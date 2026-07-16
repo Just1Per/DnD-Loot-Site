@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>D&D 5e Magic Item Looter</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>D&D 5e Magic Item Looter</h1>
+    <div class="toolbar">
+        <input
+            type="text"
+            id="search"
+            placeholder="Search Items..."
+        >
+        <select id="classFilter">
+            <option value="">All Classes</option>
+            <option value="Monk">Monk</option>
+            <option value="Paladin">Paladin</option>
+            <option value="Druid">Druid</option>
+            <option value="Wizard">Wizard</option>
+            <option value="Sorcerer">Sorcerer</option>
+            <option value="Rogue">Rogue</option>
+            <option value="Warlock">Warlock</option>
+            <option value="Cleric">Cleric</option>
+            <option value="Bard">Bard</option>
+            <option value="Artificer">Artificer</option>
+            <option value="Fighter">Fighter</option>
+            <option value="Any">Any</option>
+        </select>
+        <select id="rarityFilter">
+            <option value="">All Rarities</option>
+            <option value="Common">Common</option>
+            <option value="Uncommon">Uncommon</option>
+            <option value="Rare">Rare</option>
+            <option value="Very Rare">Very Rare</option>
+            <option value="Legendary">Legendary</option>
+        </select>
+        <select id="sourceFilter">
+            <option value="">All Sources</option>
+            <option value="Official">Official</option>
+            <option value="Homebrew">Homebrew</option>
+        </select>
+        <select id="campaignFilter">
+            <option value="">All Campaigns</option>
+            <option value="Tyranny of Dragons">
+                Tyranny of Dragons
+            </option>
+            <option value="General Loot">
+                General Loot
+            </option>
+        </select>
+        <select id="sortBy">
+            <option value="name">
+                Sort By Name
+            </option>
+            <option value="rarity">
+                Sort By Rarity
+            </option>
+            <option value="looted">
+                Sort By Looted
+            </option>
+        </select>
+        <label>
+            <input
+                type="checkbox"
+                id="showLootedOnly"
+            >
+            Looted
+        </label>
+        <label>
+            <input
+                type="checkbox"
+                id="showUnlootedOnly"
+            >
+            Unlooted
+        </label>
+
+        <label>
+            <input
+                type="checkbox"
+                id="showPrintedOnly"
+            >
+            Printed
+        </label>
+        <label>
+            <input
+                type="checkbox"
+                id="showNotPrintedOnly"
+            >
+            Not Printed
+        </label>
+        <button id="themeToggle">
+            Dark Mode
+        </button>
+        <button id="exportLooted">
+            Export Looted
+        </button>
+        <button id="exportUnlooted">
+            Export Unlooted
+        </button>
+    </div>
+<div id="campaignStats"></div>
+<div id="card-container"></div>
+<script src="js/items.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
