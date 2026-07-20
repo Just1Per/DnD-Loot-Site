@@ -18,7 +18,7 @@ onAuthStateChanged(
     auth,
     user =>
     {
-        const loginButton =
+    const loginButton =
     document.getElementById("loginButton");
 
     const logoutButton =
