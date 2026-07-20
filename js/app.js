@@ -549,9 +549,26 @@ function renderCards()
         );
     });
 
-    updateStats();
-}
+    const resultCount =
+        filtered.length;
 
+    const lootedCount =
+        filtered.filter(item =>
+            item.looted
+        ).length;
+
+    const printedCount =
+        filtered.filter(item =>
+            item.printed
+        ).length;
+
+    updateStats(
+        resultCount,
+        lootedCount,
+        printedCount
+    );
+}
+/*
 function updateStats()
 {
     const total =
@@ -582,8 +599,23 @@ function updateStats()
         |
         Printed: ${printed}
     `;
+}*/
+function updateStats(
+    results,
+    looted,
+    printed
+)
+{
+    document.getElementById(
+        "campaignStats"
+    ).innerHTML = `
+        Results: ${results}
+        |
+        Looted: ${looted}
+        |
+        Printed: ${printed}
+    `;
 }
-
 
     const loginButton =
         document.getElementById("loginButton")
