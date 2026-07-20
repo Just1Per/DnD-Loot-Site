@@ -1,5 +1,6 @@
-import {db} from ".firebase.js";
+import {db} from "./firebase.js";
 import {items as sourceItems} from "./items.js";
+
 
 import {
     collection,
@@ -9,6 +10,7 @@ import {
     updateDoc,
     deleteDoc
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
 
 console.log("Firebase connected", db);
 
