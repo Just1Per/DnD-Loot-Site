@@ -1,3 +1,89 @@
+import {db} from ".firebase.js";
+import {items as sourceItems} from "./items.js";
+
+import {
+    collection,
+    getDocs,
+    doc,
+    setDoc,
+    updateDoc,
+    deleteDoc
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+console.log("Firebase connected", db);
+
+let items = []; //Firestore items
+sourceItems //items.js items
+let players = []; //Firestore players
+
+async function loadItemsFromFirestore()
+{
+    const snapshot =
+    await getDocs(collection(db, "items"));
+
+items = 
+    snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+    console.log(items);
+
+    renderCards();
+}
+
+async function loadPlayers()
+{
+    const snapshot =
+    await getDocs(collection(db, "players"));
+
+players = 
+    snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+    console.log(players);
+}
+
+function populateOwnerFilter()
+{
+    const ownerFilter =
+        document.getElementById("ownerFilter");
+
+    if (!filter) 
+    {    
+        return;
+    }
+
+    filter.innerHTML = `
+        <option value="">
+            All Owners
+        </option>
+        `;
+    
+    players.forEach(player =>
+    {
+        filter.innerHTML += `
+            <option value="${player.name}">
+                ${player.name}
+            </option>
+        `;
+    });
+}
+
+async function importItemsToFirestore()
+{
+    console.log("Items to import:", items.length);
+    for (const item of sourceItems)
+    {
+        await setDoc(doc(db, "items", item.id), item);
+
+        console.log("Uploaded:", item.name);
+    }
+
+    console.log("All items imported to Firestore.");
+}
+
+
 const container =
     document.getElementById("card-container");
 
@@ -231,6 +317,10 @@ function renderCards()
         document.getElementById("rarityFilter")
         ?.value || "";
 
+    const ownerFilter =
+        document.getElementById("ownerFilter")
+        ?.value || "";
+
     const sourceFilter =
         document.getElementById("sourceFilter")
         ?.value || "";
@@ -277,6 +367,14 @@ function renderCards()
                 item.classes?.includes(
                     classFilter
                 )
+            );
+    }
+
+    if (ownerFilter)
+    {
+        filtered =
+            filtered.filter(item =>
+                item.owner === ownerFilter
             );
     }
 
@@ -410,6 +508,7 @@ if (
 
 [
     "search",
+    "ownerFilter",
     "classFilter",
     "rarityFilter",
     "sourceFilter",
@@ -438,4 +537,12 @@ if (
     }
 });
 
-renderCards();
+async function initializeApp()
+{
+    await loadPlayers();
+    populateOwnerFilter();
+    //importItemsToFirestore();
+    await loadItemsFromFirestore();
+}
+
+initializeApp();
