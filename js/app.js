@@ -13,7 +13,6 @@ import {
 console.log("Firebase connected", db);
 
 let items = []; //Firestore items
-sourceItems //items.js items
 let players = []; //Firestore players
 
 async function loadItemsFromFirestore()
@@ -46,11 +45,11 @@ players =
 
 function populateOwnerFilter()
 {
-    const ownerFilter =
+    const filter =
         document.getElementById("ownerFilter");
 
-    if (!filter) 
-    {    
+    if (!filter)
+    {
         return;
     }
 
@@ -58,8 +57,8 @@ function populateOwnerFilter()
         <option value="">
             All Owners
         </option>
-        `;
-    
+    `;
+
     players.forEach(player =>
     {
         filter.innerHTML += `
