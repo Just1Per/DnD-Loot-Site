@@ -589,7 +589,7 @@ async function initializeApp()
     
     populateOwnerFilter();
     //importItemsToFirestore();
-    await loadItemsFromFirestore();
+    loadItemsFromFirestore();
 };
 
 initializeApp();
