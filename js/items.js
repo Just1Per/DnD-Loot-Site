@@ -1,20 +1,20 @@
 ﻿export const items = [
-/*{
-    id: "bahamuts-final-scale",
+{
+    id: " ",
 
-    name: "Bahamut's Final Scale",
+    name: " ",
 
-    classes: ["Sorcerer"],
+    classes: [" "],
 
-    rarity: "Rare",
+    rarity: " ",
 
-    category: "Wondrous Item (Pendant)",
+    category: " ",
 
     attunement: true,
 
-    source: "Homebrew",
+    source: " ",
 
-    campaign: "Tyranny of Dragons",
+    campaign: " ",
 
     owner: null,
 
@@ -22,33 +22,33 @@
 
     receivedDate: null,
 
-    image: "images/Bahamut's Final Scale.png",
+    image: " ",
 
     description:
-        "This platinum dragon scale hangs from a simple silver chain. It bears the weight of a forgotten age.",
+        " ",
 
     quote:
-        "\"The lesson was never punishment. The lesson was understanding.\" — Bahamut",
+        " ",
 
     properties: [
         {
-            title: "Guiding Light",
+            title: " ",
             text:
-                "You always know the direction of the nearest temple, shrine, or site dedicated to Bahamut."
+                " "
         },
 
         {
-            title: "Fallen Feather",
+            title: " ",
             text:
-                "You can cast Feather Fall at will without expending a spell slot."
+                " "
         },
 
         {
-            title: "Destined Adversary",
+            title: " ",
             text:
-                "When facing dragons loyal to Tiamat, you gain advantage on the first saving throw they force you to make each encounter."
+                " "
         }
     ]
 },
-*/
+
 ];

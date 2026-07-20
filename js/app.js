@@ -9,7 +9,7 @@ import {
     setDoc,
     updateDoc,
     deleteDoc
-} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 console.log("Firebase connected", db);
 
@@ -586,9 +586,10 @@ if (
 async function initializeApp()
 {
     await loadPlayers();
+    
     populateOwnerFilter();
     //importItemsToFirestore();
     await loadItemsFromFirestore();
-}
+};
 
 initializeApp();
