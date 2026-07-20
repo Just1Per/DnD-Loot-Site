@@ -22,7 +22,7 @@ body {
 
 /* ===================================
    DARK MODE
-=================================== */
+=================================== 
 
 body.dark {
     background: #1b1b1b;
@@ -46,7 +46,7 @@ body.dark .meta-tag {
     background: #444;
     color: white;
 }
-
+*/
 /* ===================================
    HEADER
 =================================== */
@@ -59,6 +59,12 @@ h1 {
 /* ===================================
    TOOLBAR
 =================================== */
+
+
+#userDisplay {
+    margin: 0 10px;
+    font-weight: bold;
+}
 
 .toolbar {
 
@@ -80,8 +86,6 @@ h1 {
     border-radius: 8px;
 
     border: 1px solid #ccc;
-
-    min-width: 180px;
 }
 
 .toolbar button {
@@ -494,9 +498,6 @@ body.dark .item-type {
     border-radius: 8px;
 }
 
-body.dark .toolbar label {
-    background: rgba(255,255,255,0.08);
-}
 
 /* ===================================
    QUOTES

@@ -1,6 +1,59 @@
-console.log("App.js loaded");
 import {db} from "./firebase.js";
 import {items as sourceItems} from "./items.js";
+
+import {
+    auth,
+    provider,
+    signInWithPopup,
+    signOut
+}
+from "./firebase.js";
+
+import {
+    onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+onAuthStateChanged(
+    auth,
+    user =>
+    {
+        const loginButton =
+    document.getElementById("loginButton");
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+        const display =
+            document.getElementById(
+                "userDisplay"
+            );
+
+        if (user)
+        {
+            display.textContent =
+                user.email;
+
+            loginButton.style.display =
+                "none";
+
+            logoutButton.style.display =
+                "inline-block";
+        }
+        else
+        {
+            display.textContent =
+                "Not logged in";
+
+            loginButton.style.display =
+                "inline-block";
+
+            logoutButton.style.display =
+                "none";
+        }
+        renderCards();
+    }
+);
 
 import {
     collection,
@@ -10,8 +63,6 @@ import {
     updateDoc,
     deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-
-console.log("Firebase connected", db);
 
 let items = []; //Firestore items
 let players = []; //Firestore players
@@ -26,8 +77,6 @@ items =
         id: doc.id,
         ...doc.data()
     }));
-    console.log(items);
-
     renderCards();
 }
 
@@ -41,7 +90,6 @@ players =
         id: doc.id,
         ...doc.data()
     }));
-    console.log(players);
 }
 
 function populateOwnerFilter()
@@ -72,15 +120,15 @@ function populateOwnerFilter()
 
 async function importItemsToFirestore()
 {
-    console.log("Items to import:", items.length);
     for (const item of sourceItems)
     {
-        await setDoc(doc(db, "items", item.id), item);
-
-        console.log("Uploaded:", item.name);
+    await setDoc(
+        doc(db, "items", item.id),
+        item,
+        { merge: true }
+    );
     }
 
-    console.log("All items imported to Firestore.");
 }
 
 const container =
@@ -92,6 +140,10 @@ function createCard(item)
         document.createElement("div");
 
     card.classList.add("item-card");
+
+    const isAdmin =
+    auth.currentUser?.email ===
+    "casper.n.andersen@gmail.com";
 
     if (item.rarity)
     {
@@ -134,25 +186,48 @@ function createCard(item)
 
     card.innerHTML = `
 
-        <div class="card-buttons">
+           ${
+    isAdmin
+    ?
+    `
+    <div class="card-buttons">
 
-            <button class="loot-button">
-                ${
-                    isLooted
-                    ? "Looted"
-                    : "Loot"
-                }
-            </button>
+        <button class="loot-button">
+            ${isLooted ? "Looted" : "Loot"}
+        </button>
 
-            <button class="print-button">
-                ${
-                    isPrinted
-                    ? "Printed"
-                    : "Print"
-                }
-            </button>
+        <button class="print-button">
+            ${isPrinted ? "Printed" : "Print"}
+        </button>
+
+    </div>
+    `
+    :
+    ""
+}
+
+
+    ${
+        item.looted && isAdmin
+        ?
+        `
+        <div class="owner-block">
+
+            <select class="owner-select">
+
+                <option value="">
+                    No Owner
+                </option>
+
+                ${ownerOptions}
+
+            </select>
 
         </div>
+        `
+        :
+        ""
+    }
 
         <div class="watermark">
             LOOTED
@@ -204,8 +279,7 @@ function createCard(item)
             </div>
 
             ${
-                item.properties
-                .map(property => `
+                (item.properties || []).map(property => `
                     <div class="property-block">
 
                         <span class="property-title">
@@ -217,28 +291,6 @@ function createCard(item)
                     </div>
                 `)
                 .join("")
-            }
-
-            ${
-                item.looted
-                ?
-                `
-                <div class="owner-block">
-
-                    <select class="owner-select">
-
-                        <option value="">
-                            No Owner
-                        </option>
-
-                        ${ownerOptions}
-
-                    </select>
-
-                </div>
-                `
-                :
-                ""
             }
 
             ${
@@ -510,6 +562,13 @@ function updateStats()
             item.looted
         ).length;
 
+
+    const printed =
+        items.filter(item =>
+            item.printed
+        ).length;
+
+
     document.getElementById(
         "campaignStats"
     ).innerHTML = `
@@ -520,8 +579,47 @@ function updateStats()
         Unlooted: ${total - looted}
         |
         Remaining: ${total - looted}
+        |
+        Printed: ${printed}
     `;
 }
+
+
+    const loginButton =
+        document.getElementById("loginButton")
+        ?.addEventListener(
+            "click",
+            async () =>
+            {
+                try
+                {
+                    const result =
+                        await signInWithPopup(
+                            auth,
+                            provider
+                        );
+
+                    console.log(
+                        "Logged in:",
+                        result.user.email
+                    );
+                }
+                catch (error)
+                {
+                    console.error(error);
+                }
+            }
+        );
+
+    const logoutButton =
+        document.getElementById("logoutButton")
+        ?.addEventListener(
+            "click",
+            async () =>
+            {
+                await signOut(auth);
+            }
+        );
 
 document
 .getElementById("themeToggle")
@@ -588,6 +686,8 @@ async function initializeApp()
     await loadPlayers();
 
     populateOwnerFilter();
+
+    //loadItemsToFirestore();
 
     await loadItemsFromFirestore();
 }
