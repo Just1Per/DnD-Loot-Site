@@ -1,3 +1,4 @@
+console.log("App.js loaded");
 import {db} from "./firebase.js";
 import {items as sourceItems} from "./items.js";
 
