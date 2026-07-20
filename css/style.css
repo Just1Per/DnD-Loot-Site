@@ -592,3 +592,7 @@ body.dark .card-body i {
 
     font-weight: bold;
 }
+
+.owner-select {
+    width: 100%;
+}

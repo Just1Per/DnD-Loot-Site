@@ -83,6 +83,19 @@ async function importItemsToFirestore()
     console.log("All items imported to Firestore.");
 }
 
+const ownerOptions =
+    players.map(player => `
+        <option
+            value="${player.id}"
+            ${
+                item.owner === player.id
+                ? "selected"
+                : ""
+            }
+        >
+            ${player.name}
+        </option>
+    `).join("");
 
 const container =
     document.getElementById("card-container");
@@ -211,11 +224,23 @@ function createCard(item)
             }
 
             ${
-                item.owner
+                item.looted
                 ?
-                `<div class="owner-block">
-                    Owner: ${item.owner}
-                </div>`
+                `
+                <div class="owner-block">
+
+                    <select class="owner-select">
+
+                        <option value="">
+                            No Owner
+                        </option>
+
+                        ${ownerOptions}
+
+                    </select>
+
+                </div>
+                `
                 :
                 ""
             }
