@@ -54,16 +54,16 @@ function populateOwnerFilter()
         return;
     }
 
-    filter.innerHTML += `
-    <option value="${player.id}">
-        ${player.name}
-    </option>
+    filter.innerHTML = `
+        <option value="">
+            All Owners
+        </option>
     `;
 
     players.forEach(player =>
     {
         filter.innerHTML += `
-            <option value="${player.name}">
+            <option value="${player.id}">
                 ${player.name}
             </option>
         `;
@@ -586,10 +586,10 @@ if (
 async function initializeApp()
 {
     await loadPlayers();
-    
+
     populateOwnerFilter();
-    //importItemsToFirestore();
-    loadItemsFromFirestore();
-};
+
+    await loadItemsFromFirestore();
+}
 
 initializeApp();
