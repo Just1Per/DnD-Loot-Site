@@ -54,10 +54,10 @@ function populateOwnerFilter()
         return;
     }
 
-    filter.innerHTML = `
-        <option value="">
-            All Owners
-        </option>
+    filter.innerHTML += `
+    <option value="${player.id}">
+        ${player.name}
+    </option>
     `;
 
     players.forEach(player =>
@@ -83,20 +83,6 @@ async function importItemsToFirestore()
     console.log("All items imported to Firestore.");
 }
 
-const ownerOptions =
-    players.map(player => `
-        <option
-            value="${player.id}"
-            ${
-                item.owner === player.id
-                ? "selected"
-                : ""
-            }
-        >
-            ${player.name}
-        </option>
-    `).join("");
-
 const container =
     document.getElementById("card-container");
 
@@ -116,15 +102,25 @@ function createCard(item)
         );
     }
 
+    const ownerOptions =
+    players.map(player => `
+        <option
+            value="${player.id}"
+            ${
+                item.owner === player.id
+                ? "selected"
+                : ""
+            }
+        >
+            ${player.name}
+        </option>
+    `).join("");
+
     const isLooted =
-        localStorage.getItem(
-            `loot-${item.id}`
-        ) === "true";
+        item.looted;
 
     const isPrinted =
-        localStorage.getItem(
-            `printed-${item.id}`
-        ) === "true";
+    item.printed;
 
     if (isLooted)
     {
@@ -267,57 +263,91 @@ function createCard(item)
     const printButton =
         card.querySelector(".print-button");
 
-    lootButton.addEventListener(
-        "click",
-        () =>
+    const ownerSelect =
+        card.querySelector(".owner-select");
+
+    ownerSelect?.addEventListener(
+        "change",
+        async (event) =>
         {
-            card.classList.toggle(
-                "looted"
+            await updateDoc(
+                doc(
+                    db,
+                    "items",
+                    item.id
+                ),
+                {
+                    owner:
+                        event.target.value || null
+                }
             );
 
-            const looted =
-                card.classList.contains(
-                    "looted"
-                );
+            item.owner =
+                event.target.value || null;
 
-            localStorage.setItem(
-                `loot-${item.id}`,
-                looted
-            );
-
-            lootButton.textContent =
-                looted
-                ? "Looted"
-                : "Loot";
-
-            updateStats();
+            await loadItemsFromFirestore();
         }
     );
 
-    printButton.addEventListener(
-        "click",
-        () =>
+    lootButton?.addEventListener(
+    "click",
+    async () =>
+    {
+        const newLootedState =
+            !item.looted;
+
+        await updateDoc(
+            doc(
+                db,
+                "items",
+                item.id
+            ),
+            {
+                looted: newLootedState,
+
+                owner:
+                    newLootedState
+                    ? item.owner
+                    : null
+            }
+        );
+
+        item.looted =
+            newLootedState;
+
+        if (!newLootedState)
         {
-            card.classList.toggle(
-                "printed"
-            );
-
-            const printed =
-                card.classList.contains(
-                    "printed"
-                );
-
-            localStorage.setItem(
-                `printed-${item.id}`,
-                printed
-            );
-
-            printButton.textContent =
-                printed
-                ? "Printed"
-                : "Print";
+            item.owner = null;
         }
-    );
+
+        await loadItemsFromFirestore();
+    }
+);
+
+    printButton?.addEventListener(
+    "click",
+    async () =>
+    {
+        const newPrintedState =
+            !item.printed;
+
+        await updateDoc(
+            doc(
+                db,
+                "items",
+                item.id
+            ),
+            {
+                printed: newPrintedState
+            }
+        );
+
+        item.printed =
+            newPrintedState;
+
+        await loadItemsFromFirestore();
+    }
+);
 
     return card;
 }
@@ -431,9 +461,7 @@ function renderCards()
     {
         filtered =
             filtered.filter(item =>
-                localStorage.getItem(
-                    `loot-${item.id}`
-                ) === "true"
+                item.looted
             );
     }
 
@@ -441,9 +469,7 @@ function renderCards()
     {
         filtered =
             filtered.filter(item =>
-                localStorage.getItem(
-                    `loot-${item.id}`
-                ) !== "true"
+                !item.looted
             );
     }
 
@@ -451,9 +477,7 @@ function renderCards()
     {
         filtered =
             filtered.filter(item =>
-                localStorage.getItem(
-                    `printed-${item.id}`
-                ) === "true"
+                item.printed
             );
     }
 
@@ -461,11 +485,10 @@ function renderCards()
     {
         filtered =
             filtered.filter(item =>
-                localStorage.getItem(
-                    `printed-${item.id}`
-                ) !== "true"
+                !item.printed
             );
     }
+
 
     filtered.forEach(item =>
     {
@@ -484,9 +507,7 @@ function updateStats()
 
     const looted =
         items.filter(item =>
-            localStorage.getItem(
-                `loot-${item.id}`
-            ) === "true"
+            item.looted
         ).length;
 
     document.getElementById(
