@@ -139,14 +139,14 @@ function createCard(item)
         document.createElement("div");
     card.classList.add("item-card");
 
-    /*
+    
     const isAdmin =
     auth.currentUser?.email ===
     "casper.n.andersen@gmail.com";
-    */
-
-    const isAdmin = true;
     
+    /*
+    const isAdmin = true;
+    */
     const isEditing =
     isAdmin &&
     editingItems.has(item.id);
