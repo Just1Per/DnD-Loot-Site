@@ -66,6 +66,7 @@ import {
 
 let items = []; //Firestore items
 let players = []; //Firestore players
+const editingItems = new Set();
 
 async function loadItemsFromFirestore()
 {
@@ -138,9 +139,17 @@ function createCard(item)
         document.createElement("div");
     card.classList.add("item-card");
 
+    /*
     const isAdmin =
     auth.currentUser?.email ===
     "casper.n.andersen@gmail.com";
+    */
+
+    const isAdmin = true;
+    
+    const isEditing =
+    isAdmin &&
+    editingItems.has(item.id);
 
     if (item.rarity)
     {
@@ -183,26 +192,47 @@ function createCard(item)
 
     card.innerHTML = `
 
-           ${
+ ${
     isAdmin
     ?
-    `
-    <div class="card-buttons">
+    (
+        isEditing
+        ?
+        `
+        <div class="card-buttons">
 
-        <button class="loot-button">
-            ${isLooted ? "Looted" : "Loot"}
-        </button>
+            <button class="save-button">
+                Save
+            </button>
 
-        <button class="print-button">
-            ${isPrinted ? "Printed" : "Print"}
-        </button>
+            <button class="cancel-button">
+                Cancel
+            </button>
 
-    </div>
-    `
+        </div>
+        `
+        :
+        `
+        <div class="card-buttons">
+
+            <button class="loot-button">
+                ${isLooted ? "Looted" : "Loot"}
+            </button>
+
+            <button class="print-button">
+                ${isPrinted ? "Printed" : "Print"}
+            </button>
+
+            <button class="edit-button">
+                Edit
+            </button>
+
+        </div>
+        `
+    )
     :
     ""
 }
-
 
     ${
         item.looted && isAdmin
@@ -232,37 +262,118 @@ function createCard(item)
 
         <div class="card-header">
 
+            ${
+            isEditing
+            ?
+            `
+            <input
+                class="edit-name"
+                id="edit-name-${item.id}"
+                value="${item.name}"
+            >
+            `
+            :
+            `
             <h2 class="item-name">
                 ${item.name}
             </h2>
+            `
+            }
 
-            <p class="item-type">
-                ${item.category}
-                ${
-                    item.attunement
-                    ? " (Requires Attunement)"
-                    : ""
-                }
-            </p>
+            ${
+    isEditing
+    ?
+    `
+    <select id="edit-category-${item.id}">
+        <option value="Armor" ${item.category === "Armor" ? "selected" : ""}>Armor</option>
+        <option value="Potion" ${item.category === "Potion" ? "selected" : ""}>Potion</option>
+        <option value="Scroll" ${item.category === "Scroll" ? "selected" : ""}>Scroll</option>
+        <option value="Wand" ${item.category === "Wand" ? "selected" : ""}>Wand</option>
+        <option value="Weapon" ${item.category === "Weapon" ? "selected" : ""}>Weapon</option>
+        <option value="Wondrous Item" ${item.category === "Wondrous Item" ? "selected" : ""}>Wondrous Item</option>
+    </select>
 
+    <label>
+        <input
+            type="checkbox"
+            id="edit-attunement-${item.id}"
+            ${item.attunement ? "checked" : ""}
+        >
+        Requires Attunement
+    </label>
+    `
+    :
+    `
+    <p class="item-type">
+        ${item.category}
+        ${item.attunement ? " (Requires Attunement)" : ""}
+    </p>
+    `
+}
             <div class="card-meta">
-
+                ${
+                isEditing
+                ?
+                `
+                <select id="edit-rarity-${item.id}">
+                    <option value="Common" ${item.rarity === "Common" ? "selected" : ""}>Common</option>
+                    <option value="Uncommon" ${item.rarity === "Uncommon" ? "selected" : ""}>Uncommon</option>
+                    <option value="Rare" ${item.rarity === "Rare" ? "selected" : ""}>Rare</option>
+                    <option value="Very Rare" ${item.rarity === "Very Rare" ? "selected" : ""}>Very Rare</option>
+                    <option value="Legendary" ${item.rarity === "Legendary" ? "selected" : ""}>Legendary</option>
+                </select>
+                `
+                :
+                `
                 <span class="meta-tag ${item.rarity.toLowerCase().replaceAll(" ", "-")}">
                     ${item.rarity}
                 </span>
+                `
+                }
 
-                <span class="meta-tag">
-                    ${item.source}
-                </span>
+                ${
+                isEditing
+                ?
+                `
+                <input
+                    id="edit-source-${item.id}"
+                    value="${item.source || ""}"
+                >
+                `
+                :
+                item.source
+                }
 
-                <span class="meta-tag">
-                    ${item.campaign}
-                </span>
+
+                ${
+                isEditing
+                ?
+                `
+                <input
+                    id="edit-campaign-${item.id}"
+                    value="${item.campaign || ""}"
+                >
+                `
+                :
+                item.campaign
+                }
 
             </div>
 
         </div>
 
+        ${
+            isEditing
+            ?
+            `
+            <input
+                id="edit-image-${item.id}"
+                value="${item.image || ""}"
+            >
+            `
+            :
+            ""
+        }
         <img
             src="${item.image}"
             class="card-art"
@@ -271,31 +382,57 @@ function createCard(item)
 
         <div class="card-body">
 
+            ${
+            isEditing
+            ?
+            `
+            <textarea
+                class="edit-description"
+                id="edit-description-${item.id}"
+            >${item.description}</textarea>
+            `
+            :
+            `
             <div class="item-description">
                 ${item.description}
             </div>
-
-            ${
-                (item.properties || []).map(property => `
-                    <div class="property-block">
-
-                        <span class="property-title">
-                            ${property.title}:
-                        </span>
-
-                        ${property.text}
-
-                    </div>
-                `)
-                .join("")
+            `
             }
 
             ${
-                item.quote
-                ?
-                `<i>${item.quote}</i>`
-                :
-                ""
+            isEditing
+            ?
+            `
+            <textarea
+                id="edit-properties-${item.id}"
+            >${JSON.stringify(item.properties || [], null, 2)}</textarea>
+            `
+            :
+            (item.properties || []).map(property => `
+    <div class="property-block">
+
+        <span class="property-title">
+            ${property.title}:
+        </span>
+
+        ${property.text}
+
+    </div>
+`).join("")
+            }
+
+            ${
+            isEditing
+            ?
+            `
+            <textarea
+                id="edit-quote-${item.id}"
+            >${item.quote || ""}</textarea>
+            `
+            :
+            `
+            <i>${item.quote || ""}</i>
+            `
             }
 
         </div>
@@ -314,6 +451,83 @@ function createCard(item)
 
     const ownerSelect =
         card.querySelector(".owner-select");
+
+    const editButton =
+    card.querySelector(".edit-button");
+
+    const saveButton =
+    card.querySelector(".save-button");
+
+    const cancelButton =
+    card.querySelector(".cancel-button");
+
+    editButton?.addEventListener(
+    "click",
+    () =>
+    {
+        editingItems.add(item.id);
+
+        renderCards();
+    }
+    );
+
+    cancelButton?.addEventListener(
+    "click",
+    () =>
+    {
+        editingItems.delete(item.id);
+
+        renderCards();
+    }
+    );
+
+    saveButton?.addEventListener(
+    "click",
+    async () =>
+    {
+        await updateDoc(
+            doc(db, "items", item.id),
+            {
+                name:
+                    document.getElementById(`edit-name-${item.id}`).value,
+
+                description:
+                    document.getElementById(`edit-description-${item.id}`).value,
+
+                category:
+                    document.getElementById(`edit-category-${item.id}`).value,
+
+                rarity:
+                    document.getElementById(`edit-rarity-${item.id}`).value,
+
+                source:
+                    document.getElementById(`edit-source-${item.id}`).value,
+
+                campaign:
+                    document.getElementById(`edit-campaign-${item.id}`).value,
+
+                image:
+                    document.getElementById(`edit-image-${item.id}`).value,
+
+                quote:
+                    document.getElementById(`edit-quote-${item.id}`).value,
+
+                attunement:
+                    document.getElementById(`edit-attunement-${item.id}`).checked,
+
+                properties:
+                    JSON.parse(
+                        document.getElementById(`edit-properties-${item.id}`).value
+                    )
+            }
+        );
+
+        editingItems.delete(item.id);
+
+        await loadItemsFromFirestore();
+    }
+    );
+
 
     ownerSelect?.addEventListener(
         "change",
