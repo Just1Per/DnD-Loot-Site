@@ -460,54 +460,22 @@ body.dark .item-type {
     z-index: 1200;
 }
 
+
 .loot-button {
-
     background: #8b0000;
-
-    color: white;
-
-    border: none;
-
-    border-radius: 6px;
-
-    padding: 4px 8px;
-
-    font-size: 10px;
-
-    cursor: pointer;
 }
 
 .item-card.looted .loot-button {
-
-    background: #2e8b57;
-}
-
-.loot-button:hover {
-    transform: scale(1.05);
+    background: #2ecc71;
 }
 
 .print-button {
-
     background: #444;
-
-    color: white;
-
-    border: none;
-
-    border-radius: 6px;
-
-    padding: 4px 8px;
-
-    font-size: 10px;
-
-    cursor: pointer;
 }
 
 .item-card.printed .print-button {
-
     background: #2196f3;
 }
-
 
 .item-card.looted .loot-button {
     background: #2ecc71;
@@ -666,3 +634,115 @@ body.dark .card-body i {
 .owner-select {
     width: 100%;
 }
+
+/* ===================================
+   EDIT MODE
+=================================== */
+
+.edit-button {
+
+    background: #caa75c;
+
+    color: #2b1b00;
+
+    border: none;
+
+    border-radius: 6px;
+
+    padding: 4px 8px;
+
+    font-size: 10px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.edit-button:hover {
+    transform: scale(1.05);
+}
+
+.edit-name,
+.edit-description,
+[id^="edit-"],
+.card-body textarea,
+.card-header select,
+.card-header input {
+    width: 100%;
+
+    background: #fdfbf7;
+
+    border: 2px solid #8a7355;
+
+    border-radius: 6px;
+
+    padding: 6px;
+
+    color: #5c1d1d;
+
+    font-family: inherit;
+
+    margin-bottom: 6px;
+}
+
+.edit-name {
+    font-size: 14px;
+
+    font-weight: bold;
+
+    text-transform: uppercase;
+}
+
+.edit-description {
+    min-height: 80px;
+
+    resize: vertical;
+}
+
+/* ===================================
+   Buttons
+   
+   =================================== */
+
+.loot-button,
+.print-button,
+.edit-button,
+.save-button,
+.cancel-button {
+
+    color: white;
+
+    border: none;
+
+    border-radius: 6px;
+
+    padding: 4px 8px;
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    transition: transform 0.15s ease;
+}
+
+.loot-button:hover,
+.print-button:hover,
+.edit-button:hover,
+.save-button:hover,
+.cancel-button:hover {
+    transform: scale(1.05);
+}
+
+
+.edit-button {
+    background: #9b59b6;
+}
+
+.save-button {
+    background: #27ae60;
+}
+
+.cancel-button {
+    background: #c0392b;
+}
+

@@ -341,7 +341,11 @@ function createCard(item)
                 >
                 `
                 :
-                item.source
+                `
+                <span class="meta-tag">
+                    ${item.source || ""}
+                </span>
+                `
                 }
 
 
@@ -355,7 +359,11 @@ function createCard(item)
                 >
                 `
                 :
-                item.campaign
+                `
+                <span class="meta-tag">
+                    ${item.campaign || ""}
+                </span>
+                `
                 }
 
             </div>
@@ -631,6 +639,14 @@ function renderCards()
         document.getElementById("rarityFilter")
         ?.value || "";
 
+    const sourceFilter =
+        document.getElementById("sourceFilter")
+        ?.value || "";
+
+    const campaignFilter =
+        document.getElementById("campaignFilter")
+        ?.value || "";
+
     const ownerFilter =
         document.getElementById("ownerFilter")
         ?.value || "";
@@ -691,6 +707,22 @@ function renderCards()
         filtered =
             filtered.filter(item =>
                 item.rarity === rarityFilter
+            );
+    }
+
+    if (sourceFilter)
+    {
+        filtered =
+            filtered.filter(item =>
+                item.source === sourceFilter
+            );
+    }
+
+    if (campaignFilter)
+    {
+        filtered =
+            filtered.filter(item =>
+                item.campaign === campaignFilter
             );
     }
 
@@ -809,6 +841,73 @@ function updateStats()
         Printed: ${printed}
     `;
 }*/
+
+function populateSourceFilter()
+{
+    const filter =
+        document.getElementById(
+            "sourceFilter"
+        );
+
+    if (!filter)
+    {
+        return;
+    }
+
+    const sources =
+        [...new Set(
+            items
+            .map(item => item.source)
+            .filter(Boolean)
+        )]
+        .sort();
+
+    filter.innerHTML =
+        `<option value="">All Sources</option>`;
+
+    sources.forEach(source =>
+    {
+        filter.innerHTML += `
+            <option value="${source}">
+                ${source}
+            </option>
+        `;
+    });
+}
+
+function populateCampaignFilter()
+{
+    const filter =
+        document.getElementById(
+            "campaignFilter"
+        );
+
+    if (!filter)
+    {
+        return;
+    }
+
+    const campaigns =
+        [...new Set(
+            items
+            .map(item => item.campaign)
+            .filter(Boolean)
+        )]
+        .sort();
+
+    filter.innerHTML =
+        `<option value="">All Campaigns</option>`;
+
+    campaigns.forEach(campaign =>
+    {
+        filter.innerHTML += `
+            <option value="${campaign}">
+                ${campaign}
+            </option>
+        `;
+    });
+}
+
 function updateStats(
     results,
     looted,
@@ -866,6 +965,8 @@ function updateStats(
     "search",
     "ownerFilter",
     "rarityFilter",
+    "sourceFilter",
+    "campaignFilter",
     "categoryFilter",
     "showLootedOnly",
     "showUnlootedOnly",
@@ -902,6 +1003,10 @@ async function initializeApp()
     //loadItemsToFirestore();
 
     await loadItemsFromFirestore();
+
+    populateSourceFilter();
+
+    populateCampaignFilter();
 }
 
 initializeApp();
