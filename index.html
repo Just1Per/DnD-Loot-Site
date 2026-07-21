@@ -27,25 +27,19 @@
             id="search"
             placeholder="Search Items..."
         >
-        <select id="classFilter">
-            <option value="">All Classes</option>
-            <option value="Monk">Monk</option>
-            <option value="Paladin">Paladin</option>
-            <option value="Druid">Druid</option>
-            <option value="Wizard">Wizard</option>
-            <option value="Sorcerer">Sorcerer</option>
-            <option value="Rogue">Rogue</option>
-            <option value="Warlock">Warlock</option>
-            <option value="Cleric">Cleric</option>
-            <option value="Bard">Bard</option>
-            <option value="Artificer">Artificer</option>
-            <option value="Fighter">Fighter</option>
-            <option value="Any">Any</option>
-        </select>
         <select class="owner-filter" id="ownerFilter">
             <option value="">
                 All Owners
             </option>
+        </select>
+        <select id="categoryFilter">
+            <option value="">All Categories</option>
+            <option value="Armor">Armor</option>
+            <option value="Potion">Potion</option>
+            <option value="Scroll">Scroll</option>
+            <option value="Wand">Wand</option>
+            <option value="Weapon">Weapon</option>
+            <option value="Wondrous Item">Wondrous Item</option>
         </select>
         <select id="rarityFilter">
             <option value="">All Rarities</option>
@@ -54,31 +48,6 @@
             <option value="Rare">Rare</option>
             <option value="Very Rare">Very Rare</option>
             <option value="Legendary">Legendary</option>
-        </select>
-        <select id="sourceFilter">
-            <option value="">All Sources</option>
-            <option value="Official">Official</option>
-            <option value="Homebrew">Homebrew</option>
-        </select>
-        <select id="campaignFilter">
-            <option value="">All Campaigns</option>
-            <option value="Tyranny of Dragons">
-                Tyranny of Dragons
-            </option>
-            <option value="General Loot">
-                General Loot
-            </option>
-        </select>
-        <select id="sortBy">
-            <option value="name">
-                Sort By Name
-            </option>
-            <option value="rarity">
-                Sort By Rarity
-            </option>
-            <option value="looted">
-                Sort By Looted
-            </option>
         </select>
         <label>
             <input
@@ -94,7 +63,20 @@
             >
             Unlooted
         </label>
-
+        <label>
+            <input
+                type="checkbox"
+                id="showAttunementOnly"
+            >
+            Attuned
+        </label>
+        <label>
+            <input
+                type="checkbox"
+                id="showNoAttunementOnly"
+            >
+            Not Attuned
+        </label>
         <label>
             <input
                 type="checkbox"

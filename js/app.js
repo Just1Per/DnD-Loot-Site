@@ -416,10 +416,6 @@ function renderCards()
         ?.value
         .toLowerCase() || "";
 
-    const classFilter =
-        document.getElementById("classFilter")
-        ?.value || "";
-
     const rarityFilter =
         document.getElementById("rarityFilter")
         ?.value || "";
@@ -428,13 +424,9 @@ function renderCards()
         document.getElementById("ownerFilter")
         ?.value || "";
 
-    const sourceFilter =
-        document.getElementById("sourceFilter")
-        ?.value || "";
-
-    const campaignFilter =
-        document.getElementById("campaignFilter")
-        ?.value || "";
+    const categoryFilter =
+    document.getElementById("categoryFilter")
+    ?.value || "";
 
     const showLooted =
         document.getElementById("showLootedOnly")
@@ -442,6 +434,14 @@ function renderCards()
 
     const showUnlooted =
         document.getElementById("showUnlootedOnly")
+        ?.checked;
+
+    const showAttunement =
+        document.getElementById("showAttunementOnly")
+        ?.checked;
+
+    const showNoAttunement =
+        document.getElementById("showNoAttunementOnly")
         ?.checked;
 
     const showPrinted =
@@ -467,16 +467,6 @@ function renderCards()
         );
     });
 
-    if (classFilter)
-    {
-        filtered =
-            filtered.filter(item =>
-                item.classes?.includes(
-                    classFilter
-                )
-            );
-    }
-
     if (ownerFilter)
     {
         filtered =
@@ -493,19 +483,11 @@ function renderCards()
             );
     }
 
-    if (sourceFilter)
+    if (categoryFilter)
     {
         filtered =
             filtered.filter(item =>
-                item.source === sourceFilter
-            );
-    }
-
-    if (campaignFilter)
-    {
-        filtered =
-            filtered.filter(item =>
-                item.campaign === campaignFilter
+                item.category === categoryFilter
             );
     }
 
@@ -522,6 +504,22 @@ function renderCards()
         filtered =
             filtered.filter(item =>
                 !item.looted
+            );
+    }
+
+    if (showAttunement)
+    {
+        filtered =
+            filtered.filter(item =>
+                item.attunement
+            );
+    }
+
+    if (showNoAttunement)
+    {
+        filtered =
+            filtered.filter(item =>
+                !item.attunement
             );
     }
 
@@ -656,12 +654,12 @@ function updateStats(
 [
     "search",
     "ownerFilter",
-    "classFilter",
     "rarityFilter",
-    "sourceFilter",
-    "campaignFilter",
+    "categoryFilter",
     "showLootedOnly",
     "showUnlootedOnly",
+    "showAttunementOnly",
+    "showNoAttunementOnly",
     "showPrintedOnly",
     "showNotPrintedOnly"
 ]
