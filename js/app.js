@@ -103,9 +103,7 @@ function populateOwnerFilter()
     }
 
     filter.innerHTML = `
-        <option value="">
-            All Owners
-        </option>
+        <option value="">All Owners</option>
     `;
 
     players.forEach(player =>
@@ -138,7 +136,6 @@ function createCard(item)
 {
     const card =
         document.createElement("div");
-
     card.classList.add("item-card");
 
     const isAdmin =
@@ -169,7 +166,7 @@ function createCard(item)
     `).join("");
 
     const isLooted =
-        item.looted;
+    item.looted;
 
     const isPrinted =
     item.printed;

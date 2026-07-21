@@ -193,21 +193,6 @@ h1 {
 }
 
 /* ===================================
-   CAMPAIGN STATS
-=================================== */
-
-#campaignStats {
-
-    text-align: center;
-
-    margin-bottom: 20px;
-
-    font-weight: bold;
-
-    font-size: 1rem;
-}
-
-/* ===================================
    GRID
 =================================== */
 
@@ -218,10 +203,10 @@ h1 {
     grid-template-columns:
         repeat(
             auto-fit,
-            minmax(350px, 1fr)
+            minmax(350px, 2px)
         );
 
-    gap: 25px;
+    gap: 5px;
 
     max-width: 1800px;
 
@@ -539,26 +524,16 @@ body.dark .item-type {
 
     transform:
         translate(-50%, -50%)
-        rotate(-25deg);
+        rotate(-60deg);
 
     font-family: "Cinzel", serif;
 
-    font-size: 5rem;
+    font-size: 7rem;
 
     font-weight: bold;
 
-    white-space: nowrap;
-
     color:
-        rgba(255, 215, 0, 0.18);
-
-    text-shadow:
-        0 0 10px rgba(255,215,0,0.35),
-        0 0 20px rgba(255,215,0,0.2);
-
-    pointer-events: none;
-
-    z-index: 1000;
+        rgb(191 161 1 / 20%);
 }
 
 /* ===================================
@@ -666,7 +641,11 @@ body.dark .card-body i {
 
     margin-top: 15px;
 
-    padding: 10px;
+    position: absolute;
+
+    right: 1px;
+
+    padding: 5px;
 
     border-radius: 8px;
 
