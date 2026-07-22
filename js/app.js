@@ -143,7 +143,9 @@ function createCard(item)
     const isAdmin =
     auth.currentUser?.email ===
     "casper.n.andersen@gmail.com";
-    
+    const isAdmin =
+    auth.currentUser?.email ===
+    "superand96@gmail.com";
     /*
     const isAdmin = true;
     */
