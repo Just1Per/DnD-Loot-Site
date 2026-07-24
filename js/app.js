@@ -14,47 +14,6 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
-onAuthStateChanged(
-    auth,
-    user =>
-    {
-    const loginButton =
-    document.getElementById("loginButton");
-
-    const logoutButton =
-        document.getElementById("logoutButton");
-
-        const display =
-            document.getElementById(
-                "userDisplay"
-            );
-
-        if (user)
-        {
-            display.textContent =
-                user.email;
-
-            loginButton.style.display =
-                "none";
-
-            logoutButton.style.display =
-                "inline-block";
-        }
-        else
-        {
-            display.textContent =
-                "Not logged in";
-
-            loginButton.style.display =
-                "inline-block";
-
-            logoutButton.style.display =
-                "none";
-        }
-        renderCards();
-    }
-);
-
 import {
     collection,
     getDocs,
@@ -301,46 +260,49 @@ function createCard(item)
         >
         Requires Attunement
     </label>
-    <div class="class-editor">
+    
+<div class="class-selector">
+
+${
+[
+    "Artificer",
+    "Barbarian",
+    "Bard",
+    "Cleric",
+    "Druid",
+    "Fighter",
+    "Monk",
+    "Paladin",
+    "Ranger",
+    "Rogue",
+    "Sorcerer",
+    "Warlock",
+    "Wizard"
+]
+.map(className => `
+<label class="class-option">
+
+    <input
+        type="checkbox"
+        class="class-checkbox-${item.id}"
+        value="${className}"
         ${
-        [
-            "Artificer",
-            "Barbarian",
-            "Bard",
-            "Cleric",
-            "Druid",
-            "Fighter",
-            "Monk",
-            "Paladin",
-            "Ranger",
-            "Rogue",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ]
-        .map(className => `
-        <label>
-            <input
-                type="checkbox"
-                class="class-checkbox-${item.id}"
-                value="${className}"
-                ${
-                    (item.classes || [])
-                        .includes(className)
-                        ? "checked"
-                        : ""
-                }
-            >
-            ${className}
-        </label>
-        `)
-        .join("")
+            (item.classes || []).includes(className)
+            ? "checked"
+            : ""
         }
-        </div>
+    >
+
+    ${className}
+
+</label>
+`)
+.join("")
+}
+</div>
+
     `
-    
     :
-    
     `
     <p class="item-type">
         ${item.category}
@@ -348,17 +310,17 @@ function createCard(item)
     </p>
     `
 }
-        ${
-            item.classes?.length
-            ?
-            `
-            <div class="class-tag">
-                ${item.classes.join(", ")}
+            <div class="card-meta">
+                ${
+                    (item.classes || [])
+                        .map(className => `
+                            <span class="meta-tag">
+                                ${className}
+                            </span>
+                        `)
+                        .join("")
+                }
             </div>
-            `
-            :
-            ""
-        }
             <div class="card-meta">
                 ${
                 isEditing
@@ -396,20 +358,6 @@ function createCard(item)
                     ${item.source || ""}
                 </span>
                 `
-                }
-
-                ${
-                    isEditing
-                    ?
-                    `
-                    <input
-                        id="edit-classes-${item.id}"
-                        placeholder="Wizard, Cleric, Druid"
-                        value="${(item.classes || []).join(", ")}"
-                    >
-                    `
-                    :
-                    ""
                 }
 
                 ${
@@ -809,8 +757,7 @@ function renderCards()
     {
         filtered =
             filtered.filter(item =>
-                item.classes &&
-                item.classes.includes(classFilter)
+                item.classes?.includes(classFilter)
             );
     }
 

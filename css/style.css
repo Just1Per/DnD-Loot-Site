@@ -353,6 +353,43 @@ body.dark .item-type {
     font-weight: bold;
 }
 
+.class-selector {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 4px;
+
+    margin-top: 6px;
+}
+
+.class-option {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 4px 8px;
+
+    border-radius: 999px;
+
+    background: #e8e2d5;
+
+    cursor: pointer;
+
+    font-size: 10px;
+
+    font-weight: bold;
+}
+
+.class-option input {
+
+    margin: 0;
+}
+
 /* ===================================
    IMAGE
 =================================== */
@@ -377,7 +414,9 @@ body.dark .item-type {
 =================================== */
 
 .card-body {
-    flex-grow: 1;
+    flex: 1;
+
+    min-height: 0;
 
     font-size: 11px;
 
