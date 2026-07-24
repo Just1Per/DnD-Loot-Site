@@ -410,6 +410,7 @@ ${
             <textarea
                 class="edit-description"
                 id="edit-description-${item.id}"
+                placeholder="Item Description"
             >${item.description}</textarea>
             `
             :
