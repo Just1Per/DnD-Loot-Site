@@ -142,7 +142,7 @@ function createCard(item)
     
     const isAdmin =
     auth.currentUser?.email ===
-    "casper.n.andersen@gmail.com";"superand96@gmail.com";
+    "casper.n.andersen@gmail.com";
     
     /*
     const isAdmin = true;
@@ -994,19 +994,59 @@ function updateStats(
     }
 });
 
-async function initializeApp()
-{
-    await loadPlayers();
+onAuthStateChanged(
+    auth,
+    async (user) =>
+    {
+        const loginButton =
+            document.getElementById("loginButton");
 
-    populateOwnerFilter();
+        const logoutButton =
+            document.getElementById("logoutButton");
 
-    //loadItemsToFirestore();
+        const display =
+            document.getElementById("userDisplay");
 
-    await loadItemsFromFirestore();
+        if (user)
+        {
+            display.textContent =
+                user.email;
 
-    populateSourceFilter();
+            loginButton.style.display =
+                "none";
 
-    populateCampaignFilter();
-}
+            logoutButton.style.display =
+                "inline-block";
 
-initializeApp();
+            console.log(
+                "Logged in as:",
+                user.email
+            );
+
+            await loadPlayers();
+
+            populateOwnerFilter();
+
+            importItemsToFirestore();
+
+            await loadItemsFromFirestore();
+
+            populateSourceFilter();
+
+            populateCampaignFilter();
+        }
+        else
+        {
+            display.textContent =
+                "Not logged in";
+
+            loginButton.style.display =
+                "inline-block";
+
+            logoutButton.style.display =
+                "none";
+
+            renderCards();
+        }
+    }
+);
