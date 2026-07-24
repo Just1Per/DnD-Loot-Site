@@ -379,10 +379,6 @@ function createCard(item)
 
             </div>
 
-        </div>
-
-        <div class="card-body">
-
             ${
             isEditing
             ?
