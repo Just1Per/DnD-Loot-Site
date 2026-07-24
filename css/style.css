@@ -776,12 +776,16 @@ textarea::placeholder {
 
 
 
-.edit-description {
-    min-height: 120px;
+.edit-description,
+[id^="edit-properties-"],
+[id^="edit-quote-"] {
 
-    resize: vertical;
+    width: 100%;
+
+    min-height: 150px;
+
+    box-sizing: border-box;
 }
-[id^="edit-"]
 
 .card-body textarea {
     min-height: 80px;
@@ -813,12 +817,6 @@ textarea::placeholder {
     font-weight: bold;
 
     text-transform: uppercase;
-}
-
-.edit-description {
-    min-height: 80px;
-
-    resize: vertical;
 }
 
 /* ===================================
