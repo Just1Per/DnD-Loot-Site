@@ -381,13 +381,7 @@ function createCard(item)
 
         </div>
 
-        <div class="card-body">
-
-            ${
-            isEditing
-            ?
-            `
-            ${
+        ${
             isEditing
             ?
             `
@@ -405,6 +399,13 @@ function createCard(item)
             class="card-art"
             alt="${item.name}"
         >
+
+        <div class="card-body">
+
+            ${
+            isEditing
+            ?
+            `
             <textarea
                 class="edit-description"
                 id="edit-description-${item.id}"
