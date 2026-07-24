@@ -227,7 +227,8 @@ h1 {
 
 .item-card {
     width: 3.5in;
-    height: 6.5in;
+    min-height: 6.5in;
+    height: auto;
 
     border: 3px double #8a7355;
     border-radius: 8px;
