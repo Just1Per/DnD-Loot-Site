@@ -261,45 +261,44 @@ function createCard(item)
         Requires Attunement
     </label>
     
-<div class="class-selector">
-
-${
-[
-    "Artificer",
-    "Barbarian",
-    "Bard",
-    "Cleric",
-    "Druid",
-    "Fighter",
-    "Monk",
-    "Paladin",
-    "Ranger",
-    "Rogue",
-    "Sorcerer",
-    "Warlock",
-    "Wizard"
-]
-.map(className => `
-<label class="class-option">
-
-    <input
-        type="checkbox"
-        class="class-checkbox-${item.id}"
-        value="${className}"
+        <div class="class-selector">
         ${
-            (item.classes || []).includes(className)
-            ? "checked"
-            : ""
+        [
+            "Artificer",
+            "Barbarian",
+            "Bard",
+            "Cleric",
+            "Druid",
+            "Fighter",
+            "Monk",
+            "Paladin",
+            "Ranger",
+            "Rogue",
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
+        ]
+        .map(className => `
+        <label class="class-option">
+
+            <input
+                type="checkbox"
+                class="class-checkbox-${item.id}"
+                value="${className}"
+                ${
+                    (item.classes || []).includes(className)
+                    ? "checked"
+                    : ""
+                }
+            >
+
+            ${className}
+
+        </label>
+        `)
+        .join("")
         }
-    >
-
-    ${className}
-
-</label>
-`)
-.join("")
-}
-</div>
+        </div>
 
     `
     :
