@@ -639,6 +639,39 @@ body.dark .card-body i {
    EDIT MODE
 =================================== */
 
+.class-editor {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 4px;
+
+    margin-bottom: 8px;
+}
+
+.class-editor label {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    font-size: 11px;
+}
+
+input::placeholder,
+textarea::placeholder {
+
+    color: #8a7355;
+
+    font-style: italic;
+
+    opacity: 0.8;
+}
+
 .edit-button {
 
     background: #caa75c;

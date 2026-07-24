@@ -301,8 +301,46 @@ function createCard(item)
         >
         Requires Attunement
     </label>
+    <div class="class-editor">
+        ${
+        [
+            "Artificer",
+            "Barbarian",
+            "Bard",
+            "Cleric",
+            "Druid",
+            "Fighter",
+            "Monk",
+            "Paladin",
+            "Ranger",
+            "Rogue",
+            "Sorcerer",
+            "Warlock",
+            "Wizard"
+        ]
+        .map(className => `
+        <label>
+            <input
+                type="checkbox"
+                class="class-checkbox-${item.id}"
+                value="${className}"
+                ${
+                    (item.classes || [])
+                        .includes(className)
+                        ? "checked"
+                        : ""
+                }
+            >
+            ${className}
+        </label>
+        `)
+        .join("")
+        }
+        </div>
     `
+    
     :
+    
     `
     <p class="item-type">
         ${item.category}
@@ -310,6 +348,17 @@ function createCard(item)
     </p>
     `
 }
+        ${
+            item.classes?.length
+            ?
+            `
+            <div class="class-tag">
+                ${item.classes.join(", ")}
+            </div>
+            `
+            :
+            ""
+        }
             <div class="card-meta">
                 ${
                 isEditing
@@ -336,8 +385,9 @@ function createCard(item)
                 ?
                 `
                 <input
-                    id="edit-source-${item.id}"
-                    value="${item.source || ""}"
+                id="edit-source-${item.id}"
+                value="${item.source || ""}"
+                placeholder="Source"
                 >
                 `
                 :
@@ -348,14 +398,28 @@ function createCard(item)
                 `
                 }
 
+                ${
+                    isEditing
+                    ?
+                    `
+                    <input
+                        id="edit-classes-${item.id}"
+                        placeholder="Wizard, Cleric, Druid"
+                        value="${(item.classes || []).join(", ")}"
+                    >
+                    `
+                    :
+                    ""
+                }
 
                 ${
                 isEditing
                 ?
                 `
                 <input
-                    id="edit-campaign-${item.id}"
-                    value="${item.campaign || ""}"
+                id="edit-campaign-${item.id}"
+                value="${item.campaign || ""}"
+                placeholder="Campaign"
                 >
                 `
                 :
@@ -377,6 +441,7 @@ function createCard(item)
             <input
                 id="edit-image-${item.id}"
                 value="${item.image || ""}"
+                placeholder="Image URL"
             >
             `
             :
@@ -435,7 +500,9 @@ function createCard(item)
             `
             <textarea
                 id="edit-quote-${item.id}"
+                placeholder="Quote"
             >${item.quote || ""}</textarea>
+            
             `
             :
             `
@@ -522,6 +589,14 @@ function createCard(item)
 
                 attunement:
                     document.getElementById(`edit-attunement-${item.id}`).checked,
+                
+                classes:
+                [
+                    ...document.querySelectorAll(
+                        `.class-checkbox-${item.id}:checked`
+                    )
+                ]
+                .map(box => box.value),
 
                 properties:
                     JSON.parse(
@@ -652,8 +727,8 @@ function renderCards()
         ?.value || "";
 
     const categoryFilter =
-    document.getElementById("categoryFilter")
-    ?.value || "";
+        document.getElementById("categoryFilter")
+        ?.value || "";
 
     const showLooted =
         document.getElementById("showLootedOnly")
@@ -1027,7 +1102,7 @@ onAuthStateChanged(
 
             populateOwnerFilter();
 
-            importItemsToFirestore();
+            //importItemsToFirestore();
 
             await loadItemsFromFirestore();
 
