@@ -435,19 +435,11 @@ body.dark .item-type {
 =================================== */
 
 .card-body {
+
     flex: 1;
 
-    min-height: 0;
-
-    height: 0;
-
-    min-height: 0;
-
-    overflow-y: auto;
-
-    overflow-x: hidden;
-
     padding-right: 4px;
+
 }
 
 .card-body::-webkit-scrollbar {

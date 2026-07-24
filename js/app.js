@@ -377,60 +377,67 @@ function createCard(item)
                 `
                 }
 
-                ${
-                isEditing
-                ?
-                `
-                ${
-                isEditing
-                ?
-                `
-                <input
-                    id="edit-image-${item.id}"
-                    value="${item.image || ""}"
-                    placeholder="Image URL"
-                >
-                `
-                :
-                ""
-            }
-            <img
-                src="${item.image}"
-                class="card-art"
-                alt="${item.name}"
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            ${
+            isEditing
+            ?
+            `
+            ${
+            isEditing
+            ?
+            `
+            <input
+                id="edit-image-${item.id}"
+                value="${item.image || ""}"
+                placeholder="Image URL"
             >
-                <textarea
-                    class="edit-description"
-                    id="edit-description-${item.id}"
-                    placeholder="Item Description"
-                >${item.description}</textarea>
-                `
-                :
-                `
-                <div class="item-description">
-                    ${item.description}
-                </div>
-                `
-                }
+            `
+            :
+            ""
+        }
+        <img
+            src="${item.image}"
+            class="card-art"
+            alt="${item.name}"
+        >
+            <textarea
+                class="edit-description"
+                id="edit-description-${item.id}"
+                placeholder="Item Description"
+            >${item.description}</textarea>
+            `
+            :
+            `
+            <div class="item-description">
+                ${item.description}
+            </div>
+            `
+            }
 
-                ${
-                isEditing
-                ?
-                `
-                <textarea
-                    id="edit-properties-${item.id}"
-                >${JSON.stringify(item.properties || [], null, 2)}</textarea>
-                `
-                :
-                (item.properties || []).map(property => `
-    
-                <span class="property-title">
-                    ${property.title}:
-                </span>
+            ${
+            isEditing
+            ?
+            `
+            <textarea
+                id="edit-properties-${item.id}"
+            >${JSON.stringify(item.properties || [], null, 2)}</textarea>
+            `
+            :
+            (item.properties || []).map(property => `
+    <div class="property-block">
 
-                ${property.text}
+        <span class="property-title">
+            ${property.title}:
+        </span>
 
+        ${property.text}
 
+    </div>
 `).join("")
             }
 
