@@ -383,7 +383,24 @@ body.dark .item-type {
 
     line-height: 1.35;
 
-    overflow: hidden;
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding-right: 4px;
+}
+
+.card-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.card-body::-webkit-scrollbar-track {
+    background: #f4efe6;
+}
+
+.card-body::-webkit-scrollbar-thumb {
+    background: #8a7355;
+    border-radius: 4px;
 }
 
 .item-description {
@@ -695,10 +712,20 @@ textarea::placeholder {
     transform: scale(1.05);
 }
 
+
+
+.edit-description {
+    min-height: 120px;
+
+    resize: vertical;
+}
+[id^="edit-"]
+
+.card-body textarea {
+    min-height: 80px;
+}
+
 .edit-name,
-.edit-description,
-[id^="edit-"],
-.card-body textarea,
 .card-header select,
 .card-header input {
     width: 100%;

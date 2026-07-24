@@ -721,6 +721,10 @@ function renderCards()
     const campaignFilter =
         document.getElementById("campaignFilter")
         ?.value || "";
+    
+    const classFilter =
+        document.getElementById("classFilter")
+        ?.value || "";
 
     const ownerFilter =
         document.getElementById("ownerFilter")
@@ -798,6 +802,15 @@ function renderCards()
         filtered =
             filtered.filter(item =>
                 item.campaign === campaignFilter
+            );
+    }
+
+    if (classFilter)
+    {
+        filtered =
+            filtered.filter(item =>
+                item.classes &&
+                item.classes.includes(classFilter)
             );
     }
 
@@ -1043,6 +1056,7 @@ function updateStats(
     "sourceFilter",
     "campaignFilter",
     "categoryFilter",
+    "classFilter",
     "showLootedOnly",
     "showUnlootedOnly",
     "showAttunementOnly",
