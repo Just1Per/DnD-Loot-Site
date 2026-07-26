@@ -1063,7 +1063,7 @@ onAuthStateChanged(
 
             populateOwnerFilter();
 
-            //importItemsToFirestore();
+            importItemsToFirestore();
 
             await loadItemsFromFirestore();
 
