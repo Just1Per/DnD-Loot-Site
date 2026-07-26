@@ -1,13 +1,15 @@
-import {db} from "./firebase.js";
-import {items as sourceItems} from "./items.js";
-
 import {
+    db,
     auth,
     provider,
     signInWithPopup,
     signOut
 }
 from "./firebase.js";
+
+import {items as sourceItems} from "./items.js";
+
+
 
 import {
     onAuthStateChanged
@@ -20,7 +22,6 @@ import {
     doc,
     setDoc,
     updateDoc,
-    deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 let items = []; //Firestore items
@@ -29,24 +30,25 @@ const editingItems = new Set();
 
 async function loadItemsFromFirestore()
 {
-    const snapshot =
-    await getDocs(collection(db, "items"));
-
-items = 
-    snapshot.docs.map(doc => ({
+    items = (
+        await getDocs(
+            collection(db, "items")
+        )
+    ).docs.map(doc => ({
         id: doc.id,
         ...doc.data()
     }));
+
     renderCards();
 }
 
 async function loadPlayers()
 {
-    const snapshot =
-    await getDocs(collection(db, "players"));
-
-players = 
-    snapshot.docs.map(doc => ({
+    players = (
+        await getDocs(
+            collection(db, "players")
+        )
+    ).docs.map(doc => ({
         id: doc.id,
         ...doc.data()
     }));
@@ -57,24 +59,20 @@ function populateOwnerFilter()
     const filter =
         document.getElementById("ownerFilter");
 
-    if (!filter)
-    {
-        return;
-    }
+    if (!filter) return;
 
     filter.innerHTML = `
         <option value="">All Owners</option>
+        ${
+            players.map(player => `
+                <option value="${player.id}">
+                    ${player.name}
+                </option>
+            `).join("")
+        }
     `;
-
-    players.forEach(player =>
-    {
-        filter.innerHTML += `
-            <option value="${player.id}">
-                ${player.name}
-            </option>
-        `;
-    });
 }
+
 
 async function importItemsToFirestore()
 {
@@ -91,6 +89,192 @@ async function importItemsToFirestore()
 
 const container =
     document.getElementById("card-container");
+
+function attachEditEvents(
+    card,
+    item
+)
+{
+    const editButton =
+        card.querySelector(".edit-button");
+
+    const saveButton =
+        card.querySelector(".save-button");
+
+    const cancelButton =
+        card.querySelector(".cancel-button");
+
+    editButton?.addEventListener(
+        "click",
+        () =>
+        {
+            editingItems.add(item.id);
+            renderCards();
+        }
+    );
+
+    cancelButton?.addEventListener(
+        "click",
+        () =>
+        {
+            editingItems.delete(item.id);
+            renderCards();
+        }
+    );
+
+    saveButton?.addEventListener(
+        "click",
+        async () =>
+        {
+            await updateDoc(
+                doc(db, "items", item.id),
+                {
+                    name:
+                        document.getElementById(`edit-name-${item.id}`).value,
+
+                    description:
+                        document.getElementById(`edit-description-${item.id}`).value,
+
+                    category:
+                        document.getElementById(`edit-category-${item.id}`).value,
+
+                    rarity:
+                        document.getElementById(`edit-rarity-${item.id}`).value,
+
+                    source:
+                        document.getElementById(`edit-source-${item.id}`).value,
+
+                    campaign:
+                        document.getElementById(`edit-campaign-${item.id}`).value,
+
+                    image:
+                        document.getElementById(`edit-image-${item.id}`).value,
+
+                    quote:
+                        document.getElementById(`edit-quote-${item.id}`).value,
+
+                    attunement:
+                        document.getElementById(`edit-attunement-${item.id}`).checked,
+
+                    classes:
+                        [
+                            ...document.querySelectorAll(
+                                `.class-checkbox-${item.id}:checked`
+                            )
+                        ].map(box => box.value),
+
+                    properties:
+                        JSON.parse(
+                            document.getElementById(
+                                `edit-properties-${item.id}`
+                            ).value
+                        )
+                }
+            );
+
+            editingItems.delete(item.id);
+
+            await loadItemsFromFirestore();
+        }
+    );
+}
+
+function attachLootEvents(
+    card,
+    item
+)
+{
+    const lootButton =
+        card.querySelector(".loot-button");
+
+    lootButton?.addEventListener(
+        "click",
+        async () =>
+        {
+            const newLootedState =
+                !item.looted;
+
+            await updateDoc(
+                doc(db, "items", item.id),
+                {
+                    looted: newLootedState,
+                    owner:
+                        newLootedState
+                        ? item.owner
+                        : null
+                }
+            );
+
+            item.looted =
+                newLootedState;
+
+            if (!newLootedState)
+            {
+                item.owner = null;
+            }
+
+            await loadItemsFromFirestore();
+        }
+    );
+}
+
+function attachPrintEvents(
+    card,
+    item
+)
+{
+    const printButton =
+        card.querySelector(".print-button");
+
+    printButton?.addEventListener(
+        "click",
+        async () =>
+        {
+            const newPrintedState =
+                !item.printed;
+
+            await updateDoc(
+                doc(db, "items", item.id),
+                {
+                    printed: newPrintedState
+                }
+            );
+
+            item.printed =
+                newPrintedState;
+
+            await loadItemsFromFirestore();
+        }
+    );
+}
+
+function attachOwnerEvents(
+    card,
+    item
+)
+{
+    const ownerSelect =
+        card.querySelector(".owner-select");
+
+    ownerSelect?.addEventListener(
+        "change",
+        async (event) =>
+        {
+            await updateDoc(
+                doc(db, "items", item.id),
+                {
+                    owner:
+                        event.target.value || null
+                }
+            );
+
+            item.owner =
+                event.target.value || null;
+
+            await loadItemsFromFirestore();
+        }
+    );
+}
 
 function createCard(item)
 {
@@ -110,28 +294,23 @@ function createCard(item)
     isAdmin &&
     editingItems.has(item.id);
 
-    if (item.rarity)
-    {
-        card.classList.add(
-            item.rarity
+    item.rarity &&
+    card.classList.add(
+        item.rarity
             .toLowerCase()
             .replaceAll(" ", "-")
-        );
-    }
+    );
 
-    const ownerOptions =
-    players.map(player => `
+    const ownerOptions = players
+    .map(player => `
         <option
             value="${player.id}"
-            ${
-                item.owner === player.id
-                ? "selected"
-                : ""
-            }
+            ${item.owner === player.id ? "selected" : ""}
         >
             ${player.name}
         </option>
-    `).join("");
+    `)
+    .join("");
 
     const isLooted =
     item.looted;
@@ -139,15 +318,8 @@ function createCard(item)
     const isPrinted =
     item.printed;
 
-    if (isLooted)
-    {
-        card.classList.add("looted");
-    }
-
-    if (isPrinted)
-    {
-        card.classList.add("printed");
-    }
+    isLooted && card.classList.add("looted");
+    isPrinted && card.classList.add("printed");
 
     card.innerHTML = `
 
@@ -466,181 +638,24 @@ function createCard(item)
 
     `;
 
-    const lootButton =
-        card.querySelector(".loot-button");
-
-    const printButton =
-        card.querySelector(".print-button");
-
-    const ownerSelect =
-        card.querySelector(".owner-select");
-
-    const editButton =
-    card.querySelector(".edit-button");
-
-    const saveButton =
-    card.querySelector(".save-button");
-
-    const cancelButton =
-    card.querySelector(".cancel-button");
-
-    editButton?.addEventListener(
-    "click",
-    () =>
-    {
-        editingItems.add(item.id);
-
-        renderCards();
-    }
-    );
-
-    cancelButton?.addEventListener(
-    "click",
-    () =>
-    {
-        editingItems.delete(item.id);
-
-        renderCards();
-    }
-    );
-
-    saveButton?.addEventListener(
-    "click",
-    async () =>
-    {
-        await updateDoc(
-            doc(db, "items", item.id),
-            {
-                name:
-                    document.getElementById(`edit-name-${item.id}`).value,
-
-                description:
-                    document.getElementById(`edit-description-${item.id}`).value,
-
-                category:
-                    document.getElementById(`edit-category-${item.id}`).value,
-
-                rarity:
-                    document.getElementById(`edit-rarity-${item.id}`).value,
-
-                source:
-                    document.getElementById(`edit-source-${item.id}`).value,
-
-                campaign:
-                    document.getElementById(`edit-campaign-${item.id}`).value,
-
-                image:
-                    document.getElementById(`edit-image-${item.id}`).value,
-
-                quote:
-                    document.getElementById(`edit-quote-${item.id}`).value,
-
-                attunement:
-                    document.getElementById(`edit-attunement-${item.id}`).checked,
-                
-                classes:
-                [
-                    ...document.querySelectorAll(
-                        `.class-checkbox-${item.id}:checked`
-                    )
-                ]
-                .map(box => box.value),
-
-                properties:
-                    JSON.parse(
-                        document.getElementById(`edit-properties-${item.id}`).value
-                    )
-            }
-        );
-
-        editingItems.delete(item.id);
-
-        await loadItemsFromFirestore();
-    }
-    );
-
-
-    ownerSelect?.addEventListener(
-        "change",
-        async (event) =>
-        {
-            await updateDoc(
-                doc(
-                    db,
-                    "items",
-                    item.id
-                ),
-                {
-                    owner:
-                        event.target.value || null
-                }
-            );
-
-            item.owner =
-                event.target.value || null;
-
-            await loadItemsFromFirestore();
-        }
-    );
-
-    lootButton?.addEventListener(
-    "click",
-    async () =>
-    {
-        const newLootedState =
-            !item.looted;
-
-        await updateDoc(
-            doc(
-                db,
-                "items",
-                item.id
-            ),
-            {
-                looted: newLootedState,
-
-                owner:
-                    newLootedState
-                    ? item.owner
-                    : null
-            }
-        );
-
-        item.looted =
-            newLootedState;
-
-        if (!newLootedState)
-        {
-            item.owner = null;
-        }
-
-        await loadItemsFromFirestore();
-    }
+    attachEditEvents(
+    card,
+    item
 );
 
-    printButton?.addEventListener(
-    "click",
-    async () =>
-    {
-        const newPrintedState =
-            !item.printed;
+attachLootEvents(
+    card,
+    item
+);
 
-        await updateDoc(
-            doc(
-                db,
-                "items",
-                item.id
-            ),
-            {
-                printed: newPrintedState
-            }
-        );
+attachPrintEvents(
+    card,
+    item
+);
 
-        item.printed =
-            newPrintedState;
-
-        await loadItemsFromFirestore();
-    }
+attachOwnerEvents(
+    card,
+    item
 );
 
     return card;
@@ -721,19 +736,19 @@ function renderCards()
         );
     });
 
-    if (ownerFilter)
-    {
+    ownerFilter &&
+    (
         filtered =
-            filtered.filter(item =>
-                item.owner === ownerFilter
-            );
-    }
+        filtered.filter(
+            item => item.owner === ownerFilter
+        )
+    );
 
     if (rarityFilter)
     {
         filtered =
-            filtered.filter(item =>
-                item.rarity === rarityFilter
+        filtered.filter(
+            item => item.rarity === rarityFilter
             );
     }
 
@@ -825,18 +840,13 @@ function renderCards()
         );
     });
 
-    const resultCount =
-        filtered.length;
+    const resultCount = filtered.length;
 
     const lootedCount =
-        filtered.filter(item =>
-            item.looted
-        ).length;
+    filtered.filter(item => item.looted).length;
 
     const printedCount =
-        filtered.filter(item =>
-            item.printed
-        ).length;
+    filtered.filter(item => item.printed).length;
 
     updateStats(
         resultCount,
