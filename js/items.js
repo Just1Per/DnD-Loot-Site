@@ -94,881 +94,869 @@
 // - Fizban's additional items
 // ═══════════════════════════════════════════════════════════════════════════
   // ─── SWORD COAST ADVENTURER'S GUIDE ──────────────────────────────────────
-
+  // ─── MINSC AND BOO'S JOURNAL OF VILLAINY ─────────────────────────────────
   {
-    id: "moonblade",
-    name: "Moonblade",
-    classes: ["Elf", "Half-Elf"], rarity: "Legendary", category: "Weapon", attunement: true,
-    source: "Sword Coast Adventurer's Guide",
+    id: "baldurs-gate-encounter-armor",
+    name: "Armor of the Fallen",
+    classes: [],
+    rarity: "Rare",
+    category: "Armor",
+    attunement: true,
+    source: "Minsc and Boo's Journal of Villainy",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/moonblade.png",
-    description: "One of the most prized magic items created by the elves, nearly all elven noble houses once claimed one.",
+    image: "images/armor-of-the-fallen.png",
+    description: "This dark armor is inscribed with the names of fallen warriors and radiates a cold, grim energy.",
     properties: [
-      { title: "Attack Bonus", text: "+1 bonus to attack and damage rolls (increases by 1 per additional rune, max +3)." },
-      { title: "Runes", text: "Each moonblade has 1d6+1 runes carved into its blade, each granting a different property such as additional damage types, advantage on saves, or the ability to cast spells." },
-      { title: "Sentience", text: "Chaotic good, Intelligence 12, Wisdom 10, Charisma 12. Hearing and darkvision 120 ft. Communicates telepathically with its wielder." }
+      { title: "AC Bonus", text: "You gain a +1 bonus to AC while wearing this armor." },
+      { title: "Death's Ward", text: "When you are reduced to 0 hit points while wearing this armor, you can use your reaction to drop to 1 hit point instead. Once used, this property can't be used again until the next dawn." }
     ]
   },
-
-  // ─── DMG STAFF OF THE WOODLANDS ───────────────────────────────────────────
-
+ 
   {
-    id: "staff-of-the-woodlands",
-    name: "Staff of the Woodlands",
-    classes: ["Druid"], rarity: "Rare", category: "Staff", attunement: true,
-    source: "Dungeon Master's Guide",
+    id: "boos-hamster-ball",
+    name: "Boo's Magical Miniature Giant Space Hamster Ball",
+    classes: [],
+    rarity: "Legendary",
+    category: "Wondrous Item",
+    attunement: false,
+    source: "Minsc and Boo's Journal of Villainy",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/staff-of-the-woodlands.png",
-    description: "This staff can be wielded as a magic quarterstaff that grants a +2 bonus to attack and damage rolls.",
+    image: "images/boos-hamster-ball.png",
+    description: "A shimmering crystalline sphere just large enough to contain one miniature giant space hamster. The ball rolls of its own accord toward danger.",
     properties: [
-      { title: "Attack Bonus", text: "+2 bonus to attack and damage rolls. +2 bonus to spell attack rolls while holding." },
-      { title: "Spells", text: "10 charges, regains 1d6+4 at dawn. Cast animal friendship (1), awaken (5), barkskin (2), locate animals or plants (2), speak with animals (1), speak with plants (3), wall of thorns (6)." },
-      { title: "Tree Form", text: "As an action, plant the staff in earth and expend 1 charge to transform it into a 60-foot-tall tree. As an action, touch the tree and expend 1 charge to return it to staff form." }
+      { title: "Hamster Power", text: "While holding this ball, you can use a bonus action to roll it at a creature within 30 feet. Make a ranged attack roll (+7 to hit). On a hit, the creature takes 4d6 bludgeoning damage and must succeed on a DC 15 Strength saving throw or be knocked prone." },
+      { title: "Boo's Rage", text: "Once per day, the hamster ball can be activated to grant you the benefits of the barbarian's Rage feature for 1 minute, even if you are not a barbarian." }
     ]
   },
-
-  // ─── DMG ARTIFACTS ────────────────────────────────────────────────────────
-
+ 
   {
-    id: "hand-of-vecna",
-    name: "Hand of Vecna",
-    classes: [], rarity: "Artifact", category: "Wondrous Item", attunement: true,
-    source: "Dungeon Master's Guide",
+    id: "minscs-sword",
+    name: "Minsc's Blade, Lilarcor",
+    classes: [],
+    rarity: "Legendary",
+    category: "Weapon",
+    attunement: true,
+    source: "Minsc and Boo's Journal of Villainy",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/hand-of-vecna.png",
-    description: "The Hand of Vecna is a mummified human hand. To attune, you must place it where your own left hand would be, and it grafts itself to your wrist.",
+    image: "images/lilarcor.png",
+    description: "This enchanted two-handed sword belonged to the hero Minsc and is sentient, speaking loudly and boisterously.",
     properties: [
-      { title: "Strength", text: "Your Strength score becomes 20 unless it is already 20 or higher." },
-      { title: "Spells", text: "4d4+4 charges, regains 1d4+4 at dawn. Cast finger of death, sleep, slow, or telekinesis (DC 18). Each spell costs 1-3 charges." },
-      { title: "Dark Gift", text: "Vecna can read your thoughts and communicate with you telepathically from any distance." }
+      { title: "Attack Bonus", text: "+3 bonus to attack and damage rolls made with this magic weapon." },
+      { title: "Buttkicker", text: "When you hit a creature with this sword, it takes an extra 2d6 slashing damage. When you score a critical hit, the creature is also knocked prone." },
+      { title: "Sentience", text: "Chaotic good, Intelligence 6, Wisdom 6, Charisma 13. The sword can speak and shout in Common at any volume. It constantly encourages its wielder to 'go for the eyes' and kick evil in the butt." },
+      { title: "Magic Resistance", text: "While attuned to this sword, you have advantage on saving throws against spells and other magical effects." }
     ]
   },
-
+ 
   {
-    id: "eye-of-vecna",
-    name: "Eye of Vecna",
-    classes: [], rarity: "Artifact", category: "Wondrous Item", attunement: true,
-    source: "Dungeon Master's Guide",
+    id: "volo-staff",
+    name: "Volo's Staff of Many Pens",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Staff",
+    attunement: false,
+    source: "Minsc and Boo's Journal of Villainy",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/eye-of-vecna.png",
-    description: "The Eye of Vecna is a preserved human eye. To attune, you must gouge out your own eye and press the artifact into the empty socket.",
+    image: "images/volos-staff-of-many-pens.png",
+    description: "This staff is decorated with quill feathers and smells faintly of ink. It belonged to the famous traveler and writer Volo.",
     properties: [
-      { title: "Wisdom", text: "Your Wisdom score becomes 18 unless it is already 18 or higher." },
-      { title: "Eye Abilities", text: "Truesight, see through solid objects to 30 ft. Cast clairvoyance, crown of madness, disintegrate, dominate monster, eyebite. Regains 1d4+4 charges at dawn." }
+      { title: "Scribing", text: "While holding this staff, you can write at incredible speed — up to 250 words per minute with perfect penmanship. The staff never runs out of ink." },
+      { title: "Compendium", text: "As an action, tap the staff on a surface to produce a blank book of 200 pages. Once used, this property can't be used again for 7 days." },
+      { title: "Knowledge", text: "While holding this staff, you have advantage on Intelligence (History) checks related to locations, people, or monsters." }
     ]
   },
-
+ 
   {
-    id: "sword-of-kas",
-    name: "Sword of Kas",
-    classes: [], rarity: "Artifact", category: "Weapon", attunement: true,
-    source: "Dungeon Master's Guide",
+    id: "jaheira-druidstaff",
+    name: "Staff of the High Harpers",
+    classes: ["Druid", "Bard"],
+    rarity: "Very Rare",
+    category: "Staff",
+    attunement: true,
+    source: "Minsc and Boo's Journal of Villainy",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/sword-of-kas.png",
-    description: "When Vecna grew in power, he appointed Kas the Bloody-Handed as his lieutenant and bodyguard.",
+    image: "images/staff-of-the-high-harpers.png",
+    description: "A staff carved from sacred druidic oak and inscribed with Harper symbols. It hums softly with nature magic.",
     properties: [
-      { title: "Attack Bonus", text: "+3 bonus to attack and damage rolls. Scores a critical hit on a roll of 19 or 20." },
-      { title: "Spells", text: "3 charges, regains 1d3 at dawn. Cast call lightning (3), divine word at 7th level (3), or finger of death (3)." },
-      { title: "Sentience", text: "Chaotic evil, Intelligence 15, Wisdom 13, Charisma 16. Hearing and darkvision 120 ft. Speaks Common and Abyssal. Urges its wielder to turn against Vecna." }
+      { title: "Spellcasting Focus", text: "You can use this staff as a spellcasting focus for your druid and bard spells." },
+      { title: "Nature Spells", text: "The staff has 10 charges and regains 1d6 + 4 charges daily at dawn. Cast: speak with animals (1), plant growth (3), call lightning (3), control weather (8)." },
+      { title: "Harper Network", text: "While holding this staff, you can send a message to any Harper agent within 100 miles as per the sending spell, once per day." }
     ]
   },
-
+ 
   {
-    id: "blackrazor",
-    name: "Blackrazor",
-    classes: [], rarity: "Legendary", category: "Weapon", attunement: true,
-    source: "Dungeon Master's Guide",
+    id: "stone-of-the-iron-throne",
+    name: "Stone of the Iron Throne",
+    classes: [],
+    rarity: "Very Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Minsc and Boo's Journal of Villainy",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/blackrazor.png",
-    description: "Black as night, this blade was forged with an evil purpose and hungers for souls.",
+    image: "images/stone-of-the-iron-throne.png",
+    description: "A smooth black stone that radiates cold authority. It was once used by members of the Iron Throne mercantile consortium.",
     properties: [
-      { title: "Attack Bonus", text: "+3 bonus to attack and damage rolls. The sword can cut through objects that are not artifacts." },
-      { title: "Soul Hungering", text: "When you kill a creature, its soul is devoured. Until your next long rest, gain temporary HP equal to the creature's CR, and have advantage on attack rolls and saving throws." },
-      { title: "Sentience", text: "Chaotic neutral, Intelligence 17, Wisdom 10, Charisma 19. Hearing and darkvision 60 ft. Speaks Common. Desires to consume souls." }
+      { title: "Authority", text: "While holding this stone, you have advantage on Charisma (Intimidation) checks against any creature that is not immune to being frightened." },
+      { title: "Command", text: "As an action, you can cast the command spell (save DC 15) from the stone. Once used, this property can't be used again until the next dawn." },
+      { title: "Network", text: "While attuned to the stone, you can communicate telepathically with any other creature attuned to a Stone of the Iron Throne within 1 mile." }
     ]
   },
-
+ 
   {
-    id: "wave",
-    name: "Wave",
-    classes: [], rarity: "Legendary", category: "Weapon", attunement: true,
-    source: "Dungeon Master's Guide",
+    id: "dead-three-amulet",
+    name: "Amulet of the Dead Three",
+    classes: [],
+    rarity: "Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Minsc and Boo's Journal of Villainy",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/wave.png",
-    description: "This trident is dedicated to the worship of Olhydra, Princess of Evil Water.",
+    image: "images/amulet-of-the-dead-three.png",
+    description: "This amulet bears the combined symbols of Bane, Bhaal, and Myrkul — the Dead Three. It radiates a palpable aura of dread.",
     properties: [
-      { title: "Attack Bonus", text: "+3 bonus to attack and damage rolls. Extra 2d6 damage against creatures vulnerable to cold or fire." },
-      { title: "Water Mastery", text: "Breathe underwater. Swimming speed equals walking speed. Cast dominate beast (aquatic only), wall of water, water walk." },
-      { title: "Sentience", text: "Neutral, Intelligence 14, Wisdom 10, Charisma 18. Hearing and darkvision 120 ft. Seeks to drown all it encounters." }
+      { title: "Dread Aura", text: "While wearing this amulet, you emanate an aura of dread in a 10-foot radius. Creatures of your choice in the aura must succeed on a DC 14 Wisdom saving throw at the start of their turn or be frightened of you until the start of their next turn." },
+      { title: "Dead Three's Gift", text: "Once per day, you can call upon one of the Dead Three for power: Bane (advantage on all attack rolls for 1 minute), Bhaal (your attacks deal an extra 2d6 necrotic damage for 1 minute), or Myrkul (cast speak with dead without components)." }
     ]
   },
-
+ 
+  // ─── DOMAINS OF DELIGHT ───────────────────────────────────────────────────
+ 
   {
-    id: "whelm",
-    name: "Whelm",
-    classes: ["Dwarf"], rarity: "Legendary", category: "Weapon", attunement: true,
-    source: "Dungeon Master's Guide",
+    id: "archfey-token",
+    name: "Archfey's Token",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: false,
+    source: "Domains of Delight",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/whelm.png",
-    description: "Whelm is a powerful warhammer forged by dwarves and lost in White Plume Mountain.",
+    image: "images/archfey-token.png",
+    description: "A small token — often a pressed flower, a smooth river stone, or a carved acorn — given as a gift by an archfey. It carries a fragment of the archfey's power.",
     properties: [
-      { title: "Attack Bonus", text: "+3 bonus to attack and damage rolls." },
-      { title: "Thrown", text: "Range 20/60 ft. when thrown. Returns to your hand immediately after hitting or missing." },
-      { title: "Shock Wave", text: "As an action, strike the ground to send a shock wave in a 60-foot radius. DC 15 Constitution save or fall prone and be stunned until the start of your next turn." },
-      { title: "Sentience", text: "Lawful neutral, Intelligence 15, Wisdom 12, Charisma 15. Hearing and darkvision 60 ft. Hates giants and loves dwarven culture." }
+      { title: "Archfey's Favor", text: "While carrying this token, you have advantage on Charisma checks made to interact with fey creatures. Fey creatures of CR 5 or lower are initially indifferent toward you rather than hostile." },
+      { title: "Safe Passage", text: "While carrying this token within the domain of the archfey who gave it, you can't become lost by nonmagical means." }
     ]
   },
-
-  // ─── EBERRON: RISING FROM THE LAST WAR ───────────────────────────────────
-
+ 
   {
-    id: "docent",
-    name: "Docent",
-    classes: [], rarity: "Rare", category: "Wondrous Item", attunement: true,
-    source: "Eberron: Rising from the Last War",
+    id: "crown-of-the-archfey",
+    name: "Crown of the Archfey",
+    classes: [],
+    rarity: "Legendary",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Domains of Delight",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/docent.png",
-    description: "A small metal sphere, 2 inches across, studded with dragonshards. You must embed it in your chest to attune to it.",
+    image: "images/crown-of-the-archfey.png",
+    description: "This crown of woven silver branches set with glittering moonstone marks the ruler of a Feywild domain.",
     properties: [
-      { title: "Personality", text: "Sentient, any alignment. Intelligence 14, Wisdom 14, Charisma 14. Hearing and darkvision 60 ft. Communicates telepathically with its wearer." },
-      { title: "Skills", text: "+7 bonus to History and Nature checks, and can share this knowledge with its wearer." }
+      { title: "Domain Control", text: "While wearing this crown within the domain it governs, you have absolute authority over the domain's natural features. You can reshape terrain, control weather, and communicate with any creature in the domain telepathically." },
+      { title: "Fey Charm", text: "While wearing this crown, you have advantage on all Charisma checks, and creatures that can see you must succeed on a DC 18 Wisdom saving throw or be charmed by you for 1 hour." },
+      { title: "Timeless", text: "While wearing this crown, you don't age and are immune to the effects of time-altering magic." }
     ]
   },
-
+ 
   {
-    id: "living-armor",
-    name: "Living Armor",
-    classes: [], rarity: "Very Rare", category: "Armor", attunement: true,
-    source: "Eberron: Rising from the Last War",
+    id: "feywild-gift-boon",
+    name: "Feywild Boon (Charm)",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Domains of Delight",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/living-armor.png",
-    description: "This armor is partially composed of organic material integrated into its structure.",
+    image: "images/feywild-boon.png",
+    description: "A magical gift bestowed by a powerful fey creature, manifesting as a small charm or trinket. Each boon is unique.",
+    properties: [
+      { title: "Fey Blessing", text: "This charm grants one of the following boons determined when it is found: advantage on one type of ability check, resistance to one damage type, the ability to cast one cantrip at will, or a +1 bonus to one ability score." },
+      { title: "Fey Connection", text: "While attuned, you can sense the presence of portals to the Feywild within 1 mile of you." }
+    ]
+  },
+ 
+  {
+    id: "thorned-armor",
+    name: "Thorned Armor",
+    classes: [],
+    rarity: "Rare",
+    category: "Armor",
+    attunement: true,
+    source: "Domains of Delight",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/thorned-armor.png",
+    description: "This leather armor is studded with long, wickedly sharp thorns of enchanted wood that grow from the surface.",
     properties: [
       { title: "AC Bonus", text: "+1 bonus to AC while wearing this armor." },
-      { title: "Living Resilience", text: "The armor regains 1d8 hit points at the start of each of your turns if it has at least 1 hit point." },
-      { title: "Curse", text: "Cursed. Can't doff unless targeted by remove curse. Once per day when you take damage, the armor heals itself for half the damage dealt to you." }
+      { title: "Thorn Retaliation", text: "When a creature hits you with a melee attack while you wear this armor, it takes 1d6 piercing damage from the thorns." },
+      { title: "Entangle", text: "As an action, you can cause thorny vines to erupt from the ground in a 10-foot radius centered on you. The area becomes difficult terrain until the start of your next turn, and creatures in the area must succeed on a DC 14 Strength saving throw or be restrained until the end of their next turn. Once used, this property can't be used again until the next dawn." }
     ]
   },
-
+ 
   {
-    id: "prosthetic-limb",
-    name: "Prosthetic Limb",
-    classes: [], rarity: "Common", category: "Wondrous Item", attunement: false,
-    source: "Eberron: Rising from the Last War",
+    id: "mirror-of-the-feywild",
+    name: "Mirror of the Feywild",
+    classes: [],
+    rarity: "Very Rare",
+    category: "Wondrous Item",
+    attunement: false,
+    source: "Domains of Delight",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/prosthetic-limb.png",
-    description: "This item replaces a lost limb, such as a hand, arm, foot, or leg.",
-    properties: [{ title: "Prosthetic", text: "While attached, functions identically to the body part it replaces. Detach or reattach as an action. Can't be removed against your will. Detaches if you die." }]
-  },
-
-  {
-    id: "spellshard",
-    name: "Spellshard",
-    classes: [], rarity: "Common", category: "Wondrous Item", attunement: false,
-    source: "Eberron: Rising from the Last War",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/spellshard.png",
-    description: "This polished Eberron dragonshard is a common magical item across Eberron.",
-    properties: [{ title: "Message Storage", text: "Stores any number of written messages. The attuned creature or creator can speak a command word to display a stored message. As an action, touch the shard and speak to store a message of up to 50 words." }]
-  },
-
-  {
-    id: "wheel-of-wind-and-water",
-    name: "Wheel of Wind and Water",
-    classes: [], rarity: "Uncommon", category: "Wondrous Item", attunement: false,
-    source: "Eberron: Rising from the Last War",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/wheel-of-wind-and-water.png",
-    description: "When mounted at the helm of an elemental vessel, this wheel allows control of its bound elemental.",
-    properties: [{ title: "Elemental Control", text: "When mounted at the helm of an elemental vessel, communicate with and control the bound elemental to increase or decrease speed, change direction, and perform other basic navigation tasks." }]
-  },
-
-  // ─── ACQUISITIONS INCORPORATED ────────────────────────────────────────────
-
-  {
-    id: "orrery-of-the-wanderer",
-    name: "Orrery of the Wanderer",
-    classes: [], rarity: "Artifact", category: "Wondrous Item", attunement: true,
-    source: "Acquisitions Incorporated",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/orrery-of-the-wanderer.png",
-    description: "A portable arcane device resembling a model solar system with spinning spheres of glass and wire.",
+    image: "images/mirror-of-the-feywild.png",
+    description: "This ornate silver mirror shows not the viewer's reflection but instead scenes from the Feywild.",
     properties: [
-      { title: "Extraplanar Attunement", text: "Advantage on Intelligence checks about the planes of existence. Cast plane shift once per day without using a spell slot." },
-      { title: "Planar Awareness", text: "Always know which plane of existence you are on and the direction and distance to the nearest portal to another plane within 1 mile." }
+      { title: "Feywild Vision", text: "As an action, gaze into the mirror to see a random scene from the Feywild. The DM chooses what you see. You can ask the mirror a yes-or-no question about the Feywild, and it answers by showing you a relevant scene. Three uses per day." },
+      { title: "Portal", text: "Once per week, you can use the mirror as a portal to the Feywild. You and up to five willing creatures you can see step through the mirror's surface and emerge at a random location in the Feywild. The mirror closes behind you." }
     ]
   },
-
-  // ─── BIGBY PRESENTS: GLORY OF THE GIANTS ─────────────────────────────────
-
+ 
   {
-    id: "adze-of-annam",
-    name: "Adze of Annam",
-    classes: [], rarity: "Artifact", category: "Weapon", attunement: true,
-    source: "Bigby Presents: Glory of the Giants",
+    id: "song-of-the-wild",
+    name: "Song of the Wild",
+    classes: ["Bard", "Druid"],
+    rarity: "Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Domains of Delight",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/adze-of-annam.png",
-    description: "The adze of Annam is a greataxe-sized tool that belonged to Annam the All-Father, god of giants.",
+    image: "images/song-of-the-wild.png",
+    description: "This small crystal vial contains an iridescent liquid that hums with captured fey music.",
     properties: [
-      { title: "Giant Size", text: "Sized for a Huge creature. A Medium or smaller attuned creature can wield it without penalty." },
-      { title: "Attack Bonus", text: "+3 bonus to attack and damage. Deals 3d12+3 slashing damage and deals maximum damage to objects." },
-      { title: "Rune Carving", text: "As an action, carve a rune into a Huge or larger object granting a magical effect. You can have up to 3 runes active at once." }
+      { title: "Fey Melody", text: "As an action, you can open the vial and release the song inside. All creatures within 30 feet that can hear must make a DC 14 Wisdom saving throw. On a failure, they are charmed by you for 1 minute and must use their movement to dance on their turn. Once used, the vial is empty for 7 days before refilling." },
+      { title: "Inspiration", text: "While carrying this vial, when you finish a short rest you regain one expended use of Bardic Inspiration." }
     ]
   },
-
+ 
+  // ─── HEROES OF KRYNN / DRAGONLANCE PLAYER OPTIONS ────────────────────────
+ 
   {
-    id: "belt-of-giant-endurance",
-    name: "Belt of Giant Endurance",
-    classes: [], rarity: "Rare", category: "Wondrous Item", attunement: true,
-    source: "Bigby Presents: Glory of the Giants",
+    id: "kender-hoodak",
+    name: "Kender's Houdak",
+    classes: [],
+    rarity: "Common",
+    category: "Wondrous Item",
+    attunement: false,
+    source: "Heroes of Krynn",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/belt-of-giant-endurance.png",
-    description: "This wide belt is made from the hide of a giant and decorated with runes.",
+    image: "images/kenders-houdak.png",
+    description: "A kender's hoopak is a signature weapon — a staff with a sling at one end and a spike at the other. The magical version is imbued with kender luck.",
     properties: [
-      { title: "Giant Endurance", text: "Your Constitution score becomes 21 while wearing this belt, unless it is already 21 or higher." },
-      { title: "Rune of Endurance", text: "Once per day when you take damage, use your reaction to reduce the damage by 2d12." }
+      { title: "Kender Luck", text: "When you make an attack roll with this weapon and miss, you can reroll the attack roll. You must use the new result. Once used, this property can't be used again until you finish a short or long rest." },
+      { title: "Dual Purpose", text: "This weapon functions as both a quarterstaff and a sling, allowing it to make melee or ranged attacks. It has the thrown property (range 30/120 ft.) when used as a sling." }
     ]
   },
-
+ 
   {
-    id: "giant-strider-hide",
-    name: "Giant Strider Hide",
-    classes: [], rarity: "Rare", category: "Armor", attunement: true,
-    source: "Bigby Presents: Glory of the Giants",
+    id: "medallion-of-faith",
+    name: "Medallion of Faith",
+    classes: ["Cleric", "Paladin"],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Heroes of Krynn",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/giant-strider-hide.png",
-    description: "This medium armor is crafted from the hide of a giant strider.",
+    image: "images/medallion-of-faith.png",
+    description: "This medallion bears the symbol of one of Krynn's gods. It is the mark of a true cleric on Krynn, granting them divine power.",
     properties: [
-      { title: "Fire Resistance", text: "Resistance to fire damage while wearing this armor." },
-      { title: "Ember Step", text: "Walk across lava or fire without taking damage, as long as no single source deals more than 20 fire damage per round." }
+      { title: "Holy Symbol", text: "You can use this medallion as a holy symbol and spellcasting focus for your cleric or paladin spells." },
+      { title: "Divine Connection", text: "While wearing this medallion, you gain a +1 bonus to spell attack rolls and to the saving throw DCs of your cleric or paladin spells." },
+      { title: "God's Favor", text: "Once per day, when you make a saving throw, you can invoke your deity's name to gain advantage on the roll." }
     ]
   },
-
+ 
   {
-    id: "gavel-of-the-venn-rune",
-    name: "Gavel of the Venn Rune",
-    classes: [], rarity: "Very Rare", category: "Weapon", attunement: true,
-    source: "Bigby Presents: Glory of the Giants",
+    id: "solamnic-plate",
+    name: "Solamnic Plate",
+    classes: [],
+    rarity: "Rare",
+    category: "Armor",
+    attunement: true,
+    source: "Heroes of Krynn",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/gavel-of-the-venn-rune.png",
-    description: "A heavy stone gavel inscribed with the venn rune used by storm giants.",
+    image: "images/solamnic-plate.png",
+    description: "This gleaming plate armor bears the rose-and-sword insignia of the Knights of Solamnia and has been blessed by the gods of Good.",
     properties: [
-      { title: "Attack Bonus", text: "+2 bonus to attack and damage rolls." },
-      { title: "Thunder Crack", text: "3 charges, regains 1d3 at dawn. Expend 1 charge on a hit to deal extra 4d8 thunder damage and force a DC 16 Constitution save or be stunned until end of target's next turn." }
+      { title: "Knightly Defense", text: "While wearing this armor, you gain a +1 bonus to AC." },
+      { title: "Inspire Allies", text: "While wearing this armor, friendly creatures within 30 feet of you that can see you have advantage on saving throws against being frightened." },
+      { title: "Oath of Devotion", text: "While wearing this armor, you have advantage on saving throws against spells and effects that would compel you to act against your alignment." }
     ]
   },
-
+ 
   {
-    id: "lash-of-immolation",
-    name: "Lash of Immolation",
-    classes: [], rarity: "Rare", category: "Weapon", attunement: true,
-    source: "Bigby Presents: Glory of the Giants",
+    id: "dragonlance-orb",
+    name: "Dragon Orb of Krynn",
+    classes: [],
+    rarity: "Artifact",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Heroes of Krynn",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/lash-of-immolation.png",
-    description: "This whip is crafted from the hide of a fire giant and is always warm to the touch.",
+    image: "images/dragon-orb-of-krynn.png",
+    description: "One of five Dragon Orbs created during the Third Dragon War, these artifacts can control dragons.",
+    properties: [
+      { title: "Dragon Control", text: "As an action, you can attempt to control a dragon within 120 feet. The dragon must succeed on a DC 20 Charisma saving throw or be charmed by you for 1 hour. While charmed, the dragon obeys your commands. Once used, can't be used again for 24 hours." },
+      { title: "Dragon Lure", text: "While attuned, you can sense the presence of any dragon within 10 miles. You can also communicate telepathically with any dragon within 1 mile." },
+      { title: "Dangerous Attunement", text: "Each time you use the orb to control a dragon, roll a DC 15 Wisdom saving throw. On a failure, the orb attempts to control you instead, compelling you to serve its true draconic masters." }
+    ]
+  },
+ 
+  {
+    id: "tower-shield-of-the-crown",
+    name: "Tower Shield of the Crown",
+    classes: [],
+    rarity: "Rare",
+    category: "Armor",
+    attunement: false,
+    source: "Heroes of Krynn",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/tower-shield-of-the-crown.png",
+    description: "A massive tower shield bearing the crown insignia of a Knight of the Crown.",
+    properties: [
+      { title: "Heavy Shield", text: "While holding this shield, you have a +2 bonus to AC in addition to the shield's normal bonus. However, your speed is reduced by 5 feet." },
+      { title: "Shield Wall", text: "While holding this shield adjacent to another creature holding any shield, you both gain an additional +1 bonus to AC." }
+    ]
+  },
+ 
+  {
+    id: "black-robe",
+    name: "Black Robe of the Orders",
+    classes: ["Wizard"],
+    rarity: "Very Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Heroes of Krynn",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/black-robe-of-the-orders.png",
+    description: "This black silk robe is worn by wizards of the Order of the Black Robes on Krynn, followers of Nuitari.",
+    properties: [
+      { title: "Arcane Bonus", text: "While wearing this robe, you gain a +2 bonus to spell attack rolls and to the saving throw DCs of your wizard spells." },
+      { title: "Dark Magic", text: "Once per day when you cast a wizard spell that deals damage, you can maximize the damage instead of rolling." },
+      { title: "Moon Magic", text: "During a new moon, the bonus from this robe increases to +3, and your spell save DC increases by an additional 1." }
+    ]
+  },
+ 
+  {
+    id: "red-robe",
+    name: "Red Robe of the Orders",
+    classes: ["Wizard"],
+    rarity: "Very Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Heroes of Krynn",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/red-robe-of-the-orders.png",
+    description: "This red silk robe is worn by wizards of the Order of the Red Robes on Krynn, followers of Lunitari.",
+    properties: [
+      { title: "Arcane Bonus", text: "While wearing this robe, you gain a +2 bonus to spell attack rolls and to the saving throw DCs of your wizard spells." },
+      { title: "Balanced Magic", text: "Once per day, when you fail a concentration check, you can choose to succeed instead." },
+      { title: "Moon Magic", text: "During a half moon, the bonus from this robe increases to +3, and you regain one expended spell slot of 3rd level or lower at dawn." }
+    ]
+  },
+ 
+  {
+    id: "white-robe",
+    name: "White Robe of the Orders",
+    classes: ["Wizard"],
+    rarity: "Very Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Heroes of Krynn",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/white-robe-of-the-orders.png",
+    description: "This white silk robe is worn by wizards of the Order of the White Robes on Krynn, followers of Solinari.",
+    properties: [
+      { title: "Arcane Bonus", text: "While wearing this robe, you gain a +2 bonus to spell attack rolls and to the saving throw DCs of your wizard spells." },
+      { title: "Protective Magic", text: "While wearing this robe, you and friendly creatures within 10 feet have advantage on saving throws against spells." },
+      { title: "Moon Magic", text: "During a full moon, the bonus from this robe increases to +3, and you can cast one additional spell of 3rd level or lower without expending a spell slot." }
+    ]
+  },
+ 
+  // ─── THE PRACTICALLY COMPLETE GUIDE TO DRAGONS ───────────────────────────
+ 
+  {
+    id: "dragonscale-cloak",
+    name: "Dragonscale Cloak",
+    classes: [],
+    rarity: "Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "The Practically Complete Guide to Dragons",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/dragonscale-cloak.png",
+    description: "A cloak fashioned from the scales of a dragon, retaining some of the dragon's innate magical energy.",
+    properties: [
+      { title: "Elemental Resistance", text: "You have resistance to the damage type associated with the dragon whose scales form the cloak: acid (black/green), cold (white/silver), fire (red/gold/brass), lightning (blue/bronze), or poison (green)." },
+      { title: "Draconic Presence", text: "While wearing this cloak, dragons of the same type as the cloak treat you with initial respect rather than immediate hostility." }
+    ]
+  },
+ 
+  {
+    id: "scale-of-the-ancient",
+    name: "Scale of the Ancient",
+    classes: [],
+    rarity: "Very Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "The Practically Complete Guide to Dragons",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/scale-of-the-ancient.png",
+    description: "This single scale from an ancient dragon pulses with tremendous magical energy.",
+    properties: [
+      { title: "Elemental Immunity", text: "You have immunity to the damage type associated with the dragon this scale came from." },
+      { title: "Dragon Speech", text: "While holding this scale, you can speak and understand Draconic." },
+      { title: "Ancient Power", text: "Once per day, you can use an action to breathe a line or cone of elemental energy matching the scale's dragon type. The breath weapon extends 60 feet and deals 10d6 damage of the associated type (DC 17 Dexterity save for half)." }
+    ]
+  },
+ 
+  {
+    id: "dragon-tooth-weapon",
+    name: "Dragon Tooth Weapon",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Weapon",
+    attunement: false,
+    source: "The Practically Complete Guide to Dragons",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/dragon-tooth-weapon.png",
+    description: "A weapon crafted from or with a dragon's tooth, retaining some of the dragon's elemental power.",
     properties: [
       { title: "Attack Bonus", text: "+1 bonus to attack and damage rolls." },
-      { title: "Fire Damage", text: "Extra 1d6 fire damage on a hit." },
-      { title: "Immolate", text: "3 charges, regains 1d3 at dawn. Once per turn on a hit, expend 1 charge to force DC 14 Constitution save or the creature catches fire, taking 2d6 fire damage at the start of each of its turns." }
+      { title: "Elemental Strike", text: "When you hit a creature with this weapon, you can choose to deal an extra 1d6 damage of the type associated with the dragon (acid, cold, fire, lightning, or poison). Once used, this property can't be used again until the next dawn." }
     ]
   },
-
+ 
   {
-    id: "staff-of-the-rune-carver",
-    name: "Staff of the Rune Carver",
-    classes: [], rarity: "Rare", category: "Staff", attunement: true,
+    id: "wyrmling-egg-charm",
+    name: "Wyrmling Egg Charm",
+    classes: [],
+    rarity: "Common",
+    category: "Wondrous Item",
+    attunement: false,
+    source: "The Practically Complete Guide to Dragons",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/wyrmling-egg-charm.png",
+    description: "A charm carved from the shell of a dragon egg. It carries a faint echo of draconic magic.",
+    properties: [
+      { title: "Draconic Luck", text: "Once per day, when you make an ability check, attack roll, or saving throw, you can add 1d4 to the result after seeing the roll but before the outcome is determined." }
+    ]
+  },
+ 
+  {
+    id: "dragon-blood-potion",
+    name: "Potion of Dragon Blood",
+    classes: [],
+    rarity: "Rare",
+    category: "Potion",
+    attunement: false,
+    source: "The Practically Complete Guide to Dragons",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/potion-of-dragon-blood.png",
+    description: "This vial contains a few drops of dragon blood mixed with magical reagents. It glows faintly with the color of the associated dragon type.",
+    properties: [
+      { title: "Dragon's Gift", text: "When you drink this potion, you gain resistance to one damage type based on the dragon whose blood was used (acid, cold, fire, lightning, or poison) for 1 hour. Additionally, your unarmed strikes deal an extra 1d6 damage of that type for the same duration." }
+    ]
+  },
+ 
+  {
+    id: "chronicle-of-the-reckoning",
+    name: "Chronicle of the Reckoning",
+    classes: [],
+    rarity: "Very Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "The Practically Complete Guide to Dragons",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/chronicle-of-the-reckoning.png",
+    description: "This ancient tome contains records of every known dragon on the Material Plane. Its pages seem to update themselves.",
+    properties: [
+      { title: "Dragon Lore", text: "While attuned to this book, you know the name, approximate location, and general disposition of every dragon on the plane you currently occupy. You have advantage on Intelligence checks related to dragons." },
+      { title: "Dragon Sense", text: "You can sense the presence of any dragon within 10 miles. As an action, you can concentrate on the book to pinpoint the exact location of any dragon you know the name of within 100 miles." }
+    ]
+  },
+ 
+  // ─── GLORY OF THE GIANTS – ADDITIONAL PLAYER ITEMS ───────────────────────
+ 
+  {
+    id: "giants-ring",
+    name: "Ring of Giant Influence",
+    classes: [],
+    rarity: "Rare",
+    category: "Ring",
+    attunement: true,
     source: "Bigby Presents: Glory of the Giants",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/staff-of-the-rune-carver.png",
-    description: "This staff is made of petrified giant oak and etched with ancient giant runes.",
+    image: "images/ring-of-giant-influence.png",
+    description: "This oversized ring is made from the melted metal of a giant's weapon and fits any finger when worn.",
     properties: [
-      { title: "Giant Runes", text: "6 charges, regains 1d6 at dawn. Cast comprehend languages, detect magic, identify, or legend lore from the staff." },
-      { title: "Rune Mastery", text: "Advantage on Intelligence checks related to giant history and runes. Can read Giant runes even without speaking the language." }
+      { title: "Giant Speech", text: "While wearing this ring, you can speak, read, and write Giant." },
+      { title: "Giant Diplomacy", text: "While wearing this ring, you have advantage on Charisma checks made to interact with giants of any kind." },
+      { title: "Enlarging Power", text: "Once per day, you can cast the enlarge/reduce spell (enlarge only) on yourself without using a spell slot." }
     ]
   },
-
-  // ─── ADDITIONAL DMG ITEMS ─────────────────────────────────────────────────
-
+ 
   {
-    id: "arrow-of-slaying",
-    name: "Arrow of Slaying",
-    classes: [], rarity: "Very Rare", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
+    id: "rune-shield",
+    name: "Rune Shield",
+    classes: [],
+    rarity: "Rare",
+    category: "Armor",
+    attunement: true,
+    source: "Bigby Presents: Glory of the Giants",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/arrow-of-slaying.png",
-    description: "An arrow of slaying is a magic weapon meant to kill a particular kind of creature.",
-    properties: [{ title: "Slaying", text: "If a creature belonging to the associated type takes damage from the arrow, it must make a DC 17 Constitution saving throw, taking extra 6d10 piercing damage on a failure, or half extra damage on a success. Once it deals its extra damage, it becomes a nonmagical arrow." }]
-  },
-
-  {
-    id: "ammunition-plus-1",
-    name: "+1 Ammunition",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/ammunition-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this piece of magic ammunition.",
-    properties: [{ title: "+1 Bonus", text: "+1 to attack and damage rolls. Once it hits a target, it becomes nonmagical." }]
-  },
-
-  {
-    id: "ammunition-plus-2",
-    name: "+2 Ammunition",
-    classes: [], rarity: "Rare", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/ammunition-plus-2.png",
-    description: "You have a +2 bonus to attack and damage rolls made with this piece of magic ammunition.",
-    properties: [{ title: "+2 Bonus", text: "+2 to attack and damage rolls. Once it hits a target, it becomes nonmagical." }]
-  },
-
-  {
-    id: "ammunition-plus-3",
-    name: "+3 Ammunition",
-    classes: [], rarity: "Very Rare", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/ammunition-plus-3.png",
-    description: "You have a +3 bonus to attack and damage rolls made with this piece of magic ammunition.",
-    properties: [{ title: "+3 Bonus", text: "+3 to attack and damage rolls. Once it hits a target, it becomes nonmagical." }]
-  },
-
-  {
-    id: "bead-of-force",
-    name: "Bead of Force",
-    classes: [], rarity: "Rare", category: "Wondrous Item", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/bead-of-force.png",
-    description: "This small black sphere measures 3/4 of an inch in diameter.",
-    properties: [{ title: "Force Sphere", text: "As an action, throw the bead up to 60 feet. On impact, creatures within 10 feet make a DC 15 Dexterity save or take 5d4 force damage. A sphere of transparent force encloses the area for 1 minute. Creatures that failed the save are trapped inside." }]
-  },
-
-  {
-    id: "chime-of-opening",
-    name: "Chime of Opening",
-    classes: [], rarity: "Rare", category: "Wondrous Item", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/chime-of-opening.png",
-    description: "This hollow metal tube measures about 1 foot long and weighs 1 pound.",
-    properties: [{ title: "Open", text: "Strike the chime and point at an object within 120 feet that can be opened. The chime issues a clear tone, and one lock or latch on the object opens. Can be used 10 times. After the 10th time, it cracks and becomes useless." }]
-  },
-
-  {
-    id: "cloak-of-invisibility",
-    name: "Cloak of Invisibility",
-    classes: [], rarity: "Legendary", category: "Wondrous Item", attunement: true,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/cloak-of-invisibility.png",
-    description: "While wearing this cloak, you can pull its hood over your head to become invisible.",
-    properties: [{ title: "Invisibility", text: "Pull the hood over your head to become invisible along with everything you wear or carry. The cloak can be used for a total of 2 hours per day. After 2 hours, it stops functioning until the next dawn." }]
-  },
-
-  {
-    id: "crystal-ball-of-mind-reading",
-    name: "Crystal Ball of Mind Reading",
-    classes: [], rarity: "Very Rare", category: "Wondrous Item", attunement: true,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/crystal-ball-of-mind-reading.png",
-    description: "A crystal ball with the ability to also read the minds of those you observe.",
+    image: "images/rune-shield.png",
+    description: "This shield is inscribed with a giant rune that glows faintly when danger is near.",
     properties: [
-      { title: "Scrying", text: "Cast the scrying spell (save DC 17) while touching it." },
-      { title: "Mind Reading", text: "While scrying, cast detect thoughts (save DC 17) on a creature you can see through the sensor. No need to concentrate on detect thoughts during its duration." }
+      { title: "AC Bonus", text: "+1 bonus to AC while wielding this shield, in addition to the shield's normal bonus." },
+      { title: "Runic Ward", text: "When you are hit by an attack, you can use your reaction to expend 1 charge and add your proficiency bonus to your AC against that attack, potentially causing it to miss. The shield has 3 charges and regains 1d3 charges daily at dawn." }
     ]
   },
-
+ 
   {
-    id: "crystal-ball-of-telepathy",
-    name: "Crystal Ball of Telepathy",
-    classes: [], rarity: "Very Rare", category: "Wondrous Item", attunement: true,
-    source: "Dungeon Master's Guide",
+    id: "potion-of-giant-size",
+    name: "Potion of Giant Size",
+    classes: [],
+    rarity: "Legendary",
+    category: "Potion",
+    attunement: false,
+    source: "Bigby Presents: Glory of the Giants",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/crystal-ball-of-telepathy.png",
-    description: "A crystal ball that also enables telepathic communication with those you observe.",
+    image: "images/potion-of-giant-size.png",
+    description: "When you drink this potion, you grow to Huge size for 24 hours.",
     properties: [
-      { title: "Scrying", text: "Cast the scrying spell (save DC 17) while touching it." },
-      { title: "Telepathy", text: "While scrying, communicate telepathically with creatures within 30 feet of the sensor. Also cast suggestion (save DC 17) on one such creature. Once used, can't cast suggestion again until the next dawn." }
+      { title: "Giant Growth", text: "When you drink this potion, you grow to Huge size for 24 hours. Your Strength score becomes 25 (unless it is already higher). Your weapons also grow to match, and your weapon attacks deal an extra 2d6 damage of the same type. Your space and reach double." }
     ]
   },
-
+ 
   {
-    id: "crystal-ball-of-true-seeing",
-    name: "Crystal Ball of True Seeing",
-    classes: [], rarity: "Legendary", category: "Wondrous Item", attunement: true,
-    source: "Dungeon Master's Guide",
+    id: "giant-rune-focus",
+    name: "Giant Rune Focus",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Bigby Presents: Glory of the Giants",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/crystal-ball-of-true-seeing.png",
-    description: "A crystal ball that grants truesight while scrying.",
+    image: "images/giant-rune-focus.png",
+    description: "A carved stone disc etched with a giant rune that can serve as a spellcasting focus.",
     properties: [
-      { title: "Scrying", text: "Cast the scrying spell (save DC 17) while touching it." },
-      { title: "True Seeing", text: "While scrying with this crystal ball, you have truesight with a radius of 120 feet centered on the scrying sensor." }
+      { title: "Spellcasting Focus", text: "You can use this disc as a spellcasting focus for your spells." },
+      { title: "Rune Power", text: "Once per day, when you cast a spell that deals damage, you can change the damage type to one of the following: acid, cold, fire, lightning, or thunder." }
     ]
   },
-
+ 
   {
-    id: "folding-boat",
-    name: "Folding Boat",
-    classes: [], rarity: "Rare", category: "Wondrous Item", attunement: false,
-    source: "Dungeon Master's Guide",
+    id: "thunderous-greatclub",
+    name: "Thunderous Greatclub",
+    classes: [],
+    rarity: "Rare",
+    category: "Weapon",
+    attunement: true,
+    source: "Bigby Presents: Glory of the Giants",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/folding-boat.png",
-    description: "This object appears as a wooden box that measures 12 inches long, 6 inches wide, and 6 inches deep.",
+    image: "images/thunderous-greatclub.png",
+    description: "This massive greatclub is carved from the wood of a tree struck by lightning a hundred times. It crackles with electrical energy.",
     properties: [
-      { title: "Rowboat", text: "First command word: unfolds into a 10-foot-long boat with oars, anchor, mast, and sail." },
-      { title: "Sailboat", text: "Second command word: unfolds into a 24-foot-long ship with deck, rowing seats, five oar sets, and a square sail. Requires a crew of four." },
-      { title: "Refold", text: "Speak the second command word to fold back into box form, provided no creatures are aboard." }
+      { title: "Attack Bonus", text: "+1 bonus to attack and damage rolls." },
+      { title: "Thunder Crack", text: "On a hit, the target takes an extra 1d8 thunder damage." },
+      { title: "Ground Slam", text: "As an action, you can slam the greatclub into the ground. Each creature within 10 feet must make a DC 14 Strength saving throw or be knocked prone and take 2d8 thunder damage. On a success, the creature takes half damage and isn't knocked prone. Once used, this property can't be used again until the next dawn." }
     ]
   },
-
-  // ─── ADDITIONAL WEAPON VARIANTS ───────────────────────────────────────────
-
+ 
   {
-    id: "flail-plus-1",
-    name: "+1 Flail",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
+    id: "hill-giant-bag",
+    name: "Hill Giant's Sack",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: false,
+    source: "Bigby Presents: Glory of the Giants",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/flail-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic flail." }]
-  },
-
-  {
-    id: "glaive-plus-1",
-    name: "+1 Glaive",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/glaive-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic glaive." }]
-  },
-
-  {
-    id: "halberd-plus-1",
-    name: "+1 Halberd",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/halberd-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic halberd." }]
-  },
-
-  {
-    id: "lance-plus-1",
-    name: "+1 Lance",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/lance-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic lance." }]
-  },
-
-  {
-    id: "morningstar-plus-1",
-    name: "+1 Morningstar",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/morningstar-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic morningstar." }]
-  },
-
-  {
-    id: "pike-plus-1",
-    name: "+1 Pike",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/pike-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic pike." }]
-  },
-
-  {
-    id: "sickle-plus-1",
-    name: "+1 Sickle",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/sickle-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic sickle." }]
-  },
-
-  {
-    id: "trident-plus-1",
-    name: "+1 Trident",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/trident-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic trident." }]
-  },
-
-  {
-    id: "war-pick-plus-1",
-    name: "+1 War Pick",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/war-pick-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic war pick." }]
-  },
-
-  {
-    id: "whip-plus-1",
-    name: "+1 Whip",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/whip-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic whip." }]
-  },
-
-  {
-    id: "hand-crossbow-plus-1",
-    name: "+1 Hand Crossbow",
-    classes: [], rarity: "Uncommon", category: "Weapon", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/hand-crossbow-plus-1.png",
-    description: "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
-    properties: [{ title: "+1 Bonus", text: "+1 bonus to attack and damage rolls made with this magic hand crossbow." }]
-  },
-
-  // ─── ADDITIONAL ARMOR VARIANTS ────────────────────────────────────────────
-
-  {
-    id: "hide-armor-plus-1",
-    name: "+1 Hide Armor",
-    classes: [], rarity: "Uncommon", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/hide-armor-plus-1.png",
-    description: "You have a +1 bonus to AC while wearing this armor.",
-    properties: [{ title: "+1 AC", text: "+1 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "hide-armor-plus-2",
-    name: "+2 Hide Armor",
-    classes: [], rarity: "Rare", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/hide-armor-plus-2.png",
-    description: "You have a +2 bonus to AC while wearing this armor.",
-    properties: [{ title: "+2 AC", text: "+2 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "hide-armor-plus-3",
-    name: "+3 Hide Armor",
-    classes: [], rarity: "Very Rare", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/hide-armor-plus-3.png",
-    description: "You have a +3 bonus to AC while wearing this armor.",
-    properties: [{ title: "+3 AC", text: "+3 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "padded-armor-plus-1",
-    name: "+1 Padded Armor",
-    classes: [], rarity: "Uncommon", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/padded-armor-plus-1.png",
-    description: "You have a +1 bonus to AC while wearing this armor.",
-    properties: [{ title: "+1 AC", text: "+1 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "scale-mail-plus-2",
-    name: "+2 Scale Mail",
-    classes: [], rarity: "Rare", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/scale-mail-plus-2.png",
-    description: "You have a +2 bonus to AC while wearing this armor.",
-    properties: [{ title: "+2 AC", text: "+2 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "scale-mail-plus-3",
-    name: "+3 Scale Mail",
-    classes: [], rarity: "Very Rare", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/scale-mail-plus-3.png",
-    description: "You have a +3 bonus to AC while wearing this armor.",
-    properties: [{ title: "+3 AC", text: "+3 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "splint-armor-plus-2",
-    name: "+2 Splint Armor",
-    classes: [], rarity: "Very Rare", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/splint-armor-plus-2.png",
-    description: "You have a +2 bonus to AC while wearing this armor.",
-    properties: [{ title: "+2 AC", text: "+2 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "splint-armor-plus-3",
-    name: "+3 Splint Armor",
-    classes: [], rarity: "Legendary", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/splint-armor-plus-3.png",
-    description: "You have a +3 bonus to AC while wearing this armor.",
-    properties: [{ title: "+3 AC", text: "+3 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "ring-mail-plus-2",
-    name: "+2 Ring Mail",
-    classes: [], rarity: "Rare", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/ring-mail-plus-2.png",
-    description: "You have a +2 bonus to AC while wearing this armor.",
-    properties: [{ title: "+2 AC", text: "+2 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "ring-mail-plus-3",
-    name: "+3 Ring Mail",
-    classes: [], rarity: "Very Rare", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/ring-mail-plus-3.png",
-    description: "You have a +3 bonus to AC while wearing this armor.",
-    properties: [{ title: "+3 AC", text: "+3 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "chain-shirt-plus-2",
-    name: "+2 Chain Shirt",
-    classes: [], rarity: "Rare", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/chain-shirt-plus-2.png",
-    description: "You have a +2 bonus to AC while wearing this armor.",
-    properties: [{ title: "+2 AC", text: "+2 bonus to AC while wearing this armor." }]
-  },
-
-  {
-    id: "chain-shirt-plus-3",
-    name: "+3 Chain Shirt",
-    classes: [], rarity: "Very Rare", category: "Armor", attunement: false,
-    source: "Dungeon Master's Guide",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/chain-shirt-plus-3.png",
-    description: "You have a +3 bonus to AC while wearing this armor.",
-    properties: [{ title: "+3 AC", text: "+3 bonus to AC while wearing this armor." }]
-  },
-
-  // ─── TASHA'S TIERED ITEMS ─────────────────────────────────────────────────
-
-  {
-    id: "amulet-of-the-devout-rare",
-    name: "Amulet of the Devout (Rare)",
-    classes: ["Cleric", "Paladin"], rarity: "Rare", category: "Wondrous Item", attunement: true,
-    source: "Tasha's Cauldron of Everything",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/amulet-of-the-devout-rare.png",
-    description: "A rare amulet bearing the symbol of a deity.",
+    image: "images/hill-giants-sack.png",
+    description: "This enormous sack was made for a hill giant but has been magically resized for smaller creatures.",
     properties: [
-      { title: "Holy Symbol", text: "+2 bonus to spell attack rolls and to the saving throw DCs of your spells while you wear or hold it." },
-      { title: "Channel Divinity", text: "Use Channel Divinity without expending a use. Once used, can't be used again until the next dawn." }
+      { title: "Giant Capacity", text: "This bag can hold up to 1,000 pounds of material not exceeding a volume of 128 cubic feet. The bag weighs 25 pounds, regardless of its contents. If the bag is overloaded, pierced, or torn, it ruptures and is destroyed, and its contents are scattered." }
     ]
   },
-
+ 
+  // ─── VECNA: EVE OF RUIN (2024) ────────────────────────────────────────────
+ 
   {
-    id: "amulet-of-the-devout-very-rare",
-    name: "Amulet of the Devout (Very Rare)",
-    classes: ["Cleric", "Paladin"], rarity: "Very Rare", category: "Wondrous Item", attunement: true,
-    source: "Tasha's Cauldron of Everything",
+    id: "vecna-rod",
+    name: "Rod of Seven Parts",
+    classes: [],
+    rarity: "Artifact",
+    category: "Rod",
+    attunement: true,
+    source: "Vecna: Eve of Ruin",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/amulet-of-the-devout-very-rare.png",
-    description: "A very rare amulet bearing the symbol of a deity.",
+    image: "images/rod-of-seven-parts.png",
+    description: "The Rod of Seven Parts was shattered in a battle between the Wind Dukes of Aaqa and the Queen of Chaos. Its seven pieces were scattered across the multiverse.",
     properties: [
-      { title: "Holy Symbol", text: "+3 bonus to spell attack rolls and to the saving throw DCs of your spells while you wear or hold it." },
-      { title: "Channel Divinity", text: "Use Channel Divinity without expending a use. Once used, can't be used again until the next dawn." }
+      { title: "Piece Power", text: "Each piece of the rod, when found, grants a +1 bonus to AC and saving throws. For each additional piece added, the bonus increases by 1 (maximum +7 when all pieces are assembled)." },
+      { title: "Wind Walk", text: "When all seven pieces are assembled, you can cast the wind walk spell once per day without using a spell slot." },
+      { title: "Imprisonment", text: "When all seven pieces are assembled, you can cast the imprisonment spell once per week without using a spell slot or material components." }
     ]
   },
-
+ 
   {
-    id: "arcane-grimoire-rare",
-    name: "Arcane Grimoire (Rare)",
-    classes: ["Wizard"], rarity: "Rare", category: "Wondrous Item", attunement: true,
-    source: "Tasha's Cauldron of Everything",
+    id: "vecnas-spellbook",
+    name: "Vecna's Fallen Leaves",
+    classes: ["Wizard"],
+    rarity: "Artifact",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Vecna: Eve of Ruin",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/arcane-grimoire-rare.png",
-    description: "A rare leather-bound tome that enhances wizard spellcasting.",
+    image: "images/vecnas-fallen-leaves.png",
+    description: "These pages torn from Vecna's personal spellbook contain some of the most powerful and dangerous spells ever recorded.",
     properties: [
-      { title: "Spellcasting Focus", text: "Use this book as a spellcasting focus for your wizard spells." },
-      { title: "Arcane Bonus", text: "+2 bonus to spell attack rolls and to the saving throw DCs of your wizard spells." }
+      { title: "Forbidden Knowledge", text: "These pages contain 2d6 spells of 6th level or higher chosen by the DM, all from Vecna's personal collection. You can copy these spells into your own spellbook." },
+      { title: "Vecna's Influence", text: "While attuned to these pages, you gain a +2 bonus to spell attack rolls and spell save DCs. However, Vecna can read your thoughts and knows your location at all times." },
+      { title: "Dark Secrets", text: "Once per day, you can consult the pages to gain advantage on one Intelligence check related to forbidden or secret knowledge." }
     ]
   },
-
+ 
+  // ─── ADDITIONAL ITEMS FROM PREVIOUSLY COVERED BOOKS ──────────────────────
+ 
   {
-    id: "arcane-grimoire-very-rare",
-    name: "Arcane Grimoire (Very Rare)",
-    classes: ["Wizard"], rarity: "Very Rare", category: "Wondrous Item", attunement: true,
-    source: "Tasha's Cauldron of Everything",
+    id: "potion-of-vitality",
+    name: "Potion of Vitality",
+    classes: [],
+    rarity: "Very Rare",
+    category: "Potion",
+    attunement: false,
+    source: "Dungeon Master's Guide",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/arcane-grimoire-very-rare.png",
-    description: "A very rare leather-bound tome that greatly enhances wizard spellcasting.",
+    image: "images/potion-of-vitality.png",
+    description: "When you drink this potion, it removes any exhaustion you are suffering and cures any disease or poison affecting you.",
     properties: [
-      { title: "Spellcasting Focus", text: "Use this book as a spellcasting focus for your wizard spells." },
-      { title: "Arcane Bonus", text: "+3 bonus to spell attack rolls and to the saving throw DCs of your wizard spells." }
+      { title: "Vitality", text: "When you drink this potion, it removes any exhaustion you are suffering and cures any disease or poison affecting you. For the next 24 hours, you regain the maximum number of hit points for any Hit Die you spend." }
     ]
   },
-
+ 
   {
-    id: "bloodwell-vial-rare",
-    name: "Bloodwell Vial (Rare)",
-    classes: ["Sorcerer"], rarity: "Rare", category: "Wondrous Item", attunement: true,
-    source: "Tasha's Cauldron of Everything",
+    id: "oil-of-etherealness",
+    name: "Oil of Etherealness",
+    classes: [],
+    rarity: "Rare",
+    category: "Potion",
+    attunement: false,
+    source: "Dungeon Master's Guide",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/bloodwell-vial-rare.png",
-    description: "A rare vial that enhances sorcerer spellcasting.",
+    image: "images/oil-of-etherealness.png",
+    description: "Beads of this cloudy gray oil form on the outside of its container and quickly evaporate.",
     properties: [
-      { title: "Sorcery Points", text: "If your sorcery point total is 0 when you regain sorcery points, you regain 1d4 sorcery points." },
-      { title: "Bonus", text: "+2 bonus to spell attack rolls and to the saving throw DCs of your sorcerer spells." }
+      { title: "Ethereal", text: "You can use the oil to cover a Medium or smaller creature. Applying the oil takes 10 minutes. The affected creature then gains the effect of the etherealness spell for 1 hour." }
     ]
   },
-
+ 
   {
-    id: "bloodwell-vial-very-rare",
-    name: "Bloodwell Vial (Very Rare)",
-    classes: ["Sorcerer"], rarity: "Very Rare", category: "Wondrous Item", attunement: true,
-    source: "Tasha's Cauldron of Everything",
+    id: "oil-of-sharpness",
+    name: "Oil of Sharpness",
+    classes: [],
+    rarity: "Very Rare",
+    category: "Potion",
+    attunement: false,
+    source: "Dungeon Master's Guide",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/bloodwell-vial-very-rare.png",
-    description: "A very rare vial that greatly enhances sorcerer spellcasting.",
+    image: "images/oil-of-sharpness.png",
+    description: "This clear, gelatinous oil sparkles with tiny, ultrathin silver shards.",
     properties: [
-      { title: "Sorcery Points", text: "If your sorcery point total is 0 when you regain sorcery points, you regain 1d4 sorcery points." },
-      { title: "Bonus", text: "+3 bonus to spell attack rolls and to the saving throw DCs of your sorcerer spells." }
+      { title: "Sharpen", text: "You can use the oil to cover a slashing or piercing weapon or up to 5 pieces of slashing or piercing ammunition. Applying the oil takes 1 minute. For 1 hour, the coated item is magical and has a +3 bonus to attack and damage rolls." }
     ]
   },
-
+ 
   {
-    id: "moon-sickle-rare",
-    name: "Moon Sickle (Rare)",
-    classes: ["Druid", "Ranger"], rarity: "Rare", category: "Weapon", attunement: true,
-    source: "Tasha's Cauldron of Everything",
+    id: "oil-of-slipperiness",
+    name: "Oil of Slipperiness",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Potion",
+    attunement: false,
+    source: "Dungeon Master's Guide",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/moon-sickle-rare.png",
-    description: "A rare silver-bladed sickle that glimmers with moonlight.",
+    image: "images/oil-of-slipperiness.png",
+    description: "This sticky, black unguent is thick and heavy in the container but quickly spreads across the skin.",
     properties: [
-      { title: "Attack Bonus", text: "+2 bonus to attack and damage rolls." },
-      { title: "Spellcasting Focus", text: "Use as a spellcasting focus for druid and ranger spells. +2 bonus to spell attack rolls and spell save DCs of your druid and ranger spells." }
+      { title: "Slippery", text: "This oil can cover a Medium or smaller creature (along with the equipment it's wearing and carrying). The creature benefits from the freedom of movement spell for 8 hours. Alternatively, you can pour the oil on the ground as an action, creating a 10-foot square of difficult terrain. Each creature that enters the area or starts its turn there must succeed on a DC 10 Dexterity saving throw or fall prone." }
     ]
   },
-
+ 
   {
-    id: "moon-sickle-very-rare",
-    name: "Moon Sickle (Very Rare)",
-    classes: ["Druid", "Ranger"], rarity: "Very Rare", category: "Weapon", attunement: true,
-    source: "Tasha's Cauldron of Everything",
+    id: "potion-of-pugilism",
+    name: "Elixir of Health",
+    classes: [],
+    rarity: "Rare",
+    category: "Potion",
+    attunement: false,
+    source: "Dungeon Master's Guide",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/moon-sickle-very-rare.png",
-    description: "A very rare silver-bladed sickle that blazes with moonlight.",
+    image: "images/elixir-of-health.png",
+    description: "When you drink this potion, it cures any disease afflicting you, and it removes the blinded, deafened, paralyzed, and poisoned conditions.",
     properties: [
-      { title: "Attack Bonus", text: "+3 bonus to attack and damage rolls." },
-      { title: "Spellcasting Focus", text: "Use as a spellcasting focus for druid and ranger spells. +3 bonus to spell attack rolls and spell save DCs of your druid and ranger spells." }
+      { title: "Cure", text: "When you drink this potion, it cures any disease afflicting you, and it removes the blinded, deafened, paralyzed, and poisoned conditions. The clear red liquid has tiny bubbles of light in it." }
     ]
   },
-
-  // ─── FIZBAN'S ADDITIONAL ITEMS ────────────────────────────────────────────
-
+ 
   {
-    id: "platinum-scarf",
-    name: "Platinum Scarf",
-    classes: [], rarity: "Legendary", category: "Wondrous Item", attunement: true,
-    source: "Fizban's Treasury of Dragons",
+    id: "necklace-of-strangulation",
+    name: "Necklace of Strangulation",
+    classes: [],
+    rarity: "Very Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Dungeon Master's Guide",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/platinum-scarf.png",
-    description: "This scarf is made of sturdy platinum-colored fabric covered with astrological symbols.",
+    image: "images/necklace-of-strangulation.png",
+    description: "When you put on this necklace, it tightens around your throat and can't be removed except by magic.",
     properties: [
-      { title: "Protective Ends", text: "6 ends. As a bonus action, animate one end to protect a creature within 30 feet, granting +2 to AC until the start of your next turn." },
-      { title: "Breath of Life", text: "As an action, expend 2 ends (3rd level) or 4 ends (5th level) to cast the breath weapon spell. Regains all ends daily at dawn." }
+      { title: "Curse", text: "When you put on this necklace, it tightens around your throat and is cursed. You take 2 (1d4) bludgeoning damage at the start of each hour you wear it. The necklace can be removed only by a remove curse spell or similar magic." }
     ]
   },
-
+ 
   {
-    id: "dragonhide-belt",
-    name: "Dragonhide Belt",
-    classes: ["Monk"], rarity: "Uncommon", category: "Wondrous Item", attunement: true,
-    source: "Fizban's Treasury of Dragons",
+    id: "hat-of-stupidity",
+    name: "Hat of Stupidity",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Dungeon Master's Guide",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/dragonhide-belt.png",
-    description: "This belt is made from the scales and hide of a dragon.",
+    image: "images/hat-of-stupidity.png",
+    description: "This hat muffles the wearer's ability to think.",
     properties: [
-      { title: "Ki Focus", text: "+1 bonus to the saving throw DCs of your ki features. While not wearing armor and not using a shield, your AC equals 10 + Dexterity modifier + Wisdom modifier." },
-      { title: "Draconic Strike", text: "Your unarmed strikes deal damage of the type associated with the belt's dragon, plus an extra 1d4 of that damage type." }
+      { title: "Curse", text: "While wearing this hat, your Intelligence score is 1, and you have disadvantage on Intelligence checks. You are under the compulsion to put on the hat if you come within 10 feet of it. The hat can't be removed while cursed by it, and it is only removed when a remove curse spell or similar magic is used." }
     ]
   },
-
+ 
   {
-    id: "dragon-vessel",
-    name: "Dragon Vessel",
-    classes: [], rarity: "Uncommon", category: "Wondrous Item", attunement: false,
-    source: "Fizban's Treasury of Dragons",
+    id: "medallion-of-thoughts-rare",
+    name: "Cloak of Poisonousness",
+    classes: [],
+    rarity: "Very Rare",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Dungeon Master's Guide",
     campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/dragon-vessel.png",
-    description: "This vessel is decorated with the image of a dragon.",
-    properties: [{ title: "Dragon Breath", text: "As an action, produce a Tiny amount of liquid associated with a specific dragon type. The liquid disappears after 1 minute. Once used, can't be used again until the next dawn." }]
-  },
-
-  {
-    id: "scaled-ornament",
-    name: "Scaled Ornament",
-    classes: [], rarity: "Common", category: "Wondrous Item", attunement: true,
-    source: "Fizban's Treasury of Dragons",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/scaled-ornament.png",
-    description: "This ornament is made from dragon scales.",
-    properties: [{ title: "Draconic Aura", text: "Advantage on saving throws against the Frightful Presence and breath weapons of dragons. Resistance to the damage type associated with the dragon whose scales the ornament is made from." }]
-  },
-
-  {
-    id: "gem-of-dragon-sight",
-    name: "Gem of Dragon Sight",
-    classes: [], rarity: "Rare", category: "Wondrous Item", attunement: false,
-    source: "Fizban's Treasury of Dragons",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/gem-of-dragon-sight.png",
-    description: "This gem is carved in the shape of a dragon's eye.",
-    properties: [{ title: "Dragon Sight", text: "As an action, attach the gem to your forehead for 10 minutes. Grants darkvision 60 ft. (or extra 60 ft. if you already have darkvision). Once used, can't be used again until the next dawn." }]
-  },
-
-  {
-    id: "topaz-annihilator",
-    name: "Topaz Annihilator",
-    classes: [], rarity: "Legendary", category: "Weapon", attunement: true,
-    source: "Fizban's Treasury of Dragons",
-    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
-    image: "images/topaz-annihilator.png",
-    description: "This magic ranged weapon resembles a greatbow and is made from the scale and sinew of a topaz dragon.",
+    image: "images/cloak-of-poisonousness.png",
+    description: "This fine garment appears to be a cloak of protection, and it registers as magical if targeted by detect magic. However it is cursed.",
     properties: [
-      { title: "Necrotic Bolt", text: "Range 100/300 ft. +3 bonus to attack and damage. Deals necrotic damage instead of piercing and ignores resistance to necrotic damage." },
-      { title: "Annihilating Shot", text: "When you hit a creature, it makes a DC 18 Constitution save or have its hit point maximum reduced by the necrotic damage taken. This reduction lasts until the creature finishes a long rest." }
+      { title: "Curse", text: "When you put on the cloak and become attuned to it, you are poisoned. You are not aware of the poison but others who can smell can determine you are unwell. Only a remove curse spell ends the attunement to the cloak and removes the curse, after which the cloak is no longer magical." }
     ]
   },
-
+ 
+  {
+    id: "ring-of-clumsiness",
+    name: "Ring of Clumsiness",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Ring",
+    attunement: true,
+    source: "Dungeon Master's Guide",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/ring-of-clumsiness.png",
+    description: "This ring is cursed. Attuning to it curses you until you are targeted by the remove curse spell or similar magic.",
+    properties: [
+      { title: "Curse", text: "This ring is cursed. While attuned to it, you have disadvantage on Dexterity saving throws and Dexterity checks. In addition, if you are concentrating on a spell, you must succeed on a DC 15 Constitution saving throw each round or lose concentration." }
+    ]
+  },
+ 
+  {
+    id: "gauntlets-of-fumbling",
+    name: "Gauntlets of Fumbling",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Dungeon Master's Guide",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/gauntlets-of-fumbling.png",
+    description: "These gauntlets look like gauntlets of ogre power and have the same Strength-enhancing properties.",
+    properties: [
+      { title: "Strength", text: "Your Strength score is 19 while you wear these gauntlets." },
+      { title: "Curse", text: "These gauntlets are cursed. When you attack with a weapon while wearing them, you have disadvantage on the attack roll. If you roll a 1 on the attack roll, you drop the weapon. Removing the gauntlets requires a remove curse spell or similar magic." }
+    ]
+  },
+ 
+  {
+    id: "drums-of-panic",
+    name: "Drums of Panic",
+    classes: [],
+    rarity: "Rare",
+    category: "Wondrous Item",
+    attunement: false,
+    source: "Dungeon Master's Guide",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/drums-of-panic.png",
+    description: "These leather drums are 6 inches in diameter. If you are proficient with drums you can use them to create supernatural fear.",
+    properties: [
+      { title: "Panic", text: "While playing the drums, you can use an action to force creatures of your choice within 500 feet of you that can hear the drums to make a DC 13 Wisdom saving throw. On a failure, the creature is frightened for 1 minute. A creature can repeat the saving throw at the end of each of its turns. Once the drums have been used this way, they can't be used again until the next dawn." }
+    ]
+  },
+ 
+  {
+    id: "wind-fan",
+    name: "Wind Fan",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: false,
+    source: "Dungeon Master's Guide",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/wind-fan.png",
+    description: "While holding this fan, you can use an action to cast the gust of wind spell (save DC 13) from it.",
+    properties: [
+      { title: "Gust of Wind", text: "While holding this fan, you can use an action to cast the gust of wind spell (save DC 13) from it. Once used, there is a cumulative 20 percent chance each time you use the fan again that it loses its magic and becomes a nonmagical item." }
+    ]
+  },
+ 
+  {
+    id: "wings-of-flying-rare",
+    name: "Quiver of Ehlonna",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: false,
+    source: "Dungeon Master's Guide",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/quiver-of-ehlonna.png",
+    description: "Each of the quiver's three compartments connects to an extradimensional space that allows the quiver to hold numerous items.",
+    properties: [
+      { title: "Extended Storage", text: "The quiver has three compartments: the first holds up to 60 arrows or bolts; the second holds up to 18 javelins or similar weapons; the third holds up to 6 long objects such as bows, quarterstaffs, or spears. Drawing an item from the quiver requires a normal interaction with the item." }
+    ]
+  },
+ 
+  {
+    id: "circlet-of-human-perfection",
+    name: "Circlet of Human Perfection",
+    classes: [],
+    rarity: "Uncommon",
+    category: "Wondrous Item",
+    attunement: true,
+    source: "Waterdeep: Dungeon of the Mad Mage",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/circlet-of-human-perfection.png",
+    description: "The circlet transforms its attuned wearer into a handsome human of average height and weight.",
+    properties: [
+      { title: "Human Disguise", text: "The circlet transforms its attuned wearer into a handsome human of average height and weight. The wearer's physical appearance (hair color, eye color, skin tone) changes slightly. The wearer's statistics don't change. The disguise ends when the circlet is removed or the attunement ends." }
+    ]
+  },
+ 
+  {
+    id: "staff-of-power-rare",
+    name: "Nature's Wrath",
+    classes: ["Druid"],
+    rarity: "Rare",
+    category: "Staff",
+    attunement: true,
+    source: "Bigby Presents: Glory of the Giants",
+    campaign: null, looted: false, owner: null, printed: false, receivedDate: null,
+    image: "images/natures-wrath.png",
+    description: "This gnarled staff is carved from the heartwood of a tree struck by both lightning and a giant's fist. It crackles with primal energy.",
+    properties: [
+      { title: "Spellcasting Focus", text: "You can use this staff as a spellcasting focus for your druid spells." },
+      { title: "Nature Spells", text: "8 charges, regains 1d6 + 2 at dawn. Cast: thunderwave (1 charge), call lightning (3 charges), erupting earth (3 charges), control weather (8 charges)." },
+      { title: "Primal Strike", text: "The staff can be used as a magic quarterstaff. On a hit, it deals an extra 1d8 thunder or lightning damage (your choice)." }
+    ]
+  },
+ 
 ];
