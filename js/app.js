@@ -677,18 +677,7 @@ isAdmin
             :
             ""
         }
-        ${
-        item.image
-        ?
-        `
-        <img
-            src="${item.image}"
-            class="card-art"
-            alt="${item.name}"
-            onerror="this.style.display='none';"
-        >
-
-
+        
         <div class="card-body">
 
             ${
