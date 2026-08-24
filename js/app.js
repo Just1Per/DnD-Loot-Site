@@ -341,7 +341,7 @@ function createCard(item)
 {
     const card =
         document.createElement("div");
-        console.log("createCard start");
+        console.log("CREATECARD VERSION 999");
     card.classList.add("item-card");
 
     const isAdmin =
@@ -408,6 +408,14 @@ const wishedPlayers =
                 )?.name || "Unknown Player"
         )
         .join("<br>");
+
+console.log("isAdmin:", isAdmin);
+
+console.log("itemWishes:", itemWishes);
+
+console.log("players:", players);
+
+console.log("wishedPlayers:", wishedPlayers);
     
     card.innerHTML = `
 
