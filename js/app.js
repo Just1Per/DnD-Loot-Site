@@ -1182,51 +1182,53 @@ document
         "click",
         async () =>
         {
-            if (!auth.currentUser)
+            try
             {
-                alert(
-                    "Login first."
+                console.log("CREATE CHARACTER CLICKED");
+
+                const characterName =
+                    document.getElementById(
+                        "characterName"
+                    ).value;
+
+                const characterClass =
+                    document.getElementById(
+                        "characterClass"
+                    ).value;
+
+                await addDoc(
+                    collection(
+                        db,
+                        "characters"
+                    ),
+                    {
+                        name: characterName,
+                        class: characterClass,
+                        userId: auth.currentUser.uid,
+                        active: true,
+                        created: Date.now()
+                    }
                 );
-                return;
+
+                console.log(
+                    "CHARACTER SAVED"
+                );
+
+                await loadCharacters();
+
+                alert(
+                    "Character created."
+                );
             }
-
-            const characterName =
-                document.getElementById(
-                    "characterName"
-                ).value;
-
-            const characterClass =
-                document.getElementById(
-                    "characterClass"
-                ).value;
-
-            if (!characterName)
+            catch(error)
             {
-                alert(
-                    "Enter a character name."
+                console.error(
+                    "CHARACTER CREATE FAILED",
+                    error
                 );
-                return;
+
+                alert(error.message);
             }
-
-            await addDoc(
-                collection(
-                    db,
-                    "characters"
-                ),
-                {
-                    name: characterName,
-                    class: characterClass,
-                    userId: auth.currentUser.uid,
-                    active: true,
-                    created: Date.now()
-                }
-            );
-
-            await loadCharacters();
-
-            alert(
-                "Character created."
-            );
         }
     );
 
