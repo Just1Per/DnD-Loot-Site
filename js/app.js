@@ -1402,8 +1402,9 @@ onAuthStateChanged(
         display.textContent =
             user.email;
 
-        loginButton.style.display =
-            "none";
+        document.getElementById(
+            "loginControls"
+        ).style.display = "none";
 
         document.getElementById("registerButton").style.display =
             "none";
@@ -1428,8 +1429,9 @@ onAuthStateChanged(
             display.textContent =
                 "Not logged in";
 
-            loginButton.style.display =
-                "inline-block";
+            document.getElementById(
+                "loginControls"
+            ).style.display = "block";
 
             document.getElementById("registerButton").style.display =
                 "inline-block";
