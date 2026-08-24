@@ -9,10 +9,10 @@ from "./firebase.js";
 
 import {items as sourceItems} from "./items.js";
 
-
-
 import {
-    onAuthStateChanged
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
 }
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
@@ -1142,6 +1142,64 @@ function updateStats(
                 }
             }
         );
+        document
+    .getElementById("registerButton")
+    ?.addEventListener(
+        "click",
+        async () =>
+        {
+            try
+            {
+                const email =
+                    document.getElementById("emailInput").value;
+
+                const password =
+                    document.getElementById("passwordInput").value;
+
+                await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+                alert(
+                    "Account created successfully."
+                );
+            }
+            catch (error)
+            {
+                console.error(error);
+                alert(error.message);
+            }
+        }
+    );
+document
+    .getElementById("emailLoginButton")
+    ?.addEventListener(
+        "click",
+        async () =>
+        {
+            try
+            {
+                const email =
+                    document.getElementById("emailInput").value;
+
+                const password =
+                    document.getElementById("passwordInput").value;
+
+                await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+            }
+            catch (error)
+            {
+                console.error(error);
+                alert(error.message);
+            }
+        }
+    );
 
 [
     "search",
