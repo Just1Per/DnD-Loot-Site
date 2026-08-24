@@ -440,9 +440,25 @@ function createCard(item)
             ${isPrinted ? "Printed" : "Print"}
         </button>
 
-        <button class="edit-button">
-            Edit
-        </button>
+        ${
+            isEditing
+            ?
+            `
+            <button class="save-button">
+                Save
+            </button>
+
+            <button class="cancel-button">
+                Cancel
+            </button>
+            `
+            :
+            `
+            <button class="edit-button">
+                Edit
+            </button>
+            `
+        }
         `
         :
         ""
