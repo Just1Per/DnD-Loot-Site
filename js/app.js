@@ -341,6 +341,7 @@ function createCard(item)
 {
     const card =
         document.createElement("div");
+        console.log("createCard start");
     card.classList.add("item-card");
 
     const isAdmin =
@@ -398,6 +399,16 @@ function createCard(item)
     isLooted && card.classList.add("looted");
     isPrinted && card.classList.add("printed");
 
+const wishedPlayers =
+    itemWishes
+        .map(
+            wish =>
+                players.find(
+                    p => p.id === wish.playerId
+                )?.name || "Unknown Player"
+        )
+        .join("<br>");
+    
     card.innerHTML = `
 
  ${
@@ -457,21 +468,7 @@ isAdmin
 
     <br>
 
-    ${
-        itemWishes
-        .map(wish =>
-        {
-            const player =
-                players.find(
-                    p =>
-                    p.id ===
-                    wish.playerId
-                );
-
-            return player?.name;
-        })
-        .join("<br>")
-    }
+    ${wishedPlayers}
 
 </div>
 `
@@ -1301,13 +1298,13 @@ onAuthStateChanged(
                     auth.currentUser.uid
             );
 
-            populateOwnerFilter();
-
             //importItemsToFirestore();
+
+            await loadWishes();
 
             await loadItemsFromFirestore();
 
-            await loadWishes();
+            populateOwnerFilter();
 
             populateSourceFilter();
 
