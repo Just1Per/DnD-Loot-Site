@@ -1201,6 +1201,27 @@ document
         }
     );
 
+    document
+    .getElementById("logoutButton")
+    ?.addEventListener(
+        "click",
+        async () =>
+        {
+            try
+            {
+                await signOut(auth);
+
+                console.log(
+                    "Logged out"
+                );
+            }
+            catch (error)
+            {
+                console.error(error);
+            }
+        }
+    );
+
 [
     "search",
     "rarityFilter",
@@ -1315,6 +1336,11 @@ onAuthStateChanged(
         }
         else
         {
+            currentUserRole = "player";
+            selectedCharacter = null;
+            characters = [];
+            wishes = [];
+            
             display.textContent =
                 "Not logged in";
 
