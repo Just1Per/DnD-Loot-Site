@@ -19,13 +19,18 @@ from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import {
     collection,
     getDocs,
+    addDoc,
     doc,
+    getDoc,
     setDoc,
     updateDoc,
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 let items = []; //Firestore items
 let players = []; //Firestore players
+let currentUserRole = "player"; // Default role is "player"
+let currentPlayer = null; // Current player object for the logged-in user
+let wishes = []; // Firestore wishes objects for the current player
 const editingItems = new Set();
 
 async function loadItemsFromFirestore()
@@ -73,6 +78,22 @@ function populateOwnerFilter()
     `;
 }
 
+async function loadWishes()
+{
+    const snapshot =
+        await getDocs(
+            collection(
+                db,
+                "wishes"
+            )
+        );
+
+    wishes =
+        snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+}
 
 async function importItemsToFirestore()
 {
@@ -175,6 +196,46 @@ function attachEditEvents(
             editingItems.delete(item.id);
 
             await loadItemsFromFirestore();
+        }
+    );
+}
+
+function attachWishEvents(
+    card,
+    item
+)
+{
+    const wishButton =
+        card.querySelector(
+            ".wish-button"
+        );
+
+    wishButton?.addEventListener(
+        "click",
+        async () =>
+        {
+            if (!currentPlayer)
+            {
+                return;
+            }
+
+            await addDoc(
+                collection(
+                    db,
+                    "wishes"
+                ),
+                {
+                    itemId: item.id,
+                    playerId:
+                        currentPlayer.id,
+                    created:
+                        Date.now()
+                }
+            );
+
+            await loadWishes();
+
+            renderCards();
         }
     );
 }
@@ -282,17 +343,33 @@ function createCard(item)
         document.createElement("div");
     card.classList.add("item-card");
 
-    
+    const isAdmin =
+    currentUserRole === "admin";
+    /*
     const isAdmin =
     auth.currentUser?.email ===
-    "casper.n.andersen@gmail.com";
+    "casper.n.andersen@gmail.com";*/
     
     /*
     const isAdmin = true;
     */
+
+    const myWish =
+    wishes.find(
+        wish =>
+            wish.itemId === item.id &&
+            wish.playerId === currentPlayer?.id
+    );
+
     const isEditing =
     isAdmin &&
     editingItems.has(item.id);
+
+    const itemWishes =
+    wishes.filter(
+        wish =>
+            wish.itemId === item.id
+    );
 
     item.rarity &&
     card.classList.add(
@@ -358,11 +435,52 @@ function createCard(item)
                 Edit
             </button>
 
+            <button class="wish-button">
+                ${myWish ? "Wished" : "Wish"}
+            </button>
+
+            <button class="make-admin" data-userid="${player.userId}">
+                Make Admin
+            </button>
+
         </div>
         `
     )
     :
     ""
+}
+
+${
+isAdmin
+?
+`
+<div class="wish-admin-block">
+
+    Wishes:
+    ${itemWishes.length}
+
+    <br>
+
+    ${
+        itemWishes
+        .map(wish =>
+        {
+            const player =
+                players.find(
+                    p =>
+                    p.id ===
+                    wish.playerId
+                );
+
+            return player?.name;
+        })
+        .join("<br>")
+    }
+
+</div>
+`
+:
+""
 }
 
     ${
@@ -654,6 +772,11 @@ attachPrintEvents(
 );
 
 attachOwnerEvents(
+    card,
+    item
+);
+
+attachWishEvents(
     card,
     item
 );
@@ -953,6 +1076,65 @@ function populateCampaignFilter()
     });
 }
 
+function renderAdminPanel()
+{
+    if (currentUserRole !== "admin")
+    {
+        return;
+    }
+
+    const panel =
+        document.getElementById("adminPanel");
+
+    if (!panel)
+    {
+        return;
+    }
+
+    panel.innerHTML =
+        players
+        .filter(player => player.userId)
+        .map(player => `
+            <div>
+
+                ${player.name}
+
+                <button
+                    class="make-admin"
+                    data-userid="${player.userId}"
+                >
+                    Make Admin
+                </button>
+
+            </div>
+        `)
+        .join("");
+
+    panel
+        .querySelectorAll(".make-admin")
+        .forEach(button =>
+        {
+            button.addEventListener(
+                "click",
+                async () =>
+                {
+                    await updateDoc(
+                        doc(
+                            db,
+                            "users",
+                            button.dataset.userid
+                        ),
+                        {
+                            role: "admin"
+                        }
+                    );
+
+                    alert("User promoted to admin");
+                }
+            );
+        });
+}
+
 function updateStats(
     results,
     looted,
@@ -1040,6 +1222,46 @@ function updateStats(
     }
 });
 
+async function loadCurrentUserRole()
+{
+    if (!auth.currentUser)
+    {
+        currentUserRole = "player";
+        return;
+    }
+
+    const userDoc =
+        await getDoc(
+            doc(
+                db,
+                "users",
+                auth.currentUser.uid
+            )
+        );
+
+    if (!userDoc.exists())
+    {
+        await setDoc(
+            doc(
+                db,
+                "users",
+                auth.currentUser.uid
+            ),
+            {
+                email: auth.currentUser.email,
+                role: "player"
+            }
+        );
+
+        currentUserRole = "player";
+
+        return;
+    }
+
+    currentUserRole =
+        userDoc.data().role || "player";
+}
+
 onAuthStateChanged(
     auth,
     async (user) =>
@@ -1071,11 +1293,25 @@ onAuthStateChanged(
 
             await loadPlayers();
 
+            await loadCurrentUserRole();
+
+            renderAdminPanel();
+            ''
+
+            currentPlayer =
+            players.find(
+                player =>
+                    player.userId ===
+                    auth.currentUser.uid
+            );
+
             populateOwnerFilter();
 
             //importItemsToFirestore();
 
             await loadItemsFromFirestore();
+
+            await loadWishes();
 
             populateSourceFilter();
 
