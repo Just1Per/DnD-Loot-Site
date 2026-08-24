@@ -30,6 +30,7 @@ let items = []; //Firestore items
 let currentUserRole = "player"; //Default role for new users
 let characters = []; //Firestore characters tied to users
 let wishes = []; // Firestore wish records
+let selectedCharacter = null; // Currently selected character for wishing
 const editingItems = new Set();
 
 async function loadItemsFromFirestore()
@@ -56,6 +57,18 @@ async function loadCharacters()
         id: doc.id,
         ...doc.data()
     }));
+
+    if (!selectedCharacter)
+{
+    const myCharacters =
+        getCurrentUsersCharacters();
+
+    if (myCharacters.length > 0)
+    {
+        selectedCharacter =
+            myCharacters[0];
+    }
+}
 }
 
 async function loadWishes()
@@ -190,24 +203,56 @@ function attachWishEvents(
             ".wish-button"
         );
 
+    const myCharacters =
+    getCurrentUsersCharacters();
+
     wishButton?.addEventListener(
-        "click",
-        async () =>
+    "click",
+    async () =>
+    {
+        const myCharacters =
+            getCurrentUsersCharacters();
+
+        if (myCharacters.length === 0)
         {
-            await addDoc(
-                collection(db,"wishes"),
-                {
-                    itemId: item.id,
-                    characterId: selectedCharacter.id,
-                    created: Date.now()
-                }
+            alert(
+                "Create a character before wishing for items."
+            );
+            return;
+        }
+
+        const character =
+            myCharacters[0];
+
+        const existingWish =
+            wishes.find(
+                wish =>
+                    wish.itemId === item.id &&
+                    wish.characterId === character.id
             );
 
-            await loadWishes();
-
-            renderCards();
+        if (existingWish)
+        {
+            alert(
+                "This character has already wished for this item."
+            );
+            return;
         }
-    );
+
+        await addDoc(
+            collection(db, "wishes"),
+            {
+                itemId: item.id,
+                characterId: character.id,
+                created: Date.now()
+            }
+        );
+
+        await loadWishes();
+
+        renderCards();
+    }
+);
 }
 
 async function ensureUserExists()
@@ -322,21 +367,6 @@ function createCard(item)
 
     const isAdmin =
     currentUserRole === "admin";
-    /*
-    const isAdmin =
-    auth.currentUser?.email ===
-    "casper.n.andersen@gmail.com";*/
-    
-    /*
-    const isAdmin = true;
-    */
-
-    const myWish =
-    wishes.find(
-        wish =>
-            wish.itemId === item.id &&
-            wish.userId === auth.currentUser?.uid
-    );
 
     const isEditing =
     isAdmin &&
@@ -347,6 +377,31 @@ function createCard(item)
         wish =>
             wish.itemId === item.id
     );
+
+    const myWish =
+    wishes.find(
+        wish =>
+            wish.itemId === item.id &&
+            wish.characterId === selectedCharacter?.id
+    );
+
+    const wishCharacterNames =
+    itemWishes
+        .map(wish =>
+        {
+            const character =
+                characters.find(
+                    c => c.id === wish.characterId
+                );
+
+            if (!character)
+            {
+                return "Unknown Character";
+            }
+
+            return `${character.name} (${character.class})`;
+        })
+        .join("<br>");
 
     item.rarity &&
     card.classList.add(
@@ -361,56 +416,51 @@ function createCard(item)
     const isPrinted =
     item.printed;
 
+    const canWish =
+    currentUserRole !== "admin"
+    &&
+    getCurrentUsersCharacters().length > 0;
+
     isLooted && card.classList.add("looted");
     isPrinted && card.classList.add("printed");
     
     card.innerHTML = `
 
- ${
-    isAdmin
-    ?
-    (
-        isEditing
+ <div class="card-buttons">
+
+    ${
+        isAdmin
         ?
         `
-        <div class="card-buttons">
+        <button class="loot-button">
+            ${isLooted ? "Looted" : "Loot"}
+        </button>
 
-            <button class="save-button">
-                Save
-            </button>
+        <button class="print-button">
+            ${isPrinted ? "Printed" : "Print"}
+        </button>
 
-            <button class="cancel-button">
-                Cancel
-            </button>
-
-        </div>
+        <button class="edit-button">
+            Edit
+        </button>
         `
         :
+        ""
+    }
+
+    ${
+        canWish
+        ?
         `
-        <div class="card-buttons">
-
-            <button class="loot-button">
-                ${isLooted ? "Looted" : "Loot"}
-            </button>
-
-            <button class="print-button">
-                ${isPrinted ? "Printed" : "Print"}
-            </button>
-
-            <button class="edit-button">
-                Edit
-            </button>
-
-            <button class="wish-button">
-                ${myWish ? "Wished" : "Wish"}
-            </button>
-
-        </div>
+        <button class="wish-button">
+            ${myWish ? "Wished" : "Wish"}
+        </button>
         `
-    )
-    :
-    ""
-}
+        :
+        ""
+    }
+
+</div>
 
 ${
 isAdmin
@@ -418,10 +468,13 @@ isAdmin
 `
 <div class="wish-admin-block">
 
-    Wishes:
-    ${itemWishes.length}
+    <strong>
+        Wishes: ${itemWishes.length}
+    </strong>
 
-    <br>
+    <br><br>
+
+    ${wishCharacterNames || "No wishes"}
 
 </div>
 `
