@@ -661,11 +661,15 @@ isAdmin
             :
             ""
         }
+        ${
+        item.image
+        ?
+        `
         <img
             src="${item.image}"
             class="card-art"
             alt="${item.name}"
-        >
+
 
         <div class="card-body">
 
