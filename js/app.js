@@ -27,10 +27,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 let items = []; //Firestore items
-let players = []; //Firestore players
-let currentUserRole = "player"; // Default role is "player"
-let currentPlayer = null; // Current player object for the logged-in user
-let wishes = []; // Firestore wishes objects for the current player
+let currentUserRole = "player"; //Default role for new users
+let characters = []; //Firestore characters tied to users
+let wishes = []; // Firestore wish records
 const editingItems = new Set();
 
 async function loadItemsFromFirestore()
@@ -47,35 +46,16 @@ async function loadItemsFromFirestore()
     renderCards();
 }
 
-async function loadPlayers()
+async function loadCharacters()
 {
-    players = (
+    characters = (
         await getDocs(
-            collection(db, "players")
+            collection(db, "characters")
         )
     ).docs.map(doc => ({
         id: doc.id,
         ...doc.data()
     }));
-}
-
-function populateOwnerFilter()
-{
-    const filter =
-        document.getElementById("ownerFilter");
-
-    if (!filter) return;
-
-    filter.innerHTML = `
-        <option value="">All Owners</option>
-        ${
-            players.map(player => `
-                <option value="${player.id}">
-                    ${player.name}
-                </option>
-            `).join("")
-        }
-    `;
 }
 
 async function loadWishes()
@@ -214,22 +194,12 @@ function attachWishEvents(
         "click",
         async () =>
         {
-            if (!currentPlayer)
-            {
-                return;
-            }
-
             await addDoc(
-                collection(
-                    db,
-                    "wishes"
-                ),
+                collection(db,"wishes"),
                 {
                     itemId: item.id,
-                    playerId:
-                        currentPlayer.id,
-                    created:
-                        Date.now()
+                    characterId: selectedCharacter.id,
+                    created: Date.now()
                 }
             );
 
@@ -238,6 +208,31 @@ function attachWishEvents(
             renderCards();
         }
     );
+}
+
+async function ensureUserExists()
+{
+    const userRef =
+        doc(
+            db,
+            "users",
+            auth.currentUser.uid
+        );
+
+    const userDoc =
+        await getDoc(userRef);
+
+    if (!userDoc.exists())
+    {
+        await setDoc(
+            userRef,
+            {
+                email: auth.currentUser.email,
+                role: "player",
+                created: Date.now()
+            }
+        );
+    }
 }
 
 function attachLootEvents(
@@ -309,31 +304,12 @@ function attachPrintEvents(
     );
 }
 
-function attachOwnerEvents(
-    card,
-    item
-)
+function getCurrentUsersCharacters()
 {
-    const ownerSelect =
-        card.querySelector(".owner-select");
-
-    ownerSelect?.addEventListener(
-        "change",
-        async (event) =>
-        {
-            await updateDoc(
-                doc(db, "items", item.id),
-                {
-                    owner:
-                        event.target.value || null
-                }
-            );
-
-            item.owner =
-                event.target.value || null;
-
-            await loadItemsFromFirestore();
-        }
+    return characters.filter(
+        character =>
+            character.userId === auth.currentUser?.uid &&
+            character.active
     );
 }
 
@@ -359,7 +335,7 @@ function createCard(item)
     wishes.find(
         wish =>
             wish.itemId === item.id &&
-            wish.playerId === currentPlayer?.id
+            wish.userId === auth.currentUser?.uid
     );
 
     const isEditing =
@@ -379,17 +355,6 @@ function createCard(item)
             .replaceAll(" ", "-")
     );
 
-    const ownerOptions = players
-    .map(player => `
-        <option
-            value="${player.id}"
-            ${item.owner === player.id ? "selected" : ""}
-        >
-            ${player.name}
-        </option>
-    `)
-    .join("");
-
     const isLooted =
     item.looted;
 
@@ -398,24 +363,6 @@ function createCard(item)
 
     isLooted && card.classList.add("looted");
     isPrinted && card.classList.add("printed");
-
-const wishedPlayers =
-    itemWishes
-        .map(
-            wish =>
-                players.find(
-                    p => p.id === wish.playerId
-                )?.name || "Unknown Player"
-        )
-        .join("<br>");
-
-console.log("isAdmin:", isAdmin);
-
-console.log("itemWishes:", itemWishes);
-
-console.log("players:", players);
-
-console.log("wishedPlayers:", wishedPlayers);
     
     card.innerHTML = `
 
@@ -476,35 +423,11 @@ isAdmin
 
     <br>
 
-    ${wishedPlayers}
-
 </div>
 `
 :
 ""
 }
-
-    ${
-        item.looted && isAdmin
-        ?
-        `
-        <div class="owner-block">
-
-            <select class="owner-select">
-
-                <option value="">
-                    No Owner
-                </option>
-
-                ${ownerOptions}
-
-            </select>
-
-        </div>
-        `
-        :
-        ""
-    }
 
         <div class="watermark">
             LOOTED
@@ -772,11 +695,6 @@ attachPrintEvents(
     item
 );
 
-attachOwnerEvents(
-    card,
-    item
-);
-
 attachWishEvents(
     card,
     item
@@ -813,9 +731,7 @@ function renderCards()
         document.getElementById("classFilter")
         ?.value || "";
 
-    const ownerFilter =
-        document.getElementById("ownerFilter")
-        ?.value || "";
+
 
     const categoryFilter =
         document.getElementById("categoryFilter")
@@ -859,14 +775,6 @@ function renderCards()
             .includes(search)
         );
     });
-
-    ownerFilter &&
-    (
-        filtered =
-        filtered.filter(
-            item => item.owner === ownerFilter
-        )
-    );
 
     if (rarityFilter)
     {
@@ -1077,7 +985,7 @@ function populateCampaignFilter()
     });
 }
 
-function renderAdminPanel()
+async function renderAdminPanel()
 {
     if (currentUserRole !== "admin")
     {
@@ -1092,24 +1000,30 @@ function renderAdminPanel()
         return;
     }
 
-    panel.innerHTML =
-        players
-        .filter(player => player.userId)
-        .map(player => `
-            <div>
+    const snapshot =
+        await getDocs(
+            collection(db, "users")
+        );
 
-                ${player.name}
+    const users =
+        snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+    panel.innerHTML =
+        users.map(user => `
+            <div>
+                ${user.email}
+                (${user.role})
 
                 <button
                     class="make-admin"
-                    data-userid="${player.userId}"
-                >
+                    data-userid="${user.id}">
                     Make Admin
                 </button>
-
             </div>
-        `)
-        .join("");
+        `).join("");
 
     panel
         .querySelectorAll(".make-admin")
@@ -1129,13 +1043,10 @@ function renderAdminPanel()
                             role: "admin"
                         }
                     );
-
-                    alert("User promoted to admin");
                 }
             );
         });
 }
-
 function updateStats(
     results,
     looted,
@@ -1178,21 +1089,9 @@ function updateStats(
                 }
             }
         );
-console.log(players);
-console.log(currentPlayer);
-    const logoutButton =
-        document.getElementById("logoutButton")
-        ?.addEventListener(
-            "click",
-            async () =>
-            {
-                await signOut(auth);
-            }
-        );
 
 [
     "search",
-    "ownerFilter",
     "rarityFilter",
     "sourceFilter",
     "campaignFilter",
@@ -1279,6 +1178,7 @@ onAuthStateChanged(
 
         if (user)
         {
+            await ensureUserExists();
             display.textContent =
                 user.email;
 
@@ -1292,30 +1192,13 @@ onAuthStateChanged(
                 "Logged in as:",
                 user.email
             );
-
-            await loadPlayers();
-
             await loadCurrentUserRole();
-
-            renderAdminPanel();
-
-            currentPlayer =
-            players.find(
-                player =>
-                    player.userId ===
-                    auth.currentUser.uid
-            );
-
+            await renderAdminPanel();
             //importItemsToFirestore();
-
+            await loadCharacters();
             await loadWishes();
-
             await loadItemsFromFirestore();
-
-            populateOwnerFilter();
-
             populateSourceFilter();
-
             populateCampaignFilter();
         }
         else
