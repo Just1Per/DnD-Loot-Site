@@ -439,10 +439,6 @@ function createCard(item)
                 ${myWish ? "Wished" : "Wish"}
             </button>
 
-            <button class="make-admin" data-userid="${player.userId}">
-                Make Admin
-            </button>
-
         </div>
         `
     )
@@ -1177,7 +1173,8 @@ function updateStats(
                 }
             }
         );
-
+console.log(players);
+console.log(currentPlayer);
     const logoutButton =
         document.getElementById("logoutButton")
         ?.addEventListener(
@@ -1296,7 +1293,6 @@ onAuthStateChanged(
             await loadCurrentUserRole();
 
             renderAdminPanel();
-            ''
 
             currentPlayer =
             players.find(
