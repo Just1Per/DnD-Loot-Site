@@ -1395,22 +1395,25 @@ onAuthStateChanged(
         const display =
             document.getElementById("userDisplay");
 
-        if (user)
-        {
-            await ensureUserExists();
-            display.textContent =
-                user.email;
+    if (user)
+    {
+        await ensureUserExists();
 
-            loginButton.style.display =
-                "none";
+        display.textContent =
+            user.email;
 
-            logoutButton.style.display =
-                "inline-block";
+        loginButton.style.display =
+            "none";
 
-            console.log(
-                "Logged in as:",
-                user.email
-            );
+        document.getElementById("registerButton").style.display =
+            "none";
+
+        document.getElementById("emailLoginButton").style.display =
+            "none";
+
+        logoutButton.style.display =
+            "inline-block";
+
             await loadCurrentUserRole();
             await renderAdminPanel();
             //importItemsToFirestore();
@@ -1422,15 +1425,16 @@ onAuthStateChanged(
         }
         else
         {
-            currentUserRole = "player";
-            selectedCharacter = null;
-            characters = [];
-            wishes = [];
-            
             display.textContent =
                 "Not logged in";
 
             loginButton.style.display =
+                "inline-block";
+
+            document.getElementById("registerButton").style.display =
+                "inline-block";
+
+            document.getElementById("emailLoginButton").style.display =
                 "inline-block";
 
             logoutButton.style.display =
