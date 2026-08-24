@@ -1038,6 +1038,8 @@ function populateCampaignFilter()
     });
 }
 
+
+
 async function renderAdminPanel()
 {
     if (currentUserRole !== "admin")
@@ -1173,6 +1175,62 @@ function updateStats(
             }
         }
     );
+
+document
+    .getElementById("createCharacterButton")
+    ?.addEventListener(
+        "click",
+        async () =>
+        {
+            if (!auth.currentUser)
+            {
+                alert(
+                    "Login first."
+                );
+                return;
+            }
+
+            const characterName =
+                document.getElementById(
+                    "characterName"
+                ).value;
+
+            const characterClass =
+                document.getElementById(
+                    "characterClass"
+                ).value;
+
+            if (!characterName)
+            {
+                alert(
+                    "Enter a character name."
+                );
+                return;
+            }
+
+            await addDoc(
+                collection(
+                    db,
+                    "characters"
+                ),
+                {
+                    name: characterName,
+                    class: characterClass,
+                    userId: auth.currentUser.uid,
+                    active: true,
+                    created: Date.now()
+                }
+            );
+
+            await loadCharacters();
+
+            alert(
+                "Character created."
+            );
+        }
+    );
+
+
 document
     .getElementById("emailLoginButton")
     ?.addEventListener(
