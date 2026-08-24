@@ -864,3 +864,20 @@ textarea::placeholder {
     background: #c0392b;
 }
 
+.filter-panel {
+    margin-top: 10px;
+}
+
+.filter-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.filter-checkboxes {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}

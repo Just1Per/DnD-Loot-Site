@@ -1194,9 +1194,6 @@ onAuthStateChanged(
                 user.email
             );
             await loadCurrentUserRole();
-            alert(
-            "Role = " + currentUserRole
-        );
             await renderAdminPanel();
             //importItemsToFirestore();
             await loadCharacters();

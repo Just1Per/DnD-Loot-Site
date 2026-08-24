@@ -10,113 +10,140 @@
 <body>
     <h1>D&D 5e Magic Item Looter</h1>
     <div class="toolbar">
-        <button id="loginButton">
-            Login
-        </button>
 
-        <button id="logoutButton" style="display:none;">
-            Logout
-        </button>
+    <button id="loginButton">
+        Login
+    </button>
 
-        <span id="userDisplay">
-            Not logged in
-        </span>
+    <button id="logoutButton" style="display:none;">
+        Logout
+    </button>
 
-        <input
-            type="text"
-            id="search"
-            placeholder="Search Items..."
-        >
-        <select class="owner-filter" id="ownerFilter">
-            <option value="">All Owners</option>
-        </select>
-        <select id="categoryFilter">
-            <option value="">All Categories</option>
-            <option value="Armor">Armor</option>
-            <option value="Potion">Potion</option>
-            <option value="Scroll">Scroll</option>
-            <option value="Wand">Wand</option>
-            <option value="Weapon">Weapon</option>
-            <option value="Wondrous Item">Wondrous Item</option>
-        </select>
-        <select id="rarityFilter">
-            <option value="">All Rarities</option>
-            <option value="Common">Common</option>
-            <option value="Uncommon">Uncommon</option>
-            <option value="Rare">Rare</option>
-            <option value="Very Rare">Very Rare</option>
-            <option value="Legendary">Legendary</option>
-        </select>
-        <select id="sourceFilter">
-            <option value="">
-                All Sources
-            </option>
-        </select>
+    <span id="userDisplay">
+        Not logged in
+    </span>
 
-        <select id="campaignFilter">
-            <option value="">
-                All Campaigns
-            </option>
-        </select>
-        <select id="classFilter">
-        <option value="">All Classes</option>
-        <option value="Artificer">Artificer</option>
-        <option value="Barbarian">Barbarian</option>
-        <option value="Bard">Bard</option>
-        <option value="Cleric">Cleric</option>
-        <option value="Druid">Druid</option>
-        <option value="Fighter">Fighter</option>
-        <option value="Monk">Monk</option>
-        <option value="Paladin">Paladin</option>
-        <option value="Ranger">Ranger</option>
-        <option value="Rogue">Rogue</option>
-        <option value="Sorcerer">Sorcerer</option>
-        <option value="Warlock">Warlock</option>
-        <option value="Wizard">Wizard</option>
-        </select>
-        <label>
-            <input
-                type="checkbox"
-                id="showLootedOnly"
-            >
-            Looted
-        </label>
-        <label>
-            <input
-                type="checkbox"
-                id="showUnlootedOnly"
-            >
-            Unlooted
-        </label>
-        <label>
-            <input
-                type="checkbox"
-                id="showAttunementOnly"
-            >
-            Attuned
-        </label>
-        <label>
-            <input
-                type="checkbox"
-                id="showNoAttunementOnly"
-            >
-            Not Attuned
-        </label>
-        <label>
-            <input
-                type="checkbox"
-                id="showPrintedOnly"
-            >
-            Printed
-        </label>
-        <label>
-            <input
-                type="checkbox"
-                id="showNotPrintedOnly"
-            >
-            Not Printed
-        </label>
-    </div>
+    <input
+        type="text"
+        id="search"
+        placeholder="Search Items..."
+    >
+
+    <details class="filter-panel">
+
+        <summary>
+            Filters
+        </summary>
+
+        <div class="filter-grid">
+
+            <select id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="Armor">Armor</option>
+                <option value="Potion">Potion</option>
+                <option value="Scroll">Scroll</option>
+                <option value="Wand">Wand</option>
+                <option value="Weapon">Weapon</option>
+                <option value="Wondrous Item">Wondrous Item</option>
+            </select>
+
+            <select id="rarityFilter">
+                <option value="">All Rarities</option>
+                <option value="Common">Common</option>
+                <option value="Uncommon">Uncommon</option>
+                <option value="Rare">Rare</option>
+                <option value="Very Rare">Very Rare</option>
+                <option value="Legendary">Legendary</option>
+            </select>
+
+            <select id="sourceFilter">
+                <option value="">
+                    All Sources
+                </option>
+            </select>
+
+            <select id="campaignFilter">
+                <option value="">
+                    All Campaigns
+                </option>
+            </select>
+
+            <select id="classFilter">
+                <option value="">All Classes</option>
+                <option value="Artificer">Artificer</option>
+                <option value="Barbarian">Barbarian</option>
+                <option value="Bard">Bard</option>
+                <option value="Cleric">Cleric</option>
+                <option value="Druid">Druid</option>
+                <option value="Fighter">Fighter</option>
+                <option value="Monk">Monk</option>
+                <option value="Paladin">Paladin</option>
+                <option value="Ranger">Ranger</option>
+                <option value="Rogue">Rogue</option>
+                <option value="Sorcerer">Sorcerer</option>
+                <option value="Warlock">Warlock</option>
+                <option value="Wizard">Wizard</option>
+            </select>
+
+        </div>
+
+        <fieldset class="filter-checkboxes">
+
+            <legend>Status</legend>
+
+            <label>
+                <input
+                    type="checkbox"
+                    id="showLootedOnly"
+                >
+                Looted
+            </label>
+
+            <label>
+                <input
+                    type="checkbox"
+                    id="showUnlootedOnly"
+                >
+                Unlooted
+            </label>
+
+            <label>
+                <input
+                    type="checkbox"
+                    id="showAttunementOnly"
+                >
+                Attuned
+            </label>
+
+            <label>
+                <input
+                    type="checkbox"
+                    id="showNoAttunementOnly"
+                >
+                Not Attuned
+            </label>
+
+            <label>
+                <input
+                    type="checkbox"
+                    id="showPrintedOnly"
+                >
+                Printed
+            </label>
+
+            <label>
+                <input
+                    type="checkbox"
+                    id="showNotPrintedOnly"
+                >
+                Not Printed
+            </label>
+
+        </fieldset>
+
+    </details>
+
+</div>
 <div id="adminPanel"></div>
 <div id="campaignStats"></div>
 <div id="card-container"></div>
