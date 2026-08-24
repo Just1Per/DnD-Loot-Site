@@ -1157,6 +1157,7 @@ async function loadCurrentUserRole()
         currentUserRole = "player";
 
         return;
+        
     }
 
     currentUserRole =
@@ -1193,6 +1194,9 @@ onAuthStateChanged(
                 user.email
             );
             await loadCurrentUserRole();
+            alert(
+            "Role = " + currentUserRole
+        );
             await renderAdminPanel();
             //importItemsToFirestore();
             await loadCharacters();
