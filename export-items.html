@@ -9,7 +9,7 @@
 
 <h2>Firebase Item Export</h2>
 
-<button id="export">Export Item Names</button>
+<button id="export">Export Items</button>
 
 <p id="status"></p>
 
@@ -25,7 +25,7 @@ import {
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDyj69qiEnkKk4lZjleGnvFEGUdvLcSZIk",
+    apiKey: "AIzaSyDyj69qiEnKkK4lZjleGnvFEGUdvLcSZIk",
     authDomain: "dnd-loot-site.firebaseapp.com",
     projectId: "dnd-loot-site",
     storageBucket: "dnd-loot-site.firebasestorage.app",
@@ -51,31 +51,50 @@ document.getElementById("export").addEventListener("click", async () => {
             collection(db, "items")
         );
 
+
         const items = snapshot.docs
-            .map(doc => doc.data().name)
-            .filter(name => name)
-            .sort((a, b) => a.localeCompare(b));
+            .map(doc => {
+
+                const data = doc.data();
+
+                return {
+                    id: doc.id,
+                    name: data.name ?? null,
+                    category: data.category ?? null,
+                    description: data.description ?? null
+                };
+
+            })
+            .sort((a, b) =>
+                (a.name || "").localeCompare(b.name || "")
+            );
 
 
         status.textContent =
             `Found ${items.length} items. Creating file...`;
 
 
-        const text = items.join("\n");
+        const json = JSON.stringify(items, null, 2);
+
 
         const blob = new Blob(
-            [text],
-            { type: "text/plain" }
+            [json],
+            { type: "application/json" }
         );
+
 
         const url = URL.createObjectURL(blob);
 
         const link = document.createElement("a");
 
         link.href = url;
-        link.download = "firebase-item-names.txt";
+        link.download = "firebase-items.json";
+
+        document.body.appendChild(link);
 
         link.click();
+
+        document.body.removeChild(link);
 
         URL.revokeObjectURL(url);
 

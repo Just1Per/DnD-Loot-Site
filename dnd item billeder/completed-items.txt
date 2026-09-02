@@ -1,0 +1,8 @@
+ammunition-plus-1
+battleaxe-plus-1
+breastplate-plus-1
+chain-mail-plus-1
+chain-shirt-plus-1
+dagger-plus-1
+flail-plus-1
+glaive-plus-1

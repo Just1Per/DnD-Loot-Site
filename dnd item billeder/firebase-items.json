@@ -1,0 +1,3956 @@
+[
+  {
+    "id": "ammunition-plus-1",
+    "name": "+1 Ammunition",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this piece of magic ammunition."
+  },
+  {
+    "id": "battleaxe-plus-1",
+    "name": "+1 Battleaxe",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "breastplate-plus-1",
+    "name": "+1 Breastplate",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "chain-mail-plus-1",
+    "name": "+1 Chain Mail",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "chain-shirt-plus-1",
+    "name": "+1 Chain Shirt",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "dagger-plus-1",
+    "name": "+1 Dagger",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "flail-plus-1",
+    "name": "+1 Flail",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "glaive-plus-1",
+    "name": "+1 Glaive",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "greataxe-plus-1",
+    "name": "+1 Greataxe",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "greatsword-plus-1",
+    "name": "+1 Greatsword",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "halberd-plus-1",
+    "name": "+1 Halberd",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "half-plate-plus-1",
+    "name": "+1 Half Plate Armor",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "hand-crossbow-plus-1",
+    "name": "+1 Hand Crossbow",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "handaxe-plus-1",
+    "name": "+1 Handaxe",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "crossbow-heavy-plus-1",
+    "name": "+1 Heavy Crossbow",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "hide-armor-plus-1",
+    "name": "+1 Hide Armor",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "lance-plus-1",
+    "name": "+1 Lance",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "leather-armor-plus-1",
+    "name": "+1 Leather Armor",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "crossbow-light-plus-1",
+    "name": "+1 Light Crossbow",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "longbow-plus-1",
+    "name": "+1 Longbow",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "longsword-plus-1",
+    "name": "+1 Longsword",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "mace-plus-1",
+    "name": "+1 Mace",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "maul-plus-1",
+    "name": "+1 Maul",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "morningstar-plus-1",
+    "name": "+1 Morningstar",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "padded-armor-plus-1",
+    "name": "+1 Padded Armor",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "pike-plus-1",
+    "name": "+1 Pike",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "plate-armor-plus-1",
+    "name": "+1 Plate Armor",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "quarterstaff-plus-1",
+    "name": "+1 Quarterstaff",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "rapier-plus-1",
+    "name": "+1 Rapier",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "ring-mail-plus-1",
+    "name": "+1 Ring Mail",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "scale-mail-plus-1",
+    "name": "+1 Scale Mail",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "shield-plus-1",
+    "name": "+1 Shield",
+    "category": "Armor",
+    "description": "While holding this shield, you have a +1 bonus to AC. This bonus is in addition to the shield's normal bonus to AC."
+  },
+  {
+    "id": "shortbow-plus-1",
+    "name": "+1 Shortbow",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "shortsword-plus-1",
+    "name": "+1 Shortsword",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "sickle-plus-1",
+    "name": "+1 Sickle",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "spear-plus-1",
+    "name": "+1 Spear",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "splint-armor-plus-1",
+    "name": "+1 Splint Armor",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "studded-leather-plus-1",
+    "name": "+1 Studded Leather Armor",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "trident-plus-1",
+    "name": "+1 Trident",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "war-pick-plus-1",
+    "name": "+1 War Pick",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "warhammer-plus-1",
+    "name": "+1 Warhammer",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "weapon-plus-1",
+    "name": "+1 Weapon",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "whip-plus-1",
+    "name": "+1 Whip",
+    "category": "Weapon",
+    "description": "You have a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "ammunition-plus-2",
+    "name": "+2 Ammunition",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this piece of magic ammunition."
+  },
+  {
+    "id": "battleaxe-plus-2",
+    "name": "+2 Battleaxe",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "breastplate-plus-2",
+    "name": "+2 Breastplate",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "chain-mail-plus-2",
+    "name": "+2 Chain Mail",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "chain-shirt-plus-2",
+    "name": "+2 Chain Shirt",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "dagger-plus-2",
+    "name": "+2 Dagger",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "greataxe-plus-2",
+    "name": "+2 Greataxe",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "greatsword-plus-2",
+    "name": "+2 Greatsword",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "half-plate-plus-2",
+    "name": "+2 Half Plate Armor",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "hide-armor-plus-2",
+    "name": "+2 Hide Armor",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "leather-armor-plus-2",
+    "name": "+2 Leather Armor",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "longbow-plus-2",
+    "name": "+2 Longbow",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "longsword-plus-2",
+    "name": "+2 Longsword",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "mace-plus-2",
+    "name": "+2 Mace",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "plate-armor-plus-2",
+    "name": "+2 Plate Armor",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "quarterstaff-plus-2",
+    "name": "+2 Quarterstaff",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "rapier-plus-2",
+    "name": "+2 Rapier",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "ring-mail-plus-2",
+    "name": "+2 Ring Mail",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "scale-mail-plus-2",
+    "name": "+2 Scale Mail",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "shield-plus-2",
+    "name": "+2 Shield",
+    "category": "Armor",
+    "description": "While holding this shield, you have a +2 bonus to AC. This bonus is in addition to the shield's normal bonus to AC."
+  },
+  {
+    "id": "shortbow-plus-2",
+    "name": "+2 Shortbow",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "shortsword-plus-2",
+    "name": "+2 Shortsword",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "splint-armor-plus-2",
+    "name": "+2 Splint Armor",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "studded-leather-plus-2",
+    "name": "+2 Studded Leather Armor",
+    "category": "Armor",
+    "description": "You have a +2 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "warhammer-plus-2",
+    "name": "+2 Warhammer",
+    "category": "Weapon",
+    "description": "You have a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "ammunition-plus-3",
+    "name": "+3 Ammunition",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this piece of magic ammunition."
+  },
+  {
+    "id": "battleaxe-plus-3",
+    "name": "+3 Battleaxe",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "breastplate-plus-3",
+    "name": "+3 Breastplate",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "chain-mail-plus-3",
+    "name": "+3 Chain Mail",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "chain-shirt-plus-3",
+    "name": "+3 Chain Shirt",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "dagger-plus-3",
+    "name": "+3 Dagger",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "greatsword-plus-3",
+    "name": "+3 Greatsword",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "half-plate-plus-3",
+    "name": "+3 Half Plate Armor",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "hide-armor-plus-3",
+    "name": "+3 Hide Armor",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "leather-armor-plus-3",
+    "name": "+3 Leather Armor",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "longbow-plus-3",
+    "name": "+3 Longbow",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "longsword-plus-3",
+    "name": "+3 Longsword",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "mace-plus-3",
+    "name": "+3 Mace",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "plate-armor-plus-3",
+    "name": "+3 Plate Armor",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "quarterstaff-plus-3",
+    "name": "+3 Quarterstaff",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "rapier-plus-3",
+    "name": "+3 Rapier",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "ring-mail-plus-3",
+    "name": "+3 Ring Mail",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "scale-mail-plus-3",
+    "name": "+3 Scale Mail",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "shield-plus-3",
+    "name": "+3 Shield",
+    "category": "Armor",
+    "description": "While holding this shield, you have a +3 bonus to AC. This bonus is in addition to the shield's normal bonus to AC."
+  },
+  {
+    "id": "shortsword-plus-3",
+    "name": "+3 Shortsword",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "splint-armor-plus-3",
+    "name": "+3 Splint Armor",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "studded-leather-plus-3",
+    "name": "+3 Studded Leather Armor",
+    "category": "Armor",
+    "description": "You have a +3 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "warhammer-plus-3",
+    "name": "+3 Warhammer",
+    "category": "Weapon",
+    "description": "You have a +3 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "abracadabrus",
+    "name": "Abracadabrus",
+    "category": "Wondrous Item",
+    "description": "An ornate cube-shaped box that produces a random item once per dawn."
+  },
+  {
+    "id": "absorbing-tattoo",
+    "name": "Absorbing Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo features designs that emphasize one of the damage types."
+  },
+  {
+    "id": "acheron-blade",
+    "name": "Acheron Blade",
+    "category": "Weapon",
+    "description": "The black iron blade of this sword is crafted from a meteorite."
+  },
+  {
+    "id": "adamantine-armor",
+    "name": "Adamantine Armor",
+    "category": "Armor",
+    "description": "This suit of armor is reinforced with adamantine, one of the hardest substances in existence."
+  },
+  {
+    "id": "adze-of-annam",
+    "name": "Adze of Annam",
+    "category": "Weapon",
+    "description": "The adze of Annam is a greataxe-sized tool that belonged to Annam the All-Father, god of giants."
+  },
+  {
+    "id": "aegis-of-the-radiant-dawn",
+    "name": "Aegis of the Radiant Dawn",
+    "category": "Armor",
+    "description": "Heavy steel plates beautifully engraved with golden sunburst filigree."
+  },
+  {
+    "id": "akmon-hammer-of-purphoros",
+    "name": "Akmon, Hammer of Purphoros",
+    "category": "Weapon",
+    "description": "The hammer of Purphoros, god of the forge, burning with eternal flame."
+  },
+  {
+    "id": "alchemical-compendium",
+    "name": "Alchemical Compendium",
+    "category": "Wondrous Item",
+    "description": "Acrid scents cling to these pages, stained with reagents and full of diagrams, formulae, and notes on alchemical experiments."
+  },
+  {
+    "id": "alchemy-jug",
+    "name": "Alchemy Jug",
+    "category": "Wondrous Item",
+    "description": "This ceramic jug appears to be able to hold a gallon of liquid and weighs 12 pounds whether full or empty."
+  },
+  {
+    "id": "amethyst-lodestone",
+    "name": "Amethyst Lodestone",
+    "category": "Wondrous Item",
+    "description": "This fist-sized chunk of amethyst is infused with an amethyst dragon's ability to negate gravitational pull."
+  },
+  {
+    "id": "amulet-of-health",
+    "name": "Amulet of Health",
+    "category": "Wondrous Item",
+    "description": "Your Constitution score is 19 while you wear this amulet. It has no effect on you if your Constitution is already 19 or higher."
+  },
+  {
+    "id": "amulet-of-proof-against-detection-and-location",
+    "name": "Amulet of Proof against Detection and Location",
+    "category": "Wondrous Item",
+    "description": "While wearing this amulet, you are hidden from divination magic. You can't be targeted by such magic or perceived through magical scrying sensors."
+  },
+  {
+    "id": "amulet-of-ravenloft",
+    "name": "Amulet of Ravenloft",
+    "category": "Wondrous Item",
+    "description": "This gold amulet shaped like a sunburst was created by priests of the Morninglord."
+  },
+  {
+    "id": "amulet-of-stamina-and-health",
+    "name": "Amulet of Stamina and Health",
+    "category": "Wondrous Item (Amulet)",
+    "description": "A heavy silver amulet bearing two intertwined serpents encircling a heart-shaped emerald. The gem pulses with vitality, strengthening the wearer at a price."
+  },
+  {
+    "id": "amulet-of-the-black-skull",
+    "name": "Amulet of the Black Skull",
+    "category": "Wondrous Item",
+    "description": "This amulet is carved from obsidian and shaped like a screaming skull."
+  },
+  {
+    "id": "dead-three-amulet",
+    "name": "Amulet of the Dead Three",
+    "category": "Wondrous Item",
+    "description": "This amulet bears the combined symbols of Bane, Bhaal, and Myrkul — the Dead Three. It radiates a palpable aura of dread."
+  },
+  {
+    "id": "amulet-of-the-devout",
+    "name": "Amulet of the Devout",
+    "category": "Wondrous Item",
+    "description": "This amulet bears the symbol of a deity inlaid with precious stones or metals."
+  },
+  {
+    "id": "amulet-of-the-devout-rare",
+    "name": "Amulet of the Devout (Rare)",
+    "category": "Wondrous Item",
+    "description": "A rare amulet bearing the symbol of a deity."
+  },
+  {
+    "id": "amulet-of-the-devout-very-rare",
+    "name": "Amulet of the Devout (Very Rare)",
+    "category": "Wondrous Item",
+    "description": "A very rare amulet bearing the symbol of a deity."
+  },
+  {
+    "id": "amulet-of-the-drunkard",
+    "name": "Amulet of the Drunkard",
+    "category": "Wondrous Item",
+    "description": "This amulet smells of old ale and is adorned with the image of a drunken halfling."
+  },
+  {
+    "id": "amulet-of-the-planes",
+    "name": "Amulet of the Planes",
+    "category": "Wondrous Item",
+    "description": "While wearing this amulet, you can use an action to name a location that you are familiar with on another plane of existence."
+  },
+  {
+    "id": "apparatus-of-kwalish",
+    "name": "Apparatus of Kwalish",
+    "category": "Wondrous Item",
+    "description": "A sealed iron barrel weighing 500 pounds that conceals an operator's compartment."
+  },
+  {
+    "id": "arcane-grimoire",
+    "name": "Arcane Grimoire",
+    "category": "Wondrous Item",
+    "description": "While you study spells from this leather-bound tome, your eyes and fingertips tingle with the power stored within."
+  },
+  {
+    "id": "arcane-grimoire-rare",
+    "name": "Arcane Grimoire (Rare)",
+    "category": "Wondrous Item",
+    "description": "A rare leather-bound tome that enhances wizard spellcasting."
+  },
+  {
+    "id": "arcane-grimoire-very-rare",
+    "name": "Arcane Grimoire (Very Rare)",
+    "category": "Wondrous Item",
+    "description": "A very rare leather-bound tome that greatly enhances wizard spellcasting."
+  },
+  {
+    "id": "arcane-propulsion-arm",
+    "name": "Arcane Propulsion Arm",
+    "category": "Wondrous Item",
+    "description": "This prosthetic arm replaces a hand or arm that has been lost. While the prosthetic is attached, it functions identically to the body part it replaces."
+  },
+  {
+    "id": "archfey-token",
+    "name": "Archfey's Token",
+    "category": "Wondrous Item",
+    "description": "A small token — often a pressed flower, a smooth river stone, or a carved acorn — given as a gift by an archfey. It carries a fragment of the archfey's power."
+  },
+  {
+    "id": "armblade",
+    "name": "Armblade",
+    "category": "Weapon",
+    "description": "A magic weapon that attaches to a warforged's arm, integrating into their composite plating."
+  },
+  {
+    "id": "armor-of-fungal-spores",
+    "name": "Armor of Fungal Spores",
+    "category": "Armor",
+    "description": "This armor is decorated with fungi motifs. When struck by a critical hit, the armor emits a cloud of harmless spores."
+  },
+  {
+    "id": "armor-of-gleaming",
+    "name": "Armor of Gleaming",
+    "category": "Armor",
+    "description": "This armor never gets dirty."
+  },
+  {
+    "id": "armor-of-invulnerability",
+    "name": "Armor of Invulnerability",
+    "category": "Armor",
+    "description": "A suit of plate armor adorned with relief sculptures of fierce-looking faces."
+  },
+  {
+    "id": "armor-of-resistance",
+    "name": "Armor of Resistance",
+    "category": "Armor",
+    "description": "You have resistance to one type of damage while you wear this armor."
+  },
+  {
+    "id": "baldurs-gate-encounter-armor",
+    "name": "Armor of the Fallen",
+    "category": "Armor",
+    "description": "This dark armor is inscribed with the names of fallen warriors and radiates a cold, grim energy."
+  },
+  {
+    "id": "armor-of-vulnerability",
+    "name": "Armor of Vulnerability",
+    "category": "Armor",
+    "description": "This armor grants resistance to one of three damage types, but vulnerability to the other two. It appears cursed."
+  },
+  {
+    "id": "arrow-of-slaying",
+    "name": "Arrow of Slaying",
+    "category": "Weapon",
+    "description": "An arrow of slaying is a magic weapon meant to kill a particular kind of creature."
+  },
+  {
+    "id": "ascendant-dragons-orb",
+    "name": "Ascendant Dragon's Orb",
+    "category": "Wondrous Item",
+    "description": "This orb of dragonkind has been infused with the essence of a greatwyrm."
+  },
+  {
+    "id": "astral-drift",
+    "name": "Astral Drift",
+    "category": "Wondrous Item",
+    "description": "This silver compass needle always points toward the nearest portal to the Astral Sea."
+  },
+  {
+    "id": "astral-shard",
+    "name": "Astral Shard",
+    "category": "Wondrous Item",
+    "description": "This crystal is a solidified shard of the Astral Plane, swirling with silver mist."
+  },
+  {
+    "id": "astromancy-archive",
+    "name": "Astromancy Archive",
+    "category": "Wondrous Item",
+    "description": "This brass disc of articulated rings unfolds into an orrery. The rings are inscribed with astrological symbols, and around its circumference are twelve runic emblems."
+  },
+  {
+    "id": "atlas-of-endless-horizons",
+    "name": "Atlas of Endless Horizons",
+    "category": "Wondrous Item",
+    "description": "This thick tome is bound in dark leather, crisscrossed with ley lines. The pages are filled with maps of planes both known and unknown."
+  },
+  {
+    "id": "bag-of-devouring",
+    "name": "Bag of Devouring",
+    "category": "Wondrous Item",
+    "description": "This bag superficially resembles a bag of holding but is, in fact, a feeding orifice for a gigantic extradimensional creature."
+  },
+  {
+    "id": "bag-of-holding",
+    "name": "Bag of Holding",
+    "category": "Wondrous Item",
+    "description": "This bag has an interior space considerably larger than its outside dimensions, roughly 2 feet in diameter at the mouth and 4 feet deep."
+  },
+  {
+    "id": "bag-of-tricks-gray",
+    "name": "Bag of Tricks (Gray)",
+    "category": "Wondrous Item",
+    "description": "This ordinary bag, made from gray cloth, appears empty. Reaching inside the bag, however, reveals the presence of a small, fuzzy object."
+  },
+  {
+    "id": "bag-of-tricks-rust",
+    "name": "Bag of Tricks (Rust)",
+    "category": "Wondrous Item",
+    "description": "This ordinary bag, made from rust-colored cloth, appears empty."
+  },
+  {
+    "id": "bag-of-tricks-tan",
+    "name": "Bag of Tricks (Tan)",
+    "category": "Wondrous Item",
+    "description": "This ordinary bag, made from tan cloth, appears empty."
+  },
+  {
+    "id": "bahamuts-final-scale",
+    "name": "Bahamut's Final Scale",
+    "category": "Armor",
+    "description": "A platinum dragon scale said to be the final scale shed by Bahamut before passing judgment upon a proud dragon."
+  },
+  {
+    "id": "barrier-tattoo-rare",
+    "name": "Barrier Tattoo (Rare)",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo depicts protective imagery."
+  },
+  {
+    "id": "barrier-tattoo-uncommon",
+    "name": "Barrier Tattoo (Uncommon)",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo depicts protective imagery and uses ink that protects against harm."
+  },
+  {
+    "id": "barrier-tattoo-very-rare",
+    "name": "Barrier Tattoo (Very Rare)",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo depicts protective imagery."
+  },
+  {
+    "id": "battle-standard-of-infernal-power",
+    "name": "Battle Standard of Infernal Power",
+    "category": "Wondrous Item",
+    "description": "This hell-forged battle standard fills nearby allies with infernal power."
+  },
+  {
+    "id": "bead-of-force",
+    "name": "Bead of Force",
+    "category": "Wondrous Item",
+    "description": "This small black sphere measures 3/4 of an inch in diameter."
+  },
+  {
+    "id": "bell-branch",
+    "name": "Bell Branch",
+    "category": "Wondrous Item",
+    "description": "This silver implement is shaped like a tree branch and is strung with small golden bells."
+  },
+  {
+    "id": "belt-of-giant-strength-cloud",
+    "name": "Belt of Cloud Giant Strength",
+    "category": "Wondrous Item",
+    "description": "While wearing this belt, your Strength score changes to 27."
+  },
+  {
+    "id": "belt-of-giant-strength-fire",
+    "name": "Belt of Fire Giant Strength",
+    "category": "Wondrous Item",
+    "description": "While wearing this belt, your Strength score changes to 25."
+  },
+  {
+    "id": "belt-of-giant-strength-frost",
+    "name": "Belt of Frost Giant Strength",
+    "category": "Wondrous Item",
+    "description": "While wearing this belt, your Strength score changes to 23."
+  },
+  {
+    "id": "belt-of-giant-endurance",
+    "name": "Belt of Giant Endurance",
+    "category": "Wondrous Item",
+    "description": "This wide belt is made from the hide of a giant and decorated with runes."
+  },
+  {
+    "id": "belt-of-giant-strength-hill",
+    "name": "Belt of Hill Giant Strength",
+    "category": "Wondrous Item",
+    "description": "While wearing this belt, your Strength score changes to 21. The item has no effect on you if your Strength is already equal to or greater than that score."
+  },
+  {
+    "id": "belt-of-giant-strength-stone",
+    "name": "Belt of Stone Giant Strength",
+    "category": "Wondrous Item",
+    "description": "While wearing this belt, your Strength score changes to 23."
+  },
+  {
+    "id": "belt-of-giant-strength-storm",
+    "name": "Belt of Storm Giant Strength",
+    "category": "Wondrous Item",
+    "description": "While wearing this belt, your Strength score changes to 29."
+  },
+  {
+    "id": "berserker-axe",
+    "name": "Berserker Axe",
+    "category": "Weapon",
+    "description": "You gain a +1 bonus to attack and damage rolls made with this magic weapon. In addition, while you are attuned to this weapon, your hit point maximum increases by 1 for each level you have attained."
+  },
+  {
+    "id": "black-robe",
+    "name": "Black Robe of the Orders",
+    "category": "Wondrous Item",
+    "description": "This black silk robe is worn by wizards of the Order of the Black Robes on Krynn, followers of Nuitari."
+  },
+  {
+    "id": "blackrazor",
+    "name": "Blackrazor",
+    "category": "Weapon",
+    "description": "Black as night, this blade was forged with an evil purpose and hungers for souls."
+  },
+  {
+    "id": "blood-fury-tattoo",
+    "name": "Blood Fury Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo evokes fury in its form."
+  },
+  {
+    "id": "bloodwell-vial",
+    "name": "Bloodwell Vial",
+    "category": "Wondrous Item",
+    "description": "To attune to this vial, you must place a few drops of your blood into it. The vial can't be opened while your attunement to it lasts."
+  },
+  {
+    "id": "bloodwell-vial-rare",
+    "name": "Bloodwell Vial (Rare)",
+    "category": "Wondrous Item",
+    "description": "A rare vial that enhances sorcerer spellcasting."
+  },
+  {
+    "id": "bloodwell-vial-very-rare",
+    "name": "Bloodwell Vial (Very Rare)",
+    "category": "Wondrous Item",
+    "description": "A very rare vial that greatly enhances sorcerer spellcasting."
+  },
+  {
+    "id": "bobbing-lily-pad",
+    "name": "Bobbing Lily Pad",
+    "category": "Wondrous Item",
+    "description": "This large lily pad floats 1 inch above any surface, including water."
+  },
+  {
+    "id": "boos-hamster-ball",
+    "name": "Boo's Magical Miniature Giant Space Hamster Ball",
+    "category": "Wondrous Item",
+    "description": "A shimmering crystalline sphere just large enough to contain one miniature giant space hamster. The ball rolls of its own accord toward danger."
+  },
+  {
+    "id": "bookmark",
+    "name": "Bookmark",
+    "category": "Wondrous Item",
+    "description": "This metal bookmark has a sharp tip and can be magically summoned."
+  },
+  {
+    "id": "paper-bird-tomb",
+    "name": "Bookmark",
+    "category": "Wondrous Item",
+    "description": "This metal bookmark has a sharp tip and can be summoned back to hand."
+  },
+  {
+    "id": "boots-of-elvenkind",
+    "name": "Boots of Elvenkind",
+    "category": "Wondrous Item",
+    "description": "While you wear these boots, your steps make no sound, regardless of the surface you are moving across."
+  },
+  {
+    "id": "boots-of-false-tracks",
+    "name": "Boots of False Tracks",
+    "category": "Wondrous Item",
+    "description": "Only humanoids can wear these boots. While wearing the boots, you can choose to have them leave tracks like those of a different kind of humanoid of similar size."
+  },
+  {
+    "id": "boots-of-speed",
+    "name": "Boots of Speed",
+    "category": "Wondrous Item",
+    "description": "While you wear these boots, you can use a bonus action and click the boots' heels together. If you do, the boots double your walking speed, and any creature that makes an opportunity attack against you has disadvantage on the attack roll."
+  },
+  {
+    "id": "boots-of-striding-and-springing",
+    "name": "Boots of Striding and Springing",
+    "category": "Wondrous Item",
+    "description": "While you wear these boots, your walking speed becomes 30 feet, unless your walking speed is higher, and your speed isn't reduced if you are encumbered or wearing heavy armor."
+  },
+  {
+    "id": "boots-of-the-winterlands",
+    "name": "Boots of the Winterlands",
+    "category": "Wondrous Item",
+    "description": "These furred boots are snug and feel quite warm."
+  },
+  {
+    "id": "bottle-of-boundless-coffee",
+    "name": "Bottle of Boundless Coffee",
+    "category": "Wondrous Item",
+    "description": "This brass bottle fills with hot coffee when uncorked."
+  },
+  {
+    "id": "bracer-of-flying-daggers",
+    "name": "Bracer of Flying Daggers",
+    "category": "Wondrous Item",
+    "description": "This bracer has thin magical knives that spring forth on command."
+  },
+  {
+    "id": "bracers-of-archery",
+    "name": "Bracers of Archery",
+    "category": "Wondrous Item",
+    "description": "While wearing these bracers, you have proficiency with the longbow and shortbow, and you gain a +2 bonus to damage rolls on ranged attacks made with such weapons."
+  },
+  {
+    "id": "bracers-of-defense",
+    "name": "Bracers of Defense",
+    "category": "Wondrous Item",
+    "description": "While wearing these bracers, you gain a +2 bonus to AC if you are wearing no armor and using no shield."
+  },
+  {
+    "id": "brooch-of-shielding",
+    "name": "Brooch of Shielding",
+    "category": "Wondrous Item",
+    "description": "While wearing this brooch, you have resistance to force damage, and you have immunity to damage from the magic missile spell."
+  },
+  {
+    "id": "broom-of-flying",
+    "name": "Broom of Flying",
+    "category": "Wondrous Item",
+    "description": "This wooden broom, which weighs 3 pounds, functions like a mundane broom until you stand astride it and speak its command word."
+  },
+  {
+    "id": "cabals-ruin",
+    "name": "Cabal's Ruin",
+    "category": "Wondrous Item",
+    "description": "A deep blue cloak that shifts as if caught in an unfelt wind. One of the Vestiges of Divergence."
+  },
+  {
+    "id": "candle-of-the-deep",
+    "name": "Candle of the Deep",
+    "category": "Wondrous Item",
+    "description": "The flame of this candle is not extinguished when immersed in water. It gives off light and heat like a normal candle."
+  },
+  {
+    "id": "cape-of-the-mountebank",
+    "name": "Cape of the Mountebank",
+    "category": "Wondrous Item",
+    "description": "This cape smells faintly of brimstone. While wearing it, you can use it to cast the dimension door spell as an action."
+  },
+  {
+    "id": "carpet-of-flying",
+    "name": "Carpet of Flying",
+    "category": "Wondrous Item",
+    "description": "You can speak the carpet's command word as an action to make the carpet hover and fly."
+  },
+  {
+    "id": "cast-off-armor",
+    "name": "Cast-Off Armor",
+    "category": "Armor",
+    "description": "You can doff this armor as an action."
+  },
+  {
+    "id": "cauldron-of-plenty",
+    "name": "Cauldron of Plenty",
+    "category": "Wondrous Item",
+    "description": "This thick iron cauldron has runes of nourishment carved into its exterior."
+  },
+  {
+    "id": "cauldron-of-rebirth",
+    "name": "Cauldron of Rebirth",
+    "category": "Wondrous Item",
+    "description": "This Tiny blackened cauldron is half filled with a thick black liquid."
+  },
+  {
+    "id": "nature-tattoo",
+    "name": "Cauldron of the five winds",
+    "category": "Wondrous Item",
+    "description": "Crafted in Kara-Tur by the Monks of the Hidden Bamboo Valley."
+  },
+  {
+    "id": "charlatan-s-die",
+    "name": "Charlatan's Die",
+    "category": "Wondrous Item",
+    "description": "Whenever you roll this six-sided die, you can control which number it lands on."
+  },
+  {
+    "id": "charm-of-plant-command",
+    "name": "Charm of Plant Command",
+    "category": "Wondrous Item",
+    "description": "This charm allows the user to command plant creatures."
+  },
+  {
+    "id": "charm-of-the-snow-walker",
+    "name": "Charm of the Snow Walker",
+    "category": "Wondrous Item",
+    "description": "A small bone disk engraved with the symbol of Auril."
+  },
+  {
+    "id": "chime-of-opening",
+    "name": "Chime of Opening",
+    "category": "Wondrous Item",
+    "description": "This hollow metal tube measures about 1 foot long and weighs 1 pound."
+  },
+  {
+    "id": "chromatic-rose",
+    "name": "Chromatic Rose",
+    "category": "Wondrous Item",
+    "description": "This magic rose comes in one of five colors, each granting immunity to a damage type."
+  },
+  {
+    "id": "chronicle-of-the-reckoning",
+    "name": "Chronicle of the Reckoning",
+    "category": "Wondrous Item",
+    "description": "This ancient tome contains records of every known dragon on the Material Plane. Its pages seem to update themselves."
+  },
+  {
+    "id": "circlet-of-barbed-vision",
+    "name": "Circlet of Barbed Vision",
+    "category": "Wondrous Item",
+    "description": "A crown woven from black thorns. One of the Vestiges of Divergence."
+  },
+  {
+    "id": "circlet-of-blasting",
+    "name": "Circlet of Blasting",
+    "category": "Wondrous Item",
+    "description": "While wearing this circlet, you can use an action to cast the scorching ray spell with it. When you make the spell's attacks, you do so with an attack bonus of +5."
+  },
+  {
+    "id": "circlet-of-human-perfection",
+    "name": "Circlet of Human Perfection",
+    "category": "Wondrous Item",
+    "description": "The circlet transforms its attuned wearer into a handsome human of average height and weight."
+  },
+  {
+    "id": "cloak-of-arachnida",
+    "name": "Cloak of Arachnida",
+    "category": "Wondrous Item",
+    "description": "This fine garment is made of black silk interwoven with faint silvery threads."
+  },
+  {
+    "id": "cloak-of-billowing",
+    "name": "Cloak of Billowing",
+    "category": "Wondrous Item",
+    "description": "While wearing this cloak, you can use a bonus action to make it billow dramatically."
+  },
+  {
+    "id": "cloak-of-displacement",
+    "name": "Cloak of Displacement",
+    "category": "Wondrous Item",
+    "description": "While you wear this cloak, it projects an illusion that makes you appear to be standing in a place near your actual location."
+  },
+  {
+    "id": "cloak-of-elvenkind",
+    "name": "Cloak of Elvenkind",
+    "category": "Wondrous Item",
+    "description": "While you wear this cloak with its hood up, Wisdom (Perception) checks made to see you have disadvantage."
+  },
+  {
+    "id": "cloak-of-invisibility",
+    "name": "Cloak of Invisibility",
+    "category": "Wondrous Item",
+    "description": "While wearing this cloak, you can pull its hood over your head to become invisible."
+  },
+  {
+    "id": "cloak-of-many-fashions",
+    "name": "Cloak of Many Fashions",
+    "category": "Wondrous Item",
+    "description": "While wearing this cloak, you can use a bonus action to change the style, color, and apparent quality of the garment."
+  },
+  {
+    "id": "medallion-of-thoughts-rare",
+    "name": "Cloak of Poisonousness",
+    "category": "Wondrous Item",
+    "description": "This fine garment appears to be a cloak of protection, and it registers as magical if targeted by detect magic. However it is cursed."
+  },
+  {
+    "id": "cloak-of-protection",
+    "name": "Cloak of Protection",
+    "category": "Wondrous Item",
+    "description": "You gain a +1 bonus to AC and saving throws while you wear this cloak."
+  },
+  {
+    "id": "cloak-of-the-bat",
+    "name": "Cloak of the Bat",
+    "category": "Wondrous Item",
+    "description": "While wearing this cloak, you have advantage on Dexterity (Stealth) checks."
+  },
+  {
+    "id": "cloak-of-the-living-weave",
+    "name": "Cloak of the Living Weave",
+    "category": "Wondrous Item",
+    "description": "A crimson cloak embroidered with golden arcane threads. The fabric seems almost alive, curling around its wearer in moments of danger and fluttering despite the absence of wind."
+  },
+  {
+    "id": "clockwork-amulet",
+    "name": "Clockwork Amulet",
+    "category": "Wondrous Item",
+    "description": "This copper amulet contains tiny interlocking gears and is powered by magic from Mechanus, a plane of clockwork predictability."
+  },
+  {
+    "id": "clothes-of-mending",
+    "name": "Clothes of Mending",
+    "category": "Wondrous Item",
+    "description": "This outfit of traveling clothes magically mends itself to repair any damage or tears."
+  },
+  {
+    "id": "coiling-grasp-tattoo",
+    "name": "Coiling Grasp Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo depicts chains and shackles."
+  },
+  {
+    "id": "coiling-grasp-tattoo-tasha",
+    "name": "Coiling Grasp Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo depicts chains and shackles."
+  },
+  {
+    "id": "conch-of-teleportation",
+    "name": "Conch of Teleportation",
+    "category": "Wondrous Item",
+    "description": "This conch shell is inscribed with the symbol of a sea god."
+  },
+  {
+    "id": "crown-of-the-archfey",
+    "name": "Crown of the Archfey",
+    "category": "Wondrous Item",
+    "description": "This crown of woven silver branches set with glittering moonstone marks the ruler of a Feywild domain."
+  },
+  {
+    "id": "crystal-ball",
+    "name": "Crystal Ball",
+    "category": "Wondrous Item",
+    "description": "The typical crystal ball, a very rare item, is about 6 inches in diameter."
+  },
+  {
+    "id": "crystal-ball-of-mind-reading",
+    "name": "Crystal Ball of Mind Reading",
+    "category": "Wondrous Item",
+    "description": "A crystal ball with the ability to also read the minds of those you observe."
+  },
+  {
+    "id": "crystal-ball-of-telepathy",
+    "name": "Crystal Ball of Telepathy",
+    "category": "Wondrous Item",
+    "description": "A crystal ball that also enables telepathic communication with those you observe."
+  },
+  {
+    "id": "crystal-ball-of-true-seeing",
+    "name": "Crystal Ball of True Seeing",
+    "category": "Wondrous Item",
+    "description": "A crystal ball that grants truesight while scrying."
+  },
+  {
+    "id": "crystalline-chronicle",
+    "name": "Crystalline Chronicle",
+    "category": "Wondrous Item",
+    "description": "An etched crystal sphere the size of a grapefruit hums faintly, and misty spells and notes swirl within."
+  },
+  {
+    "id": "cube-of-force",
+    "name": "Cube of Force",
+    "category": "Wondrous Item",
+    "description": "This cube is about an inch across. Each face has a distinct marking on it that can be pressed. The cube starts with 36 charges."
+  },
+  {
+    "id": "cuddly-strixhaven-mascot",
+    "name": "Cuddly Strixhaven Mascot",
+    "category": "Wondrous Item",
+    "description": "A small soft toy of one of Strixhaven's mascot creatures."
+  },
+  {
+    "id": "daerns-instant-fortress",
+    "name": "Daern's Instant Fortress",
+    "category": "Wondrous Item",
+    "description": "You can use an action to place this 1-inch metal cube on the ground and speak its command word. The cube rapidly grows into a fortress that remains until you use an action to speak the command word that dismisses it."
+  },
+  {
+    "id": "dagger-of-blindsight",
+    "name": "Dagger of Blindsight",
+    "category": "Weapon",
+    "description": "This rare magic item requires attunement by a creature that has blindsight. The blade of this dagger has tiny holes running along its length."
+  },
+  {
+    "id": "dagger-of-venom",
+    "name": "Dagger of Venom",
+    "category": "Weapon",
+    "description": "You gain a +1 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "dancing-sword",
+    "name": "Dancing Sword",
+    "category": "Weapon",
+    "description": "You can use a bonus action to toss this magic sword into the air and speak the command word. When you do so, the sword begins to hover, flies up to 30 feet, and attacks one creature of your choice within 5 feet of it."
+  },
+  {
+    "id": "danoths-visor",
+    "name": "Danoth's Visor",
+    "category": "Wondrous Item",
+    "description": "Mithral-framed goggles with pink crystal lenses made for a Cerberus Assembly wizard."
+  },
+  {
+    "id": "dark-shard-amulet",
+    "name": "Dark Shard Amulet",
+    "category": "Wondrous Item",
+    "description": "This amulet is fashioned from a single shard of resilient extraplanar material originating from the realm of your warlock patron."
+  },
+  {
+    "id": "decanter-of-endless-water",
+    "name": "Decanter of Endless Water",
+    "category": "Wondrous Item",
+    "description": "This stoppered flask sloshes when shaken, as if it contains water. The decanter weighs 2 pounds."
+  },
+  {
+    "id": "deck-of-illusions",
+    "name": "Deck of Illusions",
+    "category": "Wondrous Item",
+    "description": "This box contains a set of parchment cards. A full deck has 34 cards."
+  },
+  {
+    "id": "deck-of-many-things",
+    "name": "Deck of Many Things",
+    "category": "Wondrous Item",
+    "description": "Usually found in a box or pouch, this deck contains a number of cards made of ivory or vellum. Most (75 percent) of these decks have only thirteen cards, but the rest have twenty-two."
+  },
+  {
+    "id": "dekella-bident-of-thassa",
+    "name": "Dekella, Bident of Thassa",
+    "category": "Weapon",
+    "description": "The bident of Thassa, god of the sea."
+  },
+  {
+    "id": "demon-armor",
+    "name": "Demon Armor",
+    "category": "Armor",
+    "description": "While wearing this armor, you understand and can speak Abyssal."
+  },
+  {
+    "id": "devastation-orb",
+    "name": "Devastation Orb",
+    "category": "Wondrous Item",
+    "description": "An elemental bomb created at an elemental node, the ultimate weapon of the elemental cults."
+  },
+  {
+    "id": "devotee-s-censer",
+    "name": "Devotee's Censer",
+    "category": "Wondrous Item",
+    "description": "The thurible known as a censer is typically swung on a chain while leading congregations in prayer."
+  },
+  {
+    "id": "dimensional-shackles",
+    "name": "Dimensional Shackles",
+    "category": "Wondrous Item",
+    "description": "You can use an action to place these shackles on an incapacitated creature. The shackles adjust to fit a creature of Small to Large size."
+  },
+  {
+    "id": "docent",
+    "name": "Docent",
+    "category": "Wondrous Item",
+    "description": "A small metal sphere, 2 inches across, studded with dragonshards. You must embed it in your chest to attune to it."
+  },
+  {
+    "id": "draconic-heartstone-focus",
+    "name": "Draconic Heartstone Focus",
+    "category": "Wondrous Item (Arcane Focus)",
+    "description": "A raw, pulsing gemstone harvested from a dragon's lair, warm to the touch."
+  },
+  {
+    "id": "dragon-army-helm",
+    "name": "Dragon Army Officer's Helm",
+    "category": "Armor",
+    "description": "A red-lacquered helm emblazoned with the symbol of the Dragon Armies."
+  },
+  {
+    "id": "dragonlance-orb",
+    "name": "Dragon Orb of Krynn",
+    "category": "Wondrous Item",
+    "description": "One of five Dragon Orbs created during the Third Dragon War, these artifacts can control dragons."
+  },
+  {
+    "id": "dragon-slayer",
+    "name": "Dragon Slayer",
+    "category": "Armor",
+    "description": "A blade forged for one purpose: the slaying of dragons."
+  },
+  {
+    "id": "dragonlance-weapon",
+    "name": "Dragon Slayer sword",
+    "category": "Weapon",
+    "description": "A legendary weapon forged specifically to fight dragons."
+  },
+  {
+    "id": "dragon-tooth-weapon",
+    "name": "Dragon Tooth Weapon",
+    "category": "Weapon",
+    "description": "A weapon crafted from or with a dragon's tooth, retaining some of the dragon's elemental power."
+  },
+  {
+    "id": "dragon-vessel",
+    "name": "Dragon Vessel",
+    "category": "Wondrous Item",
+    "description": "This vessel is decorated with the image of a dragon."
+  },
+  {
+    "id": "dragon-wing-bow",
+    "name": "Dragon Wing Bow",
+    "category": "Armor",
+    "description": "The limb tips of this magic bow are shaped like a dragon's wings and the weapon is infused with the essence of a dragon's breath weapon."
+  },
+  {
+    "id": "dragons-wrath-weapon",
+    "name": "Dragon's Wrath Weapon",
+    "category": "Weapon",
+    "description": "This weapon is decorated with dragon heads, claws, wings, scales, or Draconic writing, and roars or hisses when struck against a hard surface."
+  },
+  {
+    "id": "dragonhide-belt",
+    "name": "Dragonhide Belt",
+    "category": "Wondrous Item",
+    "description": "This belt is made from the scales and hide of a dragon."
+  },
+  {
+    "id": "dragonlance",
+    "name": "Dragonlance",
+    "category": "Weapon",
+    "description": "A dragonlance is a legendary weapon crafted to fight dragons."
+  },
+  {
+    "id": "dragonscale-cloak",
+    "name": "Dragonscale Cloak",
+    "category": "Wondrous Item",
+    "description": "A cloak fashioned from the scales of a dragon, retaining some of the dragon's innate magical energy."
+  },
+  {
+    "id": "dragontooth-dagger",
+    "name": "Dragontooth Dagger",
+    "category": "Weapon",
+    "description": "A dagger fashioned from the tooth of a dragon. The handle is leather wrapped around the root of the fang and lacks a traditional crossguard."
+  },
+  {
+    "id": "dread-helm",
+    "name": "Dread Helm",
+    "category": "Wondrous Item",
+    "description": "This fearsome steel helm makes your eyes glow red while you wear it."
+  },
+  {
+    "id": "driftglobe",
+    "name": "Driftglobe",
+    "category": "Wondrous Item",
+    "description": "This small sphere of thick glass weighs 1 pound."
+  },
+  {
+    "id": "drums-of-panic",
+    "name": "Drums of Panic",
+    "category": "Wondrous Item",
+    "description": "These leather drums are 6 inches in diameter. If you are proficient with drums you can use them to create supernatural fear."
+  },
+  {
+    "id": "duplicitous-manuscript",
+    "name": "Duplicitous Manuscript",
+    "category": "Wondrous Item",
+    "description": "To others, this book appears to be a volume of romantic fiction. You can use it as a spellbook."
+  },
+  {
+    "id": "dust-of-disappearance",
+    "name": "Dust of Disappearance",
+    "category": "Wondrous Item",
+    "description": "Found in a small packet, this powder resembles very fine sand."
+  },
+  {
+    "id": "dust-of-dryness",
+    "name": "Dust of Dryness",
+    "category": "Wondrous Item",
+    "description": "This small packet contains 1d6 + 4 pinches of dust."
+  },
+  {
+    "id": "dust-of-sneezing-and-choking",
+    "name": "Dust of Sneezing and Choking",
+    "category": "Wondrous Item",
+    "description": "Found in a small container, this powder resembles very fine sand. It appears to be dust of disappearance, and an identify spell reveals it to be such."
+  },
+  {
+    "id": "ear-horn-of-hearing",
+    "name": "Ear Horn of Hearing",
+    "category": "Wondrous Item",
+    "description": "While held up to your ear, this horn suppresses the effects of the deafened condition on you, allowing you to hear normally."
+  },
+  {
+    "id": "efreeti-bottle",
+    "name": "Efreeti Bottle",
+    "category": "Wondrous Item",
+    "description": "This painted brass bottle weighs 1 pound. When you use an action to remove the stopper, a cloud of thick smoke flows out of the bottle."
+  },
+  {
+    "id": "eldritch-claw-tattoo",
+    "name": "Eldritch Claw Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo depicts claws. While the tattoo is on your skin, your unarmed strikes are considered magical for the purpose of overcoming immunity and resistance to nonmagical attacks and damage."
+  },
+  {
+    "id": "eldritch-claw-tattoo-tasha",
+    "name": "Eldritch Claw Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo depicts claws and hooks."
+  },
+  {
+    "id": "elemental-essence-shard",
+    "name": "Elemental Essence Shard",
+    "category": "Wondrous Item",
+    "description": "This crackling crystal contains the essence of an elemental plane."
+  },
+  {
+    "id": "elemental-gem",
+    "name": "Elemental Gem",
+    "category": "Wondrous Item",
+    "description": "This gem contains a mote of elemental energy. When you use an action to break the gem, an elemental is summoned as if you had cast the conjure elemental spell."
+  },
+  {
+    "id": "potion-of-pugilism",
+    "name": "Elixir of Health",
+    "category": "Potion",
+    "description": "When you drink this potion, it cures any disease afflicting you, and it removes the blinded, deafened, paralyzed, and poisoned conditions."
+  },
+  {
+    "id": "elven-chain",
+    "name": "Elven Chain",
+    "category": "Armor",
+    "description": "You gain a +1 bonus to AC while you wear this armor. You are considered proficient with this armor even if you lack proficiency with medium armor."
+  },
+  {
+    "id": "enduring-spellbook",
+    "name": "Enduring Spellbook",
+    "category": "Wondrous Item",
+    "description": "This spellbook, along with anything written in it, can't be damaged by fire or immersion in water."
+  },
+  {
+    "id": "ephixis-bow-of-nylea",
+    "name": "Ephixis, Bow of Nylea",
+    "category": "Weapon",
+    "description": "The shortbow of Nylea, god of the hunt."
+  },
+  {
+    "id": "ersatz-eye",
+    "name": "Ersatz Eye",
+    "category": "Wondrous Item",
+    "description": "This artificial eye replaces a real one that was lost or removed."
+  },
+  {
+    "id": "everbright-lantern",
+    "name": "Everbright Lantern",
+    "category": "Wondrous Item",
+    "description": "This bullseye lantern contains a flickering flame that never goes out, and it doesn't need oil."
+  },
+  {
+    "id": "eye-of-vecna",
+    "name": "Eye of Vecna",
+    "category": "Wondrous Item",
+    "description": "The Eye of Vecna is a preserved human eye. To attune, you must gouge out your own eye and press the artifact into the empty socket."
+  },
+  {
+    "id": "eyes-of-charming",
+    "name": "Eyes of Charming",
+    "category": "Wondrous Item",
+    "description": "These crystal lenses fit over the eyes. They have 3 charges."
+  },
+  {
+    "id": "eyes-of-minute-seeing",
+    "name": "Eyes of Minute Seeing",
+    "category": "Wondrous Item",
+    "description": "These crystal lenses fit over the eyes. While wearing them, you can see much better than normal out to a range of 1 foot."
+  },
+  {
+    "id": "eyes-of-the-eagle",
+    "name": "Eyes of the Eagle",
+    "category": "Wondrous Item",
+    "description": "These crystal lenses fit over the eyes. While wearing them, you have advantage on Wisdom (Perception) checks that rely on sight."
+  },
+  {
+    "id": "far-realm-shard",
+    "name": "Far Realm Shard",
+    "category": "Wondrous Item",
+    "description": "This writhing crystal is steeped in the warping essence of the Far Realm."
+  },
+  {
+    "id": "fate-bag",
+    "name": "Fate Bag",
+    "category": "Wondrous Item",
+    "description": "This velvet bag contains twenty-two painted cards resembling tarot cards."
+  },
+  {
+    "id": "feather-of-diatryma-summoning",
+    "name": "Feather of Diatryma Summoning",
+    "category": "Wondrous Item",
+    "description": "If you use an action to speak the command word and throw this feather into the air, it transforms into a giant diatryma."
+  },
+  {
+    "id": "feather-token",
+    "name": "Feather Token",
+    "category": "Wondrous Item",
+    "description": "This tiny object looks like a feather. Different types of feather tokens exist, each with a different single-use effect."
+  },
+  {
+    "id": "feywild-gift-boon",
+    "name": "Feywild Boon (Charm)",
+    "category": "Wondrous Item",
+    "description": "A magical gift bestowed by a powerful fey creature, manifesting as a small charm or trinket. Each boon is unique."
+  },
+  {
+    "id": "feywild-shard",
+    "name": "Feywild Shard",
+    "category": "Wondrous Item",
+    "description": "A brilliant chunk of crystal from the Feywild used as a sorcerer's spellcasting focus."
+  },
+  {
+    "id": "figurine-of-wondrous-power-bronze-griffon",
+    "name": "Figurine of Wondrous Power (Bronze Griffon)",
+    "category": "Wondrous Item",
+    "description": "A figurine of wondrous power is a statuette of a beast small enough to fit in a pocket."
+  },
+  {
+    "id": "flame-tongue",
+    "name": "Flame Tongue",
+    "category": "Weapon",
+    "description": "You can use a bonus action to speak this magic sword's command word, causing flames to erupt from the blade."
+  },
+  {
+    "id": "folding-boat",
+    "name": "Folding Boat",
+    "category": "Wondrous Item",
+    "description": "This object appears as a wooden box that measures 12 inches long, 6 inches wide, and 6 inches deep."
+  },
+  {
+    "id": "frost-brand",
+    "name": "Frost Brand",
+    "category": "Weapon",
+    "description": "When you hit with an attack using this magic sword, the target takes an extra 1d6 cold damage. In addition, while you hold the sword, you have resistance to fire damage."
+  },
+  {
+    "id": "fulminating-treatise",
+    "name": "Fulminating Treatise",
+    "category": "Wondrous Item",
+    "description": "This thick tome crackles with elemental power when opened."
+  },
+  {
+    "id": "gauntlets-of-flaming-fury",
+    "name": "Gauntlets of Flaming Fury",
+    "category": "Wondrous Item",
+    "description": "While wearing both gauntlets, any nonmagical weapon you grasp is treated as a magic weapon."
+  },
+  {
+    "id": "gauntlets-of-fumbling",
+    "name": "Gauntlets of Fumbling",
+    "category": "Wondrous Item",
+    "description": "These gauntlets look like gauntlets of ogre power and have the same Strength-enhancing properties."
+  },
+  {
+    "id": "gauntlets-of-ogre-power",
+    "name": "Gauntlets of Ogre Power",
+    "category": "Wondrous Item",
+    "description": "Your Strength score is 19 while you wear these gauntlets. They have no effect on you if your Strength is already 19 or higher."
+  },
+  {
+    "id": "gavel-of-the-justicar",
+    "name": "Gavel of the Justicar",
+    "category": "Weapon",
+    "description": "A radiant warhammer resembling a judge's gavel enlarged for battle. Golden light flickers across its surface whenever judgment is pronounced."
+  },
+  {
+    "id": "gavel-of-the-venn-rune",
+    "name": "Gavel of the Venn Rune",
+    "category": "Weapon",
+    "description": "A heavy stone gavel inscribed with the venn rune used by storm giants."
+  },
+  {
+    "id": "gem-of-brightness",
+    "name": "Gem of Brightness",
+    "category": "Wondrous Item",
+    "description": "This prism has 50 charges. While you are holding it, you can use an action to speak one of three command words to cause one of the following effects."
+  },
+  {
+    "id": "gem-of-dragon-sight",
+    "name": "Gem of Dragon Sight",
+    "category": "Wondrous Item",
+    "description": "This gem is carved in the shape of a dragon's eye."
+  },
+  {
+    "id": "gem-of-seeing",
+    "name": "Gem of Seeing",
+    "category": "Wondrous Item",
+    "description": "This gem has 3 charges. As an action, you can speak the gem's command word and expend 1 charge."
+  },
+  {
+    "id": "ghost-lantern",
+    "name": "Ghost Lantern",
+    "category": "Wondrous Item",
+    "description": "A restless spirit is trapped inside this lantern."
+  },
+  {
+    "id": "ghost-step-tattoo",
+    "name": "Ghost Step Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this tattoo shifts and wavers on the skin, parts of it appearing blurred."
+  },
+  {
+    "id": "ghost-step-tattoo-rare",
+    "name": "Ghost Step Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this tattoo shifts and wavers on the skin."
+  },
+  {
+    "id": "giant-rune-focus",
+    "name": "Giant Rune Focus",
+    "category": "Wondrous Item",
+    "description": "A carved stone disc etched with a giant rune that can serve as a spellcasting focus."
+  },
+  {
+    "id": "giant-slayer",
+    "name": "Giant Slayer",
+    "category": "Weapon",
+    "description": "You gain a +1 bonus to attack and damage rolls made with this magic weapon. When you hit a giant with it, the giant takes an extra 2d6 damage of the weapon's type and must succeed on a DC 15 Strength saving throw or fall prone."
+  },
+  {
+    "id": "giant-strider-hide",
+    "name": "Giant Strider Hide",
+    "category": "Armor",
+    "description": "This medium armor is crafted from the hide of a giant strider."
+  },
+  {
+    "id": "glamoured-studded-leather",
+    "name": "Glamoured Studded Leather",
+    "category": "Armor",
+    "description": "While wearing this armor, you gain a +1 bonus to AC. You can also use a bonus action to speak the armor's command word and cause the armor to assume the appearance of a normal set of clothing or some other kind of armor."
+  },
+  {
+    "id": "gloves-of-missile-snaring",
+    "name": "Gloves of Missile Snaring",
+    "category": "Wondrous Item",
+    "description": "These gloves seem to almost meld into your hands when you don them."
+  },
+  {
+    "id": "gloves-of-soul-catching",
+    "name": "Gloves of Soul Catching",
+    "category": "Wondrous Item",
+    "description": "These gloves are made from the preserved hands of a powerful soul monger."
+  },
+  {
+    "id": "gloves-of-swimming-and-climbing",
+    "name": "Gloves of Swimming and Climbing",
+    "category": "Wondrous Item",
+    "description": "While wearing these gloves, climbing and swimming don't cost you extra movement, and you gain a +5 bonus to Strength (Athletics) checks made to climb or swim."
+  },
+  {
+    "id": "gloves-of-thievery",
+    "name": "Gloves of Thievery",
+    "category": "Wondrous Item",
+    "description": "These gloves are invisible while worn. While wearing them, you gain a +5 bonus to Dexterity (Sleight of Hand) checks and Dexterity checks made to pick locks."
+  },
+  {
+    "id": "gnomengarde-googles",
+    "name": "Goggles of Night",
+    "category": "Wondrous Item",
+    "description": "While wearing these dark lenses, you have darkvision out to a range of 60 feet."
+  },
+  {
+    "id": "golden-key-of-the-vault",
+    "name": "Golden Key of the Vault",
+    "category": "Wondrous Item",
+    "description": "This ornate golden key is given to operatives of the Golden Vault."
+  },
+  {
+    "id": "guardian-emblem",
+    "name": "Guardian Emblem",
+    "category": "Wondrous Item",
+    "description": "This emblem is the symbol of a deity or a spiritual tradition, wrought from silver and measuring about 2 inches across."
+  },
+  {
+    "id": "gulthias-staff",
+    "name": "Gulthias Staff",
+    "category": "Staff",
+    "description": "Made from the wood of a Gulthias tree grown from a stake plunged through a vampire's heart."
+  },
+  {
+    "id": "gurts-greataxe",
+    "name": "Gurt's Greataxe",
+    "category": "Weapon",
+    "description": "This massive greataxe belonged to the frost giant lord Gurt, slain by the hero Uthgar."
+  },
+  {
+    "id": "gурts-greataxe",
+    "name": "Gurt's Greataxe",
+    "category": "Weapon",
+    "description": "This massive greataxe belonged to the frost giant lord Gurt, slain by the great hero Uthgar."
+  },
+  {
+    "id": "hand-of-vecna",
+    "name": "Hand of Vecna",
+    "category": "Wondrous Item",
+    "description": "The Hand of Vecna is a mummified human hand. To attune, you must place it where your own left hand would be, and it grafts itself to your wrist."
+  },
+  {
+    "id": "hat-of-disguise",
+    "name": "Hat of Disguise",
+    "category": "Wondrous Item",
+    "description": "While wearing this hat, you can use an action to cast the disguise self spell from it at will."
+  },
+  {
+    "id": "hat-of-stupidity",
+    "name": "Hat of Stupidity",
+    "category": "Wondrous Item",
+    "description": "This hat muffles the wearer's ability to think."
+  },
+  {
+    "id": "hat-of-vermin",
+    "name": "Hat of Vermin",
+    "category": "Wondrous Item",
+    "description": "This hat has 3 charges. While holding the hat, you can use an action and expend 1 charge to speak a command word that summons your choice of a bat, a frog, or a rat."
+  },
+  {
+    "id": "hat-of-wizardry",
+    "name": "Hat of Wizardry",
+    "category": "Wondrous Item",
+    "description": "This cone-shaped hat is adorned with glyphs of various spells. While wearing it, you gain the following benefits."
+  },
+  {
+    "id": "headband-of-intellect",
+    "name": "Headband of Intellect",
+    "category": "Wondrous Item",
+    "description": "Your Intelligence score is 19 while you wear this headband. It has no effect on you if your Intelligence is already 19 or higher."
+  },
+  {
+    "id": "heart-weavers-primer",
+    "name": "Heart Weaver's Primer",
+    "category": "Wondrous Item",
+    "description": "This book is bound in rose-colored leather and decorated with gilt filigree."
+  },
+  {
+    "id": "hellfire-weapon",
+    "name": "Hellfire Weapon",
+    "category": "Weapon",
+    "description": "Fashioned from infernal iron, this weapon scorches the soul of those it kills."
+  },
+  {
+    "id": "helm-of-brilliance",
+    "name": "Helm of Brilliance",
+    "category": "Wondrous Item",
+    "description": "This dazzling helm is set with 1d10 diamonds, 2d10 rubies, 3d10 fire opals, and 4d10 opals."
+  },
+  {
+    "id": "helm-of-comprehending-languages",
+    "name": "Helm of Comprehending Languages",
+    "category": "Wondrous Item",
+    "description": "While wearing this helm, you can use an action to cast the comprehend languages spell from it at will."
+  },
+  {
+    "id": "helm-of-devil-command",
+    "name": "Helm of Devil Command",
+    "category": "Wondrous Item",
+    "description": "This helm allows its wearer to communicate with and command devils."
+  },
+  {
+    "id": "helm-of-telepathy",
+    "name": "Helm of Telepathy",
+    "category": "Wondrous Item",
+    "description": "While wearing this helm, you can use an action to cast the detect thoughts spell (save DC 13) from it."
+  },
+  {
+    "id": "helm-of-teleportation",
+    "name": "Helm of Teleportation",
+    "category": "Wondrous Item",
+    "description": "This helm has 3 charges. While wearing it, you can use an action and expend 1 charge to cast the teleport spell from it. The helm regains 1d3 expended charges daily at dawn."
+  },
+  {
+    "id": "helm-of-underwater-action",
+    "name": "Helm of Underwater Action",
+    "category": "Wondrous Item",
+    "description": "While wearing this helmet, you can breathe underwater."
+  },
+  {
+    "id": "hewards-handy-haversack",
+    "name": "Heward's Handy Haversack",
+    "category": "Wondrous Item",
+    "description": "This backpack has a central pouch and two side pouches, each of which is an extradimensional space."
+  },
+  {
+    "id": "hill-giant-bag",
+    "name": "Hill Giant's Sack",
+    "category": "Wondrous Item",
+    "description": "This enormous sack was made for a hill giant but has been magically resized for smaller creatures."
+  },
+  {
+    "id": "hollow-dragon",
+    "name": "Hollow Dragon",
+    "category": "Wondrous Item",
+    "description": "A hollow statuette of a dragon that can deliver messages."
+  },
+  {
+    "id": "holy-avenger",
+    "name": "Holy Avenger",
+    "category": "Weapon",
+    "description": "You gain a +3 bonus to attack and damage rolls made with this magic weapon. When you hit a fiend or an undead with it, that creature takes an extra 2d10 radiant damage."
+  },
+  {
+    "id": "holy-symbol-of-ravenkind",
+    "name": "Holy Symbol of Ravenkind",
+    "category": "Wondrous Item",
+    "description": "This holy symbol is precious to followers of the Morning Lord in Barovia."
+  },
+  {
+    "id": "hook-of-fishers-delight",
+    "name": "Hook of Fisher's Delight",
+    "category": "Wondrous Item",
+    "description": "This tiny fishhook is made from bone."
+  },
+  {
+    "id": "horn-of-blasting",
+    "name": "Horn of Blasting",
+    "category": "Wondrous Item",
+    "description": "You can use an action to speak the horn's command word and then blow the horn."
+  },
+  {
+    "id": "horn-of-silent-alarm",
+    "name": "Horn of Silent Alarm",
+    "category": "Wondrous Item",
+    "description": "This horn has 4 charges. When you use an action to blow it, one creature of your choice can hear the horn's blare, provided the creature is within 600 feet of the horn and not deafened."
+  },
+  {
+    "id": "horn-of-valhalla-silver",
+    "name": "Horn of Valhalla (Silver)",
+    "category": "Wondrous Item",
+    "description": "You can use an action to blow this horn. In response, warrior spirits from the Valhalla appear within 60 feet of you."
+  },
+  {
+    "id": "horseshoes-of-a-zephyr",
+    "name": "Horseshoes of a Zephyr",
+    "category": "Wondrous Item",
+    "description": "These iron horseshoes come in a set of four. While all four shoes are affixed to the hooves of a horse or similar creature, they allow the creature to move normally while floating 4 inches above the ground."
+  },
+  {
+    "id": "horseshoes-of-speed",
+    "name": "Horseshoes of Speed",
+    "category": "Wondrous Item",
+    "description": "These iron horseshoes come in a set of four. While all four shoes are affixed to the hooves of a horse or similar creature, they increase the creature's walking speed by 30 feet."
+  },
+  {
+    "id": "hunters-coat",
+    "name": "Hunter's Coat",
+    "category": "Armor",
+    "description": "You have a +1 bonus to AC while wearing this armor."
+  },
+  {
+    "id": "iggwilvs-cauldron",
+    "name": "Iggwilv's Cauldron",
+    "category": "Wondrous Item",
+    "description": "This giant iron cauldron belonged to the archfey and witch Iggwilv."
+  },
+  {
+    "id": "illuminator-tattoo",
+    "name": "Illuminator's Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo features beautiful calligraphy, images of writing implements, and the like."
+  },
+  {
+    "id": "illusionists-bracers",
+    "name": "Illusionist's Bracers",
+    "category": "Wondrous Item",
+    "description": "Developed by a Dimir guild illusionist for complex spellcasting."
+  },
+  {
+    "id": "immovable-rod",
+    "name": "Immovable Rod",
+    "category": "Armor",
+    "description": "This flat iron rod has a button on one end. You can use an action to press the button, which causes the rod to become magically fixed in place."
+  },
+  {
+    "id": "infernal-tack",
+    "name": "Infernal Tack",
+    "category": "Wondrous Item",
+    "description": "A beast wearing this tack is transformed into a nightmare for as long as it wears it."
+  },
+  {
+    "id": "instrument-of-illusions",
+    "name": "Instrument of Illusions",
+    "category": "Wondrous Item",
+    "description": "While you are playing this musical instrument, you can create harmless, illusory visual effects within a 5-foot-radius sphere centered on the instrument."
+  },
+  {
+    "id": "instrument-of-scribing",
+    "name": "Instrument of Scribing",
+    "category": "Wondrous Item",
+    "description": "This musical instrument has 3 charges. While you are playing it, you can use an action to expend 1 charge from the instrument and write a magical message on a nonmagical object or surface."
+  },
+  {
+    "id": "ioun-stone-absorption",
+    "name": "Ioun Stone (Absorption)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-agility",
+    "name": "Ioun Stone (Agility)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-awareness",
+    "name": "Ioun Stone (Awareness)",
+    "category": "Wondrous Item",
+    "description": "An Ioun stone is named after Ioun, a god of knowledge and prophecy revered on some worlds. When you use an action to toss one of these stones into the air, the stone orbits your head at a distance of 1d3 feet and confers a benefit to you."
+  },
+  {
+    "id": "ioun-stone-fortitude",
+    "name": "Ioun Stone (Fortitude)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-insight",
+    "name": "Ioun Stone (Insight)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-intellect",
+    "name": "Ioun Stone (Intellect)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-leadership",
+    "name": "Ioun Stone (Leadership)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-mastery",
+    "name": "Ioun Stone (Mastery)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-protection",
+    "name": "Ioun Stone (Protection)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head and confers a benefit to you."
+  },
+  {
+    "id": "ioun-stone-regeneration",
+    "name": "Ioun Stone (Regeneration)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-reserve",
+    "name": "Ioun Stone (Reserve)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-strength",
+    "name": "Ioun Stone (Strength)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "ioun-stone-sustenance",
+    "name": "Ioun Stone (Sustenance)",
+    "category": "Wondrous Item",
+    "description": "When you use an action to toss this stone into the air, it orbits your head."
+  },
+  {
+    "id": "iron-flask",
+    "name": "Iron Flask",
+    "category": "Wondrous Item",
+    "description": "This iron bottle has a brass stopper. You can use an action to speak the flask's command word, targeting a creature that you can see within 60 feet of you."
+  },
+  {
+    "id": "jewel-of-three-prayers",
+    "name": "Jewel of Three Prayers",
+    "category": "Wondrous Item",
+    "description": "A Vestige of Divergence tied to the Apotheon, a fallen god."
+  },
+  {
+    "id": "kender-hoodak",
+    "name": "Kender's Houdak",
+    "category": "Wondrous Item",
+    "description": "A kender's hoopak is a signature weapon — a staff with a sling at one end and a spike at the other. The magical version is imbued with kender luck."
+  },
+  {
+    "id": "keoghtoms-ointment",
+    "name": "Keoghtom's Ointment",
+    "category": "Wondrous Item",
+    "description": "This glass jar, 3 inches in diameter, contains 1d4 + 1 doses of a thick mixture that smells faintly of aloe."
+  },
+  {
+    "id": "khrusor-spear-of-heliod",
+    "name": "Khrusor, Spear of Heliod",
+    "category": "Weapon",
+    "description": "The golden spear of Heliod, god of the sun."
+  },
+  {
+    "id": "knaves-eye-patch",
+    "name": "Knave's Eye Patch",
+    "category": "Wondrous Item",
+    "description": "This eye patch has a detachable glass eye set into it."
+  },
+  {
+    "id": "korolnor-scepter",
+    "name": "Korolnor Scepter",
+    "category": "Armor",
+    "description": "One of the ten Ruling Scepters of Shanatar, created by the dwarves of the deep realm."
+  },
+  {
+    "id": "lantern-of-revealing",
+    "name": "Lantern of Revealing",
+    "category": "Wondrous Item",
+    "description": "While lit, this hooded lantern burns for 6 hours on 1 pint of oil, shedding bright light in a 30-foot radius and dim light for an additional 30 feet."
+  },
+  {
+    "id": "lantern-of-tracking",
+    "name": "Lantern of Tracking",
+    "category": "Wondrous Item",
+    "description": "This hooded lantern burns for 6 hours on 1 pint of oil."
+  },
+  {
+    "id": "lash-of-immolation",
+    "name": "Lash of Immolation",
+    "category": "Weapon",
+    "description": "This whip is crafted from the hide of a fire giant and is always warm to the touch."
+  },
+  {
+    "id": "libram-of-souls-and-flesh",
+    "name": "Libram of Souls and Flesh",
+    "category": "Wondrous Item",
+    "description": "This thick tome is bound in pale leather and closed with a brass clasp shaped like a skull."
+  },
+  {
+    "id": "lifewell-tattoo",
+    "name": "Lifewell Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this tattoo, depicts symbols of life and rebirth."
+  },
+  {
+    "id": "living-armor",
+    "name": "Living Armor",
+    "category": "Armor",
+    "description": "This armor is partially composed of organic material integrated into its structure."
+  },
+  {
+    "id": "lock-of-trickery",
+    "name": "Lock of Trickery",
+    "category": "Wondrous Item",
+    "description": "This lock appears to be an ordinary lock (and it comes with a key) but it has a hidden mechanism inside."
+  },
+  {
+    "id": "luck-blade",
+    "name": "Luck Blade",
+    "category": "Weapon",
+    "description": "You gain a +1 bonus to attack and damage rolls made with this magic weapon. While the sword is on your person, you also gain a +1 bonus to saving throws."
+  },
+  {
+    "id": "luxon-beacon",
+    "name": "Luxon Beacon",
+    "category": "Wondrous Item",
+    "description": "This dodecahedron of pale blue crystal rotates slowly in the air if placed above a surface."
+  },
+  {
+    "id": "lyre-of-building",
+    "name": "Lyre of Building",
+    "category": "Wondrous Item",
+    "description": "While holding this lyre, you can use your action to play it, casting the mending cantrip from the instrument."
+  },
+  {
+    "id": "lyre-of-building-tasha",
+    "name": "Lyre of Building",
+    "category": "Wondrous Item",
+    "description": "This lyre was crafted by gnomes with an eye toward practical uses for music."
+  },
+  {
+    "id": "mace-of-disruption",
+    "name": "Mace of Disruption",
+    "category": "Weapon",
+    "description": "When you hit a fiend or an undead with this magic weapon, that creature takes an extra 2d6 radiant damage."
+  },
+  {
+    "id": "mace-of-smiting",
+    "name": "Mace of Smiting",
+    "category": "Weapon",
+    "description": "You gain a +1 bonus to attack and damage rolls made with this magic weapon. The bonus increases to +3 when you use the mace to attack a construct."
+  },
+  {
+    "id": "mace-of-terror",
+    "name": "Mace of Terror",
+    "category": "Weapon",
+    "description": "This weapon has 3 charges and regains 1d3 expended charges daily at dawn."
+  },
+  {
+    "id": "mantle-of-spell-resistance",
+    "name": "Mantle of Spell Resistance",
+    "category": "Wondrous Item",
+    "description": "You have advantage on saving throws against spells while you wear this cloak."
+  },
+  {
+    "id": "mantle-of-the-ancient-grove",
+    "name": "Mantle of the Ancient Grove",
+    "category": "Armor",
+    "description": "A cloak woven from silver moss and emerald leaves that never wither. Faint whispers of ancient forests follow its wearer."
+  },
+  {
+    "id": "manual-of-bodily-health",
+    "name": "Manual of Bodily Health",
+    "category": "Wondrous Item",
+    "description": "This book contains health and diet tips, and its words are charged with magic. If you spend 48 hours over a period of 6 days or fewer studying the book's contents and practicing its guidelines, your Constitution score increases by 2, as does your maximum for that score."
+  },
+  {
+    "id": "manual-of-gainful-exercise",
+    "name": "Manual of Gainful Exercise",
+    "category": "Wondrous Item",
+    "description": "This book describes fitness exercises, and its words are charged with magic. If you spend 48 hours over a period of 6 days or fewer studying the book's contents and practicing its guidelines, your Strength score increases by 2, as does your maximum for that score."
+  },
+  {
+    "id": "manual-of-quickness-of-action",
+    "name": "Manual of Quickness of Action",
+    "category": "Wondrous Item",
+    "description": "This book contains coordination and balance exercises, and its words are charged with magic."
+  },
+  {
+    "id": "masque-charm",
+    "name": "Masque Charm",
+    "category": "Wondrous Item",
+    "description": "A small trinket shaped like a masquerade mask."
+  },
+  {
+    "id": "masquerade-tattoo",
+    "name": "Masquerade Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this magic tattoo appears on your body as whatever you desire."
+  },
+  {
+    "id": "mastix-whip-of-erebos",
+    "name": "Mastix, Whip of Erebos",
+    "category": "Weapon",
+    "description": "The barbed whip of Erebos, god of the dead."
+  },
+  {
+    "id": "medallion-of-faith",
+    "name": "Medallion of Faith",
+    "category": "Wondrous Item",
+    "description": "This medallion bears the symbol of one of Krynn's gods. It is the mark of a true cleric on Krynn, granting them divine power."
+  },
+  {
+    "id": "medallion-of-thoughts",
+    "name": "Medallion of Thoughts",
+    "category": "Wondrous Item",
+    "description": "The medallion has 3 charges. While wearing it, you can use an action and expend 1 charge to cast the detect thoughts spell (save DC 13) from it."
+  },
+  {
+    "id": "midnight-tears",
+    "name": "Midnight Tears",
+    "category": "Potion",
+    "description": "A creature that drinks this poison suffers no effect until the stroke of midnight."
+  },
+  {
+    "id": "mimir",
+    "name": "Mimir",
+    "category": "Wondrous Item",
+    "description": "A skull-shaped device serving as a repository of planar knowledge."
+  },
+  {
+    "id": "mind-shard",
+    "name": "Mind Shard",
+    "category": "Wondrous Item",
+    "description": "This sliver of crystal comes from a mind flayer's psionic crystal, and it carries a faint psionic resonance."
+  },
+  {
+    "id": "minscs-sword",
+    "name": "Minsc's Blade, Lilarcor",
+    "category": "Weapon",
+    "description": "This enchanted two-handed sword belonged to the hero Minsc and is sentient, speaking loudly and boisterously."
+  },
+  {
+    "id": "mirror-of-life-trapping",
+    "name": "Mirror of Life Trapping",
+    "category": "Wondrous Item",
+    "description": "When this 4-foot-tall mirror is activated, any creature other than you that sees its reflection must make a DC 15 Charisma saving throw or be trapped, along with anything it is wearing or carrying, in one of the mirror's twelve extradimensional cells."
+  },
+  {
+    "id": "mirror-of-reflected-pasts",
+    "name": "Mirror of Reflected Pasts",
+    "category": "Wondrous Item",
+    "description": "This mirror reflects the past rather than the present."
+  },
+  {
+    "id": "mirror-of-the-feywild",
+    "name": "Mirror of the Feywild",
+    "category": "Wondrous Item",
+    "description": "This ornate silver mirror shows not the viewer's reflection but instead scenes from the Feywild."
+  },
+  {
+    "id": "mithral-armor",
+    "name": "Mithral Armor",
+    "category": "Armor",
+    "description": "Mithral is a light, flexible metal. A mithral chain shirt or breastplate can be worn under normal clothes. If the armor normally imposes disadvantage on Dexterity (Stealth) checks or has a Strength requirement, the mithral version of the armor doesn't."
+  },
+  {
+    "id": "mithral-shield",
+    "name": "Mithral Shield",
+    "category": "Armor",
+    "description": "Made from mithral, this shield is incredibly light and flexible."
+  },
+  {
+    "id": "molten-bronze-skin",
+    "name": "Molten Bronze Skin",
+    "category": "Wondrous Item",
+    "description": "A magical tattoo that gives the skin a golden bronze sheen."
+  },
+  {
+    "id": "moon-sickle",
+    "name": "Moon Sickle",
+    "category": "Weapon",
+    "description": "This silver-bladed sickle glimmers softly with moonlight."
+  },
+  {
+    "id": "moon-sickle-rare",
+    "name": "Moon Sickle (Rare)",
+    "category": "Weapon",
+    "description": "A rare silver-bladed sickle that glimmers with moonlight."
+  },
+  {
+    "id": "moon-sickle-very-rare",
+    "name": "Moon Sickle (Very Rare)",
+    "category": "Weapon",
+    "description": "A very rare silver-bladed sickle that blazes with moonlight."
+  },
+  {
+    "id": "moon-touched-sword",
+    "name": "Moon-Touched Sword",
+    "category": "Weapon",
+    "description": "In darkness, the unsheathed blade of this sword sheds moonlight, creating bright light in a 15-foot radius and dim light for an additional 15 feet."
+  },
+  {
+    "id": "moonblade",
+    "name": "Moonblade",
+    "category": "Weapon",
+    "description": "One of the most prized magic items created by the elves, nearly all elven noble houses once claimed one."
+  },
+  {
+    "id": "mystery-key",
+    "name": "Mystery Key",
+    "category": "Wondrous Item",
+    "description": "A question mark is worked into the head of this key. The key has a 25 percent chance of unlocking any lock into which it's inserted."
+  },
+  {
+    "id": "mythcarver",
+    "name": "Mythcarver",
+    "category": "Weapon",
+    "description": "A gleaming longsword that hums softly when drawn. One of the Vestiges of Divergence."
+  },
+  {
+    "id": "natures-mantle",
+    "name": "Nature's Mantle",
+    "category": "Wondrous Item",
+    "description": "This cloak shifts color and texture to blend with the terrain surrounding you."
+  },
+  {
+    "id": "staff-of-power-rare",
+    "name": "Nature's Wrath",
+    "category": "Staff",
+    "description": "This gnarled staff is carved from the heartwood of a tree struck by both lightning and a giant's fist. It crackles with primal energy."
+  },
+  {
+    "id": "navigation-orb",
+    "name": "Navigation Orb",
+    "category": "Wondrous Item",
+    "description": "A hollow, 7-foot-diameter sphere of thin magically reinforced glass."
+  },
+  {
+    "id": "necklace-of-adaptation",
+    "name": "Necklace of Adaptation",
+    "category": "Wondrous Item",
+    "description": "While wearing this necklace, you can breathe normally in any environment, and you have advantage on saving throws made against harmful gases and vapors (such as cloudkill and stinking cloud effects, inhaled poisons, and the breath weapons of some dragons)."
+  },
+  {
+    "id": "necklace-of-fireballs",
+    "name": "Necklace of Fireballs",
+    "category": "Wondrous Item",
+    "description": "This necklace has 1d6 + 3 beads hanging from it. You can use an action to detach a bead and throw it up to 60 feet away. When it reaches the end of its trajectory, the bead detonates as a 3rd-level fireball spell (save DC 15)."
+  },
+  {
+    "id": "necklace-of-prayer-beads",
+    "name": "Necklace of Prayer Beads",
+    "category": "Wondrous Item",
+    "description": "This necklace has 1d4 + 2 magic beads made from aquamarine, black pearl, or topaz."
+  },
+  {
+    "id": "necklace-of-strangulation",
+    "name": "Necklace of Strangulation",
+    "category": "Wondrous Item",
+    "description": "When you put on this necklace, it tightens around your throat and can't be removed except by magic."
+  },
+  {
+    "id": "needle-of-mending",
+    "name": "Needle of Mending",
+    "category": "Wondrous Item",
+    "description": "This slim golden needle is enchanted to mend cloth automatically."
+  },
+  {
+    "id": "neogi-nightmare-rod",
+    "name": "Neogi Nightmare Rod",
+    "category": "Rod",
+    "description": "This crooked rod made from the fused spine of a neogi instills nightmare visions."
+  },
+  {
+    "id": "nine-lives-stealer",
+    "name": "Nine Lives Stealer",
+    "category": "Weapon",
+    "description": "You gain a +2 bonus to attack and damage rolls made with this magic weapon."
+  },
+  {
+    "id": "velvet-bag-of-sand",
+    "name": "Nolzur's Marvelous Pigments",
+    "category": "Wondrous Item",
+    "description": "Typically found in 1d4 pots inside a fine wooden box with a brush, these pigments allow you to create three-dimensional objects by painting them in two dimensions."
+  },
+  {
+    "id": "oathbow",
+    "name": "Oathbow",
+    "category": "Weapon",
+    "description": "When you nock an arrow on this bow, it whispers in Elvish, 'Swift defeat to my enemies.'"
+  },
+  {
+    "id": "obelisk-shard",
+    "name": "Obelisk Shard",
+    "category": "Wondrous Item",
+    "description": "A fragment from one of the Netherese obelisks shattered across Faerûn."
+  },
+  {
+    "id": "oil-of-etherealness",
+    "name": "Oil of Etherealness",
+    "category": "Potion",
+    "description": "Beads of this cloudy gray oil form on the outside of its container and quickly evaporate."
+  },
+  {
+    "id": "oil-of-sharpness",
+    "name": "Oil of Sharpness",
+    "category": "Potion",
+    "description": "This clear, gelatinous oil sparkles with tiny, ultrathin silver shards."
+  },
+  {
+    "id": "oil-of-slipperiness",
+    "name": "Oil of Slipperiness",
+    "category": "Potion",
+    "description": "This sticky, black unguent is thick and heavy in the container but quickly spreads across the skin."
+  },
+  {
+    "id": "orb-of-direction",
+    "name": "Orb of Direction",
+    "category": "Wondrous Item",
+    "description": "While holding this orb, you can use an action to determine which way is north. This property functions only on the Material Plane."
+  },
+  {
+    "id": "orb-of-dragonkind",
+    "name": "Orb of Dragonkind",
+    "category": "Wondrous Item",
+    "description": "Ages past, elves and humans waged a terrible war against evil dragons. To help combat the dragons, wizards created several orbs of dragonkind."
+  },
+  {
+    "id": "orb-of-time",
+    "name": "Orb of Time",
+    "category": "Wondrous Item",
+    "description": "While holding this orb, you can use an action to determine whether it is morning, afternoon, evening, or nighttime outside."
+  },
+  {
+    "id": "orrery-of-the-wanderer",
+    "name": "Orrery of the Wanderer",
+    "category": "Wondrous Item",
+    "description": "A portable arcane device resembling a model solar system with spinning spheres of glass and wire."
+  },
+  {
+    "id": "outer-essence-shard",
+    "name": "Outer Essence Shard",
+    "category": "Wondrous Item",
+    "description": "This crystal contains a sliver of energy from one of the Outer Planes."
+  },
+  {
+    "id": "paladin-s-shield-emblem",
+    "name": "Paladin's Shield Emblem",
+    "category": "Wondrous Item",
+    "description": "This emblem, engraved with holy symbols, can be attached to a shield."
+  },
+  {
+    "id": "paper-bird",
+    "name": "Paper Bird",
+    "category": "Wondrous Item",
+    "description": "Write a message of fifty words or fewer on this magic paper and speak a creature's name to deliver it."
+  },
+  {
+    "id": "pearl-of-power",
+    "name": "Pearl of Power",
+    "category": "Wondrous Item",
+    "description": "While this pearl is on your person, you can use an action to speak its command word and regain one expended spell slot of up to 3rd level."
+  },
+  {
+    "id": "pennant-of-the-vexing-wind",
+    "name": "Pennant of the Vexing Wind",
+    "category": "Wondrous Item",
+    "description": "A triangular pennant bearing the colors of a Strixhaven college."
+  },
+  {
+    "id": "peregrine-mask",
+    "name": "Peregrine Mask",
+    "category": "Wondrous Item",
+    "description": "This sleek leather mask is designed to be worn by Azorius arresters."
+  },
+  {
+    "id": "perfume-of-bewitching",
+    "name": "Perfume of Bewitching",
+    "category": "Wondrous Item",
+    "description": "This tiny vial contains magic perfume, enough for one use. You can use an action to apply the perfume to yourself, and its effect lasts 1 hour."
+  },
+  {
+    "id": "periapt-of-health",
+    "name": "Periapt of Health",
+    "category": "Wondrous Item",
+    "description": "You are immune to contracting any disease while you wear this pendant. If you are already infected with a disease, the effects of the disease are suppressed you while you wear the pendant."
+  },
+  {
+    "id": "periapt-of-wound-closure",
+    "name": "Periapt of Wound Closure",
+    "category": "Wondrous Item",
+    "description": "While you wear this pendant, you stabilize whenever you are dying at the start of your turn."
+  },
+  {
+    "id": "philosopher-s-stone",
+    "name": "Philosopher's Stone",
+    "category": "Wondrous Item",
+    "description": "This dreary chunk of whitish gray stone might be mistaken for a piece of chalk."
+  },
+  {
+    "id": "pipe-of-smoke-monsters",
+    "name": "Pipe of Smoke Monsters",
+    "category": "Wondrous Item",
+    "description": "While smoking this pipe, you can use an action to exhale a puff of smoke that takes the form of a single creature, such as a dragon, a flumph, or a froghemoth."
+  },
+  {
+    "id": "pipes-of-haunting",
+    "name": "Pipes of Haunting",
+    "category": "Wondrous Item",
+    "description": "You must be proficient with wind instruments to use these pipes. They have 3 charges and regain 1d3 expended charges daily at dawn."
+  },
+  {
+    "id": "pipes-of-the-sewers",
+    "name": "Pipes of the Sewers",
+    "category": "Wondrous Item",
+    "description": "You must be proficient with wind instruments to use these pipes."
+  },
+  {
+    "id": "pixie-dust",
+    "name": "Pixie Dust",
+    "category": "Wondrous Item",
+    "description": "A small vial of glittering dust collected from pixie wings."
+  },
+  {
+    "id": "planecaller-s-codex",
+    "name": "Planecaller's Codex",
+    "category": "Wondrous Item",
+    "description": "This thick tome is bound in multicolored leather to denote its connection to the multiverse."
+  },
+  {
+    "id": "platinum-scarf",
+    "name": "Platinum Scarf",
+    "category": "Wondrous Item",
+    "description": "This scarf is made of sturdy platinum-colored fabric covered with astrological symbols."
+  },
+  {
+    "id": "pole-of-angling",
+    "name": "Pole of Angling",
+    "category": "Wondrous Item",
+    "description": "While holding this 10-foot pole, you can speak a command word and transform it into a fishing pole with a hook, a line, and a reel."
+  },
+  {
+    "id": "pole-of-collapsing",
+    "name": "Pole of Collapsing",
+    "category": "Wondrous Item",
+    "description": "While holding this 10-foot pole, you can use an action to speak a command word and cause it to collapse into a 1-foot-long rod."
+  },
+  {
+    "id": "portable-hole",
+    "name": "Portable Hole",
+    "category": "Wondrous Item",
+    "description": "This fine black cloth, soft as silk, is folded up to the dimensions of a handkerchief. It unfolds into a circular sheet 6 feet in diameter."
+  },
+  {
+    "id": "pot-of-awakening",
+    "name": "Pot of Awakening",
+    "category": "Wondrous Item",
+    "description": "If you plant an ordinary shrub in this 10-pound clay pot and let it grow for 30 days, the shrub magically transforms into an awakened shrub."
+  },
+  {
+    "id": "potion-of-animal-friendship",
+    "name": "Potion of Animal Friendship",
+    "category": "Potion",
+    "description": "When you drink this potion, you can cast the animal friendship spell (save DC 13) for 1 hour at will."
+  },
+  {
+    "id": "potion-of-clairvoyance",
+    "name": "Potion of Clairvoyance",
+    "category": "Potion",
+    "description": "When you drink this potion, you gain the effect of the clairvoyance spell."
+  },
+  {
+    "id": "potion-of-climbing",
+    "name": "Potion of Climbing",
+    "category": "Potion",
+    "description": "When you drink this potion, you gain a climbing speed equal to your walking speed for 1 hour."
+  },
+  {
+    "id": "potion-of-diminution",
+    "name": "Potion of Diminution",
+    "category": "Potion",
+    "description": "When you drink this potion, you gain the 'reduce' effect of the enlarge/reduce spell for 1d4 hours (no concentration required)."
+  },
+  {
+    "id": "dragon-blood-potion",
+    "name": "Potion of Dragon Blood",
+    "category": "Potion",
+    "description": "This vial contains a few drops of dragon blood mixed with magical reagents. It glows faintly with the color of the associated dragon type."
+  },
+  {
+    "id": "potion-of-flying",
+    "name": "Potion of Flying",
+    "category": "Potion",
+    "description": "When you drink this potion, you gain a flying speed equal to your walking speed for 1 hour and can hover."
+  },
+  {
+    "id": "potion-of-gaseous-form",
+    "name": "Potion of Gaseous Form",
+    "category": "Potion",
+    "description": "When you drink this potion, you gain the effect of the gaseous form spell for 1 hour (no concentration required) or until you end the effect as a bonus action."
+  },
+  {
+    "id": "potion-of-giant-size",
+    "name": "Potion of Giant Size",
+    "category": "Potion",
+    "description": "When you drink this potion, you grow to Huge size for 24 hours."
+  },
+  {
+    "id": "potion-of-greater-healing",
+    "name": "Potion of Greater Healing",
+    "category": "Potion",
+    "description": "You regain 4d4 + 4 hit points when you drink this potion."
+  },
+  {
+    "id": "potion-of-growth",
+    "name": "Potion of Growth",
+    "category": "Potion",
+    "description": "When you drink this potion, you gain the 'enlarge' effect of the enlarge/reduce spell for 1d4 hours (no concentration required)."
+  },
+  {
+    "id": "potion-of-healing",
+    "name": "Potion of Healing",
+    "category": "Potion",
+    "description": "You regain 2d4 + 2 hit points when you drink this potion. The potion's red liquid glimmers when agitated."
+  },
+  {
+    "id": "potion-of-heroism",
+    "name": "Potion of Heroism",
+    "category": "Potion",
+    "description": "For 1 hour after drinking it, you gain 10 temporary hit points that last for 1 hour. For the same duration, you are under the effect of the bless spell (no concentration required)."
+  },
+  {
+    "id": "potion-of-giant-strength-hill",
+    "name": "Potion of Hill Giant Strength",
+    "category": "Potion",
+    "description": "When you drink this potion, your Strength score changes to 21 for 1 hour."
+  },
+  {
+    "id": "potion-of-invisibility",
+    "name": "Potion of Invisibility",
+    "category": "Potion",
+    "description": "This potion's container looks empty but feels as though it holds liquid. When you drink it, you become invisible for 1 hour."
+  },
+  {
+    "id": "potion-of-longevity",
+    "name": "Potion of Longevity",
+    "category": "Potion",
+    "description": "When you drink this potion, your physical age is reduced by 1d6 + 6 years, to a minimum of 13 years."
+  },
+  {
+    "id": "potion-of-mind-reading",
+    "name": "Potion of Mind Reading",
+    "category": "Potion",
+    "description": "When you drink this potion, you gain the effect of the detect thoughts spell (save DC 13)."
+  },
+  {
+    "id": "potion-of-poison",
+    "name": "Potion of Poison",
+    "category": "Potion",
+    "description": "This concoction looks, smells, and tastes like a potion of healing or other beneficial potion. However, it is actually poison masked by illusion magic."
+  },
+  {
+    "id": "potion-of-resistance",
+    "name": "Potion of Resistance",
+    "category": "Potion",
+    "description": "When you drink this potion, you gain resistance to one type of damage for 1 hour."
+  },
+  {
+    "id": "potion-of-speed",
+    "name": "Potion of Speed",
+    "category": "Potion",
+    "description": "When you drink this potion, you gain the effect of the haste spell for 1 minute (no concentration required)."
+  },
+  {
+    "id": "potion-of-giant-strength-storm",
+    "name": "Potion of Storm Giant Strength",
+    "category": "Potion",
+    "description": "When you drink this potion, your Strength score changes to 29 for 1 hour."
+  },
+  {
+    "id": "potion-of-superior-healing",
+    "name": "Potion of Superior Healing",
+    "category": "Potion",
+    "description": "You regain 8d4 + 8 hit points when you drink this potion."
+  },
+  {
+    "id": "potion-of-supreme-healing",
+    "name": "Potion of Supreme Healing",
+    "category": "Potion",
+    "description": "You regain 10d4 + 20 hit points when you drink this potion."
+  },
+  {
+    "id": "potion-of-vitality",
+    "name": "Potion of Vitality",
+    "category": "Potion",
+    "description": "When you drink this potion, it removes any exhaustion you are suffering and cures any disease or poison affecting you."
+  },
+  {
+    "id": "potion-of-water-breathing",
+    "name": "Potion of Water Breathing",
+    "category": "Potion",
+    "description": "You can breathe underwater for 1 hour after drinking this potion."
+  },
+  {
+    "id": "prosthetic-limb",
+    "name": "Prosthetic Limb",
+    "category": "Wondrous Item",
+    "description": "This item replaces a lost limb, such as a hand, arm, foot, or leg."
+  },
+  {
+    "id": "protective-verses",
+    "name": "Protective Verses",
+    "category": "Wondrous Item",
+    "description": "This spellbook is reinforced with iron and silver and inscribed with protective runes."
+  },
+  {
+    "id": "psi-crystal",
+    "name": "Psi Crystal",
+    "category": "Wondrous Item",
+    "description": "This crystal contains the looping memory of a dead mind flayer."
+  },
+  {
+    "id": "pyroconverger",
+    "name": "Pyroconverger",
+    "category": "Weapon",
+    "description": "An Izzet-made flamethrower device that channels fire magic."
+  },
+  {
+    "id": "pyxis-of-pandemonium",
+    "name": "Pyxis of Pandemonium",
+    "category": "Wondrous Item",
+    "description": "This ornate wooden box holds vials of dangerous divine gifts."
+  },
+  {
+    "id": "wings-of-flying-rare",
+    "name": "Quiver of Ehlonna",
+    "category": "Wondrous Item",
+    "description": "Each of the quiver's three compartments connects to an extradimensional space that allows the quiver to hold numerous items."
+  },
+  {
+    "id": "red-robe",
+    "name": "Red Robe of the Orders",
+    "category": "Wondrous Item",
+    "description": "This red silk robe is worn by wizards of the Order of the Red Robes on Krynn, followers of Lunitari."
+  },
+  {
+    "id": "restorative-ointment",
+    "name": "Restorative Ointment",
+    "category": "Wondrous Item",
+    "description": "A glass jar containing 1d4 + 1 doses of a thick mixture that smells faintly of aloe."
+  },
+  {
+    "id": "reveler-s-concertina",
+    "name": "Reveler's Concertina",
+    "category": "Wondrous Item",
+    "description": "While playing this concertina, you can cast the following spells."
+  },
+  {
+    "id": "rhythm-makers-drum",
+    "name": "Rhythm-Maker's Drum",
+    "category": "Wondrous Item",
+    "description": "While holding this drum, you gain a +1 bonus to spell attack rolls and spell save DCs of your bard spells."
+  },
+  {
+    "id": "ring-of-animal-influence",
+    "name": "Ring of Animal Influence",
+    "category": "Ring",
+    "description": "This ring has 3 charges, and it regains 1d3 expended charges daily at dawn."
+  },
+  {
+    "id": "ring-of-clumsiness",
+    "name": "Ring of Clumsiness",
+    "category": "Ring",
+    "description": "This ring is cursed. Attuning to it curses you until you are targeted by the remove curse spell or similar magic."
+  },
+  {
+    "id": "ring-of-djinni-summoning",
+    "name": "Ring of Djinni Summoning",
+    "category": "Ring",
+    "description": "While wearing this ring, you can speak its command word as an action to summon a particular djinni from the Elemental Plane of Air."
+  },
+  {
+    "id": "ring-of-evasion",
+    "name": "Ring of Evasion",
+    "category": "Ring",
+    "description": "This ring has 3 charges, and it regains 1d3 expended charges daily at dawn."
+  },
+  {
+    "id": "ring-of-feather-falling",
+    "name": "Ring of Feather Falling",
+    "category": "Ring",
+    "description": "When you fall while wearing this ring, you descend 60 feet per round and take no damage from falling."
+  },
+  {
+    "id": "ring-of-free-action",
+    "name": "Ring of Free Action",
+    "category": "Ring",
+    "description": "While you wear this ring, difficult terrain doesn't cost you extra movement. In addition, magic can neither reduce your speed nor cause you to be paralyzed or restrained."
+  },
+  {
+    "id": "giants-ring",
+    "name": "Ring of Giant Influence",
+    "category": "Ring",
+    "description": "This oversized ring is made from the melted metal of a giant's weapon and fits any finger when worn."
+  },
+  {
+    "id": "ring-of-invisibility",
+    "name": "Ring of Invisibility",
+    "category": "Ring",
+    "description": "While wearing this ring, you can turn invisible as an action. Anything you are wearing or carrying is invisible with you. You remain invisible until the ring is removed, until you attack or cast a spell, or until you use a bonus action to become visible again."
+  },
+  {
+    "id": "ring-of-jumping",
+    "name": "Ring of Jumping",
+    "category": "Ring",
+    "description": "While wearing this ring, you can cast the jump spell from it as a bonus action at will, but can target only yourself when you do so."
+  },
+  {
+    "id": "ring-of-mind-shielding",
+    "name": "Ring of Mind Shielding",
+    "category": "Ring",
+    "description": "While wearing this ring, you are immune to magic that allows other creatures to read your thoughts, determine whether you are lying, know your alignment, or know your creature type."
+  },
+  {
+    "id": "ring-of-obscuring",
+    "name": "Ring of Obscuring",
+    "category": "Ring",
+    "description": "This band of iron resembles intertwined vines."
+  },
+  {
+    "id": "ring-of-protection",
+    "name": "Ring of Protection",
+    "category": "Ring",
+    "description": "You gain a +1 bonus to AC and saving throws while wearing this ring."
+  },
+  {
+    "id": "ring-of-regeneration",
+    "name": "Ring of Regeneration",
+    "category": "Ring",
+    "description": "While wearing this ring, you regain 1d6 hit points every 10 minutes, provided that you have at least 1 hit point."
+  },
+  {
+    "id": "ring-of-resistance",
+    "name": "Ring of Resistance",
+    "category": "Ring",
+    "description": "You have resistance to one damage type while wearing this ring."
+  },
+  {
+    "id": "ring-of-shooting-stars",
+    "name": "Ring of Shooting Stars",
+    "category": "Ring",
+    "description": "While wearing this ring in dim light or darkness, you can cast faerie fire and dancing lights from the ring at will."
+  },
+  {
+    "id": "ring-of-spell-storing",
+    "name": "Ring of Spell Storing",
+    "category": "Ring",
+    "description": "This ring stores spells cast into it, holding them until the attuned wearer uses them. The ring can store up to 5 levels worth of spells at a time."
+  },
+  {
+    "id": "ring-of-spell-turning",
+    "name": "Ring of Spell Turning",
+    "category": "Ring",
+    "description": "While wearing this ring, you have advantage on saving throws against any spell that targets only you (not in an area of effect)."
+  },
+  {
+    "id": "ring-of-swimming",
+    "name": "Ring of Swimming",
+    "category": "Ring",
+    "description": "You have a swimming speed of 40 feet while wearing this ring."
+  },
+  {
+    "id": "ring-of-telekinesis",
+    "name": "Ring of Telekinesis",
+    "category": "Ring",
+    "description": "While wearing this ring, you can cast the telekinesis spell at will, but you can target only objects that aren't being worn or carried."
+  },
+  {
+    "id": "ring-of-temporal-salvation",
+    "name": "Ring of Temporal Salvation",
+    "category": "Ring",
+    "description": "If you die while wearing this gray ring, you get a second chance."
+  },
+  {
+    "id": "ring-of-the-astral-cosmos",
+    "name": "Ring of the Astral Cosmos",
+    "category": "Ring",
+    "description": "A band of dark obsidian inlaid with tiny diamonds that perfectly mirror the night sky."
+  },
+  {
+    "id": "ring-of-the-ram",
+    "name": "Ring of the Ram",
+    "category": "Ring",
+    "description": "This ring has 3 charges, and it regains 1d3 expended charges daily at dawn. While wearing the ring, you can use an action to expend 1 to 3 of its charges to attack one creature you can see within 60 feet of you."
+  },
+  {
+    "id": "ring-of-three-wishes",
+    "name": "Ring of Three Wishes",
+    "category": "Ring",
+    "description": "While wearing this ring, you can use an action to expend 1 of its 3 charges to cast the wish spell from it. The ring becomes nonmagical when you use the last wish."
+  },
+  {
+    "id": "ring-of-warmth",
+    "name": "Ring of Warmth",
+    "category": "Ring",
+    "description": "While wearing this ring, you have resistance to cold damage. In addition, you and everything you wear and carry are unharmed by temperatures as low as −50 degrees Fahrenheit."
+  },
+  {
+    "id": "ring-of-water-walking",
+    "name": "Ring of Water Walking",
+    "category": "Ring",
+    "description": "While wearing this ring, you can stand on and move across any liquid surface as if it were solid ground."
+  },
+  {
+    "id": "ring-of-x-ray-vision",
+    "name": "Ring of X-Ray Vision",
+    "category": "Ring",
+    "description": "While wearing this ring, you can use an action to speak its command word."
+  },
+  {
+    "id": "robe-of-eyes",
+    "name": "Robe of Eyes",
+    "category": "Wondrous Item",
+    "description": "This robe is adorned with eyelike patterns. While you wear the robe, you gain the following benefits."
+  },
+  {
+    "id": "robe-of-scintillating-colors",
+    "name": "Robe of Scintillating Colors",
+    "category": "Wondrous Item",
+    "description": "This robe has 3 charges, and it regains 1d3 expended charges daily at dawn."
+  },
+  {
+    "id": "robe-of-stars",
+    "name": "Robe of Stars",
+    "category": "Wondrous Item",
+    "description": "This black or dark blue robe is embroidered with small white or silver stars. You gain a +1 bonus to saving throws while you wear it."
+  },
+  {
+    "id": "robe-of-useful-items",
+    "name": "Robe of Useful Items",
+    "category": "Wondrous Item",
+    "description": "This robe has cloth patches of various shapes and colors covering it. While wearing the robe, you can use an action to detach one of the patches, causing it to become the object or creature it represents."
+  },
+  {
+    "id": "robes-of-the-second-strike",
+    "name": "Robes of the Second Strike",
+    "category": "Wondrous Item (Clothing)",
+    "description": "Sleeveless robes woven from ash-gray silk and bound with silver thread depicting flowing currents of wind and water. The cloth subtly corrects the wearer's stance and guides every strike toward perfection."
+  },
+  {
+    "id": "rod-of-absorption",
+    "name": "Rod of Absorption",
+    "category": "Rod",
+    "description": "While holding this rod, you can use your reaction to absorb a spell that is targeting only you and not with an area of effect."
+  },
+  {
+    "id": "rod-of-alertness",
+    "name": "Rod of Alertness",
+    "category": "Rod",
+    "description": "This rod has a flanged head and the following properties."
+  },
+  {
+    "id": "rod-of-lordly-might",
+    "name": "Rod of Lordly Might",
+    "category": "Rod",
+    "description": "This rod has a flanged head, and it functions as a magic mace that grants a +3 bonus to attack and damage rolls made with it."
+  },
+  {
+    "id": "rod-of-rulership",
+    "name": "Rod of Rulership",
+    "category": "Rod",
+    "description": "You can use an action to present the rod and command obedience from each creature of your choice that you can see within 120 feet of you."
+  },
+  {
+    "id": "rod-of-security",
+    "name": "Rod of Security",
+    "category": "Rod",
+    "description": "While holding this rod, you can use an action to activate it. The rod then instantly transports you and up to 199 other willing creatures you can see to a paradise that exists in an extraplanar space."
+  },
+  {
+    "id": "vecna-rod",
+    "name": "Rod of Seven Parts",
+    "category": "Rod",
+    "description": "The Rod of Seven Parts was shattered in a battle between the Wind Dukes of Aaqa and the Queen of Chaos. Its seven pieces were scattered across the multiverse."
+  },
+  {
+    "id": "rod-of-the-pact-keeper-plus-1",
+    "name": "Rod of the Pact Keeper +1",
+    "category": "Rod",
+    "description": "While holding this rod, you gain a +1 bonus to spell attack rolls and to the saving throw DCs of your warlock spells."
+  },
+  {
+    "id": "rod-of-the-pact-keeper-plus-2",
+    "name": "Rod of the Pact Keeper +2",
+    "category": "Rod",
+    "description": "While holding this rod, you gain a +2 bonus to spell attack rolls and to the saving throw DCs of your warlock spells."
+  },
+  {
+    "id": "rod-of-the-pact-keeper-plus-3",
+    "name": "Rod of the Pact Keeper +3",
+    "category": "Rod",
+    "description": "While holding this rod, you gain a +3 bonus to spell attack rolls and to the saving throw DCs of your warlock spells."
+  },
+  {
+    "id": "rope-of-climbing",
+    "name": "Rope of Climbing",
+    "category": "Wondrous Item",
+    "description": "This 60-foot length of silk rope weighs 3 pounds and can hold up to 3,000 pounds."
+  },
+  {
+    "id": "rope-of-entanglement",
+    "name": "Rope of Entanglement",
+    "category": "Wondrous Item",
+    "description": "This rope is 30 feet long and weighs 3 pounds. If you hold one end of the rope and use an action to speak its command word, the other end darts forward to entangle a creature you can see within 20 feet of you."
+  },
+  {
+    "id": "rope-of-mending",
+    "name": "Rope of Mending",
+    "category": "Wondrous Item",
+    "description": "You can cut this 50-foot coil of hempen rope into any number of smaller pieces, and then use an action to speak a command word and cause the pieces to knit back together."
+  },
+  {
+    "id": "ruby-of-the-war-mage",
+    "name": "Ruby of the War Mage",
+    "category": "Wondrous Item",
+    "description": "Etched with eldritch runes, this 1-inch-diameter ruby allows you to use a simple or martial weapon as a spellcasting focus for your spells."
+  },
+  {
+    "id": "ruidium-armor",
+    "name": "Ruidium Armor",
+    "category": "Armor",
+    "description": "Armor infused with ruidium, a crimson mineral from the Netherdeep."
+  },
+  {
+    "id": "ruidium-weapon",
+    "name": "Ruidium Weapon",
+    "category": "Weapon",
+    "description": "A weapon infused with ruidium, a rare crimson mineral from the Netherdeep."
+  },
+  {
+    "id": "rune-shield",
+    "name": "Rune Shield",
+    "category": "Armor",
+    "description": "This shield is inscribed with a giant rune that glows faintly when danger is near."
+  },
+  {
+    "id": "scale-of-the-ancient",
+    "name": "Scale of the Ancient",
+    "category": "Wondrous Item",
+    "description": "This single scale from an ancient dragon pulses with tremendous magical energy."
+  },
+  {
+    "id": "scaled-ornament",
+    "name": "Scaled Ornament",
+    "category": "Wondrous Item",
+    "description": "This ornament is made from dragon scales."
+  },
+  {
+    "id": "scarab-of-protection",
+    "name": "Scarab of Protection",
+    "category": "Wondrous Item",
+    "description": "If you hold this beetle-shaped medallion in your hand for 1 round, an inscription appears on its surface revealing its magical nature."
+  },
+  {
+    "id": "scimitar-of-speed",
+    "name": "Scimitar of Speed",
+    "category": "Weapon",
+    "description": "You gain a +2 bonus to attack and damage rolls made with this magic weapon. In addition, you can make one attack with it as a bonus action on each of your turns."
+  },
+  {
+    "id": "scroll-of-protection",
+    "name": "Scroll of Protection",
+    "category": "Scroll",
+    "description": "Each scroll of protection works against a specific type of creature chosen by the DM or determined randomly."
+  },
+  {
+    "id": "scimitar-of-the-northern-winds",
+    "name": "Sending Stones",
+    "category": "Wondrous Item",
+    "description": "Sending stones come in pairs, with each smooth stone carved to match its counterpart."
+  },
+  {
+    "id": "sensory-stone",
+    "name": "Sensory Stone",
+    "category": "Wondrous Item",
+    "description": "A smooth spherical stone that records and plays back sensory experiences."
+  },
+  {
+    "id": "shadowfell-brand-tattoo",
+    "name": "Shadowfell Brand Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this tattoo is dark and hazy at its edges."
+  },
+  {
+    "id": "shadowfell-shard",
+    "name": "Shadowfell Shard",
+    "category": "Wondrous Item",
+    "description": "This shard of black crystal is a solidified fragment of the Shadowfell's gloom."
+  },
+  {
+    "id": "shard-solitaire",
+    "name": "Shard Solitaire",
+    "category": "Wondrous Item",
+    "description": "This gemstone contains an extradimensional space."
+  },
+  {
+    "id": "shield-of-expression",
+    "name": "Shield of Expression",
+    "category": "Armor",
+    "description": "The front of this shield is shaped in the likeness of a face. While bearing the shield, you can use a bonus action to alter the face's expression."
+  },
+  {
+    "id": "shield-of-missile-attraction",
+    "name": "Shield of Missile Attraction",
+    "category": "Armor",
+    "description": "While holding this shield, you have resistance to damage from ranged weapon attacks."
+  },
+  {
+    "id": "shield-of-the-hidden-lord",
+    "name": "Shield of the Hidden Lord",
+    "category": "Armor",
+    "description": "A pit fiend named Gargauth, weakened and trapped within this shield, is the source of its power."
+  },
+  {
+    "id": "siren-song-lyre",
+    "name": "Siren Song Lyre",
+    "category": "Wondrous Item",
+    "description": "This lyre is carved from driftwood and strung with the hair of a sea siren."
+  },
+  {
+    "id": "skyblinder-staff",
+    "name": "Skyblinder Staff",
+    "category": "Staff",
+    "description": "You gain a +1 bonus to attack and damage rolls made with this magic staff."
+  },
+  {
+    "id": "slippers-of-spider-climbing",
+    "name": "Slippers of Spider Climbing",
+    "category": "Wondrous Item",
+    "description": "While you wear these light shoes, you can move up, down, and across vertical surfaces and upside down along ceilings, while leaving your hands free."
+  },
+  {
+    "id": "smoldering-armor",
+    "name": "Smoldering Armor",
+    "category": "Armor",
+    "description": "Wisps of harmless, odorless smoke rise from this armor while it is worn."
+  },
+  {
+    "id": "snicker-snack",
+    "name": "Snicker-Snack",
+    "category": "Weapon",
+    "description": "This vorpal sword is named after the sound it makes when it takes off a head."
+  },
+  {
+    "id": "solamnic-plate",
+    "name": "Solamnic Plate",
+    "category": "Armor",
+    "description": "This gleaming plate armor bears the rose-and-sword insignia of the Knights of Solamnia and has been blessed by the gods of Good."
+  },
+  {
+    "id": "song-of-the-wild",
+    "name": "Song of the Wild",
+    "category": "Wondrous Item",
+    "description": "This small crystal vial contains an iridescent liquid that hums with captured fey music."
+  },
+  {
+    "id": "soul-coin",
+    "name": "Soul Coin",
+    "category": "Wondrous Item",
+    "description": "Minted from infernal iron, each soul coin contains the soul of a damned creature."
+  },
+  {
+    "id": "sovereign-glue",
+    "name": "Sovereign Glue",
+    "category": "Wondrous Item",
+    "description": "This viscous, milky-white substance can form a permanent adhesive bond between any two objects."
+  },
+  {
+    "id": "speaking-stone",
+    "name": "Speaking Stone",
+    "category": "Wondrous Item",
+    "description": "The sages of the Wizards' Schools have developed a network of speaking stones to help them communicate."
+  },
+  {
+    "id": "spell-scroll-1st",
+    "name": "Spell Scroll (1st Level)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single 1st-level spell."
+  },
+  {
+    "id": "spell-scroll-2nd",
+    "name": "Spell Scroll (2nd Level)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single 2nd-level spell."
+  },
+  {
+    "id": "spell-scroll-3rd",
+    "name": "Spell Scroll (3rd Level)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single 3rd-level spell."
+  },
+  {
+    "id": "spell-scroll-4th",
+    "name": "Spell Scroll (4th Level)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single 4th-level spell."
+  },
+  {
+    "id": "spell-scroll-5th",
+    "name": "Spell Scroll (5th Level)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single 5th-level spell."
+  },
+  {
+    "id": "spell-scroll-6th",
+    "name": "Spell Scroll (6th Level)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single 6th-level spell."
+  },
+  {
+    "id": "spell-scroll-7th",
+    "name": "Spell Scroll (7th Level)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single 7th-level spell."
+  },
+  {
+    "id": "spell-scroll-8th",
+    "name": "Spell Scroll (8th Level)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single 8th-level spell."
+  },
+  {
+    "id": "spell-scroll-9th",
+    "name": "Spell Scroll (9th Level)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single 9th-level spell."
+  },
+  {
+    "id": "spell-scroll-cantrip",
+    "name": "Spell Scroll (Cantrip)",
+    "category": "Scroll",
+    "description": "A spell scroll bears the words of a single spell, written in a mystical cipher."
+  },
+  {
+    "id": "spellguard-shield",
+    "name": "Spellguard Shield",
+    "category": "Armor",
+    "description": "While holding this shield, you have advantage on saving throws against spells and other magical effects, and spell attacks have disadvantage against you."
+  },
+  {
+    "id": "spelljamming-helm",
+    "name": "Spelljamming Helm",
+    "category": "Wondrous Item",
+    "description": "This ornate chair propels and maneuvers a ship through the Astral Sea."
+  },
+  {
+    "id": "spellshard",
+    "name": "Spellshard",
+    "category": "Wondrous Item",
+    "description": "This polished Eberron dragonshard is a common magical item across Eberron."
+  },
+  {
+    "id": "spellwrought-tattoo",
+    "name": "Spellwrought Tattoo",
+    "category": "Wondrous Item",
+    "description": "Produced by a special needle, this tattoo contains a single spell of up to 5th level, wrought on your skin by a magic needle."
+  },
+  {
+    "id": "sphere-of-annihilation",
+    "name": "Sphere of Annihilation",
+    "category": "Wondrous Item",
+    "description": "This 2-foot-diameter black sphere is a hole in the multiverse, hovering in space and stabilized by a magical field surrounding it."
+  },
+  {
+    "id": "spider-staff",
+    "name": "Spider Staff",
+    "category": "Staff",
+    "description": "The top of this black staff is shaped like a spider."
+  },
+  {
+    "id": "spindle-of-fate",
+    "name": "Spindle of Fate",
+    "category": "Wondrous Item",
+    "description": "Two golden needles, linked by a crimson thread that never becomes tangled, make up this item."
+  },
+  {
+    "id": "spire-of-conflux",
+    "name": "Spire of Conflux",
+    "category": "Staff",
+    "description": "An ancient staff topped with a gnarled gem. One of the Vestiges of Divergence."
+  },
+  {
+    "id": "staff-of-adornment",
+    "name": "Staff of Adornment",
+    "category": "Staff",
+    "description": "If you place an object weighing no more than 1 pound (such as a shard of crystal, an egg, or a stone) above the tip of the staff while holding it, the object floats an inch from the staff's tip and remains there until it is removed or until the staff is no longer in your possession."
+  },
+  {
+    "id": "staff-of-birdcalls",
+    "name": "Staff of Birdcalls",
+    "category": "Staff",
+    "description": "This wooden staff is decorated with bird carvings. It has 10 charges. While holding it, you can use an action to expend 1 charge from the staff and cause it to create one of the following sounds out to a range of 60 feet."
+  },
+  {
+    "id": "staff-of-charming",
+    "name": "Staff of Charming",
+    "category": "Staff",
+    "description": "While holding this staff, you can use an action to expend 1 of its 10 charges to cast charm person, command, or comprehend languages from it using your spell save DC."
+  },
+  {
+    "id": "staff-of-defense",
+    "name": "Staff of Defense",
+    "category": "Staff",
+    "description": "This slender, hollow staff is made of glass yet is as strong as oak. It weighs 3 pounds."
+  },
+  {
+    "id": "staff-of-earth-and-stone",
+    "name": "Staff of Earth and Stone",
+    "category": "Staff",
+    "description": "This staff is made of rough gray wood."
+  },
+  {
+    "id": "staff-of-fire",
+    "name": "Staff of Fire",
+    "category": "Staff",
+    "description": "You have resistance to fire damage while you hold this staff."
+  },
+  {
+    "id": "staff-of-flowers",
+    "name": "Staff of Flowers",
+    "category": "Staff",
+    "description": "This wooden staff has 10 charges. While holding it, you can use an action to expend 1 charge from the staff and cause a flower to sprout from a patch of earth or soil within 5 feet of you, or from the staff itself."
+  },
+  {
+    "id": "staff-of-frost",
+    "name": "Staff of Frost",
+    "category": "Staff",
+    "description": "You have resistance to cold damage while you hold this staff."
+  },
+  {
+    "id": "staff-of-healing",
+    "name": "Staff of Healing",
+    "category": "Staff",
+    "description": "This staff has 10 charges. While holding it, you can use an action to expend 1 or more of its charges to cast one of the following spells from it, using your spell save DC and spellcasting ability modifier."
+  },
+  {
+    "id": "staff-of-power",
+    "name": "Staff of Power",
+    "category": "Staff",
+    "description": "This staff can be wielded as a magic quarterstaff that grants a +2 bonus to attack and damage rolls made with it."
+  },
+  {
+    "id": "staff-of-striking",
+    "name": "Staff of Striking",
+    "category": "Staff",
+    "description": "This staff can be wielded as a magic quarterstaff that grants a +3 bonus to attack and damage rolls made with it."
+  },
+  {
+    "id": "staff-of-swarming-insects",
+    "name": "Staff of Swarming Insects",
+    "category": "Staff",
+    "description": "This staff has 10 charges and regains 1d6 + 4 expended charges daily at dawn."
+  },
+  {
+    "id": "staff-of-the-dreamwalker",
+    "name": "Staff of the Dreamwalker",
+    "category": "Staff",
+    "description": "This ebony staff is topped with a silver crescent moon and set with a deep blue gemstone."
+  },
+  {
+    "id": "jaheira-druidstaff",
+    "name": "Staff of the High Harpers",
+    "category": "Armor",
+    "description": "A staff carved from sacred druidic oak and inscribed with Harper symbols. It hums softly with nature magic."
+  },
+  {
+    "id": "staff-of-the-inner-eye",
+    "name": "Staff of the Inner Eye",
+    "category": "Staff",
+    "description": "This staff is topped with a carved eye, created by the githzerai."
+  },
+  {
+    "id": "staff-of-the-ivory-claw",
+    "name": "Staff of the Ivory Claw",
+    "category": "Armor",
+    "description": "This staff is carved from white bone and topped with an ivory claw."
+  },
+  {
+    "id": "staff-of-the-magi",
+    "name": "Staff of the Magi",
+    "category": "Staff",
+    "description": "This staff can be wielded as a magic quarterstaff that grants a +2 bonus to attack and damage rolls made with it."
+  },
+  {
+    "id": "staff-of-the-rune-carver",
+    "name": "Staff of the Rune Carver",
+    "category": "Staff",
+    "description": "This staff is made of petrified giant oak and etched with ancient giant runes."
+  },
+  {
+    "id": "staff-of-the-woodlands",
+    "name": "Staff of the Woodlands",
+    "category": "Staff",
+    "description": "This staff can be wielded as a magic quarterstaff that grants a +2 bonus to attack and damage rolls."
+  },
+  {
+    "id": "staff-of-thunder-and-lightning",
+    "name": "Staff of Thunder and Lightning",
+    "category": "Staff",
+    "description": "This staff can be wielded as a magic quarterstaff that grants a +2 bonus to attack and damage rolls made with it."
+  },
+  {
+    "id": "staff-of-withering",
+    "name": "Staff of Withering",
+    "category": "Staff",
+    "description": "This staff has 3 charges and regains 1d3 expended charges daily at dawn."
+  },
+  {
+    "id": "stone-of-controlling-earth-elementals",
+    "name": "Stone of Controlling Earth Elementals",
+    "category": "Wondrous Item",
+    "description": "If the stone is touching the ground, you can use an action to speak its command word and summon an earth elemental."
+  },
+  {
+    "id": "stone-of-good-luck",
+    "name": "Stone of Good Luck (Luckstone)",
+    "category": "Wondrous Item",
+    "description": "While this polished agate is on your person, you gain a +1 bonus to ability checks and saving throws."
+  },
+  {
+    "id": "stone-of-ill-luck",
+    "name": "Stone of Ill Luck",
+    "category": "Wondrous Item",
+    "description": "This polished agate appears to be a stone of good luck to anyone who examines or identifies it. While this stone is on your person, you take a −2 penalty to ability checks and saving throws."
+  },
+  {
+    "id": "stone-of-the-iron-throne",
+    "name": "Stone of the Iron Throne",
+    "category": "Wondrous Item",
+    "description": "A smooth black stone that radiates cold authority. It was once used by members of the Iron Throne mercantile consortium."
+  },
+  {
+    "id": "stonespeaker-crystal",
+    "name": "Stonespeaker Crystal",
+    "category": "Wondrous Item",
+    "description": "This cloudy purple crystal was given as a gift by the myconids."
+  },
+  {
+    "id": "stormgirdle",
+    "name": "Stormgirdle",
+    "category": "Wondrous Item",
+    "description": "A wide belt branded with the symbol of a storm cloud."
+  },
+  {
+    "id": "strixhaven-pennant",
+    "name": "Strixhaven Pennant",
+    "category": "Wondrous Item",
+    "description": "A collegiate pennant bearing the insignia of one of Strixhaven's five colleges."
+  },
+  {
+    "id": "sun-blade",
+    "name": "Sun Blade",
+    "category": "Weapon",
+    "description": "This item appears to be a longsword hilt. While grasping the hilt, you can use a bonus action to cause a blade of pure radiance to spring into existence."
+  },
+  {
+    "id": "sunsword",
+    "name": "Sunsword",
+    "category": "Weapon",
+    "description": "A unique weapon with a crystal blade created to fight Strahd von Zarovich."
+  },
+  {
+    "id": "sword-of-answering",
+    "name": "Sword of Answering",
+    "category": "Weapon",
+    "description": "In the world of Greyhawk, these swords were forged by the same powers that created the sword of Kas."
+  },
+  {
+    "id": "sword-of-kas",
+    "name": "Sword of Kas",
+    "category": "Weapon",
+    "description": "When Vecna grew in power, he appointed Kas the Bloody-Handed as his lieutenant and bodyguard."
+  },
+  {
+    "id": "sword-of-life-stealing",
+    "name": "Sword of Life Stealing",
+    "category": "Weapon",
+    "description": "When you attack a creature with this magic weapon and roll a 20 on the attack roll, that target takes an extra 3d6 necrotic damage, provided that the target isn't a construct or an undead. You gain temporary hit points equal to the extra damage dealt."
+  },
+  {
+    "id": "sword-of-sharpness",
+    "name": "Sword of Sharpness",
+    "category": "Weapon",
+    "description": "When you attack an object with this magic sword and hit, maximize your weapon damage dice against the target. When you attack a creature with this weapon and roll a 20 on the attack roll, that target takes an extra 4d6 slashing damage."
+  },
+  {
+    "id": "sword-of-the-paruns",
+    "name": "Sword of the Paruns",
+    "category": "Weapon",
+    "description": "This longsword was forged for the original Guildpact."
+  },
+  {
+    "id": "sword-of-wounding",
+    "name": "Sword of Wounding",
+    "category": "Weapon",
+    "description": "Hit points lost to this weapon's damage can be regained only through a short or long rest, rather than by regeneration, magic, or any other means."
+  },
+  {
+    "id": "talisman-of-pure-good",
+    "name": "Talisman of Pure Good",
+    "category": "Wondrous Item",
+    "description": "This talisman is a mighty symbol of goodness. A creature that is neither good nor evil in alignment takes 6d6 radiant damage upon touching the talisman."
+  },
+  {
+    "id": "talisman-of-ultimate-evil",
+    "name": "Talisman of Ultimate Evil",
+    "category": "Wondrous Item",
+    "description": "This item symbolizes unrepentant evil. A creature that is neither good nor evil in alignment takes 6d6 necrotic damage upon touching the talisman."
+  },
+  {
+    "id": "talking-doll",
+    "name": "Talking Doll",
+    "category": "Wondrous Item",
+    "description": "While this stuffed doll is within 5 feet of you, you can spend a short rest telling it to say up to six phrases, none of which can be more than six words long, and set a condition under which the doll speaks each phrase."
+  },
+  {
+    "id": "tankard-of-sobriety",
+    "name": "Tankard of Sobriety",
+    "category": "Wondrous Item",
+    "description": "This tankard has a stern face sculpted into one side. You can drink ale, wine, or any other nonmagical alcoholic beverage poured into it without becoming inebriated."
+  },
+  {
+    "id": "teeth-of-dahlver-nar",
+    "name": "Teeth of Dahlver-Nar",
+    "category": "Wondrous Item",
+    "description": "These teeth originally belonged to Dahlver-Nar, a human warlock of great power."
+  },
+  {
+    "id": "telescopic-transporter",
+    "name": "Telescopic Transporter",
+    "category": "Wondrous Item",
+    "description": "A brass telescope that reveals extradimensional destinations when looked through."
+  },
+  {
+    "id": "tentacle-rod",
+    "name": "Tentacle Rod",
+    "category": "Rod",
+    "description": "Made by the drow, this rod is a magic weapon that ends in three rubbery tentacles."
+  },
+  {
+    "id": "aegis-link-shield",
+    "name": "The Aegis-Link Shield",
+    "category": "Armor",
+    "description": "A lightweight steel shield bearing the crisp emblem of a soaring hawk."
+  },
+  {
+    "id": "the-anima-blade",
+    "name": "The Anima Blade",
+    "category": "Weapon (Any Sword)",
+    "description": "A hilt forged from liquid silver. The blade shifts into raw energy or dense iron depending on who grips it."
+  },
+  {
+    "id": "thermal-cube",
+    "name": "Thermal Cube",
+    "category": "Wondrous Item",
+    "description": "This 3-inch cube of solid iron generates warmth."
+  },
+  {
+    "id": "thorned-armor",
+    "name": "Thorned Armor",
+    "category": "Armor",
+    "description": "This leather armor is studded with long, wickedly sharp thorns of enchanted wood that grow from the surface."
+  },
+  {
+    "id": "thunderous-greatclub",
+    "name": "Thunderous Greatclub",
+    "category": "Weapon",
+    "description": "This massive greatclub is carved from the wood of a tree struck by lightning a hundred times. It crackles with electrical energy."
+  },
+  {
+    "id": "tome-of-clear-thought",
+    "name": "Tome of Clear Thought",
+    "category": "Wondrous Item",
+    "description": "This book contains memory and logic exercises, and its words are charged with magic. If you spend 48 hours over a period of 6 days or fewer studying the book's contents and practicing its guidelines, your Intelligence score increases by 2, as does your maximum for that score."
+  },
+  {
+    "id": "tome-of-leadership-and-influence",
+    "name": "Tome of Leadership and Influence",
+    "category": "Wondrous Item",
+    "description": "This book contains guidelines for influencing and charming others, and its words are charged with magic."
+  },
+  {
+    "id": "tome-of-the-stilled-tongue",
+    "name": "Tome of the Stilled Tongue",
+    "category": "Wondrous Item",
+    "description": "This thick leather-bound volume has a desiccated tongue stuck to the front cover. Five of these tomes exist, and it's unknown which one is the original."
+  },
+  {
+    "id": "tome-of-understanding",
+    "name": "Tome of Understanding",
+    "category": "Wondrous Item",
+    "description": "This book contains intuition and insight exercises, and its words are charged with magic."
+  },
+  {
+    "id": "topaz-annihilator",
+    "name": "Topaz Annihilator",
+    "category": "Weapon",
+    "description": "This magic ranged weapon resembles a greatbow and is made from the scale and sinew of a topaz dragon."
+  },
+  {
+    "id": "tower-shield-of-the-crown",
+    "name": "Tower Shield of the Crown",
+    "category": "Armor",
+    "description": "A massive tower shield bearing the crown insignia of a Knight of the Crown."
+  },
+  {
+    "id": "trident-of-fish-command",
+    "name": "Trident of Fish Command",
+    "category": "Weapon",
+    "description": "This trident is a magic weapon. It has 3 charges. While you carry it, you can use an action and expend 1 charge to cast dominate beast (save DC 15) from it on a beast that has an innate swimming speed."
+  },
+  {
+    "id": "unbreakable-arrow",
+    "name": "Unbreakable Arrow",
+    "category": "Weapon",
+    "description": "This arrow can't be broken, except when it is within an antimagic field."
+  },
+  {
+    "id": "universal-solvent",
+    "name": "Universal Solvent",
+    "category": "Wondrous Item",
+    "description": "This tube holds milky liquid with a strong chemical smell. Using an action to pour the contents onto a surface dissolves up to 1 square foot of adhesive it touches, including sovereign glue."
+  },
+  {
+    "id": "vecnas-spellbook",
+    "name": "Vecna's Fallen Leaves",
+    "category": "Wondrous Item",
+    "description": "These pages torn from Vecna's personal spellbook contain some of the most powerful and dangerous spells ever recorded."
+  },
+  {
+    "id": "verminshroud",
+    "name": "Verminshroud",
+    "category": "Wondrous Item",
+    "description": "This patchy fur cloak is made from the pelts of several kinds of vermin."
+  },
+  {
+    "id": "veteran-s-cane",
+    "name": "Veteran's Cane",
+    "category": "Wondrous Item",
+    "description": "When you grasp this walking cane and use a bonus action to speak the command word, it transforms into an ordinary longsword and ceases to be magical."
+  },
+  {
+    "id": "vicious-weapon",
+    "name": "Vicious Weapon",
+    "category": "Weapon",
+    "description": "When you roll a 20 on your attack roll with this magic weapon, your critical hit deals an extra 7 damage of the weapon's type."
+  },
+  {
+    "id": "viol-of-cacophony",
+    "name": "Viol of Cacophony",
+    "category": "Wondrous Item",
+    "description": "This battered viol produces discordant sounds most would call noise."
+  },
+  {
+    "id": "volo-staff",
+    "name": "Volo's Staff of Many Pens",
+    "category": "Staff",
+    "description": "This staff is decorated with quill feathers and smells faintly of ink. It belonged to the famous traveler and writer Volo."
+  },
+  {
+    "id": "vorpal-sword",
+    "name": "Vorpal Sword",
+    "category": "Weapon",
+    "description": "You gain a +3 bonus to attack and damage rolls made with this magic weapon. In addition, the weapon ignores resistance to slashing damage."
+  },
+  {
+    "id": "walloping-ammunition",
+    "name": "Walloping Ammunition",
+    "category": "Weapon",
+    "description": "This ammunition packs a wallop. A creature hit by this ammunition must succeed on a DC 10 Strength saving throw or be knocked prone."
+  },
+  {
+    "id": "wand-of-binding",
+    "name": "Wand of Binding",
+    "category": "Wand",
+    "description": "This wand has 7 charges for the following properties."
+  },
+  {
+    "id": "wand-of-conducting",
+    "name": "Wand of Conducting",
+    "category": "Wand",
+    "description": "This wand has 3 charges. While holding it, you can use an action to expend 1 of its charges and create orchestral music by waving it around."
+  },
+  {
+    "id": "wand-of-enemy-detection",
+    "name": "Wand of Enemy Detection",
+    "category": "Wand",
+    "description": "This wand has 7 charges. While holding it, you can use an action and expend 1 charge to speak its command word."
+  },
+  {
+    "id": "wand-of-entangle",
+    "name": "Wand of Entangle",
+    "category": "Wand",
+    "description": "This wand is carved from a gnarled branch and twisted with dried vines."
+  },
+  {
+    "id": "wand-of-fear",
+    "name": "Wand of Fear",
+    "category": "Wand",
+    "description": "This wand has 7 charges for the following properties."
+  },
+  {
+    "id": "wand-of-fireballs",
+    "name": "Wand of Fireballs",
+    "category": "Wand",
+    "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 or more of its charges to cast the fireball spell (save DC 15) from it."
+  },
+  {
+    "id": "wand-of-lightning-bolts",
+    "name": "Wand of Lightning Bolts",
+    "category": "Wand",
+    "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 or more of its charges to cast the lightning bolt spell (save DC 15) from it."
+  },
+  {
+    "id": "wand-of-magic-detection",
+    "name": "Wand of Magic Detection",
+    "category": "Wand",
+    "description": "This wand has 3 charges. While holding it, you can expend 1 charge as an action to cast the detect magic spell from it. The wand regains 1d3 expended charges daily at dawn."
+  },
+  {
+    "id": "wand-of-magic-missiles",
+    "name": "Wand of Magic Missiles",
+    "category": "Wand",
+    "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 or more of its charges to cast the magic missile spell from it."
+  },
+  {
+    "id": "wand-of-orcus",
+    "name": "Wand of Orcus",
+    "category": "Wand",
+    "description": "The Wand of Orcus is topped with a skull. Orcus, the Demon Prince of Undeath, uses the wand to further his goals."
+  },
+  {
+    "id": "wand-of-paralysis",
+    "name": "Wand of Paralysis",
+    "category": "Wand",
+    "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 of its charges to cause a thin blue ray to streak from the tip toward a creature you can see within 60 feet of you."
+  },
+  {
+    "id": "wand-of-polymorph",
+    "name": "Wand of Polymorph",
+    "category": "Wand",
+    "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 of its charges to cast the polymorph spell (save DC 15) from it."
+  },
+  {
+    "id": "wand-of-pyrotechnics",
+    "name": "Wand of Pyrotechnics",
+    "category": "Wand",
+    "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 of its charges and create a harmless burst of multicolored light, a shower of sparks, or a puff of smoke."
+  },
+  {
+    "id": "wand-of-scowls",
+    "name": "Wand of Scowls",
+    "category": "Wand",
+    "description": "This wand has 3 charges. While holding it, you can use an action to expend 1 of its charges and target a humanoid you can see within 30 feet of you."
+  },
+  {
+    "id": "wand-of-secrets",
+    "name": "Wand of Secrets",
+    "category": "Wand",
+    "description": "The wand has 3 charges. While holding it, you can use an action to expend 1 of its charges, and if a secret door or trap is within 30 feet of you, the wand pulses and points at the one nearest to you."
+  },
+  {
+    "id": "wand-of-smiles",
+    "name": "Wand of Smiles",
+    "category": "Wand",
+    "description": "This wand has 3 charges. While holding it, you can use an action to expend 1 of its charges and target a humanoid you can see within 30 feet of you."
+  },
+  {
+    "id": "wand-of-the-war-mage-plus-1",
+    "name": "Wand of the War Mage +1",
+    "category": "Wand",
+    "description": "While holding this wand, you gain a +1 bonus to spell attack rolls. In addition, you ignore half cover when making a spell attack."
+  },
+  {
+    "id": "wand-of-the-war-mage-plus-2",
+    "name": "Wand of the War Mage +2",
+    "category": "Wand",
+    "description": "While holding this wand, you gain a +2 bonus to spell attack rolls. In addition, you ignore half cover when making a spell attack."
+  },
+  {
+    "id": "wand-of-the-war-mage-plus-3",
+    "name": "Wand of the War Mage +3",
+    "category": "Wand",
+    "description": "While holding this wand, you gain a +3 bonus to spell attack rolls. In addition, you ignore half cover when making a spell attack."
+  },
+  {
+    "id": "wand-of-web",
+    "name": "Wand of Web",
+    "category": "Wand",
+    "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 of its charges to cast the web spell (save DC 15) from it."
+  },
+  {
+    "id": "wand-of-winter",
+    "name": "Wand of Winter",
+    "category": "Wand",
+    "description": "This wand looks and feels like an icicle. It has 7 charges."
+  },
+  {
+    "id": "wand-of-wonder",
+    "name": "Wand of Wonder",
+    "category": "Wand",
+    "description": "This wand has 7 charges. While holding it, you can use an action to expend 1 of its charges and choose a target within 120 feet of you."
+  },
+  {
+    "id": "wave",
+    "name": "Wave",
+    "category": "Weapon",
+    "description": "This trident is dedicated to the worship of Olhydra, Princess of Evil Water."
+  },
+  {
+    "id": "tome-of-the-dragon",
+    "name": "Waythe",
+    "category": "Weapon",
+    "description": "Waythe is a unique greatsword most recently in the possession of a cloud giant ambassador. The sword is so large that a Medium creature must use it as a heavy, two-handed weapon."
+  },
+  {
+    "id": "weapon-of-warning",
+    "name": "Weapon of Warning",
+    "category": "Weapon",
+    "description": "This magic weapon warns you of danger. While the weapon is on your person, you have advantage on initiative rolls."
+  },
+  {
+    "id": "well-of-many-worlds",
+    "name": "Well of Many Worlds",
+    "category": "Wondrous Item",
+    "description": "This fine black cloth, soft as silk, is folded up to the dimensions of a handkerchief. It unfolds into a circular sheet 6 feet in diameter."
+  },
+  {
+    "id": "wheel-of-wind-and-water",
+    "name": "Wheel of Wind and Water",
+    "category": "Wondrous Item",
+    "description": "When mounted at the helm of an elemental vessel, this wheel allows control of its bound elemental."
+  },
+  {
+    "id": "whelm",
+    "name": "Whelm",
+    "category": "Weapon",
+    "description": "Whelm is a powerful warhammer forged by dwarves and lost in White Plume Mountain."
+  },
+  {
+    "id": "white-robe",
+    "name": "White Robe of the Orders",
+    "category": "Wondrous Item",
+    "description": "This white silk robe is worn by wizards of the Order of the White Robes on Krynn, followers of Solinari."
+  },
+  {
+    "id": "wildspace-orrery",
+    "name": "Wildspace Orrery",
+    "category": "Wondrous Item",
+    "description": "Inside a glass globe, a miniature solar system revolves around a tiny sun."
+  },
+  {
+    "id": "wind-fan",
+    "name": "Wind Fan",
+    "category": "Wondrous Item",
+    "description": "While holding this fan, you can use an action to cast the gust of wind spell (save DC 13) from it."
+  },
+  {
+    "id": "winged-boots",
+    "name": "Winged Boots",
+    "category": "Wondrous Item",
+    "description": "While you wear these boots, you have a flying speed equal to your walking speed. You can use the boots to fly for up to 4 hours, all at once or in several shorter flights, each one using a minimum of 1 minute from the duration."
+  },
+  {
+    "id": "wings-of-flying",
+    "name": "Wings of Flying",
+    "category": "Wondrous Item",
+    "description": "While wearing this cloak, you can use an action to speak its command word. This turns the cloak into a pair of bat wings or bird wings on your back for 1 hour or until you repeat the command word as an action."
+  },
+  {
+    "id": "wojek-sidearm",
+    "name": "Wojek Sidearm",
+    "category": "Weapon",
+    "description": "A compact magical firearm used by Boros soldiers."
+  },
+  {
+    "id": "woodcutters-axe",
+    "name": "Woodcutter's Axe",
+    "category": "Weapon",
+    "description": "This handaxe has a handle carved from fey wood that glows faintly near plant creatures."
+  },
+  {
+    "id": "wraps-of-the-dragons-claw",
+    "name": "Wraps of the Dragon's Claw",
+    "category": "Wondrous Item",
+    "description": "Tattered linen handwraps that smell faintly of ozone and smoke."
+  },
+  {
+    "id": "wreath-of-the-prism",
+    "name": "Wreath of the Prism",
+    "category": "Wondrous Item",
+    "description": "A loop of silvery thorns set with gemstones. One of the Vestiges of Divergence."
+  },
+  {
+    "id": "wyrmling-egg-charm",
+    "name": "Wyrmling Egg Charm",
+    "category": "Wondrous Item",
+    "description": "A charm carved from the shell of a dragon egg. It carries a faint echo of draconic magic."
+  },
+  {
+    "id": "ythryn-mythallar",
+    "name": "Ythryn Mythallar",
+    "category": "Wondrous Item",
+    "description": "A crystal ball 10 feet in diameter that keeps the floating city of Ythryn aloft."
+  }
+]
