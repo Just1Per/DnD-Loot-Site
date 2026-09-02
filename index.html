@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>D&D 5e Item Vault</title>
+  <title>D&D 5e Magic Item Looter</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=MedievalSharp&display=swap" rel="stylesheet">
@@ -12,12 +12,13 @@
 <body>
 
   <!-- ── HEADER ───────────────────────────────────────────────────────────── -->
-  <h1>⚔ D&D 5e Item Vault</h1>
+  <h1>⚔ D&D 5e Magic Item Looter</h1>
 
   <!-- ── TOP TABS ─────────────────────────────────────────────────────────── -->
   <nav class="tabs">
     <button class="tab active" data-tab="library">Library</button>
-    <button class="tab" data-tab="admin" id="adminTab" style="display:none">Admin</button>
+    <button class="tab" data-tab="player" id="playerTab" style="display:none">My Character</button>
+    <button class="tab" data-tab="admin"  id="adminTab"  style="display:none">Admin</button>
   </nav>
 
   <!-- ══════════════════════════════════════════════════════════════════════ -->
@@ -128,6 +129,49 @@
     <div id="card-container"></div>
 
   </div><!-- /tab-library -->
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- PLAYER TAB                                                            -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div id="tab-player" class="tab-content" style="display:none">
+
+    <!-- ── My Characters ──────────────────────────────────────────────── -->
+    <div class="player-section">
+      <h2 class="player-section-title">⚔ My Characters</h2>
+      <div id="myCharacterList" class="character-list"></div>
+
+      <!-- Create new character inline form -->
+      <div class="player-create-form">
+        <h3>Create New Character</h3>
+        <div class="player-create-row">
+          <input type="text" id="playerCharName" placeholder="Character name…">
+          <select id="playerCharClass">
+            <option>Artificer</option><option>Barbarian</option><option>Bard</option>
+            <option>Cleric</option><option>Druid</option><option>Fighter</option>
+            <option>Monk</option><option>Paladin</option><option>Ranger</option>
+            <option>Rogue</option><option>Sorcerer</option><option>Warlock</option>
+            <option>Wizard</option>
+          </select>
+          <button id="playerCreateCharBtn">+ Create</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── My Loot ────────────────────────────────────────────────────── -->
+    <div class="player-section">
+      <h2 class="player-section-title">🎒 My Loot</h2>
+      <p class="player-section-sub">Items the DM has marked as looted and assigned to you.</p>
+      <div id="myLootGrid" class="mini-card-grid"></div>
+    </div>
+
+    <!-- ── My Wish List ───────────────────────────────────────────────── -->
+    <div class="player-section">
+      <h2 class="player-section-title">★ My Wish List</h2>
+      <p class="player-section-sub">Items you have starred in the Library. Go to the Library tab and click ☆ on any item to add it here.</p>
+      <div id="myWishGrid" class="mini-card-grid"></div>
+    </div>
+
+  </div><!-- /tab-player -->
 
   <!-- ══════════════════════════════════════════════════════════════════════ -->
   <!-- ADMIN TAB                                                             -->
@@ -291,6 +335,42 @@
       <div class="modal-footer">
         <button class="cancel-button" id="cancelUserModal">Cancel</button>
         <button class="save-button"   id="saveUserModal">Save User</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: EDIT CHARACTER                                                 -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div id="editCharModal" class="modal" style="display:none" data-char-id="">
+    <div class="modal-box modal-box--sm">
+
+      <div class="modal-header">
+        <h2>Edit Character</h2>
+        <button class="modal-close" id="closeEditCharModal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-form-grid">
+          <label class="modal-label full">Character Name
+            <input type="text" id="editChar-name" placeholder="Character name">
+          </label>
+          <label class="modal-label full">Class
+            <select id="editChar-class">
+              <option>Artificer</option><option>Barbarian</option><option>Bard</option>
+              <option>Cleric</option><option>Druid</option><option>Fighter</option>
+              <option>Monk</option><option>Paladin</option><option>Ranger</option>
+              <option>Rogue</option><option>Sorcerer</option><option>Warlock</option>
+              <option>Wizard</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="cancel-button" id="cancelEditCharModal">Cancel</button>
+        <button class="save-button"   id="saveEditCharModal">Save</button>
       </div>
 
     </div>

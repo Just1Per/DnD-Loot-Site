@@ -330,7 +330,7 @@ function createCard(item) {
       </div>
     ` : ownerName ? `<div class="owner-badge">⚔ ${ownerName}</div>` : ""}
 
-    <div class="card-footer">D&D 5e Item Vault</div>
+    <div class="card-footer">D&D 5e Looter før vi tænker</div>
   `;
 
   attachCardEvents(card, item);
@@ -642,6 +642,166 @@ function updateStats(results, looted, printed, wished) {
     `${results} items  ·  ${looted} looted  ·  ${printed} printed  ·  ${wished} wished`;
 }
 
+// ─── PLAYER TAB ──────────────────────────────────────────────────────────────
+
+function renderPlayerTab() {
+  renderCharacterList();
+  renderMyLoot();
+  renderMyWishes();
+}
+
+function renderCharacterList() {
+  const mine = getCurrentUsersCharacters();
+  const el   = document.getElementById("myCharacterList");
+  if (!el) return;
+
+  if (mine.length === 0) {
+    el.innerHTML = `<p class="player-empty">No characters yet. Create one below.</p>`;
+    return;
+  }
+
+  el.innerHTML = mine.map(c => `
+    <div class="character-card ${selectedCharacter?.id === c.id ? "character-card--active" : ""}">
+      <div class="character-card-info">
+        <span class="character-card-name">${c.name}</span>
+        <span class="character-card-class">${c.class}</span>
+      </div>
+      <div class="character-card-actions">
+        ${selectedCharacter?.id !== c.id
+          ? `<button class="btn-select-char" data-char-id="${c.id}">Set Active</button>`
+          : `<span class="active-badge">✓ Active</span>`
+        }
+        <button class="btn-rename-char" data-char-id="${c.id}" data-char-name="${c.name}" data-char-class="${c.class}">Edit</button>
+        <button class="btn-delete-char cancel-button" data-char-id="${c.id}" data-char-name="${c.name}">Delete</button>
+      </div>
+    </div>
+  `).join("");
+
+  // Set active character
+  el.querySelectorAll(".btn-select-char").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedCharacter = characters.find(c => c.id === btn.dataset.charId) || null;
+      renderCharacterList();
+      renderMyWishes();
+      renderCards(); // refresh wish stars
+    });
+  });
+
+  // Edit character
+  el.querySelectorAll(".btn-rename-char").forEach(btn => {
+    btn.addEventListener("click", () => {
+      openEditCharacterModal(btn.dataset.charId, btn.dataset.charName, btn.dataset.charClass);
+    });
+  });
+
+  // Delete character
+  el.querySelectorAll(".btn-delete-char").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if (!confirm(`Delete "${btn.dataset.charName}"? This also removes all their wishes.`)) return;
+      // Remove their wishes first
+      const charWishes = wishes.filter(w => w.characterId === btn.dataset.charId);
+      for (const w of charWishes) await deleteDoc(doc(db, "wishes", w.id));
+      await deleteDoc(doc(db, "characters", btn.dataset.charId));
+      if (selectedCharacter?.id === btn.dataset.charId) selectedCharacter = null;
+      await loadCharacters();
+      await loadWishes();
+      renderPlayerTab();
+      renderCards();
+    });
+  });
+}
+
+function renderMyLoot() {
+  const el = document.getElementById("myLootGrid");
+  if (!el) return;
+  const mine = getCurrentUsersCharacters();
+  if (mine.length === 0) {
+    el.innerHTML = `<p class="player-empty">Create a character to see your loot.</p>`;
+    return;
+  }
+  // Items owned by any of my characters (matched via players list)
+  const myUserObj = players.find(p => p.id === auth.currentUser?.uid);
+  const myItems   = items.filter(i => i.looted && i.owner === auth.currentUser?.uid);
+  if (myItems.length === 0) {
+    el.innerHTML = `<p class="player-empty">No looted items assigned to you yet.</p>`;
+    return;
+  }
+  el.innerHTML = myItems.map(item => createMiniCard(item, "loot")).join("");
+}
+
+function renderMyWishes() {
+  const el = document.getElementById("myWishGrid");
+  if (!el) return;
+  const mine = getCurrentUsersCharacters();
+  if (mine.length === 0) {
+    el.innerHTML = `<p class="player-empty">Create a character to track wishes.</p>`;
+    return;
+  }
+  const myCharIds  = mine.map(c => c.id);
+  const myWishes   = wishes.filter(w => myCharIds.includes(w.characterId));
+  const wishedItems = myWishes
+    .map(w => {
+      const item = items.find(i => i.id === w.itemId);
+      const char = characters.find(c => c.id === w.characterId);
+      return item ? { ...item, _wishCharacter: char?.name || "?" } : null;
+    })
+    .filter(Boolean);
+
+  if (wishedItems.length === 0) {
+    el.innerHTML = `<p class="player-empty">No wishes yet. Star items in the Library to wish for them.</p>`;
+    return;
+  }
+  el.innerHTML = wishedItems.map(item => createMiniCard(item, "wish")).join("");
+}
+
+// Compact card for player tab (no edit controls)
+function createMiniCard(item, mode) {
+  const rarityClass = (item.rarity || "").toLowerCase().replaceAll(" ", "-");
+  const wishChar    = item._wishCharacter || "";
+  return `
+    <div class="mini-card ${rarityClass} ${item.looted ? "looted" : ""}">
+      ${item.image ? `<img src="${item.image}" class="mini-card-art" alt="${item.name}" onerror="this.style.display='none'">` : ""}
+      <div class="mini-card-body">
+        <div class="mini-card-name">${item.name}</div>
+        <div class="mini-card-meta">
+          ${item.rarity ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>` : ""}
+          ${item.category ? `<span class="meta-tag">${item.category}</span>` : ""}
+          ${mode === "wish" && wishChar ? `<span class="meta-tag campaign-tag">★ ${wishChar}</span>` : ""}
+          ${mode === "loot" && item.looted ? `<span class="meta-tag" style="border-color:#27ae60;color:#1e8449">⚔ Looted</span>` : ""}
+        </div>
+        ${item.attunement ? `<div class="mini-card-attune">Requires Attunement</div>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+// ─── EDIT CHARACTER MODAL ─────────────────────────────────────────────────────
+
+function openEditCharacterModal(charId, charName, charClass) {
+  document.getElementById("editChar-name").value  = charName;
+  document.getElementById("editChar-class").value = charClass;
+  document.getElementById("editCharModal").dataset.charId = charId;
+  document.getElementById("editCharModal").style.display  = "flex";
+}
+
+function closeEditCharacterModal() {
+  document.getElementById("editCharModal").style.display = "none";
+}
+
+async function saveEditCharacter() {
+  const charId   = document.getElementById("editCharModal").dataset.charId;
+  const newName  = document.getElementById("editChar-name").value.trim();
+  const newClass = document.getElementById("editChar-class").value;
+  if (!newName) { alert("Character name is required."); return; }
+  await updateDoc(doc(db, "characters", charId), { name: newName, class: newClass });
+  await loadCharacters();
+  if (selectedCharacter?.id === charId) {
+    selectedCharacter = characters.find(c => c.id === charId) || null;
+  }
+  closeEditCharacterModal();
+  renderPlayerTab();
+}
+
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 
 function initTabs() {
@@ -653,7 +813,8 @@ function initTabs() {
       btn.classList.add("active");
       const panel = document.getElementById(`tab-${tabId}`);
       if (panel) panel.style.display = "block";
-      if (tabId === "admin") { renderUserTable(); renderAdminStats(); }
+      if (tabId === "admin")  { renderUserTable(); renderAdminStats(); }
+      if (tabId === "player") { renderPlayerTab(); }
     });
   });
 }
@@ -686,6 +847,30 @@ function initModalListeners() {
   document.getElementById("closeUserModal")?.addEventListener("click", closeUserModal);
   document.getElementById("cancelUserModal")?.addEventListener("click", closeUserModal);
   document.getElementById("saveUserModal")?.addEventListener("click", saveUserModal);
+
+  // Edit character modal
+  document.getElementById("closeEditCharModal")?.addEventListener("click",  closeEditCharacterModal);
+  document.getElementById("cancelEditCharModal")?.addEventListener("click", closeEditCharacterModal);
+  document.getElementById("saveEditCharModal")?.addEventListener("click",   saveEditCharacter);
+
+  // Player tab — create character inline form
+  document.getElementById("playerCreateCharBtn")?.addEventListener("click", async () => {
+    const name = document.getElementById("playerCharName").value.trim();
+    const cls  = document.getElementById("playerCharClass").value;
+    if (!name) { alert("Enter a character name."); return; }
+    const newDoc = await addDoc(collection(db, "characters"), {
+      name, class: cls,
+      userId: auth.currentUser.uid,
+      active: true,
+      created: Date.now()
+    });
+    await loadCharacters();
+    // Auto-select the new character
+    selectedCharacter = characters.find(c => c.id === newDoc.id) || null;
+    document.getElementById("playerCharName").value = "";
+    renderPlayerTab();
+    renderCards();
+  });
 
   document.querySelectorAll(".modal").forEach(modal => {
     modal.addEventListener("click", e => {
@@ -751,6 +936,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
   const logoutBtn     = document.getElementById("logoutButton");
   const display       = document.getElementById("userDisplay");
   const adminTab      = document.getElementById("adminTab");
+  const playerTab     = document.getElementById("playerTab");
   const addBtn        = document.getElementById("addItemBtn");
   const charPanel     = document.getElementById("characterPanel");
   const adminPanel    = document.getElementById("adminPanel");
@@ -762,7 +948,11 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 
     if (loginControls) loginControls.style.display = "none";
     if (logoutBtn)     logoutBtn.style.display      = "inline-block";
-    if (charPanel)     charPanel.style.display      = isPlayer() ? "block" : "none";
+    // Old character panel in library toolbar — hide it, player tab replaces it
+    if (charPanel)     charPanel.style.display      = "none";
+
+    // Player tab visible for players and admins
+    if (playerTab) playerTab.style.display = isPlayer() ? "inline-block" : "none";
 
     if (isAdmin()) {
       if (adminTab)   adminTab.style.display   = "inline-block";
@@ -785,12 +975,14 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 
   } else {
     currentUser = null;
+    selectedCharacter = null;
     display.textContent = "Not logged in";
 
     if (loginControls) loginControls.style.display = "block";
     if (logoutBtn)     logoutBtn.style.display      = "none";
     if (charPanel)     charPanel.style.display      = "none";
     if (adminTab)      adminTab.style.display        = "none";
+    if (playerTab)     playerTab.style.display       = "none";
     if (addBtn)        addBtn.style.display           = "none";
     if (adminPanel)    adminPanel.style.display       = "none";
 

@@ -917,6 +917,255 @@ textarea::placeholder {
   opacity: 0.75;
 }
 
+/* ─── PLAYER TAB ─────────────────────────────────────────────────────────── */
+
+.player-section {
+  background: #f4efe6;
+  border: 3px double #8a7355;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 18px 20px;
+}
+
+.player-section-title {
+  font-family: "Cinzel", serif;
+  font-size: 1rem;
+  color: #5c1d1d;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.player-section-sub {
+  font-size: 0.78rem;
+  color: #8a7355;
+  font-style: italic;
+  margin-bottom: 14px;
+}
+
+.player-empty {
+  color: #8a7355;
+  font-style: italic;
+  font-size: 0.85rem;
+  padding: 8px 0;
+}
+
+/* Character cards list */
+.character-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.character-card {
+  background: #fdfbf7;
+  border: 2px solid #8a7355;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  gap: 12px;
+  flex-wrap: wrap;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.character-card--active {
+  border-color: #c79c32;
+  box-shadow: 0 0 0 2px rgba(199,156,50,0.25);
+  background: #fffdf4;
+}
+
+.character-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.character-card-name {
+  font-family: "Cinzel", serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #5c1d1d;
+}
+
+.character-card-class {
+  font-size: 0.75rem;
+  color: #8a7355;
+  font-style: italic;
+}
+
+.character-card-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.active-badge {
+  font-family: "Cinzel", serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #c79c32;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border: 1px solid #c79c32;
+  border-radius: 4px;
+  background: rgba(199,156,50,0.1);
+}
+
+.btn-select-char,
+.btn-rename-char {
+  background: linear-gradient(180deg, #9b1d1d, #651313);
+  border: 2px solid #d4af37;
+  border-radius: 6px;
+  color: #f5e6c8;
+  cursor: pointer;
+  font-family: "Cinzel", serif;
+  font-size: 0.65rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  transition: transform 0.15s;
+}
+
+.btn-select-char:hover,
+.btn-rename-char:hover { transform: scale(1.05); }
+
+.btn-rename-char {
+  background: linear-gradient(180deg, #6c3483, #4a235a);
+  border-color: #9b59b6;
+}
+
+/* Create character form */
+.player-create-form {
+  background: #fdfbf7;
+  border: 2px solid #c8b89a;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.player-create-form h3 {
+  font-family: "Cinzel", serif;
+  font-size: 0.78rem;
+  color: #5c1d1d;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.player-create-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.player-create-row input,
+.player-create-row select {
+  background: #fdfbf7;
+  border: 2px solid #8a7355;
+  border-radius: 6px;
+  color: #5c1d1d;
+  font-family: Georgia, serif;
+  font-size: 0.82rem;
+  padding: 7px 10px;
+  flex: 1;
+  min-width: 140px;
+}
+
+.player-create-row input:focus,
+.player-create-row select:focus {
+  border-color: #caa75c;
+  outline: none;
+  box-shadow: 0 0 6px rgba(202,167,92,0.4);
+}
+
+.player-create-row button {
+  background: linear-gradient(180deg, #9b1d1d, #651313);
+  border: 2px solid #d4af37;
+  border-radius: 6px;
+  color: #f5e6c8;
+  cursor: pointer;
+  font-family: "Cinzel", serif;
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  padding: 7px 16px;
+  text-transform: uppercase;
+  transition: transform 0.15s;
+  white-space: nowrap;
+}
+
+.player-create-row button:hover { transform: translateY(-1px); }
+
+/* Mini card grid (loot + wishes) */
+.mini-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.mini-card {
+  background: #fdfbf7;
+  border: 2px solid #8a7355;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.mini-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.mini-card.uncommon  { border-color: #2ecc71; }
+.mini-card.rare      { border-color: #3498db; }
+.mini-card.very-rare { border-color: #9b59b6; }
+.mini-card.legendary { border-color: #e67e22; }
+.mini-card.artifact  { border-color: #c0392b; }
+
+.mini-card-art {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  background: #f5f2eb;
+  border-bottom: 1px solid #8a7355;
+  display: block;
+}
+
+.mini-card-body {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mini-card-name {
+  font-family: "Cinzel", serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #5c1d1d;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.mini-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.mini-card-attune {
+  font-size: 0.62rem;
+  color: #8a7355;
+  font-style: italic;
+}
+
 /* ─── MOBILE ─────────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
