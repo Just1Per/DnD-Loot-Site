@@ -1,5 +1,5 @@
 import {
-  db, auth, provider, signInWithPopup, signOut
+  db, storage, auth, provider, signInWithPopup, signOut
 } from "./firebase.js";
 
 import { items as sourceItems } from "./items.js";
