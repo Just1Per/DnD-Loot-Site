@@ -1,1448 +1,805 @@
 import {
-    db,
-    auth,
-    provider,
-    signInWithPopup,
-    signOut
-}
-from "./firebase.js";
+  db, auth, provider, signInWithPopup, signOut
+} from "./firebase.js";
 
-import {items as sourceItems} from "./items.js";
+import { items as sourceItems } from "./items.js";
 
 import {
-    onAuthStateChanged,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
 import {
-    collection,
-    getDocs,
-    addDoc,
-    doc,
-    getDoc,
-    setDoc,
-    updateDoc,
+  collection, getDocs, addDoc, doc, getDoc,
+  setDoc, updateDoc, deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-let items = []; //Firestore items
-let currentUserRole = "player"; //Default role for new users
-let characters = []; //Firestore characters tied to users
-let wishes = []; // Firestore wish records
-let selectedCharacter = null; // Currently selected character for wishing
+// ─── STATE ────────────────────────────────────────────────────────────────────
+
+let items             = [];
+let characters        = [];
+let wishes            = [];
+let users             = [];
+let players           = [];
+let currentUser       = null;
+let selectedCharacter = null;
+
 const editingItems = new Set();
 
-async function loadItemsFromFirestore()
-{
-    items = (
-        await getDocs(
-            collection(db, "items")
-        )
-    ).docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    }));
+const ALL_CLASSES = [
+  "Artificer","Barbarian","Bard","Cleric","Druid","Fighter",
+  "Monk","Paladin","Ranger","Rogue","Sorcerer","Warlock","Wizard"
+];
 
-    renderCards();
+// ─── ROLE HELPERS ─────────────────────────────────────────────────────────────
+
+const isAdmin = () => {
+  const role = currentUser?.role;
+  return Array.isArray(role) ? role.includes("admin") : role === "admin";
+};
+
+const isPlayer = () => {
+  const role = currentUser?.role;
+  return Array.isArray(role)
+    ? role.includes("player") || role.includes("admin")
+    : ["player","admin"].includes(role);
+};
+
+function getCurrentUsersCharacters() {
+  return characters.filter(c => c.userId === auth.currentUser?.uid && c.active);
 }
 
-async function loadCharacters()
-{
-    characters = (
-        await getDocs(
-            collection(db, "characters")
-        )
-    ).docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    }));
+// ─── DATA LOADERS ─────────────────────────────────────────────────────────────
 
-    if (!selectedCharacter)
-{
-    const myCharacters =
-        getCurrentUsersCharacters();
-
-    if (myCharacters.length > 0)
-    {
-        selectedCharacter =
-            myCharacters[0];
+async function loadCurrentUser(firebaseUser) {
+  const ref  = doc(db, "users", firebaseUser.uid);
+  const snap = await getDoc(ref);
+  if (snap.exists()) {
+    currentUser = { uid: firebaseUser.uid, ...snap.data() };
+  } else {
+    // Check if admin pre-created this account by email
+    const allSnap  = await getDocs(collection(db, "users"));
+    const existing = allSnap.docs.find(d => d.data().email === firebaseUser.email);
+    if (existing) {
+      await setDoc(ref, existing.data(), { merge: true });
+      await deleteDoc(existing.ref);
+      currentUser = { uid: firebaseUser.uid, ...existing.data() };
+    } else {
+      const newUser = {
+        email:         firebaseUser.email,
+        name:          firebaseUser.displayName || firebaseUser.email,
+        characterName: "",
+        role:          ["viewer"]
+      };
+      await setDoc(ref, newUser);
+      currentUser = { uid: firebaseUser.uid, ...newUser };
     }
-}
-}
-
-async function loadWishes()
-{
-    const snapshot =
-        await getDocs(
-            collection(
-                db,
-                "wishes"
-            )
-        );
-
-    wishes =
-        snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+  }
 }
 
-async function importItemsToFirestore()
-{
-    for (const item of sourceItems)
-    {
-    await setDoc(
-        doc(db, "items", item.id),
-        item,
-        { merge: true }
-    );
-    }
-
+async function loadItemsFromFirestore() {
+  items = (await getDocs(collection(db, "items")))
+    .docs.map(d => ({ id: d.id, ...d.data() }));
+  renderCards();
+  populateSourceFilter();
+  populateCampaignFilter();
 }
 
-const container =
-    document.getElementById("card-container");
+async function loadCharacters() {
+  characters = (await getDocs(collection(db, "characters")))
+    .docs.map(d => ({ id: d.id, ...d.data() }));
+  if (!selectedCharacter) {
+    const mine = getCurrentUsersCharacters();
+    if (mine.length > 0) selectedCharacter = mine[0];
+  }
+}
 
-function attachEditEvents(
-    card,
-    item
-)
-{
-    const editButton =
-        card.querySelector(".edit-button");
+async function loadWishes() {
+  wishes = (await getDocs(collection(db, "wishes")))
+    .docs.map(d => ({ id: d.id, ...d.data() }));
+}
 
-    const saveButton =
-        card.querySelector(".save-button");
+async function loadUsers() {
+  const snap = await getDocs(collection(db, "users"));
+  users   = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  players = users.filter(u => {
+    const r = u.role;
+    return Array.isArray(r)
+      ? r.includes("player") || r.includes("admin")
+      : ["player","admin"].includes(r);
+  });
+}
 
-    const cancelButton =
-        card.querySelector(".cancel-button");
+async function importItemsIfEmpty() {
+  const snap = await getDocs(collection(db, "items"));
+  if (!snap.empty) return;
+  console.log("Firestore empty — importing items...");
+  for (const item of sourceItems) {
+    await setDoc(doc(db, "items", item.id), {
+      ...item,
+      looted: false, printed: false, owner: null, receivedDate: null
+    }, { merge: true });
+  }
+  console.log("Import complete.");
+}
 
-    editButton?.addEventListener(
-        "click",
-        () =>
-        {
-            editingItems.add(item.id);
-            renderCards();
+// ─── RENDER CARDS ─────────────────────────────────────────────────────────────
+
+const container = document.getElementById("card-container");
+
+function renderCards() {
+  container.innerHTML = "";
+  const filtered = applyFilters([...items]);
+  filtered.forEach(item => container.appendChild(createCard(item)));
+  updateStats(
+    filtered.length,
+    filtered.filter(i => i.looted).length,
+    filtered.filter(i => i.printed).length,
+    filtered.filter(i => wishes.some(w => w.itemId === i.id)).length
+  );
+}
+
+function applyFilters(list) {
+  const val = id => document.getElementById(id)?.value || "";
+  const chk = id => document.getElementById(id)?.checked || false;
+
+  const search   = val("search").toLowerCase();
+  const rarity   = val("rarityFilter");
+  const source   = val("sourceFilter");
+  const campaign = val("campaignFilter");
+  const cls      = val("classFilter");
+  const category = val("categoryFilter");
+  const owner    = val("ownerFilter");
+
+  return list.filter(item => {
+    if (search && !(
+      (item.name        || "").toLowerCase().includes(search) ||
+      (item.description || "").toLowerCase().includes(search)
+    )) return false;
+    if (rarity   && item.rarity    !== rarity)    return false;
+    if (source   && item.source    !== source)    return false;
+    if (campaign && item.campaign  !== campaign)  return false;
+    if (category && item.category  !== category)  return false;
+    if (cls      && !item.classes?.includes(cls)) return false;
+    if (owner    && item.owner     !== owner)     return false;
+    if (chk("showLootedOnly")       && !item.looted)   return false;
+    if (chk("showUnlootedOnly")     &&  item.looted)   return false;
+    if (chk("showWishedOnly")       && !wishes.some(w => w.itemId === item.id)) return false;
+    if (chk("showAttunementOnly")   && !item.attunement) return false;
+    if (chk("showNoAttunementOnly") &&  item.attunement) return false;
+    if (chk("showPrintedOnly")      && !item.printed)  return false;
+    if (chk("showNotPrintedOnly")   &&  item.printed)  return false;
+    return true;
+  });
+}
+
+// ─── CREATE CARD ──────────────────────────────────────────────────────────────
+
+function createCard(item) {
+  const card = document.createElement("div");
+  card.classList.add("item-card");
+
+  const admin     = isAdmin();
+  const isEditing = admin && editingItems.has(item.id);
+
+  const rarityClass = (item.rarity || "").toLowerCase().replaceAll(" ", "-");
+  if (rarityClass)  card.classList.add(rarityClass);
+  if (item.looted)  card.classList.add("looted");
+  if (item.printed) card.classList.add("printed");
+
+  const itemWishes = wishes.filter(w => w.itemId === item.id);
+  const myWish     = wishes.find(w =>
+    w.itemId === item.id && w.characterId === selectedCharacter?.id
+  );
+  const wishNames  = itemWishes.map(w => {
+    const c = characters.find(ch => ch.id === w.characterId);
+    return c ? `${c.name} (${c.class})` : "Unknown";
+  }).join(", ");
+
+  const canWish = isPlayer() && !admin && getCurrentUsersCharacters().length > 0;
+  const ownerObj  = players.find(p => p.id === item.owner);
+  const ownerName = ownerObj ? (ownerObj.characterName || ownerObj.name) : "";
+
+  card.innerHTML = `
+    <div class="watermark">LOOTED</div>
+
+    <div class="card-buttons">
+      ${admin ? `
+        <button class="loot-button">${item.looted ? "Looted" : "Loot"}</button>
+        <button class="print-button">${item.printed ? "Printed" : "Print"}</button>
+        ${isEditing
+          ? `<button class="save-button">Save</button>
+             <button class="cancel-button">Cancel</button>`
+          : `<button class="edit-button">Edit</button>
+             <button class="clone-button">Clone</button>`
         }
-    );
-
-    cancelButton?.addEventListener(
-        "click",
-        () =>
-        {
-            editingItems.delete(item.id);
-            renderCards();
-        }
-    );
-
-    saveButton?.addEventListener(
-        "click",
-        async () =>
-        {
-            await updateDoc(
-                doc(db, "items", item.id),
-                {
-                    name:
-                        document.getElementById(`edit-name-${item.id}`).value,
-
-                    description:
-                        document.getElementById(`edit-description-${item.id}`).value,
-
-                    category:
-                        document.getElementById(`edit-category-${item.id}`).value,
-
-                    rarity:
-                        document.getElementById(`edit-rarity-${item.id}`).value,
-
-                    source:
-                        document.getElementById(`edit-source-${item.id}`).value,
-
-                    campaign:
-                        document.getElementById(`edit-campaign-${item.id}`).value,
-
-                    image:
-                        document.getElementById(`edit-image-${item.id}`).value,
-
-                    quote:
-                        document.getElementById(`edit-quote-${item.id}`).value,
-
-                    attunement:
-                        document.getElementById(`edit-attunement-${item.id}`).checked,
-
-                    classes:
-                        [
-                            ...document.querySelectorAll(
-                                `.class-checkbox-${item.id}:checked`
-                            )
-                        ].map(box => box.value),
-
-                    properties:
-                        JSON.parse(
-                            document.getElementById(
-                                `edit-properties-${item.id}`
-                            ).value
-                        )
-                }
-            );
-
-            editingItems.delete(item.id);
-
-            await loadItemsFromFirestore();
-        }
-    );
-}
-
-function attachWishEvents(
-    card,
-    item
-)
-{
-    const wishButton =
-        card.querySelector(
-            ".wish-button"
-        );
-
-    const myCharacters =
-    getCurrentUsersCharacters();
-
-    wishButton?.addEventListener(
-    "click",
-    async () =>
-    {
-        const myCharacters =
-            getCurrentUsersCharacters();
-
-        if (myCharacters.length === 0)
-        {
-            alert(
-                "Create a character before wishing for items."
-            );
-            return;
-        }
-
-        const character =
-            myCharacters[0];
-
-        const existingWish =
-            wishes.find(
-                wish =>
-                    wish.itemId === item.id &&
-                    wish.characterId === character.id
-            );
-
-        if (existingWish)
-        {
-            alert(
-                "This character has already wished for this item."
-            );
-            return;
-        }
-
-        await addDoc(
-            collection(db, "wishes"),
-            {
-                itemId: item.id,
-                characterId: character.id,
-                created: Date.now()
-            }
-        );
-
-        await loadWishes();
-
-        renderCards();
-    }
-);
-}
-
-async function ensureUserExists()
-{
-    const userRef =
-        doc(
-            db,
-            "users",
-            auth.currentUser.uid
-        );
-
-    const userDoc =
-        await getDoc(userRef);
-
-    if (!userDoc.exists())
-    {
-        await setDoc(
-            userRef,
-            {
-                email: auth.currentUser.email,
-                role: "player",
-                created: Date.now()
-            }
-        );
-    }
-}
-
-function attachLootEvents(
-    card,
-    item
-)
-{
-    const lootButton =
-        card.querySelector(".loot-button");
-
-    lootButton?.addEventListener(
-        "click",
-        async () =>
-        {
-            const newLootedState =
-                !item.looted;
-
-            await updateDoc(
-                doc(db, "items", item.id),
-                {
-                    looted: newLootedState,
-                    owner:
-                        newLootedState
-                        ? item.owner
-                        : null
-                }
-            );
-
-            item.looted =
-                newLootedState;
-
-            if (!newLootedState)
-            {
-                item.owner = null;
-            }
-
-            await loadItemsFromFirestore();
-        }
-    );
-}
-
-function attachPrintEvents(
-    card,
-    item
-)
-{
-    const printButton =
-        card.querySelector(".print-button");
-
-    printButton?.addEventListener(
-        "click",
-        async () =>
-        {
-            const newPrintedState =
-                !item.printed;
-
-            await updateDoc(
-                doc(db, "items", item.id),
-                {
-                    printed: newPrintedState
-                }
-            );
-
-            item.printed =
-                newPrintedState;
-
-            await loadItemsFromFirestore();
-        }
-    );
-}
-
-function getCurrentUsersCharacters()
-{
-    return characters.filter(
-        character =>
-            character.userId === auth.currentUser?.uid &&
-            character.active
-    );
-}
-
-function createCard(item)
-{
-    const card =
-        document.createElement("div");
-        console.log("CREATECARD VERSION 999");
-    card.classList.add("item-card");
-
-    const isAdmin =
-    currentUserRole === "admin";
-
-    const isEditing =
-    isAdmin &&
-    editingItems.has(item.id);
-
-    const itemWishes =
-    wishes.filter(
-        wish =>
-            wish.itemId === item.id
-    );
-
-    const myWish =
-    wishes.find(
-        wish =>
-            wish.itemId === item.id &&
-            wish.characterId === selectedCharacter?.id
-    );
-
-    const wishCharacterNames =
-    itemWishes
-        .map(wish =>
-        {
-            const character =
-                characters.find(
-                    c => c.id === wish.characterId
-                );
-
-            if (!character)
-            {
-                return "Unknown Character";
-            }
-
-            return `${character.name} (${character.class})`;
-        })
-        .join("<br>");
-
-    item.rarity &&
-    card.classList.add(
-        item.rarity
-            .toLowerCase()
-            .replaceAll(" ", "-")
-    );
-
-    const isLooted =
-    item.looted;
-
-    const isPrinted =
-    item.printed;
-
-    const canWish =
-    currentUserRole !== "admin"
-    &&
-    getCurrentUsersCharacters().length > 0;
-
-    isLooted && card.classList.add("looted");
-    isPrinted && card.classList.add("printed");
-    
-    card.innerHTML = `
-
- <div class="card-buttons">
-
-    ${
-        isAdmin
-        ?
-        `
-        <button class="loot-button">
-            ${isLooted ? "Looted" : "Loot"}
+      ` : ""}
+      ${canWish ? `
+        <button class="wish-button ${myWish ? "wished" : ""}">
+          ${myWish ? "★ Wished" : "☆ Wish"}
         </button>
-
-        <button class="print-button">
-            ${isPrinted ? "Printed" : "Print"}
-        </button>
-
-        ${
-            isEditing
-            ?
-            `
-            <button class="save-button">
-                Save
-            </button>
-
-            <button class="cancel-button">
-                Cancel
-            </button>
-            `
-            :
-            `
-            <button class="edit-button">
-                Edit
-            </button>
-            `
-        }
-        `
-        :
-        ""
-    }
-
-    ${
-        canWish
-        ?
-        `
-        <button class="wish-button">
-            ${myWish ? "Wished" : "Wish"}
-        </button>
-        `
-        :
-        ""
-    }
-
-</div>
-
-${
-isAdmin
-?
-`
-<div class="wish-admin-block">
-
-    <strong>
-        Wishes: ${itemWishes.length}
-    </strong>
-
-    <br><br>
-
-    ${wishCharacterNames || "No wishes"}
-
-</div>
-`
-:
-""
-}
-
-        <div class="watermark">
-            LOOTED
-        </div>
-
-        <div class="card-header">
-
-            ${
-            isEditing
-            ?
-            `
-            <input
-                class="edit-name"
-                id="edit-name-${item.id}"
-                value="${item.name}"
-            >
-            `
-            :
-            `
-            <h2 class="item-name">
-                ${item.name}
-            </h2>
-            `
-            }
-
-            ${
-    isEditing
-    ?
-    `
-    <select id="edit-category-${item.id}">
-        <option value="Armor" ${item.category === "Armor" ? "selected" : ""}>Armor</option>
-        <option value="Potion" ${item.category === "Potion" ? "selected" : ""}>Potion</option>
-        <option value="Scroll" ${item.category === "Scroll" ? "selected" : ""}>Scroll</option>
-        <option value="Wand" ${item.category === "Wand" ? "selected" : ""}>Wand</option>
-        <option value="Weapon" ${item.category === "Weapon" ? "selected" : ""}>Weapon</option>
-        <option value="Wondrous Item" ${item.category === "Wondrous Item" ? "selected" : ""}>Wondrous Item</option>
-    </select>
-
-    <label>
-        <input
-            type="checkbox"
-            id="edit-attunement-${item.id}"
-            ${item.attunement ? "checked" : ""}
-        >
-        Requires Attunement
-    </label>
-    
-        <div class="class-selector">
-        ${
-        [
-            "Artificer",
-            "Barbarian",
-            "Bard",
-            "Cleric",
-            "Druid",
-            "Fighter",
-            "Monk",
-            "Paladin",
-            "Ranger",
-            "Rogue",
-            "Sorcerer",
-            "Warlock",
-            "Wizard"
-        ]
-        .map(className => `
-        <label class="class-option">
-
-            <input
-                type="checkbox"
-                class="class-checkbox-${item.id}"
-                value="${className}"
-                ${
-                    (item.classes || []).includes(className)
-                    ? "checked"
-                    : ""
-                }
-            >
-
-            ${className}
-
-        </label>
-        `)
-        .join("")
-        }
-        </div>
-
-    `
-    :
-    `
-    <p class="item-type">
-        ${item.category}
-        ${item.attunement ? " (Requires Attunement)" : ""}
-    </p>
-    `
-}
-            <div class="card-meta">
-                ${
-                    (item.classes || [])
-                        .map(className => `
-                            <span class="meta-tag">
-                                ${className}
-                            </span>
-                        `)
-                        .join("")
-                }
-            </div>
-            <div class="card-meta">
-                ${
-                isEditing
-                ?
-                `
-                <select id="edit-rarity-${item.id}">
-                    <option value="Common" ${item.rarity === "Common" ? "selected" : ""}>Common</option>
-                    <option value="Uncommon" ${item.rarity === "Uncommon" ? "selected" : ""}>Uncommon</option>
-                    <option value="Rare" ${item.rarity === "Rare" ? "selected" : ""}>Rare</option>
-                    <option value="Very Rare" ${item.rarity === "Very Rare" ? "selected" : ""}>Very Rare</option>
-                    <option value="Legendary" ${item.rarity === "Legendary" ? "selected" : ""}>Legendary</option>
-                </select>
-                `
-                :
-                `
-                <span class="meta-tag ${item.rarity.toLowerCase().replaceAll(" ", "-")}">
-                    ${item.rarity}
-                </span>
-                `
-                }
-
-                ${
-                isEditing
-                ?
-                `
-                <input
-                id="edit-source-${item.id}"
-                value="${item.source || ""}"
-                placeholder="Source"
-                >
-                `
-                :
-                `
-                <span class="meta-tag">
-                    ${item.source || ""}
-                </span>
-                `
-                }
-
-                ${
-                isEditing
-                ?
-                `
-                <input
-                id="edit-campaign-${item.id}"
-                value="${item.campaign || ""}"
-                placeholder="Campaign"
-                >
-                `
-                :
-                `
-                <span class="meta-tag">
-                    ${item.campaign || ""}
-                </span>
-                `
-                }
-
-            </div>
-
-        </div>
-
-        ${
-            isEditing
-            ?
-            `
-            <input
-                id="edit-image-${item.id}"
-                value="${item.image || ""}"
-                placeholder="Image URL"
-            >
-            `
-            :
-            ""
-        }
-
-        ${
-            item.image
-            ?
-            `
-            <img
-                src="${item.image}"
-                class="card-art"
-                alt="${item.name}"
-                onerror="this.onerror=null;this.src='placeholder.jpg';"
-            >
-            `
-            :
-            ""
-        }
-        
-        <div class="card-body">
-
-            ${
-            isEditing
-            ?
-            `
-            <textarea
-                class="edit-description"
-                id="edit-description-${item.id}"
-                placeholder="Item Description"
-            >${item.description}</textarea>
-            `
-            :
-            `
-            <div class="item-description">
-                ${item.description}
-            </div>
-            `
-            }
-
-            ${
-            isEditing
-            ?
-            `
-            <textarea
-                id="edit-properties-${item.id}"
-            >${JSON.stringify(item.properties || [], null, 2)}</textarea>
-            `
-            :
-            (item.properties || []).map(property => `
-    <div class="property-block">
-
-        <span class="property-title">
-            ${property.title}:
-        </span>
-
-        ${property.text}
-
+      ` : ""}
     </div>
-`).join("")
-            }
 
-            ${
-            isEditing
-            ?
-            `
-            <textarea
-                id="edit-quote-${item.id}"
-                placeholder="Quote"
-            >${item.quote || ""}</textarea>
-            
-            `
-            :
-            `
-            <i>${item.quote || ""}</i>
-            `
-            }
+    ${admin && itemWishes.length > 0 ? `
+      <div class="wish-admin-block">
+        ★ Wished by: ${wishNames}
+      </div>
+    ` : !admin && itemWishes.length > 0 ? `
+      <div class="wish-count-block">★ ${itemWishes.length} wish${itemWishes.length > 1 ? "es" : ""}</div>
+    ` : ""}
 
+    <div class="card-header">
+      ${isEditing
+        ? `<input class="edit-name" id="edit-name-${item.id}" value="${(item.name || "").replace(/"/g, "&quot;")}">` 
+        : `<h2 class="item-name">${item.name}</h2>`
+      }
+
+      ${isEditing ? `
+        <select id="edit-category-${item.id}">
+          ${["Armor","Potion","Ring","Rod","Scroll","Staff","Vehicle","Wand","Weapon","Wondrous Item"]
+            .map(c => `<option value="${c}" ${item.category === c ? "selected" : ""}>${c}</option>`)
+            .join("")}
+        </select>
+        <label>
+          <input type="checkbox" id="edit-attunement-${item.id}" ${item.attunement ? "checked" : ""}>
+          Requires Attunement
+        </label>
+        <div class="class-selector">
+          ${ALL_CLASSES.map(cls => `
+            <label class="class-option">
+              <input type="checkbox" class="class-checkbox-${item.id}" value="${cls}"
+                ${(item.classes || []).includes(cls) ? "checked" : ""}> ${cls}
+            </label>
+          `).join("")}
         </div>
+      ` : `
+        <p class="item-type">
+          ${item.category || ""}${item.attunement ? " · Requires Attunement" : ""}
+        </p>
+      `}
 
-        <div class="card-footer">
-            D&D 5e Magic Item Looter
-        </div>
+      <div class="card-meta">
+        ${(item.classes || []).map(c => `<span class="meta-tag">${c}</span>`).join("")}
+      </div>
 
-    `;
+      <div class="card-meta">
+        ${isEditing ? `
+          <select id="edit-rarity-${item.id}">
+            ${["Common","Uncommon","Rare","Very Rare","Legendary","Artifact"]
+              .map(r => `<option value="${r}" ${item.rarity === r ? "selected" : ""}>${r}</option>`)
+              .join("")}
+          </select>
+          <input id="edit-source-${item.id}"   value="${item.source   || ""}" placeholder="Source">
+          <input id="edit-campaign-${item.id}" value="${item.campaign || ""}" placeholder="Campaign">
+        ` : `
+          ${item.rarity   ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>` : ""}
+          ${item.source   ? `<span class="meta-tag">${item.source}</span>`                : ""}
+          ${item.campaign ? `<span class="meta-tag campaign-tag">${item.campaign}</span>` : ""}
+        `}
+      </div>
+    </div>
 
-    attachEditEvents(
-    card,
-    item
-);
-
-attachLootEvents(
-    card,
-    item
-);
-
-attachPrintEvents(
-    card,
-    item
-);
-
-attachWishEvents(
-    card,
-    item
-);
-
-    return card;
-}
-
-function renderCards()
-{
-    container.innerHTML = "";
-
-    let filtered =
-        [...items];
-
-    const search =
-        document.getElementById("search")
-        ?.value
-        .toLowerCase() || "";
-
-    const rarityFilter =
-        document.getElementById("rarityFilter")
-        ?.value || "";
-
-    const sourceFilter =
-        document.getElementById("sourceFilter")
-        ?.value || "";
-
-    const campaignFilter =
-        document.getElementById("campaignFilter")
-        ?.value || "";
-    
-    const classFilter =
-        document.getElementById("classFilter")
-        ?.value || "";
-
-
-
-    const categoryFilter =
-        document.getElementById("categoryFilter")
-        ?.value || "";
-
-    const showLooted =
-        document.getElementById("showLootedOnly")
-        ?.checked;
-
-    const showUnlooted =
-        document.getElementById("showUnlootedOnly")
-        ?.checked;
-
-    const showAttunement =
-        document.getElementById("showAttunementOnly")
-        ?.checked;
-
-    const showNoAttunement =
-        document.getElementById("showNoAttunementOnly")
-        ?.checked;
-
-    const showPrinted =
-        document.getElementById("showPrintedOnly")
-        ?.checked;
-
-    const showNotPrinted =
-        document.getElementById("showNotPrintedOnly")
-        ?.checked;
-
-    filtered = filtered.filter(item =>
-    {
-        return (
-            item.name
-            .toLowerCase()
-            .includes(search)
-
-            ||
-
-            item.description
-            .toLowerCase()
-            .includes(search)
-        );
-    });
-
-    if (rarityFilter)
-    {
-        filtered =
-        filtered.filter(
-            item => item.rarity === rarityFilter
-            );
+    ${isEditing
+      ? `<input id="edit-image-${item.id}" value="${item.image || ""}" placeholder="Image URL">`
+      : ""
     }
 
-    if (sourceFilter)
-    {
-        filtered =
-            filtered.filter(item =>
-                item.source === sourceFilter
-            );
+    ${item.image
+      ? `<img src="${item.image}" class="card-art" alt="${item.name}"
+           onerror="this.style.display='none'">`
+      : ""
     }
 
-    if (campaignFilter)
-    {
-        filtered =
-            filtered.filter(item =>
-                item.campaign === campaignFilter
-            );
-    }
+    <div class="card-body">
+      ${isEditing
+        ? `<textarea class="edit-description" id="edit-description-${item.id}"
+             placeholder="Description">${item.description || ""}</textarea>`
+        : `<div class="item-description">${item.description || ""}</div>`
+      }
 
-    if (classFilter)
-    {
-        filtered =
-            filtered.filter(item =>
-                item.classes?.includes(classFilter)
-            );
-    }
-
-    if (categoryFilter)
-    {
-        filtered =
-            filtered.filter(item =>
-                item.category === categoryFilter
-            );
-    }
-
-    if (showLooted)
-    {
-        filtered =
-            filtered.filter(item =>
-                item.looted
-            );
-    }
-
-    if (showUnlooted)
-    {
-        filtered =
-            filtered.filter(item =>
-                !item.looted
-            );
-    }
-
-    if (showAttunement)
-    {
-        filtered =
-            filtered.filter(item =>
-                item.attunement
-            );
-    }
-
-    if (showNoAttunement)
-    {
-        filtered =
-            filtered.filter(item =>
-                !item.attunement
-            );
-    }
-
-    if (showPrinted)
-    {
-        filtered =
-            filtered.filter(item =>
-                item.printed
-            );
-    }
-
-    if (showNotPrinted)
-    {
-        filtered =
-            filtered.filter(item =>
-                !item.printed
-            );
-    }
-
-
-    filtered.forEach(item =>
-    {
-        container.appendChild(
-            createCard(item)
-        );
-    });
-
-    const resultCount = filtered.length;
-
-    const lootedCount =
-    filtered.filter(item => item.looted).length;
-
-    const printedCount =
-    filtered.filter(item => item.printed).length;
-
-    updateStats(
-        resultCount,
-        lootedCount,
-        printedCount
-    );
-}
-/*
-function updateStats()
-{
-    const total =
-        items.length;
-
-    const looted =
-        items.filter(item =>
-            item.looted
-        ).length;
-
-
-    const printed =
-        items.filter(item =>
-            item.printed
-        ).length;
-
-
-    document.getElementById(
-        "campaignStats"
-    ).innerHTML = `
-        Total Items: ${total}
-        |
-        Looted: ${looted}
-        |
-        Unlooted: ${total - looted}
-        |
-        Remaining: ${total - looted}
-        |
-        Printed: ${printed}
-    `;
-}*/
-
-function populateSourceFilter()
-{
-    const filter =
-        document.getElementById(
-            "sourceFilter"
-        );
-
-    if (!filter)
-    {
-        return;
-    }
-
-    const sources =
-        [...new Set(
-            items
-            .map(item => item.source)
-            .filter(Boolean)
-        )]
-        .sort();
-
-    filter.innerHTML =
-        `<option value="">All Sources</option>`;
-
-    sources.forEach(source =>
-    {
-        filter.innerHTML += `
-            <option value="${source}">
-                ${source}
-            </option>
-        `;
-    });
-}
-
-function populateCampaignFilter()
-{
-    const filter =
-        document.getElementById(
-            "campaignFilter"
-        );
-
-    if (!filter)
-    {
-        return;
-    }
-
-    const campaigns =
-        [...new Set(
-            items
-            .map(item => item.campaign)
-            .filter(Boolean)
-        )]
-        .sort();
-
-    filter.innerHTML =
-        `<option value="">All Campaigns</option>`;
-
-    campaigns.forEach(campaign =>
-    {
-        filter.innerHTML += `
-            <option value="${campaign}">
-                ${campaign}
-            </option>
-        `;
-    });
-}
-
-
-
-async function renderAdminPanel()
-{
-    if (currentUserRole !== "admin")
-    {
-        return;
-    }
-
-    const panel =
-        document.getElementById("adminPanel");
-
-    if (!panel)
-    {
-        return;
-    }
-
-    const snapshot =
-        await getDocs(
-            collection(db, "users")
-        );
-
-    const users =
-        snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-
-    panel.innerHTML =
-        users.map(user => `
-            <div>
-                ${user.email}
-                (${user.role})
-
-                <button
-                    class="make-admin"
-                    data-userid="${user.id}">
-                    Make Admin
-                </button>
+      ${isEditing
+        ? `<textarea id="edit-properties-${item.id}"
+             placeholder='[{"title":"Name","text":"Description"}]'>${
+               JSON.stringify(item.properties || [], null, 2)
+             }</textarea>`
+        : (item.properties || []).map(p => `
+            <div class="property-block">
+              <span class="property-title">${p.title}:</span> ${p.text}
             </div>
-        `).join("");
+          `).join("")
+      }
 
-    panel
-        .querySelectorAll(".make-admin")
-        .forEach(button =>
-        {
-            button.addEventListener(
-                "click",
-                async () =>
-                {
-                    await updateDoc(
-                        doc(
-                            db,
-                            "users",
-                            button.dataset.userid
-                        ),
-                        {
-                            role: "admin"
-                        }
-                    );
-                }
-            );
-        });
-}
-function updateStats(
-    results,
-    looted,
-    printed
-)
-{
-    document.getElementById(
-        "campaignStats"
-    ).innerHTML = `
-        Results: ${results}
-        |
-        Looted: ${looted}
-        |
-        Printed: ${printed}
-    `;
+      ${isEditing
+        ? `<textarea id="edit-quote-${item.id}" placeholder="Quote">${item.quote || ""}</textarea>`
+        : item.quote ? `<i>${item.quote}</i>` : ""
+      }
+    </div>
+
+    ${item.looted && admin ? `
+      <div class="owner-block">
+        <select class="owner-select">
+          <option value="">No Owner</option>
+          ${players.map(p => `
+            <option value="${p.id}" ${item.owner === p.id ? "selected" : ""}>
+              ${p.characterName || p.name}
+            </option>
+          `).join("")}
+        </select>
+      </div>
+    ` : ownerName ? `<div class="owner-badge">⚔ ${ownerName}</div>` : ""}
+
+    <div class="card-footer">D&D 5e Item Vault</div>
+  `;
+
+  attachCardEvents(card, item);
+  return card;
 }
 
-    const loginButton =
-        document.getElementById("loginButton")
-        ?.addEventListener(
-            "click",
-            async () =>
-            {
-                try
-                {
-                    const result =
-                        await signInWithPopup(
-                            auth,
-                            provider
-                        );
+// ─── CARD EVENTS ──────────────────────────────────────────────────────────────
 
-                    console.log(
-                        "Logged in:",
-                        result.user.email
-                    );
-                }
-                catch (error)
-                {
-                    console.error(error);
-                }
-            }
-        );
-        document
-    .getElementById("registerButton")
-    ?.addEventListener(
-        "click",
-        async () =>
-        {
-            try
-            {
-                const email =
-                    document.getElementById("emailInput").value;
-
-                const password =
-                    document.getElementById("passwordInput").value;
-
-                await createUserWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
-                );
-
-                alert(
-                    "Account created successfully."
-                );
-            }
-            catch (error)
-            {
-                console.error(error);
-                alert(error.message);
-            }
-        }
-    );
-
-document
-    .getElementById("createCharacterButton")
-    ?.addEventListener(
-        "click",
-        async () =>
-        {
-            try
-            {
-                console.log("CREATE CHARACTER CLICKED");
-
-                const characterName =
-                    document.getElementById(
-                        "characterName"
-                    ).value;
-
-                const characterClass =
-                    document.getElementById(
-                        "characterClass"
-                    ).value;
-
-                await addDoc(
-                    collection(
-                        db,
-                        "characters"
-                    ),
-                    {
-                        name: characterName,
-                        class: characterClass,
-                        userId: auth.currentUser.uid,
-                        active: true,
-                        created: Date.now()
-                    }
-                );
-
-                console.log(
-                    "CHARACTER SAVED"
-                );
-
-                await loadCharacters();
-
-                alert(
-                    "Character created."
-                );
-            }
-            catch(error)
-            {
-                console.error(
-                    "CHARACTER CREATE FAILED",
-                    error
-                );
-
-                alert(error.message);
-            }
-        }
-    );
-
-
-document
-    .getElementById("emailLoginButton")
-    ?.addEventListener(
-        "click",
-        async () =>
-        {
-            try
-            {
-                const email =
-                    document.getElementById("emailInput").value;
-
-                const password =
-                    document.getElementById("passwordInput").value;
-
-                await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
-                );
-            }
-            catch (error)
-            {
-                console.error(error);
-                alert(error.message);
-            }
-        }
-    );
-
-    document
-    .getElementById("logoutButton")
-    ?.addEventListener(
-        "click",
-        async () =>
-        {
-            try
-            {
-                await signOut(auth);
-
-                console.log(
-                    "Logged out"
-                );
-            }
-            catch (error)
-            {
-                console.error(error);
-            }
-        }
-    );
-
-[
-    "search",
-    "rarityFilter",
-    "sourceFilter",
-    "campaignFilter",
-    "categoryFilter",
-    "classFilter",
-    "showLootedOnly",
-    "showUnlootedOnly",
-    "showAttunementOnly",
-    "showNoAttunementOnly",
-    "showPrintedOnly",
-    "showNotPrintedOnly"
-]
-.forEach(id =>
-{
-    const element =
-        document.getElementById(id);
-
-    if (element)
-    {
-        element.addEventListener(
-            "input",
-            renderCards
-        );
-
-        element.addEventListener(
-            "change",
-            renderCards
-        );
+function attachCardEvents(card, item) {
+  // Edit / Save / Cancel
+  card.querySelector(".edit-button")?.addEventListener("click", () => {
+    editingItems.add(item.id); renderCards();
+  });
+  card.querySelector(".cancel-button")?.addEventListener("click", () => {
+    editingItems.delete(item.id); renderCards();
+  });
+  card.querySelector(".save-button")?.addEventListener("click", async () => {
+    let properties = [];
+    try {
+      properties = JSON.parse(
+        document.getElementById(`edit-properties-${item.id}`).value || "[]"
+      );
+    } catch {
+      alert("Properties JSON is invalid. Please fix before saving."); return;
     }
+    await updateDoc(doc(db, "items", item.id), {
+      name:        document.getElementById(`edit-name-${item.id}`).value,
+      description: document.getElementById(`edit-description-${item.id}`).value,
+      category:    document.getElementById(`edit-category-${item.id}`).value,
+      rarity:      document.getElementById(`edit-rarity-${item.id}`).value,
+      source:      document.getElementById(`edit-source-${item.id}`).value,
+      campaign:    document.getElementById(`edit-campaign-${item.id}`).value,
+      image:       document.getElementById(`edit-image-${item.id}`).value,
+      quote:       document.getElementById(`edit-quote-${item.id}`).value,
+      attunement:  document.getElementById(`edit-attunement-${item.id}`).checked,
+      classes:     [...document.querySelectorAll(`.class-checkbox-${item.id}:checked`)]
+                     .map(b => b.value),
+      properties
+    });
+    editingItems.delete(item.id);
+    await loadItemsFromFirestore();
+  });
+
+  // Loot
+  card.querySelector(".loot-button")?.addEventListener("click", async () => {
+    const newVal = !item.looted;
+    await updateDoc(doc(db, "items", item.id), {
+      looted: newVal,
+      owner:  newVal ? (item.owner || null) : null
+    });
+    await loadItemsFromFirestore();
+  });
+
+  // Print
+  card.querySelector(".print-button")?.addEventListener("click", async () => {
+    await updateDoc(doc(db, "items", item.id), { printed: !item.printed });
+    await loadItemsFromFirestore();
+  });
+
+  // Clone
+  card.querySelector(".clone-button")?.addEventListener("click", async () => {
+    const cloneId = item.id + "-copy-" + Date.now();
+    const { id: _removed, ...rest } = item;
+    await setDoc(doc(db, "items", cloneId), {
+      ...rest,
+      name: item.name + " (Homebrew)", source: "Homebrew",
+      looted: false, printed: false, owner: null
+    });
+    await loadItemsFromFirestore();
+    editingItems.add(cloneId);
+    renderCards();
+  });
+
+  // Owner select
+  card.querySelector(".owner-select")?.addEventListener("change", async e => {
+    await updateDoc(doc(db, "items", item.id), { owner: e.target.value || null });
+    await loadItemsFromFirestore();
+  });
+
+  // Wish
+  card.querySelector(".wish-button")?.addEventListener("click", async () => {
+    const mine = getCurrentUsersCharacters();
+    if (mine.length === 0) { alert("Create a character to wish for items."); return; }
+    const character = mine[0];
+    const existing  = wishes.find(
+      w => w.itemId === item.id && w.characterId === character.id
+    );
+    if (existing) {
+      await deleteDoc(doc(db, "wishes", existing.id));
+    } else {
+      await addDoc(collection(db, "wishes"), {
+        itemId:      item.id,
+        characterId: character.id,
+        userId:      auth.currentUser.uid,
+        created:     Date.now()
+      });
+    }
+    await loadWishes();
+    renderCards();
+  });
+}
+
+// ─── ADD ITEM MODAL ───────────────────────────────────────────────────────────
+
+function buildModalClassCheckboxes(selected = []) {
+  const wrap = document.getElementById("modal-classes");
+  if (!wrap) return;
+  wrap.innerHTML = ALL_CLASSES.map(c => `
+    <label class="class-option">
+      <input type="checkbox" value="${c}" ${selected.includes(c) ? "checked" : ""}> ${c}
+    </label>
+  `).join("");
+}
+
+function openItemModal(item = null) {
+  document.getElementById("itemModalTitle").textContent = item ? "Edit Item" : "Add Item";
+  document.getElementById("modal-name").value         = item?.name        || "";
+  document.getElementById("modal-category").value     = item?.category    || "Wondrous Item";
+  document.getElementById("modal-rarity").value       = item?.rarity      || "Common";
+  document.getElementById("modal-source").value       = item?.source      || "";
+  document.getElementById("modal-campaign").value     = item?.campaign    || "";
+  document.getElementById("modal-image").value        = item?.image       || "";
+  document.getElementById("modal-description").value  = item?.description || "";
+  document.getElementById("modal-quote").value        = item?.quote       || "";
+  document.getElementById("modal-attunement").checked = item?.attunement  || false;
+  document.getElementById("modal-properties").value   =
+    JSON.stringify(item?.properties || [], null, 2);
+  buildModalClassCheckboxes(item?.classes || []);
+  document.getElementById("itemModal").dataset.editId = item?.id || "";
+  document.getElementById("itemModal").style.display  = "flex";
+}
+
+function closeItemModal() {
+  document.getElementById("itemModal").style.display = "none";
+}
+
+async function saveItemModal() {
+  const editId = document.getElementById("itemModal").dataset.editId;
+  const name   = document.getElementById("modal-name").value.trim();
+  if (!name) { alert("Name is required."); return; }
+
+  let properties = [];
+  try {
+    properties = JSON.parse(document.getElementById("modal-properties").value || "[]");
+  } catch {
+    alert("Properties JSON is invalid."); return;
+  }
+
+  const classes = [...document.querySelectorAll("#modal-classes input:checked")]
+    .map(i => i.value);
+
+  const data = {
+    name,
+    category:    document.getElementById("modal-category").value,
+    rarity:      document.getElementById("modal-rarity").value,
+    source:      document.getElementById("modal-source").value,
+    campaign:    document.getElementById("modal-campaign").value,
+    image:       document.getElementById("modal-image").value,
+    description: document.getElementById("modal-description").value,
+    quote:       document.getElementById("modal-quote").value,
+    attunement:  document.getElementById("modal-attunement").checked,
+    classes, properties
+  };
+
+  if (!editId) {
+    const autoId = name.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-");
+    await setDoc(doc(db, "items", autoId), {
+      ...data, looted: false, printed: false, owner: null, receivedDate: null
+    }, { merge: true });
+  } else {
+    await updateDoc(doc(db, "items", editId), data);
+  }
+
+  closeItemModal();
+  await loadItemsFromFirestore();
+}
+
+// ─── USER MODAL ───────────────────────────────────────────────────────────────
+
+function openUserModal(user = null) {
+  document.getElementById("userModalTitle").textContent = user ? "Edit User" : "Add User";
+  document.getElementById("user-name").value      = user?.name          || "";
+  document.getElementById("user-character").value = user?.characterName || "";
+  document.getElementById("user-email").value     = user?.email         || "";
+  document.querySelectorAll(".role-checkbox").forEach(cb => {
+    const role = user?.role || [];
+    cb.checked = Array.isArray(role) ? role.includes(cb.value) : role === cb.value;
+  });
+  document.getElementById("userModal").dataset.editId = user?.id || "";
+  document.getElementById("userModal").style.display  = "flex";
+}
+
+function closeUserModal() {
+  document.getElementById("userModal").style.display = "none";
+}
+
+async function saveUserModal() {
+  const editId = document.getElementById("userModal").dataset.editId;
+  const name   = document.getElementById("user-name").value.trim();
+  const email  = document.getElementById("user-email").value.trim();
+  if (!name || !email) { alert("Name and email are required."); return; }
+
+  const role = [...document.querySelectorAll(".role-checkbox:checked")].map(cb => cb.value);
+  const data = {
+    name,
+    characterName: document.getElementById("user-character").value.trim(),
+    email, role
+  };
+
+  if (editId) {
+    await updateDoc(doc(db, "users", editId), data);
+  } else {
+    const tempId = email.toLowerCase().replaceAll(/[^a-z0-9]/g, "-");
+    await setDoc(doc(db, "users", tempId), data, { merge: true });
+  }
+
+  closeUserModal();
+  await loadUsers();
+  populateOwnerFilter();
+  renderUserTable();
+  renderAdminStats();
+}
+
+// ─── ADMIN PANEL ──────────────────────────────────────────────────────────────
+
+function renderUserTable() {
+  const tbody = document.getElementById("userTableBody");
+  if (!tbody) return;
+  tbody.innerHTML = users.map(u => {
+    const role = Array.isArray(u.role) ? u.role.join(", ") : (u.role || "viewer");
+    return `
+      <tr>
+        <td>${u.name          || "—"}</td>
+        <td>${u.characterName || "—"}</td>
+        <td>${u.email         || "—"}</td>
+        <td><span class="role-badge">${role}</span></td>
+        <td class="table-actions">
+          <button class="edit-button btn-sm" data-edit-user="${u.id}">Edit</button>
+          <button class="cancel-button btn-sm" data-delete-user="${u.id}">Delete</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  tbody.querySelectorAll("[data-edit-user]").forEach(btn => {
+    const user = users.find(u => u.id === btn.dataset.editUser);
+    btn.addEventListener("click", () => openUserModal(user));
+  });
+
+  tbody.querySelectorAll("[data-delete-user]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if (!confirm("Delete this user? This cannot be undone.")) return;
+      await deleteDoc(doc(db, "users", btn.dataset.deleteUser));
+      await loadUsers();
+      populateOwnerFilter();
+      renderUserTable();
+      renderAdminStats();
+    });
+  });
+}
+
+function renderAdminStats() {
+  const el = document.getElementById("adminStats");
+  if (!el) return;
+  el.innerHTML = `
+    <div class="stat-card"><span class="stat-num">${items.length}</span><span class="stat-label">Total Items</span></div>
+    <div class="stat-card"><span class="stat-num">${items.filter(i=>i.looted).length}</span><span class="stat-label">Looted</span></div>
+    <div class="stat-card"><span class="stat-num">${items.filter(i=>i.printed).length}</span><span class="stat-label">Printed</span></div>
+    <div class="stat-card"><span class="stat-num">${wishes.length}</span><span class="stat-label">Wishes</span></div>
+    <div class="stat-card"><span class="stat-num">${users.length}</span><span class="stat-label">Users</span></div>
+    <div class="stat-card"><span class="stat-num">${players.length}</span><span class="stat-label">Players</span></div>
+  `;
+}
+
+// ─── FILTER POPULATORS ────────────────────────────────────────────────────────
+
+function populateSourceFilter() {
+  const el = document.getElementById("sourceFilter");
+  if (!el) return;
+  const cur = el.value;
+  const sources = [...new Set(items.map(i => i.source).filter(Boolean))].sort();
+  el.innerHTML = `<option value="">All Sources</option>` +
+    sources.map(s => `<option value="${s}" ${s===cur?"selected":""}>${s}</option>`).join("");
+}
+
+function populateCampaignFilter() {
+  const el = document.getElementById("campaignFilter");
+  if (!el) return;
+  const cur = el.value;
+  const campaigns = [...new Set(items.map(i => i.campaign).filter(Boolean))].sort();
+  el.innerHTML = `<option value="">All Campaigns</option>` +
+    campaigns.map(c => `<option value="${c}" ${c===cur?"selected":""}>${c}</option>`).join("");
+}
+
+function populateOwnerFilter() {
+  const el = document.getElementById("ownerFilter");
+  if (!el) return;
+  el.innerHTML = `<option value="">All Owners</option>` +
+    players.map(p =>
+      `<option value="${p.id}">${p.characterName || p.name}</option>`
+    ).join("");
+}
+
+// ─── STATS BAR ────────────────────────────────────────────────────────────────
+
+function updateStats(results, looted, printed, wished) {
+  const el = document.getElementById("campaignStats");
+  if (el) el.textContent =
+    `${results} items  ·  ${looted} looted  ·  ${printed} printed  ·  ${wished} wished`;
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+
+function initTabs() {
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const tabId = btn.dataset.tab;
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.style.display = "none");
+      btn.classList.add("active");
+      const panel = document.getElementById(`tab-${tabId}`);
+      if (panel) panel.style.display = "block";
+      if (tabId === "admin") { renderUserTable(); renderAdminStats(); }
+    });
+  });
+}
+
+// ─── FILTER LISTENERS ────────────────────────────────────────────────────────
+
+function initFilterListeners() {
+  [
+    "search","ownerFilter","rarityFilter","sourceFilter","campaignFilter",
+    "categoryFilter","classFilter","showLootedOnly","showUnlootedOnly",
+    "showWishedOnly","showAttunementOnly","showNoAttunementOnly",
+    "showPrintedOnly","showNotPrintedOnly"
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input",  renderCards);
+    el.addEventListener("change", renderCards);
+  });
+}
+
+// ─── MODAL LISTENERS ─────────────────────────────────────────────────────────
+
+function initModalListeners() {
+  document.getElementById("addItemBtn")?.addEventListener("click", () => openItemModal());
+  document.getElementById("closeItemModal")?.addEventListener("click", closeItemModal);
+  document.getElementById("cancelItemModal")?.addEventListener("click", closeItemModal);
+  document.getElementById("saveItemModal")?.addEventListener("click", saveItemModal);
+
+  document.getElementById("openAddUserBtn")?.addEventListener("click", () => openUserModal());
+  document.getElementById("closeUserModal")?.addEventListener("click", closeUserModal);
+  document.getElementById("cancelUserModal")?.addEventListener("click", closeUserModal);
+  document.getElementById("saveUserModal")?.addEventListener("click", saveUserModal);
+
+  document.querySelectorAll(".modal").forEach(modal => {
+    modal.addEventListener("click", e => {
+      if (e.target === modal) modal.style.display = "none";
+    });
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape")
+      document.querySelectorAll(".modal").forEach(m => m.style.display = "none");
+  });
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+
+document.getElementById("loginButton")?.addEventListener("click", async () => {
+  try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); }
 });
 
-async function loadCurrentUserRole()
-{
-    if (!auth.currentUser)
-    {
-        currentUserRole = "player";
-        return;
+document.getElementById("emailLoginButton")?.addEventListener("click", async () => {
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      document.getElementById("emailInput").value,
+      document.getElementById("passwordInput").value
+    );
+  } catch (e) { alert(e.message); }
+});
+
+document.getElementById("registerButton")?.addEventListener("click", async () => {
+  try {
+    await createUserWithEmailAndPassword(
+      auth,
+      document.getElementById("emailInput").value,
+      document.getElementById("passwordInput").value
+    );
+    alert("Account created! You can now log in.");
+  } catch (e) { alert(e.message); }
+});
+
+document.getElementById("logoutButton")?.addEventListener("click", async () => {
+  await signOut(auth);
+});
+
+document.getElementById("createCharacterButton")?.addEventListener("click", async () => {
+  const name = document.getElementById("characterName").value.trim();
+  if (!name) { alert("Enter a character name."); return; }
+  await addDoc(collection(db, "characters"), {
+    name,
+    class:   document.getElementById("characterClass").value,
+    userId:  auth.currentUser.uid,
+    active:  true,
+    created: Date.now()
+  });
+  await loadCharacters();
+  alert(`Character "${name}" created!`);
+});
+
+// ─── AUTH STATE ───────────────────────────────────────────────────────────────
+
+onAuthStateChanged(auth, async (firebaseUser) => {
+  const loginControls = document.getElementById("loginControls");
+  const logoutBtn     = document.getElementById("logoutButton");
+  const display       = document.getElementById("userDisplay");
+  const adminTab      = document.getElementById("adminTab");
+  const addBtn        = document.getElementById("addItemBtn");
+  const charPanel     = document.getElementById("characterPanel");
+  const adminPanel    = document.getElementById("adminPanel");
+
+  if (firebaseUser) {
+    await loadCurrentUser(firebaseUser);
+
+    display.textContent = currentUser.characterName || currentUser.name || firebaseUser.email;
+
+    if (loginControls) loginControls.style.display = "none";
+    if (logoutBtn)     logoutBtn.style.display      = "inline-block";
+    if (charPanel)     charPanel.style.display      = isPlayer() ? "block" : "none";
+
+    if (isAdmin()) {
+      if (adminTab)   adminTab.style.display   = "inline-block";
+      if (addBtn)     addBtn.style.display      = "inline-block";
+      if (adminPanel) adminPanel.style.display  = "block";
+    } else {
+      if (adminTab)   adminTab.style.display   = "none";
+      if (addBtn)     addBtn.style.display      = "none";
+      if (adminPanel) adminPanel.style.display  = "none";
     }
 
-    const userDoc =
-        await getDoc(
-            doc(
-                db,
-                "users",
-                auth.currentUser.uid
-            )
-        );
+    await importItemsIfEmpty();
+    await loadUsers();
+    await loadCharacters();
+    await loadWishes();
+    await loadItemsFromFirestore();
+    populateOwnerFilter();
 
-    if (!userDoc.exists())
-    {
-        await setDoc(
-            doc(
-                db,
-                "users",
-                auth.currentUser.uid
-            ),
-            {
-                email: auth.currentUser.email,
-                role: "player"
-            }
-        );
+    if (isAdmin()) { renderUserTable(); renderAdminStats(); }
 
-        currentUserRole = "player";
+  } else {
+    currentUser = null;
+    display.textContent = "Not logged in";
 
-        return;
-        
-    }
+    if (loginControls) loginControls.style.display = "block";
+    if (logoutBtn)     logoutBtn.style.display      = "none";
+    if (charPanel)     charPanel.style.display      = "none";
+    if (adminTab)      adminTab.style.display        = "none";
+    if (addBtn)        addBtn.style.display           = "none";
+    if (adminPanel)    adminPanel.style.display       = "none";
 
-    currentUserRole =
-        userDoc.data().role || "player";
-}
+    renderCards();
+  }
+});
 
-onAuthStateChanged(
-    auth,
-    async (user) =>
-    {
-        const loginButton =
-            document.getElementById("loginButton");
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
 
-        const logoutButton =
-            document.getElementById("logoutButton");
-
-        const display =
-            document.getElementById("userDisplay");
-
-    if (user)
-    {
-        await ensureUserExists();
-
-        display.textContent =
-            user.email;
-
-        document.getElementById(
-            "loginControls"
-        ).style.display = "none";
-
-        document.getElementById("registerButton").style.display =
-            "none";
-
-        document.getElementById("emailLoginButton").style.display =
-            "none";
-
-        logoutButton.style.display =
-            "inline-block";
-
-            await loadCurrentUserRole();
-            await renderAdminPanel();
-            //importItemsToFirestore();
-            await loadCharacters();
-            await loadWishes();
-            await loadItemsFromFirestore();
-            populateSourceFilter();
-            populateCampaignFilter();
-        }
-        else
-        {
-            display.textContent =
-                "Not logged in";
-
-            document.getElementById(
-                "loginControls"
-            ).style.display = "block";
-
-            document.getElementById("registerButton").style.display =
-                "inline-block";
-
-            document.getElementById("emailLoginButton").style.display =
-                "inline-block";
-
-            logoutButton.style.display =
-                "none";
-
-            renderCards();
-        }
-    }
-);
+initTabs();
+initFilterListeners();
+initModalListeners();
