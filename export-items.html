@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Export Firebase Items</title>
+</head>
+
+<body>
+
+<h2>Firebase Item Export</h2>
+
+<button id="export">Export Item Names</button>
+
+<p id="status"></p>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDyj69qiEnkKk4lZjleGnvFEGUdvLcSZIk",
+    authDomain: "dnd-loot-site.firebaseapp.com",
+    projectId: "dnd-loot-site",
+    storageBucket: "dnd-loot-site.firebasestorage.app",
+    messagingSenderId: "345641251366",
+    appId: "1:345641251366:web:081fe07bc2cc859901ace7",
+    measurementId: "G-ZHNPHYLDJ0"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+document.getElementById("export").addEventListener("click", async () => {
+
+    const status = document.getElementById("status");
+
+    status.textContent = "Loading items...";
+
+    try {
+
+        const snapshot = await getDocs(
+            collection(db, "items")
+        );
+
+        const items = snapshot.docs
+            .map(doc => doc.data().name)
+            .filter(name => name)
+            .sort((a, b) => a.localeCompare(b));
+
+
+        status.textContent =
+            `Found ${items.length} items. Creating file...`;
+
+
+        const text = items.join("\n");
+
+        const blob = new Blob(
+            [text],
+            { type: "text/plain" }
+        );
+
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = "firebase-item-names.txt";
+
+        link.click();
+
+        URL.revokeObjectURL(url);
+
+
+        status.textContent =
+            `Done! Exported ${items.length} items.`;
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "Error: " + error.message;
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
