@@ -86,7 +86,9 @@ async function loadCurrentUser(firebaseUser) {
 }
 
 async function loadItemsFromFirestore()
+
 {
+  console.log("loadItemsFromFirestore running");
     items = await Promise.all(
         (await getDocs(collection(db, "items")))
         .docs.map(async d =>
