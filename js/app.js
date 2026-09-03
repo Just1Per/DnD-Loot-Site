@@ -98,12 +98,14 @@ async function loadItemsFromFirestore()
             };
 
             const filename =
-            item.id + ".png";
-            
+                item.name
+                    .replaceAll(" ", "-")
+                    + ".png";
+
             item.imageUrl =
-            await loadStorageImage(
-                `dnd-item-images/${item.id}.png`
-            );
+                await loadStorageImage(
+                    `dnd-item-images/${filename}`
+                );
 
             return item;
         })
@@ -358,20 +360,10 @@ function createCard(item) {
       : ""
     }
 
-  ${item.imageUrl
-    ? `
-      <div class="image-wrapper">
-
-        ${item.imageUrl}
-
-        <div class="image-watermark">
-          © DKDM
-        </div>
-
-      </div>
-    `
-    : ""
-}
+    ${item.imageUrl
+      ? `<img src="${item.imageUrl}" class="card-art" alt="${item.name}" onerror="this.style.display='none'">`
+      : ""
+    }
 
     <div class="card-body">
       ${isEditing
