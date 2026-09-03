@@ -97,15 +97,10 @@ async function loadItemsFromFirestore()
                 ...d.data()
             };
 
-            const filename =
-                item.name
-                    .replaceAll(" ", "-")
-                    + ".png";
-
             item.imageUrl =
-                await loadStorageImage(
-                    `dnd-item-images/${filename}`
-                );
+            await loadStorageImage(
+                `dnd-item-images/${item.id}.png`
+            );
 
             return item;
         })
