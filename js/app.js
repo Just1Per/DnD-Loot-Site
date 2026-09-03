@@ -1,5 +1,5 @@
 import {
-  db, auth, provider, signInWithPopup, signOut
+  db, storage, auth, provider, signInWithPopup, signOut
 } from "./firebase.js";
 
 import { items as sourceItems } from "./items.js";
@@ -14,6 +14,12 @@ import {
   collection, getDocs, addDoc, doc, getDoc,
   setDoc, updateDoc, deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+import {
+  ref,
+  getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 // Data flow: User → Character → Item (owner = character ID)
@@ -79,12 +85,35 @@ async function loadCurrentUser(firebaseUser) {
   }
 }
 
-async function loadItemsFromFirestore() {
-  items = (await getDocs(collection(db, "items")))
-    .docs.map(d => ({ id: d.id, ...d.data() }));
-  renderCards();
-  populateSourceFilter();
-  populateCampaignFilter();
+async function loadItemsFromFirestore()
+{
+    items = await Promise.all(
+        (await getDocs(collection(db, "items")))
+        .docs.map(async d =>
+        {
+            const item =
+            {
+                id: d.id,
+                ...d.data()
+            };
+
+            const filename =
+                item.name
+                    .replaceAll(" ", "-")
+                    + ".png";
+
+            item.imageUrl =
+                await loadStorageImage(
+                    `dnd-item-images/${filename}`
+                );
+
+            return item;
+        })
+    );
+
+    renderCards();
+    populateSourceFilter();
+    populateCampaignFilter();
 }
 
 async function loadCharacters() {
@@ -117,6 +146,31 @@ async function importItemsIfEmpty() {
     }, { merge: true });
   }
   console.log("Import complete.");
+}
+
+async function loadStorageImage(path)
+{
+    if (!path)
+    {
+        return "";
+    }
+
+    try
+    {
+        return await getDownloadURL(
+            ref(storage, path)
+        );
+    }
+    catch(error)
+    {
+        console.error(
+            "Image load failed:",
+            path,
+            error
+        );
+
+        return "";
+    }
 }
 
 // ─── OWNER HELPERS ────────────────────────────────────────────────────────────
@@ -302,12 +356,12 @@ function createCard(item) {
     </div>
 
     ${isEditing
-      ? `<input id="edit-image-${item.id}" value="${item.image||""}" placeholder="Image URL">`
+      ? `<input id="edit-image-${item.id}" value="${item.imageUrl||""}" placeholder="Image URL">`
       : ""
     }
 
-    ${item.image
-      ? `<img src="${item.image}" class="card-art" alt="${item.name}" onerror="this.style.display='none'">`
+    ${item.imageUrl
+      ? `<img src="${item.imageUrl}" class="card-art" alt="${item.name}" onerror="this.style.display='none'">`
       : ""
     }
 
@@ -790,7 +844,7 @@ function createMiniCard(item, mode, extra="") {
   const rarityClass = (item.rarity||"").toLowerCase().replaceAll(" ","-");
   return `
     <div class="mini-card ${rarityClass}">
-      ${item.image ? `<img src="${item.image}" class="mini-card-art" alt="${item.name}" onerror="this.style.display='none'">` : ""}
+      ${item.imageUrl ? `<img src="${item.imageUrl}" class="mini-card-art" alt="${item.name}" onerror="this.style.display='none'">` : ""}
       <div class="mini-card-body">
         <div class="mini-card-name">${item.name}</div>
         <div class="mini-card-meta">
