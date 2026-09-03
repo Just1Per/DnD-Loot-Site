@@ -362,14 +362,16 @@ function createCard(item) {
     ? `
       <div class="image-wrapper">
 
-        <img
-          src="${item.imageUrl}"
-          class="card-art"
-          alt="${item.name}"
-          onerror="this.style.display='none'"
-        >`
-      : ""
-    }
+        ${item.imageUrl}
+
+        <div class="image-watermark">
+          © DKDM
+        </div>
+
+      </div>
+    `
+    : ""
+}
 
     <div class="card-body">
       ${isEditing
