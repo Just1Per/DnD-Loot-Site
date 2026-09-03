@@ -6,27 +6,25 @@
   <title>D&D 5e Magic Item Looter</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=MedievalSharp&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- ── HEADER ───────────────────────────────────────────────────────────── -->
   <h1>⚔ D&D 5e Magic Item Looter</h1>
 
-  <!-- ── TOP TABS ─────────────────────────────────────────────────────────── -->
+  <!-- ── TABS ──────────────────────────────────────────────────────────── -->
   <nav class="tabs">
     <button class="tab active" data-tab="library">Library</button>
     <button class="tab" data-tab="player" id="playerTab" style="display:none">My Character</button>
     <button class="tab" data-tab="admin"  id="adminTab"  style="display:none">Admin</button>
   </nav>
 
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
-  <!-- LIBRARY TAB                                                           -->
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════════════════════════════════
+       LIBRARY TAB
+  ══════════════════════════════════════════════════════════════════════ -->
   <div id="tab-library" class="tab-content active">
 
-    <!-- Toolbar -->
     <div class="toolbar">
 
       <!-- Auth row -->
@@ -40,38 +38,26 @@
 
       <button id="logoutButton" style="display:none">Logout</button>
       <span   id="userDisplay">Not logged in</span>
-      <button id="addItemBtn" style="display:none">+ Add Item</button>
+      <button id="addItemBtn"  style="display:none">+ Add Item</button>
 
-      <!-- Search -->
       <input type="text" id="search" placeholder="Search items…" class="search-input">
 
-      <!-- Collapsible filters -->
       <details class="filter-panel">
         <summary>Filters</summary>
         <div class="filter-grid">
 
           <select id="categoryFilter">
             <option value="">All Categories</option>
-            <option>Armor</option>
-            <option>Potion</option>
-            <option>Ring</option>
-            <option>Rod</option>
-            <option>Scroll</option>
-            <option>Staff</option>
-            <option>Vehicle</option>
-            <option>Wand</option>
-            <option>Weapon</option>
+            <option>Armor</option><option>Potion</option><option>Ring</option>
+            <option>Rod</option><option>Scroll</option><option>Staff</option>
+            <option>Vehicle</option><option>Wand</option><option>Weapon</option>
             <option>Wondrous Item</option>
           </select>
 
           <select id="rarityFilter">
             <option value="">All Rarities</option>
-            <option>Common</option>
-            <option>Uncommon</option>
-            <option>Rare</option>
-            <option>Very Rare</option>
-            <option>Legendary</option>
-            <option>Artifact</option>
+            <option>Common</option><option>Uncommon</option><option>Rare</option>
+            <option>Very Rare</option><option>Legendary</option><option>Artifact</option>
           </select>
 
           <select id="sourceFilter">
@@ -91,6 +77,7 @@
             <option>Wizard</option>
           </select>
 
+          <!-- Owner filter = characters (not users) -->
           <select id="ownerFilter">
             <option value="">All Owners</option>
           </select>
@@ -111,36 +98,26 @@
 
     </div><!-- /toolbar -->
 
-    <!-- Character panel (players only) -->
-    <div id="characterPanel" style="display:none" class="character-panel">
-      <h3>My Character</h3>
-      <input type="text" id="characterName" placeholder="Character Name">
-      <select id="characterClass">
-        <option>Artificer</option><option>Barbarian</option><option>Bard</option>
-        <option>Cleric</option><option>Druid</option><option>Fighter</option>
-        <option>Monk</option><option>Paladin</option><option>Ranger</option>
-        <option>Rogue</option><option>Sorcerer</option><option>Warlock</option>
-        <option>Wizard</option>
-      </select>
-      <button id="createCharacterButton">Create Character</button>
-    </div>
-
     <div id="campaignStats" class="campaign-stats"></div>
     <div id="card-container"></div>
 
   </div><!-- /tab-library -->
 
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
-  <!-- PLAYER TAB                                                            -->
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════════════════════════════════
+       PLAYER TAB
+  ══════════════════════════════════════════════════════════════════════ -->
   <div id="tab-player" class="tab-content" style="display:none">
 
-    <!-- ── My Characters ──────────────────────────────────────────────── -->
+    <!-- My Characters -->
     <div class="player-section">
       <h2 class="player-section-title">⚔ My Characters</h2>
+      <p class="player-section-sub">
+        The <strong>active</strong> character is used when you wish for items in the Library.
+        You can have multiple characters but only one is active at a time.
+      </p>
       <div id="myCharacterList" class="character-list"></div>
 
-      <!-- Create new character inline form -->
+      <!-- Create new character -->
       <div class="player-create-form">
         <h3>Create New Character</h3>
         <div class="player-create-row">
@@ -157,25 +134,30 @@
       </div>
     </div>
 
-    <!-- ── My Loot ────────────────────────────────────────────────────── -->
+    <!-- My Loot -->
     <div class="player-section">
       <h2 class="player-section-title">🎒 My Loot</h2>
-      <p class="player-section-sub">Items the DM has marked as looted and assigned to you.</p>
+      <p class="player-section-sub">
+        Items the DM has marked as looted and assigned to one of your characters.
+      </p>
       <div id="myLootGrid" class="mini-card-grid"></div>
     </div>
 
-    <!-- ── My Wish List ───────────────────────────────────────────────── -->
+    <!-- My Wish List -->
     <div class="player-section">
       <h2 class="player-section-title">★ My Wish List</h2>
-      <p class="player-section-sub">Items you have starred in the Library. Go to the Library tab and click ☆ on any item to add it here.</p>
+      <p class="player-section-sub">
+        Items you have starred in the Library. Click ☆ on any item card to add it here.
+        Wishes are tracked per character — make sure the right character is active first.
+      </p>
       <div id="myWishGrid" class="mini-card-grid"></div>
     </div>
 
   </div><!-- /tab-player -->
 
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
-  <!-- ADMIN TAB                                                             -->
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════════════════════════════════
+       ADMIN TAB
+  ══════════════════════════════════════════════════════════════════════ -->
   <div id="tab-admin" class="tab-content" style="display:none">
     <div id="adminPanel" style="display:none">
 
@@ -185,15 +167,24 @@
         <div id="adminStats" class="admin-stats-grid"></div>
       </div>
 
-      <!-- User management -->
+      <!-- User + character management -->
       <div class="admin-section">
-        <h2>Users</h2>
-        <button id="openAddUserBtn" class="toolbar-btn">+ Add User</button>
+        <h2>Users &amp; Characters</h2>
+        <p class="admin-section-sub">
+          Each user's characters are shown beneath their row.
+          You can edit or delete individual characters directly from here.
+          Deleting a user also deletes all their characters and wishes.
+        </p>
+        <button id="openAddUserBtn" class="toolbar-btn" style="margin-bottom:14px">+ Add User</button>
         <div class="table-scroll">
           <table class="user-table">
             <thead>
               <tr>
-                <th>Name</th><th>Character</th><th>Email</th><th>Role</th><th>Actions</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Characters</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="userTableBody"></tbody>
@@ -204,17 +195,15 @@
     </div>
   </div><!-- /tab-admin -->
 
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
-  <!-- MODAL: ADD / EDIT ITEM                                                -->
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MODAL: ADD / EDIT ITEM
+  ══════════════════════════════════════════════════════════════════════ -->
   <div id="itemModal" class="modal" style="display:none" data-edit-id="">
     <div class="modal-box">
-
       <div class="modal-header">
         <h2 id="itemModalTitle">Add Item</h2>
         <button class="modal-close" id="closeItemModal">✕</button>
       </div>
-
       <div class="modal-body">
         <div class="modal-form-grid">
 
@@ -233,9 +222,8 @@
 
           <label class="modal-label">Rarity
             <select id="modal-rarity">
-              <option selected>Common</option><option>Uncommon</option>
-              <option>Rare</option><option>Very Rare</option>
-              <option>Legendary</option><option>Artifact</option>
+              <option selected>Common</option><option>Uncommon</option><option>Rare</option>
+              <option>Very Rare</option><option>Legendary</option><option>Artifact</option>
             </select>
           </label>
 
@@ -257,7 +245,7 @@
 
           <label class="modal-label full">Properties
             <small>JSON array — e.g. [{"title":"Bonus","text":"You gain +1 to AC."}]</small>
-            <textarea id="modal-properties" rows="6"
+            <textarea id="modal-properties" rows="5"
               placeholder='[{"title":"Property Name","text":"Property description."}]'></textarea>
           </label>
 
@@ -276,26 +264,22 @@
 
         </div>
       </div>
-
       <div class="modal-footer">
         <button class="cancel-button" id="cancelItemModal">Cancel</button>
         <button class="save-button"   id="saveItemModal">Save Item</button>
       </div>
-
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
-  <!-- MODAL: ADD / EDIT USER                                                -->
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MODAL: ADD / EDIT USER
+  ══════════════════════════════════════════════════════════════════════ -->
   <div id="userModal" class="modal" style="display:none" data-edit-id="">
     <div class="modal-box modal-box--sm">
-
       <div class="modal-header">
         <h2 id="userModalTitle">Add User</h2>
         <button class="modal-close" id="closeUserModal">✕</button>
       </div>
-
       <div class="modal-body">
         <div class="modal-form-grid">
 
@@ -303,54 +287,54 @@
             <input type="text" id="user-name" placeholder="e.g. Casper Andersen">
           </label>
 
-          <label class="modal-label full">Character Name
-            <input type="text" id="user-character" placeholder="In-game character name">
-          </label>
-
           <label class="modal-label full">Email
             <input type="email" id="user-email" placeholder="player@example.com">
+            <small>When this person first logs in with Google, their account will automatically
+            link to this entry if the email matches.</small>
           </label>
 
           <div class="modal-label full">
             <span>Roles</span>
             <div class="role-checks">
               <label>
-                <input type="checkbox" class="role-checkbox" value="admin"> Admin
-                <small>— can edit, loot, print, add and clone items</small>
+                <input type="checkbox" class="role-checkbox" value="admin">
+                <strong>Admin</strong>
+                <small>— can edit items, manage loot, manage users</small>
               </label>
               <label>
-                <input type="checkbox" class="role-checkbox" value="player"> Player
-                <small>— can wish for items and see ownership</small>
+                <input type="checkbox" class="role-checkbox" value="player">
+                <strong>Player</strong>
+                <small>— gets a My Character tab, can wish for items, can receive loot</small>
               </label>
               <label>
-                <input type="checkbox" class="role-checkbox" value="viewer"> Viewer
-                <small>— read-only access</small>
+                <input type="checkbox" class="role-checkbox" value="viewer">
+                <strong>Viewer</strong>
+                <small>— read-only access to the library</small>
               </label>
             </div>
+            <small style="margin-top:8px;display:block">
+              A user can have multiple roles, e.g. admin + player if you also play in the campaign.
+            </small>
           </div>
 
         </div>
       </div>
-
       <div class="modal-footer">
         <button class="cancel-button" id="cancelUserModal">Cancel</button>
         <button class="save-button"   id="saveUserModal">Save User</button>
       </div>
-
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
-  <!-- MODAL: EDIT CHARACTER                                                 -->
-  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MODAL: EDIT CHARACTER
+  ══════════════════════════════════════════════════════════════════════ -->
   <div id="editCharModal" class="modal" style="display:none" data-char-id="">
     <div class="modal-box modal-box--sm">
-
       <div class="modal-header">
         <h2>Edit Character</h2>
         <button class="modal-close" id="closeEditCharModal">✕</button>
       </div>
-
       <div class="modal-body">
         <div class="modal-form-grid">
           <label class="modal-label full">Character Name
@@ -367,12 +351,10 @@
           </label>
         </div>
       </div>
-
       <div class="modal-footer">
         <button class="cancel-button" id="cancelEditCharModal">Cancel</button>
         <button class="save-button"   id="saveEditCharModal">Save</button>
       </div>
-
     </div>
   </div>
 
