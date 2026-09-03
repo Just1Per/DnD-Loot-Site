@@ -101,7 +101,6 @@ async function loadItemsFromFirestore()
             const path =
               `dnd-item-images/${item.id}.png`;
 
-          console.log(
           item.imageUrl =
               await loadStorageImage(path);
 
