@@ -360,8 +360,16 @@ function createCard(item) {
       : ""
     }
 
-    ${item.imageUrl
-      ? `<img src="${item.imageUrl}" class="card-art" alt="${item.name}" onerror="this.style.display='none'">`
+  ${item.imageUrl
+    ? `
+      <div class="image-wrapper">
+
+        <img
+          src="${item.imageUrl}"
+          class="card-art"
+          alt="${item.name}"
+          onerror="this.style.display='none'"
+        >`
       : ""
     }
 

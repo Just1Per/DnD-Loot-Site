@@ -20,6 +20,16 @@ h1 {
   padding: 24px 16px 0;
 }
 
+/* ─── FOOTER ─────────────────────────────────────────────────────────────── */
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+
+    color: #888;
+    font-size: 0.9rem;
+}
+
 /* ─── TABS ───────────────────────────────────────────────────────────────── */
 .tabs {
   display: flex;
@@ -263,6 +273,30 @@ h1 {
 }
 
 .item-card.looted .watermark { display: block; }
+
+/* ─── IMAGEWATERMARK ──────────────────────────────────────────────────────────── */
+
+.image-wrapper {
+    position: relative;
+}
+
+.image-watermark {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+
+    color: rgba(255,255,255,0.65);
+
+    font-size: 12px;
+    font-weight: bold;
+
+    text-shadow:
+        1px 1px 2px black;
+
+    pointer-events: none;
+
+    user-select: none;
+}
 
 /* ─── CARD BUTTONS ───────────────────────────────────────────────────────── */
 .card-buttons {
