@@ -97,10 +97,21 @@ async function loadItemsFromFirestore()
                 ...d.data()
             };
 
-            item.imageUrl =
-            await loadStorageImage(
-                `dnd-item-images/${item.id}.png`
-            );
+            const path =
+              `dnd-item-images/${item.id}.png`;
+
+          console.log(
+              "Loading image:",
+              path
+          );
+
+          item.imageUrl =
+              await loadStorageImage(path);
+
+          console.log(
+              "Image URL:",
+              item.imageUrl
+          );
 
             return item;
         })
