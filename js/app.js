@@ -85,32 +85,39 @@ async function loadCurrentUser(firebaseUser) {
   }
 }
 
-async function loadItemsFromFirestore()
+// Helper to strip +, numbers, and trailing underscores/dashes to get base image ID
+function getBaseImageId(itemId) {
+  if (!itemId) return "";
+  // Removes + signs, numbers, and trims trailing underscores or hyphens
+  const base = itemId.replace(/\+/g, '').replace(/[0-9]/g, '').replace(/_+$|-+$/g, '');
+  return base || itemId; // Fallback to original ID if name was purely numbers
+}
 
-{
-    items = await Promise.all(
-        (await getDocs(collection(db, "items")))
-        .docs.map(async d =>
-        {
-            const item =
-            {
-                id: d.id,
-                ...d.data()
-            };
+async function loadItemsFromFirestore() {
+  items = await Promise.all(
+    (await getDocs(collection(db, "items")))
+      .docs.map(async d => {
+        const item = {
+          id: d.id,
+          ...d.data()
+        };
 
-            const path =
-              `dnd-item-images/${item.id}.png`;
+        // 1. Get the normalized base ID (e.g. "ammunition_+1" -> "ammunition")
+        const baseId = getBaseImageId(item.id);
 
-          item.imageUrl =
-              await loadStorageImage(path);
+        // 2. Build storage path using baseId
+        const path = `dnd-item-images/${baseId}.png`;
 
-            return item;
-        })
-    );
+        // 3. Load download URL from Firebase Storage
+        item.imageUrl = await loadStorageImage(path);
 
-    renderCards();
-    populateSourceFilter();
-    populateCampaignFilter();
+        return item;
+      })
+  );
+
+  renderCards();
+  populateSourceFilter();
+  populateCampaignFilter();
 }
 
 async function loadCharacters() {
@@ -268,8 +275,9 @@ function createCard(item) {
     return c ? `${c.name} (${c.class})` : "Unknown";
   }).join(", ");
 
-  // Player can wish only if they have a selected character
-  const canWish = isPlayer() && !admin && selectedCharacter !== null;
+  // Anyone with player role can wish (including admin+player) if they have a selected character
+  const canWish   = isPlayer() && selectedCharacter !== null;
+  const needsChar = isPlayer() && selectedCharacter === null;
 
   // Owner = character ID → look up character name
   const ownerChar = characters.find(c => c.id === item.owner);
@@ -296,7 +304,7 @@ function createCard(item) {
         <button class="wish-button ${myWish ? "wished" : ""}">
           ${myWish ? "★ Wished" : "☆ Wish"}
         </button>
-      ` : !admin && isPlayer() && !selectedCharacter ? `
+          ` : needsChar ? `
         <span class="no-char-hint">Select a character to wish</span>
       ` : ""}
     </div>
