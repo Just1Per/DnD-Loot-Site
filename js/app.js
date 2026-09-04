@@ -88,9 +88,20 @@ async function loadCurrentUser(firebaseUser) {
 // Helper to strip +, numbers, and trailing underscores/dashes to get base image ID
 function getBaseImageId(itemId) {
   if (!itemId) return "";
-  // Removes + signs, numbers, and trims trailing underscores or hyphens
-  const base = itemId.replace(/\+/g, '').replace(/[0-9]/g, '').replace(/_+$|-+$/g, '');
-  return base || itemId; // Fallback to original ID if name was purely numbers
+  
+  let base = itemId.toLowerCase();
+  
+  // 1. Remove words like 'plus', symbols (+), and numbers
+  base = base.replace(/[\-_\s]*plus[\-_\s]*/g, '-') // Handles -plus-, _plus_, etc.
+             .replace(/\+/g, '')
+             .replace(/[0-9]/g, '');
+  
+  // 2. Clean up multiple dashes/underscores and trim trailing symbols
+  // "ammunition-" -> "ammunition"
+  base = base.replace(/[-_\s]+/g, '-')
+             .replace(/^[-_\s]+|[-_\s]+$/g, '');
+  
+  return base || itemId;
 }
 
 async function loadItemsFromFirestore() {
