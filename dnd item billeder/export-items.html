@@ -9,20 +9,18 @@
 
 <h2>Firebase Item Export</h2>
 
-<button id="export">Export Items</button>
+<button id="export">Export All Items</button>
 
 <p id="status"></p>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 import {
     getFirestore,
     collection,
     getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 const firebaseConfig = {
     apiKey: "AIzaSyDyj69qiEnKkK4lZjleGnvFEGUdvLcSZIk",
@@ -34,83 +32,50 @@ const firebaseConfig = {
     measurementId: "G-ZHNPHYLDJ0"
 };
 
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-
 document.getElementById("export").addEventListener("click", async () => {
-
     const status = document.getElementById("status");
-
-    status.textContent = "Loading items...";
+    status.textContent = "Loading all items from Firestore...";
 
     try {
 
-        const snapshot = await getDocs(
-            collection(db, "items")
-        );
+        const snapshot = await getDocs(collection(db, "items"));
 
-
+        // Maps all documents directly without filtering
         const items = snapshot.docs
             .map(doc => {
-
                 const data = doc.data();
-
                 return {
                     id: doc.id,
                     name: data.name ?? null,
                     category: data.category ?? null,
                     description: data.description ?? null
                 };
-
             })
-            .sort((a, b) =>
-                (a.name || "").localeCompare(b.name || "")
-            );
+            .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 
-
-        status.textContent =
-            `Found ${items.length} items. Creating file...`;
-
+        status.textContent = `Found ${items.length} total items. Creating file...`;
 
         const json = JSON.stringify(items, null, 2);
-
-
-        const blob = new Blob(
-            [json],
-            { type: "application/json" }
-        );
-
-
+        const blob = new Blob([json], { type: "application/json" });
         const url = URL.createObjectURL(blob);
-
         const link = document.createElement("a");
 
         link.href = url;
-        link.download = "firebase-items.json";
-
+        link.download = "all-firebase-items.json";
         document.body.appendChild(link);
-
         link.click();
-
         document.body.removeChild(link);
-
         URL.revokeObjectURL(url);
 
-
-        status.textContent =
-            `Done! Exported ${items.length} items.`;
+        status.textContent = `Done! Exported all ${items.length} items.`;
 
     } catch (error) {
-
         console.error(error);
-
-        status.textContent =
-            "Error: " + error.message;
-
+        status.textContent = "Error: " + error.message;
     }
-
 });
 
 </script>

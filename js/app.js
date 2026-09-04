@@ -85,22 +85,36 @@ async function loadCurrentUser(firebaseUser) {
   }
 }
 
-// Helper to strip +, numbers, and trailing underscores/dashes to get base image ID
+// Helper to strip numerical bonuses, colors, rarities, and extra modifiers to resolve base image ID
 function getBaseImageId(itemId) {
   if (!itemId) return "";
   
   let base = itemId.toLowerCase();
-  
-  // 1. Remove words like 'plus', symbols (+), and numbers
-  base = base.replace(/[\-_\s]*plus[\-_\s]*/g, '-') // Handles -plus-, _plus_, etc.
-             .replace(/\+/g, '')
-             .replace(/[0-9]/g, '');
-  
-  // 2. Clean up multiple dashes/underscores and trim trailing symbols
-  // "ammunition-" -> "ammunition"
+
+  // 1. Array of words to strip out (colors, rarities, variants)
+  const wordsToRemove = [
+    // Rarities
+    "common", "uncommon", "rare", "very-rare", "veryrare", "legendary", "artifact", "minor", "major",
+    // Colors
+    "grey", "gray", "red", "blue", "green", "black", "white", "yellow", "purple", "orange", "bronze", "silver", "gold",
+    // Modifiers & extra terms
+    "plus"
+  ];
+
+  // 2. Remove numerical bonuses (+1, +2, +3, 1, 2, etc.)
+  base = base.replace(/\+/g, '').replace(/[0-9]/g, '');
+
+  // 3. Strip each target word dynamically as standalone hyphenated/space segments
+  wordsToRemove.forEach(word => {
+    const regex = new RegExp(`(?<=^|[-_\\s])${word}(?=[-_\\s]|$)`, "gi");
+    base = base.replace(regex, "");
+  });
+
+  // 4. Clean up trailing or consecutive dashes/underscores
+  // e.g. "waraxe--grey" -> "waraxe", "barrier-tattoo-rare" -> "barrier-tattoo"
   base = base.replace(/[-_\s]+/g, '-')
              .replace(/^[-_\s]+|[-_\s]+$/g, '');
-  
+
   return base || itemId;
 }
 
