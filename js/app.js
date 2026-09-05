@@ -453,8 +453,11 @@ function attachCardEvents(card, item) {
   });
 
   card.querySelector(".print-button")?.addEventListener("click", async () => {
-    await updateDoc(doc(db,"items",item.id), { printed: !item.printed });
-    await loadItemsFromFirestore();
+    const newPrinted = !item.printed;
+    await updateDoc(doc(db,"items",item.id), { printed: newPrinted });
+    const localItem = items.find(i => i.id === item.id);
+    if (localItem) localItem.printed = newPrinted;
+    rerenderSingleCard(item.id);
   });
 
   card.querySelector(".clone-button")?.addEventListener("click", async () => {
