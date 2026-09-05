@@ -18,19 +18,16 @@ import {
 import {
   ref,
   getDownloadURL
-}
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
-// Data flow: User → Character → Item (owner = character ID)
-// A player must have at least one character to wish or be assigned loot.
 
-let items             = [];  // all Firestore items
-let characters        = [];  // all Firestore characters (all players)
-let wishes            = [];  // all Firestore wishes
-let users             = [];  // all Firestore users
-let currentUser       = null; // { uid, email, name, role:[], ... }
-let selectedCharacter = null; // the character currently "active" for wishing
+let items             = [];
+let characters        = [];
+let wishes            = [];
+let users             = [];
+let currentUser       = null;
+let selectedCharacter = null;
 
 const editingItems = new Set();
 
@@ -38,6 +35,23 @@ const ALL_CLASSES = [
   "Artificer","Barbarian","Bard","Cleric","Druid","Fighter",
   "Monk","Paladin","Ranger","Rogue","Sorcerer","Warlock","Wizard"
 ];
+
+// Campaigns available for character creation — pulled from items dynamically
+function availableCampaigns() {
+  return [...new Set(items.map(i => i.campaign).filter(Boolean))].sort();
+}
+
+// ─── TIER HELPER ─────────────────────────────────────────────────────────────
+// Returns tier info based on character level
+
+function getTier(level) {
+  const lvl = parseInt(level) || 0;
+  if (lvl >= 17) return { tier: 4, label: "Tier 4", rarity: "Very Rare & Legendary", color: "#d45050", bg: "rgba(212,80,80,0.12)" };
+  if (lvl >= 11) return { tier: 3, label: "Tier 3", rarity: "Rare & Very Rare",       color: "#9b59b6", bg: "rgba(155,89,182,0.12)" };
+  if (lvl >= 5)  return { tier: 2, label: "Tier 2", rarity: "Uncommon & Rare",        color: "#3498db", bg: "rgba(52,152,219,0.12)" };
+  if (lvl >= 1)  return { tier: 1, label: "Tier 1", rarity: "Common & Uncommon",      color: "#27ae60", bg: "rgba(39,174,96,0.12)" };
+  return null;
+}
 
 // ─── ROLE HELPERS ─────────────────────────────────────────────────────────────
 
@@ -53,7 +67,6 @@ const isPlayer = () => {
     : ["player","admin"].includes(r);
 };
 
-// My own active characters
 function myCharacters() {
   return characters.filter(c => c.userId === auth.currentUser?.uid && c.active !== false);
 }
@@ -61,16 +74,15 @@ function myCharacters() {
 // ─── DATA LOADERS ─────────────────────────────────────────────────────────────
 
 async function loadCurrentUser(firebaseUser) {
-  const ref  = doc(db, "users", firebaseUser.uid);
-  const snap = await getDoc(ref);
+  const userRef = doc(db, "users", firebaseUser.uid);
+  const snap    = await getDoc(userRef);
   if (snap.exists()) {
     currentUser = { uid: firebaseUser.uid, ...snap.data() };
   } else {
-    // Check if an admin pre-created this account by email
     const allSnap  = await getDocs(collection(db, "users"));
     const existing = allSnap.docs.find(d => d.data().email === firebaseUser.email);
     if (existing) {
-      await setDoc(ref, existing.data(), { merge: true });
+      await setDoc(userRef, existing.data(), { merge: true });
       await deleteDoc(existing.ref);
       currentUser = { uid: firebaseUser.uid, ...existing.data() };
     } else {
@@ -79,7 +91,7 @@ async function loadCurrentUser(firebaseUser) {
         name:  firebaseUser.displayName || firebaseUser.email,
         role:  ["viewer"]
       };
-      await setDoc(ref, newUser);
+      await setDoc(userRef, newUser);
       currentUser = { uid: firebaseUser.uid, ...newUser };
     }
   }
@@ -148,7 +160,6 @@ async function loadItemsFromFirestore() {
 async function loadCharacters() {
   characters = (await getDocs(collection(db, "characters")))
     .docs.map(d => ({ id: d.id, ...d.data() }));
-  // Auto-select first character if none selected
   if (!selectedCharacter) {
     const mine = myCharacters();
     if (mine.length > 0) selectedCharacter = mine[0];
@@ -177,37 +188,9 @@ async function importItemsIfEmpty() {
   console.log("Import complete.");
 }
 
-async function loadStorageImage(path)
-{
-    if (!path)
-    {
-        return "";
-    }
-
-    try
-    {
-        return await getDownloadURL(
-            ref(storage, path)
-        );
-    }
-    catch(error)
-    {
-        console.error(
-            "Image load failed:",
-            path,
-            error
-        );
-
-        return "";
-    }
-}
-
 // ─── OWNER HELPERS ────────────────────────────────────────────────────────────
-// owner field on item = character ID (not user ID)
-// "All characters that belong to players/admins" = what fills the owner dropdown
 
 function allPlayableCharacters() {
-  // Characters belonging to users with role player or admin
   const playerUserIds = users
     .filter(u => {
       const r = u.role;
@@ -244,15 +227,13 @@ function renderCards() {
 function applyFilters(list) {
   const val = id => document.getElementById(id)?.value || "";
   const chk = id => document.getElementById(id)?.checked || false;
-
   const search   = val("search").toLowerCase();
   const rarity   = val("rarityFilter");
   const source   = val("sourceFilter");
   const campaign = val("campaignFilter");
   const cls      = val("classFilter");
   const category = val("categoryFilter");
-  const owner    = val("ownerFilter"); // this is now a character ID
-
+  const owner    = val("ownerFilter");
   return list.filter(item => {
     if (search && !(
       (item.name        || "").toLowerCase().includes(search) ||
@@ -289,7 +270,6 @@ function createCard(item) {
   if (item.looted)  card.classList.add("looted");
   if (item.printed) card.classList.add("printed");
 
-  // Wishes: keyed by character ID
   const itemWishes = wishes.filter(w => w.itemId === item.id);
   const myWish     = selectedCharacter
     ? wishes.find(w => w.itemId === item.id && w.characterId === selectedCharacter.id)
@@ -300,15 +280,11 @@ function createCard(item) {
     return c ? `${c.name} (${c.class})` : "Unknown";
   }).join(", ");
 
-  // Anyone with player role can wish (including admin+player) if they have a selected character
   const canWish   = isPlayer() && selectedCharacter !== null;
   const needsChar = isPlayer() && selectedCharacter === null;
 
-  // Owner = character ID → look up character name
   const ownerChar = characters.find(c => c.id === item.owner);
   const ownerName = ownerChar ? `${ownerChar.name} (${ownerChar.class})` : "";
-
-  // Admin owner dropdown: all playable characters
   const playableChars = allPlayableCharacters();
 
   card.innerHTML = `
@@ -329,15 +305,18 @@ function createCard(item) {
         <button class="wish-button ${myWish ? "wished" : ""}">
           ${myWish ? "★ Wished" : "☆ Wish"}
         </button>
-          ` : needsChar ? `
+      ` : needsChar ? `
         <span class="no-char-hint">Select a character to wish</span>
       ` : ""}
     </div>
 
-    ${admin && itemWishes.length > 0 ? `
-      <div class="wish-admin-block">★ Wished by: ${wishNames}</div>
-    ` : !admin && itemWishes.length > 0 ? `
-      <div class="wish-count-block">★ ${itemWishes.length} wish${itemWishes.length !== 1 ? "es" : ""}</div>
+    ${itemWishes.length > 0 ? `
+      <div class="${admin ? "wish-admin-block" : "wish-count-block"}">
+        ${admin
+          ? `★ Wished by: ${wishNames}`
+          : `★ ${itemWishes.length} wish${itemWishes.length !== 1 ? "es" : ""}`
+        }
+      </div>
     ` : ""}
 
     <div class="card-header">
@@ -345,7 +324,6 @@ function createCard(item) {
         ? `<input class="edit-name" id="edit-name-${item.id}" value="${(item.name||"").replace(/"/g,"&quot;")}">` 
         : `<h2 class="item-name">${item.name}</h2>`
       }
-
       ${isEditing ? `
         <select id="edit-category-${item.id}">
           ${["Armor","Potion","Ring","Rod","Scroll","Staff","Vehicle","Wand","Weapon","Wondrous Item"]
@@ -365,7 +343,6 @@ function createCard(item) {
       ` : `
         <p class="item-type">${item.category||""}${item.attunement?" · Requires Attunement":""}</p>
       `}
-
       <div class="card-meta">
         ${(item.classes||[]).map(c=>`<span class="meta-tag">${c}</span>`).join("")}
       </div>
@@ -378,9 +355,9 @@ function createCard(item) {
           <input id="edit-source-${item.id}"   value="${item.source  ||""}" placeholder="Source">
           <input id="edit-campaign-${item.id}" value="${item.campaign||""}" placeholder="Campaign">
         ` : `
-          ${item.rarity   ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>`     : ""}
-          ${item.source   ? `<span class="meta-tag">${item.source}</span>`                    : ""}
-          ${item.campaign ? `<span class="meta-tag campaign-tag">${item.campaign}</span>`     : ""}
+          ${item.rarity   ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>`   : ""}
+          ${item.source   ? `<span class="meta-tag">${item.source}</span>`                  : ""}
+          ${item.campaign ? `<span class="meta-tag campaign-tag">${item.campaign}</span>`   : ""}
         `}
       </div>
     </div>
@@ -389,7 +366,6 @@ function createCard(item) {
       ? `<input id="edit-image-${item.id}" value="${item.imageUrl||""}" placeholder="Image URL">`
       : ""
     }
-
     ${item.imageUrl
       ? `<img src="${item.imageUrl}" class="card-art" alt="${item.name}" onerror="this.style.display='none'">`
       : ""
@@ -401,7 +377,6 @@ function createCard(item) {
              placeholder="Description">${item.description||""}</textarea>`
         : `<div class="item-description">${item.description||""}</div>`
       }
-
       ${isEditing
         ? `<textarea id="edit-properties-${item.id}"
              placeholder='[{"title":"Name","text":"Description"}]'>${
@@ -412,7 +387,6 @@ function createCard(item) {
               <span class="property-title">${p.title}:</span> ${p.text}
             </div>`).join("")
       }
-
       ${isEditing
         ? `<textarea id="edit-quote-${item.id}" placeholder="Quote">${item.quote||""}</textarea>`
         : item.quote ? `<i>${item.quote}</i>` : ""
@@ -430,9 +404,7 @@ function createCard(item) {
             </option>`).join("")}
         </select>
       </div>
-    ` : ownerName ? `
-      <div class="owner-badge">⚔ ${ownerName}</div>
-    ` : ""}
+    ` : ownerName ? `<div class="owner-badge">⚔ ${ownerName}</div>` : ""}
 
     <div class="card-footer">D&D 5e Item Vault</div>
   `;
@@ -452,9 +424,8 @@ function attachCardEvents(card, item) {
   });
   card.querySelector(".save-button")?.addEventListener("click", async () => {
     let properties = [];
-    try {
-      properties = JSON.parse(document.getElementById(`edit-properties-${item.id}`).value || "[]");
-    } catch { alert("Properties JSON is invalid."); return; }
+    try { properties = JSON.parse(document.getElementById(`edit-properties-${item.id}`).value || "[]"); }
+    catch { alert("Properties JSON is invalid."); return; }
     await updateDoc(doc(db,"items",item.id), {
       name:        document.getElementById(`edit-name-${item.id}`).value,
       description: document.getElementById(`edit-description-${item.id}`).value,
@@ -498,13 +469,11 @@ function attachCardEvents(card, item) {
     renderCards();
   });
 
-  // owner-select now saves a CHARACTER ID
   card.querySelector(".owner-select")?.addEventListener("change", async e => {
     await updateDoc(doc(db,"items",item.id), { owner: e.target.value || null });
     await loadItemsFromFirestore();
   });
 
-  // Wish uses selectedCharacter.id (character ID)
   card.querySelector(".wish-button")?.addEventListener("click", async () => {
     if (!selectedCharacter) { alert("Select a character in the My Character tab first."); return; }
     const existing = wishes.find(w => w.itemId===item.id && w.characterId===selectedCharacter.id);
@@ -551,9 +520,7 @@ function openItemModal(item=null) {
   document.getElementById("itemModal").style.display  = "flex";
 }
 
-function closeItemModal() {
-  document.getElementById("itemModal").style.display = "none";
-}
+function closeItemModal() { document.getElementById("itemModal").style.display = "none"; }
 
 async function saveItemModal() {
   const editId = document.getElementById("itemModal").dataset.editId;
@@ -599,9 +566,7 @@ function openUserModal(user=null) {
   document.getElementById("userModal").style.display  = "flex";
 }
 
-function closeUserModal() {
-  document.getElementById("userModal").style.display = "none";
-}
+function closeUserModal() { document.getElementById("userModal").style.display = "none"; }
 
 async function saveUserModal() {
   const editId = document.getElementById("userModal").dataset.editId;
@@ -630,16 +595,39 @@ function renderUserTable() {
   if (!tbody) return;
 
   tbody.innerHTML = users.map(u => {
-    const role       = Array.isArray(u.role) ? u.role.join(", ") : (u.role||"viewer");
-    const userChars  = characters.filter(c => c.userId === u.id && c.active !== false);
-    const charHTML   = userChars.length > 0
-      ? userChars.map(c => `
-          <div class="admin-char-row">
-            <span class="admin-char-name">${c.name}</span>
-            <span class="admin-char-class">${c.class}</span>
-            <button class="edit-button btn-sm" data-edit-char="${c.id}" data-char-name="${c.name}" data-char-class="${c.class}">Edit</button>
-            <button class="cancel-button btn-sm" data-delete-char="${c.id}" data-char-name="${c.name}">Delete</button>
-          </div>`).join("")
+    const role      = Array.isArray(u.role) ? u.role.join(", ") : (u.role||"viewer");
+    const userChars = characters.filter(c => c.userId === u.id && c.active !== false);
+
+    const charHTML = userChars.length > 0
+      ? userChars.map(c => {
+          const tier = getTier(c.level);
+          const tierBadge = tier
+            ? `<span class="tier-badge" style="background:${tier.bg};color:${tier.color};border-color:${tier.color}">
+                 ${tier.label}
+               </span>`
+            : "";
+          const levelBadge = c.level
+            ? `<span class="level-badge">Lvl ${c.level}</span>`
+            : `<span class="level-badge level-badge--empty">No level</span>`;
+          const campaign = c.campaign
+            ? `<span class="char-campaign">${c.campaign}</span>`
+            : "";
+          return `
+            <div class="admin-char-row">
+              <div class="admin-char-info">
+                <span class="admin-char-name">${c.name}</span>
+                <span class="admin-char-class">${c.class}</span>
+                ${campaign}
+                ${levelBadge}
+                ${tierBadge}
+              </div>
+              <div class="admin-char-btns">
+                <button class="wish-view-btn btn-sm" data-char-id="${c.id}" data-char-name="${c.name}">Wishes</button>
+                <button class="edit-button btn-sm" data-edit-char="${c.id}" data-char-name="${c.name}" data-char-class="${c.class}" data-char-level="${c.level||""}" data-char-campaign="${c.campaign||""}">Edit</button>
+                <button class="cancel-button btn-sm" data-delete-char="${c.id}" data-char-name="${c.name}">Delete</button>
+              </div>
+            </div>`;
+        }).join("")
       : `<span class="no-chars">No characters</span>`;
 
     return `
@@ -648,15 +636,17 @@ function renderUserTable() {
         <td>${u.email||"—"}</td>
         <td><span class="role-badge">${role}</span></td>
         <td class="chars-cell">${charHTML}</td>
-        <td class="table-actions">
-          <button class="edit-button btn-sm" data-edit-user="${u.id}">Edit</button>
-          <button class="cancel-button btn-sm" data-delete-user="${u.id}">Delete</button>
+        <td>
+          <div class="table-actions">
+            <button class="edit-button btn-sm" data-edit-user="${u.id}">Edit User</button>
+            <button class="cancel-button btn-sm" data-delete-user="${u.id}">Delete User</button>
+          </div>
         </td>
       </tr>
     `;
   }).join("");
 
-  // User edit/delete
+  // User edit / delete
   tbody.querySelectorAll("[data-edit-user]").forEach(btn => {
     btn.addEventListener("click", () => openUserModal(users.find(u=>u.id===btn.dataset.editUser)));
   });
@@ -664,7 +654,6 @@ function renderUserTable() {
     btn.addEventListener("click", async () => {
       if (!confirm("Delete this user? All their characters and wishes will also be deleted.")) return;
       const uid = btn.dataset.deleteUser;
-      // Delete characters + wishes
       const userChars = characters.filter(c=>c.userId===uid);
       for (const c of userChars) {
         const charWishes = wishes.filter(w=>w.characterId===c.id);
@@ -672,19 +661,21 @@ function renderUserTable() {
         await deleteDoc(doc(db,"characters",c.id));
       }
       await deleteDoc(doc(db,"users",uid));
-      await loadUsers();
-      await loadCharacters();
-      await loadWishes();
-      populateOwnerFilter();
-      renderUserTable();
-      renderAdminStats();
+      await loadUsers(); await loadCharacters(); await loadWishes();
+      populateOwnerFilter(); renderUserTable(); renderAdminStats();
     });
   });
 
-  // Character edit/delete (from admin panel)
+  // Character edit / delete
   tbody.querySelectorAll("[data-edit-char]").forEach(btn => {
     btn.addEventListener("click", () => {
-      openEditCharacterModal(btn.dataset.editChar, btn.dataset.charName, btn.dataset.charClass);
+      openEditCharacterModal(
+        btn.dataset.editChar,
+        btn.dataset.charName,
+        btn.dataset.charClass,
+        btn.dataset.charLevel,
+        btn.dataset.charCampaign
+      );
     });
   });
   tbody.querySelectorAll("[data-delete-char]").forEach(btn => {
@@ -693,16 +684,17 @@ function renderUserTable() {
       const cid = btn.dataset.deleteChar;
       const charWishes = wishes.filter(w=>w.characterId===cid);
       for (const w of charWishes) await deleteDoc(doc(db,"wishes",w.id));
-      // Un-assign any items owned by this character
       const ownedItems = items.filter(i=>i.owner===cid);
       for (const i of ownedItems) await updateDoc(doc(db,"items",i.id), { owner: null });
       await deleteDoc(doc(db,"characters",cid));
-      await loadCharacters();
-      await loadWishes();
-      await loadItemsFromFirestore();
-      renderUserTable();
-      renderAdminStats();
+      await loadCharacters(); await loadWishes(); await loadItemsFromFirestore();
+      renderUserTable(); renderAdminStats();
     });
+  });
+
+  // Wishes modal button
+  tbody.querySelectorAll(".wish-view-btn").forEach(btn => {
+    btn.addEventListener("click", () => openWishModal(btn.dataset.charId, btn.dataset.charName));
   });
 }
 
@@ -721,6 +713,54 @@ function renderAdminStats() {
     <div class="stat-card"><span class="stat-num">${playerCount}</span><span class="stat-label">Players</span></div>
     <div class="stat-card"><span class="stat-num">${characters.length}</span><span class="stat-label">Characters</span></div>
   `;
+}
+
+// ─── WISH MODAL (admin view) ──────────────────────────────────────────────────
+
+function openWishModal(charId, charName) {
+  const charWishes  = wishes.filter(w => w.characterId === charId);
+  const wishedItems = charWishes
+    .map(w => items.find(i => i.id === w.itemId))
+    .filter(Boolean);
+
+  const char  = characters.find(c => c.id === charId);
+  const tier  = char ? getTier(char.level) : null;
+  const modal = document.getElementById("wishModal");
+  const title = document.getElementById("wishModalCharName");
+  const grid  = document.getElementById("wishModalGrid");
+
+  title.textContent = `${charName}'s Wishes`;
+
+  if (wishedItems.length === 0) {
+    grid.innerHTML = `<p class="player-empty" style="grid-column:1/-1">No wishes yet for this character.</p>`;
+  } else {
+    grid.innerHTML = wishedItems.map(item => {
+      const rarityClass = (item.rarity||"").toLowerCase().replaceAll(" ","-");
+      return `
+        <div class="wish-modal-card ${rarityClass}">
+          ${item.imageUrl ? `<img src="${item.imageUrl}" class="wish-modal-art" alt="${item.name}" onerror="this.style.display='none'">` : ""}
+          <div class="wish-modal-body">
+            <div class="wish-modal-name">${item.name}</div>
+            <div class="card-meta" style="margin-top:4px">
+              ${item.rarity   ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>`   : ""}
+              ${item.category ? `<span class="meta-tag">${item.category}</span>`                : ""}
+              ${item.attunement ? `<span class="meta-tag">Attunement</span>`                    : ""}
+            </div>
+            ${(item.properties||[]).slice(0,2).map(p=>`
+              <div class="wish-modal-prop">
+                <span class="property-title">${p.title}:</span> ${p.text.substring(0,120)}${p.text.length>120?"…":""}
+              </div>`).join("")}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  modal.style.display = "flex";
+}
+
+function closeWishModal() {
+  document.getElementById("wishModal").style.display = "none";
 }
 
 // ─── FILTER POPULATORS ────────────────────────────────────────────────────────
@@ -743,7 +783,6 @@ function populateCampaignFilter() {
     campaigns.map(c=>`<option value="${c}" ${c===cur?"selected":""}>${c}</option>`).join("");
 }
 
-// Owner filter now lists characters (not users)
 function populateOwnerFilter() {
   const el = document.getElementById("ownerFilter");
   if (!el) return;
@@ -778,35 +817,48 @@ function renderCharacterList() {
     return;
   }
 
-  el.innerHTML = mine.map(c => `
-    <div class="character-card ${selectedCharacter?.id===c.id?"character-card--active":""}">
-      <div class="character-card-info">
-        <span class="character-card-name">${c.name}</span>
-        <span class="character-card-class">${c.class}</span>
+  el.innerHTML = mine.map(c => {
+    const tier = getTier(c.level);
+    const tierBadge = tier
+      ? `<span class="tier-badge" style="background:${tier.bg};color:${tier.color};border-color:${tier.color}">
+           ${tier.label} · ${tier.rarity}
+         </span>`
+      : "";
+    return `
+      <div class="character-card ${selectedCharacter?.id===c.id?"character-card--active":""}">
+        <div class="character-card-info">
+          <span class="character-card-name">${c.name}</span>
+          <span class="character-card-class">${c.class}${c.campaign ? " · " + c.campaign : ""}${c.level ? " · Level " + c.level : ""}</span>
+          ${tierBadge}
+        </div>
+        <div class="character-card-actions">
+          ${selectedCharacter?.id!==c.id
+            ? `<button class="btn-select-char" data-char-id="${c.id}">Set Active</button>`
+            : `<span class="active-badge">✓ Active</span>`
+          }
+          <button class="btn-rename-char" data-char-id="${c.id}" data-char-name="${c.name}" data-char-class="${c.class}" data-char-level="${c.level||""}" data-char-campaign="${c.campaign||""}">Edit</button>
+          <button class="btn-delete-char cancel-button" data-char-id="${c.id}" data-char-name="${c.name}">Delete</button>
+        </div>
       </div>
-      <div class="character-card-actions">
-        ${selectedCharacter?.id!==c.id
-          ? `<button class="btn-select-char" data-char-id="${c.id}">Set Active</button>`
-          : `<span class="active-badge">✓ Active</span>`
-        }
-        <button class="btn-rename-char" data-char-id="${c.id}" data-char-name="${c.name}" data-char-class="${c.class}">Edit</button>
-        <button class="btn-delete-char cancel-button" data-char-id="${c.id}" data-char-name="${c.name}">Delete</button>
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 
   el.querySelectorAll(".btn-select-char").forEach(btn => {
     btn.addEventListener("click", () => {
       selectedCharacter = characters.find(c=>c.id===btn.dataset.charId)||null;
-      renderCharacterList();
-      renderMyWishes();
-      renderCards();
+      renderCharacterList(); renderMyWishes(); renderCards();
     });
   });
 
   el.querySelectorAll(".btn-rename-char").forEach(btn => {
     btn.addEventListener("click", () => {
-      openEditCharacterModal(btn.dataset.charId, btn.dataset.charName, btn.dataset.charClass);
+      openEditCharacterModal(
+        btn.dataset.charId,
+        btn.dataset.charName,
+        btn.dataset.charClass,
+        btn.dataset.charLevel,
+        btn.dataset.charCampaign
+      );
     });
   });
 
@@ -816,20 +868,16 @@ function renderCharacterList() {
       const cid = btn.dataset.charId;
       const charWishes = wishes.filter(w=>w.characterId===cid);
       for (const w of charWishes) await deleteDoc(doc(db,"wishes",w.id));
-      // Un-assign owned items
       const ownedItems = items.filter(i=>i.owner===cid);
       for (const i of ownedItems) await updateDoc(doc(db,"items",i.id), { owner: null });
       await deleteDoc(doc(db,"characters",cid));
       if (selectedCharacter?.id===cid) selectedCharacter=null;
-      await loadCharacters();
-      await loadWishes();
-      await loadItemsFromFirestore();
+      await loadCharacters(); await loadWishes(); await loadItemsFromFirestore();
       renderPlayerTab();
     });
   });
 }
 
-// My Loot: items where owner = one of my character IDs
 function renderMyLoot() {
   const el = document.getElementById("myLootGrid");
   if (!el) return;
@@ -848,7 +896,6 @@ function renderMyLoot() {
   }).join("");
 }
 
-// My Wishes: all wishes from any of my characters
 function renderMyWishes() {
   const el = document.getElementById("myWishGrid");
   if (!el) return;
@@ -891,9 +938,18 @@ function createMiniCard(item, mode, extra="") {
 
 // ─── EDIT CHARACTER MODAL ─────────────────────────────────────────────────────
 
-function openEditCharacterModal(charId, charName, charClass) {
-  document.getElementById("editChar-name").value  = charName;
-  document.getElementById("editChar-class").value = charClass;
+function openEditCharacterModal(charId, charName, charClass, charLevel="", charCampaign="") {
+  document.getElementById("editChar-name").value     = charName;
+  document.getElementById("editChar-class").value    = charClass;
+  document.getElementById("editChar-level").value    = charLevel;
+  document.getElementById("editChar-campaign").value = charCampaign;
+
+  // Populate campaign dropdown dynamically
+  const campSel = document.getElementById("editChar-campaign");
+  const camps   = availableCampaigns();
+  campSel.innerHTML = `<option value="">No Campaign</option>` +
+    camps.map(c=>`<option value="${c}" ${c===charCampaign?"selected":""}>${c}</option>`).join("");
+
   document.getElementById("editCharModal").dataset.charId = charId;
   document.getElementById("editCharModal").style.display  = "flex";
 }
@@ -903,19 +959,38 @@ function closeEditCharacterModal() {
 }
 
 async function saveEditCharacter() {
-  const charId   = document.getElementById("editCharModal").dataset.charId;
-  const newName  = document.getElementById("editChar-name").value.trim();
-  const newClass = document.getElementById("editChar-class").value;
+  const charId      = document.getElementById("editCharModal").dataset.charId;
+  const newName     = document.getElementById("editChar-name").value.trim();
+  const newClass    = document.getElementById("editChar-class").value;
+  const newLevel    = parseInt(document.getElementById("editChar-level").value) || null;
+  const newCampaign = document.getElementById("editChar-campaign").value || null;
+
   if (!newName) { alert("Character name is required."); return; }
-  await updateDoc(doc(db,"characters",charId), { name: newName, class: newClass });
+  if (newLevel !== null && (newLevel < 1 || newLevel > 20)) {
+    alert("Level must be between 1 and 20."); return;
+  }
+
+  await updateDoc(doc(db,"characters",charId), {
+    name: newName, class: newClass,
+    level: newLevel, campaign: newCampaign
+  });
   await loadCharacters();
   if (selectedCharacter?.id===charId) selectedCharacter=characters.find(c=>c.id===charId)||null;
   closeEditCharacterModal();
-  // Refresh whichever panel triggered the edit
   renderPlayerTab();
   if (isAdmin()) { renderUserTable(); renderAdminStats(); }
   populateOwnerFilter();
   renderCards();
+}
+
+// ─── CREATE CHARACTER (player tab form) ───────────────────────────────────────
+
+function populateCreateCharCampaigns() {
+  const sel   = document.getElementById("playerCharCampaign");
+  if (!sel) return;
+  const camps = availableCampaigns();
+  sel.innerHTML = `<option value="">No Campaign</option>` +
+    camps.map(c=>`<option value="${c}">${c}</option>`).join("");
 }
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
@@ -928,7 +1003,7 @@ function showTab(tabId) {
   const panel = document.getElementById(`tab-${tabId}`);
   if (panel) panel.style.display = "block";
   if (tabId==="admin")  { renderUserTable(); renderAdminStats(); }
-  if (tabId==="player") { renderPlayerTab(); }
+  if (tabId==="player") { renderPlayerTab(); populateCreateCharCampaigns(); }
 }
 
 function initTabs() {
@@ -972,18 +1047,28 @@ function initModalListeners() {
   document.getElementById("cancelEditCharModal")?.addEventListener("click", closeEditCharacterModal);
   document.getElementById("saveEditCharModal")?.addEventListener("click",   saveEditCharacter);
 
+  // Wish modal (admin)
+  document.getElementById("closeWishModal")?.addEventListener("click",  closeWishModal);
+  document.getElementById("closeWishModalBtn")?.addEventListener("click", closeWishModal);
+
   // Player tab — create character
   document.getElementById("playerCreateCharBtn")?.addEventListener("click", async () => {
-    const name = document.getElementById("playerCharName").value.trim();
-    const cls  = document.getElementById("playerCharClass").value;
+    const name     = document.getElementById("playerCharName").value.trim();
+    const cls      = document.getElementById("playerCharClass").value;
+    const level    = parseInt(document.getElementById("playerCharLevel").value) || null;
+    const campaign = document.getElementById("playerCharCampaign").value || null;
+
     if (!name) { alert("Enter a character name."); return; }
+    if (level !== null && (level < 1 || level > 20)) { alert("Level must be 1–20."); return; }
+
     const newDoc = await addDoc(collection(db,"characters"), {
-      name, class: cls, userId: auth.currentUser.uid, active: true, created: Date.now()
+      name, class: cls, level, campaign,
+      userId: auth.currentUser.uid, active: true, created: Date.now()
     });
     await loadCharacters();
     selectedCharacter = characters.find(c=>c.id===newDoc.id)||null;
-    document.getElementById("playerCharName").value = "";
-    // Show player tab if first character (tab was hidden before)
+    document.getElementById("playerCharName").value  = "";
+    document.getElementById("playerCharLevel").value = "";
     const playerTab = document.getElementById("playerTab");
     if (playerTab) playerTab.style.display = "inline-block";
     renderPlayerTab();
@@ -1043,7 +1128,6 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 
   if (firebaseUser) {
     await loadCurrentUser(firebaseUser);
-
     display.textContent = currentUser.name || firebaseUser.email;
 
     if (loginControls) loginControls.style.display = "none";
@@ -1056,29 +1140,24 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     await loadItemsFromFirestore();
     populateOwnerFilter();
 
-    // Admin tab: visible to admins
-    if (adminTab)  adminTab.style.display  = isAdmin()  ? "inline-block" : "none";
-    if (addBtn)    addBtn.style.display    = isAdmin()  ? "inline-block" : "none";
-    if (adminPanel) adminPanel.style.display = isAdmin() ? "block"        : "none";
+    if (adminTab)   adminTab.style.display   = isAdmin()  ? "inline-block" : "none";
+    if (addBtn)     addBtn.style.display     = isAdmin()  ? "inline-block" : "none";
+    if (adminPanel) adminPanel.style.display = isAdmin()  ? "block"        : "none";
 
-    // Player tab: visible to players/admins IF they have at least one character
     const hasChars = myCharacters().length > 0;
     if (playerTab) playerTab.style.display = (isPlayer() && hasChars) ? "inline-block" : "none";
 
     if (isAdmin()) { renderUserTable(); renderAdminStats(); }
 
   } else {
-    currentUser       = null;
-    selectedCharacter = null;
+    currentUser = null; selectedCharacter = null;
     display.textContent = "Not logged in";
-
     if (loginControls) loginControls.style.display = "block";
     if (logoutBtn)     logoutBtn.style.display      = "none";
     if (adminTab)      adminTab.style.display        = "none";
     if (playerTab)     playerTab.style.display       = "none";
     if (addBtn)        addBtn.style.display           = "none";
     if (adminPanel)    adminPanel.style.display       = "none";
-
     renderCards();
   }
 });

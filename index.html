@@ -9,11 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-
-<footer class="site-footer">
-    © DKDM • All artwork and content reserved.
-</footer>
-
 <body>
 
   <h1>⚔ D&D 5e Magic Item Looter</h1>
@@ -29,10 +24,8 @@
        LIBRARY TAB
   ══════════════════════════════════════════════════════════════════════ -->
   <div id="tab-library" class="tab-content active">
-
     <div class="toolbar">
 
-      <!-- Auth row -->
       <div id="loginControls" class="login-controls">
         <button id="loginButton">Google Login</button>
         <input  type="email"    id="emailInput"    placeholder="Email">
@@ -65,13 +58,8 @@
             <option>Very Rare</option><option>Legendary</option><option>Artifact</option>
           </select>
 
-          <select id="sourceFilter">
-            <option value="">All Sources</option>
-          </select>
-
-          <select id="campaignFilter">
-            <option value="">All Campaigns</option>
-          </select>
+          <select id="sourceFilter"><option value="">All Sources</option></select>
+          <select id="campaignFilter"><option value="">All Campaigns</option></select>
 
           <select id="classFilter">
             <option value="">All Classes</option>
@@ -82,10 +70,7 @@
             <option>Wizard</option>
           </select>
 
-          <!-- Owner filter = characters (not users) -->
-          <select id="ownerFilter">
-            <option value="">All Owners</option>
-          </select>
+          <select id="ownerFilter"><option value="">All Owners</option></select>
 
           <fieldset class="filter-checkboxes">
             <legend>Status</legend>
@@ -100,13 +85,11 @@
 
         </div>
       </details>
-
-    </div><!-- /toolbar -->
+    </div>
 
     <div id="campaignStats" class="campaign-stats"></div>
     <div id="card-container"></div>
-
-  </div><!-- /tab-library -->
+  </div>
 
   <!-- ══════════════════════════════════════════════════════════════════════
        PLAYER TAB
@@ -126,13 +109,17 @@
       <div class="player-create-form">
         <h3>Create New Character</h3>
         <div class="player-create-row">
-          <input type="text" id="playerCharName" placeholder="Character name…">
+          <input  type="text"   id="playerCharName"     placeholder="Character name…">
           <select id="playerCharClass">
             <option>Artificer</option><option>Barbarian</option><option>Bard</option>
             <option>Cleric</option><option>Druid</option><option>Fighter</option>
             <option>Monk</option><option>Paladin</option><option>Ranger</option>
             <option>Rogue</option><option>Sorcerer</option><option>Warlock</option>
             <option>Wizard</option>
+          </select>
+          <input  type="number" id="playerCharLevel"    placeholder="Level (1–20)" min="1" max="20">
+          <select id="playerCharCampaign">
+            <option value="">No Campaign</option>
           </select>
           <button id="playerCreateCharBtn">+ Create</button>
         </div>
@@ -142,9 +129,7 @@
     <!-- My Loot -->
     <div class="player-section">
       <h2 class="player-section-title">🎒 My Loot</h2>
-      <p class="player-section-sub">
-        Items the DM has marked as looted and assigned to one of your characters.
-      </p>
+      <p class="player-section-sub">Items the DM has marked as looted and assigned to one of your characters.</p>
       <div id="myLootGrid" class="mini-card-grid"></div>
     </div>
 
@@ -176,8 +161,8 @@
       <div class="admin-section">
         <h2>Users &amp; Characters</h2>
         <p class="admin-section-sub">
-          Each user's characters are shown beneath their row.
-          You can edit or delete individual characters directly from here.
+          Each user's characters are shown beneath their row, with level, campaign and tier badge.
+          Click <strong>Wishes</strong> on any character to see what they want.
           Deleting a user also deletes all their characters and wishes.
         </p>
         <button id="openAddUserBtn" class="toolbar-btn" style="margin-bottom:14px">+ Add User</button>
@@ -197,6 +182,85 @@
         </div>
       </div>
 
+      <!-- Loot rarity reference — collapsible -->
+      <details class="admin-section loot-ref-panel">
+        <summary>📖 Magic Item Rarity Progression by Level</summary>
+
+        <div class="loot-ref-grid">
+
+          <div class="loot-ref-card tier-1">
+            <div class="loot-ref-header">
+              <span class="loot-ref-tier">Tier 1</span>
+              <span class="loot-ref-levels">Levels 1–4</span>
+              <span class="loot-ref-subtitle">Local Heroes</span>
+            </div>
+            <div class="loot-ref-rarities">
+              <span class="rarity-pill common">Common</span>
+              <span class="rarity-pill uncommon">Uncommon</span>
+            </div>
+            <p class="loot-ref-desc">
+              Players usually find their first <strong>Common</strong> items early on.
+              Around levels 3–4, characters typically acquire their first
+              <strong>Uncommon</strong> items — e.g. <em>+1 Weapon, Bag of Holding,
+              Cloak of Protection</em>.
+            </p>
+          </div>
+
+          <div class="loot-ref-card tier-2">
+            <div class="loot-ref-header">
+              <span class="loot-ref-tier">Tier 2</span>
+              <span class="loot-ref-levels">Levels 5–10</span>
+              <span class="loot-ref-subtitle">Heroes of the Realm</span>
+            </div>
+            <div class="loot-ref-rarities">
+              <span class="rarity-pill uncommon">Uncommon</span>
+              <span class="rarity-pill rare">Rare</span>
+            </div>
+            <p class="loot-ref-desc">
+              <strong>Uncommon</strong> items become standard. Around levels 7–9,
+              characters start acquiring <strong>Rare</strong> items — e.g.
+              <em>+2 Weapon, Flame Tongue, Ring of Protection,
+              Belt of Hill Giant Strength</em>.
+            </p>
+          </div>
+
+          <div class="loot-ref-card tier-3">
+            <div class="loot-ref-header">
+              <span class="loot-ref-tier">Tier 3</span>
+              <span class="loot-ref-levels">Levels 11–16</span>
+              <span class="loot-ref-subtitle">Masters of the Realm</span>
+            </div>
+            <div class="loot-ref-rarities">
+              <span class="rarity-pill rare">Rare</span>
+              <span class="rarity-pill very-rare">Very Rare</span>
+            </div>
+            <p class="loot-ref-desc">
+              <strong>Rare</strong> items are common across the party. Around levels 11–13,
+              characters begin finding <strong>Very Rare</strong> items — e.g.
+              <em>+3 Weapon, Staff of Power, Manual of Gainful Exercise</em>.
+            </p>
+          </div>
+
+          <div class="loot-ref-card tier-4">
+            <div class="loot-ref-header">
+              <span class="loot-ref-tier">Tier 4</span>
+              <span class="loot-ref-levels">Levels 17–20</span>
+              <span class="loot-ref-subtitle">Masters of the World</span>
+            </div>
+            <div class="loot-ref-rarities">
+              <span class="rarity-pill very-rare">Very Rare</span>
+              <span class="rarity-pill legendary">Legendary</span>
+            </div>
+            <p class="loot-ref-desc">
+              <strong>Very Rare</strong> items are standard equipment. Around levels 17+,
+              characters earn <strong>Legendary</strong> items and Artifacts — e.g.
+              <em>Vorpal Sword, Holy Avenger, Staff of the Magi</em>.
+            </p>
+          </div>
+
+        </div>
+      </details>
+
     </div>
   </div><!-- /tab-admin -->
 
@@ -211,11 +275,9 @@
       </div>
       <div class="modal-body">
         <div class="modal-form-grid">
-
           <label class="modal-label full">Name
             <input type="text" id="modal-name" placeholder="Item name">
           </label>
-
           <label class="modal-label">Category
             <select id="modal-category">
               <option>Armor</option><option>Potion</option><option>Ring</option>
@@ -224,49 +286,39 @@
               <option selected>Wondrous Item</option>
             </select>
           </label>
-
           <label class="modal-label">Rarity
             <select id="modal-rarity">
               <option selected>Common</option><option>Uncommon</option><option>Rare</option>
               <option>Very Rare</option><option>Legendary</option><option>Artifact</option>
             </select>
           </label>
-
           <label class="modal-label">Source
             <input type="text" id="modal-source" placeholder="e.g. Dungeon Master's Guide">
           </label>
-
           <label class="modal-label">Campaign
             <input type="text" id="modal-campaign" placeholder="e.g. Tyranny of Dragons">
           </label>
-
           <label class="modal-label full">Image URL
             <input type="text" id="modal-image" placeholder="https://…">
           </label>
-
           <label class="modal-label full">Description
             <textarea id="modal-description" rows="3" placeholder="Flavour description…"></textarea>
           </label>
-
           <label class="modal-label full">Properties
             <small>JSON array — e.g. [{"title":"Bonus","text":"You gain +1 to AC."}]</small>
             <textarea id="modal-properties" rows="5"
               placeholder='[{"title":"Property Name","text":"Property description."}]'></textarea>
           </label>
-
           <label class="modal-label full">Quote
             <input type="text" id="modal-quote" placeholder="Optional flavour quote">
           </label>
-
           <label class="modal-label full checkbox-row">
             <input type="checkbox" id="modal-attunement"> Requires Attunement
           </label>
-
           <div class="modal-label full">
             <span>Classes (leave blank for all)</span>
             <div class="class-selector" id="modal-classes"></div>
           </div>
-
         </div>
       </div>
       <div class="modal-footer">
@@ -287,17 +339,13 @@
       </div>
       <div class="modal-body">
         <div class="modal-form-grid">
-
           <label class="modal-label full">Full Name
             <input type="text" id="user-name" placeholder="e.g. Casper Andersen">
           </label>
-
           <label class="modal-label full">Email
             <input type="email" id="user-email" placeholder="player@example.com">
-            <small>When this person first logs in with Google, their account will automatically
-            link to this entry if the email matches.</small>
+            <small>When this person first logs in with Google, their account links automatically if the email matches.</small>
           </label>
-
           <div class="modal-label full">
             <span>Roles</span>
             <div class="role-checks">
@@ -321,7 +369,6 @@
               A user can have multiple roles, e.g. admin + player if you also play in the campaign.
             </small>
           </div>
-
         </div>
       </div>
       <div class="modal-footer">
@@ -345,13 +392,21 @@
           <label class="modal-label full">Character Name
             <input type="text" id="editChar-name" placeholder="Character name">
           </label>
-          <label class="modal-label full">Class
+          <label class="modal-label">Class
             <select id="editChar-class">
               <option>Artificer</option><option>Barbarian</option><option>Bard</option>
               <option>Cleric</option><option>Druid</option><option>Fighter</option>
               <option>Monk</option><option>Paladin</option><option>Ranger</option>
               <option>Rogue</option><option>Sorcerer</option><option>Warlock</option>
               <option>Wizard</option>
+            </select>
+          </label>
+          <label class="modal-label">Level (1–20)
+            <input type="number" id="editChar-level" placeholder="e.g. 5" min="1" max="20">
+          </label>
+          <label class="modal-label full">Campaign
+            <select id="editChar-campaign">
+              <option value="">No Campaign</option>
             </select>
           </label>
         </div>
@@ -362,6 +417,26 @@
       </div>
     </div>
   </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MODAL: CHARACTER WISHES (admin view)
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div id="wishModal" class="modal" style="display:none">
+    <div class="modal-box modal-box--wide">
+      <div class="modal-header">
+        <h2 id="wishModalCharName">Wishes</h2>
+        <button class="modal-close" id="closeWishModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="wishModalGrid" class="wish-modal-grid"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-button" id="closeWishModalBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">© DKDM • All artwork and content reserved.</footer>
 
   <script type="module" src="js/app.js"></script>
 </body>
