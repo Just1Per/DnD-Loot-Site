@@ -97,6 +97,15 @@ async function loadCurrentUser(firebaseUser) {
   }
 }
 
+async function loadStorageImage(path) {
+  try {
+    return await getDownloadURL(ref(storage, path));
+  } catch (error) {
+    console.warn(`Could not load storage image: ${path}`, error);
+    return "";
+  }
+}
+
 // Helper to strip numerical bonuses, colors, rarities, and extra modifiers to resolve base image ID
 function getBaseImageId(itemId) {
   if (!itemId) return "";
