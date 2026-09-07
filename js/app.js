@@ -1,6 +1,7 @@
-import {
-  db, storage, auth, provider, signInWithPopup, signOut
-} from "./firebase.js";
+// ─── IMPORTS ──────────────────────────────────────────────────────────────────
+
+import { db, storage, auth, provider, signInWithPopup, signOut }
+  from "./firebase.js";
 
 import { items as sourceItems } from "./items.js";
 
@@ -15,43 +16,35 @@ import {
   setDoc, updateDoc, deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-import {
-  ref,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
+import { ref, getDownloadURL }
+  from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
+// Data flow: User → Character (id) → Item (owner = characterId)
 
-let items             = [];
-let characters        = [];
-let wishes            = [];
-let users             = [];
-let currentUser       = null;
-let selectedCharacter = null;
+let items             = [];   // local mirror of Firestore items collection
+let characters        = [];   // local mirror of Firestore characters collection
+let wishes            = [];   // local mirror of Firestore wishes collection
+let users             = [];   // local mirror of Firestore users collection
+let currentUser       = null; // { uid, email, name, role:[], ... }
+let selectedCharacter = null; // currently active character for wishing
 
-const editingItems = new Set();
+const editingItems = new Set(); // item IDs currently in inline-edit mode
+
+// Image URL cache — itemId → resolved URL string
+// Avoids re-fetching Firebase Storage on every single-card re-render
+const imageCache = new Map();
 
 const ALL_CLASSES = [
   "Artificer","Barbarian","Bard","Cleric","Druid","Fighter",
   "Monk","Paladin","Ranger","Rogue","Sorcerer","Warlock","Wizard"
 ];
 
-// Campaigns available for character creation — pulled from items dynamically
-function availableCampaigns() {
-  return [...new Set(items.map(i => i.campaign).filter(Boolean))].sort();
-}
+const CATEGORIES = [
+  "Armor","Potion","Ring","Rod","Scroll","Staff","Vehicle","Wand","Weapon","Wondrous Item"
+];
 
-// ─── TIER HELPER ─────────────────────────────────────────────────────────────
-// Returns tier info based on character level
-
-function getTier(level) {
-  const lvl = parseInt(level) || 0;
-  if (lvl >= 17) return { tier: 4, label: "Tier 4", rarity: "Very Rare & Legendary", color: "#d45050", bg: "rgba(212,80,80,0.12)" };
-  if (lvl >= 11) return { tier: 3, label: "Tier 3", rarity: "Rare & Very Rare",       color: "#9b59b6", bg: "rgba(155,89,182,0.12)" };
-  if (lvl >= 5)  return { tier: 2, label: "Tier 2", rarity: "Uncommon & Rare",        color: "#3498db", bg: "rgba(52,152,219,0.12)" };
-  if (lvl >= 1)  return { tier: 1, label: "Tier 1", rarity: "Common & Uncommon",      color: "#27ae60", bg: "rgba(39,174,96,0.12)" };
-  return null;
-}
+const RARITIES = ["Common","Uncommon","Rare","Very Rare","Legendary","Artifact"];
 
 // ─── ROLE HELPERS ─────────────────────────────────────────────────────────────
 
@@ -67,34 +60,47 @@ const isPlayer = () => {
     : ["player","admin"].includes(r);
 };
 
-function myCharacters() {
-  return characters.filter(c => c.userId === auth.currentUser?.uid && c.active !== false);
+const myCharacters = () =>
+  characters.filter(c => c.userId === auth.currentUser?.uid && c.active !== false);
+
+// ─── TIER HELPER ─────────────────────────────────────────────────────────────
+
+function getTier(level) {
+  const lvl = parseInt(level) || 0;
+  if (lvl >= 17) return { tier: 4, label: "Tier 4", rarity: "Very Rare & Legendary", color: "#d45050", bg: "rgba(212,80,80,0.12)" };
+  if (lvl >= 11) return { tier: 3, label: "Tier 3", rarity: "Rare & Very Rare",       color: "#9b59b6", bg: "rgba(155,89,182,0.12)" };
+  if (lvl >= 5)  return { tier: 2, label: "Tier 2", rarity: "Uncommon & Rare",        color: "#3498db", bg: "rgba(52,152,219,0.12)" };
+  if (lvl >= 1)  return { tier: 1, label: "Tier 1", rarity: "Common & Uncommon",      color: "#27ae60", bg: "rgba(39,174,96,0.12)" };
+  return null;
 }
 
-// ─── DATA LOADERS ─────────────────────────────────────────────────────────────
+// ─── CAMPAIGNS HELPER ─────────────────────────────────────────────────────────
 
-async function loadCurrentUser(firebaseUser) {
-  const userRef = doc(db, "users", firebaseUser.uid);
-  const snap    = await getDoc(userRef);
-  if (snap.exists()) {
-    currentUser = { uid: firebaseUser.uid, ...snap.data() };
-  } else {
-    const allSnap  = await getDocs(collection(db, "users"));
-    const existing = allSnap.docs.find(d => d.data().email === firebaseUser.email);
-    if (existing) {
-      await setDoc(userRef, existing.data(), { merge: true });
-      await deleteDoc(existing.ref);
-      currentUser = { uid: firebaseUser.uid, ...existing.data() };
-    } else {
-      const newUser = {
-        email: firebaseUser.email,
-        name:  firebaseUser.displayName || firebaseUser.email,
-        role:  ["viewer"]
-      };
-      await setDoc(userRef, newUser);
-      currentUser = { uid: firebaseUser.uid, ...newUser };
-    }
-  }
+function availableCampaigns() {
+  return [...new Set(items.map(i => i.campaign).filter(Boolean))].sort();
+}
+
+// ─── IMAGE HELPERS ────────────────────────────────────────────────────────────
+// Your enhanced getBaseImageId — strips colours, rarities, numerical bonuses
+
+function getBaseImageId(itemId) {
+  if (!itemId) return "";
+  let base = itemId.toLowerCase();
+
+  const wordsToRemove = [
+    "common","uncommon","rare","very-rare","veryrare","legendary","artifact","minor","major",
+    "grey","gray","red","blue","green","black","white","yellow","purple","orange","bronze","silver","gold",
+    "plus"
+  ];
+
+  base = base.replace(/\+/g, "").replace(/[0-9]/g, "");
+
+  wordsToRemove.forEach(word => {
+    const regex = new RegExp(`(?<=^|[-_\\s])${word}(?=[-_\\s]|$)`, "gi");
+    base = base.replace(regex, "");
+  });
+
+  return base.replace(/[-_\s]+/g, "-").replace(/^[-_]+|[-_]+$/g, "") || itemId;
 }
 
 async function loadStorageImage(path) {
@@ -106,61 +112,54 @@ async function loadStorageImage(path) {
   }
 }
 
-// Helper to strip numerical bonuses, colors, rarities, and extra modifiers to resolve base image ID
-function getBaseImageId(itemId) {
-  if (!itemId) return "";
-  
-  let base = itemId.toLowerCase();
-
-  // 1. Array of words to strip out (colors, rarities, variants)
-  const wordsToRemove = [
-    // Rarities
-    "common", "uncommon", "rare", "very-rare", "veryrare", "legendary", "artifact", "minor", "major",
-    // Colors
-    "grey", "gray", "red", "blue", "green", "black", "white", "yellow", "purple", "orange", "bronze", "silver", "gold",
-    // Modifiers & extra terms
-    "plus"
-  ];
-
-  // 2. Remove numerical bonuses (+1, +2, +3, 1, 2, etc.)
-  base = base.replace(/\+/g, '').replace(/[0-9]/g, '');
-
-  // 3. Strip each target word dynamically as standalone hyphenated/space segments
-  wordsToRemove.forEach(word => {
-    const regex = new RegExp(`(?<=^|[-_\\s])${word}(?=[-_\\s]|$)`, "gi");
-    base = base.replace(regex, "");
-  });
-
-  // 4. Clean up trailing or consecutive dashes/underscores
-  // e.g. "waraxe--grey" -> "waraxe", "barrier-tattoo-rare" -> "barrier-tattoo"
-  base = base.replace(/[-_\s]+/g, '-')
-             .replace(/^[-_\s]+|[-_\s]+$/g, '');
-
-  return base || itemId;
+// Resolves an item's image URL, using imageCache to avoid duplicate Storage requests
+async function resolveImageUrl(itemId) {
+  if (imageCache.has(itemId)) return imageCache.get(itemId);
+  const url = await loadStorageImage(`dnd-item-images/${getBaseImageId(itemId)}.png`);
+  imageCache.set(itemId, url);
+  return url;
 }
 
+// ─── DATA LOADERS ─────────────────────────────────────────────────────────────
+
+async function loadCurrentUser(firebaseUser) {
+  const userRef = doc(db, "users", firebaseUser.uid);
+  const snap    = await getDoc(userRef);
+  if (snap.exists()) {
+    currentUser = { uid: firebaseUser.uid, ...snap.data() };
+    return;
+  }
+  // First login — check if admin pre-created this account by email
+  const allSnap  = await getDocs(collection(db, "users"));
+  const existing = allSnap.docs.find(d => d.data().email === firebaseUser.email);
+  if (existing) {
+    await setDoc(userRef, existing.data(), { merge: true });
+    await deleteDoc(existing.ref);
+    currentUser = { uid: firebaseUser.uid, ...existing.data() };
+  } else {
+    const newUser = {
+      email: firebaseUser.email,
+      name:  firebaseUser.displayName || firebaseUser.email,
+      role:  ["viewer"]
+    };
+    await setDoc(userRef, newUser);
+    currentUser = { uid: firebaseUser.uid, ...newUser };
+  }
+}
+
+/**
+ * Full Firestore load — called on boot, after clone, and after add-new-item.
+ * Images resolved in parallel using the cache (already-fetched URLs are instant).
+ */
 async function loadItemsFromFirestore() {
+  const snap = await getDocs(collection(db, "items"));
   items = await Promise.all(
-    (await getDocs(collection(db, "items")))
-      .docs.map(async d => {
-        const item = {
-          id: d.id,
-          ...d.data()
-        };
-
-        // 1. Get the normalized base ID (e.g. "ammunition_+1" -> "ammunition")
-        const baseId = getBaseImageId(item.id);
-
-        // 2. Build storage path using baseId
-        const path = `dnd-item-images/${baseId}.png`;
-
-        // 3. Load download URL from Firebase Storage
-        item.imageUrl = await loadStorageImage(path);
-
-        return item;
-      })
+    snap.docs.map(async d => {
+      const item    = { id: d.id, ...d.data() };
+      item.imageUrl = await resolveImageUrl(item.id);
+      return item;
+    })
   );
-
   renderCards();
   populateSourceFilter();
   populateCampaignFilter();
@@ -171,7 +170,7 @@ async function loadCharacters() {
     .docs.map(d => ({ id: d.id, ...d.data() }));
   if (!selectedCharacter) {
     const mine = myCharacters();
-    if (mine.length > 0) selectedCharacter = mine[0];
+    if (mine.length) selectedCharacter = mine[0];
   }
 }
 
@@ -181,14 +180,15 @@ async function loadWishes() {
 }
 
 async function loadUsers() {
-  const snap = await getDocs(collection(db, "users"));
-  users = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  users = (await getDocs(collection(db, "users")))
+    .docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
+/** One-time import — only runs when items collection is empty */
 async function importItemsIfEmpty() {
   const snap = await getDocs(collection(db, "items"));
   if (!snap.empty) return;
-  console.log("Firestore empty — importing items...");
+  console.log("Firestore empty — importing items…");
   for (const item of sourceItems) {
     await setDoc(doc(db, "items", item.id), {
       ...item, looted: false, printed: false, owner: null, receivedDate: null
@@ -197,34 +197,48 @@ async function importItemsIfEmpty() {
   console.log("Import complete.");
 }
 
-// ─── OWNER HELPERS ────────────────────────────────────────────────────────────
+// ─── LOCAL STATE PATCH ────────────────────────────────────────────────────────
 
-function allPlayableCharacters() {
-  const playerUserIds = users
-    .filter(u => {
-      const r = u.role;
-      return Array.isArray(r)
-        ? r.includes("player") || r.includes("admin")
-        : ["player","admin"].includes(r);
-    })
-    .map(u => u.id);
-  return characters.filter(c => playerUserIds.includes(c.userId) && c.active !== false);
+/**
+ * Apply a partial update to an item in the local `items` array.
+ * Does NOT touch Firestore. Call updateDoc separately.
+ * Returns the updated item object.
+ */
+function patchItem(itemId, changes) {
+  const idx = items.findIndex(i => i.id === itemId);
+  if (idx === -1) return null;
+  items[idx] = { ...items[idx], ...changes };
+  return items[idx];
 }
 
-function characterDisplayName(char) {
-  if (!char) return "";
-  const owner = users.find(u => u.id === char.userId);
-  return `${char.name} (${char.class})${owner ? " — " + (owner.name || owner.email) : ""}`;
+// ─── SINGLE-CARD RE-RENDER ────────────────────────────────────────────────────
+
+/**
+ * Replace exactly one card in the DOM using its data-item-id attribute.
+ * Every other card is untouched. Image URL comes from imageCache — no Storage request.
+ */
+function rerenderCard(itemId) {
+  const item    = items.find(i => i.id === itemId);
+  const oldCard = container.querySelector(`[data-item-id="${itemId}"]`);
+  if (!item || !oldCard) return;
+  oldCard.replaceWith(createCard(item));
+  refreshStatsBar();
 }
 
-// ─── RENDER CARDS ─────────────────────────────────────────────────────────────
+// ─── RENDER CARDS (full grid) ─────────────────────────────────────────────────
 
 const container = document.getElementById("card-container");
 
 function renderCards() {
-  container.innerHTML = "";
   const filtered = applyFilters([...items]);
+  container.innerHTML = "";
   filtered.forEach(item => container.appendChild(createCard(item)));
+  refreshStatsBar();
+}
+
+/** Recompute stats from in-memory state — no Firestore read needed */
+function refreshStatsBar() {
+  const filtered = applyFilters([...items]);
   updateStats(
     filtered.length,
     filtered.filter(i => i.looted).length,
@@ -235,7 +249,8 @@ function renderCards() {
 
 function applyFilters(list) {
   const val = id => document.getElementById(id)?.value || "";
-  const chk = id => document.getElementById(id)?.checked || false;
+  const chk = id => document.getElementById(id)?.checked ?? false;
+
   const search   = val("search").toLowerCase();
   const rarity   = val("rarityFilter");
   const source   = val("sourceFilter");
@@ -243,11 +258,10 @@ function applyFilters(list) {
   const cls      = val("classFilter");
   const category = val("categoryFilter");
   const owner    = val("ownerFilter");
+
   return list.filter(item => {
-    if (search && !(
-      (item.name        || "").toLowerCase().includes(search) ||
-      (item.description || "").toLowerCase().includes(search)
-    )) return false;
+    if (search   && !((item.name||"").toLowerCase().includes(search) ||
+                      (item.description||"").toLowerCase().includes(search))) return false;
     if (rarity   && item.rarity   !== rarity)    return false;
     if (source   && item.source   !== source)    return false;
     if (campaign && item.campaign !== campaign)  return false;
@@ -265,16 +279,35 @@ function applyFilters(list) {
   });
 }
 
+// ─── OWNER HELPERS ────────────────────────────────────────────────────────────
+
+function allPlayableCharacters() {
+  const playerIds = users
+    .filter(u => {
+      const r = u.role;
+      return Array.isArray(r) ? r.includes("player") || r.includes("admin") : ["player","admin"].includes(r);
+    })
+    .map(u => u.id);
+  return characters.filter(c => playerIds.includes(c.userId) && c.active !== false);
+}
+
+function characterDisplayName(char) {
+  if (!char) return "";
+  const owner = users.find(u => u.id === char.userId);
+  return `${char.name} (${char.class})${owner ? " — " + (owner.name || owner.email) : ""}`;
+}
+
 // ─── CREATE CARD ──────────────────────────────────────────────────────────────
 
 function createCard(item) {
   const card = document.createElement("div");
   card.classList.add("item-card");
+  card.dataset.itemId = item.id; // used by rerenderCard()
 
-  const admin     = isAdmin();
-  const isEditing = admin && editingItems.has(item.id);
-
+  const admin       = isAdmin();
+  const isEditing   = admin && editingItems.has(item.id);
   const rarityClass = (item.rarity || "").toLowerCase().replaceAll(" ", "-");
+
   if (rarityClass)  card.classList.add(rarityClass);
   if (item.looted)  card.classList.add("looted");
   if (item.printed) card.classList.add("printed");
@@ -283,17 +316,15 @@ function createCard(item) {
   const myWish     = selectedCharacter
     ? wishes.find(w => w.itemId === item.id && w.characterId === selectedCharacter.id)
     : null;
-
-  const wishNames = itemWishes.map(w => {
+  const wishNames  = itemWishes.map(w => {
     const c = characters.find(ch => ch.id === w.characterId);
     return c ? `${c.name} (${c.class})` : "Unknown";
   }).join(", ");
 
-  const canWish   = isPlayer() && selectedCharacter !== null;
-  const needsChar = isPlayer() && selectedCharacter === null;
-
-  const ownerChar = characters.find(c => c.id === item.owner);
-  const ownerName = ownerChar ? `${ownerChar.name} (${ownerChar.class})` : "";
+  const canWish       = isPlayer() && selectedCharacter !== null;
+  const needsChar     = isPlayer() && selectedCharacter === null;
+  const ownerChar     = characters.find(c => c.id === item.owner);
+  const ownerName     = ownerChar ? `${ownerChar.name} (${ownerChar.class})` : "";
   const playableChars = allPlayableCharacters();
 
   card.innerHTML = `
@@ -323,8 +354,7 @@ function createCard(item) {
       <div class="${admin ? "wish-admin-block" : "wish-count-block"}">
         ${admin
           ? `★ Wished by: ${wishNames}`
-          : `★ ${itemWishes.length} wish${itemWishes.length !== 1 ? "es" : ""}`
-        }
+          : `★ ${itemWishes.length} wish${itemWishes.length !== 1 ? "es" : ""}`}
       </div>
     ` : ""}
 
@@ -335,8 +365,7 @@ function createCard(item) {
       }
       ${isEditing ? `
         <select id="edit-category-${item.id}">
-          ${["Armor","Potion","Ring","Rod","Scroll","Staff","Vehicle","Wand","Weapon","Wondrous Item"]
-            .map(c => `<option value="${c}" ${item.category===c?"selected":""}>${c}</option>`).join("")}
+          ${CATEGORIES.map(c => `<option ${item.category===c?"selected":""}>${c}</option>`).join("")}
         </select>
         <label>
           <input type="checkbox" id="edit-attunement-${item.id}" ${item.attunement?"checked":""}>
@@ -358,15 +387,14 @@ function createCard(item) {
       <div class="card-meta">
         ${isEditing ? `
           <select id="edit-rarity-${item.id}">
-            ${["Common","Uncommon","Rare","Very Rare","Legendary","Artifact"]
-              .map(r=>`<option value="${r}" ${item.rarity===r?"selected":""}>${r}</option>`).join("")}
+            ${RARITIES.map(r=>`<option ${item.rarity===r?"selected":""}>${r}</option>`).join("")}
           </select>
           <input id="edit-source-${item.id}"   value="${item.source  ||""}" placeholder="Source">
           <input id="edit-campaign-${item.id}" value="${item.campaign||""}" placeholder="Campaign">
         ` : `
-          ${item.rarity   ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>`   : ""}
-          ${item.source   ? `<span class="meta-tag">${item.source}</span>`                  : ""}
-          ${item.campaign ? `<span class="meta-tag campaign-tag">${item.campaign}</span>`   : ""}
+          ${item.rarity   ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>` : ""}
+          ${item.source   ? `<span class="meta-tag">${item.source}</span>`                : ""}
+          ${item.campaign ? `<span class="meta-tag campaign-tag">${item.campaign}</span>` : ""}
         `}
       </div>
     </div>
@@ -376,7 +404,7 @@ function createCard(item) {
       : ""
     }
     ${item.imageUrl
-      ? `<img src="${item.imageUrl}" class="card-art" alt="${item.name}" onerror="this.style.display='none'">`
+      ? `<img src="${item.imageUrl}" class="card-art" alt="${item.name}" loading="lazy" onerror="this.style.display='none'">`
       : ""
     }
 
@@ -388,9 +416,7 @@ function createCard(item) {
       }
       ${isEditing
         ? `<textarea id="edit-properties-${item.id}"
-             placeholder='[{"title":"Name","text":"Description"}]'>${
-               JSON.stringify(item.properties||[],null,2)
-             }</textarea>`
+             placeholder='[{"title":"Name","text":"Description"}]'>${JSON.stringify(item.properties||[],null,2)}</textarea>`
         : (item.properties||[]).map(p=>`
             <div class="property-block">
               <span class="property-title">${p.title}:</span> ${p.text}
@@ -408,9 +434,8 @@ function createCard(item) {
         <select class="owner-select">
           <option value="">No Owner</option>
           ${playableChars.map(c => `
-            <option value="${c.id}" ${item.owner===c.id?"selected":""}>
-              ${characterDisplayName(c)}
-            </option>`).join("")}
+            <option value="${c.id}" ${item.owner===c.id?"selected":""}>${characterDisplayName(c)}</option>
+          `).join("")}
         </select>
       </div>
     ` : ownerName ? `<div class="owner-badge">⚔ ${ownerName}</div>` : ""}
@@ -425,97 +450,131 @@ function createCard(item) {
 // ─── CARD EVENTS ──────────────────────────────────────────────────────────────
 
 function attachCardEvents(card, item) {
+
+  // Edit / Cancel — only re-renders this one card
   card.querySelector(".edit-button")?.addEventListener("click", () => {
-    editingItems.add(item.id); renderCards();
+    editingItems.add(item.id);
+    rerenderCard(item.id);
   });
+
   card.querySelector(".cancel-button")?.addEventListener("click", () => {
-    editingItems.delete(item.id); renderCards();
+    editingItems.delete(item.id);
+    rerenderCard(item.id);
   });
+
+  // Save — writes to Firestore, patches local state, re-renders one card
   card.querySelector(".save-button")?.addEventListener("click", async () => {
     let properties = [];
-    try { properties = JSON.parse(document.getElementById(`edit-properties-${item.id}`).value || "[]"); }
-    catch { alert("Properties JSON is invalid."); return; }
-    await updateDoc(doc(db,"items",item.id), {
+    try {
+      properties = JSON.parse(document.getElementById(`edit-properties-${item.id}`).value || "[]");
+    } catch { alert("Properties JSON is invalid."); return; }
+
+    const changes = {
       name:        document.getElementById(`edit-name-${item.id}`).value,
       description: document.getElementById(`edit-description-${item.id}`).value,
       category:    document.getElementById(`edit-category-${item.id}`).value,
       rarity:      document.getElementById(`edit-rarity-${item.id}`).value,
       source:      document.getElementById(`edit-source-${item.id}`).value,
       campaign:    document.getElementById(`edit-campaign-${item.id}`).value,
-      image:       document.getElementById(`edit-image-${item.id}`).value,
       quote:       document.getElementById(`edit-quote-${item.id}`).value,
       attunement:  document.getElementById(`edit-attunement-${item.id}`).checked,
-      classes:     [...document.querySelectorAll(`.class-checkbox-${item.id}:checked`)].map(b=>b.value),
+      classes:     [...document.querySelectorAll(`.class-checkbox-${item.id}:checked`)].map(b => b.value),
       properties
-    });
+    };
+
+    // Await here so the user gets confirmation the save succeeded before leaving edit mode
+    await updateDoc(doc(db, "items", item.id), changes);
     editingItems.delete(item.id);
-    await loadItemsFromFirestore();
+    patchItem(item.id, changes);
+    rerenderCard(item.id);
+    // Refresh filter dropdowns in case source/campaign changed
+    populateSourceFilter();
+    populateCampaignFilter();
   });
 
-  card.querySelector(".loot-button")?.addEventListener("click", async () => {
-    const newVal = !item.looted;
-    await updateDoc(doc(db,"items",item.id), {
-      looted: newVal,
-      owner:  newVal ? (item.owner||null) : null
-    });
-    await loadItemsFromFirestore();
+  // Loot — fire-and-forget Firestore write, instant local update
+  card.querySelector(".loot-button")?.addEventListener("click", () => {
+    const newLooted = !item.looted;
+    const changes   = { looted: newLooted, owner: newLooted ? (item.owner || null) : null };
+    updateDoc(doc(db, "items", item.id), changes);
+    patchItem(item.id, changes);
+    rerenderCard(item.id);
   });
 
-  card.querySelector(".print-button")?.addEventListener("click", async () => {
-    const newPrinted = !item.printed;
-    await updateDoc(doc(db,"items",item.id), { printed: newPrinted });
-    const localItem = items.find(i => i.id === item.id);
-    if (localItem) localItem.printed = newPrinted;
-    rerenderSingleCard(item.id);
+  // Print — fire-and-forget Firestore write, instant local update
+  card.querySelector(".print-button")?.addEventListener("click", () => {
+    const changes = { printed: !item.printed };
+    updateDoc(doc(db, "items", item.id), changes);
+    patchItem(item.id, changes);
+    rerenderCard(item.id);
   });
 
+  // Clone — full reload needed because a new card must appear in the grid
   card.querySelector(".clone-button")?.addEventListener("click", async () => {
-    const cloneId = item.id + "-copy-" + Date.now();
-    const { id: _r, ...rest } = item;
-    await setDoc(doc(db,"items",cloneId), {
-      ...rest, name: item.name+" (Homebrew)", source: "Homebrew",
+    const cloneId = `${item.id}-copy-${Date.now()}`;
+    const { id: _drop, imageUrl: _img, ...rest } = item;
+    await setDoc(doc(db, "items", cloneId), {
+      ...rest,
+      name: `${item.name} (Homebrew)`, source: "Homebrew",
       looted: false, printed: false, owner: null
     });
     await loadItemsFromFirestore();
     editingItems.add(cloneId);
-    renderCards();
+    rerenderCard(cloneId);
   });
 
-  card.querySelector(".owner-select")?.addEventListener("change", async e => {
-    await updateDoc(doc(db,"items",item.id), { owner: e.target.value || null });
-    await loadItemsFromFirestore();
+  // Owner assign — fire-and-forget, instant local update
+  card.querySelector(".owner-select")?.addEventListener("change", e => {
+    const ownerId = e.target.value || null;
+    updateDoc(doc(db, "items", item.id), { owner: ownerId });
+    patchItem(item.id, { owner: ownerId });
+    rerenderCard(item.id);
   });
 
+  // Wish — patches local wishes array + re-renders one card, no Firestore read
   card.querySelector(".wish-button")?.addEventListener("click", async () => {
-    if (!selectedCharacter) { alert("Select a character in the My Character tab first."); return; }
-    const existing = wishes.find(w => w.itemId===item.id && w.characterId===selectedCharacter.id);
+    if (!selectedCharacter) {
+      alert("Select a character in the My Character tab first.");
+      return;
+    }
+    const existing = wishes.find(
+      w => w.itemId === item.id && w.characterId === selectedCharacter.id
+    );
     if (existing) {
-      await deleteDoc(doc(db,"wishes",existing.id));
+      deleteDoc(doc(db, "wishes", existing.id));
+      wishes = wishes.filter(w => w.id !== existing.id);
     } else {
-      await addDoc(collection(db,"wishes"), {
+      const newRef = await addDoc(collection(db, "wishes"), {
         itemId:      item.id,
         characterId: selectedCharacter.id,
         userId:      auth.currentUser.uid,
         created:     Date.now()
       });
+      wishes.push({
+        id: newRef.id, itemId: item.id,
+        characterId: selectedCharacter.id,
+        userId: auth.currentUser.uid, created: Date.now()
+      });
     }
-    await loadWishes();
-    renderCards();
+    rerenderCard(item.id);
+    // Also refresh player wish list if that tab is open
+    const playerPanel = document.getElementById("tab-player");
+    if (playerPanel?.style.display !== "none") renderMyWishes();
   });
 }
 
-// ─── ADD / EDIT ITEM MODAL ────────────────────────────────────────────────────
+// ─── ADD ITEM MODAL ───────────────────────────────────────────────────────────
 
-function buildModalClassCheckboxes(selected=[]) {
+function buildModalClassCheckboxes(selected = []) {
   const wrap = document.getElementById("modal-classes");
   if (!wrap) return;
-  wrap.innerHTML = ALL_CLASSES.map(c=>`
+  wrap.innerHTML = ALL_CLASSES.map(c => `
     <label class="class-option">
-      <input type="checkbox" value="${c}" ${selected.includes(c)?"checked":""}> ${c}
+      <input type="checkbox" value="${c}" ${selected.includes(c) ? "checked" : ""}> ${c}
     </label>`).join("");
 }
 
-function openItemModal(item=null) {
+function openItemModal(item = null) {
   document.getElementById("itemModalTitle").textContent = item ? "Edit Item" : "Add Item";
   document.getElementById("modal-name").value         = item?.name        || "";
   document.getElementById("modal-category").value     = item?.category    || "Wondrous Item";
@@ -526,8 +585,8 @@ function openItemModal(item=null) {
   document.getElementById("modal-description").value  = item?.description || "";
   document.getElementById("modal-quote").value        = item?.quote       || "";
   document.getElementById("modal-attunement").checked = item?.attunement  || false;
-  document.getElementById("modal-properties").value   = JSON.stringify(item?.properties||[],null,2);
-  buildModalClassCheckboxes(item?.classes||[]);
+  document.getElementById("modal-properties").value   = JSON.stringify(item?.properties || [], null, 2);
+  buildModalClassCheckboxes(item?.classes || []);
   document.getElementById("itemModal").dataset.editId = item?.id || "";
   document.getElementById("itemModal").style.display  = "flex";
 }
@@ -538,10 +597,12 @@ async function saveItemModal() {
   const editId = document.getElementById("itemModal").dataset.editId;
   const name   = document.getElementById("modal-name").value.trim();
   if (!name) { alert("Name is required."); return; }
+
   let properties = [];
-  try { properties = JSON.parse(document.getElementById("modal-properties").value||"[]"); }
+  try { properties = JSON.parse(document.getElementById("modal-properties").value || "[]"); }
   catch { alert("Properties JSON is invalid."); return; }
-  const classes = [...document.querySelectorAll("#modal-classes input:checked")].map(i=>i.value);
+
+  const classes = [...document.querySelectorAll("#modal-classes input:checked")].map(i => i.value);
   const data = {
     name,
     category:    document.getElementById("modal-category").value,
@@ -554,19 +615,30 @@ async function saveItemModal() {
     attunement:  document.getElementById("modal-attunement").checked,
     classes, properties
   };
+
   if (!editId) {
-    const autoId = name.toLowerCase().replaceAll(/[^a-z0-9]+/g,"-");
-    await setDoc(doc(db,"items",autoId), { ...data, looted:false, printed:false, owner:null, receivedDate:null }, { merge:true });
+    // New item — full reload so it appears in the grid
+    const autoId = name.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-");
+    await setDoc(doc(db, "items", autoId),
+      { ...data, looted: false, printed: false, owner: null, receivedDate: null },
+      { merge: true }
+    );
+    closeItemModal();
+    await loadItemsFromFirestore();
   } else {
-    await updateDoc(doc(db,"items",editId), data);
+    // Edit existing — patch local + re-render one card
+    await updateDoc(doc(db, "items", editId), data);
+    closeItemModal();
+    patchItem(editId, data);
+    rerenderCard(editId);
+    populateSourceFilter();
+    populateCampaignFilter();
   }
-  closeItemModal();
-  await loadItemsFromFirestore();
 }
 
 // ─── USER MODAL ───────────────────────────────────────────────────────────────
 
-function openUserModal(user=null) {
+function openUserModal(user = null) {
   document.getElementById("userModalTitle").textContent = user ? "Edit User" : "Add User";
   document.getElementById("user-name").value  = user?.name  || "";
   document.getElementById("user-email").value = user?.email || "";
@@ -585,16 +657,21 @@ async function saveUserModal() {
   const name   = document.getElementById("user-name").value.trim();
   const email  = document.getElementById("user-email").value.trim();
   if (!name || !email) { alert("Name and email are required."); return; }
-  const role = [...document.querySelectorAll(".role-checkbox:checked")].map(cb=>cb.value);
+
+  const role = [...document.querySelectorAll(".role-checkbox:checked")].map(cb => cb.value);
   const data = { name, email, role };
+
   if (editId) {
-    await updateDoc(doc(db,"users",editId), data);
+    await updateDoc(doc(db, "users", editId), data);
+    const idx = users.findIndex(u => u.id === editId);
+    if (idx !== -1) users[idx] = { ...users[idx], ...data };
   } else {
-    const tempId = email.toLowerCase().replaceAll(/[^a-z0-9]/g,"-");
-    await setDoc(doc(db,"users",tempId), data, { merge:true });
+    const tempId = email.toLowerCase().replaceAll(/[^a-z0-9]/g, "-");
+    await setDoc(doc(db, "users", tempId), data, { merge: true });
+    users.push({ id: tempId, ...data });
   }
+
   closeUserModal();
-  await loadUsers();
   populateOwnerFilter();
   renderUserTable();
   renderAdminStats();
@@ -607,36 +684,39 @@ function renderUserTable() {
   if (!tbody) return;
 
   tbody.innerHTML = users.map(u => {
-    const role      = Array.isArray(u.role) ? u.role.join(", ") : (u.role||"viewer");
+    const role      = Array.isArray(u.role) ? u.role.join(", ") : (u.role || "viewer");
     const userChars = characters.filter(c => c.userId === u.id && c.active !== false);
 
     const charHTML = userChars.length > 0
       ? userChars.map(c => {
-          const tier = getTier(c.level);
-          const tierBadge = tier
-            ? `<span class="tier-badge" style="background:${tier.bg};color:${tier.color};border-color:${tier.color}">
-                 ${tier.label}
-               </span>`
+          const tier       = getTier(c.level);
+          const tierBadge  = tier
+            ? `<span class="tier-badge" style="background:${tier.bg};color:${tier.color};border-color:${tier.color}">${tier.label}</span>`
             : "";
           const levelBadge = c.level
             ? `<span class="level-badge">Lvl ${c.level}</span>`
             : `<span class="level-badge level-badge--empty">No level</span>`;
-          const campaign = c.campaign
-            ? `<span class="char-campaign">${c.campaign}</span>`
-            : "";
+          const campSpan   = c.campaign
+            ? `<span class="char-campaign">${c.campaign}</span>` : "";
           return `
             <div class="admin-char-row">
               <div class="admin-char-info">
                 <span class="admin-char-name">${c.name}</span>
                 <span class="admin-char-class">${c.class}</span>
-                ${campaign}
-                ${levelBadge}
-                ${tierBadge}
+                ${campSpan}${levelBadge}${tierBadge}
               </div>
               <div class="admin-char-btns">
-                <button class="wish-view-btn btn-sm" data-char-id="${c.id}" data-char-name="${c.name}">Wishes</button>
-                <button class="edit-button btn-sm" data-edit-char="${c.id}" data-char-name="${c.name}" data-char-class="${c.class}" data-char-level="${c.level||""}" data-char-campaign="${c.campaign||""}">Edit</button>
-                <button class="cancel-button btn-sm" data-delete-char="${c.id}" data-char-name="${c.name}">Delete</button>
+                <button class="wish-view-btn btn-sm"
+                  data-char-id="${c.id}" data-char-name="${c.name}">Wishes</button>
+                <button class="edit-button btn-sm"
+                  data-edit-char="${c.id}"
+                  data-char-name="${c.name}"
+                  data-char-class="${c.class}"
+                  data-char-level="${c.level||""}"
+                  data-char-campaign="${c.campaign||""}">Edit</button>
+                <button class="cancel-button btn-sm"
+                  data-delete-char="${c.id}"
+                  data-char-name="${c.name}">Delete</button>
               </div>
             </div>`;
         }).join("")
@@ -654,59 +734,81 @@ function renderUserTable() {
             <button class="cancel-button btn-sm" data-delete-user="${u.id}">Delete User</button>
           </div>
         </td>
-      </tr>
-    `;
+      </tr>`;
   }).join("");
 
   // User edit / delete
   tbody.querySelectorAll("[data-edit-user]").forEach(btn => {
-    btn.addEventListener("click", () => openUserModal(users.find(u=>u.id===btn.dataset.editUser)));
+    btn.addEventListener("click", () =>
+      openUserModal(users.find(u => u.id === btn.dataset.editUser))
+    );
   });
+
   tbody.querySelectorAll("[data-delete-user]").forEach(btn => {
     btn.addEventListener("click", async () => {
       if (!confirm("Delete this user? All their characters and wishes will also be deleted.")) return;
-      const uid = btn.dataset.deleteUser;
-      const userChars = characters.filter(c=>c.userId===uid);
+      const uid       = btn.dataset.deleteUser;
+      const userChars = characters.filter(c => c.userId === uid);
       for (const c of userChars) {
-        const charWishes = wishes.filter(w=>w.characterId===c.id);
-        for (const w of charWishes) await deleteDoc(doc(db,"wishes",w.id));
-        await deleteDoc(doc(db,"characters",c.id));
+        for (const w of wishes.filter(w => w.characterId === c.id))
+          await deleteDoc(doc(db, "wishes", w.id));
+        await deleteDoc(doc(db, "characters", c.id));
       }
-      await deleteDoc(doc(db,"users",uid));
-      await loadUsers(); await loadCharacters(); await loadWishes();
-      populateOwnerFilter(); renderUserTable(); renderAdminStats();
+      await deleteDoc(doc(db, "users", uid));
+      // Patch local state — no Firestore reload needed
+      users      = users.filter(u => u.id !== uid);
+      characters = characters.filter(c => c.userId !== uid);
+      wishes     = wishes.filter(w => !userChars.some(c => c.id === w.characterId));
+      // Items owned by deleted user's characters lose their owner locally
+      userChars.forEach(c => {
+        items.filter(i => i.owner === c.id).forEach(i => patchItem(i.id, { owner: null }));
+      });
+      populateOwnerFilter();
+      renderUserTable();
+      renderAdminStats();
+      renderCards();
     });
   });
 
   // Character edit / delete
   tbody.querySelectorAll("[data-edit-char]").forEach(btn => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", () =>
       openEditCharacterModal(
-        btn.dataset.editChar,
-        btn.dataset.charName,
-        btn.dataset.charClass,
-        btn.dataset.charLevel,
+        btn.dataset.editChar, btn.dataset.charName,
+        btn.dataset.charClass, btn.dataset.charLevel,
         btn.dataset.charCampaign
-      );
-    });
+      )
+    );
   });
+
   tbody.querySelectorAll("[data-delete-char]").forEach(btn => {
     btn.addEventListener("click", async () => {
       if (!confirm(`Delete character "${btn.dataset.charName}"? Their wishes will also be removed.`)) return;
       const cid = btn.dataset.deleteChar;
-      const charWishes = wishes.filter(w=>w.characterId===cid);
-      for (const w of charWishes) await deleteDoc(doc(db,"wishes",w.id));
-      const ownedItems = items.filter(i=>i.owner===cid);
-      for (const i of ownedItems) await updateDoc(doc(db,"items",i.id), { owner: null });
-      await deleteDoc(doc(db,"characters",cid));
-      await loadCharacters(); await loadWishes(); await loadItemsFromFirestore();
-      renderUserTable(); renderAdminStats();
+      for (const w of wishes.filter(w => w.characterId === cid))
+        await deleteDoc(doc(db, "wishes", w.id));
+      // Un-assign owned items (fire-and-forget writes)
+      items.filter(i => i.owner === cid).forEach(i => {
+        updateDoc(doc(db, "items", i.id), { owner: null });
+        patchItem(i.id, { owner: null });
+      });
+      await deleteDoc(doc(db, "characters", cid));
+      // Patch local state
+      wishes     = wishes.filter(w => w.characterId !== cid);
+      characters = characters.filter(c => c.id !== cid);
+      if (selectedCharacter?.id === cid) selectedCharacter = null;
+      populateOwnerFilter();
+      renderUserTable();
+      renderAdminStats();
+      renderCards();
     });
   });
 
-  // Wishes modal button
+  // Wishes modal
   tbody.querySelectorAll(".wish-view-btn").forEach(btn => {
-    btn.addEventListener("click", () => openWishModal(btn.dataset.charId, btn.dataset.charName));
+    btn.addEventListener("click", () =>
+      openWishModal(btn.dataset.charId, btn.dataset.charName)
+    );
   });
 }
 
@@ -714,7 +816,8 @@ function renderAdminStats() {
   const el = document.getElementById("adminStats");
   if (!el) return;
   const playerCount = users.filter(u => {
-    const r=u.role; return Array.isArray(r)?r.includes("player")||r.includes("admin"):["player","admin"].includes(r);
+    const r = u.role;
+    return Array.isArray(r) ? r.includes("player") || r.includes("admin") : ["player","admin"].includes(r);
   }).length;
   el.innerHTML = `
     <div class="stat-card"><span class="stat-num">${items.length}</span><span class="stat-label">Total Items</span></div>
@@ -730,77 +833,77 @@ function renderAdminStats() {
 // ─── WISH MODAL (admin view) ──────────────────────────────────────────────────
 
 function openWishModal(charId, charName) {
-  const charWishes  = wishes.filter(w => w.characterId === charId);
-  const wishedItems = charWishes
+  const wishedItems = wishes
+    .filter(w => w.characterId === charId)
     .map(w => items.find(i => i.id === w.itemId))
     .filter(Boolean);
 
-  const char  = characters.find(c => c.id === charId);
-  const tier  = char ? getTier(char.level) : null;
-  const modal = document.getElementById("wishModal");
-  const title = document.getElementById("wishModalCharName");
-  const grid  = document.getElementById("wishModalGrid");
+  document.getElementById("wishModalCharName").textContent = `${charName}'s Wishes`;
+  const grid = document.getElementById("wishModalGrid");
 
-  title.textContent = `${charName}'s Wishes`;
-
-  if (wishedItems.length === 0) {
-    grid.innerHTML = `<p class="player-empty" style="grid-column:1/-1">No wishes yet for this character.</p>`;
-  } else {
-    grid.innerHTML = wishedItems.map(item => {
-      const rarityClass = (item.rarity||"").toLowerCase().replaceAll(" ","-");
-      return `
-        <div class="wish-modal-card ${rarityClass}">
-          ${item.imageUrl ? `<img src="${item.imageUrl}" class="wish-modal-art" alt="${item.name}" onerror="this.style.display='none'">` : ""}
-          <div class="wish-modal-body">
-            <div class="wish-modal-name">${item.name}</div>
-            <div class="card-meta" style="margin-top:4px">
-              ${item.rarity   ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>`   : ""}
-              ${item.category ? `<span class="meta-tag">${item.category}</span>`                : ""}
-              ${item.attunement ? `<span class="meta-tag">Attunement</span>`                    : ""}
+  grid.innerHTML = wishedItems.length === 0
+    ? `<p class="player-empty" style="grid-column:1/-1">No wishes yet for this character.</p>`
+    : wishedItems.map(item => {
+        const rc = (item.rarity||"").toLowerCase().replaceAll(" ","-");
+        return `
+          <div class="wish-modal-card ${rc}">
+            ${item.imageUrl ? `<img src="${item.imageUrl}" class="wish-modal-art" alt="${item.name}" onerror="this.style.display='none'">` : ""}
+            <div class="wish-modal-body">
+              <div class="wish-modal-name">${item.name}</div>
+              <div class="card-meta" style="margin-top:4px">
+                ${item.rarity   ? `<span class="meta-tag ${rc}">${item.rarity}</span>` : ""}
+                ${item.category ? `<span class="meta-tag">${item.category}</span>`     : ""}
+                ${item.attunement ? `<span class="meta-tag">Attunement</span>`         : ""}
+              </div>
+              ${(item.properties||[]).slice(0,2).map(p=>`
+                <div class="wish-modal-prop">
+                  <span class="property-title">${p.title}:</span>
+                  ${p.text.substring(0,120)}${p.text.length>120?"…":""}
+                </div>`).join("")}
             </div>
-            ${(item.properties||[]).slice(0,2).map(p=>`
-              <div class="wish-modal-prop">
-                <span class="property-title">${p.title}:</span> ${p.text.substring(0,120)}${p.text.length>120?"…":""}
-              </div>`).join("")}
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
+          </div>`;
+      }).join("");
 
-  modal.style.display = "flex";
+  document.getElementById("wishModal").style.display = "flex";
 }
 
-function closeWishModal() {
-  document.getElementById("wishModal").style.display = "none";
-}
+function closeWishModal() { document.getElementById("wishModal").style.display = "none"; }
 
 // ─── FILTER POPULATORS ────────────────────────────────────────────────────────
 
 function populateSourceFilter() {
   const el = document.getElementById("sourceFilter");
   if (!el) return;
-  const cur = el.value;
+  const cur     = el.value;
   const sources = [...new Set(items.map(i=>i.source).filter(Boolean))].sort();
-  el.innerHTML = `<option value="">All Sources</option>` +
-    sources.map(s=>`<option value="${s}" ${s===cur?"selected":""}>${s}</option>`).join("");
+  el.innerHTML  = `<option value="">All Sources</option>` +
+    sources.map(s=>`<option ${s===cur?"selected":""}>${s}</option>`).join("");
 }
 
 function populateCampaignFilter() {
   const el = document.getElementById("campaignFilter");
   if (!el) return;
-  const cur = el.value;
-  const campaigns = [...new Set(items.map(i=>i.campaign).filter(Boolean))].sort();
-  el.innerHTML = `<option value="">All Campaigns</option>` +
-    campaigns.map(c=>`<option value="${c}" ${c===cur?"selected":""}>${c}</option>`).join("");
+  const cur       = el.value;
+  const campaigns = availableCampaigns();
+  el.innerHTML    = `<option value="">All Campaigns</option>` +
+    campaigns.map(c=>`<option ${c===cur?"selected":""}>${c}</option>`).join("");
 }
 
 function populateOwnerFilter() {
   const el = document.getElementById("ownerFilter");
   if (!el) return;
-  const playable = allPlayableCharacters();
   el.innerHTML = `<option value="">All Owners</option>` +
-    playable.map(c=>`<option value="${c.id}">${characterDisplayName(c)}</option>`).join("");
+    allPlayableCharacters().map(c =>
+      `<option value="${c.id}">${characterDisplayName(c)}</option>`
+    ).join("");
+}
+
+function populateCreateCharCampaigns() {
+  const sel = document.getElementById("playerCharCampaign");
+  if (!sel) return;
+  const camps = availableCampaigns();
+  sel.innerHTML = `<option value="">No Campaign</option>` +
+    camps.map(c=>`<option>${c}</option>`).join("");
 }
 
 // ─── STATS BAR ────────────────────────────────────────────────────────────────
@@ -824,7 +927,7 @@ function renderCharacterList() {
   const el   = document.getElementById("myCharacterList");
   if (!el) return;
 
-  if (mine.length === 0) {
+  if (!mine.length) {
     el.innerHTML = `<p class="player-empty">No characters yet — create one below.</p>`;
     return;
   }
@@ -840,7 +943,7 @@ function renderCharacterList() {
       <div class="character-card ${selectedCharacter?.id===c.id?"character-card--active":""}">
         <div class="character-card-info">
           <span class="character-card-name">${c.name}</span>
-          <span class="character-card-class">${c.class}${c.campaign ? " · " + c.campaign : ""}${c.level ? " · Level " + c.level : ""}</span>
+          <span class="character-card-class">${c.class}${c.campaign?" · "+c.campaign:""}${c.level?" · Level "+c.level:""}</span>
           ${tierBadge}
         </div>
         <div class="character-card-actions">
@@ -848,44 +951,50 @@ function renderCharacterList() {
             ? `<button class="btn-select-char" data-char-id="${c.id}">Set Active</button>`
             : `<span class="active-badge">✓ Active</span>`
           }
-          <button class="btn-rename-char" data-char-id="${c.id}" data-char-name="${c.name}" data-char-class="${c.class}" data-char-level="${c.level||""}" data-char-campaign="${c.campaign||""}">Edit</button>
-          <button class="btn-delete-char cancel-button" data-char-id="${c.id}" data-char-name="${c.name}">Delete</button>
+          <button class="btn-rename-char"
+            data-char-id="${c.id}" data-char-name="${c.name}"
+            data-char-class="${c.class}" data-char-level="${c.level||""}"
+            data-char-campaign="${c.campaign||""}">Edit</button>
+          <button class="btn-delete-char cancel-button"
+            data-char-id="${c.id}" data-char-name="${c.name}">Delete</button>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join("");
 
   el.querySelectorAll(".btn-select-char").forEach(btn => {
     btn.addEventListener("click", () => {
-      selectedCharacter = characters.find(c=>c.id===btn.dataset.charId)||null;
+      selectedCharacter = characters.find(c => c.id === btn.dataset.charId) || null;
       renderCharacterList(); renderMyWishes(); renderCards();
     });
   });
 
   el.querySelectorAll(".btn-rename-char").forEach(btn => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", () =>
       openEditCharacterModal(
-        btn.dataset.charId,
-        btn.dataset.charName,
-        btn.dataset.charClass,
-        btn.dataset.charLevel,
+        btn.dataset.charId, btn.dataset.charName,
+        btn.dataset.charClass, btn.dataset.charLevel,
         btn.dataset.charCampaign
-      );
-    });
+      )
+    );
   });
 
   el.querySelectorAll(".btn-delete-char").forEach(btn => {
     btn.addEventListener("click", async () => {
       if (!confirm(`Delete "${btn.dataset.charName}"? Their wishes will also be removed.`)) return;
       const cid = btn.dataset.charId;
-      const charWishes = wishes.filter(w=>w.characterId===cid);
-      for (const w of charWishes) await deleteDoc(doc(db,"wishes",w.id));
-      const ownedItems = items.filter(i=>i.owner===cid);
-      for (const i of ownedItems) await updateDoc(doc(db,"items",i.id), { owner: null });
-      await deleteDoc(doc(db,"characters",cid));
-      if (selectedCharacter?.id===cid) selectedCharacter=null;
-      await loadCharacters(); await loadWishes(); await loadItemsFromFirestore();
+      for (const w of wishes.filter(w => w.characterId === cid))
+        await deleteDoc(doc(db, "wishes", w.id));
+      items.filter(i => i.owner === cid).forEach(i => {
+        updateDoc(doc(db, "items", i.id), { owner: null });
+        patchItem(i.id, { owner: null });
+      });
+      await deleteDoc(doc(db, "characters", cid));
+      wishes     = wishes.filter(w => w.characterId !== cid);
+      characters = characters.filter(c => c.id !== cid);
+      if (selectedCharacter?.id === cid) selectedCharacter = null;
+      populateOwnerFilter();
       renderPlayerTab();
+      renderCards();
     });
   });
 }
@@ -894,17 +1003,12 @@ function renderMyLoot() {
   const el = document.getElementById("myLootGrid");
   if (!el) return;
   const mine = myCharacters();
-  if (mine.length===0) {
-    el.innerHTML=`<p class="player-empty">Create a character to see your loot.</p>`; return;
-  }
-  const myCharIds = mine.map(c=>c.id);
-  const myItems   = items.filter(i=>i.looted && myCharIds.includes(i.owner));
-  if (myItems.length===0) {
-    el.innerHTML=`<p class="player-empty">No items assigned to you yet.</p>`; return;
-  }
+  if (!mine.length) { el.innerHTML = `<p class="player-empty">Create a character to see your loot.</p>`; return; }
+  const myItems = items.filter(i => i.looted && mine.some(c => c.id === i.owner));
+  if (!myItems.length) { el.innerHTML = `<p class="player-empty">No items assigned to you yet.</p>`; return; }
   el.innerHTML = myItems.map(item => {
-    const ownerChar = characters.find(c=>c.id===item.owner);
-    return createMiniCard(item, "loot", ownerChar?.name||"");
+    const ownerChar = characters.find(c => c.id === item.owner);
+    return createMiniCard(item, "loot", ownerChar?.name || "");
   }).join("");
 }
 
@@ -912,55 +1016,51 @@ function renderMyWishes() {
   const el = document.getElementById("myWishGrid");
   if (!el) return;
   const mine = myCharacters();
-  if (mine.length===0) {
-    el.innerHTML=`<p class="player-empty">Create a character to track wishes.</p>`; return;
-  }
-  const myCharIds = mine.map(c=>c.id);
-  const myWishes  = wishes.filter(w=>myCharIds.includes(w.characterId));
-  const wished    = myWishes.map(w=>{
-    const item = items.find(i=>i.id===w.itemId);
-    const char = characters.find(c=>c.id===w.characterId);
-    return item ? { ...item, _wishChar: char?.name||"?" } : null;
-  }).filter(Boolean);
+  if (!mine.length) { el.innerHTML = `<p class="player-empty">Create a character to track wishes.</p>`; return; }
+  const myCharIds = mine.map(c => c.id);
+  const wished    = wishes
+    .filter(w => myCharIds.includes(w.characterId))
+    .map(w => {
+      const item = items.find(i => i.id === w.itemId);
+      const char = characters.find(c => c.id === w.characterId);
+      return item ? { ...item, _wishChar: char?.name || "?" } : null;
+    })
+    .filter(Boolean);
 
-  if (wished.length===0) {
-    el.innerHTML=`<p class="player-empty">No wishes yet. Click ☆ on any item in the Library.</p>`; return;
-  }
+  if (!wished.length) { el.innerHTML = `<p class="player-empty">No wishes yet. Click ☆ on any item in the Library.</p>`; return; }
   el.innerHTML = wished.map(item => createMiniCard(item, "wish", item._wishChar)).join("");
 }
 
-function createMiniCard(item, mode, extra="") {
-  const rarityClass = (item.rarity||"").toLowerCase().replaceAll(" ","-");
+function createMiniCard(item, mode, extra = "") {
+  const rc = (item.rarity||"").toLowerCase().replaceAll(" ","-");
   return `
-    <div class="mini-card ${rarityClass}">
+    <div class="mini-card ${rc}">
       ${item.imageUrl ? `<img src="${item.imageUrl}" class="mini-card-art" alt="${item.name}" onerror="this.style.display='none'">` : ""}
       <div class="mini-card-body">
         <div class="mini-card-name">${item.name}</div>
         <div class="mini-card-meta">
-          ${item.rarity  ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>`  : ""}
-          ${item.category? `<span class="meta-tag">${item.category}</span>`               : ""}
-          ${mode==="wish" && extra ? `<span class="meta-tag campaign-tag">★ ${extra}</span>` : ""}
-          ${mode==="loot" && extra ? `<span class="meta-tag" style="border-color:#27ae60;color:#1e8449">⚔ ${extra}</span>` : ""}
+          ${item.rarity   ? `<span class="meta-tag ${rc}">${item.rarity}</span>`   : ""}
+          ${item.category ? `<span class="meta-tag">${item.category}</span>`       : ""}
+          ${mode==="wish"&&extra ? `<span class="meta-tag campaign-tag">★ ${extra}</span>` : ""}
+          ${mode==="loot"&&extra ? `<span class="meta-tag" style="border-color:#27ae60;color:#1e8449">⚔ ${extra}</span>` : ""}
         </div>
         ${item.attunement ? `<div class="mini-card-attune">Requires Attunement</div>` : ""}
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 // ─── EDIT CHARACTER MODAL ─────────────────────────────────────────────────────
 
-function openEditCharacterModal(charId, charName, charClass, charLevel="", charCampaign="") {
-  document.getElementById("editChar-name").value     = charName;
-  document.getElementById("editChar-class").value    = charClass;
-  document.getElementById("editChar-level").value    = charLevel;
-  document.getElementById("editChar-campaign").value = charCampaign;
+function openEditCharacterModal(charId, charName, charClass, charLevel = "", charCampaign = "") {
+  document.getElementById("editChar-name").value  = charName;
+  document.getElementById("editChar-class").value = charClass;
+  document.getElementById("editChar-level").value = charLevel;
 
-  // Populate campaign dropdown dynamically
   const campSel = document.getElementById("editChar-campaign");
-  const camps   = availableCampaigns();
   campSel.innerHTML = `<option value="">No Campaign</option>` +
-    camps.map(c=>`<option value="${c}" ${c===charCampaign?"selected":""}>${c}</option>`).join("");
+    availableCampaigns().map(c =>
+      `<option ${c===charCampaign?"selected":""}>${c}</option>`
+    ).join("");
 
   document.getElementById("editCharModal").dataset.charId = charId;
   document.getElementById("editCharModal").style.display  = "flex";
@@ -978,44 +1078,34 @@ async function saveEditCharacter() {
   const newCampaign = document.getElementById("editChar-campaign").value || null;
 
   if (!newName) { alert("Character name is required."); return; }
-  if (newLevel !== null && (newLevel < 1 || newLevel > 20)) {
-    alert("Level must be between 1 and 20."); return;
-  }
+  if (newLevel !== null && (newLevel < 1 || newLevel > 20)) { alert("Level must be 1–20."); return; }
 
-  await updateDoc(doc(db,"characters",charId), {
-    name: newName, class: newClass,
-    level: newLevel, campaign: newCampaign
-  });
-  await loadCharacters();
-  if (selectedCharacter?.id===charId) selectedCharacter=characters.find(c=>c.id===charId)||null;
+  const changes = { name: newName, class: newClass, level: newLevel, campaign: newCampaign };
+  await updateDoc(doc(db, "characters", charId), changes);
+
+  // Patch local characters array
+  const idx = characters.findIndex(c => c.id === charId);
+  if (idx !== -1) characters[idx] = { ...characters[idx], ...changes };
+  if (selectedCharacter?.id === charId) selectedCharacter = characters[idx];
+
   closeEditCharacterModal();
+  populateOwnerFilter();
   renderPlayerTab();
   if (isAdmin()) { renderUserTable(); renderAdminStats(); }
-  populateOwnerFilter();
-  renderCards();
-}
-
-// ─── CREATE CHARACTER (player tab form) ───────────────────────────────────────
-
-function populateCreateCharCampaigns() {
-  const sel   = document.getElementById("playerCharCampaign");
-  if (!sel) return;
-  const camps = availableCampaigns();
-  sel.innerHTML = `<option value="">No Campaign</option>` +
-    camps.map(c=>`<option value="${c}">${c}</option>`).join("");
+  renderCards(); // owner badges on item cards may show the updated name
 }
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 
 function showTab(tabId) {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.querySelectorAll(".tab-content").forEach(c => c.style.display="none");
+  document.querySelectorAll(".tab-content").forEach(c => c.style.display = "none");
   const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
   if (btn) btn.classList.add("active");
   const panel = document.getElementById(`tab-${tabId}`);
   if (panel) panel.style.display = "block";
-  if (tabId==="admin")  { renderUserTable(); renderAdminStats(); }
-  if (tabId==="player") { renderPlayerTab(); populateCreateCharCampaigns(); }
+  if (tabId === "admin")  { renderUserTable(); renderAdminStats(); }
+  if (tabId === "player") { renderPlayerTab(); populateCreateCharCampaigns(); }
 }
 
 function initTabs() {
@@ -1027,10 +1117,11 @@ function initTabs() {
 // ─── FILTER LISTENERS ────────────────────────────────────────────────────────
 
 function initFilterListeners() {
-  ["search","ownerFilter","rarityFilter","sourceFilter","campaignFilter",
-   "categoryFilter","classFilter","showLootedOnly","showUnlootedOnly",
-   "showWishedOnly","showAttunementOnly","showNoAttunementOnly",
-   "showPrintedOnly","showNotPrintedOnly"
+  [
+    "search","ownerFilter","rarityFilter","sourceFilter","campaignFilter",
+    "categoryFilter","classFilter","showLootedOnly","showUnlootedOnly",
+    "showWishedOnly","showAttunementOnly","showNoAttunementOnly",
+    "showPrintedOnly","showNotPrintedOnly"
   ].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -1042,28 +1133,24 @@ function initFilterListeners() {
 // ─── MODAL LISTENERS ─────────────────────────────────────────────────────────
 
 function initModalListeners() {
-  // Item modal
-  document.getElementById("addItemBtn")?.addEventListener("click", ()=>openItemModal());
-  document.getElementById("closeItemModal")?.addEventListener("click", closeItemModal);
+  document.getElementById("addItemBtn")?.addEventListener("click",      () => openItemModal());
+  document.getElementById("closeItemModal")?.addEventListener("click",  closeItemModal);
   document.getElementById("cancelItemModal")?.addEventListener("click", closeItemModal);
-  document.getElementById("saveItemModal")?.addEventListener("click", saveItemModal);
+  document.getElementById("saveItemModal")?.addEventListener("click",   saveItemModal);
 
-  // User modal
-  document.getElementById("openAddUserBtn")?.addEventListener("click", ()=>openUserModal());
-  document.getElementById("closeUserModal")?.addEventListener("click", closeUserModal);
+  document.getElementById("openAddUserBtn")?.addEventListener("click",  () => openUserModal());
+  document.getElementById("closeUserModal")?.addEventListener("click",  closeUserModal);
   document.getElementById("cancelUserModal")?.addEventListener("click", closeUserModal);
-  document.getElementById("saveUserModal")?.addEventListener("click", saveUserModal);
+  document.getElementById("saveUserModal")?.addEventListener("click",   saveUserModal);
 
-  // Edit character modal
   document.getElementById("closeEditCharModal")?.addEventListener("click",  closeEditCharacterModal);
   document.getElementById("cancelEditCharModal")?.addEventListener("click", closeEditCharacterModal);
   document.getElementById("saveEditCharModal")?.addEventListener("click",   saveEditCharacter);
 
-  // Wish modal (admin)
-  document.getElementById("closeWishModal")?.addEventListener("click",  closeWishModal);
+  document.getElementById("closeWishModal")?.addEventListener("click",    closeWishModal);
   document.getElementById("closeWishModalBtn")?.addEventListener("click", closeWishModal);
 
-  // Player tab — create character
+  // Create character (player tab)
   document.getElementById("playerCreateCharBtn")?.addEventListener("click", async () => {
     const name     = document.getElementById("playerCharName").value.trim();
     const cls      = document.getElementById("playerCharClass").value;
@@ -1073,33 +1160,39 @@ function initModalListeners() {
     if (!name) { alert("Enter a character name."); return; }
     if (level !== null && (level < 1 || level > 20)) { alert("Level must be 1–20."); return; }
 
-    const newDoc = await addDoc(collection(db,"characters"), {
+    const newRef = await addDoc(collection(db, "characters"), {
       name, class: cls, level, campaign,
       userId: auth.currentUser.uid, active: true, created: Date.now()
     });
-    await loadCharacters();
-    selectedCharacter = characters.find(c=>c.id===newDoc.id)||null;
+    const newChar = { id: newRef.id, name, class: cls, level, campaign,
+      userId: auth.currentUser.uid, active: true, created: Date.now() };
+    characters.push(newChar);
+    selectedCharacter = newChar;
+
     document.getElementById("playerCharName").value  = "";
     document.getElementById("playerCharLevel").value = "";
+
     const playerTab = document.getElementById("playerTab");
     if (playerTab) playerTab.style.display = "inline-block";
+
     renderPlayerTab();
-    renderCards();
+    renderCards(); // wish buttons now appear
   });
 
   // Close on backdrop click or Escape
   document.querySelectorAll(".modal").forEach(modal => {
-    modal.addEventListener("click", e => { if (e.target===modal) modal.style.display="none"; });
+    modal.addEventListener("click", e => { if (e.target === modal) modal.style.display = "none"; });
   });
   document.addEventListener("keydown", e => {
-    if (e.key==="Escape") document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
+    if (e.key === "Escape")
+      document.querySelectorAll(".modal").forEach(m => m.style.display = "none");
   });
 }
 
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 
 document.getElementById("loginButton")?.addEventListener("click", async () => {
-  try { await signInWithPopup(auth, provider); } catch(e) { console.error(e); }
+  try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); }
 });
 
 document.getElementById("emailLoginButton")?.addEventListener("click", async () => {
@@ -1109,7 +1202,7 @@ document.getElementById("emailLoginButton")?.addEventListener("click", async () 
       document.getElementById("emailInput").value,
       document.getElementById("passwordInput").value
     );
-  } catch(e) { alert(e.message); }
+  } catch (e) { alert(e.message); }
 });
 
 document.getElementById("registerButton")?.addEventListener("click", async () => {
@@ -1120,7 +1213,7 @@ document.getElementById("registerButton")?.addEventListener("click", async () =>
       document.getElementById("passwordInput").value
     );
     alert("Account created! You can now log in.");
-  } catch(e) { alert(e.message); }
+  } catch (e) { alert(e.message); }
 });
 
 document.getElementById("logoutButton")?.addEventListener("click", async () => {
@@ -1145,16 +1238,15 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     if (loginControls) loginControls.style.display = "none";
     if (logoutBtn)     logoutBtn.style.display      = "inline-block";
 
+    // Load all collections on login — users/characters/wishes in parallel
     await importItemsIfEmpty();
-    await loadUsers();
-    await loadCharacters();
-    await loadWishes();
+    await Promise.all([loadUsers(), loadCharacters(), loadWishes()]);
     await loadItemsFromFirestore();
     populateOwnerFilter();
 
-    if (adminTab)   adminTab.style.display   = isAdmin()  ? "inline-block" : "none";
-    if (addBtn)     addBtn.style.display     = isAdmin()  ? "inline-block" : "none";
-    if (adminPanel) adminPanel.style.display = isAdmin()  ? "block"        : "none";
+    if (adminTab)   adminTab.style.display   = isAdmin() ? "inline-block" : "none";
+    if (addBtn)     addBtn.style.display     = isAdmin() ? "inline-block" : "none";
+    if (adminPanel) adminPanel.style.display = isAdmin() ? "block"        : "none";
 
     const hasChars = myCharacters().length > 0;
     if (playerTab) playerTab.style.display = (isPlayer() && hasChars) ? "inline-block" : "none";
@@ -1170,7 +1262,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     if (playerTab)     playerTab.style.display       = "none";
     if (addBtn)        addBtn.style.display           = "none";
     if (adminPanel)    adminPanel.style.display       = "none";
-    renderCards();
+    items = []; wishes = []; renderCards();
   }
 });
 
