@@ -276,7 +276,7 @@ h1 {
 
 .loot-button, .print-button, .edit-button, .clone-button,
 .save-button, .cancel-button, .wish-button, .btn-sm,
-.btn-select-char, .btn-rename-char, .btn-delete-char, .wish-view-btn {
+.btn-select-char, .btn-rename-char, .btn-delete-char, .wish-view-btn, .highlight-button {
   border: none;
   border-radius: 6px;
   color: white;
@@ -292,14 +292,14 @@ h1 {
 
 .loot-button:hover, .print-button:hover, .edit-button:hover, .clone-button:hover,
 .save-button:hover, .cancel-button:hover, .wish-button:hover, .btn-sm:hover,
-.btn-select-char:hover, .btn-rename-char:hover, .btn-delete-char:hover, .wish-view-btn:hover {
+.btn-select-char:hover, .btn-rename-char:hover, .btn-delete-char:hover, .wish-view-btn:hover, .highlight-button:hover {
   transform: scale(1.06); opacity: 1;
 }
 
 .loot-button    { background: #8b0000; }
-.highlight-button { background: #555; }
+.highlight-button { background: #eee018; }
 .edit-button    { background: #9b59b6; }
-.clone-button   { background: #c79c32; color: #1a0e00; }
+.clone-button   { background: #b88607; color: #1a0e00; }
 .save-edit-button { background: #27ae60; }
 .cancel-button  { background: #c0392b; }
 .wish-view-btn  { background: #2471a3; }
