@@ -297,7 +297,7 @@ h1 {
 }
 
 .loot-button    { background: #8b0000; }
-.highlight-button { background: #eee018; }
+.highlight-button { background: #5e5e5c; }
 .edit-button    { background: #9b59b6; }
 .clone-button   { background: #b88607; color: #1a0e00; }
 .save-edit-button { background: #27ae60; }
@@ -313,14 +313,15 @@ h1 {
 }
 
 .save-item-button {
-  background: #5c1d1d;
+  background: #00771e;
   border: 2px solid #d4af37 !important;
   color: #f5e6c8;
 }
 
 .save-item-button.saved {
-  background: #d4af37;
-  color: #2b1b00;
+  background: #f5e6c8;
+  border: 2px solid #d4af37 !important;
+  color: #00771e;
 }
 
 .no-char-hint {
