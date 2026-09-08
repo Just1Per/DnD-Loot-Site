@@ -112,12 +112,18 @@ async function loadStorageImage(path) {
   }
 }
 
+// Shown whenever Firebase Storage has no image for an item.
+// Put placeholder.png in the same folder as index.html.
+const PLACEHOLDER_IMAGE = "./placeholder.png";
+
 // Resolves an item's image URL, using imageCache to avoid duplicate Storage requests
 async function resolveImageUrl(itemId) {
   if (imageCache.has(itemId)) return imageCache.get(itemId);
   const url = await loadStorageImage(`dnd-item-images/${getBaseImageId(itemId)}.png`);
-  imageCache.set(itemId, url);
-  return url;
+  // Cache the result — placeholder if nothing found, real URL if found
+  const resolved = url || PLACEHOLDER_IMAGE;
+  imageCache.set(itemId, resolved);
+  return resolved;
 }
 
 /**
@@ -132,7 +138,7 @@ async function uploadItemImage(itemId, file) {
   try {
     await uploadBytes(imgRef, file, { contentType: file.type || "image/png" });
     const url = await getDownloadURL(imgRef);
-    // Bust cache so rerenderCard fetches the new URL
+    // Replace whatever was cached (including the placeholder) with the real URL
     imageCache.set(itemId, url);
     return url;
   } catch (e) {
@@ -432,8 +438,9 @@ function createCard(item) {
       : ""
     }
     ${item.imageUrl
-      ? `<img src="${item.imageUrl}" class="card-art" alt="${item.name}" loading="lazy" onerror="this.style.display='none'">`
-      : ""
+      ? `<img src="${item.imageUrl}" class="card-art" alt="${item.name}" loading="lazy"
+           onerror="this.src='./placeholder.png'">`
+      : `<img src="${PLACEHOLDER_IMAGE}" class="card-art" alt="${item.name}" loading="lazy">`
     }
 
     <div class="card-body">
