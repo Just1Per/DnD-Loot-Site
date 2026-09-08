@@ -375,7 +375,7 @@ function createCard(item) {
       ` : ""}
       ${canSave ? `
         <button class="save-item-button ${mySave ? "saved" : ""}">
-          ${mySave ? "★ Saved" : "☆ Save"}
+          ${mySave ? "Saved" : "Save"}
         </button>
       ` : needsChar ? `
         <span class="no-char-hint">Select a character to save items</span>
