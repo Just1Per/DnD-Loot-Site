@@ -16,7 +16,7 @@ import {
   setDoc, updateDoc, deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-import { ref, getDownloadURL }
+import { ref, getDownloadURL, uploadBytes }
   from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
@@ -118,6 +118,27 @@ async function resolveImageUrl(itemId) {
   const url = await loadStorageImage(`dnd-item-images/${getBaseImageId(itemId)}.png`);
   imageCache.set(itemId, url);
   return url;
+}
+
+/**
+ * Upload a File object to Firebase Storage at the correct path for an item.
+ * Overwrites any existing image. Busts the imageCache entry so the new
+ * image is fetched on the next render.
+ * Returns the new download URL, or "" on failure.
+ */
+async function uploadItemImage(itemId, file) {
+  const path    = `dnd-item-images/${getBaseImageId(itemId)}.png`;
+  const imgRef  = ref(storage, path);
+  try {
+    await uploadBytes(imgRef, file, { contentType: file.type || "image/png" });
+    const url = await getDownloadURL(imgRef);
+    // Bust cache so rerenderCard fetches the new URL
+    imageCache.set(itemId, url);
+    return url;
+  } catch (e) {
+    console.error("Image upload failed:", e);
+    return "";
+  }
 }
 
 // ─── DATA LOADERS ─────────────────────────────────────────────────────────────
@@ -348,6 +369,13 @@ function createCard(item) {
       ` : needsChar ? `
         <span class="no-char-hint">Select a character to wish</span>
       ` : ""}
+      ${admin ? `
+        <label class="upload-image-btn" title="Upload image to Firebase Storage">
+          📷 ${item.imageUrl ? "Replace Image" : "Upload Image"}
+          <input type="file" class="image-file-input" accept="image/*" style="display:none">
+        </label>
+        <span class="upload-progress" style="display:none">Uploading…</span>
+      ` : ""}
     </div>
 
     ${itemWishes.length > 0 ? `
@@ -529,6 +557,37 @@ function attachCardEvents(card, item) {
     updateDoc(doc(db, "items", item.id), { owner: ownerId });
     patchItem(item.id, { owner: ownerId });
     rerenderCard(item.id);
+  });
+
+  // Image upload — uploads file to Storage, busts cache, re-renders card
+  card.querySelector(".image-file-input")?.addEventListener("change", async e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type and size (max 4 MB)
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file."); return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      alert("Image must be smaller than 4 MB."); return;
+    }
+
+    // Show progress, disable button
+    const progressEl = card.querySelector(".upload-progress");
+    const labelEl    = card.querySelector(".upload-image-btn");
+    if (progressEl) progressEl.style.display = "inline";
+    if (labelEl)    labelEl.style.opacity    = "0.4";
+
+    const url = await uploadItemImage(item.id, file);
+
+    if (url) {
+      patchItem(item.id, { imageUrl: url });
+      rerenderCard(item.id);
+    } else {
+      alert("Image upload failed. Check the browser console for details.");
+      if (progressEl) progressEl.style.display = "none";
+      if (labelEl)    labelEl.style.opacity    = "1";
+    }
   });
 
   // Wish — patches local wishes array + re-renders one card, no Firestore read

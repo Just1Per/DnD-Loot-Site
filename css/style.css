@@ -326,6 +326,43 @@ h1 {
   align-self: center;
 }
 
+/* ─── IMAGE UPLOAD BUTTON ────────────────────────────────────────────────── */
+.upload-image-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #2c6e8a;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.67rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  transition: transform 0.15s, opacity 0.15s;
+  opacity: 0.9;
+  user-select: none;
+}
+
+.upload-image-btn:hover { transform: scale(1.06); opacity: 1; }
+
+.upload-progress {
+  font-size: 0.65rem;
+  color: #2c6e8a;
+  font-style: italic;
+  font-weight: bold;
+  padding: 4px 6px;
+  align-self: center;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
 /* ─── WISH DISPLAY ───────────────────────────────────────────────────────── */
 .wish-admin-block {
   background: rgba(212,175,55,0.14);
