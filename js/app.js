@@ -218,7 +218,7 @@ async function importItemsIfEmpty() {
   console.log("Firestore empty — importing items…");
   for (const item of sourceItems) {
     await setDoc(doc(db, "items", item.id), {
-      ...item, looted: false, printed: false, owner: null, receivedDate: null
+      ...item, looted: false, highlighted: false, owner: null, receivedDate: null
     }, { merge: true });
   }
   console.log("Import complete.");
@@ -269,8 +269,8 @@ function refreshStatsBar() {
   updateStats(
     filtered.length,
     filtered.filter(i => i.looted).length,
-    filtered.filter(i => i.printed).length,
-    filtered.filter(i => wishes.some(w => w.itemId === i.id)).length
+    filtered.filter(i => i.highlighted).length,
+    wishes.length
   );
 }
 
@@ -297,11 +297,11 @@ function applyFilters(list) {
     if (owner    && item.owner    !== owner)     return false;
     if (chk("showLootedOnly")       && !item.looted)    return false;
     if (chk("showUnlootedOnly")     &&  item.looted)    return false;
-    if (chk("showWishedOnly")       && !wishes.some(w => w.itemId === item.id)) return false;
+    if (chk("showSavedOnly")        && !wishes.some(w => w.itemId === item.id)) return false;
     if (chk("showAttunementOnly")   && !item.attunement) return false;
     if (chk("showNoAttunementOnly") &&  item.attunement) return false;
-    if (chk("showPrintedOnly")      && !item.printed)   return false;
-    if (chk("showNotPrintedOnly")   &&  item.printed)   return false;
+    if (chk("showHighlightedOnly")      && !item.highlighted)   return false;
+    if (chk("showNotHighlightedOnly")   &&  item.highlighted)   return false;
     return true;
   });
 }
@@ -335,21 +335,26 @@ function createCard(item) {
   const isEditing   = admin && editingItems.has(item.id);
   const rarityClass = (item.rarity || "").toLowerCase().replaceAll(" ", "-");
 
-  if (rarityClass)  card.classList.add(rarityClass);
-  if (item.looted)  card.classList.add("looted");
-  if (item.printed) card.classList.add("printed");
+  if (rarityClass)     card.classList.add(rarityClass);
+  if (item.looted)     card.classList.add("looted");
+  if (item.highlighted) card.classList.add("highlighted");
 
-  const itemWishes = wishes.filter(w => w.itemId === item.id);
-  const myWish     = selectedCharacter
+  const itemSaves  = wishes.filter(w => w.itemId === item.id);
+  const mySave     = selectedCharacter
     ? wishes.find(w => w.itemId === item.id && w.characterId === selectedCharacter.id)
     : null;
-  const wishNames  = itemWishes.map(w => {
+  const saveNames  = itemSaves.map(w => {
     const c = characters.find(ch => ch.id === w.characterId);
     return c ? `${c.name} (${c.class})` : "Unknown";
   }).join(", ");
 
-  const canWish       = isPlayer() && selectedCharacter !== null;
-  const needsChar     = isPlayer() && selectedCharacter === null;
+  // Save: visible to admins (always) and players with a selected character
+  const canSave   = isPlayer() && selectedCharacter !== null;
+  const needsChar = isPlayer() && !admin && selectedCharacter === null;
+
+  // Save info block: admin sees all savers, player only sees it if their character saved it
+  const showSaveInfo = admin || !!mySave;
+
   const ownerChar     = characters.find(c => c.id === item.owner);
   const ownerName     = ownerChar ? `${ownerChar.name} (${ownerChar.class})` : "";
   const playableChars = allPlayableCharacters();
@@ -360,20 +365,20 @@ function createCard(item) {
     <div class="card-buttons">
       ${admin ? `
         <button class="loot-button">${item.looted ? "Looted" : "Loot"}</button>
-        <button class="print-button">${item.printed ? "Printed" : "Print"}</button>
+        <button class="highlight-button">${item.highlighted ? "Highlighted" : "Highlight"}</button>
         ${isEditing
-          ? `<button class="save-button">Save</button>
+          ? `<button class="save-edit-button">Save</button>
              <button class="cancel-button">Cancel</button>`
           : `<button class="edit-button">Edit</button>
              <button class="clone-button">Clone</button>`
         }
       ` : ""}
-      ${canWish ? `
-        <button class="wish-button ${myWish ? "wished" : ""}">
-          ${myWish ? "★ Wished" : "☆ Wish"}
+      ${canSave ? `
+        <button class="save-item-button ${mySave ? "saved" : ""}">
+          ${mySave ? "★ Saved" : "☆ Save"}
         </button>
       ` : needsChar ? `
-        <span class="no-char-hint">Select a character to wish</span>
+        <span class="no-char-hint">Select a character to save items</span>
       ` : ""}
       ${admin ? `
         <label class="upload-image-btn" title="Upload image to Firebase Storage">
@@ -384,11 +389,11 @@ function createCard(item) {
       ` : ""}
     </div>
 
-    ${itemWishes.length > 0 ? `
+    ${showSaveInfo && itemSaves.length > 0 ? `
       <div class="${admin ? "wish-admin-block" : "wish-count-block"}">
         ${admin
-          ? `★ Wished by: ${wishNames}`
-          : `★ ${itemWishes.length} wish${itemWishes.length !== 1 ? "es" : ""}`}
+          ? `★ Saved by: ${saveNames}`
+          : `★ Saved by your character`}
       </div>
     ` : ""}
 
@@ -497,8 +502,8 @@ function attachCardEvents(card, item) {
     rerenderCard(item.id);
   });
 
-  // Save — writes to Firestore, patches local state, re-renders one card
-  card.querySelector(".save-button")?.addEventListener("click", async () => {
+  // Save edit — writes to Firestore, patches local state, re-renders one card
+  card.querySelector(".save-edit-button")?.addEventListener("click", async () => {
     let properties = [];
     try {
       properties = JSON.parse(document.getElementById(`edit-properties-${item.id}`).value || "[]");
@@ -536,9 +541,9 @@ function attachCardEvents(card, item) {
     rerenderCard(item.id);
   });
 
-  // Print — fire-and-forget Firestore write, instant local update
-  card.querySelector(".print-button")?.addEventListener("click", () => {
-    const changes = { printed: !item.printed };
+  // Highlight — fire-and-forget Firestore write, visible to all users
+  card.querySelector(".highlight-button")?.addEventListener("click", () => {
+    const changes = { highlighted: !item.highlighted };
     updateDoc(doc(db, "items", item.id), changes);
     patchItem(item.id, changes);
     rerenderCard(item.id);
@@ -551,7 +556,7 @@ function attachCardEvents(card, item) {
     await setDoc(doc(db, "items", cloneId), {
       ...rest,
       name: `${item.name} (Homebrew)`, source: "Homebrew",
-      looted: false, printed: false, owner: null
+      looted: false, highlighted: false, owner: null
     });
     await loadItemsFromFirestore();
     editingItems.add(cloneId);
@@ -597,8 +602,8 @@ function attachCardEvents(card, item) {
     }
   });
 
-  // Wish — patches local wishes array + re-renders one card, no Firestore read
-  card.querySelector(".wish-button")?.addEventListener("click", async () => {
+  // Save item — patches local wishes array + re-renders one card, no Firestore read
+  card.querySelector(".save-item-button")?.addEventListener("click", async () => {
     if (!selectedCharacter) {
       alert("Select a character in the My Character tab first.");
       return;
@@ -686,7 +691,7 @@ async function saveItemModal() {
     // New item — full reload so it appears in the grid
     const autoId = name.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-");
     await setDoc(doc(db, "items", autoId),
-      { ...data, looted: false, printed: false, owner: null, receivedDate: null },
+      { ...data, looted: false, highlighted: false, owner: null, receivedDate: null },
       { merge: true }
     );
     closeItemModal();
@@ -888,7 +893,7 @@ function renderAdminStats() {
   el.innerHTML = `
     <div class="stat-card"><span class="stat-num">${items.length}</span><span class="stat-label">Total Items</span></div>
     <div class="stat-card"><span class="stat-num">${items.filter(i=>i.looted).length}</span><span class="stat-label">Looted</span></div>
-    <div class="stat-card"><span class="stat-num">${items.filter(i=>i.printed).length}</span><span class="stat-label">Printed</span></div>
+    <div class="stat-card"><span class="stat-num">${items.filter(i=>i.highlighted).length}</span><span class="stat-label">Highlighted</span></div>
     <div class="stat-card"><span class="stat-num">${wishes.length}</span><span class="stat-label">Wishes</span></div>
     <div class="stat-card"><span class="stat-num">${users.length}</span><span class="stat-label">Users</span></div>
     <div class="stat-card"><span class="stat-num">${playerCount}</span><span class="stat-label">Players</span></div>
@@ -974,10 +979,10 @@ function populateCreateCharCampaigns() {
 
 // ─── STATS BAR ────────────────────────────────────────────────────────────────
 
-function updateStats(results, looted, printed, wished) {
+function updateStats(results, looted, highlighted, saved) {
   const el = document.getElementById("campaignStats");
   if (el) el.textContent =
-    `${results} items  ·  ${looted} looted  ·  ${printed} printed  ·  ${wished} wished`;
+    `${results} items  ·  ${looted} looted  ·  ${highlighted} highlighted  ·  ${saved} saved`;
 }
 
 // ─── PLAYER TAB ──────────────────────────────────────────────────────────────
@@ -1186,8 +1191,8 @@ function initFilterListeners() {
   [
     "search","ownerFilter","rarityFilter","sourceFilter","campaignFilter",
     "categoryFilter","classFilter","showLootedOnly","showUnlootedOnly",
-    "showWishedOnly","showAttunementOnly","showNoAttunementOnly",
-    "showPrintedOnly","showNotPrintedOnly"
+    "showSavedOnly","showAttunementOnly","showNoAttunementOnly",
+    "showHighlightedOnly","showNotHighlightedOnly"
   ].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;

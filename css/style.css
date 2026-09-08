@@ -297,23 +297,28 @@ h1 {
 }
 
 .loot-button    { background: #8b0000; }
-.print-button   { background: #555; }
+.highlight-button { background: #555; }
 .edit-button    { background: #9b59b6; }
 .clone-button   { background: #c79c32; color: #1a0e00; }
-.save-button    { background: #27ae60; }
+.save-edit-button { background: #27ae60; }
 .cancel-button  { background: #c0392b; }
 .wish-view-btn  { background: #2471a3; }
 
-.item-card.looted  .loot-button  { background: #27ae60; }
-.item-card.printed .print-button { background: #2196f3; }
+.item-card.looted       .loot-button      { background: #27ae60; }
+.item-card.highlighted  .highlight-button { background: #d4af37; color: #2b1b00; }
 
-.wish-button {
+/* Highlighted card — golden glow visible to ALL users */
+.item-card.highlighted {
+  box-shadow: 0 0 0 2px #d4af37, 0 6px 20px rgba(212,175,55,0.35);
+}
+
+.save-item-button {
   background: #5c1d1d;
   border: 2px solid #d4af37 !important;
   color: #f5e6c8;
 }
 
-.wish-button.wished {
+.save-item-button.saved {
   background: #d4af37;
   color: #2b1b00;
 }
