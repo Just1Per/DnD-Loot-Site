@@ -287,17 +287,16 @@ h1 {
 .loot-button, .highlight-button, .edit-button, .clone-button,
 .save-edit-button, .cancel-button, .save-item-button, .delete-item-button,
 .btn-sm, .btn-select-char, .btn-rename-char, .btn-delete-char, .wish-view-btn, .highlight-button, .save-item-button {
-  border: none;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  font-size: 0.67rem;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  padding: 4px 10px;
-  text-transform: uppercase;
-  transition: transform 0.15s, opacity 0.15s;
-  opacity: 0.9;
+background: rgba(212, 175, 55, 0.18);
+    border: 1px solid #c79c32;
+    border-radius: 4px;
+    color: #7d6608;
+    font-family: "Cinzel", serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    text-transform: uppercase;
 }
 
 .loot-button:hover, .highlight-button:hover, .edit-button:hover, .clone-button:hover,
@@ -306,7 +305,7 @@ h1 {
 .btn-select-char:hover, .btn-rename-char:hover, .btn-delete-char:hover, .wish-view-btn:hover, .highlight-button:hover, .save-item-button:hover {
   transform: scale(1.06); opacity: 1;
 }
-
+/*
 .loot-button        { background: #8b0000; }
 .highlight-button   { background: #555; }
 .edit-button        { background: #9b59b6; }
@@ -318,7 +317,7 @@ h1 {
 
 .item-card.looted      .loot-button      { background: #27ae60; }
 .item-card.highlighted .highlight-button { background: #d4af37; color: #2b1b00; }
-
+*/
 /* Highlighted card — golden glow visible to ALL users */
 .item-card.highlighted {
   box-shadow: 0 0 0 2px #d4af37, 0 6px 20px rgba(212,175,55,0.35);
