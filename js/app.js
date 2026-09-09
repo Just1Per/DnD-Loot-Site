@@ -137,26 +137,24 @@ async function uploadItemImage(itemId, file) {
 
 async function loadCurrentUser(firebaseUser) {
   const userRef = doc(db, "users", firebaseUser.uid);
-  const snap    = await getDoc(userRef);
-  if (snap.exists()) {
-    currentUser = { uid: firebaseUser.uid, ...snap.data() };
-    return;
+  try {
+    const snap = await getDoc(userRef);
+    if (snap.exists()) {
+      currentUser = { uid: firebaseUser.uid, ...snap.data() };
+      return;
+    }
+  } catch (e) {
+    console.warn("User doc fetch failed, attempting creation/fallback...", e);
   }
-  const allSnap  = await getDocs(collection(db, "users"));
-  const existing = allSnap.docs.find(d => d.data().email === firebaseUser.email);
-  if (existing) {
-    await setDoc(userRef, existing.data(), { merge: true });
-    await deleteDoc(existing.ref);
-    currentUser = { uid: firebaseUser.uid, ...existing.data() };
-  } else {
-    const newUser = {
-      email: firebaseUser.email,
-      name:  firebaseUser.displayName || firebaseUser.email,
-      role:  ["viewer"]
-    };
-    await setDoc(userRef, newUser);
-    currentUser = { uid: firebaseUser.uid, ...newUser };
-  }
+
+  // Fallback creation logic if document is missing or blocked initially
+  const newUser = {
+    email: firebaseUser.email,
+    name:  firebaseUser.displayName || firebaseUser.email,
+    role:  ["viewer"]
+  };
+  await setDoc(userRef, newUser, { merge: true });
+  currentUser = { uid: firebaseUser.uid, ...newUser };
 }
 
 async function loadItemsFromFirestore() {
