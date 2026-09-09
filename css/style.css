@@ -21,6 +21,7 @@ h1 {
   text-transform: uppercase;
   text-shadow: 1px 1px 0 #d4af37, 2px 2px 6px rgba(0,0,0,0.2);
   padding: 24px 16px 0;
+  justify-content: center;
 }
 
 .header-logo {
