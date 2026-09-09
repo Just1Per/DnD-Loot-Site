@@ -403,7 +403,7 @@ function createCard(item) {
     ${isEditing ? `
       <div class="card-image-edit">
         <img src="${item.imageUrl || PLACEHOLDER_IMAGE}" class="card-art card-art--edit"
-          alt="${item.name}" onerror="this.src='${PLACEHOLDER_IMAGE}'">
+          alt="${item.name}" loading="lazy" onerror="this.src='${PLACEHOLDER_IMAGE}'">
         <label class="upload-image-btn upload-image-btn--overlay" title="Upload or replace image">
           📷 ${item.imageUrl && item.imageUrl !== PLACEHOLDER_IMAGE ? "Replace Image" : "Upload Image"}
           <input type="file" class="image-file-input" accept="image/*" style="display:none">
