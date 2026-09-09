@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>D&D 5e Magic Item Looter</title>
+  <title>D&D 5e Item Vault</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,12 +11,13 @@
 </head>
 <body>
 
-  <h1>⚔ D&D 5e Magic Item Looter</h1>
+  <h1>⚔ D&D 5e Item Vault</h1>
 
   <!-- ── TABS ──────────────────────────────────────────────────────────── -->
   <nav class="tabs">
     <button class="tab active" data-tab="library">Library</button>
     <button class="tab" data-tab="player" id="playerTab" style="display:none">My Character</button>
+    <button class="tab" data-tab="dm"     id="dmTab"     style="display:none">DM</button>
     <button class="tab" data-tab="admin"  id="adminTab"  style="display:none">Admin</button>
   </nav>
 
@@ -74,11 +75,11 @@
 
           <fieldset class="filter-checkboxes">
             <legend>Status</legend>
-            <label><input type="checkbox" id="showLootedOnly">      Looted</label>
-            <label><input type="checkbox" id="showUnlootedOnly">    Unlooted</label>
-            <label><input type="checkbox" id="showSavedOnly">       Saved</label>
-            <label><input type="checkbox" id="showAttunementOnly">  Requires Attunement</label>
-            <label><input type="checkbox" id="showNoAttunementOnly">No Attunement</label>
+            <label><input type="checkbox" id="showLootedOnly">         Looted</label>
+            <label><input type="checkbox" id="showUnlootedOnly">       Unlooted</label>
+            <label><input type="checkbox" id="showSavedOnly">          Saved</label>
+            <label><input type="checkbox" id="showAttunementOnly">     Requires Attunement</label>
+            <label><input type="checkbox" id="showNoAttunementOnly">   No Attunement</label>
             <label><input type="checkbox" id="showHighlightedOnly">    Highlighted</label>
             <label><input type="checkbox" id="showNotHighlightedOnly"> Not Highlighted</label>
           </fieldset>
@@ -89,27 +90,24 @@
 
     <div id="campaignStats" class="campaign-stats"></div>
     <div id="card-container"></div>
-  </div>
+  </div><!-- /tab-library -->
 
   <!-- ══════════════════════════════════════════════════════════════════════
        PLAYER TAB
   ══════════════════════════════════════════════════════════════════════ -->
   <div id="tab-player" class="tab-content" style="display:none">
 
-    <!-- My Characters -->
     <div class="player-section">
       <h2 class="player-section-title">⚔ My Characters</h2>
       <p class="player-section-sub">
-        The <strong>active</strong> character is used when you wish for items in the Library.
+        The <strong>active</strong> character is used when you save items in the Library.
         You can have multiple characters but only one is active at a time.
       </p>
       <div id="myCharacterList" class="character-list"></div>
-
-      <!-- Create new character -->
       <div class="player-create-form">
         <h3>Create New Character</h3>
         <div class="player-create-row">
-          <input  type="text"   id="playerCharName"     placeholder="Character name…">
+          <input  type="text"   id="playerCharName"  placeholder="Character name…">
           <select id="playerCharClass">
             <option>Artificer</option><option>Barbarian</option><option>Bard</option>
             <option>Cleric</option><option>Druid</option><option>Fighter</option>
@@ -118,26 +116,22 @@
             <option>Wizard</option>
           </select>
           <input  type="number" id="playerCharLevel"    placeholder="Level (1–20)" min="1" max="20">
-          <select id="playerCharCampaign">
-            <option value="">No Campaign</option>
-          </select>
+          <select id="playerCharCampaign"><option value="">No Campaign</option></select>
           <button id="playerCreateCharBtn">+ Create</button>
         </div>
       </div>
     </div>
 
-    <!-- My Loot -->
     <div class="player-section">
       <h2 class="player-section-title">🎒 My Loot</h2>
       <p class="player-section-sub">Items the DM has marked as looted and assigned to one of your characters.</p>
       <div id="myLootGrid" class="mini-card-grid"></div>
     </div>
 
-    <!-- My Saved Items -->
     <div class="player-section">
       <h2 class="player-section-title">★ My Saved Items</h2>
       <p class="player-section-sub">
-        Items you have saved in the Library. Click ☆ Save on any item card to add it here.
+        Items you have saved in the Library. Click ☆ Save on any item to add it here.
         Saved items are tracked per character — make sure the right character is active first.
       </p>
       <div id="myWishGrid" class="mini-card-grid"></div>
@@ -146,24 +140,41 @@
   </div><!-- /tab-player -->
 
   <!-- ══════════════════════════════════════════════════════════════════════
+       DM TAB
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div id="tab-dm" class="tab-content" style="display:none">
+
+    <div class="player-section">
+      <h2 class="player-section-title">🗺 My Campaigns</h2>
+      <p class="player-section-sub">
+        Create and manage your campaigns. Players can be invited to a campaign
+        to access the item database scoped to that campaign.
+      </p>
+      <div id="campaignList" class="campaign-list"></div>
+      <button id="openCreateCampaignBtn" class="toolbar-btn" style="margin-top:14px">
+        + Create Campaign
+      </button>
+    </div>
+
+  </div><!-- /tab-dm -->
+
+  <!-- ══════════════════════════════════════════════════════════════════════
        ADMIN TAB
   ══════════════════════════════════════════════════════════════════════ -->
   <div id="tab-admin" class="tab-content" style="display:none">
     <div id="adminPanel" style="display:none">
 
-      <!-- Stats -->
       <div class="admin-section">
         <h2>Overview</h2>
         <div id="adminStats" class="admin-stats-grid"></div>
       </div>
 
-      <!-- User + character management -->
       <div class="admin-section">
         <h2>Users &amp; Characters</h2>
         <p class="admin-section-sub">
-          Each user's characters are shown beneath their row, with level, campaign and tier badge.
-          Click <strong>Wishes</strong> on any character to see what they want.
-          Deleting a user also deletes all their characters and wishes.
+          Each user's characters are shown beneath their row with level, campaign and tier badge.
+          Click <strong>Saved</strong> on any character to see their saved items.
+          Deleting a user also deletes all their characters and saves.
         </p>
         <button id="openAddUserBtn" class="toolbar-btn" style="margin-bottom:14px">+ Add User</button>
         <div class="table-scroll">
@@ -185,7 +196,6 @@
       <!-- Loot rarity reference — collapsible -->
       <details class="admin-section loot-ref-panel">
         <summary>📖 Magic Item Rarity Progression by Level</summary>
-
         <div class="loot-ref-grid">
 
           <div class="loot-ref-card tier-1">
@@ -298,9 +308,6 @@
           <label class="modal-label">Campaign
             <input type="text" id="modal-campaign" placeholder="e.g. Tyranny of Dragons">
           </label>
-          <label class="modal-label full">Image URL
-            <input type="text" id="modal-image" placeholder="https://…">
-          </label>
           <label class="modal-label full">Description
             <textarea id="modal-description" rows="3" placeholder="Flavour description…"></textarea>
           </label>
@@ -323,7 +330,7 @@
       </div>
       <div class="modal-footer">
         <button class="cancel-button" id="cancelItemModal">Cancel</button>
-        <button class="save-button"   id="saveItemModal">Save Item</button>
+        <button class="save-edit-button" id="saveItemModal">Save Item</button>
       </div>
     </div>
   </div>
@@ -352,12 +359,17 @@
               <label>
                 <input type="checkbox" class="role-checkbox" value="admin">
                 <strong>Admin</strong>
-                <small>— can edit items, manage loot, manage users</small>
+                <small>— full control: edit items, manage users, manage all campaigns</small>
+              </label>
+              <label>
+                <input type="checkbox" class="role-checkbox" value="dm">
+                <strong>Dungeon Master</strong>
+                <small>— can create and manage campaigns, assign loot, see saved items</small>
               </label>
               <label>
                 <input type="checkbox" class="role-checkbox" value="player">
                 <strong>Player</strong>
-                <small>— gets a My Character tab, can wish for items, can receive loot</small>
+                <small>— can create characters, save items, receive loot</small>
               </label>
               <label>
                 <input type="checkbox" class="role-checkbox" value="viewer">
@@ -366,14 +378,14 @@
               </label>
             </div>
             <small style="margin-top:8px;display:block">
-              A user can have multiple roles, e.g. admin + player if you also play in the campaign.
+              A user can have multiple roles, e.g. DM + player if you also play in the campaign.
             </small>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button class="cancel-button" id="cancelUserModal">Cancel</button>
-        <button class="save-button"   id="saveUserModal">Save User</button>
+        <button class="save-edit-button" id="saveUserModal">Save User</button>
       </div>
     </div>
   </div>
@@ -405,26 +417,24 @@
             <input type="number" id="editChar-level" placeholder="e.g. 5" min="1" max="20">
           </label>
           <label class="modal-label full">Campaign
-            <select id="editChar-campaign">
-              <option value="">No Campaign</option>
-            </select>
+            <select id="editChar-campaign"><option value="">No Campaign</option></select>
           </label>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="cancel-button" id="cancelEditCharModal">Cancel</button>
-        <button class="save-button"   id="saveEditCharModal">Save</button>
+        <button class="cancel-button"    id="cancelEditCharModal">Cancel</button>
+        <button class="save-edit-button" id="saveEditCharModal">Save</button>
       </div>
     </div>
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════════════
-       MODAL: CHARACTER WISHES (admin view)
+       MODAL: CHARACTER SAVED ITEMS (admin/dm view)
   ══════════════════════════════════════════════════════════════════════ -->
   <div id="wishModal" class="modal" style="display:none">
     <div class="modal-box modal-box--wide">
       <div class="modal-header">
-        <h2 id="wishModalCharName">Wishes</h2>
+        <h2 id="wishModalCharName">Saved Items</h2>
         <button class="modal-close" id="closeWishModal">✕</button>
       </div>
       <div class="modal-body">
@@ -436,8 +446,34 @@
     </div>
   </div>
 
-  <footer class="site-footer">© DKDM • All artwork and content reserved.</footer>
+  <!-- ══════════════════════════════════════════════════════════════════════
+       MODAL: CREATE / EDIT CAMPAIGN
+  ══════════════════════════════════════════════════════════════════════ -->
+  <div id="campaignModal" class="modal" style="display:none" data-edit-id="">
+    <div class="modal-box modal-box--sm">
+      <div class="modal-header">
+        <h2 id="campaignModalTitle">Create Campaign</h2>
+        <button class="modal-close" id="closeCampaignModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-form-grid">
+          <label class="modal-label full">Campaign Name
+            <input type="text" id="campaign-name" placeholder="e.g. Tyranny of Dragons">
+          </label>
+          <label class="modal-label full">Description
+            <textarea id="campaign-description" rows="3"
+              placeholder="A short description of the campaign…"></textarea>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-button"    id="cancelCampaignModal">Cancel</button>
+        <button class="save-edit-button" id="saveCampaignModal">Save Campaign</button>
+      </div>
+    </div>
+  </div>
 
+  <footer class="site-footer">© DKDM • All artwork and content reserved.</footer>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

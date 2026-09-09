@@ -26,14 +26,16 @@ let items             = [];   // local mirror of Firestore items collection
 let characters        = [];   // local mirror of Firestore characters collection
 let wishes            = [];   // local mirror of Firestore wishes collection
 let users             = [];   // local mirror of Firestore users collection
+let campaigns         = [];   // local mirror of Firestore campaigns collection
 let currentUser       = null; // { uid, email, name, role:[], ... }
-let selectedCharacter = null; // currently active character for wishing
+let selectedCharacter = null; // currently active character for saving items
 
 const editingItems = new Set(); // item IDs currently in inline-edit mode
 
 // Image URL cache — itemId → resolved URL string
-// Avoids re-fetching Firebase Storage on every single-card re-render
 const imageCache = new Map();
+
+const PLACEHOLDER_IMAGE = "./placeholder.png";
 
 const ALL_CLASSES = [
   "Artificer","Barbarian","Bard","Cleric","Druid","Fighter",
@@ -48,17 +50,20 @@ const RARITIES = ["Common","Uncommon","Rare","Very Rare","Legendary","Artifact"]
 
 // ─── ROLE HELPERS ─────────────────────────────────────────────────────────────
 
-const isAdmin = () => {
+const hasRole = (role) => {
   const r = currentUser?.role;
-  return Array.isArray(r) ? r.includes("admin") : r === "admin";
+  return Array.isArray(r) ? r.includes(role) : r === role;
 };
 
-const isPlayer = () => {
-  const r = currentUser?.role;
-  return Array.isArray(r)
-    ? r.includes("player") || r.includes("admin")
-    : ["player","admin"].includes(r);
-};
+// Role hierarchy:
+// viewer  — read-only library access
+// player  — can create characters, save items, receive loot
+// dm      — can create and manage campaigns (like a player but with campaign tools)
+// admin   — full control: edit items, manage users, manage all campaigns
+
+const isAdmin  = () => hasRole("admin");
+const isDM     = () => hasRole("dm") || hasRole("admin");
+const isPlayer = () => hasRole("player") || hasRole("dm") || hasRole("admin");
 
 const myCharacters = () =>
   characters.filter(c => c.userId === auth.currentUser?.uid && c.active !== false);
@@ -77,69 +82,50 @@ function getTier(level) {
 // ─── CAMPAIGNS HELPER ─────────────────────────────────────────────────────────
 
 function availableCampaigns() {
-  return [...new Set(items.map(i => i.campaign).filter(Boolean))].sort();
+  // Combine campaigns from the campaigns collection + any set directly on items
+  const fromCollection = campaigns.map(c => c.name).filter(Boolean);
+  const fromItems      = items.map(i => i.campaign).filter(Boolean);
+  return [...new Set([...fromCollection, ...fromItems])].sort();
 }
 
 // ─── IMAGE HELPERS ────────────────────────────────────────────────────────────
-// Your enhanced getBaseImageId — strips colours, rarities, numerical bonuses
 
 function getBaseImageId(itemId) {
   if (!itemId) return "";
   let base = itemId.toLowerCase();
-
   const wordsToRemove = [
     "common","uncommon","rare","very-rare","veryrare","legendary","artifact","minor","major",
     "grey","gray","red","blue","green","black","white","yellow","purple","orange","bronze","silver","gold",
     "plus"
   ];
-
   base = base.replace(/\+/g, "").replace(/[0-9]/g, "");
-
   wordsToRemove.forEach(word => {
     const regex = new RegExp(`(?<=^|[-_\\s])${word}(?=[-_\\s]|$)`, "gi");
     base = base.replace(regex, "");
   });
-
   return base.replace(/[-_\s]+/g, "-").replace(/^[-_]+|[-_]+$/g, "") || itemId;
 }
 
 async function loadStorageImage(path) {
-  try {
-    return await getDownloadURL(ref(storage, path));
-  } catch (error) {
-    console.warn(`Could not load storage image: ${path}`, error);
-    return "";
-  }
+  try { return await getDownloadURL(ref(storage, path)); }
+  catch (e) { console.warn(`Image not found: ${path}`); return ""; }
 }
 
-// Shown whenever Firebase Storage has no image for an item.
-// Put placeholder.png in the same folder as index.html.
-const PLACEHOLDER_IMAGE = "./placeholder.png";
-
-// Resolves an item's image URL, using imageCache to avoid duplicate Storage requests
 async function resolveImageUrl(itemId) {
   if (imageCache.has(itemId)) return imageCache.get(itemId);
-  const url = await loadStorageImage(`dnd-item-images/${getBaseImageId(itemId)}.png`);
-  // Cache the result — placeholder if nothing found, real URL if found
+  const url      = await loadStorageImage(`dnd-item-images/${getBaseImageId(itemId)}.png`);
   const resolved = url || PLACEHOLDER_IMAGE;
   imageCache.set(itemId, resolved);
   return resolved;
 }
 
-/**
- * Upload a File object to Firebase Storage at the correct path for an item.
- * Overwrites any existing image. Busts the imageCache entry so the new
- * image is fetched on the next render.
- * Returns the new download URL, or "" on failure.
- */
 async function uploadItemImage(itemId, file) {
-  const path    = `dnd-item-images/${getBaseImageId(itemId)}.png`;
-  const imgRef  = ref(storage, path);
+  const path   = `dnd-item-images/${getBaseImageId(itemId)}.png`;
+  const imgRef = ref(storage, path);
   try {
     await uploadBytes(imgRef, file, { contentType: file.type || "image/png" });
     const url = await getDownloadURL(imgRef);
-    // Replace whatever was cached (including the placeholder) with the real URL
-    imageCache.set(itemId, url);
+    imageCache.set(itemId, url); // bust cache with real URL
     return url;
   } catch (e) {
     console.error("Image upload failed:", e);
@@ -156,7 +142,6 @@ async function loadCurrentUser(firebaseUser) {
     currentUser = { uid: firebaseUser.uid, ...snap.data() };
     return;
   }
-  // First login — check if admin pre-created this account by email
   const allSnap  = await getDocs(collection(db, "users"));
   const existing = allSnap.docs.find(d => d.data().email === firebaseUser.email);
   if (existing) {
@@ -174,10 +159,6 @@ async function loadCurrentUser(firebaseUser) {
   }
 }
 
-/**
- * Full Firestore load — called on boot, after clone, and after add-new-item.
- * Images resolved in parallel using the cache (already-fetched URLs are instant).
- */
 async function loadItemsFromFirestore() {
   const snap = await getDocs(collection(db, "items"));
   items = await Promise.all(
@@ -211,7 +192,11 @@ async function loadUsers() {
     .docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
-/** One-time import — only runs when items collection is empty */
+async function loadCampaigns() {
+  campaigns = (await getDocs(collection(db, "campaigns")))
+    .docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
 async function importItemsIfEmpty() {
   const snap = await getDocs(collection(db, "items"));
   if (!snap.empty) return;
@@ -226,11 +211,6 @@ async function importItemsIfEmpty() {
 
 // ─── LOCAL STATE PATCH ────────────────────────────────────────────────────────
 
-/**
- * Apply a partial update to an item in the local `items` array.
- * Does NOT touch Firestore. Call updateDoc separately.
- * Returns the updated item object.
- */
 function patchItem(itemId, changes) {
   const idx = items.findIndex(i => i.id === itemId);
   if (idx === -1) return null;
@@ -240,10 +220,6 @@ function patchItem(itemId, changes) {
 
 // ─── SINGLE-CARD RE-RENDER ────────────────────────────────────────────────────
 
-/**
- * Replace exactly one card in the DOM using its data-item-id attribute.
- * Every other card is untouched. Image URL comes from imageCache — no Storage request.
- */
 function rerenderCard(itemId) {
   const item    = items.find(i => i.id === itemId);
   const oldCard = container.querySelector(`[data-item-id="${itemId}"]`);
@@ -263,7 +239,6 @@ function renderCards() {
   refreshStatsBar();
 }
 
-/** Recompute stats from in-memory state — no Firestore read needed */
 function refreshStatsBar() {
   const filtered = applyFilters([...items]);
   updateStats(
@@ -277,7 +252,6 @@ function refreshStatsBar() {
 function applyFilters(list) {
   const val = id => document.getElementById(id)?.value || "";
   const chk = id => document.getElementById(id)?.checked ?? false;
-
   const search   = val("search").toLowerCase();
   const rarity   = val("rarityFilter");
   const source   = val("sourceFilter");
@@ -285,7 +259,6 @@ function applyFilters(list) {
   const cls      = val("classFilter");
   const category = val("categoryFilter");
   const owner    = val("ownerFilter");
-
   return list.filter(item => {
     if (search   && !((item.name||"").toLowerCase().includes(search) ||
                       (item.description||"").toLowerCase().includes(search))) return false;
@@ -295,13 +268,13 @@ function applyFilters(list) {
     if (category && item.category !== category)  return false;
     if (cls      && !item.classes?.includes(cls)) return false;
     if (owner    && item.owner    !== owner)     return false;
-    if (chk("showLootedOnly")       && !item.looted)    return false;
-    if (chk("showUnlootedOnly")     &&  item.looted)    return false;
-    if (chk("showSavedOnly")        && !wishes.some(w => w.itemId === item.id)) return false;
-    if (chk("showAttunementOnly")   && !item.attunement) return false;
-    if (chk("showNoAttunementOnly") &&  item.attunement) return false;
-    if (chk("showHighlightedOnly")      && !item.highlighted)   return false;
-    if (chk("showNotHighlightedOnly")   &&  item.highlighted)   return false;
+    if (chk("showLootedOnly")         && !item.looted)      return false;
+    if (chk("showUnlootedOnly")       &&  item.looted)      return false;
+    if (chk("showSavedOnly")          && !wishes.some(w => w.itemId === item.id)) return false;
+    if (chk("showAttunementOnly")     && !item.attunement)  return false;
+    if (chk("showNoAttunementOnly")   &&  item.attunement)  return false;
+    if (chk("showHighlightedOnly")    && !item.highlighted) return false;
+    if (chk("showNotHighlightedOnly") &&  item.highlighted) return false;
     return true;
   });
 }
@@ -312,7 +285,9 @@ function allPlayableCharacters() {
   const playerIds = users
     .filter(u => {
       const r = u.role;
-      return Array.isArray(r) ? r.includes("player") || r.includes("admin") : ["player","admin"].includes(r);
+      return Array.isArray(r)
+        ? r.some(x => ["player","dm","admin"].includes(x))
+        : ["player","dm","admin"].includes(r);
     })
     .map(u => u.id);
   return characters.filter(c => playerIds.includes(c.userId) && c.active !== false);
@@ -329,14 +304,14 @@ function characterDisplayName(char) {
 function createCard(item) {
   const card = document.createElement("div");
   card.classList.add("item-card");
-  card.dataset.itemId = item.id; // used by rerenderCard()
+  card.dataset.itemId = item.id;
 
   const admin       = isAdmin();
   const isEditing   = admin && editingItems.has(item.id);
   const rarityClass = (item.rarity || "").toLowerCase().replaceAll(" ", "-");
 
-  if (rarityClass)     card.classList.add(rarityClass);
-  if (item.looted)     card.classList.add("looted");
+  if (rarityClass)      card.classList.add(rarityClass);
+  if (item.looted)      card.classList.add("looted");
   if (item.highlighted) card.classList.add("highlighted");
 
   const itemSaves  = wishes.filter(w => w.itemId === item.id);
@@ -348,11 +323,8 @@ function createCard(item) {
     return c ? `${c.name} (${c.class})` : "Unknown";
   }).join(", ");
 
-  // Save: visible to admins (always) and players with a selected character
-  const canSave   = isPlayer() && selectedCharacter !== null;
-  const needsChar = isPlayer() && !admin && selectedCharacter === null;
-
-  // Save info block: admin sees all savers, player only sees it if their character saved it
+  const canSave    = isPlayer() && selectedCharacter !== null;
+  const needsChar  = isPlayer() && !admin && selectedCharacter === null;
   const showSaveInfo = admin || !!mySave;
 
   const ownerChar     = characters.find(c => c.id === item.owner);
@@ -368,32 +340,24 @@ function createCard(item) {
         <button class="highlight-button">${item.highlighted ? "Highlighted" : "Highlight"}</button>
         ${isEditing
           ? `<button class="save-edit-button">Save</button>
-             <button class="cancel-button">Cancel</button>`
-          : `<button class="edit-button">Edit</button>
-             <button class="clone-button">Clone</button>`
+             <button class="cancel-button">Cancel</button>
+             <button class="clone-button">Clone</button>
+             <button class="delete-item-button">🗑 Delete</button>`
+          : `<button class="edit-button">Edit</button>`
         }
       ` : ""}
       ${canSave ? `
         <button class="save-item-button ${mySave ? "saved" : ""}">
-          ${mySave ? "Saved" : "Save"}
+          ${mySave ? "★ Saved" : "☆ Save"}
         </button>
       ` : needsChar ? `
         <span class="no-char-hint">Select a character to save items</span>
-      ` : ""}
-      ${admin ? `
-        <label class="upload-image-btn" title="Upload image to Firebase Storage">
-          📷 ${item.imageUrl ? "Replace Image" : "Upload Image"}
-          <input type="file" class="image-file-input" accept="image/*" style="display:none">
-        </label>
-        <span class="upload-progress" style="display:none">Uploading…</span>
       ` : ""}
     </div>
 
     ${showSaveInfo && itemSaves.length > 0 ? `
       <div class="${admin ? "wish-admin-block" : "wish-count-block"}">
-        ${admin
-          ? `★ Saved by: ${saveNames}`
-          : `★ Saved by your character`}
+        ${admin ? `★ Saved by: ${saveNames}` : `★ Saved by your character`}
       </div>
     ` : ""}
 
@@ -438,15 +402,20 @@ function createCard(item) {
       </div>
     </div>
 
-    ${isEditing
-      ? `<input id="edit-image-${item.id}" value="${item.imageUrl||""}" placeholder="Image URL">`
-      : ""
-    }
-    ${item.imageUrl
-      ? `<img src="${item.imageUrl}" class="card-art" alt="${item.name}" loading="lazy"
-           onerror="this.src='./placeholder.png'">`
-      : `<img src="${PLACEHOLDER_IMAGE}" class="card-art" alt="${item.name}" loading="lazy">`
-    }
+    ${isEditing ? `
+      <div class="card-image-edit">
+        <img src="${item.imageUrl || PLACEHOLDER_IMAGE}" class="card-art card-art--edit"
+          alt="${item.name}" onerror="this.src='${PLACEHOLDER_IMAGE}'">
+        <label class="upload-image-btn upload-image-btn--overlay" title="Upload or replace image">
+          📷 ${item.imageUrl && item.imageUrl !== PLACEHOLDER_IMAGE ? "Replace Image" : "Upload Image"}
+          <input type="file" class="image-file-input" accept="image/*" style="display:none">
+        </label>
+        <span class="upload-progress" style="display:none">Uploading…</span>
+      </div>
+    ` : `
+      <img src="${item.imageUrl || PLACEHOLDER_IMAGE}" class="card-art" alt="${item.name}"
+        loading="lazy" onerror="this.src='${PLACEHOLDER_IMAGE}'">
+    `}
 
     <div class="card-body">
       ${isEditing
@@ -491,7 +460,6 @@ function createCard(item) {
 
 function attachCardEvents(card, item) {
 
-  // Edit / Cancel — only re-renders this one card
   card.querySelector(".edit-button")?.addEventListener("click", () => {
     editingItems.add(item.id);
     rerenderCard(item.id);
@@ -502,7 +470,7 @@ function attachCardEvents(card, item) {
     rerenderCard(item.id);
   });
 
-  // Save edit — writes to Firestore, patches local state, re-renders one card
+  // Save edit
   card.querySelector(".save-edit-button")?.addEventListener("click", async () => {
     let properties = [];
     try {
@@ -522,17 +490,34 @@ function attachCardEvents(card, item) {
       properties
     };
 
-    // Await here so the user gets confirmation the save succeeded before leaving edit mode
     await updateDoc(doc(db, "items", item.id), changes);
     editingItems.delete(item.id);
     patchItem(item.id, changes);
     rerenderCard(item.id);
-    // Refresh filter dropdowns in case source/campaign changed
     populateSourceFilter();
     populateCampaignFilter();
   });
 
-  // Loot — fire-and-forget Firestore write, instant local update
+  // Delete item — only visible in edit mode, admin only
+  card.querySelector(".delete-item-button")?.addEventListener("click", async () => {
+    if (!confirm(`Permanently delete "${item.name}"? This cannot be undone.`)) return;
+    // Remove all saves/wishes for this item
+    const itemWishes = wishes.filter(w => w.itemId === item.id);
+    for (const w of itemWishes) await deleteDoc(doc(db, "wishes", w.id));
+    wishes = wishes.filter(w => w.itemId !== item.id);
+    // Delete from Firestore
+    await deleteDoc(doc(db, "items", item.id));
+    // Remove from local state and remove from DOM immediately
+    items = items.filter(i => i.id !== item.id);
+    editingItems.delete(item.id);
+    const cardEl = container.querySelector(`[data-item-id="${item.id}"]`);
+    if (cardEl) cardEl.remove();
+    refreshStatsBar();
+    populateSourceFilter();
+    populateCampaignFilter();
+  });
+
+  // Loot
   card.querySelector(".loot-button")?.addEventListener("click", () => {
     const newLooted = !item.looted;
     const changes   = { looted: newLooted, owner: newLooted ? (item.owner || null) : null };
@@ -541,7 +526,7 @@ function attachCardEvents(card, item) {
     rerenderCard(item.id);
   });
 
-  // Highlight — fire-and-forget Firestore write, visible to all users
+  // Highlight
   card.querySelector(".highlight-button")?.addEventListener("click", () => {
     const changes = { highlighted: !item.highlighted };
     updateDoc(doc(db, "items", item.id), changes);
@@ -549,7 +534,7 @@ function attachCardEvents(card, item) {
     rerenderCard(item.id);
   });
 
-  // Clone — full reload needed because a new card must appear in the grid
+  // Clone
   card.querySelector(".clone-button")?.addEventListener("click", async () => {
     const cloneId = `${item.id}-copy-${Date.now()}`;
     const { id: _drop, imageUrl: _img, ...rest } = item;
@@ -563,7 +548,7 @@ function attachCardEvents(card, item) {
     rerenderCard(cloneId);
   });
 
-  // Owner assign — fire-and-forget, instant local update
+  // Owner assign
   card.querySelector(".owner-select")?.addEventListener("change", e => {
     const ownerId = e.target.value || null;
     updateDoc(doc(db, "items", item.id), { owner: ownerId });
@@ -571,38 +556,33 @@ function attachCardEvents(card, item) {
     rerenderCard(item.id);
   });
 
-  // Image upload — uploads file to Storage, busts cache, re-renders card
+  // Image upload — inside edit mode image area
   card.querySelector(".image-file-input")?.addEventListener("change", async e => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!file.type.startsWith("image/")) { alert("Please select an image file."); return; }
+    if (file.size > 4 * 1024 * 1024)    { alert("Image must be smaller than 4 MB."); return; }
 
-    // Validate file type and size (max 4 MB)
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file."); return;
-    }
-    if (file.size > 4 * 1024 * 1024) {
-      alert("Image must be smaller than 4 MB."); return;
-    }
-
-    // Show progress, disable button
     const progressEl = card.querySelector(".upload-progress");
-    const labelEl    = card.querySelector(".upload-image-btn");
+    const labelEl    = card.querySelector(".upload-image-btn--overlay");
     if (progressEl) progressEl.style.display = "inline";
     if (labelEl)    labelEl.style.opacity    = "0.4";
 
     const url = await uploadItemImage(item.id, file);
-
     if (url) {
       patchItem(item.id, { imageUrl: url });
       rerenderCard(item.id);
+      // Stay in edit mode after upload
+      editingItems.add(item.id);
+      rerenderCard(item.id);
     } else {
-      alert("Image upload failed. Check the browser console for details.");
+      alert("Upload failed. Check the browser console.");
       if (progressEl) progressEl.style.display = "none";
       if (labelEl)    labelEl.style.opacity    = "1";
     }
   });
 
-  // Save item — patches local wishes array + re-renders one card, no Firestore read
+  // Save item (wish)
   card.querySelector(".save-item-button")?.addEventListener("click", async () => {
     if (!selectedCharacter) {
       alert("Select a character in the My Character tab first.");
@@ -628,7 +608,6 @@ function attachCardEvents(card, item) {
       });
     }
     rerenderCard(item.id);
-    // Also refresh player wish list if that tab is open
     const playerPanel = document.getElementById("tab-player");
     if (playerPanel?.style.display !== "none") renderMyWishes();
   });
@@ -652,7 +631,6 @@ function openItemModal(item = null) {
   document.getElementById("modal-rarity").value       = item?.rarity      || "Common";
   document.getElementById("modal-source").value       = item?.source      || "";
   document.getElementById("modal-campaign").value     = item?.campaign    || "";
-  document.getElementById("modal-image").value        = item?.image       || "";
   document.getElementById("modal-description").value  = item?.description || "";
   document.getElementById("modal-quote").value        = item?.quote       || "";
   document.getElementById("modal-attunement").checked = item?.attunement  || false;
@@ -668,11 +646,9 @@ async function saveItemModal() {
   const editId = document.getElementById("itemModal").dataset.editId;
   const name   = document.getElementById("modal-name").value.trim();
   if (!name) { alert("Name is required."); return; }
-
   let properties = [];
   try { properties = JSON.parse(document.getElementById("modal-properties").value || "[]"); }
   catch { alert("Properties JSON is invalid."); return; }
-
   const classes = [...document.querySelectorAll("#modal-classes input:checked")].map(i => i.value);
   const data = {
     name,
@@ -680,15 +656,12 @@ async function saveItemModal() {
     rarity:      document.getElementById("modal-rarity").value,
     source:      document.getElementById("modal-source").value,
     campaign:    document.getElementById("modal-campaign").value,
-    image:       document.getElementById("modal-image").value,
     description: document.getElementById("modal-description").value,
     quote:       document.getElementById("modal-quote").value,
     attunement:  document.getElementById("modal-attunement").checked,
     classes, properties
   };
-
   if (!editId) {
-    // New item — full reload so it appears in the grid
     const autoId = name.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-");
     await setDoc(doc(db, "items", autoId),
       { ...data, looted: false, highlighted: false, owner: null, receivedDate: null },
@@ -697,7 +670,6 @@ async function saveItemModal() {
     closeItemModal();
     await loadItemsFromFirestore();
   } else {
-    // Edit existing — patch local + re-render one card
     await updateDoc(doc(db, "items", editId), data);
     closeItemModal();
     patchItem(editId, data);
@@ -728,10 +700,8 @@ async function saveUserModal() {
   const name   = document.getElementById("user-name").value.trim();
   const email  = document.getElementById("user-email").value.trim();
   if (!name || !email) { alert("Name and email are required."); return; }
-
   const role = [...document.querySelectorAll(".role-checkbox:checked")].map(cb => cb.value);
   const data = { name, email, role };
-
   if (editId) {
     await updateDoc(doc(db, "users", editId), data);
     const idx = users.findIndex(u => u.id === editId);
@@ -741,11 +711,48 @@ async function saveUserModal() {
     await setDoc(doc(db, "users", tempId), data, { merge: true });
     users.push({ id: tempId, ...data });
   }
-
   closeUserModal();
   populateOwnerFilter();
   renderUserTable();
   renderAdminStats();
+}
+
+// ─── CAMPAIGN MODAL ───────────────────────────────────────────────────────────
+
+function openCampaignModal(campaign = null) {
+  document.getElementById("campaignModalTitle").textContent = campaign ? "Edit Campaign" : "Create Campaign";
+  document.getElementById("campaign-name").value        = campaign?.name        || "";
+  document.getElementById("campaign-description").value = campaign?.description || "";
+  document.getElementById("campaignModal").dataset.editId = campaign?.id || "";
+  document.getElementById("campaignModal").style.display  = "flex";
+}
+
+function closeCampaignModal() { document.getElementById("campaignModal").style.display = "none"; }
+
+async function saveCampaignModal() {
+  const editId = document.getElementById("campaignModal").dataset.editId;
+  const name   = document.getElementById("campaign-name").value.trim();
+  if (!name) { alert("Campaign name is required."); return; }
+  const data = {
+    name,
+    description: document.getElementById("campaign-description").value.trim(),
+    dmId:        auth.currentUser.uid,
+    created:     Date.now()
+  };
+  if (editId) {
+    await updateDoc(doc(db, "campaigns", editId), { name: data.name, description: data.description });
+    const idx = campaigns.findIndex(c => c.id === editId);
+    if (idx !== -1) campaigns[idx] = { ...campaigns[idx], ...data };
+  } else {
+    const newRef = await addDoc(collection(db, "campaigns"), data);
+    campaigns.push({ id: newRef.id, ...data });
+  }
+  closeCampaignModal();
+  renderCampaignList();
+  populateCampaignFilter();
+  // Also refresh character campaign dropdowns
+  const campSel = document.getElementById("playerCharCampaign");
+  if (campSel) populateCreateCharCampaigns();
 }
 
 // ─── ADMIN: USER + CHARACTER TABLE ────────────────────────────────────────────
@@ -757,8 +764,7 @@ function renderUserTable() {
   tbody.innerHTML = users.map(u => {
     const role      = Array.isArray(u.role) ? u.role.join(", ") : (u.role || "viewer");
     const userChars = characters.filter(c => c.userId === u.id && c.active !== false);
-
-    const charHTML = userChars.length > 0
+    const charHTML  = userChars.length > 0
       ? userChars.map(c => {
           const tier       = getTier(c.level);
           const tierBadge  = tier
@@ -778,7 +784,7 @@ function renderUserTable() {
               </div>
               <div class="admin-char-btns">
                 <button class="wish-view-btn btn-sm"
-                  data-char-id="${c.id}" data-char-name="${c.name}">Wishes</button>
+                  data-char-id="${c.id}" data-char-name="${c.name}">Saved</button>
                 <button class="edit-button btn-sm"
                   data-edit-char="${c.id}"
                   data-char-name="${c.name}"
@@ -808,7 +814,6 @@ function renderUserTable() {
       </tr>`;
   }).join("");
 
-  // User edit / delete
   tbody.querySelectorAll("[data-edit-user]").forEach(btn => {
     btn.addEventListener("click", () =>
       openUserModal(users.find(u => u.id === btn.dataset.editUser))
@@ -817,7 +822,7 @@ function renderUserTable() {
 
   tbody.querySelectorAll("[data-delete-user]").forEach(btn => {
     btn.addEventListener("click", async () => {
-      if (!confirm("Delete this user? All their characters and wishes will also be deleted.")) return;
+      if (!confirm("Delete this user? All their characters and saves will also be deleted.")) return;
       const uid       = btn.dataset.deleteUser;
       const userChars = characters.filter(c => c.userId === uid);
       for (const c of userChars) {
@@ -826,11 +831,9 @@ function renderUserTable() {
         await deleteDoc(doc(db, "characters", c.id));
       }
       await deleteDoc(doc(db, "users", uid));
-      // Patch local state — no Firestore reload needed
       users      = users.filter(u => u.id !== uid);
       characters = characters.filter(c => c.userId !== uid);
       wishes     = wishes.filter(w => !userChars.some(c => c.id === w.characterId));
-      // Items owned by deleted user's characters lose their owner locally
       userChars.forEach(c => {
         items.filter(i => i.owner === c.id).forEach(i => patchItem(i.id, { owner: null }));
       });
@@ -841,7 +844,6 @@ function renderUserTable() {
     });
   });
 
-  // Character edit / delete
   tbody.querySelectorAll("[data-edit-char]").forEach(btn => {
     btn.addEventListener("click", () =>
       openEditCharacterModal(
@@ -854,17 +856,15 @@ function renderUserTable() {
 
   tbody.querySelectorAll("[data-delete-char]").forEach(btn => {
     btn.addEventListener("click", async () => {
-      if (!confirm(`Delete character "${btn.dataset.charName}"? Their wishes will also be removed.`)) return;
+      if (!confirm(`Delete character "${btn.dataset.charName}"? Their saved items will also be removed.`)) return;
       const cid = btn.dataset.deleteChar;
       for (const w of wishes.filter(w => w.characterId === cid))
         await deleteDoc(doc(db, "wishes", w.id));
-      // Un-assign owned items (fire-and-forget writes)
       items.filter(i => i.owner === cid).forEach(i => {
         updateDoc(doc(db, "items", i.id), { owner: null });
         patchItem(i.id, { owner: null });
       });
       await deleteDoc(doc(db, "characters", cid));
-      // Patch local state
       wishes     = wishes.filter(w => w.characterId !== cid);
       characters = characters.filter(c => c.id !== cid);
       if (selectedCharacter?.id === cid) selectedCharacter = null;
@@ -875,7 +875,6 @@ function renderUserTable() {
     });
   });
 
-  // Wishes modal
   tbody.querySelectorAll(".wish-view-btn").forEach(btn => {
     btn.addEventListener("click", () =>
       openWishModal(btn.dataset.charId, btn.dataset.charName)
@@ -888,20 +887,68 @@ function renderAdminStats() {
   if (!el) return;
   const playerCount = users.filter(u => {
     const r = u.role;
-    return Array.isArray(r) ? r.includes("player") || r.includes("admin") : ["player","admin"].includes(r);
+    return Array.isArray(r)
+      ? r.some(x => ["player","dm","admin"].includes(x))
+      : ["player","dm","admin"].includes(r);
   }).length;
   el.innerHTML = `
     <div class="stat-card"><span class="stat-num">${items.length}</span><span class="stat-label">Total Items</span></div>
     <div class="stat-card"><span class="stat-num">${items.filter(i=>i.looted).length}</span><span class="stat-label">Looted</span></div>
     <div class="stat-card"><span class="stat-num">${items.filter(i=>i.highlighted).length}</span><span class="stat-label">Highlighted</span></div>
-    <div class="stat-card"><span class="stat-num">${wishes.length}</span><span class="stat-label">Wishes</span></div>
+    <div class="stat-card"><span class="stat-num">${wishes.length}</span><span class="stat-label">Saved</span></div>
     <div class="stat-card"><span class="stat-num">${users.length}</span><span class="stat-label">Users</span></div>
     <div class="stat-card"><span class="stat-num">${playerCount}</span><span class="stat-label">Players</span></div>
     <div class="stat-card"><span class="stat-num">${characters.length}</span><span class="stat-label">Characters</span></div>
+    <div class="stat-card"><span class="stat-num">${campaigns.length}</span><span class="stat-label">Campaigns</span></div>
   `;
 }
 
-// ─── WISH MODAL (admin view) ──────────────────────────────────────────────────
+// ─── CAMPAIGN LIST (DM tab) ───────────────────────────────────────────────────
+
+function renderCampaignList() {
+  const el = document.getElementById("campaignList");
+  if (!el) return;
+
+  // DMs see their own campaigns; admins see all
+  const myCampaigns = isAdmin()
+    ? campaigns
+    : campaigns.filter(c => c.dmId === auth.currentUser?.uid);
+
+  if (!myCampaigns.length) {
+    el.innerHTML = `<p class="player-empty">No campaigns yet — create one below.</p>`;
+    return;
+  }
+
+  el.innerHTML = myCampaigns.map(c => `
+    <div class="campaign-card">
+      <div class="campaign-card-info">
+        <span class="campaign-card-name">${c.name}</span>
+        ${c.description ? `<span class="campaign-card-desc">${c.description}</span>` : ""}
+      </div>
+      <div class="campaign-card-actions">
+        <button class="edit-button btn-sm" data-edit-campaign="${c.id}">Edit</button>
+        <button class="cancel-button btn-sm" data-delete-campaign="${c.id}" data-campaign-name="${c.name}">Delete</button>
+      </div>
+    </div>`).join("");
+
+  el.querySelectorAll("[data-edit-campaign]").forEach(btn => {
+    btn.addEventListener("click", () =>
+      openCampaignModal(campaigns.find(c => c.id === btn.dataset.editCampaign))
+    );
+  });
+
+  el.querySelectorAll("[data-delete-campaign]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if (!confirm(`Delete campaign "${btn.dataset.campaignName}"?`)) return;
+      await deleteDoc(doc(db, "campaigns", btn.dataset.deleteCampaign));
+      campaigns = campaigns.filter(c => c.id !== btn.dataset.deleteCampaign);
+      renderCampaignList();
+      populateCampaignFilter();
+    });
+  });
+}
+
+// ─── WISH / SAVE MODAL (admin view) ──────────────────────────────────────────
 
 function openWishModal(charId, charName) {
   const wishedItems = wishes
@@ -909,16 +956,16 @@ function openWishModal(charId, charName) {
     .map(w => items.find(i => i.id === w.itemId))
     .filter(Boolean);
 
-  document.getElementById("wishModalCharName").textContent = `${charName}'s Wishes`;
+  document.getElementById("wishModalCharName").textContent = `${charName}'s Saved Items`;
   const grid = document.getElementById("wishModalGrid");
 
   grid.innerHTML = wishedItems.length === 0
-    ? `<p class="player-empty" style="grid-column:1/-1">No wishes yet for this character.</p>`
+    ? `<p class="player-empty" style="grid-column:1/-1">No saved items for this character.</p>`
     : wishedItems.map(item => {
         const rc = (item.rarity||"").toLowerCase().replaceAll(" ","-");
         return `
           <div class="wish-modal-card ${rc}">
-            ${item.imageUrl ? `<img src="${item.imageUrl}" class="wish-modal-art" alt="${item.name}" onerror="this.style.display='none'">` : ""}
+            ${item.imageUrl ? `<img src="${item.imageUrl}" class="wish-modal-art" alt="${item.name}" onerror="this.src='${PLACEHOLDER_IMAGE}'">` : ""}
             <div class="wish-modal-body">
               <div class="wish-modal-name">${item.name}</div>
               <div class="card-meta" style="margin-top:4px">
@@ -954,10 +1001,10 @@ function populateSourceFilter() {
 function populateCampaignFilter() {
   const el = document.getElementById("campaignFilter");
   if (!el) return;
-  const cur       = el.value;
-  const campaigns = availableCampaigns();
-  el.innerHTML    = `<option value="">All Campaigns</option>` +
-    campaigns.map(c=>`<option ${c===cur?"selected":""}>${c}</option>`).join("");
+  const cur   = el.value;
+  const camps = availableCampaigns();
+  el.innerHTML = `<option value="">All Campaigns</option>` +
+    camps.map(c=>`<option ${c===cur?"selected":""}>${c}</option>`).join("");
 }
 
 function populateOwnerFilter() {
@@ -997,12 +1044,10 @@ function renderCharacterList() {
   const mine = myCharacters();
   const el   = document.getElementById("myCharacterList");
   if (!el) return;
-
   if (!mine.length) {
     el.innerHTML = `<p class="player-empty">No characters yet — create one below.</p>`;
     return;
   }
-
   el.innerHTML = mine.map(c => {
     const tier = getTier(c.level);
     const tierBadge = tier
@@ -1051,7 +1096,7 @@ function renderCharacterList() {
 
   el.querySelectorAll(".btn-delete-char").forEach(btn => {
     btn.addEventListener("click", async () => {
-      if (!confirm(`Delete "${btn.dataset.charName}"? Their wishes will also be removed.`)) return;
+      if (!confirm(`Delete "${btn.dataset.charName}"? Their saved items will also be removed.`)) return;
       const cid = btn.dataset.charId;
       for (const w of wishes.filter(w => w.characterId === cid))
         await deleteDoc(doc(db, "wishes", w.id));
@@ -1087,9 +1132,9 @@ function renderMyWishes() {
   const el = document.getElementById("myWishGrid");
   if (!el) return;
   const mine = myCharacters();
-  if (!mine.length) { el.innerHTML = `<p class="player-empty">Create a character to track wishes.</p>`; return; }
+  if (!mine.length) { el.innerHTML = `<p class="player-empty">Create a character to save items.</p>`; return; }
   const myCharIds = mine.map(c => c.id);
-  const wished    = wishes
+  const saved     = wishes
     .filter(w => myCharIds.includes(w.characterId))
     .map(w => {
       const item = items.find(i => i.id === w.itemId);
@@ -1097,16 +1142,15 @@ function renderMyWishes() {
       return item ? { ...item, _wishChar: char?.name || "?" } : null;
     })
     .filter(Boolean);
-
-  if (!wished.length) { el.innerHTML = `<p class="player-empty">No wishes yet. Click ☆ on any item in the Library.</p>`; return; }
-  el.innerHTML = wished.map(item => createMiniCard(item, "wish", item._wishChar)).join("");
+  if (!saved.length) { el.innerHTML = `<p class="player-empty">No saved items yet. Click ☆ Save on any item in the Library.</p>`; return; }
+  el.innerHTML = saved.map(item => createMiniCard(item, "wish", item._wishChar)).join("");
 }
 
 function createMiniCard(item, mode, extra = "") {
   const rc = (item.rarity||"").toLowerCase().replaceAll(" ","-");
   return `
     <div class="mini-card ${rc}">
-      ${item.imageUrl ? `<img src="${item.imageUrl}" class="mini-card-art" alt="${item.name}" onerror="this.style.display='none'">` : ""}
+      ${item.imageUrl ? `<img src="${item.imageUrl}" class="mini-card-art" alt="${item.name}" onerror="this.src='${PLACEHOLDER_IMAGE}'">` : ""}
       <div class="mini-card-body">
         <div class="mini-card-name">${item.name}</div>
         <div class="mini-card-meta">
@@ -1126,20 +1170,14 @@ function openEditCharacterModal(charId, charName, charClass, charLevel = "", cha
   document.getElementById("editChar-name").value  = charName;
   document.getElementById("editChar-class").value = charClass;
   document.getElementById("editChar-level").value = charLevel;
-
   const campSel = document.getElementById("editChar-campaign");
   campSel.innerHTML = `<option value="">No Campaign</option>` +
-    availableCampaigns().map(c =>
-      `<option ${c===charCampaign?"selected":""}>${c}</option>`
-    ).join("");
-
+    availableCampaigns().map(c => `<option ${c===charCampaign?"selected":""}>${c}</option>`).join("");
   document.getElementById("editCharModal").dataset.charId = charId;
   document.getElementById("editCharModal").style.display  = "flex";
 }
 
-function closeEditCharacterModal() {
-  document.getElementById("editCharModal").style.display = "none";
-}
+function closeEditCharacterModal() { document.getElementById("editCharModal").style.display = "none"; }
 
 async function saveEditCharacter() {
   const charId      = document.getElementById("editCharModal").dataset.charId;
@@ -1147,23 +1185,18 @@ async function saveEditCharacter() {
   const newClass    = document.getElementById("editChar-class").value;
   const newLevel    = parseInt(document.getElementById("editChar-level").value) || null;
   const newCampaign = document.getElementById("editChar-campaign").value || null;
-
   if (!newName) { alert("Character name is required."); return; }
   if (newLevel !== null && (newLevel < 1 || newLevel > 20)) { alert("Level must be 1–20."); return; }
-
   const changes = { name: newName, class: newClass, level: newLevel, campaign: newCampaign };
   await updateDoc(doc(db, "characters", charId), changes);
-
-  // Patch local characters array
   const idx = characters.findIndex(c => c.id === charId);
   if (idx !== -1) characters[idx] = { ...characters[idx], ...changes };
   if (selectedCharacter?.id === charId) selectedCharacter = characters[idx];
-
   closeEditCharacterModal();
   populateOwnerFilter();
   renderPlayerTab();
   if (isAdmin()) { renderUserTable(); renderAdminStats(); }
-  renderCards(); // owner badges on item cards may show the updated name
+  renderCards();
 }
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
@@ -1177,6 +1210,7 @@ function showTab(tabId) {
   if (panel) panel.style.display = "block";
   if (tabId === "admin")  { renderUserTable(); renderAdminStats(); }
   if (tabId === "player") { renderPlayerTab(); populateCreateCharCampaigns(); }
+  if (tabId === "dm")     { renderCampaignList(); }
 }
 
 function initTabs() {
@@ -1221,16 +1255,20 @@ function initModalListeners() {
   document.getElementById("closeWishModal")?.addEventListener("click",    closeWishModal);
   document.getElementById("closeWishModalBtn")?.addEventListener("click", closeWishModal);
 
-  // Create character (player tab)
+  // Campaign modal
+  document.getElementById("openCreateCampaignBtn")?.addEventListener("click", () => openCampaignModal());
+  document.getElementById("closeCampaignModal")?.addEventListener("click",    closeCampaignModal);
+  document.getElementById("cancelCampaignModal")?.addEventListener("click",   closeCampaignModal);
+  document.getElementById("saveCampaignModal")?.addEventListener("click",     saveCampaignModal);
+
+  // Create character
   document.getElementById("playerCreateCharBtn")?.addEventListener("click", async () => {
     const name     = document.getElementById("playerCharName").value.trim();
     const cls      = document.getElementById("playerCharClass").value;
     const level    = parseInt(document.getElementById("playerCharLevel").value) || null;
     const campaign = document.getElementById("playerCharCampaign").value || null;
-
     if (!name) { alert("Enter a character name."); return; }
     if (level !== null && (level < 1 || level > 20)) { alert("Level must be 1–20."); return; }
-
     const newRef = await addDoc(collection(db, "characters"), {
       name, class: cls, level, campaign,
       userId: auth.currentUser.uid, active: true, created: Date.now()
@@ -1239,18 +1277,14 @@ function initModalListeners() {
       userId: auth.currentUser.uid, active: true, created: Date.now() };
     characters.push(newChar);
     selectedCharacter = newChar;
-
     document.getElementById("playerCharName").value  = "";
     document.getElementById("playerCharLevel").value = "";
-
     const playerTab = document.getElementById("playerTab");
     if (playerTab) playerTab.style.display = "inline-block";
-
     renderPlayerTab();
-    renderCards(); // wish buttons now appear
+    renderCards();
   });
 
-  // Close on backdrop click or Escape
   document.querySelectorAll(".modal").forEach(modal => {
     modal.addEventListener("click", e => { if (e.target === modal) modal.style.display = "none"; });
   });
@@ -1298,6 +1332,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
   const logoutBtn     = document.getElementById("logoutButton");
   const display       = document.getElementById("userDisplay");
   const adminTab      = document.getElementById("adminTab");
+  const dmTab         = document.getElementById("dmTab");
   const playerTab     = document.getElementById("playerTab");
   const addBtn        = document.getElementById("addItemBtn");
   const adminPanel    = document.getElementById("adminPanel");
@@ -1309,15 +1344,16 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     if (loginControls) loginControls.style.display = "none";
     if (logoutBtn)     logoutBtn.style.display      = "inline-block";
 
-    // Load all collections on login — users/characters/wishes in parallel
     await importItemsIfEmpty();
-    await Promise.all([loadUsers(), loadCharacters(), loadWishes()]);
+    await Promise.all([loadUsers(), loadCharacters(), loadWishes(), loadCampaigns()]);
     await loadItemsFromFirestore();
     populateOwnerFilter();
 
+    // Tab visibility by role
     if (adminTab)   adminTab.style.display   = isAdmin() ? "inline-block" : "none";
     if (addBtn)     addBtn.style.display     = isAdmin() ? "inline-block" : "none";
     if (adminPanel) adminPanel.style.display = isAdmin() ? "block"        : "none";
+    if (dmTab)      dmTab.style.display      = isDM()    ? "inline-block" : "none";
 
     const hasChars = myCharacters().length > 0;
     if (playerTab) playerTab.style.display = (isPlayer() && hasChars) ? "inline-block" : "none";
@@ -1330,6 +1366,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     if (loginControls) loginControls.style.display = "block";
     if (logoutBtn)     logoutBtn.style.display      = "none";
     if (adminTab)      adminTab.style.display        = "none";
+    if (dmTab)         dmTab.style.display           = "none";
     if (playerTab)     playerTab.style.display       = "none";
     if (addBtn)        addBtn.style.display           = "none";
     if (adminPanel)    adminPanel.style.display       = "none";

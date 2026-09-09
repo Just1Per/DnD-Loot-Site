@@ -274,9 +274,9 @@ h1 {
   z-index: 10;
 }
 
-.loot-button, .print-button, .edit-button, .clone-button,
-.save-button, .cancel-button, .wish-button, .btn-sm,
-.btn-select-char, .btn-rename-char, .btn-delete-char, .wish-view-btn, .highlight-button, .save-item-button {
+.loot-button, .highlight-button, .edit-button, .clone-button,
+.save-edit-button, .cancel-button, .save-item-button, .delete-item-button,
+.btn-sm, .btn-select-char, .btn-rename-char, .btn-delete-char, .wish-view-btn, .highlight-button, .save-item-button {
   border: none;
   border-radius: 6px;
   color: white;
@@ -290,22 +290,24 @@ h1 {
   opacity: 0.9;
 }
 
-.loot-button:hover, .print-button:hover, .edit-button:hover, .clone-button:hover,
-.save-button:hover, .cancel-button:hover, .wish-button:hover, .btn-sm:hover,
+.loot-button:hover, .highlight-button:hover, .edit-button:hover, .clone-button:hover,
+.save-edit-button:hover, .cancel-button:hover, .save-item-button:hover,
+.delete-item-button:hover, .btn-sm:hover,
 .btn-select-char:hover, .btn-rename-char:hover, .btn-delete-char:hover, .wish-view-btn:hover, .highlight-button:hover, .save-item-button:hover {
   transform: scale(1.06); opacity: 1;
 }
 
-.loot-button    { background: #8b0000; }
-.highlight-button { background: #5e5e5c; }
-.edit-button    { background: #9b59b6; }
-.clone-button   { background: #b88607; color: #1a0e00; }
-.save-edit-button { background: #27ae60; }
-.cancel-button  { background: #c0392b; }
-.wish-view-btn  { background: #2471a3; }
+.loot-button        { background: #8b0000; }
+.highlight-button   { background: #555; }
+.edit-button        { background: #9b59b6; }
+.clone-button       { background: #2471a3; }
+.save-edit-button   { background: #27ae60; }
+.cancel-button      { background: #c0392b; }
+.wish-view-btn      { background: #2471a3; }
+.delete-item-button { background: #6b0000; border: 1px solid #ff8080 !important; }
 
-.item-card.looted       .loot-button      { background: #27ae60; }
-.item-card.highlighted  .highlight-button { background: #d4af37; color: #2b1b00; }
+.item-card.looted      .loot-button      { background: #27ae60; }
+.item-card.highlighted .highlight-button { background: #d4af37; color: #2b1b00; }
 
 /* Highlighted card — golden glow visible to ALL users */
 .item-card.highlighted {
@@ -313,15 +315,14 @@ h1 {
 }
 
 .save-item-button {
-  background: #00771e;
+  background: #5c1d1d;
   border: 2px solid #d4af37 !important;
   color: #f5e6c8;
 }
 
 .save-item-button.saved {
-  background: #f5e6c8;
-  border: 2px solid #d4af37 !important;
-  color: #00771e;
+  background: #d4af37;
+  color: #2b1b00;
 }
 
 .no-char-hint {
@@ -1233,6 +1234,105 @@ h1 {
 
 /* ─── MISC ───────────────────────────────────────────────────────────────── */
 input::placeholder, textarea::placeholder { color: #8a7355; font-style: italic; opacity: 0.72; }
+
+/* ─── CARD IMAGE EDIT AREA ───────────────────────────────────────────────── */
+.card-image-edit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f5f2eb;
+  border-top: 1px solid #8a7355;
+  border-bottom: 1px solid #8a7355;
+}
+
+.card-art--edit {
+  width: 100%;
+  height: 2.1in;
+  object-fit: contain;
+  display: block;
+  opacity: 0.88;
+}
+
+.upload-image-btn--overlay {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(44,110,138,0.92);
+  backdrop-filter: blur(2px);
+  border-radius: 6px;
+  padding: 5px 12px;
+  white-space: nowrap;
+  font-size: 0.67rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: white;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  text-transform: uppercase;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.upload-image-btn--overlay:hover {
+  background: rgba(44,110,138,1);
+  transform: translateX(-50%) scale(1.04);
+}
+
+/* ─── DM TAB — CAMPAIGN LIST ─────────────────────────────────────────────── */
+.campaign-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.campaign-card {
+  background: #fdfbf7;
+  border: 2px solid #8a7355;
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+  transition: box-shadow 0.15s;
+}
+
+.campaign-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+.campaign-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.campaign-card-name {
+  font-family: "Cinzel", serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #5c1d1d;
+}
+
+.campaign-card-desc {
+  font-size: 0.76rem;
+  color: #8a7355;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.campaign-card-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* DM role badge — teal/teal-green */
+.role-badge[data-role="dm"],
+span.role-badge:has(> *)  { /* fallback handled by text content */ }
 
 /* ─── MOBILE ─────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
