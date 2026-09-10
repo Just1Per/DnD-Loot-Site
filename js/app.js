@@ -136,25 +136,77 @@ async function uploadItemImage(itemId, file) {
 // ─── DATA LOADERS ─────────────────────────────────────────────────────────────
 
 async function loadCurrentUser(firebaseUser) {
-  const userRef = doc(db, "users", firebaseUser.uid);
+  const uidRef = doc(db, "users", firebaseUser.uid);
+
   try {
-    const snap = await getDoc(userRef);
-    if (snap.exists()) {
-      currentUser = { uid: firebaseUser.uid, ...snap.data() };
+    // 1. Se først om brugeren allerede findes under Firebase UID
+    const uidSnap = await getDoc(uidRef);
+
+    if (uidSnap.exists()) {
+      currentUser = {
+        uid: firebaseUser.uid,
+        id: firebaseUser.uid,
+        ...uidSnap.data()
+      };
       return;
     }
-  } catch (e) {
-    console.warn("User doc fetch failed, attempting creation/fallback...", e);
-  }
 
-  // Fallback creation logic if document is missing or blocked initially
-  const newUser = {
-    email: firebaseUser.email,
-    name:  firebaseUser.displayName || firebaseUser.email,
-    role:  ["viewer"]
-  };
-  await setDoc(userRef, newUser, { merge: true });
-  currentUser = { uid: firebaseUser.uid, ...newUser };
+    // 2. Hvis ikke: find pre-created user via email
+    const usersSnap = await getDocs(collection(db, "users"));
+
+    const email = (firebaseUser.email || "").toLowerCase();
+
+    const matchingDoc = usersSnap.docs.find(d => {
+      const data = d.data();
+      return (data.email || "").toLowerCase() === email;
+    });
+
+    if (matchingDoc) {
+      const existingData = matchingDoc.data();
+
+      // Flyt/kopier brugerens data over på det rigtige Firebase UID
+      await setDoc(uidRef, {
+        ...existingData,
+        email: firebaseUser.email,
+        name:
+          existingData.name ||
+          firebaseUser.displayName ||
+          firebaseUser.email
+      }, { merge: true });
+
+      // Fjern det gamle midlertidige email-dokument
+      if (matchingDoc.id !== firebaseUser.uid) {
+        await deleteDoc(doc(db, "users", matchingDoc.id));
+      }
+
+      currentUser = {
+        uid: firebaseUser.uid,
+        id: firebaseUser.uid,
+        ...existingData
+      };
+
+      return;
+    }
+
+    // 3. Helt ny bruger uden admin-created entry
+    const newUser = {
+      email: firebaseUser.email,
+      name: firebaseUser.displayName || firebaseUser.email,
+      role: ["viewer"]
+    };
+
+    await setDoc(uidRef, newUser, { merge: true });
+
+    currentUser = {
+      uid: firebaseUser.uid,
+      id: firebaseUser.uid,
+      ...newUser
+    };
+
+  } catch (e) {
+    console.error("Failed loading current user:", e);
+    throw e;
+  }
 }
 
 async function loadItemsFromFirestore() {
