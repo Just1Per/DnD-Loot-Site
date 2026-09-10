@@ -63,7 +63,7 @@ const hasRole = (role) => {
 
 const isAdmin  = () => hasRole("admin");
 const isDM     = () => hasRole("dm") || hasRole("admin");
-const isPlayer = () => hasRole("player") || hasRole("dm") || hasRole("admin");
+const isPlayer = () => hasRole("player") || hasRole("admin");;
 
 const myCharacters = () =>
   characters.filter(c => c.userId === auth.currentUser?.uid && c.active !== false);
@@ -1353,8 +1353,9 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     if (adminPanel) adminPanel.style.display = isAdmin() ? "block"        : "none";
     if (dmTab)      dmTab.style.display      = isDM()    ? "inline-block" : "none";
 
-    const hasChars = myCharacters().length > 0;
-    if (playerTab) playerTab.style.display = (isPlayer() && hasChars) ? "inline-block" : "none";
+    if (playerTab) {
+      playerTab.style.display = isPlayer() ? "inline-block" : "none";
+    }
 
     if (isAdmin()) { renderUserTable(); renderAdminStats(); }
 
