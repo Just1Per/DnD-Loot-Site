@@ -315,11 +315,16 @@
           <label class="modal-label full">Description
             <textarea id="modal-description" rows="3" placeholder="Flavour description…"></textarea>
           </label>
-          <label class="modal-label full">Properties
-            <small>JSON array — e.g. [{"title":"Bonus","text":"You gain +1 to AC."}]</small>
-            <textarea id="modal-properties" rows="5"
-              placeholder='[{"title":"Property Name","text":"Property description."}]'></textarea>
-          </label>
+          <div class="modal-label full">
+          <span>Properties</span>
+          <div id="modal-properties-list" class="properties-editor"></div>
+          <button
+            type="button"
+            id="addPropertyBtn"
+            class="toolbar-btn property-add-btn">
+            + Add Property
+          </button>
+        </div>
           <label class="modal-label full">Quote
             <input type="text" id="modal-quote" placeholder="Optional flavour quote">
           </label>

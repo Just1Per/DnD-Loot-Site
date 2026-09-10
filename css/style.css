@@ -502,6 +502,45 @@ background: rgba(212, 175, 55, 0.18);
 .property-block { font-size: 0.8rem; line-height: 1.5; margin-bottom: 6px; }
 .property-title { color: #5c1d1d; font-family: "Cinzel", serif; font-size: 0.74rem; font-weight: bold; }
 
+.properties-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.property-edit-row {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 14px;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.property-edit-fields {
+  display: grid;
+  gap: 10px;
+}
+
+.property-edit-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.property-edit-fields input,
+.property-edit-fields textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.remove-property-btn {
+  margin-top: 10px;
+}
+
+.property-add-btn {
+  margin-top: 12px;
+}
+
 .card-body i {
   color: #888;
   display: block;
@@ -682,10 +721,6 @@ background: rgba(212, 175, 55, 0.18);
   border-radius: 4px;
   background: rgba(199,156,50,0.1);
 }
-
-.btn-select-char { background: linear-gradient(180deg, #9b1d1d, #651313); border: 2px solid #d4af37 !important; }
-.btn-rename-char { background: linear-gradient(180deg, #6c3483, #4a235a); }
-.btn-delete-char { background: #c0392b; }
 
 /* Create character form */
 .player-create-form {

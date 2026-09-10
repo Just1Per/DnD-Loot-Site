@@ -674,6 +674,77 @@ function buildModalClassCheckboxes(selected = []) {
     </label>`).join("");
 }
 
+function createPropertyRow(property = {}) {
+  const row = document.createElement("div");
+  row.className = "property-edit-row";
+
+  row.innerHTML = `
+    <div class="property-edit-fields">
+
+      <label>
+        Title
+        <input
+          type="text"
+          class="property-title-input"
+          placeholder="e.g. Bonus"
+          value="${escapeHtml(property.title || "")}">
+      </label>
+
+      <label>
+        Text
+        <textarea
+          class="property-text-input"
+          rows="3"
+          placeholder="Property description...">${escapeHtml(property.text || "")}</textarea>
+      </label>
+
+    </div>
+
+    <button
+      type="button"
+      class="cancel-button remove-property-btn">
+      Remove
+    </button>
+  `;
+
+  row.querySelector(".remove-property-btn")
+    .addEventListener("click", () => row.remove());
+
+  return row;
+}
+
+
+function renderPropertyEditor(properties = []) {
+  const container = document.getElementById("modal-properties-list");
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  properties.forEach(property => {
+    container.appendChild(createPropertyRow(property));
+  });
+}
+
+
+function getPropertiesFromEditor() {
+  return [...document.querySelectorAll(".property-edit-row")]
+    .map(row => ({
+      title: row.querySelector(".property-title-input").value.trim(),
+      text: row.querySelector(".property-text-input").value.trim()
+    }))
+    .filter(p => p.title || p.text);
+}
+
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
 function openItemModal(item = null) {
   document.getElementById("itemModalTitle").textContent = item ? "Edit Item" : "Add Item";
   document.getElementById("modal-name").value         = item?.name        || "";
@@ -684,7 +755,7 @@ function openItemModal(item = null) {
   document.getElementById("modal-description").value  = item?.description || "";
   document.getElementById("modal-quote").value        = item?.quote       || "";
   document.getElementById("modal-attunement").checked = item?.attunement  || false;
-  document.getElementById("modal-properties").value   = JSON.stringify(item?.properties || [], null, 2);
+  renderPropertyEditor(item?.properties || []);
   buildModalClassCheckboxes(item?.classes || []);
   document.getElementById("itemModal").dataset.editId = item?.id || "";
   document.getElementById("itemModal").style.display  = "flex";
@@ -696,9 +767,7 @@ async function saveItemModal() {
   const editId = document.getElementById("itemModal").dataset.editId;
   const name   = document.getElementById("modal-name").value.trim();
   if (!name) { alert("Name is required."); return; }
-  let properties = [];
-  try { properties = JSON.parse(document.getElementById("modal-properties").value || "[]"); }
-  catch { alert("Properties JSON is invalid."); return; }
+  const properties = getPropertiesFromEditor();
   const classes = [...document.querySelectorAll("#modal-classes input:checked")].map(i => i.value);
   const data = {
     name,
@@ -1310,6 +1379,19 @@ function initModalListeners() {
   document.getElementById("closeCampaignModal")?.addEventListener("click",    closeCampaignModal);
   document.getElementById("cancelCampaignModal")?.addEventListener("click",   closeCampaignModal);
   document.getElementById("saveCampaignModal")?.addEventListener("click",     saveCampaignModal);
+
+  // Edit item modal
+  document.getElementById("addPropertyBtn")
+  ?.addEventListener("click", () => {
+
+    const container =
+      document.getElementById("modal-properties-list");
+
+    container.appendChild(
+      createPropertyRow()
+    );
+
+  });
 
   // Create character
   document.getElementById("playerCreateCharBtn")?.addEventListener("click", async () => {
