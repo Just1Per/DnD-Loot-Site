@@ -19,8 +19,8 @@
  * Usage from your deployed site's DevTools console:
  *
  *   const { runMigration } = await import("/js/migration-v2.js");
- *   await runMigration({ dryRun: true });   // inspect first
- *   await runMigration({ dryRun: false });  // then actually write
+ *   await runMigration({ dryRun: true, ignoreHighlightOnlyAmbiguous: true });
+ *   await runMigration({ dryRun: false, ignoreHighlightOnlyAmbiguous: true });
  */
 
 import { db } from "./firebase.js";
@@ -40,7 +40,7 @@ async function writeDoc(ref, data, options, dryRun) {
 }
 
 
-export async function runMigration({ dryRun = true } = {}) {
+export async function runMigration({ dryRun = true, ignoreHighlightOnlyAmbiguous = false } = {}) {
   const startedAt = Date.now();
 
   console.log("══════════════════════════════════════════════════");
@@ -82,6 +82,7 @@ export async function runMigration({ dryRun = true } = {}) {
     savesSkipped: 0,
     itemStateCopied: 0,
     itemStateAmbiguous: 0,
+    highlightOnlyIgnored: 0,
     visibilityCopied: 0
   };
 
@@ -275,6 +276,20 @@ export async function runMigration({ dryRun = true } = {}) {
     if (!meaningfulState) continue;
 
     if (!campaign) {
+      const highlightOnly =
+        item.highlighted === true &&
+        item.looted !== true &&
+        !item.owner &&
+        !item.receivedDate;
+
+      if (highlightOnly && ignoreHighlightOnlyAmbiguous) {
+        console.log(
+          `↷ Ignoring legacy highlight-only state for "${item.name}" (${item.id})`
+        );
+        stats.highlightOnlyIgnored++;
+        continue;
+      }
+
       console.warn(
         `⚠ Item "${item.name}" (${item.id}) has legacy campaign-specific state ` +
         "but no unique campaign can be inferred. Review it manually."
@@ -332,7 +347,7 @@ export async function runMigration({ dryRun = true } = {}) {
 
   if (dryRun) {
     console.log("No data was changed. If the warnings look correct, run:");
-    console.log('await runMigration({ dryRun: false })');
+    console.log('await runMigration({ dryRun: false, ignoreHighlightOnlyAmbiguous: true })');
   } else {
     console.log("Legacy global characters/, wishes/, itemVisibility/ and legacy item state were NOT deleted.");
     console.log("Verify the new app thoroughly before cleaning old data.");
