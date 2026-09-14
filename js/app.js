@@ -17,6 +17,9 @@ import {
 import { ref, getDownloadURL, uploadBytes }
   from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
+import { getFunctions, httpsCallable }
+  from "https://www.gstatic.com/firebasejs/12.16.0/firebase-functions.js";
+
 // ─── STATE ────────────────────────────────────────────────────────────────────
 // Data flow: User → Campaign → Character → Item (owner = characterId)
 
@@ -33,6 +36,8 @@ let selectedCharacter = null;
 let pendingInvites   = [];   // pending invites matching the signed-in user's email
 let campaignInvites  = [];   // pending invites for the active campaign (admin/DM management)
 let campaignMembers  = [];   // active campaign roster for DM tools
+let myDMRequest      = null; // current user's global DM application
+let dmRequests       = [];   // all DM applications (admin only)
 let itemsLoadPromise = Promise.resolve();
 
 const editingItems = new Set();
@@ -50,6 +55,59 @@ const CATEGORIES = [
 ];
 
 const RARITIES = ["Common","Uncommon","Rare","Very Rare","Legendary","Artifact"];
+
+
+// ─── ROADMAP STEP 5: USAGE LIMITS ────────────────────────────────────────────
+// The browser uses these as fast UX guardrails. The authoritative checks live
+// in Cloud Functions, so a modified browser cannot bypass them.
+const DEFAULT_USAGE_LIMITS = Object.freeze({
+  campaignsPerDM: 5,
+  membersPerCampaign: 12,
+  charactersPerUserPerCampaign: 5,
+  savedItemsPerCharacter: 100
+});
+
+let usageLimits = { ...DEFAULT_USAGE_LIMITS };
+
+const cloudFunctions = getFunctions();
+const createCampaignSecure      = httpsCallable(cloudFunctions, "createCampaignSecure");
+const createCampaignInviteSecure= httpsCallable(cloudFunctions, "createCampaignInviteSecure");
+const acceptCampaignInviteSecure= httpsCallable(cloudFunctions, "acceptCampaignInviteSecure");
+const createCharacterSecure     = httpsCallable(cloudFunctions, "createCharacterSecure");
+const toggleSavedItemSecure     = httpsCallable(cloudFunctions, "toggleSavedItemSecure");
+
+function functionErrorMessage(error, fallback = "The request could not be completed.") {
+  const raw = error?.message || fallback;
+  return raw.replace(/^FirebaseError:\s*/i, "");
+}
+
+async function loadUsageLimits() {
+  try {
+    const snap = await getDoc(doc(db, "config", "usageLimits"));
+    if (!snap.exists()) return;
+    const data = snap.data() || {};
+    usageLimits = {
+      campaignsPerDM: Number(data.campaignsPerDM) > 0 ? Number(data.campaignsPerDM) : DEFAULT_USAGE_LIMITS.campaignsPerDM,
+      membersPerCampaign: Number(data.membersPerCampaign) > 0 ? Number(data.membersPerCampaign) : DEFAULT_USAGE_LIMITS.membersPerCampaign,
+      charactersPerUserPerCampaign: Number(data.charactersPerUserPerCampaign) > 0 ? Number(data.charactersPerUserPerCampaign) : DEFAULT_USAGE_LIMITS.charactersPerUserPerCampaign,
+      savedItemsPerCharacter: Number(data.savedItemsPerCharacter) > 0 ? Number(data.savedItemsPerCharacter) : DEFAULT_USAGE_LIMITS.savedItemsPerCharacter
+    };
+  } catch (e) {
+    console.warn("Usage limits config could not be loaded; using defaults.", e);
+    usageLimits = { ...DEFAULT_USAGE_LIMITS };
+  }
+}
+
+function ownedCampaignCount() {
+  const uid = auth.currentUser?.uid;
+  return campaigns.filter(c => c.ownerId === uid).length;
+}
+
+function reservedCampaignSeats() {
+  const activeMembers = campaignMembers.filter(m => (m.status || "active") === "active").length;
+  const pending = campaignInvites.filter(i => i.status === "pending").length;
+  return activeMembers + pending;
+}
 
 // ─── ROLE HELPERS ─────────────────────────────────────────────────────────────
 
@@ -402,6 +460,504 @@ async function loadCampaignMembers() {
     .sort((a, b) => memberLabel(a).localeCompare(memberLabel(b)));
 }
 
+
+// ─── GLOBAL DM APPLICATION / APPROVAL ────────────────────────────────────────
+// Roadmap Step 4:
+// - "dm" on users/{uid}.role is a GLOBAL capability: it allows creating campaigns.
+// - It does NOT make someone a DM inside every campaign.
+// - Campaign authority still comes from campaigns/{campaignId}/members/{uid}.
+
+function normalizedRoles(user) {
+  const value = user?.role;
+  if (Array.isArray(value)) return [...new Set(value.filter(Boolean))];
+  if (typeof value === "string" && value) return [value];
+  return ["viewer"];
+}
+
+function rolesWithDM(user) {
+  const roles = normalizedRoles(user).filter(r => r !== "viewer");
+  if (!roles.includes("dm")) roles.push("dm");
+  return roles.length ? roles : ["dm"];
+}
+
+function rolesWithoutDM(user) {
+  const roles = normalizedRoles(user).filter(r => r !== "dm");
+  return roles.length ? roles : ["viewer"];
+}
+
+async function loadMyDMRequest() {
+  const uid = auth.currentUser?.uid;
+  if (!uid) {
+    myDMRequest = null;
+    return;
+  }
+
+  const snap = await getDoc(doc(db, "dmRequests", uid));
+  myDMRequest = snap.exists() ? { id: snap.id, ...snap.data() } : null;
+}
+
+async function loadDMRequests() {
+  if (!isAdmin()) {
+    dmRequests = [];
+    return;
+  }
+
+  const snap = await getDocs(collection(db, "dmRequests"));
+  dmRequests = snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => {
+      const rank = { pending: 0, approved: 1, rejected: 2, revoked: 3, withdrawn: 4 };
+      const ar = rank[a.status] ?? 9;
+      const br = rank[b.status] ?? 9;
+      if (ar !== br) return ar - br;
+      return (b.submittedAt || 0) - (a.submittedAt || 0);
+    });
+}
+
+function ensureDMApplicationPanel() {
+  const list = document.getElementById("campaignSelectorList");
+  if (!list) return null;
+
+  let panel = document.getElementById("dmApplicationPanel");
+  if (panel) return panel;
+
+  panel = document.createElement("div");
+  panel.id = "dmApplicationPanel";
+  panel.className = "dm-application-panel";
+
+  const actions = document.getElementById("dmSelectorActions");
+  if (actions) actions.insertAdjacentElement("beforebegin", panel);
+  else list.insertAdjacentElement("afterend", panel);
+
+  return panel;
+}
+
+function renderDMApplicationPanel() {
+  const panel = ensureDMApplicationPanel();
+  if (!panel || !auth.currentUser) return;
+
+  // Admins and already-approved DMs have campaign-creation capability already.
+  if (isAdmin() || hasRole("dm")) {
+    panel.style.display = "none";
+    return;
+  }
+
+  panel.style.display = "block";
+
+  const request = myDMRequest;
+  const status = request?.status || "none";
+  const reviewNote = request?.reviewNote
+    ? `<div class="dm-application-note"><strong>Admin note:</strong> ${escapeHtml(request.reviewNote)}</div>`
+    : "";
+
+  if (status === "pending") {
+    panel.innerHTML = `
+      <div class="dm-application-card">
+        <div class="dm-application-heading">
+          <div>
+            <strong>Dungeon Master application pending</strong>
+            <span>Your application is waiting for an administrator to review it.</span>
+          </div>
+          <span class="role-badge">Pending</span>
+        </div>
+        ${request.message ? `<p>${escapeHtml(request.message)}</p>` : ""}
+        <div class="dm-application-actions">
+          <button type="button" class="dm-approval-action" data-refresh-dm-request>Refresh status</button>
+          <button type="button" class="dm-approval-action dm-danger-btn" data-withdraw-dm-request>Withdraw</button>
+        </div>
+      </div>`;
+  } else if (status === "approved") {
+    panel.innerHTML = `
+      <div class="dm-application-card">
+        <div class="dm-application-heading">
+          <div>
+            <strong>Dungeon Master application approved</strong>
+            <span>Your account has been approved to create campaigns.</span>
+          </div>
+          <span class="role-badge">Approved</span>
+        </div>
+        ${reviewNote}
+        <div class="dm-application-actions">
+          <button type="button" class="btn-primary" data-refresh-dm-request>Refresh account access</button>
+        </div>
+      </div>`;
+  } else {
+    const rejectedCopy = status === "rejected"
+      ? `<div class="dm-application-note"><strong>Previous application:</strong> Not approved.${request?.reviewNote ? ` ${escapeHtml(request.reviewNote)}` : ""}</div>`
+      : status === "revoked"
+        ? `<div class="dm-application-note"><strong>DM access was revoked.</strong>${request?.reviewNote ? ` ${escapeHtml(request.reviewNote)}` : ""} You may submit a new application.</div>`
+        : status === "withdrawn"
+          ? `<div class="dm-application-note">Your previous application was withdrawn. You may apply again.</div>`
+          : "";
+
+    panel.innerHTML = `
+      <div class="dm-application-card">
+        <div class="dm-application-heading">
+          <div>
+            <strong>Want to run your own campaign?</strong>
+            <span>Apply for global Dungeon Master access. Approval lets you create campaigns, but does not give you DM rights in campaigns owned by other people.</span>
+          </div>
+          <span class="role-badge">DM Access</span>
+        </div>
+        ${rejectedCopy}
+        <label class="dm-application-label">
+          Why do you want to become a DM?
+          <textarea id="dm-request-message" rows="3" maxlength="1000" placeholder="Tell us briefly what you want to run...">${escapeHtml(request?.message || "")}</textarea>
+        </label>
+        <label class="dm-application-label">
+          Experience <span>(optional)</span>
+          <textarea id="dm-request-experience" rows="2" maxlength="1000" placeholder="Previous DM/player experience, if any...">${escapeHtml(request?.experience || "")}</textarea>
+        </label>
+        <div class="dm-application-actions">
+          <button type="button" class="btn-primary" data-submit-dm-request>
+            ${status === "rejected" || status === "withdrawn" || status === "revoked" ? "Reapply for DM Access" : "Apply for DM Access"}
+          </button>
+        </div>
+      </div>`;
+  }
+
+  panel.querySelector("[data-submit-dm-request]")?.addEventListener("click", submitDMRequest);
+  panel.querySelector("[data-withdraw-dm-request]")?.addEventListener("click", withdrawDMRequest);
+  panel.querySelectorAll("[data-refresh-dm-request]").forEach(btn => {
+    btn.addEventListener("click", refreshDMApplicationStatus);
+  });
+}
+
+async function submitDMRequest() {
+  const uid = auth.currentUser?.uid;
+  if (!uid || isAdmin() || hasRole("dm")) return;
+
+  const message = document.getElementById("dm-request-message")?.value.trim() || "";
+  const experience = document.getElementById("dm-request-experience")?.value.trim() || "";
+
+  if (!message) {
+    alert("Please tell us briefly why you want to become a Dungeon Master.");
+    return;
+  }
+
+  const now = Date.now();
+  const data = {
+    userId: uid,
+    name: currentUser?.name || auth.currentUser?.displayName || auth.currentUser?.email || "User",
+    email: auth.currentUser?.email || "",
+    emailLower: normalizeEmail(auth.currentUser?.email),
+    message,
+    experience,
+    status: "pending",
+    submittedAt: now,
+    updatedAt: now
+  };
+
+  try {
+    if (myDMRequest) {
+      await updateDoc(doc(db, "dmRequests", uid), data);
+    } else {
+      await setDoc(doc(db, "dmRequests", uid), data);
+    }
+
+    myDMRequest = { id: uid, ...data };
+    renderDMApplicationPanel();
+    alert("Your DM application has been submitted.");
+  } catch (e) {
+    console.error("DM application failed:", e);
+    alert(`Could not submit DM application: ${e.message}`);
+  }
+}
+
+async function withdrawDMRequest() {
+  const uid = auth.currentUser?.uid;
+  if (!uid || myDMRequest?.status !== "pending") return;
+  if (!confirm("Withdraw your Dungeon Master application?")) return;
+
+  try {
+    const changes = {
+      status: "withdrawn",
+      updatedAt: Date.now()
+    };
+    await updateDoc(doc(db, "dmRequests", uid), changes);
+    myDMRequest = { ...myDMRequest, ...changes };
+    renderDMApplicationPanel();
+  } catch (e) {
+    console.error("Withdraw DM application failed:", e);
+    alert(`Could not withdraw application: ${e.message}`);
+  }
+}
+
+async function refreshDMApplicationStatus() {
+  if (!auth.currentUser) return;
+
+  try {
+    await Promise.all([
+      loadCurrentUser(auth.currentUser),
+      loadMyDMRequest()
+    ]);
+    await loadCampaigns();
+    renderCampaignSelector();
+    renderDMApplicationPanel();
+
+    const display = document.getElementById("userDisplay");
+    if (display) display.textContent = currentUser.name || auth.currentUser.email;
+
+    const dmActions = document.getElementById("dmSelectorActions");
+    if (dmActions) dmActions.style.display = isDM() ? "flex" : "none";
+  } catch (e) {
+    console.error("Refresh DM status failed:", e);
+    alert(`Could not refresh DM status: ${e.message}`);
+  }
+}
+
+function ensureAdminDMRequestsPanel() {
+  const adminPanel = document.getElementById("adminPanel");
+  if (!adminPanel) return null;
+
+  let section = document.getElementById("adminDMRequestsSection");
+  if (section) return section;
+
+  section = document.createElement("div");
+  section.id = "adminDMRequestsSection";
+  section.className = "admin-section";
+  section.innerHTML = `
+    <h2>Dungeon Master Applications</h2>
+    <p class="admin-section-sub">
+      Approval grants the global ability to create campaigns. It does not grant DM access to other people's campaigns.
+    </p>
+    <div id="adminDMRequestsList"></div>`;
+
+  const firstSection = adminPanel.querySelector(".admin-section");
+  if (firstSection) firstSection.insertAdjacentElement("afterend", section);
+  else adminPanel.appendChild(section);
+
+  return section;
+}
+
+function renderAdminDMRequests() {
+  const section = ensureAdminDMRequestsPanel();
+  if (!section || !isAdmin()) return;
+
+  const list = document.getElementById("adminDMRequestsList");
+  if (!list) return;
+
+  const pending = dmRequests.filter(r => r.status === "pending");
+  const history = dmRequests.filter(r => r.status !== "pending");
+
+  const requestRow = (request, historical = false) => {
+    const user = users.find(u => u.id === request.userId);
+    const userHasDM = normalizedRoles(user).includes("dm");
+    const status = request.status || "pending";
+
+    return `
+      <div class="dm-request-admin-row">
+        <div class="dm-request-admin-main">
+          <div class="dm-request-admin-title">
+            <strong>${escapeHtml(request.name || user?.name || request.email || "User")}</strong>
+            <span class="role-badge">${escapeHtml(status)}</span>
+          </div>
+          <div class="dm-request-admin-meta">${escapeHtml(request.email || user?.email || request.userId || "")}</div>
+          ${request.message ? `<p><strong>Why:</strong> ${escapeHtml(request.message)}</p>` : ""}
+          ${request.experience ? `<p><strong>Experience:</strong> ${escapeHtml(request.experience)}</p>` : ""}
+          ${request.reviewNote ? `<p class="dm-request-review-note"><strong>Review note:</strong> ${escapeHtml(request.reviewNote)}</p>` : ""}
+        </div>
+        <div class="dm-request-admin-actions">
+          ${status === "pending" ? `
+            <button type="button" class="dm-approval-action" data-approve-dm-request="${escapeHtml(request.userId)}">Approve</button>
+            <button type="button" class="dm-approval-action dm-danger-btn" data-reject-dm-request="${escapeHtml(request.userId)}">Reject</button>
+          ` : ""}
+          ${status === "approved" && userHasDM ? `
+            <button type="button" class="dm-approval-action dm-danger-btn" data-revoke-dm-request="${escapeHtml(request.userId)}">Revoke DM Access</button>
+          ` : ""}
+        </div>
+      </div>`;
+  };
+
+  list.innerHTML = `
+    <div class="dm-request-summary">
+      <span><strong>${pending.length}</strong> pending</span>
+      <span><strong>${dmRequests.filter(r => r.status === "approved").length}</strong> approved</span>
+    </div>
+    ${pending.length
+      ? `<div class="dm-request-group"><h3>Pending</h3>${pending.map(r => requestRow(r)).join("")}</div>`
+      : `<p class="admin-section-sub">No pending DM applications.</p>`}
+    ${history.length
+      ? `<details class="dm-request-history"><summary>Application history (${history.length})</summary>${history.map(r => requestRow(r, true)).join("")}</details>`
+      : ""}
+  `;
+
+  list.querySelectorAll("[data-approve-dm-request]").forEach(btn => {
+    btn.addEventListener("click", () => reviewDMRequest(btn.dataset.approveDmRequest, "approved"));
+  });
+  list.querySelectorAll("[data-reject-dm-request]").forEach(btn => {
+    btn.addEventListener("click", () => reviewDMRequest(btn.dataset.rejectDmRequest, "rejected"));
+  });
+  list.querySelectorAll("[data-revoke-dm-request]").forEach(btn => {
+    btn.addEventListener("click", () => revokeDMAccess(btn.dataset.revokeDmRequest));
+  });
+}
+
+async function reviewDMRequest(uid, decision) {
+  if (!isAdmin() || !["approved", "rejected"].includes(decision)) return;
+
+  const request = dmRequests.find(r => r.userId === uid || r.id === uid);
+  const user = users.find(u => u.id === uid);
+  if (!request || !user) {
+    alert("The user account could not be found.");
+    return;
+  }
+
+  const action = decision === "approved" ? "approve" : "reject";
+  const reviewNote = prompt(
+    decision === "approved"
+      ? "Optional note for the applicant:"
+      : "Optional reason for rejection:",
+    request.reviewNote || ""
+  );
+  if (reviewNote === null) return;
+
+  if (!confirm(`${action[0].toUpperCase() + action.slice(1)} ${request.name || user.name || user.email}?`)) return;
+
+  const now = Date.now();
+  const batch = writeBatch(db);
+
+  if (decision === "approved") {
+    batch.update(doc(db, "users", uid), {
+      role: rolesWithDM(user),
+      updatedAt: now
+    });
+  }
+
+  batch.update(doc(db, "dmRequests", uid), {
+    status: decision,
+    reviewedAt: now,
+    reviewedBy: auth.currentUser.uid,
+    reviewNote: reviewNote.trim(),
+    updatedAt: now
+  });
+
+  try {
+    await batch.commit();
+
+    if (decision === "approved") {
+      user.role = rolesWithDM(user);
+      user.updatedAt = now;
+    }
+
+    Object.assign(request, {
+      status: decision,
+      reviewedAt: now,
+      reviewedBy: auth.currentUser.uid,
+      reviewNote: reviewNote.trim(),
+      updatedAt: now
+    });
+
+    renderAdminDMRequests();
+    renderAdminStats();
+  } catch (e) {
+    console.error("Review DM application failed:", e);
+    alert(`Could not ${action} DM application: ${e.message}`);
+  }
+}
+
+async function revokeDMAccess(uid) {
+  if (!isAdmin()) return;
+
+  const request = dmRequests.find(r => r.userId === uid || r.id === uid);
+  const user = users.find(u => u.id === uid);
+  if (!user) {
+    alert("The user account could not be found.");
+    return;
+  }
+
+  if (normalizedRoles(user).includes("admin")) {
+    alert("Admins already have campaign-creation capability. Remove admin access separately if needed.");
+    return;
+  }
+
+  const reviewNote = prompt(
+    "Optional note explaining why DM creation access is being revoked:",
+    request?.reviewNote || ""
+  );
+  if (reviewNote === null) return;
+
+  if (!confirm(`Revoke global DM creation access for ${user.name || user.email || uid}? Existing campaign ownership/membership will be preserved.`)) return;
+
+  const now = Date.now();
+  const batch = writeBatch(db);
+
+  batch.update(doc(db, "users", uid), {
+    role: rolesWithoutDM(user),
+    updatedAt: now
+  });
+
+  if (request) {
+    batch.update(doc(db, "dmRequests", uid), {
+      status: "revoked",
+      reviewedAt: now,
+      reviewedBy: auth.currentUser.uid,
+      reviewNote: reviewNote.trim(),
+      updatedAt: now
+    });
+  }
+
+  try {
+    await batch.commit();
+    user.role = rolesWithoutDM(user);
+    user.updatedAt = now;
+
+    if (request) {
+      Object.assign(request, {
+        status: "revoked",
+        reviewedAt: now,
+        reviewedBy: auth.currentUser.uid,
+        reviewNote: reviewNote.trim(),
+        updatedAt: now
+      });
+    }
+
+    renderAdminDMRequests();
+    renderUserTable();
+    renderAdminStats();
+  } catch (e) {
+    console.error("Revoke DM access failed:", e);
+    alert(`Could not revoke DM access: ${e.message}`);
+  }
+}
+
+function ensureDMApprovalStyles() {
+  if (document.getElementById("dmApprovalStep4Styles")) return;
+
+  const style = document.createElement("style");
+  style.id = "dmApprovalStep4Styles";
+  style.textContent = `
+    .dm-application-panel{width:100%;margin:14px 0 4px}
+    .dm-application-card{background:#f4efe6;border:2px solid #8a7355;border-radius:10px;padding:14px}
+    .dm-application-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+    .dm-application-heading>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+    .dm-application-heading strong{font-family:"Cinzel",serif;color:#5c1d1d;font-size:.82rem;letter-spacing:.5px}
+    .dm-application-heading span:not(.role-badge){color:#776957;font-size:.7rem;line-height:1.45}
+    .dm-application-label{display:flex;flex-direction:column;gap:5px;margin-top:9px;color:#5c1d1d;font-family:"Cinzel",serif;font-size:.68rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+    .dm-application-label span{font-family:inherit;font-weight:400;text-transform:none;color:#8a7355}
+    .dm-application-label textarea{background:#fdfbf7;border:2px solid #8a7355;border-radius:7px;color:#333;font:inherit;letter-spacing:normal;padding:8px 10px;resize:vertical;text-transform:none}
+    .dm-application-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .dm-application-note{background:#fdfbf7;border-left:3px solid #c79c32;border-radius:4px;color:#6f6253;font-size:.72rem;line-height:1.45;margin:8px 0;padding:8px 10px}
+    .dm-request-summary{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 14px;color:#8a7355;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
+    .dm-request-group h3{font-family:"Cinzel",serif;color:#5c1d1d;font-size:.76rem;letter-spacing:.6px;margin:14px 0 8px;text-transform:uppercase}
+    .dm-request-admin-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;background:#fdfbf7;border:1px solid #c8b89a;border-radius:8px;margin:8px 0;padding:12px}
+    .dm-request-admin-main{min-width:0;flex:1}
+    .dm-request-admin-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .dm-request-admin-title strong{font-family:"Cinzel",serif;color:#5c1d1d;font-size:.78rem}
+    .dm-request-admin-meta{color:#8a7355;font-size:.68rem;margin:3px 0 8px;word-break:break-all}
+    .dm-request-admin-main p{color:#5f5549;font-size:.72rem;line-height:1.45;margin:5px 0}
+    .dm-request-review-note{font-style:italic}
+    .dm-request-admin-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+    .dm-request-history{margin-top:14px}
+    .dm-request-history>summary{cursor:pointer;color:#5c1d1d;font-family:"Cinzel",serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    .dm-approval-action{background:rgba(212,175,55,.18);border:1px solid #c79c32;border-radius:4px;color:#7d6608;cursor:pointer;font-family:"Cinzel",serif;font-size:.62rem;font-weight:700;letter-spacing:.5px;padding:5px 9px;text-transform:uppercase;transition:transform .15s,background .15s}
+    .dm-approval-action:hover{background:rgba(212,175,55,.28);transform:translateY(-1px)}
+    @media(max-width:700px){.dm-request-admin-row{flex-direction:column}.dm-request-admin-actions{justify-content:flex-start}.dm-application-heading{flex-direction:column}}
+  `;
+  document.head.appendChild(style);
+}
+
+
 // ─── CAMPAIGN INVITATIONS ───────────────────────────────────────────────────
 
 async function loadMyPendingInvites() {
@@ -454,49 +1010,13 @@ async function acceptCampaignInvite(inviteId) {
     return;
   }
 
-  const now = Date.now();
-  const batch = writeBatch(db);
-
-  batch.set(
-    doc(db, "campaigns", invite.campaignId, "members", uid),
-    {
-      uid,
-      displayName: invite.name || currentUser?.name || auth.currentUser?.email || "Member",
-      role: invite.role === "dm" ? "dm" : "player",
-      status: "active",
-      joinedAt: now,
-      inviteId: invite.id
-    },
-    { merge: true }
-  );
-
-  batch.set(
-    doc(db, "users", uid, "campaigns", invite.campaignId),
-    {
-      role: invite.role === "dm" ? "dm" : "player",
-      status: "active",
-      joinedAt: now,
-      inviteId: invite.id
-    },
-    { merge: true }
-  );
-
-  batch.update(
-    doc(db, "campaignInvites", invite.id),
-    {
-      status: "accepted",
-      acceptedBy: uid,
-      acceptedAt: now
-    }
-  );
-
   try {
-    await batch.commit();
+    await acceptCampaignInviteSecure({ inviteId });
     await Promise.all([loadMyPendingInvites(), loadCampaigns()]);
     renderCampaignSelector();
   } catch (e) {
     console.error("Accept invitation failed:", e);
-    alert(`Could not accept invitation: ${e.message}`);
+    alert(`Could not accept invitation: ${functionErrorMessage(e)}`);
   }
 }
 
@@ -865,9 +1385,23 @@ function showCampaignSelector() {
   if (screen) screen.style.display = "flex";
 
   renderCampaignSelector();
+  renderDMApplicationPanel();
 
   const dmActions = document.getElementById("dmSelectorActions");
   if (dmActions) dmActions.style.display = isDM() ? "flex" : "none";
+
+  const createBtn = document.getElementById("openCreateCampaignBtn");
+  if (createBtn && isDM()) {
+    const used = ownedCampaignCount();
+    const full = !isAdmin() && used >= usageLimits.campaignsPerDM;
+    createBtn.disabled = full;
+    createBtn.title = isAdmin()
+      ? "Administrators are exempt from the owned-campaign limit."
+      : `${used}/${usageLimits.campaignsPerDM} owned campaigns used`;
+    createBtn.textContent = full
+      ? `Campaign limit reached (${used}/${usageLimits.campaignsPerDM})`
+      : `+ New Campaign (${used}/${usageLimits.campaignsPerDM})`;
+  }
 }
 
 function renderCampaignSelector() {
@@ -1007,6 +1541,7 @@ function showMainApp() {
     renderUserTable();
     renderAdminStats();
     renderAdminInvites();
+    renderAdminDMRequests();
   }
 
   if (canManageCampaign()) renderDMTools();
@@ -1406,29 +1941,38 @@ function attachCardEvents(card, item) {
       s => s.itemId === item.id && s.characterId === selectedCharacter.id
     );
 
-    if (existing) {
-      await deleteDoc(
-        doc(db, "campaigns", activeCampaign.id, "saves", existing.id)
-      );
+    if (!existing) {
+      const savedForCharacter = saves.filter(s => s.characterId === selectedCharacter.id).length;
+      if (savedForCharacter >= usageLimits.savedItemsPerCharacter) {
+        alert(`A character can save a maximum of ${usageLimits.savedItemsPerCharacter} items.`);
+        return;
+      }
+    }
 
-      saves = saves.filter(s => s.id !== existing.id);
-
-    } else {
-      // Deterministic id prevents duplicate saves for the same character/item pair.
-      const saveId = `${selectedCharacter.id}__${item.id}`;
-      const data = {
-        itemId: item.id,
+    try {
+      const result = await toggleSavedItemSecure({
+        campaignId: activeCampaign.id,
         characterId: selectedCharacter.id,
-        userId: auth.currentUser.uid,
-        created: Date.now()
-      };
+        itemId: item.id
+      });
 
-      await setDoc(
-        doc(db, "campaigns", activeCampaign.id, "saves", saveId),
-        data
-      );
-
-      saves.push({ id: saveId, ...data });
+      const saveId = `${selectedCharacter.id}__${item.id}`;
+      if (result.data?.saved) {
+        const data = result.data.save || {
+          itemId: item.id,
+          characterId: selectedCharacter.id,
+          userId: auth.currentUser.uid,
+          created: Date.now()
+        };
+        saves = saves.filter(s => s.id !== saveId);
+        saves.push({ id: saveId, ...data });
+      } else {
+        saves = saves.filter(s => s.id !== saveId);
+      }
+    } catch (e) {
+      console.error("Save item failed:", e);
+      alert(`Could not update saved item: ${functionErrorMessage(e)}`);
+      return;
     }
 
     rerenderCard(item.id);
@@ -1622,35 +2166,22 @@ async function saveUserModal() {
     return;
   }
 
-  const emailLower = normalizeEmail(email);
   const selectedRoles = [...document.querySelectorAll(".role-checkbox:checked")].map(cb => cb.value);
   const campaignRole = selectedRoles.includes("dm") ? "dm" : "player";
 
+  // Fast browser-side guardrail. The Cloud Function repeats this check using
+  // authoritative Firestore reads before it creates the invitation.
+  if (reservedCampaignSeats() >= usageLimits.membersPerCampaign) {
+    alert(`This campaign has reached its ${usageLimits.membersPerCampaign}-seat limit. Active members and pending invitations both reserve a seat.`);
+    return;
+  }
+
   try {
-    // Avoid duplicate pending invites without needing a composite index.
-    const sameEmailSnap = await getDocs(
-      query(collection(db, "campaignInvites"), where("emailLower", "==", emailLower))
-    );
-    const duplicate = sameEmailSnap.docs.some(d => {
-      const data = d.data();
-      return data.campaignId === activeCampaign.id && data.status === "pending";
-    });
-
-    if (duplicate) {
-      alert("That email already has a pending invitation to this campaign.");
-      return;
-    }
-
-    await addDoc(collection(db, "campaignInvites"), {
+    await createCampaignInviteSecure({
+      campaignId: activeCampaign.id,
       name,
       email,
-      emailLower,
-      campaignId: activeCampaign.id,
-      campaignName: activeCampaign.name,
-      role: campaignRole,
-      status: "pending",
-      createdBy: auth.currentUser.uid,
-      createdAt: Date.now()
+      role: campaignRole
     });
 
     closeUserModal();
@@ -1659,7 +2190,7 @@ async function saveUserModal() {
     alert(`Invitation created for ${email}. It will appear when that email logs in.`);
   } catch (e) {
     console.error("Create invitation failed:", e);
-    alert(`Could not create invitation: ${e.message}`);
+    alert(`Could not create invitation: ${functionErrorMessage(e)}`);
   }
 }
 
@@ -1698,46 +2229,19 @@ async function saveCampaignModal() {
     }
 
   } else {
-    const data = {
-      name,
-      description,
-      dmId: auth.currentUser.uid,
-      ownerId: auth.currentUser.uid,
-      defaultItemVisible: true,
-      created: Date.now(),
-      updatedAt: Date.now()
-    };
+    if (!isAdmin() && ownedCampaignCount() >= usageLimits.campaignsPerDM) {
+      alert(`Your account can own a maximum of ${usageLimits.campaignsPerDM} campaigns.`);
+      return;
+    }
 
-    const newRef = await addDoc(collection(db, "campaigns"), data);
-
-    // Authoritative membership + fast per-user index.
-    await Promise.all([
-      setDoc(
-        doc(db, "campaigns", newRef.id, "members", auth.currentUser.uid),
-        {
-          uid: auth.currentUser.uid,
-          role: "dm",
-          status: "active",
-          joinedAt: Date.now()
-        },
-        { merge: true }
-      ),
-      setDoc(
-        doc(db, "users", auth.currentUser.uid, "campaigns", newRef.id),
-        {
-          role: "dm",
-          status: "active",
-          joinedAt: Date.now()
-        },
-        { merge: true }
-      )
-    ]);
-
-    campaigns.push({
-      id: newRef.id,
-      membershipRole: "dm",
-      ...data
-    });
+    try {
+      await createCampaignSecure({ name, description });
+      await loadCampaigns();
+    } catch (e) {
+      console.error("Create campaign failed:", e);
+      alert(`Could not create campaign: ${functionErrorMessage(e)}`);
+      return;
+    }
   }
 
   closeCampaignModal();
@@ -1902,6 +2406,7 @@ function renderAdminStats() {
     <div class="stat-card"><span class="stat-num">${playerCount}</span><span class="stat-label">Players</span></div>
     <div class="stat-card"><span class="stat-num">${characters.length}</span><span class="stat-label">Characters</span></div>
     <div class="stat-card"><span class="stat-num">${campaigns.length}</span><span class="stat-label">Campaigns</span></div>
+    <div class="stat-card"><span class="stat-num">${dmRequests.filter(r => r.status === "pending").length}</span><span class="stat-label">DM Requests</span></div>
   `;
 }
 
@@ -2007,6 +2512,17 @@ function renderPlayerTab() {
   renderCharacterList();
   renderMyLoot();
   renderMyWishes();
+
+  const createBtn = document.getElementById("playerCreateCharBtn");
+  if (createBtn) {
+    const used = myCharacters().length;
+    const full = used >= usageLimits.charactersPerUserPerCampaign;
+    createBtn.disabled = full;
+    createBtn.title = `${used}/${usageLimits.charactersPerUserPerCampaign} active characters used`;
+    createBtn.textContent = full
+      ? `Character limit reached (${used}/${usageLimits.charactersPerUserPerCampaign})`
+      : `Create Character (${used}/${usageLimits.charactersPerUserPerCampaign})`;
+  }
 }
 
 function renderCharacterList() {
@@ -2292,8 +2808,10 @@ function renderDMOverview() {
   const looted = states.filter(s => s.looted).length;
   const highlighted = states.filter(s => s.highlighted).length;
 
+  const seatsUsed = reservedCampaignSeats();
   el.innerHTML = `
-    <div class="dm-overview-stat"><strong>${campaignMembers.length}</strong><span>Members</span></div>
+    <div class="dm-overview-stat"><strong>${campaignMembers.length}/${usageLimits.membersPerCampaign}</strong><span>Members</span></div>
+    <div class="dm-overview-stat"><strong>${seatsUsed}/${usageLimits.membersPerCampaign}</strong><span>Seats Reserved</span></div>
     <div class="dm-overview-stat"><strong>${characters.length}</strong><span>Characters</span></div>
     <div class="dm-overview-stat"><strong>${visible}</strong><span>Visible Items</span></div>
     <div class="dm-overview-stat"><strong>${looted}</strong><span>Looted</span></div>
@@ -2637,8 +3155,8 @@ function initModalListeners() {
       return;
     }
 
-    if (myCharacters().length >= 10) {
-      alert("You can have a maximum of 10 active characters in one campaign.");
+    if (myCharacters().length >= usageLimits.charactersPerUserPerCampaign) {
+      alert(`You can have a maximum of ${usageLimits.charactersPerUserPerCampaign} active characters in one campaign.`);
       return;
     }
 
@@ -2656,21 +3174,22 @@ function initModalListeners() {
       return;
     }
 
-    const data = {
-      name,
-      class: cls,
-      level,
-      userId: auth.currentUser.uid,
-      active: true,
-      created: Date.now()
-    };
+    let newChar;
+    try {
+      const result = await createCharacterSecure({
+        campaignId: activeCampaign.id,
+        name,
+        className: cls,
+        level
+      });
+      newChar = result.data?.character;
+      if (!newChar?.id) throw new Error("The server did not return the new character.");
+    } catch (e) {
+      console.error("Create character failed:", e);
+      alert(`Could not create character: ${functionErrorMessage(e)}`);
+      return;
+    }
 
-    const newRef = await addDoc(
-      collection(db, "campaigns", activeCampaign.id, "characters"),
-      data
-    );
-
-    const newChar = { id: newRef.id, ...data };
     characters.push(newChar);
     selectedCharacter = newChar;
 
@@ -2726,6 +3245,8 @@ document.getElementById("logoutButton")?.addEventListener("click", async () => {
   itemState = {};
   pendingInvites = [];
   campaignInvites = [];
+  myDMRequest = null;
+  dmRequests = [];
   await signOut(auth);
 });
 
@@ -2757,11 +3278,14 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       });
 
       await Promise.all([
+        loadUsageLimits(),
         loadCampaigns(),
         loadMyPendingInvites(),
-        isAdmin() ? loadUsers() : Promise.resolve()
+        loadMyDMRequest(),
+        isAdmin() ? Promise.all([loadUsers(), loadDMRequests()]) : Promise.resolve()
       ]);
 
+      ensureDMApprovalStyles();
       showCampaignSelector();
 
       // Do not block the campaign selector on catalogue painting.
@@ -2787,6 +3311,8 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     pendingInvites = [];
     campaignInvites = [];
     campaignMembers = [];
+    myDMRequest = null;
+    dmRequests = [];
     itemsLoadPromise = Promise.resolve();
 
     display.textContent = "Not logged in";
