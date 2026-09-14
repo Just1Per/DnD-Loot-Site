@@ -37,11 +37,22 @@ let myDMRequest      = null; // current user's global DM application
 let dmRequests       = [];   // all DM applications (admin only)
 let dashboardCharacters = []; // current user's recent characters across accessible campaigns
 let itemsLoadPromise = Promise.resolve();
+let catalogVersion   = 0;     // master catalogue version used by IndexedDB cache
 
 const editingItems = new Set();
 const imageCache   = new Map();
 
 const PLACEHOLDER_IMAGE = "./placeholder.png";
+
+// Step 7 performance pass. The tiny metadata document lives inside /items so
+// the existing public-read/admin-write item rules already protect it. It is
+// filtered out of the visible catalogue and never rendered as an item.
+const CATALOG_META_ID          = "__catalog_meta__";
+const CATALOG_CACHE_DB         = "dnd-item-vault-cache";
+const CATALOG_CACHE_DB_VERSION = 1;
+const CATALOG_CACHE_STORE      = "catalog";
+const CATALOG_CACHE_KEY        = "master-items";
+const CATALOG_NO_META_TTL_MS   = 24 * 60 * 60 * 1000;
 
 const ALL_CLASSES = [
   "Artificer","Barbarian","Bard","Cleric","Druid","Fighter",
@@ -269,6 +280,219 @@ async function uploadItemImage(itemId, file) {
   }
 }
 
+// ─── MASTER CATALOGUE CACHE (INDEXEDDB) ──────────────────────────────────────
+
+/**
+ * The item catalogue changes rarely, but historically every refresh downloaded
+ * every /items document. Step 7 keeps a local IndexedDB copy and performs only
+ * one tiny Firestore metadata read on normal refreshes.
+ *
+ * /items/__catalog_meta__
+ *   version: timestamp-like integer
+ *   itemCount: number
+ *   updatedAt: number
+ *
+ * Admin item edits bump the version. Other clients see the new version and
+ * refresh the catalogue once, then return to IndexedDB cache hits.
+ */
+function openCatalogCacheDB() {
+  return new Promise((resolve, reject) => {
+    if (!("indexedDB" in window)) {
+      resolve(null);
+      return;
+    }
+
+    const request = indexedDB.open(CATALOG_CACHE_DB, CATALOG_CACHE_DB_VERSION);
+
+    request.onupgradeneeded = () => {
+      const dbHandle = request.result;
+      if (!dbHandle.objectStoreNames.contains(CATALOG_CACHE_STORE)) {
+        dbHandle.createObjectStore(CATALOG_CACHE_STORE, { keyPath: "key" });
+      }
+    };
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror   = () => reject(request.error);
+  });
+}
+
+async function readCatalogCache() {
+  let dbHandle;
+
+  try {
+    dbHandle = await openCatalogCacheDB();
+    if (!dbHandle) return null;
+
+    return await new Promise((resolve, reject) => {
+      const tx = dbHandle.transaction(CATALOG_CACHE_STORE, "readonly");
+      const request = tx.objectStore(CATALOG_CACHE_STORE).get(CATALOG_CACHE_KEY);
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror   = () => reject(request.error);
+    });
+  } catch (e) {
+    console.warn("Catalogue cache read failed; falling back to Firestore.", e);
+    return null;
+  } finally {
+    try { dbHandle?.close(); } catch {}
+  }
+}
+
+function catalogItemsForCache() {
+  // imageUrl is a short-lived/local Storage resolution. Do not persist it as
+  // catalogue data. A future thumbnailUrl field *is* persisted automatically.
+  return items.map(item => {
+    const cachedItem = { ...item };
+    delete cachedItem.imageUrl;
+    return cachedItem;
+  });
+}
+
+async function writeCatalogCache(version = catalogVersion) {
+  let dbHandle;
+
+  try {
+    dbHandle = await openCatalogCacheDB();
+    if (!dbHandle) return;
+
+    const record = {
+      key: CATALOG_CACHE_KEY,
+      version: Number(version) || 0,
+      cachedAt: Date.now(),
+      items: catalogItemsForCache()
+    };
+
+    await new Promise((resolve, reject) => {
+      const tx = dbHandle.transaction(CATALOG_CACHE_STORE, "readwrite");
+      tx.objectStore(CATALOG_CACHE_STORE).put(record);
+      tx.oncomplete = () => resolve();
+      tx.onerror    = () => reject(tx.error);
+      tx.onabort    = () => reject(tx.error);
+    });
+  } catch (e) {
+    console.warn("Catalogue cache write failed; the app will continue normally.", e);
+  } finally {
+    try { dbHandle?.close(); } catch {}
+  }
+}
+
+async function clearCatalogCache() {
+  let dbHandle;
+
+  try {
+    dbHandle = await openCatalogCacheDB();
+    if (!dbHandle) return;
+
+    await new Promise((resolve, reject) => {
+      const tx = dbHandle.transaction(CATALOG_CACHE_STORE, "readwrite");
+      tx.objectStore(CATALOG_CACHE_STORE).delete(CATALOG_CACHE_KEY);
+      tx.oncomplete = () => resolve();
+      tx.onerror    = () => reject(tx.error);
+    });
+  } finally {
+    try { dbHandle?.close(); } catch {}
+  }
+}
+
+function applyCatalogItems(sourceItems) {
+  items = (sourceItems || [])
+    .filter(item => item?.id && item.id !== CATALOG_META_ID)
+    .map(raw => ({
+      ...raw,
+      // Optional Step 7+ thumbnail field: if you later store direct WebP/JPEG
+      // thumbnail URLs in Firestore, cards can paint them immediately.
+      imageUrl: raw.thumbnailUrl || raw.thumbUrl || getCachedImageUrl(raw.id)
+    }));
+
+  populateSourceFilter();
+  populateCampaignFilter();
+
+  if (activeCampaign) renderCards();
+}
+
+async function readCatalogMeta() {
+  try {
+    const snap = await getDoc(doc(db, "items", CATALOG_META_ID));
+    return snap.exists() ? snap.data() : null;
+  } catch (e) {
+    console.warn("Could not read catalogue metadata.", e);
+    return null;
+  }
+}
+
+async function fetchFreshCatalog() {
+  const snap = await getDocs(collection(db, "items"));
+
+  let embeddedMeta = null;
+  const freshItems = [];
+
+  snap.docs.forEach(d => {
+    if (d.id === CATALOG_META_ID) {
+      embeddedMeta = d.data();
+      return;
+    }
+    freshItems.push({ id: d.id, ...d.data() });
+  });
+
+  return { freshItems, embeddedMeta };
+}
+
+async function seedCatalogMetaIfNeeded() {
+  if (!isAdmin()) return catalogVersion;
+
+  const version = Date.now();
+
+  try {
+    await setDoc(doc(db, "items", CATALOG_META_ID), {
+      _type: "catalog-meta",
+      version,
+      itemCount: items.length,
+      updatedAt: version
+    }, { merge: true });
+
+    catalogVersion = version;
+    await writeCatalogCache(catalogVersion);
+    return catalogVersion;
+  } catch (e) {
+    console.warn("Could not seed catalogue metadata.", e);
+    return catalogVersion;
+  }
+}
+
+async function markCatalogChanged() {
+  // Every master-item mutation is admin-only, so the existing /items rule lets
+  // the same admin update this metadata document as well.
+  const version = Date.now();
+
+  try {
+    await setDoc(doc(db, "items", CATALOG_META_ID), {
+      _type: "catalog-meta",
+      version,
+      itemCount: items.length,
+      updatedAt: version
+    }, { merge: true });
+
+    catalogVersion = version;
+  } catch (e) {
+    // Do not undo a successful item edit just because cache invalidation failed.
+    console.warn("Item saved, but catalogue version could not be updated.", e);
+  }
+
+  await writeCatalogCache(catalogVersion);
+}
+
+// Handy diagnostic/recovery helpers for the browser console.
+window.dndVaultCatalogCache = {
+  clear: clearCatalogCache,
+  refresh: async () => {
+    await clearCatalogCache();
+    return loadItemsFromFirestore({ forceRefresh: true });
+  },
+  info: async () => ({
+    server: await readCatalogMeta(),
+    local: await readCatalogCache()
+  })
+};
+
 // ─── DATA LOADERS ─────────────────────────────────────────────────────────────
 
 async function loadCurrentUser(firebaseUser) {
@@ -306,20 +530,57 @@ async function loadCurrentUser(firebaseUser) {
  * Load the master item catalogue without resolving every Storage URL first.
  * Cards paint immediately with cached/placeholder art and resolve images near the viewport.
  */
-async function loadItemsFromFirestore() {
-  const snap = await getDocs(collection(db, "items"));
+async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
+  const metaPromise = readCatalogMeta();
+  const cached = forceRefresh ? null : await readCatalogCache();
 
-  items = snap.docs.map(d => {
-    const item = { id: d.id, ...d.data() };
-    item.imageUrl = getCachedImageUrl(item.id);
-    return item;
-  });
+  // Paint cached catalogue immediately. This is the main perceived-speed win:
+  // filters/cards can exist before any large Firestore read occurs.
+  if (cached?.items?.length) {
+    catalogVersion = Number(cached.version) || 0;
+    applyCatalogItems(cached.items);
+  }
 
-  populateSourceFilter();
-  populateCampaignFilter();
+  const serverMeta = await metaPromise;
+  const serverVersion = Number(serverMeta?.version) || 0;
+  const cachedVersion = Number(cached?.version) || 0;
+  const cacheAge = cached?.cachedAt ? Date.now() - cached.cachedAt : Infinity;
 
-  if (activeCampaign) renderCards();
+  const versionMatch = !!cached?.items?.length
+    && serverVersion > 0
+    && cachedVersion === serverVersion;
+
+  // Compatibility path for the very first deployment before an admin has
+  // created __catalog_meta__. It avoids repeated full downloads for one day.
+  const legacyCacheFresh = !!cached?.items?.length
+    && serverVersion === 0
+    && cacheAge < CATALOG_NO_META_TTL_MS;
+
+  if (!forceRefresh && (versionMatch || legacyCacheFresh)) {
+    console.debug(
+      `[catalog] IndexedDB hit — ${cached.items.length} items, version ${cachedVersion || "legacy"}`
+    );
+
+    // First admin visit upgrades the database to proper versioned caching.
+    if (serverVersion === 0 && isAdmin()) {
+      await seedCatalogMetaIfNeeded();
+    }
+    return;
+  }
+
+  console.debug("[catalog] refreshing master catalogue from Firestore");
+  const { freshItems, embeddedMeta } = await fetchFreshCatalog();
+
+  catalogVersion = serverVersion || Number(embeddedMeta?.version) || 0;
+  applyCatalogItems(freshItems);
+
+  if (catalogVersion === 0 && isAdmin()) {
+    await seedCatalogMetaIfNeeded();
+  } else {
+    await writeCatalogCache(catalogVersion);
+  }
 }
+
 
 /** Load characters scoped to the active campaign. */
 async function loadCharacters() {
@@ -1169,8 +1430,10 @@ async function loadCampaigns() {
 }
 
 async function importItemsIfEmpty() {
-  const snap = await getDocs(query(collection(db, "items"), limit(1)));
-  if (!snap.empty) return;
+  // limit(2) matters because Step 7 stores one metadata document in /items.
+  const snap = await getDocs(query(collection(db, "items"), limit(2)));
+  const hasRealItem = snap.docs.some(d => d.id !== CATALOG_META_ID);
+  if (hasRealItem) return;
 
   console.log("Firestore item catalogue empty — importing items…");
   const { items: sourceItems } = await import("./items.js");
@@ -1188,6 +1451,8 @@ async function importItemsIfEmpty() {
   }
 
   console.log("Item import complete.");
+  // The subsequent catalogue load will populate items before normal use.
+  // Metadata is created after that first load by seedCatalogMetaIfNeeded().
 }
 
 
@@ -1911,6 +2176,7 @@ function attachCardEvents(card, item) {
 
     editingItems.delete(item.id);
     patchItem(item.id, changes);
+    await markCatalogChanged();
     rerenderCard(item.id);
     populateSourceFilter();
     populateCampaignFilter();
@@ -1939,6 +2205,7 @@ function attachCardEvents(card, item) {
 
     items = items.filter(i => i.id !== item.id);
     editingItems.delete(item.id);
+    await markCatalogChanged();
 
     container.querySelector(`[data-item-id="${item.id}"]`)?.remove();
 
@@ -1994,7 +2261,11 @@ function attachCardEvents(card, item) {
       source: "Homebrew"
     });
 
-    await loadItemsFromFirestore();
+    // Add the clone locally before bumping itemCount/version, then force one
+    // fresh catalogue read so the exact saved Firestore data is authoritative.
+    items.push({ id: cloneId, ...masterFields, name: `${item.name} (Homebrew)`, source: "Homebrew" });
+    await markCatalogChanged();
+    await loadItemsFromFirestore({ forceRefresh: true });
     editingItems.add(cloneId);
     renderCards();
   });
@@ -2145,12 +2416,15 @@ async function saveItemModal() {
       data,
       { merge: true }
     );
+    items.push({ id: autoId, ...data });
+    await markCatalogChanged();
     closeItemModal();
-    await loadItemsFromFirestore();
+    await loadItemsFromFirestore({ forceRefresh: true });
   } else {
     await updateDoc(doc(db,"items",editId), data);
     closeItemModal();
     patchItem(editId, data);
+    await markCatalogChanged();
     rerenderCard(editId);
     populateSourceFilter();
     populateCampaignFilter();
