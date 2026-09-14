@@ -11,27 +11,29 @@ import {
 
 import {
   collection, getDocs, addDoc, doc, getDoc,
-  setDoc, updateDoc, deleteDoc, query, limit
+  setDoc, updateDoc, deleteDoc, query, where, limit
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 import { ref, getDownloadURL, uploadBytes }
   from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
-// Data flow: User → Character (id) → Item (owner = characterId)
+// Data flow: User → Campaign → Character → Item (owner = characterId)
 
-let items             = [];   // local mirror of Firestore items collection
-let characters        = [];   // local mirror of Firestore characters collection
-let wishes            = [];   // local mirror of Firestore wishes collection
-let users             = [];   // local mirror of Firestore users collection
-let campaigns         = [];   // local mirror of Firestore campaigns collection
-let currentUser       = null; // { uid, email, name, role:[], ... }
-let selectedCharacter = null; // currently active character for saving items
+let items          = [];   // master item DB — always full, filtered by visibility
+let characters     = [];   // characters scoped to activeCampaign
+let saves          = [];   // saves scoped to activeCampaign
+let users          = [];   // all users (admin/DM use only)
+let campaigns      = [];   // campaigns the current user has access to
+let itemState      = {};   // campaign-specific state: visibility, loot, highlight, owner
+let currentUser    = null; // { uid, id, email, name, role:[], ... }
+let activeCampaign = null; // campaign currently selected
+let activeMembershipRole = null; // "player" | "dm" | "owner" | "admin"
+let selectedCharacter = null;
+let itemsLoadPromise = Promise.resolve();
 
-const editingItems = new Set(); // item IDs currently in inline-edit mode
-
-// Image URL cache — itemId → resolved URL string
-const imageCache = new Map();
+const editingItems = new Set();
+const imageCache   = new Map();
 
 const PLACEHOLDER_IMAGE = "./placeholder.png";
 
@@ -53,15 +55,15 @@ const hasRole = (role) => {
   return Array.isArray(r) ? r.includes(role) : r === role;
 };
 
-// Role hierarchy:
-// viewer  — read-only library access
-// player  — can create characters, save items, receive loot
-// dm      — can create and manage campaigns (like a player but with campaign tools)
-// admin   — full control: edit items, manage users, manage all campaigns
-
 const isAdmin  = () => hasRole("admin");
-const isDM     = () => hasRole("dm") || hasRole("admin");
-const isPlayer = () => hasRole("player") || hasRole("admin");;
+const isDM     = () => hasRole("dm") || hasRole("admin"); // global capability: can create campaigns
+const isPlayer = () => hasRole("player") || hasRole("dm") || hasRole("admin");
+
+const canManageCampaign = () =>
+  isAdmin() || ["owner", "dm"].includes(activeMembershipRole);
+
+const canUseCharacters = () =>
+  isAdmin() || ["owner", "dm", "player"].includes(activeMembershipRole);
 
 const myCharacters = () =>
   characters.filter(c => c.userId === auth.currentUser?.uid && c.active !== false);
@@ -80,10 +82,56 @@ function getTier(level) {
 // ─── CAMPAIGNS HELPER ─────────────────────────────────────────────────────────
 
 function availableCampaigns() {
-  // Combine campaigns from the campaigns collection + any set directly on items
   const fromCollection = campaigns.map(c => c.name).filter(Boolean);
   const fromItems      = items.map(i => i.campaign).filter(Boolean);
   return [...new Set([...fromCollection, ...fromItems])].sort();
+}
+
+// ─── PROPERTY EDITOR HELPERS ──────────────────────────────────────────────────
+// Your improved visual property editor replacing the raw JSON textarea
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function createPropertyRow(property = {}) {
+  const row = document.createElement("div");
+  row.className = "property-edit-row";
+  row.innerHTML = `
+    <div class="property-edit-fields">
+      <label>Title
+        <input type="text" class="property-title-input" placeholder="e.g. Bonus"
+          value="${escapeHtml(property.title || "")}">
+      </label>
+      <label>Text
+        <textarea class="property-text-input" rows="3"
+          placeholder="Property description...">${escapeHtml(property.text || "")}</textarea>
+      </label>
+    </div>
+    <button type="button" class="cancel-button remove-property-btn">Remove</button>
+  `;
+  row.querySelector(".remove-property-btn").addEventListener("click", () => row.remove());
+  return row;
+}
+
+function renderPropertyEditor(properties = []) {
+  const el = document.getElementById("modal-properties-list");
+  if (!el) return;
+  el.innerHTML = "";
+  properties.forEach(p => el.appendChild(createPropertyRow(p)));
+}
+
+function getPropertiesFromEditor() {
+  return [...document.querySelectorAll(".property-edit-row")]
+    .map(row => ({
+      title: row.querySelector(".property-title-input").value.trim(),
+      text:  row.querySelector(".property-text-input").value.trim()
+    }))
+    .filter(p => p.title || p.text);
 }
 
 // ─── IMAGE HELPERS ────────────────────────────────────────────────────────────
@@ -93,8 +141,7 @@ function getBaseImageId(itemId) {
   let base = itemId.toLowerCase();
   const wordsToRemove = [
     "common","uncommon","rare","very-rare","veryrare","legendary","artifact","minor","major",
-    "grey","gray","red","blue","green","black","white","yellow","purple","orange","bronze","silver","gold",
-    "plus"
+    "grey","gray","red","blue","green","black","white","yellow","purple","orange","bronze","silver","gold","plus"
   ];
   base = base.replace(/\+/g, "").replace(/[0-9]/g, "");
   wordsToRemove.forEach(word => {
@@ -129,10 +176,7 @@ function cacheImageUrl(itemId, url) {
 
 async function loadStorageImage(path) {
   try { return await getDownloadURL(ref(storage, path)); }
-  catch (e) {
-    console.warn(`Image not found: ${path}`);
-    return "";
-  }
+  catch { return ""; }
 }
 
 async function resolveImageUrl(itemId) {
@@ -172,7 +216,9 @@ function observePendingImages(root = document) {
   const pending = root.querySelectorAll?.("img[data-image-item-id]") || [];
 
   pending.forEach(img => {
-    const cached = getCachedImageUrl(img.dataset.imageItemId);
+    const itemId = img.dataset.imageItemId;
+    const cached = getCachedImageUrl(itemId);
+
     if (cached) {
       img.src = cached;
       delete img.dataset.imageItemId;
@@ -182,7 +228,6 @@ function observePendingImages(root = document) {
     if (imageObserver) {
       imageObserver.observe(img);
     } else {
-      const itemId = img.dataset.imageItemId;
       resolveImageUrl(itemId).then(url => {
         if (!img.isConnected) return;
         img.src = url;
@@ -192,13 +237,21 @@ function observePendingImages(root = document) {
   });
 }
 
+function itemImageMarkup(item, className, extraAttrs = "") {
+  const cached = item.imageUrl || getCachedImageUrl(item.id);
+  const src = cached || PLACEHOLDER_IMAGE;
+  const pending = cached ? "" : ` data-image-item-id="${escapeHtml(item.id)}"`;
+  return `<img src="${src}" class="${className}" alt="${escapeHtml(item.name || "")}"
+    loading="lazy" decoding="async"${pending} ${extraAttrs}
+    onerror="this.src='${PLACEHOLDER_IMAGE}'; delete this.dataset.imageItemId;">`;
+}
+
 async function uploadItemImage(itemId, file) {
-  const path   = `dnd-item-images/${getBaseImageId(itemId)}.png`;
-  const imgRef = ref(storage, path);
+  const imgRef = ref(storage, `dnd-item-images/${getBaseImageId(itemId)}.png`);
   try {
     await uploadBytes(imgRef, file, { contentType: file.type || "image/png" });
     const url = await getDownloadURL(imgRef);
-    cacheImageUrl(itemId, url); // bust cache with real URL
+    cacheImageUrl(itemId, url);
     return url;
   } catch (e) {
     console.error("Image upload failed:", e);
@@ -212,42 +265,49 @@ async function loadCurrentUser(firebaseUser) {
   const uidRef = doc(db, "users", firebaseUser.uid);
 
   try {
-    // 1. Se først om brugeren allerede findes under Firebase UID
     const uidSnap = await getDoc(uidRef);
-
     if (uidSnap.exists()) {
-      currentUser = {
-        uid: firebaseUser.uid,
-        id: firebaseUser.uid,
-        ...uidSnap.data()
-      };
+      currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...uidSnap.data() };
       return;
     }
 
-    // 2. Hvis ikke: find pre-created user via email
-    const usersSnap = await getDocs(collection(db, "users"));
-
+    // Admin-created accounts may still use an email-derived document id.
+    // New records use emailLower so linking is a single indexed query.
     const email = (firebaseUser.email || "").toLowerCase();
 
-    const matchingDoc = usersSnap.docs.find(d => {
-      const data = d.data();
-      return (data.email || "").toLowerCase() === email;
-    });
+    let matchingDoc = null;
+
+    const lowerSnap = await getDocs(
+      query(collection(db, "users"), where("emailLower", "==", email), limit(1))
+    );
+    matchingDoc = lowerSnap.docs[0] || null;
+
+    // Backward compatibility for older user documents without emailLower.
+    if (!matchingDoc) {
+      const exactEmailSnap = await getDocs(
+        query(collection(db, "users"), where("email", "==", firebaseUser.email), limit(1))
+      );
+      matchingDoc = exactEmailSnap.docs[0] || null;
+    }
+
+    // Final legacy fallback: only older accounts pay for this one-time scan.
+    if (!matchingDoc) {
+      const usersSnap = await getDocs(collection(db, "users"));
+      matchingDoc = usersSnap.docs.find(d =>
+        (d.data().email || "").toLowerCase() === email
+      ) || null;
+    }
 
     if (matchingDoc) {
       const existingData = matchingDoc.data();
 
-      // Flyt/kopier brugerens data over på det rigtige Firebase UID
       await setDoc(uidRef, {
         ...existingData,
         email: firebaseUser.email,
-        name:
-          existingData.name ||
-          firebaseUser.displayName ||
-          firebaseUser.email
+        emailLower: email,
+        name: existingData.name || firebaseUser.displayName || firebaseUser.email
       }, { merge: true });
 
-      // Fjern det gamle midlertidige email-dokument
       if (matchingDoc.id !== firebaseUser.uid) {
         await deleteDoc(doc(db, "users", matchingDoc.id));
       }
@@ -255,26 +315,23 @@ async function loadCurrentUser(firebaseUser) {
       currentUser = {
         uid: firebaseUser.uid,
         id: firebaseUser.uid,
-        ...existingData
+        ...existingData,
+        email: firebaseUser.email,
+        emailLower: email
       };
-
       return;
     }
 
-    // 3. Helt ny bruger uden admin-created entry
     const newUser = {
       email: firebaseUser.email,
+      emailLower: email,
       name: firebaseUser.displayName || firebaseUser.email,
-      role: ["viewer"]
+      role: ["viewer"],
+      created: Date.now()
     };
 
     await setDoc(uidRef, newUser, { merge: true });
-
-    currentUser = {
-      uid: firebaseUser.uid,
-      id: firebaseUser.uid,
-      ...newUser
-    };
+    currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...newUser };
 
   } catch (e) {
     console.error("Failed loading current user:", e);
@@ -282,56 +339,228 @@ async function loadCurrentUser(firebaseUser) {
   }
 }
 
+/**
+ * Load the master item catalogue without resolving every Storage URL first.
+ * Cards paint immediately with cached/placeholder art and resolve images near the viewport.
+ */
 async function loadItemsFromFirestore() {
   const snap = await getDocs(collection(db, "items"));
+
   items = snap.docs.map(d => {
     const item = { id: d.id, ...d.data() };
-    const cachedImage = getCachedImageUrl(item.id);
-    if (cachedImage) item.imageUrl = cachedImage;
+    item.imageUrl = getCachedImageUrl(item.id);
     return item;
+  });
+
+  populateSourceFilter();
+  populateCampaignFilter();
+
+  if (activeCampaign) renderCards();
+}
+
+/** Load characters scoped to the active campaign. */
+async function loadCharacters() {
+  if (!activeCampaign) {
+    characters = [];
+    selectedCharacter = null;
+    return;
+  }
+
+  characters = (await getDocs(
+    collection(db, "campaigns", activeCampaign.id, "characters")
+  )).docs.map(d => ({ id: d.id, ...d.data() }));
+
+  const mine = myCharacters();
+
+  if (!selectedCharacter || !mine.some(c => c.id === selectedCharacter.id)) {
+    selectedCharacter = mine[0] || null;
+  }
+}
+
+/** Load saves scoped to the active campaign. */
+async function loadSaves() {
+  if (!activeCampaign) {
+    saves = [];
+    return;
+  }
+
+  const savesRef = collection(db, "campaigns", activeCampaign.id, "saves");
+
+  const snap = canManageCampaign()
+    ? await getDocs(savesRef)
+    : await getDocs(query(savesRef, where("userId", "==", auth.currentUser.uid)));
+
+  saves = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
+/**
+ * Campaign-specific state for master items.
+ * The global items collection contains item content only.
+ * Loot, owner, highlight and visibility belong to a campaign.
+ */
+async function loadItemState() {
+  if (!activeCampaign) {
+    itemState = {};
+    return;
+  }
+
+  const snap = await getDocs(
+    collection(db, "campaigns", activeCampaign.id, "itemState")
+  );
+
+  itemState = {};
+  snap.docs.forEach(d => {
+    itemState[d.id] = { ...d.data() };
   });
 }
 
-async function loadCharacters() {
-  characters = (await getDocs(collection(db, "characters")))
-    .docs.map(d => ({ id: d.id, ...d.data() }));
-  if (!selectedCharacter) {
-    const mine = myCharacters();
-    if (mine.length) selectedCharacter = mine[0];
-  }
-}
-
-async function loadWishes() {
-  wishes = (await getDocs(collection(db, "wishes")))
-    .docs.map(d => ({ id: d.id, ...d.data() }));
-}
-
+/** User data is only loaded for admin/campaign-management views. */
 async function loadUsers() {
-  users = (await getDocs(collection(db, "users")))
-    .docs.map(d => ({ id: d.id, ...d.data() }));
+  if (isAdmin()) {
+    users = (await getDocs(collection(db, "users")))
+      .docs.map(d => ({ id: d.id, ...d.data() }));
+    return;
+  }
+
+  if (!activeCampaign || !canManageCampaign()) {
+    users = [];
+    return;
+  }
+
+  // DMs only need users who are members of the active campaign.
+  const memberSnap = await getDocs(
+    collection(db, "campaigns", activeCampaign.id, "members")
+  );
+
+  const memberIds = memberSnap.docs
+    .filter(d => d.data().status === "active")
+    .map(d => d.id);
+
+  const userSnaps = await Promise.all(
+    memberIds.map(uid => getDoc(doc(db, "users", uid)))
+  );
+
+  users = userSnaps
+    .filter(snap => snap.exists())
+    .map(snap => ({ id: snap.id, ...snap.data() }));
 }
 
+/**
+ * Fast campaign lookup.
+ *
+ * Authoritative membership:
+ *   campaigns/{campaignId}/members/{uid}
+ *
+ * Fast per-user index:
+ *   users/{uid}/campaigns/{campaignId}
+ *
+ * The migration creates both. A legacy fallback remains for old data.
+ */
 async function loadCampaigns() {
-  campaigns = (await getDocs(collection(db, "campaigns")))
-    .docs.map(d => ({ id: d.id, ...d.data() }));
+  const uid = auth.currentUser?.uid;
+  if (!uid) {
+    campaigns = [];
+    return;
+  }
+
+  if (isAdmin()) {
+    const snap = await getDocs(collection(db, "campaigns"));
+    campaigns = snap.docs.map(d => ({
+      id: d.id,
+      membershipRole: "admin",
+      ...d.data()
+    }));
+    return;
+  }
+
+  const campaignMap = new Map();
+
+  // Primary path: tiny per-user membership index.
+  const indexSnap = await getDocs(collection(db, "users", uid, "campaigns"));
+  const refs = indexSnap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .filter(r => r.status === "active");
+
+  const indexedCampaignDocs = await Promise.all(
+    refs.map(r => getDoc(doc(db, "campaigns", r.id)))
+  );
+
+  indexedCampaignDocs.forEach((snap, idx) => {
+    if (!snap.exists()) return;
+    const refData = refs[idx];
+    campaignMap.set(snap.id, {
+      id: snap.id,
+      ...snap.data(),
+      membershipRole: refData.role || "player"
+    });
+  });
+
+  // A globally approved DM may own older campaigns created before the user index existed.
+  if (isDM()) {
+    const ownedSnap = await getDocs(
+      query(collection(db, "campaigns"), where("dmId", "==", uid))
+    );
+
+    ownedSnap.docs.forEach(d => {
+      campaignMap.set(d.id, {
+        id: d.id,
+        ...d.data(),
+        membershipRole: "dm"
+      });
+    });
+  }
+
+  // Legacy fallback for pre-migration players. This should disappear once migration-v2 is verified.
+  if (campaignMap.size === 0) {
+    const allSnap = await getDocs(collection(db, "campaigns"));
+    const all = allSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    const checks = await Promise.all(
+      all.map(async camp => {
+        try {
+          const memberSnap = await getDoc(
+            doc(db, "campaigns", camp.id, "members", uid)
+          );
+          if (!memberSnap.exists() || memberSnap.data().status !== "active") return null;
+          return {
+            ...camp,
+            membershipRole: memberSnap.data().role || "player"
+          };
+        } catch {
+          return null;
+        }
+      })
+    );
+
+    checks.filter(Boolean).forEach(c => campaignMap.set(c.id, c));
+  }
+
+  campaigns = [...campaignMap.values()]
+    .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 }
 
 async function importItemsIfEmpty() {
-  // Only read one document to check whether the collection has data.
-  // items.js is loaded dynamically only when a seed/import is actually needed.
   const snap = await getDocs(query(collection(db, "items"), limit(1)));
   if (!snap.empty) return;
 
-  console.log("Firestore empty — importing items…");
+  console.log("Firestore item catalogue empty — importing items…");
   const { items: sourceItems } = await import("./items.js");
 
-  for (const item of sourceItems) {
-    await setDoc(doc(db, "items", item.id), {
-      ...item, looted: false, highlighted: false, owner: null, receivedDate: null
-    }, { merge: true });
+  for (const sourceItem of sourceItems) {
+    const {
+      looted: _looted,
+      highlighted: _highlighted,
+      owner: _owner,
+      receivedDate: _receivedDate,
+      ...masterItem
+    } = sourceItem;
+
+    await setDoc(doc(db, "items", sourceItem.id), masterItem, { merge: true });
   }
-  console.log("Import complete.");
+
+  console.log("Item import complete.");
 }
+
 
 // ─── LOCAL STATE PATCH ────────────────────────────────────────────────────────
 
@@ -342,52 +571,83 @@ function patchItem(itemId, changes) {
   return items[idx];
 }
 
+function getItemState(itemId) {
+  const raw = itemState[itemId] || {};
+  const defaultVisible = activeCampaign?.defaultItemVisible !== false;
+
+  return {
+    visible: raw.visible ?? defaultVisible,
+    looted: raw.looted ?? false,
+    highlighted: raw.highlighted ?? false,
+    owner: raw.owner ?? null,
+    receivedDate: raw.receivedDate ?? null,
+    ...raw
+  };
+}
+
+function patchItemState(itemId, changes) {
+  itemState[itemId] = {
+    ...(itemState[itemId] || {}),
+    ...changes
+  };
+  return getItemState(itemId);
+}
+
+async function persistItemState(itemId, changes) {
+  if (!activeCampaign) return null;
+
+  patchItemState(itemId, changes);
+
+  await setDoc(
+    doc(db, "campaigns", activeCampaign.id, "itemState", itemId),
+    changes,
+    { merge: true }
+  );
+
+  return getItemState(itemId);
+}
+
+
 // ─── SINGLE-CARD RE-RENDER ────────────────────────────────────────────────────
+
+function buildRenderContext() {
+  const charactersById = new Map(characters.map(c => [c.id, c]));
+  const usersById      = new Map(users.map(u => [u.id, u]));
+  const savesByItem    = new Map();
+
+  for (const save of saves) {
+    if (!savesByItem.has(save.itemId)) savesByItem.set(save.itemId, []);
+    savesByItem.get(save.itemId).push(save);
+  }
+
+  return {
+    charactersById,
+    usersById,
+    savesByItem,
+    playableChars: allPlayableCharacters()
+  };
+}
 
 function rerenderCard(itemId) {
   const item    = items.find(i => i.id === itemId);
   const oldCard = container.querySelector(`[data-item-id="${itemId}"]`);
+
   if (!item || !oldCard) return;
+
   const newCard = createCard(item, buildRenderContext());
   oldCard.replaceWith(newCard);
   observePendingImages(newCard);
   refreshStatsBar();
 }
 
-// ─── RENDER CARDS (full grid) ─────────────────────────────────────────────────
+// ─── RENDER CARDS ─────────────────────────────────────────────────────────────
 
 const container = document.getElementById("card-container");
 
-function buildRenderContext() {
-  const characterById = new Map(characters.map(c => [c.id, c]));
-  const userById      = new Map(users.map(u => [u.id, u]));
-  const wishesByItem  = new Map();
-
-  for (const wish of wishes) {
-    if (!wishesByItem.has(wish.itemId)) wishesByItem.set(wish.itemId, []);
-    wishesByItem.get(wish.itemId).push(wish);
-  }
-
-  const selectedWishByItem = new Map();
-  if (selectedCharacter) {
-    for (const wish of wishes) {
-      if (wish.characterId === selectedCharacter.id) {
-        selectedWishByItem.set(wish.itemId, wish);
-      }
-    }
-  }
-
-  return {
-    characterById,
-    userById,
-    wishesByItem,
-    selectedWishByItem,
-    playableChars: allPlayableCharacters()
-  };
-}
-
 function renderCards() {
-  const filtered = applyFilters(items);
+  if (!container) return;
+
+  const filtered = applyFilters(visibleItems());
   const context  = buildRenderContext();
   const fragment = document.createDocumentFragment();
 
@@ -396,32 +656,41 @@ function renderCards() {
   }
 
   container.replaceChildren(fragment);
-
-  updateStats(
-    filtered.length,
-    filtered.filter(i => i.looted).length,
-    filtered.filter(i => i.highlighted).length,
-    wishes.length
-  );
-
+  updateStatsFromFiltered(filtered);
   observePendingImages(container);
 }
 
-function refreshStatsBar(filtered = null) {
-  const result = filtered || applyFilters(items);
-  updateStats(
-    result.length,
-    result.filter(i => i.looted).length,
-    result.filter(i => i.highlighted).length,
-    wishes.length
-  );
+/**
+ * Campaign managers see the full catalogue.
+ * Players see only items visible under the active campaign's policy/state.
+ */
+function visibleItems() {
+  if (!activeCampaign || canManageCampaign()) return items;
+  return items.filter(item => getItemState(item.id).visible);
+}
+
+function updateStatsFromFiltered(filtered) {
+  let looted = 0;
+  let highlighted = 0;
+
+  for (const item of filtered) {
+    const state = getItemState(item.id);
+    if (state.looted) looted++;
+    if (state.highlighted) highlighted++;
+  }
+
+  updateStats(filtered.length, looted, highlighted, saves.length);
+}
+
+function refreshStatsBar() {
+  updateStatsFromFiltered(applyFilters(visibleItems()));
 }
 
 function applyFilters(list) {
   const val = id => document.getElementById(id)?.value || "";
   const chk = id => document.getElementById(id)?.checked ?? false;
 
-  const search   = val("search").trim().toLowerCase();
+  const search   = val("search").toLowerCase().trim();
   const rarity   = val("rarityFilter");
   const source   = val("sourceFilter");
   const campaign = val("campaignFilter");
@@ -429,10 +698,13 @@ function applyFilters(list) {
   const category = val("categoryFilter");
   const owner    = val("ownerFilter");
 
-  const showSavedOnly = chk("showSavedOnly");
-  const savedItemIds   = showSavedOnly ? new Set(wishes.map(w => w.itemId)) : null;
+  const savedItemIds = chk("showSavedOnly")
+    ? new Set(saves.map(s => s.itemId))
+    : null;
 
   return list.filter(item => {
+    const state = getItemState(item.id);
+
     if (search && !(
       (item.name || "").toLowerCase().includes(search) ||
       (item.description || "").toLowerCase().includes(search)
@@ -443,44 +715,173 @@ function applyFilters(list) {
     if (campaign && item.campaign !== campaign) return false;
     if (category && item.category !== category) return false;
     if (cls      && !item.classes?.includes(cls)) return false;
-    if (owner    && item.owner !== owner) return false;
+    if (owner    && state.owner !== owner) return false;
 
-    if (chk("showLootedOnly")         && !item.looted)      return false;
-    if (chk("showUnlootedOnly")       &&  item.looted)      return false;
-    if (showSavedOnly                 && !savedItemIds.has(item.id)) return false;
-    if (chk("showAttunementOnly")     && !item.attunement)  return false;
-    if (chk("showNoAttunementOnly")   &&  item.attunement)  return false;
-    if (chk("showHighlightedOnly")    && !item.highlighted) return false;
-    if (chk("showNotHighlightedOnly") &&  item.highlighted) return false;
+    if (chk("showLootedOnly")         && !state.looted)      return false;
+    if (chk("showUnlootedOnly")       &&  state.looted)      return false;
+    if (savedItemIds                  && !savedItemIds.has(item.id)) return false;
+    if (chk("showAttunementOnly")     && !item.attunement)   return false;
+    if (chk("showNoAttunementOnly")   &&  item.attunement)   return false;
+    if (chk("showHighlightedOnly")    && !state.highlighted) return false;
+    if (chk("showNotHighlightedOnly") &&  state.highlighted) return false;
 
     return true;
   });
 }
 
+
 // ─── OWNER HELPERS ────────────────────────────────────────────────────────────
 
 function allPlayableCharacters() {
-  const playerIds = new Set(
-    users
-      .filter(u => {
-        const r = u.role;
-        return Array.isArray(r)
-          ? r.some(x => ["player","dm","admin"].includes(x))
-          : ["player","dm","admin"].includes(r);
-      })
-      .map(u => u.id)
-  );
-
-  return characters.filter(c => playerIds.has(c.userId) && c.active !== false);
+  return characters.filter(c => c.active !== false);
 }
 
-function characterDisplayName(char, userById = null) {
+function characterDisplayName(char, usersById = null) {
   if (!char) return "";
-  const owner = userById
-    ? userById.get(char.userId)
-    : users.find(u => u.id === char.userId);
-
+  const owner = usersById?.get(char.userId) || users.find(u => u.id === char.userId);
   return `${char.name} (${char.class})${owner ? " — " + (owner.name || owner.email) : ""}`;
+}
+
+// ─── CAMPAIGN SELECTOR ────────────────────────────────────────────────────────
+
+function showCampaignSelector() {
+  hideAllScreens();
+
+  const screen = document.getElementById("campaignSelectorScreen");
+  if (screen) screen.style.display = "flex";
+
+  renderCampaignSelector();
+
+  const dmActions = document.getElementById("dmSelectorActions");
+  if (dmActions) dmActions.style.display = isDM() ? "flex" : "none";
+}
+
+function renderCampaignSelector() {
+  const list = document.getElementById("campaignSelectorList");
+  if (!list) return;
+
+  if (!campaigns.length) {
+    list.innerHTML = `
+      <div class="campaign-selector-empty">
+        ${isDM()
+          ? `<p>You don't have any active campaigns yet.</p>
+             <p>Click <strong>+ New Campaign</strong> to get started.</p>`
+          : `<p>You haven't joined any campaigns yet.</p>
+             <p>Please ask your Dungeon Master for an invitation.</p>`
+        }
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = campaigns.map(c => `
+    <button class="campaign-selector-card" data-campaign-id="${c.id}" type="button">
+      <div>
+        <span class="campaign-selector-name">${c.name}</span>
+        ${c.description ? `<span class="campaign-selector-desc">${c.description}</span>` : ""}
+        <span class="campaign-selector-role">${c.membershipRole || "player"}</span>
+      </div>
+      <span class="campaign-selector-arrow">→</span>
+    </button>`).join("");
+
+  list.querySelectorAll(".campaign-selector-card").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const camp = campaigns.find(c => c.id === btn.dataset.campaignId);
+      if (camp) enterCampaign(camp);
+    });
+  });
+}
+
+async function enterCampaign(campaign) {
+  activeCampaign       = campaign;
+  activeMembershipRole = isAdmin()
+    ? "admin"
+    : (campaign.membershipRole || (campaign.dmId === auth.currentUser?.uid ? "dm" : "player"));
+
+  selectedCharacter = null;
+
+  const indicator = document.getElementById("activeCampaignName");
+  if (indicator) indicator.textContent = campaign.name;
+
+  await Promise.all([
+    itemsLoadPromise,
+    loadCharacters(),
+    loadSaves(),
+    loadItemState(),
+    loadUsers()
+  ]);
+
+  showMainApp();
+  populateOwnerFilter();
+  renderCards();
+}
+
+function leaveCampaign() {
+  activeCampaign       = null;
+  activeMembershipRole = null;
+  selectedCharacter    = null;
+  characters = [];
+  saves = [];
+  users = isAdmin() ? users : [];
+  itemState = {};
+  showCampaignSelector();
+}
+
+// ─── SCREEN MANAGEMENT ────────────────────────────────────────────────────────
+
+function hideAllScreens() {
+  const sel  = document.getElementById("campaignSelectorScreen");
+  const main = document.getElementById("mainApp");
+
+  if (sel)  sel.style.display  = "none";
+  if (main) main.style.display = "none";
+}
+
+function showMainApp() {
+  hideAllScreens();
+
+  const main = document.getElementById("mainApp");
+  if (main) main.style.display = "block";
+
+  const playerTab  = document.getElementById("playerTab");
+  const adminTab   = document.getElementById("adminTab");
+  const addBtn     = document.getElementById("addItemBtn");
+  const adminPanel = document.getElementById("adminPanel");
+
+  if (adminTab)   adminTab.style.display   = isAdmin() ? "inline-block" : "none";
+  if (addBtn)     addBtn.style.display     = isAdmin() ? "inline-block" : "none";
+  if (adminPanel) adminPanel.style.display = isAdmin() ? "block" : "none";
+  if (playerTab)  playerTab.style.display  = canUseCharacters() ? "inline-block" : "none";
+
+  if (isAdmin()) {
+    renderUserTable();
+    renderAdminStats();
+  }
+
+  showTab("library");
+}
+
+// ─── CAMPAIGN ITEM STATE / VISIBILITY ─────────────────────────────────────────
+
+async function toggleItemVisibility(itemId) {
+  if (!activeCampaign || !canManageCampaign()) return;
+
+  const newVal = !getItemState(itemId).visible;
+  await persistItemState(itemId, { visible: newVal });
+  rerenderCard(itemId);
+}
+
+async function setVisibilityByRarity(rarity, visible) {
+  if (!activeCampaign || !canManageCampaign()) return;
+
+  const matches = items.filter(i => i.rarity === rarity);
+
+  // This is a management action, not part of page load. Run writes concurrently
+  // rather than one-by-one, while keeping the local UI state in sync.
+  await Promise.all(matches.map(item =>
+    persistItemState(item.id, { visible })
+  ));
+
+  renderCards();
 }
 
 // ─── CREATE CARD ──────────────────────────────────────────────────────────────
@@ -491,52 +892,59 @@ function createCard(item, context = buildRenderContext()) {
   card.dataset.itemId = item.id;
 
   const admin       = isAdmin();
+  const manager     = canManageCampaign();
   const isEditing   = admin && editingItems.has(item.id);
   const rarityClass = (item.rarity || "").toLowerCase().replaceAll(" ", "-");
+  const state       = getItemState(item.id);
+  const isVisible   = state.visible;
 
-  if (rarityClass)      card.classList.add(rarityClass);
-  if (item.looted)      card.classList.add("looted");
-  if (item.highlighted) card.classList.add("highlighted");
+  if (rarityClass)       card.classList.add(rarityClass);
+  if (state.looted)      card.classList.add("looted");
+  if (state.highlighted) card.classList.add("highlighted");
+  if (activeCampaign && !isVisible && manager) card.classList.add("hidden-from-players");
 
-  const itemSaves = context.wishesByItem.get(item.id) || [];
-  const mySave    = selectedCharacter
-    ? context.selectedWishByItem.get(item.id) || null
+  const itemSaves = context.savesByItem.get(item.id) || [];
+  const mySave = selectedCharacter
+    ? itemSaves.find(s => s.characterId === selectedCharacter.id)
     : null;
 
-  const saveNames = itemSaves.map(w => {
-    const c = context.characterById.get(w.characterId);
+  const saveNames = itemSaves.map(s => {
+    const c = context.charactersById.get(s.characterId);
     return c ? `${c.name} (${c.class})` : "Unknown";
   }).join(", ");
 
-  const canSave      = isPlayer() && selectedCharacter !== null;
-  const needsChar    = isPlayer() && !admin && selectedCharacter === null;
-  const showSaveInfo = admin || !!mySave;
+  const canSave      = canUseCharacters() && selectedCharacter !== null;
+  const needsChar    = canUseCharacters() && selectedCharacter === null;
+  const showSaveInfo = manager || !!mySave;
 
-  const ownerChar     = context.characterById.get(item.owner);
-  const ownerName     = ownerChar ? `${ownerChar.name} (${ownerChar.class})` : "";
-  const playableChars = context.playableChars;
-
-  const cachedImage = item.imageUrl || getCachedImageUrl(item.id);
-  const imageSrc    = cachedImage || PLACEHOLDER_IMAGE;
-  const imageData   = cachedImage ? "" : `data-image-item-id="${item.id}"`;
+  const ownerChar = state.owner ? context.charactersById.get(state.owner) : null;
+  const ownerName = ownerChar ? `${ownerChar.name} (${ownerChar.class})` : "";
 
   card.innerHTML = `
     <div class="watermark">LOOTED</div>
 
     <div class="card-buttons">
+      ${manager && activeCampaign ? `
+        <button class="loot-button" type="button">${state.looted ? "Looted" : "Loot"}</button>
+        <button class="highlight-button" type="button">${state.highlighted ? "Highlighted" : "Highlight"}</button>
+        <button class="visibility-toggle-btn ${isVisible ? "visible" : "hidden-item"}" type="button"
+          title="${isVisible ? "Visible to players — click to hide" : "Hidden from players — click to show"}">
+          ${isVisible ? "👁 Visible" : "🚫 Hidden"}
+        </button>
+      ` : ""}
+
       ${admin ? `
-        <button class="loot-button">${item.looted ? "Looted" : "Loot"}</button>
-        <button class="highlight-button">${item.highlighted ? "Highlighted" : "Highlight"}</button>
         ${isEditing
-          ? `<button class="save-edit-button">Save</button>
-             <button class="cancel-button">Cancel</button>
-             <button class="clone-button">Clone</button>
-             <button class="delete-item-button">🗑 Delete</button>`
-          : `<button class="edit-button">Edit</button>`
+          ? `<button class="save-edit-button" type="button">Save</button>
+             <button class="cancel-button" type="button">Cancel</button>
+             <button class="clone-button" type="button">Clone</button>
+             <button class="delete-item-button" type="button">🗑 Delete</button>`
+          : `<button class="edit-button" type="button">Edit Master Item</button>`
         }
       ` : ""}
+
       ${canSave ? `
-        <button class="save-item-button ${mySave ? "saved" : ""}">
+        <button class="save-item-button ${mySave ? "saved" : ""}" type="button">
           ${mySave ? "★ Saved" : "☆ Save"}
         </button>
       ` : needsChar ? `
@@ -545,24 +953,27 @@ function createCard(item, context = buildRenderContext()) {
     </div>
 
     ${showSaveInfo && itemSaves.length > 0 ? `
-      <div class="${admin ? "wish-admin-block" : "wish-count-block"}">
-        ${admin ? `★ Saved by: ${saveNames}` : `★ Saved by your character`}
+      <div class="${manager ? "wish-admin-block" : "wish-count-block"}">
+        ${manager ? `★ Saved by: ${saveNames}` : `★ Saved by your character`}
       </div>
     ` : ""}
 
     <div class="card-header">
       ${isEditing
-        ? `<input class="edit-name" id="edit-name-${item.id}" value="${(item.name||"").replace(/"/g,"&quot;")}">` 
+        ? `<input class="edit-name" id="edit-name-${item.id}" value="${escapeHtml(item.name || "")}">`
         : `<h2 class="item-name">${item.name}</h2>`
       }
+
       ${isEditing ? `
         <select id="edit-category-${item.id}">
           ${CATEGORIES.map(c => `<option ${item.category===c?"selected":""}>${c}</option>`).join("")}
         </select>
+
         <label>
           <input type="checkbox" id="edit-attunement-${item.id}" ${item.attunement?"checked":""}>
           Requires Attunement
         </label>
+
         <div class="class-selector">
           ${ALL_CLASSES.map(cls => `
             <label class="class-option">
@@ -573,38 +984,36 @@ function createCard(item, context = buildRenderContext()) {
       ` : `
         <p class="item-type">${item.category||""}${item.attunement?" · Requires Attunement":""}</p>
       `}
+
       <div class="card-meta">
         ${(item.classes||[]).map(c=>`<span class="meta-tag">${c}</span>`).join("")}
       </div>
+
       <div class="card-meta">
         ${isEditing ? `
           <select id="edit-rarity-${item.id}">
             ${RARITIES.map(r=>`<option ${item.rarity===r?"selected":""}>${r}</option>`).join("")}
           </select>
-          <input id="edit-source-${item.id}"   value="${item.source  ||""}" placeholder="Source">
-          <input id="edit-campaign-${item.id}" value="${item.campaign||""}" placeholder="Campaign">
+          <input id="edit-source-${item.id}"   value="${escapeHtml(item.source || "")}" placeholder="Source">
+          <input id="edit-campaign-${item.id}" value="${escapeHtml(item.campaign || "")}" placeholder="Campaign / Book">
         ` : `
-          ${item.rarity   ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>` : ""}
-          ${item.source   ? `<span class="meta-tag">${item.source}</span>`                : ""}
-          ${item.campaign ? `<span class="meta-tag campaign-tag">${item.campaign}</span>` : ""}
+          ${item.rarity    ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>` : ""}
+          ${item.source    ? `<span class="meta-tag">${item.source}</span>` : ""}
+          ${item.campaign  ? `<span class="meta-tag campaign-tag">${item.campaign}</span>` : ""}
         `}
       </div>
     </div>
 
     ${isEditing ? `
       <div class="card-image-edit">
-        <img src="${imageSrc}" ${imageData} class="card-art card-art--edit"
-          alt="${item.name}" loading="lazy" decoding="async" fetchpriority="low" onerror="this.src='${PLACEHOLDER_IMAGE}'">
-        <label class="upload-image-btn upload-image-btn--overlay" title="Upload or replace image">
-          📷 ${cachedImage ? "Replace Image" : "Upload Image"}
+        ${itemImageMarkup(item, "card-art card-art--edit")}
+        <label class="upload-image-btn--overlay" title="Upload or replace image">
+          📷 ${item.imageUrl ? "Replace Image" : "Upload Image"}
           <input type="file" class="image-file-input" accept="image/*" style="display:none">
         </label>
         <span class="upload-progress" style="display:none">Uploading…</span>
       </div>
-    ` : `
-      <img src="${imageSrc}" ${imageData} class="card-art" alt="${item.name}"
-        loading="lazy" decoding="async" fetchpriority="low" onerror="this.src='${PLACEHOLDER_IMAGE}'">
-    `}
+    ` : itemImageMarkup(item, "card-art")}
 
     <div class="card-body">
       ${isEditing
@@ -612,6 +1021,7 @@ function createCard(item, context = buildRenderContext()) {
              placeholder="Description">${item.description||""}</textarea>`
         : `<div class="item-description">${item.description||""}</div>`
       }
+
       ${isEditing
         ? `<textarea id="edit-properties-${item.id}"
              placeholder='[{"title":"Name","text":"Description"}]'>${JSON.stringify(item.properties||[],null,2)}</textarea>`
@@ -620,19 +1030,22 @@ function createCard(item, context = buildRenderContext()) {
               <span class="property-title">${p.title}:</span> ${p.text}
             </div>`).join("")
       }
+
       ${isEditing
         ? `<textarea id="edit-quote-${item.id}" placeholder="Quote">${item.quote||""}</textarea>`
         : item.quote ? `<i>${item.quote}</i>` : ""
       }
     </div>
 
-    ${item.looted && admin ? `
+    ${state.looted && manager ? `
       <div class="owner-block">
         <label class="owner-label">Assign to character:</label>
         <select class="owner-select">
           <option value="">No Owner</option>
-          ${playableChars.map(c => `
-            <option value="${c.id}" ${item.owner===c.id?"selected":""}>${characterDisplayName(c, context.userById)}</option>
+          ${context.playableChars.map(c => `
+            <option value="${c.id}" ${state.owner===c.id?"selected":""}>
+              ${characterDisplayName(c, context.usersById)}
+            </option>
           `).join("")}
         </select>
       </div>
@@ -644,6 +1057,7 @@ function createCard(item, context = buildRenderContext()) {
   attachCardEvents(card, item);
   return card;
 }
+
 
 // ─── CARD EVENTS ──────────────────────────────────────────────────────────────
 
@@ -659,12 +1073,18 @@ function attachCardEvents(card, item) {
     rerenderCard(item.id);
   });
 
-  // Save edit
+  // Master catalogue editing remains admin-only because the buttons are admin-only.
   card.querySelector(".save-edit-button")?.addEventListener("click", async () => {
     let properties = [];
+
     try {
-      properties = JSON.parse(document.getElementById(`edit-properties-${item.id}`).value || "[]");
-    } catch { alert("Properties JSON is invalid."); return; }
+      properties = JSON.parse(
+        document.getElementById(`edit-properties-${item.id}`).value || "[]"
+      );
+    } catch {
+      alert("Properties JSON is invalid.");
+      return;
+    }
 
     const changes = {
       name:        document.getElementById(`edit-name-${item.id}`).value,
@@ -675,11 +1095,13 @@ function attachCardEvents(card, item) {
       campaign:    document.getElementById(`edit-campaign-${item.id}`).value,
       quote:       document.getElementById(`edit-quote-${item.id}`).value,
       attunement:  document.getElementById(`edit-attunement-${item.id}`).checked,
-      classes:     [...document.querySelectorAll(`.class-checkbox-${item.id}:checked`)].map(b => b.value),
+      classes:     [...document.querySelectorAll(`.class-checkbox-${item.id}:checked`)]
+        .map(b => b.value),
       properties
     };
 
     await updateDoc(doc(db, "items", item.id), changes);
+
     editingItems.delete(item.id);
     patchItem(item.id, changes);
     rerenderCard(item.id);
@@ -687,203 +1109,191 @@ function attachCardEvents(card, item) {
     populateCampaignFilter();
   });
 
-  // Delete item — only visible in edit mode, admin only
   card.querySelector(".delete-item-button")?.addEventListener("click", async () => {
-    if (!confirm(`Permanently delete "${item.name}"? This cannot be undone.`)) return;
-    // Remove all saves/wishes for this item
-    const itemWishes = wishes.filter(w => w.itemId === item.id);
-    for (const w of itemWishes) await deleteDoc(doc(db, "wishes", w.id));
-    wishes = wishes.filter(w => w.itemId !== item.id);
-    // Delete from Firestore
+    if (!confirm(`Permanently delete "${item.name}" from the master catalogue? This cannot be undone.`)) return;
+
+    if (activeCampaign) {
+      const itemSaves = saves.filter(s => s.itemId === item.id);
+
+      await Promise.all(itemSaves.map(s =>
+        deleteDoc(doc(db, "campaigns", activeCampaign.id, "saves", s.id))
+      ));
+
+      saves = saves.filter(s => s.itemId !== item.id);
+
+      await deleteDoc(
+        doc(db, "campaigns", activeCampaign.id, "itemState", item.id)
+      ).catch(() => {});
+
+      delete itemState[item.id];
+    }
+
     await deleteDoc(doc(db, "items", item.id));
-    // Remove from local state and remove from DOM immediately
+
     items = items.filter(i => i.id !== item.id);
     editingItems.delete(item.id);
-    const cardEl = container.querySelector(`[data-item-id="${item.id}"]`);
-    if (cardEl) cardEl.remove();
+
+    container.querySelector(`[data-item-id="${item.id}"]`)?.remove();
+
     refreshStatsBar();
     populateSourceFilter();
     populateCampaignFilter();
   });
 
-  // Loot
-  card.querySelector(".loot-button")?.addEventListener("click", () => {
-    const newLooted = !item.looted;
-    const changes   = { looted: newLooted, owner: newLooted ? (item.owner || null) : null };
-    updateDoc(doc(db, "items", item.id), changes);
-    patchItem(item.id, changes);
+  // Loot/highlight/owner are campaign state — never mutate the global master item.
+  card.querySelector(".loot-button")?.addEventListener("click", async () => {
+    if (!activeCampaign || !canManageCampaign()) return;
+
+    const state = getItemState(item.id);
+    const newLooted = !state.looted;
+
+    await persistItemState(item.id, {
+      looted: newLooted,
+      owner: newLooted ? state.owner : null,
+      receivedDate: newLooted ? (state.receivedDate || Date.now()) : null
+    });
+
+    rerenderCard(item.id);
+    renderMyLoot();
+  });
+
+  card.querySelector(".highlight-button")?.addEventListener("click", async () => {
+    if (!activeCampaign || !canManageCampaign()) return;
+
+    const state = getItemState(item.id);
+
+    await persistItemState(item.id, {
+      highlighted: !state.highlighted
+    });
+
     rerenderCard(item.id);
   });
 
-  // Highlight
-  card.querySelector(".highlight-button")?.addEventListener("click", () => {
-    const changes = { highlighted: !item.highlighted };
-    updateDoc(doc(db, "items", item.id), changes);
-    patchItem(item.id, changes);
-    rerenderCard(item.id);
-  });
-
-  // Clone
   card.querySelector(".clone-button")?.addEventListener("click", async () => {
     const cloneId = `${item.id}-copy-${Date.now()}`;
-    const { id: _drop, imageUrl: _img, ...rest } = item;
+    const {
+      id: _id,
+      imageUrl: _imageUrl,
+      looted: _legacyLooted,
+      highlighted: _legacyHighlighted,
+      owner: _legacyOwner,
+      receivedDate: _legacyReceivedDate,
+      ...masterFields
+    } = item;
+
     await setDoc(doc(db, "items", cloneId), {
-      ...rest,
-      name: `${item.name} (Homebrew)`, source: "Homebrew",
-      looted: false, highlighted: false, owner: null
+      ...masterFields,
+      name: `${item.name} (Homebrew)`,
+      source: "Homebrew"
     });
+
     await loadItemsFromFirestore();
     editingItems.add(cloneId);
-    populateSourceFilter();
-    populateCampaignFilter();
     renderCards();
   });
 
-  // Owner assign
-  card.querySelector(".owner-select")?.addEventListener("change", e => {
+  card.querySelector(".owner-select")?.addEventListener("change", async e => {
+    if (!activeCampaign || !canManageCampaign()) return;
+
     const ownerId = e.target.value || null;
-    updateDoc(doc(db, "items", item.id), { owner: ownerId });
-    patchItem(item.id, { owner: ownerId });
+    await persistItemState(item.id, { owner: ownerId });
+
     rerenderCard(item.id);
+    renderMyLoot();
   });
 
-  // Image upload — inside edit mode image area
   card.querySelector(".image-file-input")?.addEventListener("change", async e => {
     const file = e.target.files?.[0];
+
     if (!file) return;
-    if (!file.type.startsWith("image/")) { alert("Please select an image file."); return; }
-    if (file.size > 4 * 1024 * 1024)    { alert("Image must be smaller than 4 MB."); return; }
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      alert("Image must be smaller than 4 MB.");
+      return;
+    }
 
     const progressEl = card.querySelector(".upload-progress");
     const labelEl    = card.querySelector(".upload-image-btn--overlay");
+
     if (progressEl) progressEl.style.display = "inline";
-    if (labelEl)    labelEl.style.opacity    = "0.4";
+    if (labelEl)    labelEl.style.opacity = "0.4";
 
     const url = await uploadItemImage(item.id, file);
+
     if (url) {
       patchItem(item.id, { imageUrl: url });
-      rerenderCard(item.id);
-      // Stay in edit mode after upload
       editingItems.add(item.id);
       rerenderCard(item.id);
     } else {
       alert("Upload failed. Check the browser console.");
       if (progressEl) progressEl.style.display = "none";
-      if (labelEl)    labelEl.style.opacity    = "1";
+      if (labelEl)    labelEl.style.opacity = "1";
     }
   });
 
-  // Save item (wish)
+  card.querySelector(".visibility-toggle-btn")?.addEventListener("click", async () => {
+    await toggleItemVisibility(item.id);
+  });
+
   card.querySelector(".save-item-button")?.addEventListener("click", async () => {
     if (!selectedCharacter) {
       alert("Select a character in the My Character tab first.");
       return;
     }
-    const existing = wishes.find(
-      w => w.itemId === item.id && w.characterId === selectedCharacter.id
-    );
-    if (existing) {
-      deleteDoc(doc(db, "wishes", existing.id));
-      wishes = wishes.filter(w => w.id !== existing.id);
-    } else {
-      const newRef = await addDoc(collection(db, "wishes"), {
-        itemId:      item.id,
-        characterId: selectedCharacter.id,
-        userId:      auth.currentUser.uid,
-        created:     Date.now()
-      });
-      wishes.push({
-        id: newRef.id, itemId: item.id,
-        characterId: selectedCharacter.id,
-        userId: auth.currentUser.uid, created: Date.now()
-      });
+    if (!activeCampaign) {
+      alert("No active campaign.");
+      return;
     }
+
+    const existing = saves.find(
+      s => s.itemId === item.id && s.characterId === selectedCharacter.id
+    );
+
+    if (existing) {
+      await deleteDoc(
+        doc(db, "campaigns", activeCampaign.id, "saves", existing.id)
+      );
+
+      saves = saves.filter(s => s.id !== existing.id);
+
+    } else {
+      // Deterministic id prevents duplicate saves for the same character/item pair.
+      const saveId = `${selectedCharacter.id}__${item.id}`;
+      const data = {
+        itemId: item.id,
+        characterId: selectedCharacter.id,
+        userId: auth.currentUser.uid,
+        created: Date.now()
+      };
+
+      await setDoc(
+        doc(db, "campaigns", activeCampaign.id, "saves", saveId),
+        data
+      );
+
+      saves.push({ id: saveId, ...data });
+    }
+
     rerenderCard(item.id);
+
     const playerPanel = document.getElementById("tab-player");
     if (playerPanel?.style.display !== "none") renderMyWishes();
   });
 }
 
-// ─── ADD ITEM MODAL ───────────────────────────────────────────────────────────
+
+// ─── ADD ITEM MODAL (uses your property editor UI) ────────────────────────────
 
 function buildModalClassCheckboxes(selected = []) {
   const wrap = document.getElementById("modal-classes");
   if (!wrap) return;
   wrap.innerHTML = ALL_CLASSES.map(c => `
     <label class="class-option">
-      <input type="checkbox" value="${c}" ${selected.includes(c) ? "checked" : ""}> ${c}
+      <input type="checkbox" value="${c}" ${selected.includes(c)?"checked":""}> ${c}
     </label>`).join("");
-}
-
-function createPropertyRow(property = {}) {
-  const row = document.createElement("div");
-  row.className = "property-edit-row";
-
-  row.innerHTML = `
-    <div class="property-edit-fields">
-
-      <label>
-        Title
-        <input
-          type="text"
-          class="property-title-input"
-          placeholder="e.g. Bonus"
-          value="${escapeHtml(property.title || "")}">
-      </label>
-
-      <label>
-        Text
-        <textarea
-          class="property-text-input"
-          rows="3"
-          placeholder="Property description...">${escapeHtml(property.text || "")}</textarea>
-      </label>
-
-    </div>
-
-    <button
-      type="button"
-      class="cancel-button remove-property-btn">
-      Remove
-    </button>
-  `;
-
-  row.querySelector(".remove-property-btn")
-    .addEventListener("click", () => row.remove());
-
-  return row;
-}
-
-
-function renderPropertyEditor(properties = []) {
-  const container = document.getElementById("modal-properties-list");
-
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  properties.forEach(property => {
-    container.appendChild(createPropertyRow(property));
-  });
-}
-
-
-function getPropertiesFromEditor() {
-  return [...document.querySelectorAll(".property-edit-row")]
-    .map(row => ({
-      title: row.querySelector(".property-title-input").value.trim(),
-      text: row.querySelector(".property-text-input").value.trim()
-    }))
-    .filter(p => p.title || p.text);
-}
-
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
 }
 
 function openItemModal(item = null) {
@@ -905,11 +1315,11 @@ function openItemModal(item = null) {
 function closeItemModal() { document.getElementById("itemModal").style.display = "none"; }
 
 async function saveItemModal() {
-  const editId = document.getElementById("itemModal").dataset.editId;
-  const name   = document.getElementById("modal-name").value.trim();
+  const editId     = document.getElementById("itemModal").dataset.editId;
+  const name       = document.getElementById("modal-name").value.trim();
   if (!name) { alert("Name is required."); return; }
   const properties = getPropertiesFromEditor();
-  const classes = [...document.querySelectorAll("#modal-classes input:checked")].map(i => i.value);
+  const classes    = [...document.querySelectorAll("#modal-classes input:checked")].map(i=>i.value);
   const data = {
     name,
     category:    document.getElementById("modal-category").value,
@@ -922,18 +1332,16 @@ async function saveItemModal() {
     classes, properties
   };
   if (!editId) {
-    const autoId = name.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-");
-    await setDoc(doc(db, "items", autoId),
-      { ...data, looted: false, highlighted: false, owner: null, receivedDate: null },
+    const autoId = name.toLowerCase().replaceAll(/[^a-z0-9]+/g,"-");
+    await setDoc(
+      doc(db, "items", autoId),
+      data,
       { merge: true }
     );
     closeItemModal();
     await loadItemsFromFirestore();
-    populateSourceFilter();
-    populateCampaignFilter();
-    renderCards();
   } else {
-    await updateDoc(doc(db, "items", editId), data);
+    await updateDoc(doc(db,"items",editId), data);
     closeItemModal();
     patchItem(editId, data);
     rerenderCard(editId);
@@ -963,19 +1371,18 @@ async function saveUserModal() {
   const name   = document.getElementById("user-name").value.trim();
   const email  = document.getElementById("user-email").value.trim();
   if (!name || !email) { alert("Name and email are required."); return; }
-  const role = [...document.querySelectorAll(".role-checkbox:checked")].map(cb => cb.value);
-  const data = { name, email, role };
+  const role = [...document.querySelectorAll(".role-checkbox:checked")].map(cb=>cb.value);
+  const data = { name, email, emailLower: email.toLowerCase(), role };
   if (editId) {
-    await updateDoc(doc(db, "users", editId), data);
-    const idx = users.findIndex(u => u.id === editId);
-    if (idx !== -1) users[idx] = { ...users[idx], ...data };
+    await updateDoc(doc(db,"users",editId), data);
+    const idx = users.findIndex(u=>u.id===editId);
+    if (idx!==-1) users[idx]={...users[idx],...data};
   } else {
-    const tempId = email.toLowerCase().replaceAll(/[^a-z0-9]/g, "-");
-    await setDoc(doc(db, "users", tempId), data, { merge: true });
-    users.push({ id: tempId, ...data });
+    const tempId = email.toLowerCase().replaceAll(/[^a-z0-9]/g,"-");
+    await setDoc(doc(db,"users",tempId), data, { merge:true });
+    users.push({ id:tempId, ...data });
   }
   closeUserModal();
-  populateOwnerFilter();
   renderUserTable();
   renderAdminStats();
 }
@@ -995,38 +1402,80 @@ function closeCampaignModal() { document.getElementById("campaignModal").style.d
 async function saveCampaignModal() {
   const editId = document.getElementById("campaignModal").dataset.editId;
   const name   = document.getElementById("campaign-name").value.trim();
-  if (!name) { alert("Campaign name is required."); return; }
-  const data = {
-    name,
-    description: document.getElementById("campaign-description").value.trim(),
-    dmId:        auth.currentUser.uid,
-    created:     Date.now()
-  };
-  if (editId) {
-    await updateDoc(doc(db, "campaigns", editId), { name: data.name, description: data.description });
-    const idx = campaigns.findIndex(c => c.id === editId);
-    if (idx !== -1) campaigns[idx] = { ...campaigns[idx], ...data };
-  } else {
-    const newRef = await addDoc(collection(db, "campaigns"), data);
-    campaigns.push({ id: newRef.id, ...data });
+
+  if (!name) {
+    alert("Campaign name is required.");
+    return;
   }
+
+  const description = document.getElementById("campaign-description").value.trim();
+
+  if (editId) {
+    await updateDoc(
+      doc(db, "campaigns", editId),
+      { name, description, updatedAt: Date.now() }
+    );
+
+    const idx = campaigns.findIndex(c => c.id === editId);
+    if (idx !== -1) {
+      campaigns[idx] = { ...campaigns[idx], name, description, updatedAt: Date.now() };
+    }
+
+  } else {
+    const data = {
+      name,
+      description,
+      dmId: auth.currentUser.uid,
+      ownerId: auth.currentUser.uid,
+      defaultItemVisible: true,
+      created: Date.now(),
+      updatedAt: Date.now()
+    };
+
+    const newRef = await addDoc(collection(db, "campaigns"), data);
+
+    // Authoritative membership + fast per-user index.
+    await Promise.all([
+      setDoc(
+        doc(db, "campaigns", newRef.id, "members", auth.currentUser.uid),
+        {
+          uid: auth.currentUser.uid,
+          role: "dm",
+          status: "active",
+          joinedAt: Date.now()
+        },
+        { merge: true }
+      ),
+      setDoc(
+        doc(db, "users", auth.currentUser.uid, "campaigns", newRef.id),
+        {
+          role: "dm",
+          status: "active",
+          joinedAt: Date.now()
+        },
+        { merge: true }
+      )
+    ]);
+
+    campaigns.push({
+      id: newRef.id,
+      membershipRole: "dm",
+      ...data
+    });
+  }
+
   closeCampaignModal();
-  renderCampaignList();
-  populateCampaignFilter();
-  // Also refresh character campaign dropdowns
-  const campSel = document.getElementById("playerCharCampaign");
-  if (campSel) populateCreateCharCampaigns();
+  renderCampaignSelector();
 }
 
-// ─── ADMIN: USER + CHARACTER TABLE ────────────────────────────────────────────
+// ─── ADMIN: USER TABLE ────────────────────────────────────────────────────────
 
 function renderUserTable() {
   const tbody = document.getElementById("userTableBody");
   if (!tbody) return;
-
   tbody.innerHTML = users.map(u => {
-    const role      = Array.isArray(u.role) ? u.role.join(", ") : (u.role || "viewer");
-    const userChars = characters.filter(c => c.userId === u.id && c.active !== false);
+    const role      = Array.isArray(u.role) ? u.role.join(", ") : (u.role||"viewer");
+    const userChars = characters.filter(c=>c.userId===u.id && c.active!==false);
     const charHTML  = userChars.length > 0
       ? userChars.map(c => {
           const tier       = getTier(c.level);
@@ -1036,27 +1485,22 @@ function renderUserTable() {
           const levelBadge = c.level
             ? `<span class="level-badge">Lvl ${c.level}</span>`
             : `<span class="level-badge level-badge--empty">No level</span>`;
-          const campSpan   = c.campaign
-            ? `<span class="char-campaign">${c.campaign}</span>` : "";
           return `
             <div class="admin-char-row">
               <div class="admin-char-info">
                 <span class="admin-char-name">${c.name}</span>
                 <span class="admin-char-class">${c.class}</span>
-                ${campSpan}${levelBadge}${tierBadge}
+                ${c.campaign?`<span class="char-campaign">${c.campaign}</span>`:""}
+                ${levelBadge}${tierBadge}
               </div>
               <div class="admin-char-btns">
-                <button class="wish-view-btn btn-sm"
+                <button class="wish-view-btn btn-sm" type="button"
                   data-char-id="${c.id}" data-char-name="${c.name}">Saved</button>
-                <button class="edit-button btn-sm"
-                  data-edit-char="${c.id}"
-                  data-char-name="${c.name}"
-                  data-char-class="${c.class}"
-                  data-char-level="${c.level||""}"
-                  data-char-campaign="${c.campaign||""}">Edit</button>
-                <button class="cancel-button btn-sm"
-                  data-delete-char="${c.id}"
-                  data-char-name="${c.name}">Delete</button>
+                <button class="edit-button btn-sm" type="button"
+                  data-edit-char="${c.id}" data-char-name="${c.name}"
+                  data-char-class="${c.class}" data-char-level="${c.level||""}">Edit</button>
+                <button class="cancel-button btn-sm" type="button"
+                  data-delete-char="${c.id}" data-char-name="${c.name}">Delete</button>
               </div>
             </div>`;
         }).join("")
@@ -1070,95 +1514,114 @@ function renderUserTable() {
         <td class="chars-cell">${charHTML}</td>
         <td>
           <div class="table-actions">
-            <button class="edit-button btn-sm" data-edit-user="${u.id}">Edit User</button>
-            <button class="cancel-button btn-sm" data-delete-user="${u.id}">Delete User</button>
+            <button class="edit-button btn-sm" type="button" data-edit-user="${u.id}">Edit</button>
+            <button class="cancel-button btn-sm" type="button" data-delete-user="${u.id}">Delete</button>
           </div>
         </td>
       </tr>`;
   }).join("");
 
   tbody.querySelectorAll("[data-edit-user]").forEach(btn => {
-    btn.addEventListener("click", () =>
-      openUserModal(users.find(u => u.id === btn.dataset.editUser))
-    );
+    btn.addEventListener("click", () => openUserModal(users.find(u=>u.id===btn.dataset.editUser)));
   });
 
   tbody.querySelectorAll("[data-delete-user]").forEach(btn => {
     btn.addEventListener("click", async () => {
-      if (!confirm("Delete this user? All their characters and saves will also be deleted.")) return;
-      const uid       = btn.dataset.deleteUser;
-      const userChars = characters.filter(c => c.userId === uid);
-      for (const c of userChars) {
-        for (const w of wishes.filter(w => w.characterId === c.id))
-          await deleteDoc(doc(db, "wishes", w.id));
-        await deleteDoc(doc(db, "characters", c.id));
+      if (!confirm("Delete this user? Their characters and saves in the active campaign will also be removed.")) return;
+      const uid = btn.dataset.deleteUser;
+      if (activeCampaign) {
+        const userChars = characters.filter(c => c.userId === uid);
+        const userCharIds = new Set(userChars.map(c => c.id));
+
+        for (const c of userChars) {
+          const charSaves = saves.filter(s => s.characterId === c.id);
+
+          await Promise.all(charSaves.map(s =>
+            deleteDoc(doc(db, "campaigns", activeCampaign.id, "saves", s.id))
+          ));
+
+          const ownedItemIds = Object.entries(itemState)
+            .filter(([, state]) => state?.owner === c.id)
+            .map(([itemId]) => itemId);
+
+          await Promise.all(ownedItemIds.map(itemId =>
+            persistItemState(itemId, { owner: null })
+          ));
+
+          await deleteDoc(
+            doc(db, "campaigns", activeCampaign.id, "characters", c.id)
+          );
+        }
+
+        characters = characters.filter(c => c.userId !== uid);
+        saves = saves.filter(s => !userCharIds.has(s.characterId));
       }
-      await deleteDoc(doc(db, "users", uid));
-      users      = users.filter(u => u.id !== uid);
-      characters = characters.filter(c => c.userId !== uid);
-      wishes     = wishes.filter(w => !userChars.some(c => c.id === w.characterId));
-      userChars.forEach(c => {
-        items.filter(i => i.owner === c.id).forEach(i => patchItem(i.id, { owner: null }));
-      });
-      populateOwnerFilter();
-      renderUserTable();
-      renderAdminStats();
-      renderCards();
+      await deleteDoc(doc(db,"users",uid));
+      users = users.filter(u=>u.id!==uid);
+      renderUserTable(); renderAdminStats(); renderCards();
     });
   });
 
   tbody.querySelectorAll("[data-edit-char]").forEach(btn => {
     btn.addEventListener("click", () =>
-      openEditCharacterModal(
-        btn.dataset.editChar, btn.dataset.charName,
-        btn.dataset.charClass, btn.dataset.charLevel,
-        btn.dataset.charCampaign
-      )
+      openEditCharacterModal(btn.dataset.editChar, btn.dataset.charName,
+        btn.dataset.charClass, btn.dataset.charLevel)
     );
   });
 
   tbody.querySelectorAll("[data-delete-char]").forEach(btn => {
     btn.addEventListener("click", async () => {
-      if (!confirm(`Delete character "${btn.dataset.charName}"? Their saved items will also be removed.`)) return;
+      if (!confirm(`Delete "${btn.dataset.charName}"?`)) return;
       const cid = btn.dataset.deleteChar;
-      for (const w of wishes.filter(w => w.characterId === cid))
-        await deleteDoc(doc(db, "wishes", w.id));
-      items.filter(i => i.owner === cid).forEach(i => {
-        updateDoc(doc(db, "items", i.id), { owner: null });
-        patchItem(i.id, { owner: null });
-      });
-      await deleteDoc(doc(db, "characters", cid));
-      wishes     = wishes.filter(w => w.characterId !== cid);
-      characters = characters.filter(c => c.id !== cid);
-      if (selectedCharacter?.id === cid) selectedCharacter = null;
-      populateOwnerFilter();
-      renderUserTable();
-      renderAdminStats();
-      renderCards();
+      if (activeCampaign) {
+        const ownedItemIds = Object.entries(itemState)
+          .filter(([, state]) => state?.owner === cid)
+          .map(([itemId]) => itemId);
+
+        if (ownedItemIds.length && !canManageCampaign()) {
+          alert("This character still has assigned loot. Ask the DM to unassign the loot before deleting the character.");
+          return;
+        }
+
+        const charSaves = saves.filter(s => s.characterId === cid);
+        await Promise.all(charSaves.map(s =>
+          deleteDoc(doc(db, "campaigns", activeCampaign.id, "saves", s.id))
+        ));
+
+        if (ownedItemIds.length) {
+          await Promise.all(ownedItemIds.map(itemId =>
+            persistItemState(itemId, { owner: null })
+          ));
+        }
+
+        await deleteDoc(
+          doc(db, "campaigns", activeCampaign.id, "characters", cid)
+        );
+      }
+      saves      = saves.filter(s=>s.characterId!==cid);
+      characters = characters.filter(c=>c.id!==cid);
+      if (selectedCharacter?.id===cid) selectedCharacter=null;
+      populateOwnerFilter(); renderUserTable(); renderAdminStats(); renderCards();
     });
   });
 
   tbody.querySelectorAll(".wish-view-btn").forEach(btn => {
-    btn.addEventListener("click", () =>
-      openWishModal(btn.dataset.charId, btn.dataset.charName)
-    );
+    btn.addEventListener("click", () => openWishModal(btn.dataset.charId, btn.dataset.charName));
   });
 }
 
 function renderAdminStats() {
   const el = document.getElementById("adminStats");
   if (!el) return;
-  const playerCount = users.filter(u => {
-    const r = u.role;
-    return Array.isArray(r)
-      ? r.some(x => ["player","dm","admin"].includes(x))
-      : ["player","dm","admin"].includes(r);
+  const playerCount = users.filter(u=>{
+    const r=u.role; return Array.isArray(r)?r.some(x=>["player","dm","admin"].includes(x)):["player","dm","admin"].includes(r);
   }).length;
+  const states = items.map(i => getItemState(i.id));
   el.innerHTML = `
     <div class="stat-card"><span class="stat-num">${items.length}</span><span class="stat-label">Total Items</span></div>
-    <div class="stat-card"><span class="stat-num">${items.filter(i=>i.looted).length}</span><span class="stat-label">Looted</span></div>
-    <div class="stat-card"><span class="stat-num">${items.filter(i=>i.highlighted).length}</span><span class="stat-label">Highlighted</span></div>
-    <div class="stat-card"><span class="stat-num">${wishes.length}</span><span class="stat-label">Saved</span></div>
+    <div class="stat-card"><span class="stat-num">${states.filter(s=>s.looted).length}</span><span class="stat-label">Looted</span></div>
+    <div class="stat-card"><span class="stat-num">${states.filter(s=>s.highlighted).length}</span><span class="stat-label">Highlighted</span></div>
+    <div class="stat-card"><span class="stat-num">${saves.length}</span><span class="stat-label">Saved</span></div>
     <div class="stat-card"><span class="stat-num">${users.length}</span><span class="stat-label">Users</span></div>
     <div class="stat-card"><span class="stat-num">${playerCount}</span><span class="stat-label">Players</span></div>
     <div class="stat-card"><span class="stat-num">${characters.length}</span><span class="stat-label">Characters</span></div>
@@ -1166,80 +1629,28 @@ function renderAdminStats() {
   `;
 }
 
-// ─── CAMPAIGN LIST (DM tab) ───────────────────────────────────────────────────
-
-function renderCampaignList() {
-  const el = document.getElementById("campaignList");
-  if (!el) return;
-
-  // DMs see their own campaigns; admins see all
-  const myCampaigns = isAdmin()
-    ? campaigns
-    : campaigns.filter(c => c.dmId === auth.currentUser?.uid);
-
-  if (!myCampaigns.length) {
-    el.innerHTML = `<p class="player-empty">No campaigns yet — create one below.</p>`;
-    return;
-  }
-
-  el.innerHTML = myCampaigns.map(c => `
-    <div class="campaign-card">
-      <div class="campaign-card-info">
-        <span class="campaign-card-name">${c.name}</span>
-        ${c.description ? `<span class="campaign-card-desc">${c.description}</span>` : ""}
-      </div>
-      <div class="campaign-card-actions">
-        <button class="edit-button btn-sm" data-edit-campaign="${c.id}">Edit</button>
-        <button class="cancel-button btn-sm" data-delete-campaign="${c.id}" data-campaign-name="${c.name}">Delete</button>
-      </div>
-    </div>`).join("");
-
-  el.querySelectorAll("[data-edit-campaign]").forEach(btn => {
-    btn.addEventListener("click", () =>
-      openCampaignModal(campaigns.find(c => c.id === btn.dataset.editCampaign))
-    );
-  });
-
-  el.querySelectorAll("[data-delete-campaign]").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      if (!confirm(`Delete campaign "${btn.dataset.campaignName}"?`)) return;
-      await deleteDoc(doc(db, "campaigns", btn.dataset.deleteCampaign));
-      campaigns = campaigns.filter(c => c.id !== btn.dataset.deleteCampaign);
-      renderCampaignList();
-      populateCampaignFilter();
-    });
-  });
-}
-
-// ─── WISH / SAVE MODAL (admin view) ──────────────────────────────────────────
+// ─── SAVE MODAL ───────────────────────────────────────────────────────────────
 
 function openWishModal(charId, charName) {
-  const wishedItems = wishes
-    .filter(w => w.characterId === charId)
-    .map(w => items.find(i => i.id === w.itemId))
+  const savedItems = saves
+    .filter(s=>s.characterId===charId)
+    .map(s=>items.find(i=>i.id===s.itemId))
     .filter(Boolean);
-
   document.getElementById("wishModalCharName").textContent = `${charName}'s Saved Items`;
   const grid = document.getElementById("wishModalGrid");
-
-  grid.innerHTML = wishedItems.length === 0
+  grid.innerHTML = savedItems.length===0
     ? `<p class="player-empty" style="grid-column:1/-1">No saved items for this character.</p>`
-    : wishedItems.map(item => {
-        const rc = (item.rarity||"").toLowerCase().replaceAll(" ","-");
-        const cachedImage = item.imageUrl || getCachedImageUrl(item.id);
-        const imageSrc    = cachedImage || PLACEHOLDER_IMAGE;
-        const imageData   = cachedImage ? "" : `data-image-item-id="${item.id}"`;
+    : savedItems.map(item=>{
+        const rc=(item.rarity||"").toLowerCase().replaceAll(" ","-");
         return `
           <div class="wish-modal-card ${rc}">
-            <img src="${imageSrc}" ${imageData} class="wish-modal-art" alt="${item.name}"
-              loading="lazy" decoding="async" fetchpriority="low"
-              onerror="this.src='${PLACEHOLDER_IMAGE}'">
+            ${itemImageMarkup(item, "wish-modal-art")}
             <div class="wish-modal-body">
               <div class="wish-modal-name">${item.name}</div>
               <div class="card-meta" style="margin-top:4px">
-                ${item.rarity   ? `<span class="meta-tag ${rc}">${item.rarity}</span>` : ""}
-                ${item.category ? `<span class="meta-tag">${item.category}</span>`     : ""}
-                ${item.attunement ? `<span class="meta-tag">Attunement</span>`         : ""}
+                ${item.rarity  ?`<span class="meta-tag ${rc}">${item.rarity}</span>`:""}
+                ${item.category?`<span class="meta-tag">${item.category}</span>`:""}
+                ${item.attunement?`<span class="meta-tag">Attunement</span>`:""}
               </div>
               ${(item.properties||[]).slice(0,2).map(p=>`
                 <div class="wish-modal-prop">
@@ -1249,21 +1660,43 @@ function openWishModal(charId, charName) {
             </div>
           </div>`;
       }).join("");
-
   document.getElementById("wishModal").style.display = "flex";
   observePendingImages(grid);
 }
 
 function closeWishModal() { document.getElementById("wishModal").style.display = "none"; }
 
+// ─── VISIBILITY BULK CONTROLS ─────────────────────────────────────────────────
+
+function renderVisibilityControls() {
+  const el = document.getElementById("visibilityControls");
+  if (!el || !activeCampaign || !canManageCampaign()) { if(el) el.innerHTML=""; return; }
+  el.innerHTML = `
+    <div class="visibility-bulk">
+      <span class="visibility-bulk-label">Quick show by rarity:</span>
+      ${RARITIES.map(r=>`
+        <div class="visibility-bulk-rarity">
+          <span class="rarity-pill ${r.toLowerCase().replaceAll(" ","-")}">${r}</span>
+          <button class="vis-show-btn" type="button" data-rarity="${r}">Show all</button>
+          <button class="vis-hide-btn" type="button" data-rarity="${r}">Hide all</button>
+        </div>`).join("")}
+    </div>`;
+  el.querySelectorAll(".vis-show-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>setVisibilityByRarity(btn.dataset.rarity, true));
+  });
+  el.querySelectorAll(".vis-hide-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>setVisibilityByRarity(btn.dataset.rarity, false));
+  });
+}
+
 // ─── FILTER POPULATORS ────────────────────────────────────────────────────────
 
 function populateSourceFilter() {
   const el = document.getElementById("sourceFilter");
   if (!el) return;
-  const cur     = el.value;
+  const cur = el.value;
   const sources = [...new Set(items.map(i=>i.source).filter(Boolean))].sort();
-  el.innerHTML  = `<option value="">All Sources</option>` +
+  el.innerHTML = `<option value="">All Sources</option>` +
     sources.map(s=>`<option ${s===cur?"selected":""}>${s}</option>`).join("");
 }
 
@@ -1280,18 +1713,9 @@ function populateOwnerFilter() {
   const el = document.getElementById("ownerFilter");
   if (!el) return;
   el.innerHTML = `<option value="">All Owners</option>` +
-    allPlayableCharacters().map(c =>
-      `<option value="${c.id}">${characterDisplayName(c)}</option>`
-    ).join("");
+    allPlayableCharacters().map(c=>`<option value="${c.id}">${characterDisplayName(c)}</option>`).join("");
 }
 
-function populateCreateCharCampaigns() {
-  const sel = document.getElementById("playerCharCampaign");
-  if (!sel) return;
-  const camps = availableCampaigns();
-  sel.innerHTML = `<option value="">No Campaign</option>` +
-    camps.map(c=>`<option>${c}</option>`).join("");
-}
 
 // ─── STATS BAR ────────────────────────────────────────────────────────────────
 
@@ -1313,73 +1737,67 @@ function renderCharacterList() {
   const mine = myCharacters();
   const el   = document.getElementById("myCharacterList");
   if (!el) return;
-  if (!mine.length) {
-    el.innerHTML = `<p class="player-empty">No characters yet — create one below.</p>`;
-    return;
-  }
-  el.innerHTML = mine.map(c => {
+  if (!mine.length) { el.innerHTML=`<p class="player-empty">No characters yet — create one below.</p>`; return; }
+  el.innerHTML = mine.map(c=>{
     const tier = getTier(c.level);
     const tierBadge = tier
-      ? `<span class="tier-badge" style="background:${tier.bg};color:${tier.color};border-color:${tier.color}">
-           ${tier.label} · ${tier.rarity}
-         </span>`
+      ? `<span class="tier-badge" style="background:${tier.bg};color:${tier.color};border-color:${tier.color}">${tier.label} · ${tier.rarity}</span>`
       : "";
     return `
       <div class="character-card ${selectedCharacter?.id===c.id?"character-card--active":""}">
         <div class="character-card-info">
           <span class="character-card-name">${c.name}</span>
-          <span class="character-card-class">${c.class}${c.campaign?" · "+c.campaign:""}${c.level?" · Level "+c.level:""}</span>
+          <span class="character-card-class">${c.class}${c.level?" · Level "+c.level:""}</span>
           ${tierBadge}
         </div>
         <div class="character-card-actions">
           ${selectedCharacter?.id!==c.id
-            ? `<button class="btn-select-char" data-char-id="${c.id}">Set Active</button>`
+            ? `<button class="btn-select-char" type="button" data-char-id="${c.id}">Set Active</button>`
             : `<span class="active-badge">✓ Active</span>`
           }
-          <button class="btn-rename-char"
+          <button class="btn-rename-char" type="button"
             data-char-id="${c.id}" data-char-name="${c.name}"
-            data-char-class="${c.class}" data-char-level="${c.level||""}"
-            data-char-campaign="${c.campaign||""}">Edit</button>
-          <button class="btn-delete-char cancel-button"
+            data-char-class="${c.class}" data-char-level="${c.level||""}">Edit</button>
+          <button class="btn-delete-char cancel-button" type="button"
             data-char-id="${c.id}" data-char-name="${c.name}">Delete</button>
         </div>
       </div>`;
   }).join("");
 
-  el.querySelectorAll(".btn-select-char").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedCharacter = characters.find(c => c.id === btn.dataset.charId) || null;
+  el.querySelectorAll(".btn-select-char").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      selectedCharacter=characters.find(c=>c.id===btn.dataset.charId)||null;
       renderCharacterList(); renderMyWishes(); renderCards();
     });
   });
 
-  el.querySelectorAll(".btn-rename-char").forEach(btn => {
-    btn.addEventListener("click", () =>
-      openEditCharacterModal(
-        btn.dataset.charId, btn.dataset.charName,
-        btn.dataset.charClass, btn.dataset.charLevel,
-        btn.dataset.charCampaign
-      )
+  el.querySelectorAll(".btn-rename-char").forEach(btn=>{
+    btn.addEventListener("click", ()=>
+      openEditCharacterModal(btn.dataset.charId, btn.dataset.charName,
+        btn.dataset.charClass, btn.dataset.charLevel)
     );
   });
 
-  el.querySelectorAll(".btn-delete-char").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      if (!confirm(`Delete "${btn.dataset.charName}"? Their saved items will also be removed.`)) return;
+  el.querySelectorAll(".btn-delete-char").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      if (!confirm(`Delete "${btn.dataset.charName}"?`)) return;
       const cid = btn.dataset.charId;
-      for (const w of wishes.filter(w => w.characterId === cid))
-        await deleteDoc(doc(db, "wishes", w.id));
-      items.filter(i => i.owner === cid).forEach(i => {
-        updateDoc(doc(db, "items", i.id), { owner: null });
-        patchItem(i.id, { owner: null });
-      });
-      await deleteDoc(doc(db, "characters", cid));
-      wishes     = wishes.filter(w => w.characterId !== cid);
-      characters = characters.filter(c => c.id !== cid);
-      if (selectedCharacter?.id === cid) selectedCharacter = null;
-      populateOwnerFilter();
-      renderPlayerTab();
-      renderCards();
+      if (activeCampaign) {
+        for (const s of saves.filter(s=>s.characterId===cid))
+          await deleteDoc(doc(db,"campaigns",activeCampaign.id,"saves",s.id));
+        const ownedItemIds = Object.entries(itemState)
+          .filter(([, state]) => state?.owner === cid)
+          .map(([itemId]) => itemId);
+
+        await Promise.all(ownedItemIds.map(itemId =>
+          persistItemState(itemId, { owner: null })
+        ));
+        await deleteDoc(doc(db,"campaigns",activeCampaign.id,"characters",cid));
+      }
+      saves=saves.filter(s=>s.characterId!==cid);
+      characters=characters.filter(c=>c.id!==cid);
+      if (selectedCharacter?.id===cid) selectedCharacter=null;
+      populateOwnerFilter(); renderPlayerTab(); renderCards();
     });
   });
 }
@@ -1389,14 +1807,18 @@ function renderMyLoot() {
   if (!el) return;
 
   const mine = myCharacters();
+
   if (!mine.length) {
     el.innerHTML = `<p class="player-empty">Create a character to see your loot.</p>`;
     return;
   }
 
-  const myCharIds    = new Set(mine.map(c => c.id));
-  const characterMap = new Map(characters.map(c => [c.id, c]));
-  const myItems      = items.filter(i => i.looted && myCharIds.has(i.owner));
+  const myCharIds = new Set(mine.map(c => c.id));
+
+  const myItems = items.filter(item => {
+    const state = getItemState(item.id);
+    return state.looted && state.owner && myCharIds.has(state.owner);
+  });
 
   if (!myItems.length) {
     el.innerHTML = `<p class="player-empty">No items assigned to you yet.</p>`;
@@ -1404,7 +1826,8 @@ function renderMyLoot() {
   }
 
   el.innerHTML = myItems.map(item => {
-    const ownerChar = characterMap.get(item.owner);
+    const ownerId = getItemState(item.id).owner;
+    const ownerChar = characters.find(c => c.id === ownerId);
     return createMiniCard(item, "loot", ownerChar?.name || "");
   }).join("");
 
@@ -1414,72 +1837,46 @@ function renderMyLoot() {
 function renderMyWishes() {
   const el = document.getElementById("myWishGrid");
   if (!el) return;
-
   const mine = myCharacters();
-  if (!mine.length) {
-    el.innerHTML = `<p class="player-empty">Create a character to save items.</p>`;
-    return;
-  }
-
-  const myCharIds   = new Set(mine.map(c => c.id));
-  const itemMap     = new Map(items.map(i => [i.id, i]));
-  const charMap     = new Map(characters.map(c => [c.id, c]));
-  const saved       = [];
-
-  for (const wish of wishes) {
-    if (!myCharIds.has(wish.characterId)) continue;
-
-    const item = itemMap.get(wish.itemId);
-    if (!item) continue;
-
-    saved.push({
-      ...item,
-      _wishChar: charMap.get(wish.characterId)?.name || "?"
-    });
-  }
-
-  if (!saved.length) {
-    el.innerHTML = `<p class="player-empty">No saved items yet. Click ☆ Save on any item in the Library.</p>`;
-    return;
-  }
-
-  el.innerHTML = saved.map(item => createMiniCard(item, "wish", item._wishChar)).join("");
+  if (!mine.length) { el.innerHTML=`<p class="player-empty">Create a character to save items.</p>`; return; }
+  const myCharIds = mine.map(c=>c.id);
+  const saved = saves
+    .filter(s=>myCharIds.includes(s.characterId))
+    .map(s=>{
+      const item=items.find(i=>i.id===s.itemId);
+      const char=characters.find(c=>c.id===s.characterId);
+      return item?{...item,_wishChar:char?.name||"?"}:null;
+    }).filter(Boolean);
+  if (!saved.length) { el.innerHTML=`<p class="player-empty">No saved items yet. Click ☆ Save on any item.</p>`; return; }
+  el.innerHTML = saved.map(item=>createMiniCard(item,"wish",item._wishChar)).join("");
   observePendingImages(el);
 }
 
-function createMiniCard(item, mode, extra = "") {
-  const rc = (item.rarity||"").toLowerCase().replaceAll(" ","-");
-  const cachedImage = item.imageUrl || getCachedImageUrl(item.id);
-  const imageSrc    = cachedImage || PLACEHOLDER_IMAGE;
-  const imageData   = cachedImage ? "" : `data-image-item-id="${item.id}"`;
-
+function createMiniCard(item, mode, extra="") {
+  const rc=(item.rarity||"").toLowerCase().replaceAll(" ","-");
   return `
     <div class="mini-card ${rc}">
-      <img src="${imageSrc}" ${imageData} class="mini-card-art" alt="${item.name}"
-        loading="lazy" decoding="async" fetchpriority="low"
-        onerror="this.src='${PLACEHOLDER_IMAGE}'">
+      ${itemImageMarkup(item, "mini-card-art")}
       <div class="mini-card-body">
         <div class="mini-card-name">${item.name}</div>
         <div class="mini-card-meta">
-          ${item.rarity   ? `<span class="meta-tag ${rc}">${item.rarity}</span>`   : ""}
-          ${item.category ? `<span class="meta-tag">${item.category}</span>`       : ""}
-          ${mode==="wish"&&extra ? `<span class="meta-tag campaign-tag">★ ${extra}</span>` : ""}
-          ${mode==="loot"&&extra ? `<span class="meta-tag" style="border-color:#27ae60;color:#1e8449">⚔ ${extra}</span>` : ""}
+          ${item.rarity  ?`<span class="meta-tag ${rc}">${item.rarity}</span>`:""}
+          ${item.category?`<span class="meta-tag">${item.category}</span>`:""}
+          ${mode==="wish"&&extra?`<span class="meta-tag campaign-tag">★ ${extra}</span>`:""}
+          ${mode==="loot"&&extra?`<span class="meta-tag" style="border-color:#27ae60;color:#1e8449">⚔ ${extra}</span>`:""}
         </div>
-        ${item.attunement ? `<div class="mini-card-attune">Requires Attunement</div>` : ""}
+        ${item.attunement?`<div class="mini-card-attune">Requires Attunement</div>`:""}
       </div>
     </div>`;
 }
 
 // ─── EDIT CHARACTER MODAL ─────────────────────────────────────────────────────
 
-function openEditCharacterModal(charId, charName, charClass, charLevel = "", charCampaign = "") {
+function openEditCharacterModal(charId, charName, charClass, charLevel = "") {
   document.getElementById("editChar-name").value  = charName;
   document.getElementById("editChar-class").value = charClass;
   document.getElementById("editChar-level").value = charLevel;
-  const campSel = document.getElementById("editChar-campaign");
-  campSel.innerHTML = `<option value="">No Campaign</option>` +
-    availableCampaigns().map(c => `<option ${c===charCampaign?"selected":""}>${c}</option>`).join("");
+
   document.getElementById("editCharModal").dataset.charId = charId;
   document.getElementById("editCharModal").style.display  = "flex";
 }
@@ -1487,58 +1884,81 @@ function openEditCharacterModal(charId, charName, charClass, charLevel = "", cha
 function closeEditCharacterModal() { document.getElementById("editCharModal").style.display = "none"; }
 
 async function saveEditCharacter() {
-  const charId      = document.getElementById("editCharModal").dataset.charId;
-  const newName     = document.getElementById("editChar-name").value.trim();
-  const newClass    = document.getElementById("editChar-class").value;
-  const newLevel    = parseInt(document.getElementById("editChar-level").value) || null;
-  const newCampaign = document.getElementById("editChar-campaign").value || null;
-  if (!newName) { alert("Character name is required."); return; }
-  if (newLevel !== null && (newLevel < 1 || newLevel > 20)) { alert("Level must be 1–20."); return; }
-  const changes = { name: newName, class: newClass, level: newLevel, campaign: newCampaign };
-  await updateDoc(doc(db, "characters", charId), changes);
+  const charId   = document.getElementById("editCharModal").dataset.charId;
+  const newName  = document.getElementById("editChar-name").value.trim();
+  const newClass = document.getElementById("editChar-class").value;
+  const newLevel = parseInt(document.getElementById("editChar-level").value) || null;
+
+  if (!newName) {
+    alert("Character name is required.");
+    return;
+  }
+
+  if (newLevel !== null && (newLevel < 1 || newLevel > 20)) {
+    alert("Level must be 1–20.");
+    return;
+  }
+
+  const changes = {
+    name: newName,
+    class: newClass,
+    level: newLevel
+  };
+
+  if (activeCampaign) {
+    await updateDoc(
+      doc(db, "campaigns", activeCampaign.id, "characters", charId),
+      changes
+    );
+  }
+
   const idx = characters.findIndex(c => c.id === charId);
   if (idx !== -1) characters[idx] = { ...characters[idx], ...changes };
+
   if (selectedCharacter?.id === charId) selectedCharacter = characters[idx];
+
   closeEditCharacterModal();
   populateOwnerFilter();
   renderPlayerTab();
-  if (isAdmin()) { renderUserTable(); renderAdminStats(); }
+
+  if (isAdmin()) {
+    renderUserTable();
+    renderAdminStats();
+  }
+
   renderCards();
 }
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 
 function showTab(tabId) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.querySelectorAll(".tab-content").forEach(c => c.style.display = "none");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(c=>c.style.display="none");
   const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
   if (btn) btn.classList.add("active");
   const panel = document.getElementById(`tab-${tabId}`);
-  if (panel) panel.style.display = "block";
-  if (tabId === "admin")  { renderUserTable(); renderAdminStats(); }
-  if (tabId === "player") { renderPlayerTab(); populateCreateCharCampaigns(); }
-  if (tabId === "dm")     { renderCampaignList(); }
+  if (panel) panel.style.display="block";
+  if (tabId==="admin")   { renderUserTable(); renderAdminStats(); }
+  if (tabId==="player")  { renderPlayerTab(); }
+  if (tabId==="library") { renderVisibilityControls(); }
 }
 
 function initTabs() {
-  document.querySelectorAll(".tab").forEach(btn => {
-    btn.addEventListener("click", () => showTab(btn.dataset.tab));
+  document.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>showTab(btn.dataset.tab));
   });
 }
 
 // ─── FILTER LISTENERS ────────────────────────────────────────────────────────
 
-function debounce(fn, wait = 160) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), wait);
-  };
-}
-
 function initFilterListeners() {
+  let searchTimer = null;
+
   const search = document.getElementById("search");
-  if (search) search.addEventListener("input", debounce(renderCards, 140));
+  search?.addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(renderCards, 140);
+  });
 
   [
     "ownerFilter","rarityFilter","sourceFilter","campaignFilter",
@@ -1555,12 +1975,18 @@ function initFilterListeners() {
 // ─── MODAL LISTENERS ─────────────────────────────────────────────────────────
 
 function initModalListeners() {
-  document.getElementById("addItemBtn")?.addEventListener("click",      () => openItemModal());
+  document.getElementById("addItemBtn")?.addEventListener("click",      ()=>openItemModal());
   document.getElementById("closeItemModal")?.addEventListener("click",  closeItemModal);
   document.getElementById("cancelItemModal")?.addEventListener("click", closeItemModal);
   document.getElementById("saveItemModal")?.addEventListener("click",   saveItemModal);
 
-  document.getElementById("openAddUserBtn")?.addEventListener("click",  () => openUserModal());
+  // Property editor — add new row
+  document.getElementById("addPropertyBtn")?.addEventListener("click", ()=>{
+    const list = document.getElementById("modal-properties-list");
+    if (list) list.appendChild(createPropertyRow());
+  });
+
+  document.getElementById("openAddUserBtn")?.addEventListener("click",  ()=>openUserModal());
   document.getElementById("closeUserModal")?.addEventListener("click",  closeUserModal);
   document.getElementById("cancelUserModal")?.addEventListener("click", closeUserModal);
   document.getElementById("saveUserModal")?.addEventListener("click",   saveUserModal);
@@ -1572,75 +1998,96 @@ function initModalListeners() {
   document.getElementById("closeWishModal")?.addEventListener("click",    closeWishModal);
   document.getElementById("closeWishModalBtn")?.addEventListener("click", closeWishModal);
 
-  // Campaign modal
-  document.getElementById("openCreateCampaignBtn")?.addEventListener("click", () => openCampaignModal());
+  document.getElementById("openCreateCampaignBtn")?.addEventListener("click", ()=>openCampaignModal());
   document.getElementById("closeCampaignModal")?.addEventListener("click",    closeCampaignModal);
   document.getElementById("cancelCampaignModal")?.addEventListener("click",   closeCampaignModal);
   document.getElementById("saveCampaignModal")?.addEventListener("click",     saveCampaignModal);
 
-  // Edit item modal
-  document.getElementById("addPropertyBtn")
-  ?.addEventListener("click", () => {
-
-    const container =
-      document.getElementById("modal-properties-list");
-
-    container.appendChild(
-      createPropertyRow()
-    );
-
-  });
+  // Leave campaign button
+  document.getElementById("leaveCampaignBtn")?.addEventListener("click", leaveCampaign);
 
   // Create character
   document.getElementById("playerCreateCharBtn")?.addEventListener("click", async () => {
-    const name     = document.getElementById("playerCharName").value.trim();
-    const cls      = document.getElementById("playerCharClass").value;
-    const level    = parseInt(document.getElementById("playerCharLevel").value) || null;
-    const campaign = document.getElementById("playerCharCampaign").value || null;
-    if (!name) { alert("Enter a character name."); return; }
-    if (level !== null && (level < 1 || level > 20)) { alert("Level must be 1–20."); return; }
-    const newRef = await addDoc(collection(db, "characters"), {
-      name, class: cls, level, campaign,
-      userId: auth.currentUser.uid, active: true, created: Date.now()
-    });
-    const newChar = { id: newRef.id, name, class: cls, level, campaign,
-      userId: auth.currentUser.uid, active: true, created: Date.now() };
+    if (!activeCampaign) {
+      alert("No active campaign.");
+      return;
+    }
+
+    if (!canUseCharacters()) {
+      alert("You do not have permission to create characters in this campaign.");
+      return;
+    }
+
+    if (myCharacters().length >= 10) {
+      alert("You can have a maximum of 10 active characters in one campaign.");
+      return;
+    }
+
+    const name  = document.getElementById("playerCharName").value.trim();
+    const cls   = document.getElementById("playerCharClass").value;
+    const level = parseInt(document.getElementById("playerCharLevel").value) || null;
+
+    if (!name) {
+      alert("Enter a character name.");
+      return;
+    }
+
+    if (level !== null && (level < 1 || level > 20)) {
+      alert("Level must be 1–20.");
+      return;
+    }
+
+    const data = {
+      name,
+      class: cls,
+      level,
+      userId: auth.currentUser.uid,
+      active: true,
+      created: Date.now()
+    };
+
+    const newRef = await addDoc(
+      collection(db, "campaigns", activeCampaign.id, "characters"),
+      data
+    );
+
+    const newChar = { id: newRef.id, ...data };
     characters.push(newChar);
     selectedCharacter = newChar;
-    document.getElementById("playerCharName").value  = "";
+
+    document.getElementById("playerCharName").value = "";
     document.getElementById("playerCharLevel").value = "";
-    const playerTab = document.getElementById("playerTab");
-    if (playerTab) playerTab.style.display = "inline-block";
+
     renderPlayerTab();
+    populateOwnerFilter();
     renderCards();
   });
 
-  document.querySelectorAll(".modal").forEach(modal => {
-    modal.addEventListener("click", e => { if (e.target === modal) modal.style.display = "none"; });
+  document.querySelectorAll(".modal").forEach(modal=>{
+    modal.addEventListener("click", e=>{ if(e.target===modal) modal.style.display="none"; });
   });
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape")
-      document.querySelectorAll(".modal").forEach(m => m.style.display = "none");
+  document.addEventListener("keydown", e=>{
+    if (e.key==="Escape") document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
   });
 }
 
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 
-document.getElementById("loginButton")?.addEventListener("click", async () => {
-  try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); }
+document.getElementById("loginButton")?.addEventListener("click", async ()=>{
+  try { await signInWithPopup(auth, provider); } catch(e) { console.error(e); }
 });
 
-document.getElementById("emailLoginButton")?.addEventListener("click", async () => {
+document.getElementById("emailLoginButton")?.addEventListener("click", async ()=>{
   try {
     await signInWithEmailAndPassword(
       auth,
       document.getElementById("emailInput").value,
       document.getElementById("passwordInput").value
     );
-  } catch (e) { alert(e.message); }
+  } catch(e) { alert(e.message); }
 });
 
-document.getElementById("registerButton")?.addEventListener("click", async () => {
+document.getElementById("registerButton")?.addEventListener("click", async ()=>{
   try {
     await createUserWithEmailAndPassword(
       auth,
@@ -1648,10 +2095,16 @@ document.getElementById("registerButton")?.addEventListener("click", async () =>
       document.getElementById("passwordInput").value
     );
     alert("Account created! You can now log in.");
-  } catch (e) { alert(e.message); }
+  } catch(e) { alert(e.message); }
 });
 
 document.getElementById("logoutButton")?.addEventListener("click", async () => {
+  activeCampaign = null;
+  activeMembershipRole = null;
+  selectedCharacter = null;
+  characters = [];
+  saves = [];
+  itemState = {};
   await signOut(auth);
 });
 
@@ -1661,58 +2114,76 @@ onAuthStateChanged(auth, async (firebaseUser) => {
   const loginControls = document.getElementById("loginControls");
   const logoutBtn     = document.getElementById("logoutButton");
   const display       = document.getElementById("userDisplay");
-  const adminTab      = document.getElementById("adminTab");
-  const dmTab         = document.getElementById("dmTab");
-  const playerTab     = document.getElementById("playerTab");
-  const addBtn        = document.getElementById("addItemBtn");
-  const adminPanel    = document.getElementById("adminPanel");
 
   if (firebaseUser) {
-    await loadCurrentUser(firebaseUser);
-    display.textContent = currentUser.name || firebaseUser.email;
+    try {
+      await loadCurrentUser(firebaseUser);
 
-    if (loginControls) loginControls.style.display = "none";
-    if (logoutBtn)     logoutBtn.style.display      = "inline-block";
+      display.textContent = currentUser.name || firebaseUser.email;
 
-    await importItemsIfEmpty();
+      if (loginControls) loginControls.style.display = "none";
+      if (logoutBtn)     logoutBtn.style.display = "inline-block";
 
-    // Start independent Firestore reads together instead of serially.
-    await Promise.all([
-      loadUsers(),
-      loadCharacters(),
-      loadWishes(),
-      loadCampaigns(),
-      loadItemsFromFirestore()
-    ]);
+      // One-document catalogue existence check. The expensive legacy items.js
+      // import happens only on a genuinely empty database.
+      await importItemsIfEmpty();
 
-    populateSourceFilter();
-    populateCampaignFilter();
-    populateOwnerFilter();
-    renderCards();
+      // Start the large catalogue read in parallel. The user can see/select a
+      // campaign before item cards and Storage URLs have finished resolving.
+      itemsLoadPromise = loadItemsFromFirestore().catch(e => {
+        console.error("Item catalogue load failed:", e);
+        throw e;
+      });
 
-    // Tab visibility by role
-    if (adminTab)   adminTab.style.display   = isAdmin() ? "inline-block" : "none";
-    if (addBtn)     addBtn.style.display     = isAdmin() ? "inline-block" : "none";
-    if (adminPanel) adminPanel.style.display = isAdmin() ? "block"        : "none";
-    if (dmTab)      dmTab.style.display      = isDM()    ? "inline-block" : "none";
+      await Promise.all([
+        loadCampaigns(),
+        isAdmin() ? loadUsers() : Promise.resolve()
+      ]);
 
-    if (playerTab) {
-      playerTab.style.display = isPlayer() ? "inline-block" : "none";
+      showCampaignSelector();
+
+      // Do not block the campaign selector on catalogue painting.
+      itemsLoadPromise.catch(() => {});
+
+    } catch (e) {
+      console.error("Startup failed:", e);
+      display.textContent = "Failed to load account";
     }
 
-    if (isAdmin()) { renderUserTable(); renderAdminStats(); }
-
   } else {
-    currentUser = null; selectedCharacter = null;
+    currentUser = null;
+    activeCampaign = null;
+    activeMembershipRole = null;
+    selectedCharacter = null;
+
+    items = [];
+    characters = [];
+    saves = [];
+    users = [];
+    campaigns = [];
+    itemState = {};
+    itemsLoadPromise = Promise.resolve();
+
     display.textContent = "Not logged in";
+
     if (loginControls) loginControls.style.display = "block";
-    if (logoutBtn)     logoutBtn.style.display      = "none";
-    if (adminTab)      adminTab.style.display        = "none";
-    if (dmTab)         dmTab.style.display           = "none";
-    if (playerTab)     playerTab.style.display       = "none";
-    if (addBtn)        addBtn.style.display           = "none";
-    if (adminPanel)    adminPanel.style.display       = "none";
-    items = []; wishes = []; renderCards();
+    if (logoutBtn)     logoutBtn.style.display = "none";
+
+    hideAllScreens();
+
+    const selectorScreen = document.getElementById("campaignSelectorScreen");
+    if (selectorScreen) selectorScreen.style.display = "flex";
+
+    const list = document.getElementById("campaignSelectorList");
+    if (list) {
+      list.innerHTML = `
+        <div class="campaign-selector-empty">
+          <p>Please log in to continue.</p>
+        </div>`;
+    }
+
+    const dmActions = document.getElementById("dmSelectorActions");
+    if (dmActions) dmActions.style.display = "none";
   }
 });
 
