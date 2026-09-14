@@ -385,7 +385,7 @@ body {
   font-size: 0.72rem;
   font-weight: bold;
   letter-spacing: 1px;
-  padding: 8px 16px;
+  padding: 6px 8px;
   text-transform: uppercase;
   box-shadow: 0 3px 8px rgba(0,0,0,0.22);
   transition: transform 0.15s, box-shadow 0.15s;
@@ -1616,3 +1616,4 @@ input::placeholder, textarea::placeholder { color: #8a7355; font-style: italic; 
   .item-card, .mini-card, .wish-modal-card, .campaign-selector-card { transition: none; }
   .item-card:hover, .mini-card:hover, .wish-modal-card:hover, .campaign-selector-card:hover { transform: none; }
 }
+

@@ -1,0 +1,134 @@
+/* D&D Item Vault — Unified action button theme
+   Load AFTER your main style.css.
+   Keeps primary CTA buttons (Create Character, New Campaign, toolbar buttons) unchanged.
+*/
+
+:root {
+  --action-bg: rgba(212, 175, 55, 0.12);
+  --action-bg-hover: rgba(212, 175, 55, 0.22);
+  --action-bg-active: rgba(212, 175, 55, 0.30);
+  --action-border: #c79c32;
+  --action-text: #7d6608;
+  --action-text-strong: #5c1d1d;
+  --action-danger: #8b2d2d;
+  --action-danger-bg: rgba(139, 45, 45, 0.08);
+  --action-danger-hover: rgba(139, 45, 45, 0.15);
+}
+
+/* Shared badge-style action buttons */
+.item-card .loot-button,
+.item-card .highlight-button,
+.item-card .edit-button,
+.item-card .clone-button,
+.item-card .save-edit-button,
+.item-card .cancel-button,
+.item-card .save-item-button,
+.item-card .delete-item-button,
+.item-card .visibility-toggle-btn,
+#tab-admin .btn-sm,
+#tab-admin .edit-button,
+#tab-admin .cancel-button,
+.character-card-actions .btn-select-char,
+.character-card-actions .btn-rename-char,
+.character-card-actions .btn-delete-char,
+.visibility-bulk .vis-show-btn,
+.visibility-bulk .vis-hide-btn {
+  background: var(--action-bg) !important;
+  border: 1px solid var(--action-border) !important;
+  border-radius: 4px;
+  color: var(--action-text) !important;
+  cursor: pointer;
+  font-family: "Cinzel", serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1.35;
+  opacity: 1;
+  padding: 3px 8px;
+  text-transform: uppercase;
+  box-shadow: none;
+  transition: background 0.15s ease, border-color 0.15s ease,
+              color 0.15s ease, transform 0.15s ease;
+}
+
+.item-card .loot-button:hover,
+.item-card .highlight-button:hover,
+.item-card .edit-button:hover,
+.item-card .clone-button:hover,
+.item-card .save-edit-button:hover,
+.item-card .cancel-button:hover,
+.item-card .save-item-button:hover,
+.item-card .delete-item-button:hover,
+.item-card .visibility-toggle-btn:hover,
+#tab-admin .btn-sm:hover,
+#tab-admin .edit-button:hover,
+#tab-admin .cancel-button:hover,
+.character-card-actions .btn-select-char:hover,
+.character-card-actions .btn-rename-char:hover,
+.character-card-actions .btn-delete-char:hover,
+.visibility-bulk .vis-show-btn:hover,
+.visibility-bulk .vis-hide-btn:hover {
+  background: var(--action-bg-hover) !important;
+  border-color: #a97f22 !important;
+  color: var(--action-text-strong) !important;
+  transform: translateY(-1px);
+  opacity: 1;
+}
+
+/* Selected / active states use one stronger gold treatment instead of new colors */
+.item-card.looted .loot-button,
+.item-card.highlighted .highlight-button,
+.item-card .save-item-button.saved,
+.item-card .visibility-toggle-btn.visible,
+.character-card--active .btn-select-char {
+  background: var(--action-bg-active) !important;
+  border-color: #a97f22 !important;
+  color: var(--action-text-strong) !important;
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,0.18);
+}
+
+/* Hidden remains neutral/muted rather than grey */
+.item-card .visibility-toggle-btn.hidden-item {
+  background: rgba(138, 115, 85, 0.10) !important;
+  border-color: #a99474 !important;
+  color: #6f604c !important;
+}
+
+/* Destructive actions: same badge shape, only a restrained crimson cue */
+.item-card .delete-item-button,
+#tab-admin [data-delete-user],
+#tab-admin [data-delete-char],
+.character-card-actions .btn-delete-char {
+  background: var(--action-danger-bg) !important;
+  border-color: rgba(139,45,45,0.55) !important;
+  color: var(--action-danger) !important;
+}
+
+.item-card .delete-item-button:hover,
+#tab-admin [data-delete-user]:hover,
+#tab-admin [data-delete-char]:hover,
+.character-card-actions .btn-delete-char:hover {
+  background: var(--action-danger-hover) !important;
+  border-color: var(--action-danger) !important;
+  color: #6b1717 !important;
+}
+
+/* Keep the primary CTA language you said you like */
+.btn-primary,
+.player-create-row button,
+.toolbar > button,
+.toolbar-btn,
+#openCreateCampaignBtn,
+#playerCreateCharBtn,
+#openAddUserBtn {
+  /* Intentionally inherits the existing red/gold primary-button design. */
+}
+
+/* Active badge visually belongs to the same family */
+.active-badge,
+.role-badge {
+  background: var(--action-bg);
+  border: 1px solid var(--action-border);
+  border-radius: 4px;
+  color: var(--action-text);
+}
