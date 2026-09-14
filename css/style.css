@@ -26,6 +26,21 @@ body {
   z-index: 100;
 }
 
+.site-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-logo {
+  width: 55px;
+  height: 55px;
+  max-width: 55px;
+  max-height: 55px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .site-title {
   font-family: "Cinzel", serif;
   font-size: 1.4rem;
