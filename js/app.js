@@ -3,8 +3,6 @@
 import { db, storage, auth, provider, signInWithPopup, signOut }
   from "./firebase.js";
 
-import { items as sourceItems } from "./items.js";
-
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -13,7 +11,7 @@ import {
 
 import {
   collection, getDocs, addDoc, doc, getDoc,
-  setDoc, updateDoc, deleteDoc
+  setDoc, updateDoc, deleteDoc, query, limit
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 import { ref, getDownloadURL, uploadBytes }
@@ -106,17 +104,92 @@ function getBaseImageId(itemId) {
   return base.replace(/[-_\s]+/g, "-").replace(/^[-_]+|[-_]+$/g, "") || itemId;
 }
 
+const IMAGE_SESSION_PREFIX = "dnd-item-image:";
+
+function getCachedImageUrl(itemId) {
+  if (!itemId) return "";
+  if (imageCache.has(itemId)) return imageCache.get(itemId);
+
+  try {
+    const cached = sessionStorage.getItem(IMAGE_SESSION_PREFIX + itemId);
+    if (cached) {
+      imageCache.set(itemId, cached);
+      return cached;
+    }
+  } catch {}
+
+  return "";
+}
+
+function cacheImageUrl(itemId, url) {
+  if (!itemId || !url) return;
+  imageCache.set(itemId, url);
+  try { sessionStorage.setItem(IMAGE_SESSION_PREFIX + itemId, url); } catch {}
+}
+
 async function loadStorageImage(path) {
   try { return await getDownloadURL(ref(storage, path)); }
-  catch (e) { console.warn(`Image not found: ${path}`); return ""; }
+  catch (e) {
+    console.warn(`Image not found: ${path}`);
+    return "";
+  }
 }
 
 async function resolveImageUrl(itemId) {
-  if (imageCache.has(itemId)) return imageCache.get(itemId);
-  const url      = await loadStorageImage(`dnd-item-images/${getBaseImageId(itemId)}.png`);
-  const resolved = url || PLACEHOLDER_IMAGE;
-  imageCache.set(itemId, resolved);
-  return resolved;
+  const cached = getCachedImageUrl(itemId);
+  if (cached) return cached;
+
+  const url = await loadStorageImage(`dnd-item-images/${getBaseImageId(itemId)}.png`);
+  if (url) cacheImageUrl(itemId, url);
+  return url || PLACEHOLDER_IMAGE;
+}
+
+const imageObserver = "IntersectionObserver" in window
+  ? new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+
+        const img = entry.target;
+        observer.unobserve(img);
+
+        const itemId = img.dataset.imageItemId;
+        if (!itemId) return;
+
+        resolveImageUrl(itemId).then(url => {
+          if (!img.isConnected) return;
+          img.src = url;
+
+          const item = items.find(i => i.id === itemId);
+          if (item && url !== PLACEHOLDER_IMAGE) item.imageUrl = url;
+
+          delete img.dataset.imageItemId;
+        });
+      });
+    }, { rootMargin: "500px 0px" })
+  : null;
+
+function observePendingImages(root = document) {
+  const pending = root.querySelectorAll?.("img[data-image-item-id]") || [];
+
+  pending.forEach(img => {
+    const cached = getCachedImageUrl(img.dataset.imageItemId);
+    if (cached) {
+      img.src = cached;
+      delete img.dataset.imageItemId;
+      return;
+    }
+
+    if (imageObserver) {
+      imageObserver.observe(img);
+    } else {
+      const itemId = img.dataset.imageItemId;
+      resolveImageUrl(itemId).then(url => {
+        if (!img.isConnected) return;
+        img.src = url;
+        delete img.dataset.imageItemId;
+      });
+    }
+  });
 }
 
 async function uploadItemImage(itemId, file) {
@@ -125,7 +198,7 @@ async function uploadItemImage(itemId, file) {
   try {
     await uploadBytes(imgRef, file, { contentType: file.type || "image/png" });
     const url = await getDownloadURL(imgRef);
-    imageCache.set(itemId, url); // bust cache with real URL
+    cacheImageUrl(itemId, url); // bust cache with real URL
     return url;
   } catch (e) {
     console.error("Image upload failed:", e);
@@ -211,16 +284,12 @@ async function loadCurrentUser(firebaseUser) {
 
 async function loadItemsFromFirestore() {
   const snap = await getDocs(collection(db, "items"));
-  items = await Promise.all(
-    snap.docs.map(async d => {
-      const item    = { id: d.id, ...d.data() };
-      item.imageUrl = await resolveImageUrl(item.id);
-      return item;
-    })
-  );
-  renderCards();
-  populateSourceFilter();
-  populateCampaignFilter();
+  items = snap.docs.map(d => {
+    const item = { id: d.id, ...d.data() };
+    const cachedImage = getCachedImageUrl(item.id);
+    if (cachedImage) item.imageUrl = cachedImage;
+    return item;
+  });
 }
 
 async function loadCharacters() {
@@ -248,9 +317,14 @@ async function loadCampaigns() {
 }
 
 async function importItemsIfEmpty() {
-  const snap = await getDocs(collection(db, "items"));
+  // Only read one document to check whether the collection has data.
+  // items.js is loaded dynamically only when a seed/import is actually needed.
+  const snap = await getDocs(query(collection(db, "items"), limit(1)));
   if (!snap.empty) return;
+
   console.log("Firestore empty — importing items…");
+  const { items: sourceItems } = await import("./items.js");
+
   for (const item of sourceItems) {
     await setDoc(doc(db, "items", item.id), {
       ...item, looted: false, highlighted: false, owner: null, receivedDate: null
@@ -274,7 +348,9 @@ function rerenderCard(itemId) {
   const item    = items.find(i => i.id === itemId);
   const oldCard = container.querySelector(`[data-item-id="${itemId}"]`);
   if (!item || !oldCard) return;
-  oldCard.replaceWith(createCard(item));
+  const newCard = createCard(item, buildRenderContext());
+  oldCard.replaceWith(newCard);
+  observePendingImages(newCard);
   refreshStatsBar();
 }
 
@@ -282,19 +358,61 @@ function rerenderCard(itemId) {
 
 const container = document.getElementById("card-container");
 
-function renderCards() {
-  const filtered = applyFilters([...items]);
-  container.innerHTML = "";
-  filtered.forEach(item => container.appendChild(createCard(item)));
-  refreshStatsBar();
+function buildRenderContext() {
+  const characterById = new Map(characters.map(c => [c.id, c]));
+  const userById      = new Map(users.map(u => [u.id, u]));
+  const wishesByItem  = new Map();
+
+  for (const wish of wishes) {
+    if (!wishesByItem.has(wish.itemId)) wishesByItem.set(wish.itemId, []);
+    wishesByItem.get(wish.itemId).push(wish);
+  }
+
+  const selectedWishByItem = new Map();
+  if (selectedCharacter) {
+    for (const wish of wishes) {
+      if (wish.characterId === selectedCharacter.id) {
+        selectedWishByItem.set(wish.itemId, wish);
+      }
+    }
+  }
+
+  return {
+    characterById,
+    userById,
+    wishesByItem,
+    selectedWishByItem,
+    playableChars: allPlayableCharacters()
+  };
 }
 
-function refreshStatsBar() {
-  const filtered = applyFilters([...items]);
+function renderCards() {
+  const filtered = applyFilters(items);
+  const context  = buildRenderContext();
+  const fragment = document.createDocumentFragment();
+
+  for (const item of filtered) {
+    fragment.appendChild(createCard(item, context));
+  }
+
+  container.replaceChildren(fragment);
+
   updateStats(
     filtered.length,
     filtered.filter(i => i.looted).length,
     filtered.filter(i => i.highlighted).length,
+    wishes.length
+  );
+
+  observePendingImages(container);
+}
+
+function refreshStatsBar(filtered = null) {
+  const result = filtered || applyFilters(items);
+  updateStats(
+    result.length,
+    result.filter(i => i.looted).length,
+    result.filter(i => i.highlighted).length,
     wishes.length
   );
 }
@@ -302,29 +420,39 @@ function refreshStatsBar() {
 function applyFilters(list) {
   const val = id => document.getElementById(id)?.value || "";
   const chk = id => document.getElementById(id)?.checked ?? false;
-  const search   = val("search").toLowerCase();
+
+  const search   = val("search").trim().toLowerCase();
   const rarity   = val("rarityFilter");
   const source   = val("sourceFilter");
   const campaign = val("campaignFilter");
   const cls      = val("classFilter");
   const category = val("categoryFilter");
   const owner    = val("ownerFilter");
+
+  const showSavedOnly = chk("showSavedOnly");
+  const savedItemIds   = showSavedOnly ? new Set(wishes.map(w => w.itemId)) : null;
+
   return list.filter(item => {
-    if (search   && !((item.name||"").toLowerCase().includes(search) ||
-                      (item.description||"").toLowerCase().includes(search))) return false;
-    if (rarity   && item.rarity   !== rarity)    return false;
-    if (source   && item.source   !== source)    return false;
-    if (campaign && item.campaign !== campaign)  return false;
-    if (category && item.category !== category)  return false;
+    if (search && !(
+      (item.name || "").toLowerCase().includes(search) ||
+      (item.description || "").toLowerCase().includes(search)
+    )) return false;
+
+    if (rarity   && item.rarity   !== rarity)   return false;
+    if (source   && item.source   !== source)   return false;
+    if (campaign && item.campaign !== campaign) return false;
+    if (category && item.category !== category) return false;
     if (cls      && !item.classes?.includes(cls)) return false;
-    if (owner    && item.owner    !== owner)     return false;
+    if (owner    && item.owner !== owner) return false;
+
     if (chk("showLootedOnly")         && !item.looted)      return false;
     if (chk("showUnlootedOnly")       &&  item.looted)      return false;
-    if (chk("showSavedOnly")          && !wishes.some(w => w.itemId === item.id)) return false;
+    if (showSavedOnly                 && !savedItemIds.has(item.id)) return false;
     if (chk("showAttunementOnly")     && !item.attunement)  return false;
     if (chk("showNoAttunementOnly")   &&  item.attunement)  return false;
     if (chk("showHighlightedOnly")    && !item.highlighted) return false;
     if (chk("showNotHighlightedOnly") &&  item.highlighted) return false;
+
     return true;
   });
 }
@@ -332,26 +460,32 @@ function applyFilters(list) {
 // ─── OWNER HELPERS ────────────────────────────────────────────────────────────
 
 function allPlayableCharacters() {
-  const playerIds = users
-    .filter(u => {
-      const r = u.role;
-      return Array.isArray(r)
-        ? r.some(x => ["player","dm","admin"].includes(x))
-        : ["player","dm","admin"].includes(r);
-    })
-    .map(u => u.id);
-  return characters.filter(c => playerIds.includes(c.userId) && c.active !== false);
+  const playerIds = new Set(
+    users
+      .filter(u => {
+        const r = u.role;
+        return Array.isArray(r)
+          ? r.some(x => ["player","dm","admin"].includes(x))
+          : ["player","dm","admin"].includes(r);
+      })
+      .map(u => u.id)
+  );
+
+  return characters.filter(c => playerIds.has(c.userId) && c.active !== false);
 }
 
-function characterDisplayName(char) {
+function characterDisplayName(char, userById = null) {
   if (!char) return "";
-  const owner = users.find(u => u.id === char.userId);
+  const owner = userById
+    ? userById.get(char.userId)
+    : users.find(u => u.id === char.userId);
+
   return `${char.name} (${char.class})${owner ? " — " + (owner.name || owner.email) : ""}`;
 }
 
 // ─── CREATE CARD ──────────────────────────────────────────────────────────────
 
-function createCard(item) {
+function createCard(item, context = buildRenderContext()) {
   const card = document.createElement("div");
   card.classList.add("item-card");
   card.dataset.itemId = item.id;
@@ -364,22 +498,27 @@ function createCard(item) {
   if (item.looted)      card.classList.add("looted");
   if (item.highlighted) card.classList.add("highlighted");
 
-  const itemSaves  = wishes.filter(w => w.itemId === item.id);
-  const mySave     = selectedCharacter
-    ? wishes.find(w => w.itemId === item.id && w.characterId === selectedCharacter.id)
+  const itemSaves = context.wishesByItem.get(item.id) || [];
+  const mySave    = selectedCharacter
+    ? context.selectedWishByItem.get(item.id) || null
     : null;
-  const saveNames  = itemSaves.map(w => {
-    const c = characters.find(ch => ch.id === w.characterId);
+
+  const saveNames = itemSaves.map(w => {
+    const c = context.characterById.get(w.characterId);
     return c ? `${c.name} (${c.class})` : "Unknown";
   }).join(", ");
 
-  const canSave    = isPlayer() && selectedCharacter !== null;
-  const needsChar  = isPlayer() && !admin && selectedCharacter === null;
+  const canSave      = isPlayer() && selectedCharacter !== null;
+  const needsChar    = isPlayer() && !admin && selectedCharacter === null;
   const showSaveInfo = admin || !!mySave;
 
-  const ownerChar     = characters.find(c => c.id === item.owner);
+  const ownerChar     = context.characterById.get(item.owner);
   const ownerName     = ownerChar ? `${ownerChar.name} (${ownerChar.class})` : "";
-  const playableChars = allPlayableCharacters();
+  const playableChars = context.playableChars;
+
+  const cachedImage = item.imageUrl || getCachedImageUrl(item.id);
+  const imageSrc    = cachedImage || PLACEHOLDER_IMAGE;
+  const imageData   = cachedImage ? "" : `data-image-item-id="${item.id}"`;
 
   card.innerHTML = `
     <div class="watermark">LOOTED</div>
@@ -454,17 +593,17 @@ function createCard(item) {
 
     ${isEditing ? `
       <div class="card-image-edit">
-        <img src="${item.imageUrl || PLACEHOLDER_IMAGE}" class="card-art card-art--edit"
-          alt="${item.name}" loading="lazy" onerror="this.src='${PLACEHOLDER_IMAGE}'">
+        <img src="${imageSrc}" ${imageData} class="card-art card-art--edit"
+          alt="${item.name}" loading="lazy" decoding="async" fetchpriority="low" onerror="this.src='${PLACEHOLDER_IMAGE}'">
         <label class="upload-image-btn upload-image-btn--overlay" title="Upload or replace image">
-          📷 ${item.imageUrl && item.imageUrl !== PLACEHOLDER_IMAGE ? "Replace Image" : "Upload Image"}
+          📷 ${cachedImage ? "Replace Image" : "Upload Image"}
           <input type="file" class="image-file-input" accept="image/*" style="display:none">
         </label>
         <span class="upload-progress" style="display:none">Uploading…</span>
       </div>
     ` : `
-      <img src="${item.imageUrl || PLACEHOLDER_IMAGE}" class="card-art" alt="${item.name}"
-        loading="lazy" onerror="this.src='${PLACEHOLDER_IMAGE}'">
+      <img src="${imageSrc}" ${imageData} class="card-art" alt="${item.name}"
+        loading="lazy" decoding="async" fetchpriority="low" onerror="this.src='${PLACEHOLDER_IMAGE}'">
     `}
 
     <div class="card-body">
@@ -493,7 +632,7 @@ function createCard(item) {
         <select class="owner-select">
           <option value="">No Owner</option>
           ${playableChars.map(c => `
-            <option value="${c.id}" ${item.owner===c.id?"selected":""}>${characterDisplayName(c)}</option>
+            <option value="${c.id}" ${item.owner===c.id?"selected":""}>${characterDisplayName(c, context.userById)}</option>
           `).join("")}
         </select>
       </div>
@@ -595,7 +734,9 @@ function attachCardEvents(card, item) {
     });
     await loadItemsFromFirestore();
     editingItems.add(cloneId);
-    rerenderCard(cloneId);
+    populateSourceFilter();
+    populateCampaignFilter();
+    renderCards();
   });
 
   // Owner assign
@@ -788,6 +929,9 @@ async function saveItemModal() {
     );
     closeItemModal();
     await loadItemsFromFirestore();
+    populateSourceFilter();
+    populateCampaignFilter();
+    renderCards();
   } else {
     await updateDoc(doc(db, "items", editId), data);
     closeItemModal();
@@ -1082,9 +1226,14 @@ function openWishModal(charId, charName) {
     ? `<p class="player-empty" style="grid-column:1/-1">No saved items for this character.</p>`
     : wishedItems.map(item => {
         const rc = (item.rarity||"").toLowerCase().replaceAll(" ","-");
+        const cachedImage = item.imageUrl || getCachedImageUrl(item.id);
+        const imageSrc    = cachedImage || PLACEHOLDER_IMAGE;
+        const imageData   = cachedImage ? "" : `data-image-item-id="${item.id}"`;
         return `
           <div class="wish-modal-card ${rc}">
-            ${item.imageUrl ? `<img src="${item.imageUrl}" class="wish-modal-art" alt="${item.name}" onerror="this.src='${PLACEHOLDER_IMAGE}'">` : ""}
+            <img src="${imageSrc}" ${imageData} class="wish-modal-art" alt="${item.name}"
+              loading="lazy" decoding="async" fetchpriority="low"
+              onerror="this.src='${PLACEHOLDER_IMAGE}'">
             <div class="wish-modal-body">
               <div class="wish-modal-name">${item.name}</div>
               <div class="card-meta" style="margin-top:4px">
@@ -1102,6 +1251,7 @@ function openWishModal(charId, charName) {
       }).join("");
 
   document.getElementById("wishModal").style.display = "flex";
+  observePendingImages(grid);
 }
 
 function closeWishModal() { document.getElementById("wishModal").style.display = "none"; }
@@ -1237,39 +1387,77 @@ function renderCharacterList() {
 function renderMyLoot() {
   const el = document.getElementById("myLootGrid");
   if (!el) return;
+
   const mine = myCharacters();
-  if (!mine.length) { el.innerHTML = `<p class="player-empty">Create a character to see your loot.</p>`; return; }
-  const myItems = items.filter(i => i.looted && mine.some(c => c.id === i.owner));
-  if (!myItems.length) { el.innerHTML = `<p class="player-empty">No items assigned to you yet.</p>`; return; }
+  if (!mine.length) {
+    el.innerHTML = `<p class="player-empty">Create a character to see your loot.</p>`;
+    return;
+  }
+
+  const myCharIds    = new Set(mine.map(c => c.id));
+  const characterMap = new Map(characters.map(c => [c.id, c]));
+  const myItems      = items.filter(i => i.looted && myCharIds.has(i.owner));
+
+  if (!myItems.length) {
+    el.innerHTML = `<p class="player-empty">No items assigned to you yet.</p>`;
+    return;
+  }
+
   el.innerHTML = myItems.map(item => {
-    const ownerChar = characters.find(c => c.id === item.owner);
+    const ownerChar = characterMap.get(item.owner);
     return createMiniCard(item, "loot", ownerChar?.name || "");
   }).join("");
+
+  observePendingImages(el);
 }
 
 function renderMyWishes() {
   const el = document.getElementById("myWishGrid");
   if (!el) return;
+
   const mine = myCharacters();
-  if (!mine.length) { el.innerHTML = `<p class="player-empty">Create a character to save items.</p>`; return; }
-  const myCharIds = mine.map(c => c.id);
-  const saved     = wishes
-    .filter(w => myCharIds.includes(w.characterId))
-    .map(w => {
-      const item = items.find(i => i.id === w.itemId);
-      const char = characters.find(c => c.id === w.characterId);
-      return item ? { ...item, _wishChar: char?.name || "?" } : null;
-    })
-    .filter(Boolean);
-  if (!saved.length) { el.innerHTML = `<p class="player-empty">No saved items yet. Click ☆ Save on any item in the Library.</p>`; return; }
+  if (!mine.length) {
+    el.innerHTML = `<p class="player-empty">Create a character to save items.</p>`;
+    return;
+  }
+
+  const myCharIds   = new Set(mine.map(c => c.id));
+  const itemMap     = new Map(items.map(i => [i.id, i]));
+  const charMap     = new Map(characters.map(c => [c.id, c]));
+  const saved       = [];
+
+  for (const wish of wishes) {
+    if (!myCharIds.has(wish.characterId)) continue;
+
+    const item = itemMap.get(wish.itemId);
+    if (!item) continue;
+
+    saved.push({
+      ...item,
+      _wishChar: charMap.get(wish.characterId)?.name || "?"
+    });
+  }
+
+  if (!saved.length) {
+    el.innerHTML = `<p class="player-empty">No saved items yet. Click ☆ Save on any item in the Library.</p>`;
+    return;
+  }
+
   el.innerHTML = saved.map(item => createMiniCard(item, "wish", item._wishChar)).join("");
+  observePendingImages(el);
 }
 
 function createMiniCard(item, mode, extra = "") {
   const rc = (item.rarity||"").toLowerCase().replaceAll(" ","-");
+  const cachedImage = item.imageUrl || getCachedImageUrl(item.id);
+  const imageSrc    = cachedImage || PLACEHOLDER_IMAGE;
+  const imageData   = cachedImage ? "" : `data-image-item-id="${item.id}"`;
+
   return `
     <div class="mini-card ${rc}">
-      ${item.imageUrl ? `<img src="${item.imageUrl}" class="mini-card-art" alt="${item.name}" onerror="this.src='${PLACEHOLDER_IMAGE}'">` : ""}
+      <img src="${imageSrc}" ${imageData} class="mini-card-art" alt="${item.name}"
+        loading="lazy" decoding="async" fetchpriority="low"
+        onerror="this.src='${PLACEHOLDER_IMAGE}'">
       <div class="mini-card-body">
         <div class="mini-card-name">${item.name}</div>
         <div class="mini-card-meta">
@@ -1340,16 +1528,26 @@ function initTabs() {
 
 // ─── FILTER LISTENERS ────────────────────────────────────────────────────────
 
+function debounce(fn, wait = 160) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), wait);
+  };
+}
+
 function initFilterListeners() {
+  const search = document.getElementById("search");
+  if (search) search.addEventListener("input", debounce(renderCards, 140));
+
   [
-    "search","ownerFilter","rarityFilter","sourceFilter","campaignFilter",
+    "ownerFilter","rarityFilter","sourceFilter","campaignFilter",
     "categoryFilter","classFilter","showLootedOnly","showUnlootedOnly",
     "showSavedOnly","showAttunementOnly","showNoAttunementOnly",
     "showHighlightedOnly","showNotHighlightedOnly"
   ].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.addEventListener("input",  renderCards);
     el.addEventListener("change", renderCards);
   });
 }
@@ -1477,9 +1675,20 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     if (logoutBtn)     logoutBtn.style.display      = "inline-block";
 
     await importItemsIfEmpty();
-    await Promise.all([loadUsers(), loadCharacters(), loadWishes(), loadCampaigns()]);
-    await loadItemsFromFirestore();
+
+    // Start independent Firestore reads together instead of serially.
+    await Promise.all([
+      loadUsers(),
+      loadCharacters(),
+      loadWishes(),
+      loadCampaigns(),
+      loadItemsFromFirestore()
+    ]);
+
+    populateSourceFilter();
+    populateCampaignFilter();
     populateOwnerFilter();
+    renderCards();
 
     // Tab visibility by role
     if (adminTab)   adminTab.style.display   = isAdmin() ? "inline-block" : "none";
