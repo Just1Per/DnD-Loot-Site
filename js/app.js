@@ -6,9 +6,7 @@ import { db, storage, auth, provider, signInWithPopup, signOut }
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendEmailVerification,
-  reload
+  signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
 import {
@@ -410,7 +408,7 @@ async function loadUsers() {
 
 async function loadMyPendingInvites() {
   const emailLower = normalizeEmail(auth.currentUser?.email);
-  if (!emailLower || !auth.currentUser?.emailVerified) {
+  if (!emailLower) {
     pendingInvites = [];
     return;
   }
@@ -445,44 +443,12 @@ async function loadActiveCampaignInvites() {
   renderAdminInvites();
 }
 
-async function resendVerificationEmail() {
-  if (!auth.currentUser || auth.currentUser.emailVerified) return;
-  try {
-    await sendEmailVerification(auth.currentUser);
-    alert("Verification email sent. Open the link in that email, then return here and click ‘I verified’. ");
-  } catch (e) {
-    console.error("Verification email failed:", e);
-    alert(`Could not send verification email: ${e.message}`);
-  }
-}
-
-async function refreshEmailVerification() {
-  if (!auth.currentUser) return;
-  try {
-    await reload(auth.currentUser);
-    if (!auth.currentUser.emailVerified) {
-      alert("This email is not verified yet.");
-      return;
-    }
-    await loadMyPendingInvites();
-    renderCampaignSelector();
-    alert("Email verified. Pending invitations are now available.");
-  } catch (e) {
-    console.error("Verification refresh failed:", e);
-    alert(`Could not refresh verification status: ${e.message}`);
-  }
-}
-
 async function acceptCampaignInvite(inviteId) {
   const invite = pendingInvites.find(i => i.id === inviteId);
   const uid = auth.currentUser?.uid;
   const emailLower = normalizeEmail(auth.currentUser?.email);
 
   if (!invite || !uid) return;
-  if (!auth.currentUser?.emailVerified) {
-    alert("Verify your email before accepting campaign invitations.");
-    return;
-  }
   if (normalizeEmail(invite.emailLower) !== emailLower) {
     alert("This invitation belongs to a different email address.");
     return;
@@ -906,18 +872,6 @@ function renderCampaignSelector() {
   const list = document.getElementById("campaignSelectorList");
   if (!list) return;
 
-  const verificationHtml = auth.currentUser?.email && !auth.currentUser.emailVerified
-    ? `
-      <div class="campaign-selector-empty" style="margin-bottom:16px">
-        <p><strong>Verify your email to receive campaign invitations.</strong></p>
-        <p>Campaign invitations are matched to a verified login email. Google accounts are normally already verified.</p>
-        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-          <button class="toolbar-btn" type="button" data-send-verification>Send verification email</button>
-          <button class="toolbar-btn" type="button" data-refresh-verification>I've verified</button>
-        </div>
-      </div>`
-    : "";
-
   const inviteHtml = pendingInvites.length
     ? `
       <div style="width:100%;margin-bottom:16px">
@@ -956,10 +910,8 @@ function renderCampaignSelector() {
         }
       </div>`;
 
-  list.innerHTML = verificationHtml + inviteHtml + campaignHtml;
+  list.innerHTML = inviteHtml + campaignHtml;
 
-  list.querySelector("[data-send-verification]")?.addEventListener("click", resendVerificationEmail);
-  list.querySelector("[data-refresh-verification]")?.addEventListener("click", refreshEmailVerification);
 
   list.querySelectorAll(".campaign-selector-card[data-campaign-id]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -2400,13 +2352,12 @@ document.getElementById("emailLoginButton")?.addEventListener("click", async ()=
 
 document.getElementById("registerButton")?.addEventListener("click", async ()=>{
   try {
-    const credential = await createUserWithEmailAndPassword(
+    await createUserWithEmailAndPassword(
       auth,
       document.getElementById("emailInput").value,
       document.getElementById("passwordInput").value
     );
-    await sendEmailVerification(credential.user);
-    alert("Account created. A Firebase verification email was sent. Verify the address before accepting campaign invitations.");
+    alert("Account created. If this email has a pending campaign invitation, it will appear on the campaign screen.");
   } catch(e) { alert(e.message); }
 });
 
