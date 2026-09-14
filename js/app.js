@@ -6,12 +6,14 @@ import { db, storage, auth, provider, signInWithPopup, signOut }
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  reload
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
 import {
   collection, getDocs, addDoc, doc, getDoc,
-  setDoc, updateDoc, deleteDoc, query, where, limit
+  setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 import { ref, getDownloadURL, uploadBytes }
@@ -30,6 +32,8 @@ let currentUser    = null; // { uid, id, email, name, role:[], ... }
 let activeCampaign = null; // campaign currently selected
 let activeMembershipRole = null; // "player" | "dm" | "owner" | "admin"
 let selectedCharacter = null;
+let pendingInvites   = [];   // pending invites matching the signed-in user's email
+let campaignInvites  = [];   // pending invites for the active campaign (admin/DM management)
 let itemsLoadPromise = Promise.resolve();
 
 const editingItems = new Set();
@@ -96,6 +100,10 @@ function escapeHtml(value) {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function normalizeEmail(value) {
+  return String(value || "").trim().toLowerCase();
 }
 
 function createPropertyRow(property = {}) {
@@ -271,66 +279,19 @@ async function loadCurrentUser(firebaseUser) {
       return;
     }
 
-    // Admin-created accounts may still use an email-derived document id.
-    // New records use emailLower so linking is a single indexed query.
-    const email = (firebaseUser.email || "").toLowerCase();
-
-    let matchingDoc = null;
-
-    const lowerSnap = await getDocs(
-      query(collection(db, "users"), where("emailLower", "==", email), limit(1))
-    );
-    matchingDoc = lowerSnap.docs[0] || null;
-
-    // Backward compatibility for older user documents without emailLower.
-    if (!matchingDoc) {
-      const exactEmailSnap = await getDocs(
-        query(collection(db, "users"), where("email", "==", firebaseUser.email), limit(1))
-      );
-      matchingDoc = exactEmailSnap.docs[0] || null;
-    }
-
-    // Final legacy fallback: only older accounts pay for this one-time scan.
-    if (!matchingDoc) {
-      const usersSnap = await getDocs(collection(db, "users"));
-      matchingDoc = usersSnap.docs.find(d =>
-        (d.data().email || "").toLowerCase() === email
-      ) || null;
-    }
-
-    if (matchingDoc) {
-      const existingData = matchingDoc.data();
-
-      await setDoc(uidRef, {
-        ...existingData,
-        email: firebaseUser.email,
-        emailLower: email,
-        name: existingData.name || firebaseUser.displayName || firebaseUser.email
-      }, { merge: true });
-
-      if (matchingDoc.id !== firebaseUser.uid) {
-        await deleteDoc(doc(db, "users", matchingDoc.id));
-      }
-
-      currentUser = {
-        uid: firebaseUser.uid,
-        id: firebaseUser.uid,
-        ...existingData,
-        email: firebaseUser.email,
-        emailLower: email
-      };
-      return;
-    }
-
+    // Foundation V2.4: new accounts are always created under their real
+    // Firebase Auth UID. We no longer create or scan email-derived temp users.
+    // Campaign access is granted separately through campaign invitations.
+    const email = firebaseUser.email || "";
     const newUser = {
-      email: firebaseUser.email,
-      emailLower: email,
-      name: firebaseUser.displayName || firebaseUser.email,
+      email,
+      emailLower: normalizeEmail(email),
+      name: firebaseUser.displayName || email || "New User",
       role: ["viewer"],
       created: Date.now()
     };
 
-    await setDoc(uidRef, newUser, { merge: true });
+    await setDoc(uidRef, newUser);
     currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...newUser };
 
   } catch (e) {
@@ -445,6 +406,221 @@ async function loadUsers() {
     .map(snap => ({ id: snap.id, ...snap.data() }));
 }
 
+// ─── CAMPAIGN INVITATIONS ───────────────────────────────────────────────────
+
+async function loadMyPendingInvites() {
+  const emailLower = normalizeEmail(auth.currentUser?.email);
+  if (!emailLower || !auth.currentUser?.emailVerified) {
+    pendingInvites = [];
+    return;
+  }
+
+  // Query only by the authenticated email. Status is filtered client-side so
+  // this uses the default single-field Firestore index. Security Rules still
+  // ensure a user can only read invitations addressed to their own email.
+  const snap = await getDocs(
+    query(collection(db, "campaignInvites"), where("emailLower", "==", emailLower))
+  );
+
+  pendingInvites = snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .filter(invite => invite.status === "pending");
+}
+
+async function loadActiveCampaignInvites() {
+  if (!activeCampaign || !canManageCampaign()) {
+    campaignInvites = [];
+    renderAdminInvites();
+    return;
+  }
+
+  const snap = await getDocs(
+    query(collection(db, "campaignInvites"), where("campaignId", "==", activeCampaign.id))
+  );
+
+  campaignInvites = snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .filter(invite => invite.status === "pending");
+
+  renderAdminInvites();
+}
+
+async function resendVerificationEmail() {
+  if (!auth.currentUser || auth.currentUser.emailVerified) return;
+  try {
+    await sendEmailVerification(auth.currentUser);
+    alert("Verification email sent. Open the link in that email, then return here and click ‘I verified’. ");
+  } catch (e) {
+    console.error("Verification email failed:", e);
+    alert(`Could not send verification email: ${e.message}`);
+  }
+}
+
+async function refreshEmailVerification() {
+  if (!auth.currentUser) return;
+  try {
+    await reload(auth.currentUser);
+    if (!auth.currentUser.emailVerified) {
+      alert("This email is not verified yet.");
+      return;
+    }
+    await loadMyPendingInvites();
+    renderCampaignSelector();
+    alert("Email verified. Pending invitations are now available.");
+  } catch (e) {
+    console.error("Verification refresh failed:", e);
+    alert(`Could not refresh verification status: ${e.message}`);
+  }
+}
+
+async function acceptCampaignInvite(inviteId) {
+  const invite = pendingInvites.find(i => i.id === inviteId);
+  const uid = auth.currentUser?.uid;
+  const emailLower = normalizeEmail(auth.currentUser?.email);
+
+  if (!invite || !uid) return;
+  if (!auth.currentUser?.emailVerified) {
+    alert("Verify your email before accepting campaign invitations.");
+    return;
+  }
+  if (normalizeEmail(invite.emailLower) !== emailLower) {
+    alert("This invitation belongs to a different email address.");
+    return;
+  }
+
+  const now = Date.now();
+  const batch = writeBatch(db);
+
+  batch.set(
+    doc(db, "campaigns", invite.campaignId, "members", uid),
+    {
+      uid,
+      role: invite.role === "dm" ? "dm" : "player",
+      status: "active",
+      joinedAt: now,
+      inviteId: invite.id
+    },
+    { merge: true }
+  );
+
+  batch.set(
+    doc(db, "users", uid, "campaigns", invite.campaignId),
+    {
+      role: invite.role === "dm" ? "dm" : "player",
+      status: "active",
+      joinedAt: now,
+      inviteId: invite.id
+    },
+    { merge: true }
+  );
+
+  batch.update(
+    doc(db, "campaignInvites", invite.id),
+    {
+      status: "accepted",
+      acceptedBy: uid,
+      acceptedAt: now
+    }
+  );
+
+  try {
+    await batch.commit();
+    await Promise.all([loadMyPendingInvites(), loadCampaigns()]);
+    renderCampaignSelector();
+  } catch (e) {
+    console.error("Accept invitation failed:", e);
+    alert(`Could not accept invitation: ${e.message}`);
+  }
+}
+
+async function declineCampaignInvite(inviteId) {
+  const invite = pendingInvites.find(i => i.id === inviteId);
+  const uid = auth.currentUser?.uid;
+  if (!invite || !uid) return;
+
+  if (!confirm(`Decline the invitation to "${invite.campaignName || "this campaign"}"?`)) return;
+
+  try {
+    await updateDoc(doc(db, "campaignInvites", invite.id), {
+      status: "declined",
+      declinedBy: uid,
+      declinedAt: Date.now()
+    });
+    pendingInvites = pendingInvites.filter(i => i.id !== invite.id);
+    renderCampaignSelector();
+  } catch (e) {
+    console.error("Decline invitation failed:", e);
+    alert(`Could not decline invitation: ${e.message}`);
+  }
+}
+
+async function cancelCampaignInvite(inviteId) {
+  const invite = campaignInvites.find(i => i.id === inviteId);
+  if (!invite) return;
+
+  if (!confirm(`Cancel the invitation for ${invite.name || invite.email}?`)) return;
+
+  try {
+    await updateDoc(doc(db, "campaignInvites", invite.id), {
+      status: "canceled",
+      canceledBy: auth.currentUser.uid,
+      canceledAt: Date.now()
+    });
+    campaignInvites = campaignInvites.filter(i => i.id !== invite.id);
+    renderAdminInvites();
+  } catch (e) {
+    console.error("Cancel invitation failed:", e);
+    alert(`Could not cancel invitation: ${e.message}`);
+  }
+}
+
+function ensureAdminInvitePanel() {
+  const addBtn = document.getElementById("openAddUserBtn");
+  if (!addBtn) return null;
+
+  // Keep the existing HTML untouched: V2.4 injects a small pending-invites
+  // panel directly below the old Add User button.
+  addBtn.textContent = "+ Invite User";
+
+  let panel = document.getElementById("adminInvitePanel");
+  if (panel) return panel;
+
+  panel = document.createElement("div");
+  panel.id = "adminInvitePanel";
+  panel.style.margin = "0 0 16px";
+  panel.style.padding = "12px";
+  panel.style.border = "1px solid #c8b89a";
+  panel.style.borderRadius = "8px";
+  panel.style.background = "#fdfbf7";
+  addBtn.insertAdjacentElement("afterend", panel);
+  return panel;
+}
+
+function renderAdminInvites() {
+  const panel = ensureAdminInvitePanel();
+  if (!panel || !activeCampaign || !isAdmin()) return;
+
+  const rows = campaignInvites.length
+    ? campaignInvites.map(invite => `
+        <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e9dfcf">
+          <div style="min-width:0">
+            <strong>${escapeHtml(invite.name || invite.email || "Pending user")}</strong><br>
+            <small>${escapeHtml(invite.email || "")} · <span class="role-badge">${escapeHtml(invite.role || "player")}</span></small>
+          </div>
+          <button class="cancel-button btn-sm" type="button" data-cancel-invite="${invite.id}">Cancel</button>
+        </div>`).join("")
+    : `<p class="admin-section-sub" style="margin:0">No pending invitations for this campaign.</p>`;
+
+  panel.innerHTML = `
+    <div style="font-family:Cinzel,serif;font-weight:700;color:#5c1d1d;margin-bottom:8px">Pending Invitations</div>
+    ${rows}
+  `;
+
+  panel.querySelectorAll("[data-cancel-invite]").forEach(btn => {
+    btn.addEventListener("click", () => cancelCampaignInvite(btn.dataset.cancelInvite));
+  });
+}
+
 /**
  * Fast campaign lookup.
  *
@@ -454,7 +630,9 @@ async function loadUsers() {
  * Fast per-user index:
  *   users/{uid}/campaigns/{campaignId}
  *
- * The migration creates both. A legacy fallback remains for old data.
+ * The migration creates both. Foundation V2.4 intentionally removes the
+ * old "read every campaign then test membership" fallback because strict
+ * production rules correctly reject that broad read for normal users.
  */
 async function loadCampaigns() {
   const uid = auth.currentUser?.uid;
@@ -495,45 +673,13 @@ async function loadCampaigns() {
     });
   });
 
-  // A globally approved DM may own older campaigns created before the user index existed.
-  if (isDM()) {
-    const ownedSnap = await getDocs(
-      query(collection(db, "campaigns"), where("dmId", "==", uid))
-    );
+  // Foundation V2.4 uses the per-user index for every non-admin account,
+  // including approved DMs. Campaign creation writes that index immediately,
+  // and migration-v2 creates it for legacy campaigns.
 
-    ownedSnap.docs.forEach(d => {
-      campaignMap.set(d.id, {
-        id: d.id,
-        ...d.data(),
-        membershipRole: "dm"
-      });
-    });
-  }
-
-  // Legacy fallback for pre-migration players. This should disappear once migration-v2 is verified.
-  if (campaignMap.size === 0) {
-    const allSnap = await getDocs(collection(db, "campaigns"));
-    const all = allSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-    const checks = await Promise.all(
-      all.map(async camp => {
-        try {
-          const memberSnap = await getDoc(
-            doc(db, "campaigns", camp.id, "members", uid)
-          );
-          if (!memberSnap.exists() || memberSnap.data().status !== "active") return null;
-          return {
-            ...camp,
-            membershipRole: memberSnap.data().role || "player"
-          };
-        } catch {
-          return null;
-        }
-      })
-    );
-
-    checks.filter(Boolean).forEach(c => campaignMap.set(c.id, c));
-  }
+  // No broad legacy fallback here. Normal users may only fetch campaigns
+  // referenced by their own users/{uid}/campaigns index. Pending invitations
+  // are loaded separately from campaignInvites.
 
   campaigns = [...campaignMap.values()]
     .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
@@ -760,34 +906,74 @@ function renderCampaignSelector() {
   const list = document.getElementById("campaignSelectorList");
   if (!list) return;
 
-  if (!campaigns.length) {
-    list.innerHTML = `
+  const verificationHtml = auth.currentUser?.email && !auth.currentUser.emailVerified
+    ? `
+      <div class="campaign-selector-empty" style="margin-bottom:16px">
+        <p><strong>Verify your email to receive campaign invitations.</strong></p>
+        <p>Campaign invitations are matched to a verified login email. Google accounts are normally already verified.</p>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <button class="toolbar-btn" type="button" data-send-verification>Send verification email</button>
+          <button class="toolbar-btn" type="button" data-refresh-verification>I've verified</button>
+        </div>
+      </div>`
+    : "";
+
+  const inviteHtml = pendingInvites.length
+    ? `
+      <div style="width:100%;margin-bottom:16px">
+        <div style="font-family:Cinzel,serif;font-weight:700;color:#5c1d1d;margin-bottom:8px">Pending Invitations</div>
+        ${pendingInvites.map(invite => `
+          <div class="campaign-selector-card" style="cursor:default;margin-bottom:8px">
+            <div>
+              <span class="campaign-selector-name">${escapeHtml(invite.campaignName || "Campaign Invitation")}</span>
+              <span class="campaign-selector-desc">Invited as ${escapeHtml(invite.role || "player")}${invite.name ? ` · ${escapeHtml(invite.name)}` : ""}</span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+              <button class="save-edit-button btn-sm" type="button" data-accept-invite="${invite.id}">Accept</button>
+              <button class="cancel-button btn-sm" type="button" data-decline-invite="${invite.id}">Decline</button>
+            </div>
+          </div>`).join("")}
+      </div>`
+    : "";
+
+  const campaignHtml = campaigns.length
+    ? campaigns.map(c => `
+      <button class="campaign-selector-card" data-campaign-id="${c.id}" type="button">
+        <div>
+          <span class="campaign-selector-name">${escapeHtml(c.name || "Campaign")}</span>
+          ${c.description ? `<span class="campaign-selector-desc">${escapeHtml(c.description)}</span>` : ""}
+          <span class="campaign-selector-role">${escapeHtml(c.membershipRole || "player")}</span>
+        </div>
+        <span class="campaign-selector-arrow">→</span>
+      </button>`).join("")
+    : `
       <div class="campaign-selector-empty">
         ${isDM()
           ? `<p>You don't have any active campaigns yet.</p>
              <p>Click <strong>+ New Campaign</strong> to get started.</p>`
           : `<p>You haven't joined any campaigns yet.</p>
-             <p>Please ask your Dungeon Master for an invitation.</p>`
+             <p>If someone invited this email address, the invitation will appear above.</p>`
         }
       </div>`;
-    return;
-  }
 
-  list.innerHTML = campaigns.map(c => `
-    <button class="campaign-selector-card" data-campaign-id="${c.id}" type="button">
-      <div>
-        <span class="campaign-selector-name">${c.name}</span>
-        ${c.description ? `<span class="campaign-selector-desc">${c.description}</span>` : ""}
-        <span class="campaign-selector-role">${c.membershipRole || "player"}</span>
-      </div>
-      <span class="campaign-selector-arrow">→</span>
-    </button>`).join("");
+  list.innerHTML = verificationHtml + inviteHtml + campaignHtml;
 
-  list.querySelectorAll(".campaign-selector-card").forEach(btn => {
+  list.querySelector("[data-send-verification]")?.addEventListener("click", resendVerificationEmail);
+  list.querySelector("[data-refresh-verification]")?.addEventListener("click", refreshEmailVerification);
+
+  list.querySelectorAll(".campaign-selector-card[data-campaign-id]").forEach(btn => {
     btn.addEventListener("click", () => {
       const camp = campaigns.find(c => c.id === btn.dataset.campaignId);
       if (camp) enterCampaign(camp);
     });
+  });
+
+  list.querySelectorAll("[data-accept-invite]").forEach(btn => {
+    btn.addEventListener("click", () => acceptCampaignInvite(btn.dataset.acceptInvite));
+  });
+
+  list.querySelectorAll("[data-decline-invite]").forEach(btn => {
+    btn.addEventListener("click", () => declineCampaignInvite(btn.dataset.declineInvite));
   });
 }
 
@@ -810,6 +996,8 @@ async function enterCampaign(campaign) {
     loadUsers()
   ]);
 
+  if (isAdmin()) await loadActiveCampaignInvites();
+
   showMainApp();
   populateOwnerFilter();
   renderCards();
@@ -823,6 +1011,7 @@ function leaveCampaign() {
   saves = [];
   users = isAdmin() ? users : [];
   itemState = {};
+  campaignInvites = [];
   showCampaignSelector();
 }
 
@@ -855,6 +1044,7 @@ function showMainApp() {
   if (isAdmin()) {
     renderUserTable();
     renderAdminStats();
+    renderAdminInvites();
   }
 
   showTab("library");
@@ -1352,39 +1542,160 @@ async function saveItemModal() {
 
 // ─── USER MODAL ───────────────────────────────────────────────────────────────
 
+function setInviteRoleCheckboxMode(inviteMode) {
+  const checkboxes = [...document.querySelectorAll(".role-checkbox")];
+
+  checkboxes.forEach(cb => {
+    const label = cb.closest("label");
+    const isCampaignRole = ["player", "dm"].includes(cb.value);
+
+    if (inviteMode) {
+      if (label) label.style.display = isCampaignRole ? "" : "none";
+      cb.onchange = isCampaignRole
+        ? () => {
+            if (cb.checked) {
+              checkboxes.forEach(other => {
+                if (other !== cb && ["player", "dm"].includes(other.value)) other.checked = false;
+              });
+            }
+          }
+        : null;
+    } else {
+      if (label) label.style.display = "";
+      cb.onchange = null;
+    }
+  });
+}
+
 function openUserModal(user = null) {
-  document.getElementById("userModalTitle").textContent = user ? "Edit User" : "Add User";
+  const modal = document.getElementById("userModal");
+  const saveBtn = document.getElementById("saveUserModal");
+  const emailHelp = document.querySelector("#user-email + small");
+  const roleChecks = document.querySelector(".role-checks");
+  const roleTitle = roleChecks?.parentElement?.querySelector(":scope > span");
+  const roleHelp = roleChecks?.parentElement?.querySelector(":scope > small");
+
   document.getElementById("user-name").value  = user?.name  || "";
   document.getElementById("user-email").value = user?.email || "";
   document.querySelectorAll(".role-checkbox").forEach(cb => {
     const r = user?.role || [];
     cb.checked = Array.isArray(r) ? r.includes(cb.value) : r === cb.value;
   });
-  document.getElementById("userModal").dataset.editId = user?.id || "";
-  document.getElementById("userModal").style.display  = "flex";
+
+  if (user) {
+    document.getElementById("userModalTitle").textContent = "Edit User";
+    modal.dataset.editId = user.id || "";
+    modal.dataset.mode = "edit";
+    setInviteRoleCheckboxMode(false);
+    if (saveBtn) saveBtn.textContent = "Save User";
+    if (emailHelp) emailHelp.textContent = "This is the authenticated account email.";
+    if (roleTitle) roleTitle.textContent = "Roles";
+    if (roleHelp) roleHelp.textContent = "Global roles control account capabilities. Inside each campaign, membership decides whether the user is a player or DM.";
+  } else {
+    if (!activeCampaign) {
+      alert("Open a campaign before inviting a user.");
+      return;
+    }
+
+    document.getElementById("userModalTitle").textContent = `Invite User to ${activeCampaign.name}`;
+    modal.dataset.editId = "";
+    modal.dataset.mode = "invite";
+    setInviteRoleCheckboxMode(true);
+
+    const playerCheckbox = document.querySelector('.role-checkbox[value="player"]');
+    const dmCheckbox = document.querySelector('.role-checkbox[value="dm"]');
+    if (playerCheckbox) playerCheckbox.checked = true;
+    if (dmCheckbox) dmCheckbox.checked = false;
+
+    if (saveBtn) saveBtn.textContent = "Create Invitation";
+    if (emailHelp) {
+      emailHelp.textContent = "No email is sent yet. When this email logs in, the pending campaign invitation appears automatically.";
+    }
+    if (roleTitle) roleTitle.textContent = "Campaign Role";
+    if (roleHelp) roleHelp.textContent = "This role applies only inside the current campaign. It does not grant global admin access.";
+  }
+
+  modal.style.display = "flex";
 }
 
-function closeUserModal() { document.getElementById("userModal").style.display = "none"; }
+function closeUserModal() {
+  document.getElementById("userModal").style.display = "none";
+  setInviteRoleCheckboxMode(false);
+}
 
 async function saveUserModal() {
-  const editId = document.getElementById("userModal").dataset.editId;
+  const modal  = document.getElementById("userModal");
+  const editId = modal.dataset.editId;
+  const mode   = modal.dataset.mode || (editId ? "edit" : "invite");
   const name   = document.getElementById("user-name").value.trim();
   const email  = document.getElementById("user-email").value.trim();
-  if (!name || !email) { alert("Name and email are required."); return; }
-  const role = [...document.querySelectorAll(".role-checkbox:checked")].map(cb=>cb.value);
-  const data = { name, email, emailLower: email.toLowerCase(), role };
-  if (editId) {
-    await updateDoc(doc(db,"users",editId), data);
-    const idx = users.findIndex(u=>u.id===editId);
-    if (idx!==-1) users[idx]={...users[idx],...data};
-  } else {
-    const tempId = email.toLowerCase().replaceAll(/[^a-z0-9]/g,"-");
-    await setDoc(doc(db,"users",tempId), data, { merge:true });
-    users.push({ id:tempId, ...data });
+
+  if (!name || !email) {
+    alert("Name and email are required.");
+    return;
   }
-  closeUserModal();
-  renderUserTable();
-  renderAdminStats();
+
+  if (mode === "edit" && editId) {
+    const role = [...document.querySelectorAll(".role-checkbox:checked")].map(cb => cb.value);
+    const data = { name, email, emailLower: normalizeEmail(email), role };
+
+    try {
+      await updateDoc(doc(db, "users", editId), data);
+      const idx = users.findIndex(u => u.id === editId);
+      if (idx !== -1) users[idx] = { ...users[idx], ...data };
+      closeUserModal();
+      renderUserTable();
+      renderAdminStats();
+    } catch (e) {
+      console.error("Save user failed:", e);
+      alert(`Could not save user: ${e.message}`);
+    }
+    return;
+  }
+
+  if (!activeCampaign) {
+    alert("Open a campaign before inviting a user.");
+    return;
+  }
+
+  const emailLower = normalizeEmail(email);
+  const selectedRoles = [...document.querySelectorAll(".role-checkbox:checked")].map(cb => cb.value);
+  const campaignRole = selectedRoles.includes("dm") ? "dm" : "player";
+
+  try {
+    // Avoid duplicate pending invites without needing a composite index.
+    const sameEmailSnap = await getDocs(
+      query(collection(db, "campaignInvites"), where("emailLower", "==", emailLower))
+    );
+    const duplicate = sameEmailSnap.docs.some(d => {
+      const data = d.data();
+      return data.campaignId === activeCampaign.id && data.status === "pending";
+    });
+
+    if (duplicate) {
+      alert("That email already has a pending invitation to this campaign.");
+      return;
+    }
+
+    await addDoc(collection(db, "campaignInvites"), {
+      name,
+      email,
+      emailLower,
+      campaignId: activeCampaign.id,
+      campaignName: activeCampaign.name,
+      role: campaignRole,
+      status: "pending",
+      createdBy: auth.currentUser.uid,
+      createdAt: Date.now()
+    });
+
+    closeUserModal();
+    await loadActiveCampaignInvites();
+    alert(`Invitation created for ${email}. It will appear when that email logs in.`);
+  } catch (e) {
+    console.error("Create invitation failed:", e);
+    alert(`Could not create invitation: ${e.message}`);
+  }
 }
 
 // ─── CAMPAIGN MODAL ───────────────────────────────────────────────────────────
@@ -2089,12 +2400,13 @@ document.getElementById("emailLoginButton")?.addEventListener("click", async ()=
 
 document.getElementById("registerButton")?.addEventListener("click", async ()=>{
   try {
-    await createUserWithEmailAndPassword(
+    const credential = await createUserWithEmailAndPassword(
       auth,
       document.getElementById("emailInput").value,
       document.getElementById("passwordInput").value
     );
-    alert("Account created! You can now log in.");
+    await sendEmailVerification(credential.user);
+    alert("Account created. A Firebase verification email was sent. Verify the address before accepting campaign invitations.");
   } catch(e) { alert(e.message); }
 });
 
@@ -2105,6 +2417,8 @@ document.getElementById("logoutButton")?.addEventListener("click", async () => {
   characters = [];
   saves = [];
   itemState = {};
+  pendingInvites = [];
+  campaignInvites = [];
   await signOut(auth);
 });
 
@@ -2137,6 +2451,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 
       await Promise.all([
         loadCampaigns(),
+        loadMyPendingInvites(),
         isAdmin() ? loadUsers() : Promise.resolve()
       ]);
 
@@ -2162,6 +2477,8 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     users = [];
     campaigns = [];
     itemState = {};
+    pendingInvites = [];
+    campaignInvites = [];
     itemsLoadPromise = Promise.resolve();
 
     display.textContent = "Not logged in";
