@@ -18,7 +18,7 @@
  *
  * Usage from your deployed site's DevTools console:
  *
- *   const { runMigration } = await import("/js/migration-v2.js");
+ *   const { runMigration } = await import("/js/migration-v2.3.js");
  *   await runMigration({ dryRun: true, ignoreHighlightOnlyAmbiguous: true });
  *   await runMigration({ dryRun: false, ignoreHighlightOnlyAmbiguous: true });
  */
@@ -305,7 +305,7 @@ export async function runMigration({ dryRun = true, ignoreHighlightOnlyAmbiguous
         highlighted: item.highlighted === true,
         owner: item.owner || null,
         receivedDate: item.receivedDate || null,
-        migratedAt: Date.now()
+        updatedAt: Date.now()
       },
       { merge: true },
       dryRun
@@ -329,8 +329,7 @@ export async function runMigration({ dryRun = true, ignoreHighlightOnlyAmbiguous
         doc(db, "campaigns", campaign.id, "itemState", visibilityDoc.id),
         {
           visible: data.visible,
-          migratedFrom: "itemVisibility",
-          migratedAt: Date.now()
+          updatedAt: Date.now()
         },
         { merge: true },
         dryRun
