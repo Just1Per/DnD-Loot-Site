@@ -17,9 +17,6 @@ import {
 import { ref, getDownloadURL, uploadBytes }
   from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
-import { getFunctions, httpsCallable }
-  from "https://www.gstatic.com/firebasejs/12.16.0/firebase-functions.js";
-
 // ─── STATE ────────────────────────────────────────────────────────────────────
 // Data flow: User → Campaign → Character → Item (owner = characterId)
 
@@ -55,59 +52,6 @@ const CATEGORIES = [
 ];
 
 const RARITIES = ["Common","Uncommon","Rare","Very Rare","Legendary","Artifact"];
-
-
-// ─── ROADMAP STEP 5: USAGE LIMITS ────────────────────────────────────────────
-// The browser uses these as fast UX guardrails. The authoritative checks live
-// in Cloud Functions, so a modified browser cannot bypass them.
-const DEFAULT_USAGE_LIMITS = Object.freeze({
-  campaignsPerDM: 5,
-  membersPerCampaign: 12,
-  charactersPerUserPerCampaign: 5,
-  savedItemsPerCharacter: 100
-});
-
-let usageLimits = { ...DEFAULT_USAGE_LIMITS };
-
-const cloudFunctions = getFunctions();
-const createCampaignSecure      = httpsCallable(cloudFunctions, "createCampaignSecure");
-const createCampaignInviteSecure= httpsCallable(cloudFunctions, "createCampaignInviteSecure");
-const acceptCampaignInviteSecure= httpsCallable(cloudFunctions, "acceptCampaignInviteSecure");
-const createCharacterSecure     = httpsCallable(cloudFunctions, "createCharacterSecure");
-const toggleSavedItemSecure     = httpsCallable(cloudFunctions, "toggleSavedItemSecure");
-
-function functionErrorMessage(error, fallback = "The request could not be completed.") {
-  const raw = error?.message || fallback;
-  return raw.replace(/^FirebaseError:\s*/i, "");
-}
-
-async function loadUsageLimits() {
-  try {
-    const snap = await getDoc(doc(db, "config", "usageLimits"));
-    if (!snap.exists()) return;
-    const data = snap.data() || {};
-    usageLimits = {
-      campaignsPerDM: Number(data.campaignsPerDM) > 0 ? Number(data.campaignsPerDM) : DEFAULT_USAGE_LIMITS.campaignsPerDM,
-      membersPerCampaign: Number(data.membersPerCampaign) > 0 ? Number(data.membersPerCampaign) : DEFAULT_USAGE_LIMITS.membersPerCampaign,
-      charactersPerUserPerCampaign: Number(data.charactersPerUserPerCampaign) > 0 ? Number(data.charactersPerUserPerCampaign) : DEFAULT_USAGE_LIMITS.charactersPerUserPerCampaign,
-      savedItemsPerCharacter: Number(data.savedItemsPerCharacter) > 0 ? Number(data.savedItemsPerCharacter) : DEFAULT_USAGE_LIMITS.savedItemsPerCharacter
-    };
-  } catch (e) {
-    console.warn("Usage limits config could not be loaded; using defaults.", e);
-    usageLimits = { ...DEFAULT_USAGE_LIMITS };
-  }
-}
-
-function ownedCampaignCount() {
-  const uid = auth.currentUser?.uid;
-  return campaigns.filter(c => c.ownerId === uid).length;
-}
-
-function reservedCampaignSeats() {
-  const activeMembers = campaignMembers.filter(m => (m.status || "active") === "active").length;
-  const pending = campaignInvites.filter(i => i.status === "pending").length;
-  return activeMembers + pending;
-}
 
 // ─── ROLE HELPERS ─────────────────────────────────────────────────────────────
 
@@ -1010,13 +954,49 @@ async function acceptCampaignInvite(inviteId) {
     return;
   }
 
+  const now = Date.now();
+  const batch = writeBatch(db);
+
+  batch.set(
+    doc(db, "campaigns", invite.campaignId, "members", uid),
+    {
+      uid,
+      displayName: invite.name || currentUser?.name || auth.currentUser?.email || "Member",
+      role: invite.role === "dm" ? "dm" : "player",
+      status: "active",
+      joinedAt: now,
+      inviteId: invite.id
+    },
+    { merge: true }
+  );
+
+  batch.set(
+    doc(db, "users", uid, "campaigns", invite.campaignId),
+    {
+      role: invite.role === "dm" ? "dm" : "player",
+      status: "active",
+      joinedAt: now,
+      inviteId: invite.id
+    },
+    { merge: true }
+  );
+
+  batch.update(
+    doc(db, "campaignInvites", invite.id),
+    {
+      status: "accepted",
+      acceptedBy: uid,
+      acceptedAt: now
+    }
+  );
+
   try {
-    await acceptCampaignInviteSecure({ inviteId });
+    await batch.commit();
     await Promise.all([loadMyPendingInvites(), loadCampaigns()]);
     renderCampaignSelector();
   } catch (e) {
     console.error("Accept invitation failed:", e);
-    alert(`Could not accept invitation: ${functionErrorMessage(e)}`);
+    alert(`Could not accept invitation: ${e.message}`);
   }
 }
 
@@ -1389,19 +1369,6 @@ function showCampaignSelector() {
 
   const dmActions = document.getElementById("dmSelectorActions");
   if (dmActions) dmActions.style.display = isDM() ? "flex" : "none";
-
-  const createBtn = document.getElementById("openCreateCampaignBtn");
-  if (createBtn && isDM()) {
-    const used = ownedCampaignCount();
-    const full = !isAdmin() && used >= usageLimits.campaignsPerDM;
-    createBtn.disabled = full;
-    createBtn.title = isAdmin()
-      ? "Administrators are exempt from the owned-campaign limit."
-      : `${used}/${usageLimits.campaignsPerDM} owned campaigns used`;
-    createBtn.textContent = full
-      ? `Campaign limit reached (${used}/${usageLimits.campaignsPerDM})`
-      : `+ New Campaign (${used}/${usageLimits.campaignsPerDM})`;
-  }
 }
 
 function renderCampaignSelector() {
@@ -1941,38 +1908,29 @@ function attachCardEvents(card, item) {
       s => s.itemId === item.id && s.characterId === selectedCharacter.id
     );
 
-    if (!existing) {
-      const savedForCharacter = saves.filter(s => s.characterId === selectedCharacter.id).length;
-      if (savedForCharacter >= usageLimits.savedItemsPerCharacter) {
-        alert(`A character can save a maximum of ${usageLimits.savedItemsPerCharacter} items.`);
-        return;
-      }
-    }
+    if (existing) {
+      await deleteDoc(
+        doc(db, "campaigns", activeCampaign.id, "saves", existing.id)
+      );
 
-    try {
-      const result = await toggleSavedItemSecure({
-        campaignId: activeCampaign.id,
-        characterId: selectedCharacter.id,
-        itemId: item.id
-      });
+      saves = saves.filter(s => s.id !== existing.id);
 
+    } else {
+      // Deterministic id prevents duplicate saves for the same character/item pair.
       const saveId = `${selectedCharacter.id}__${item.id}`;
-      if (result.data?.saved) {
-        const data = result.data.save || {
-          itemId: item.id,
-          characterId: selectedCharacter.id,
-          userId: auth.currentUser.uid,
-          created: Date.now()
-        };
-        saves = saves.filter(s => s.id !== saveId);
-        saves.push({ id: saveId, ...data });
-      } else {
-        saves = saves.filter(s => s.id !== saveId);
-      }
-    } catch (e) {
-      console.error("Save item failed:", e);
-      alert(`Could not update saved item: ${functionErrorMessage(e)}`);
-      return;
+      const data = {
+        itemId: item.id,
+        characterId: selectedCharacter.id,
+        userId: auth.currentUser.uid,
+        created: Date.now()
+      };
+
+      await setDoc(
+        doc(db, "campaigns", activeCampaign.id, "saves", saveId),
+        data
+      );
+
+      saves.push({ id: saveId, ...data });
     }
 
     rerenderCard(item.id);
@@ -2166,22 +2124,35 @@ async function saveUserModal() {
     return;
   }
 
+  const emailLower = normalizeEmail(email);
   const selectedRoles = [...document.querySelectorAll(".role-checkbox:checked")].map(cb => cb.value);
   const campaignRole = selectedRoles.includes("dm") ? "dm" : "player";
 
-  // Fast browser-side guardrail. The Cloud Function repeats this check using
-  // authoritative Firestore reads before it creates the invitation.
-  if (reservedCampaignSeats() >= usageLimits.membersPerCampaign) {
-    alert(`This campaign has reached its ${usageLimits.membersPerCampaign}-seat limit. Active members and pending invitations both reserve a seat.`);
-    return;
-  }
-
   try {
-    await createCampaignInviteSecure({
-      campaignId: activeCampaign.id,
+    // Avoid duplicate pending invites without needing a composite index.
+    const sameEmailSnap = await getDocs(
+      query(collection(db, "campaignInvites"), where("emailLower", "==", emailLower))
+    );
+    const duplicate = sameEmailSnap.docs.some(d => {
+      const data = d.data();
+      return data.campaignId === activeCampaign.id && data.status === "pending";
+    });
+
+    if (duplicate) {
+      alert("That email already has a pending invitation to this campaign.");
+      return;
+    }
+
+    await addDoc(collection(db, "campaignInvites"), {
       name,
       email,
-      role: campaignRole
+      emailLower,
+      campaignId: activeCampaign.id,
+      campaignName: activeCampaign.name,
+      role: campaignRole,
+      status: "pending",
+      createdBy: auth.currentUser.uid,
+      createdAt: Date.now()
     });
 
     closeUserModal();
@@ -2190,7 +2161,7 @@ async function saveUserModal() {
     alert(`Invitation created for ${email}. It will appear when that email logs in.`);
   } catch (e) {
     console.error("Create invitation failed:", e);
-    alert(`Could not create invitation: ${functionErrorMessage(e)}`);
+    alert(`Could not create invitation: ${e.message}`);
   }
 }
 
@@ -2229,19 +2200,46 @@ async function saveCampaignModal() {
     }
 
   } else {
-    if (!isAdmin() && ownedCampaignCount() >= usageLimits.campaignsPerDM) {
-      alert(`Your account can own a maximum of ${usageLimits.campaignsPerDM} campaigns.`);
-      return;
-    }
+    const data = {
+      name,
+      description,
+      dmId: auth.currentUser.uid,
+      ownerId: auth.currentUser.uid,
+      defaultItemVisible: true,
+      created: Date.now(),
+      updatedAt: Date.now()
+    };
 
-    try {
-      await createCampaignSecure({ name, description });
-      await loadCampaigns();
-    } catch (e) {
-      console.error("Create campaign failed:", e);
-      alert(`Could not create campaign: ${functionErrorMessage(e)}`);
-      return;
-    }
+    const newRef = await addDoc(collection(db, "campaigns"), data);
+
+    // Authoritative membership + fast per-user index.
+    await Promise.all([
+      setDoc(
+        doc(db, "campaigns", newRef.id, "members", auth.currentUser.uid),
+        {
+          uid: auth.currentUser.uid,
+          role: "dm",
+          status: "active",
+          joinedAt: Date.now()
+        },
+        { merge: true }
+      ),
+      setDoc(
+        doc(db, "users", auth.currentUser.uid, "campaigns", newRef.id),
+        {
+          role: "dm",
+          status: "active",
+          joinedAt: Date.now()
+        },
+        { merge: true }
+      )
+    ]);
+
+    campaigns.push({
+      id: newRef.id,
+      membershipRole: "dm",
+      ...data
+    });
   }
 
   closeCampaignModal();
@@ -2512,17 +2510,6 @@ function renderPlayerTab() {
   renderCharacterList();
   renderMyLoot();
   renderMyWishes();
-
-  const createBtn = document.getElementById("playerCreateCharBtn");
-  if (createBtn) {
-    const used = myCharacters().length;
-    const full = used >= usageLimits.charactersPerUserPerCampaign;
-    createBtn.disabled = full;
-    createBtn.title = `${used}/${usageLimits.charactersPerUserPerCampaign} active characters used`;
-    createBtn.textContent = full
-      ? `Character limit reached (${used}/${usageLimits.charactersPerUserPerCampaign})`
-      : `Create Character (${used}/${usageLimits.charactersPerUserPerCampaign})`;
-  }
 }
 
 function renderCharacterList() {
@@ -2808,10 +2795,8 @@ function renderDMOverview() {
   const looted = states.filter(s => s.looted).length;
   const highlighted = states.filter(s => s.highlighted).length;
 
-  const seatsUsed = reservedCampaignSeats();
   el.innerHTML = `
-    <div class="dm-overview-stat"><strong>${campaignMembers.length}/${usageLimits.membersPerCampaign}</strong><span>Members</span></div>
-    <div class="dm-overview-stat"><strong>${seatsUsed}/${usageLimits.membersPerCampaign}</strong><span>Seats Reserved</span></div>
+    <div class="dm-overview-stat"><strong>${campaignMembers.length}</strong><span>Members</span></div>
     <div class="dm-overview-stat"><strong>${characters.length}</strong><span>Characters</span></div>
     <div class="dm-overview-stat"><strong>${visible}</strong><span>Visible Items</span></div>
     <div class="dm-overview-stat"><strong>${looted}</strong><span>Looted</span></div>
@@ -3155,8 +3140,8 @@ function initModalListeners() {
       return;
     }
 
-    if (myCharacters().length >= usageLimits.charactersPerUserPerCampaign) {
-      alert(`You can have a maximum of ${usageLimits.charactersPerUserPerCampaign} active characters in one campaign.`);
+    if (myCharacters().length >= 10) {
+      alert("You can have a maximum of 10 active characters in one campaign.");
       return;
     }
 
@@ -3174,22 +3159,21 @@ function initModalListeners() {
       return;
     }
 
-    let newChar;
-    try {
-      const result = await createCharacterSecure({
-        campaignId: activeCampaign.id,
-        name,
-        className: cls,
-        level
-      });
-      newChar = result.data?.character;
-      if (!newChar?.id) throw new Error("The server did not return the new character.");
-    } catch (e) {
-      console.error("Create character failed:", e);
-      alert(`Could not create character: ${functionErrorMessage(e)}`);
-      return;
-    }
+    const data = {
+      name,
+      class: cls,
+      level,
+      userId: auth.currentUser.uid,
+      active: true,
+      created: Date.now()
+    };
 
+    const newRef = await addDoc(
+      collection(db, "campaigns", activeCampaign.id, "characters"),
+      data
+    );
+
+    const newChar = { id: newRef.id, ...data };
     characters.push(newChar);
     selectedCharacter = newChar;
 
@@ -3278,7 +3262,6 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       });
 
       await Promise.all([
-        loadUsageLimits(),
         loadCampaigns(),
         loadMyPendingInvites(),
         loadMyDMRequest(),
