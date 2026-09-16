@@ -39,7 +39,7 @@ const PLACEHOLDER_IMAGE = "./placeholder.png";
 // Step 7 performance pass. The tiny metadata document lives inside /items so
 // the existing public-read/admin-write item rules already protect it. It is
 // filtered out of the visible catalogue and never rendered as an item.
-const CATALOG_META_ID          = "__catalog_meta__";
+const CATALOG_META_ID = "catalog_meta";
 const CATALOG_CACHE_DB         = "dnd-item-vault-cache";
 const CATALOG_CACHE_DB_VERSION = 1;
 const CATALOG_CACHE_STORE      = "catalog";
