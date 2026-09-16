@@ -5,6 +5,48 @@
 
 // ─── DATA LOADERS ─────────────────────────────────────────────────────────────
 
+function directoryDisplayName(profile, uid) {
+  const email = normalizeEmail(profile?.email);
+  const rawName = String(profile?.name || "").trim();
+  const nameLooksLikeEmail = rawName.includes("@") || (email && normalizeEmail(rawName) === email);
+  return (!rawName || nameLooksLikeEmail) ? `Player ${String(uid).slice(0, 6)}` : rawName;
+}
+
+function directoryEmailHint(email) {
+  const normalized = normalizeEmail(email);
+  const at = normalized.indexOf("@");
+  if (at <= 0) return "";
+  const local = normalized.slice(0, at);
+  const domain = normalized.slice(at + 1);
+  const shown = local.slice(0, Math.min(2, local.length));
+  return `${shown}${local.length > shown.length ? "***" : ""}@${domain}`;
+}
+
+async function syncUserDirectoryEntry(uid, profile) {
+  if (!uid || !profile) return false;
+
+  // The registered-user directory is an optional discovery feature. A missing
+  // or not-yet-deployed directory rule must NEVER prevent the real /users/{uid}
+  // account from loading.
+  try {
+    await setDoc(
+      doc(db, "userDirectory", uid),
+      {
+        uid,
+        name: directoryDisplayName(profile, uid),
+        emailHint: directoryEmailHint(profile.email),
+        updatedAt: Date.now()
+      },
+      { merge: true }
+    );
+    return true;
+  } catch (e) {
+    console.warn("Registered-user directory sync skipped:", e?.message || e);
+    return false;
+  }
+}
+
+
 async function loadCurrentUser(firebaseUser) {
   const uidRef = doc(db, "users", firebaseUser.uid);
 
@@ -12,6 +54,7 @@ async function loadCurrentUser(firebaseUser) {
     const uidSnap = await getDoc(uidRef);
     if (uidSnap.exists()) {
       currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...uidSnap.data() };
+      await syncUserDirectoryEntry(firebaseUser.uid, currentUser);
       return;
     }
 
@@ -29,6 +72,7 @@ async function loadCurrentUser(firebaseUser) {
 
     await setDoc(uidRef, newUser);
     currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...newUser };
+    await syncUserDirectoryEntry(firebaseUser.uid, currentUser);
 
   } catch (e) {
     console.error("Failed loading current user:", e);
@@ -61,7 +105,7 @@ async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
     && cachedVersion === serverVersion;
 
   // Compatibility path for the very first deployment before an admin has
-  // created __catalog_meta__. It avoids repeated full downloads for one day.
+  // created catalog_meta. It avoids repeated full downloads for one day.
   const legacyCacheFresh = !!cached?.items?.length
     && serverVersion === 0
     && cacheAge < CATALOG_NO_META_TTL_MS;
@@ -153,6 +197,10 @@ async function loadUsers() {
   if (isAdmin()) {
     users = (await getDocs(collection(db, "users")))
       .docs.map(d => ({ id: d.id, ...d.data() }));
+
+    // One-time/ongoing directory backfill. Directory sync is deliberately
+    // non-fatal so an unavailable directory can never break admin login.
+    await Promise.allSettled(users.map(user => syncUserDirectoryEntry(user.id, user)));
   } else {
     // Strict rules intentionally do not let a campaign DM read every user's
     // global profile. DM/member UI is rendered from campaign membership data.

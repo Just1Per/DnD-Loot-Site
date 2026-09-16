@@ -6,22 +6,39 @@
 // ─── CAMPAIGN INVITATIONS ───────────────────────────────────────────────────
 
 async function loadMyPendingInvites() {
+  const uid = auth.currentUser?.uid;
   const emailLower = normalizeEmail(auth.currentUser?.email);
-  if (!emailLower) {
+  if (!uid) {
     pendingInvites = [];
     return;
   }
 
-  // Query only by the authenticated email. Status is filtered client-side so
-  // this uses the default single-field Firestore index. Security Rules still
-  // ensure a user can only read invitations addressed to their own email.
-  const snap = await getDocs(
-    query(collection(db, "campaignInvites"), where("emailLower", "==", emailLower))
-  );
+  // Email lookup is the established invitation path and remains authoritative
+  // for compatibility with existing deployments.
+  const inviteMap = new Map();
 
-  pendingInvites = snap.docs
-    .map(d => ({ id: d.id, ...d.data() }))
-    .filter(invite => invite.status === "pending");
+  if (emailLower) {
+    const emailSnap = await getDocs(
+      query(collection(db, "campaignInvites"), where("emailLower", "==", emailLower))
+    );
+    emailSnap.docs.forEach(d => inviteMap.set(d.id, { id: d.id, ...d.data() }));
+  }
+
+  // UID-targeted invitations are an optional upgrade. If the new Firestore
+  // rules have not been deployed yet, this query may be denied. That must not
+  // break account startup, so we simply keep the email-based results.
+  try {
+    const uidSnap = await getDocs(
+      query(collection(db, "campaignInvites"), where("targetUid", "==", uid))
+    );
+    uidSnap.docs.forEach(d => inviteMap.set(d.id, { id: d.id, ...d.data() }));
+  } catch (e) {
+    console.warn("UID-targeted invitation lookup unavailable; using email invitations only:", e?.message || e);
+  }
+
+  pendingInvites = [...inviteMap.values()]
+    .filter(invite => invite.status === "pending")
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 }
 
 async function loadActiveCampaignInvites() {
@@ -50,8 +67,10 @@ async function acceptCampaignInvite(inviteId) {
   const emailLower = normalizeEmail(auth.currentUser?.email);
 
   if (!invite || !uid) return;
-  if (normalizeEmail(invite.emailLower) !== emailLower) {
-    alert("This invitation belongs to a different email address.");
+  const targetsUid = invite.targetUid === uid;
+  const targetsEmail = !!emailLower && normalizeEmail(invite.emailLower) === emailLower;
+  if (!targetsUid && !targetsEmail) {
+    alert("This invitation belongs to a different account.");
     return;
   }
 
@@ -175,7 +194,7 @@ function renderAdminInvites() {
         <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e9dfcf">
           <div style="min-width:0">
             <strong>${escapeHtml(invite.name || invite.email || "Pending user")}</strong><br>
-            <small>${escapeHtml(invite.email || "")} · <span class="role-badge">${escapeHtml(invite.role || "player")}</span></small>
+            <small>${escapeHtml(invite.email || (invite.targetUid ? "Registered account" : ""))} · <span class="role-badge">${escapeHtml(invite.role || "player")}</span></small>
           </div>
           <button class="cancel-button btn-sm" type="button" data-cancel-invite="${invite.id}">Cancel</button>
         </div>`).join("")
