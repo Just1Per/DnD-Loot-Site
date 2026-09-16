@@ -126,13 +126,14 @@ async function saveUserModal() {
   const campaignRole = selectedRoles.includes("dm") ? "dm" : "player";
 
   try {
-    // Avoid duplicate pending invites without needing a composite index.
-    const sameEmailSnap = await getDocs(
-      query(collection(db, "campaignInvites"), where("emailLower", "==", emailLower))
+    // Query by campaignId so campaign DMs can safely read only invitations
+    // for the campaign they manage. Then filter email/status client-side.
+    const campaignInviteSnap = await getDocs(
+      query(collection(db, "campaignInvites"), where("campaignId", "==", activeCampaign.id))
     );
-    const duplicate = sameEmailSnap.docs.some(d => {
+    const duplicate = campaignInviteSnap.docs.some(d => {
       const data = d.data();
-      return data.campaignId === activeCampaign.id && data.status === "pending";
+      return normalizeEmail(data.emailLower) === emailLower && data.status === "pending";
     });
 
     if (duplicate) {
