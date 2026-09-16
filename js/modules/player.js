@@ -259,6 +259,9 @@ function closeEditCharacterModal() { document.getElementById("editCharModal").st
 
 async function saveEditCharacter() {
   const charId   = document.getElementById("editCharModal").dataset.charId;
+  const character = characters.find(c => c.id === charId);
+  if (!activeCampaign || !character || (!canManageCampaign() && character.userId !== auth.currentUser?.uid)) return;
+  const campaignId = activeCampaign.id;
   const newName  = document.getElementById("editChar-name").value.trim();
   const newClass = document.getElementById("editChar-class").value;
   const newLevel = parseInt(document.getElementById("editChar-level").value) || null;
@@ -279,12 +282,13 @@ async function saveEditCharacter() {
     level: newLevel
   };
 
-  if (activeCampaign) {
-    await updateDoc(
-      doc(db, "campaigns", activeCampaign.id, "characters", charId),
-      changes
-    );
+  try {
+    await updateDoc(doc(db, "campaigns", campaignId, "characters", charId), changes);
+  } catch (error) {
+    alert(`Could not save character: ${error.message}`);
+    return;
   }
+  if (activeCampaign?.id !== campaignId) return;
 
   const idx = characters.findIndex(c => c.id === charId);
   if (idx !== -1) characters[idx] = { ...characters[idx], ...changes };
@@ -300,6 +304,7 @@ async function saveEditCharacter() {
     renderAdminStats();
   }
 
+  if (canManageCampaign()) renderDMCharacters();
   renderCards();
 }
 

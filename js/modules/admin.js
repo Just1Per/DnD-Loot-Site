@@ -163,6 +163,7 @@ async function openUserModal(user = null) {
   });
 
   if (user) {
+    if (!isAdmin()) return;
     document.getElementById("userModalTitle").textContent = "Edit User";
     modal.dataset.editId = user.id || "";
     modal.dataset.mode = "edit";
@@ -234,6 +235,7 @@ async function saveUserModal() {
   const email  = document.getElementById("user-email").value.trim();
 
   if (mode === "edit" && editId) {
+    if (!isAdmin()) return;
     if (!name || !email) {
       alert("Name and email are required.");
       return;
@@ -406,160 +408,36 @@ async function saveCampaignModal() {
 function renderUserTable() {
   const tbody = document.getElementById("userTableBody");
   if (!tbody) return;
+  if (!isAdmin()) { tbody.replaceChildren(); return; }
   tbody.innerHTML = users.map(u => {
-    const role      = Array.isArray(u.role) ? u.role.join(", ") : (u.role||"viewer");
-    const userChars = characters.filter(c=>c.userId===u.id && c.active!==false);
-    const charHTML  = userChars.length > 0
-      ? userChars.map(c => {
-          const tier       = getTier(c.level);
-          const tierBadge  = tier
-            ? `<span class="tier-badge" style="background:${tier.bg};color:${tier.color};border-color:${tier.color}">${tier.label}</span>`
-            : "";
-          const levelBadge = c.level
-            ? `<span class="level-badge">Lvl ${c.level}</span>`
-            : `<span class="level-badge level-badge--empty">No level</span>`;
-          return `
-            <div class="admin-char-row">
-              <div class="admin-char-info">
-                <span class="admin-char-name">${c.name}</span>
-                <span class="admin-char-class">${c.class}</span>
-                ${c.campaign?`<span class="char-campaign">${c.campaign}</span>`:""}
-                ${levelBadge}${tierBadge}
-              </div>
-              <div class="admin-char-btns">
-                <button class="wish-view-btn btn-sm" type="button"
-                  data-char-id="${c.id}" data-char-name="${c.name}">Saved</button>
-                <button class="edit-button btn-sm" type="button"
-                  data-edit-char="${c.id}" data-char-name="${c.name}"
-                  data-char-class="${c.class}" data-char-level="${c.level||""}">Edit</button>
-                <button class="cancel-button btn-sm" type="button"
-                  data-delete-char="${c.id}" data-char-name="${c.name}">Delete</button>
-              </div>
-            </div>`;
-        }).join("")
-      : `<span class="no-chars">No characters</span>`;
-
-    return `
-      <tr>
-        <td>${u.name||"—"}</td>
-        <td>${u.email||"—"}</td>
-        <td><span class="role-badge">${role}</span></td>
-        <td class="chars-cell">${charHTML}</td>
-        <td>
-          <div class="table-actions">
-            <button class="edit-button btn-sm" type="button" data-edit-user="${u.id}">Edit</button>
-            <button class="cancel-button btn-sm" type="button" data-delete-user="${u.id}">Delete</button>
-          </div>
-        </td>
-      </tr>`;
-  }).join("");
-
+    const role = Array.isArray(u.role) ? u.role.join(", ") : (u.role || "viewer");
+    return `<tr><td>${escapeHtml(u.name || "—")}</td><td>${escapeHtml(u.email || "—")}</td>
+      <td><span class="role-badge">${escapeHtml(role)}</span></td>
+      <td><button class="edit-button btn-sm" type="button" data-edit-user="${escapeHtml(u.id)}">Edit</button></td></tr>`;
+  }).join("") || `<tr><td colspan="4">No registered users found.</td></tr>`;
   tbody.querySelectorAll("[data-edit-user]").forEach(btn => {
-    btn.addEventListener("click", () => openUserModal(users.find(u=>u.id===btn.dataset.editUser)));
-  });
-
-  tbody.querySelectorAll("[data-delete-user]").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      if (!confirm("Delete this user? Their characters and saves in the active campaign will also be removed.")) return;
-      const uid = btn.dataset.deleteUser;
-      if (activeCampaign) {
-        const userChars = characters.filter(c => c.userId === uid);
-        const userCharIds = new Set(userChars.map(c => c.id));
-
-        for (const c of userChars) {
-          const charSaves = saves.filter(s => s.characterId === c.id);
-
-          await Promise.all(charSaves.map(s =>
-            deleteDoc(doc(db, "campaigns", activeCampaign.id, "saves", s.id))
-          ));
-
-          const ownedItemIds = Object.entries(itemState)
-            .filter(([, state]) => state?.owner === c.id)
-            .map(([itemId]) => itemId);
-
-          await Promise.all(ownedItemIds.map(itemId =>
-            persistItemState(itemId, { owner: null })
-          ));
-
-          await deleteDoc(
-            doc(db, "campaigns", activeCampaign.id, "characters", c.id)
-          );
-        }
-
-        characters = characters.filter(c => c.userId !== uid);
-        saves = saves.filter(s => !userCharIds.has(s.characterId));
-      }
-      await deleteDoc(doc(db,"users",uid));
-      users = users.filter(u=>u.id!==uid);
-      renderUserTable(); renderAdminStats(); renderCards();
+    btn.addEventListener("click", () => {
+      if (isAdmin()) openUserModal(users.find(u => u.id === btn.dataset.editUser));
     });
-  });
-
-  tbody.querySelectorAll("[data-edit-char]").forEach(btn => {
-    btn.addEventListener("click", () =>
-      openEditCharacterModal(btn.dataset.editChar, btn.dataset.charName,
-        btn.dataset.charClass, btn.dataset.charLevel)
-    );
-  });
-
-  tbody.querySelectorAll("[data-delete-char]").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      if (!confirm(`Delete "${btn.dataset.charName}"?`)) return;
-      const cid = btn.dataset.deleteChar;
-      if (activeCampaign) {
-        const ownedItemIds = Object.entries(itemState)
-          .filter(([, state]) => state?.owner === cid)
-          .map(([itemId]) => itemId);
-
-        if (ownedItemIds.length && !canManageCampaign()) {
-          alert("This character still has assigned loot. Ask the DM to unassign the loot before deleting the character.");
-          return;
-        }
-
-        const charSaves = saves.filter(s => s.characterId === cid);
-        await Promise.all(charSaves.map(s =>
-          deleteDoc(doc(db, "campaigns", activeCampaign.id, "saves", s.id))
-        ));
-
-        if (ownedItemIds.length) {
-          await Promise.all(ownedItemIds.map(itemId =>
-            persistItemState(itemId, { owner: null })
-          ));
-        }
-
-        await deleteDoc(
-          doc(db, "campaigns", activeCampaign.id, "characters", cid)
-        );
-      }
-      saves      = saves.filter(s=>s.characterId!==cid);
-      characters = characters.filter(c=>c.id!==cid);
-      if (selectedCharacter?.id===cid) selectedCharacter=null;
-      populateOwnerFilter(); renderUserTable(); renderAdminStats(); renderCards();
-    });
-  });
-
-  tbody.querySelectorAll(".wish-view-btn").forEach(btn => {
-    btn.addEventListener("click", () => openWishModal(btn.dataset.charId, btn.dataset.charName));
   });
 }
 
-function renderAdminStats() {
-  const el = document.getElementById("adminStats");
-  if (!el) return;
-  const playerCount = users.filter(u=>{
-    const r=u.role; return Array.isArray(r)?r.some(x=>["player","dm","admin"].includes(x)):["player","dm","admin"].includes(r);
-  }).length;
-  const states = items.map(i => getItemState(i.id));
-  el.innerHTML = `
-    <div class="stat-card"><span class="stat-num">${items.length}</span><span class="stat-label">Total Items</span></div>
-    <div class="stat-card"><span class="stat-num">${states.filter(s=>s.looted).length}</span><span class="stat-label">Looted</span></div>
-    <div class="stat-card"><span class="stat-num">${states.filter(s=>s.highlighted).length}</span><span class="stat-label">Highlighted</span></div>
-    <div class="stat-card"><span class="stat-num">${saves.length}</span><span class="stat-label">Saved</span></div>
-    <div class="stat-card"><span class="stat-num">${users.length}</span><span class="stat-label">Users</span></div>
-    <div class="stat-card"><span class="stat-num">${playerCount}</span><span class="stat-label">Players</span></div>
-    <div class="stat-card"><span class="stat-num">${characters.length}</span><span class="stat-label">Characters</span></div>
-    <div class="stat-card"><span class="stat-num">${campaigns.length}</span><span class="stat-label">Campaigns</span></div>
-    <div class="stat-card"><span class="stat-num">${dmRequests.filter(r => r.status === "pending").length}</span><span class="stat-label">DM Requests</span></div>
-  `;
-}
+// Kept for callers in the account/approval workflow; campaign stats live in DM Tools.
+function renderAdminStats() {}
 
+let adminReturnTab = "library";
+function openAdminView() {
+  if (!isAdmin() || !auth.currentUser) return;
+  adminReturnTab = document.querySelector(".tabs .tab.active")?.dataset.tab || "library";
+  hideAllScreens();
+  document.getElementById("tab-admin").style.display = "block";
+  document.getElementById("adminPanel").style.display = "block";
+  document.getElementById("adminTab").setAttribute("aria-pressed", "true");
+  renderUserTable();
+  renderAdminDMRequests();
+}
+function closeAdminView() {
+  document.getElementById("adminTab").setAttribute("aria-pressed", "false");
+  if (activeCampaign) { showMainApp(); showTab(adminReturnTab); }
+  else showCampaignSelector();
+}

@@ -1617,3 +1617,19 @@ input::placeholder, textarea::placeholder { color: #8a7355; font-style: italic; 
   .item-card:hover, .mini-card:hover, .wish-modal-card:hover, .campaign-selector-card:hover { transform: none; }
 }
 
+
+/* Campaign character management and independent website administration. */
+#tab-admin { max-width: 1400px; margin: 24px auto; padding: 0 20px; }
+#closeAdminView { margin-bottom: 18px; }
+.dm-character-group { margin-top: 14px; padding: 14px; background: #fdfbf7; border: 1px solid #c8b89a; border-radius: 8px; }
+.dm-character-group h3 { margin: 0 0 10px; color: #5c1d1d; font-family: "Cinzel", serif; }
+.dm-character-group .admin-char-row { gap: 12px; flex-wrap: wrap; }
+.dm-tools-grid > .loot-ref-panel { grid-column: 1 / -1; }
+.character-loot-dialog { margin:auto; width: min(1200px, calc(100vw - 32px)); max-width: none; max-height: 88vh; box-sizing: border-box; padding: 22px; border: 3px double #8a7355; border-radius: 12px; background: #f4efe6; color: #333; overflow-y: auto; }
+.character-loot-dialog::backdrop { background: rgba(0,0,0,.65); }
+.character-loot-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:20px; }
+.character-loot-heading h2 { margin:0; font-family: "Cinzel", serif; color:#5c1d1d; }
+.character-loot-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:22px; align-items:start; }
+.character-loot-grid .item-card { min-width:0; width:100%; box-sizing:border-box; }
+.character-loot-grid .loot-empty { grid-column:1 / -1; }
+@media(max-width:600px) { .character-loot-dialog { padding:12px; } .character-loot-heading h2 { font-size:1.1rem; } .dm-character-group .admin-char-btns { flex-wrap:wrap; } }

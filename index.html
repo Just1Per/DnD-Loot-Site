@@ -30,6 +30,7 @@
         <button id="emailLoginButton" type="button">Login</button>
       </div>
       <span id="userDisplay" class="user-display">Not logged in</span>
+      <button id="adminTab" type="button" class="toolbar-btn" style="display:none">Admin</button>
       <button id="logoutButton" type="button" style="display:none">Logout</button>
     </div>
   </header>
@@ -72,7 +73,6 @@
     <nav class="tabs" aria-label="Main navigation">
       <button class="tab active" data-tab="library" type="button">Library</button>
       <button class="tab" data-tab="player" id="playerTab" type="button" style="display:none">My Character</button>
-      <button class="tab" data-tab="admin"  id="adminTab"  type="button" style="display:none">Admin</button>
     </nav>
 
     <!-- ════════════════════════════════════════════════════════════════
@@ -200,117 +200,7 @@
     <!-- ════════════════════════════════════════════════════════════════
          ADMIN TAB
     ════════════════════════════════════════════════════════════════ -->
-    <div id="tab-admin" class="tab-content" style="display:none">
-      <div id="adminPanel" style="display:none">
 
-        <div class="admin-section">
-          <h2>Overview</h2>
-          <div id="adminStats" class="admin-stats-grid"></div>
-        </div>
-
-        <div class="admin-section">
-          <h2>Users &amp; Characters</h2>
-          <p class="admin-section-sub">
-            Characters shown are those in the currently active campaign.
-            Deleting a user removes them from the system.
-          </p>
-          <button id="openAddUserBtn" type="button" class="toolbar-btn"
-            style="margin-bottom:14px">+ Add User</button>
-          <div class="table-scroll">
-            <table class="user-table">
-              <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Role</th>
-                  <th scope="col">Characters</th>
-                  <th scope="col">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="userTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Loot rarity reference — collapsible -->
-        <details class="admin-section loot-ref-panel">
-          <summary>📖 Magic Item Rarity Progression by Level</summary>
-          <div class="loot-ref-grid">
-
-            <div class="loot-ref-card tier-1">
-              <div class="loot-ref-header">
-                <span class="loot-ref-tier">Tier 1</span>
-                <span class="loot-ref-levels">Levels 1–4</span>
-                <span class="loot-ref-subtitle">Local Heroes</span>
-              </div>
-              <div class="loot-ref-rarities">
-                <span class="rarity-pill common">Common</span>
-                <span class="rarity-pill uncommon">Uncommon</span>
-              </div>
-              <p class="loot-ref-desc">
-                Players usually find their first <strong>Common</strong> items early on.
-                Around levels 3–4 characters typically acquire their first
-                <strong>Uncommon</strong> items — e.g.
-                <em>+1 Weapon, Bag of Holding, Cloak of Protection</em>.
-              </p>
-            </div>
-
-            <div class="loot-ref-card tier-2">
-              <div class="loot-ref-header">
-                <span class="loot-ref-tier">Tier 2</span>
-                <span class="loot-ref-levels">Levels 5–10</span>
-                <span class="loot-ref-subtitle">Heroes of the Realm</span>
-              </div>
-              <div class="loot-ref-rarities">
-                <span class="rarity-pill uncommon">Uncommon</span>
-                <span class="rarity-pill rare">Rare</span>
-              </div>
-              <p class="loot-ref-desc">
-                <strong>Uncommon</strong> items become standard. Around levels 7–9
-                characters start acquiring <strong>Rare</strong> items — e.g.
-                <em>+2 Weapon, Flame Tongue, Ring of Protection</em>.
-              </p>
-            </div>
-
-            <div class="loot-ref-card tier-3">
-              <div class="loot-ref-header">
-                <span class="loot-ref-tier">Tier 3</span>
-                <span class="loot-ref-levels">Levels 11–16</span>
-                <span class="loot-ref-subtitle">Masters of the Realm</span>
-              </div>
-              <div class="loot-ref-rarities">
-                <span class="rarity-pill rare">Rare</span>
-                <span class="rarity-pill very-rare">Very Rare</span>
-              </div>
-              <p class="loot-ref-desc">
-                <strong>Rare</strong> items are common across the party. Around levels 11–13
-                characters begin finding <strong>Very Rare</strong> items — e.g.
-                <em>+3 Weapon, Staff of Power</em>.
-              </p>
-            </div>
-
-            <div class="loot-ref-card tier-4">
-              <div class="loot-ref-header">
-                <span class="loot-ref-tier">Tier 4</span>
-                <span class="loot-ref-levels">Levels 17–20</span>
-                <span class="loot-ref-subtitle">Masters of the World</span>
-              </div>
-              <div class="loot-ref-rarities">
-                <span class="rarity-pill very-rare">Very Rare</span>
-                <span class="rarity-pill legendary">Legendary</span>
-              </div>
-              <p class="loot-ref-desc">
-                <strong>Very Rare</strong> items are standard. Around levels 17+
-                characters earn <strong>Legendary</strong> items — e.g.
-                <em>Vorpal Sword, Holy Avenger, Staff of the Magi</em>.
-              </p>
-            </div>
-
-          </div>
-        </details>
-
-      </div>
-    </div><!-- /tab-admin -->
 
   </div><!-- /mainApp -->
 
@@ -542,6 +432,36 @@
     <p>© DKDM — All artwork and content reserved.</p>
   </footer>
 
+    <div id="tab-admin" class="tab-content" style="display:none">
+      <div id="adminPanel" style="display:none">
+        <button id="closeAdminView" type="button" class="toolbar-btn">← Back</button>
+
+
+
+        <div class="admin-section">
+          <h2>Website Users</h2>
+          <p class="admin-section-sub">
+            All registered users across the website. Roles here apply to the account, independently of campaign membership.
+          </p>
+          <div class="table-scroll">
+            <table class="user-table">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div><!-- /tab-admin -->
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

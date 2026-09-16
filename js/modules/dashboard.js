@@ -227,6 +227,9 @@ function renderCampaignSelector() {
 }
 
 async function enterCampaign(campaign) {
+  closeCharacterLoot();
+  closeWishModal();
+  closeEditCharacterModal();
   activeCampaign       = campaign;
   activeMembershipRole = isAdmin()
     ? "admin"
@@ -258,6 +261,9 @@ async function enterCampaign(campaign) {
 }
 
 async function leaveCampaign() {
+  closeCharacterLoot();
+  closeWishModal();
+  closeEditCharacterModal();
   activeCampaign       = null;
   activeMembershipRole = null;
   selectedCharacter    = null;
@@ -274,6 +280,9 @@ async function leaveCampaign() {
 // ─── SCREEN MANAGEMENT ────────────────────────────────────────────────────────
 
 function hideAllScreens() {
+  document.getElementById("tab-admin").style.display = "none";
+  document.getElementById("adminTab").style.display = isAdmin() ? "inline-block" : "none";
+  document.getElementById("adminTab").setAttribute("aria-pressed", "false");
   const sel  = document.getElementById("campaignSelectorScreen");
   const main = document.getElementById("mainApp");
 
@@ -302,7 +311,6 @@ function showMainApp() {
   if (isAdmin()) {
     renderUserTable();
     renderAdminStats();
-    renderAdminInvites();
     renderAdminDMRequests();
   }
 

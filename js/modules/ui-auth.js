@@ -6,6 +6,8 @@
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 
 function showTab(tabId) {
+  if (tabId === "admin") { openAdminView(); return; }
+  if (tabId === "dm" && (!activeCampaign || !canManageCampaign())) return;
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c=>c.style.display="none");
   const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
@@ -19,6 +21,8 @@ function showTab(tabId) {
 }
 
 function initTabs() {
+  document.getElementById("adminTab").addEventListener("click", openAdminView);
+  document.getElementById("closeAdminView").addEventListener("click", closeAdminView);
   document.querySelectorAll(".tab").forEach(btn=>{
     btn.addEventListener("click", ()=>showTab(btn.dataset.tab));
   });
@@ -236,6 +240,10 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     }
 
   } else {
+    closeCharacterLoot();
+    closeWishModal();
+    closeEditCharacterModal();
+    closeUserModal();
     currentUser = null;
     activeCampaign = null;
     activeMembershipRole = null;

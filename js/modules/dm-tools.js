@@ -18,7 +18,7 @@ function ensureDMToolsUI() {
     btn.dataset.tab = "dm";
     btn.style.display = "none";
     btn.textContent = "DM Tools";
-    if (adminTab) tabs.insertBefore(btn, adminTab);
+    if (adminTab?.parentElement === tabs) tabs.insertBefore(btn, adminTab);
     else tabs.appendChild(btn);
   }
 
@@ -30,7 +30,7 @@ function ensureDMToolsUI() {
     panel.className = "tab-content";
     panel.style.display = "none";
     panel.innerHTML = `<div id="dmToolsPanel"></div>`;
-    if (adminPanel) main.insertBefore(panel, adminPanel);
+    if (adminPanel?.parentElement === main) main.insertBefore(panel, adminPanel);
     else main.appendChild(panel);
   }
 
@@ -331,17 +331,229 @@ function renderDMTools() {
       </section>
 
       <section class="dm-tool-card dm-tool-card--wide">
+        <h2>Characters &amp; Items</h2>
+        <div id="dmCharacterList"></div>
+      </section>
+      <section class="dm-tool-card dm-tool-card--wide">
         <h2>Pending Invitations</h2>
         <div id="dmPendingInvites" class="dm-invite-list"></div>
       </section>
+              <!-- Loot rarity reference — collapsible -->
+        <details class="admin-section loot-ref-panel">
+          <summary>📖 Magic Item Rarity Progression by Level</summary>
+          <div class="loot-ref-grid">
+
+            <div class="loot-ref-card tier-1">
+              <div class="loot-ref-header">
+                <span class="loot-ref-tier">Tier 1</span>
+                <span class="loot-ref-levels">Levels 1–4</span>
+                <span class="loot-ref-subtitle">Local Heroes</span>
+              </div>
+              <div class="loot-ref-rarities">
+                <span class="rarity-pill common">Common</span>
+                <span class="rarity-pill uncommon">Uncommon</span>
+              </div>
+              <p class="loot-ref-desc">
+                Players usually find their first <strong>Common</strong> items early on.
+                Around levels 3–4 characters typically acquire their first
+                <strong>Uncommon</strong> items — e.g.
+                <em>+1 Weapon, Bag of Holding, Cloak of Protection</em>.
+              </p>
+            </div>
+
+            <div class="loot-ref-card tier-2">
+              <div class="loot-ref-header">
+                <span class="loot-ref-tier">Tier 2</span>
+                <span class="loot-ref-levels">Levels 5–10</span>
+                <span class="loot-ref-subtitle">Heroes of the Realm</span>
+              </div>
+              <div class="loot-ref-rarities">
+                <span class="rarity-pill uncommon">Uncommon</span>
+                <span class="rarity-pill rare">Rare</span>
+              </div>
+              <p class="loot-ref-desc">
+                <strong>Uncommon</strong> items become standard. Around levels 7–9
+                characters start acquiring <strong>Rare</strong> items — e.g.
+                <em>+2 Weapon, Flame Tongue, Ring of Protection</em>.
+              </p>
+            </div>
+
+            <div class="loot-ref-card tier-3">
+              <div class="loot-ref-header">
+                <span class="loot-ref-tier">Tier 3</span>
+                <span class="loot-ref-levels">Levels 11–16</span>
+                <span class="loot-ref-subtitle">Masters of the Realm</span>
+              </div>
+              <div class="loot-ref-rarities">
+                <span class="rarity-pill rare">Rare</span>
+                <span class="rarity-pill very-rare">Very Rare</span>
+              </div>
+              <p class="loot-ref-desc">
+                <strong>Rare</strong> items are common across the party. Around levels 11–13
+                characters begin finding <strong>Very Rare</strong> items — e.g.
+                <em>+3 Weapon, Staff of Power</em>.
+              </p>
+            </div>
+
+            <div class="loot-ref-card tier-4">
+              <div class="loot-ref-header">
+                <span class="loot-ref-tier">Tier 4</span>
+                <span class="loot-ref-levels">Levels 17–20</span>
+                <span class="loot-ref-subtitle">Masters of the World</span>
+              </div>
+              <div class="loot-ref-rarities">
+                <span class="rarity-pill very-rare">Very Rare</span>
+                <span class="rarity-pill legendary">Legendary</span>
+              </div>
+              <p class="loot-ref-desc">
+                <strong>Very Rare</strong> items are standard. Around levels 17+
+                characters earn <strong>Legendary</strong> items — e.g.
+                <em>Vorpal Sword, Holy Avenger, Staff of the Magi</em>.
+              </p>
+            </div>
+
+          </div>
+        </details>
     </div>`;
 
   renderDMOverview();
   renderDMMembers();
   renderDMInvites();
+  renderDMCharacters();
 
   document.getElementById("dmSaveCampaignSettings")?.addEventListener("click", saveDMCampaignSettings);
   document.getElementById("dmInviteMember")?.addEventListener("click", () => openUserModal());
   document.getElementById("dmOpenLibrary")?.addEventListener("click", () => showTab("library"));
 }
 
+// Campaign character management. Include preserved characters of former members.
+function renderDMCharacters() {
+  const list = document.getElementById("dmCharacterList");
+  if (!list) return;
+  if (!activeCampaign || !canManageCampaign()) { list.replaceChildren(); return; }
+  const groups = new Map();
+  for (const member of campaignMembers) groups.set(member.uid || member.id, { member, chars: [] });
+  for (const character of characters.filter(c => c.active !== false)) {
+    if (!groups.has(character.userId)) groups.set(character.userId, { member: { uid: character.userId }, chars: [] });
+    groups.get(character.userId).chars.push(character);
+  }
+  list.innerHTML = [...groups.values()].map(({member, chars}) => `
+    <section class="dm-character-group">
+      <h3>${escapeHtml(memberLabel(member))}</h3>
+      ${chars.length ? chars.map(c => {
+        const saved = new Set(saves.filter(s => s.characterId === c.id).map(s => s.itemId)).size;
+        const looted = items.filter(i => { const state = getItemState(i.id); return state.looted && state.owner === c.id; }).length;
+        return `<div class="admin-char-row">
+          <div class="admin-char-info"><strong>${escapeHtml(c.name)}</strong>
+            <span>${escapeHtml(c.class || "Adventurer")}</span>
+            <span class="level-badge">${c.level ? `Lvl ${escapeHtml(c.level)}` : "No level"}</span></div>
+          <div class="admin-char-btns">
+            <button type="button" class="wish-view-btn btn-sm" data-dm-saved="${escapeHtml(c.id)}">Saved (${saved})</button>
+            <button type="button" class="loot-button btn-sm" data-dm-loot="${escapeHtml(c.id)}">Looted (${looted})</button>
+            <button type="button" class="edit-button btn-sm" data-dm-edit="${escapeHtml(c.id)}">Edit</button>
+            <button type="button" class="cancel-button btn-sm" data-dm-delete="${escapeHtml(c.id)}" ${!isAdmin() && c.userId !== auth.currentUser?.uid && saved ? 'disabled title="Only the character owner or an admin can delete a character with saved items under the current permissions."' : ""}>Delete</button>
+          </div></div>`;
+      }).join("") : '<p>No active characters.</p>'}
+    </section>`).join("") || "<p>No characters or members in this campaign yet.</p>";
+  for (const [action, handler] of Object.entries({
+    saved: c => openWishModal(c.id, c.name),
+    loot: c => openCharacterLoot(c.id),
+    edit: c => openEditCharacterModal(c.id, c.name, c.class, c.level || ""),
+    delete: c => deleteDMCampaignCharacter(c)
+  })) {
+    list.querySelectorAll(`[data-dm-${action}]`).forEach(button => button.addEventListener("click", () => {
+      if (!activeCampaign || !canManageCampaign()) return;
+      const c = characters.find(c => c.id === button.getAttribute(`data-dm-${action}`));
+      if (c) handler(c);
+    }));
+  }
+}
+
+async function deleteDMCampaignCharacter(character) {
+  if (!activeCampaign || !canManageCampaign()) return;
+  if (!isAdmin() && character.userId !== auth.currentUser?.uid && saves.some(s => s.characterId === character.id)) {
+    alert("Only the character owner or an admin can delete this character while they have saved items.");
+    return;
+  }
+  if (!confirm(`Delete "${character.name}" from this campaign? Their saved items will be removed and loot will become unassigned.`)) return;
+  const campaignId = activeCampaign.id;
+  const charSaves = saves.filter(s => s.characterId === character.id);
+  const owned = Object.keys(itemState).filter(id => itemState[id]?.owner === character.id);
+  const batch = writeBatch(db);
+  for (const save of charSaves) batch.delete(doc(db, "campaigns", campaignId, "saves", save.id));
+  for (const id of owned) batch.set(doc(db, "campaigns", campaignId, "itemState", id), { owner: null }, { merge: true });
+  batch.delete(doc(db, "campaigns", campaignId, "characters", character.id));
+  try {
+    await batch.commit();
+    if (activeCampaign?.id !== campaignId) return;
+    saves = saves.filter(s => s.characterId !== character.id);
+    characters = characters.filter(c => c.id !== character.id);
+    for (const id of owned) patchItemState(id, { owner: null });
+    if (selectedCharacter?.id === character.id) selectedCharacter = null;
+    populateOwnerFilter();
+    renderDMCharacters();
+    renderDMOverview();
+    renderPlayerTab();
+    renderCards();
+  } catch (error) {
+    alert(`Could not delete character: ${error.message}`);
+  }
+}
+
+let characterLootView = null;
+let characterLootReturnFocus = null;
+function ensureCharacterLootDialog() {
+  let dialog = document.getElementById("characterLootDialog");
+  if (dialog) return dialog;
+  dialog = document.createElement("dialog");
+  dialog.id = "characterLootDialog";
+  dialog.className = "character-loot-dialog";
+  dialog.setAttribute("aria-labelledby", "characterLootTitle");
+  dialog.innerHTML = `<div class="character-loot-heading"><h2 id="characterLootTitle"></h2>
+    <button type="button" class="cancel-button" id="closeCharacterLoot">Close</button></div>
+    <div id="characterLootCards" class="character-loot-grid"></div>`;
+  document.body.appendChild(dialog);
+  dialog.querySelector("#closeCharacterLoot").addEventListener("click", closeCharacterLoot);
+  dialog.addEventListener("cancel", event => { event.preventDefault(); closeCharacterLoot(); });
+  dialog.addEventListener("close", () => { characterLootView = null; });
+  return dialog;
+}
+function openCharacterLoot(characterId) {
+  if (!activeCampaign || !canManageCampaign()) return;
+  if (!characters.some(c => c.id === characterId)) return;
+  characterLootReturnFocus = document.activeElement;
+  characterLootView = { campaignId: activeCampaign.id, characterId };
+  const dialog = ensureCharacterLootDialog();
+  refreshCharacterLoot();
+  if (!dialog.open) dialog.showModal();
+}
+function closeCharacterLoot() {
+  characterLootView = null;
+  const dialog = document.getElementById("characterLootDialog");
+  if (dialog?.open) dialog.close();
+  dialog?.querySelector("#characterLootCards")?.replaceChildren();
+  if (characterLootReturnFocus?.isConnected) characterLootReturnFocus.focus();
+  characterLootReturnFocus = null;
+}
+function refreshCharacterLoot(itemId = null) {
+  if (!characterLootView) return;
+  const { campaignId, characterId } = characterLootView;
+  const character = characters.find(c => c.id === characterId);
+  if (!canManageCampaign() || activeCampaign?.id !== campaignId || !character) { closeCharacterLoot(); return; }
+  const grid = document.getElementById("characterLootCards");
+  const loot = items.filter(i => { const state = getItemState(i.id); return state.looted && state.owner === characterId; });
+  document.getElementById("characterLootTitle").textContent = `${character.name}'s Looted Items (${loot.length})`;
+  const context = buildRenderContext();
+  if (itemId) {
+    const old = [...grid.querySelectorAll("[data-item-id]")].find(c => c.dataset.itemId === itemId);
+    const item = loot.find(i => i.id === itemId);
+    if (old && item) old.replaceWith(createCard(item, context));
+    else if (old) old.remove();
+    else if (item) grid.appendChild(createCard(item, context));
+    grid.querySelector(".loot-empty")?.remove();
+  } else {
+    grid.replaceChildren(...loot.map(i => createCard(i, context)));
+  }
+  if (!loot.length) grid.innerHTML = '<p class="loot-empty">No looted items assigned to this character.</p>';
+  observePendingImages(grid);
+}

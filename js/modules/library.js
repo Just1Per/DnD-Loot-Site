@@ -103,17 +103,17 @@ function createCard(item, context = buildRenderContext()) {
 
     <div class="card-header">
       ${isEditing
-        ? `<input class="edit-name" id="edit-name-${item.id}" value="${escapeHtml(item.name || "")}">`
+        ? `<input class="edit-name" data-edit-field="name" value="${escapeHtml(item.name || "")}">`
         : `<h2 class="item-name">${item.name}</h2>`
       }
 
       ${isEditing ? `
-        <select id="edit-category-${item.id}">
+        <select data-edit-field="category">
           ${CATEGORIES.map(c => `<option ${item.category===c?"selected":""}>${c}</option>`).join("")}
         </select>
 
         <label>
-          <input type="checkbox" id="edit-attunement-${item.id}" ${item.attunement?"checked":""}>
+          <input type="checkbox" data-edit-field="attunement" ${item.attunement?"checked":""}>
           Requires Attunement
         </label>
 
@@ -134,11 +134,11 @@ function createCard(item, context = buildRenderContext()) {
 
       <div class="card-meta">
         ${isEditing ? `
-          <select id="edit-rarity-${item.id}">
+          <select data-edit-field="rarity">
             ${RARITIES.map(r=>`<option ${item.rarity===r?"selected":""}>${r}</option>`).join("")}
           </select>
-          <input id="edit-source-${item.id}"   value="${escapeHtml(item.source || "")}" placeholder="Source">
-          <input id="edit-campaign-${item.id}" value="${escapeHtml(item.campaign || "")}" placeholder="Campaign / Book">
+          <input data-edit-field="source"   value="${escapeHtml(item.source || "")}" placeholder="Source">
+          <input data-edit-field="campaign" value="${escapeHtml(item.campaign || "")}" placeholder="Campaign / Book">
         ` : `
           ${item.rarity    ? `<span class="meta-tag ${rarityClass}">${item.rarity}</span>` : ""}
           ${item.source    ? `<span class="meta-tag">${item.source}</span>` : ""}
@@ -160,13 +160,13 @@ function createCard(item, context = buildRenderContext()) {
 
     <div class="card-body">
       ${isEditing
-        ? `<textarea class="edit-description" id="edit-description-${item.id}"
+        ? `<textarea class="edit-description" data-edit-field="description"
              placeholder="Description">${item.description||""}</textarea>`
         : `<div class="item-description">${item.description||""}</div>`
       }
 
       ${isEditing
-        ? `<textarea id="edit-properties-${item.id}"
+        ? `<textarea data-edit-field="properties"
              placeholder='[{"title":"Name","text":"Description"}]'>${JSON.stringify(item.properties||[],null,2)}</textarea>`
         : (item.properties||[]).map(p=>`
             <div class="property-block">
@@ -175,7 +175,7 @@ function createCard(item, context = buildRenderContext()) {
       }
 
       ${isEditing
-        ? `<textarea id="edit-quote-${item.id}" placeholder="Quote">${item.quote||""}</textarea>`
+        ? `<textarea data-edit-field="quote" placeholder="Quote">${item.quote||""}</textarea>`
         : item.quote ? `<i>${item.quote}</i>` : ""
       }
     </div>
@@ -205,24 +205,38 @@ function createCard(item, context = buildRenderContext()) {
 // ─── CARD EVENTS ──────────────────────────────────────────────────────────────
 
 function attachCardEvents(card, item) {
+  const onCardEvent = (selector, type, handler) => {
+    card.querySelector(selector)?.addEventListener(type, async event => {
+      const control = event.currentTarget;
+      if (control.dataset.busy === "true") return;
+      control.dataset.busy = "true";
+      control.disabled = true;
+      try { await handler(event); }
+      catch (error) {
+        console.error("Item action failed:", error);
+        if (control.matches(".owner-select")) control.value = getItemState(item.id).owner || "";
+        alert(`Could not save item changes: ${error.message}`);
+      } finally { control.disabled = false; delete control.dataset.busy; }
+    });
+  };
 
-  card.querySelector(".edit-button")?.addEventListener("click", () => {
+  onCardEvent(".edit-button", "click", () => {
     editingItems.add(item.id);
     rerenderCard(item.id);
   });
 
-  card.querySelector(".cancel-button")?.addEventListener("click", () => {
+  onCardEvent(".cancel-button", "click", () => {
     editingItems.delete(item.id);
     rerenderCard(item.id);
   });
 
   // Master catalogue editing remains admin-only because the buttons are admin-only.
-  card.querySelector(".save-edit-button")?.addEventListener("click", async () => {
+  onCardEvent(".save-edit-button", "click", async () => {
     let properties = [];
 
     try {
       properties = JSON.parse(
-        document.getElementById(`edit-properties-${item.id}`).value || "[]"
+        card.querySelector(`[data-edit-field="properties"]`).value || "[]"
       );
     } catch {
       alert("Properties JSON is invalid.");
@@ -230,15 +244,15 @@ function attachCardEvents(card, item) {
     }
 
     const changes = {
-      name:        document.getElementById(`edit-name-${item.id}`).value,
-      description: document.getElementById(`edit-description-${item.id}`).value,
-      category:    document.getElementById(`edit-category-${item.id}`).value,
-      rarity:      document.getElementById(`edit-rarity-${item.id}`).value,
-      source:      document.getElementById(`edit-source-${item.id}`).value,
-      campaign:    document.getElementById(`edit-campaign-${item.id}`).value,
-      quote:       document.getElementById(`edit-quote-${item.id}`).value,
-      attunement:  document.getElementById(`edit-attunement-${item.id}`).checked,
-      classes:     [...document.querySelectorAll(`.class-checkbox-${item.id}:checked`)]
+      name:        card.querySelector(`[data-edit-field="name"]`).value,
+      description: card.querySelector(`[data-edit-field="description"]`).value,
+      category:    card.querySelector(`[data-edit-field="category"]`).value,
+      rarity:      card.querySelector(`[data-edit-field="rarity"]`).value,
+      source:      card.querySelector(`[data-edit-field="source"]`).value,
+      campaign:    card.querySelector(`[data-edit-field="campaign"]`).value,
+      quote:       card.querySelector(`[data-edit-field="quote"]`).value,
+      attunement:  card.querySelector(`[data-edit-field="attunement"]`).checked,
+      classes:     [...card.querySelectorAll(`.class-checkbox-${item.id}:checked`)]
         .map(b => b.value),
       properties
     };
@@ -253,7 +267,7 @@ function attachCardEvents(card, item) {
     populateCampaignFilter();
   });
 
-  card.querySelector(".delete-item-button")?.addEventListener("click", async () => {
+  onCardEvent(".delete-item-button", "click", async () => {
     if (!confirm(`Permanently delete "${item.name}" from the master catalogue? This cannot be undone.`)) return;
 
     if (activeCampaign) {
@@ -280,13 +294,15 @@ function attachCardEvents(card, item) {
 
     container.querySelector(`[data-item-id="${item.id}"]`)?.remove();
 
+    refreshCharacterLoot();
+    renderDMCharacters();
     refreshStatsBar();
     populateSourceFilter();
     populateCampaignFilter();
   });
 
   // Loot/highlight/owner are campaign state — never mutate the global master item.
-  card.querySelector(".loot-button")?.addEventListener("click", async () => {
+  onCardEvent(".loot-button", "click", async () => {
     if (!activeCampaign || !canManageCampaign()) return;
 
     const state = getItemState(item.id);
@@ -302,7 +318,7 @@ function attachCardEvents(card, item) {
     renderMyLoot();
   });
 
-  card.querySelector(".highlight-button")?.addEventListener("click", async () => {
+  onCardEvent(".highlight-button", "click", async () => {
     if (!activeCampaign || !canManageCampaign()) return;
 
     const state = getItemState(item.id);
@@ -314,7 +330,7 @@ function attachCardEvents(card, item) {
     rerenderCard(item.id);
   });
 
-  card.querySelector(".clone-button")?.addEventListener("click", async () => {
+  onCardEvent(".clone-button", "click", async () => {
     const cloneId = `${item.id}-copy-${Date.now()}`;
     const {
       id: _id,
@@ -341,7 +357,7 @@ function attachCardEvents(card, item) {
     renderCards();
   });
 
-  card.querySelector(".owner-select")?.addEventListener("change", async e => {
+  onCardEvent(".owner-select", "change", async e => {
     if (!activeCampaign || !canManageCampaign()) return;
 
     const ownerId = e.target.value || null;
@@ -351,7 +367,7 @@ function attachCardEvents(card, item) {
     renderMyLoot();
   });
 
-  card.querySelector(".image-file-input")?.addEventListener("change", async e => {
+  onCardEvent(".image-file-input", "change", async e => {
     const file = e.target.files?.[0];
 
     if (!file) return;
@@ -383,11 +399,11 @@ function attachCardEvents(card, item) {
     }
   });
 
-  card.querySelector(".visibility-toggle-btn")?.addEventListener("click", async () => {
+  onCardEvent(".visibility-toggle-btn", "click", async () => {
     await toggleItemVisibility(item.id);
   });
 
-  card.querySelector(".save-item-button")?.addEventListener("click", async () => {
+  onCardEvent(".save-item-button", "click", async () => {
     if (!selectedCharacter) {
       alert("Select a character in the My Character tab first.");
       return;

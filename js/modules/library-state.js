@@ -37,15 +37,16 @@ function patchItemState(itemId, changes) {
 async function persistItemState(itemId, changes) {
   if (!activeCampaign) return null;
 
-  patchItemState(itemId, changes);
+  const campaignId = activeCampaign.id;
 
   await setDoc(
-    doc(db, "campaigns", activeCampaign.id, "itemState", itemId),
+    doc(db, "campaigns", campaignId, "itemState", itemId),
     changes,
     { merge: true }
   );
 
-  return getItemState(itemId);
+  if (activeCampaign?.id !== campaignId) return null;
+  return patchItemState(itemId, changes);
 }
 
 
@@ -70,14 +71,16 @@ function buildRenderContext() {
 }
 
 function rerenderCard(itemId) {
-  const item    = items.find(i => i.id === itemId);
-  const oldCard = container.querySelector(`[data-item-id="${itemId}"]`);
-
-  if (!item || !oldCard) return;
-
-  const newCard = createCard(item, buildRenderContext());
-  oldCard.replaceWith(newCard);
-  observePendingImages(newCard);
+  const item = items.find(i => i.id === itemId);
+  const oldCard = [...container.querySelectorAll("[data-item-id]")].find(c => c.dataset.itemId === itemId);
+  if (item && oldCard) {
+    const card = createCard(item, buildRenderContext());
+    oldCard.replaceWith(card);
+    observePendingImages(card);
+  }
+  refreshCharacterLoot(itemId);
+  renderDMCharacters();
+  renderDMOverview();
   refreshStatsBar();
 }
 
@@ -99,6 +102,7 @@ function renderCards() {
   container.replaceChildren(fragment);
   updateStatsFromFiltered(filtered);
   observePendingImages(container);
+  refreshCharacterLoot();
 }
 
 /**
