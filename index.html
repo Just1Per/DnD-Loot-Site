@@ -215,7 +215,7 @@
             Deleting a user removes them from the system.
           </p>
           <button id="openAddUserBtn" type="button" class="toolbar-btn"
-            style="margin-bottom:14px">+ Add User</button>
+            style="margin-bottom:14px">+ Invite User</button>
           <div class="table-scroll">
             <table class="user-table">
               <thead>
@@ -391,27 +391,44 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════════════
-       MODAL: ADD / EDIT USER
+       MODAL: INVITE / EDIT USER
   ══════════════════════════════════════════════════════════════════════ -->
   <div id="userModal" class="modal" style="display:none"
     aria-modal="true" role="dialog" aria-labelledby="userModalTitle">
     <div class="modal-box modal-box--sm">
       <div class="modal-header">
-        <h2 id="userModalTitle">Add User</h2>
+        <h2 id="userModalTitle">Invite User</h2>
         <button class="modal-close" id="closeUserModal" type="button" aria-label="Close">✕</button>
       </div>
       <div class="modal-body">
         <div class="modal-form-grid">
 
-          <label class="modal-label full">Full Name
-            <input type="text" id="user-name" placeholder="e.g. Casper Andersen" autocomplete="name">
-          </label>
+          <div id="registeredInviteSection" class="modal-label full" style="display:none">
+            <span>Registered User</span>
+            <input type="search" id="registeredUserSearch"
+              placeholder="Search registered users by name…" autocomplete="off">
+            <small>Select an existing D&amp;D Vault account. The player will still accept the campaign invitation from their dashboard.</small>
 
-          <label class="modal-label full">Email
-            <input type="email" id="user-email" placeholder="player@example.com" autocomplete="email">
-            <small>When this person first logs in with Google their account links
-              automatically if the email matches.</small>
-          </label>
+            <div id="registeredUserSelected" style="display:none;margin-top:10px;padding:10px;border:1px solid #c8b89a;border-radius:8px;background:#fdfbf7"></div>
+            <div id="registeredUserResults" style="margin-top:8px;max-height:180px;overflow:auto"></div>
+
+            <div style="display:flex;align-items:center;gap:10px;margin:14px 0 4px">
+              <span style="height:1px;background:#d8cbb7;flex:1"></span>
+              <small style="white-space:nowrap">or invite by email</small>
+              <span style="height:1px;background:#d8cbb7;flex:1"></span>
+            </div>
+          </div>
+
+          <div id="manualInviteFields" class="full" style="display:contents">
+            <label class="modal-label full">Full Name
+              <input type="text" id="user-name" placeholder="e.g. Casper Andersen" autocomplete="name">
+            </label>
+
+            <label class="modal-label full">Email
+              <input type="email" id="user-email" placeholder="player@example.com" autocomplete="email">
+              <small>For someone not selected above, enter the email they use to sign in.</small>
+            </label>
+          </div>
 
           <div class="modal-label full">
             <span>Roles</span>
@@ -449,7 +466,7 @@
       </div>
       <div class="modal-footer">
         <button class="cancel-button"    id="cancelUserModal" type="button">Cancel</button>
-        <button class="save-edit-button" id="saveUserModal"   type="button">Save User</button>
+        <button class="save-edit-button" id="saveUserModal"   type="button">Create Invitation</button>
       </div>
     </div>
   </div>
