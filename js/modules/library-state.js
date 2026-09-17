@@ -13,42 +13,20 @@ function patchItem(itemId, changes) {
 }
 
 function getItemState(itemId) {
-  const raw = itemState[itemId] || {};
-  const defaultVisible = activeCampaign?.defaultItemVisible !== false;
-
-  return {
-    visible: raw.visible ?? defaultVisible,
-    looted: raw.looted ?? false,
-    highlighted: raw.highlighted ?? false,
-    owner: raw.owner ?? null,
-    receivedDate: raw.receivedDate ?? null,
-    ...raw
-  };
+  const item=items.find(i=>i.id===itemId)||{};
+  const entries=inventory.filter(e=>e.itemId===itemId&&e.quantity>0);
+  return {visible:!!item.visible,highlighted:!!item.highlighted,looted:entries.length>0,
+    owner:entries.length===1?entries[0].characterId:null,receivedDate:entries[0]?.receivedAt||null};
 }
-
-function patchItemState(itemId, changes) {
-  itemState[itemId] = {
-    ...(itemState[itemId] || {}),
-    ...changes
-  };
-  return getItemState(itemId);
+function patchItemState(itemId,changes) { return patchItem(itemId,changes); }
+async function persistItemState(itemId,changes) {
+  if(!canManageCampaign())throw Error('Campaign DM access is required.');
+  const safe={};for(const k of ['visible','highlighted'])if(k in changes)safe[k]=!!changes[k];
+  if(Object.keys(safe).length!==Object.keys(changes).length)throw Error('Inventory changes must use the inventory controls.');
+  const id=activeCampaign.id;
+  await updateDoc(doc(db,'campaigns',id,'items',itemId),safe);
+  if(activeCampaign?.id===id)patchItem(itemId,safe);
 }
-
-async function persistItemState(itemId, changes) {
-  if (!activeCampaign) return null;
-
-  const campaignId = activeCampaign.id;
-
-  await setDoc(
-    doc(db, "campaigns", campaignId, "itemState", itemId),
-    changes,
-    { merge: true }
-  );
-
-  if (activeCampaign?.id !== campaignId) return null;
-  return patchItemState(itemId, changes);
-}
-
 
 // ─── SINGLE-CARD RE-RENDER ────────────────────────────────────────────────────
 
@@ -160,7 +138,7 @@ function applyFilters(list) {
     if (campaign && item.campaign !== campaign) return false;
     if (category && item.category !== category) return false;
     if (cls      && !item.classes?.includes(cls)) return false;
-    if (owner    && state.owner !== owner) return false;
+    if (owner && !inventory.some(e=>e.itemId===item.id && e.characterId===owner && e.quantity>0)) return false;
 
     if (chk("showLootedOnly")         && !state.looted)      return false;
     if (chk("showUnlootedOnly")       &&  state.looted)      return false;

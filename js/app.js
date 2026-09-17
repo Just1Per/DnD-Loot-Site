@@ -14,11 +14,13 @@ import {
 
 import {
   collection, getDocs, addDoc, doc, getDoc,
-  setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch
+  setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
 
 import { ref, getDownloadURL, uploadBytes }
   from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
+
 
 // The feature files are intentionally loaded as ordered browser scripts.
 // This is the lowest-risk way to split the existing 3,700+ line app without
@@ -27,11 +29,12 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   db, storage, auth, provider, signInWithPopup, signOut,
   onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword,
   collection, getDocs, addDoc, doc, getDoc,
-  setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch,
-  ref, getDownloadURL, uploadBytes
+  setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId,
+  ref, getDownloadURL, uploadBytes,
 });
 
 const FEATURE_FILES = [
+  "./modules/campaign-store.js",
   "./modules/core.js",
   "./modules/images.js",
   "./modules/catalog-cache.js",
@@ -40,6 +43,7 @@ const FEATURE_FILES = [
   "./modules/invitations.js",
   "./modules/library-state.js",
   "./modules/dashboard.js",
+  "./modules/campaign-items.js",
   "./modules/library.js",
   "./modules/admin.js",
   "./modules/player.js",

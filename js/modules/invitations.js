@@ -49,9 +49,9 @@ async function loadActiveCampaignInvites() {
     return;
   }
 
-  const snap = await getDocs(
-    query(collection(db, "campaignInvites"), where("campaignId", "==", activeCampaign.id))
-  );
+  const id = activeCampaign.id;
+  const snap = await getDocs(query(collection(db, "campaignInvites"), where("campaignId", "==", id)));
+  if (activeCampaign?.id !== id) return;
 
   campaignInvites = snap.docs
     .map(d => ({ id: d.id, ...d.data() }))
@@ -230,16 +230,6 @@ async function loadCampaigns() {
     return;
   }
 
-  if (isAdmin()) {
-    const snap = await getDocs(collection(db, "campaigns"));
-    campaigns = snap.docs.map(d => ({
-      id: d.id,
-      membershipRole: "admin",
-      ...d.data()
-    }));
-    return;
-  }
-
   const campaignMap = new Map();
 
   // Primary path: tiny per-user membership index.
@@ -275,29 +265,6 @@ async function loadCampaigns() {
 }
 
 async function importItemsIfEmpty() {
-  // limit(2) matters because Step 7 stores one metadata document in /items.
-  const snap = await getDocs(query(collection(db, "items"), limit(2)));
-  const hasRealItem = snap.docs.some(d => d.id !== CATALOG_META_ID);
-  if (hasRealItem) return;
-
-  console.log("Firestore item catalogue empty — importing items…");
-  const { items: sourceItems } = await import("./items.js");
-
-  for (const sourceItem of sourceItems) {
-    const {
-      looted: _looted,
-      highlighted: _highlighted,
-      owner: _owner,
-      receivedDate: _receivedDate,
-      ...masterItem
-    } = sourceItem;
-
-    await setDoc(doc(db, "items", sourceItem.id), masterItem, { merge: true });
-  }
-
-  console.log("Item import complete.");
-  // The subsequent catalogue load will populate items before normal use.
-  // Metadata is created after that first load by seedCatalogMetaIfNeeded().
+  // Root catalogue creation is explicit in Admin. An empty catalogue must not
+  // break login or import an unavailable legacy items.js file automatically.
 }
-
-

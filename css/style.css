@@ -1633,3 +1633,23 @@ input::placeholder, textarea::placeholder { color: #8a7355; font-style: italic; 
 .character-loot-grid .item-card { min-width:0; width:100%; box-sizing:border-box; }
 .character-loot-grid .loot-empty { grid-column:1 / -1; }
 @media(max-width:600px) { .character-loot-dialog { padding:12px; } .character-loot-heading h2 { font-size:1.1rem; } .dm-character-group .admin-char-btns { flex-wrap:wrap; } }
+
+/* Campaign copies and private inventory. */
+#rootCatalogueScreen { width: min(1600px, 100%); margin: 24px auto; padding: 0 20px; }
+.campaign-item-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:16px 0; color:#746453; font-size:.8rem; }
+.vault-dialog { margin:auto; width:min(900px,calc(100vw - 32px)); max-height:88vh; padding:24px; overflow:auto; background:#fdfbf7; border:3px double #8a7355; border-radius:12px; color:#333; }
+.vault-dialog::backdrop { background:rgba(0,0,0,.65); }
+.vault-dialog-small { width:min(440px,calc(100vw - 32px)); }
+.vault-dialog h2 { font-family:"Cinzel",serif; color:#5c1d1d; margin-bottom:14px; }
+.vault-dialog p { margin:10px 0; }
+.vault-dialog .modal-label { margin:12px 0; }
+.root-picker-row { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 0; border-bottom:1px solid #c8b89a; }
+.inventory-quantity { font-weight:bold; color:#5c1d1d; margin-top:10px; }
+.supply-label { font-size:.8rem; color:#746453; margin-top:8px; }
+#campaignItemOptions { gap:12px; }
+#modal-campaign[readonly] { background:#eee5d5; cursor:not-allowed; }
+#actionError { color:#9b2424; }
+.item-description, .property-block { white-space:pre-wrap; overflow-wrap:anywhere; }
+button:disabled { opacity:.55; cursor:not-allowed; }
+#myLootGrid.character-loot-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); }
+@media(max-width:600px){.root-picker-row{align-items:flex-start;flex-direction:column}.vault-dialog{padding:16px}}

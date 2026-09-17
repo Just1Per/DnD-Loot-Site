@@ -227,40 +227,38 @@ function renderCampaignSelector() {
 }
 
 async function enterCampaign(campaign) {
-  closeCharacterLoot();
-  closeWishModal();
-  closeEditCharacterModal();
-  activeCampaign       = campaign;
-  activeMembershipRole = isAdmin()
-    ? "admin"
-    : (campaign.membershipRole || (campaign.dmId === auth.currentUser?.uid ? "dm" : "player"));
-
-  selectedCharacter = null;
-
-  const indicator = document.getElementById("activeCampaignName");
-  if (indicator) indicator.textContent = campaign.name;
-
-  const campaignLoads = [
-    itemsLoadPromise,
-    loadCharacters(),
-    loadSaves(),
-    loadItemState(),
-    loadUsers()
-  ];
-
-  if (canManageCampaign()) {
-    campaignLoads.push(loadCampaignMembers());
-    campaignLoads.push(loadActiveCampaignInvites());
+  closeCharacterLoot(); closeWishModal(); closeEditCharacterModal(); closeItemModal();
+  closeVaultAction(); closeRootPicker();
+  const generation = ++campaignLoadGeneration;
+  hideAllScreens();
+  try {
+    const fresh = await getDoc(doc(db, "campaigns", campaign.id));
+    const membership = await getDoc(doc(db, "campaigns", campaign.id, "members", auth.currentUser.uid));
+    if (generation !== campaignLoadGeneration) return;
+    if (!fresh.exists()) throw new Error("Campaign no longer exists.");
+    const owner = fresh.data().ownerId === auth.currentUser.uid;
+    if (!owner && (!membership.exists() || membership.data().status !== "active")) throw new Error("You no longer have access to this campaign.");
+    activeCampaign = { ...fresh.data(), id: fresh.id };
+    activeMembershipRole = owner ? "owner" : membership.data().role;
+    items = []; inventory = []; campaignSupply = {}; itemState = {}; characters = []; saves = []; campaignMembers = []; campaignInvites = []; selectedCharacter = null;
+    document.getElementById("activeCampaignName").textContent = activeCampaign.name;
+    await Promise.all([loadCharacters(), loadSaves(), loadCampaignInventory()]);
+    if (generation !== campaignLoadGeneration) return;
+    await loadCampaignItems();
+    if (canManageCampaign()) await Promise.all([loadCampaignMembers(), loadActiveCampaignInvites(), loadCampaignSupply()]);
+    if (generation !== campaignLoadGeneration) return;
+    showMainApp(); populateOwnerFilter(); renderCards();
+  } catch (error) {
+    if (generation !== campaignLoadGeneration) return;
+    activeCampaign = null; activeMembershipRole = null; items = []; inventory = [];
+    alert(`Could not open campaign: ${error.message}`); showCampaignSelector();
   }
-
-  await Promise.all(campaignLoads);
-
-  showMainApp();
-  populateOwnerFilter();
-  renderCards();
 }
 
 async function leaveCampaign() {
+  ++campaignLoadGeneration;
+  items = []; inventory = []; campaignSupply = {};
+  closeVaultAction(); closeRootPicker(); closeItemModal();
   closeCharacterLoot();
   closeWishModal();
   closeEditCharacterModal();
@@ -280,6 +278,8 @@ async function leaveCampaign() {
 // ─── SCREEN MANAGEMENT ────────────────────────────────────────────────────────
 
 function hideAllScreens() {
+  const root = document.getElementById("rootCatalogueScreen");
+  if (root) root.style.display = "none";
   document.getElementById("tab-admin").style.display = "none";
   document.getElementById("adminTab").style.display = isAdmin() ? "inline-block" : "none";
   document.getElementById("adminTab").setAttribute("aria-pressed", "false");
@@ -304,7 +304,7 @@ function showMainApp() {
 
   if (dmTab)      dmTab.style.display      = canManageCampaign() ? "inline-block" : "none";
   if (adminTab)   adminTab.style.display   = isAdmin() ? "inline-block" : "none";
-  if (addBtn)     addBtn.style.display     = isAdmin() ? "inline-block" : "none";
+  if (addBtn)     addBtn.style.display     = canManageCampaign() ? "inline-block" : "none";
   if (adminPanel) adminPanel.style.display = isAdmin() ? "block" : "none";
   if (playerTab)  playerTab.style.display  = canUseCharacters() ? "inline-block" : "none";
 
@@ -316,6 +316,7 @@ function showMainApp() {
 
   if (canManageCampaign()) renderDMTools();
 
+  renderCampaignToolbar();
   showTab("library");
 }
 

@@ -363,6 +363,7 @@ async function saveCampaignModal() {
       dmId: auth.currentUser.uid,
       ownerId: auth.currentUser.uid,
       defaultItemVisible: true,
+      inventoryVersion: 2,
       created: Date.now(),
       updatedAt: Date.now()
     };

@@ -107,24 +107,19 @@ function observePendingImages(root = document) {
 }
 
 function itemImageMarkup(item, className, extraAttrs = "") {
-  const cached = item.imageUrl || getCachedImageUrl(item.id);
+  const imageId = item.imageBaseId || item.id;
+  const cached = item.imageUrl || getCachedImageUrl(imageId);
   const src = cached || PLACEHOLDER_IMAGE;
-  const pending = cached ? "" : ` data-image-item-id="${escapeHtml(item.id)}"`;
-  return `<img src="${src}" class="${className}" alt="${escapeHtml(item.name || "")}"
+  const pending = cached ? "" : ` data-image-item-id="${escapeHtml(imageId)}"`;
+  return `<img src="${escapeHtml(src)}" class="${className}" alt="${escapeHtml(item.name || "")}"
     loading="lazy" decoding="async"${pending} ${extraAttrs}
     onerror="this.src='${PLACEHOLDER_IMAGE}'; delete this.dataset.imageItemId;">`;
 }
 
-async function uploadItemImage(itemId, file) {
-  const imgRef = ref(storage, `dnd-item-images/${getBaseImageId(itemId)}.png`);
-  try {
-    await uploadBytes(imgRef, file, { contentType: file.type || "image/png" });
-    const url = await getDownloadURL(imgRef);
-    cacheImageUrl(itemId, url);
-    return url;
-  } catch (e) {
-    console.error("Image upload failed:", e);
-    return "";
-  }
+async function uploadItemImage(itemId,file,{campaignId=null}={}) {
+  if(!file.type.startsWith('image/')||file.size>=4*1024*1024)throw Error('Choose an image under 4 MB.');
+  const path=campaignId?`campaign-item-images/${campaignId}/${itemId}`:`dnd-item-images/${itemId}.png`;
+  const imageRef=ref(storage,path);
+  await uploadBytes(imageRef,file,{contentType:file.type});
+  return getDownloadURL(imageRef);
 }
-

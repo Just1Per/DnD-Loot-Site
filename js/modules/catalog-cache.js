@@ -63,9 +63,9 @@ async function readCatalogCache() {
 function catalogItemsForCache() {
   // imageUrl is a short-lived/local Storage resolution. Do not persist it as
   // catalogue data. A future thumbnailUrl field *is* persisted automatically.
-  return items.map(item => {
+  return rootItems.map(item => {
     const cachedItem = { ...item };
-    delete cachedItem.imageUrl;
+    if (!cachedItem.imageUrl?.startsWith("https://")) delete cachedItem.imageUrl;
     return cachedItem;
   });
 }
@@ -117,19 +117,19 @@ async function clearCatalogCache() {
 }
 
 function applyCatalogItems(sourceItems) {
-  items = (sourceItems || [])
+  rootItems = (sourceItems || [])
     .filter(item => item?.id && item.id !== CATALOG_META_ID)
     .map(raw => ({
       ...raw,
       // Optional Step 7+ thumbnail field: if you later store direct WebP/JPEG
       // thumbnail URLs in Firestore, cards can paint them immediately.
-      imageUrl: raw.thumbnailUrl || raw.thumbUrl || getCachedImageUrl(raw.id)
+      imageUrl: raw.imageUrl || raw.thumbnailUrl || raw.thumbUrl || getCachedImageUrl(raw.id)
     }));
 
   populateSourceFilter();
   populateCampaignFilter();
 
-  if (activeCampaign) renderCards();
+  if (document.getElementById("rootCatalogueScreen")?.style.display === "block") renderRootCatalogue();
 }
 
 async function readCatalogMeta() {
@@ -168,7 +168,7 @@ async function seedCatalogMetaIfNeeded() {
     await setDoc(doc(db, "items", CATALOG_META_ID), {
       _type: "catalog-meta",
       version,
-      itemCount: items.length,
+      itemCount: rootItems.length,
       updatedAt: version
     }, { merge: true });
 
@@ -190,7 +190,7 @@ async function markCatalogChanged() {
     await setDoc(doc(db, "items", CATALOG_META_ID), {
       _type: "catalog-meta",
       version,
-      itemCount: items.length,
+      itemCount: rootItems.length,
       updatedAt: version
     }, { merge: true });
 

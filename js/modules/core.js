@@ -9,9 +9,15 @@ const {
   ref, getDownloadURL, uploadBytes
 } = window.__DND_VAULT_DEPS__;
 
+const vaultCall = createCampaignStore(window.__DND_VAULT_DEPS__);
+
 // ─── STATE ────────────────────────────────────────────────────────────────────
 // Data flow: User → Campaign → Character → Item (owner = characterId)
 
+let rootItems = [];
+let inventory = [];
+let campaignSupply = {};
+let campaignLoadGeneration = 0;
 let items          = [];   // master item DB — always full, filtered by visibility
 let characters     = [];   // characters scoped to activeCampaign
 let saves          = [];   // saves scoped to activeCampaign
@@ -69,10 +75,10 @@ const isDM     = () => hasRole("dm") || hasRole("admin"); // global capability: 
 const isPlayer = () => hasRole("player") || hasRole("dm") || hasRole("admin");
 
 const canManageCampaign = () =>
-  isAdmin() || ["owner", "dm"].includes(activeMembershipRole);
+  !!activeCampaign && ["owner", "dm"].includes(activeMembershipRole);
 
 const canUseCharacters = () =>
-  isAdmin() || ["owner", "dm", "player"].includes(activeMembershipRole);
+  !!activeCampaign && ["owner", "dm", "player"].includes(activeMembershipRole);
 
 const myCharacters = () =>
   characters.filter(c => c.userId === auth.currentUser?.uid && c.active !== false);

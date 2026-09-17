@@ -54,6 +54,7 @@ function initFilterListeners() {
 // ─── MODAL LISTENERS ─────────────────────────────────────────────────────────
 
 function initModalListeners() {
+  document.getElementById("openRootCatalogue")?.addEventListener("click", openRootCatalogue);
   document.getElementById("addItemBtn")?.addEventListener("click",      ()=>openItemModal());
   document.getElementById("closeItemModal")?.addEventListener("click",  closeItemModal);
   document.getElementById("cancelItemModal")?.addEventListener("click", closeItemModal);
@@ -249,6 +250,9 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     activeMembershipRole = null;
     selectedCharacter = null;
 
+    ++campaignLoadGeneration;
+    closeVaultAction(); closeRootPicker(); closeItemModal();
+    rootItems = []; inventory = []; campaignSupply = {};
     items = [];
     characters = [];
     saves = [];

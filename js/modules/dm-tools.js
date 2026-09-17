@@ -268,7 +268,10 @@ async function saveDMCampaignSettings() {
     const indicator = document.getElementById("activeCampaignName");
     if (indicator) indicator.textContent = name;
 
+    items=items.map(i=>({...i,campaign:activeCampaign.name}));
+    populateCampaignFilter();
     renderCards();
+    renderPlayerTab();
     renderDMTools();
     alert("Campaign settings saved.");
   } catch (e) {
@@ -315,7 +318,7 @@ function renderDMTools() {
 
       <section class="dm-tool-card">
         <h2>Item Controls</h2>
-        <p>Visibility, loot assignment and highlighting are campaign-scoped. Use the Library to manage individual items and the rarity quick-controls.</p>
+        <p>Visibility, loot assignment and highlighting are campaign-scoped. Add catalogue copies or create your own campaign items in the Library. Set available quantities and player-looting permissions on each item.</p>
         <div class="dm-tool-actions">
           <button id="dmOpenLibrary" class="btn-primary" type="button">Open Library Controls</button>
         </div>
@@ -433,7 +436,7 @@ function renderDMCharacters() {
   if (!activeCampaign || !canManageCampaign()) { list.replaceChildren(); return; }
   const groups = new Map();
   for (const member of campaignMembers) groups.set(member.uid || member.id, { member, chars: [] });
-  for (const character of characters.filter(c => c.active !== false)) {
+  for (const character of characters) {
     if (!groups.has(character.userId)) groups.set(character.userId, { member: { uid: character.userId }, chars: [] });
     groups.get(character.userId).chars.push(character);
   }
@@ -442,7 +445,7 @@ function renderDMCharacters() {
       <h3>${escapeHtml(memberLabel(member))}</h3>
       ${chars.length ? chars.map(c => {
         const saved = new Set(saves.filter(s => s.characterId === c.id).map(s => s.itemId)).size;
-        const looted = items.filter(i => { const state = getItemState(i.id); return state.looted && state.owner === c.id; }).length;
+        const looted = inventory.filter(e=>e.characterId===c.id).reduce((n,e)=>n+e.quantity,0);
         return `<div class="admin-char-row">
           <div class="admin-char-info"><strong>${escapeHtml(c.name)}</strong>
             <span>${escapeHtml(c.class || "Adventurer")}</span>
@@ -451,7 +454,7 @@ function renderDMCharacters() {
             <button type="button" class="wish-view-btn btn-sm" data-dm-saved="${escapeHtml(c.id)}">Saved (${saved})</button>
             <button type="button" class="loot-button btn-sm" data-dm-loot="${escapeHtml(c.id)}">Looted (${looted})</button>
             <button type="button" class="edit-button btn-sm" data-dm-edit="${escapeHtml(c.id)}">Edit</button>
-            <button type="button" class="cancel-button btn-sm" data-dm-delete="${escapeHtml(c.id)}" ${!isAdmin() && c.userId !== auth.currentUser?.uid && saved ? 'disabled title="Only the character owner or an admin can delete a character with saved items under the current permissions."' : ""}>Delete</button>
+            <button type="button" class="cancel-button btn-sm" data-dm-delete="${escapeHtml(c.id)}" >${c.active===false?'Restore':'Archive'}</button>
           </div></div>`;
       }).join("") : '<p>No active characters.</p>'}
     </section>`).join("") || "<p>No characters or members in this campaign yet.</p>";
@@ -470,34 +473,8 @@ function renderDMCharacters() {
 }
 
 async function deleteDMCampaignCharacter(character) {
-  if (!activeCampaign || !canManageCampaign()) return;
-  if (!isAdmin() && character.userId !== auth.currentUser?.uid && saves.some(s => s.characterId === character.id)) {
-    alert("Only the character owner or an admin can delete this character while they have saved items.");
-    return;
-  }
-  if (!confirm(`Delete "${character.name}" from this campaign? Their saved items will be removed and loot will become unassigned.`)) return;
-  const campaignId = activeCampaign.id;
-  const charSaves = saves.filter(s => s.characterId === character.id);
-  const owned = Object.keys(itemState).filter(id => itemState[id]?.owner === character.id);
-  const batch = writeBatch(db);
-  for (const save of charSaves) batch.delete(doc(db, "campaigns", campaignId, "saves", save.id));
-  for (const id of owned) batch.set(doc(db, "campaigns", campaignId, "itemState", id), { owner: null }, { merge: true });
-  batch.delete(doc(db, "campaigns", campaignId, "characters", character.id));
-  try {
-    await batch.commit();
-    if (activeCampaign?.id !== campaignId) return;
-    saves = saves.filter(s => s.characterId !== character.id);
-    characters = characters.filter(c => c.id !== character.id);
-    for (const id of owned) patchItemState(id, { owner: null });
-    if (selectedCharacter?.id === character.id) selectedCharacter = null;
-    populateOwnerFilter();
-    renderDMCharacters();
-    renderDMOverview();
-    renderPlayerTab();
-    renderCards();
-  } catch (error) {
-    alert(`Could not delete character: ${error.message}`);
-  }
+  if(!canManageCampaign())return;
+  try {await deleteCampaignCharacter(character.id);}catch(error){alert(error.message);}
 }
 
 let characterLootView = null;
@@ -535,25 +512,15 @@ function closeCharacterLoot() {
   if (characterLootReturnFocus?.isConnected) characterLootReturnFocus.focus();
   characterLootReturnFocus = null;
 }
-function refreshCharacterLoot(itemId = null) {
-  if (!characterLootView) return;
-  const { campaignId, characterId } = characterLootView;
-  const character = characters.find(c => c.id === characterId);
-  if (!canManageCampaign() || activeCampaign?.id !== campaignId || !character) { closeCharacterLoot(); return; }
-  const grid = document.getElementById("characterLootCards");
-  const loot = items.filter(i => { const state = getItemState(i.id); return state.looted && state.owner === characterId; });
-  document.getElementById("characterLootTitle").textContent = `${character.name}'s Looted Items (${loot.length})`;
-  const context = buildRenderContext();
-  if (itemId) {
-    const old = [...grid.querySelectorAll("[data-item-id]")].find(c => c.dataset.itemId === itemId);
-    const item = loot.find(i => i.id === itemId);
-    if (old && item) old.replaceWith(createCard(item, context));
-    else if (old) old.remove();
-    else if (item) grid.appendChild(createCard(item, context));
-    grid.querySelector(".loot-empty")?.remove();
-  } else {
-    grid.replaceChildren(...loot.map(i => createCard(i, context)));
-  }
-  if (!loot.length) grid.innerHTML = '<p class="loot-empty">No looted items assigned to this character.</p>';
+function refreshCharacterLoot() {
+  if(!characterLootView)return;
+  const {campaignId,characterId}=characterLootView;
+  const character=characters.find(c=>c.id===characterId);
+  if(!canManageCampaign()||activeCampaign?.id!==campaignId||!character){closeCharacterLoot();return;}
+  const grid=document.getElementById('characterLootCards');
+  const entries=inventory.filter(e=>e.characterId===characterId&&e.quantity>0);
+  document.getElementById('characterLootTitle').textContent=`${character.name}'s Looted Items (${entries.reduce((n,e)=>n+e.quantity,0)})`;
+  grid.replaceChildren(...entries.map(e=>createCard(inventoryItem(e),{inventoryEntry:e})));
+  if(!entries.length)grid.innerHTML='<p class="loot-empty">No looted items assigned to this character.</p>';
   observePendingImages(grid);
 }

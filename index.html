@@ -149,6 +149,7 @@
         </details>
       </div>
 
+      <div id="campaignInventoryToolbar"></div>
       <p id="campaignStats" class="campaign-stats" aria-live="polite"></p>
       <div id="card-container" class="card-container" role="list" aria-label="Magic items"></div>
     </div><!-- /tab-library -->
@@ -161,7 +162,7 @@
       <div class="player-section">
         <h2 class="player-section-title">⚔ My Characters</h2>
         <p class="player-section-sub">
-          The <strong>active</strong> character is used when you save items in the Library.
+          The <strong>active</strong> character is used when you save or loot items in this campaign.
         </p>
         <div id="myCharacterList" class="character-list"></div>
         <div class="player-create-form">
@@ -183,7 +184,7 @@
 
       <div class="player-section">
         <h2 class="player-section-title">🎒 My Loot</h2>
-        <p class="player-section-sub">Items assigned to your characters by the DM.</p>
+        <p class="player-section-sub">Items looted by or assigned to your characters. Only you and the campaign DM can see your inventory.</p>
         <div id="myLootGrid" class="mini-card-grid"></div>
       </div>
 
@@ -309,7 +310,7 @@
               <label>
                 <input type="checkbox" class="role-checkbox" value="admin">
                 <strong>Admin</strong>
-                <small>— full control: edit items, manage users, manage all campaigns</small>
+                <small>— manage root catalogue items and website accounts. Campaign access requires membership.</small>
               </label>
               <label>
                 <input type="checkbox" class="role-checkbox" value="dm">
@@ -440,6 +441,7 @@
 
         <div class="admin-section">
           <h2>Website Users</h2>
+          <button id="openRootCatalogue" type="button" class="toolbar-btn">Root Catalogue</button>
           <p class="admin-section-sub">
             All registered users across the website. Roles here apply to the account, independently of campaign membership.
           </p>
@@ -462,6 +464,7 @@
 
       </div>
     </div><!-- /tab-admin -->
+  <section id="rootCatalogueScreen" style="display:none"></section>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

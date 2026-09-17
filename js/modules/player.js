@@ -17,19 +17,19 @@ function openWishModal(charId, charName) {
     : savedItems.map(item=>{
         const rc=(item.rarity||"").toLowerCase().replaceAll(" ","-");
         return `
-          <div class="wish-modal-card ${rc}">
+          <div class="wish-modal-card ${escapeHtml(rc)}">
             ${itemImageMarkup(item, "wish-modal-art")}
             <div class="wish-modal-body">
-              <div class="wish-modal-name">${item.name}</div>
+              <div class="wish-modal-name">${escapeHtml(item.name)}</div>
               <div class="card-meta" style="margin-top:4px">
-                ${item.rarity  ?`<span class="meta-tag ${rc}">${item.rarity}</span>`:""}
-                ${item.category?`<span class="meta-tag">${item.category}</span>`:""}
+                ${item.rarity  ?`<span class="meta-tag ${escapeHtml(rc)}">${escapeHtml(item.rarity)}</span>`:""}
+                ${item.category?`<span class="meta-tag">${escapeHtml(item.category)}</span>`:""}
                 ${item.attunement?`<span class="meta-tag">Attunement</span>`:""}
               </div>
               ${(item.properties||[]).slice(0,2).map(p=>`
                 <div class="wish-modal-prop">
-                  <span class="property-title">${p.title}:</span>
-                  ${p.text.substring(0,120)}${p.text.length>120?"…":""}
+                  <span class="property-title">${escapeHtml(p.title)}:</span>
+                  ${escapeHtml(p.text.substring(0,120))}${p.text.length>120?"…":""}
                 </div>`).join("")}
             </div>
           </div>`;
@@ -87,7 +87,7 @@ function populateOwnerFilter() {
   const el = document.getElementById("ownerFilter");
   if (!el) return;
   el.innerHTML = `<option value="">All Owners</option>` +
-    allPlayableCharacters().map(c=>`<option value="${c.id}">${characterDisplayName(c)}</option>`).join("");
+    (canManageCampaign()?allPlayableCharacters():myCharacters()).map(c=>`<option value="${c.id}">${characterDisplayName(c)}</option>`).join("");
 }
 
 
@@ -108,7 +108,7 @@ function renderPlayerTab() {
 }
 
 function renderCharacterList() {
-  const mine = myCharacters();
+  const mine = characters.filter(c=>c.userId===auth.currentUser?.uid);
   const el   = document.getElementById("myCharacterList");
   if (!el) return;
   if (!mine.length) { el.innerHTML=`<p class="player-empty">No characters yet — create one below.</p>`; return; }
@@ -120,20 +120,20 @@ function renderCharacterList() {
     return `
       <div class="character-card ${selectedCharacter?.id===c.id?"character-card--active":""}">
         <div class="character-card-info">
-          <span class="character-card-name">${c.name}</span>
-          <span class="character-card-class">${c.class}${c.level?" · Level "+c.level:""}</span>
+          <span class="character-card-name">${escapeHtml(c.name)}</span>
+          <span class="character-card-class">${escapeHtml(c.class)}${c.level?" · Level "+c.level:""}</span>
           ${tierBadge}
         </div>
         <div class="character-card-actions">
-          ${selectedCharacter?.id!==c.id
+          ${c.active===false ? '<span class="active-badge">Archived</span>' : selectedCharacter?.id!==c.id
             ? `<button class="btn-select-char" type="button" data-char-id="${c.id}">Set Active</button>`
             : `<span class="active-badge">✓ Active</span>`
           }
           <button class="btn-rename-char" type="button"
-            data-char-id="${c.id}" data-char-name="${c.name}"
-            data-char-class="${c.class}" data-char-level="${c.level||""}">Edit</button>
+            data-char-id="${c.id}" data-char-name="${escapeHtml(c.name)}"
+            data-char-class="${escapeHtml(c.class)}" data-char-level="${c.level||""}">Edit</button>
           <button class="btn-delete-char cancel-button" type="button"
-            data-char-id="${c.id}" data-char-name="${c.name}">Delete</button>
+            data-char-id="${c.id}" data-char-name="${escapeHtml(c.name)}">${c.active===false?'Restore':'Archive'}</button>
         </div>
       </div>`;
   }).join("");
@@ -152,60 +152,17 @@ function renderCharacterList() {
     );
   });
 
-  el.querySelectorAll(".btn-delete-char").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
-      if (!confirm(`Delete "${btn.dataset.charName}"?`)) return;
-      const cid = btn.dataset.charId;
-      if (activeCampaign) {
-        for (const s of saves.filter(s=>s.characterId===cid))
-          await deleteDoc(doc(db,"campaigns",activeCampaign.id,"saves",s.id));
-        const ownedItemIds = Object.entries(itemState)
-          .filter(([, state]) => state?.owner === cid)
-          .map(([itemId]) => itemId);
-
-        await Promise.all(ownedItemIds.map(itemId =>
-          persistItemState(itemId, { owner: null })
-        ));
-        await deleteDoc(doc(db,"campaigns",activeCampaign.id,"characters",cid));
-      }
-      saves=saves.filter(s=>s.characterId!==cid);
-      characters=characters.filter(c=>c.id!==cid);
-      if (selectedCharacter?.id===cid) selectedCharacter=null;
-      populateOwnerFilter(); renderPlayerTab(); renderCards();
-    });
-  });
+  el.querySelectorAll(".btn-delete-char").forEach(btn=>btn.addEventListener("click",()=>runVaultButton(btn,()=>deleteCampaignCharacter(btn.dataset.charId))));
 }
-
 function renderMyLoot() {
-  const el = document.getElementById("myLootGrid");
-  if (!el) return;
-
-  const mine = myCharacters();
-
-  if (!mine.length) {
-    el.innerHTML = `<p class="player-empty">Create a character to see your loot.</p>`;
-    return;
-  }
-
-  const myCharIds = new Set(mine.map(c => c.id));
-
-  const myItems = items.filter(item => {
-    const state = getItemState(item.id);
-    return state.looted && state.owner && myCharIds.has(state.owner);
-  });
-
-  if (!myItems.length) {
-    el.innerHTML = `<p class="player-empty">No items assigned to you yet.</p>`;
-    return;
-  }
-
-  el.innerHTML = myItems.map(item => {
-    const ownerId = getItemState(item.id).owner;
-    const ownerChar = characters.find(c => c.id === ownerId);
-    return createMiniCard(item, "loot", ownerChar?.name || "");
-  }).join("");
-
-  observePendingImages(el);
+  const el=document.getElementById('myLootGrid');if(!el)return;
+  const owned=inventory.filter(e=>e.userId===auth.currentUser?.uid&&e.quantity>0);
+  el.classList.add('character-loot-grid');
+  if(!owned.length){el.innerHTML='<p class="player-empty">No items owned yet. Loot a visible item when allowed, or ask your DM.</p>';return;}
+  el.replaceChildren(...owned.map(e=>{
+    const card=createCard(inventoryItem(e),{inventoryEntry:e});
+    const label=document.createElement('p');label.className='owner-badge';label.textContent=characters.find(c=>c.id===e.characterId)?.name||'Your character';card.prepend(label);return card;
+  }));observePendingImages(el);
 }
 
 function renderMyWishes() {
@@ -229,15 +186,15 @@ function renderMyWishes() {
 function createMiniCard(item, mode, extra="") {
   const rc=(item.rarity||"").toLowerCase().replaceAll(" ","-");
   return `
-    <div class="mini-card ${rc}">
+    <div class="mini-card ${escapeHtml(rc)}">
       ${itemImageMarkup(item, "mini-card-art")}
       <div class="mini-card-body">
-        <div class="mini-card-name">${item.name}</div>
+        <div class="mini-card-name">${escapeHtml(item.name)}</div>
         <div class="mini-card-meta">
-          ${item.rarity  ?`<span class="meta-tag ${rc}">${item.rarity}</span>`:""}
-          ${item.category?`<span class="meta-tag">${item.category}</span>`:""}
-          ${mode==="wish"&&extra?`<span class="meta-tag campaign-tag">★ ${extra}</span>`:""}
-          ${mode==="loot"&&extra?`<span class="meta-tag" style="border-color:#27ae60;color:#1e8449">⚔ ${extra}</span>`:""}
+          ${item.rarity  ?`<span class="meta-tag ${escapeHtml(rc)}">${escapeHtml(item.rarity)}</span>`:""}
+          ${item.category?`<span class="meta-tag">${escapeHtml(item.category)}</span>`:""}
+          ${mode==="wish"&&extra?`<span class="meta-tag campaign-tag">★ ${escapeHtml(extra)}</span>`:""}
+          ${mode==="loot"&&extra?`<span class="meta-tag" style="border-color:#27ae60;color:#1e8449">⚔ ${escapeHtml(extra)}</span>`:""}
         </div>
         ${item.attunement?`<div class="mini-card-attune">Requires Attunement</div>`:""}
       </div>

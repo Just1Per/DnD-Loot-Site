@@ -132,3 +132,28 @@
   border-radius: 4px;
   color: var(--action-text);
 }
+
+/* New inventory controls use the existing gold action-button theme. */
+.item-card .assign-button,
+.item-card .unloot-button,
+.item-card .transfer-button,
+.item-card .use-button,
+#tab-dm .admin-char-btns button {
+  background: var(--action-bg) !important;
+  border: 1px solid var(--action-border) !important;
+  border-radius: 4px;
+  color: var(--action-text) !important;
+  cursor: pointer;
+  font-family: "Cinzel", serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1.35;
+  padding: 5px 9px;
+  text-transform: uppercase;
+}
+.item-card .assign-button:hover,
+.item-card .unloot-button:hover,
+.item-card .transfer-button:hover,
+.item-card .use-button:hover,
+#tab-dm .admin-char-btns button:hover { background:var(--action-bg-hover) !important; }

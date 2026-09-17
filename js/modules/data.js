@@ -136,61 +136,21 @@ async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
 }
 
 
-/** Load characters scoped to the active campaign. */
 async function loadCharacters() {
-  if (!activeCampaign) {
-    characters = [];
-    selectedCharacter = null;
-    return;
-  }
-
-  characters = (await getDocs(
-    collection(db, "campaigns", activeCampaign.id, "characters")
-  )).docs.map(d => ({ id: d.id, ...d.data() }));
-
+  const id = activeCampaign?.id; if (!id) { characters = []; selectedCharacter = null; return; }
+  const snap = await getDocs(collection(db, "campaigns", id, "characters"));
+  if (activeCampaign?.id !== id) return;
+  characters = snap.docs.map(d => ({ ...d.data(), id: d.id }));
   const mine = myCharacters();
-
-  if (!selectedCharacter || !mine.some(c => c.id === selectedCharacter.id)) {
-    selectedCharacter = mine[0] || null;
-  }
+  if (!mine.some(c => c.id === selectedCharacter?.id)) selectedCharacter = mine[0] || null;
 }
-
-/** Load saves scoped to the active campaign. */
 async function loadSaves() {
-  if (!activeCampaign) {
-    saves = [];
-    return;
-  }
-
-  const savesRef = collection(db, "campaigns", activeCampaign.id, "saves");
-
-  const snap = canManageCampaign()
-    ? await getDocs(savesRef)
-    : await getDocs(query(savesRef, where("userId", "==", auth.currentUser.uid)));
-
-  saves = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const id = activeCampaign?.id; if (!id) { saves = []; return; }
+  const reference = collection(db, "campaigns", id, "saves");
+  const snap = await getDocs(canManageCampaign() ? reference : query(reference, where("userId", "==", auth.currentUser.uid)));
+  if (activeCampaign?.id === id) saves = snap.docs.map(d => ({ ...d.data(), id: d.id }));
 }
-
-/**
- * Campaign-specific state for master items.
- * The global items collection contains item content only.
- * Loot, owner, highlight and visibility belong to a campaign.
- */
-async function loadItemState() {
-  if (!activeCampaign) {
-    itemState = {};
-    return;
-  }
-
-  const snap = await getDocs(
-    collection(db, "campaigns", activeCampaign.id, "itemState")
-  );
-
-  itemState = {};
-  snap.docs.forEach(d => {
-    itemState[d.id] = { ...d.data() };
-  });
-}
+async function loadItemState() { return loadCampaignItems(); }
 
 /** User data is global admin data. Campaign DMs use member documents instead. */
 async function loadUsers() {
@@ -214,9 +174,9 @@ async function loadCampaignMembers() {
     return;
   }
 
-  const snap = await getDocs(
-    collection(db, "campaigns", activeCampaign.id, "members")
-  );
+  const id = activeCampaign.id;
+  const snap = await getDocs(collection(db, "campaigns", id, "members"));
+  if (activeCampaign?.id !== id) return;
 
   campaignMembers = snap.docs
     .map(d => ({ id: d.id, uid: d.id, ...d.data() }))
