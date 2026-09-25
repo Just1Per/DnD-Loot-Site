@@ -125,6 +125,7 @@ function renderCharacterList() {
           ${tierBadge}
         </div>
         <div class="character-card-actions">
+          <button type="button" class="btn-sheet-char" data-char-id="${escapeHtml(c.id)}">Character sheet</button>
           ${c.active===false ? '<span class="active-badge">Archived</span>' : selectedCharacter?.id!==c.id
             ? `<button class="btn-select-char" type="button" data-char-id="${c.id}">Set Active</button>`
             : `<span class="active-badge">✓ Active</span>`
@@ -137,6 +138,8 @@ function renderCharacterList() {
         </div>
       </div>`;
   }).join("");
+
+  el.querySelectorAll(".btn-sheet-char").forEach(btn=>btn.addEventListener("click",()=>openCharacterSheet(btn.dataset.charId)));
 
   el.querySelectorAll(".btn-select-char").forEach(btn=>{
     btn.addEventListener("click", ()=>{

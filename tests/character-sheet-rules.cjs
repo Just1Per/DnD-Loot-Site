@@ -1,0 +1,28 @@
+const fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
+const {initializeTestEnvironment,assertFails,assertSucceeds}=require('@firebase/rules-unit-testing');
+const sdk=require('firebase/firestore');const {doc,setDoc,getDoc,getDocs,collection,deleteDoc,updateDoc}=sdk;
+const M=require('../js/modules/character-sheet-model');const {createCharacterSheetStore}=require('../js/modules/character-sheet-store');
+(async()=>{const env=await initializeTestEnvironment({projectId:'demo-vault-test',firestore:{host:'127.0.0.1',port:8080,rules:fs.readFileSync(path.join(__dirname,'../firestore.rules'),'utf8')}});let n=0;const check=async(name,f)=>{await f();n++;console.log('PASS',name)};
+ await env.clearFirestore();await env.withSecurityRulesDisabled(async c=>{const db=c.firestore();for(const [p,d] of Object.entries({'campaigns/a':{ownerId:'owner',name:'Coast'},'campaigns/a/members/player':{status:'active',role:'player'},'campaigns/a/members/other':{status:'active',role:'player'},'campaigns/a/members/dm':{status:'active',role:'dm'},'campaigns/a/characters/c1':{name:'Arden',class:'Bard',level:5,userId:'player'},'users/admin':{role:['admin']}}))await setDoc(doc(db,p),d);});
+ const db={},store={};for(const uid of ['owner','dm','player','other','admin','outsider']){db[uid]=env.authenticatedContext(uid).firestore();store[uid]=createCharacterSheetStore({...sdk,db:db[uid],auth:{currentUser:{uid}}});}
+ const identity={name:'Arden',class:'Bard',level:5},payload={campaignId:'a',characterId:'c1',revision:0,data:M.normalize({hpCurrent:30,hpMax:30,notes:'Private notes'}),identity,previousIdentity:identity};
+ await check('owner can open a missing sheet',async()=>assert.equal((await store.player.load('a','c1')).revision,0));
+ await check('player saves identity and private sheet atomically',async()=>assert.equal(await store.player.save(payload),1));
+ await check('owner can reload saved sheet',async()=>assert.equal((await store.player.load('a','c1')).data.notes,'Private notes'));
+ await check('DM and campaign owner can read sheet',async()=>{assert.equal((await store.dm.load('a','c1')).revision,1);assert.equal((await store.owner.load('a','c1')).revision,1);});
+ await check('other player, global admin and outsider cannot read sheet',async()=>{for(const u of ['other','admin','outsider'])await assertFails(getDoc(doc(db[u],'campaigns/a/characterSheets/c1')));});
+ await check('private notes are absent from shared roster',async()=>{const c=await getDoc(doc(db.other,'campaigns/a/characters/c1'));assert.equal(c.data().notes,undefined);assert.equal(c.data().data,undefined);});
+ await check('bulk sheet listing is denied',()=>assertFails(getDocs(collection(db.player,'campaigns/a/characterSheets'))));
+ await check('DM can edit player sheet',async()=>assert.equal(await store.dm.save({...payload,revision:1,data:M.normalize({notes:'DM edit'})}),2));
+ await check('stale revision preserves newer data',async()=>{await assert.rejects(store.player.save({...payload,revision:1}),/changed/);assert.equal((await store.player.load('a','c1')).data.notes,'DM edit');});
+ await check('simultaneous DM and player saves produce one winner',async()=>{const r=await Promise.allSettled([store.player.save({...payload,revision:2}),store.dm.save({...payload,revision:2})]);assert.equal(r.filter(x=>x.status==='fulfilled').length,1);});
+ await check('other player cannot forge sheet writes',()=>assertFails(setDoc(doc(db.other,'campaigns/a/characterSheets/c1'),{schemaVersion:1,revision:4,data:M.normalize(),updatedAt:1,updatedBy:'other'})));
+ await check('global admin gets no campaign write bypass',()=>assertFails(setDoc(doc(db.admin,'campaigns/a/characterSheets/c1'),{schemaVersion:1,revision:4,data:M.normalize(),updatedAt:1,updatedBy:'admin'})));
+ await check('forged author and unsupported versions denied',async()=>{await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,updatedBy:'dm'}));await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,schemaVersion:2}));});
+ await check('unbounded or malformed row containers denied',()=>assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,'data.spells':Array(151).fill({})})));
+ await check('concurrent identity changes are not overwritten',async()=>{await updateDoc(doc(db.dm,'campaigns/a/characters/c1'),{name:'Renamed'});await assert.rejects(store.player.save({...payload,revision:3}),/Character details changed/);});
+ await check('archived character retains private sheet',async()=>{await updateDoc(doc(db.dm,'campaigns/a/characters/c1'),{active:false});await assertSucceeds(getDoc(doc(db.player,'campaigns/a/characterSheets/c1')));});
+ await check('missing character cannot receive an orphan sheet',()=>assertFails(setDoc(doc(db.owner,'campaigns/a/characterSheets/missing'),{schemaVersion:1,revision:1,data:M.normalize(),updatedAt:1,updatedBy:'owner'})));
+ await check('removed member loses access to own sheet',async()=>{await deleteDoc(doc(db.owner,'campaigns/a/members/player'));await assertFails(getDoc(doc(db.player,'campaigns/a/characterSheets/c1')));});
+ await env.cleanup();console.log(`SUCCESS ${n} sheet permission/persistence checks`);
+})().catch(e=>{console.error(e);process.exit(1)});

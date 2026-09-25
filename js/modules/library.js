@@ -44,7 +44,12 @@ function createCard(item,context={}) {
     <div class="card-body"><div class="item-description">${escapeHtml(item.description||'')}</div>${(item.properties||[]).map(p=>`<div class="property-block"><span class="property-title">${escapeHtml(p.title)}:</span> ${escapeHtml(p.text)}</div>`).join('')}${item.quote?`<i>${escapeHtml(item.quote)}</i>`:''}</div>
     ${manager&&!entry&&owned.length?`<div class="owner-badge">${owned.map(e=>`${escapeHtml(characters.find(c=>c.id===e.characterId)?.name||'Character')} × ${e.quantity}`).join(' · ')}</div>`:''}
     <div class="card-footer">${root?'Root Catalogue':'D&D Campaign Vault'}</div>`;
-  const on=(selector,work)=>card.querySelector(selector)?.addEventListener('click',event=>runVaultButton(event.currentTarget,work));
+  const on=(selector,work)=>card.querySelector(selector)?.addEventListener('click',event=>{
+    // The existing item editor is outside the sheet's native dialog. Close the
+    // sheet first, preserving its unsaved-change confirmation.
+    if(event.currentTarget.closest('#sheetInventory') && ['.edit-button','.clone-button'].includes(selector) && !closeCharacterSheet())return;
+    return runVaultButton(event.currentTarget,work);
+  });
   on('.edit-button',()=>{closeCharacterLoot();openItemModal(item,{scope:root?'root':'campaign'});});
   on('.clone-button',async()=>{
     if(root){const id=crypto.randomUUID();const data={...rootItemData(item),imageBaseId:item.imageBaseId||item.id};await setDoc(doc(db,'items',id),{...data,name:`${item.name} (Copy)`});rootItems.push({...data,id,name:`${item.name} (Copy)`});await markCatalogChanged();renderRootCatalogue();}

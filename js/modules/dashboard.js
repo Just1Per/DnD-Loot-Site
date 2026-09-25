@@ -228,7 +228,7 @@ function renderCampaignSelector() {
 
 async function enterCampaign(campaign) {
   closeCharacterLoot(); closeWishModal(); closeEditCharacterModal(); closeItemModal();
-  closeVaultAction(); closeRootPicker();
+  closeCharacterSheet(true); closeVaultAction(); closeRootPicker();
   const generation = ++campaignLoadGeneration;
   hideAllScreens();
   try {
@@ -258,7 +258,7 @@ async function enterCampaign(campaign) {
 async function leaveCampaign() {
   ++campaignLoadGeneration;
   items = []; inventory = []; campaignSupply = {};
-  closeVaultAction(); closeRootPicker(); closeItemModal();
+  closeCharacterSheet(true); closeVaultAction(); closeRootPicker(); closeItemModal();
   closeCharacterLoot();
   closeWishModal();
   closeEditCharacterModal();

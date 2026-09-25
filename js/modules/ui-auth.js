@@ -251,7 +251,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     selectedCharacter = null;
 
     ++campaignLoadGeneration;
-    closeVaultAction(); closeRootPicker(); closeItemModal();
+    closeCharacterSheet(true); closeVaultAction(); closeRootPicker(); closeItemModal();
     rootItems = []; inventory = []; campaignSupply = {};
     items = [];
     characters = [];

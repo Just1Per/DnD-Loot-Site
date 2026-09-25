@@ -451,6 +451,7 @@ function renderDMCharacters() {
             <span>${escapeHtml(c.class || "Adventurer")}</span>
             <span class="level-badge">${c.level ? `Lvl ${escapeHtml(c.level)}` : "No level"}</span></div>
           <div class="admin-char-btns">
+            <button type="button" class="edit-button btn-sm" data-dm-sheet="${escapeHtml(c.id)}">Character sheet</button>
             <button type="button" class="wish-view-btn btn-sm" data-dm-saved="${escapeHtml(c.id)}">Saved (${saved})</button>
             <button type="button" class="loot-button btn-sm" data-dm-loot="${escapeHtml(c.id)}">Looted (${looted})</button>
             <button type="button" class="edit-button btn-sm" data-dm-edit="${escapeHtml(c.id)}">Edit</button>
@@ -459,6 +460,7 @@ function renderDMCharacters() {
       }).join("") : '<p>No active characters.</p>'}
     </section>`).join("") || "<p>No characters or members in this campaign yet.</p>";
   for (const [action, handler] of Object.entries({
+    sheet: c => openCharacterSheet(c.id),
     saved: c => openWishModal(c.id, c.name),
     loot: c => openCharacterLoot(c.id),
     edit: c => openEditCharacterModal(c.id, c.name, c.class, c.level || ""),

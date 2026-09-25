@@ -36,6 +36,9 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
 const FEATURE_FILES = [
   "./modules/campaign-store.js",
   "./modules/core.js",
+  "./modules/character-sheet-model.js",
+  "./modules/character-sheet-store.js",
+  "./modules/character-sheet.js",
   "./modules/images.js",
   "./modules/catalog-cache.js",
   "./modules/data.js",

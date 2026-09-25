@@ -24,7 +24,7 @@ async function refreshCampaignData() {
   const id=activeCampaign?.id;if(!id)return;
   await Promise.all([loadCampaignItems(),loadCampaignInventory(),loadSaves(),loadCampaignSupply()]);
   if(activeCampaign?.id!==id)return;
-  renderCards();renderPlayerTab();renderDMCharacters();renderDMOverview();renderCampaignToolbar();
+  renderCards();renderPlayerTab();renderDMCharacters();renderDMOverview();renderCampaignToolbar();refreshCharacterSheetInventory();
 }
 function inventoryItem(entry) {
   return items.find(i=>i.id===entry.itemId)||{...entry.item,id:entry.itemId,campaignId:entry.campaignId,campaign:activeCampaign?.name||'',visible:false};
