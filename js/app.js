@@ -36,6 +36,8 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
 const FEATURE_FILES = [
   "./modules/campaign-store.js",
   "./modules/core.js",
+  "./modules/character-race-catalog.js",
+  "./modules/character-rules-2024.js",
   "./modules/character-rules.js",
   "./modules/character-sheet-model.js",
   "./modules/character-sheet-store.js",
@@ -59,7 +61,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20260925-rules-v2");
+    moduleUrl.searchParams.set("v", "20260925-editions-v4");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;

@@ -201,7 +201,7 @@ var CharacterSheetModel = (() => {
     const effects = Rules.evaluate(d, level, Object.keys(skills));
     const scores = {};
     for (const key of Object.keys(abilities)) {
-      scores[key] = Math.min(30, d.abilities[key] + (d.build.scoreMode === 'base' ? effects.asi[key] || 0 : 0));
+      scores[key] = Math.min(30, d.abilities[key] + (d.build.scoreMode === 'base' ? Math.min(effects.asi[key] || 0, Math.max(0, 20 - d.abilities[key])) : 0));
       mods[key] = mod(scores[key]);
       saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + d.saves[key].bonus;
     }
@@ -215,7 +215,7 @@ var CharacterSheetModel = (() => {
       mods,
       saves,
       skills: checks,
-      initiative: mods.dex + d.initiativeBonus,
+      initiative: mods.dex + d.initiativeBonus + (effects.initiativeBonus || 0),
       passive: 10 + checks.perception + d.passiveBonus,
       spellAttack: mods[d.spellAbility] + pb + d.spellAttackBonus,
       spellDC: 8 + mods[d.spellAbility] + pb + d.spellDCBonus,

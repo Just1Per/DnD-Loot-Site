@@ -470,3 +470,5 @@
 .sheet-rule-summary{border:1px solid var(--sheet-border);border-radius:8px;padding:18px;margin:0 0 24px;background:#faf4e6;font-size:13px;line-height:1.6}
 .sheet-rule-summary .sheet-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.sheet-rule-summary .sheet-metrics strong{font-size:18px}.sheet-rule-summary li{margin:6px 0}.sheet-build-warning{border-left:3px solid #a07120;padding-left:12px;color:#80521b}.sheet-ability-total{font-size:11px;font-weight:400;line-height:1.4;color:#755525}.sheet-field input[readonly]{background:#f0e8d9}
 @media(max-width:600px){.sheet-rule-summary .sheet-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+#sheetManualIdentity [hidden] { display: none !important; }

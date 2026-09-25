@@ -1,7 +1,8 @@
 (async()=>{const results=JSON.parse(document.getElementById('test-results').textContent),check=(name,ok)=>{results.push({name,pass:!!ok});if(!ok)throw Error(name)};try{
 seed('player');delete testSheetDocs['campaigns/a/characterSheets/c1'];testSheetDocs['campaigns/a/characters/c1']={name:'Thorin',class:'Fighter',level:7,userId:'player'};await openCharacterSheet('c1');
 const form=document.getElementById('characterSheetForm');const change=(name,value)=>{const el=form.querySelector(`[name="${name}"]`);if(el.type==='checkbox')el.checked=value;else el.value=value;el.dispatchEvent(new Event('change',{bubbles:true}));};
-check('Builder exposes reference races and all base classes',form.querySelector('[name="build.race"]').querySelectorAll('option').length===10&&form.querySelector('[name="build.classId"]').querySelectorAll('option').length===13);
+change('build.edition','2014');
+check('Builder exposes reference races and all base classes',form.querySelector('[name="build.race"]').querySelectorAll('option').length===80&&form.querySelector('[name="build.classId"]').querySelectorAll('option').length===13);
 change('abilities.dex','14');change('build.race','high-elf');check('Selecting race updates ability total and automatic traits',document.querySelector('[data-derived="mods.dex"]').textContent==='+3'&&document.getElementById('sheetBuildSummary').textContent.includes('Fey Ancestry'));
 change('build.race','human');check('Switching race does not stack previous bonuses',CharacterSheetModel.derive(sheetSession.data,7).scores.dex===15&&form.querySelector('[name="abilities.dex"]').value==='14');
 change('build.race','hill-dwarf');change('notes','Keep my notes');check('Race speed is derived without overwriting manual speed',form.querySelector('[name="speed"]').value==='25'&&sheetSession.data.speed===30);change('build.race','');check('Custom race restores manual movement',form.querySelector('[name="speed"]').value==='30');

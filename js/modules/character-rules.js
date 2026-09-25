@@ -186,6 +186,140 @@ var CharacterRules = (() => {
       ]
     }
   };
+  const Catalog = typeof CharacterRaceCatalog !== 'undefined' ? CharacterRaceCatalog : require('./character-race-catalog');
+  Catalog.extend(races);
+  const Modern = typeof CharacterRules2024 !== 'undefined' ? CharacterRules2024 : require('./character-rules-2024');
+  Modern.extend(races);
+  const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
+  const abilityKeys = [
+    'str',
+    'dex',
+    'con',
+    'int',
+    'wis',
+    'cha'
+  ];
+  const instruments = [
+    'Bagpipes',
+    'Drum',
+    'Dulcimer',
+    'Flute',
+    'Lute',
+    'Lyre',
+    'Horn',
+    'Pan flute',
+    'Shawm',
+    'Viol'
+  ];
+  const tools = [
+    'Alchemist\u2019s supplies',
+    'Brewer\u2019s supplies',
+    'Calligrapher\u2019s supplies',
+    'Carpenter\u2019s tools',
+    'Cartographer\u2019s tools',
+    'Cobbler\u2019s tools',
+    'Cook\u2019s utensils',
+    'Glassblower\u2019s tools',
+    'Jeweler\u2019s tools',
+    'Leatherworker\u2019s tools',
+    'Mason\u2019s tools',
+    'Painter\u2019s supplies',
+    'Potter\u2019s tools',
+    'Smith\u2019s tools',
+    'Tinker\u2019s tools',
+    'Weaver\u2019s tools',
+    'Woodcarver\u2019s tools',
+    'Disguise kit',
+    'Forgery kit',
+    'Herbalism kit',
+    'Navigator\u2019s tools',
+    'Poisoner\u2019s kit',
+    'Thieves\u2019 tools',
+    'Dice set',
+    'Dragonchess set',
+    'Playing card set',
+    'Three-Dragon Ante set',
+    ...instruments
+  ];
+  const weapons = [
+    'Club',
+    'Dagger',
+    'Greatclub',
+    'Handaxe',
+    'Javelin',
+    'Light hammer',
+    'Mace',
+    'Quarterstaff',
+    'Sickle',
+    'Spear',
+    'Light crossbow',
+    'Dart',
+    'Shortbow',
+    'Sling',
+    'Battleaxe',
+    'Flail',
+    'Glaive',
+    'Greataxe',
+    'Greatsword',
+    'Halberd',
+    'Lance',
+    'Longsword',
+    'Maul',
+    'Morningstar',
+    'Pike',
+    'Rapier',
+    'Scimitar',
+    'Shortsword',
+    'Trident',
+    'War pick',
+    'Warhammer',
+    'Whip',
+    'Blowgun',
+    'Hand crossbow',
+    'Heavy crossbow',
+    'Longbow',
+    'Net'
+  ];
+  function profile(build, level = 1) {
+    const r = own(races, build?.race) ? races[build.race] : null;
+    if (!r || r.edition === '2024' && build.edition !== '2024')
+      return null;
+    const p = {
+      ...r,
+      traits: [...r.traits],
+      spells: [...r.spells || []]
+    };
+    for (const [field, choices, min] of [
+        [
+          'raceFeature',
+          r.optionChoices,
+          r.optionLevel || 1
+        ],
+        [
+          'raceFeature2',
+          r.secondOptionChoices,
+          r.secondOptionLevel || 1
+        ]
+      ]) {
+      const key = build[field];
+      if (level < min || !choices || !own(choices, key) || field === 'raceFeature2' && key === build.raceFeature)
+        continue;
+      const option = choices[key];
+      Object.assign(p, {
+        ...option,
+        name: r.name,
+        traits: [
+          ...p.traits,
+          ...option.traits || []
+        ],
+        spells: [
+          ...p.spells,
+          ...option.spells || []
+        ]
+      });
+    }
+    return p;
+  }
   const classes = {
     barbarian: {
       name: 'Barbarian',
@@ -568,12 +702,24 @@ var CharacterRules = (() => {
     'Orc',
     'Primordial',
     'Sylvan',
-    'Undercommon'
+    'Undercommon',
+    'Aarakocra',
+    'Aquan',
+    'Auran',
+    'Gith',
+    'Grung',
+    'Ignan',
+    'Leonin',
+    'Loxodon',
+    'Quori',
+    'Terran',
+    'Vedalken'
   ];
   const cantrips = [
     'Acid Splash',
     'Chill Touch',
     'Dancing Lights',
+    'Light',
     'Fire Bolt',
     'Light',
     'Mage Hand',
@@ -829,12 +975,36 @@ var CharacterRules = (() => {
   const normalize = b => {
     b = b && typeof b === 'object' ? b : {};
     return {
-      edition: '2014',
-      race: races[b.race] ? b.race : '',
+      edition: b.edition === '2024' ? '2024' : '2014',
+      race: own(races, b.race) ? b.race : '',
       classId: classes[b.classId] ? b.classId : '',
-      background: b.background === 'acolyte' ? 'acolyte' : '',
+      background: b.background === 'acolyte' || own(Modern.backgrounds, b.background) ? b.background : '',
+      backgroundPattern: b.backgroundPattern === '111' ? '111' : '21',
+      backgroundAbilities: Array.from({ length: 3 }, (_, i) => abilityKeys.includes(b.backgroundAbilities?.[i]) ? b.backgroundAbilities[i] : ''),
+      standardLanguages: Array.from({ length: 2 }, (_, i) => Modern.standardLanguages.includes(b.standardLanguages?.[i]) ? b.standardLanguages[i] : ''),
+      humanOriginFeat: Modern.originFeats.includes(b.humanOriginFeat) ? b.humanOriginFeat : '',
+      backgroundFeat: Modern.originFeats.includes(b.backgroundFeat) ? b.backgroundFeat : '',
+      humanFeatChoices: Array.from({ length: 3 }, (_, i) => String(b.humanFeatChoices?.[i] || '').slice(0, 120)),
+      backgroundFeatChoices: Array.from({ length: 3 }, (_, i) => String(b.backgroundFeatChoices?.[i] || '').slice(0, 120)),
       scoreMode: b.scoreMode === 'base' ? 'base' : 'total',
       autoSlots: !!b.autoSlots,
+      asiPattern: b.asiPattern === '111' ? '111' : '21',
+      flexibleChoices: Array.from({ length: 3 }, (_, i) => abilityKeys.includes(b.flexibleChoices?.[i]) ? b.flexibleChoices[i] : ''),
+      raceSkills: Array.from({ length: 2 }, (_, i) => String(b.raceSkills?.[i] || '').slice(0, 40)),
+      raceTools: Array.from({ length: 2 }, (_, i) => String(b.raceTools?.[i] || '').slice(0, 100)),
+      raceSize: [
+        'Small',
+        'Medium'
+      ].includes(b.raceSize) ? b.raceSize : '',
+      raceAbility: [
+        'int',
+        'wis',
+        'cha'
+      ].includes(b.raceAbility) ? b.raceAbility : '',
+      raceFeature: String(b.raceFeature || '').slice(0, 40),
+      raceFeature2: String(b.raceFeature2 || '').slice(0, 40),
+      raceCantrip: String(b.raceCantrip || '').slice(0, 100),
+      raceFeat: String(b.raceFeat || '').slice(0, 200),
       dragon: dragons[b.dragon] ? b.dragon : 'red',
       abilityChoices: [
         String(b.abilityChoices?.[0] || ''),
@@ -859,7 +1029,7 @@ var CharacterRules = (() => {
     };
   };
   function evaluate(data, level, skillNames = []) {
-    const b = normalize(data.build), r = races[b.race], c = classes[b.classId], lvl = Math.max(1, Math.min(20, Math.trunc(Number(level)) || 1));
+    const b = normalize(data.build), lvl = Math.max(1, Math.min(20, Math.trunc(Number(level)) || 1)), r = profile(b, lvl), c = b.edition === '2024' ? Modern.classProfile(b.classId, classes[b.classId]) : classes[b.classId];
     const result = {
       race: r,
       classData: c,
@@ -874,17 +1044,102 @@ var CharacterRules = (() => {
       saves: c?.saves || [],
       resistances: [...r?.resistances || []],
       speed: r?.speed ?? data.speed,
-      size: r?.size || '\u2014',
+      size: r?.sizeChoice ? b.raceSize || 'Choose size' : lvl >= 5 && r?.sizeAt5 ? r.sizeAt5 : r?.size || '\u2014',
+      fly: r?.fly || 0,
+      swim: r?.swim || 0,
+      climb: r?.climb || 0,
+      immunities: [...r?.immunities || []],
+      naturalArmor: r?.naturalArmor || null,
+      initiativeBonus: r?.initiativePB ? Math.ceil(lvl / 4) + 1 : 0,
       darkvision: r?.darkvision || 0,
-      hpBonus: b.race === 'hill-dwarf' ? lvl : 0,
+      hpBonus: b.race === 'hill-dwarf' ? lvl : (r?.hpPerLevel || 0) * lvl,
       innate: [],
       warnings: [],
       slotMax: null,
       pact: null
     };
+    if (r) {
+      const bonuses = b.edition === '2024' ? [] : r.flexible ? b.asiPattern === '111' ? [
+        1,
+        1,
+        1
+      ] : [
+        2,
+        1
+      ] : r.choiceBonuses || [];
+      const used = new Set();
+      bonuses.forEach((n, i) => {
+        const key = b.flexibleChoices[i];
+        if (!abilityKeys.includes(key) || used.has(key) || r.excludeAbilities?.includes(key)) {
+          result.warnings.push('Choose distinct permitted abilities for each racial bonus.');
+          return;
+        }
+        used.add(key);
+        result.asi[key] = (result.asi[key] || 0) + n;
+      });
+      const allowedSkills = r.skillPool === 'any' ? skillNames : r.skillPool || [];
+      const selectedSkills = new Set();
+      for (const key of b.raceSkills.slice(0, r.skillCount || 0)) {
+        if (!allowedSkills.includes(key) || selectedSkills.has(key) || result.skills.includes(key))
+          result.warnings.push('Choose different racial skills from the available list.');
+        else {
+          selectedSkills.add(key);
+          result.skills.push(key);
+        }
+      }
+      const allowedTools = r.instrumentOnly ? instruments : r.weaponTool ? [
+        ...tools,
+        ...weapons
+      ] : tools;
+      const selectedTools = new Set();
+      for (const key of b.raceTools.slice(0, r.toolCount || 0)) {
+        if (!allowedTools.includes(key) || selectedTools.has(key))
+          result.warnings.push('Choose distinct permitted racial tools or weapons.');
+        else {
+          selectedTools.add(key);
+          result.proficiencies.push(key);
+        }
+      }
+      if (r.sizeChoice && !b.raceSize)
+        result.warnings.push('Choose Small or Medium for this race.');
+      const base = races[b.race];
+      if (base.optionChoices && lvl >= (base.optionLevel || 1) && !own(base.optionChoices, b.raceFeature))
+        result.warnings.push('Choose your racial feature.');
+      if (base.secondOptionChoices && lvl >= (base.secondOptionLevel || 1) && (!own(base.secondOptionChoices, b.raceFeature2) || b.raceFeature2 === b.raceFeature))
+        result.warnings.push('Choose a different second racial feature.');
+      if (r.spellChoice || r.spells?.some(s => s.ability === 'choice') || r.cantripPool) {
+        if (!b.raceAbility)
+          result.warnings.push('Choose Intelligence, Wisdom or Charisma for racial magic / feature DC.');
+        result.raceAbility = b.raceAbility;
+      }
+      for (const s of r.spells || [])
+        if (lvl >= s.level)
+          result.innate.push(`${ s.name } — ${ s.usage }; ${ (s.ability === 'choice' ? b.raceAbility || 'choose ability' : s.ability).toUpperCase() }`);
+      if (r.cantripPool) {
+        const pool = r.cantripPool === 'sorcerer' ? [
+          ...cantrips,
+          'Blade Ward',
+          'Friends'
+        ] : r.cantripPool;
+        const selectedCantrip = pool.includes(b.raceCantrip) ? b.raceCantrip : r.defaultCantrip;
+        if (selectedCantrip)
+          result.innate.push(`${ selectedCantrip } — at will; ${ b.raceAbility.toUpperCase() || 'choose ability' }`);
+        else
+          result.warnings.push('Choose a racial cantrip.');
+      }
+      for (const [min, text] of r.levelTraits || [])
+        if (lvl >= min)
+          result.traits.push(text);
+      if (r.feat) {
+        if (b.raceFeat)
+          result.traits.push(`Chosen feat (effects entered manually): ${ b.raceFeat }`);
+        else
+          result.warnings.push('Record your racial feat; apply its effects manually.');
+      }
+    }
     if (b.race === 'half-elf') {
       const used = new Set();
-      for (const key of b.abilityChoices) {
+      for (const key of b.edition === '2014' ? b.abilityChoices : []) {
         if (![
             'str',
             'dex',
@@ -912,13 +1167,16 @@ var CharacterRules = (() => {
         'human',
         'half-elf',
         'high-elf'
-      ].includes(b.race)) {
-      if (b.extraLanguage && !result.languages.includes(b.extraLanguage))
+      ].includes(b.race) || r?.extraLanguage) {
+      if (b.extraLanguage && (r?.languagePool || languages).includes(b.extraLanguage) && !result.languages.includes(b.extraLanguage))
         result.languages.push(b.extraLanguage);
       else
         result.warnings.push('Choose one additional race language.');
     }
-    if (b.race === 'hill-dwarf') {
+    if ([
+        'hill-dwarf',
+        'mountain-dwarf'
+      ].includes(b.race)) {
       if (b.tool)
         result.proficiencies.push(b.tool);
       else
@@ -929,6 +1187,17 @@ var CharacterRules = (() => {
         result.innate.push(`${ b.cantrip } — at will; Intelligence`);
       else
         result.warnings.push('Choose a wizard cantrip for your High Elf.');
+    }
+    if (b.race === 'dragonborn-2024' && r) {
+      result.resistances.push(dragons[b.dragon][0]);
+      result.breath = {
+        type: dragons[b.dragon][0],
+        area: '15 ft cone or 5 \xD7 30 ft line (choose each use)',
+        save: 'dex',
+        dice: lvl >= 17 ? 4 : lvl >= 11 ? 3 : lvl >= 5 ? 2 : 1,
+        die: 10,
+        usage: 'PB uses per long rest; replaces one attack'
+      };
     }
     if (b.race === 'dragonborn') {
       const [type, area, save] = dragons[b.dragon];
@@ -962,6 +1231,8 @@ var CharacterRules = (() => {
         if (c.caster === 'full' || c.caster === 'half') {
           const row = (c.caster === 'full' ? fullSlots : halfSlots)[lvl - 1];
           row.forEach((n, i) => result.slotMax[i] = n);
+          if (b.edition === '2024' && c.caster === 'half' && lvl === 1)
+            result.slotMax[0] = 2;
         }
         if (c.caster === 'pact') {
           const slotLevel = lvl >= 9 ? 5 : lvl >= 7 ? 4 : lvl >= 5 ? 3 : lvl >= 3 ? 2 : 1, count = lvl >= 17 ? 4 : lvl >= 11 ? 3 : lvl >= 2 ? 2 : 1;
@@ -973,7 +1244,7 @@ var CharacterRules = (() => {
         }
       }
     }
-    if (b.background === 'acolyte') {
+    if (b.background === 'acolyte' && b.edition === '2014') {
       result.skills.push('insight', 'religion');
       result.traits.push('Shelter of the Faithful: receive support from temples of your faith; discuss available aid with your DM.');
       for (const lang of b.backgroundLanguages) {
@@ -983,6 +1254,11 @@ var CharacterRules = (() => {
           result.warnings.push('Choose two different additional background languages.');
       }
     }
+    if (b.edition === '2014' && races[b.race]?.edition === '2024')
+      result.warnings.push('This species requires 2024 rules. Change rules version or select a 2014 race.');
+    if (b.edition === '2014' && Modern.backgrounds[b.background])
+      result.warnings.push('This background requires 2024 rules.');
+    Modern.apply(result, b, data, lvl, skillNames, tools);
     result.skills = [...new Set(result.skills)];
     result.languages = [...new Set(result.languages)];
     result.warnings = [...new Set(result.warnings)];
@@ -990,6 +1266,11 @@ var CharacterRules = (() => {
   }
   return {
     races,
+    modern: Modern,
+    profile,
+    tools,
+    weapons,
+    instruments,
     classes,
     dragons,
     languages,

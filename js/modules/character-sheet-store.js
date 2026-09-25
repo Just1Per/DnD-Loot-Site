@@ -30,7 +30,7 @@ function createCharacterSheetStore(sdk) {
           throw Error('Character details changed while this sheet was open. Export your edits, then reopen the sheet.');
       const next = revision + 1;
       tx.set(sheetRef, {
-        schemaVersion: 2,
+        schemaVersion: Math.max(sheet.data()?.schemaVersion || 1, data.build?.edition === '2024' ? 3 : 2),
         revision: next,
         data,
         updatedAt: Date.now(),
