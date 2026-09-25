@@ -1,6 +1,8 @@
 # Character sheets: first functional release
 
-Branch: `feature/character-sheets`.
+Initial release: `feature/character-sheets`.
+
+The follow-up `feature/character-rules-engine` adds a structured builder with 2024 defaults and labelled 2014 options; see [character-rules-engine.md](character-rules-engine.md).
 
 Open **My Character → Character sheet**, or **DM Panel → Characters → Character sheet**. Existing characters need no migration. An empty sheet is created only when first saved.
 

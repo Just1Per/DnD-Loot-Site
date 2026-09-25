@@ -47,7 +47,11 @@ async function openCharacterSheet(characterId) {
     const stored = await characterSheetStore.load(campaignId, characterId);
     if (generation !== sheetGeneration || activeCampaign?.id !== campaignId)
       return;
-    if (stored.schemaVersion !== 1)
+    if (![
+        1,
+        2,
+        3
+      ].includes(stored.schemaVersion))
       throw Error('This sheet uses a newer format. Update the website before editing it.');
     sheetSession = {
       campaignId,
@@ -63,6 +67,10 @@ async function openCharacterSheet(characterId) {
       dirty: false,
       saving: false
     };
+    if (!stored.revision) {
+      sheetSession.data.build.scoreMode = 'base';
+      sheetSession.data.build.edition = '2024';
+    }
     renderCharacterSheet();
   } catch (error) {
     if (generation === sheetGeneration)
@@ -112,10 +120,10 @@ function renderCharacterSheet() {
     ]
   ].map(([key, label], i) => `<button type="button" role="tab" id="sheet-tab-${ key }" data-sheet-tab="${ key }" aria-controls="sheet-${ key }" aria-selected="${ i === 0 }" tabindex="${ i === 0 ? 0 : -1 }">${ label }</button>`).join('') }</nav>
   <div class="sheet-body">
-  ${ sheetSection('overview', 'The adventurer', `<div class="sheet-grid sheet-identity">${ field('Character name', 'identity.name') }${ field('Class / subclasses', 'identity.class') }${ field('Level', 'identity.level', 'number', {
+  ${ sheetSection('overview', 'The adventurer', `<div class="sheet-grid sheet-identity">${ field('Character name', 'identity.name') }${ field('Level', 'identity.level', 'number', {
     min: 1,
     max: 20
-  }) }${ field('Species / race', 'species') }${ field('Background', 'background') }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid">${ field('Maximum HP', 'hpMax', 'number', { min: 0 }) }${ field('Current HP', 'hpCurrent', 'number', { min: 0 }) }${ field('Temporary HP', 'hpTemp', 'number', { min: 0 }) }${ field('Armor class', 'ac', 'number', { min: 0 }) }${ field('Speed (ft)', 'speed', 'number', { min: 0 }) }${ field('Inspiration', 'inspiration', 'checkbox') }</div><div class="sheet-hp-tools"><label>Amount <input id="sheetHpAmount" type="number" min="0" step="1" value="1"></label><button type="button" id="sheetDamage">Take damage</button><button type="button" id="sheetHeal">Heal</button><small>Damage uses temporary HP first. Save to keep these changes.</small></div><div class="sheet-grid two">${ field('Features & traits', 'features', 'textarea', { rows: 7 }) }${ field('Limited resources \u2014 maximum / used / recovery', 'resources', 'textarea', { rows: 7 }) }${ field('Languages', 'languages', 'textarea') }${ field('Armor, weapon & tool proficiencies', 'proficiencies', 'textarea') }</div>`) }
+  }) }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div id="sheetBuildControls"></div><div id="sheetBuildSummary" class="sheet-rule-summary"></div><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid">${ field('Maximum HP', 'hpMax', 'number', { min: 0 }) }${ field('Current HP', 'hpCurrent', 'number', { min: 0 }) }${ field('Temporary HP', 'hpTemp', 'number', { min: 0 }) }${ field('Armor class', 'ac', 'number', { min: 0 }) }${ field('Speed (ft)', 'speed', 'number', { min: 0 }) }${ field('Inspiration', 'inspiration', 'checkbox') }</div><div class="sheet-hp-tools"><label>Amount <input id="sheetHpAmount" type="number" min="0" step="1" value="1"></label><button type="button" id="sheetDamage">Take damage</button><button type="button" id="sheetHeal">Heal</button><small>Damage uses temporary HP first. Save to keep these changes.</small></div><div class="sheet-grid two">${ field('Additional features & notes', 'features', 'textarea', { rows: 7 }) }${ field('Limited resources \u2014 maximum / used / recovery', 'resources', 'textarea', { rows: 7 }) }${ field('Additional languages / notes', 'languages', 'textarea') }${ field('Additional proficiencies / notes', 'proficiencies', 'textarea') }</div>`) }
   ${ sheetSection('skills', 'Abilities, saving throws & skills', `<div class="sheet-abilities">${ abilityOptions.map(([key, label]) => `<div class="sheet-ability">${ field(label, `abilities.${ key }`, 'number', {
     min: 1,
     max: 30
@@ -195,6 +203,7 @@ function renderCharacterSheet() {
     ]
   ].map(([key, label]) => field(label, key, 'textarea', { rows: 5 })).join('') }</div>`) }
   </div></form>`;
+  renderSheetBuildControls();
   renderSheetRows();
   fillSheetForm();
   refreshCharacterSheetInventory();
@@ -205,6 +214,15 @@ function renderCharacterSheet() {
     if (!event.target.name)
       return;
     readSheetForm();
+    if (event.target.name === 'build.classId' && CharacterRules.classes[s.data.build.classId]) {
+      const selected = CharacterRules.classes[s.data.build.classId];
+      s.identity.class = selected.name;
+      form.querySelector('[name="identity.class"]').value = selected.name;
+      if (selected.ability) {
+        s.data.spellAbility = selected.ability;
+        form.querySelector('[name="spellAbility"]').value = selected.ability;
+      }
+    }
     s.dirty = true;
     sheetStatus('Unsaved changes');
     updateSheetCalculations();
@@ -213,6 +231,15 @@ function renderCharacterSheet() {
     if (!event.target.name)
       return;
     readSheetForm();
+    if (event.target.name === 'build.classId' && CharacterRules.classes[s.data.build.classId]) {
+      const selected = CharacterRules.classes[s.data.build.classId];
+      s.identity.class = selected.name;
+      form.querySelector('[name="identity.class"]').value = selected.name;
+      if (selected.ability) {
+        s.data.spellAbility = selected.ability;
+        form.querySelector('[name="spellAbility"]').value = selected.ability;
+      }
+    }
     s.dirty = true;
     sheetStatus('Unsaved changes');
     updateSheetCalculations();
@@ -305,6 +332,8 @@ function readSheetForm() {
   const data = structuredClone(s.data);
   data.identity = { ...s.identity || s.character };
   document.querySelectorAll('#characterSheetForm [name]').forEach(input => {
+    if (input.name === 'speed' && input.readOnly)
+      return;
     const keys = input.name.split('.'), last = keys.pop();
     let target = data;
     for (const key of keys)
@@ -323,6 +352,7 @@ function updateSheetCalculations() {
   if (!s)
     return;
   const d = CharacterSheetModel.derive(s.data, s.identity?.level || s.character.level || 1);
+  updateSheetBuildSummary(d);
   document.querySelectorAll('#characterSheetDialog [data-derived]').forEach(el => {
     const path = el.dataset.derived, value = path.split('.').reduce((v, key) => v?.[key], d);
     el.textContent = [
@@ -354,9 +384,10 @@ function changeSheetHP(action) {
     return;
   }
   readSheetForm();
-  sheetSession.data = CharacterSheetModel[action](sheetSession.data, amount);
+  sheetSession.data = CharacterSheetModel[action](sheetSession.data, amount, sheetSession.identity?.level || sheetSession.character.level);
   sheetSession.dirty = true;
   fillSheetForm();
+  updateSheetCalculations();
   sheetStatus('HP updated \u2014 save to keep this change.');
 }
 async function saveCharacterSheet() {
@@ -449,7 +480,7 @@ function exportCharacterSheet() {
   const s = sheetSession;
   const blob = new Blob([JSON.stringify({
       format: 'dnd-vault-character-sheet',
-      schemaVersion: 1,
+      schemaVersion: 3,
       character: s.identity,
       campaign: activeCampaign.name,
       data: s.data,
@@ -482,3 +513,466 @@ function prepareSheetPrint() {
   document.body.classList.add('printing-character-sheet');
 }
 window.addEventListener('beforeprint', prepareSheetPrint);
+function renderSheetBuildControls() {
+  const R = CharacterRules, M = CharacterSheetModel, f = sheetField;
+  const options = object => [
+    [
+      '',
+      'Custom / manual'
+    ],
+    ...Object.entries(object).map(([key, value]) => [
+      key,
+      value.name
+    ])
+  ];
+  const abilityChoices = [
+    [
+      '',
+      'Choose ability'
+    ],
+    ...Object.entries(M.abilities).filter(([key]) => key !== 'cha')
+  ];
+  const skillChoices = [
+    [
+      '',
+      'Choose skill'
+    ],
+    ...Object.entries(M.skills).map(([key, [label]]) => [
+      key,
+      label
+    ])
+  ];
+  const languageChoices = [
+    [
+      '',
+      'Choose language'
+    ],
+    ...R.languages.map(name => [
+      name,
+      name
+    ])
+  ];
+  document.getElementById('sheetBuildControls').innerHTML = `<h4>Character builder</h4><p class="sheet-help">2024 is the standard for new sheets. 2014 options are clearly marked and remain available. In 2024, ability increases come from your background, including when using a legacy race. This builder handles a single class; class features and unlisted options remain manual.</p><div class="sheet-grid">${ f('Rules version', 'build.edition', 'select', {
+    values: [
+      [
+        '2024',
+        '2024 \u2014 current'
+      ],
+      [
+        '2014',
+        '2014 \u2014 legacy'
+      ]
+    ]
+  }) }${ f('Race / species', 'build.race', 'select', { values: options(R.races) }) }${ f('Class', 'build.classId', 'select', { values: options(R.classes) }) }${ f('Background', 'build.background', 'select', {
+    values: [
+      [
+        '',
+        'Custom / manual'
+      ],
+      ...Object.entries(R.modern.backgrounds).map(([id, bg]) => [
+        id,
+        bg.name + ' \u2014 2024'
+      ]),
+      [
+        'acolyte',
+        'Acolyte \u2014 2014'
+      ]
+    ]
+  }) }${ f('How your numbers are entered', 'build.scoreMode', 'select', {
+    values: [
+      [
+        'total',
+        'Final totals \u2014 ability / HP bonuses already included'
+      ],
+      [
+        'base',
+        'Base scores / HP \u2014 add origin bonuses automatically'
+      ]
+    ]
+  }) }${ f('Calculate class spell slots', 'build.autoSlots', 'checkbox') }</div><div class="sheet-grid" id="sheetManualIdentity">${ f('Custom class / subclasses', 'identity.class') }${ f('Custom race', 'species') }${ f('Custom background', 'background') }</div>
+  <div class="sheet-grid two" data-build-for="half-elf">${ f('Ability +1 choice 1', 'build.abilityChoices.0', 'select', { values: abilityChoices }) }${ f('Ability +1 choice 2', 'build.abilityChoices.1', 'select', { values: abilityChoices }) }${ f('Racial skill choice 1', 'build.skillChoices.0', 'select', { values: skillChoices }) }${ f('Racial skill choice 2', 'build.skillChoices.1', 'select', { values: skillChoices }) }</div>
+  <div class="sheet-grid two" data-build-for="human,half-elf,high-elf">${ f('Extra race language', 'build.extraLanguage', 'select', { values: languageChoices }) }</div>
+  <div class="sheet-grid two" data-build-for="high-elf">${ f('Wizard cantrip (Intelligence)', 'build.cantrip', 'select', {
+    values: [
+      [
+        '',
+        'Choose cantrip'
+      ],
+      ...R.cantrips.map(name => [
+        name,
+        name
+      ])
+    ]
+  }) }</div>
+  <div class="sheet-grid two" data-build-for="hill-dwarf,mountain-dwarf">${ f('Dwarven tool training', 'build.tool', 'select', {
+    values: [
+      [
+        '',
+        'Choose tool'
+      ],
+      ...[
+        'Smith\u2019s tools',
+        'Brewer\u2019s supplies',
+        'Mason\u2019s tools'
+      ].map(name => [
+        name,
+        name
+      ])
+    ]
+  }) }</div>
+  <div class="sheet-grid two" data-build-for="dragonborn,dragonborn-2024">${ f('Draconic ancestry', 'build.dragon', 'select', {
+    values: Object.keys(R.dragons).map(key => [
+      key,
+      key[0].toUpperCase() + key.slice(1)
+    ])
+  }) }</div>
+  <div class="sheet-grid two" id="sheetRaceChoices">
+  ${ f('Ability bonus pattern', 'build.asiPattern', 'select', {
+    values: [
+      [
+        '21',
+        '+2 and +1'
+      ],
+      [
+        '111',
+        '+1, +1 and +1'
+      ]
+    ]
+  }) }
+  ${ [
+    0,
+    1,
+    2
+  ].map(i => f(`Ability bonus ${ i + 1 }`, `build.flexibleChoices.${ i }`, 'select', {
+    values: [
+      [
+        '',
+        'Choose ability'
+      ],
+      ...Object.entries(M.abilities)
+    ]
+  })).join('') }
+  ${ f('Race size', 'build.raceSize', 'select', {
+    values: [
+      [
+        '',
+        'Choose size'
+      ],
+      [
+        'Small',
+        'Small'
+      ],
+      [
+        'Medium',
+        'Medium'
+      ]
+    ]
+  }) }
+  ${ f('Racial feature', 'build.raceFeature', 'select', {
+    values: [[
+        '',
+        'Choose feature'
+      ]]
+  }) }
+  ${ f('Second racial feature (level 5)', 'build.raceFeature2', 'select', {
+    values: [[
+        '',
+        'Choose feature'
+      ]]
+  }) }
+  ${ [
+    0,
+    1
+  ].map(i => f(`Race skill ${ i + 1 }`, `build.raceSkills.${ i }`, 'select', { values: skillChoices })).join('') }
+  ${ [
+    0,
+    1
+  ].map(i => f(`Race tool / weapon ${ i + 1 }`, `build.raceTools.${ i }`, 'select', {
+    values: [[
+        '',
+        'Choose proficiency'
+      ]]
+  })).join('') }
+  ${ f('Racial spell / feature ability', 'build.raceAbility', 'select', {
+    values: [
+      [
+        '',
+        'Choose ability'
+      ],
+      ...Object.entries(M.abilities).filter(([key]) => [
+        'int',
+        'wis',
+        'cha'
+      ].includes(key))
+    ]
+  }) }
+  ${ f('Racial cantrip', 'build.raceCantrip', 'select', {
+    values: [[
+        '',
+        'Choose cantrip'
+      ]]
+  }) }
+  ${ f('Racial feat (apply effects manually)', 'build.raceFeat') }
+  </div>
+  <div class="sheet-grid two" id="sheetModernOrigin">
+  ${ f('Background ability pattern', 'build.backgroundPattern', 'select', {
+    values: [
+      [
+        '21',
+        '+2 and +1'
+      ],
+      [
+        '111',
+        '+1, +1 and +1'
+      ]
+    ]
+  }) }
+  ${ [
+    0,
+    1,
+    2
+  ].map(i => f(`Background ability ${ i + 1 }`, `build.backgroundAbilities.${ i }`, 'select', {
+    values: [
+      [
+        '',
+        'Choose ability'
+      ],
+      ...Object.entries(M.abilities)
+    ]
+  })).join('') }
+  ${ [
+    0,
+    1
+  ].map(i => f(`Standard language ${ i + 1 }`, `build.standardLanguages.${ i }`, 'select', {
+    values: [
+      [
+        '',
+        'Choose language'
+      ],
+      ...R.modern.standardLanguages.map(n => [
+        n,
+        n
+      ])
+    ]
+  })).join('') }
+  ${ f('Background Origin feat', 'build.backgroundFeat', 'select', {
+    values: [
+      [
+        '',
+        'Choose Origin feat'
+      ],
+      ...R.modern.originFeats.map(n => [
+        n,
+        n
+      ])
+    ]
+  }) }
+  ${ f('Human additional Origin feat', 'build.humanOriginFeat', 'select', {
+    values: [
+      [
+        '',
+        'Choose Origin feat'
+      ],
+      ...R.modern.originFeats.map(n => [
+        n,
+        n
+      ])
+    ]
+  }) }
+  ${ [
+    'background',
+    'human'
+  ].map(scope => [
+    0,
+    1,
+    2
+  ].map(i => f(`${ scope === 'human' ? 'Human' : 'Background' } Skilled proficiency ${ i + 1 }`, `build.${ scope }FeatChoices.${ i }`, 'select', {
+    values: [
+      [
+        '',
+        'Choose skill or tool'
+      ],
+      ...Object.entries(M.skills).map(([id, [name]]) => [
+        'skill:' + id,
+        name
+      ]),
+      ...R.tools.map(n => [
+        'tool:' + n,
+        n
+      ])
+    ]
+  })).join('')).join('') }
+  </div>
+  <div class="sheet-grid two" id="sheetClassSkills">${ Array.from({ length: 4 }, (_, i) => f(`Class skill ${ i + 1 }`, `build.classSkills.${ i }`, 'select', { values: skillChoices })).join('') }</div>
+  <div class="sheet-grid two" id="sheetBackgroundChoices">${ f('Background language 1', 'build.backgroundLanguages.0', 'select', { values: languageChoices }) }${ f('Background language 2', 'build.backgroundLanguages.1', 'select', { values: languageChoices }) }</div>`;
+  const raceSelect = document.querySelector('[name="build.race"]');
+  raceSelect.innerHTML = '<option value="">Custom / manual</option>' + [
+    '2024',
+    'Common',
+    'Exotic',
+    'Monstrous',
+    'Setting specific',
+    'Custom'
+  ].map(category => `<optgroup label="${ sheetEscape(category) }">${ Object.entries(R.races).filter(([, r]) => r.category === category).sort((a, b) => a[1].name.localeCompare(b[1].name)).map(([id, r]) => `<option value="${ sheetEscape(id) }">${ sheetEscape(r.name) } — ${ sheetEscape(r.edition === '2024' ? '2024' : '2014 \xB7 ' + (r.book || 'SRD')) }</option>`).join('') }</optgroup>`).join('');
+}
+function updateSheetBuildSummary(derived) {
+  const s = sheetSession;
+  if (!s)
+    return;
+  const b = s.data.build, R = CharacterRules, e = derived.effects, c = e.classData, form = document.getElementById('characterSheetForm');
+  form.querySelectorAll('[data-build-for]').forEach(el => el.hidden = !el.dataset.buildFor.split(',').includes(b.race));
+  const race = e.race, baseRace = R.races[b.race], level = s.identity?.level || s.character.level || 1;
+  const show = (name, visible) => {
+    const el = form.querySelector(`[name="${ name }"]`);
+    el.closest('label').hidden = !visible;
+    return el;
+  };
+  const setOptions = (name, values, value, prompt) => {
+    const el = form.querySelector(`[name="${ name }"]`), html = `<option value="">${ sheetEscape(prompt) }</option>` + values.map(([key, label]) => `<option value="${ sheetEscape(key) }">${ sheetEscape(label) }</option>`).join('');
+    if (el.dataset.options !== html) {
+      el.innerHTML = html;
+      el.dataset.options = html;
+    }
+    el.value = value;
+  };
+  show('build.asiPattern', b.edition === '2014' && race?.flexible);
+  const bonuses = b.edition === '2024' ? [] : race?.flexible ? b.asiPattern === '111' ? [
+    1,
+    1,
+    1
+  ] : [
+    2,
+    1
+  ] : race?.choiceBonuses || [];
+  for (let i = 0; i < 3; i++) {
+    const el = show(`build.flexibleChoices.${ i }`, i < bonuses.length);
+    el.closest('label').querySelector('span').textContent = `Ability bonus +${ bonuses[i] || 1 }`;
+    for (const option of el.querySelectorAll('option'))
+      option.disabled = race?.excludeAbilities?.includes(option.value) || false;
+  }
+  show('build.raceSize', race?.sizeChoice);
+  show('build.raceFeature', baseRace?.optionChoices && level >= (baseRace.optionLevel || 1));
+  setOptions('build.raceFeature', Object.entries(baseRace?.optionChoices || {}).map(([key, o]) => [
+    key,
+    o.name
+  ]), b.raceFeature, 'Choose feature');
+  show('build.raceFeature2', baseRace?.secondOptionChoices && level >= (baseRace.secondOptionLevel || 1));
+  setOptions('build.raceFeature2', Object.entries(baseRace?.secondOptionChoices || {}).filter(([key]) => key !== b.raceFeature).map(([key, o]) => [
+    key,
+    o.name
+  ]), b.raceFeature2, 'Choose feature');
+  for (let i = 0; i < 2; i++) {
+    const el = show(`build.raceSkills.${ i }`, i < (race?.skillCount || 0));
+    const pool = race?.skillPool === 'any' ? Object.keys(CharacterSheetModel.skills) : race?.skillPool || [];
+    for (const option of el.querySelectorAll('option'))
+      option.disabled = !!option.value && (!pool.includes(option.value) || (race?.skills || []).includes(option.value));
+    show(`build.raceTools.${ i }`, i < (race?.toolCount || 0));
+    const toolPool = race?.instrumentOnly ? R.instruments : race?.weaponTool ? [
+      ...R.tools,
+      ...R.weapons
+    ] : R.tools;
+    setOptions(`build.raceTools.${ i }`, toolPool.map(t => [
+      t,
+      t
+    ]), b.raceTools[i], 'Choose proficiency');
+  }
+  show('build.raceAbility', race?.spellChoice || race?.cantripPool || race?.spells?.some(spell => spell.ability === 'choice'));
+  show('build.raceCantrip', race?.cantripPool);
+  setOptions('build.raceCantrip', (race?.cantripPool === 'sorcerer' ? [
+    ...R.cantrips,
+    'Blade Ward',
+    'Friends'
+  ] : race?.cantripPool || []).map(n => [
+    n,
+    n
+  ]), b.raceCantrip || race?.defaultCantrip || '', 'Choose cantrip');
+  show('build.raceFeat', race?.feat);
+  const extra = form.querySelector('[name="build.extraLanguage"]');
+  extra.closest('[data-build-for]').hidden = !race?.extraLanguage && ![
+    'human',
+    'half-elf',
+    'high-elf'
+  ].includes(b.race);
+  for (const option of extra.querySelectorAll('option'))
+    option.disabled = !!option.value && (e.race?.languagePool ? !e.race.languagePool.includes(option.value) : false);
+  document.getElementById('sheetBackgroundChoices').hidden = b.background !== 'acolyte' || b.edition !== '2014';
+  for (const name of [
+      'build.abilityChoices.0',
+      'build.abilityChoices.1'
+    ])
+    show(name, b.race === 'half-elf' && b.edition === '2014');
+  show('identity.class', !b.classId);
+  show('species', !b.race);
+  show('background', !b.background);
+  document.getElementById('sheetModernOrigin').hidden = b.edition !== '2024';
+  const bg = R.modern.backgrounds[b.background];
+  for (let i = 0; i < 3; i++) {
+    const el = show(`build.backgroundAbilities.${ i }`, b.backgroundPattern === '111' || i < 2);
+    el.closest('label').querySelector('span').textContent = `Background ability +${ b.backgroundPattern === '111' || i === 1 ? 1 : 2 }`;
+    for (const option of el.querySelectorAll('option'))
+      option.disabled = !!option.value && !!bg && !bg.abilities.includes(option.value);
+  }
+  show('build.backgroundFeat', !bg);
+  show('build.humanOriginFeat', race?.originFeat);
+  for (let i = 0; i < 3; i++) {
+    show(`build.backgroundFeatChoices.${ i }`, (bg?.feat || b.backgroundFeat) === 'Skilled');
+    show(`build.humanFeatChoices.${ i }`, race?.originFeat && b.humanOriginFeat === 'Skilled');
+  }
+  for (const option of form.querySelector('[name="build.race"]').querySelectorAll('option'))
+    option.disabled = b.edition === '2014' && R.races[option.value]?.edition === '2024';
+  for (const option of form.querySelector('[name="build.background"]').querySelectorAll('option'))
+    option.disabled = b.edition === '2014' && !!R.modern.backgrounds[option.value];
+  for (let i = 0; i < 4; i++) {
+    const input = form.querySelector(`[name="build.classSkills.${ i }"]`), available = c ? c.skills === 'any' ? Object.keys(CharacterSheetModel.skills) : c.skills : [];
+    input.closest('label').hidden = !c || i >= c.count;
+    for (const option of input.querySelectorAll('option'))
+      option.disabled = !!option.value && !available.includes(option.value);
+  }
+  if (e.slotMax)
+    for (let i = 0; i < 9; i++) {
+      const max = form.querySelector(`[name="slots.${ i }.max"]`), used = form.querySelector(`[name="slots.${ i }.used"]`);
+      max.value = e.slotMax[i];
+      used.max = e.slotMax[i];
+      max.readOnly = true;
+    }
+  else
+    for (let i = 0; i < 9; i++) {
+      form.querySelector(`[name="slots.${ i }.max"]`).readOnly = false;
+      form.querySelector(`[name="slots.${ i }.used"]`).max = 99;
+    }
+  const stat = (label, value) => `<div><span>${ sheetEscape(label) }</span><strong>${ sheetEscape(value) }</strong></div>`;
+  const asi = Object.entries(e.asi).map(([key, value]) => `${ key.toUpperCase() } +${ value }`).join(', ') || 'None';
+  const learnedSkills = e.skills.map(key => CharacterSheetModel.skills[key]?.[0] || key).join(', ') || 'None';
+  const breath = e.breath ? `<p><strong>Breath weapon:</strong> ${ e.breath.dice }d${ e.breath.die || 6 } ${ sheetEscape(e.breath.type) } · ${ sheetEscape(e.breath.area) } · ${ e.breath.save.toUpperCase() } save DC ${ 8 + derived.pb + derived.mods.con }. Half damage on success; ${ sheetEscape(e.breath.usage || 'once per short or long rest') }.</p>` : '';
+  const raceInfo = race ? `<p><strong>${ sheetEscape(race.name) }</strong> · ${ sheetEscape(race.source) } · ${ sheetEscape(race.creatureType) }${ race.url ? ` · <a href="${ sheetEscape(race.url) }" target="_blank" rel="noopener">Race reference</a>` : '' }</p>` : '';
+  const movement = [
+    [
+      'Flight',
+      e.fly
+    ],
+    [
+      'Swim',
+      e.swim
+    ],
+    [
+      'Climb',
+      e.climb
+    ]
+  ].filter(([, n]) => n).map(([label, n]) => `${ label } ${ n } ft`).join(' \xB7 ');
+  const naturalAC = e.naturalArmor ? e.naturalArmor.base + (e.naturalArmor.ability ? derived.mods[e.naturalArmor.ability] : 0) : null;
+  const additional = `${ movement ? `<p><strong>Other movement:</strong> ${ sheetEscape(movement) }. See racial restrictions below.</p>` : '' }${ naturalAC !== null ? `<p><strong>Natural armor reference:</strong> AC ${ naturalAC } before shield or other effects. Apply this manually in Combat when eligible; entered AC is preserved.</p>` : '' }${ e.immunities.length ? `<p><strong>Immunities:</strong> ${ sheetEscape(e.immunities.join(', ')) }</p>` : '' }${ e.raceAbility ? `<p><strong>Racial magic / feature:</strong> ${ sheetEscape(e.raceAbility.toUpperCase()) } · DC ${ 8 + derived.pb + derived.mods[e.raceAbility] } · spell attack ${ CharacterSheetModel.signed(derived.pb + derived.mods[e.raceAbility]) }</p>` : '' }`;
+  document.getElementById('sheetBuildSummary').innerHTML = `<h4>Calculated from your choices · ${ sheetEscape(b.edition) }</h4>${ raceInfo }${ additional }<p><strong>Class:</strong> ${ sheetEscape(c ? c.name + ' \u2014 ' + b.edition : 'Custom / manual') } · <strong>Background:</strong> ${ sheetEscape(bg ? bg.name + ' \u2014 2024' : b.background === 'acolyte' ? 'Acolyte \u2014 2014' : 'Custom / manual') }</p>${ e.originFeats?.length ? `<p><strong>Origin feats:</strong> ${ sheetEscape(e.originFeats.join(', ')) }</p>` : '' }<p>${ b.scoreMode === 'base' ? 'Origin bonuses are added to base abilities (up to 20) and base maximum HP.' : 'Your entered ability scores and maximum HP are treated as final totals; origin bonuses are shown for reference only.' } Manual notes and proficiencies remain separate.</p><div class="sheet-metrics">${ stat(b.edition === '2024' ? 'Background bonuses' : 'Race bonuses', asi) }${ stat('Walking speed', `${ e.speed } ft`) }${ stat('Size', e.size) }${ stat('Darkvision', e.darkvision ? `${ e.darkvision } ft` : 'None') }${ stat('Effective maximum HP', derived.hpMax) }${ stat('Hit dice', c ? `${ s.identity?.level || s.character.level || 1 }d${ c.die }` : s.data.hitDice || 'Manual') }</div><p><strong>Automatic skills:</strong> ${ sheetEscape(learnedSkills) }</p><p><strong>Class saving throws:</strong> ${ sheetEscape(e.saves.map(key => CharacterSheetModel.abilities[key]).join(', ') || 'Manual') }</p><p><strong>Languages:</strong> ${ sheetEscape(e.languages.join(', ') || 'Manual') }</p><p><strong>Equipment / tool proficiencies:</strong> ${ sheetEscape(e.proficiencies.join(', ') || 'Manual') }</p><p><strong>Resistances:</strong> ${ sheetEscape(e.resistances.join(', ') || 'None from race') }</p><ul>${ e.traits.map(trait => `<li>${ sheetEscape(trait) }</li>`).join('') }</ul>${ breath }${ e.innate.length ? `<p><strong>Granted racial spells:</strong> ${ sheetEscape(e.innate.join('; ')) }</p>` : '' }${ e.pact ? `<p><strong>Pact Magic:</strong> ${ e.pact.count } slot(s), level ${ e.pact.level }; recover on a short or long rest. Mystic Arcanum spells are separate and tracked manually.</p>` : '' }<p class="sheet-help">Traits below are reminders, not action buttons. Conditional bonuses, racial attacks, class features, feats, armor effects and rest recovery require manual entry. PB means proficiency bonus. <a href="rules-attribution.html" target="_blank" rel="noopener">Rules source & attribution</a></p>${ e.warnings.length ? `<div class="sheet-build-warning">${ e.warnings.map(w => `<p>${ sheetEscape(w) }</p>`).join('') }</div>` : '' }`;
+  for (const [key, label] of Object.entries(CharacterSheetModel.abilities)) {
+    const input = form.querySelector(`[name="abilities.${ key }"]`);
+    let output = input.parentElement.querySelector('.sheet-ability-total');
+    if (!output) {
+      output = document.createElement('small');
+      output.className = 'sheet-ability-total';
+      input.parentElement.appendChild(output);
+    }
+    output.textContent = `Total ${ derived.scores[key] }${ b.scoreMode === 'base' && e.asi[key] ? ` (includes +${ derived.scores[key] - s.data.abilities[key] } origin)` : '' }`;
+  }
+  const speed = form.querySelector('[name="speed"]');
+  speed.readOnly = !!e.race;
+  speed.value = e.race ? e.speed : s.data.speed;
+}
