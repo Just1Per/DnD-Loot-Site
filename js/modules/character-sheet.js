@@ -47,7 +47,10 @@ async function openCharacterSheet(characterId) {
     const stored = await characterSheetStore.load(campaignId, characterId);
     if (generation !== sheetGeneration || activeCampaign?.id !== campaignId)
       return;
-    if (stored.schemaVersion !== 1)
+    if (![
+        1,
+        2
+      ].includes(stored.schemaVersion))
       throw Error('This sheet uses a newer format. Update the website before editing it.');
     sheetSession = {
       campaignId,
@@ -63,6 +66,8 @@ async function openCharacterSheet(characterId) {
       dirty: false,
       saving: false
     };
+    if (!stored.revision)
+      sheetSession.data.build.scoreMode = 'base';
     renderCharacterSheet();
   } catch (error) {
     if (generation === sheetGeneration)
@@ -115,7 +120,7 @@ function renderCharacterSheet() {
   ${ sheetSection('overview', 'The adventurer', `<div class="sheet-grid sheet-identity">${ field('Character name', 'identity.name') }${ field('Class / subclasses', 'identity.class') }${ field('Level', 'identity.level', 'number', {
     min: 1,
     max: 20
-  }) }${ field('Species / race', 'species') }${ field('Background', 'background') }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid">${ field('Maximum HP', 'hpMax', 'number', { min: 0 }) }${ field('Current HP', 'hpCurrent', 'number', { min: 0 }) }${ field('Temporary HP', 'hpTemp', 'number', { min: 0 }) }${ field('Armor class', 'ac', 'number', { min: 0 }) }${ field('Speed (ft)', 'speed', 'number', { min: 0 }) }${ field('Inspiration', 'inspiration', 'checkbox') }</div><div class="sheet-hp-tools"><label>Amount <input id="sheetHpAmount" type="number" min="0" step="1" value="1"></label><button type="button" id="sheetDamage">Take damage</button><button type="button" id="sheetHeal">Heal</button><small>Damage uses temporary HP first. Save to keep these changes.</small></div><div class="sheet-grid two">${ field('Features & traits', 'features', 'textarea', { rows: 7 }) }${ field('Limited resources \u2014 maximum / used / recovery', 'resources', 'textarea', { rows: 7 }) }${ field('Languages', 'languages', 'textarea') }${ field('Armor, weapon & tool proficiencies', 'proficiencies', 'textarea') }</div>`) }
+  }) }${ field('Custom race / notes', 'species') }${ field('Background', 'background') }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div id="sheetBuildControls"></div><div id="sheetBuildSummary" class="sheet-rule-summary"></div><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid">${ field('Maximum HP', 'hpMax', 'number', { min: 0 }) }${ field('Current HP', 'hpCurrent', 'number', { min: 0 }) }${ field('Temporary HP', 'hpTemp', 'number', { min: 0 }) }${ field('Armor class', 'ac', 'number', { min: 0 }) }${ field('Speed (ft)', 'speed', 'number', { min: 0 }) }${ field('Inspiration', 'inspiration', 'checkbox') }</div><div class="sheet-hp-tools"><label>Amount <input id="sheetHpAmount" type="number" min="0" step="1" value="1"></label><button type="button" id="sheetDamage">Take damage</button><button type="button" id="sheetHeal">Heal</button><small>Damage uses temporary HP first. Save to keep these changes.</small></div><div class="sheet-grid two">${ field('Features & traits', 'features', 'textarea', { rows: 7 }) }${ field('Limited resources \u2014 maximum / used / recovery', 'resources', 'textarea', { rows: 7 }) }${ field('Languages', 'languages', 'textarea') }${ field('Armor, weapon & tool proficiencies', 'proficiencies', 'textarea') }</div>`) }
   ${ sheetSection('skills', 'Abilities, saving throws & skills', `<div class="sheet-abilities">${ abilityOptions.map(([key, label]) => `<div class="sheet-ability">${ field(label, `abilities.${ key }`, 'number', {
     min: 1,
     max: 30
@@ -195,6 +200,7 @@ function renderCharacterSheet() {
     ]
   ].map(([key, label]) => field(label, key, 'textarea', { rows: 5 })).join('') }</div>`) }
   </div></form>`;
+  renderSheetBuildControls();
   renderSheetRows();
   fillSheetForm();
   refreshCharacterSheetInventory();
@@ -205,6 +211,15 @@ function renderCharacterSheet() {
     if (!event.target.name)
       return;
     readSheetForm();
+    if (event.target.name === 'build.classId' && CharacterRules.classes[s.data.build.classId]) {
+      const selected = CharacterRules.classes[s.data.build.classId];
+      s.identity.class = selected.name;
+      form.querySelector('[name="identity.class"]').value = selected.name;
+      if (selected.ability) {
+        s.data.spellAbility = selected.ability;
+        form.querySelector('[name="spellAbility"]').value = selected.ability;
+      }
+    }
     s.dirty = true;
     sheetStatus('Unsaved changes');
     updateSheetCalculations();
@@ -213,6 +228,15 @@ function renderCharacterSheet() {
     if (!event.target.name)
       return;
     readSheetForm();
+    if (event.target.name === 'build.classId' && CharacterRules.classes[s.data.build.classId]) {
+      const selected = CharacterRules.classes[s.data.build.classId];
+      s.identity.class = selected.name;
+      form.querySelector('[name="identity.class"]').value = selected.name;
+      if (selected.ability) {
+        s.data.spellAbility = selected.ability;
+        form.querySelector('[name="spellAbility"]').value = selected.ability;
+      }
+    }
     s.dirty = true;
     sheetStatus('Unsaved changes');
     updateSheetCalculations();
@@ -305,6 +329,8 @@ function readSheetForm() {
   const data = structuredClone(s.data);
   data.identity = { ...s.identity || s.character };
   document.querySelectorAll('#characterSheetForm [name]').forEach(input => {
+    if (input.name === 'speed' && input.readOnly)
+      return;
     const keys = input.name.split('.'), last = keys.pop();
     let target = data;
     for (const key of keys)
@@ -323,6 +349,7 @@ function updateSheetCalculations() {
   if (!s)
     return;
   const d = CharacterSheetModel.derive(s.data, s.identity?.level || s.character.level || 1);
+  updateSheetBuildSummary(d);
   document.querySelectorAll('#characterSheetDialog [data-derived]').forEach(el => {
     const path = el.dataset.derived, value = path.split('.').reduce((v, key) => v?.[key], d);
     el.textContent = [
@@ -354,9 +381,10 @@ function changeSheetHP(action) {
     return;
   }
   readSheetForm();
-  sheetSession.data = CharacterSheetModel[action](sheetSession.data, amount);
+  sheetSession.data = CharacterSheetModel[action](sheetSession.data, amount, sheetSession.identity?.level || sheetSession.character.level);
   sheetSession.dirty = true;
   fillSheetForm();
+  updateSheetCalculations();
   sheetStatus('HP updated \u2014 save to keep this change.');
 }
 async function saveCharacterSheet() {
@@ -449,7 +477,7 @@ function exportCharacterSheet() {
   const s = sheetSession;
   const blob = new Blob([JSON.stringify({
       format: 'dnd-vault-character-sheet',
-      schemaVersion: 1,
+      schemaVersion: 2,
       character: s.identity,
       campaign: activeCampaign.name,
       data: s.data,
@@ -482,3 +510,148 @@ function prepareSheetPrint() {
   document.body.classList.add('printing-character-sheet');
 }
 window.addEventListener('beforeprint', prepareSheetPrint);
+function renderSheetBuildControls() {
+  const R = CharacterRules, M = CharacterSheetModel, f = sheetField;
+  const options = object => [
+    [
+      '',
+      'Custom / manual'
+    ],
+    ...Object.entries(object).map(([key, value]) => [
+      key,
+      value.name
+    ])
+  ];
+  const abilityChoices = [
+    [
+      '',
+      'Choose ability'
+    ],
+    ...Object.entries(M.abilities).filter(([key]) => key !== 'cha')
+  ];
+  const skillChoices = [
+    [
+      '',
+      'Choose skill'
+    ],
+    ...Object.entries(M.skills).map(([key, [label]]) => [
+      key,
+      label
+    ])
+  ];
+  const languageChoices = [
+    [
+      '',
+      'Choose language'
+    ],
+    ...R.languages.map(name => [
+      name,
+      name
+    ])
+  ];
+  document.getElementById('sheetBuildControls').innerHTML = `<h4>Character builder · 2014 rules</h4><p class="sheet-help">The nine base race options in your reference PDF, with SRD 5.1 traits. Choose Custom / manual for other books or homebrew. This builder handles a single class; keep multiclass builds manual.</p><div class="sheet-grid">${ f('Race / subrace', 'build.race', 'select', { values: options(R.races) }) }${ f('Class', 'build.classId', 'select', { values: options(R.classes) }) }${ f('Background', 'build.background', 'select', {
+    values: [
+      [
+        '',
+        'Custom / manual'
+      ],
+      [
+        'acolyte',
+        'Acolyte'
+      ]
+    ]
+  }) }${ f('How your numbers are entered', 'build.scoreMode', 'select', {
+    values: [
+      [
+        'total',
+        'Final totals \u2014 racial ability / HP bonuses already included'
+      ],
+      [
+        'base',
+        'Base scores / HP \u2014 add racial bonuses automatically'
+      ]
+    ]
+  }) }${ f('Calculate class spell slots', 'build.autoSlots', 'checkbox') }</div>
+  <div class="sheet-grid two" data-build-for="half-elf">${ f('Ability +1 choice 1', 'build.abilityChoices.0', 'select', { values: abilityChoices }) }${ f('Ability +1 choice 2', 'build.abilityChoices.1', 'select', { values: abilityChoices }) }${ f('Racial skill choice 1', 'build.skillChoices.0', 'select', { values: skillChoices }) }${ f('Racial skill choice 2', 'build.skillChoices.1', 'select', { values: skillChoices }) }</div>
+  <div class="sheet-grid two" data-build-for="human,half-elf,high-elf">${ f('Extra race language', 'build.extraLanguage', 'select', { values: languageChoices }) }</div>
+  <div class="sheet-grid two" data-build-for="high-elf">${ f('Wizard cantrip (Intelligence)', 'build.cantrip', 'select', {
+    values: [
+      [
+        '',
+        'Choose cantrip'
+      ],
+      ...R.cantrips.map(name => [
+        name,
+        name
+      ])
+    ]
+  }) }</div>
+  <div class="sheet-grid two" data-build-for="hill-dwarf">${ f('Dwarven tool training', 'build.tool', 'select', {
+    values: [
+      [
+        '',
+        'Choose tool'
+      ],
+      ...[
+        'Smith\u2019s tools',
+        'Brewer\u2019s supplies',
+        'Mason\u2019s tools'
+      ].map(name => [
+        name,
+        name
+      ])
+    ]
+  }) }</div>
+  <div class="sheet-grid two" data-build-for="dragonborn">${ f('Draconic ancestry', 'build.dragon', 'select', {
+    values: Object.keys(R.dragons).map(key => [
+      key,
+      key[0].toUpperCase() + key.slice(1)
+    ])
+  }) }</div>
+  <div class="sheet-grid two" id="sheetClassSkills">${ Array.from({ length: 4 }, (_, i) => f(`Class skill ${ i + 1 }`, `build.classSkills.${ i }`, 'select', { values: skillChoices })).join('') }</div>
+  <div class="sheet-grid two" id="sheetBackgroundChoices">${ f('Background language 1', 'build.backgroundLanguages.0', 'select', { values: languageChoices }) }${ f('Background language 2', 'build.backgroundLanguages.1', 'select', { values: languageChoices }) }</div>`;
+}
+function updateSheetBuildSummary(derived) {
+  const s = sheetSession;
+  if (!s)
+    return;
+  const b = s.data.build, R = CharacterRules, e = derived.effects, c = e.classData, form = document.getElementById('characterSheetForm');
+  form.querySelectorAll('[data-build-for]').forEach(el => el.hidden = !el.dataset.buildFor.split(',').includes(b.race));
+  document.getElementById('sheetBackgroundChoices').hidden = b.background !== 'acolyte';
+  for (let i = 0; i < 4; i++) {
+    const input = form.querySelector(`[name="build.classSkills.${ i }"]`), available = c ? c.skills === 'any' ? Object.keys(CharacterSheetModel.skills) : c.skills : [];
+    input.closest('label').hidden = !c || i >= c.count;
+    for (const option of input.querySelectorAll('option'))
+      option.disabled = !!option.value && !available.includes(option.value);
+  }
+  if (e.slotMax)
+    for (let i = 0; i < 9; i++) {
+      const max = form.querySelector(`[name="slots.${ i }.max"]`), used = form.querySelector(`[name="slots.${ i }.used"]`);
+      max.value = e.slotMax[i];
+      used.max = e.slotMax[i];
+      max.readOnly = true;
+    }
+  else
+    for (let i = 0; i < 9; i++) {
+      form.querySelector(`[name="slots.${ i }.max"]`).readOnly = false;
+      form.querySelector(`[name="slots.${ i }.used"]`).max = 99;
+    }
+  const stat = (label, value) => `<div><span>${ sheetEscape(label) }</span><strong>${ sheetEscape(value) }</strong></div>`;
+  const asi = Object.entries(e.asi).map(([key, value]) => `${ key.toUpperCase() } +${ value }`).join(', ') || 'None';
+  const learnedSkills = e.skills.map(key => CharacterSheetModel.skills[key]?.[0] || key).join(', ') || 'None';
+  const breath = e.breath ? `<p><strong>Breath weapon:</strong> ${ e.breath.dice }d6 ${ sheetEscape(e.breath.type) } · ${ sheetEscape(e.breath.area) } · ${ e.breath.save.toUpperCase() } save DC ${ 8 + derived.pb + derived.mods.con }. Half damage on success; once per short or long rest.</p>` : '';
+  document.getElementById('sheetBuildSummary').innerHTML = `<h4>Calculated from your choices</h4><p>${ b.scoreMode === 'base' ? 'Racial bonuses are added to base abilities and base maximum HP.' : 'Your entered ability scores and maximum HP are treated as final totals; racial bonuses are shown for reference only.' } Manual notes and proficiencies remain separate.</p><div class="sheet-metrics">${ stat('Race bonuses', asi) }${ stat('Walking speed', `${ e.speed } ft`) }${ stat('Size', e.size) }${ stat('Darkvision', e.darkvision ? `${ e.darkvision } ft` : 'None') }${ stat('Effective maximum HP', derived.hpMax) }${ stat('Hit dice', c ? `${ s.identity?.level || s.character.level || 1 }d${ c.die }` : s.data.hitDice || 'Manual') }</div><p><strong>Automatic skills:</strong> ${ sheetEscape(learnedSkills) }</p><p><strong>Class saving throws:</strong> ${ sheetEscape(e.saves.map(key => CharacterSheetModel.abilities[key]).join(', ') || 'Manual') }</p><p><strong>Languages:</strong> ${ sheetEscape(e.languages.join(', ') || 'Manual') }</p><p><strong>Equipment / tool proficiencies:</strong> ${ sheetEscape(e.proficiencies.join(', ') || 'Manual') }</p><p><strong>Resistances:</strong> ${ sheetEscape(e.resistances.join(', ') || 'None from race') }</p><ul>${ e.traits.map(trait => `<li>${ sheetEscape(trait) }</li>`).join('') }</ul>${ breath }${ e.innate.length ? `<p><strong>Granted racial spells:</strong> ${ sheetEscape(e.innate.join('; ')) }</p>` : '' }${ e.pact ? `<p><strong>Pact Magic:</strong> ${ e.pact.count } slot(s), level ${ e.pact.level }; recover on a short or long rest. Mystic Arcanum spells are separate and tracked manually.</p>` : '' }<p class="sheet-help">Class features, subclasses, feats, ASIs from leveling, armor effects and rest recovery still require manual entry. <a href="rules-attribution.html" target="_blank" rel="noopener">Rules source & attribution</a></p>${ e.warnings.length ? `<div class="sheet-build-warning">${ e.warnings.map(w => `<p>${ sheetEscape(w) }</p>`).join('') }</div>` : '' }`;
+  for (const [key, label] of Object.entries(CharacterSheetModel.abilities)) {
+    const input = form.querySelector(`[name="abilities.${ key }"]`);
+    let output = input.parentElement.querySelector('.sheet-ability-total');
+    if (!output) {
+      output = document.createElement('small');
+      output.className = 'sheet-ability-total';
+      input.parentElement.appendChild(output);
+    }
+    output.textContent = `Total ${ derived.scores[key] }${ b.scoreMode === 'base' && e.asi[key] ? ` (includes +${ e.asi[key] } race)` : '' }`;
+  }
+  const speed = form.querySelector('[name="speed"]');
+  speed.readOnly = !!e.race;
+  speed.value = e.race ? e.speed : s.data.speed;
+}

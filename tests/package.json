@@ -7,7 +7,7 @@
     "linkedom": "^0.18.13"
   },
   "scripts": {
-    "test": "node --test character-sheet-model.cjs && node dom.cjs",
+    "test": "node --test character-sheet-model.cjs character-rules.cjs && node dom.cjs",
     "test:rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node character-sheet-rules.cjs\""
   }
 }
