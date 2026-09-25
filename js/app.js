@@ -61,7 +61,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20260925-editions-v4");
+    moduleUrl.searchParams.set("v", "20260925-editions-v5");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;

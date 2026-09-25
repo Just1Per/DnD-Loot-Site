@@ -79,7 +79,8 @@ The existing private characterSheets collection remains unchanged. Rules allow:
 - schema 2: 2014 builder sheets;
 - schema 3: 2014 or 2024 builder sheets.
 
-2024 saves use schema 3. Once upgraded, switching back to 2014 retains schema 3.
+All new saves use schema 3, including 2014 sheets with expanded race choices.
+Switching back to 2014 retains schema 3.
 Rules reject schema downgrades, protecting the data from older website clients.
 UI accepts schemas 1–3; optimistic revision and identity checks remain in place.
 Owning player and campaign DM/owner retain private access; global admin alone
