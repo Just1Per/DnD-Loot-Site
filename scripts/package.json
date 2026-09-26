@@ -1,0 +1,1 @@
+{"name":"dnd-vault-catalog-tools","private":true,"type":"module","scripts":{"import:rules":"node import-rules.mjs"},"dependencies":{"firebase-admin":"^13.10.0"}}

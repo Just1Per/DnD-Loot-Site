@@ -472,3 +472,12 @@
 @media(max-width:600px){.sheet-rule-summary .sheet-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 #sheetManualIdentity [hidden] { display: none !important; }
+
+.sheet-catalog { margin-block: 1.25rem; padding: 1rem; border: 1px solid var(--border, #675843); border-radius: .5rem; }
+.sheet-catalog-results { max-height: 18rem; overflow-y: auto; margin-bottom: 1rem; }
+.sheet-catalog-results article { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; padding: .5rem; border-bottom: 1px solid #77664c55; }
+.sheet-catalog-results article strong { flex: 1 1 12rem; }
+.sheet-catalog-results article span { font-size: .85rem; }
+.sheet-catalog-results button { flex-shrink: 0; }
+.sheet-rule-text { white-space: pre-wrap; }
+@media print { .sheet-catalog-results, #catalogSpellResults, #catalogFeatResults, #catalogLongRest { display: none; } }

@@ -19,15 +19,26 @@ const M=require('../js/modules/character-sheet-model');const {createCharacterShe
  await check('simultaneous DM and player saves produce one winner',async()=>{const r=await Promise.allSettled([store.player.save({...payload,revision:2}),store.dm.save({...payload,revision:2})]);assert.equal(r.filter(x=>x.status==='fulfilled').length,1);});
  await check('other player cannot forge sheet writes',()=>assertFails(setDoc(doc(db.other,'campaigns/a/characterSheets/c1'),{schemaVersion:1,revision:4,data:M.normalize(),updatedAt:1,updatedBy:'other'})));
  await check('global admin gets no campaign write bypass',()=>assertFails(setDoc(doc(db.admin,'campaigns/a/characterSheets/c1'),{schemaVersion:1,revision:4,data:M.normalize(),updatedAt:1,updatedBy:'admin'})));
- await check('forged author and unsupported versions denied',async()=>{await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,updatedBy:'dm'}));await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,schemaVersion:4}));});
+ await check('forged author and unsupported versions denied',async()=>{await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,updatedBy:'dm'}));await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,schemaVersion:99}));});
  await check('unbounded or malformed row containers denied',()=>assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,'data.spells':Array(151).fill({})})));
  await check('old clients cannot downgrade a rules-engine sheet',()=>assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,schemaVersion:1})));
- await check('2024 sheets save and reload with schema-three protection',async()=>{const modern=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:'Tough',background:'criminal-2024',backgroundAbilities:['dex','con']}});await store.player.save({...payload,revision:3,data:modern});const saved=await store.player.load('a','c1');assert.equal(saved.schemaVersion,3);assert.equal(saved.data.build.humanOriginFeat,'Tough');});
+ await check('2024 sheets save and reload with schema-four protection',async()=>{const modern=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:'Tough',background:'criminal-2024',backgroundAbilities:['dex','con']}});await store.player.save({...payload,revision:3,data:modern});const saved=await store.player.load('a','c1');assert.equal(saved.schemaVersion,4);assert.equal(saved.data.build.humanOriginFeat,'Tough');});
  await check('legacy clients cannot downgrade a 2024 sheet or forge its edition',async()=>{await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:5,schemaVersion:2,'data.build.edition':'2014'}));await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:5,'data.build.edition':'2099'}));});
- await check('switching rules back to 2014 retains schema-three protection',async()=>{await store.player.save({...payload,revision:4});assert.equal((await store.player.load('a','c1')).schemaVersion,3);});
+ await check('switching rules back to 2014 retains schema-four protection',async()=>{await store.player.save({...payload,revision:4});assert.equal((await store.player.load('a','c1')).schemaVersion,4);});
  await check('concurrent identity changes are not overwritten',async()=>{await updateDoc(doc(db.dm,'campaigns/a/characters/c1'),{name:'Renamed'});await assert.rejects(store.player.save({...payload,revision:5}),/Character details changed/);});
  await check('archived character retains private sheet',async()=>{await updateDoc(doc(db.dm,'campaigns/a/characters/c1'),{active:false});await assertSucceeds(getDoc(doc(db.player,'campaigns/a/characterSheets/c1')));});
  await check('missing character cannot receive an orphan sheet',()=>assertFails(setDoc(doc(db.owner,'campaigns/a/characterSheets/missing'),{schemaVersion:1,revision:1,data:M.normalize(),updatedAt:1,updatedBy:'owner'})));
  await check('removed member loses access to own sheet',async()=>{await deleteDoc(doc(db.owner,'campaigns/a/members/player'));await assertFails(getDoc(doc(db.player,'campaigns/a/characterSheets/c1')));});
+ await check('catalogue is writable only by root admin and readable by signed-in players',async()=>{
+   await assertSucceeds(setDoc(doc(db.admin,'rulesCatalog/current'),{format:1,release:'test'}));
+   await assertSucceeds(setDoc(doc(db.admin,'rulesCatalog/test/parts/0000'),{text:'reference data'}));
+   await assertSucceeds(getDoc(doc(db.player,'rulesCatalog/current')));
+   await assertSucceeds(getDoc(doc(db.player,'rulesCatalog/test/parts/0000')));
+   for(const u of ['player','dm','owner'])await assertFails(setDoc(doc(db[u],'rulesCatalog/current'),{release:'forged'}));
+   await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(),'rulesCatalog/current')));
+ });
+ await check('old version-three clients cannot erase catalogue choices',async()=>{
+   await assertFails(updateDoc(doc(db.dm,'campaigns/a/characterSheets/c1'),{revision:6,schemaVersion:3}));
+ });
  await env.cleanup();console.log(`SUCCESS ${n} sheet permission/persistence checks`);
 })().catch(e=>{console.error(e);process.exit(1)});

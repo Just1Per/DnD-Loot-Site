@@ -50,7 +50,8 @@ async function openCharacterSheet(characterId) {
     if (![
         1,
         2,
-        3
+        3,
+        4
       ].includes(stored.schemaVersion))
       throw Error('This sheet uses a newer format. Update the website before editing it.');
     sheetSession = {
@@ -204,6 +205,7 @@ function renderCharacterSheet() {
   ].map(([key, label]) => field(label, key, 'textarea', { rows: 5 })).join('') }</div>`) }
   </div></form>`;
   renderSheetBuildControls();
+  if (typeof renderSheetCatalog === 'function') renderSheetCatalog();
   renderSheetRows();
   fillSheetForm();
   refreshCharacterSheetInventory();
@@ -353,6 +355,7 @@ function updateSheetCalculations() {
     return;
   const d = CharacterSheetModel.derive(s.data, s.identity?.level || s.character.level || 1);
   updateSheetBuildSummary(d);
+  if (typeof updateSheetCatalogGrants === 'function') updateSheetCatalogGrants();
   document.querySelectorAll('#characterSheetDialog [data-derived]').forEach(el => {
     const path = el.dataset.derived, value = path.split('.').reduce((v, key) => v?.[key], d);
     el.textContent = [
@@ -480,7 +483,7 @@ function exportCharacterSheet() {
   const s = sheetSession;
   const blob = new Blob([JSON.stringify({
       format: 'dnd-vault-character-sheet',
-      schemaVersion: 3,
+      schemaVersion: 4,
       character: s.identity,
       campaign: activeCampaign.name,
       data: s.data,

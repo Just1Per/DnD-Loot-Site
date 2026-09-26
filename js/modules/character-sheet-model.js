@@ -1,6 +1,7 @@
 /* Framework-independent character sheet data and calculations. */
 var CharacterSheetModel = (() => {
   const Rules = typeof CharacterRules !== 'undefined' ? CharacterRules : require('./character-rules');
+  const Catalog = typeof CharacterCatalog !== 'undefined' ? CharacterCatalog : require('./character-catalog');
   const abilities = {
     str: 'Strength',
     dex: 'Dexterity',
@@ -127,6 +128,7 @@ var CharacterSheetModel = (() => {
     raw = raw && typeof raw === 'object' ? raw : {};
     const result = {
       build: Rules.normalize(raw.build),
+      rulesChoices: Catalog.normalize(raw.rulesChoices),
       abilities: {},
       saves: {},
       skills: {},
@@ -186,6 +188,7 @@ var CharacterSheetModel = (() => {
     }));
     result.spells = (Array.isArray(raw.spells) ? raw.spells : []).slice(0, 150).map(s => ({
       name: text(s?.name),
+      catalogId: text(s?.catalogId),
       level: number(s?.level, 0, 0, 9),
       prepared: !!s?.prepared,
       casting: text(s?.casting),

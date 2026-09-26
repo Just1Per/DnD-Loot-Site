@@ -1,3 +1,5 @@
+> This document describes the first sheet release. For the current builder and catalogue additions, see [character-rules-engine.md](character-rules-engine.md) and [rules-catalog.md](rules-catalog.md).
+
 # Character sheets: first functional release
 
 Initial release: `feature/character-sheets`.

@@ -71,7 +71,7 @@ var CharacterRules2024 = (() => {
       feat: 'Savage Attacker'
     }
   };
-  // Origin categories are restricted here; feat spell selections and active effects remain manual.
+  // Origin categories are restricted here; Magic Initiate choices live in the spell catalogue.
   const originFeats = [
     'Alert',
     'Crafter',
@@ -462,7 +462,7 @@ var CharacterRules2024 = (() => {
       }
       taken.add(name);
       e.originFeats.push(name);
-      e.traits.push(`${ name } (2024 Origin feat): ${ featText[name] || 'Record spell selections and other feat effects manually in Features / Spells.' }`);
+      e.traits.push(`${ name } (2024 Origin feat): ${ featText[name] || 'Choose spells in the Feat catalogue below; other effects remain manual.' }`);
       if (name === 'Alert')
         e.initiativeBonus = Math.max(e.initiativeBonus, Math.ceil(level / 4) + 1);
       if (name === 'Tough')
