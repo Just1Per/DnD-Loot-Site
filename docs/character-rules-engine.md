@@ -72,18 +72,19 @@ scripts from the supplied PDF execute on the website.
 
 ## Firestore update required before saving 2024 sheets
 
-Manually publish **this branch's current `firestore.rules`**, including schema 4.
+Manually publish **this branch's current `firestore.rules`**, including schema 5.
 The existing private characterSheets collection remains unchanged. Rules allow:
 
 - schema 1: original manual sheets;
 - schema 2: 2014 builder sheets;
 - schema 3: 2014 or 2024 builder sheets;
-- schema 4: catalogue feat/spell selections and resources.
+- schema 4: catalogue feat/spell selections and resources;
+- schema 5: automatic feat effect choices and repeated feat instances.
 
-All new saves use schema 4, including 2014 sheets with expanded race choices.
-Switching back to 2014 retains schema 4.
+All new saves use schema 5, including 2014 sheets with expanded race choices.
+Switching back to 2014 retains schema 5.
 Rules reject schema downgrades, protecting the data from older website clients.
-UI accepts schemas 1–4; optimistic revision and identity checks remain in place.
+UI accepts schemas 1–5; optimistic revision and identity checks remain in place.
 Owning player and campaign DM/owner retain private access; global admin alone
 gets no campaign bypass. No Functions, Storage changes or bulk migrations.
 
@@ -106,4 +107,4 @@ acceptance remains a preview test, not a claim made by these automated checks.
 
 ## Spell / feat catalogue
 
-See [catalogue import and usage](rules-catalog.md) for coverage, schema 4, testing and the optional database import.
+See [catalogue import and usage](rules-catalog.md) for coverage, schema 5, testing and the optional database import.

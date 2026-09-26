@@ -22,9 +22,9 @@ const M=require('../js/modules/character-sheet-model');const {createCharacterShe
  await check('forged author and unsupported versions denied',async()=>{await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,updatedBy:'dm'}));await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,schemaVersion:99}));});
  await check('unbounded or malformed row containers denied',()=>assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,'data.spells':Array(151).fill({})})));
  await check('old clients cannot downgrade a rules-engine sheet',()=>assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,schemaVersion:1})));
- await check('2024 sheets save and reload with schema-four protection',async()=>{const modern=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:'Tough',background:'criminal-2024',backgroundAbilities:['dex','con']}});await store.player.save({...payload,revision:3,data:modern});const saved=await store.player.load('a','c1');assert.equal(saved.schemaVersion,4);assert.equal(saved.data.build.humanOriginFeat,'Tough');});
+ await check('2024 sheets save and reload with schema-five protection',async()=>{const modern=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:'Tough',background:'criminal-2024',backgroundAbilities:['dex','con']}});await store.player.save({...payload,revision:3,data:modern});const saved=await store.player.load('a','c1');assert.equal(saved.schemaVersion,5);assert.equal(saved.data.build.humanOriginFeat,'Tough');});
  await check('legacy clients cannot downgrade a 2024 sheet or forge its edition',async()=>{await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:5,schemaVersion:2,'data.build.edition':'2014'}));await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:5,'data.build.edition':'2099'}));});
- await check('switching rules back to 2014 retains schema-four protection',async()=>{await store.player.save({...payload,revision:4});assert.equal((await store.player.load('a','c1')).schemaVersion,4);});
+ await check('switching rules back to 2014 retains schema-five protection',async()=>{await store.player.save({...payload,revision:4});assert.equal((await store.player.load('a','c1')).schemaVersion,5);});
  await check('concurrent identity changes are not overwritten',async()=>{await updateDoc(doc(db.dm,'campaigns/a/characters/c1'),{name:'Renamed'});await assert.rejects(store.player.save({...payload,revision:5}),/Character details changed/);});
  await check('archived character retains private sheet',async()=>{await updateDoc(doc(db.dm,'campaigns/a/characters/c1'),{active:false});await assertSucceeds(getDoc(doc(db.player,'campaigns/a/characterSheets/c1')));});
  await check('missing character cannot receive an orphan sheet',()=>assertFails(setDoc(doc(db.owner,'campaigns/a/characterSheets/missing'),{schemaVersion:1,revision:1,data:M.normalize(),updatedAt:1,updatedBy:'owner'})));
@@ -39,6 +39,10 @@ const M=require('../js/modules/character-sheet-model');const {createCharacterShe
  });
  await check('old version-three clients cannot erase catalogue choices',async()=>{
    await assertFails(updateDoc(doc(db.dm,'campaigns/a/characterSheets/c1'),{revision:6,schemaVersion:3}));
+ });
+ await check('version-four clients cannot overwrite feat effects and malformed effects are denied',async()=>{
+   await assertFails(updateDoc(doc(db.dm,'campaigns/a/characterSheets/c1'),{revision:6,schemaVersion:4}));
+   await assertFails(updateDoc(doc(db.dm,'campaigns/a/characterSheets/c1'),{revision:6,'data.rulesChoices.effects':[]}));
  });
  await env.cleanup();console.log(`SUCCESS ${n} sheet permission/persistence checks`);
 })().catch(e=>{console.error(e);process.exit(1)});

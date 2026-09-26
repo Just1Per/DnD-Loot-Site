@@ -1,15 +1,19 @@
 /* Edition-aware catalogue and feat spell choices. No campaign permissions here. */
 var CharacterCatalog = (() => {
+  const Feats=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
   let catalogue=null, pending=null;
   const sdk=typeof window!=='undefined'?window.__DND_VAULT_DEPS__:null;
   const normalize = raw => {
-    const feats=[...new Set((Array.isArray(raw?.feats)?raw.feats:[]).filter(x=>typeof x==='string' && x.length<100))].slice(0,30);
+    const values=Array.isArray(raw?.feats)?raw.feats:[];
+    const feats=values.filter((x,i)=>typeof x==='string' && x.length<100 && !['__proto__','constructor','prototype'].includes(x) && (Feats.definitions[x]?.repeatable || values.indexOf(x)===i)).slice(0,30);
     const grants={};
     for(const [key,g] of Object.entries(raw?.grants||{}).slice(0,40)) {
       if(['__proto__','constructor','prototype'].includes(key) || !/^[a-zA-Z0-9_-]{1,100}$/.test(key) || !g || typeof g!=='object') continue;
       grants[key]={classId:String(g.classId||'').slice(0,30),ability:['int','wis','cha'].includes(g.ability)?g.ability:'int',spells:[0,1,2].map(i=>String(g.spells?.[i]||'').slice(0,100)),used:g.used?1:0};
     }
-    return {feats,grants};
+    const effects={};
+    for(const [key,value] of Object.entries(raw?.effects||{}).slice(0,40))if(!['__proto__','constructor','prototype'].includes(key)&&/^[a-zA-Z0-9_-]{1,100}$/.test(key))effects[key]=Feats.choice(value||{});
+    return {feats,grants,effects};
   };
   function set(data) {
     if(data?.format!==1 || !Array.isArray(data.spells) || !Array.isArray(data.feats)) throw Error('Unsupported rules catalogue');
@@ -19,6 +23,7 @@ var CharacterCatalog = (() => {
       ids.add(r.id);
     }
     if(data.spells.some(s=>!Number.isInteger(s.level)||s.level<0||s.level>9) || data.feats.some(f=>!Number.isInteger(f.minimumLevel)||f.minimumLevel<0||f.minimumLevel>20)) throw Error('Invalid catalogue levels');
+    for(const feat of data.feats)if(feat.licensedText && Feats.definitions[feat.id]?.descriptionOverride)feat.description=Feats.definitions[feat.id].descriptionOverride;
     catalogue=data;return data;
   }
   async function load() {
@@ -41,7 +46,7 @@ var CharacterCatalog = (() => {
           }
         } catch(error) { reason='Bundled catalogue (database catalogue unavailable)'; console.warn(reason,error.message); }
       }
-      const response=await fetch('data/rules/catalog.json?v=20260926-catalog-v1');
+      const response=await fetch('data/rules/catalog.json?v=20260926-feats-v2');
       if(!response.ok) throw Error('Could not load spell and feat catalogue');
       const data=set(await response.json()); data.loadedFrom=reason; return data;
     })().catch(e=>{pending=null;throw e;});
@@ -63,8 +68,9 @@ var CharacterCatalog = (() => {
       if(b.race==='human-2024') add('human','Human · Magic Initiate','2024',b.humanOriginFeat);
     }
     if(b.edition==='2014' && b.race==='variant-human') add('variant','Variant Human · Magic Initiate','2014',b.raceFeat);
-    for(const id of data.rulesChoices?.feats||[]) {
-      const feat=find(id,'feats');if(feat)add(id,`${feat.name} · ${feat.edition}`,feat.edition,feat.name);
+    for(const {id,key,origin} of Feats.entries(data)) {
+      if(origin)continue;
+      const feat=find(id,'feats');if(feat)add(key,`${feat.name} · ${feat.edition}`,feat.edition,feat.name);
     }
     return out;
   }
@@ -79,6 +85,7 @@ var CharacterCatalog = (() => {
     if(picks[0] && picks[0]?.id===picks[1]?.id) errors.push('Choose two different cantrips.');
     const ability=grant.edition==='2024'?choice.ability:({cleric:'wis',druid:'wis',wizard:'int',bard:'cha',sorcerer:'cha',warlock:'cha'}[classId]);
     if(data && classId && grants(data).some(other=>other.key!==grant.key && other.edition===grant.edition && (grant.edition==='2014' || (other.fixedClass||data.rulesChoices?.grants?.[other.key]?.classId)===classId))) errors.push(grant.edition==='2014'?'2014 Magic Initiate is not repeatable.':'Repeated Magic Initiate must use a different spell class.');
+    if(data && grants(data).some(other=>other.edition!==grant.edition))errors.push('Choose one rules edition for Magic Initiate; do not stack its 2014 and 2024 versions.');
     return {errors,picks,classId,ability};
   }
   function spellRow(spell) {
@@ -87,6 +94,7 @@ var CharacterCatalog = (() => {
   function longRest(data) {
     for(const g of Object.values(data.rulesChoices.grants)) g.used=0;
     for(const slot of data.slots) slot.used=0;
+    Feats.reset(data,'long');
   }
   return {normalize,set,load,find,spells,grants,validateGrant,spellRow,longRest,get data(){return catalogue;}};
 })();

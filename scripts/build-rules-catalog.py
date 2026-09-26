@@ -69,6 +69,9 @@ for row in feats:
     out=basic(row,'Feat'); out['category']=row.get('category','General / special'); out['minimumLevel']=max([int(x['level']) for x in row.get('prerequisite',[]) if isinstance(x.get('level'),int)] or [0])
     # Requirements need DM review: don't infer arbitrary custom prose prerequisites.
     out['requiresReview']=bool(row.get('prerequisite')); featrows.append(out)
+for f in featrows:
+    if f['source']=='PHB' and f['name']=='Grappler':
+        f['description']='You have advantage on attack rolls against a creature you are grappling.\n\nYou can use your action to try to pin a creature grappled by you. To do so, make another grapple check. If you succeed, you and the creature are both restrained until the grapple ends.'
 spells.sort(key=lambda x:(x['name'],x['edition'],x['source'])); featrows.sort(key=lambda x:(x['name'],x['edition'],x['source']))
 catalog={'format':1,'indexRevision':INDEX_REV,'srdRevision':SRD_REV,'spells':spells,'feats':featrows}
 body=json.dumps(catalog,ensure_ascii=False,separators=(',',':'))+'\n'
@@ -76,3 +79,24 @@ body=json.dumps(catalog,ensure_ascii=False,separators=(',',':'))+'\n'
 manifest={'format':1,'release':hashlib.sha256(body.encode()).hexdigest(),'spells':len(spells),'feats':len(featrows),'spellSources':index,'counts':{edn:{'spells':sum(s['edition']==edn for s in spells),'feats':sum(f['edition']==edn for f in featrows),'fullSpellTexts':sum(s['edition']==edn and s['licensedText'] for s in spells)} for edn in ('2014','2024')}}
 (ROOT/'data/rules/manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(json.dumps(manifest,indent=2))
+# Mechanical facts only; no arbitrary entry text or executable expressions.
+mechanics={}
+for row in feats:
+    key=identity('Feat',row['source'],row['name'])
+    if not any(f['id']==key for f in featrows): continue
+    ability=[]
+    for a in row.get('ability',[]):
+        option={k:a[k] for k in ('str','dex','con','int','wis','cha') if k in a}
+        option['max']=a.get('max',20)
+        if 'choose' in a:
+            c=a['choose'];option['choose']={k:c[k] for k in ('from','amount','count') if k in c}
+        ability.append(option)
+    requirements=[]
+    for r in row.get('prerequisite',[]):
+        requirements.append({'level':r.get('level',0) if isinstance(r.get('level',0),int) else 0,'ability':r.get('ability',[]),'manual':bool(set(r)-{'level','ability'}) or ('level' in r and not isinstance(r['level'],int))})
+    mechanics[key]={'name':row['name'],'source':row['source'],'edition':ed(row['source']),'ability':ability,'requirements':requirements,'repeatable':bool(row.get('repeatable'))}
+for f in featrows:
+    if f['source']=='PHB' and f['name']=='Grappler': mechanics[f['id']]['descriptionOverride']=f['description']
+js='/* Generated numeric feat facts; see scripts/build-rules-catalog.py and rules-attribution.html. */\nvar CharacterFeatData = '+json.dumps(mechanics,ensure_ascii=False,separators=(',',':'))+';\nif(typeof module!=="undefined" && module.exports) module.exports=CharacterFeatData;\n'
+(ROOT/'js/modules/character-feat-data.js').write_text(js)
+print('Feat ability increase definitions:',sum(bool(m['ability']) for m in mechanics.values()))

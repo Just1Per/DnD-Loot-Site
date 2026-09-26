@@ -3,8 +3,8 @@
 This is part of PR #2 on `feature/character-rules-engine`. Keep the existing repo
 folders. No Cloud Functions were added or changed, and GitHub Hosting deployment
 continues as before. **Publish this branch's complete `firestore.rules` manually
-before saving sheets with this version.** Sheet format 4 prevents an old client
-from erasing new spell/feat selections. Existing formats 1–3 remain readable.
+before saving sheets with this version.** Sheet format 5 prevents an old client
+from erasing new spell/feat selections. Existing formats 1–4 remain readable.
 
 ## On the sheet
 
@@ -34,10 +34,10 @@ from erasing new spell/feat selections. Existing formats 1–3 remain readable.
   Only the character owner and campaign DM can read it.
 
 General feat prerequisites need DM review. Adding a catalogue feat does not spend
-an ASI or automatically implement all its combat effects or ability bonuses.
+an ASI or automatically implement all its combat effects. Supported ability bonuses
+are calculated as listed below.
 Existing Origin Alert/Tough/Skilled automation remains in the original builder;
-additional catalogue feats are reference selections, with Magic Initiate choices
-supported as described above. Class learning/preparation limits, multiclassing,
+additional catalogue feats now have the supported calculations listed below. Class learning/preparation limits, multiclassing,
 subclasses and spell-slot spending on casts are not fully automated.
 
 ## Coverage and text
@@ -129,3 +129,51 @@ The command uses demo data, not the live database. Hosting ignores both `scripts
 and `tests/`. Automated DOM tests cover selection, duplicate prevention, Magic
 Initiate resources, and save/reopen. They do not replace a visual mobile/browser
 review on the Firebase preview.
+
+## Automatic feat effects (schema 5 update)
+
+The current sheet now calculates the following effects. A feat's card explicitly
+lists what is automated; **this is not full automation of every feat**.
+
+| Feats | Automated sheet effects |
+| --- | --- |
+| 178 catalogue feats with structured ability increases | Fixed/selected abilities, +2 versus two +1 for ASI, caps of 20/30, level and numeric ability prerequisites |
+| Ability Score Improvement and other repeatable feats | Independent saved selections per occurrence; removing one preserves the others |
+| Alert (2014/2024) | Initiative +5 / proficiency bonus, with duplicate Origin prevention |
+| Tough (2014/2024) | +2 HP per level in Base mode |
+| Resilient (2014/2024) | Selected ability +1 and matching saving throw proficiency; 2024 requires an untrained save |
+| Skilled (2014/2024) | Three skill/tool choices; supported repeatable 2024 selections |
+| Skill Expert (TCE/2024) | Ability +1, new skill and expertise in a proficient skill |
+| Observant (2014) | Ability increase and passive Perception +5; passive Investigation remains manual |
+| Observant (2024) | Ability increase and selected proficiency/expertise; Search action remains manual |
+| Archery (2024) | +2 only for attacks marked Ranged weapon, after confirmation of Fighting Style eligibility |
+| Defense (2024) | +1 effective AC when armor is confirmed; entered AC must exclude this bonus |
+| Boon of Truesight (2024) | Ability increase and 60-ft Truesight in the feature summary |
+| Selected 2024 limited-use effects | Independent counters for Boon of Fate, Boon of Combat Prowess, Grappler and Savage Attacker, with their stated turn/initiative/rest recovery events |
+
+Feat Constitution modifier increases also add HP for all character levels in
+**Base mode**. Enter maximum HP before feat bonuses. Current HP is not healed by
+selecting a feat. In **Final totals mode**, ability and HP entries remain final;
+other proficiency/initiative effects still apply, as with the existing builder.
+Do not duplicate calculated bonuses in manual adjustment fields.
+
+A Variant Human's recognized PHB feat participates in these calculations. Existing
+background/Human Origin calculations remain separate and do not stack duplicate
+non-repeatable feat bonuses. Variant Human's existing field still supports manual
+homebrew. Origin choices outside the existing supported calculations remain manual;
+the new resource buttons apply to additional catalogue feats.
+
+Known numeric prerequisites are checked before the feat's own ability increase.
+Other requirements (class features, race, previous feats, campaign permissions,
+spellcasting, etc.) require an explicit checkbox confirming review with the DM.
+This is a rules aid, not a permission system or a complete level-up engine.
+Combat targeting, movement, advantage/disadvantage, conditional damage, dice rolls,
+actions/reactions and encounter adjudication are still manual unless listed above.
+
+Publish the updated complete `firestore.rules` before saving: new saves now use
+**schema 5**, which protects effect selections from schema-4 clients. Existing
+sheets remain readable. The automation definitions ship with the website, so they
+work with the previous database catalogue without another import. The catalogue
+also corrects an upstream 2014 Grappler transcription error against SRD 5.1 p.75:
+pinning uses another grapple check, not a maneuver-DC saving throw. The frontend
+applies that correction to older imported catalogues too.

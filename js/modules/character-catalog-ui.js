@@ -21,7 +21,7 @@ function renderSheetCatalogControls() {
   const feats=document.getElementById('sheetFeatCatalog'), spells=document.getElementById('sheetSpellCatalog');
   if(!feats || !spells)return;
   const editions='<option value="2014">2014</option><option value="2024">2024</option>';
-  feats.innerHTML=`<h3>Feat catalogue</h3><p>${esc(C.data.loadedFrom||'Rules catalogue')} · ${C.data.feats.length} feats. Source prerequisites and non-automated effects need DM review; adding a feat does not spend an ASI or change your scores.</p><div class="sheet-grid"><label class="sheet-field">Rules<select id="catalogFeatEdition">${editions}</select></label><label class="sheet-field">Find feat<input id="catalogFeatSearch" type="search" placeholder="Feat name"></label></div><div id="catalogFeatResults"></div><div id="catalogSelectedFeats"></div><div id="catalogFeatGrants"></div>`;
+  feats.innerHTML=`<h3>Feat catalogue</h3><p>${esc(C.data.loadedFrom||'Rules catalogue')} · ${C.data.feats.length} feats. Supported sheet bonuses are calculated from your choices. Other effects remain manual; each feat shows its automation coverage. Choosing a feat does not spend an ASI.</p><div class="sheet-grid"><label class="sheet-field">Rules<select id="catalogFeatEdition">${editions}</select></label><label class="sheet-field">Find feat<input id="catalogFeatSearch" type="search" placeholder="Feat name"></label></div><div id="catalogFeatResults"></div><div id="catalogSelectedFeats"></div><div id="catalogFeatGrants"></div>`;
   spells.innerHTML=`<h4>Choose spells from the catalogue</h4><p>2014 and 2024 entries are separate. Adding a spell does not check class progression, preparation limits or DM approval.</p><div class="sheet-grid"><label class="sheet-field">Rules<select id="catalogSpellEdition">${editions}<option value="">Both editions</option></select></label><label class="sheet-field">Class<select id="catalogSpellClass"><option value="">Any class</option>${['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard'].map(c=>`<option value="${c}">${c}</option>`).join('')}</select></label><label class="sheet-field">Level<select id="catalogSpellLevel"><option value="">Any level</option>${Array.from({length:10},(_,i)=>`<option value="${i}">${i||'Cantrip'}</option>`).join('')}</select></label><label class="sheet-field">Find spell<input id="catalogSpellSearch" type="search" placeholder="Spell name"></label></div><div id="catalogSpellResults"></div><button type="button" id="catalogLongRest">Long rest: reset spell slots & Magic Initiate uses</button>`;
   document.getElementById('catalogFeatEdition').value=sheetSession.data.build.edition;
   document.getElementById('catalogSpellEdition').value=sheetSession.data.build.edition;
@@ -31,7 +31,7 @@ function renderSheetCatalogControls() {
     readSheetForm();if(!confirm('Reset spell slots and Magic Initiate free uses after a long rest? HP and other resources are unchanged.'))return;
     C.longRest(sheetSession.data);fillSheetForm();sheetCatalogSignature='';catalogChanged();
   };
-  renderCatalogSpellResults();renderCatalogFeatResults();sheetCatalogSignature='';updateSheetCatalogGrants();
+  renderCatalogSpellResults();renderCatalogFeatResults();sheetCatalogSignature='';updateSheetCalculations();
 }
 function renderCatalogSpellResults() {
   const host=document.getElementById('catalogSpellResults');if(!host)return;
@@ -60,7 +60,7 @@ function renderCatalogFeatResults() {
     if(feat.minimumLevel>Number(sheetSession.identity.level)){sheetStatus(`This feat requires level ${feat.minimumLevel}.`,true);return;}
     if(data.build.edition==='2014' && data.build.race==='variant-human' && feat.edition==='2014' && !data.build.raceFeat){data.build.raceFeat=feat.name;fillSheetForm();}
     else {
-      if(data.rulesChoices.feats.includes(feat.id)){sheetStatus('This feat is already selected.');return;}
+      if(data.rulesChoices.feats.includes(feat.id)&&!CharacterFeatRules.definitions[feat.id]?.repeatable){sheetStatus('This feat is already selected.');return;}
       if(data.rulesChoices.feats.length>=30){sheetStatus('Maximum 30 additional feats.',true);return;}
       data.rulesChoices.feats.push(feat.id);
     }
@@ -72,15 +72,26 @@ function updateSheetCatalogGrants() {
   if(!host || !CharacterCatalog.data || !sheetSession)return;
   const data=sheetSession.data, C=CharacterCatalog;
   const stats=CharacterSheetModel.derive(data,sheetSession.identity.level);
-  const signature=JSON.stringify([stats.mods,stats.pb,data.build.edition,data.build.race,data.build.background,data.build.backgroundFeat,data.build.humanOriginFeat,data.build.raceFeat,data.rulesChoices]);
+  const signature=JSON.stringify([stats.scores,stats.pb,stats.feats.reports.map(r=>r.warnings),data.build.edition,data.build.race,data.build.background,data.build.backgroundFeat,data.build.humanOriginFeat,data.build.raceFeat,data.rulesChoices]);
   if(signature===sheetCatalogSignature)return;
   sheetCatalogSignature=signature;
   const feats=document.getElementById('catalogSelectedFeats');
-  feats.innerHTML='<h4>Additional feats</h4>'+data.rulesChoices.feats.map(id=>{
-    const f=C.find(id,'feats');return `<article class="sheet-repeat"><h4>${sheetEscape(f?f.name+' · '+f.edition:id)}</h4><p>${sheetEscape(f?f.book+', p. '+f.page:'Catalogue entry unavailable; selection preserved.')}</p><p class="sheet-rule-text">${sheetEscape(f?.description||'Consult the source for the full feat rules. Apply effects in the sheet’s manual fields; only Magic Initiate spell choices are automated here.')}</p><button type="button" data-remove-feat="${sheetEscape(id)}">Remove feat</button></article>`;
+  feats.innerHTML='<h4>Selected feat effects</h4><p>Ability/HP bonuses apply in Base mode. Situational effects need the stated conditions; existing manual bonuses are not removed.</p><div class="sheet-actions"><button type="button" data-feat-reset="turn">Start my turn</button><button type="button" data-feat-reset="initiative">Roll initiative: reset feat uses</button><button type="button" data-feat-reset="short">Short rest: reset feat uses</button></div>'+stats.feats.reports.map(report=>{
+    const f=C.find(report.id,'feats');return `<article class="sheet-repeat" data-feat-key="${sheetEscape(report.key)}"><h4>${sheetEscape((f?.name||report.def.name)+' · '+report.def.edition)}${report.origin?' · Variant Human':''}</h4><p>${sheetEscape(f?f.book+', p. '+f.page:report.def.source)}</p>${renderFeatEffectControls(report)}<details><summary>Full rules / source reference</summary><p class="sheet-rule-text">${sheetEscape(f?.description||'Consult the source for complete rules. Effects not listed as automated remain manual.')}</p></details>${report.origin?'':`<button type="button" data-remove-feat="${sheetEscape(report.key)}">Remove feat</button>`}</article>`;
   }).join('');
-  feats.querySelectorAll('[data-remove-feat]').forEach(button=>button.onclick=()=>{
-    readSheetForm();const id=button.dataset.removeFeat;sheetSession.data.rulesChoices.feats=sheetSession.data.rulesChoices.feats.filter(f=>f!==id);delete sheetSession.data.rulesChoices.grants[id];catalogChanged();
+  feats.querySelectorAll('[data-feat-reset]').forEach(button=>button.onclick=()=>{readSheetForm();CharacterFeatRules.reset(sheetSession.data,button.dataset.featReset);catalogChanged('Feat uses reset. Save to keep this change.');});
+  feats.querySelectorAll('[data-remove-feat]').forEach(button=>button.onclick=()=>{readSheetForm();CharacterFeatRules.remove(sheetSession.data,button.dataset.removeFeat);catalogChanged();});
+  feats.querySelectorAll('[data-feat-key]').forEach(article=>{
+    const key=article.dataset.featKey;
+    article.querySelectorAll('[data-feat-choice]').forEach(input=>input.onchange=()=>{
+      readSheetForm();const c=sheetSession.data.rulesChoices.effects[key] ||= CharacterFeatRules.choice();
+      const field=input.dataset.featChoice, value=input.type==='checkbox'?input.checked:input.value;
+      if(field.startsWith('ability'))c.abilities[Number(field.slice(-1))]=value;
+      else if(field.startsWith('training'))c.training[Number(field.slice(-1))]=value;
+      else c[field]=field==='option'?Number(value):value;
+      catalogChanged();
+    });
+    article.querySelectorAll('[data-feat-use]').forEach(button=>button.onclick=()=>{readSheetForm();const c=sheetSession.data.rulesChoices.effects[key] ||= CharacterFeatRules.choice();c.used=button.dataset.featUse==='use'?1:0;catalogChanged();});
   });
   const grants=C.grants(data);
   host.innerHTML=grants.map(g=>{
@@ -108,4 +119,26 @@ function updateSheetCatalogGrants() {
     article.querySelector('[data-undo-grant]').onclick=()=>{readSheetForm();getChoice().used=0;catalogChanged();};
     article.querySelector('[data-copy-grant]').onclick=()=>{const choice=getChoice();if(!C.validateGrant(grant,choice,sheetSession.data).errors.length)addCatalogSpells(choice.spells,grant.edition==='2024'?choice.spells[2]:'');};
   });
+}
+function renderFeatEffectControls(report) {
+  const {def,choice:c,warnings,automated}=report,esc=sheetEscape;
+  const select=(label,field,rows,value)=>`<label class="sheet-field">${esc(label)}<select data-feat-choice="${field}">${rows.map(([key,text])=>`<option value="${esc(key)}" ${String(key)===String(value)?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
+  let html='<div class="sheet-grid">';
+  if(def.requirements.some(r=>r.manual))html+=`<label class="sheet-check"><input type="checkbox" data-feat-choice="confirmed" ${c.confirmed?'checked':''}> Other prerequisites checked with DM (class features, spellcasting, etc.)</label>`;
+  if(def.ability.length>1)html+=select('Ability increase pattern','option',[[0,'One ability +2'],[1,'Two different abilities +1']],c.option);
+  const ability=def.ability[c.option]||def.ability[0];
+  if(ability?.choose)for(let i=0;i<(ability.choose.count||1);i++)html+=select('Ability +'+(ability.choose.amount||1)+' (maximum '+ability.max+')','ability'+i,[['','Choose ability'],...ability.choose.from.map(a=>[a,CharacterSheetModel.abilities[a]])],c.abilities[i]);
+  const skills=Object.entries(CharacterSheetModel.skills).map(([k,[label]])=>['skill:'+k,label]);
+  if(def.name==='Skilled')for(let i=0;i<3;i++)html+=select('Training '+(i+1),'training'+i,[['','Choose skill/tool'],...skills,...CharacterRules.tools.map(t=>['tool:'+t,t])],c.training[i]);
+  if(def.name==='Skill Expert'){
+    html+=select('New skill','training0',[['','Choose skill'],...skills],c.training[0]);
+    html+=select('Expertise (must be proficient)','expertise',[['','Choose skill'],...Object.entries(CharacterSheetModel.skills).map(([k,[label]])=>[k,label])],c.expertise);
+  }
+  if(def.name==='Observant'&&def.edition==='2024')html+=select('Proficiency / expertise','training0',[['','Choose skill'],...skills.filter(([key])=>['skill:insight','skill:investigation','skill:perception'].includes(key))],c.training[0]);
+  if(def.name==='Defense'&&def.edition==='2024')html+=`<label class="sheet-check"><input type="checkbox" data-feat-choice="armored" ${c.armored?'checked':''}> Wearing Light/Medium/Heavy armor; my entered AC excludes this +1</label>`;
+  html+='</div><p><strong>Automated sheet effects:</strong> '+esc(automated.join('; ')||(def.name==='Magic Initiate'?'Spell choices and free use below':'None applied yet'))+'.</p>';
+  if(warnings.length)html+='<p role="status" class="sheet-error">'+esc(warnings.join(' '))+'</p>';
+  const resource=CharacterFeatRules.resource(def);
+  if(resource)html+=`<p>${esc(resource.label)} · remaining ${c.used?0:1}/1 · resets: ${esc(resource.resets.join(', '))}. Apply only when the feat’s conditions are met.</p><button type="button" data-feat-use="use" ${c.used||warnings.length?'disabled':''}>Use feature</button> <button type="button" data-feat-use="undo" ${!c.used?'disabled':''}>Undo use</button>`;
+  return html+'<p>Other effects and combat decisions are manual. In Base mode, a feat’s Constitution modifier increase also adds HP for every character level. Enter HP before these feat bonuses.</p>';
 }

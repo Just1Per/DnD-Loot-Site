@@ -39,6 +39,8 @@ const FEATURE_FILES = [
   "./modules/character-race-catalog.js",
   "./modules/character-rules-2024.js",
   "./modules/character-rules.js",
+  "./modules/character-feat-data.js",
+  "./modules/character-feat-rules.js",
   "./modules/character-catalog.js",
   "./modules/character-sheet-model.js",
   "./modules/character-sheet-store.js",
@@ -63,7 +65,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20260926-catalog-v1");
+    moduleUrl.searchParams.set("v", "20260926-feats-v2");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;
