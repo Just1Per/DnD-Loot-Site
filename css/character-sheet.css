@@ -481,3 +481,74 @@
 .sheet-catalog-results button { flex-shrink: 0; }
 .sheet-rule-text { white-space: pre-wrap; }
 @media print { .sheet-catalog-results, #catalogSpellResults, #catalogFeatResults, #catalogLongRest { display: none; } }
+
+/* The sheet is a full-page workspace, not an overlay. */
+#tab-character-sheet { padding: 0 24px 64px; }
+.sheet-character-chooser { display:flex; align-items:center; flex-wrap:wrap; gap:12px; padding:18px 0; text-align:left; }
+.sheet-character-chooser label { font-weight:700; }
+.sheet-character-chooser select { min-width:240px; max-width:100%; padding:10px 14px; }
+.sheet-character-chooser span { margin-left:auto; font-size:12px; opacity:.75; }
+.sheet-empty { padding:64px 24px; text-align:center; border:1px dashed #8c8273; border-radius:12px; }
+#characterSheetPage { width:100%; min-width:0; }
+#characterSheetPage .character-sheet {
+  --sheet-ink:#222; --sheet-muted:#565656; --sheet-border:#b6b6b6; --sheet-paper:#fff;
+  width:100%; height:auto; max-height:none; margin:0; border:1px solid #b6b6b6;
+  border-radius:5px; box-shadow:0 5px 22px #0000000d; overflow:visible;
+}
+#characterSheetPage .sheet-header { background:#fff; color:#222; border-bottom:3px double #333; padding:24px 28px; }
+#characterSheetPage .sheet-header p, #characterSheetPage .sheet-eyebrow { color:#555; }
+#characterSheetPage .sheet-header h2 { font-size:clamp(28px,3vw,44px); }
+#characterSheetPage .sheet-tabs { background:#f1f1ef; z-index:2; border-bottom:1px solid #aaa; flex-wrap:wrap; }
+#characterSheetPage .sheet-tabs button { background:transparent; border-color:transparent; color:#444; }
+#characterSheetPage .sheet-tabs button[aria-selected="true"] { background:#fff; color:#171717; border:1px solid #666; box-shadow:none; }
+#characterSheetPage .sheet-panel h3 { font-size:17px; letter-spacing:.04em; color:#252525; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:18px; }
+#characterSheetPage .sheet-panel h4 { color:#333; }
+#characterSheetPage .sheet-field input, #characterSheetPage .sheet-field select, #characterSheetPage .sheet-field textarea { background:#f3f3f3; border:1px solid #c4c4c4; border-radius:3px; color:#222; }
+#characterSheetPage .sheet-identity-strip { padding:22px 28px; margin:0; border-bottom:1px solid #bbb; grid-template-columns:2fr .6fr 1fr 1fr; }
+#characterSheetPage .sheet-page-grid { display:grid; grid-template-columns:minmax(460px,.95fr) minmax(0,1.4fr); grid-template-areas:"skills vitals" "skills combat"; gap:26px; align-items:start; }
+.sheet-page-grid #sheet-skills { grid-area:skills; }
+.sheet-page-grid #sheet-overview { grid-area:vitals; }
+.sheet-page-grid #sheet-combat { grid-area:combat; }
+.sheet-page-grid #sheet-skills { display:grid; grid-template-columns:86px minmax(0,1fr); column-gap:16px; }
+.sheet-page-grid #sheet-skills>h3, .sheet-page-grid #sheet-skills>.sheet-field { grid-column:1/-1; }
+.sheet-page-grid #sheet-skills>.sheet-abilities { display:flex; flex-direction:column; gap:15px; }
+.sheet-page-grid #sheet-skills>.sheet-grid.two { display:block; }
+.sheet-page-grid .sheet-ability { padding:12px 7px; border:2px solid #444; border-radius:16px 4px; background:#fafafa; }
+.sheet-page-grid .sheet-ability .sheet-field { font-size:10px; text-align:center; }
+.sheet-page-grid .sheet-ability strong { display:block; width:52px; margin:10px auto 0; padding:4px; border:1px solid #555; border-radius:50%; background:#fff; }
+.sheet-page-grid .sheet-ability input { text-align:center; padding:6px!important; }
+.sheet-page-grid .sheet-check-row { grid-template-columns:minmax(75px,1fr) 94px 46px 32px; gap:6px; padding:7px 0; }
+.sheet-page-grid .sheet-check-row .sheet-field { font-size:9px; gap:3px; }
+.sheet-page-grid .sheet-check-row input, .sheet-page-grid .sheet-check-row select { padding:5px!important; font-size:12px; }
+.sheet-page-grid .sheet-check-row>strong { font-size:11px; }
+.sheet-page-grid .sheet-metrics>div { background:#f5f5f4; border:2px solid #444; border-radius:16px 4px; color:#222; }
+.sheet-page-grid .sheet-metrics strong { color:#222; }
+@media(max-width:1100px) {
+  #characterSheetPage .sheet-page-grid { grid-template-columns:1fr; grid-template-areas:"vitals" "skills" "combat"; }
+}
+@media(max-width:600px) {
+  #tab-character-sheet { padding:0 10px 32px; }
+  .sheet-character-chooser { align-items:stretch; flex-direction:column; }
+  .sheet-character-chooser span { margin:0; }
+  #characterSheetPage .sheet-header { padding:18px 14px; }
+  #characterSheetPage .sheet-identity-strip { padding:16px 14px; grid-template-columns:1fr 1fr; }
+  #characterSheetPage .sheet-body { padding:18px 12px; }
+  .sheet-page-grid #sheet-skills { display:block; }
+  .sheet-page-grid #sheet-skills>.sheet-abilities { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .sheet-page-grid .sheet-check-row { grid-template-columns:minmax(65px,1fr) 85px 40px 28px; gap:4px; }
+}
+@media print {
+  body.printing-character-sheet>#mainApp { display:block!important; }
+  body.printing-character-sheet #mainApp>*:not(#tab-character-sheet) { display:none!important; }
+  body.printing-character-sheet #tab-character-sheet { display:block!important; padding:0!important; }
+  body.printing-character-sheet .sheet-character-chooser { display:none!important; }
+  #characterSheetPage .sheet-page-grid { display:block; }
+  #characterSheetPage .sheet-panel { display:block!important; }
+  #characterSheetPage .sheet-identity-strip { padding:0 0 16px; }
+}
+#mainApp>.tabs { flex-wrap:wrap; }
+.sheet-page-grid .sheet-ability strong { color:#222; }
+@media(max-width:600px) {
+  .sheet-page-grid .sheet-check-row { grid-template-columns:minmax(55px,1fr) 100px 40px 28px; }
+  .sheet-page-grid .sheet-check-row input, .sheet-page-grid .sheet-check-row select { font-size:16px; }
+}

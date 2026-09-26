@@ -6,7 +6,7 @@ function renderSheetCatalog() {
   sheetCatalogSignature='';
   const host=document.createElement('section');host.id='sheetFeatCatalog';host.className='sheet-catalog';
   host.innerHTML='<h3>Feats</h3><p role="status">Loading feat and spell choices…</p>';
-  document.getElementById('sheet-overview').appendChild(host);
+  document.getElementById('sheet-builder').appendChild(host);
   const spellHost=document.createElement('section');spellHost.id='sheetSpellCatalog';spellHost.className='sheet-catalog';
   document.getElementById('sheetSpellRows').before(spellHost);
   CharacterCatalog.load().then(()=>{if(sheetSession===session && document.getElementById('sheetFeatCatalog')===host)renderSheetCatalogControls();}).catch(error=>{

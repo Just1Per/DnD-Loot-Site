@@ -17,6 +17,7 @@ const ctx=vm.createContext(sandbox);const run=async f=>vm.runInContext(fs.readFi
  await run(path.join(__dirname,'character-edition-ui-checks.js'));
  await run(path.join(__dirname,'character-catalog-ui-checks.js'));
  await run(path.join(__dirname,'character-feat-ui-checks.js'));
+ await run(path.join(__dirname,'character-sheet-page-checks.js'));
  const results=JSON.parse(document.getElementById('test-results').textContent);fs.writeFileSync(path.join(__dirname,'dom-results.json'),JSON.stringify(results,null,2));
  for(const r of results)console.log(r.pass?'PASS':'FAIL',r.name);if(results.some(r=>!r.pass))process.exitCode=1;else console.log(`SUCCESS ${results.length} DOM checks`);
 })().catch(e=>{console.error(e);process.exitCode=1;});

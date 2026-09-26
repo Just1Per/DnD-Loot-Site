@@ -45,9 +45,7 @@ function createCard(item,context={}) {
     ${manager&&!entry&&owned.length?`<div class="owner-badge">${owned.map(e=>`${escapeHtml(characters.find(c=>c.id===e.characterId)?.name||'Character')} × ${e.quantity}`).join(' · ')}</div>`:''}
     <div class="card-footer">${root?'Root Catalogue':'D&D Campaign Vault'}</div>`;
   const on=(selector,work)=>card.querySelector(selector)?.addEventListener('click',event=>{
-    // The existing item editor is outside the sheet's native dialog. Close the
-    // sheet first, preserving its unsaved-change confirmation.
-    if(event.currentTarget.closest('#sheetInventory') && ['.edit-button','.clone-button'].includes(selector) && !closeCharacterSheet())return;
+    // The page-based sheet keeps its draft while the item editor is open.
     return runVaultButton(event.currentTarget,work);
   });
   on('.edit-button',()=>{closeCharacterLoot();openItemModal(item,{scope:root?'root':'campaign'});});

@@ -3,6 +3,36 @@ const characterSheetStore = createCharacterSheetStore(window.__DND_VAULT_DEPS__)
 let sheetSession = null;
 let sheetGeneration = 0;
 const sheetEscape = value => escapeHtml(String(value ?? ''));
+function sheetCharacters() {
+  return characters.filter(c => canManageCampaign() || c.userId === auth.currentUser?.uid);
+}
+function renderCharacterSheetChooser(selectedId = sheetSession?.characterId) {
+  const host=document.getElementById('characterSheetChooser');
+  if(!host)return;
+  const choices=sheetCharacters();
+  host.innerHTML=`<label for="sheetCharacterSelect">Character sheet</label><select id="sheetCharacterSelect"><option value="">Choose a character</option>${choices.map(c=>`<option value="${sheetEscape(c.id)}" ${c.id===selectedId?'selected':''}>${sheetEscape(c.name)}${c.active===false?' · Archived':''}</option>`).join('')}</select><span>Private to the player and campaign DM</span>`;
+  host.querySelector('select').onchange=event=>{if(event.target.value)openCharacterSheet(event.target.value);else renderCharacterSheetChooser();};
+}
+function renderCharacterSheetTab() {
+  renderCharacterSheetChooser();
+  if(sheetSession || document.getElementById('characterSheetDialog'))return;
+  const choices=sheetCharacters(), character=choices.find(c=>c.id===selectedCharacter?.id)||choices.find(c=>c.userId===auth.currentUser?.uid&&c.active!==false)||choices[0];
+  if(character){openCharacterSheet(character.id);return;}
+  document.getElementById('characterSheetPage').innerHTML='<div class="sheet-empty"><h2>Your character sheet</h2><p>Create a character in this campaign to start your sheet.</p><button type="button" id="sheetGoToCharacters">Go to My Character</button></div>';
+  document.getElementById('sheetGoToCharacters').onclick=()=>showTab('player');
+}
+function leaveCharacterSheet() {
+  if(closeCharacterSheet())showTab('player');
+}
+function arrangeCharacterSheetPage() {
+  const root=document.getElementById('characterSheetDialog'),body=root.querySelector('.sheet-body');
+  const builder=document.createElement('section');
+  builder.id='sheet-builder';builder.className='sheet-panel';builder.dataset.sheetSection='builder';builder.setAttribute('role','tabpanel');builder.setAttribute('aria-labelledby','sheet-tab-builder');
+  builder.innerHTML='<h3>Character builder & feats</h3><p>Choose your rules, class and origins here. Return to Overview to use your character sheet.</p>';
+  builder.append(document.getElementById('sheetBuildControls'),document.getElementById('sheetBuildSummary'));
+  body.appendChild(builder);
+  const identity=root.querySelector('.sheet-identity');identity.classList.add('sheet-identity-strip');body.before(identity);
+}
 function sheetStatus(message, error = false) {
   const el = document.getElementById('sheetStatus');
   if (!el)
@@ -17,32 +47,29 @@ function closeCharacterSheet(force = false) {
   sheetSession = null;
   const dialog = document.getElementById('characterSheetDialog');
   if (dialog) {
-    if (dialog.open)
-      dialog.close();
     dialog.remove();
   }
   document.body.classList.remove('printing-character-sheet');
+  document.getElementById('characterSheetChooser').replaceChildren();
+  document.getElementById('characterSheetPage').innerHTML = '<p class="sheet-empty">Choose a character to open their sheet.</p>';
   return true;
 }
 async function openCharacterSheet(characterId) {
   const character = characters.find(c => c.id === characterId);
   if (!activeCampaign || !character || !canManageCampaign() && character.userId !== auth.currentUser?.uid)
     return;
-  if (!closeCharacterSheet())
-    return;
+  if(sheetSession?.characterId===characterId && sheetSession.campaignId===activeCampaign.id){showTab('character-sheet',false);renderCharacterSheetChooser();return;}
+  if (!closeCharacterSheet()){renderCharacterSheetChooser();return;}
   const generation = ++sheetGeneration, campaignId = activeCampaign.id;
-  const dialog = document.createElement('dialog');
+  const dialog = document.createElement('section');
   dialog.id = 'characterSheetDialog';
   dialog.className = 'character-sheet';
   dialog.setAttribute('aria-labelledby', 'sheetTitle');
   dialog.innerHTML = '<header class="sheet-header"><div><span class="sheet-eyebrow">CHARACTER JOURNAL</span><h2 id="sheetTitle">Opening your sheet\u2026</h2></div><button type="button" data-sheet-close aria-label="Close character sheet">Close</button></header><p role="status" id="sheetStatus">Loading private character data\u2026</p>';
-  document.body.appendChild(dialog);
-  dialog.showModal();
-  dialog.querySelector('[data-sheet-close]').onclick = () => closeCharacterSheet();
-  dialog.addEventListener('cancel', event => {
-    event.preventDefault();
-    closeCharacterSheet();
-  });
+  document.getElementById('characterSheetPage').replaceChildren(dialog);
+  renderCharacterSheetChooser(characterId);
+  showTab('character-sheet',false);
+  dialog.querySelector('[data-sheet-close]').onclick = leaveCharacterSheet;
   try {
     const stored = await characterSheetStore.load(campaignId, characterId);
     if (generation !== sheetGeneration || activeCampaign?.id !== campaignId)
@@ -93,7 +120,7 @@ function renderCharacterSheet() {
     return;
   const M = CharacterSheetModel, dialog = document.getElementById('characterSheetDialog');
   const abilityOptions = Object.entries(M.abilities), field = sheetField;
-  dialog.innerHTML = `<form id="characterSheetForm" novalidate><header class="sheet-header"><div><span class="sheet-eyebrow">${ sheetEscape(activeCampaign.name) } · PRIVATE CHARACTER JOURNAL</span><h2 id="sheetTitle">${ sheetEscape(s.character.name) }</h2><p>${ sheetEscape(s.character.class || 'Adventurer') } · Level ${ sheetEscape(s.character.level || 1) }${ s.character.active === false ? ' \xB7 Archived' : '' }</p></div><div class="sheet-actions"><button type="button" id="sheetExport">Export JSON</button><button type="button" id="sheetPrint">Print</button><button type="button" data-sheet-close>Close</button><button type="submit" class="btn-primary" id="sheetSave">Save sheet</button></div></header>
+  dialog.innerHTML = `<form id="characterSheetForm" novalidate><header class="sheet-header"><div><span class="sheet-eyebrow">${ sheetEscape(activeCampaign.name) } · PRIVATE CHARACTER JOURNAL</span><h2 id="sheetTitle">${ sheetEscape(s.character.name) }</h2><p>${ sheetEscape(s.character.class || 'Adventurer') } · Level ${ sheetEscape(s.character.level || 1) }${ s.character.active === false ? ' \xB7 Archived' : '' }</p></div><div class="sheet-actions"><button type="button" id="sheetExport">Export JSON</button><button type="button" id="sheetPrint">Print</button><button type="button" data-sheet-close>My characters</button><button type="submit" class="btn-primary" id="sheetSave">Save sheet</button></div></header>
   <div class="sheet-feedback"><p id="sheetStatus" role="status" aria-live="polite">${ s.revision ? 'Saved sheet loaded.' : 'New sheet \u2014 fill in your character and save.' }</p><span>Only you and your campaign DM can open this sheet.</span></div>
   <nav class="sheet-tabs" role="tablist" aria-label="Character sheet sections">${ [
     [
@@ -115,6 +142,10 @@ function renderCharacterSheet() {
     [
       'inventory',
       'Inventory'
+    ],
+    [
+      'builder',
+      'Character builder'
     ],
     [
       'story',
@@ -205,6 +236,7 @@ function renderCharacterSheet() {
     ]
   ].map(([key, label]) => field(label, key, 'textarea', { rows: 5 })).join('') }</div>`) }
   </div></form>`;
+  arrangeCharacterSheetPage();
   renderSheetBuildControls();
   if (typeof renderSheetCatalog === 'function') renderSheetCatalog();
   renderSheetRows();
@@ -251,7 +283,7 @@ function renderCharacterSheet() {
     event.preventDefault();
     saveCharacterSheet();
   });
-  dialog.querySelector('[data-sheet-close]').onclick = () => closeCharacterSheet();
+  dialog.querySelector('[data-sheet-close]').onclick = leaveCharacterSheet;
   dialog.querySelectorAll('[data-sheet-tab]').forEach(button => {
     button.onclick = () => selectSheetTab(button.dataset.sheetTab);
     button.onkeydown = event => {
@@ -287,7 +319,8 @@ function selectSheetTab(key) {
   const dialog = document.getElementById('characterSheetDialog');
   if (!dialog)
     return;
-  dialog.querySelectorAll('[data-sheet-section]').forEach(panel => panel.hidden = panel.dataset.sheetSection !== key);
+  dialog.querySelector('.sheet-body').classList.toggle('sheet-page-grid',key==='overview');
+  dialog.querySelectorAll('[data-sheet-section]').forEach(panel => panel.hidden = key==='overview'?!['overview','skills','combat'].includes(panel.dataset.sheetSection):panel.dataset.sheetSection!==key);
   dialog.querySelectorAll('[data-sheet-tab]').forEach(button => {
     const selected = button.dataset.sheetTab === key;
     button.setAttribute('aria-selected', String(selected));
@@ -505,7 +538,7 @@ window.addEventListener('beforeunload', event => {
 });
 window.addEventListener('afterprint', () => document.body.classList.remove('printing-character-sheet'));
 function prepareSheetPrint() {
-  if (!sheetSession)
+  if (!sheetSession || document.getElementById('tab-character-sheet').style.display === 'none')
     return;
   const dialog = document.getElementById('characterSheetDialog');
   dialog.querySelectorAll('.sheet-print-value').forEach(el => el.remove());
