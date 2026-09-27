@@ -44,6 +44,7 @@ function closeCharacterSheet(force = false) {
   if (!force && sheetSession?.dirty && !confirm('Discard unsaved character sheet changes?'))
     return false;
   ++sheetGeneration;
+  if(typeof stopEquipmentWatch!=='undefined'){stopEquipmentWatch?.();stopEquipmentWatch=null;}
   sheetSession = null;
   const dialog = document.getElementById('characterSheetDialog');
   if (dialog) {
@@ -80,7 +81,8 @@ async function openCharacterSheet(characterId) {
         3,
         4,
         5,
-        6
+        6,
+        7
       ].includes(stored.schemaVersion))
       throw Error('This sheet uses a newer format. Update the website before editing it.');
     sheetSession = {
@@ -100,8 +102,10 @@ async function openCharacterSheet(characterId) {
     if (!stored.revision) {
       sheetSession.data.build.scoreMode = 'base';
       sheetSession.data.build.edition = '2024';
+      sheetSession.data.equipmentState.acMode = 'equipment';
     }
     renderCharacterSheet();
+    watchSheetEquipment();
   } catch (error) {
     if (generation === sheetGeneration)
       sheetStatus(`Could not open sheet: ${ error.message }${ error.code === 'permission-denied' ? ' Publish the character-sheet Firestore rules and confirm campaign access.' : '' }`, true);
@@ -157,7 +161,7 @@ function renderCharacterSheet() {
   ${ sheetSection('overview', 'The adventurer', `<div class="sheet-grid sheet-identity">${ field('Character name', 'identity.name') }${ field('Level', 'identity.level', 'number', {
     min: 1,
     max: 20
-  }) }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div id="sheetBuildControls"></div><div id="sheetBuildSummary" class="sheet-rule-summary"></div><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid">${ field('Maximum HP', 'hpMax', 'number', { min: 0 }) }${ field('Current HP', 'hpCurrent', 'number', { min: 0 }) }${ field('Temporary HP', 'hpTemp', 'number', { min: 0 }) }${ field('Armor class before automatic Defense bonus', 'ac', 'number', { min: 0 }) }<p>Effective AC: <output data-derived="ac"></output></p>${ field('Speed before feat bonuses (ft)', 'speed', 'number', { min: 0 }) }<p>Effective speed: <output data-derived="effects.speed"></output> ft</p>${ field('Inspiration', 'inspiration', 'checkbox') }</div><div class="sheet-hp-tools"><label>Amount <input id="sheetHpAmount" type="number" min="0" step="1" value="1"></label><button type="button" id="sheetDamage">Take damage</button><button type="button" id="sheetHeal">Heal</button><small>Damage uses temporary HP first. Save to keep these changes.</small></div><div class="sheet-grid two">${ field('Additional features & notes', 'features', 'textarea', { rows: 7 }) }${ field('Limited resources \u2014 maximum / used / recovery', 'resources', 'textarea', { rows: 7 }) }${ field('Additional languages / notes', 'languages', 'textarea') }${ field('Additional proficiencies / notes', 'proficiencies', 'textarea') }</div>`) }
+  }) }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div id="sheetBuildControls"></div><div id="sheetBuildSummary" class="sheet-rule-summary"></div><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid">${ field('Maximum HP', 'hpMax', 'number', { min: 0 }) }${ field('Current HP', 'hpCurrent', 'number', { min: 0 }) }${ field('Temporary HP', 'hpTemp', 'number', { min: 0 }) }${ field('Manual base AC before equipment / feat bonuses', 'ac', 'number', { min: 0 }) }<p>Effective AC: <output data-derived="ac"></output></p>${ field('Speed before feat bonuses (ft)', 'speed', 'number', { min: 0 }) }<p>Effective speed: <output data-derived="effects.speed"></output> ft</p>${ field('Inspiration', 'inspiration', 'checkbox') }</div><div class="sheet-hp-tools"><label>Amount <input id="sheetHpAmount" type="number" min="0" step="1" value="1"></label><button type="button" id="sheetDamage">Take damage</button><button type="button" id="sheetHeal">Heal</button><small>Damage uses temporary HP first. Save to keep these changes.</small></div><div class="sheet-grid two">${ field('Additional features & notes', 'features', 'textarea', { rows: 7 }) }${ field('Limited resources \u2014 maximum / used / recovery', 'resources', 'textarea', { rows: 7 }) }${ field('Additional languages / notes', 'languages', 'textarea') }${ field('Additional proficiencies / notes', 'proficiencies', 'textarea') }</div>`) }
   ${ sheetSection('skills', 'Abilities, saving throws & skills', `<div class="sheet-abilities">${ abilityOptions.map(([key, label]) => `<div class="sheet-ability">${ field(label, `abilities.${ key }`, 'number', {
     min: 1,
     max: 30
@@ -187,7 +191,7 @@ function renderCharacterSheet() {
   }) }${ field('Death save failures', 'deathFailure', 'number', {
     min: 0,
     max: 3
-  }) }${ field('Hit dice \u2014 total / spent', 'hitDice') }${ field('Conditions', 'conditions') }${ field('Resistances & immunities', 'resistances') }</div><h4>Attacks & actions</h4><p class="sheet-help">Attack bonuses use the chosen ability, proficiency and extra bonus. Enter damage dice and special effects yourself.</p><div id="sheetAttackRows"></div><button type="button" id="sheetAddAttack">+ Add attack</button>`) }
+  }) }${ field('Hit dice \u2014 total / spent', 'hitDice') }${ field('Conditions', 'conditions') }${ field('Resistances & immunities', 'resistances') }</div><h4>Weapons from loot</h4><div id="sheetLootAttacks"></div><h4>Manual attacks & actions</h4><p class="sheet-help">Attack bonuses use the chosen ability, proficiency and extra bonus. Enter damage dice and special effects yourself.</p><div id="sheetAttackRows"></div><button type="button" id="sheetAddAttack">+ Add attack</button>`) }
   ${ sheetSection('spells', 'Spellbook', `<div class="sheet-grid">${ field('Spellcasting ability', 'spellAbility', 'select', { values: abilityOptions }) }${ field('Spell attack bonus adjustment', 'spellAttackBonus', 'number') }${ field('Spell save DC adjustment', 'spellDCBonus', 'number') }</div><div class="sheet-metrics"><div><span>Spell attack</span><strong data-derived="spellAttack"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><h4>Spell slots</h4><p class="sheet-help">Set totals for your class and level. Track spent slots here; recovery and class features are manual.</p><div class="sheet-slot-grid">${ s.data.slots.map((slot, i) => `<div><strong>Level ${ i + 1 }</strong>${ field('Total', `slots.${ i }.max`, 'number', {
     min: 0,
     max: 99
@@ -195,7 +199,7 @@ function renderCharacterSheet() {
     min: 0,
     max: 99
   }) }</div>`).join('') }</div><h4>Known & prepared spells</h4><div id="sheetSpellRows"></div><button type="button" id="sheetAddSpell">+ Add spell</button>`) }
-  ${ sheetSection('inventory', 'Equipment & treasure', `<p class="sheet-help">Campaign loot below comes directly from this character’s inventory. Use the item controls to consume, assign or return loot.</p><div id="sheetInventory" class="character-loot-grid"></div><h4>Coins</h4><div class="sheet-grid">${ [
+  ${ sheetSection('inventory', 'Equipment & treasure', `<p class="sheet-help">Campaign loot below comes directly from this character’s inventory. Use the item controls to consume, assign or return loot.</p>${field('Armor Class calculation', 'equipmentState.acMode', 'select', {values:[['manual','Manual base + equipped bonuses'],['equipment','Automatic: armor / 10 + DEX']]})}${field('Other AC adjustment', 'equipmentState.acAdjustment', 'number')}<p class="sheet-help">Manual AC must exclude equipped shield, item and feat bonuses. Automatic mode uses worn armor or 10 + DEX; use Manual base for Mage Armor, natural armor and class alternatives.</p><div id="sheetEquipmentSummary"></div><button type="button" id="sheetRefreshLoot">Refresh campaign loot</button><div id="sheetInventory" class="character-loot-grid"></div><h4>Coins</h4><div class="sheet-grid">${ [
     'cp',
     'sp',
     'ep',
@@ -305,6 +309,7 @@ function renderCharacterSheet() {
       }
     };
   });
+  dialog.querySelector('#sheetRefreshLoot').onclick = event => runVaultButton(event.currentTarget, async () => { await refreshCampaignData(); watchSheetEquipment(); });
   dialog.querySelector('#sheetAddAttack').onclick = () => addSheetRow('attacks');
   dialog.querySelector('#sheetAddSpell').onclick = () => addSheetRow('spells');
   dialog.querySelector('#sheetDamage').onclick = () => changeSheetHP('damage');
@@ -388,7 +393,8 @@ function updateSheetCalculations() {
   const s = sheetSession;
   if (!s)
     return;
-  const d = CharacterSheetModel.derive(s.data, s.identity?.level || s.character.level || 1);
+  const d = CharacterSheetModel.derive(s.data, s.identity?.level || s.character.level || 1, sheetEquipmentLoot());
+  renderEquipmentCalculations(d);
   updateSheetBuildSummary(d);
   if (typeof updateSheetCatalogGrants === 'function') updateSheetCatalogGrants();
   document.querySelectorAll('#characterSheetDialog [data-derived]').forEach(el => {
@@ -505,13 +511,18 @@ function refreshCharacterSheetInventory() {
   const s = sheetSession, el = document.getElementById('sheetInventory');
   if (!s || !el || activeCampaign?.id !== s.campaignId)
     return;
-  const entries = inventory.filter(entry => entry.characterId === s.characterId);
+  const entries = inventory.filter(entry => entry.characterId === s.characterId && entry.quantity > 0);
   if (!entries.length) {
     el.innerHTML = '<p class="sheet-empty">No campaign loot yet. Claim an available item from the Library or ask your DM to assign one.</p>';
-    return;
+  } else {
+    el.replaceChildren(...entries.map(entry => {
+      const wrapper=document.createElement('div');wrapper.className='sheet-owned-item';
+      wrapper.append(createCard(inventoryItem(entry), { inventoryEntry: entry }),equipmentControls(entry));
+      return wrapper;
+    }));
+    observePendingImages(el);
   }
-  el.replaceChildren(...entries.map(entry => createCard(inventoryItem(entry), { inventoryEntry: entry })));
-  observePendingImages(el);
+  updateSheetCalculations();
 }
 function exportCharacterSheet() {
   if (!sheetSession)
@@ -520,7 +531,7 @@ function exportCharacterSheet() {
   const s = sheetSession;
   const blob = new Blob([JSON.stringify({
       format: 'dnd-vault-character-sheet',
-      schemaVersion: 6,
+      schemaVersion: 7,
       character: s.identity,
       campaign: activeCampaign.name,
       data: s.data,
@@ -1001,7 +1012,7 @@ function updateSheetBuildSummary(derived) {
   ].filter(([, n]) => n).map(([label, n]) => `${ label } ${ n } ft`).join(' \xB7 ');
   const naturalAC = e.naturalArmor ? e.naturalArmor.base + (e.naturalArmor.ability ? derived.mods[e.naturalArmor.ability] : 0) : null;
   const additional = `${ movement ? `<p><strong>Other movement:</strong> ${ sheetEscape(movement) }. See racial restrictions below.</p>` : '' }${ naturalAC !== null ? `<p><strong>Natural armor reference:</strong> AC ${ naturalAC } before shield or other effects. Apply this manually in Combat when eligible; entered AC is preserved.</p>` : '' }${ e.immunities.length ? `<p><strong>Immunities:</strong> ${ sheetEscape(e.immunities.join(', ')) }</p>` : '' }${ e.raceAbility ? `<p><strong>Racial magic / feature:</strong> ${ sheetEscape(e.raceAbility.toUpperCase()) } · DC ${ 8 + derived.pb + derived.mods[e.raceAbility] } · spell attack ${ CharacterSheetModel.signed(derived.pb + derived.mods[e.raceAbility]) }</p>` : '' }`;
-  document.getElementById('sheetBuildSummary').innerHTML = `<h4>Calculated from your choices · ${ sheetEscape(b.edition) }</h4>${ raceInfo }${ additional }<p><strong>Class:</strong> ${ sheetEscape(c ? c.name + ' \u2014 ' + b.edition : 'Custom / manual') } · <strong>Background:</strong> ${ sheetEscape(bg ? bg.name + ' \u2014 2024' : b.background === 'acolyte' ? 'Acolyte \u2014 2014' : 'Custom / manual') }</p>${ e.originFeats?.length ? `<p><strong>Origin feats:</strong> ${ sheetEscape(e.originFeats.join(', ')) }</p>` : '' }<p>${ b.scoreMode === 'base' ? 'Origin bonuses are added to base abilities (up to 20) and base maximum HP.' : 'Your entered ability scores and maximum HP are treated as final totals; origin bonuses are shown for reference only.' } Manual notes and proficiencies remain separate.</p><div class="sheet-metrics">${ stat(b.edition === '2024' ? 'Background bonuses' : 'Race bonuses', asi) }${ stat('Walking speed', `${ e.speed } ft`) }${ stat('Size', e.size) }${ stat('Darkvision', e.darkvision ? `${ e.darkvision } ft` : 'None') }${ stat('Effective maximum HP', derived.hpMax) }${ stat('Hit dice', c ? `${ s.identity?.level || s.character.level || 1 }d${ c.die }` : s.data.hitDice || 'Manual') }</div><p><strong>Automatic skills:</strong> ${ sheetEscape(learnedSkills) }</p><p><strong>Class saving throws:</strong> ${ sheetEscape(e.saves.map(key => CharacterSheetModel.abilities[key]).join(', ') || 'Manual') }</p><p><strong>Languages:</strong> ${ sheetEscape(e.languages.join(', ') || 'Manual') }</p><p><strong>Equipment / tool proficiencies:</strong> ${ sheetEscape(e.proficiencies.join(', ') || 'Manual') }</p><p><strong>Resistances:</strong> ${ sheetEscape(e.resistances.join(', ') || 'None from race') }</p><ul>${ e.traits.map(trait => `<li>${ sheetEscape(trait) }</li>`).join('') }</ul>${ breath }${ e.innate.length ? `<p><strong>Granted racial spells:</strong> ${ sheetEscape(e.innate.join('; ')) }</p>` : '' }${ e.pact ? `<p><strong>Pact Magic:</strong> ${ e.pact.count } slot(s), level ${ e.pact.level }; recover on a short or long rest. Mystic Arcanum spells are separate and tracked manually.</p>` : '' }<p class="sheet-help">Traits below are reminders, not action buttons. Conditional bonuses, racial attacks, class features, feats, armor effects and rest recovery require manual entry. PB means proficiency bonus. <a href="rules-attribution.html" target="_blank" rel="noopener">Rules source & attribution</a></p>${ e.warnings.length ? `<div class="sheet-build-warning">${ e.warnings.map(w => `<p>${ sheetEscape(w) }</p>`).join('') }</div>` : '' }`;
+  document.getElementById('sheetBuildSummary').innerHTML = `<h4>Calculated from your choices · ${ sheetEscape(b.edition) }</h4>${ raceInfo }${ additional }<p><strong>Class:</strong> ${ sheetEscape(c ? c.name + ' \u2014 ' + b.edition : 'Custom / manual') } · <strong>Background:</strong> ${ sheetEscape(bg ? bg.name + ' \u2014 2024' : b.background === 'acolyte' ? 'Acolyte \u2014 2014' : 'Custom / manual') }</p>${ e.originFeats?.length ? `<p><strong>Origin feats:</strong> ${ sheetEscape(e.originFeats.join(', ')) }</p>` : '' }<p>${ b.scoreMode === 'base' ? 'Origin bonuses are added to base abilities (up to 20) and base maximum HP.' : 'Your entered ability scores and maximum HP are treated as final totals; origin bonuses are shown for reference only.' } Manual notes and proficiencies remain separate.</p><div class="sheet-metrics">${ stat(b.edition === '2024' ? 'Background bonuses' : 'Race bonuses', asi) }${ stat('Walking speed', `${ e.speed } ft`) }${ stat('Size', e.size) }${ stat('Darkvision', e.darkvision ? `${ e.darkvision } ft` : 'None') }${ stat('Effective maximum HP', derived.hpMax) }${ stat('Hit dice', c ? `${ s.identity?.level || s.character.level || 1 }d${ c.die }` : s.data.hitDice || 'Manual') }</div><p><strong>Automatic skills:</strong> ${ sheetEscape(learnedSkills) }</p><p><strong>Class saving throws:</strong> ${ sheetEscape(e.saves.map(key => CharacterSheetModel.abilities[key]).join(', ') || 'Manual') }</p><p><strong>Languages:</strong> ${ sheetEscape(e.languages.join(', ') || 'Manual') }</p><p><strong>Equipment / tool proficiencies:</strong> ${ sheetEscape(e.proficiencies.join(', ') || 'Manual') }</p><p><strong>Resistances:</strong> ${ sheetEscape(e.resistances.join(', ') || 'None from race') }</p><ul>${ e.traits.map(trait => `<li>${ sheetEscape(trait) }</li>`).join('') }</ul>${ breath }${ e.innate.length ? `<p><strong>Granted racial spells:</strong> ${ sheetEscape(e.innate.join('; ')) }</p>` : '' }${ e.pact ? `<p><strong>Pact Magic:</strong> ${ e.pact.count } slot(s), level ${ e.pact.level }; recover on a short or long rest. Mystic Arcanum spells are separate and tracked manually.</p>` : '' }<p class="sheet-help">Traits below are reminders, not action buttons. Conditional bonuses, racial attacks, class features and unsupported conditional effects require manual entry. PB means proficiency bonus. <a href="rules-attribution.html" target="_blank" rel="noopener">Rules source & attribution</a></p>${ e.warnings.length ? `<div class="sheet-build-warning">${ e.warnings.map(w => `<p>${ sheetEscape(w) }</p>`).join('') }</div>` : '' }`;
   for (const [key, label] of Object.entries(CharacterSheetModel.abilities)) {
     const input = form.querySelector(`[name="abilities.${ key }"]`);
     let output = input.parentElement.querySelector('.sheet-ability-total');

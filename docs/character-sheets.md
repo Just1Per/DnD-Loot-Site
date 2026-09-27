@@ -1,3 +1,5 @@
+> Latest equipment update: new saves use schema **7**; publish the current Firestore rules. See [campaign equipment](character-equipment.md) for loot integration, AC and weapon calculations. Earlier schema references below describe previous updates.
+
 > This document describes the first sheet release. For the current builder and catalogue additions, see [character-rules-engine.md](character-rules-engine.md) and [rules-catalog.md](rules-catalog.md).
 
 # Character sheets: first functional release

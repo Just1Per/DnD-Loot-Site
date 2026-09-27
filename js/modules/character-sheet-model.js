@@ -3,6 +3,7 @@ var CharacterSheetModel = (() => {
   const Rules = typeof CharacterRules !== 'undefined' ? CharacterRules : require('./character-rules');
   const Catalog = typeof CharacterCatalog !== 'undefined' ? CharacterCatalog : require('./character-catalog');
   const Feats=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
+  const Equipment=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
   const abilities = {
     str: 'Strength',
     dex: 'Dexterity',
@@ -128,6 +129,7 @@ var CharacterSheetModel = (() => {
   function normalize(raw = {}) {
     raw = raw && typeof raw === 'object' ? raw : {};
     const result = {
+      equipmentState: Equipment.choices(raw.equipmentState),
       build: Rules.normalize(raw.build),
       rulesChoices: Catalog.normalize(raw.rulesChoices),
       abilities: {},
@@ -201,7 +203,7 @@ var CharacterSheetModel = (() => {
     }));
     return result;
   }
-  function derive(data, level) {
+  function derive(data, level, loot = []) {
     const d = normalize(data), pb = proficiency(level), mods = {}, saves = {}, checks = {};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
     const scores = {};
@@ -217,7 +219,7 @@ var CharacterSheetModel = (() => {
     }
     for (const [key, [, ability]] of Object.entries(skills))
       checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0)) + d.skills[key].bonus;
-    return {
+    const result = {
       effects,
       feats,
       ac: d.ac + feats.acBonus,
@@ -233,6 +235,9 @@ var CharacterSheetModel = (() => {
       spellDC: 8 + mods[d.spellAbility] + pb + d.spellDCBonus,
       attacks: d.attacks.map(a => mods[a.ability] + (a.proficient ? pb : 0) + a.bonus + (a.rangedWeapon ? feats.rangedBonus : 0))
     };
+    result.gear=Equipment.derive(d,result,loot);
+    result.ac=result.gear.ac;
+    return result;
   }
   function damage(data, amount) {
     const d = normalize(data), n = number(amount, 0, 0);

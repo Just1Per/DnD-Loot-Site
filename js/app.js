@@ -14,7 +14,7 @@ import {
 
 import {
   collection, getDocs, addDoc, doc, getDoc,
-  setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId
+  setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId, onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
@@ -29,11 +29,12 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   db, storage, auth, provider, signInWithPopup, signOut,
   onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword,
   collection, getDocs, addDoc, doc, getDoc,
-  setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId,
+  setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId, onSnapshot,
   ref, getDownloadURL, uploadBytes,
 });
 
 const FEATURE_FILES = [
+  "./modules/character-equipment.js",
   "./modules/campaign-store.js",
   "./modules/core.js",
   "./modules/character-race-catalog.js",
@@ -45,6 +46,7 @@ const FEATURE_FILES = [
   "./modules/character-sheet-model.js",
   "./modules/character-sheet-store.js",
   "./modules/character-sheet.js",
+  "./modules/character-equipment-ui.js",
   "./modules/character-catalog-ui.js",
   "./modules/images.js",
   "./modules/catalog-cache.js",
@@ -65,7 +67,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20260927-feats-v4");
+    moduleUrl.searchParams.set("v", "20260927-equipment-v1");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;

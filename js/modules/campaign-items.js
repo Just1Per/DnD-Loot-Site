@@ -27,7 +27,8 @@ async function refreshCampaignData() {
   renderCards();renderPlayerTab();renderDMCharacters();renderDMOverview();renderCampaignToolbar();refreshCharacterSheetInventory();
 }
 function inventoryItem(entry) {
-  return items.find(i=>i.id===entry.itemId)||{...entry.item,id:entry.itemId,campaignId:entry.campaignId,campaign:activeCampaign?.name||'',visible:false};
+  const current=items.find(i=>i.id===entry.itemId);
+  return current && (current.updatedAt||0)>=(entry.item?.updatedAt||0) ? current : {...entry.item,id:entry.itemId,campaignId:entry.campaignId,campaign:activeCampaign?.name||'',visible:false};
 }
 async function runVaultButton(button,work) {
   if(button?.disabled)return;

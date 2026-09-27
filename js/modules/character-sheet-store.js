@@ -30,7 +30,7 @@ function createCharacterSheetStore(sdk) {
           throw Error('Character details changed while this sheet was open. Export your edits, then reopen the sheet.');
       const next = revision + 1;
       tx.set(sheetRef, {
-        schemaVersion: 6,
+        schemaVersion: 7,
         revision: next,
         data,
         updatedAt: Date.now(),

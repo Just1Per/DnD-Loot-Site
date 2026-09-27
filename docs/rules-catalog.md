@@ -1,3 +1,5 @@
+> Latest equipment update: new saves use schema **7**; publish the current Firestore rules. See [campaign equipment](character-equipment.md) for loot integration, AC and weapon calculations. Earlier schema references below describe previous updates.
+
 # Feats and spells: install and test
 
 This is part of PR #2 on `feature/character-rules-engine`. Keep the existing repo

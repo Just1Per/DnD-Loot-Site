@@ -1,3 +1,5 @@
+> Latest equipment update: new saves use schema **7**; publish the current Firestore rules. See [campaign equipment](character-equipment.md) for loot integration, AC and weapon calculations. Earlier schema references below describe previous updates.
+
 # Character builder: 2024 default, with 2014 support
 
 New sheets default to **2024** and **Base scores / HP**. Previously saved sheets
