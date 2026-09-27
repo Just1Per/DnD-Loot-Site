@@ -79,7 +79,8 @@ async function openCharacterSheet(characterId) {
         2,
         3,
         4,
-        5
+        5,
+        6
       ].includes(stored.schemaVersion))
       throw Error('This sheet uses a newer format. Update the website before editing it.');
     sheetSession = {
@@ -156,7 +157,7 @@ function renderCharacterSheet() {
   ${ sheetSection('overview', 'The adventurer', `<div class="sheet-grid sheet-identity">${ field('Character name', 'identity.name') }${ field('Level', 'identity.level', 'number', {
     min: 1,
     max: 20
-  }) }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div id="sheetBuildControls"></div><div id="sheetBuildSummary" class="sheet-rule-summary"></div><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid">${ field('Maximum HP', 'hpMax', 'number', { min: 0 }) }${ field('Current HP', 'hpCurrent', 'number', { min: 0 }) }${ field('Temporary HP', 'hpTemp', 'number', { min: 0 }) }${ field('Armor class before automatic Defense bonus', 'ac', 'number', { min: 0 }) }<p>Effective AC: <output data-derived="ac"></output></p>${ field('Speed (ft)', 'speed', 'number', { min: 0 }) }${ field('Inspiration', 'inspiration', 'checkbox') }</div><div class="sheet-hp-tools"><label>Amount <input id="sheetHpAmount" type="number" min="0" step="1" value="1"></label><button type="button" id="sheetDamage">Take damage</button><button type="button" id="sheetHeal">Heal</button><small>Damage uses temporary HP first. Save to keep these changes.</small></div><div class="sheet-grid two">${ field('Additional features & notes', 'features', 'textarea', { rows: 7 }) }${ field('Limited resources \u2014 maximum / used / recovery', 'resources', 'textarea', { rows: 7 }) }${ field('Additional languages / notes', 'languages', 'textarea') }${ field('Additional proficiencies / notes', 'proficiencies', 'textarea') }</div>`) }
+  }) }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div id="sheetBuildControls"></div><div id="sheetBuildSummary" class="sheet-rule-summary"></div><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid">${ field('Maximum HP', 'hpMax', 'number', { min: 0 }) }${ field('Current HP', 'hpCurrent', 'number', { min: 0 }) }${ field('Temporary HP', 'hpTemp', 'number', { min: 0 }) }${ field('Armor class before automatic Defense bonus', 'ac', 'number', { min: 0 }) }<p>Effective AC: <output data-derived="ac"></output></p>${ field('Speed before feat bonuses (ft)', 'speed', 'number', { min: 0 }) }<p>Effective speed: <output data-derived="effects.speed"></output> ft</p>${ field('Inspiration', 'inspiration', 'checkbox') }</div><div class="sheet-hp-tools"><label>Amount <input id="sheetHpAmount" type="number" min="0" step="1" value="1"></label><button type="button" id="sheetDamage">Take damage</button><button type="button" id="sheetHeal">Heal</button><small>Damage uses temporary HP first. Save to keep these changes.</small></div><div class="sheet-grid two">${ field('Additional features & notes', 'features', 'textarea', { rows: 7 }) }${ field('Limited resources \u2014 maximum / used / recovery', 'resources', 'textarea', { rows: 7 }) }${ field('Additional languages / notes', 'languages', 'textarea') }${ field('Additional proficiencies / notes', 'proficiencies', 'textarea') }</div>`) }
   ${ sheetSection('skills', 'Abilities, saving throws & skills', `<div class="sheet-abilities">${ abilityOptions.map(([key, label]) => `<div class="sheet-ability">${ field(label, `abilities.${ key }`, 'number', {
     min: 1,
     max: 30
@@ -395,6 +396,7 @@ function updateSheetCalculations() {
     el.textContent = [
       'spellDC',
       'ac',
+      'effects.speed',
       'passive'
     ].includes(path) ? value : CharacterSheetModel.signed(value);
   });
@@ -518,7 +520,7 @@ function exportCharacterSheet() {
   const s = sheetSession;
   const blob = new Blob([JSON.stringify({
       format: 'dnd-vault-character-sheet',
-      schemaVersion: 5,
+      schemaVersion: 6,
       character: s.identity,
       campaign: activeCampaign.name,
       data: s.data,
@@ -1012,5 +1014,5 @@ function updateSheetBuildSummary(derived) {
   }
   const speed = form.querySelector('[name="speed"]');
   speed.readOnly = !!e.race;
-  speed.value = e.race ? e.speed : s.data.speed;
+  speed.value = e.race ? e.speed - (derived.feats.speedBonus || 0) : s.data.speed;
 }

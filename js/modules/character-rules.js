@@ -1041,7 +1041,7 @@ var CharacterRules = (() => {
         ...c?.profs || []
       ],
       skills: [...r?.skills || []],
-      saves: c?.saves || [],
+      saves: [...c?.saves || []],
       resistances: [...r?.resistances || []],
       speed: r?.speed ?? data.speed,
       size: r?.sizeChoice ? b.raceSize || 'Choose size' : lvl >= 5 && r?.sizeAt5 ? r.sizeAt5 : r?.size || '\u2014',

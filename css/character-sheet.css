@@ -552,3 +552,8 @@
   .sheet-page-grid .sheet-check-row { grid-template-columns:minmax(55px,1fr) 100px 40px 28px; }
   .sheet-page-grid .sheet-check-row input, .sheet-page-grid .sheet-check-row select { font-size:16px; }
 }
+.sheet-resource-panel { margin-top:20px; border:1px solid var(--sheet-border); border-radius:6px; padding:14px; }
+.sheet-resource-row { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:10px 0; border-bottom:1px solid var(--sheet-border); }
+.sheet-resource-row>span { flex:1 1 180px; }
+.sheet-resource-row small { display:block; font-size:11px; margin-top:4px; }
+.sheet-resource-row output { font-weight:700; min-width:42px; text-align:center; }

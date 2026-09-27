@@ -77,7 +77,7 @@ function updateSheetCatalogGrants() {
   sheetCatalogSignature=signature;
   const feats=document.getElementById('catalogSelectedFeats');
   feats.innerHTML='<h4>Selected feat effects</h4><p>Ability/HP bonuses apply in Base mode. Situational effects need the stated conditions; existing manual bonuses are not removed.</p><div class="sheet-actions"><button type="button" data-feat-reset="turn">Start my turn</button><button type="button" data-feat-reset="initiative">Roll initiative: reset feat uses</button><button type="button" data-feat-reset="short">Short rest: reset feat uses</button></div>'+stats.feats.reports.map(report=>{
-    const f=C.find(report.id,'feats');return `<article class="sheet-repeat" data-feat-key="${sheetEscape(report.key)}"><h4>${sheetEscape((f?.name||report.def.name)+' · '+report.def.edition)}${report.origin?' · Variant Human':''}</h4><p>${sheetEscape(f?f.book+', p. '+f.page:report.def.source)}</p>${renderFeatEffectControls(report)}<details><summary>Full rules / source reference</summary><p class="sheet-rule-text">${sheetEscape(f?.description||'Consult the source for complete rules. Effects not listed as automated remain manual.')}</p></details>${report.origin?'':`<button type="button" data-remove-feat="${sheetEscape(report.key)}">Remove feat</button>`}</article>`;
+    const f=C.find(report.id,'feats');return `<article class="sheet-repeat" data-feat-key="${sheetEscape(report.key)}"><h4>${sheetEscape((f?.name||report.def.name)+' · '+report.def.edition)}${report.origin?' · '+sheetEscape(report.originLabel||'Variant Human'):''}</h4><p>${sheetEscape(f?f.book+', p. '+f.page:report.def.source)}</p>${renderFeatEffectControls(report,sheetSession.identity.level)}<details><summary>Full rules / source reference</summary><p class="sheet-rule-text">${sheetEscape(f?.description||'Consult the source for complete rules. Effects not listed as automated remain manual.')}</p></details>${report.origin?'':`<button type="button" data-remove-feat="${sheetEscape(report.key)}">Remove feat</button>`}</article>`;
   }).join('');
   feats.querySelectorAll('[data-feat-reset]').forEach(button=>button.onclick=()=>{readSheetForm();CharacterFeatRules.reset(sheetSession.data,button.dataset.featReset);catalogChanged('Feat uses reset. Save to keep this change.');});
   feats.querySelectorAll('[data-remove-feat]').forEach(button=>button.onclick=()=>{readSheetForm();CharacterFeatRules.remove(sheetSession.data,button.dataset.removeFeat);catalogChanged();});
@@ -91,8 +91,9 @@ function updateSheetCatalogGrants() {
       else c[field]=field==='option'?Number(value):value;
       catalogChanged();
     });
-    article.querySelectorAll('[data-feat-use]').forEach(button=>button.onclick=()=>{readSheetForm();const c=sheetSession.data.rulesChoices.effects[key] ||= CharacterFeatRules.choice();c.used=button.dataset.featUse==='use'?1:0;catalogChanged();});
+    article.querySelectorAll('[data-feat-use]').forEach(button=>button.onclick=()=>changeFeatUse(key,button.dataset.featUse==='use'?1:-1));
   });
+  renderFeatCombatResources(stats);
   const grants=C.grants(data);
   host.innerHTML=grants.map(g=>{
     const choice=data.rulesChoices.grants[g.key]||{classId:g.fixedClass,ability:'int',spells:['','',''],used:0};
@@ -120,7 +121,7 @@ function updateSheetCatalogGrants() {
     article.querySelector('[data-copy-grant]').onclick=()=>{const choice=getChoice();if(!C.validateGrant(grant,choice,sheetSession.data).errors.length)addCatalogSpells(choice.spells,grant.edition==='2024'?choice.spells[2]:'');};
   });
 }
-function renderFeatEffectControls(report) {
+function renderFeatEffectControls(report,level) {
   const {def,choice:c,warnings,automated}=report,esc=sheetEscape;
   const select=(label,field,rows,value)=>`<label class="sheet-field">${esc(label)}<select data-feat-choice="${field}">${rows.map(([key,text])=>`<option value="${esc(key)}" ${String(key)===String(value)?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
   let html='<div class="sheet-grid">';
@@ -134,11 +135,36 @@ function renderFeatEffectControls(report) {
     html+=select('New skill','training0',[['','Choose skill'],...skills],c.training[0]);
     html+=select('Expertise (must be proficient)','expertise',[['','Choose skill'],...Object.entries(CharacterSheetModel.skills).map(([k,[label]])=>[k,label])],c.expertise);
   }
+  if(['Crafter','Musician'].includes(def.name)&&def.source==='XPHB' || def.name==='Linguist'&&def.source==='PHB'){
+    const options=CharacterFeatRules.trainingOptions(def,CharacterRules).map(v=>[v,v.split(':')[1]]);
+    for(let i=0;i<3;i++)html+=select('Choose '+(def.name==='Linguist'?'language':'training')+' '+(i+1),'training'+i,[['','Choose'],...options],c.training[i]);
+  }
+  if(def.name==='Keen Mind'&&def.source==='XPHB')html+=select('Knowledge proficiency / expertise','training0',[['','Choose skill'],...skills.filter(([key])=>CharacterFeatRules.trainingOptions(def,CharacterRules).includes(key))],c.training[0]);
+  if(def.name==='Boon of Skill'&&def.source==='XPHB')html+=select('Expertise','expertise',[['','Choose skill'],...Object.entries(CharacterSheetModel.skills).map(([k,[label]])=>[k,label])],c.expertise);
   if(def.name==='Observant'&&def.edition==='2024')html+=select('Proficiency / expertise','training0',[['','Choose skill'],...skills.filter(([key])=>['skill:insight','skill:investigation','skill:perception'].includes(key))],c.training[0]);
   if(def.name==='Defense'&&def.edition==='2024')html+=`<label class="sheet-check"><input type="checkbox" data-feat-choice="armored" ${c.armored?'checked':''}> Wearing Light/Medium/Heavy armor; my entered AC excludes this +1</label>`;
   html+='</div><p><strong>Automated sheet effects:</strong> '+esc(automated.join('; ')||(def.name==='Magic Initiate'?'Spell choices and free use below':'None applied yet'))+'.</p>';
   if(warnings.length)html+='<p role="status" class="sheet-error">'+esc(warnings.join(' '))+'</p>';
-  const resource=CharacterFeatRules.resource(def);
-  if(resource)html+=`<p>${esc(resource.label)} · remaining ${c.used?0:1}/1 · resets: ${esc(resource.resets.join(', '))}. Apply only when the feat’s conditions are met.</p><button type="button" data-feat-use="use" ${c.used||warnings.length?'disabled':''}>Use feature</button> <button type="button" data-feat-use="undo" ${!c.used?'disabled':''}>Undo use</button>`;
+  const resource=CharacterFeatRules.resource(def,level);
+  if(resource)html+=`<p>${esc(resource.label)} · remaining ${Math.max(0,resource.max-c.used)}/${resource.max} · resets: ${esc(resource.resets.join(', '))}. Apply only when the feat’s conditions are met.</p><button type="button" data-feat-use="use" ${c.used>=resource.max||warnings.length?'disabled':''}>Use feature</button> <button type="button" data-feat-use="undo" ${!c.used?'disabled':''}>Undo use</button>`;
   return html+'<p>Other effects and combat decisions are manual. In Base mode, a feat’s Constitution modifier increase also adds HP for every character level. Enter HP before these feat bonuses.</p>';
+}
+
+function changeFeatUse(key,delta) {
+  readSheetForm();
+  const stats=CharacterSheetModel.derive(sheetSession.data,sheetSession.identity.level);
+  const report=stats.feats.reports.find(r=>r.key===key),resource=report&&CharacterFeatRules.resource(report.def,sheetSession.identity.level);
+  if(!resource || delta>0&&report.warnings.length)return;
+  const c=sheetSession.data.rulesChoices.effects[key] ||= CharacterFeatRules.choice();
+  if(delta>0&&c.used>=resource.max)return;
+  c.used=Math.max(0,Math.min(99,c.used+delta));catalogChanged();
+}
+function renderFeatCombatResources(stats) {
+  let host=document.getElementById('sheetFeatResources');
+  if(!host){host=document.createElement('section');host.id='sheetFeatResources';host.className='sheet-resource-panel';document.getElementById('sheet-combat').appendChild(host);}
+  const rows=stats.feats.reports.map(report=>({report,resource:CharacterFeatRules.resource(report.def,sheetSession.identity.level)})).filter(x=>x.resource);
+  host.hidden=!rows.length;
+  host.innerHTML='<h4>Feat resources</h4><p>Use a point when the feat’s conditions apply. Rolls and targets remain your choice.</p>'+rows.map(({report:r,resource:v})=>`<div class="sheet-resource-row"><span><strong>${sheetEscape(r.def.name)} · ${r.def.edition}${r.origin?' · '+sheetEscape(r.originLabel||'Variant Human'):''}</strong><small>${sheetEscape(v.label)} · recovery: ${sheetEscape(v.resets.join(', '))}</small></span><output>${Math.max(0,v.max-r.choice.used)} / ${v.max}</output><button type="button" data-combat-feat="${sheetEscape(r.key)}" data-delta="1" ${r.warnings.length||r.choice.used>=v.max?'disabled':''}>Use</button><button type="button" data-combat-feat="${sheetEscape(r.key)}" data-delta="-1" ${!r.choice.used?'disabled':''}>Undo</button></div>`).join('')+'<div class="sheet-actions"><button type="button" data-combat-recover="turn">Start my turn</button><button type="button" data-combat-recover="initiative">Initiative: reset uses</button><button type="button" data-combat-recover="short">Short rest: feat uses</button><button type="button" data-combat-recover="long">Long rest: feat uses</button></div>';
+  host.querySelectorAll('[data-combat-feat]').forEach(button=>button.onclick=()=>changeFeatUse(button.dataset.combatFeat,Number(button.dataset.delta)));
+  host.querySelectorAll('[data-combat-recover]').forEach(button=>button.onclick=()=>{readSheetForm();CharacterFeatRules.reset(sheetSession.data,button.dataset.combatRecover);catalogChanged('Feat uses reset. HP and spell slots are unchanged. Save to keep this change.');});
 }

@@ -85,6 +85,6 @@ supports the sheet's new location within the application rather than as a direct
 child of the document body.
 
 No database schema or Firestore rules changes are needed for this layout update;
-it uses the existing schema 5. Automated DOM tests cover navigation, field
+the subsequent feat-resource update uses schema 6. Automated DOM tests cover navigation, field
 uniqueness, privacy, empty campaigns, draft preservation, character switching and
 DM entry points. Full browser/mobile visual acceptance remains for the preview.

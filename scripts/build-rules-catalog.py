@@ -95,6 +95,8 @@ for row in feats:
     for r in row.get('prerequisite',[]):
         requirements.append({'level':r.get('level',0) if isinstance(r.get('level',0),int) else 0,'ability':r.get('ability',[]),'manual':bool(set(r)-{'level','ability'}) or ('level' in r and not isinstance(r['level'],int))})
     mechanics[key]={'name':row['name'],'source':row['source'],'edition':ed(row['source']),'ability':ability,'requirements':requirements,'repeatable':bool(row.get('repeatable'))}
+    if row.get('armorProficiencies'): mechanics[key]['armorTraining']=[a for group in row['armorProficiencies'] for a,v in group.items() if v is True and a in ('light','medium','heavy','shield')]
+    if row['source']=='XPHB' and row['name']=='Crafter': mechanics[key]['toolChoices']=row['toolProficiencies'][0]['choose']['from']
 for f in featrows:
     if f['source']=='PHB' and f['name']=='Grappler': mechanics[f['id']]['descriptionOverride']=f['description']
 js='/* Generated numeric feat facts; see scripts/build-rules-catalog.py and rules-attribution.html. */\nvar CharacterFeatData = '+json.dumps(mechanics,ensure_ascii=False,separators=(',',':'))+';\nif(typeof module!=="undefined" && module.exports) module.exports=CharacterFeatData;\n'

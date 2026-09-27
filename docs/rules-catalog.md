@@ -3,8 +3,8 @@
 This is part of PR #2 on `feature/character-rules-engine`. Keep the existing repo
 folders. No Cloud Functions were added or changed, and GitHub Hosting deployment
 continues as before. **Publish this branch's complete `firestore.rules` manually
-before saving sheets with this version.** Sheet format 5 prevents an old client
-from erasing new spell/feat selections. Existing formats 1–4 remain readable.
+before saving sheets with this version.** Sheet format 6 prevents an old client
+from erasing new spell/feat selections. Existing formats 1–5 remain readable.
 
 ## On the sheet
 
@@ -177,3 +177,54 @@ work with the previous database catalogue without another import. The catalogue
 also corrects an upstream 2014 Grappler transcription error against SRD 5.1 p.75:
 pinning uses another grapple check, not a maneuver-DC saving throw. The frontend
 applies that correction to older imported catalogues too.
+
+## More feat automation (schema 6)
+
+This update adds the following calculations and choices without requiring another
+catalogue import. The definitions ship with the website and work with an existing
+imported catalogue.
+
+| Feat | Added support |
+| --- | --- |
+| Lucky, 2014 | Three points, with individual use/undo and long-rest recovery |
+| Lucky, 2024 | Points equal to proficiency bonus, including background/Human Origin selections |
+| Crafter, 2024 | Three distinct choices from its eight eligible artisan tools |
+| Musician, 2024 | Three instrument proficiencies and a proficiency-based ally limit reminder |
+| Linguist, 2014 | Three different language choices from the builder's language catalogue |
+| Keen Mind, 2024 | Selected knowledge skill proficiency or expertise |
+| Lightly / Moderately / Heavily Armored | Correct training for each edition, including differing shield grants; other prerequisites remain subject to DM confirmation |
+| Mobile, 2014 / Speedy, 2024 | Walking speed +10 ft; the two versions cannot stack |
+| Athlete, 2024 | Climb speed equal to effective walking speed, including other supported speed bonuses |
+| Boon of Speed, 2024 | Walking speed +30 ft, gated to level 19+ |
+| Boon of Fortitude, 2024 | +40 maximum HP in Base mode and a once-per-turn extra-healing tracker |
+| Boon of Skill, 2024 | All 18 skill proficiencies and one eligible expertise |
+
+Lucky, Crafter, Musician and Savage Attacker also work when selected as a 2024
+background/Human Origin feat. Duplicate Origin/non-repeatable selections do not
+grant extra pools or effects. Existing Origin Alert/Tough/Skilled calculations
+remain in their original builder controls.
+
+The combat overview now contains **Feat resources**, so spending and restoring
+points does not require visiting the Character builder. Use/Undo change one point
+at a time and cannot spend beyond capacity. Reducing a character's level does not
+refill spent points. Short-rest, initiative and start-of-turn buttons reset only
+features with that recovery rule. The combat long-rest button restores feat uses,
+including Magic Initiate, but does not change HP or spell slots. The Spells tab's
+existing long-rest button also resets spell slots. All changes require Save sheet.
+
+This does not roll dice, decide advantage, choose targets, apply Musician inspiration
+to another character, spend money for Crafter, create temporary crafted items, or
+automatically heal for Boon of Fortitude. Its extra-healing button is a use tracker;
+apply the eligible healing amount through the existing HP controls. Mobile/Speedy
+terrain/opportunity-attack effects and non-walking movement adjustments not listed
+above remain manual. Current HP is never increased by selecting a feat.
+
+The Resilient calculation also now copies class saving-throw arrays before adding
+feat proficiency, preventing bonuses from leaking into other characters or
+remaining after a feat is removed.
+
+**Publish the complete updated `firestore.rules` before saving.** New saves use
+schema 6 because a schema-5 client normalizes a numeric use counter to 0/1. Older
+clients must not overwrite a pool with several spent points. Formats 1–5 remain
+readable and campaign privacy is unchanged. No Firebase Functions or production
+imports are needed for this update.
