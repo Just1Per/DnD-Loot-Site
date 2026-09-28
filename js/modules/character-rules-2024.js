@@ -13,64 +13,7 @@ var CharacterRules2024 = (() => {
     'Halfling',
     'Orc'
   ];
-  const backgrounds = {
-    'acolyte-2024': {
-      name: 'Acolyte',
-      abilities: [
-        'int',
-        'wis',
-        'cha'
-      ],
-      skills: [
-        'insight',
-        'religion'
-      ],
-      tool: 'Calligrapher\u2019s supplies',
-      feat: 'Magic Initiate (Cleric)'
-    },
-    'criminal-2024': {
-      name: 'Criminal',
-      abilities: [
-        'dex',
-        'con',
-        'int'
-      ],
-      skills: [
-        'sleightOfHand',
-        'stealth'
-      ],
-      tool: 'Thieves\u2019 tools',
-      feat: 'Alert'
-    },
-    'sage-2024': {
-      name: 'Sage',
-      abilities: [
-        'con',
-        'int',
-        'wis'
-      ],
-      skills: [
-        'arcana',
-        'history'
-      ],
-      tool: 'Calligrapher\u2019s supplies',
-      feat: 'Magic Initiate (Wizard)'
-    },
-    'soldier-2024': {
-      name: 'Soldier',
-      abilities: [
-        'str',
-        'dex',
-        'con'
-      ],
-      skills: [
-        'athletics',
-        'intimidation'
-      ],
-      tool: 'Choose one gaming set (record in additional proficiencies)',
-      feat: 'Savage Attacker'
-    }
-  };
+  const backgrounds=(typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds:require('./character-backgrounds')).modern;
   // Origin categories are restricted here; Magic Initiate choices live in the spell catalogue.
   const originFeats = [
     'Alert',
@@ -90,6 +33,11 @@ var CharacterRules2024 = (() => {
     Alert: 'Initiative includes PB; after rolling, you may swap with a willing ally unless either of you is incapacitated.',
     Skilled: 'Choose any three skill/tool proficiencies below. This feat is repeatable.',
     'Savage Attacker': 'Once per turn, on a weapon hit roll its damage dice twice and use either result.',
+    Crafter: 'Three tool choices are in Feats; discounts and crafting are resolved manually.',
+    Musician: 'Choose instrument proficiencies in Feats; grant inspiration to eligible allies after resting.',
+    Lucky: 'Luck points are tracked in Combat; spending a point requires a permitted roll.',
+    Healer: 'Use a healer’s kit with Hit Dice; healing rolls of 1 may be rerolled where the feat permits. Resolve healing manually.',
+    'Tavern Brawler': 'Unarmed damage, rerolls, improvised weapons and a limited push; resolve these combat effects manually.',
     Tough: 'Maximum HP increases by twice character level; calculated in Base scores / HP mode.'
   };
   const spell = (level, name, usage = 'once per long rest; may also use an appropriate spell slot') => ({
@@ -394,12 +342,6 @@ var CharacterRules2024 = (() => {
       return;
     e.asi = {};
     const bg = backgrounds[b.background];
-    if (bg) {
-      e.skills.push(...bg.skills);
-      e.proficiencies.push(bg.tool);
-    }
-    if (b.background === 'acolyte')
-      e.skills.push('insight', 'religion');
     const allowed = bg?.abilities || [
       'str',
       'dex',

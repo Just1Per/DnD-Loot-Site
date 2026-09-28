@@ -385,7 +385,7 @@ match /characterSheets/{charId} {
     let d = request.resource.data;
     return exists(characterPath(campaignId, charId))
       && d.keys().hasOnly(['schemaVersion','revision','data','updatedAt','updatedBy'])
-      && d.schemaVersion in [1, 2, 3, 4, 5, 6, 7] && d.revision is int && d.revision > 0
+      && d.schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8] && d.revision is int && d.revision > 0
       && d.updatedBy == request.auth.uid && d.updatedAt is int
       && d.data is map
       && d.data.keys().hasOnly(['equipmentState','rulesChoices','build','abilities','saves','skills','coins','slots','attacks','spells','inspiration','spellAbility',
@@ -394,7 +394,7 @@ match /characterSheets/{charId} {
         'ac','speed','hpMax','hpCurrent','hpTemp','initiativeBonus','spellAttackBonus','spellDCBonus','deathSuccess','deathFailure','passiveBonus'])
       && (d.schemaVersion == 1
         || (d.schemaVersion == 2 && d.data.build is map && d.data.build.edition == '2014')
-        || (d.schemaVersion in [3, 4, 5, 6, 7] && d.data.build is map && d.data.build.edition in ['2014', '2024']))
+        || (d.schemaVersion in [3, 4, 5, 6, 7, 8] && d.data.build is map && d.data.build.edition in ['2014', '2024']))
       && (d.schemaVersion < 4 || (d.data.rulesChoices is map
         && d.data.rulesChoices.keys().hasOnly(['feats','grants','effects'])
         && d.data.rulesChoices.feats is list && d.data.rulesChoices.feats.size() <= 30

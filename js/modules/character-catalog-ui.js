@@ -6,7 +6,7 @@ function renderSheetCatalog() {
   sheetCatalogSignature='';
   const host=document.createElement('section');host.id='sheetFeatCatalog';host.className='sheet-catalog';
   host.innerHTML='<h3>Feats</h3><p role="status">Loading feat and spell choices…</p>';
-  document.getElementById('sheet-builder').appendChild(host);
+  document.getElementById('sheet-feats').appendChild(host);
   const spellHost=document.createElement('section');spellHost.id='sheetSpellCatalog';spellHost.className='sheet-catalog';
   document.getElementById('sheetSpellRows').before(spellHost);
   CharacterCatalog.load().then(()=>{if(sheetSession===session && document.getElementById('sheetFeatCatalog')===host)renderSheetCatalogControls();}).catch(error=>{
@@ -37,7 +37,8 @@ function renderCatalogSpellResults() {
   const host=document.getElementById('catalogSpellResults');if(!host)return;
   const get=id=>document.getElementById(id).value;
   const rows=CharacterCatalog.spells({edition:get('catalogSpellEdition'),classId:get('catalogSpellClass'),level:get('catalogSpellLevel'),search:get('catalogSpellSearch')});
-  host.innerHTML=`<p>${rows.length} matches${rows.length>60?' · Showing first 60; narrow your search':''}</p><div class="sheet-catalog-results">${rows.slice(0,60).map(s=>`<article><strong>${sheetEscape(s.name)}</strong> <span>${s.edition} · Level ${s.level} · ${sheetEscape(s.source)}</span><button type="button" data-add-catalog-spell="${sheetEscape(s.id)}">Add spell</button></article>`).join('')}</div>`;
+  host.innerHTML=`<p>${rows.length} matches${rows.length>60?' · Showing first 60; narrow your search':''}</p><div class="sheet-catalog-results">${rows.slice(0,60).map(s=>`<article><strong>${sheetEscape(s.name)}</strong> <span>${s.edition} · Level ${s.level} · ${sheetEscape(s.source)}</span><button type="button" class="sheet-info-button" data-spell-info="${sheetEscape(s.id)}" aria-label="Information about ${sheetEscape(s.name)}">i</button><button type="button" data-add-catalog-spell="${sheetEscape(s.id)}">Add spell</button></article>`).join('')}</div>`;
+  host.querySelectorAll('[data-spell-info]').forEach(button=>button.onclick=()=>openSpellInformation({catalogId:button.dataset.spellInfo}));
   host.querySelectorAll('[data-add-catalog-spell]').forEach(button=>button.onclick=()=>addCatalogSpells([button.dataset.addCatalogSpell]));
 }
 function addCatalogSpells(ids, preparedId='') {
