@@ -15,7 +15,7 @@ export function prepareCatalog(text) {
   const release=createHash('sha256').update(text).digest('hex');
   const parts=[];
   for(let i=0;i<text.length;i+=100000) parts.push(text.slice(i,i+100000));
-  return {release,parts,manifest:{format:1,release,parts:parts.length,spells:data.spells.length,feats:data.feats.length}};
+  return {release,parts,manifest:{format:1,metadataVersion:data.metadataVersion||1,release,parts:parts.length,spells:data.spells.length,feats:data.feats.length}};
 }
 export async function publishCatalog(db,prepared) {
   // Content-addressed releases are complete before the current pointer changes.

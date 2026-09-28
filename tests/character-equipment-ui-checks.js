@@ -16,7 +16,7 @@
   check('Equipment toggles preserve unsaved stats and calculate weapon damage',sheetSession.data.abilities.str===18&&document.getElementById('sheetLootAttacks').textContent.includes('1d8 + 5 slashing'));
   for(const el of document.querySelectorAll('#characterSheetForm input,select,textarea'))el.checkValidity=()=>true;
   await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');
-  check('Equipped and attuned states survive schema-eight save and reopen',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===8&&document.querySelector('[data-derived="ac"]').textContent==='11');
+  check('Equipped and attuned states survive schema-nine save and reopen',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===9&&document.querySelector('[data-derived="ac"]').textContent==='11');
   // Install listener test adapter only for this fixture; all callbacks are explicit.
   closeCharacterSheet(true);const listeners=[];equipmentSDK.onSnapshot=(q,next,error)=>{const l={next,error,stopped:false};listeners.push(l);return()=>l.stopped=true;};
   await openCharacterSheet('c1');

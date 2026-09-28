@@ -8,7 +8,7 @@ function renderSheetCatalog() {
   host.innerHTML='<h3>Feats</h3><p role="status">Loading feat and spell choices…</p>';
   document.getElementById('sheet-feats').appendChild(host);
   const spellHost=document.createElement('section');spellHost.id='sheetSpellCatalog';spellHost.className='sheet-catalog';
-  document.getElementById('sheetSpellRows').before(spellHost);
+  document.getElementById('sheetSpellEditor').before(spellHost);
   CharacterCatalog.load().then(()=>{if(sheetSession===session && document.getElementById('sheetFeatCatalog')===host)renderSheetCatalogControls();}).catch(error=>{
     if(sheetSession===session){host.innerHTML=`<h3>Feats</h3><p role="alert">${sheetEscape(error.message)}. Manual fields remain available.</p><button type="button" id="sheetRetryCatalog">Retry catalogue</button>`;host.querySelector('button').onclick=()=>CharacterCatalog.load().then(()=>{if(sheetSession===session)renderSheetCatalogControls();}).catch(e=>sheetStatus(e.message,true));}
   });
@@ -21,7 +21,7 @@ function renderSheetCatalogControls() {
   const feats=document.getElementById('sheetFeatCatalog'), spells=document.getElementById('sheetSpellCatalog');
   if(!feats || !spells)return;
   const editions='<option value="2014">2014</option><option value="2024">2024</option>';
-  feats.innerHTML=`<h3>Feat catalogue</h3><p>${esc(C.data.loadedFrom||'Rules catalogue')} · ${C.data.feats.length} feats. Supported sheet bonuses are calculated from your choices. Other effects remain manual; each feat shows its automation coverage. Choosing a feat does not spend an ASI.</p><div class="sheet-grid"><label class="sheet-field">Rules<select id="catalogFeatEdition">${editions}</select></label><label class="sheet-field">Find feat<input id="catalogFeatSearch" type="search" placeholder="Feat name"></label></div><div id="catalogFeatResults"></div><div id="catalogSelectedFeats"></div><div id="catalogFeatGrants"></div>`;
+  feats.innerHTML=`<h3>Feat catalogue</h3><p>${esc(C.data.loadedFrom||'Rules catalogue')} · ${C.data.feats.length} feats. Supported sheet bonuses are calculated from your choices. Other effects remain manual; each feat shows its automation coverage. Advancement choices are shared by feats and ASIs. Origin configuration is in Character builder.</p><div class="sheet-grid"><label class="sheet-field">Rules<select id="catalogFeatEdition">${editions}<option value="">Both editions</option></select></label><label class="sheet-field">Find feat<input id="catalogFeatSearch" type="search" placeholder="Feat name"></label></div><p id="sheetFeatBudget" role="status"></p><div id="catalogFeatResults"></div><div id="catalogSelectedFeats"></div><div id="catalogFeatGrants"></div>`;
   spells.innerHTML=`<h4>Choose spells from the catalogue</h4><p>2014 and 2024 entries are separate. Adding a spell does not check class progression, preparation limits or DM approval.</p><div class="sheet-grid"><label class="sheet-field">Rules<select id="catalogSpellEdition">${editions}<option value="">Both editions</option></select></label><label class="sheet-field">Class<select id="catalogSpellClass"><option value="">Any class</option>${['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard'].map(c=>`<option value="${c}">${c}</option>`).join('')}</select></label><label class="sheet-field">Level<select id="catalogSpellLevel"><option value="">Any level</option>${Array.from({length:10},(_,i)=>`<option value="${i}">${i||'Cantrip'}</option>`).join('')}</select></label><label class="sheet-field">Find spell<input id="catalogSpellSearch" type="search" placeholder="Spell name"></label></div><div id="catalogSpellResults"></div><button type="button" id="catalogLongRest">Long rest: reset spell slots & Magic Initiate uses</button>`;
   document.getElementById('catalogFeatEdition').value=sheetSession.data.build.edition;
   document.getElementById('catalogSpellEdition').value=sheetSession.data.build.edition;
@@ -54,10 +54,12 @@ function addCatalogSpells(ids, preparedId='') {
 function renderCatalogFeatResults() {
   const host=document.getElementById('catalogFeatResults');if(!host)return;
   const edition=document.getElementById('catalogFeatEdition').value, search=document.getElementById('catalogFeatSearch').value.toLowerCase();
-  const rows=CharacterCatalog.data.feats.filter(f=>f.edition===edition && f.name.toLowerCase().includes(search));
-  host.innerHTML=`<p>${rows.length} matches${rows.length>40?' · Showing first 40; narrow your search':''}</p><div class="sheet-catalog-results">${rows.slice(0,40).map(f=>`<article><strong>${sheetEscape(f.name)}</strong> <span>${f.edition} · ${sheetEscape(f.source)}${f.minimumLevel?' · Level '+f.minimumLevel+'+':''}</span><button type="button" data-add-catalog-feat="${sheetEscape(f.id)}">Choose feat</button></article>`).join('')}</div>`;
+  const scores=CharacterSheetModel.derive(sheetSession.data,sheetSession.identity.level).scores;
+  const rows=CharacterCatalog.data.feats.filter(f=>(!edition||f.edition===edition) && f.name.toLowerCase().includes(search));
+  host.innerHTML=`<p>${rows.length} matches${rows.length>40?' · Showing first 40; narrow your search':''}</p><div class="sheet-catalog-results">${rows.slice(0,40).map(f=>`<article><strong>${sheetEscape(f.name)}</strong> <span>${f.edition} · ${sheetEscape(f.source)}${f.minimumLevel?' · Level '+f.minimumLevel+'+':''}</span><button type="button" data-add-catalog-feat="${sheetEscape(f.id)}" ${CharacterPlayRules.eligible(sheetSession.data,sheetSession.identity.level,f,CharacterCatalog.data.feats,scores)?'disabled':''} title="${sheetEscape(CharacterPlayRules.eligible(sheetSession.data,sheetSession.identity.level,f,CharacterCatalog.data.feats,scores))}">Choose feat</button></article>`).join('')}</div>`;
   host.querySelectorAll('[data-add-catalog-feat]').forEach(button=>button.onclick=()=>{
     readSheetForm();const feat=CharacterCatalog.find(button.dataset.addCatalogFeat,'feats'),data=sheetSession.data;
+    const denied=CharacterPlayRules.eligible(data,Number(sheetSession.identity.level),feat,CharacterCatalog.data.feats,CharacterSheetModel.derive(data,Number(sheetSession.identity.level)).scores);if(denied){sheetStatus(denied,true);return;}
     if(feat.minimumLevel>Number(sheetSession.identity.level)){sheetStatus(`This feat requires level ${feat.minimumLevel}.`,true);return;}
     if(data.build.edition==='2014' && data.build.race==='variant-human' && feat.edition==='2014' && !data.build.raceFeat){data.build.raceFeat=feat.name;fillSheetForm();}
     else {
