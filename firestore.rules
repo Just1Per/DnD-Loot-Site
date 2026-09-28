@@ -385,16 +385,16 @@ match /characterSheets/{charId} {
     let d = request.resource.data;
     return exists(characterPath(campaignId, charId))
       && d.keys().hasOnly(['schemaVersion','revision','data','updatedAt','updatedBy'])
-      && d.schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9] && d.revision is int && d.revision > 0
+      && d.schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] && d.revision is int && d.revision > 0
       && d.updatedBy == request.auth.uid && d.updatedAt is int
       && d.data is map
-      && d.data.keys().hasOnly(['profile','advancement','equipmentState','rulesChoices','build','abilities','saves','skills','coins','slots','attacks','spells','inspiration','spellAbility',
+      && d.data.keys().hasOnly(['actions','profile','advancement','equipmentState','rulesChoices','build','abilities','saves','skills','coins','slots','attacks','spells','inspiration','spellAbility',
         'species','background','alignment','experience','appearance','personality','ideals','bonds','flaws','backstory',
         'allies','notes','features','languages','proficiencies','resistances','conditions','equipment','hitDice','resources',
         'ac','speed','hpMax','hpCurrent','hpTemp','initiativeBonus','spellAttackBonus','spellDCBonus','deathSuccess','deathFailure','passiveBonus'])
       && (d.schemaVersion == 1
         || (d.schemaVersion == 2 && d.data.build is map && d.data.build.edition == '2014')
-        || (d.schemaVersion in [3, 4, 5, 6, 7, 8, 9] && d.data.build is map && d.data.build.edition in ['2014', '2024']))
+        || (d.schemaVersion in [3, 4, 5, 6, 7, 8, 9, 10] && d.data.build is map && d.data.build.edition in ['2014', '2024']))
       && (d.schemaVersion < 4 || (d.data.rulesChoices is map
         && d.data.rulesChoices.keys().hasOnly(['feats','grants','effects'])
         && d.data.rulesChoices.feats is list && d.data.rulesChoices.feats.size() <= 30
@@ -411,6 +411,7 @@ match /characterSheets/{charId} {
         && d.data.advancement.keys().hasOnly(['asiSpent','lessons'])
         && d.data.advancement.asiSpent is int && d.data.advancement.asiSpent >= 0 && d.data.advancement.asiSpent <= 7
         && d.data.advancement.lessons is bool))
+      && (d.schemaVersion < 10 || (d.data.actions is list && d.data.actions.size() <= 60))
       && d.data.abilities is map && d.data.saves is map && d.data.skills is map && d.data.coins is map
       && d.data.attacks is list && d.data.attacks.size() <= 30
       && d.data.spells is list && d.data.spells.size() <= 150

@@ -6,6 +6,7 @@
  check('Story owns all physical fields and a single alignment dropdown',field('profile.gender').closest('[data-sheet-section]').id==='sheet-story'&&field('alignment').tagName==='SELECT'&&form.querySelectorAll('[name="alignment"]').length===1&&field('alignment').querySelectorAll('option').length===10);
  change('alignment','Chaotic Good');change('profile.hair','Silver');change('profile.height',181);
  check('Alignment immediately updates overview and explanatory text',document.getElementById('sheetOverviewReadout').textContent.includes('Chaotic Good')&&document.getElementById('sheetAlignmentHelp').textContent.includes('injustice'));
+ change('build.background','acolyte-2024');
  const story=document.querySelector('[data-story-choice="personality"]');story.value='0';story.onchange();check('Adobe story choice fills the saved text',field('personality').value===CharacterAdobeData.story.acolyte.personality[0]&&field('personality').readOnly);
  story.value='other';story.onchange();change('personality','My custom personality');check('Other unlocks custom text',!field('personality').readOnly&&sheetSession.data.personality==='My custom personality');
  change('build.edition','2014');change('build.race','half-orc');change('build.scoreMode','base');change('abilities.str',10);updateSheetCalculations();updateSheetCalculations();

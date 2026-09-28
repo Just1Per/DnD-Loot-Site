@@ -51,6 +51,7 @@ function closeCharacterSheet(force = false) {
     return false;
   ++sheetGeneration;
   closeSpellInformation();
+  closeAttackPicker();
   if(typeof stopEquipmentWatch!=='undefined'){stopEquipmentWatch?.();stopEquipmentWatch=null;}
   sheetSession = null;
   const dialog = document.getElementById('characterSheetDialog');
@@ -91,7 +92,8 @@ async function openCharacterSheet(characterId) {
         6,
         7,
         8,
-        9
+        9,
+        10
       ].includes(stored.schemaVersion))
       throw Error('This sheet uses a newer format. Update the website before editing it.');
     sheetSession = {
@@ -308,7 +310,7 @@ function renderCharacterSheet() {
     };
   });
   dialog.querySelector('#sheetRefreshLoot').onclick = event => runVaultButton(event.currentTarget, async () => { await refreshCampaignData(); watchSheetEquipment(); });
-  dialog.querySelector('#sheetAddAttack').onclick = () => addSheetRow('attacks');
+  dialog.querySelector('#sheetAddAttack').onclick = () => openAttackPicker();
   dialog.querySelector('#sheetAddSpell').onclick = () => addSheetRow('spells');
   dialog.querySelector('#sheetDamage').onclick = () => changeSheetHP('damage');
   dialog.querySelector('#sheetHeal').onclick = () => changeSheetHP('heal');
@@ -537,7 +539,7 @@ function exportCharacterSheet() {
   const s = sheetSession;
   const blob = new Blob([JSON.stringify({
       format: 'dnd-vault-character-sheet',
-      schemaVersion: 9,
+      schemaVersion: 10,
       character: s.identity,
       campaign: activeCampaign.name,
       data: s.data,

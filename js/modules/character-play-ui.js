@@ -6,14 +6,11 @@ function setupCharacterPlayUI(){
  const alignment=form.querySelector('[name="alignment"]');alignment.closest('label').remove();
  profile.insertAdjacentHTML('beforeend',f('Alignment','alignment','select',{values:[['','Choose alignment'],...Object.keys(CharacterPlayRules.alignments).map(x=>[x,x]),...(sheetSession.data.alignment&&!Object.hasOwn(CharacterPlayRules.alignments,sheetSession.data.alignment)?[[sheetSession.data.alignment,sheetSession.data.alignment+' (saved)']]:[])]})+'<p id="sheetAlignmentHelp" class="sheet-help"></p>');
  story.querySelector('h3').after(profile);
- const preset=document.createElement('label');preset.className='sheet-field';preset.innerHTML='<span>Personality suggestions from Adobe sheet</span><select id="sheetStoryPreset"><option value="acolyte">Acolyte · Adobe SRD table</option></select><small>The supplied PDF contains this one background table. These are optional writing prompts for any background.</small>';profile.after(preset);
+ const preset=document.createElement('p');preset.id='sheetStoryPreset';preset.className='sheet-help';profile.after(preset);
  for(const key of ['personality','ideals','bonds','flaws']){
-  const area=form.querySelector(`[name="${key}"]`),label=area.closest('label'),select=document.createElement('select');select.dataset.storyChoice=key;select.setAttribute('aria-label',key+' suggestion');
-  select.innerHTML='<option value="">Choose a suggestion</option>'+CharacterAdobeData.story.acolyte[key].map((v,i)=>`<option value="${i}">${sheetEscape(v)}</option>`).join('')+'<option value="other">Other — write my own</option>';
-  const index=CharacterAdobeData.story.acolyte[key].indexOf(sheetSession.data[key]);select.value=index>=0?String(index):sheetSession.data[key]?'other':'';
-  label.insertBefore(select,area);area.rows=3;area.readOnly=index>=0;
-  select.onchange=()=>{if(select.value==='other')area.readOnly=false;else{area.value=select.value===''?'':CharacterAdobeData.story.acolyte[key][Number(select.value)];area.readOnly=true;}area.dispatchEvent(new Event('input',{bubbles:true}));if(select.value==='other')area.focus();};
+  const area=form.querySelector(`[name="${key}"]`),select=document.createElement('select');select.dataset.storyChoice=key;select.setAttribute('aria-label',key+' suggestion');area.before(select);area.rows=3;
  }
+ updateStorySuggestions();
  const advancement=document.createElement('section');advancement.className='sheet-editor-box';advancement.innerHTML='<h4>Advancement</h4>'+f('ASI choices spent on ability scores instead of feats','advancement.asiSpent','number',{min:0,max:7})+'<p class="sheet-help">For 2014 ASIs already entered in your base scores, reserve their choices here. Do not also select an Ability Score Improvement feat for the same increase. Progression uses your selected single class and its level; multiclass progression is not yet supported.</p>'+f('Warlock: one invocation spent on Lessons of the First Ones','advancement.lessons','checkbox')+'<p class="sheet-help">2024 Warlock, level 2+: reserves one invocation for an Origin feat. This does not grant an extra general feat.</p>';
  document.getElementById('sheetBuildControls').appendChild(advancement);
  const spells=document.getElementById('sheet-spells'),sheet=document.createElement('section');sheet.id='sheetSpellReadout';spells.querySelector('h3').after(sheet);
@@ -22,6 +19,7 @@ function setupCharacterPlayUI(){
  const gear=document.createElement('section');gear.id='sheetGearPicker';gear.className='sheet-editor-box';document.getElementById('sheetInventory').before(gear);renderSheetGearPicker();
 }
 function updateCharacterPlayUI(d){
+ updateStorySuggestions();
  const s=sheetSession,help=document.getElementById('sheetAlignmentHelp');if(help)help.textContent=CharacterPlayRules.alignments[s.data.alignment]||'';
  const host=document.getElementById('sheetSpellReadout');if(!host)return;
  const esc=sheetEscape;

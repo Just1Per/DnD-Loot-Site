@@ -745,3 +745,12 @@
 #sheetInventory .sheet-owned-item { border:1px solid #aaa; border-radius:8px 2px; padding:10px; }
 #sheetInventory summary { cursor:pointer; font-weight:600; font-size:13px; padding:6px 0; }
 #sheetInventory details[open]>.item-card { margin-top:8px; }
+.sheet-attack-picker { width:min(850px,calc(100% - 30px)); max-height:90vh; overflow:auto; }
+.sheet-attack-picker header { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.sheet-attack-picker [hidden] { display:none!important; }
+.sheet-attack-picker .sheet-spell-heading strong { font:600 16px/1.4 sans-serif; }
+#sheetOverviewAddAttack { float:right; font:600 11px sans-serif; padding:5px 8px; }
+.sheet-action-controls { display:flex; gap:5px; margin:5px 0; }
+.sheet-action-controls button { font-size:11px; padding:3px 6px; }
+.sheet-action-unavailable { color:#934a26; }
+@media print { #sheetAttackPicker,.sheet-action-controls { display:none!important; } }

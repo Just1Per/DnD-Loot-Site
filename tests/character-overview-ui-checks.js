@@ -12,7 +12,7 @@
   check('Background info lists grants and overview uses its name',document.getElementById('sheetBackgroundSummary').textContent.includes('Tough')&&document.getElementById('sheetOverviewReadout').textContent.includes('Farmer'));
   change('build.background','soldier-2024');check('Gaming tool selector appears for Soldier',!form.querySelector('[name="build.backgroundTools.0"]').closest('label').hidden);
   change('build.backgroundTools.0','Dice set');for(const el of form.querySelectorAll('input,select,textarea'))el.checkValidity=()=>true;await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');await Promise.resolve();
-  check('Background tool selection survives schema-nine save and reopen',sheetSession.data.build.backgroundTools[0]==='Dice set'&&testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===9);
+  check('Background tool selection survives schema-ten save and reopen',sheetSession.data.build.backgroundTools[0]==='Dice set'&&testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===10);
   const spell=CharacterCatalog.spells({edition:'2024',search:'Fireball'}).find(s=>s.name==='Fireball');addCatalogSpells([spell.id]);document.querySelector('[data-spell-info-index="0"]').click();
   check('Saved spell info opens accessible dialog with description and edition',document.getElementById('sheetSpellInformation').open&&document.getElementById('sheetSpellInformation').textContent.includes('2024')&&document.getElementById('sheetSpellInformation').textContent.includes(spell.description.slice(0,40)));
   document.querySelector('#sheetSpellInformation button').click();check('Spell popup closes without changing spell selection',!document.getElementById('sheetSpellInformation')&&sheetSession.data.spells.length===1);

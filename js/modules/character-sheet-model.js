@@ -1,5 +1,6 @@
 /* Framework-independent character sheet data and calculations. */
 var CharacterSheetModel = (() => {
+  const Actions=typeof CharacterActions!=='undefined'?CharacterActions:require('./character-actions');
   const Play=typeof CharacterPlayRules!=='undefined'?CharacterPlayRules:require('./character-play-rules');
   const Rules = typeof CharacterRules !== 'undefined' ? CharacterRules : require('./character-rules');
   const Catalog = typeof CharacterCatalog !== 'undefined' ? CharacterCatalog : require('./character-catalog');
@@ -130,6 +131,7 @@ var CharacterSheetModel = (() => {
   function normalize(raw = {}) {
     raw = raw && typeof raw === 'object' ? raw : {};
     const result = {
+      actions: Actions.normalize(raw.actions),
       profile: Play.normalizeProfile(raw.profile),
       advancement: Play.normalizeAdvancement(raw.advancement),
       equipmentState: Equipment.choices(raw.equipmentState),
@@ -240,6 +242,7 @@ var CharacterSheetModel = (() => {
     };
     result.gear=Equipment.derive(d,result,loot);
     result.ac=result.gear.ac;
+    result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     return result;
   }
   function damage(data, amount) {
