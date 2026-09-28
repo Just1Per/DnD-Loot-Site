@@ -1,3 +1,5 @@
+> Current release: read-only Overview, separate Feats tab, spell information and 35 backgrounds. New saves use schema **8**. See [overview/background update](character-overview-backgrounds.md).
+
 > Latest equipment update: new saves use schema **7**; publish the current Firestore rules. See [campaign equipment](character-equipment.md) for loot integration, AC and weapon calculations. Earlier schema references below describe previous updates.
 
 # Feats and spells: install and test

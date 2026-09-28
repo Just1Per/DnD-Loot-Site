@@ -5,6 +5,7 @@ try {
  seed('player');closeCharacterSheet(true);delete testSheetDocs['campaigns/a/characterSheets/c1'];testSheetDocs['campaigns/a/characters/c1']={name:'Thorin',class:'Fighter',level:7,userId:'player'};
  await openCharacterSheet('c1');await Promise.resolve();let form=document.getElementById('characterSheetForm');
  const change=(name,value)=>{const el=form.querySelector(`[name="${name}"]`);el.value=value;el.dispatchEvent(new Event('change',{bubbles:true}));};
+ selectSheetTab('combat');
  change('build.race','human-2024');change('build.humanOriginFeat','Lucky');
  check('Human Origin Lucky exposes a three-point pool directly on the combat page',document.getElementById('sheetFeatResources').textContent.includes('3 / 3')&&!document.getElementById('sheet-combat').hidden);
  const use=()=>document.querySelector('[data-combat-feat="origin-human"][data-delta="1"]');
@@ -13,7 +14,7 @@ try {
  document.querySelector('[data-combat-feat="origin-human"][data-delta="-1"]').onclick();
  check('Undo restores one point, not the entire pool',sheetSession.data.rulesChoices.effects['origin-human'].used===2);
  for(const el of form.querySelectorAll('input,select,textarea'))el.checkValidity=()=>true;await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');await Promise.resolve();form=document.getElementById('characterSheetForm');
- check('Multiple spent points survive schema-seven save and reopen',sheetSession.data.rulesChoices.effects['origin-human'].used===2&&testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===7&&document.getElementById('sheetFeatResources').textContent.includes('1 / 3'));
+ check('Multiple spent points survive schema-eight save and reopen',sheetSession.data.rulesChoices.effects['origin-human'].used===2&&testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===8&&document.getElementById('sheetFeatResources').textContent.includes('1 / 3'));
  document.querySelector('[data-combat-recover="short"]').onclick();check('Short rest does not refill Lucky',sheetSession.data.rulesChoices.effects['origin-human'].used===2);
  const hp=sheetSession.data.hpCurrent;sheetSession.data.rulesChoices.grants.human={classId:'wizard',ability:'int',spells:['','',''],used:1};document.querySelector('[data-combat-recover="long"]').onclick();
  check('Long-rest feat reset restores Lucky and Magic Initiate without healing',sheetSession.data.rulesChoices.effects['origin-human'].used===0&&sheetSession.data.rulesChoices.grants.human.used===0&&sheetSession.data.hpCurrent===hp);

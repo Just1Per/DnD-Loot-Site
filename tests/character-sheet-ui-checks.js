@@ -5,7 +5,7 @@ try {
  check('Players have a character sheet entry point',!!document.querySelector('.btn-sheet-char'));
  testSheetDocs['campaigns/a/characters/c1']={name:'Thorin',class:'Fighter',level:7,userId:'player'};
  await openCharacterSheet('c1');
- check('Sheet opens for own character in its dedicated page with all seven sections',document.getElementById('characterSheetDialog').tagName==='SECTION'&&document.querySelectorAll('[data-sheet-section]').length===7);
+ check('Sheet opens for own character in its dedicated page with all eight sections',document.getElementById('characterSheetDialog').tagName==='SECTION'&&document.querySelectorAll('[data-sheet-section]').length===8);
  check('Inventory section contains only this character’s loot',document.querySelectorAll('#sheetInventory .item-card').length===1&&document.querySelector('#sheetInventory .inventory-quantity').textContent==='Owned: 2');
  const form=document.getElementById('characterSheetForm');for(const el of form.querySelectorAll('input,select,textarea'))el.checkValidity=()=>true;
  form.querySelector('[name="abilities.dex"]').value='18';form.querySelector('[name="abilities.dex"]').dispatchEvent(new Event('input',{bubbles:true}));

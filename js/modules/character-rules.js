@@ -1,6 +1,7 @@
 /* Original engine and structured adaptations of SRD 5.1 (CC BY 4.0).
  * See rules-attribution.html for source and license. No Acrobat scripts execute here. */
 var CharacterRules = (() => {
+  const Backgrounds=typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds:require('./character-backgrounds');
   const races = {
     'dragonborn': {
       name: 'Dragonborn',
@@ -978,7 +979,9 @@ var CharacterRules = (() => {
       edition: b.edition === '2024' ? '2024' : '2014',
       race: own(races, b.race) ? b.race : '',
       classId: classes[b.classId] ? b.classId : '',
-      background: b.background === 'acolyte' || own(Modern.backgrounds, b.background) ? b.background : '',
+      background: Backgrounds.get(b.background) ? b.background : '',
+      backgroundTools: [0,1].map(i=>String(b.backgroundTools?.[i]||'').slice(0,120)),
+      backgroundReplacementSkills: [0,1].map(i=>String(b.backgroundReplacementSkills?.[i]||'').slice(0,40)),
       backgroundPattern: b.backgroundPattern === '111' ? '111' : '21',
       backgroundAbilities: Array.from({ length: 3 }, (_, i) => abilityKeys.includes(b.backgroundAbilities?.[i]) ? b.backgroundAbilities[i] : ''),
       standardLanguages: Array.from({ length: 2 }, (_, i) => Modern.standardLanguages.includes(b.standardLanguages?.[i]) ? b.standardLanguages[i] : ''),
@@ -1244,16 +1247,7 @@ var CharacterRules = (() => {
         }
       }
     }
-    if (b.background === 'acolyte' && b.edition === '2014') {
-      result.skills.push('insight', 'religion');
-      result.traits.push('Shelter of the Faithful: receive support from temples of your faith; discuss available aid with your DM.');
-      for (const lang of b.backgroundLanguages) {
-        if (lang && !result.languages.includes(lang))
-          result.languages.push(lang);
-        else
-          result.warnings.push('Choose two different additional background languages.');
-      }
-    }
+    Backgrounds.apply(result,b,data,skillNames,tools,languages,instruments);
     if (b.edition === '2014' && races[b.race]?.edition === '2024')
       result.warnings.push('This species requires 2024 rules. Change rules version or select a 2014 race.');
     if (b.edition === '2014' && Modern.backgrounds[b.background])
