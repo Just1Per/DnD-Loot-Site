@@ -45,9 +45,7 @@ function createCard(item,context={}) {
     ${manager&&!entry&&owned.length?`<div class="owner-badge">${owned.map(e=>`${escapeHtml(characters.find(c=>c.id===e.characterId)?.name||'Character')} × ${e.quantity}`).join(' · ')}</div>`:''}
     <div class="card-footer">${root?'Root Catalogue':'D&D Campaign Vault'}</div>`;
   const on=(selector,work)=>card.querySelector(selector)?.addEventListener('click',event=>{
-    // The existing item editor is outside the sheet's native dialog. Close the
-    // sheet first, preserving its unsaved-change confirmation.
-    if(event.currentTarget.closest('#sheetInventory') && ['.edit-button','.clone-button'].includes(selector) && !closeCharacterSheet())return;
+    // The page-based sheet keeps its draft while the item editor is open.
     return runVaultButton(event.currentTarget,work);
   });
   on('.edit-button',()=>{closeCharacterLoot();openItemModal(item,{scope:root?'root':'campaign'});});
@@ -77,7 +75,7 @@ function createCard(item,context={}) {
   });return card;
 }
 function rootItemData(item) {
-  const allowed=['name','description','category','rarity','source','quote','attunement','classes','properties','imageUrl','imageBaseId'];
+  const allowed=['mechanics','name','description','category','rarity','source','quote','attunement','classes','properties','imageUrl','imageBaseId'];
   return Object.fromEntries(allowed.filter(k=>item[k]!==undefined).map(k=>[k,item[k]]));
 }
 function buildModalClassCheckboxes(selected=[]) {
@@ -103,6 +101,7 @@ function openItemModal(item=null,{scope='campaign'}={}) {
     <small>Set how many additional copies are available. Already-owned copies are separate. New and cloned items start hidden, with one copy, for DM assignment only.</small>`:''}`;
   const unlimited=options.querySelector('#modal-unlimited');const remaining=options.querySelector('#modal-remaining');
   if(unlimited){const sync=()=>{remaining.disabled=unlimited.checked;};unlimited.addEventListener('change',sync);sync();}
+  renderItemMechanicsEditor(item);
   document.getElementById('itemModal').style.display='flex';
 }
 function closeItemModal(){document.getElementById('itemModal').style.display='none';itemEditor=null;}
@@ -112,6 +111,7 @@ async function saveItemModal() {
     if(editor.scope==='campaign'&&activeCampaign?.id!==editor.campaignId)throw Error('The active campaign changed. Reopen the editor.');
     const item={};for(const key of ['name','category','rarity','source','description','quote'])item[key]=document.getElementById(`modal-${key}`).value;
     if(!item.name.trim())throw Error('Name is required.');
+    item.mechanics=readItemMechanicsEditor();
     item.attunement=document.getElementById('modal-attunement').checked;item.properties=getPropertiesFromEditor();item.classes=[...document.querySelectorAll('#modal-classes input:checked')].map(i=>i.value);item.imageUrl=document.getElementById('modal-imageUrl').value.trim();item.imageBaseId=editor.imageBaseId;
     if(item.imageUrl&&!/^https:\/\//i.test(item.imageUrl))throw Error('Image URL must use HTTPS.');
     const file=document.getElementById('modal-imageFile').files?.[0];

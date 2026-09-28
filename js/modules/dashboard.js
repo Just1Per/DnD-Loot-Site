@@ -256,9 +256,10 @@ async function enterCampaign(campaign) {
 }
 
 async function leaveCampaign() {
+  if (!closeCharacterSheet()) return;
   ++campaignLoadGeneration;
   items = []; inventory = []; campaignSupply = {};
-  closeCharacterSheet(true); closeVaultAction(); closeRootPicker(); closeItemModal();
+  closeVaultAction(); closeRootPicker(); closeItemModal();
   closeCharacterLoot();
   closeWishModal();
   closeEditCharacterModal();
@@ -296,6 +297,8 @@ function showMainApp() {
   const main = document.getElementById("mainApp");
   if (main) main.style.display = "block";
 
+  const sheetTab = document.getElementById("characterSheetTab");
+  if (sheetTab) sheetTab.style.display = (canUseCharacters() || canManageCampaign()) ? "inline-block" : "none";
   const playerTab  = document.getElementById("playerTab");
   const dmTab      = document.getElementById("dmTab");
   const adminTab   = document.getElementById("adminTab");

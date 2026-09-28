@@ -5,7 +5,7 @@ try {
  check('Players have a character sheet entry point',!!document.querySelector('.btn-sheet-char'));
  testSheetDocs['campaigns/a/characters/c1']={name:'Thorin',class:'Fighter',level:7,userId:'player'};
  await openCharacterSheet('c1');
- check('Sheet opens for own character with all six sections',document.getElementById('characterSheetDialog').open&&document.querySelectorAll('[data-sheet-section]').length===6);
+ check('Sheet opens for own character in its dedicated page with all seven sections',document.getElementById('characterSheetDialog').tagName==='SECTION'&&document.querySelectorAll('[data-sheet-section]').length===7);
  check('Inventory section contains only this character’s loot',document.querySelectorAll('#sheetInventory .item-card').length===1&&document.querySelector('#sheetInventory .inventory-quantity').textContent==='Owned: 2');
  const form=document.getElementById('characterSheetForm');for(const el of form.querySelectorAll('input,select,textarea'))el.checkValidity=()=>true;
  form.querySelector('[name="abilities.dex"]').value='18';form.querySelector('[name="abilities.dex"]').dispatchEvent(new Event('input',{bubbles:true}));
@@ -29,7 +29,7 @@ try {
  window.confirm=()=>false;check('Closing dirty sheet can be canceled',closeCharacterSheet()===false&&!!sheetSession);window.confirm=()=>true;
  closeCharacterSheet(true);check('Forced close clears private data and DOM',sheetSession===null&&!document.getElementById('characterSheetDialog'));
  await openCharacterSheet('c2');check('Other player sheet cannot be opened from UI',!document.getElementById('characterSheetDialog'));
- seed('dm');await openCharacterSheet('c1');check('DM can open player sheet',!!sheetSession&&document.getElementById('sheetTitle').textContent==='Thorin');document.querySelector('#sheetInventory .edit-button').click();check('Inventory editing closes the sheet before opening item editor',!sheetSession&&document.getElementById('itemModal').style.display==='flex');closeItemModal();
+ seed('dm');await openCharacterSheet('c1');check('DM can open player sheet',!!sheetSession&&document.getElementById('sheetTitle').textContent==='Thorin');document.querySelector('#sheetInventory .edit-button').click();check('Inventory editing preserves the page sheet while opening item editor',!!sheetSession&&document.getElementById('itemModal').style.display==='flex');closeItemModal();closeCharacterSheet(true);
  seed('player');testSheetFail=true;await openCharacterSheet('c1');check('Permission failure is actionable without exposing sheet',sheetSession===null&&document.getElementById('sheetStatus').textContent.includes('Firestore rules'));testSheetFail=false;closeCharacterSheet(true);
 }catch(e){results.push({name:e.stack,pass:false});}
 document.getElementById('test-results').textContent=JSON.stringify(results,null,2);

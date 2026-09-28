@@ -67,3 +67,6 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# Reproducible catalogue download cache
+scripts/.source-cache/

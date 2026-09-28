@@ -1,6 +1,12 @@
+> Latest equipment update: new saves use schema **7**; publish the current Firestore rules. See [campaign equipment](character-equipment.md) for loot integration, AC and weapon calculations. Earlier schema references below describe previous updates.
+
+> This document describes the first sheet release. For the current builder and catalogue additions, see [character-rules-engine.md](character-rules-engine.md) and [rules-catalog.md](rules-catalog.md).
+
 # Character sheets: first functional release
 
-Branch: `feature/character-sheets`.
+Initial release: `feature/character-sheets`.
+
+The follow-up `feature/character-rules-engine` adds a structured builder with 2024 defaults and labelled 2014 options; see [character-rules-engine.md](character-rules-engine.md).
 
 Open **My Character → Character sheet**, or **DM Panel → Characters → Character sheet**. Existing characters need no migration. An empty sheet is created only when first saved.
 
@@ -56,3 +62,31 @@ Tests use a demo Firebase project, not production. DOM checks use linkedom and t
 - Existing player and DM modules provide entry buttons; campaign switching/logout clears the private dialog.
 
 Tests and documentation are excluded from Firebase Hosting uploads. The functions folder and deployment workflows are unchanged.
+
+## Full-page Character sheet tab
+
+The main navigation now has **Character sheet** immediately after **My Character**.
+The existing character-card and DM-roster buttons open this same page. It is no
+longer a native dialog or a viewport-height scrolling overlay.
+
+The default Overview shows abilities, saving throws, skills, vitals and combat
+fields together. The paper styling and ability column follow the supplied Adobe
+sheet's organization. Identity fields span the page; Character builder and feats
+have a dedicated internal tab. Spells, inventory and story keep their own views.
+The page uses the available width and stacks columns on smaller screens.
+
+A character selector lists only the player's own characters (the campaign DM may
+choose campaign characters). Opening the main tab defaults to the active character
+or the first available character. Empty campaigns link to My Character.
+
+Switching main tabs preserves the live form and unsaved draft. Choosing a different
+character or leaving the campaign asks before discarding changes. Opening an item
+editor from the sheet inventory now preserves the sheet too. Logout and forced
+campaign cleanup remove both private sheet content and chooser names. Printing
+supports the sheet's new location within the application rather than as a direct
+child of the document body.
+
+No database schema or Firestore rules changes are needed for this layout update;
+the subsequent feat-resource update uses schema 6. Automated DOM tests cover navigation, field
+uniqueness, privacy, empty campaigns, draft preservation, character switching and
+DM entry points. Full browser/mobile visual acceptance remains for the preview.

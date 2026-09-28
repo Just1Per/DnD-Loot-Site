@@ -5,7 +5,8 @@
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 
-function showTab(tabId) {
+function showTab(tabId, render = true) {
+  if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
   if (tabId === "admin") { openAdminView(); return; }
   if (tabId === "dm" && (!activeCampaign || !canManageCampaign())) return;
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
@@ -16,6 +17,7 @@ function showTab(tabId) {
   if (panel) panel.style.display="block";
   if (tabId==="admin")   { renderUserTable(); renderAdminStats(); }
   if (tabId==="dm")      { renderDMTools(); }
+  if (tabId==="character-sheet" && render) { renderCharacterSheetTab(); }
   if (tabId==="player")  { renderPlayerTab(); }
   if (tabId==="library") { renderVisibilityControls(); }
 }

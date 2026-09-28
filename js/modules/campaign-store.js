@@ -25,6 +25,7 @@ function createCampaignStore(sdk) {
     if (imageUrl && !/^https:\/\//i.test(imageUrl))
       fail('Image URL must use HTTPS.');
     return {
+      ...(v.mechanics ? {mechanics:(typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment')).normalize(v.mechanics)} : {}),
       name: name.slice(0, 200),
       description: String(v.description || '').slice(0, 30000),
       category: String(v.category || ''),
@@ -80,6 +81,22 @@ function createCampaignStore(sdk) {
         updatedAt: Date.now()
       });
     });
+    // Refresh private owned copies too, including hidden campaign items. Each
+    // transaction rereads the record, so concurrent consume/transfer cannot be undone.
+    try {
+      const owned = await getDocs(query(collection(db, 'campaigns', id(d.campaignId), 'inventory'), where('itemId', '==', key)));
+      for (let offset = 0; offset < owned.docs.length; offset += 20) {
+        await Promise.all(owned.docs.slice(offset, offset + 20).map(record => runTransaction(db, async tx => {
+          await access(tx, d.campaignId, true);
+          const currentItem = await tx.get(ref(d.campaignId, 'items', key));
+          const ownedRef = ref(d.campaignId, 'inventory', record.id), currentOwned = await tx.get(ownedRef);
+          if (currentItem.exists() && currentOwned.exists() && currentOwned.data().itemId === key)
+            tx.update(ownedRef, {item: currentItem.data()});
+        })));
+      }
+    } catch (error) {
+      throw Error('Item saved, but some owned copies could not be refreshed. Reopen the item editor and save again to retry. ' + error.message);
+    }
     return { itemId: key };
   }
   async function copyItem(d) {
