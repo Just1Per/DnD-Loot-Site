@@ -1,6 +1,7 @@
 {
   "format": 1,
-  "release": "25c40fd9b49dfb53da6cf08e3c6b9c500dfd93db9beac7bfd88478ac49164312",
+  "metadataVersion": 2,
+  "release": "956ee7a3c1e44dd853931e0aa35e9dbe94c775fb8ce354327a23ec9064f06f4d",
   "spells": 969,
   "feats": 302,
   "spellSources": {

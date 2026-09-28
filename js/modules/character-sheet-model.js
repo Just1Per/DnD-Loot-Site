@@ -1,5 +1,6 @@
 /* Framework-independent character sheet data and calculations. */
 var CharacterSheetModel = (() => {
+  const Play=typeof CharacterPlayRules!=='undefined'?CharacterPlayRules:require('./character-play-rules');
   const Rules = typeof CharacterRules !== 'undefined' ? CharacterRules : require('./character-rules');
   const Catalog = typeof CharacterCatalog !== 'undefined' ? CharacterCatalog : require('./character-catalog');
   const Feats=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
@@ -129,6 +130,8 @@ var CharacterSheetModel = (() => {
   function normalize(raw = {}) {
     raw = raw && typeof raw === 'object' ? raw : {};
     const result = {
+      profile: Play.normalizeProfile(raw.profile),
+      advancement: Play.normalizeAdvancement(raw.advancement),
       equipmentState: Equipment.choices(raw.equipmentState),
       build: Rules.normalize(raw.build),
       rulesChoices: Catalog.normalize(raw.rulesChoices),

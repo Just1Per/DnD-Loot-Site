@@ -22,9 +22,9 @@ const M=require('../js/modules/character-sheet-model');const {createCharacterShe
  await check('forged author and unsupported versions denied',async()=>{await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,updatedBy:'dm'}));await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,schemaVersion:99}));});
  await check('unbounded or malformed row containers denied',()=>assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,'data.spells':Array(151).fill({})})));
  await check('old clients cannot downgrade a rules-engine sheet',()=>assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:4,schemaVersion:1})));
- await check('2024 sheets save and reload with schema-eight protection',async()=>{const modern=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:'Tough',background:'criminal-2024',backgroundAbilities:['dex','con']}});await store.player.save({...payload,revision:3,data:modern});const saved=await store.player.load('a','c1');assert.equal(saved.schemaVersion,8);assert.equal(saved.data.build.humanOriginFeat,'Tough');});
+ await check('2024 sheets save and reload with schema-nine protection',async()=>{const modern=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:'Tough',background:'criminal-2024',backgroundAbilities:['dex','con']}});await store.player.save({...payload,revision:3,data:modern});const saved=await store.player.load('a','c1');assert.equal(saved.schemaVersion,9);assert.equal(saved.data.build.humanOriginFeat,'Tough');});
  await check('legacy clients cannot downgrade a 2024 sheet or forge its edition',async()=>{await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:5,schemaVersion:2,'data.build.edition':'2014'}));await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:5,'data.build.edition':'2099'}));});
- await check('switching rules back to 2014 retains schema-eight protection',async()=>{await store.player.save({...payload,revision:4});assert.equal((await store.player.load('a','c1')).schemaVersion,8);});
+ await check('switching rules back to 2014 retains schema-nine protection',async()=>{await store.player.save({...payload,revision:4});assert.equal((await store.player.load('a','c1')).schemaVersion,9);});
  await check('concurrent identity changes are not overwritten',async()=>{await updateDoc(doc(db.dm,'campaigns/a/characters/c1'),{name:'Renamed'});await assert.rejects(store.player.save({...payload,revision:5}),/Character details changed/);});
  await check('archived character retains private sheet',async()=>{await updateDoc(doc(db.dm,'campaigns/a/characters/c1'),{active:false});await assertSucceeds(getDoc(doc(db.player,'campaigns/a/characterSheets/c1')));});
  await check('missing character cannot receive an orphan sheet',()=>assertFails(setDoc(doc(db.owner,'campaigns/a/characterSheets/missing'),{schemaVersion:1,revision:1,data:M.normalize(),updatedAt:1,updatedBy:'owner'})));
@@ -58,10 +58,11 @@ const M=require('../js/modules/character-sheet-model');const {createCharacterShe
    await assertFails(updateDoc(doc(db.dm,'campaigns/a/characterSheets/c1'),{revision:8,'data.equipmentState.loadout':Array(201).fill({})}));
    await assertFails(updateDoc(doc(db.dm,'campaigns/a/characterSheets/c1'),{revision:8,'data.equipmentState.mechanics':{acBonus:99}}));
  });
+ await check('schema-eight cannot erase new profile data',async()=>{await assertFails(updateDoc(doc(db.dm,'campaigns/a/characterSheets/c1'),{revision:8,schemaVersion:8}));});
  await check('schema-seven clients cannot erase expanded background choices',async()=>{
    await assertFails(updateDoc(doc(db.dm,'campaigns/a/characterSheets/c1'),{revision:8,schemaVersion:7}));
    await assertSucceeds(updateDoc(doc(db.dm,'campaigns/a/characterSheets/c1'),{revision:8,'data.build.background':'artisan-2024','data.build.backgroundTools':['Smith’s tools',''],'data.build.backgroundReplacementSkills':['arcana','']}));
-   const saved=(await getDoc(doc(db.dm,'campaigns/a/characterSheets/c1'))).data();assert.equal(saved.schemaVersion,8);assert.equal(saved.data.build.backgroundTools[0],'Smith’s tools');
+   const saved=(await getDoc(doc(db.dm,'campaigns/a/characterSheets/c1'))).data();assert.equal(saved.schemaVersion,9);assert.equal(saved.data.build.backgroundTools[0],'Smith’s tools');
  });
  await env.cleanup();console.log(`SUCCESS ${n} sheet permission/persistence checks`);
 })().catch(e=>{console.error(e);process.exit(1)});

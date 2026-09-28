@@ -17,7 +17,7 @@ function renderCharacterOverview(d) {
   <section class="sheet-summary-box"><h4>Armor & defenses</h4><p>${esc(d.gear.baseLabel)} ${d.gear.base} · shield ${d.gear.shield} · items ${sign(d.gear.bonus)} · Defense ${sign(d.gear.defense)} · adjustment ${sign(d.gear.adjustment)}</p><p><strong>Conditions:</strong> ${esc(s.data.conditions||'None recorded')}</p><p><strong>Resistances:</strong> ${esc([...e.resistances,s.data.resistances].filter(Boolean).join('; ')||'—')}</p><p><strong>Death saves:</strong> ${s.data.deathSuccess} successes / ${s.data.deathFailure} failures · <strong>Hit dice:</strong> ${esc(s.data.hitDice||'—')}</p></section>
   <section class="sheet-summary-box"><h4>Attacks</h4><div class="sheet-summary-table-wrap"><table><thead><tr><th>Weapon / action</th><th>To hit</th><th>Damage</th><th>Range</th></tr></thead><tbody>${attacks.join('')||'<tr><td colspan="4">Equip a looted weapon in Inventory or add an action in Combat.</td></tr>'}</tbody></table></div></section>
   <section class="sheet-summary-box"><h4>Proficiencies & languages</h4><p>${esc([...e.proficiencies,s.data.proficiencies].filter(Boolean).join(' · ')||'—')}</p><p>${esc([...e.languages,s.data.languages].filter(Boolean).join(' · ')||'—')}</p></section>
-  <section class="sheet-summary-box"><h4>Features & resources</h4><p>${esc((e.originFeats||[]).join(' · ')||'No Origin feats selected')}</p><p class="sheet-rule-text">${esc(s.data.resources||s.data.features||'Manage feat resources in Combat and feat choices in Feats.')}</p>${d.feats.reports.filter(r=>CharacterFeatRules.resource(r.def,s.identity.level)).map(r=>{const v=CharacterFeatRules.resource(r.def,s.identity.level);return `<p>${esc(r.def.name)}: ${Math.max(0,v.max-r.choice.used)} / ${v.max}</p>`;}).join('')}</section></div></div><p class="sheet-help">Overview is read-only. Edit identity and background in Character builder, scores in Abilities & skills, and HP/actions in Combat.</p>`;
+  <section class="sheet-summary-box"><h4>Features & resources</h4><p>${esc((e.originFeats||[]).join(' · ')||'No Origin feats selected')}</p><p class="sheet-rule-text">${esc(s.data.resources||s.data.features||'Manage feat resources in Combat and feat choices in Character builder.')}</p>${d.feats.reports.filter(r=>CharacterFeatRules.resource(r.def,s.identity.level)).map(r=>{const v=CharacterFeatRules.resource(r.def,s.identity.level);return `<p>${esc(r.def.name)}: ${Math.max(0,v.max-r.choice.used)} / ${v.max}</p>`;}).join('')}</section></div></div><p class="sheet-help">Overview is read-only. Edit identity and background in Character builder, scores in Abilities & skills, and HP/actions in Combat.</p>`;
 }
 function closeSpellInformation(){const d=document.getElementById('sheetSpellInformation');if(d){if(d.open)d.close();d.remove();}}
 function openSpellInformation({catalogId='',index=null}={}) {
@@ -31,12 +31,12 @@ function openSpellInformation({catalogId='',index=null}={}) {
   document.body.appendChild(d);d.querySelector('button').onclick=closeSpellInformation;d.addEventListener('click',event=>{if(event.target===d)closeSpellInformation();});d.showModal();d.querySelector('button').focus();
 }
 function moveOriginFeatControls() {
- const form=document.getElementById('characterSheetForm'),host=document.getElementById('sheet-feats');
+ const form=document.getElementById('characterSheetForm'),host=document.getElementById('sheetBuildControls');
  const modern=document.createElement('section');modern.id='sheetOriginFeatChoices';modern.innerHTML='<h3>Origin feat choices</h3><p>Your background grants its listed feat automatically. Make additional Human or custom-background choices here.</p>';
  const legacy=document.createElement('section');legacy.id='sheetLegacyFeatChoice';legacy.innerHTML='<h3>Variant Human feat</h3>';
  for(const name of ['build.backgroundFeat','build.humanOriginFeat',...[0,1,2].flatMap(i=>[`build.backgroundFeatChoices.${i}`,`build.humanFeatChoices.${i}`])]){const label=form.querySelector(`[name="${name}"]`)?.closest('label');if(label)modern.appendChild(label);}
  const race=form.querySelector('[name="build.raceFeat"]')?.closest('label');if(race)legacy.appendChild(race);
- host.prepend(modern,legacy);
+ host.append(modern,legacy);
 }
 function updateBackgroundControls(d) {
  const b=sheetSession.data.build,bg=CharacterBackgrounds.get(b.background),form=document.getElementById('characterSheetForm'),R=CharacterRules;
@@ -52,7 +52,53 @@ function updateBackgroundControls(d) {
  document.getElementById('sheetBackgroundChoices').hidden=!count;
  for(let i=0;i<2;i++)form.querySelector(`[name="build.backgroundLanguages.${i}"]`).closest('label').hidden=i>=count;
  const summary=document.getElementById('sheetBackgroundSummary');
- summary.innerHTML=bg?`<h4>${sheetEscape(bg.name)} · ${bg.edition}</h4><p><strong>Skills:</strong> ${bg.skills.map(k=>sheetEscape(CharacterSheetModel.skills[k]?.[0]||k)).join(', ')}</p><p><strong>Tools:</strong> ${sheetEscape([...bg.fixedTools.map(t=>CharacterBackgrounds.toolName(t,R.tools)),...bg.toolChoices.map(t=>({anyArtisansTool:'Choose one artisan tool',anyMusicalInstrument:'Choose one musical instrument',anyGamingSet:'Choose one gaming set',merchant:'Choose artisan/navigator tools or one extra language'}[t]))].join(', ')||'None')}</p><p><strong>Additional languages:</strong> ${count}</p>${bg.abilities?`<p><strong>Ability increases:</strong> +2/+1 or +1/+1/+1 among ${bg.abilities.map(k=>CharacterSheetModel.abilities[k]).join(', ')}; capped at 20 in Base mode.</p><p><strong>Origin feat:</strong> ${sheetEscape(bg.feat)}. See Feats for choices and automation.</p>`:`<p><strong>Feature:</strong> ${sheetEscape(bg.feature)}. Narrative benefits require DM agreement.${b.edition==='2024'?' Your 2024 rules additionally grant background ability increases and an Origin feat choice in Feats.':' No background ability increase or Origin feat under 2014 rules.'}</p>`}<p class="sheet-help">${bg.source}, p. ${bg.page}. Skills, tools, languages and supported feat effects are derived from your selections. Starting equipment is not added to campaign loot automatically; arrange it with the DM.</p>`:'<p>Custom background: record skills and tools in Abilities & skills / Combat notes. Under 2024 rules, select ability increases here and an Origin feat in Feats.</p>';
+ summary.innerHTML=bg?`<h4>${sheetEscape(bg.name)} · ${bg.edition}</h4><p><strong>Skills:</strong> ${bg.skills.map(k=>sheetEscape(CharacterSheetModel.skills[k]?.[0]||k)).join(', ')}</p><p><strong>Tools:</strong> ${sheetEscape([...bg.fixedTools.map(t=>CharacterBackgrounds.toolName(t,R.tools)),...bg.toolChoices.map(t=>({anyArtisansTool:'Choose one artisan tool',anyMusicalInstrument:'Choose one musical instrument',anyGamingSet:'Choose one gaming set',merchant:'Choose artisan/navigator tools or one extra language'}[t]))].join(', ')||'None')}</p><p><strong>Additional languages:</strong> ${count}</p>${bg.abilities?`<p><strong>Ability increases:</strong> +2/+1 or +1/+1/+1 among ${bg.abilities.map(k=>CharacterSheetModel.abilities[k]).join(', ')}; capped at 20 in Base mode.</p><p><strong>Origin feat:</strong> ${sheetEscape(bg.feat)}. Choose the origin in Character builder; see Feats for its effects.</p>`:`<p><strong>Feature:</strong> ${sheetEscape(bg.feature)}. Narrative benefits require DM agreement.${b.edition==='2024'?' Your 2024 rules additionally grant background ability increases and an Origin feat choice in Character builder.':' No background ability increase or Origin feat under 2014 rules.'}</p>`}<p class="sheet-help">${bg.source}, p. ${bg.page}. Skills, tools, languages and supported feat effects are derived from your selections. Starting equipment is not added to campaign loot automatically; arrange it with the DM.</p>`:'<p>Custom background: record skills and tools in Abilities & skills / Combat notes. Under 2024 rules, select ability increases here and an Origin feat in Character builder.</p>';
  document.getElementById('sheetOriginFeatChoices').hidden=b.edition!=='2024';
  document.getElementById('sheetLegacyFeatChoice').hidden=b.edition!=='2014'||b.race!=='variant-human';
+}
+function refineCharacterBuilder() {
+ const root=document.getElementById('sheetBuildControls');
+ const group=(title,nodes)=>{const section=document.createElement('section');section.className='sheet-builder-group sheet-editor-box';const heading=document.createElement('h4');heading.textContent=title;section.appendChild(heading);for(const node of nodes)if(node)section.appendChild(node);root.appendChild(section);return section;};
+ const grids=[...root.children];
+ group('Rules & character',[grids.find(n=>n.classList.contains('sheet-grid')),document.getElementById('sheetManualIdentity')]);
+ const race=group('Species & ancestry choices',[...root.querySelectorAll(':scope > [data-build-for]'),document.getElementById('sheetRaceChoices')]);race.id='sheetSpeciesEditorGroup';
+ group('Class training',[document.getElementById('sheetClassSkills')]);
+ group('Background & ability increases',[document.getElementById('sheetModernOrigin'),document.getElementById('sheetBackgroundSummary'),document.getElementById('sheetBackgroundTraining'),document.getElementById('sheetBackgroundChoices')]);
+ const summary=document.getElementById('sheetBuildSummary');summary.classList.add('sheet-editor-box');
+}
+function skillAutomaticRank(d,key){return Math.max(d.effects.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0);}
+function bindSkillOrbs() {
+ document.querySelectorAll('[data-skill][data-rank]').forEach(button=>button.onclick=()=>{
+  readSheetForm();const s=sheetSession,key=button.dataset.skill,rank=Number(button.dataset.rank);
+  const d=CharacterSheetModel.derive(s.data,s.identity.level),automatic=skillAutomaticRank(d,key);
+  if(rank<automatic||rank===automatic&&s.data.skills[key].rank<=automatic)return;
+  s.data.skills[key].rank=s.data.skills[key].rank===rank?0:rank;
+  document.querySelector(`[name="skills.${key}.rank"]`).value=s.data.skills[key].rank;
+  s.dirty=true;updateSheetCalculations();sheetStatus('Unsaved skill training change');
+ });
+}
+function updateAbilityAndSkillControls(d) {
+ const s=sheetSession,base=s.data.build.scoreMode==='base',M=CharacterSheetModel;
+ for(const key of Object.keys(M.abilities)){
+  const input=document.querySelector(`[name="abilities.${key}"]`),score=document.querySelector(`[data-ability-score="${key}"]`),detail=document.querySelector(`[data-ability-breakdown="${key}"]`);
+  if(!input||!score)continue;
+  input.closest('label').querySelector('span').textContent=base?'Base score':'Entered total';score.textContent=d.scores[key];
+  const origin=base?Math.min(d.effects.asi[key]||0,Math.max(0,20-s.data.abilities[key])):0;
+  const feat=base?d.scores[key]-s.data.abilities[key]-origin:0;
+  detail.textContent=base?`${s.data.abilities[key]} base + ${origin} ${s.data.build.edition==='2024'?'background':'race'}${feat?' '+M.signed(feat)+' feats':''} = ${d.scores[key]}`:'Bonuses already included in your entered total.';
+ }
+ const notice=document.getElementById('sheetScoreModeNotice');
+ notice.innerHTML=base?'Automatic scores: enter your scores before bonuses below. The large numbers include valid race/background and feat increases, with their limits applied.':'Final totals mode: your entered scores already include bonuses. To calculate them automatically, select Base scores / HP in Character builder and enter scores before bonuses.';
+ for(const key of Object.keys(M.skills)){
+  const automatic=skillAutomaticRank(d,key),manual=s.data.skills[key].rank,effective=Math.max(automatic,manual);
+  const source=document.querySelector(`[data-skill-source="${key}"]`);if(source){source.textContent=automatic?' · Auto':'';source.title=automatic?'Training granted by Character builder or Feats.':'';}
+  document.querySelectorAll(`[data-skill="${key}"]`).forEach(button=>{
+   const rank=Number(button.dataset.rank);button.setAttribute('aria-pressed',String(rank===effective));
+   button.disabled=rank<automatic||rank===automatic&&manual<=automatic;
+   button.classList.toggle('sheet-orb-automatic',rank===automatic&&automatic>0);
+   button.title=button.disabled?'Granted training cannot be reduced here. Edit its source in Character builder or Feats.':rank===manual?'Click to remove your manual training choice.':'Set '+({0.5:'half proficiency',1:'proficiency',2:'expertise'}[rank]);
+  });
+ }
+ const group=document.getElementById('sheetSpeciesEditorGroup');
+ if(group){group.hidden=false;group.hidden=![...group.querySelectorAll('input,select')].some(input=>{const hidden=input.closest('[hidden]');return !hidden||!group.contains(hidden);});}
 }

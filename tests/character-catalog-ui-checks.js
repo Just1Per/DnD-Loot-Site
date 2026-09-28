@@ -19,7 +19,7 @@ try {
  for(const el of form.querySelectorAll('input,select,textarea'))el.checkValidity=()=>true;await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');await Promise.resolve();form=document.getElementById('characterSheetForm');
  check('Catalogue choices and resource usage survive save and reopen',sheetSession.data.rulesChoices.grants.human.used===1&&sheetSession.data.rulesChoices.grants.human.spells[2]===picks[2].id&&sheetSession.data.spells[0].catalogId);
  const before=sheetSession.data.hpCurrent;CharacterCatalog.longRest(sheetSession.data);sheetCatalogSignature='';updateSheetCatalogGrants();check('Long rest restores Magic Initiate without changing HP',sheetSession.data.rulesChoices.grants.human.used===0&&sheetSession.data.hpCurrent===before);
- document.getElementById('catalogFeatSearch').value='Grappler';renderCatalogFeatResults();document.querySelector('[data-add-catalog-feat]').onclick();
+ change('build.classId','fighter');change('abilities.str',13);document.getElementById('catalogFeatSearch').value='Grappler';renderCatalogFeatResults();document.querySelector('[data-add-catalog-feat]').onclick();
  check('Feat catalogue stores a distinct 2024 selection',sheetSession.data.rulesChoices.feats.length===1&&CharacterCatalog.find(sheetSession.data.rulesChoices.feats[0],'feats').edition==='2024');
  closeCharacterSheet(true);
 }catch(e){results.push({name:e.stack,pass:false});}
