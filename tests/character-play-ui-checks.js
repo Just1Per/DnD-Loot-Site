@@ -21,15 +21,12 @@
  const fire=CharacterCatalog.spells({edition:'2024',search:'Fireball'}).find(s=>s.name==='Fireball');addCatalogSpells([fire.id]);check('Spell sheet shows selected spells, save, school, book and page',document.querySelector('.sheet-spell-table').textContent.includes('Fireball')&&document.querySelector('.sheet-spell-table').textContent.includes('DEX')&&document.querySelector('.sheet-spell-table').textContent.includes('Evocation'));
  document.querySelector('[data-prepare-spell="0"]').onclick();check('Prepared state syncs with spell editor',sheetSession.data.spells[0].prepared&&field('spells.0.prepared').checked);
  change('identity.level',1);document.getElementById('catalogFeatEdition').value='';document.getElementById('catalogFeatSearch').value='Alert';renderCatalogFeatResults();check('Both editions are listed and unavailable feats are disabled',document.getElementById('catalogFeatResults').textContent.includes('2014')&&document.getElementById('catalogFeatResults').textContent.includes('2024')&&[...document.querySelectorAll('[data-add-catalog-feat]')].every(b=>b.disabled));
- check('Players cannot create campaign gear from template controls',!document.getElementById('sheetAddBaseGear')&&!document.getElementById('sheetAddGearPack'));
+ check('Players can add personal gear and packs',!!document.getElementById('sheetAddBaseGear')&&!!document.getElementById('sheetAddGearPack'));
  const names=[...form.querySelectorAll('[name]')].map(n=>n.name);check('New layout has no duplicate named inputs',new Set(names).size===names.length);
  for(const el of form.querySelectorAll('input,select,textarea'))el.checkValidity=()=>true;await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');await Promise.resolve();form=document.getElementById('characterSheetForm');
  check('Profile, custom story, slot and spell changes survive reopening',sheetSession.data.profile.hair==='Silver'&&sheetSession.data.profile.height===181&&sheetSession.data.personality==='My custom personality'&&sheetSession.data.slots[0].used===2&&sheetSession.data.spells[0].prepared&&field('alignment').value==='Chaotic Good');
  closeCharacterSheet(true);seed('dm');await openCharacterSheet('c1');await Promise.resolve();
- check('DM has gear and pack campaign-copy controls',!!document.getElementById('sheetAddBaseGear')&&!!document.getElementById('sheetAddGearPack'));
- const template=CharacterAdobeData.gear[0];await addSheetGearTemplates([template]);const copied=items.find(i=>i.id==='base-'+template.id),before=JSON.stringify(fixtureSupply[copied.id]);
- check('DM gear templates start hidden, finite and assignment-only',copied.campaignId==='a'&&!copied.visible&&copied.lootMode==='dm'&&!fixtureSupply[copied.id].unlimited);
- await addSheetGearTemplates([template]);check('Adding a gear template again preserves existing campaign stock',before===JSON.stringify(fixtureSupply[copied.id])&&items.filter(i=>i.id===copied.id).length===1);
+ check('DM uses the same character gear controls',!!document.getElementById('sheetAddBaseGear')&&!!document.getElementById('sheetAddGearPack'));
  check('Spell catalogue is outside the collapsed spell editor',!document.getElementById('sheetSpellCatalog').closest('#sheetSpellEditor'));
  closeCharacterSheet(true);
  }catch(e){results.push({name:e.stack,pass:false});}

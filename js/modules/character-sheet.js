@@ -93,7 +93,8 @@ async function openCharacterSheet(characterId) {
         7,
         8,
         9,
-        10
+        10,
+        11
       ].includes(stored.schemaVersion))
       throw Error('This sheet uses a newer format. Update the website before editing it.');
     sheetSession = {
@@ -195,13 +196,13 @@ function renderCharacterSheet() {
     min: 0,
     max: 99
   }) }</div>`).join('') }</div><h4>Known & prepared spells</h4><div id="sheetSpellRows"></div><button type="button" id="sheetAddSpell">+ Add spell</button>`) }
-  ${ sheetSection('inventory', 'Equipment & treasure', `<p class="sheet-help">Campaign loot below comes directly from this character’s inventory. Use the item controls to consume, assign or return loot.</p>${field('Armor Class calculation', 'equipmentState.acMode', 'select', {values:[['manual','Manual base + equipped bonuses'],['equipment','Automatic: armor / 10 + DEX']]})}${field('Other AC adjustment', 'equipmentState.acAdjustment', 'number')}<p class="sheet-help">Manual AC must exclude equipped shield, item and feat bonuses. Automatic mode uses worn armor or 10 + DEX; use Manual base for Mage Armor, natural armor and class alternatives.</p><div id="sheetEquipmentSummary"></div><button type="button" id="sheetRefreshLoot">Refresh campaign loot</button><div id="sheetInventory" class="character-loot-grid"></div><h4>Coins</h4><div class="sheet-grid">${ [
+  ${ sheetSection('inventory', 'Equipment & treasure', `<p class="sheet-help">Add starting gear, packs, and supplies directly to this character. Save sheet to keep changes. Campaign loot is included automatically.</p><details class="sheet-inventory-settings"><summary>Armor Class & equipment settings</summary>${field('Armor Class calculation', 'equipmentState.acMode', 'select', {values:[['manual','Manual base + equipped bonuses'],['equipment','Automatic: armor / 10 + DEX']]})}${field('Other AC adjustment', 'equipmentState.acAdjustment', 'number')}<p class="sheet-help">Manual AC must exclude equipped shield, item and feat bonuses. Automatic mode uses worn armor or 10 + DEX; use Manual base for Mage Armor, natural armor and class alternatives.</p><div id="sheetEquipmentSummary"></div></details><button type="button" id="sheetRefreshLoot">Refresh campaign loot</button><div id="sheetInventory" class="character-loot-grid"></div><div id="sheetCoinSource" class="sheet-grid">${ [
     'cp',
     'sp',
     'ep',
     'gp',
     'pp'
-  ].map(key => field(key.toUpperCase(), `coins.${ key }`, 'number', { min: 0 })).join('') }</div>${ field('Other equipment & supplies', 'equipment', 'textarea', { rows: 8 }) }`) }
+  ].map(key => field(key.toUpperCase(), `coins.${ key }`, 'number', { min: 0 })).join('') }</div>${ field('Equipment notes', 'equipment', 'textarea', { rows: 8 }) }`) }
   ${ sheetSection('story', 'The person behind the adventure', `<div class="sheet-grid two">${ [
     [
       'appearance',
@@ -398,6 +399,7 @@ function updateSheetCalculations() {
   renderEquipmentCalculations(d);
   renderCharacterOverview(d);
   updateCharacterPlayUI(d);
+  updateInventoryTotals(d);
   updateSheetBuildSummary(d);
   if (typeof updateSheetCatalogGrants === 'function') updateSheetCatalogGrants();
   document.querySelectorAll('#characterSheetDialog [data-derived]').forEach(el => {
@@ -515,21 +517,7 @@ function refreshCharacterSheetInventory() {
   if (!s || !el || activeCampaign?.id !== s.campaignId)
     return;
   renderSheetGearPicker();
-  const entries = inventory.filter(entry => entry.characterId === s.characterId && entry.quantity > 0);
-  if (!entries.length) {
-    el.innerHTML = '<p class="sheet-empty">No campaign loot yet. Claim an available item from the Library or ask your DM to assign one.</p>';
-  } else {
-    el.replaceChildren(...entries.map(entry => {
-      const wrapper=document.createElement('div');wrapper.className='sheet-owned-item';
-      const detail=document.createElement('details'),summary=document.createElement('summary'),item=inventoryItem(entry);
-      const weight=item.properties?.find(p=>p.title==='Weight per unit (lb)')?.text;
-      summary.textContent=`${item.name} · Quantity: ${entry.quantity}${weight?' · '+weight+' lb each':''}`;
-      detail.append(summary,createCard(item,{inventoryEntry:entry}));
-      wrapper.append(detail,equipmentControls(entry));
-      return wrapper;
-    }));
-    observePendingImages(el);
-  }
+  renderCharacterInventory();
   updateSheetCalculations();
 }
 function exportCharacterSheet() {
@@ -539,7 +527,7 @@ function exportCharacterSheet() {
   const s = sheetSession;
   const blob = new Blob([JSON.stringify({
       format: 'dnd-vault-character-sheet',
-      schemaVersion: 10,
+      schemaVersion: 11,
       character: s.identity,
       campaign: activeCampaign.name,
       data: s.data,

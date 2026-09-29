@@ -8,7 +8,7 @@ const ctx=vm.createContext(sandbox);const run=async f=>vm.runInContext(fs.readFi
 (async()=>{
  await run(path.join(__dirname,'dom-setup.js'));await run(path.join(__dirname,'dom-fixture.js'));
  vm.runInContext('function createCampaignStore(){return window.__DND_VAULT_DEPS__.vaultCall}',ctx);
- for(const name of ['character-equipment','core','character-race-catalog','character-background-data','character-backgrounds','character-rules-2024','character-rules','character-feat-data','character-feat-rules','character-catalog','character-adobe-data','character-play-rules','character-actions','character-story','character-sheet-model','character-sheet-store','character-overview-ui','character-play-ui','character-action-ui','character-sheet','character-equipment-ui','character-catalog-ui','images','catalog-cache','data','dm-approval','invitations','library-state','dashboard','campaign-items','library','admin','player','dm-tools','ui-auth'])await run(path.join(__dirname,`../js/modules/${name}.js`));
+ for(const name of ['character-equipment','core','character-race-catalog','character-background-data','character-backgrounds','character-rules-2024','character-rules','character-feat-data','character-feat-rules','character-catalog','character-adobe-data','character-play-rules','character-actions','character-story','character-sheet-model','character-sheet-store','character-overview-ui','character-play-ui', 'character-inventory-ui','character-action-ui','character-sheet','character-equipment-ui','character-catalog-ui','images','catalog-cache','data','dm-approval','invitations','library-state','dashboard','campaign-items','library','admin','player','dm-tools','ui-auth'])await run(path.join(__dirname,`../js/modules/${name}.js`));
  vm.runInContext('CharacterCatalog.set('+fs.readFileSync(path.join(__dirname,'../data/rules/catalog.json'),'utf8')+')',ctx);
  await run(path.join(__dirname,'dom-state.js'));await run(path.join(__dirname,'dom-checks.js'));
  await run(path.join(__dirname,'character-sheet-ui-checks.js'));
@@ -23,6 +23,7 @@ const ctx=vm.createContext(sandbox);const run=async f=>vm.runInContext(fs.readFi
  await run(path.join(__dirname,'character-overview-ui-checks.js'));
  await run(path.join(__dirname,'character-play-ui-checks.js'));
  await run(path.join(__dirname,'character-action-ui-checks.js'));
+ await run(path.join(__dirname,'character-inventory-ui-checks.js'));
  const results=JSON.parse(document.getElementById('test-results').textContent);fs.writeFileSync(path.join(__dirname,'dom-results.json'),JSON.stringify(results,null,2));
  for(const r of results)console.log(r.pass?'PASS':'FAIL',r.name);if(results.some(r=>!r.pass))process.exitCode=1;else console.log(`SUCCESS ${results.length} DOM checks`);
 })().catch(e=>{console.error(e);process.exitCode=1;});

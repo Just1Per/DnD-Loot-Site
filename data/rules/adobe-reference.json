@@ -1062,6 +1062,458 @@
       "category": "Adventuring gear"
     }
   ],
+  "baseEquipment": [
+    {
+      "id": "equipment-padded",
+      "name": "Padded",
+      "quantity": 1,
+      "weight": 8.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-leather",
+      "name": "Leather",
+      "quantity": 1,
+      "weight": 10.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-studded-leather",
+      "name": "Studded Leather",
+      "quantity": 1,
+      "weight": 13.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-hide",
+      "name": "Hide",
+      "quantity": 1,
+      "weight": 12.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-chain-shirt",
+      "name": "Chain Shirt",
+      "quantity": 1,
+      "weight": 20.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-scale-mail",
+      "name": "Scale Mail",
+      "quantity": 1,
+      "weight": 45.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-breastplate",
+      "name": "Breastplate",
+      "quantity": 1,
+      "weight": 20.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-half-plate",
+      "name": "Half Plate",
+      "quantity": 1,
+      "weight": 40.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-ring-mail",
+      "name": "Ring Mail",
+      "quantity": 1,
+      "weight": 40.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-chain-mail",
+      "name": "Chain Mail",
+      "quantity": 1,
+      "weight": 55.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-splint",
+      "name": "Splint",
+      "quantity": 1,
+      "weight": 60.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-plate",
+      "name": "Plate",
+      "quantity": 1,
+      "weight": 65.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-club",
+      "name": "Club",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-dagger",
+      "name": "Dagger",
+      "quantity": 1,
+      "weight": 1.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-greatclub",
+      "name": "Greatclub",
+      "quantity": 1,
+      "weight": 10.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-handaxe",
+      "name": "Handaxe",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-javelin",
+      "name": "Javelin",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-light-hammer",
+      "name": "Light hammer",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-mace",
+      "name": "Mace",
+      "quantity": 1,
+      "weight": 4.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-quarterstaff",
+      "name": "Quarterstaff",
+      "quantity": 1,
+      "weight": 4.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-sickle",
+      "name": "Sickle",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-spear",
+      "name": "Spear",
+      "quantity": 1,
+      "weight": 3.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-light-crossbow",
+      "name": "Light crossbow",
+      "quantity": 1,
+      "weight": 5.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-dart",
+      "name": "Dart",
+      "quantity": 1,
+      "weight": 0.25,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-shortbow",
+      "name": "Shortbow",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-sling",
+      "name": "Sling",
+      "quantity": 1,
+      "weight": 0.001,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-battleaxe",
+      "name": "Battleaxe",
+      "quantity": 1,
+      "weight": 4.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-flail",
+      "name": "Flail",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-glaive",
+      "name": "Glaive",
+      "quantity": 1,
+      "weight": 6.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-greataxe",
+      "name": "Greataxe",
+      "quantity": 1,
+      "weight": 7.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-greatsword",
+      "name": "Greatsword",
+      "quantity": 1,
+      "weight": 6.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-halberd",
+      "name": "Halberd",
+      "quantity": 1,
+      "weight": 6.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-lance",
+      "name": "Lance",
+      "quantity": 1,
+      "weight": 6.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-longsword",
+      "name": "Longsword",
+      "quantity": 1,
+      "weight": 3.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-maul",
+      "name": "Maul",
+      "quantity": 1,
+      "weight": 10.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-morningstar",
+      "name": "Morningstar",
+      "quantity": 1,
+      "weight": 4.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-pike",
+      "name": "Pike",
+      "quantity": 1,
+      "weight": 18.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-rapier",
+      "name": "Rapier",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-scimitar",
+      "name": "Scimitar",
+      "quantity": 1,
+      "weight": 3.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-shortsword",
+      "name": "Shortsword",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-trident",
+      "name": "Trident",
+      "quantity": 1,
+      "weight": 4.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-war-pick",
+      "name": "War pick",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-warhammer",
+      "name": "Warhammer",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-whip",
+      "name": "Whip",
+      "quantity": 1,
+      "weight": 3.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-blowgun",
+      "name": "Blowgun",
+      "quantity": 1,
+      "weight": 1.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-hand-crossbow",
+      "name": "Hand crossbow",
+      "quantity": 1,
+      "weight": 3.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-heavy-crossbow",
+      "name": "Heavy crossbow",
+      "quantity": 1,
+      "weight": 18.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-longbow",
+      "name": "Longbow",
+      "quantity": 1,
+      "weight": 2.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-net",
+      "name": "Net",
+      "quantity": 1,
+      "weight": 3.0,
+      "edition": "2014",
+      "price": "",
+      "category": "Weapons & armor"
+    },
+    {
+      "id": "equipment-shield",
+      "name": "Shield",
+      "quantity": 1,
+      "weight": 6,
+      "edition": "2014",
+      "price": "10 gp",
+      "category": "Weapons & armor"
+    }
+  ],
   "packs": [
     {
       "id": "burglar",

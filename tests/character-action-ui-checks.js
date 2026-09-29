@@ -20,7 +20,7 @@
  check('Loot picker never shows another player’s private item',sheetSession.data.actions[2].ref==='owned-axe');
  fixtureInventory=fixtureInventory.filter(e=>e.id!=='owned-axe');await refreshCampaignData();check('Returning loot disables its pinned attack without deleting the reference',CharacterSheetModel.derive(sheetSession.data,7,sheetEquipmentLoot()).actions[2].available===false&&document.getElementById('sheetOverviewReadout').textContent.includes('no longer in this character'));
  for(const e of form.querySelectorAll('input,select,textarea'))e.checkValidity=()=>true;await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');await Promise.resolve();form=document.getElementById('characterSheetForm');
- check('Actions and source references survive schema-ten save and reopen',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===10&&sheetSession.data.actions.length===3&&sheetSession.data.actions[1].ref===fire.id);
+ check('Actions and source references survive schema-eleven save and reopen',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===11&&sheetSession.data.actions.length===3&&sheetSession.data.actions[1].ref===fire.id);
  document.querySelector('[data-remove-action="2"]').click();check('Removing one action preserves the others',sheetSession.data.actions.length===2);
  openAttackPicker();closeCharacterSheet(true);check('Closing the sheet removes the private attack picker',!document.getElementById('sheetAttackPicker'));
  }catch(e){results.push({name:e.stack,pass:false});}

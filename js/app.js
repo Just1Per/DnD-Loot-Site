@@ -53,6 +53,7 @@ const FEATURE_FILES = [
   "./modules/character-sheet-store.js",
   "./modules/character-overview-ui.js",
   "./modules/character-play-ui.js",
+  "./modules/character-inventory-ui.js",
   "./modules/character-action-ui.js",
   "./modules/character-sheet.js",
   "./modules/character-equipment-ui.js",
@@ -76,7 +77,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20260928-attacks-v1");
+    moduleUrl.searchParams.set("v", "20260929-inventory-v1");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;
