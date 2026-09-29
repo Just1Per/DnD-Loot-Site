@@ -12,3 +12,10 @@ test('personal inventory normalization preserves fractional weights and excludes
  const d=M.normalize({personalGear:[null,{id:'rope',name:'Rope',quantity:2.9,weight:0.075,carried:false,location:'Camp'},{id:'rope',name:'Duplicate'}]});
  assert.equal(d.personalGear.length,1);assert.equal(d.personalGear[0].quantity,2);assert.equal(d.personalGear[0].weight,.075);assert.equal(d.personalGear[0].carried,false);assert.deepEqual(M.normalize(d),d);
 });
+test('point buy prices nonlinear base scores and flags invalid or over-budget arrays',()=>{
+ assert.equal(M.pointBuy({str:15,dex:15,con:15,int:8,wis:8,cha:8}).spent,27);
+ assert.equal(M.pointBuy({str:15,dex:14,con:13,int:12,wis:10,cha:8}).remaining,0);
+ assert.equal(M.pointBuy({str:15,dex:15,con:15,int:15,wis:15,cha:15}).remaining,-27);
+ assert.deepEqual(M.pointBuy({str:16,dex:8,con:8,int:8,wis:8,cha:8}).invalid,['str']);
+ assert.equal(M.normalize({build:{scoreMethod:'pointBuy'}}).build.scoreMethod,'pointBuy');
+});

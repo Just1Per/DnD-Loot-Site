@@ -62,7 +62,8 @@ var CharacterFeatRules = (() => {
           else for(const a of picks)increases[a]=(increases[a]||0)+(select.amount||1);
         }
         if(!warnings.length){
-          if(data.build.scoreMode==='base')for(const [a,n] of Object.entries(increases))scores[a]+=Math.max(0,Math.min(n,option.max-scores[a]));
+          report.abilityIncreases={...increases};report.appliedAbilityIncreases={};
+          if(data.build.scoreMode==='base')for(const [a,n] of Object.entries(increases)){const applied=Math.max(0,Math.min(n,option.max-scores[a]));scores[a]+=applied;report.appliedAbilityIncreases[a]=applied;}
           automated.push('Ability increase (maximum '+option.max+'); '+(data.build.scoreMode==='base'?'included in totals':'reference only in Final totals mode'));
         }
       }

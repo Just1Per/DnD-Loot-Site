@@ -52,3 +52,8 @@ test('unrecognized feats remain removable and unsafe object keys cannot break ev
 test('2014 and 2024 editions of the same feat cannot stack their bonuses',()=>{
  const d=sheet('Alert',{}, {build:{edition:'2024',race:'human-2024',humanOriginFeat:'Alert'}},'PHB');assert.equal(M.derive(d,9).initiative,4);assert.match(M.derive(d,9).feats.reports[0].warnings.join(' '),/Duplicate/);
 });
+test('ability breakdown records named feat gains and actual capped amounts',()=>{
+ const d=sheet('Ability Score Improvement',{option:0,abilities:['str']},{abilities:{str:19}}),r=M.derive(d,4).feats.reports[0];
+ assert.equal(r.abilityIncreases.str,2);assert.equal(r.appliedAbilityIncreases.str,1);
+ d.build.scoreMode='total';const total=M.derive(d,4);assert.equal(total.scores.str,19);assert.equal(total.feats.reports[0].abilityIncreases.str,2);assert.deepEqual(total.feats.reports[0].appliedAbilityIncreases,{});
+});

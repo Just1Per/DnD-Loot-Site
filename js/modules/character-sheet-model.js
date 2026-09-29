@@ -215,6 +215,12 @@ var CharacterSheetModel = (() => {
     }));
     return result;
   }
+  function pointBuy(abilities={}) {
+    const costs={8:0,9:1,10:2,11:3,12:4,13:5,14:7,15:9};
+    const rows=Object.keys(CharacterSheetModel.abilities).map(key=>({key,score:Number(abilities[key]),cost:costs[abilities[key]]??null}));
+    const invalid=rows.filter(r=>r.cost===null).map(r=>r.key),spent=rows.reduce((n,r)=>n+(r.cost||0),0);
+    return {rows,invalid,spent,remaining:27-spent,budget:27,valid:!invalid.length&&spent<=27};
+  }
   function derive(data, level, loot = []) {
     const d = normalize(data), pb = proficiency(level), mods = {}, saves = {}, checks = {};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
@@ -273,6 +279,7 @@ var CharacterSheetModel = (() => {
     derive,
     mod,
     proficiency,
+    pointBuy,
     signed,
     damage,
     heal
