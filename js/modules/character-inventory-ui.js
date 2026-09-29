@@ -62,3 +62,32 @@ function updateInventoryTotals(stats){
  const attuned=s.data.equipmentState.loadout.filter(g=>g.attuned).map(g=>sheetEquipmentLoot().find(e=>e.id===g.id)).filter(e=>e?.item.attunement);
  document.getElementById('sheetInventoryAttuned').innerHTML=Array.from({length:Math.max(3,attuned.length)},(_,i)=>`<div class="sheet-attunement-line">${i+1}. ${sheetEscape(attuned[i]?.item.name||'—')}</div>`).join('');
 }
+
+function renderInventoryDefense(stats) {
+ const s=sheetSession;let host=document.getElementById('sheetInventoryDefense');if(!s)return;
+ if(!host){host=document.createElement('section');host.id='sheetInventoryDefense';host.className='sheet-summary-box sheet-defense-panel';document.querySelector('#sheet-inventory h3')?.after(host);}
+ const esc=sheetEscape,owned=sheetEquipmentLoot(),state=s.data.equipmentState;
+ const entries=kind=>owned.filter(e=>CharacterEquipment.infer(e.item).kind===kind);
+ const selected=kind=>entries(kind).find(e=>state.loadout.some(c=>c.id===e.id&&c.equipped));
+ const armor=selected('armor'),shield=selected('shield'),m=armor&&CharacterEquipment.infer(armor.item),p=m&&CharacterEquipment.profile(m,s.data.build.edition);
+ const options=(kind,current)=>`<option value="">${kind==='armor'?'Unarmored · 10 + DEX':'No shield'}</option><optgroup label="Your inventory">${entries(kind).map(e=>`<option value="${esc(e.id)}" ${e.id===current?.id?'selected':''}>${esc(e.item.name)}</option>`).join('')}</optgroup><optgroup label="Add & equip standard gear">${sheetBaseGear().filter(g=>CharacterEquipment.infer(g).kind===kind&&!entries(kind).some(e=>e.item.name.toLowerCase()===g.name.toLowerCase())).map(g=>`<option value="base:${esc(g.id)}">${esc(g.name)}${kind==='armor'? ' · '+CharacterEquipment.profile(CharacterEquipment.infer(g),s.data.build.edition).group:''}</option>`).join('')}</optgroup>`;
+ const dex=p?.group==='heavy'?0:p?.group==='medium'?Math.min(2,stats.mods.dex):stats.mods.dex;
+ const parts=state.acMode==='manual'?[`Manual base ${s.data.ac}`]:[`${p?p.name:'Unarmored'} ${p?p.baseAC:10}`,`DEX ${CharacterSheetModel.signed(dex)}${p?.group==='heavy'?' (not applied)':p?.group==='medium'?' (maximum +2)':''}`];
+ for(const [name,value] of [['shield',stats.gear.shield],['item bonuses',stats.gear.bonus],['Defense',stats.gear.defense],['adjustment',stats.gear.adjustment]])if(value)parts.push(`${name} ${CharacterSheetModel.signed(value)}`);
+ host.innerHTML=`<div class="sheet-defense-emblem"><svg viewBox="0 0 100 116" aria-hidden="true"><path d="M8 8 L50 2 L92 8 V53 Q92 87 50 112 Q8 87 8 53Z"/><path class="sheet-defense-inset" d="M15 14 L50 9 L85 14 V53 Q85 81 50 103 Q15 81 15 53Z"/></svg><div><small>ARMOR CLASS</small><strong>${stats.ac}</strong><span>${state.acMode==='equipment'?'AUTOMATIC':'MANUAL BASE'}</span></div></div><div class="sheet-defense-content"><h4>Armor & defenses</h4><div class="sheet-defense-selectors"><label>Armor<select id="sheetArmorSelect">${options('armor',armor)}</select></label><label>Shield<select id="sheetShieldSelect">${options('shield',shield)}</select></label></div><p class="sheet-defense-formula">${parts.map(x=>`<span>${esc(x)}</span>`).join('<b> + </b>')} <b>= ${stats.ac} AC</b></p><p class="sheet-help">Choose from your inventory, or add and equip standard gear. This uses automatic AC; special unarmored formulas remain under Armor Class & equipment settings.</p>${stats.gear.warnings.map(w=>`<p class="sheet-build-warning">${esc(w)}</p>`).join('')}${armor?.item.attunement||shield?.item.attunement?'<p class="sheet-help">Magical benefits that require attunement use the item’s Attuned checkbox below.</p>':''}</div>`;
+ for(const [id,kind] of [['sheetArmorSelect','armor'],['sheetShieldSelect','shield']])host.querySelector('#'+id).onchange=event=>selectInventoryDefense(kind,event.target.value);
+}
+function selectInventoryDefense(kind,id){
+ if(!sheetSession)return;readSheetForm();const s=sheetSession,state=s.data.equipmentState;
+ let chosen=id?sheetEquipmentLoot().find(e=>e.id===id):null;
+ const template=id.startsWith('base:')?sheetBaseGear().find(g=>g.id===id.slice(5)&&CharacterEquipment.infer(g).kind===kind):null;
+ if(id&&!chosen&&!template)return;
+ if((chosen&&!state.loadout.some(c=>c.id===chosen.id)||template)&&state.loadout.length>=200){sheetStatus('Equipment selection limit reached.',true);renderInventoryDefense(CharacterSheetModel.derive(s.data,s.identity.level,sheetEquipmentLoot()));return;}
+ if(template){
+  if(s.data.personalGear.length>=200){sheetStatus('Personal inventory is full. Remove an unused row first.',true);return;}
+  const g={id:'personal-'+crypto.randomUUID(),name:template.name,quantity:1,weight:Number(template.weight)||0,location:'Worn',carried:true,notes:'',edition:template.edition};s.data.personalGear.push(g);chosen=personalGearEntries().find(e=>e.id===g.id);
+ }
+ for(const c of state.loadout){const e=sheetEquipmentLoot().find(e=>e.id===c.id),personal=s.data.personalGear.find(g=>g.id===c.id);if(CharacterEquipment.infer(e?.item||{name:personal?.name||''}).kind===kind)c.equipped=false;}
+ if(chosen){let c=state.loadout.find(c=>c.id===chosen.id);if(!c){c=CharacterEquipment.choices({loadout:[{id:chosen.id}]}).loadout[0];state.loadout.push(c);}c.equipped=true;}
+ state.acMode='equipment';document.querySelector('[name="equipmentState.acMode"]').value='equipment';s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Armor updated. Save sheet to keep changes.');document.getElementById(kind==='armor'?'sheetArmorSelect':'sheetShieldSelect')?.focus();
+}

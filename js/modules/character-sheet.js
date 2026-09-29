@@ -400,6 +400,7 @@ function updateSheetCalculations() {
   renderCharacterOverview(d);
   updateCharacterPlayUI(d);
   updateInventoryTotals(d);
+  renderInventoryDefense(d);
   updateSheetBuildSummary(d);
   if (typeof updateSheetCatalogGrants === 'function') updateSheetCatalogGrants();
   document.querySelectorAll('#characterSheetDialog [data-derived]').forEach(el => {

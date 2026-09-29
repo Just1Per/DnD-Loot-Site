@@ -5,6 +5,7 @@ The Inventory tab adds basic gear and packs directly to the opened character's p
 - Choose specific gear, a background equipment selection, an equipment pack, or a custom item. Save the sheet to persist it.
 - Packs expand into editable rows. Choice placeholders need a selection; starting coin entries are reminders to update the coin fields. Adding a pack does not charge coins or enforce a starting-equipment budget.
 - Rows contain name, quantity, weight per item, line total, storage location, and a carried checkbox. Zero weight may need filling in for a background placeholder or custom item.
+- The top Armor and Shield dropdowns equip owned items or add and equip standard gear. The live shield badge shows AC with a DEX/armor/bonus breakdown; selecting armor activates automatic AC. Special class/spell AC formulas still use manual settings.
 - Personal gear can be equipped in the details below the ledger. Recognized weapon and armor names use the existing attack/AC engine. Uncarried or depleted personal gear grants no equipment benefit.
 - Campaign loot appears alongside personal gear, retaining full cards and existing consume/return/DM controls. It is not copied into editable personal rows. Campaign stock is unchanged by personal gear edits.
 - Coins, carried weight and attuned items appear in a side column. Unknown campaign weights are flagged. Coins use 50 per pound. Containers are descriptive storage locations, not automatic weight-reducing magic bags; carrying-capacity traits and encumbrance penalties remain manual.
