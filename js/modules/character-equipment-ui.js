@@ -2,7 +2,7 @@
 function sheetEquipmentLoot() {
   const s=sheetSession;
   if(!s||activeCampaign?.id!==s.campaignId)return [];
-  return inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0).map(e=>({...e,item:inventoryItem(e)}));
+  return inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0).map(e=>({...e,item:inventoryItem(e)})).concat(personalGearEntries());
 }
 function renderEquipmentCalculations(stats) {
   let host=document.getElementById('sheetEquipmentSummary');
@@ -16,7 +16,7 @@ function renderEquipmentCalculations(stats) {
 }
 function equipmentControls(entry) {
   const state=sheetSession.data.equipmentState,c=state.loadout.find(v=>v.id===entry.id)||CharacterEquipment.choices({loadout:[{id:entry.id}]}).loadout[0];
-  const item=inventoryItem(entry),m=CharacterEquipment.infer(item),p=CharacterEquipment.profile(m,sheetSession.data.build.edition);
+  const item=entry.personal?entry.item:inventoryItem(entry),m=CharacterEquipment.infer(item),p=CharacterEquipment.profile(m,sheetSession.data.build.edition);
   const el=document.createElement('div');el.className='sheet-equipment-controls';el.dataset.equipmentId=entry.id;
   const select=(label,key,options)=>`<label>${label}<select data-gear="${key}">${options.map(([value,name])=>`<option value="${value}" ${c[key]===value?'selected':''}>${sheetEscape(name)}</option>`).join('')}</select></label>`;
   el.innerHTML=`<label><input type="checkbox" data-gear="equipped" ${c.equipped?'checked':''}> Equipped / worn</label>${item.attunement?`<label><input type="checkbox" data-gear="attuned" ${c.attuned?'checked':''}> Attuned</label>`:''}${m.kind==='weapon'&&p?select('Attack ability','ability',[['auto','Automatic (STR / DEX)'],...Object.entries(CharacterSheetModel.abilities)])+select('Weapon proficiency','proficiency',[['auto','From class / feats'],['yes','Proficient (other feature / DM)'],['no','Not proficient']])+select('Attack use','mode',[['normal','Normal'],...(p.versatile?[['twoHanded','Two-handed (versatile)']]:[]),...(p.props.includes('thrown')?[['thrown','Thrown']]:[]),...(p.props.includes('light')?[['offhand','Extra Light-weapon attack']]:[]),...(m.base==='lance'?[['mounted','Mounted']]:[])]):''}<small>${m.kind==='none'?'No automatic mechanics configured. Ask the DM to set the equipment fields on this item.':m.inferred?'Standard item recognized by its exact name. DM can customize its mechanics.':'Uses the equipment mechanics set by the DM.'}</small>`;

@@ -43,6 +43,11 @@ def basic(row, kind):
     if licensed:
         f=licensed['fields']; out['description']=clean(f.get('desc',''))
         if kind=='Feat': out['description']+='\n\n'+'\n\n'.join(clean(x) for x in benefits.get(licensed['pk'],[]))
+        if kind=='Spell':
+            out['combat']={'damage':('1d8' if name=='Spiritual Weapon' else f.get('damage_roll','')),'attack':bool(f.get('attack_roll')),'addAbility':name=='Spiritual Weapon'}
+            inc=re.search(r'damage increases by (\d+d\d+) for (?:each|every) (?:spell )?slot level',f.get('higher_level',''),re.I)
+            if inc:out['combat']['upcast']=inc[1]
+            if name=='Spiritual Weapon' and edition=='2014':out['combat'].update(upcast='1d8',step=2)
         if kind=='Spell' and f.get('higher_level'): out['description']+='\n\nAt higher levels: '+clean(f['higher_level'])
         out['license']='CC-BY-4.0 / SRD '+('5.2.1' if edition=='2024' else '5.1')
     return out
@@ -61,6 +66,9 @@ for source in sources:
         out['duration']='; '.join(('Concentration, ' if d.get('concentration') else '')+ (' '.join(str(d['duration'].get(k,'')) for k in ('amount','type')) if 'duration' in d else d.get('type','')) for d in row.get('duration',[]))
         # Only component flags, never non-SRD prose material descriptions.
         out['components']=', '.join(k.upper() for k in ('v','s','m') if row.get('components',{}).get(k))
+        combat=out.setdefault('combat',{});combat['attack']=bool(row.get('spellAttack')) or combat.get('attack',False);combat['types']=row.get('damageInflict',[])
+        scale=row.get('scalingLevelDice')
+        if isinstance(scale,dict) and row.get('damageInflict') and (row.get('spellAttack') or row.get('savingThrow')):combat['scaling']=scale.get('scaling',{})
         out['save']=', '.join(v.upper() for v in row.get('savingThrow',[]))
         out['ritual']=bool(row.get('meta',{}).get('ritual')); spells.append(out)
 featrows=[]
@@ -74,10 +82,10 @@ for f in featrows:
     if f['source']=='PHB' and f['name']=='Grappler':
         f['description']='You have advantage on attack rolls against a creature you are grappling.\n\nYou can use your action to try to pin a creature grappled by you. To do so, make another grapple check. If you succeed, you and the creature are both restrained until the grapple ends.'
 spells.sort(key=lambda x:(x['name'],x['edition'],x['source'])); featrows.sort(key=lambda x:(x['name'],x['edition'],x['source']))
-catalog={'format':1,'metadataVersion':2,'indexRevision':INDEX_REV,'srdRevision':SRD_REV,'spells':spells,'feats':featrows}
+catalog={'format':1,'metadataVersion':3,'indexRevision':INDEX_REV,'srdRevision':SRD_REV,'spells':spells,'feats':featrows}
 body=json.dumps(catalog,ensure_ascii=False,separators=(',',':'))+'\n'
 (ROOT/'data/rules/catalog.json').write_text(body)
-manifest={'format':1,'metadataVersion':2,'release':hashlib.sha256(body.encode()).hexdigest(),'spells':len(spells),'feats':len(featrows),'spellSources':index,'counts':{edn:{'spells':sum(s['edition']==edn for s in spells),'feats':sum(f['edition']==edn for f in featrows),'fullSpellTexts':sum(s['edition']==edn and s['licensedText'] for s in spells)} for edn in ('2014','2024')}}
+manifest={'format':1,'metadataVersion':3,'release':hashlib.sha256(body.encode()).hexdigest(),'spells':len(spells),'feats':len(featrows),'spellSources':index,'counts':{edn:{'spells':sum(s['edition']==edn for s in spells),'feats':sum(f['edition']==edn for f in featrows),'fullSpellTexts':sum(s['edition']==edn and s['licensedText'] for s in spells)} for edn in ('2014','2024')}}
 (ROOT/'data/rules/manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(json.dumps(manifest,indent=2))
 # Mechanical facts only; no arbitrary entry text or executable expressions.

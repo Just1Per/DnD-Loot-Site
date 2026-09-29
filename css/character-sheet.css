@@ -745,3 +745,39 @@
 #sheetInventory .sheet-owned-item { border:1px solid #aaa; border-radius:8px 2px; padding:10px; }
 #sheetInventory summary { cursor:pointer; font-weight:600; font-size:13px; padding:6px 0; }
 #sheetInventory details[open]>.item-card { margin-top:8px; }
+.sheet-attack-picker { width:min(850px,calc(100% - 30px)); max-height:90vh; overflow:auto; }
+.sheet-attack-picker header { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.sheet-attack-picker [hidden] { display:none!important; }
+.sheet-attack-picker .sheet-spell-heading strong { font:600 16px/1.4 sans-serif; }
+#sheetOverviewAddAttack { float:right; font:600 11px sans-serif; padding:5px 8px; }
+.sheet-action-controls { display:flex; gap:5px; margin:5px 0; }
+.sheet-action-controls button { font-size:11px; padding:3px 6px; }
+.sheet-action-unavailable { color:#934a26; }
+@media print { #sheetAttackPicker,.sheet-action-controls { display:none!important; } }
+/* Paper-style inventory ledger. */
+#sheetInventory.sheet-inventory-ledger{display:grid;grid-template-columns:minmax(0,1fr) 145px;gap:14px;align-items:start}
+.sheet-inventory-main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
+.sheet-inventory-column,.sheet-inventory-sidebar{border:1px solid #777;border-radius:10px 2px;padding:10px;background:#fff;color:#202020;min-width:0}
+.sheet-inventory-column h4,.sheet-inventory-sidebar h4{margin:0 0 8px;text-transform:uppercase;font-size:11px;letter-spacing:.06em}
+.sheet-inventory-campaign,.sheet-inventory-settings{grid-column:1/-1}
+.sheet-inventory-table{width:100%;border-collapse:collapse;font-size:12px}
+.sheet-inventory-table th{font-size:10px;text-align:left;font-weight:500;color:#555}
+.sheet-inventory-table td{border-bottom:1px solid #bbb;padding:4px 2px;vertical-align:top}
+#characterSheetDialog .sheet-inventory-table input{min-width:0;width:100%;border:0;border-radius:0;padding:3px 0;background:transparent;color:#202020;font-size:12px}
+.sheet-inventory-table td:first-child{width:36%}.sheet-inventory-table td:nth-child(2){width:42px}.sheet-inventory-table td:nth-child(3){width:50px}.sheet-inventory-table td:nth-child(4){width:50px;font-variant-numeric:tabular-nums;padding-top:7px}.sheet-inventory-table td:nth-child(5){width:24%}
+.sheet-inventory-table small{display:block;font-size:9px;color:#666}
+#characterSheetDialog .sheet-inventory-table input[type=checkbox]{width:auto}
+.sheet-carry{font-size:10px;white-space:nowrap;display:block}.sheet-inventory-table button{padding:2px 5px;font-size:13px}
+#sheetInventoryCoins{display:grid;gap:5px;margin-bottom:18px}#sheetInventoryCoins label{display:grid;grid-template-columns:24px 1fr;gap:5px;align-items:center;font-size:11px}#sheetInventoryCoins input{width:100%;min-width:0;text-align:center;padding:5px;border:1px solid #888;border-radius:12px 2px}
+#sheetInventoryTotals strong{display:block;font-size:21px}#sheetInventoryTotals small{display:block;font-size:10px;margin:6px 0 14px}#sheetInventoryTotals p{font-size:11px}
+.sheet-attunement-line{border-bottom:1px solid #aaa;font-size:11px;padding:7px 0}
+.sheet-inventory-add{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end}.sheet-inventory-add label{display:grid;gap:4px;font-size:12px}.sheet-inventory-add select{min-width:0;width:100%}.sheet-inventory-loot{border-bottom:1px solid #aaa}
+@media(max-width:1100px){.sheet-inventory-main{grid-template-columns:1fr}}
+@media(max-width:650px){#sheetInventory.sheet-inventory-ledger{grid-template-columns:1fr}.sheet-inventory-sidebar{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sheet-inventory-add{grid-template-columns:1fr}.sheet-inventory-scroll{overflow-x:auto}.sheet-inventory-table{min-width:440px}}
+@media print{#sheetGearPicker,#sheetRefreshLoot,.sheet-inventory-settings,.sheet-inventory-table button{display:none!important}#sheetInventory.sheet-inventory-ledger{grid-template-columns:1fr 115px}.sheet-inventory-main{grid-template-columns:1fr 1fr}.sheet-inventory-column{break-inside:auto}.sheet-inventory-table tr{break-inside:avoid}.sheet-inventory-table{min-width:0}.sheet-inventory-scroll{overflow:visible}}
+/* Overview-style armor selector and a decorative shield framing the live AC. */
+#sheetInventoryDefense{display:grid;grid-template-columns:120px minmax(0,1fr);gap:22px;align-items:center;margin:12px 0 18px;padding:18px;background:linear-gradient(110deg,#f0ede7,#fff 45%);border:1px solid #777;border-radius:12px 3px;color:#252525}
+.sheet-defense-emblem{position:relative;width:112px;height:130px;align-self:start}.sheet-defense-emblem svg{position:absolute;inset:0;width:100%;height:100%;fill:#fffcf5;stroke:#333;stroke-width:1.8}.sheet-defense-emblem .sheet-defense-inset{fill:none;stroke:#aaa;stroke-width:1}.sheet-defense-emblem>div{position:absolute;inset:24px 0 0;display:flex;align-items:center;flex-direction:column}.sheet-defense-emblem small{font-size:9px;letter-spacing:.09em}.sheet-defense-emblem strong{font:600 40px/1.2 Georgia,serif}.sheet-defense-emblem span{font-size:8px;letter-spacing:.08em;color:#666}
+.sheet-defense-content{min-width:0}.sheet-defense-content h4{margin:0 0 10px;font-size:12px;letter-spacing:.08em;text-transform:uppercase}.sheet-defense-selectors{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sheet-defense-selectors label{display:grid;gap:4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em}.sheet-defense-selectors select{width:100%;min-width:0;background:#fff;color:#222;border:1px solid #aaa;border-radius:6px 2px;padding:9px;font-size:13px}.sheet-defense-formula{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 6px;font-size:12px}.sheet-defense-formula span{padding:4px 7px;border-bottom:1px solid #aaa}.sheet-defense-content .sheet-help{font-size:11px;margin:6px 0}.sheet-defense-content .sheet-build-warning{font-size:12px}
+@media(max-width:600px){#sheetInventoryDefense{grid-template-columns:85px minmax(0,1fr);gap:12px;padding:12px}.sheet-defense-emblem{width:80px;height:100px}.sheet-defense-emblem>div{inset:18px 0 0}.sheet-defense-emblem strong{font-size:30px}.sheet-defense-emblem small{font-size:7px}.sheet-defense-emblem span{font-size:6px}.sheet-defense-selectors{grid-template-columns:1fr}}
+@media print{#sheetInventoryDefense{background:#fff;break-inside:avoid;padding:8px;margin:6px 0;grid-template-columns:85px 1fr}.sheet-defense-emblem{width:75px;height:95px}.sheet-defense-emblem>div{inset:18px 0 0}.sheet-defense-emblem strong{font-size:27px}.sheet-defense-content .sheet-help{display:none}.sheet-defense-emblem small{font-size:7px}.sheet-defense-emblem span{font-size:6px}}

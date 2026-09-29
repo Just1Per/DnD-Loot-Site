@@ -36,7 +36,7 @@ var CharacterCatalog = (() => {
           const snapshot=await sdk.getDoc(sdk.doc(sdk.db,'rulesCatalog','current'));
           if(snapshot.exists()) {
             const manifest=snapshot.data();
-            if(manifest.metadataVersion!==2 || manifest.format!==1 || !/^[a-f0-9]{64}$/.test(manifest.release) || !Number.isInteger(manifest.parts) || manifest.parts<1 || manifest.parts>100) throw Error('Invalid catalogue manifest');
+            if(manifest.metadataVersion!==3 || manifest.format!==1 || !/^[a-f0-9]{64}$/.test(manifest.release) || !Number.isInteger(manifest.parts) || manifest.parts<1 || manifest.parts>100) throw Error('Invalid catalogue manifest');
             const parts=await Promise.all(Array.from({length:manifest.parts},(_,i)=>sdk.getDoc(sdk.doc(sdk.db,'rulesCatalog',manifest.release,'parts',String(i).padStart(4,'0')))));
             if(parts.some(p=>!p.exists() || typeof p.data().text!=='string')) throw Error('Incomplete catalogue release');
             const text=parts.map(p=>p.data().text).join('');
@@ -46,7 +46,7 @@ var CharacterCatalog = (() => {
           }
         } catch(error) { reason='Bundled catalogue (database catalogue unavailable)'; console.warn(reason,error.message); }
       }
-      const response=await fetch('data/rules/catalog.json?v=20260928-play-v3');
+      const response=await fetch('data/rules/catalog.json?v=20260928-attacks-v1');
       if(!response.ok) throw Error('Could not load spell and feat catalogue');
       const data=set(await response.json()); data.loadedFrom=reason; return data;
     })().catch(e=>{pending=null;throw e;});

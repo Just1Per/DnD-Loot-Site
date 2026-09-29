@@ -1,5 +1,6 @@
 /* Framework-independent character sheet data and calculations. */
 var CharacterSheetModel = (() => {
+  const Actions=typeof CharacterActions!=='undefined'?CharacterActions:require('./character-actions');
   const Play=typeof CharacterPlayRules!=='undefined'?CharacterPlayRules:require('./character-play-rules');
   const Rules = typeof CharacterRules !== 'undefined' ? CharacterRules : require('./character-rules');
   const Catalog = typeof CharacterCatalog !== 'undefined' ? CharacterCatalog : require('./character-catalog');
@@ -130,6 +131,14 @@ var CharacterSheetModel = (() => {
   function normalize(raw = {}) {
     raw = raw && typeof raw === 'object' ? raw : {};
     const result = {
+      personalGear: (Array.isArray(raw.personalGear)?raw.personalGear:[]).filter(g=>g&&typeof g==='object').slice(0,200).map((g,i)=>({
+        id: 'personal-'+String(g.id||i).replace(/^personal-/, '').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,80),
+        name: String(g.name||'Item').slice(0,160), quantity: number(g.quantity,1,0,9999),
+        weight: Math.max(0,Math.min(99999,Number(g.weight)||0)), location: String(g.location||'Backpack').slice(0,80),
+        carried: g.carried!==false, notes: String(g.notes||'').slice(0,500),
+        edition: g.edition==='2024'?'2024':'2014'
+      })).filter((g,i,a)=>a.findIndex(x=>x.id===g.id)===i),
+      actions: Actions.normalize(raw.actions),
       profile: Play.normalizeProfile(raw.profile),
       advancement: Play.normalizeAdvancement(raw.advancement),
       equipmentState: Equipment.choices(raw.equipmentState),
@@ -240,6 +249,7 @@ var CharacterSheetModel = (() => {
     };
     result.gear=Equipment.derive(d,result,loot);
     result.ac=result.gear.ac;
+    result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     return result;
   }
   function damage(data, amount) {

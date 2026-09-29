@@ -11,6 +11,7 @@ try {
  form.querySelector('[name="abilities.dex"]').value='18';form.querySelector('[name="abilities.dex"]').dispatchEvent(new Event('input',{bubbles:true}));
  check('Ability edit updates derived values and dirty status',document.querySelector('[data-derived="initiative"]').textContent==='+4'&&sheetSession.dirty);
  document.getElementById('sheetAddAttack').click();
+ const kind=document.getElementById('attackKind');kind.value='manual';kind.onchange();document.getElementById('attackName').value='Test action';document.getElementById('attackName').dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('attackConfirm').click();
  check('Attacks can be added without losing ability edits',sheetSession.data.attacks.length===1&&form.querySelector('[name="abilities.dex"]').value==='18');
  document.getElementById('sheetAddSpell').click();
  check('Spells can be added to spellbook',sheetSession.data.spells.length===1);

@@ -47,10 +47,14 @@ const FEATURE_FILES = [
   "./modules/character-catalog.js",
   "./modules/character-adobe-data.js",
   "./modules/character-play-rules.js",
+  "./modules/character-actions.js",
+  "./modules/character-story.js",
   "./modules/character-sheet-model.js",
   "./modules/character-sheet-store.js",
   "./modules/character-overview-ui.js",
   "./modules/character-play-ui.js",
+  "./modules/character-inventory-ui.js",
+  "./modules/character-action-ui.js",
   "./modules/character-sheet.js",
   "./modules/character-equipment-ui.js",
   "./modules/character-catalog-ui.js",
@@ -73,7 +77,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20260928-play-v3");
+    moduleUrl.searchParams.set("v", "20260929-armor-v1");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;

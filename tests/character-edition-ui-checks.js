@@ -13,7 +13,7 @@
  change('build.backgroundAbilities.0','dex');change('build.backgroundAbilities.1','con');change('build.raceSize','Medium');change('build.raceSkills.0','perception');change('build.humanOriginFeat','Skilled');change('build.humanFeatChoices.0','skill:arcana');change('build.humanFeatChoices.1','skill:history');change('build.humanFeatChoices.2','tool:Flute');change('build.standardLanguages.0','Elvish');change('build.standardLanguages.1','Orc');
  check('Human feat training and background feat both appear in summary',visible('build.humanFeatChoices.0')&&document.getElementById('sheetBuildSummary').textContent.includes('Alert, Skilled')&&CharacterSheetModel.derive(sheetSession.data,7).effects.proficiencies.includes('Flute'));
  for(const el of form.querySelectorAll('input,select,textarea'))el.checkValidity=()=>true;await saveCharacterSheet();
- check('2024 data saves with protected schema version nine',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===9);
+ check('2024 data saves with protected schema version eleven',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===11);
  closeCharacterSheet(true);await openCharacterSheet('c1');form=document.getElementById('characterSheetForm');
  check('2024 edition and Origin feat choices survive reopening',field('build.edition').value==='2024'&&field('build.humanOriginFeat').value==='Skilled'&&field('build.humanFeatChoices.2').value==='tool:Flute'&&!visible('species'));
  change('build.race','');change('build.classId','');change('build.background','');
@@ -21,7 +21,7 @@
  change('build.edition','2014');change('build.race','variant-human');
  check('2014 Variant Human shows manual feat and two ability bonuses',visible('build.raceFeat')&&visible('build.flexibleChoices.0')&&visible('build.flexibleChoices.1')&&!visible('build.flexibleChoices.2')&&document.getElementById('sheetModernOrigin').hidden);
  change('build.flexibleChoices.0','dex');change('build.flexibleChoices.1','con');change('build.raceFeat','Lucky');
- for(const el of form.querySelectorAll('input,select,textarea'))el.checkValidity=()=>true;await saveCharacterSheet();check('Switching back to 2014 does not downgrade schema protection',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===9);
+ for(const el of form.querySelectorAll('input,select,textarea'))el.checkValidity=()=>true;await saveCharacterSheet();check('Switching back to 2014 does not downgrade schema protection',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===11);
  closeCharacterSheet(true);
  }catch(e){results.push({name:e.stack,pass:false});}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);

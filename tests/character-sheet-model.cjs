@@ -8,3 +8,7 @@ test('damage consumes temporary HP and floors current HP at zero',()=>{const d=M
 test('healing caps at maximum and does not alter temporary HP',()=>{assert.deepEqual([M.heal({hpMax:12,hpCurrent:10,hpTemp:3},10).hpCurrent,M.heal({hpMax:12,hpCurrent:10,hpTemp:3},10).hpTemp],[12,3]);});
 test('normalization limits data, rejects unknown ranks and remains idempotent',()=>{const d=M.normalize({abilities:{str:500},skills:{arcana:{rank:10}},deathSuccess:8,slots:[{max:2,used:10}],spells:[null],attacks:[null],hpCurrent:NaN});assert.equal(d.abilities.str,30);assert.equal(d.skills.arcana.rank,0);assert.equal(d.deathSuccess,3);assert.equal(d.slots[0].used,2);assert.deepEqual(M.normalize(d),d);});
 test('attack calculations include only selected training',()=>{const d=M.normalize({abilities:{str:18},attacks:[{ability:'str',proficient:true,bonus:1},{ability:'str',proficient:false,bonus:0}]});assert.deepEqual(M.derive(d,5).attacks,[8,4]);});
+test('personal inventory normalization preserves fractional weights and excludes malformed entries',()=>{
+ const d=M.normalize({personalGear:[null,{id:'rope',name:'Rope',quantity:2.9,weight:0.075,carried:false,location:'Camp'},{id:'rope',name:'Duplicate'}]});
+ assert.equal(d.personalGear.length,1);assert.equal(d.personalGear[0].quantity,2);assert.equal(d.personalGear[0].weight,.075);assert.equal(d.personalGear[0].carried,false);assert.deepEqual(M.normalize(d),d);
+});
