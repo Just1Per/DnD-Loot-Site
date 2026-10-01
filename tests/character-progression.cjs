@@ -5,10 +5,12 @@ assert.equal(P.levelFromXP(0), 1, '0 XP should be level 1');
 assert.equal(P.levelFromXP(299), 1, '299 XP should remain level 1');
 assert.equal(P.levelFromXP(300), 2, '300 XP should be level 2');
 assert.equal(P.levelFromXP(355000), 20, '355000 XP should be level 20');
-assert.deepEqual(P.xpProgress(63999), {
-  xp:63999, level:8, current:34000, next:48000, remaining:0,
-  percent:100
-}, 'xpProgress should clamp display percent after the next threshold');
+const xp = P.xpProgress(47999);
+assert.equal(xp.level, 8);
+assert.equal(xp.current, 34000);
+assert.equal(xp.next, 48000);
+assert.equal(xp.remaining, 1);
+assert.ok(xp.percent > 99 && xp.percent < 100);
 
 const sorcerer16 = P.calculateHP({classLevels:[{classId:'sorcerer',level:16}],constitution:14,hpMode:'fixed'});
 assert.equal(sorcerer16.max, 98, 'level 16 Sorcerer with CON 14 fixed HP should be 98');
