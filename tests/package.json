@@ -8,6 +8,6 @@
   },
   "scripts": {
     "test": "node --test character-sheet-model.cjs character-rules.cjs character-catalog.cjs character-feat-rules.cjs character-more-feats.cjs character-equipment.cjs character-magic-armor.cjs character-backgrounds.cjs character-play-rules.cjs character-actions.cjs character-progression.cjs character-subclasses.cjs character-creatures.cjs && node dom.cjs",
-    "test:rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node character-sheet-rules.cjs\""
+    "test:rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node character-sheet-rules-current.cjs && node firestore-adobe-access.cjs\""
   }
 }
