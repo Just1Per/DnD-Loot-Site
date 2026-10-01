@@ -49,8 +49,12 @@ const subclassText=fs.existsSync(path.join(root,subclassPath))?read(subclassPath
 missing=hasAll(subclassText,baseline.baseSubclasses);
 add('subclasses',missing.length?'partial':'covered',missing.length?`Structured Adobe base subclasses still missing: ${missing.join(', ')}`:`All ${baseline.categories.subclasses} Adobe base subclasses are structured for class-level selection.`);
 
-const creatureFile=path.join(root,'js/modules/character-creature-data.js');
-add('creatures',fs.existsSync(creatureFile)?'covered':'pending',fs.existsSync(creatureFile)?'Structured companion/wild-shape creature catalogue is present.':`${baseline.categories.creatures} Adobe base creatures still need a structured web catalogue/picker.`);
+const creaturePaths=Array.from({length:4},(_,i)=>`js/modules/character-creature-data-${i+1}.js`);
+const creatureFilesPresent=creaturePaths.every(p=>fs.existsSync(path.join(root,p)));
+const creatureText=creatureFilesPresent?creaturePaths.map(read).join('\n'):'';
+const creatureCount=(creatureText.match(/\"id\":/g)||[]).length;
+const creatureUI=fs.existsSync(path.join(root,'js/modules/character-creature-ui.js'));
+add('creatures',creatureFilesPresent&&creatureUI&&creatureCount===baseline.categories.creatures?'covered':'partial',creatureFilesPresent?`${creatureCount}/${baseline.categories.creatures} Adobe creature records imported${creatureUI?' with':' without'} the Companion/Familiar/Wild Shape picker.`:`${baseline.categories.creatures} Adobe base creatures still need a complete structured web catalogue.`);
 
 const magicItemMechanics=path.join(root,'data/rules/adobe-magic-item-reference.json');
 add('magic items',fs.existsSync(magicItemMechanics)?'covered':'partial',fs.existsSync(magicItemMechanics)?'Adobe magic-item mechanics reference is present.':`${baseline.categories.magicItems} Adobe base magic items are not yet represented by one complete structured mechanics reference; root-library item data and equipment effects are currently split.`);
