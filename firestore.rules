@@ -1,3 +1,5 @@
+// D&D Vault Firestore Rules Revision: 12
+// Character sheet schema: 12 — Adobe parity progression/pages/subclasses
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
@@ -385,7 +387,7 @@ match /characterSheets/{charId} {
     let d = request.resource.data;
     return exists(characterPath(campaignId, charId))
       && d.keys().hasOnly(['schemaVersion','revision','data','updatedAt','updatedBy'])
-      && d.schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] && d.revision is int && d.revision > 0
+      && d.schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] && d.revision is int && d.revision > 0
       && d.updatedBy == request.auth.uid && d.updatedAt is int
       && d.data is map
       && d.data.keys().hasOnly(['personalGear','actions','profile','advancement','equipmentState','rulesChoices','build','abilities','saves','skills','coins','slots','attacks','spells','inspiration','spellAbility',
@@ -394,7 +396,7 @@ match /characterSheets/{charId} {
         'ac','speed','hpMax','hpCurrent','hpTemp','initiativeBonus','spellAttackBonus','spellDCBonus','deathSuccess','deathFailure','passiveBonus'])
       && (d.schemaVersion == 1
         || (d.schemaVersion == 2 && d.data.build is map && d.data.build.edition == '2014')
-        || (d.schemaVersion in [3, 4, 5, 6, 7, 8, 9, 10, 11] && d.data.build is map && d.data.build.edition in ['2014', '2024']))
+        || (d.schemaVersion in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12] && d.data.build is map && d.data.build.edition in ['2014', '2024']))
       && (d.schemaVersion < 4 || (d.data.rulesChoices is map
         && d.data.rulesChoices.keys().hasOnly(['feats','grants','effects'])
         && d.data.rulesChoices.feats is list && d.data.rulesChoices.feats.size() <= 30
@@ -412,6 +414,25 @@ match /characterSheets/{charId} {
         && d.data.advancement.asiSpent is int && d.data.advancement.asiSpent >= 0 && d.data.advancement.asiSpent <= 7
         && d.data.advancement.lessons is bool))
       && (d.schemaVersion < 11 || (d.data.personalGear is list && d.data.personalGear.size() <= 200))
+      && (d.schemaVersion < 12 || (
+        d.data.rulesChoices.grants.__adobe is map
+        && d.data.rulesChoices.grants.__adobe.keys().hasOnly(['data','used'])
+        && d.data.rulesChoices.grants.__adobe.used == 0
+        && d.data.rulesChoices.grants.__adobe.data is map
+        && d.data.rulesChoices.grants.__adobe.data.keys().hasOnly(['useExperience','hpMode','hpRolls','classLevels','pages','companion'])
+        && d.data.rulesChoices.grants.__adobe.data.useExperience is bool
+        && d.data.rulesChoices.grants.__adobe.data.hpMode in ['fixed','rolled','max']
+        && d.data.rulesChoices.grants.__adobe.data.hpRolls is list
+        && d.data.rulesChoices.grants.__adobe.data.hpRolls.size() <= 19
+        && d.data.rulesChoices.grants.__adobe.data.classLevels is list
+        && d.data.rulesChoices.grants.__adobe.data.classLevels.size() <= 8
+        && d.data.rulesChoices.grants.__adobe.data.pages is map
+        && d.data.rulesChoices.grants.__adobe.data.pages.keys().hasOnly(['spells','companion','rules'])
+        && d.data.rulesChoices.grants.__adobe.data.pages.spells is bool
+        && d.data.rulesChoices.grants.__adobe.data.pages.companion is bool
+        && d.data.rulesChoices.grants.__adobe.data.pages.rules is bool
+        && d.data.rulesChoices.grants.__adobe.data.companion is map
+      ))
       && (d.schemaVersion < 10 || (d.data.actions is list && d.data.actions.size() <= 60))
       && d.data.abilities is map && d.data.saves is map && d.data.skills is map && d.data.coins is map
       && d.data.attacks is list && d.data.attacks.size() <= 30
@@ -495,7 +516,11 @@ match /items/{itemId} {
  allow delete: if isCampaignDM(campaignId);
 }
 match /supply/{itemId} {
- allow read: if isCampaignDM(campaignId);
+ allow read: if isCampaignDM(campaignId)
+   || (isActiveMember(campaignId)
+     && exists(itemPath(itemId))
+     && get(itemPath(itemId)).data.visible == true
+     && get(itemPath(itemId)).data.lootMode == 'player');
  allow create: if isCampaignDM(campaignId) && validStock(request.resource.data);
  allow update: if validStock(request.resource.data) && (isCampaignDM(campaignId) || debitMatches(itemId));
  allow delete: if isCampaignDM(campaignId);
