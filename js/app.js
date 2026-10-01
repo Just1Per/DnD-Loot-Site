@@ -17,14 +17,12 @@ import {
   setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId, onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-
 import { ref, getDownloadURL, uploadBytes }
   from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
-
 // The feature files are intentionally loaded as ordered browser scripts.
-// This is the lowest-risk way to split the existing 3,700+ line app without
-// changing its shared runtime state or requiring any HTML/Firestore changes.
+// This is the lowest-risk way to split the existing app without changing
+// its shared runtime state or requiring a bundler.
 window.__DND_VAULT_DEPS__ = Object.freeze({
   db, storage, auth, provider, signInWithPopup, signOut,
   onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword,
@@ -60,6 +58,7 @@ const FEATURE_FILES = [
   "./modules/character-sheet.js",
   "./modules/character-equipment-ui.js",
   "./modules/character-catalog-ui.js",
+  "./modules/character-adobe-integration.js",
   "./modules/images.js",
   "./modules/catalog-cache.js",
   "./modules/data.js",
@@ -79,7 +78,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261001-engine-v1");
+    moduleUrl.searchParams.set("v", "20261001-adobe-v1");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;
