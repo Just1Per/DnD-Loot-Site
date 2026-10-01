@@ -1,5 +1,5 @@
 /* Character advancement engine: XP, class levels, HP and multiclass spell-slot progression.
- * Kept framework-independent so builder, overview and tests share one source of truth. */
+ * Framework-independent so builder, overview and tests share one source of truth. */
 var CharacterProgression = (() => {
   const XP_THRESHOLDS = Object.freeze([
     0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000,
@@ -25,8 +25,9 @@ var CharacterProgression = (() => {
 
   const FULL_CASTERS = new Set(['bard','cleric','druid','sorcerer','wizard']);
   const HALF_CASTERS = new Set(['artificer','paladin','ranger']);
-  const THIRD_CASTERS = new Set(['eldritch-knight','arcane-trickster']);
+  const THIRD_CASTER_SUBCLASSES = new Set(['eldritch-knight','arcane-trickster']);
 
+  // Standard full-caster/multiclass Spellcasting slot progression, levels 0-20.
   const MULTICLASS_SLOTS = Object.freeze([
     [0,0,0,0,0,0,0,0,0],
     [2,0,0,0,0,0,0,0,0],
@@ -45,10 +46,10 @@ var CharacterProgression = (() => {
     [4,3,3,3,2,1,1,0,0],
     [4,3,3,3,2,1,1,1,0],
     [4,3,3,3,2,1,1,1,0],
+    [4,3,3,3,2,1,1,1,1],
     [4,3,3,3,3,1,1,1,1],
     [4,3,3,3,3,2,1,1,1],
-    [4,3,3,3,3,2,2,1,1],
-    [4,3,3,3,3,2,2,2,1]
+    [4,3,3,3,3,2,2,1,1]
   ]);
 
   const clampLevel = value => Math.max(1, Math.min(20, Math.trunc(Number(value) || 1)));
@@ -56,7 +57,7 @@ var CharacterProgression = (() => {
   const abilityMod = score => Math.floor((Number(score || 10) - 10) / 2);
 
   function levelFromXP(value) {
-    const xp = Math.max(0, Math.trunc(Number(value) || 0));
+    const xp = Math.max(0, Math.trunc(Number(String(value ?? '').replace(/,/g,'')) || 0));
     let level = 1;
     for (let i = 1; i < XP_THRESHOLDS.length; i++) {
       if (xp < XP_THRESHOLDS[i]) break;
@@ -66,7 +67,7 @@ var CharacterProgression = (() => {
   }
 
   function xpProgress(value) {
-    const xp = Math.max(0, Math.trunc(Number(value) || 0));
+    const xp = Math.max(0, Math.trunc(Number(String(value ?? '').replace(/,/g,'')) || 0));
     const level = levelFromXP(xp);
     const current = XP_THRESHOLDS[level - 1];
     const next = level < 20 ? XP_THRESHOLDS[level] : null;
@@ -86,18 +87,20 @@ var CharacterProgression = (() => {
     for (const entry of source) {
       const classId = key(entry?.classId || entry?.class || entry?.name);
       if (!classId) continue;
-      const level = clampLevel(entry?.level);
-      result.push({classId, level, subclassId:key(entry?.subclassId || entry?.subclass)});
+      result.push({
+        classId,
+        level: clampLevel(entry?.level),
+        subclassId: key(entry?.subclassId || entry?.subclass)
+      });
     }
     let total = result.reduce((sum, entry) => sum + entry.level, 0);
-    while (total > 20 && result.length) {
-      const last = result[result.length - 1];
-      const reduce = Math.min(last.level - 1, total - 20);
-      last.level -= reduce;
-      total -= reduce;
-      if (last.level < 1) result.pop();
+    for (let i = result.length - 1; i >= 0 && total > 20; i--) {
+      const remove = Math.min(result[i].level, total - 20);
+      result[i].level -= remove;
+      total -= remove;
+      if (result[i].level <= 0) result.splice(i,1);
     }
-    return result.length ? result : [{classId:'adventurer', level:clampLevel(fallbackLevel)}];
+    return result.length ? result : [{classId:key(fallbackClass)||'adventurer', level:clampLevel(fallbackLevel), subclassId:''}];
   }
 
   function totalLevel(classLevels) {
@@ -112,13 +115,6 @@ var CharacterProgression = (() => {
     return Math.floor(Number(hitDie || 8) / 2) + 1;
   }
 
-  /*
-   * hpMode:
-   * - fixed: maximum die at character level 1, fixed average thereafter
-   * - max: maximum die at every level
-   * - rolled: maximum die at character level 1, supplied hpRolls thereafter
-   * hpRolls is indexed by character level after first (level 2 => hpRolls[0]).
-   */
   function calculateHP({classLevels, constitution = 10, hpMode = 'fixed', hpRolls = [], bonuses = 0} = {}) {
     const levels = normalizeClassLevels(classLevels);
     const conMod = abilityMod(constitution);
@@ -146,20 +142,32 @@ var CharacterProgression = (() => {
     return {max:Math.max(1, base + extra),base,bonuses:extra,conMod,mode,breakdown};
   }
 
-  function casterLevel(classLevels) {
+  function casterLevel(classLevels, edition='2014') {
     let total = 0;
     for (const entry of normalizeClassLevels(classLevels)) {
       if (FULL_CASTERS.has(entry.classId)) total += entry.level;
       else if (entry.classId === 'artificer') total += Math.ceil(entry.level / 2);
-      else if (HALF_CASTERS.has(entry.classId)) total += Math.floor(entry.level / 2);
-      else if (THIRD_CASTERS.has(entry.subclassId)) total += Math.floor(entry.level / 3);
+      else if (entry.classId === 'paladin' || entry.classId === 'ranger') {
+        // 2014 multiclass rules round these classes down. The 2024 classes begin
+        // spellcasting at level 1, so round up when using the revised rules.
+        total += edition === '2024' ? Math.ceil(entry.level / 2) : Math.floor(entry.level / 2);
+      } else if (THIRD_CASTER_SUBCLASSES.has(entry.subclassId)) total += Math.floor(entry.level / 3);
     }
     return Math.max(0, Math.min(20, total));
   }
 
-  function spellSlots(classLevels) {
-    const level = casterLevel(classLevels);
+  function spellSlots(classLevels, edition='2014') {
+    const level = casterLevel(classLevels,edition);
     return level ? [...MULTICLASS_SLOTS[level]] : [0,0,0,0,0,0,0,0,0];
+  }
+
+  function hitDiceSummary(classLevels) {
+    const totals = new Map();
+    for (const entry of normalizeClassLevels(classLevels)) {
+      const die = hitDieFor(entry.classId);
+      totals.set(die,(totals.get(die)||0)+entry.level);
+    }
+    return [...totals.entries()].sort((a,b)=>b[0]-a[0]).map(([die,count])=>`${count}d${die}`).join(' + ');
   }
 
   return {
@@ -175,7 +183,8 @@ var CharacterProgression = (() => {
     fixedHitPointsForDie,
     calculateHP,
     casterLevel,
-    spellSlots
+    spellSlots,
+    hitDiceSummary
   };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = CharacterProgression;
