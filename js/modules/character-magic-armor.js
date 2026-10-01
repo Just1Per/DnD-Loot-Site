@@ -1,7 +1,7 @@
 'use strict';
 /* Structured Adobe magic-armor facts used to store AC mechanics on root items. */
 var CharacterMagicArmor = (() => {
-  const E=CharacterEquipment;
+  const E=CharacterEquipment,baseInfer=E.infer.bind(E);
   const special={
     'demon armor':{kind:'armor',base:'plate',acBonus:1,source:'Adobe: Demon Armor'},
     'dragon scale mail':{kind:'armor',base:'scale-mail',acBonus:1,source:'Adobe: Dragon Scale Mail'},
@@ -47,6 +47,10 @@ var CharacterMagicArmor = (() => {
     const base=E.armor[mechanics.base];
     return base?base.baseAC+Number(mechanics.acBonus||0):null;
   }
+  // Prefer explicit stored mechanics. For legacy root/campaign items, provide
+  // the Adobe magic-armor mapping before falling back to the generic name parser.
+  E.infer=item=>item?.mechanics?baseInfer(item):(infer(item)||baseInfer(item));
   return {special,infer,expectedAC};
 })();
+if(typeof globalThis!=='undefined')globalThis.CharacterMagicArmor=CharacterMagicArmor;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterMagicArmor;
