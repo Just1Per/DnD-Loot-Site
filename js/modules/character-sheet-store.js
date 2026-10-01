@@ -2,6 +2,24 @@
 function createCharacterSheetStore(sdk) {
   const {db, doc, getDoc, runTransaction, auth} = sdk;
   const path = (campaignId, characterId) => doc(db, 'campaigns', campaignId, 'characterSheets', characterId);
+  const adobeDefaults = () => ({
+    useExperience: false,
+    hpMode: 'fixed',
+    hpRolls: [],
+    classLevels: [],
+    pages: { spells:false, companion:false, rules:false },
+    companion: {}
+  });
+  function persistedData(raw) {
+    const data = structuredClone(raw || {});
+    data.rulesChoices ||= {feats:[],grants:{},effects:{}};
+    data.rulesChoices.grants ||= {};
+    const embedded = data.rulesChoices.grants.__adobe?.data;
+    const adobe = data.adobe || embedded || adobeDefaults();
+    data.rulesChoices.grants.__adobe = {data:adobe, used:0};
+    delete data.adobe;
+    return data;
+  }
   async function load(campaignId, characterId) {
     const snapshot = await getDoc(path(campaignId, characterId));
     return snapshot.exists() ? snapshot.data() : {
@@ -32,7 +50,7 @@ function createCharacterSheetStore(sdk) {
       tx.set(sheetRef, {
         schemaVersion: 12,
         revision: next,
-        data,
+        data: persistedData(data),
         updatedAt: Date.now(),
         updatedBy: actor
       });
