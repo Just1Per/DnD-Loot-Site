@@ -8,4 +8,5 @@ var CharacterCreatureData = (() => {
   const search=(query='')=>{const q=String(query).trim().toLowerCase();return q?rows.filter(row=>row.name.toLowerCase().includes(q)||String(row.type||'').toLowerCase().includes(q)):rows.slice()};
   return {rows,add,find,search};
 })();
+if(typeof globalThis!=='undefined')globalThis.CharacterCreatureData=CharacterCreatureData;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterCreatureData;
