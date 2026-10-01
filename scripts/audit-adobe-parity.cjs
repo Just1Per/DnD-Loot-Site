@@ -44,9 +44,10 @@ const baseEquipment=Array.isArray(adobe.baseEquipment)?adobe.baseEquipment.lengt
 add('gear',gearCount>=baseline.categories.gear?'covered':'partial',`${gearCount} Adobe adventuring-gear records imported.`);
 add('weapons & armor',equipment.includes('breastplate')&&equipment.includes('plate')?'covered':'partial',`${baseEquipment} base equipment records imported; AC/weapon mechanics are handled by the equipment engine.`);
 
-const subclassText=rules+'\n'+read('js/modules/character-rules-2024.js');
+const subclassPath='js/modules/character-subclass-data.js';
+const subclassText=fs.existsSync(path.join(root,subclassPath))?read(subclassPath):'';
 missing=hasAll(subclassText,baseline.baseSubclasses);
-add('subclasses',missing.length?'partial':'covered',missing.length?`Not all Adobe base subclasses are yet structured for selection/progression. Missing from structured rules text: ${missing.join(', ')}`:'All Adobe base subclasses are represented.');
+add('subclasses',missing.length?'partial':'covered',missing.length?`Structured Adobe base subclasses still missing: ${missing.join(', ')}`:`All ${baseline.categories.subclasses} Adobe base subclasses are structured for class-level selection.`);
 
 const creatureFile=path.join(root,'js/modules/character-creature-data.js');
 add('creatures',fs.existsSync(creatureFile)?'covered':'pending',fs.existsSync(creatureFile)?'Structured companion/wild-shape creature catalogue is present.':`${baseline.categories.creatures} Adobe base creatures still need a structured web catalogue/picker.`);
@@ -54,7 +55,10 @@ add('creatures',fs.existsSync(creatureFile)?'covered':'pending',fs.existsSync(cr
 const magicItemMechanics=path.join(root,'data/rules/adobe-magic-item-reference.json');
 add('magic items',fs.existsSync(magicItemMechanics)?'covered':'partial',fs.existsSync(magicItemMechanics)?'Adobe magic-item mechanics reference is present.':`${baseline.categories.magicItems} Adobe base magic items are not yet represented by one complete structured mechanics reference; root-library item data and equipment effects are currently split.`);
 
+const rulesText=read('firestore.rules');
+add('firestore schema',rulesText.includes('Firestore Rules Revision: 12')&&rulesText.includes('schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]')?'covered':'partial','Character-sheet persistence is expected to move in lockstep with the Adobe parity schema.');
+
 for(const row of report) console.log(`${row.status.toUpperCase().padEnd(8)} ${row.category}: ${row.detail}`);
-const incomplete=report.filter(r=>!['covered'].includes(r.status));
+const incomplete=report.filter(r=>r.status!=='covered');
 console.log(`\nAdobe parity: ${report.length-incomplete.length}/${report.length} categories covered; ${incomplete.length} need more work.`);
 if(process.argv.includes('--strict')&&incomplete.length)process.exitCode=1;
