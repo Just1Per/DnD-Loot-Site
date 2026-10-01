@@ -58,7 +58,9 @@ const FEATURE_FILES = [
   "./modules/character-sheet.js",
   "./modules/character-equipment-ui.js",
   "./modules/character-catalog-ui.js",
-  "./modules/character-adobe-integration.js",
+  "./modules/character-adobe-engine.js",
+  "./modules/character-adobe-builder-ui.js",
+  "./modules/character-adobe-pages.js",
   "./modules/images.js",
   "./modules/catalog-cache.js",
   "./modules/data.js",
@@ -78,7 +80,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261001-adobe-v1");
+    moduleUrl.searchParams.set("v", "20261001-adobe-v2");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;
