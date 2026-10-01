@@ -989,6 +989,7 @@ var CharacterRules = (() => {
       backgroundFeat: Modern.originFeats.includes(b.backgroundFeat) ? b.backgroundFeat : '',
       humanFeatChoices: Array.from({ length: 3 }, (_, i) => String(b.humanFeatChoices?.[i] || '').slice(0, 120)),
       backgroundFeatChoices: Array.from({ length: 3 }, (_, i) => String(b.backgroundFeatChoices?.[i] || '').slice(0, 120)),
+      scoreMethod: b.scoreMethod==='pointBuy'?'pointBuy':'manual',
       scoreMode: b.scoreMode === 'base' ? 'base' : 'total',
       autoSlots: !!b.autoSlots,
       asiPattern: b.asiPattern === '111' ? '111' : '21',

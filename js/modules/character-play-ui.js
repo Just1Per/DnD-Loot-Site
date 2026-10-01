@@ -11,6 +11,7 @@ function setupCharacterPlayUI(){
   const area=form.querySelector(`[name="${key}"]`),select=document.createElement('select');select.dataset.storyChoice=key;select.setAttribute('aria-label',key+' suggestion');area.before(select);area.rows=3;
  }
  updateStorySuggestions();
+ const scoreMode=form.querySelector('[name="build.scoreMode"]')?.closest('label');if(scoreMode)document.querySelector('.sheet-point-panel').appendChild(scoreMode);
  const advancement=document.createElement('section');advancement.className='sheet-editor-box';advancement.innerHTML='<h4>Advancement</h4>'+f('ASI choices spent on ability scores instead of feats','advancement.asiSpent','number',{min:0,max:7})+'<p class="sheet-help">For 2014 ASIs already entered in your base scores, reserve their choices here. Do not also select an Ability Score Improvement feat for the same increase. Progression uses your selected single class and its level; multiclass progression is not yet supported.</p>'+f('Warlock: one invocation spent on Lessons of the First Ones','advancement.lessons','checkbox')+'<p class="sheet-help">2024 Warlock, level 2+: reserves one invocation for an Origin feat. This does not grant an extra general feat.</p>';
  document.getElementById('sheetBuildControls').appendChild(advancement);
  const spells=document.getElementById('sheet-spells'),sheet=document.createElement('section');sheet.id='sheetSpellReadout';spells.querySelector('h3').after(sheet);
