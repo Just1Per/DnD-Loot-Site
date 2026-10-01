@@ -8,7 +8,15 @@ function createCharacterSheetStore(sdk) {
     hpRolls: [],
     classLevels: [],
     pages: { spells:false, companion:false, rules:false },
-    companion: {}
+    companion: {
+      type:'companion',name:'',creature:'',size:'Medium',profBonus:2,ac:10,
+      hpMax:1,hpCurrent:1,hpTemp:0,speed:30,initiativeBonus:0,
+      abilities:{str:10,dex:10,con:10,int:10,wis:10,cha:10},
+      saveProficient:{str:false,dex:false,con:false,int:false,wis:false,cha:false},
+      skillRank:{acrobatics:0,animalHandling:0,arcana:0,athletics:0,deception:0,history:0,insight:0,intimidation:0,investigation:0,medicine:0,nature:0,perception:0,performance:0,persuasion:0,religion:0,sleightOfHand:0,stealth:0,survival:0},
+      skillBonus:{acrobatics:0,animalHandling:0,arcana:0,athletics:0,deception:0,history:0,insight:0,intimidation:0,investigation:0,medicine:0,nature:0,perception:0,performance:0,persuasion:0,religion:0,sleightOfHand:0,stealth:0,survival:0},
+      attacks:'',traits:'',notes:''
+    }
   });
   function persistedData(raw) {
     const data = structuredClone(raw || {});
