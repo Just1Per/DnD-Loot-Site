@@ -45,7 +45,7 @@ add('feats',grappler?'covered':'missing',`${catalog.feats.filter(f=>f.edition===
 const gearCount=Array.isArray(adobe.gear)?adobe.gear.length:0;
 const baseEquipment=Array.isArray(adobe.baseEquipment)?adobe.baseEquipment.length:0;
 add('gear',gearCount>=baseline.categories.gear?'covered':'partial',`${gearCount} Adobe adventuring-gear records imported.`);
-add('weapons & armor',equipment.includes('breastplate')&&equipment.includes('plate')?'covered':'partial',`${baseEquipment} base equipment records imported; AC/weapon mechanics are handled by the equipment engine.`);
+add('weapons & armor',norm(equipment).includes('breastplate')&&norm(equipment).includes('plate')?'covered':'partial',`${baseEquipment} base equipment records imported; AC/weapon mechanics are handled by the equipment engine.`);
 
 const subclassPath='js/modules/character-subclass-data.js';
 const subclassText=fs.existsSync(path.join(root,subclassPath))?read(subclassPath):'';
@@ -60,7 +60,11 @@ const creatureUI=fs.existsSync(path.join(root,'js/modules/character-creature-ui.
 add('creatures',creatureFilesPresent&&creatureUI&&creatureCount===baseline.categories.creatures?'covered':'partial',creatureFilesPresent?`${creatureCount}/${baseline.categories.creatures} Adobe creature records imported${creatureUI?' with':' without'} the Companion/Familiar/Wild Shape picker.`:`${baseline.categories.creatures} Adobe base creatures still need a complete structured web catalogue.`);
 
 const magicItemMechanics=path.join(root,'data/rules/adobe-magic-item-reference.json');
-add('magic items',fs.existsSync(magicItemMechanics)?'covered':'partial',fs.existsSync(magicItemMechanics)?'Adobe magic-item mechanics reference is present.':`${baseline.categories.magicItems} Adobe base magic items are not yet represented by one complete structured mechanics reference; root-library item data and equipment effects are currently split.`);
+let magicItemReference=null;
+if(fs.existsSync(magicItemMechanics))try{magicItemReference=JSON.parse(fs.readFileSync(magicItemMechanics,'utf8'));}catch{}
+const magicItemCount=Array.isArray(magicItemReference?.names)?magicItemReference.names.length:0;
+const magicAutomationCount=magicItemReference?.automation&&typeof magicItemReference.automation==='object'?Object.keys(magicItemReference.automation).length:0;
+add('magic items',magicItemCount>=baseline.categories.magicItems?'covered':'partial',magicItemCount?`${magicItemCount}/${baseline.categories.magicItems} Adobe base magic items indexed; ${magicAutomationCount} high-confidence automatic effect profiles plus generic armor/weapon variants.`:`${baseline.categories.magicItems} Adobe base magic items are not yet represented by one complete structured mechanics reference; root-library item data and equipment effects are currently split.`);
 
 const rulesText=read('firestore.rules');
 const ruleRevision=Number(rulesText.match(/Firestore Rules Revision:\s*(\d+)/)?.[1]||0);
