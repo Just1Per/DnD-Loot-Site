@@ -23,6 +23,7 @@ var CharacterCatalog = (() => {
       ids.add(r.id);
     }
     if(data.spells.some(s=>!Number.isInteger(s.level)||s.level<0||s.level>9) || data.feats.some(f=>!Number.isInteger(f.minimumLevel)||f.minimumLevel<0||f.minimumLevel>20)) throw Error('Invalid catalogue levels');
+    if(data.spells.some(s=>!schools.includes(String(s.school||'')))) throw Error('Invalid or missing spell school');
     for(const feat of data.feats)if(feat.licensedText && Feats.definitions[feat.id]?.descriptionOverride)feat.description=Feats.definitions[feat.id].descriptionOverride;
     catalogue=data;return data;
   }
