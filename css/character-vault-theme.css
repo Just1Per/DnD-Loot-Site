@@ -295,6 +295,48 @@
   background:linear-gradient(180deg,#aa2626,#741616)!important;
   box-shadow:0 6px 14px rgba(0,0,0,.24)!important;
 }
+
+/* Secondary actions that sit on dark sheet headers use the site's gold-on-brown treatment. */
+#characterSheetPage .sheet-header .sheet-actions button:not(.btn-primary),
+#characterSheetDialog .sheet-header .sheet-actions button:not(.btn-primary),
+#characterSheetDialog .sheet-header>button {
+  background:rgba(212,175,55,.14);
+  border:1px solid var(--vault-gold);
+  color:var(--vault-cream);
+}
+#characterSheetPage .sheet-header .sheet-actions button:not(.btn-primary):hover:not(:disabled),
+#characterSheetDialog .sheet-header .sheet-actions button:not(.btn-primary):hover:not(:disabled),
+#characterSheetDialog .sheet-header>button:hover:not(:disabled) {
+  background:rgba(212,175,55,.28);
+  color:#fff6df;
+  box-shadow:0 3px 9px rgba(0,0,0,.20);
+}
+
+/* Destructive row/catalogue actions stay visually distinct. */
+#characterSheetPage :is([data-remove-row],[data-remove-feat],[data-remove-personal]),
+#characterSheetDialog :is([data-remove-row],[data-remove-feat],[data-remove-personal]) {
+  background:var(--action-danger-bg,rgba(139,45,45,.08));
+  border-color:var(--action-danger,var(--vault-danger));
+  color:var(--action-danger,var(--vault-danger));
+}
+#characterSheetPage :is([data-remove-row],[data-remove-feat],[data-remove-personal]):hover:not(:disabled),
+#characterSheetDialog :is([data-remove-row],[data-remove-feat],[data-remove-personal]):hover:not(:disabled) {
+  background:var(--action-danger-hover,rgba(139,45,45,.15));
+  border-color:var(--vault-danger);
+  color:#742222;
+}
+
+/* + Page is a secondary Vault action even though the legacy layer used !important. */
+#characterSheetPage .sheet-add-page-button,
+#characterSheetDialog .sheet-add-page-button {
+  background:var(--action-bg,rgba(212,175,55,.12))!important;
+  border:1px dashed var(--vault-gold-deep)!important;
+  color:var(--vault-burgundy)!important;
+}
+#characterSheetPage .sheet-add-page-button:hover,
+#characterSheetDialog .sheet-add-page-button:hover {
+  background:var(--action-bg-hover,rgba(212,175,55,.22))!important;
+}
 #characterSheetPage .sheet-info-button,
 #characterSheetDialog .sheet-info-button {
   border:1px solid var(--vault-gold-deep)!important;
