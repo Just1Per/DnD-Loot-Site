@@ -50,7 +50,7 @@ var CharacterRules2024 = (() => {
   const cantrip = name => spell(1, name, 'at will');
   function extend(races) {
     for (const r of Object.values(races))
-      r.edition = '2014';
+      if (!r.edition) r.edition = '2014';
     const add = (id, name, extra = {}) => races[id + '-2024'] = {
       name,
       edition: '2024',
