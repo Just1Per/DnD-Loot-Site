@@ -220,10 +220,19 @@ function renderBuildFeatChoices() {
 
 function renderCatalogFeatResults() {
   const host=document.getElementById('catalogFeatResults');if(!host)return;
-  const edition=document.getElementById('catalogFeatEdition').value, search=document.getElementById('catalogFeatSearch').value.toLowerCase();
+  const get=id=>document.getElementById(id)?.value||'';
+  const edition=get('catalogFeatEdition'),category=get('catalogFeatCategory'),effect=get('catalogFeatEffect'),source=get('catalogFeatSource'),level=get('catalogFeatLevel'),search=get('catalogFeatSearch').trim().toLowerCase();
   const scores=CharacterSheetModel.derive(sheetSession.data,sheetSession.identity.level).scores;
-  const rows=CharacterCatalog.data.feats.filter(f=>(!edition||f.edition===edition) && f.name.toLowerCase().includes(search));
-  host.innerHTML=`<p>${rows.length} matches${rows.length>40?' · Showing first 40; narrow your search':''}</p><div class="sheet-catalog-results">${rows.slice(0,40).map(f=>`<article><strong>${sheetEscape(f.name)}</strong> <span>${f.edition} · ${sheetEscape(f.source)}${f.minimumLevel?' · Level '+f.minimumLevel+'+':''}</span><button type="button" data-add-catalog-feat="${sheetEscape(f.id)}" ${CharacterPlayRules.eligible(sheetSession.data,sheetSession.identity.level,f,CharacterCatalog.data.feats,scores)?'disabled':''} title="${sheetEscape(CharacterPlayRules.eligible(sheetSession.data,sheetSession.identity.level,f,CharacterCatalog.data.feats,scores))}">Choose feat</button></article>`).join('')}</div>`;
+  const rows=CharacterCatalog.data.feats.filter(f=>{
+    const ref=featReference(f),hay=[f.name,f.source,f.book,featCategoryLabel(f),featPreviewText(f),...(ref?.features||[]),...(ref?.facts||[])].filter(Boolean).join(' ').toLowerCase();
+    return (!edition||f.edition===edition)&&(!category||String(f.category||'')===category)&&(!effect||featEffectTags(f).includes(effect))&&(!source||f.source===source)&&
+      (level===''||(level==='0'?Number(f.minimumLevel||0)===0:Number(f.minimumLevel||0)<=Number(level)))&&(!search||hay.includes(search));
+  }).sort((a,b)=>a.name.localeCompare(b.name)||a.edition.localeCompare(b.edition));
+  host.innerHTML=`<div class="sheet-repeat-title"><h4>Browse feats</h4><span>${rows.length} of ${CharacterCatalog.data.feats.length} shown</span></div><div class="sheet-catalog-results sheet-feat-results">${rows.map(f=>{
+    const denied=CharacterPlayRules.eligible(sheetSession.data,sheetSession.identity.level,f,CharacterCatalog.data.feats,scores),tags=featEffectTags(f);
+    return `<article><div class="sheet-feat-result-copy"><strong>${sheetEscape(f.name)}</strong><span>${f.edition} · ${sheetEscape(featCategoryLabel(f))} · ${sheetEscape(f.source)}${f.minimumLevel?' · Level '+f.minimumLevel+'+':''}</span><small>${sheetEscape(featPreviewText(f).slice(0,180))}${featPreviewText(f).length>180?'…':''}</small>${tags.length?'<div class="sheet-feat-tags">'+tags.map(t=>'<span>'+sheetEscape(t)+'</span>').join('')+'</div>':''}</div><button type="button" class="sheet-info-button" data-feat-info="${sheetEscape(f.id)}" aria-label="Information about ${sheetEscape(f.name)}">i</button><button type="button" data-add-catalog-feat="${sheetEscape(f.id)}" ${denied?'disabled':''} title="${sheetEscape(denied||'Choose this feat')}">Choose feat</button></article>`;
+  }).join('')||'<p class="sheet-empty">No feats match these filters.</p>'}</div>`;
+  host.querySelectorAll('[data-feat-info]').forEach(button=>button.onclick=()=>openFeatInformation(button.dataset.featInfo));
   host.querySelectorAll('[data-add-catalog-feat]').forEach(button=>button.onclick=()=>{
     readSheetForm();const feat=CharacterCatalog.find(button.dataset.addCatalogFeat,'feats'),data=sheetSession.data;
     const denied=CharacterPlayRules.eligible(data,Number(sheetSession.identity.level),feat,CharacterCatalog.data.feats,CharacterSheetModel.derive(data,Number(sheetSession.identity.level)).scores);if(denied){sheetStatus(denied,true);return;}
@@ -234,22 +243,23 @@ function renderCatalogFeatResults() {
       if(data.rulesChoices.feats.length>=30){sheetStatus('Maximum 30 additional feats.',true);return;}
       data.rulesChoices.feats.push(feat.id);
     }
-    catalogChanged('Feat selected. Review its prerequisites with your DM, then save.');
+    catalogChanged('Feat selected. Review its choices, then save.');renderCatalogFeatResults();
   });
 }
 function updateSheetCatalogGrants() {
   const host=document.getElementById('catalogFeatGrants');
   if(!host || !CharacterCatalog.data || !sheetSession)return;
   const data=sheetSession.data, C=CharacterCatalog;
-  renderBuildFeatChoices();
+  renderBuildFeatChoices();renderDmFeatApproval();
   const stats=CharacterSheetModel.derive(data,sheetSession.identity.level);
   const signature=JSON.stringify([stats.scores,stats.pb,stats.feats.reports.map(r=>r.warnings),data.build.edition,data.build.race,data.build.background,data.build.backgroundFeat,data.build.humanOriginFeat,data.build.raceFeat,data.rulesChoices]);
   if(signature===sheetCatalogSignature)return;
   sheetCatalogSignature=signature;
   const feats=document.getElementById('catalogSelectedFeats');
   feats.innerHTML='<h4>Your selected feats</h4>'+(stats.feats.reports.length?'<p class="sheet-help">Configure feat-specific choices here. Combat resources and rest recovery are tracked on the relevant gameplay sections.</p>':'<p class="sheet-help">No feat with additional catalogue controls is selected yet.</p>')+stats.feats.reports.map(report=>{
-    const f=C.find(report.id,'feats');return `<article class="sheet-repeat" data-feat-key="${sheetEscape(report.key)}"><h4>${sheetEscape((f?.name||report.def.name)+' · '+report.def.edition)}${report.origin?' · '+sheetEscape(report.originLabel||'Variant Human'):''}</h4><p>${sheetEscape(f?f.book+', p. '+f.page:report.def.source)}</p>${renderFeatEffectControls(report,sheetSession.identity.level)}<details><summary>Full rules / source reference</summary><p class="sheet-rule-text">${sheetEscape(f?.description||'Consult the source for complete rules. Effects not listed as automated remain manual.')}</p></details>${report.origin?'':`<button type="button" data-remove-feat="${sheetEscape(report.key)}">Remove feat</button>`}</article>`;
+    const f=C.find(report.id,'feats'),summary=f?featPreviewText(f):'Source-specific feat.';return `<article class="sheet-repeat" data-feat-key="${sheetEscape(report.key)}"><div class="sheet-repeat-title"><h4>${sheetEscape((f?.name||report.def.name)+' · '+report.def.edition)}${report.origin?' · '+sheetEscape(report.originLabel||'Variant Human'):''}</h4>${f?`<button type="button" class="sheet-info-button" data-selected-feat-info="${sheetEscape(f.id)}" aria-label="Information about ${sheetEscape(f.name)}">i</button>`:''}</div><p>${sheetEscape(f?f.book+', p. '+f.page:report.def.source)}</p><p class="sheet-help">${sheetEscape(summary)}</p>${renderFeatEffectControls(report,sheetSession.identity.level)}${report.origin?'':`<button type="button" data-remove-feat="${sheetEscape(report.key)}">Remove feat</button>`}</article>`;
   }).join('');
+  feats.querySelectorAll('[data-selected-feat-info]').forEach(button=>button.onclick=()=>openFeatInformation(button.dataset.selectedFeatInfo));
   feats.querySelectorAll('[data-remove-feat]').forEach(button=>button.onclick=()=>{readSheetForm();CharacterFeatRules.remove(sheetSession.data,button.dataset.removeFeat);catalogChanged();});
   feats.querySelectorAll('[data-feat-key]').forEach(article=>{
     const key=article.dataset.featKey;
