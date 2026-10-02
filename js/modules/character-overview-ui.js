@@ -34,11 +34,19 @@ function openSpellInformation({catalogId='',index=null}={}) {
 }
 function moveOriginFeatControls() {
  const form=document.getElementById('characterSheetForm'),host=document.getElementById('sheetBuildControls');
- const modern=document.createElement('section');modern.id='sheetOriginFeatChoices';modern.innerHTML='<h3>Origin feat choices</h3><p>Your background grants its listed feat automatically. Make additional Human or custom-background choices here.</p>';
- const legacy=document.createElement('section');legacy.id='sheetLegacyFeatChoice';legacy.innerHTML='<h3>Variant Human feat</h3>';
- for(const name of ['build.backgroundFeat','build.humanOriginFeat',...[0,1,2].flatMap(i=>[`build.backgroundFeatChoices.${i}`,`build.humanFeatChoices.${i}`])]){const label=form.querySelector(`[name="${name}"]`)?.closest('label');if(label)modern.appendChild(label);}
- const race=form.querySelector('[name="build.raceFeat"]')?.closest('label');if(race)legacy.appendChild(race);
- host.append(modern,legacy);
+ for(const name of ['build.backgroundFeat','build.humanOriginFeat','build.raceFeat',...[0,1,2].flatMap(i=>[`build.backgroundFeatChoices.${i}`,`build.humanFeatChoices.${i}`])]){
+  const label=form.querySelector(`[name="${name}"]`)?.closest('label');
+  if(label){label.hidden=true;label.dataset.featCatalogueManaged='true';}
+ }
+ let note=document.getElementById('sheetBuilderFeatNotice');
+ if(!note){
+  note=document.createElement('section');
+  note.id='sheetBuilderFeatNotice';
+  note.className='sheet-editor-box sheet-builder-feat-notice';
+  note.innerHTML='<div><span class="sheet-eyebrow">FEAT CHOICES</span><h4>Choose feats on the Feats page</h4><p>Your background, species and level progression determine when you receive a feat. The actual feat selection and feat-specific choices are now kept together in the Feat catalogue.</p></div><button type="button" data-open-feat-page>Open Feats</button>';
+  host.append(note);
+  note.querySelector('[data-open-feat-page]').onclick=()=>document.querySelector('[data-sheet-tab="feats"]')?.click();
+ }
 }
 function updateBackgroundControls(d) {
  const b=sheetSession.data.build,bg=CharacterBackgrounds.get(b.background),form=document.getElementById('characterSheetForm'),R=CharacterRules;
@@ -71,8 +79,7 @@ function updateBackgroundControls(d) {
   }
   summary.innerHTML=`<h4>${sheetEscape(bg.name)} · ${sheetEscape(bg.edition)} · ${sheetEscape(source)}</h4><p><strong>Skills:</strong> ${sheetEscape(skillText)}</p><p><strong>Tools:</strong> ${sheetEscape(toolText)}</p><p><strong>Additional languages:</strong> ${count}</p>${mechanics}<p class="sheet-help">${sheetEscape(ref)}. Factual options are loaded into the builder; source-specific prose, equipment and mechanics not represented by the rules engine remain manual. Starting equipment is not added to campaign loot automatically.</p>`;
  }else summary.innerHTML='<p>Custom background: record skills and tools in Abilities & skills / Combat notes. Under 2024 rules, select ability increases here and an Origin feat in Character builder.</p>';
- document.getElementById('sheetOriginFeatChoices').hidden=b.edition!=='2024';
- document.getElementById('sheetLegacyFeatChoice').hidden=b.edition!=='2014'||b.race!=='variant-human';
+ form.querySelectorAll('[data-feat-catalogue-managed="true"]').forEach(label=>label.hidden=true);
 }
 function refineCharacterBuilder() {
  const root=document.getElementById('sheetBuildControls');
