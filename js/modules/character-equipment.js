@@ -80,7 +80,7 @@ var CharacterEquipment = (() => {
   }
   function choices(raw={}) {
     const seen=new Set();
-    return {acMode:raw?.acMode==='equipment'?'equipment':'manual',acAdjustment:n(raw?.acAdjustment),loadout:(Array.isArray(raw?.loadout)?raw.loadout:[]).filter(v=>v&&typeof v.id==='string'&&v.id.length<=200&&!seen.has(v.id)&&seen.add(v.id)).slice(0,200).map(v=>({id:v.id,equipped:v.equipped===true,attuned:v.attuned===true,ability:['str','dex','con','int','wis','cha'].includes(v.ability)?v.ability:'auto',proficiency:['yes','no'].includes(v.proficiency)?v.proficiency:'auto',mode:['twoHanded','thrown','offhand','mounted'].includes(v.mode)?v.mode:'normal'}))};
+    return {acMode:'equipment',acAdjustment:0,loadout:(Array.isArray(raw?.loadout)?raw.loadout:[]).filter(v=>v&&typeof v.id==='string'&&v.id.length<=200&&!seen.has(v.id)&&seen.add(v.id)).slice(0,200).map(v=>({id:v.id,equipped:v.equipped===true,attuned:v.attuned===true,ability:['str','dex','con','int','wis','cha'].includes(v.ability)?v.ability:'auto',proficiency:['yes','no'].includes(v.proficiency)?v.proficiency:'auto',mode:['twoHanded','thrown','offhand','mounted'].includes(v.mode)?v.mode:'normal'}))};
   }
   function trained(w,profs) {
     const entries=profs.map(p=>p.toLowerCase());
@@ -114,10 +114,28 @@ var CharacterEquipment = (() => {
       }
       if(r.item.attunement&&!r.magicActive)warnings.push(r.item.name+': magical bonuses require attunement.');
     }
-    let base=data.ac,baseLabel='Manual base AC';
-    if(c.acMode==='equipment'){
-      base=10+stats.mods.dex;baseLabel='Unarmored: 10 + DEX';
-      if(armorEntry){const p=armorEntry.profile;base=p.baseAC+(p.group==='heavy'?0:p.group==='medium'?Math.min(2,stats.mods.dex):stats.mods.dex);baseLabel=p.name;}
+    let base=10+stats.mods.dex,baseLabel='Unarmored: 10 + DEX';
+    if(armorEntry){
+      const p=armorEntry.profile;
+      base=p.baseAC+(p.group==='heavy'?0:p.group==='medium'?Math.min(2,stats.mods.dex):stats.mods.dex);
+      baseLabel=p.name;
+    } else {
+      const adobe=data.rulesChoices?.grants?.__adobe?.data||data.adobe||{};
+      const classLevels=(Array.isArray(adobe.classLevels)&&adobe.classLevels.length?adobe.classLevels:[{classId:data.build?.classId,level:1,subclassId:''}]).filter(Boolean);
+      const hasClass=id=>classLevels.some(entry=>entry.classId===id&&Number(entry.level||0)>=1);
+      const subclass=(id,sub,min=1)=>classLevels.some(entry=>entry.classId===id&&entry.subclassId===sub&&Number(entry.level||0)>=min);
+      const alternatives=[{value:10+stats.mods.dex,label:'Unarmored: 10 + DEX',shield:true}];
+      const race=typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null;
+      if(race?.naturalArmor){
+        const ability=race.naturalArmor.ability,mod=ability?Number(stats.mods?.[ability]||0):0;
+        alternatives.push({value:Number(race.naturalArmor.base||10)+mod,label:(race.name||'Racial')+' natural armor',shield:true});
+      }
+      if(hasClass('barbarian'))alternatives.push({value:10+stats.mods.dex+stats.mods.con,label:'Barbarian Unarmored Defense',shield:true});
+      if(hasClass('monk')&&!shieldEntry)alternatives.push({value:10+stats.mods.dex+stats.mods.wis,label:'Monk Unarmored Defense',shield:false});
+      if(data.build?.edition==='2014'&&subclass('sorcerer','draconic-bloodline',1))alternatives.push({value:13+stats.mods.dex,label:'Draconic Resilience',shield:true});
+      if(data.build?.edition==='2024'&&subclass('sorcerer','draconic-bloodline',3))alternatives.push({value:10+stats.mods.dex+stats.mods.cha,label:'Draconic Resilience',shield:true});
+      const best=alternatives.sort((a,b)=>b.value-a.value)[0];
+      base=best.value;baseLabel=best.label;
     }
     const profs=stats.effects.proficiencies;
     if(armorEntry){
@@ -127,6 +145,8 @@ var CharacterEquipment = (() => {
       if(p.strength>stats.scores.str)warnings.push(p.name+': strength requirement not met; apply speed penalty unless exempt.');
     }
     let shield=shieldEntry?2:0;
+    const raceForAC=typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null;
+    if(raceForAC?.acBonus)bonus+=Number(raceForAC.acBonus)||0;
     if(shieldEntry&&!profs.some(v=>v.toLowerCase()==='shields')){
       warnings.push('Shield training not found'+(data.build.edition==='2024'?'; shield AC is inactive.':'; check armor penalties.'));
       if(data.build.edition==='2024'){shield=0;if(shieldEntry.magicActive){const source=sources.find(s=>s.name===shieldEntry.item.name);if(source){bonus-=source.value;sources.splice(sources.indexOf(source),1);}}}
@@ -157,9 +177,8 @@ var CharacterEquipment = (() => {
       attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
     }
     // Defense uses actual armor in automatic mode, preserving manual confirmation otherwise.
-    let defense=stats.feats.acBonus;
-    if(c.acMode==='equipment')defense=armorEntry&&stats.feats.reports.some(r=>r.def.name==='Defense'&&r.def.edition==='2024'&&r.automated?.length)?1:0;
-    return {entries,attacks,warnings,attuned,base,baseLabel,shield,bonus,defense,adjustment:c.acAdjustment,sources,ac:base+shield+bonus+defense+c.acAdjustment};
+    let defense=armorEntry&&stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)?stats.feats.acBonus:0;
+    return {entries,attacks,warnings,attuned,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
   return {weapons,armor,normalize,infer,profile,choices,derive};
 })();
