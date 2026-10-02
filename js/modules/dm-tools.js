@@ -455,7 +455,8 @@ function renderDMCharacters() {
             <button type="button" class="wish-view-btn btn-sm" data-dm-saved="${escapeHtml(c.id)}">Saved (${saved})</button>
             <button type="button" class="loot-button btn-sm" data-dm-loot="${escapeHtml(c.id)}">Looted (${looted})</button>
             <button type="button" class="edit-button btn-sm" data-dm-edit="${escapeHtml(c.id)}">Edit</button>
-            <button type="button" class="cancel-button btn-sm" data-dm-delete="${escapeHtml(c.id)}" >${c.active===false?'Restore':'Archive'}</button>
+            <button type="button" class="cancel-button btn-sm" data-dm-archive="${escapeHtml(c.id)}">${c.active===false?'Restore':'Archive'}</button>
+            <button type="button" class="dm-danger-btn btn-sm" data-dm-hard-delete="${escapeHtml(c.id)}">Delete</button>
           </div></div>`;
       }).join("") : '<p>No active characters.</p>'}
     </section>`).join("") || "<p>No characters or members in this campaign yet.</p>";
@@ -464,7 +465,8 @@ function renderDMCharacters() {
     saved: c => openWishModal(c.id, c.name),
     loot: c => openCharacterLoot(c.id),
     edit: c => openEditCharacterModal(c.id, c.name, c.class, c.level || ""),
-    delete: c => deleteDMCampaignCharacter(c)
+    archive: c => deleteDMCampaignCharacter(c),
+    "hard-delete": c => hardDeleteDMCampaignCharacter(c)
   })) {
     list.querySelectorAll(`[data-dm-${action}]`).forEach(button => button.addEventListener("click", () => {
       if (!activeCampaign || !canManageCampaign()) return;
@@ -477,6 +479,47 @@ function renderDMCharacters() {
 async function deleteDMCampaignCharacter(character) {
   if(!canManageCampaign())return;
   try {await deleteCampaignCharacter(character.id);}catch(error){alert(error.message);}
+}
+
+async function hardDeleteDMCampaignCharacter(character) {
+  if(!activeCampaign||!canManageCampaign()||!character)return;
+  const campaignId=activeCampaign.id;
+  const savedCount=saves.filter(s=>s.characterId===character.id).length;
+  const lootCount=inventory.filter(e=>e.characterId===character.id).length;
+  const warning=[
+    `Permanently delete "${character.name}"?`,
+    '',
+    'This cannot be undone.',
+    'The private character sheet, saved-item links and character inventory entries will also be deleted.',
+    savedCount||lootCount?`Current linked records: ${savedCount} saved item link(s), ${lootCount} inventory entr${lootCount===1?'y':'ies'}.`:''
+  ].filter(Boolean).join('\n');
+  if(!confirm(warning))return;
+  try {
+    const [savedSnapshot,inventorySnapshot]=await Promise.all([
+      getDocs(query(collection(db,'campaigns',campaignId,'saves'),where('characterId','==',character.id))),
+      getDocs(query(collection(db,'campaigns',campaignId,'inventory'),where('characterId','==',character.id)))
+    ]);
+    const operations=savedSnapshot.size+inventorySnapshot.size+2;
+    if(operations>500)throw Error('This character has too many linked records for one safe delete. Remove some inventory first.');
+    const batch=writeBatch(db);
+    savedSnapshot.forEach(snapshot=>batch.delete(snapshot.ref));
+    inventorySnapshot.forEach(snapshot=>batch.delete(snapshot.ref));
+    batch.delete(doc(db,'campaigns',campaignId,'characterSheets',character.id));
+    batch.delete(doc(db,'campaigns',campaignId,'characters',character.id));
+    await batch.commit();
+    if(sheetSession?.characterId===character.id)closeCharacterSheet(true);
+    if(selectedCharacter?.id===character.id)selectedCharacter=null;
+    if(activeCampaign?.id!==campaignId)return;
+    await loadCharacters();
+    await refreshCampaignData();
+    populateOwnerFilter();
+    renderPlayerTab();
+    renderDMTools();
+    renderCards();
+  } catch(error) {
+    console.error('Permanent character delete failed:',error);
+    alert(`Could not delete character: ${error.message}`);
+  }
 }
 
 let characterLootView = null;

@@ -8,6 +8,7 @@ function createCharacterSheetStore(sdk) {
     hpRolls: [],
     classLevels: [],
     pages: { spells:false, companion:false, rules:false },
+    tabOrder: ['overview','skills','combat','spells','inventory','builder','feats','story','companion','rules'],
     companion: {
       type:'companion',name:'',creature:'',size:'Medium',profBonus:2,ac:10,
       hpMax:1,hpCurrent:1,hpTemp:0,speed:30,initiativeBonus:0,
@@ -55,7 +56,7 @@ function createCharacterSheetStore(sdk) {
           throw Error('Character details changed while this sheet was open. Export your edits, then reopen the sheet.');
       const next = revision + 1;
       tx.set(sheetRef, {
-        schemaVersion: 13,
+        schemaVersion: 14,
         revision: next,
         data: persistedData(data),
         updatedAt: Date.now(),

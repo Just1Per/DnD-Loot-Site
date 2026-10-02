@@ -96,7 +96,8 @@ async function openCharacterSheet(characterId) {
         10,
         11,
         12,
-        13
+        13,
+        14
       ].includes(stored.schemaVersion))
       throw Error('This sheet uses a newer format. Update the website before editing it.');
     sheetSession = {
