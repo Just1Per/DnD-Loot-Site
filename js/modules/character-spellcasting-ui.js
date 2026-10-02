@@ -217,17 +217,15 @@
     }).join('');
     syncSlots(d);
     const totals=d.effects?.slotMax||[];
-    slotHost.innerHTML='<div class="sheet-repeat-title"><h4>Spell slots</h4><button type="button" data-reset-slots>Long rest · restore slots</button></div><div class="sheet-auto-slot-grid">'+totals.map((max,i)=>{
+    slotHost.innerHTML='<div class="sheet-repeat-title"><h4>Spell slots</h4><button type="button" data-reset-slots>Long rest · restore all</button></div><div class="sheet-auto-slot-grid sheet-auto-slot-orbs">'+totals.map((max,i)=>{
       max=Number(max)||0;if(!max)return'';
       const used=Math.min(max,Number(sheetSession.data.slots[i]?.used)||0),left=max-used;
-      return '<article><span>Level '+(i+1)+'</span><strong>'+left+' / '+max+'</strong><small>available</small><div><button type="button" data-slot-use="'+i+'" '+(used>=max?'disabled':'')+'>Use</button><button type="button" data-slot-restore="'+i+'" '+(used<=0?'disabled':'')+'>Restore</button></div></article>';
-    }).join('')+'</div>'+(d.progression?.pact?'<p class="sheet-help">Pact Magic: '+d.progression.pact.count+' slot'+(d.progression.pact.count===1?'':'s')+' at level '+d.progression.pact.slotLevel+'. Pact slots recover on a short or long rest.</p>':'');
+      return '<article><span>Level '+(i+1)+'</span><div class="sheet-slot-orb-row">'+Array.from({length:max},(_,j)=>'<button type="button" class="sheet-slot-orb" data-auto-slot-level="'+i+'" data-auto-slot-number="'+j+'" aria-label="Level '+(i+1)+' spell slot '+(j+1)+', '+(j<used?'used':'available')+'" aria-pressed="'+(j<used)+'"></button>').join('')+'</div><small>'+left+' / '+max+' available</small></article>';
+    }).join('')+'</div>'+(d.progression?.pact?'<p class="sheet-help sheet-pact-slot-help">Pact Magic: '+d.progression.pact.count+' slot'+(d.progression.pact.count===1?'':'s')+' at level '+d.progression.pact.slotLevel+'. Pact slots recover on a short or long rest.</p>':'');
     slotHost.querySelector('[data-reset-slots]')?.addEventListener('click',()=>{readSheetForm();for(const slot of sheetSession.data.slots)slot.used=0;sheetSession.dirty=true;updateSheetCalculations();sheetStatus('Spell slots restored. Save to keep the change.');});
-    slotHost.querySelectorAll('[data-slot-use],[data-slot-restore]').forEach(button=>button.onclick=()=>{
-      readSheetForm();
-      const i=Number(button.dataset.slotUse??button.dataset.slotRestore),slot=sheetSession.data.slots[i],max=Number(d.effects.slotMax?.[i])||0;
-      if(!slot)return;
-      slot.used=Math.max(0,Math.min(max,(Number(slot.used)||0)+(button.dataset.slotUse!==undefined?1:-1)));
+    slotHost.querySelectorAll('[data-auto-slot-level]').forEach(button=>button.onclick=()=>{
+      readSheetForm();const i=Number(button.dataset.autoSlotLevel),j=Number(button.dataset.autoSlotNumber),slot=sheetSession.data.slots[i],max=Number(d.effects.slotMax?.[i])||0;
+      if(!slot)return;slot.used=Math.max(0,Math.min(max,j<(Number(slot.used)||0)?j:j+1));
       sheetSession.dirty=true;updateSheetCalculations();sheetStatus('Spell slot use changed. Save to keep it.');
     });
   }
