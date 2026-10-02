@@ -147,12 +147,20 @@
   }
   function selectionError(p,rows){
     const cantrips=rows.filter(s=>s.level===0),leveled=rows.filter(s=>s.level>0),prepared=leveled.filter(s=>s.prepared);
-    if(cantrips.length!==p.cantrips)return 'Choose exactly '+p.cantrips+' cantrip'+(p.cantrips===1?'':'s')+'. You currently have '+cantrips.length+'.';
+    if(cantrips.length>p.cantrips)return 'Too many cantrips: choose at most '+p.cantrips+'. You currently have '+cantrips.length+'.';
     if(p.mode==='spellbook'){
-      if(leveled.length<p.bookMinimum)return 'Your level-'+p.level+' Wizard spellbook needs at least '+p.bookMinimum+' level 1+ spells from class progression. You currently have '+leveled.length+'.';
-      if(prepared.length!==p.spellCount)return 'Mark exactly '+p.spellCount+' Wizard spell'+(p.spellCount===1?'':'s')+' as prepared. You currently have '+prepared.length+'.';
-    }else if(leveled.length!==p.spellCount)return 'Choose exactly '+p.spellCount+' level 1+ spell'+(p.spellCount===1?'':'s')+'. You currently have '+leveled.length+'.';
+      if(prepared.length>p.spellCount)return 'Too many prepared Wizard spells: prepare at most '+p.spellCount+'. You currently have '+prepared.length+'.';
+    }else if(leveled.length>p.spellCount)return 'Too many level 1+ spells: choose at most '+p.spellCount+'. You currently have '+leveled.length+'.';
     return'';
+  }
+  function completionNotice(p,rows){
+    const cantrips=rows.filter(s=>s.level===0),leveled=rows.filter(s=>s.level>0),prepared=leveled.filter(s=>s.prepared),parts=[];
+    if(cantrips.length<p.cantrips)parts.push((p.cantrips-cantrips.length)+' cantrip'+(p.cantrips-cantrips.length===1?'':'s')+' remaining');
+    if(p.mode==='spellbook'){
+      if(leveled.length<p.bookMinimum)parts.push((p.bookMinimum-leveled.length)+' spellbook spell'+(p.bookMinimum-leveled.length===1?'':'s')+' remaining from level progression');
+      if(prepared.length<p.spellCount)parts.push((p.spellCount-prepared.length)+' prepared spell'+(p.spellCount-prepared.length===1?'':'s')+' remaining');
+    }else if(leveled.length<p.spellCount)parts.push((p.spellCount-leveled.length)+' '+S.modeLabel(p).toLowerCase()+' remaining');
+    return parts.length?'Incomplete: '+parts.join(' · ')+'. You can still generate and continue later.':'Ready to generate.';
   }
   function updateCount(){
     const p=currentProfile(),count=document.getElementById('spellGeneratorCount');
@@ -161,14 +169,15 @@
     const parts=['Cantrips '+cantrips+'/'+p.cantrips];
     if(p.mode==='spellbook')parts.push('Spellbook '+leveled+'/'+p.bookMinimum+' minimum','Prepared '+prepared+'/'+p.spellCount);
     else parts.push(S.modeLabel(p)+' '+leveled+'/'+p.spellCount);
-    const error=selectionError(p,rows);
-    count.innerHTML='<strong>'+parts.join(' · ')+'</strong><small>'+esc(error||'Ready to generate.')+'</small>';
+    const error=selectionError(p,rows),notice=completionNotice(p,rows);
+    count.innerHTML='<strong>'+parts.join(' · ')+'</strong><small>'+esc(error||notice)+'</small>';
     count.classList.toggle('is-invalid',!!error);
+    count.classList.toggle('is-incomplete',!error&&notice.startsWith('Incomplete:'));
   }
   function applyGenerated(){
     const p=currentProfile();
     if(!p)return;
-    const rows=selections(),error=selectionError(p,rows);
+    const rows=selections(),error=selectionError(p,rows),notice=completionNotice(p,rows);
     if(error){sheetStatus(error,true);updateCount();return;}
     readSheetForm();
     const other=sheetSession.data.spells.filter(spell=>spell.classId!==p.classId);
@@ -180,7 +189,7 @@
     sheetSession.dirty=true;
     renderSheetRows();fillSheetForm();updateSheetCalculations();
     document.getElementById('sheetSpellGenerator').close();
-    sheetStatus(p.name+' spell sheet generated. Save the character sheet to keep it.');
+    sheetStatus((notice.startsWith('Incomplete:')?p.name+' partial spell sheet updated. ':p.name+' spell sheet generated. ')+(notice.startsWith('Incomplete:')?notice+' ':'')+'Save the character sheet to keep it.');
   }
 
   function syncSlots(d){
