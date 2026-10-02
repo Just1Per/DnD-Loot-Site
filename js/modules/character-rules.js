@@ -986,7 +986,7 @@ var CharacterRules = (() => {
       backgroundAbilities: Array.from({ length: 3 }, (_, i) => abilityKeys.includes(b.backgroundAbilities?.[i]) ? b.backgroundAbilities[i] : ''),
       standardLanguages: Array.from({ length: 2 }, (_, i) => Modern.standardLanguages.includes(b.standardLanguages?.[i]) ? b.standardLanguages[i] : ''),
       humanOriginFeat: Modern.originFeats.includes(b.humanOriginFeat) ? b.humanOriginFeat : '',
-      backgroundFeat: Modern.originFeats.includes(b.backgroundFeat) ? b.backgroundFeat : '',
+      backgroundFeat: String(b.backgroundFeat || '').slice(0, 200),
       humanFeatChoices: Array.from({ length: 3 }, (_, i) => String(b.humanFeatChoices?.[i] || '').slice(0, 120)),
       backgroundFeatChoices: Array.from({ length: 3 }, (_, i) => String(b.backgroundFeatChoices?.[i] || '').slice(0, 120)),
       scoreMethod: b.scoreMethod==='pointBuy'?'pointBuy':'manual',
