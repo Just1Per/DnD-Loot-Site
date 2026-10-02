@@ -157,7 +157,11 @@
   };
   const optionsFor=(classId,level,edition)=>Object.values(all)
     .filter(row=>row.classId===classId&&compatible(row,edition)&&Number(level||0)>=effectiveMinimum(row,edition))
-    .sort((a,b)=>(a.edition===edition?0:1)-(b.edition===edition?0:1)||a.source.localeCompare(b.source)||a.name.localeCompare(b.name));
+    .sort((a,b)=>{
+      const core=edition==='2024'?'PHB24':'PHB';
+      const priority=row=>row.source===core?0:row.edition===edition?1:2;
+      return priority(a)-priority(b)||a.source.localeCompare(b.source)||a.name.localeCompare(b.name);
+    });
   const sourceLabel=row=>row?.sourceName||sourceNames[row?.source]||row?.source||'D&D';
 
   Object.assign(S,{sourceNames,effectiveMinimum,compatible,optionsFor,sourceLabel});
