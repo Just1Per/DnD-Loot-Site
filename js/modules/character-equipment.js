@@ -125,7 +125,7 @@ var CharacterEquipment = (() => {
       const hasClass=id=>classLevels.some(entry=>entry.classId===id&&Number(entry.level||0)>=1);
       const subclass=(id,sub,min=1)=>classLevels.some(entry=>entry.classId===id&&entry.subclassId===sub&&Number(entry.level||0)>=min);
       const alternatives=[{value:10+stats.mods.dex,label:'Unarmored: 10 + DEX',shield:true}];
-      const race=typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null;
+      const race=stats.effects?.race||(typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null);
       if(race?.naturalArmor){
         const ability=race.naturalArmor.ability,mod=ability?Number(stats.mods?.[ability]||0):0;
         alternatives.push({value:Number(race.naturalArmor.base||10)+mod,label:(race.name||'Racial')+' natural armor',shield:true});
@@ -145,8 +145,11 @@ var CharacterEquipment = (() => {
       if(p.strength>stats.scores.str)warnings.push(p.name+': strength requirement not met; apply speed penalty unless exempt.');
     }
     let shield=shieldEntry?2:0;
-    const raceForAC=typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null;
-    if(raceForAC?.acBonus)bonus+=Number(raceForAC.acBonus)||0;
+    const raceForAC=stats.effects?.race||(typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null);
+    if(raceForAC?.acBonus){
+      const condition=raceForAC.acBonusCondition||'always',heavy=armorEntry?.profile?.group==='heavy';
+      if(condition==='always'||condition==='not-heavy'&&!heavy)bonus+=Number(raceForAC.acBonus)||0;
+    }
     if(shieldEntry&&!profs.some(v=>v.toLowerCase()==='shields')){
       warnings.push('Shield training not found'+(data.build.edition==='2024'?'; shield AC is inactive.':'; check armor penalties.'));
       if(data.build.edition==='2024'){shield=0;if(shieldEntry.magicActive){const source=sources.find(s=>s.name===shieldEntry.item.name);if(source){bonus-=source.value;sources.splice(sources.indexOf(source),1);}}}
