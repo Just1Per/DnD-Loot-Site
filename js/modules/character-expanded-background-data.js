@@ -130,5 +130,31 @@
   rv('mist-wanderer-rthw','Mist Wanderer',['survival','stealth'],'A Dark Gift feat');
   rv('spirit-medium-rthw','Spirit Medium',['insight','religion'],'A Dark Gift feat');
 
+
+  // Baldur's Gate: Descent into Avernus background variants.
+  for(const row of [
+    ['acolyte-bgdia','Acolyte — Baldur’s Gate',['insight','religion'],'Shelter of the Faithful'],
+    ['charlatan-bgdia','Charlatan — Baldur’s Gate',['deception','sleightOfHand'],'False Identity'],
+    ['criminal-bgdia','Criminal — Baldur’s Gate',['deception','stealth'],'Criminal Contact'],
+    ['entertainer-bgdia','Entertainer — Baldur’s Gate',['acrobatics','performance'],'By Popular Demand'],
+    ['folk-hero-bgdia','Folk Hero — Baldur’s Gate',['animalHandling','survival'],'Rustic Hospitality'],
+    ['guild-artisan-bgdia','Guild Artisan — Baldur’s Gate',['insight','persuasion'],'Guild Membership'],
+    ['hermit-bgdia','Hermit — Baldur’s Gate',['medicine','religion'],'Discovery'],
+    ['noble-bgdia','Noble — Baldur’s Gate',['history','persuasion'],'Position of Privilege'],
+    ['outlander-bgdia','Outlander — Baldur’s Gate',['athletics','survival'],'Wanderer'],
+    ['sage-bgdia','Sage — Baldur’s Gate',['arcana','history'],'Researcher'],
+    ['sailor-bgdia','Sailor — Baldur’s Gate',['athletics','perception'],'Ship’s Passage'],
+    ['soldier-bgdia','Soldier — Baldur’s Gate',['athletics','intimidation'],'Military Rank'],
+    ['urchin-bgdia','Urchin — Baldur’s Gate',['sleightOfHand','stealth'],'City Secrets']
+  ]) add(row[0],row[1],'2014','BGDIA',row[2],row[3]);
+
+  // Wayfinder's Guide to Eberron legacy House Agent variants.
+  for(const house of ['Cannith','Deneith','Ghallanda','Jorasco','Kundarak','Lyrandar','Medani','Orien','Phiarlan','Sivis','Tharashk','Thuranni','Vadalis'])
+    add('house-agent-'+house.toLowerCase()+'-wgte','House Agent ('+house+')','2014','WGTE',['investigation','persuasion'],'House Connections');
+
+  // Lorwyn: First Light current backgrounds.
+  add('lorwyn-expert-lfl','Lorwyn Expert','2024','LFL',['athletics','nature'],'',{feat:'Child of the Sun',fixedFeat:true});
+  add('shadowmoor-expert-lfl','Shadowmoor Expert','2024','LFL',['acrobatics','deception'],'',{feat:'Shadowmoor Hexer',fixedFeat:true});
+
   D.expanded=Object.freeze(rows);
 })();
