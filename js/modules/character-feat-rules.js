@@ -19,7 +19,7 @@ var CharacterFeatRules = (() => {
     if(data.build.edition==='2024') {
       const B=typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds:require('./character-backgrounds');
       const background=B.get(data.build.background);
-      const bg=background?.featChoices?.length?data.build.backgroundFeat:(background?.feat||data.build.backgroundFeat);
+      const bg=background?.featChoices?.length?(background.featChoices.includes(data.build.backgroundFeat)?data.build.backgroundFeat:''):(background?.feat||data.build.backgroundFeat);
       const origins=[['origin-background',bg,'Background'],...(data.build.race==='human-2024'?[['origin-human',data.build.humanOriginFeat,'Human']]:[])];
       for(const [key,name,label] of origins.reverse())if(name) {
         const candidates=Object.keys(definitions).filter(id=>definitions[id].edition==='2024'&&definitions[id].name===name);
