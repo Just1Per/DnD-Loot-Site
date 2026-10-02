@@ -29,7 +29,9 @@
   school.value='';search.value='necrotic';search.oninput();
   const damageRows=[...dialog.querySelectorAll('[data-spell-pick]')].map(el=>CharacterCatalog.find(el.dataset.spellId));
   check('Spell search can match necrotic damage type, not only spell name',damageRows.length>0&&damageRows.some(spell=>(spell.combat?.types||[]).includes('necrotic')));
-  dialog.close();
+  school.value='';search.value='';search.oninput();
+  dialog.querySelector('#spellGeneratorApply').onclick();
+  check('A partial spell sheet can be generated before every allowed spell is chosen',!dialog.open&&sheetSession.data.spells.some(spell=>spell.catalogId===chosenId));
 
   change('build.race','human-2024');renderBuildFeatChoices();
   const human=document.querySelector('[data-build-feat-field="humanOriginFeat"]');
