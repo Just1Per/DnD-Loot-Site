@@ -53,8 +53,20 @@ var CharacterCatalog = (() => {
     return pending;
   }
   const find=(id,kind='spells')=>catalogue?.[kind]?.find(s=>s.id===id);
-  function spells({edition,legacy=false,classId='',level='',search=''}={}) {
-    return (catalogue?.spells||[]).filter(s=>(!edition || s.edition===edition || legacy && edition==='2024' && s.edition==='2014') && (level==='' || s.level===Number(level)) && (!classId || (s.classesByEdition?.[edition]||s.classes||[]).includes(classId)) && s.name.toLowerCase().includes(search.toLowerCase()));
+  const schools=Object.freeze(['Abjuration','Conjuration','Divination','Enchantment','Evocation','Illusion','Necromancy','Transmutation']);
+  function spells({edition,legacy=false,classId='',level='',school='',search=''}={}) {
+    const needle=String(search||'').trim().toLowerCase();
+    return (catalogue?.spells||[]).filter(s=>{
+      const versionOk=!edition || s.edition===edition || legacy && edition==='2024' && s.edition==='2014';
+      const levelOk=level==='' || s.level===Number(level);
+      const classOk=!classId || (s.classesByEdition?.[edition]||s.classes||[]).includes(classId);
+      const schoolOk=!school || String(s.school||'').toLowerCase()===String(school).toLowerCase();
+      const searchable=[
+        s.name,s.school,s.source,s.book,s.save,s.casting,s.range,
+        ...(s.combat?.types||[])
+      ].filter(Boolean).join(' ').toLowerCase();
+      return versionOk&&levelOk&&classOk&&schoolOk&&(!needle||searchable.includes(needle));
+    });
   }
   function grants(data) {
     const b=data.build||{}, out=[];
@@ -96,6 +108,6 @@ var CharacterCatalog = (() => {
     for(const slot of data.slots) slot.used=0;
     Feats.reset(data,'long');
   }
-  return {normalize,set,load,find,spells,grants,validateGrant,spellRow,longRest,get data(){return catalogue;}};
+  return {normalize,set,load,find,spells,schools,grants,validateGrant,spellRow,longRest,get data(){return catalogue;}};
 })();
 if(typeof module!=='undefined' && module.exports) module.exports=CharacterCatalog;
