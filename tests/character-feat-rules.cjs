@@ -71,3 +71,12 @@ test('2014 Moderately Armored recognizes Light armor training and grants Medium 
  assert.ok(!bad.effects.proficiencies.includes('Shields'));
  assert.match(bad.feats.reports[0].warnings.join(' '),/Light armor training/);
 });
+
+test('2024 Moderately Armored auto-checks Light armor but does not grant Shield training',()=>{
+ const d=sheet('Moderately Armored',{abilities:['dex']},{build:{classId:'rogue'},abilities:{dex:13}},'XPHB');
+ const r=M.derive(d,4);
+ assert.ok(r.effects.proficiencies.includes('Light armor'));
+ assert.ok(r.effects.proficiencies.includes('Medium armor'));
+ assert.ok(!r.effects.proficiencies.includes('Shields'));
+ assert.equal(r.feats.reports[0].warnings.length,0);
+});
