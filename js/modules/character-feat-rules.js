@@ -55,10 +55,10 @@ var CharacterFeatRules = (() => {
       const report={...entry,def,choice:c,warnings,automated};reports.push(report);
       if(entry.managedOrigin){if(!origins[identity]){warnings.push('Duplicate or unavailable Origin feat: no effects applied.');continue;}origins[identity]--;}
       else {if(seen.has(identity)&&(!def.repeatable||seen.get(identity)!==def.edition)){warnings.push('Duplicate feat: no additional effects applied.');continue;}seen.set(identity,def.edition);}
-      const moderatelyArmored2014=def.name==='Moderately Armored'&&def.source==='PHB'&&def.edition==='2014';
+      const moderatelyArmored=def.name==='Moderately Armored'&&['PHB','XPHB'].includes(def.source);
       const hasLightArmor=effects.proficiencies.some(v=>String(v).toLowerCase()==='light armor');
-      warnings.push(...requirements(def,scores,level,c.confirmed||(moderatelyArmored2014&&hasLightArmor)));
-      if(moderatelyArmored2014&&!hasLightArmor)warnings.push('Requires Light armor training.');
+      warnings.push(...requirements(def,scores,level,c.confirmed||(moderatelyArmored&&hasLightArmor)));
+      if(moderatelyArmored&&!hasLightArmor)warnings.push('Requires Light armor training.');
       if(warnings.length)continue;
       if(def.name==='Resilient'&&def.source==='XPHB'&&(effects.saves.includes(c.abilities[0])||data.saves[c.abilities[0]]?.proficient)){warnings.push('Choose an ability without saving throw proficiency.');continue;}
       const option=def.ability[c.option]||def.ability[0];
