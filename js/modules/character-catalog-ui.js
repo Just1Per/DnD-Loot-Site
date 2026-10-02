@@ -205,7 +205,7 @@ function renderFeatEffectControls(report,level) {
   const {def,choice:c,warnings,automated}=report,esc=sheetEscape;
   const select=(label,field,rows,value)=>`<label class="sheet-field">${esc(label)}<select data-feat-choice="${field}">${rows.map(([key,text])=>`<option value="${esc(key)}" ${String(key)===String(value)?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
   let html='<div class="sheet-grid">';
-  const autoArmorPrereq=def.name==='Moderately Armored'&&def.source==='PHB'&&def.edition==='2014';
+  const autoArmorPrereq=def.name==='Moderately Armored'&&['PHB','XPHB'].includes(def.source);
   if(def.requirements.some(r=>r.manual)&&!autoArmorPrereq)html+=`<label class="sheet-check"><input type="checkbox" data-feat-choice="confirmed" ${c.confirmed?'checked':''}> Other prerequisites checked with DM (class features, spellcasting, etc.)</label>`;
   if(autoArmorPrereq)html+='<p class="sheet-help">Prerequisite: Light armor training is checked automatically from your race, class and other feats.</p>';
   if(def.ability.length>1)html+=select('Ability increase pattern','option',[[0,'One ability +2'],[1,'Two different abilities +1']],c.option);
