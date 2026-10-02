@@ -469,3 +469,20 @@
   .sheet-spell-prepared-choice { grid-column:1/-1; }
   .sheet-spell-class-summary dl { grid-template-columns:1fr; }
 }
+
+/* Revision 20: expanded class option catalogue */
+.sheet-subclass-source-note {
+  flex-basis:100%;
+  display:block;
+  margin:.15rem 0 .25rem;
+  padding:.45rem .6rem;
+  border-left:3px solid #b18a42;
+  border-radius:0 6px 6px 0;
+  background:#fff8e8;
+  color:#6d5a3f;
+  font-size:.75rem;
+  line-height:1.35;
+}
+.sheet-class-level-row .sheet-subclass-select {
+  min-width:min(330px,100%);
+}
