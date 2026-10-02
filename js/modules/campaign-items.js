@@ -65,7 +65,7 @@ function renderCampaignToolbar() {
     if(!copy||!confirm(copy[0]))return;
     const campaignId=activeCampaign.id,result=await vaultCall('vaultBulkItemPolicy',{campaignId,mode});
     if(activeCampaign?.id!==campaignId)return;
-    await refreshCampaignData();sheetStatus?.(`${copy[1]} ${result.changed} item(s) updated.`);
+    await refreshCampaignData();if(typeof sheetStatus==='function')sheetStatus(`${copy[1]} ${result.changed} item(s) updated.`);
   })));
   document.getElementById('addItemBtn').textContent='+ Create Campaign Item';
 }
