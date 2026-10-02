@@ -377,7 +377,7 @@ var CharacterRules2024 = (() => {
     if (!e.languages.includes('Common'))
       e.languages.unshift('Common');
     const feats = [];
-    const bgFeat = bg?.featChoices?.length ? b.backgroundFeat : (bg?.feat || b.backgroundFeat);
+    const bgFeat = bg?.featChoices?.length ? (bg.featChoices.includes(b.backgroundFeat)?b.backgroundFeat:'') : (bg?.feat || b.backgroundFeat);
     if (bgFeat)
       feats.push({
         name: bgFeat,
