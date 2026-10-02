@@ -196,6 +196,42 @@
     });
   }
 
+  function adoptLegacySpells(d){
+    const rows=profiles(d);
+    if(rows.length!==1)return;
+    let changed=false;
+    for(const spell of sheetSession.data.spells)if(!spell.classId){spell.classId=rows[0].classId;changed=true;}
+    if(changed)sheetSession.dirty=true;
+  }
+
+  function renderGeneratedTable(d){
+    const host=document.getElementById('sheetSpellReadout');
+    if(!host||!sheetSession)return;
+    adoptLegacySpells(d);
+    const rows=sheetSession.data.spells.map((spell,i)=>({spell,i})).sort((a,b)=>a.spell.level-b.spell.level||a.spell.name.localeCompare(b.spell.name));
+    const showPrepared=rows.some(({spell})=>classProfile(spell.classId,d)?.mode==='spellbook');
+    const prepHead=showPrepared?'<th scope="col">Prep</th>':'';
+    const colspan=showPrepared?12:11;
+    host.innerHTML='<div class="sheet-spell-table-wrap"><table class="sheet-spell-table"><thead><tr>'+prepHead+['Lv','Spell','Short description','Save','School','Time','Range','Comp','Duration','B','P'].map(t=>'<th scope="col">'+t+'</th>').join('')+'</tr></thead><tbody>'+(
+      rows.map(({spell:p,i})=>{
+        const catalog=CharacterCatalog.find(p.catalogId),description=catalog?.shortDescription||catalog?.description||p.notes||'Source reference only',profile=classProfile(p.classId,d);
+        const prep=showPrepared?(profile?.mode==='spellbook'?'<td><button type="button" data-generated-prepare="'+i+'" class="sheet-slot-orb" aria-label="Prepare '+esc(p.name)+'" aria-pressed="'+p.prepared+'"></button></td>':'<td>—</td>'):'';
+        return '<tr>'+prep+'<td>'+(p.level||'C')+'</td><td><strong>'+esc(p.name)+'</strong><small>'+(profile?esc(profile.name)+' · ':'')+esc(catalog?.edition||'Custom')+'</small><button type="button" class="sheet-info-button" data-generated-spell-info="'+i+'" aria-label="Information about '+esc(p.name)+'">i</button></td><td>'+esc(description.replace(/\s+/g,' ').slice(0,180))+(description.length>180?'…':'')+'</td><td>'+esc(catalog?.save||'—')+'</td><td>'+esc(catalog?.school||'—')+'</td><td>'+esc(p.casting)+'</td><td>'+esc(p.range)+'</td><td>'+esc(p.components)+'</td><td>'+esc(p.duration)+'</td><td title="'+esc(catalog?.book||'')+'">'+esc(catalog?.source||'—')+'</td><td>'+(catalog?.page?esc(catalog.page):'—')+'</td></tr>';
+      }).join('')||'<tr><td colspan="'+colspan+'">Use Generate spell sheet to choose the spells available to this character.</td></tr>'
+    )+'</tbody></table></div>';
+    host.querySelectorAll('[data-generated-spell-info]').forEach(button=>button.onclick=()=>openSpellInformation({index:Number(button.dataset.generatedSpellInfo)}));
+    host.querySelectorAll('[data-generated-prepare]').forEach(button=>button.onclick=()=>{
+      const i=Number(button.dataset.generatedPrepare),spell=sheetSession.data.spells[i],profile=spell&&classProfile(spell.classId,d);
+      if(!spell||profile?.mode!=='spellbook')return;
+      readSheetForm();
+      const current=sheetSession.data.spells.filter(row=>row.classId===profile.classId&&row.level>0&&row.prepared).length;
+      if(!spell.prepared&&current>=profile.spellCount){sheetStatus('This Wizard can prepare '+profile.spellCount+' spells. Unprepare one first.',true);return;}
+      spell.prepared=!spell.prepared;
+      const hidden=document.querySelector('[name="spells.'+i+'.prepared"]');if(hidden)hidden.checked=spell.prepared;
+      sheetSession.dirty=true;updateSheetCalculations();sheetStatus('Wizard preparation changed. Save to keep it.');
+    });
+  }
+
   function decorateRows(){
     const d=stats();if(!d||!sheetSession)return;
     document.querySelectorAll('#sheetSpellRows .sheet-repeat').forEach((article,i)=>{
@@ -216,5 +252,5 @@
   const baseSetup=window.setupCharacterPlayUI;
   window.setupCharacterPlayUI=function(...args){const result=baseSetup?.apply(this,args);setup();return result;};
   const baseUpdate=window.updateCharacterPlayUI;
-  window.updateCharacterPlayUI=function(d,...args){const result=baseUpdate?.call(this,d,...args);setup();renderSummary(d);decorateRows();return result;};
+  window.updateCharacterPlayUI=function(d,...args){const result=baseUpdate?.call(this,d,...args);setup();renderSummary(d);renderGeneratedTable(d);decorateRows();return result;};
 })();
