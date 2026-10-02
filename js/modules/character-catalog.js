@@ -13,6 +13,7 @@ var CharacterCatalog = (() => {
         grants[key]={
           bonusFeats:Math.max(0,Math.min(10,Math.trunc(Number(g.bonusFeats)||0))),
           bonusAsis:Math.max(0,Math.min(10,Math.trunc(Number(g.bonusAsis)||0))),
+          usedAsis:Math.max(0,Math.min(10,Math.trunc(Number(g.usedAsis)||0))),
           approvedBy:String(g.approvedBy||'').slice(0,128),
           updatedAt:Math.max(0,Math.trunc(Number(g.updatedAt)||0))
         };
