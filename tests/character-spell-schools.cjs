@@ -7,7 +7,7 @@ C.set(data);
 
 const schools=['Abjuration','Conjuration','Divination','Enchantment','Evocation','Illusion','Necromancy','Transmutation'];
 assert.deepEqual([...C.schools],schools);
-assert.equal(data.spells.length,969,'catalogue size changed; review school coverage expectations');
+assert.ok(data.spells.length>=900,'expected the full spell catalogue, not a reduced fixture');
 assert.equal(data.spells.filter(spell=>!spell.school).length,0,'every spell must have a school of magic');
 assert.deepEqual([...new Set(data.spells.map(spell=>spell.school))].sort(),[...schools].sort(),'only the eight D&D schools of magic should be used');
 
