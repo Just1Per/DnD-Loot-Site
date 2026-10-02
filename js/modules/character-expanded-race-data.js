@@ -19,7 +19,7 @@
       races[id]={
         name,edition,book,source:C.sources[book]||book,category,
         asi:{},flexible:edition==='2014',languages:[],creatureType:'Humanoid',
-        speed:30,size:'Medium',traits:[],partial:false,...extra
+        speed:30,size:'Medium',traits:[],partial:true,...extra
       };
     };
 
