@@ -52,9 +52,21 @@ function renderCampaignToolbar() {
       alert('Campaign inventory upgraded. Legacy looted items with missing owners remain out of stock for DM review.');
     }));return;
   }
-  bar.innerHTML=`<div class="campaign-item-toolbar">${canManageCampaign()?'<button type="button" id="addFromRoot" class="toolbar-btn">Add from Root Catalogue</button>':''}<button type="button" id="refreshCampaignItems" class="toolbar-btn">Refresh Items</button>${!canManageCampaign()?'<span>Your loot and saved items are private to you and the campaign DM.</span>':''}</div>`;
+  bar.innerHTML=`<div class="campaign-item-toolbar">${canManageCampaign()?'<button type="button" id="addFromRoot" class="toolbar-btn">Add from Root Catalogue</button>':''}<button type="button" id="refreshCampaignItems" class="toolbar-btn">Refresh Items</button>${canManageCampaign()?'<div class="campaign-bulk-controls" aria-label="DM bulk item controls"><strong>DM quick controls</strong><button type="button" data-bulk-item-policy="player-loot" class="toolbar-btn">All items: player loot ON</button><button type="button" data-bulk-item-policy="dm-only" class="toolbar-btn">All items: player loot OFF</button><button type="button" data-bulk-item-policy="unlimited" class="toolbar-btn">All items: unlimited</button></div>':'<span>Your loot and saved items are private to you and the campaign DM.</span>'}</div>`;
   bar.querySelector('#addFromRoot')?.addEventListener('click',event=>runVaultButton(event.currentTarget,openRootPicker));
   bar.querySelector('#refreshCampaignItems')?.addEventListener('click',event=>runVaultButton(event.currentTarget,refreshCampaignData));
+  bar.querySelectorAll('[data-bulk-item-policy]').forEach(button=>button.addEventListener('click',event=>runVaultButton(event.currentTarget,async()=>{
+    const mode=event.currentTarget.dataset.bulkItemPolicy;
+    const copy={
+      'player-loot':['Make every campaign item visible and lootable by players?','All campaign items are now visible and player-lootable.'],
+      'dm-only':['Hide every campaign item and return them to DM-assignment only?','All campaign items are now hidden and DM-assignment only.'],
+      unlimited:['Make every campaign item supply unlimited? Existing ownership is preserved.','All campaign item supplies are now unlimited.']
+    }[mode];
+    if(!copy||!confirm(copy[0]))return;
+    const campaignId=activeCampaign.id,result=await vaultCall('vaultBulkItemPolicy',{campaignId,mode});
+    if(activeCampaign?.id!==campaignId)return;
+    await refreshCampaignData();sheetStatus?.(`${copy[1]} ${result.changed} item(s) updated.`);
+  })));
   document.getElementById('addItemBtn').textContent='+ Create Campaign Item';
 }
 async function openRootCatalogue() {
