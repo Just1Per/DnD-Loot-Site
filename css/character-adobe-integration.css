@@ -162,3 +162,14 @@
 .sheet-rules-grid h4 { font-family:"Cinzel",Georgia,serif; color:#663829; }
 .sheet-overview-feat-summary ul { margin:.45rem 0 0 1.1rem; }
 .sheet-overview-feat-summary li { margin:.3rem 0; }
+
+.sheet-class-features { flex-basis:100%; margin:.15rem 0 .25rem; }
+.sheet-class-features summary { cursor:pointer; color:#6b4b2a; font-weight:700; }
+.sheet-feature-chip-list { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.5rem; }
+.sheet-feature-chip {
+  display:inline-flex; gap:.35rem; align-items:center;
+  padding:.28rem .5rem; border:1px solid #d8c9ae; border-radius:999px;
+  background:#fffaf0; color:#513a20; font-size:.78rem;
+}
+.sheet-feature-chip.is-subclass { border-color:#b69a68; background:#f4e3bd; }
+.sheet-feature-chip small { opacity:.65; }
