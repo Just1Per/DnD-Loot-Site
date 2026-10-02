@@ -35,13 +35,14 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
 if (!document.querySelector('link[data-character-adobe-integration]')) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = new URL('../css/character-adobe-integration.css?v=20261001-adobe-v3', import.meta.url).href;
+  link.href = new URL('../css/character-adobe-integration.css?v=20261002-adobe-v17', import.meta.url).href;
   link.dataset.characterAdobeIntegration = 'true';
   document.head.appendChild(link);
 }
 
 const FEATURE_FILES = [
   "./modules/character-equipment.js",
+  "./modules/character-magic-armor.js",
   "./modules/campaign-store.js",
   "./modules/core.js",
   "./modules/character-race-catalog.js",
@@ -49,10 +50,17 @@ const FEATURE_FILES = [
   "./modules/character-backgrounds.js",
   "./modules/character-rules-2024.js",
   "./modules/character-rules.js",
+  "./modules/character-subclass-data.js",
+  "./modules/character-class-progression.js",
   "./modules/character-feat-data.js",
   "./modules/character-feat-rules.js",
   "./modules/character-catalog.js",
   "./modules/character-adobe-data.js",
+  "./modules/character-creature-data.js",
+  "./modules/character-creature-data-1.js",
+  "./modules/character-creature-data-2.js",
+  "./modules/character-creature-data-3.js",
+  "./modules/character-creature-data-4.js",
   "./modules/character-play-rules.js",
   "./modules/character-actions.js",
   "./modules/character-story.js",
@@ -70,6 +78,7 @@ const FEATURE_FILES = [
   "./modules/character-adobe-engine.js",
   "./modules/character-adobe-builder-ui.js",
   "./modules/character-adobe-pages.js",
+  "./modules/character-creature-ui.js",
   "./modules/images.js",
   "./modules/catalog-cache.js",
   "./modules/data.js",
@@ -89,7 +98,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261001-adobe-v3");
+    moduleUrl.searchParams.set("v", "20261001-adobe-v7");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;

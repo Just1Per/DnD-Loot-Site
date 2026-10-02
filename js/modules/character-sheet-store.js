@@ -2,13 +2,38 @@
 function createCharacterSheetStore(sdk) {
   const {db, doc, getDoc, runTransaction, auth} = sdk;
   const path = (campaignId, characterId) => doc(db, 'campaigns', campaignId, 'characterSheets', characterId);
+  const adobeDefaults = () => ({
+    useExperience: false,
+    hpMode: 'fixed',
+    hpRolls: [],
+    classLevels: [],
+    pages: { spells:false, companion:false, rules:false },
+    companion: {
+      type:'companion',name:'',creature:'',size:'Medium',profBonus:2,ac:10,
+      hpMax:1,hpCurrent:1,hpTemp:0,speed:30,initiativeBonus:0,
+      abilities:{str:10,dex:10,con:10,int:10,wis:10,cha:10},
+      saveProficient:{str:false,dex:false,con:false,int:false,wis:false,cha:false},
+      skillRank:{acrobatics:0,animalHandling:0,arcana:0,athletics:0,deception:0,history:0,insight:0,intimidation:0,investigation:0,medicine:0,nature:0,perception:0,performance:0,persuasion:0,religion:0,sleightOfHand:0,stealth:0,survival:0},
+      skillBonus:{acrobatics:0,animalHandling:0,arcana:0,athletics:0,deception:0,history:0,insight:0,intimidation:0,investigation:0,medicine:0,nature:0,perception:0,performance:0,persuasion:0,religion:0,sleightOfHand:0,stealth:0,survival:0},
+      attacks:'',traits:'',notes:''
+    }
+  });
+  function persistedData(raw) {
+    const data = structuredClone(raw || {});
+    data.rulesChoices ||= {feats:[],grants:{},effects:{}};
+    data.rulesChoices.grants ||= {};
+    const embedded = data.rulesChoices.grants.__adobe?.data;
+    const adobe = data.adobe || embedded || adobeDefaults();
+    data.rulesChoices.grants.__adobe = {data:adobe, used:0};
+    delete data.adobe;
+    return data;
+  }
   async function load(campaignId, characterId) {
     const snapshot = await getDoc(path(campaignId, characterId));
-    return snapshot.exists() ? snapshot.data() : {
-      schemaVersion: 1,
-      revision: 0,
-      data: {}
-    };
+    if (!snapshot.exists())
+      return {schemaVersion:1,revision:0,data:{}};
+    const stored = snapshot.data();
+    return stored;
   }
   async function save({campaignId, characterId, revision, data, identity, previousIdentity}) {
     const actor = auth.currentUser?.uid;
@@ -30,9 +55,9 @@ function createCharacterSheetStore(sdk) {
           throw Error('Character details changed while this sheet was open. Export your edits, then reopen the sheet.');
       const next = revision + 1;
       tx.set(sheetRef, {
-        schemaVersion: 11,
+        schemaVersion: 13,
         revision: next,
-        data,
+        data: persistedData(data),
         updatedAt: Date.now(),
         updatedBy: actor
       });
