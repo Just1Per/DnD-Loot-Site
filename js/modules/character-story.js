@@ -79,12 +79,42 @@ var CharacterStory = (()=>{
   };
  }
 
+ function genericKnownBackground(bg){
+  const label=bg?.name||'my background';
+  return {
+   source:'Original '+label+' suggestions (not copied source text)',
+   personality:[
+    'I often approach unfamiliar situations through the habits I learned as a '+label+'.',
+    'I notice the details that people outside my old life tend to overlook.',
+    'I am quick to recognize when someone is dealing with problems I have faced before.'
+   ],
+   ideals:[
+    ideal('Duty: I try to honor the responsibilities I carried before becoming an adventurer.','Lawful'),
+    ideal('Freedom: I refuse to let old institutions decide what my life must become.','Chaotic'),
+    ideal('Compassion: I use what I learned to make life safer or fairer for other people.','Good'),
+    ideal('Ambition: My old skills are tools for gaining influence, wealth, or power.','Evil'),
+    ideal('Balance: Experience taught me that rules and instincts both have limits.','Neutral')
+   ],
+   bonds:[
+    'Someone from my former life still depends on me.',
+    'I carry a promise connected to the work or community that shaped me.',
+    'There is a place, organization, or person from my background that I intend to protect.'
+   ],
+   flaws:[
+    'I rely on old habits even when the situation has changed.',
+    'I assume people without my experience will make the same mistakes I once saw.',
+    'I have difficulty walking away when my pride in my old role is challenged.'
+   ]
+  };
+ }
  function get(background){
   const key=String(background||'').replace(/-20(?:14|24)$/,''),canonical=alias[key]||key;
   const adobe=typeof CharacterAdobeData!=='undefined'?CharacterAdobeData.story:null;
   if(adobe?.[canonical])return {...adobe[canonical],ideals:(adobe[canonical].ideals||[]).map(parsedIdeal),source:'Adobe sheet table'};
-  const p=profiles[canonical];if(!p)return {source:'Custom background — write your own',personality:[],ideals:[],bonds:[],flaws:[]};
-  return expanded(canonical,p);
+  const p=profiles[canonical];if(p)return expanded(canonical,p);
+  const known=typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds.get(background):null;
+  if(known)return genericKnownBackground(known);
+  return {source:'Custom background — write your own',personality:[],ideals:[],bonds:[],flaws:[]};
  }
  return {get};
 })();
