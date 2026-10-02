@@ -1,10 +1,11 @@
-// D&D Vault Firestore Rules Revision: 18
+// D&D Vault Firestore Rules Revision: 19
 // Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
 // Revision 16: Adobe class/subclass progression iteration; permissions unchanged
 // Revision 17: parity audit + character-sheet style loading sync; permissions unchanged
 // Revision 18: DM permanent character deletion + schema 14 tab layout state
+// Revision 19: persist normalized advancement state and keep schema 12/13 Adobe saves compatible
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
@@ -423,9 +424,18 @@ match /characterSheets/{charId} {
       && (d.schemaVersion < 9 || (d.data.profile is map
         && d.data.profile.keys().hasOnly(['gender','age','size','height','weight','hair','eyes','skin'])
         && d.data.advancement is map
-        && d.data.advancement.keys().hasOnly(['asiSpent','lessons'])
+        && d.data.advancement.keys().hasOnly(['asiSpent','lessons','useExperience','xp','hpMode','hpRolls','classLevels','extraPages','companion'])
         && d.data.advancement.asiSpent is int && d.data.advancement.asiSpent >= 0 && d.data.advancement.asiSpent <= 7
-        && d.data.advancement.lessons is bool))
+        && d.data.advancement.lessons is bool
+        && d.data.advancement.useExperience is bool
+        && d.data.advancement.xp is int && d.data.advancement.xp >= 0 && d.data.advancement.xp <= 1000000000
+        && d.data.advancement.hpMode in ['fixed','rolled','max','manual']
+        && d.data.advancement.hpRolls is list && d.data.advancement.hpRolls.size() <= 19
+        && d.data.advancement.classLevels is list && d.data.advancement.classLevels.size() <= 20
+        && d.data.advancement.extraPages is list && d.data.advancement.extraPages.size() <= 3
+        && d.data.advancement.companion is map
+        && d.data.advancement.companion.keys().hasOnly(['name','type','size','ac','hpMax','hpCurrent','speed','initiative','proficiency','abilities','saves','skills','senses','attacks','traits','notes'])
+        && d.data.advancement.companion.abilities is map))
       && (d.schemaVersion < 11 || (d.data.personalGear is list && d.data.personalGear.size() <= 200))
       && (d.schemaVersion < 12 || (
         d.data.rulesChoices.grants.__adobe is map
@@ -444,8 +454,9 @@ match /characterSheets/{charId} {
         && d.data.rulesChoices.grants.__adobe.data.pages.spells is bool
         && d.data.rulesChoices.grants.__adobe.data.pages.companion is bool
         && d.data.rulesChoices.grants.__adobe.data.pages.rules is bool
-        && d.data.rulesChoices.grants.__adobe.data.tabOrder is list
-        && d.data.rulesChoices.grants.__adobe.data.tabOrder.size() <= 10
+        && (!('tabOrder' in d.data.rulesChoices.grants.__adobe.data)
+          || (d.data.rulesChoices.grants.__adobe.data.tabOrder is list
+            && d.data.rulesChoices.grants.__adobe.data.tabOrder.size() <= 10))
         && d.data.rulesChoices.grants.__adobe.data.companion is map
       ))
       && (d.schemaVersion < 10 || (d.data.actions is list && d.data.actions.size() <= 60))
