@@ -3,6 +3,7 @@ var CharacterBackgrounds=(()=>{
  const data=typeof CharacterBackgroundData!=='undefined'?CharacterBackgroundData:require('./character-background-data');
  const get=id=>Object.hasOwn(data.modern,id)?data.modern[id]:Object.hasOwn(data.legacy,id)?data.legacy[id]:Object.hasOwn(data.expanded||{},id)?data.expanded[id]:null;
  const norm=s=>s.toLowerCase().replaceAll('’',"'");
+ const sourceName=bg=>data.sourceNames?.[bg?.source]||bg?.source||'D&D';
  const toolName=(name,tools)=>tools.find(t=>norm(t)===norm(name))||name.replace(/^./,s=>s.toUpperCase());
  function toolOptions(kind,R){
   if(kind==='anyArtisansTool')return R.tools.slice(0,17);
@@ -40,6 +41,6 @@ var CharacterBackgrounds=(()=>{
   if(bg.partial)e.warnings.push(bg.name+': source-specific tool/language/equipment'+(bg.edition==='2024'?' and ability/feat details':'')+' are only partially automated; use the source entry for remaining choices.');
   e.proficiencies=[...new Set(e.proficiencies)];
  }
- return {...data,get,toolName,toolOptions,apply};
+ return {...data,get,sourceName,toolName,toolOptions,apply};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterBackgrounds;
