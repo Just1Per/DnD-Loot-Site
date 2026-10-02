@@ -25,12 +25,12 @@
 
     const manual=panel.querySelector(':scope > .sheet-grid');
     if(manual){manual.hidden=true;manual.dataset.engineManaged='spellcasting';}
+    const legacyMetrics=panel.querySelector(':scope > .sheet-metrics');if(legacyMetrics)legacyMetrics.hidden=true;
     const oldSlots=panel.querySelector('.sheet-slot-grid');
-    if(oldSlots)oldSlots.hidden=true;
-    const oldHelp=[...panel.querySelectorAll('.sheet-help')].find(p=>/Set totals for your class and level/i.test(p.textContent));
-    if(oldHelp)oldHelp.textContent='Spell-slot totals are calculated from your class levels and multiclass rules.';
-    const oldHeading=[...panel.querySelectorAll('h4')].find(h=>/Known & prepared spells/i.test(h.textContent));
-    if(oldHeading)oldHeading.textContent='Your generated spells';
+    if(oldSlots){oldSlots.hidden=true;const details=oldSlots.closest('details');if(details)details.hidden=true;}
+    const oldSlotHeading=[...panel.querySelectorAll('h4')].find(h=>h.textContent.trim()==='Spell slots');if(oldSlotHeading)oldSlotHeading.hidden=true;
+    const oldHelp=[...panel.querySelectorAll('.sheet-help')].find(p=>/Set totals for your class and level|Spell-slot totals are calculated/i.test(p.textContent));if(oldHelp)oldHelp.hidden=true;
+    const oldHeading=[...panel.querySelectorAll('h4')].find(h=>/Known & prepared spells/i.test(h.textContent));if(oldHeading)oldHeading.hidden=true;
     const add=document.getElementById('sheetAddSpell');
     if(add){add.textContent='+ Manual / DM-approved spell';add.title='For a granted spell, homebrew spell, or other exception.';}
 
@@ -252,5 +252,5 @@
   const baseSetup=window.setupCharacterPlayUI;
   window.setupCharacterPlayUI=function(...args){const result=baseSetup?.apply(this,args);setup();return result;};
   const baseUpdate=window.updateCharacterPlayUI;
-  window.updateCharacterPlayUI=function(d,...args){const result=baseUpdate?.call(this,d,...args);setup();renderSummary(d);renderGeneratedTable(d);decorateRows();return result;};
+  window.updateCharacterPlayUI=function(d,...args){const result=baseUpdate?.call(this,d,...args);setup();adoptLegacySpells(d);renderSummary(d);renderGeneratedTable(d);decorateRows();return result;};
 })();
