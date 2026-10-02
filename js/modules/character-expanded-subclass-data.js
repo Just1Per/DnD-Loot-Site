@@ -137,21 +137,12 @@
   for(const row of [['alchemist-efota','Alchemist'],['armorer-efota','Armorer'],['artillerist-efota','Artillerist'],['battle-smith-efota','Battle Smith'],['cartographer-efota','Cartographer']])
     add(row[0],'artificer',row[1],3,'2024','EFOTA',{current:true,classPending:true});
 
-  // Older options remain usable with 2024 classes unless a 2024/current version replaces that exact option.
-  const replacedNames=new Set(Object.values(all).filter(row=>row.edition==='2024'&&row.current).map(row=>row.name.toLowerCase().replace(/^school of |^the |^way of the |^way of |^warrior of |^path of |^circle of |^college of |^oath of |^.* domain$/g,'')));
+  // Older subclasses remain selectable as explicitly labelled legacy options on a 2024 class.
+  // The 2024 class chassis standardizes subclass selection at class level 3.
   const effectiveMinimum=(row,edition)=>edition==='2024'&&row.edition==='2014'?Math.max(3,row.minimumLevel):row.minimumLevel;
   const compatible=(row,edition)=>{
     if(!row)return false;
-    if(edition==='2014')return row.edition==='2014';
-    if(row.edition==='2024')return true;
-    // Keep legacy options available for backwards-compatible 2024 characters.
-    // Explicitly superseded PHB/Tasha/Xanathar options are hidden when a current version exists with a matching familiar name.
-    const current=Object.values(all).some(candidate=>candidate.edition==='2024'&&candidate.classId===row.classId&&(
-      candidate.name===row.name ||
-      candidate.name.replace(/^(Warrior|Path|Circle|College|Oath|School) (of |of the )?/,'').replace(/ Sorcery$| Patron$/,'')===
-      row.name.replace(/^(Way|Path|Circle|College|Oath|School|The) (of |of the )?/,'').replace(/ Bloodline$| Mind$| Soul$/,'')
-    ));
-    return !current;
+    return edition==='2014' ? row.edition==='2014' : (row.edition==='2014'||row.edition==='2024');
   };
   const optionsFor=(classId,level,edition)=>Object.values(all)
     .filter(row=>row.classId===classId&&compatible(row,edition)&&Number(level||0)>=effectiveMinimum(row,edition))
