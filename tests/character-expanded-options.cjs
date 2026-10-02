@@ -35,11 +35,10 @@ assert.ok(Subclasses.find('cartographer-efota').classPending);
 // Race/species catalogue
 global.CharacterRaceCatalog=require('../js/modules/character-race-catalog');
 require('../js/modules/character-expanded-race-data');
-const races={human:{name:'Human',asi:{},languages:['Common'],traits:[]}};
 global.CharacterBackgrounds=Backgrounds;
-const Modern=require('../js/modules/character-rules-2024');
-CharacterRaceCatalog.extend(races);
-Modern.extend(races);
+global.CharacterRules2024=require('../js/modules/character-rules-2024');
+const Rules=require('../js/modules/character-rules');
+const races=Rules.races;
 for(const id of [
   'sea-elf-mpmm','shadar-kai-mpmm','feral-tiefling-scag',
   'chromatic-dragonborn-ftd','gem-dragonborn-ftd','metallic-dragonborn-ftd',
