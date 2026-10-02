@@ -36,8 +36,8 @@ function createCharacterSheetStore(sdk) {
     // character-sheet.js still has the legacy supported-version list through 11.
     // Expose schema 12 as 11 to that UI gate while retaining the true persisted
     // version for diagnostics. Writes always remain schema 12.
-    return stored.schemaVersion === 12
-      ? {...stored, schemaVersion:11, __storedSchemaVersion:12}
+    return stored.schemaVersion >= 12
+      ? {...stored, schemaVersion:13, __storedSchemaVersion:stored.schemaVersion}
       : stored;
   }
   async function save({campaignId, characterId, revision, data, identity, previousIdentity}) {
@@ -60,7 +60,7 @@ function createCharacterSheetStore(sdk) {
           throw Error('Character details changed while this sheet was open. Export your edits, then reopen the sheet.');
       const next = revision + 1;
       tx.set(sheetRef, {
-        schemaVersion: 12,
+        schemaVersion: 13,
         revision: next,
         data: persistedData(data),
         updatedAt: Date.now(),
