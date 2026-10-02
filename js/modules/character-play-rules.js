@@ -25,16 +25,16 @@ var CharacterPlayRules = (()=>{
   const b=data.build||{},classId=b.classId,known=['artificer','barbarian','bard','cleric','druid','fighter','monk','paladin','ranger','rogue','sorcerer','warlock','wizard'].includes(classId),modern=b.edition==='2024';
   const levels=[4,8,12,16,19,...(classId==='fighter'?[6,14]:classId==='rogue'?[10]:[])].sort((a,b)=>a-b);
   const total=known?levels.filter(n=>n<=level).length:0,spent=advancement(data.advancement).asiSpent;
-  const dm=data.rulesChoices?.grants?.__dm||{},bonusFeats=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusFeats)||0))),bonusAsis=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusAsis)||0)));
+  const dm=data.rulesChoices?.grants?.__dm||{},bonusFeats=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusFeats)||0))),bonusAsis=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusAsis)||0))),bonusAsiUsed=Math.max(0,Math.min(10,Math.trunc(Number(dm.usedAsis)||0)));
   const style=modern&&((classId==='fighter'&&level>=1)||(['paladin','ranger'].includes(classId)&&level>=2))?1:0;
   const lessons=modern&&classId==='warlock'&&level>=2&&data.advancement?.lessons?1:0;
   let featUsed=0,styleUsed=0,lessonUsed=0;
   for(const id of data.rulesChoices.feats){const f=catalog.find(v=>v.id===id);if(f?.category==='FS'&&styleUsed<style)styleUsed++;else if(f?.category==='O'&&lessonUsed<lessons)lessonUsed++;else featUsed++;}
-  const combined=featUsed+spent,combinedCapacity=total+bonusFeats+bonusAsis,featCapacity=total+bonusFeats,asiCapacity=total+bonusAsis;
-  const remaining=Math.max(0,Math.min(featCapacity-featUsed,combinedCapacity-combined));
-  const asiRemaining=Math.max(0,Math.min(asiCapacity-spent,combinedCapacity-combined));
-  const over=Math.max(0,featUsed-featCapacity,spent-asiCapacity,combined-combinedCapacity);
-  return {total,remaining,asiRemaining,style:Math.max(0,style-styleUsed),lessons:Math.max(0,lessons-lessonUsed),over,levels,known,bonusFeats,bonusAsis,featUsed,asiUsed:spent};
+  const bonusFeatCovered=Math.min(featUsed,bonusFeats),normalFeatUsed=Math.max(0,featUsed-bonusFeatCovered);
+  const normalUsed=normalFeatUsed+spent,normalRemaining=Math.max(0,total-normalUsed),bonusFeatRemaining=Math.max(0,bonusFeats-bonusFeatCovered),bonusAsiRemaining=Math.max(0,bonusAsis-bonusAsiUsed);
+  const remaining=normalRemaining+bonusFeatRemaining,asiRemaining=normalRemaining+bonusAsiRemaining;
+  const over=Math.max(0,normalUsed-total,bonusAsiUsed-bonusAsis);
+  return {total,remaining,asiRemaining,normalRemaining,bonusFeatRemaining,bonusAsiRemaining,style:Math.max(0,style-styleUsed),lessons:Math.max(0,lessons-lessonUsed),over,levels,known,bonusFeats,bonusAsis,featUsed,asiUsed:spent,bonusAsiUsed};
  }
  function eligible(data,level,feat,catalog,scores){
   if(!feat)return 'Feat unavailable';
