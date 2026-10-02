@@ -39,6 +39,14 @@
   human.value='Lucky';human.onchange();
   check('Choosing a build-granted feat in Feat catalogue updates the character build',sheetSession.data.build.humanOriginFeat==='Lucky');
   check('Generic feat reset buttons are no longer shown on the Feats page',!document.querySelector('[data-feat-reset]'));
+  document.getElementById('catalogFeatEdition').value='';renderCatalogFeatResults();
+  check('Feat browser renders the complete filtered list instead of truncating to 40',document.querySelectorAll('#catalogFeatResults .sheet-feat-results>article').length===CharacterCatalog.data.feats.length);
+  document.getElementById('catalogFeatEffect').value='armor';renderCatalogFeatResults();
+  check('Feat effect filter can isolate armor and shield related feats',[...document.querySelectorAll('[data-feat-info]')].length>0&&[...document.querySelectorAll('[data-feat-info]')].every(b=>featEffectTags(CharacterCatalog.find(b.dataset.featInfo,'feats')).includes('armor')));
+  document.getElementById('catalogFeatEffect').value='';document.getElementById('catalogFeatSearch').value='Survivor';renderCatalogFeatResults();
+  const survivorInfo=document.querySelector('[data-feat-info]');survivorInfo.click();
+  check('Feat information popup gives Survivor useful selection information',document.getElementById('sheetFeatInformation').open&&/Initiative/i.test(document.getElementById('sheetFeatInformation').textContent)&&/Charmed|Frightened/i.test(document.getElementById('sheetFeatInformation').textContent));
+  closeFeatInformation();
   closeCharacterSheet(true);
  }catch(e){results.push({name:e.stack,pass:false});}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
