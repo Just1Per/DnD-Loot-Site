@@ -2,7 +2,7 @@
 function renderCharacterOverview(d) {
   const s=sheetSession,host=document.getElementById('sheetOverviewReadout');if(!s||!host)return;
   const M=CharacterSheetModel,b=s.data.build,e=d.effects,esc=sheetEscape,sign=M.signed;
-  const bg=CharacterRules.modern.backgrounds[b.background]||CharacterBackgrounds.legacy[b.background];
+  const bg=CharacterBackgrounds.get(b.background);
   const metric=(label,value)=>`<div><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`;
   const skills=Object.entries(M.skills).map(([key,[name,ability]])=>{
     const rank=Math.max(s.data.skills[key].rank,e.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0);
