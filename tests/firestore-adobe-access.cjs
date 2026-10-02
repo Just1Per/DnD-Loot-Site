@@ -39,6 +39,8 @@ const {createCharacterSheetStore}=require('../js/modules/character-sheet-store')
  assert.equal(raw.data.rulesChoices.grants.__adobe.data.companion.type,'companion');
  assert.equal(raw.data.rulesChoices.grants.__adobe.data.pages.companion,false);
  assert.ok(Array.isArray(raw.data.rulesChoices.grants.__adobe.data.tabOrder));
+ assert.equal(raw.data.advancement.hpMode,'fixed');
+ assert.ok(Array.isArray(raw.data.advancement.classLevels));
  await assertFails(deleteDoc(doc(player,'campaigns/a/characters/c1')));
  await assertSucceeds(deleteDoc(doc(dm,'campaigns/a/characterSheets/c1')));
  await assertSucceeds(deleteDoc(doc(dm,'campaigns/a/characters/c1')));
