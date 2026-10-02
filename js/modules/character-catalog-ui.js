@@ -50,7 +50,7 @@ function openFeatInformation(featId){
 }
 function dmFeatGrant(){
   const grants=sheetSession?.data?.rulesChoices?.grants||(sheetSession.data.rulesChoices.grants={});
-  return grants.__dm||(grants.__dm={bonusFeats:0,bonusAsis:0,approvedBy:'',updatedAt:0});
+  return grants.__dm||(grants.__dm={bonusFeats:0,bonusAsis:0,usedAsis:0,approvedBy:'',updatedAt:0});
 }
 function renderDmFeatApproval(){
   const host=document.getElementById('sheetDmFeatApproval');if(!host||!sheetSession)return;
@@ -59,7 +59,8 @@ function renderDmFeatApproval(){
     <div class="sheet-dm-approval-grid">
       <article><span>Bonus feat choices</span><strong>${grant.bonusFeats||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="feat" data-delta="-1">−</button><button type="button" data-dm-grant="feat" data-delta="1">+</button></div>':''}</article>
       <article><span>Bonus ASI choices</span><strong>${grant.bonusAsis||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="asi" data-delta="-1">−</button><button type="button" data-dm-grant="asi" data-delta="1">+</button></div>':''}</article>
-      <article><span>ASI choices reserved</span><strong>${sheetSession.data.advancement.asiSpent}</strong><div><button type="button" data-asi-spend="-1" ${!sheetSession.data.advancement.asiSpent?'disabled':''}>Undo</button><button type="button" data-asi-spend="1" ${!budget.asiRemaining?'disabled':''}>Use ASI choice</button></div></article>
+      <article><span>Normal ASI choices used</span><strong>${sheetSession.data.advancement.asiSpent}</strong><div><button type="button" data-asi-spend="-1" data-asi-kind="normal" ${!sheetSession.data.advancement.asiSpent?'disabled':''}>Undo</button><button type="button" data-asi-spend="1" data-asi-kind="normal" ${!budget.normalRemaining?'disabled':''}>Use normal ASI</button></div></article>
+      <article><span>DM bonus ASIs used</span><strong>${grant.usedAsis||0} / ${grant.bonusAsis||0}</strong><div><button type="button" data-asi-spend="-1" data-asi-kind="bonus" ${!grant.usedAsis?'disabled':''}>Undo</button><button type="button" data-asi-spend="1" data-asi-kind="bonus" ${!budget.bonusAsiRemaining?'disabled':''}>Use bonus ASI</button></div></article>
     </div>
     <p class="sheet-help">${canManageCampaign()?'As DM, use +/− to confirm extra feat or ASI allowances for this character. Save the character sheet after changing approvals.':'Only the campaign DM can change bonus allowances.'} An ASI choice reserves one advancement choice for ability scores; edit the actual scores on Abilities & skills.</p>`;
   host.querySelectorAll('[data-dm-grant]').forEach(button=>button.onclick=()=>{
@@ -69,11 +70,15 @@ function renderDmFeatApproval(){
     catalogChanged('DM bonus advancement approval changed. Save the character sheet to keep it.');renderDmFeatApproval();renderCatalogFeatResults();
   });
   host.querySelectorAll('[data-asi-spend]').forEach(button=>button.onclick=()=>{
-    readSheetForm();const delta=Number(button.dataset.asiSpend)||0,current=Number(sheetSession.data.advancement.asiSpent)||0;
-    const b=CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data?.feats||[]);
-    if(delta>0&&!b.asiRemaining)return sheetStatus('No available ASI choice. Ask the DM for an additional ASI allowance.',true);
-    sheetSession.data.advancement.asiSpent=Math.max(0,Math.min(17,current+delta));
-    const input=document.querySelector('[name="advancement.asiSpent"]');if(input)input.value=sheetSession.data.advancement.asiSpent;
+    readSheetForm();const delta=Number(button.dataset.asiSpend)||0,kind=button.dataset.asiKind,b=CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data?.feats||[]);
+    if(kind==='bonus'){
+      const g=dmFeatGrant();if(delta>0&&!b.bonusAsiRemaining)return sheetStatus('No unused DM-approved bonus ASI remains.',true);
+      g.usedAsis=Math.max(0,Math.min(g.bonusAsis||0,(Number(g.usedAsis)||0)+delta));
+    }else{
+      const current=Number(sheetSession.data.advancement.asiSpent)||0;if(delta>0&&!b.normalRemaining)return sheetStatus('No normal advancement choice remains for an ASI.',true);
+      sheetSession.data.advancement.asiSpent=Math.max(0,Math.min(7,current+delta));
+      const input=document.querySelector('[name="advancement.asiSpent"]');if(input)input.value=sheetSession.data.advancement.asiSpent;
+    }
     catalogChanged('ASI choice reservation changed. Save the character sheet to keep it.');renderDmFeatApproval();renderCatalogFeatResults();
   });
 }
