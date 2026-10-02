@@ -18,7 +18,7 @@ function renderCharacterOverview(d) {
   <section class="sheet-summary-box"><h4>Armor & defenses</h4><p>${esc(d.gear.baseLabel)} ${d.gear.base} · shield ${d.gear.shield} · items ${sign(d.gear.bonus)} · Defense ${sign(d.gear.defense)} · adjustment ${sign(d.gear.adjustment)}</p><p><strong>Conditions:</strong> ${esc(s.data.conditions||'None recorded')}</p><p><strong>Resistances:</strong> ${esc([...e.resistances,s.data.resistances].filter(Boolean).join('; ')||'—')}</p><p><strong>Death saves:</strong> ${s.data.deathSuccess} successes / ${s.data.deathFailure} failures · <strong>Hit dice:</strong> ${esc(s.data.hitDice||'—')}</p></section>
   <section class="sheet-summary-box"><h4>Attacks & actions <button type="button" id="sheetOverviewAddAttack">+ Add attack</button></h4><div class="sheet-summary-table-wrap"><table><thead><tr><th>Weapon / action</th><th>To hit / save</th><th>Damage</th><th>Range</th></tr></thead><tbody>${attacks.join('')||'<tr><td colspan="4">Equip a looted weapon in Inventory or add an action in Combat.</td></tr>'}</tbody></table></div></section>
   <section class="sheet-summary-box"><h4>Proficiencies & languages</h4><p>${esc([...e.proficiencies,s.data.proficiencies].filter(Boolean).join(' · ')||'—')}</p><p>${esc([...e.languages,s.data.languages].filter(Boolean).join(' · ')||'—')}</p></section>
-  <section class="sheet-summary-box"><h4>Features & resources</h4><p>${esc((e.originFeats||[]).join(' · ')||'No Origin feats selected')}</p><p class="sheet-rule-text">${esc(s.data.resources||s.data.features||'Manage feat resources in Combat and feat choices in Character builder.')}</p>${d.feats.reports.filter(r=>CharacterFeatRules.resource(r.def,s.identity.level)).map(r=>{const v=CharacterFeatRules.resource(r.def,s.identity.level);return `<p>${esc(r.def.name)}: ${Math.max(0,v.max-r.choice.used)} / ${v.max}</p>`;}).join('')}</section></div></div><p class="sheet-help">Add or edit attacks here; other values are read-only. Edit identity and background in Character builder, scores in Abilities & skills, and HP/actions in Combat.</p>`;
+  <section class="sheet-summary-box"><h4>Features & resources</h4><p>${esc((e.originFeats||[]).join(' · ')||'No Origin feats selected')}</p><p class="sheet-rule-text">${esc(s.data.resources||s.data.features||'Manage feat resources in Combat and feat choices on the Feats page.')}</p>${d.feats.reports.filter(r=>CharacterFeatRules.resource(r.def,s.identity.level)).map(r=>{const v=CharacterFeatRules.resource(r.def,s.identity.level);return `<p>${esc(r.def.name)}: ${Math.max(0,v.max-r.choice.used)} / ${v.max}</p>`;}).join('')}</section></div></div><p class="sheet-help">Add or edit attacks here; other values are read-only. Edit identity and background in Character builder, scores in Abilities & skills, and HP/actions in Combat.</p>`;
  bindOverviewAttacks();
 }
 function closeSpellInformation(){const d=document.getElementById('sheetSpellInformation');if(d){if(d.open)d.close();d.remove();}}
@@ -34,11 +34,19 @@ function openSpellInformation({catalogId='',index=null}={}) {
 }
 function moveOriginFeatControls() {
  const form=document.getElementById('characterSheetForm'),host=document.getElementById('sheetBuildControls');
- const modern=document.createElement('section');modern.id='sheetOriginFeatChoices';modern.innerHTML='<h3>Origin feat choices</h3><p>Your background grants its listed feat automatically. Make additional Human or custom-background choices here.</p>';
- const legacy=document.createElement('section');legacy.id='sheetLegacyFeatChoice';legacy.innerHTML='<h3>Variant Human feat</h3>';
- for(const name of ['build.backgroundFeat','build.humanOriginFeat',...[0,1,2].flatMap(i=>[`build.backgroundFeatChoices.${i}`,`build.humanFeatChoices.${i}`])]){const label=form.querySelector(`[name="${name}"]`)?.closest('label');if(label)modern.appendChild(label);}
- const race=form.querySelector('[name="build.raceFeat"]')?.closest('label');if(race)legacy.appendChild(race);
- host.append(modern,legacy);
+ for(const name of ['build.backgroundFeat','build.humanOriginFeat','build.raceFeat',...[0,1,2].flatMap(i=>[`build.backgroundFeatChoices.${i}`,`build.humanFeatChoices.${i}`])]){
+  const label=form.querySelector(`[name="${name}"]`)?.closest('label');
+  if(label){label.hidden=true;label.dataset.featCatalogueManaged='true';}
+ }
+ let note=document.getElementById('sheetBuilderFeatNotice');
+ if(!note){
+  note=document.createElement('section');
+  note.id='sheetBuilderFeatNotice';
+  note.className='sheet-editor-box sheet-builder-feat-notice';
+  note.innerHTML='<div><span class="sheet-eyebrow">FEAT CHOICES</span><h4>Choose feats on the Feats page</h4><p>Your background, species and level progression determine when you receive a feat. The actual feat selection and feat-specific choices are now kept together in the Feat catalogue.</p></div><button type="button" data-open-feat-page>Open Feats</button>';
+  host.append(note);
+  note.querySelector('[data-open-feat-page]').onclick=()=>document.querySelector('[data-sheet-tab="feats"]')?.click();
+ }
 }
 function updateBackgroundControls(d) {
  const b=sheetSession.data.build,bg=CharacterBackgrounds.get(b.background),form=document.getElementById('characterSheetForm'),R=CharacterRules;
@@ -65,14 +73,13 @@ function updateBackgroundControls(d) {
    mechanics=bg.abilities?.length
     ?`<p><strong>Ability increases:</strong> +2/+1 or +1/+1/+1 among ${bg.abilities.map(k=>CharacterSheetModel.abilities[k]).join(', ')}; capped at 20 in Base mode.</p>`
     :'<p><strong>Ability increases:</strong> this expanded 2024 background is selectable, but its source-specific ability list is not automated yet; choose the source-legal abilities in Character builder.</p>';
-   mechanics+=bg.feat?`<p><strong>Origin feat:</strong> ${sheetEscape(bg.feat)}${bg.fixedFeat?' (fixed by this background)':''}. ${R.modern.originFeats.includes(bg.feat)?'Supported effects apply automatically where implemented.':'Source-specific feat effects remain manual until their adapter is added.'}</p>`:'<p><strong>Origin feat:</strong> choose the source-legal feat in Character builder.</p>';
+   mechanics+=bg.feat?`<p><strong>Origin feat:</strong> ${sheetEscape(bg.feat)}${bg.fixedFeat?' (fixed by this background)':''}. ${R.modern.originFeats.includes(bg.feat)?'Supported effects apply automatically where implemented.':'Source-specific feat effects remain manual until their adapter is added.'}</p>`:'<p><strong>Origin feat:</strong> choose the source-legal feat on the Feats page.</p>';
   }else{
    mechanics=bg.feature?`<p><strong>Feature:</strong> ${sheetEscape(bg.feature)}. Narrative/source-specific benefits require DM agreement. No background ability increase or Origin feat under 2014 rules.</p>`:'<p><strong>Background feature:</strong> consult the listed source for remaining source-specific details.</p>';
   }
   summary.innerHTML=`<h4>${sheetEscape(bg.name)} · ${sheetEscape(bg.edition)} · ${sheetEscape(source)}</h4><p><strong>Skills:</strong> ${sheetEscape(skillText)}</p><p><strong>Tools:</strong> ${sheetEscape(toolText)}</p><p><strong>Additional languages:</strong> ${count}</p>${mechanics}<p class="sheet-help">${sheetEscape(ref)}. Factual options are loaded into the builder; source-specific prose, equipment and mechanics not represented by the rules engine remain manual. Starting equipment is not added to campaign loot automatically.</p>`;
- }else summary.innerHTML='<p>Custom background: record skills and tools in Abilities & skills / Combat notes. Under 2024 rules, select ability increases here and an Origin feat in Character builder.</p>';
- document.getElementById('sheetOriginFeatChoices').hidden=b.edition!=='2024';
- document.getElementById('sheetLegacyFeatChoice').hidden=b.edition!=='2014'||b.race!=='variant-human';
+ }else summary.innerHTML='<p>Custom background: record skills and tools in Abilities & skills / Combat notes. Under 2024 rules, select ability increases here and choose the Origin feat on the Feats page.</p>';
+ form.querySelectorAll('[data-feat-catalogue-managed="true"]').forEach(label=>label.hidden=true);
 }
 function refineCharacterBuilder() {
  const root=document.getElementById('sheetBuildControls');

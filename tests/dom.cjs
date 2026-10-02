@@ -20,6 +20,7 @@ const ctx=vm.createContext(sandbox);const run=async f=>vm.runInContext(fs.readFi
  await run(path.join(__dirname,'character-feat-ui-checks.js'));
  await run(path.join(__dirname,'character-sheet-page-checks.js'));
  await run(path.join(__dirname,'character-more-feats-ui-checks.js'));
+ await run(path.join(__dirname,'character-spell-feat-flow-ui-checks.js'));
  await run(path.join(__dirname,'character-equipment-ui-checks.js'));
  await run(path.join(__dirname,'character-overview-ui-checks.js'));
  await run(path.join(__dirname,'character-play-ui-checks.js'));

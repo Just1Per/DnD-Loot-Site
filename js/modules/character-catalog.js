@@ -23,6 +23,7 @@ var CharacterCatalog = (() => {
       ids.add(r.id);
     }
     if(data.spells.some(s=>!Number.isInteger(s.level)||s.level<0||s.level>9) || data.feats.some(f=>!Number.isInteger(f.minimumLevel)||f.minimumLevel<0||f.minimumLevel>20)) throw Error('Invalid catalogue levels');
+    if(data.spells.some(s=>!schools.includes(String(s.school||'')))) throw Error('Invalid or missing spell school');
     for(const feat of data.feats)if(feat.licensedText && Feats.definitions[feat.id]?.descriptionOverride)feat.description=Feats.definitions[feat.id].descriptionOverride;
     catalogue=data;return data;
   }
@@ -53,8 +54,20 @@ var CharacterCatalog = (() => {
     return pending;
   }
   const find=(id,kind='spells')=>catalogue?.[kind]?.find(s=>s.id===id);
-  function spells({edition,legacy=false,classId='',level='',search=''}={}) {
-    return (catalogue?.spells||[]).filter(s=>(!edition || s.edition===edition || legacy && edition==='2024' && s.edition==='2014') && (level==='' || s.level===Number(level)) && (!classId || (s.classesByEdition?.[edition]||s.classes||[]).includes(classId)) && s.name.toLowerCase().includes(search.toLowerCase()));
+  const schools=Object.freeze(['Abjuration','Conjuration','Divination','Enchantment','Evocation','Illusion','Necromancy','Transmutation']);
+  function spells({edition,legacy=false,classId='',level='',school='',search=''}={}) {
+    const needle=String(search||'').trim().toLowerCase();
+    return (catalogue?.spells||[]).filter(s=>{
+      const versionOk=!edition || s.edition===edition || legacy && edition==='2024' && s.edition==='2014';
+      const levelOk=level==='' || s.level===Number(level);
+      const classOk=!classId || (s.classesByEdition?.[edition]||s.classes||[]).includes(classId);
+      const schoolOk=!school || String(s.school||'').toLowerCase()===String(school).toLowerCase();
+      const searchable=[
+        s.name,s.school,s.source,s.book,s.save,s.casting,s.range,
+        ...(s.combat?.types||[])
+      ].filter(Boolean).join(' ').toLowerCase();
+      return versionOk&&levelOk&&classOk&&schoolOk&&(!needle||searchable.includes(needle));
+    });
   }
   function grants(data) {
     const b=data.build||{}, out=[];
@@ -62,8 +75,8 @@ var CharacterCatalog = (() => {
       if(/^Magic Initiate(?: \(|$)/.test(feat||'')) out.push({key,label,edition,fixedClass:fixedClass || /\((\w+)\)/.exec(feat)?.[1]?.toLowerCase() || ''});
     };
     if(b.edition==='2024') {
-      const rules=typeof CharacterRules!=='undefined'?CharacterRules:(typeof require!=='undefined'?require('./character-rules'):null);
-      const bg=rules?.modern.backgrounds[b.background];
+      const backgrounds=typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds:(typeof require!=='undefined'?require('./character-backgrounds'):null);
+      const bg=backgrounds?.get?.(b.background);
       add('background','Background · Magic Initiate','2024',bg?.feat||b.backgroundFeat);
       if(b.race==='human-2024') add('human','Human · Magic Initiate','2024',b.humanOriginFeat);
     }
@@ -96,6 +109,6 @@ var CharacterCatalog = (() => {
     for(const slot of data.slots) slot.used=0;
     Feats.reset(data,'long');
   }
-  return {normalize,set,load,find,spells,grants,validateGrant,spellRow,longRest,get data(){return catalogue;}};
+  return {normalize,set,load,find,spells,schools,grants,validateGrant,spellRow,longRest,get data(){return catalogue;}};
 })();
 if(typeof module!=='undefined' && module.exports) module.exports=CharacterCatalog;

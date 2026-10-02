@@ -398,10 +398,11 @@ var CharacterRules2024 = (() => {
     e.originFeats = [];
     for (const {name, choices} of feats) {
       if (!originFeats.includes(name)) {
-        if (bg?.fixedFeat && name === bg.feat) {
+        if (name) {
           e.originFeats.push(name);
-          e.traits.push(name+' ('+(bg.source||'D&D')+' background feat): source-specific effects are not automated yet.');
-        } else if (name) e.warnings.push('Background feat '+name+' is not yet automated; keep it as a source/manual feature.');
+          e.traits.push(name+' (Origin feat): source-specific effects are not automated yet.');
+          e.warnings.push(name+': selected on the Feats page; keep its source-specific effects as manual until an automation adapter is added.');
+        }
         continue;
       }
       if (taken.has(name) && name !== 'Skilled') {

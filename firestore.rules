@@ -1,4 +1,4 @@
-// D&D Vault Firestore Rules Revision: 20
+// D&D Vault Firestore Rules Revision: 21
 // Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
@@ -7,6 +7,7 @@
 // Revision 18: DM permanent character deletion + schema 14 tab layout state
 // Revision 19: persist normalized advancement state and keep schema 12/13 Adobe saves compatible
 // Revision 20: expanded first-party race/background/subclass catalogues; permissions and schema unchanged
+// Revision 21: spell-generator filtering + Feats-page choice flow; permissions and schema unchanged
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {

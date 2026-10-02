@@ -8,13 +8,17 @@ var CharacterFeatRules = (() => {
   }
   function entries(data) {
     const seen={};const result=(data.rulesChoices?.feats||[]).map(id=>{seen[id]=(seen[id]||0)+1;return {id,key:id+(seen[id]>1?'--'+seen[id]:'')};});
-    if(data.build.edition==='2014' && data.build.race==='variant-human') {
-      const id=Object.keys(definitions).find(id=>definitions[id].source==='PHB' && definitions[id].name.toLowerCase()===data.build.raceFeat.trim().toLowerCase());
-      if(id)result.unshift({id,key:'variant',origin:true});
+    if(data.build.edition==='2014' && data.build.raceFeat) {
+      const R=typeof CharacterRules!=='undefined'?CharacterRules:require('./character-rules');
+      const race=R.races?.[data.build.race];
+      if(data.build.race==='variant-human'||race?.feat){
+        const id=Object.keys(definitions).find(id=>definitions[id].edition==='2014' && definitions[id].name.toLowerCase()===data.build.raceFeat.trim().toLowerCase());
+        if(id)result.unshift({id,key:'variant',origin:true,originLabel:data.build.race==='variant-human'?'Variant Human':race?.name||'Race'});
+      }
     }
     if(data.build.edition==='2024') {
-      const R=typeof CharacterRules!=='undefined'?CharacterRules:require('./character-rules');
-      const bg=R.modern.backgrounds[data.build.background]?.feat||data.build.backgroundFeat;
+      const B=typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds:require('./character-backgrounds');
+      const bg=B.get(data.build.background)?.feat||data.build.backgroundFeat;
       const origins=[['origin-background',bg,'Background'],...(data.build.race==='human-2024'?[['origin-human',data.build.humanOriginFeat,'Human']]:[])];
       for(const [key,name,label] of origins.reverse())if(['Lucky','Crafter','Musician','Savage Attacker'].includes(name)) {
         const id=Object.keys(definitions).find(id=>definitions[id].source==='XPHB'&&definitions[id].name===name);

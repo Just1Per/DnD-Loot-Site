@@ -947,7 +947,7 @@ function updateSheetBuildSummary(derived) {
     n,
     n
   ]), b.raceCantrip || race?.defaultCantrip || '', 'Choose cantrip');
-  show('build.raceFeat', race?.feat);
+  show('build.raceFeat', false);
   const extra = form.querySelector('[name="build.extraLanguage"]');
   extra.closest('[data-build-for]').hidden = !race?.extraLanguage && ![
     'human',
@@ -973,11 +973,11 @@ function updateSheetBuildSummary(derived) {
     for (const option of el.querySelectorAll('option'))
       option.disabled = !!option.value && !!bg?.abilities?.length && !bg.abilities.includes(option.value);
   }
-  show('build.backgroundFeat', b.edition === '2024' && !bg?.feat);
-  show('build.humanOriginFeat', race?.originFeat);
+  show('build.backgroundFeat', false);
+  show('build.humanOriginFeat', false);
   for (let i = 0; i < 3; i++) {
-    show(`build.backgroundFeatChoices.${ i }`, (bg?.feat || b.backgroundFeat) === 'Skilled');
-    show(`build.humanFeatChoices.${ i }`, race?.originFeat && b.humanOriginFeat === 'Skilled');
+    show(`build.backgroundFeatChoices.${ i }`, false);
+    show(`build.humanFeatChoices.${ i }`, false);
   }
   for (const option of form.querySelector('[name="build.race"]').querySelectorAll('option'))
     option.disabled = b.edition === '2014' && R.races[option.value]?.edition === '2024';
