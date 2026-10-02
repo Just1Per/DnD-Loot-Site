@@ -1007,7 +1007,7 @@ function updateSheetBuildSummary(derived) {
   const asi = Object.entries(e.asi).map(([key, value]) => `${ key.toUpperCase() } +${ value }`).join(', ') || 'None';
   const learnedSkills = e.skills.map(key => CharacterSheetModel.skills[key]?.[0] || key).join(', ') || 'None';
   const breath = e.breath ? `<p><strong>Breath weapon:</strong> ${ e.breath.dice }d${ e.breath.die || 6 } ${ sheetEscape(e.breath.type) } · ${ sheetEscape(e.breath.area) } · ${ e.breath.save.toUpperCase() } save DC ${ 8 + derived.pb + derived.mods.con }. Half damage on success; ${ sheetEscape(e.breath.usage || 'once per short or long rest') }.</p>` : '';
-  const raceInfo = race ? `<p><strong>${ sheetEscape(race.name) }</strong> · ${ sheetEscape(race.source) } · ${ sheetEscape(race.creatureType) }${ race.url ? ` · <a href="${ sheetEscape(race.url) }" target="_blank" rel="noopener">Race reference</a>` : '' }</p>` : '';
+  const raceInfo = race ? `<p><strong>${ sheetEscape(race.name) }</strong> · ${ sheetEscape(race.source) } · ${ sheetEscape(race.creatureType) }${ race.url ? ` · <a href="${ sheetEscape(race.url) }" target="_blank" rel="noopener">Race reference</a>` : '' }</p>${race.partial?'<p class="sheet-help">Expanded source option: supported statistics are calculated here; source-specific conditional mechanics remain manual until their rules adapter is added.</p>':''}` : '';
   const movement = [
     [
       'Flight',
