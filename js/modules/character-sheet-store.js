@@ -33,12 +33,7 @@ function createCharacterSheetStore(sdk) {
     if (!snapshot.exists())
       return {schemaVersion:1,revision:0,data:{}};
     const stored = snapshot.data();
-    // character-sheet.js still has the legacy supported-version list through 11.
-    // Expose schema 12 as 11 to that UI gate while retaining the true persisted
-    // version for diagnostics. Writes always remain schema 12.
-    return stored.schemaVersion >= 12
-      ? {...stored, schemaVersion:13, __storedSchemaVersion:stored.schemaVersion}
-      : stored;
+    return stored;
   }
   async function save({campaignId, characterId, revision, data, identity, previousIdentity}) {
     const actor = auth.currentUser?.uid;
