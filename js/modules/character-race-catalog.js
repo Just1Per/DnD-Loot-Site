@@ -850,7 +850,9 @@ var CharacterRaceCatalog = (() => {
         },
         carapace: {
           name: 'Carapace',
-          traits: ['AC +1 unless wearing heavy armor; apply manually.']
+          acBonus: 1,
+          acBonusCondition: 'not-heavy',
+          traits: ['Carapace: +1 AC unless wearing heavy armor.']
         },
         acid: {
           name: 'Acid Spit',
