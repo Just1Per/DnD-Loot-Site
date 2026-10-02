@@ -1,9 +1,10 @@
-// D&D Vault Firestore Rules Revision: 17
-// Character sheet schema: 13 — Adobe parity UI/style + permissions sync
+// D&D Vault Firestore Rules Revision: 18
+// Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
 // Revision 16: Adobe class/subclass progression iteration; permissions unchanged
 // Revision 17: parity audit + character-sheet style loading sync; permissions unchanged
+// Revision 18: DM permanent character deletion + schema 14 tab layout state
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
@@ -386,7 +387,7 @@ match /characters/{charId} {
     );
   allow update: if request.resource.data.userId == resource.data.userId
     && (isCampaignDM(campaignId) || (isActiveMember(campaignId) && resource.data.userId == request.auth.uid));
-  allow delete: if false;
+  allow delete: if isCampaignDM(campaignId);
 }
 // Private character details are separate from the campaign's shared roster.
 match /characterSheets/{charId} {
@@ -399,7 +400,7 @@ match /characterSheets/{charId} {
     let d = request.resource.data;
     return exists(characterPath(campaignId, charId))
       && d.keys().hasOnly(['schemaVersion','revision','data','updatedAt','updatedBy'])
-      && d.schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] && d.revision is int && d.revision > 0
+      && d.schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] && d.revision is int && d.revision > 0
       && d.updatedBy == request.auth.uid && d.updatedAt is int
       && d.data is map
       && d.data.keys().hasOnly(['personalGear','actions','profile','advancement','equipmentState','rulesChoices','build','abilities','saves','skills','coins','slots','attacks','spells','inspiration','spellAbility',
@@ -408,7 +409,7 @@ match /characterSheets/{charId} {
         'ac','speed','hpMax','hpCurrent','hpTemp','initiativeBonus','spellAttackBonus','spellDCBonus','deathSuccess','deathFailure','passiveBonus'])
       && (d.schemaVersion == 1
         || (d.schemaVersion == 2 && d.data.build is map && d.data.build.edition == '2014')
-        || (d.schemaVersion in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] && d.data.build is map && d.data.build.edition in ['2014', '2024']))
+        || (d.schemaVersion in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] && d.data.build is map && d.data.build.edition in ['2014', '2024']))
       && (d.schemaVersion < 4 || (d.data.rulesChoices is map
         && d.data.rulesChoices.keys().hasOnly(['feats','grants','effects'])
         && d.data.rulesChoices.feats is list && d.data.rulesChoices.feats.size() <= 30
@@ -431,7 +432,7 @@ match /characterSheets/{charId} {
         && d.data.rulesChoices.grants.__adobe.keys().hasOnly(['data','used'])
         && d.data.rulesChoices.grants.__adobe.used == 0
         && d.data.rulesChoices.grants.__adobe.data is map
-        && d.data.rulesChoices.grants.__adobe.data.keys().hasOnly(['useExperience','hpMode','hpRolls','classLevels','pages','companion'])
+        && d.data.rulesChoices.grants.__adobe.data.keys().hasOnly(['useExperience','hpMode','hpRolls','classLevels','pages','tabOrder','companion'])
         && d.data.rulesChoices.grants.__adobe.data.useExperience is bool
         && d.data.rulesChoices.grants.__adobe.data.hpMode in ['fixed','rolled','max']
         && d.data.rulesChoices.grants.__adobe.data.hpRolls is list
@@ -443,6 +444,8 @@ match /characterSheets/{charId} {
         && d.data.rulesChoices.grants.__adobe.data.pages.spells is bool
         && d.data.rulesChoices.grants.__adobe.data.pages.companion is bool
         && d.data.rulesChoices.grants.__adobe.data.pages.rules is bool
+        && d.data.rulesChoices.grants.__adobe.data.tabOrder is list
+        && d.data.rulesChoices.grants.__adobe.data.tabOrder.size() <= 10
         && d.data.rulesChoices.grants.__adobe.data.companion is map
       ))
       && (d.schemaVersion < 10 || (d.data.actions is list && d.data.actions.size() <= 60))
@@ -457,7 +460,7 @@ match /characterSheets/{charId} {
   allow update: if mayUseSheet() && validSheet()
     && request.resource.data.schemaVersion >= resource.data.schemaVersion
     && request.resource.data.revision == resource.data.revision + 1;
-  allow delete: if false;
+  allow delete: if isCampaignDM(campaignId);
 }
 match /saves/{saveId} {
   allow read: if isCampaignDM(campaignId)
@@ -469,7 +472,8 @@ match /saves/{saveId} {
     && saveId == request.resource.data.characterId + "__" + request.resource.data.itemId
     && get(/databases/$(database)/documents/campaigns/$(campaignId)/items/$(request.resource.data.itemId)).data.visible == true;
   allow update: if false;
-  allow delete: if (isActiveMember(campaignId) || isCampaignOwner(campaignId)) && resource.data.userId == request.auth.uid;
+  allow delete: if isCampaignDM(campaignId)
+    || ((isActiveMember(campaignId) || isCampaignOwner(campaignId)) && resource.data.userId == request.auth.uid);
 }
 function itemPath(itemId) { return /databases/$(database)/documents/campaigns/$(campaignId)/items/$(itemId); }
 function stockPath(itemId) { return /databases/$(database)/documents/campaigns/$(campaignId)/supply/$(itemId); }
