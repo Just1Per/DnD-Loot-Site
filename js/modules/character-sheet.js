@@ -861,7 +861,7 @@ function renderSheetBuildControls() {
     'Monstrous',
     'Setting specific',
     'Custom'
-  ].map(category => `<optgroup label="${ sheetEscape(category) }">${ Object.entries(R.races).filter(([, r]) => r.category === category).sort((a, b) => a[1].name.localeCompare(b[1].name)).map(([id, r]) => `<option value="${ sheetEscape(id) }">${ sheetEscape(r.name) } — ${ sheetEscape(r.edition === '2024' ? '2024 · ' + (r.book || 'PHB') : '2014 · ' + (r.book || 'SRD')) }</option>`).join('') }</optgroup>`).join('');
+  ].map(category => `<optgroup label="${ sheetEscape(category) }">${ Object.entries(R.races).filter(([, r]) => r.category === category).sort((a, b) => a[1].name.localeCompare(b[1].name)).map(([id, r]) => `<option value="${ sheetEscape(id) }">${ sheetEscape(r.name) } — ${ sheetEscape((r.edition === '2024' ? '2024 · ' : '2014 · ') + (r.source || r.book || 'D&D')) }</option>`).join('') }</optgroup>`).join('');
   const backgroundSelect = document.querySelector('[name="build.background"]');
   const expandedBackgrounds = Object.entries(CharacterBackgrounds.expanded || {});
   const backgroundGroups = [
