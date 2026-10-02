@@ -17,6 +17,7 @@ const rules=read('js/modules/character-rules.js');
 const races=read('js/modules/character-race-catalog.js');
 const backgrounds=read('js/modules/character-background-data.js');
 const equipment=read('js/modules/character-equipment.js');
+const classProgression=fs.existsSync(path.join(root,'js/modules/character-class-progression.js'))?read('js/modules/character-class-progression.js'):'';
 const report=[];
 const add=(category,status,detail)=>report.push({category,status,detail});
 const norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,'');
@@ -27,6 +28,8 @@ add('skills',missing.length?'missing':'covered',missing.length?`Missing: ${missi
 
 missing=hasAll(rules,baseline.baseClasses);
 add('classes',missing.length?'missing':'covered',missing.length?`Missing: ${missing.join(', ')}`:`All ${baseline.categories.classes} Adobe base classes are represented.`);
+const classFeatureCoverage=baseline.baseClasses.filter(name=>norm(classProgression).includes(norm(name))).length;
+add('class progression',classFeatureCoverage===baseline.categories.classes?'covered':'partial',`${classFeatureCoverage}/${baseline.categories.classes} base classes have Adobe feature unlock references.`);
 
 missing=hasAll(rules+'\n'+races,baseline.baseRaces);
 add('races',missing.length?'missing':'covered',missing.length?`Missing: ${missing.join(', ')}`:`All ${baseline.categories.races} Adobe base races are represented; the web catalogue also contains additional races/species.`);
@@ -60,7 +63,8 @@ const magicItemMechanics=path.join(root,'data/rules/adobe-magic-item-reference.j
 add('magic items',fs.existsSync(magicItemMechanics)?'covered':'partial',fs.existsSync(magicItemMechanics)?'Adobe magic-item mechanics reference is present.':`${baseline.categories.magicItems} Adobe base magic items are not yet represented by one complete structured mechanics reference; root-library item data and equipment effects are currently split.`);
 
 const rulesText=read('firestore.rules');
-add('firestore schema',rulesText.includes('Firestore Rules Revision: 12')&&rulesText.includes('schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]')?'covered':'partial','Character-sheet persistence is expected to move in lockstep with the Adobe parity schema.');
+const ruleRevision=Number(rulesText.match(/Firestore Rules Revision:\s*(\d+)/)?.[1]||0);
+add('firestore schema',ruleRevision>=17&&rulesText.includes('schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]')?'covered':'partial',`Firestore rules revision ${ruleRevision}; character-sheet schema 13 expected for this parity iteration.`);
 
 for(const row of report) console.log(`${row.status.toUpperCase().padEnd(8)} ${row.category}: ${row.detail}`);
 const incomplete=report.filter(r=>r.status!=='covered');
