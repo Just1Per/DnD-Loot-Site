@@ -1,7 +1,7 @@
 const fs=require('fs'),path=require('path'),assert=require('node:assert/strict');
 const {initializeTestEnvironment,assertFails,assertSucceeds}=require('@firebase/rules-unit-testing');
 const sdk=require('firebase/firestore');
-const {doc,setDoc,getDoc}=sdk;
+const {doc,setDoc,getDoc,deleteDoc}=sdk;
 const M=require('../js/modules/character-sheet-model');
 const {createCharacterSheetStore}=require('../js/modules/character-sheet-store');
 
@@ -39,6 +39,9 @@ const {createCharacterSheetStore}=require('../js/modules/character-sheet-store')
  assert.equal(raw.data.rulesChoices.grants.__adobe.data.companion.type,'companion');
  assert.equal(raw.data.rulesChoices.grants.__adobe.data.pages.companion,false);
  assert.ok(Array.isArray(raw.data.rulesChoices.grants.__adobe.data.tabOrder));
+ await assertFails(deleteDoc(doc(player,'campaigns/a/characters/c1')));
+ await assertSucceeds(deleteDoc(doc(dm,'campaigns/a/characterSheets/c1')));
+ await assertSucceeds(deleteDoc(doc(dm,'campaigns/a/characters/c1')));
  await env.cleanup();
- console.log('SUCCESS Adobe schema 14 tab layout and campaign supply permissions');
+ console.log('SUCCESS Adobe schema 14 tab layout, campaign supply permissions and DM character deletion');
 })().catch(error=>{console.error(error);process.exit(1)});
