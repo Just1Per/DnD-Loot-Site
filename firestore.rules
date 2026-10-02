@@ -1,5 +1,5 @@
-// D&D Vault Firestore Rules Revision: 13
-// Character sheet schema: 13 — Adobe parity UI/style + permissions sync
+// D&D Vault Firestore Rules Revision: 14
+// Character sheet schema: 13 — Adobe parity UI/style + permissions sync\n// Revision 14: campaign DMs may create characters for active campaign members
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
@@ -370,8 +370,16 @@ match /campaigns/{campaignId} {
 // ---------------------------------------------------------------------
 match /characters/{charId} {
   allow read: if isCampaignDM(campaignId) || isActiveMember(campaignId);
-  allow create: if (isActiveMember(campaignId) || isCampaignOwner(campaignId))
-    && request.resource.data.userId == request.auth.uid;
+  allow create: if (
+      ((isActiveMember(campaignId) || isCampaignOwner(campaignId))
+        && request.resource.data.userId == request.auth.uid)
+      || (
+        isCampaignDM(campaignId)
+        && request.resource.data.userId is string
+        && exists(memberPath(campaignId, request.resource.data.userId))
+        && get(memberPath(campaignId, request.resource.data.userId)).data.status == "active"
+      )
+    );
   allow update: if request.resource.data.userId == resource.data.userId
     && (isCampaignDM(campaignId) || (isActiveMember(campaignId) && resource.data.userId == request.auth.uid));
   allow delete: if false;
