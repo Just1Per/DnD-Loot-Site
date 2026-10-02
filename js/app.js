@@ -35,7 +35,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
 if (!document.querySelector('link[data-character-adobe-integration]')) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = new URL('../css/character-adobe-integration.css?v=20261002-magic-items-v23', import.meta.url).href;
+  link.href = new URL('../css/character-adobe-integration.css?v=20261002-feat-spell-polish-v24', import.meta.url).href;
   link.dataset.characterAdobeIntegration = 'true';
   document.head.appendChild(link);
 }
@@ -58,6 +58,7 @@ const FEATURE_FILES = [
   "./modules/character-expanded-subclass-data.js",
   "./modules/character-class-progression.js",
   "./modules/character-feat-data.js",
+  "./modules/character-feat-reference.js",
   "./modules/character-feat-rules.js",
   "./modules/character-catalog.js",
   "./modules/character-adobe-data.js",
@@ -105,7 +106,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261002-magic-items-v23");
+    moduleUrl.searchParams.set("v", "20261002-feat-spell-polish-v24");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;
