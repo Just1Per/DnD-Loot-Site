@@ -74,8 +74,8 @@ var CharacterCatalog = (() => {
       if(/^Magic Initiate(?: \(|$)/.test(feat||'')) out.push({key,label,edition,fixedClass:fixedClass || /\((\w+)\)/.exec(feat)?.[1]?.toLowerCase() || ''});
     };
     if(b.edition==='2024') {
-      const rules=typeof CharacterRules!=='undefined'?CharacterRules:(typeof require!=='undefined'?require('./character-rules'):null);
-      const bg=rules?.modern.backgrounds[b.background];
+      const backgrounds=typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds:(typeof require!=='undefined'?require('./character-backgrounds'):null);
+      const bg=backgrounds?.get?.(b.background);
       add('background','Background · Magic Initiate','2024',bg?.feat||b.backgroundFeat);
       if(b.race==='human-2024') add('human','Human · Magic Initiate','2024',b.humanOriginFeat);
     }
