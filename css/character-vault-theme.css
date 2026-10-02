@@ -904,3 +904,31 @@
     background:#000!important;
   }
 }
+
+/* Revision 23: calmer, narrower Overview and explicit feat summary. */
+#sheetOverviewReadout {
+  width:100%;
+  max-width:1120px;
+  margin-inline:auto;
+}
+.sheet-overview-feat-list {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.45rem;
+}
+.sheet-overview-feat-list>span {
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:.32rem .62rem;
+  border:1px solid var(--vault-border-soft);
+  border-left:3px solid var(--vault-gold);
+  border-radius:999px;
+  background:linear-gradient(180deg,#fffaf0,#f2e4ce);
+  color:var(--vault-burgundy);
+  font-weight:700;
+  font-size:.78rem;
+}
+@media(max-width:900px) {
+  #sheetOverviewReadout { max-width:780px; }
+}
