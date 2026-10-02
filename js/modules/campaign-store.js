@@ -1,6 +1,6 @@
 /* Browser Firestore operations. Security is enforced by firestore.rules, not this UI. */
 function createCampaignStore(sdk) {
-  const {db, doc, collection, getDocs, query, where, limit, orderBy, startAfter, documentId, runTransaction, increment} = sdk;
+  const {db, doc, collection, getDocs, query, where, limit, orderBy, startAfter, documentId, runTransaction, writeBatch, increment} = sdk;
   const uid = () => sdk.auth.currentUser?.uid;
   const fail = message => {
     throw Error(message);
@@ -238,6 +238,28 @@ function createCampaignStore(sdk) {
       throw e;
     }
   }
+  async function bulkItemPolicy(d) {
+    const cid=id(d.campaignId),mode=String(d.mode||'');
+    if(!['player-loot','dm-only','unlimited'].includes(mode))fail('Unknown bulk item policy.');
+    await runTransaction(db,tx=>access(tx,cid,true));
+    const snapshot=await getDocs(collection(db,'campaigns',cid,'items'));
+    const docs=snapshot.docs.filter(record=>record.id!=='catalog_meta');
+    let changed=0;
+    for(let offset=0;offset<docs.length;offset+=200){
+      const batch=writeBatch(db),stamp=Date.now(),part=docs.slice(offset,offset+200);
+      for(const record of part){
+        const itemRef=ref(cid,'items',record.id);
+        if(mode==='player-loot')batch.update(itemRef,{visible:true,lootMode:'player',updatedAt:stamp});
+        if(mode==='dm-only')batch.update(itemRef,{visible:false,lootMode:'dm',updatedAt:stamp});
+        if(mode==='unlimited'){
+          const stockRef=ref(cid,'supply',record.id);
+          batch.update(stockRef,{unlimited:true,revision:increment(1),updatedAt:stamp});
+        }
+      }
+      await batch.commit();changed+=part.length;
+    }
+    return {changed,mode};
+  }
   async function deleteItem(d) {
     const sr = ref(d.campaignId, 'supply', d.itemId);
     const before = await sdk.getDoc(sr);
@@ -344,6 +366,7 @@ function createCampaignStore(sdk) {
     vaultInventoryAction: inventoryAction,
     vaultDeleteCampaignItem: deleteItem,
     vaultDeleteCharacter: deleteCharacter,
+    vaultBulkItemPolicy: bulkItemPolicy,
     vaultMigrateCampaign: migrate
   };
   return (name, data) => {
