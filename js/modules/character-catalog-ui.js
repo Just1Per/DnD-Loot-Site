@@ -1,5 +1,82 @@
 'use strict';
 let sheetCatalogSignature='';
+const featCategoryLabels={O:'Origin',G:'General',FS:'Fighting Style','FS:P':'Fighting Style · Paladin','FS:R':'Fighting Style · Ranger',EB:'Epic Boon',DG:'Dark Gift',D:'Dragonmark / setting','':'Other / legacy'};
+function featReference(feat){
+  return (typeof CharacterFeatReference!=='undefined'&&CharacterFeatReference.records?.[feat?.source+'|'+feat?.name])||null;
+}
+function featCategoryLabel(feat){return featCategoryLabels[String(feat?.category||'')]||String(feat?.category||'Other');}
+function featEffectTags(feat){
+  const ref=featReference(feat),def=CharacterFeatRules.definitions?.[feat?.id],tags=new Set(ref?.tags||[]);
+  if(def?.ability?.length)tags.add('ability');
+  if(def?.armorTraining?.length)tags.add('armor');
+  if(def?.toolChoices?.length)tags.add('skills');
+  if(/^Magic Initiate/.test(feat?.name||''))tags.add('spells');
+  return [...tags];
+}
+function featPreviewText(feat){
+  const ref=featReference(feat),def=CharacterFeatRules.definitions?.[feat?.id],parts=[];
+  if(ref?.summary)parts.push(ref.summary);
+  if(!parts.length&&feat?.description)parts.push(feat.description.replace(/\s+/g,' ').trim());
+  if(!parts.length&&def?.ability?.length)parts.push('Includes an ability-score increase; configure the allowed ability choice after selecting the feat.');
+  if(!parts.length)parts.push('Structured feat metadata is available below; use the listed source and page for complete source-book wording.');
+  return parts.join(' ');
+}
+function closeFeatInformation(){const d=document.getElementById('sheetFeatInformation');if(d){if(d.open)d.close();d.remove();}}
+function openFeatInformation(featId){
+  const feat=CharacterCatalog.find(featId,'feats');if(!feat)return;
+  closeFeatInformation();
+  const ref=featReference(feat),def=CharacterFeatRules.definitions?.[feat.id],d=document.createElement('dialog');
+  d.id='sheetFeatInformation';d.className='vault-dialog sheet-feat-information';d.setAttribute('aria-labelledby','sheetFeatInformationTitle');
+  const ability=(def?.ability||[]).map(option=>{
+    const fixed=Object.entries(option).filter(([k,v])=>CharacterSheetModel.abilities[k]&&Number(v)).map(([k,v])=>CharacterSheetModel.abilities[k]+' +'+v);
+    const choose=option.choose?.from?.length?'Choose '+(option.choose.count||1)+' from '+option.choose.from.map(k=>CharacterSheetModel.abilities[k]||k.toUpperCase()).join(', ')+' (+'+(option.choose.amount||1)+')':'';
+    return [...fixed,choose].filter(Boolean).join(' · ');
+  }).filter(Boolean);
+  const req=[...(ref?.requirements||[])];
+  if(!req.length&&feat.minimumLevel)req.push('Level '+feat.minimumLevel+'+');
+  const facts=[...(ref?.facts||[])];
+  if(def?.armorTraining?.length)facts.push('Armor training: '+def.armorTraining.map(v=>({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[v]||v)).join(', '));
+  if(ability.length)facts.push(...ability);
+  if(def?.repeatable)facts.push('Repeatable feat');
+  const licensed=String(feat.description||'').trim();
+  d.innerHTML=`<header><div><span class="sheet-eyebrow">FEAT REFERENCE</span><h2 id="sheetFeatInformationTitle">${sheetEscape(feat.name)}</h2></div><button type="button" aria-label="Close feat information">Close</button></header>
+    <div class="sheet-feat-facts"><p><strong>Rules:</strong> ${sheetEscape(feat.edition)}</p><p><strong>Category:</strong> ${sheetEscape(featCategoryLabel(feat))}</p><p><strong>Source:</strong> ${sheetEscape(feat.book||feat.source)}${feat.page?' · p. '+sheetEscape(feat.page):''}</p><p><strong>Minimum level:</strong> ${feat.minimumLevel||'None'}</p></div>
+    <section class="sheet-summary-box"><h4>Quick summary</h4><p>${sheetEscape(featPreviewText(feat))}</p></section>
+    ${facts.length?`<section class="sheet-summary-box"><h4>Structured benefits</h4><ul>${[...new Set(facts)].map(v=>'<li>'+sheetEscape(v)+'</li>').join('')}</ul></section>`:''}
+    ${ref?.features?.length?`<section class="sheet-summary-box"><h4>Named features</h4><p>${ref.features.map(sheetEscape).join(' · ')}</p></section>`:''}
+    ${req.length?`<section class="sheet-summary-box"><h4>Prerequisites</h4><p>${req.map(sheetEscape).join(' · ')}</p></section>`:''}
+    ${licensed?`<details open><summary>Licensed / bundled rules text</summary><p class="sheet-rule-text">${sheetEscape(licensed)}</p></details>`:'<p class="sheet-help">The site stores a concise mechanical reference for this non-SRD feat rather than copying the source book. Use the source/page above for the exact published wording.</p>'}`;
+  document.body.appendChild(d);d.querySelector('header button').onclick=closeFeatInformation;d.addEventListener('click',event=>{if(event.target===d)closeFeatInformation();});d.showModal();d.querySelector('header button').focus();
+}
+function dmFeatGrant(){
+  const grants=sheetSession?.data?.rulesChoices?.grants||(sheetSession.data.rulesChoices.grants={});
+  return grants.__dm||(grants.__dm={bonusFeats:0,bonusAsis:0,approvedBy:'',updatedAt:0});
+}
+function renderDmFeatApproval(){
+  const host=document.getElementById('sheetDmFeatApproval');if(!host||!sheetSession)return;
+  const grant=dmFeatGrant(),budget=CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data?.feats||[]);
+  host.innerHTML=`<div class="sheet-repeat-title"><div><span class="sheet-eyebrow">DM APPROVALS</span><h4>Bonus advancement</h4></div><small>These are extra choices beyond normal class progression.</small></div>
+    <div class="sheet-dm-approval-grid">
+      <article><span>Bonus feat choices</span><strong>${grant.bonusFeats||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="feat" data-delta="-1">−</button><button type="button" data-dm-grant="feat" data-delta="1">+</button></div>':''}</article>
+      <article><span>Bonus ASI choices</span><strong>${grant.bonusAsis||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="asi" data-delta="-1">−</button><button type="button" data-dm-grant="asi" data-delta="1">+</button></div>':''}</article>
+      <article><span>ASI choices reserved</span><strong>${sheetSession.data.advancement.asiSpent}</strong><div><button type="button" data-asi-spend="-1" ${!sheetSession.data.advancement.asiSpent?'disabled':''}>Undo</button><button type="button" data-asi-spend="1" ${!budget.asiRemaining?'disabled':''}>Use ASI choice</button></div></article>
+    </div>
+    <p class="sheet-help">${canManageCampaign()?'As DM, use +/− to confirm extra feat or ASI allowances for this character. Save the character sheet after changing approvals.':'Only the campaign DM can change bonus allowances.'} An ASI choice reserves one advancement choice for ability scores; edit the actual scores on Abilities & skills.</p>`;
+  host.querySelectorAll('[data-dm-grant]').forEach(button=>button.onclick=()=>{
+    if(!canManageCampaign())return;
+    readSheetForm();const g=dmFeatGrant(),key=button.dataset.dmGrant==='feat'?'bonusFeats':'bonusAsis',delta=Number(button.dataset.delta)||0;
+    g[key]=Math.max(0,Math.min(10,(Number(g[key])||0)+delta));g.approvedBy=auth.currentUser?.uid||'';g.updatedAt=Date.now();
+    catalogChanged('DM bonus advancement approval changed. Save the character sheet to keep it.');renderDmFeatApproval();renderCatalogFeatResults();
+  });
+  host.querySelectorAll('[data-asi-spend]').forEach(button=>button.onclick=()=>{
+    readSheetForm();const delta=Number(button.dataset.asiSpend)||0,current=Number(sheetSession.data.advancement.asiSpent)||0;
+    const b=CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data?.feats||[]);
+    if(delta>0&&!b.asiRemaining)return sheetStatus('No available ASI choice. Ask the DM for an additional ASI allowance.',true);
+    sheetSession.data.advancement.asiSpent=Math.max(0,Math.min(17,current+delta));
+    const input=document.querySelector('[name="advancement.asiSpent"]');if(input)input.value=sheetSession.data.advancement.asiSpent;
+    catalogChanged('ASI choice reservation changed. Save the character sheet to keep it.');renderDmFeatApproval();renderCatalogFeatResults();
+  });
+}
 function renderSheetCatalog() {
   const session=sheetSession;
   if(!session)return;
