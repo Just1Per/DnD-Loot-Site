@@ -205,6 +205,7 @@ var CharacterSheetModel = (() => {
     result.spells = (Array.isArray(raw.spells) ? raw.spells : []).slice(0, 150).map(s => ({
       name: text(s?.name),
       catalogId: text(s?.catalogId),
+      classId: String(s?.classId||'').toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,60),
       level: number(s?.level, 0, 0, 9),
       prepared: !!s?.prepared,
       casting: text(s?.casting),
