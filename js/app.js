@@ -51,6 +51,7 @@ const FEATURE_FILES = [
   "./modules/character-rules-2024.js",
   "./modules/character-rules.js",
   "./modules/character-subclass-data.js",
+  "./modules/character-class-progression.js",
   "./modules/character-feat-data.js",
   "./modules/character-feat-rules.js",
   "./modules/character-catalog.js",
