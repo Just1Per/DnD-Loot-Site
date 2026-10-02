@@ -36,7 +36,7 @@ var CharacterBackgrounds=(()=>{
    if(languages.includes(lang)&&!e.languages.includes(lang))e.languages.push(lang);
    else e.warnings.push('Choose '+count+' different additional background language'+(count===1?'':'s')+'.');
   }
-  if(bg.feature){const ref=bg.page?`${bg.source||'D&D'}, p. ${bg.page}`:(bg.source||'D&D');e.traits.push(bg.feature+' — background feature; resolve its narrative benefits with your DM ('+ref+').');}
+  if(bg.feature){const ref=bg.page?`${sourceName(bg)}, p. ${bg.page}`:sourceName(bg);e.traits.push(bg.feature+' — background feature; resolve its narrative benefits with your DM ('+ref+').');}
   if(bg.skillOptions?.length)e.warnings.push('Background: choose '+(bg.skillChoiceCount||1)+' additional skill'+((bg.skillChoiceCount||1)===1?'':'s')+' from '+bg.skillOptions.map(k=>k.replace(/([A-Z])/g,' $1')).join(', ')+'. Record the choice in Skills.');
   if(bg.partial)e.warnings.push(bg.name+': source-specific tool/language/equipment'+(bg.edition==='2024'?' and ability/feat details':'')+' are only partially automated; use the source entry for remaining choices.');
   e.proficiencies=[...new Set(e.proficiencies)];
