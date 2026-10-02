@@ -78,7 +78,10 @@ function renderBuildFeatChoices() {
   const cards=[];
   if(b.edition==='2024'){
     const fixed=bg?.feat||'';
-    if(fixed){
+    const backgroundChoices=Array.isArray(bg?.featChoices)?uniqueByName(allFeats.filter(f=>f.edition==='2024'&&bg.featChoices.includes(f.name))):[];
+    if(backgroundChoices.length){
+      cards.push('<article class="sheet-build-feat-card is-choice"><div><span class="sheet-eyebrow">BACKGROUND FEAT CHOICE</span><strong>'+sheetEscape(bg.featLabel||'Choose your background feat')+'</strong><small>'+sheetEscape(bg?.name||'Background')+' grants one feat from this source-specific list.</small></div><label class="sheet-field"><span>Feat</span><select data-build-feat-field="backgroundFeat">'+optionList(backgroundChoices,b.backgroundFeat,'Choose background feat')+'</select></label></article>');
+    }else if(fixed){
       cards.push('<article class="sheet-build-feat-card is-granted"><div><span class="sheet-eyebrow">BACKGROUND FEAT</span><strong>'+sheetEscape(fixed)+'</strong><small>'+sheetEscape(bg?.name||'Background')+' grants this feat automatically.</small></div></article>');
     }else{
       cards.push('<article class="sheet-build-feat-card"><div><span class="sheet-eyebrow">BACKGROUND ORIGIN FEAT</span><strong>Choose your Origin feat</strong><small>Your background grants one Origin feat. Choose it here instead of in Character Builder.</small></div><label class="sheet-field"><span>Origin feat</span><select data-build-feat-field="backgroundFeat">'+optionList(originFeats,b.backgroundFeat,'Choose Origin feat')+'</select></label></article>');
@@ -92,7 +95,7 @@ function renderBuildFeatChoices() {
     cards.push('<article class="sheet-build-feat-card"><div><span class="sheet-eyebrow">RACE FEAT</span><strong>'+sheetEscape(label)+'</strong><small>Choose the feat granted by your race here.</small></div><label class="sheet-field"><span>Feat</span><select data-build-feat-field="raceFeat">'+optionList(legacyFeats,b.raceFeat,'Choose feat')+'</select></label></article>');
   }
   const skilled=[];
-  const backgroundFeat=bg?.feat||b.backgroundFeat;
+  const backgroundFeat=bg?.featChoices?.length?b.backgroundFeat:(bg?.feat||b.backgroundFeat);
   if(b.edition==='2024'&&backgroundFeat==='Skilled')skilled.push(['backgroundFeatChoices','Background Skilled',b.backgroundFeatChoices||[]]);
   if(b.edition==='2024'&&b.race==='human-2024'&&b.humanOriginFeat==='Skilled')skilled.push(['humanFeatChoices','Human Skilled',b.humanFeatChoices||[]]);
   for(const [field,label,values] of skilled){
@@ -202,7 +205,9 @@ function renderFeatEffectControls(report,level) {
   const {def,choice:c,warnings,automated}=report,esc=sheetEscape;
   const select=(label,field,rows,value)=>`<label class="sheet-field">${esc(label)}<select data-feat-choice="${field}">${rows.map(([key,text])=>`<option value="${esc(key)}" ${String(key)===String(value)?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
   let html='<div class="sheet-grid">';
-  if(def.requirements.some(r=>r.manual))html+=`<label class="sheet-check"><input type="checkbox" data-feat-choice="confirmed" ${c.confirmed?'checked':''}> Other prerequisites checked with DM (class features, spellcasting, etc.)</label>`;
+  const autoArmorPrereq=def.name==='Moderately Armored'&&def.source==='PHB'&&def.edition==='2014';
+  if(def.requirements.some(r=>r.manual)&&!autoArmorPrereq)html+=`<label class="sheet-check"><input type="checkbox" data-feat-choice="confirmed" ${c.confirmed?'checked':''}> Other prerequisites checked with DM (class features, spellcasting, etc.)</label>`;
+  if(autoArmorPrereq)html+='<p class="sheet-help">Prerequisite: Light armor training is checked automatically from your race, class and other feats.</p>';
   if(def.ability.length>1)html+=select('Ability increase pattern','option',[[0,'One ability +2'],[1,'Two different abilities +1']],c.option);
   const ability=def.ability[c.option]||def.ability[0];
   if(ability?.choose)for(let i=0;i<(ability.choose.count||1);i++)html+=select('Ability +'+(ability.choose.amount||1)+' (maximum '+ability.max+')','ability'+i,[['','Choose ability'],...ability.choose.from.map(a=>[a,CharacterSheetModel.abilities[a]])],c.abilities[i]);
