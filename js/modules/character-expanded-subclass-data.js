@@ -9,7 +9,7 @@
   const sourceNames={
     PHB:'Player’s Handbook (2014)',PHB24:'Player’s Handbook (2024)',
     SCAG:'Sword Coast Adventurer’s Guide',XGE:'Xanathar’s Guide to Everything',
-    TCE:'Tasha’s Cauldron of Everything',DMG:'Dungeon Master’s Guide',
+    TCE:'Tasha’s Cauldron of Everything',DMG:'Dungeon Master’s Guide',ERLW:'Eberron: Rising from the Last War',
     GGR:'Guildmasters’ Guide to Ravnica',EGW:'Explorer’s Guide to Wildemount',
     MOT:'Mythic Odysseys of Theros',FTD:'Fizban’s Treasury of Dragons',
     DSOTDQ:'Dragonlance: Shadow of the Dragon Queen',BGG:'Bigby Presents: Glory of the Giants',
@@ -41,6 +41,17 @@
     ['illusion','wizard','School of Illusion',2],['necromancy','wizard','School of Necromancy',2],
     ['transmutation','wizard','School of Transmutation',2]
   ]) add(...row,'2014','PHB');
+
+  // Dungeon Master's Guide villainous options.
+  add('death-domain','cleric','Death Domain',1,'2014','DMG');
+  add('oathbreaker','paladin','Oathbreaker',3,'2014','DMG');
+
+  // Legacy Artificer subclasses are catalogued for completeness; the base Artificer
+  // class still needs its own web-engine implementation before these can be selected.
+  add('alchemist-legacy','artificer','Alchemist',3,'2014','ERLW',{classPending:true});
+  add('artillerist-legacy','artificer','Artillerist',3,'2014','ERLW',{classPending:true});
+  add('battle-smith-legacy','artificer','Battle Smith',3,'2014','ERLW',{classPending:true});
+  add('armorer-legacy','artificer','Armorer',3,'2014','TCE',{classPending:true});
 
   // Sword Coast Adventurer's Guide
   for(const row of [
