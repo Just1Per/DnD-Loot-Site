@@ -5,6 +5,21 @@
 (()=>{
   const D=typeof CharacterBackgroundData!=='undefined'?CharacterBackgroundData:null;
   if(!D)return;
+  D.sourceNames=Object.freeze({
+    ...(D.sourceNames||{}),
+    XPHB:'Player’s Handbook (2024)',PHB:'Player’s Handbook (2014)',
+    SCAG:'Sword Coast Adventurer’s Guide',TOA:'Tomb of Annihilation',
+    GOS:'Ghosts of Saltmarsh',BGDIA:'Baldur’s Gate: Descent into Avernus',
+    COS:'Curse of Strahd',VRGR:'Van Richten’s Guide to Ravenloft',
+    WBTW:'The Wild Beyond the Witchlight',SAIS:'Spelljammer: Adventures in Space',
+    MOT:'Mythic Odysseys of Theros',BGG:'Bigby Presents: Glory of the Giants',
+    PAITM:'Planescape: Adventures in the Multiverse',BOMT:'The Book of Many Things',
+    AI:'Acquisitions Incorporated',GGR:'Guildmasters’ Guide to Ravnica',
+    SCC:'Strixhaven: A Curriculum of Chaos',DSOTDQ:'Dragonlance: Shadow of the Dragon Queen',
+    FRHOF:'Forgotten Realms: Heroes of Faerûn',EFOTA:'Eberron: Forge of the Artificer',
+    RTHW:'Ravenloft: The Horrors Within',WGTE:'Wayfinder’s Guide to Eberron',
+    LFL:'Lorwyn: First Light'
+  });
   const rows={};
   const add=(id,name,edition,source,skills,feature='',extra={})=>{
     rows[id]={
