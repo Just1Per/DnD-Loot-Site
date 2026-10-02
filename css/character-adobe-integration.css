@@ -383,6 +383,7 @@
   background:#f7f1e5;
 }
 .sheet-spell-generator-count.is-invalid { border-left-color:#8b3a3a; }
+.sheet-spell-generator-count.is-incomplete { border-left-color:#b18a42; background:#fff8e8; }
 .sheet-spell-generator-count small { color:#756654; }
 .sheet-spell-generator-count {
   border-radius:7px;
