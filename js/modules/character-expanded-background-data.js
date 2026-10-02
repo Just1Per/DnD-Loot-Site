@@ -139,11 +139,15 @@
   ]) eb('house-'+row[0]+'-heir-efota','House '+row[1]+' Heir',[row[2],row[3]],row[4]);
 
   // 2026 Ravenloft: The Horrors Within
-  const rv=(id,name,skills,feat)=>add(id,name,'2024','RTHW',skills,'',{feat,fixedFeat:true});
-  rv('haunted-one-rthw','Haunted One',['arcana','survival'],'Survivor or a Dark Gift feat');
-  rv('investigator-rthw','Investigator',['insight','investigation'],'Sharp Eye or a Dark Gift feat');
-  rv('mist-wanderer-rthw','Mist Wanderer',['survival','stealth'],'A Dark Gift feat');
-  rv('spirit-medium-rthw','Spirit Medium',['insight','religion'],'A Dark Gift feat');
+  // These backgrounds grant a real feat choice rather than a literal feat named
+  // "Survivor or a Dark Gift feat". Keep the permitted choice set structured so
+  // the Feats page can store one actual feat and the rules engine can resolve it.
+  const darkGiftFeats=['Aberrant Anatomy','Echoing Soul','Gathered Whispers','Living Shadow','Mist Walker','Second Skin','Symbiotic Being','Touch of Death','Watchers'];
+  const rvChoice=(id,name,skills,label,choices)=>add(id,name,'2024','RTHW',skills,'',{feat:'',featLabel:label,featChoices:choices,fixedFeat:false});
+  rvChoice('haunted-one-rthw','Haunted One',['arcana','survival'],'Survivor or a Dark Gift feat',['Survivor',...darkGiftFeats]);
+  rvChoice('investigator-rthw','Investigator',['insight','investigation'],'Sharp Eye or a Dark Gift feat',['Sharp Eye',...darkGiftFeats]);
+  rvChoice('mist-wanderer-rthw','Mist Wanderer',['survival','stealth'],'A Dark Gift feat',darkGiftFeats);
+  rvChoice('spirit-medium-rthw','Spirit Medium',['insight','religion'],'A Dark Gift feat',darkGiftFeats);
 
 
   // Baldur's Gate: Descent into Avernus background variants.

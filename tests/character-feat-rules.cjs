@@ -57,3 +57,26 @@ test('ability breakdown records named feat gains and actual capped amounts',()=>
  assert.equal(r.abilityIncreases.str,2);assert.equal(r.appliedAbilityIncreases.str,1);
  d.build.scoreMode='total';const total=M.derive(d,4);assert.equal(total.scores.str,19);assert.equal(total.feats.reports[0].abilityIncreases.str,2);assert.deepEqual(total.feats.reports[0].appliedAbilityIncreases,{});
 });
+
+test('2014 Moderately Armored recognizes Light armor training and grants Medium armor plus Shields',()=>{
+ const d=sheet('Moderately Armored',{abilities:['dex']},{build:{classId:'rogue'},abilities:{dex:13}},'PHB');
+ const r=M.derive(d,4);
+ assert.ok(r.effects.proficiencies.includes('Light armor'));
+ assert.ok(r.effects.proficiencies.includes('Medium armor'));
+ assert.ok(r.effects.proficiencies.includes('Shields'));
+ assert.equal(r.feats.reports[0].warnings.length,0);
+ const invalid=sheet('Moderately Armored',{abilities:['dex'],confirmed:true},{build:{classId:'wizard'},abilities:{dex:13}},'PHB');
+ const bad=M.derive(invalid,4);
+ assert.ok(!bad.effects.proficiencies.includes('Medium armor'));
+ assert.ok(!bad.effects.proficiencies.includes('Shields'));
+ assert.match(bad.feats.reports[0].warnings.join(' '),/Light armor training/);
+});
+
+test('2024 Moderately Armored auto-checks Light armor but does not grant Shield training',()=>{
+ const d=sheet('Moderately Armored',{abilities:['dex']},{build:{classId:'rogue'},abilities:{dex:13}},'XPHB');
+ const r=M.derive(d,4);
+ assert.ok(r.effects.proficiencies.includes('Light armor'));
+ assert.ok(r.effects.proficiencies.includes('Medium armor'));
+ assert.ok(!r.effects.proficiencies.includes('Shields'));
+ assert.equal(r.feats.reports[0].warnings.length,0);
+});

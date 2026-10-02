@@ -18,10 +18,12 @@ var CharacterFeatRules = (() => {
     }
     if(data.build.edition==='2024') {
       const B=typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds:require('./character-backgrounds');
-      const bg=B.get(data.build.background)?.feat||data.build.backgroundFeat;
+      const background=B.get(data.build.background);
+      const bg=background?.featChoices?.length?(background.featChoices.includes(data.build.backgroundFeat)?data.build.backgroundFeat:''):(background?.feat||data.build.backgroundFeat);
       const origins=[['origin-background',bg,'Background'],...(data.build.race==='human-2024'?[['origin-human',data.build.humanOriginFeat,'Human']]:[])];
-      for(const [key,name,label] of origins.reverse())if(['Lucky','Crafter','Musician','Savage Attacker'].includes(name)) {
-        const id=Object.keys(definitions).find(id=>definitions[id].source==='XPHB'&&definitions[id].name===name);
+      for(const [key,name,label] of origins.reverse())if(name) {
+        const candidates=Object.keys(definitions).filter(id=>definitions[id].edition==='2024'&&definitions[id].name===name);
+        const id=candidates.find(id=>definitions[id].source==='XPHB')||candidates[0];
         if(id)result.unshift({id,key,origin:true,managedOrigin:true,originLabel:label});
       }
     }
@@ -53,7 +55,10 @@ var CharacterFeatRules = (() => {
       const report={...entry,def,choice:c,warnings,automated};reports.push(report);
       if(entry.managedOrigin){if(!origins[identity]){warnings.push('Duplicate or unavailable Origin feat: no effects applied.');continue;}origins[identity]--;}
       else {if(seen.has(identity)&&(!def.repeatable||seen.get(identity)!==def.edition)){warnings.push('Duplicate feat: no additional effects applied.');continue;}seen.set(identity,def.edition);}
-      warnings.push(...requirements(def,scores,level,c.confirmed));
+      const moderatelyArmored=def.name==='Moderately Armored'&&['PHB','XPHB'].includes(def.source);
+      const hasLightArmor=effects.proficiencies.some(v=>String(v).toLowerCase()==='light armor');
+      warnings.push(...requirements(def,scores,level,c.confirmed||(moderatelyArmored&&hasLightArmor)));
+      if(moderatelyArmored&&!hasLightArmor)warnings.push('Requires Light armor training.');
       if(warnings.length)continue;
       if(def.name==='Resilient'&&def.source==='XPHB'&&(effects.saves.includes(c.abilities[0])||data.saves[c.abilities[0]]?.proficient)){warnings.push('Choose an ability without saving throw proficiency.');continue;}
       const option=def.ability[c.option]||def.ability[0];

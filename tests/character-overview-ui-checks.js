@@ -8,6 +8,13 @@
   check('Feat catalogue owns build-granted feat choices while Builder keeps only a handoff',document.getElementById('sheetFeatCatalog').closest('[data-sheet-section]').id==='sheet-feats'&&document.getElementById('catalogBuildFeatChoices')&&form.querySelector('[name="build.humanOriginFeat"]').closest('label').hidden&&document.getElementById('sheetBuilderFeatNotice'));
   change('identity.name','Test <img src=x>');change('abilities.dex','18');check('Read-only overview recalculates without interpreting names as markup',document.getElementById('sheetOverviewReadout').textContent.includes('Test <img src=x>')&&!document.querySelector('#sheet-overview img')&&document.querySelectorAll('.sheet-summary-ability')[1].textContent.includes('+4'));
   check('Background dropdown contains core and expanded profiles plus custom',form.querySelector('[name="build.background"]').querySelectorAll('option').length===1+Object.keys(CharacterBackgrounds.modern).length+Object.keys(CharacterBackgrounds.legacy).length+Object.keys(CharacterBackgrounds.expanded||{}).length);
+  change('build.background','haunted-one-rthw');
+  const hauntedFeat=document.querySelector('[data-build-feat-field="backgroundFeat"]');
+  check('Haunted One offers a real Survivor or Dark Gift feat choice',!!hauntedFeat&&[...hauntedFeat.options].some(o=>o.value==='Survivor')&&[...hauntedFeat.options].some(o=>o.value==='Aberrant Anatomy')&&![...hauntedFeat.options].some(o=>o.value==='Sharp Eye'));
+  hauntedFeat.value='Survivor';hauntedFeat.dispatchEvent(new Event('change',{bubbles:true}));
+  const lucky=CharacterCatalog.data.feats.find(f=>f.name==='Lucky'&&f.edition==='2024');sheetSession.data.rulesChoices.feats.push(lucky.id);updateSheetCalculations();
+  check('Overview lists background and manually selected feats',document.getElementById('sheetOverviewReadout').textContent.includes('Survivor')&&document.getElementById('sheetOverviewReadout').textContent.includes('Lucky')&&document.querySelectorAll('.sheet-overview-feat-list>span').length>=2);
+  sheetSession.data.rulesChoices.feats=sheetSession.data.rulesChoices.feats.filter(id=>id!==lucky.id);updateSheetCalculations();
   change('build.background','farmer-2024');change('build.backgroundAbilities.0','str');change('build.backgroundAbilities.1','con');
   check('Background info lists grants and overview uses its name',document.getElementById('sheetBackgroundSummary').textContent.includes('Tough')&&document.getElementById('sheetOverviewReadout').textContent.includes('Farmer'));
   change('build.background','soldier-2024');check('Gaming tool selector appears for Soldier',!form.querySelector('[name="build.backgroundTools.0"]').closest('label').hidden);

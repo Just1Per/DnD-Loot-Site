@@ -377,12 +377,14 @@ var CharacterRules2024 = (() => {
     if (!e.languages.includes('Common'))
       e.languages.unshift('Common');
     const feats = [];
-    const bgFeat = bg?.feat || b.backgroundFeat;
+    const bgFeat = bg?.featChoices?.length ? (bg.featChoices.includes(b.backgroundFeat)?b.backgroundFeat:'') : (bg?.feat || b.backgroundFeat);
     if (bgFeat)
       feats.push({
         name: bgFeat,
         choices: b.backgroundFeatChoices
       });
+    else if (bg?.featChoices?.length)
+      e.warnings.push('Choose the background feat on the Feats page: '+(bg.featLabel || bg.featChoices.join(' or '))+'.');
     else
       e.warnings.push('Choose an Origin feat for your custom / legacy background.');
     if (e.race?.originFeat) {
