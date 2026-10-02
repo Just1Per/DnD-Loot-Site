@@ -22,12 +22,69 @@ var CharacterStory = (()=>{
  wayfarer:['I learn a little of every place before moving on.','A stranger deserves a chance to become a friend.','I am following a promise across a changing world.','I leave whenever staying begins to matter.']
  };
  const alias={spy:'criminal',gladiator:'entertainer','guild-merchant':'guild-artisan',knight:'noble',retainers:'noble',pirate:'sailor'};
+ const meta={
+  criminal:['the underworld','people who live outside respectable society','a hidden safe place'],
+  charlatan:['crowds and first impressions','people fooled by those with more power','an old identity'],
+  entertainer:['an audience','performers and ordinary listeners','a stage that once felt like home'],
+  'folk-hero':['working communities','ordinary people','the place that first called me a hero'],
+  'guild-artisan':['craft and trade','workers and apprentices','my first workshop'],
+  hermit:['silence and reflection','people searching for answers','the refuge where I learned to be alone'],
+  noble:['rank and obligation','people affected by my family name','my household'],
+  outlander:['wilderness and travel','travelers far from safety','the land I call home'],
+  sage:['books and unanswered questions','people seeking knowledge','a library or place of study'],
+  sailor:['ships and hard weather','the crew beside me','the vessel that taught me my trade'],
+  soldier:['discipline and danger','comrades under pressure','the unit that shaped me'],
+  urchin:['streets and overlooked places','people with nowhere safe to sleep','the neighborhood that raised me'],
+  artisan:['tools and patient work','people who depend on skilled hands','my mentor’s workshop'],
+  farmer:['seasons and practical labor','families who depend on the harvest','the land that fed me'],
+  guard:['routines and warning signs','people who rely on protection','the post I once watched'],
+  guide:['routes and hazards','travelers who trust my judgment','a road nobody else remembers'],
+  merchant:['needs, prices, and promises','customers and trading partners','the market where I learned my trade'],
+  scribe:['records and small details','people protected by an accurate account','the archive entrusted to me'],
+  wayfarer:['new places and unfamiliar customs','strangers between homes','the road I keep returning to']
+ };
+ const baseIdealAlignment={criminal:'Lawful',charlatan:'Good',entertainer:'Good','folk-hero':'Good','guild-artisan':'Lawful',hermit:'Neutral',noble:'Good',outlander:'Good',sage:'Neutral',sailor:'Lawful',soldier:'Good',urchin:'Good',artisan:'Lawful',farmer:'Good',guard:'Good',guide:'Lawful',merchant:'Lawful',scribe:'Lawful',wayfarer:'Good'};
+ function ideal(text,alignment){return{text,alignment};}
+ function parsedIdeal(value){
+  const text=String(value||''),match=text.match(/\((Lawful|Chaotic|Good|Evil|Neutral|Any)\)\s*$/i);
+  return{text,alignment:match?match[1][0].toUpperCase()+match[1].slice(1).toLowerCase():'Any'};
+ }
+ function expanded(canonical,p){
+  const [world,people,place]=meta[canonical]||['my old life','people like me','a place from my past'];
+  return {
+   source:'Original background-specific suggestions (not copied source text)',
+   personality:[
+    p[0],
+    'I instinctively read a new situation through what I learned from '+world+'.',
+    'I pay close attention to how strangers treat '+people+'.'
+   ],
+   ideals:[
+    ideal(p[1],baseIdealAlignment[canonical]||'Any'),
+    ideal('Duty: I honor commitments that come from '+world+', even when keeping them is inconvenient.','Lawful'),
+    ideal('Freedom: Nobody should be trapped by customs or authorities simply because they have always existed.','Chaotic'),
+    ideal('Compassion: I use what my background taught me to help '+people+' when I can.','Good'),
+    ideal('Ambition: The skills I learned from '+world+' should raise my position, whatever it costs others.','Evil'),
+    ideal('Balance: I try to preserve what works while accepting that every situation requires its own judgment.','Neutral')
+   ],
+   bonds:[
+    p[2],
+    'I will take serious risks to protect '+people+'.',
+    'Something connected to '+place+' still has a claim on me.'
+   ],
+   flaws:[
+    p[3],
+    'I overvalue habits that kept me safe in '+world+', even when they no longer fit.',
+    'I can be slow to trust people who have never understood '+people+'.'
+   ]
+  };
+ }
+
  function get(background){
   const key=String(background||'').replace(/-20(?:14|24)$/,''),canonical=alias[key]||key;
   const adobe=typeof CharacterAdobeData!=='undefined'?CharacterAdobeData.story:null;
-  if(adobe?.[canonical])return {...adobe[canonical],source:'Adobe sheet table'};
+  if(adobe?.[canonical])return {...adobe[canonical],ideals:(adobe[canonical].ideals||[]).map(parsedIdeal),source:'Adobe sheet table'};
   const p=profiles[canonical];if(!p)return {source:'Custom background — write your own',personality:[],ideals:[],bonds:[],flaws:[]};
-  return {source:'Original background-specific suggestions (not Adobe text)',personality:[p[0]],ideals:[p[1]],bonds:[p[2]],flaws:[p[3]]};
+  return expanded(canonical,p);
  }
  return {get};
 })();
@@ -37,10 +94,16 @@ function updateStorySuggestions(){
  const b=sheetSession.data.build.background;if(host.dataset.background===b)return;host.dataset.background=b;
  const profile=CharacterStory.get(b),bg=CharacterBackgrounds.get(b);
  host.textContent=(bg?.name||'Custom background')+' · '+profile.source;
+ const valueOf=row=>typeof row==='string'?row:row?.text||'';
+ const idealLabel=row=>typeof row==='string'?row:`${row.alignment||'Any'} · ${row.text}`;
  for(const key of ['personality','ideals','bonds','flaws']){
-  const input=form.querySelector(`[name="${key}"]`),select=form.querySelector(`[data-story-choice="${key}"]`),rows=profile[key];
-  select.innerHTML='<option value="">Choose a suggestion</option>'+rows.map((v,i)=>`<option value="${i}">${sheetEscape(v)}</option>`).join('')+'<option value="other">Other — write my own</option>';
-  const current=sheetSession.data[key],index=rows.indexOf(current);select.value=index>=0?String(index):current?'other':'';input.readOnly=index>=0;
-  select.onchange=()=>{if(select.value==='other')input.readOnly=false;else{input.value=select.value===''?'':rows[Number(select.value)];input.readOnly=true;}input.dispatchEvent(new Event('input',{bubbles:true}));if(select.value==='other')input.focus();};
+  const input=form.querySelector(`[name="${key}"]`),select=form.querySelector(`[data-story-choice="${key}"]`),rows=profile[key]||[],values=rows.map(valueOf);
+  select.innerHTML='<option value="">Choose a suggestion</option>'+rows.map((row,i)=>`<option value="${i}">${sheetEscape(key==='ideals'?idealLabel(row):valueOf(row))}</option>`).join('')+'<option value="other">Other — write my own</option>';
+  const current=sheetSession.data[key],index=values.indexOf(current);select.value=index>=0?String(index):current?'other':'';input.readOnly=index>=0;
+  let hint=key==='ideals'?select.parentElement?.querySelector('[data-ideal-alignment-hint]'):null;
+  if(key==='ideals'&&!hint){hint=document.createElement('small');hint.dataset.idealAlignmentHint='true';hint.className='sheet-help';select.after(hint);}
+  const updateHint=()=>{if(!hint)return;const row=rows[Number(select.value)];hint.textContent=select.value!==''&&select.value!=='other'&&row?.alignment?`Alignment tendency: ${row.alignment}. This is guidance only; it does not change your alignment automatically.`:'Ideals are marked with a suggested alignment tendency when relevant.';};
+  updateHint();
+  select.onchange=()=>{if(select.value==='other')input.readOnly=false;else{input.value=select.value===''?'':valueOf(rows[Number(select.value)]);input.readOnly=true;}updateHint();input.dispatchEvent(new Event('input',{bubbles:true}));if(select.value==='other')input.focus();};
  }
 }
