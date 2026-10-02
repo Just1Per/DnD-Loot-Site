@@ -109,7 +109,7 @@ var CharacterSpellcasting=(()=>{
   function modeLabel(p){
     if(!p)return'';
     if(p.mode==='known')return'Spells known';
-    if(p.mode==='fixed-prepared')return'Prepared list (change on level-up)';
+    if(p.mode==='fixed-prepared')return'Spells available (change on level-up)';
     if(p.mode==='spellbook')return'Spellbook / prepared';
     if(p.mode==='prepared')return'Prepared spells';
     return'Spells';
