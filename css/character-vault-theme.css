@@ -4,7 +4,8 @@
    character-sheet layout, rules logic, or print behavior. */
 
 .character-sheet,
-#characterSheetPage {
+#characterSheetPage,
+#tab-character-sheet {
   --vault-burgundy:#5c1d1d;
   --vault-burgundy-bright:#9b1d1d;
   --vault-burgundy-dark:#651313;
