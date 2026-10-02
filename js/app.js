@@ -35,7 +35,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
 if (!document.querySelector('link[data-character-adobe-integration]')) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = new URL('../css/character-adobe-integration.css?v=20261002-adobe-v19', import.meta.url).href;
+  link.href = new URL('../css/character-adobe-integration.css?v=20261002-options-v20', import.meta.url).href;
   link.dataset.characterAdobeIntegration = 'true';
   document.head.appendChild(link);
 }
@@ -46,11 +46,14 @@ const FEATURE_FILES = [
   "./modules/campaign-store.js",
   "./modules/core.js",
   "./modules/character-race-catalog.js",
+  "./modules/character-expanded-race-data.js",
   "./modules/character-background-data.js",
+  "./modules/character-expanded-background-data.js",
   "./modules/character-backgrounds.js",
   "./modules/character-rules-2024.js",
   "./modules/character-rules.js",
   "./modules/character-subclass-data.js",
+  "./modules/character-expanded-subclass-data.js",
   "./modules/character-class-progression.js",
   "./modules/character-feat-data.js",
   "./modules/character-feat-rules.js",
@@ -100,7 +103,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261002-adobe-v19");
+    moduleUrl.searchParams.set("v", "20261002-options-v20");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;

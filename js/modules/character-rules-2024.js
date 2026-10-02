@@ -13,7 +13,8 @@ var CharacterRules2024 = (() => {
     'Halfling',
     'Orc'
   ];
-  const backgrounds=(typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds:require('./character-backgrounds')).modern;
+  const BackgroundCatalog=(typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds:require('./character-backgrounds'));
+  const backgrounds=BackgroundCatalog.modern;
   // Origin categories are restricted here; Magic Initiate choices live in the spell catalogue.
   const originFeats = [
     'Alert',
@@ -49,7 +50,7 @@ var CharacterRules2024 = (() => {
   const cantrip = name => spell(1, name, 'at will');
   function extend(races) {
     for (const r of Object.values(races))
-      r.edition = '2014';
+      if (!r.edition) r.edition = '2014';
     const add = (id, name, extra = {}) => races[id + '-2024'] = {
       name,
       edition: '2024',
@@ -341,7 +342,7 @@ var CharacterRules2024 = (() => {
     if (b.edition !== '2024')
       return;
     e.asi = {};
-    const bg = backgrounds[b.background];
+    const bg = BackgroundCatalog.get(b.background);
     const allowed = bg?.abilities || [
       'str',
       'dex',
@@ -396,8 +397,13 @@ var CharacterRules2024 = (() => {
     const taken = new Set();
     e.originFeats = [];
     for (const {name, choices} of feats) {
-      if (!originFeats.includes(name))
+      if (!originFeats.includes(name)) {
+        if (bg?.fixedFeat && name === bg.feat) {
+          e.originFeats.push(name);
+          e.traits.push(name+' ('+(bg.source||'D&D')+' background feat): source-specific effects are not automated yet.');
+        } else if (name) e.warnings.push('Background feat '+name+' is not yet automated; keep it as a source/manual feature.');
         continue;
+      }
       if (taken.has(name) && name !== 'Skilled') {
         e.warnings.push('This Origin feat cannot be taken twice; choose a different feat.');
         continue;

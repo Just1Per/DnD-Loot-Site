@@ -9,7 +9,7 @@
     const field=name=>form.querySelector(`[name="${name}"]`);
     const change=(name,value)=>{field(name).value=value;field(name).dispatchEvent(new Event('change',{bubbles:true}));};
     const visible=name=>!field(name).closest('label').hidden;
-    check('Race selector groups entries by category and displays book version',field('build.race').querySelectorAll('optgroup').length===6&&field('build.race').textContent.includes('MPMM'));
+    check('Race selector groups entries by category and displays book version',field('build.race').querySelectorAll('optgroup').length===6&&field('build.race').textContent.includes('Mordenkainen'));
     change('build.edition','2014');
     change('identity.level','5');
     change('build.race','fairy-mpmm'); change('abilities.dex','14');change('build.flexibleChoices.0','dex');change('build.flexibleChoices.1','con');change('build.raceAbility','wis');
@@ -35,7 +35,7 @@
       change('build.race',race);
       if(!document.getElementById('sheetBuildSummary').textContent.includes(CharacterRules.races[race].name))throw Error('Race summary missing: '+race);
     }
-    check('All 79 race entries render without throwing or changing manual notes',field('notes').value==='Keep these notes');
+    check('All assembled race/species entries render without throwing or changing manual notes',field('notes').value==='Keep these notes'&&Object.keys(CharacterRules.races).length>=100);
     closeCharacterSheet(true);
   } catch(e) {results.push({name:e.stack,pass:false});}
   document.getElementById('test-results').textContent=JSON.stringify(results,null,2);

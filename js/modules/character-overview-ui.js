@@ -43,9 +43,9 @@ function moveOriginFeatControls() {
 function updateBackgroundControls(d) {
  const b=sheetSession.data.build,bg=CharacterBackgrounds.get(b.background),form=document.getElementById('characterSheetForm'),R=CharacterRules;
  const active=bg&&!(b.edition==='2014'&&bg.edition==='2024');
- let count=active?bg.languages:0;
+ let count=active?Number(bg.languages||0):0;
  for(let i=0;i<2;i++){
-  const input=form.querySelector(`[name="build.backgroundTools.${i}"]`),kind=active?bg.toolChoices[i]:null;
+  const input=form.querySelector(`[name="build.backgroundTools.${i}"]`),kind=active?(bg.toolChoices||[])[i]:null;
   const options=CharacterBackgrounds.toolOptions(kind,R);input.closest('label').hidden=!kind;
   for(const option of input.querySelectorAll('option'))option.disabled=!!option.value&&!options.includes(option.value);
   if(kind==='merchant'&&b.backgroundTools[i]==='Additional language')count++;
@@ -54,7 +54,23 @@ function updateBackgroundControls(d) {
  document.getElementById('sheetBackgroundChoices').hidden=!count;
  for(let i=0;i<2;i++)form.querySelector(`[name="build.backgroundLanguages.${i}"]`).closest('label').hidden=i>=count;
  const summary=document.getElementById('sheetBackgroundSummary');
- summary.innerHTML=bg?`<h4>${sheetEscape(bg.name)} · ${bg.edition}</h4><p><strong>Skills:</strong> ${bg.skills.map(k=>sheetEscape(CharacterSheetModel.skills[k]?.[0]||k)).join(', ')}</p><p><strong>Tools:</strong> ${sheetEscape([...bg.fixedTools.map(t=>CharacterBackgrounds.toolName(t,R.tools)),...bg.toolChoices.map(t=>({anyArtisansTool:'Choose one artisan tool',anyMusicalInstrument:'Choose one musical instrument',anyGamingSet:'Choose one gaming set',merchant:'Choose artisan/navigator tools or one extra language'}[t]))].join(', ')||'None')}</p><p><strong>Additional languages:</strong> ${count}</p>${bg.abilities?`<p><strong>Ability increases:</strong> +2/+1 or +1/+1/+1 among ${bg.abilities.map(k=>CharacterSheetModel.abilities[k]).join(', ')}; capped at 20 in Base mode.</p><p><strong>Origin feat:</strong> ${sheetEscape(bg.feat)}. Choose the origin in Character builder; see Feats for its effects.</p>`:`<p><strong>Feature:</strong> ${sheetEscape(bg.feature)}. Narrative benefits require DM agreement.${b.edition==='2024'?' Your 2024 rules additionally grant background ability increases and an Origin feat choice in Character builder.':' No background ability increase or Origin feat under 2014 rules.'}</p>`}<p class="sheet-help">${bg.source}, p. ${bg.page}. Skills, tools, languages and supported feat effects are derived from your selections. Starting equipment is not added to campaign loot automatically; arrange it with the DM.</p>`:'<p>Custom background: record skills and tools in Abilities & skills / Combat notes. Under 2024 rules, select ability increases here and an Origin feat in Character builder.</p>';
+ if(bg){
+  const fixedSkills=(bg.skills||[]).map(k=>CharacterSheetModel.skills[k]?.[0]||k);
+  const optionalSkills=(bg.skillOptions||[]).map(k=>CharacterSheetModel.skills[k]?.[0]||k);
+  const skillText=[fixedSkills.join(', '),optionalSkills.length?`choose ${bg.skillChoiceCount||1} from ${optionalSkills.join(', ')}`:''].filter(Boolean).join(' · ')||'Source/manual';
+  const toolText=[...(bg.fixedTools||[]).map(t=>CharacterBackgrounds.toolName(t,R.tools)),...(bg.toolChoices||[]).map(t=>({anyArtisansTool:'Choose one artisan tool',anyMusicalInstrument:'Choose one musical instrument',anyGamingSet:'Choose one gaming set',merchant:'Choose artisan/navigator tools or one extra language'}[t]||t))].join(', ')||'Source/manual';
+  const source=CharacterBackgrounds.sourceName(bg),ref=bg.page?`${source}, p. ${bg.page}`:source;
+  let mechanics='';
+  if(bg.edition==='2024'){
+   mechanics=bg.abilities?.length
+    ?`<p><strong>Ability increases:</strong> +2/+1 or +1/+1/+1 among ${bg.abilities.map(k=>CharacterSheetModel.abilities[k]).join(', ')}; capped at 20 in Base mode.</p>`
+    :'<p><strong>Ability increases:</strong> this expanded 2024 background is selectable, but its source-specific ability list is not automated yet; choose the source-legal abilities in Character builder.</p>';
+   mechanics+=bg.feat?`<p><strong>Origin feat:</strong> ${sheetEscape(bg.feat)}${bg.fixedFeat?' (fixed by this background)':''}. ${R.modern.originFeats.includes(bg.feat)?'Supported effects apply automatically where implemented.':'Source-specific feat effects remain manual until their adapter is added.'}</p>`:'<p><strong>Origin feat:</strong> choose the source-legal feat in Character builder.</p>';
+  }else{
+   mechanics=bg.feature?`<p><strong>Feature:</strong> ${sheetEscape(bg.feature)}. Narrative/source-specific benefits require DM agreement. No background ability increase or Origin feat under 2014 rules.</p>`:'<p><strong>Background feature:</strong> consult the listed source for remaining source-specific details.</p>';
+  }
+  summary.innerHTML=`<h4>${sheetEscape(bg.name)} · ${sheetEscape(bg.edition)} · ${sheetEscape(source)}</h4><p><strong>Skills:</strong> ${sheetEscape(skillText)}</p><p><strong>Tools:</strong> ${sheetEscape(toolText)}</p><p><strong>Additional languages:</strong> ${count}</p>${mechanics}<p class="sheet-help">${sheetEscape(ref)}. Factual options are loaded into the builder; source-specific prose, equipment and mechanics not represented by the rules engine remain manual. Starting equipment is not added to campaign loot automatically.</p>`;
+ }else summary.innerHTML='<p>Custom background: record skills and tools in Abilities & skills / Combat notes. Under 2024 rules, select ability increases here and an Origin feat in Character builder.</p>';
  document.getElementById('sheetOriginFeatChoices').hidden=b.edition!=='2024';
  document.getElementById('sheetLegacyFeatChoice').hidden=b.edition!=='2014'||b.race!=='variant-human';
 }
