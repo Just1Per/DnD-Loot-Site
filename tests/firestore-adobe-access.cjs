@@ -32,12 +32,13 @@ const {createCharacterSheetStore}=require('../js/modules/character-sheet-store')
 
  const store=createCharacterSheetStore({...sdk,db:player,auth:{currentUser:{uid:'player'}}});
  const identity={name:'Arden',class:'Druid',level:5};
- const data=M.normalize({notes:'schema 12'});
+ const data=M.normalize({notes:'schema 14'});
  await store.save({campaignId:'a',characterId:'c1',revision:0,data,identity,previousIdentity:identity});
  const raw=(await getDoc(doc(player,'campaigns/a/characterSheets/c1'))).data();
- assert.equal(raw.schemaVersion,12);
+ assert.equal(raw.schemaVersion,14);
  assert.equal(raw.data.rulesChoices.grants.__adobe.data.companion.type,'companion');
  assert.equal(raw.data.rulesChoices.grants.__adobe.data.pages.companion,false);
+ assert.ok(Array.isArray(raw.data.rulesChoices.grants.__adobe.data.tabOrder));
  await env.cleanup();
- console.log('SUCCESS Adobe schema 12 and campaign supply permissions');
+ console.log('SUCCESS Adobe schema 14 tab layout and campaign supply permissions');
 })().catch(error=>{console.error(error);process.exit(1)});
