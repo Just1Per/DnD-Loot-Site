@@ -1,5 +1,5 @@
-// D&D Vault Firestore Rules Revision: 14
-// Character sheet schema: 13 — Adobe parity UI/style + permissions sync\n// Revision 14: campaign DMs may create characters for active campaign members
+// D&D Vault Firestore Rules Revision: 15
+// Character sheet schema: 13 — Adobe parity UI/style + permissions sync\n// Revision 14: campaign DMs may create characters for active campaign members\n// Revision 15: character-sheet visual parity iteration; permissions unchanged
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
