@@ -260,3 +260,212 @@
   background:#fffaf0;
 }
 .sheet-creature-attack-picker .sheet-help { margin:.45rem 0 0; }
+
+
+/* Revision 19: generated spell sheet, inventory editor and clearer multiclass tools */
+.sheet-spell-generation {
+  margin:.8rem 0 1rem;
+  padding:16px;
+  border:1px solid #c9ad75;
+  border-radius:12px;
+  background:linear-gradient(145deg,#fffdf7,#f4e8d0);
+  box-shadow:0 8px 24px #4a30100d;
+}
+.sheet-spell-generation .sheet-repeat-title { margin-bottom:.8rem; }
+.sheet-spell-class-summary {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:.65rem;
+}
+.sheet-spell-class-summary > article {
+  padding:.8rem;
+  border:1px solid #d8c9ae;
+  border-radius:9px;
+  background:#fffaf0;
+}
+.sheet-spell-class-summary > article > div {
+  display:flex;
+  justify-content:space-between;
+  gap:.5rem;
+  color:#513a20;
+}
+.sheet-spell-class-summary dl {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.45rem;
+  margin:.7rem 0 0;
+}
+.sheet-spell-class-summary dl div { display:grid; gap:.1rem; }
+.sheet-spell-class-summary dt {
+  color:#756654;
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.sheet-spell-class-summary dd { margin:0; font-weight:700; }
+
+.sheet-auto-slot-summary { margin-top:.9rem; }
+.sheet-auto-slot-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(112px,1fr));
+  gap:.5rem;
+}
+.sheet-auto-slot-grid article {
+  display:grid;
+  gap:.2rem;
+  padding:.6rem;
+  text-align:center;
+  border:1px solid #d8c9ae;
+  border-radius:8px;
+  background:#fffdf8;
+}
+.sheet-auto-slot-grid article > strong {
+  font:700 1.15rem/1.1 "Cinzel",Georgia,serif;
+  color:#663829;
+}
+.sheet-auto-slot-grid article > small { color:#756654; }
+.sheet-auto-slot-grid article > div {
+  display:flex;
+  justify-content:center;
+  gap:.3rem;
+  margin-top:.25rem;
+}
+.sheet-auto-slot-grid button { padding:.28rem .45rem; font-size:.72rem; }
+
+.sheet-spell-generator {
+  width:min(860px,calc(100vw - 28px));
+  max-height:min(86vh,900px);
+  padding:0;
+  border:1px solid #967345;
+  border-radius:14px;
+  background:#fffcf5;
+  color:#342d26;
+  box-shadow:0 24px 70px #0007;
+}
+.sheet-spell-generator::backdrop { background:#17130f99; backdrop-filter:blur(2px); }
+.sheet-spell-generator-body {
+  display:grid;
+  gap:.8rem;
+  max-height:calc(86vh - 132px);
+  padding:16px 18px;
+  overflow:auto;
+}
+.sheet-spell-generator-requirement {
+  display:grid;
+  gap:.25rem;
+  padding:.75rem .85rem;
+  border:1px solid #c6a468;
+  border-radius:9px;
+  background:#f7e8c7;
+}
+.sheet-spell-generator-requirement strong { color:#663829; }
+.sheet-spell-generator-requirement small { color:#756654; }
+.sheet-spell-generator-count {
+  display:grid;
+  gap:.2rem;
+  padding:.55rem .7rem;
+  border-left:4px solid #8f7b50;
+  background:#f7f1e5;
+}
+.sheet-spell-generator-count.is-invalid { border-left-color:#8b3a3a; }
+.sheet-spell-generator-count small { color:#756654; }
+.sheet-spell-generator-results { display:grid; gap:.35rem; }
+.sheet-spell-generator-row {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto auto;
+  align-items:center;
+  gap:.7rem;
+  padding:.55rem .65rem;
+  border:1px solid #e0d3bd;
+  border-radius:8px;
+  background:#fffdf8;
+}
+.sheet-spell-generator-row > label:first-child {
+  display:flex;
+  align-items:flex-start;
+  gap:.55rem;
+}
+.sheet-spell-generator-row > label:first-child span { display:grid; gap:.12rem; }
+.sheet-spell-generator-row small { color:#756654; }
+.sheet-spell-prepared-choice {
+  display:flex;
+  align-items:center;
+  gap:.3rem;
+  color:#684824;
+  font-weight:700;
+}
+.sheet-spell-class-badge {
+  display:inline-flex;
+  margin-left:.35rem;
+  padding:.14rem .38rem;
+  border:1px solid #c7a76d;
+  border-radius:999px;
+  background:#f4e3bd;
+  color:#65451f;
+  font:700 .62rem/1.2 "Cinzel",Georgia,serif;
+  vertical-align:middle;
+}
+
+.sheet-multiclass-tools {
+  margin:.75rem 0;
+  padding:.65rem .75rem;
+  border:1px solid #d0bb91;
+  border-radius:9px;
+  background:#fffaf0;
+}
+.sheet-multiclass-tools summary {
+  cursor:pointer;
+  color:#663829;
+  font-weight:700;
+}
+.sheet-inline-controls {
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+  margin-top:.55rem;
+}
+.sheet-inline-controls select { min-width:190px; }
+
+.sheet-personal-gear-editor {
+  width:min(620px,calc(100vw - 28px));
+  padding:0;
+  border:1px solid #967345;
+  border-radius:14px;
+  background:#fffcf5;
+  box-shadow:0 24px 70px #0007;
+}
+.sheet-personal-gear-editor::backdrop { background:#17130f99; backdrop-filter:blur(2px); }
+.sheet-personal-gear-editor-body { display:grid; gap:.8rem; padding:16px 18px; }
+.sheet-personal-gear-editor output {
+  display:flex;
+  min-height:38px;
+  align-items:center;
+  padding:.45rem .6rem;
+  border:1px solid #d8c9ae;
+  border-radius:6px;
+  background:#f1eadc;
+  font-weight:700;
+}
+.sheet-inventory-row-actions {
+  display:flex;
+  gap:.3rem;
+  white-space:nowrap;
+}
+.sheet-derived-readout {
+  display:grid;
+  align-content:center;
+  gap:.15rem;
+  padding:.55rem .7rem;
+  border:1px solid #d8c9ae;
+  border-radius:8px;
+  background:#fffaf0;
+}
+.sheet-derived-readout > span { color:#756654; font-size:.72rem; text-transform:uppercase; }
+.sheet-derived-readout strong { color:#663829; font:700 1.25rem/1 "Cinzel",Georgia,serif; }
+.sheet-derived-readout small { color:#756654; }
+
+@media(max-width:720px){
+  .sheet-spell-generator-row { grid-template-columns:minmax(0,1fr) auto; }
+  .sheet-spell-prepared-choice { grid-column:1/-1; }
+  .sheet-spell-class-summary dl { grid-template-columns:1fr; }
+}

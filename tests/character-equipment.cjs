@@ -43,14 +43,32 @@ test('edition-specific Trident, Lance, War Pick and Net are not silently conflat
  assert.equal(E.profile(E.normalize({kind:'weapon',base:'war-pick'}),'2014').versatile,'');
  const l=[loot('n','Net')];assert.equal(M.derive(make(l),5,l).gear.attacks[0].attack,null);assert.equal(M.derive(make(l,{build:{edition:'2014'}}),5,l).gear.attacks[0].attack,3);
 });
-test('manual AC survives old sheets; automatic Defense uses armor, never shield alone',()=>{
+test('legacy manual AC is ignored; automatic Defense uses armor, never shield alone',()=>{
  const def=Object.entries(F.definitions).find(([,v])=>v.name==='Defense'&&v.source==='XPHB')[0];
  const l=[loot('s','Shield'),loot('a','Leather')],d=make(l,{ac:17,rulesChoices:{feats:[def],effects:{[def]:{confirmed:true,armored:false}}}});
  assert.equal(M.derive(d,5,l).gear.defense,1);d.equipmentState.loadout[1].equipped=false;assert.equal(M.derive(d,5,l).gear.defense,0);
- const old=M.normalize({ac:18});assert.equal(M.derive(old,5,l).ac,18);
+ const old=M.normalize({ac:18,abilities:{dex:12},equipmentState:{acMode:'manual',acAdjustment:20}});
+ assert.equal(old.equipmentState.acMode,'equipment');assert.equal(old.equipmentState.acAdjustment,0);assert.equal(M.derive(old,5,[]).ac,11);
 });
 test('unknown descriptions never fabricate AC bonuses or weapon mechanics',()=>{
  assert.equal(E.infer({name:'Dragon ring',description:'AC +1 when the moon shines'}).acBonus,0);
  assert.equal(E.infer({name:'Longsword +1',mechanics:{kind:'none'}}).kind,'none');
  const d=make([]);assert.deepEqual(M.normalize(d),d);
+});
+
+test('automatic unarmored formulas cover Barbarian Monk and Draconic Sorcerer',()=>{
+ const stats={mods:{str:0,dex:2,con:3,int:0,wis:4,cha:4},scores:{str:10,dex:14,con:16,int:10,wis:18,cha:18},effects:{proficiencies:[]},feats:{acBonus:0,reports:[],rangedBonus:0},pb:3};
+ const data=(classLevels,edition='2014')=>({build:{edition,classId:classLevels[0].classId},equipmentState:{acMode:'equipment',loadout:[]},rulesChoices:{grants:{__adobe:{data:{classLevels}}}}});
+ assert.equal(E.derive(data([{classId:'barbarian',level:5}]),stats,[]).ac,15);
+ assert.equal(E.derive(data([{classId:'monk',level:5}]),stats,[]).ac,16);
+ assert.equal(E.derive(data([{classId:'sorcerer',level:5,subclassId:'draconic-bloodline'}]),stats,[]).ac,15);
+ assert.equal(E.derive(data([{classId:'sorcerer',level:5,subclassId:'draconic-bloodline'}],'2024'),stats,[]).ac,16);
+});
+
+test('racial AC profiles apply natural armor and permanent conditional bonuses automatically',()=>{
+ const baseStats={mods:{str:0,dex:2,con:3,int:0,wis:0,cha:0},scores:{str:10,dex:14,con:16,int:10,wis:10,cha:10},effects:{proficiencies:[],race:{name:'Loxodon',naturalArmor:{base:12,ability:'con'}}},feats:{acBonus:0,reports:[],rangedBonus:0},pb:2};
+ const data={build:{edition:'2014',classId:'fighter'},equipmentState:{loadout:[]},rulesChoices:{grants:{}}};
+ assert.equal(E.derive(data,baseStats,[]).ac,15);
+ const simic={...baseStats,effects:{...baseStats.effects,race:{name:'Simic Hybrid',acBonus:1,acBonusCondition:'not-heavy'}}};
+ assert.equal(E.derive(data,simic,[]).ac,13);
 });
