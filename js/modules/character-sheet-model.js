@@ -6,6 +6,7 @@ var CharacterSheetModel = (() => {
   const Catalog = typeof CharacterCatalog !== 'undefined' ? CharacterCatalog : require('./character-catalog');
   const Feats=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
   const Equipment=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
+  const Magic=typeof CharacterMagicItems!=='undefined'?CharacterMagicItems:null;
   const abilities = {
     str: 'Strength',
     dex: 'Dexterity',
@@ -231,6 +232,7 @@ var CharacterSheetModel = (() => {
     }
     const originCon = scores.con;
     const feats=Feats.apply(d,level,effects,scores,Object.keys(skills),Rules.tools);
+    const magicItems=Magic?Magic.apply(d,scores,effects,loot):{active:[],reports:[],warnings:[]};
     if(d.build.scoreMode==='base')effects.hpBonus+=Math.max(1,Math.min(20,Number(level)||1))*(mod(scores.con)-mod(originCon));
     for (const key of Object.keys(abilities)) {
       mods[key] = mod(scores[key]);
@@ -254,7 +256,9 @@ var CharacterSheetModel = (() => {
       spellDC: 8 + mods[d.spellAbility] + pb + d.spellDCBonus,
       attacks: d.attacks.map(a => mods[a.ability] + (a.proficient ? pb : 0) + a.bonus + (a.rangedWeapon ? feats.rangedBonus : 0))
     };
+    result.magicItems=magicItems;
     result.gear=Equipment.derive(d,result,loot);
+    if(Magic)result.gear=Magic.augmentGear(d,result.gear,magicItems);
     result.ac=result.gear.ac;
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     return result;

@@ -1,0 +1,542 @@
+{
+  "format": 1,
+  "source": "User-supplied MorePurpleMoreBetter character sheet v13.0.4 / ListsMagicItems",
+  "purpose": "Adobe parity index plus high-confidence static mechanics used by the web character sheet. Acrobat-only code and long item prose are intentionally excluded.",
+  "count": 239,
+  "names": [
+    "Adamantine Armor",
+    "Ammunition, +1, +2, or +3",
+    "Amulet of Health",
+    "Amulet of Proof against Detection and Location",
+    "Amulet of the Planes",
+    "Animated Shield",
+    "Apparatus of Kwalish",
+    "Armor, +1, +2, or +3",
+    "Armor of Invulnerability",
+    "Armor of Resistance",
+    "Armor of Vulnerability",
+    "Arrow-Catching Shield",
+    "Arrow of Slaying",
+    "Bag of Beans",
+    "Bag of Devouring",
+    "Bag of Holding",
+    "Bag of Tricks",
+    "Bead of Force",
+    "Belt of Dwarvenkind",
+    "Belt of Giant Strength",
+    "Berserker Axe",
+    "Boots of Elvenkind",
+    "Boots of Levitation",
+    "Boots of Speed",
+    "Boots of Striding and Springing",
+    "Boots of the Winterlands",
+    "Bowl of Commanding Water Elementals",
+    "Bracers of Archery",
+    "Bracers of Defense",
+    "Brazier of Commanding Fire Elementals",
+    "Brooch of Shielding",
+    "Broom of Flying",
+    "Candle of Invocation",
+    "Cape of the Mountebank",
+    "Carpet of Flying",
+    "Censer of Controlling Air Elementals",
+    "Chime of Opening",
+    "Circlet of Blasting",
+    "Cloak of Arachnida",
+    "Cloak of Displacement",
+    "Cloak of Elvenkind",
+    "Cloak of Protection",
+    "Cloak of the Bat",
+    "Cloak of the Manta Ray",
+    "Crystal Ball",
+    "Cube of Force",
+    "Cubic Gate",
+    "Daern's Instant Fortress",
+    "Dagger of Venom",
+    "Dancing Sword",
+    "Decanter of Endless Water",
+    "Deck of Illusions",
+    "Deck of Many Things",
+    "Defender",
+    "Demon Armor",
+    "Dimensional Shackles",
+    "Dragon Scale Mail",
+    "Dragon Slayer",
+    "Dust of Disappearance",
+    "Dust of Dryness",
+    "Dust of Sneezing and Choking",
+    "Dwarven Plate",
+    "Dwarven Thrower",
+    "Efreeti Bottle",
+    "Elemental Gem",
+    "Elven Chain",
+    "Eversmoking Bottle",
+    "Eyes of Charming",
+    "Eyes of Minute Seeing",
+    "Eyes of the Eagle",
+    "Figurine of Wondrous Power",
+    "Flame Tongue",
+    "Folding Boat",
+    "Frost Brand",
+    "Gauntlets of Ogre Power",
+    "Gem of Brightness",
+    "Gem of Seeing",
+    "Giant Slayer",
+    "Glamoured Studded Leather",
+    "Gloves of Missile Snaring",
+    "Gloves of Swimming and Climbing",
+    "Goggles of Night",
+    "Hammer of Thunderbolts",
+    "Hat of Disguise",
+    "Headband of Intellect",
+    "Helm of Brilliance",
+    "Helm of Comprehending Languages",
+    "Helm of Telepathy",
+    "Helm of Teleportation",
+    "Holy Avenger",
+    "Heward's Handy Haversack",
+    "Horn of Blasting",
+    "Horn of Valhalla",
+    "Horseshoes of a Zephyr",
+    "Horseshoes of Speed",
+    "Immovable Rod",
+    "Ioun Stone",
+    "Iron Bands of Bilarro",
+    "Iron Flask",
+    "Javelin of Lightning",
+    "Keoghtom's Ointment",
+    "Lantern of Revealing",
+    "Luck Blade",
+    "Mace of Disruption",
+    "Mace of Smiting",
+    "Mace of Terror",
+    "Mantle of Spell Resistance",
+    "Manual of Bodily Health",
+    "Manual of Gainful Exercise",
+    "Manual of Golems",
+    "Manual of Quickness of Action",
+    "Medallion of Thoughts",
+    "Mirror of Life Trapping",
+    "Mithral Armor",
+    "Necklace of Adaptation",
+    "Necklace of Fireballs",
+    "Necklace of Prayer Beads",
+    "Nolzur's Marvelous Pigments",
+    "Nine Lives Stealer",
+    "Oathbow",
+    "Oil of Etherealness",
+    "Oil of Sharpness",
+    "Oil of Slipperiness",
+    "Pearl of Power",
+    "Periapt of Health",
+    "Periapt of Proof Against Poison",
+    "Periapt of Wound Closure",
+    "Philter of Love",
+    "Pipes of Haunting",
+    "Pipes of the Sewers",
+    "Plate Armor of Etherealness",
+    "Portable Hole",
+    "Potion of Animal Friendship",
+    "Potion of Clairvoyance",
+    "Potion of Climbing",
+    "Potion of Diminution",
+    "Potion of Flying",
+    "Potion of Gaseous Form",
+    "Potion of Giant Strength",
+    "Potion of Growth",
+    "Potion of Healing",
+    "Potion of Heroism",
+    "Potion of Invisibility",
+    "Potion of Mind Reading",
+    "Potion of Poison",
+    "Potion of Resistance",
+    "Potion of Speed",
+    "Potion of Water Breathing",
+    "Quaal's Feather Token",
+    "Quiver of Ehlonna",
+    "Ring of Animal Influence",
+    "Ring of Djinni Summoning",
+    "Ring of Elemental Command",
+    "Ring of Evasion",
+    "Ring of Feather Falling",
+    "Ring of Free Action",
+    "Ring of Invisibility",
+    "Ring of Jumping",
+    "Ring of Mind Shielding",
+    "Ring of Protection",
+    "Ring of Regeneration",
+    "Ring of Resistance",
+    "Ring of Shooting Stars",
+    "Ring of Spell Storing",
+    "Ring of Spell Turning",
+    "Ring of Swimming",
+    "Ring of Telekinesis",
+    "Ring of the Ram",
+    "Ring of Three Wishes",
+    "Ring of Warmth",
+    "Ring of Water Walking",
+    "Ring of X-ray Vision",
+    "Robe of Eyes",
+    "Robe of Scintillating Colors",
+    "Robe of Stars",
+    "Robe of the Archmagi",
+    "Robe of Useful Items",
+    "Rod of Absorption",
+    "Rod of Alertness",
+    "Rod of Lordly Might",
+    "Rod of Rulership",
+    "Rod of Security",
+    "Rope of Climbing",
+    "Rope of Entanglement",
+    "Scarab of Protection",
+    "Scimitar of Speed",
+    "Shield, +1, +2, or +3",
+    "Shield of Missile Attraction",
+    "Slippers of Spider Climbing",
+    "Sovereign Glue",
+    "Spell Scroll",
+    "Spellguard Shield",
+    "Sphere of Annihilation",
+    "Staff of Charming",
+    "Staff of Fire",
+    "Staff of Frost",
+    "Staff of Healing",
+    "Staff of Power",
+    "Staff of Striking",
+    "Staff of Swarming Insects",
+    "Staff of the Magi",
+    "Staff of the Python",
+    "Staff of the Woodlands",
+    "Staff of Thunder and Lightning",
+    "Staff of Withering",
+    "Stone of Controlling Earth Elementals",
+    "Stone of Good Luck",
+    "Sun Blade",
+    "Sword of Life Stealing",
+    "Sword of Sharpness",
+    "Sword of Wounding",
+    "Talisman of Pure Good",
+    "Talisman of the Sphere",
+    "Talisman of Ultimate Evil",
+    "Tome of Clear Thought",
+    "Tome of Leadership and Influence",
+    "Tome of Understanding",
+    "Trident of Fish Command",
+    "Universal Solvent",
+    "Vicious Weapon",
+    "Vorpal Sword",
+    "Wand of Binding",
+    "Wand of Enemy Detection",
+    "Wand of Fear",
+    "Wand of Fireballs",
+    "Wand of Lightning Bolts",
+    "Wand of Magic Detection",
+    "Wand of Magic Missiles",
+    "Wand of Paralysis",
+    "Wand of Polymorph",
+    "Wand of Secrets",
+    "Wand of the War Mage, +1, +2, or +3",
+    "Wand of Web",
+    "Wand of Wonder",
+    "Weapon, +1, +2, or +3",
+    "Well of Many Worlds",
+    "Wind Fan",
+    "Winged Boots",
+    "Wings of Flying"
+  ],
+  "automation": {
+    "amulet of health": {
+      "attunement": true,
+      "abilityOverride": {
+        "con": 19
+      }
+    },
+    "gauntlets of ogre power": {
+      "attunement": true,
+      "abilityOverride": {
+        "str": 19
+      }
+    },
+    "headband of intellect": {
+      "attunement": true,
+      "abilityOverride": {
+        "int": 19
+      }
+    },
+    "belt of dwarvenkind": {
+      "attunement": true,
+      "abilityBonus": {
+        "con": 2
+      },
+      "resistances": [
+        "Poison"
+      ],
+      "darkvision": {
+        "mode": "minimum",
+        "value": 60
+      }
+    },
+    "belt of hill giant strength": {
+      "attunement": true,
+      "abilityOverride": {
+        "str": 21
+      }
+    },
+    "belt of frost giant strength": {
+      "attunement": true,
+      "abilityOverride": {
+        "str": 23
+      }
+    },
+    "belt of stone giant strength": {
+      "attunement": true,
+      "abilityOverride": {
+        "str": 23
+      }
+    },
+    "belt of fire giant strength": {
+      "attunement": true,
+      "abilityOverride": {
+        "str": 25
+      }
+    },
+    "belt of cloud giant strength": {
+      "attunement": true,
+      "abilityOverride": {
+        "str": 27
+      }
+    },
+    "belt of storm giant strength": {
+      "attunement": true,
+      "abilityOverride": {
+        "str": 29
+      }
+    },
+    "cloak of protection": {
+      "attunement": true,
+      "acBonus": 1
+    },
+    "ring of protection": {
+      "attunement": true,
+      "acBonus": 1
+    },
+    "bracers of defense": {
+      "attunement": true,
+      "conditionalAC": {
+        "bonus": 2,
+        "when": "no-armor-or-shield"
+      }
+    },
+    "boots of the winterlands": {
+      "attunement": true,
+      "resistances": [
+        "Cold"
+      ]
+    },
+    "brooch of shielding": {
+      "attunement": true,
+      "resistances": [
+        "Force"
+      ]
+    },
+    "frost brand": {
+      "attunement": true,
+      "resistances": [
+        "Fire"
+      ]
+    },
+    "helm of brilliance": {
+      "attunement": true,
+      "resistances": [
+        "Fire"
+      ]
+    },
+    "ring of warmth": {
+      "attunement": true,
+      "resistances": [
+        "Cold"
+      ]
+    },
+    "staff of fire": {
+      "attunement": true,
+      "resistances": [
+        "Fire"
+      ]
+    },
+    "staff of frost": {
+      "attunement": true,
+      "resistances": [
+        "Cold"
+      ]
+    },
+    "goggles of night": {
+      "attunement": false,
+      "darkvision": {
+        "mode": "add-or-set",
+        "value": 60
+      }
+    },
+    "robe of eyes": {
+      "attunement": true,
+      "darkvision": {
+        "mode": "minimum",
+        "value": 120
+      }
+    },
+    "boots of striding and springing": {
+      "attunement": true,
+      "speed": {
+        "walk": {
+          "mode": "minimum",
+          "value": 30
+        }
+      }
+    },
+    "cloak of the manta ray": {
+      "attunement": false,
+      "speed": {
+        "swim": {
+          "mode": "minimum",
+          "value": 60
+        }
+      }
+    },
+    "ring of swimming": {
+      "attunement": false,
+      "speed": {
+        "swim": {
+          "mode": "minimum",
+          "value": 40
+        }
+      }
+    },
+    "slippers of spider climbing": {
+      "attunement": true,
+      "speed": {
+        "climb": {
+          "mode": "walking"
+        }
+      }
+    },
+    "dagger of venom": {
+      "attunement": false,
+      "weapon": {
+        "base": "dagger",
+        "attackBonus": 1,
+        "damageBonus": 1
+      }
+    },
+    "dwarven thrower": {
+      "attunement": true,
+      "weapon": {
+        "base": "warhammer",
+        "attackBonus": 3,
+        "damageBonus": 3,
+        "notes": "Thrown range and returning behavior remain a manual reminder."
+      }
+    },
+    "javelin of lightning": {
+      "attunement": false,
+      "weapon": {
+        "base": "javelin"
+      }
+    },
+    "mace of disruption": {
+      "attunement": true,
+      "weapon": {
+        "base": "mace"
+      }
+    },
+    "mace of smiting": {
+      "attunement": false,
+      "weapon": {
+        "base": "mace",
+        "attackBonus": 1,
+        "damageBonus": 1
+      }
+    },
+    "mace of terror": {
+      "attunement": true,
+      "weapon": {
+        "base": "mace"
+      }
+    },
+    "oathbow": {
+      "attunement": true,
+      "weapon": {
+        "base": "longbow"
+      }
+    },
+    "scimitar of speed": {
+      "attunement": true,
+      "weapon": {
+        "base": "scimitar",
+        "attackBonus": 2,
+        "damageBonus": 2
+      }
+    },
+    "staff of power": {
+      "attunement": true,
+      "acBonus": 2,
+      "weapon": {
+        "base": "quarterstaff",
+        "attackBonus": 2,
+        "damageBonus": 2
+      }
+    },
+    "staff of striking": {
+      "attunement": true,
+      "weapon": {
+        "base": "quarterstaff",
+        "attackBonus": 3,
+        "damageBonus": 3
+      }
+    },
+    "staff of the magi": {
+      "attunement": true,
+      "weapon": {
+        "base": "quarterstaff",
+        "attackBonus": 2,
+        "damageBonus": 2
+      }
+    },
+    "staff of the woodlands": {
+      "attunement": true,
+      "weapon": {
+        "base": "quarterstaff",
+        "attackBonus": 2,
+        "damageBonus": 2
+      }
+    },
+    "staff of thunder and lightning": {
+      "attunement": true,
+      "weapon": {
+        "base": "quarterstaff",
+        "attackBonus": 2,
+        "damageBonus": 2
+      }
+    },
+    "staff of withering": {
+      "attunement": true,
+      "weapon": {
+        "base": "quarterstaff"
+      }
+    },
+    "sun blade": {
+      "attunement": true,
+      "weapon": {
+        "base": "longsword",
+        "attackBonus": 2,
+        "damageBonus": 2,
+        "damage": "1d8",
+        "damageType": "radiant"
+      }
+    },
+    "trident of fish command": {
+      "attunement": true,
+      "weapon": {
+        "base": "trident"
+      }
+    }
+  }
+}

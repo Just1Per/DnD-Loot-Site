@@ -94,8 +94,9 @@ var CharacterEquipment = (() => {
     // Only owned items can consume an attunement slot. Quantity never multiplies bonuses.
     for(const r of entries){
       r.profile=profile(r.mechanics,data.build.edition);
-      r.magicActive=!r.item.attunement;
-      if(r.item.attunement&&r.choice.attuned){attuned++;r.magicActive=attuned<=3;if(!r.magicActive)warnings.push(r.item.name+': exceeds three attunement slots; magic inactive.');}
+      r.requiresAttunement=(typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(r.item))||!!r.item.attunement;
+      r.magicActive=!r.requiresAttunement;
+      if(r.requiresAttunement&&r.choice.attuned){attuned++;r.magicActive=attuned<=3;if(!r.magicActive)warnings.push(r.item.name+': exceeds three attunement slots; magic inactive.');}
       r.active=r.choice.equipped;
       if(!r.active)continue;
       const kind=r.mechanics.kind;
@@ -112,7 +113,7 @@ var CharacterEquipment = (() => {
         if(names.has(name)){warnings.push(r.item.name+': duplicate item AC bonus ignored.');}
         else {bonus+=r.mechanics.acBonus;sources.push({name:r.item.name,value:r.mechanics.acBonus});names.add(name);}
       }
-      if(r.item.attunement&&!r.magicActive)warnings.push(r.item.name+': magical bonuses require attunement.');
+      if(r.requiresAttunement&&!r.magicActive)warnings.push(r.item.name+': magical bonuses require attunement.');
     }
     let base=10+stats.mods.dex,baseLabel='Unarmored: 10 + DEX';
     if(armorEntry){
