@@ -6,7 +6,7 @@
 var CharacterMagicItems=(()=>{
   const E=CharacterEquipment;
   const priorInfer=E.infer.bind(E);
-  const reference=globalThis.__DND_VAULT_MAGIC_ITEM_REFERENCE__||{names:[],automation:{}};
+  const reference=typeof CharacterMagicItemReference!=='undefined'?CharacterMagicItemReference:{names:[],automation:{}};
   const clean=value=>String(value||'').trim().toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9+]+/g,' ').replace(/\s+/g,' ').trim();
   const knownNames=new Set((reference.names||[]).map(clean));
   const rules=new Map(Object.entries(reference.automation||{}).map(([name,rule])=>[clean(name),rule]));
