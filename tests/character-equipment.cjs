@@ -64,3 +64,11 @@ test('automatic unarmored formulas cover Barbarian Monk and Draconic Sorcerer',(
  assert.equal(E.derive(data([{classId:'sorcerer',level:5,subclassId:'draconic-bloodline'}]),stats,[]).ac,15);
  assert.equal(E.derive(data([{classId:'sorcerer',level:5,subclassId:'draconic-bloodline'}],'2024'),stats,[]).ac,16);
 });
+
+test('racial AC profiles apply natural armor and permanent conditional bonuses automatically',()=>{
+ const baseStats={mods:{str:0,dex:2,con:3,int:0,wis:0,cha:0},scores:{str:10,dex:14,con:16,int:10,wis:10,cha:10},effects:{proficiencies:[],race:{name:'Loxodon',naturalArmor:{base:12,ability:'con'}}},feats:{acBonus:0,reports:[],rangedBonus:0},pb:2};
+ const data={build:{edition:'2014',classId:'fighter'},equipmentState:{loadout:[]},rulesChoices:{grants:{}}};
+ assert.equal(E.derive(data,baseStats,[]).ac,15);
+ const simic={...baseStats,effects:{...baseStats.effects,race:{name:'Simic Hybrid',acBonus:1,acBonusCondition:'not-heavy'}}};
+ assert.equal(E.derive(data,simic,[]).ac,13);
+});
