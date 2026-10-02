@@ -59,7 +59,7 @@ function updateBackgroundControls(d) {
   const optionalSkills=(bg.skillOptions||[]).map(k=>CharacterSheetModel.skills[k]?.[0]||k);
   const skillText=[fixedSkills.join(', '),optionalSkills.length?`choose ${bg.skillChoiceCount||1} from ${optionalSkills.join(', ')}`:''].filter(Boolean).join(' · ')||'Source/manual';
   const toolText=[...(bg.fixedTools||[]).map(t=>CharacterBackgrounds.toolName(t,R.tools)),...(bg.toolChoices||[]).map(t=>({anyArtisansTool:'Choose one artisan tool',anyMusicalInstrument:'Choose one musical instrument',anyGamingSet:'Choose one gaming set',merchant:'Choose artisan/navigator tools or one extra language'}[t]||t))].join(', ')||'Source/manual';
-  const ref=bg.page?`${bg.source}, p. ${bg.page}`:bg.source||'D&D';
+  const source=CharacterBackgrounds.sourceName(bg),ref=bg.page?`${source}, p. ${bg.page}`:source;
   let mechanics='';
   if(bg.edition==='2024'){
    mechanics=bg.abilities?.length
@@ -69,7 +69,7 @@ function updateBackgroundControls(d) {
   }else{
    mechanics=bg.feature?`<p><strong>Feature:</strong> ${sheetEscape(bg.feature)}. Narrative/source-specific benefits require DM agreement. No background ability increase or Origin feat under 2014 rules.</p>`:'<p><strong>Background feature:</strong> consult the listed source for remaining source-specific details.</p>';
   }
-  summary.innerHTML=`<h4>${sheetEscape(bg.name)} · ${sheetEscape(bg.edition)} · ${sheetEscape(bg.source||'D&D')}</h4><p><strong>Skills:</strong> ${sheetEscape(skillText)}</p><p><strong>Tools:</strong> ${sheetEscape(toolText)}</p><p><strong>Additional languages:</strong> ${count}</p>${mechanics}<p class="sheet-help">${sheetEscape(ref)}. Factual options are loaded into the builder; source-specific prose, equipment and mechanics not represented by the rules engine remain manual. Starting equipment is not added to campaign loot automatically.</p>`;
+  summary.innerHTML=`<h4>${sheetEscape(bg.name)} · ${sheetEscape(bg.edition)} · ${sheetEscape(source)}</h4><p><strong>Skills:</strong> ${sheetEscape(skillText)}</p><p><strong>Tools:</strong> ${sheetEscape(toolText)}</p><p><strong>Additional languages:</strong> ${count}</p>${mechanics}<p class="sheet-help">${sheetEscape(ref)}. Factual options are loaded into the builder; source-specific prose, equipment and mechanics not represented by the rules engine remain manual. Starting equipment is not added to campaign loot automatically.</p>`;
  }else summary.innerHTML='<p>Custom background: record skills and tools in Abilities & skills / Combat notes. Under 2024 rules, select ability increases here and an Origin feat in Character builder.</p>';
  document.getElementById('sheetOriginFeatChoices').hidden=b.edition!=='2024';
  document.getElementById('sheetLegacyFeatChoice').hidden=b.edition!=='2014'||b.race!=='variant-human';
