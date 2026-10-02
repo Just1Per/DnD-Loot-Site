@@ -729,6 +729,7 @@ var CharacterRaceCatalog = (() => {
     }, 'ERLW');
     setting('warforged', 'Warforged', {
       flexible: false,
+      acBonus: 1,
       asi: { con: 2 },
       choiceBonuses: [1],
       excludeAbilities: ['con'],
@@ -743,7 +744,7 @@ var CharacterRaceCatalog = (() => {
       traits: [
         'No eating, drinking or breathing. Poison saves have advantage.',
         'Rest consciously and motionless for 6 hours instead of sleeping.',
-        'AC +1 (apply manually). Only integrate armor you are proficient with; attaching/removing takes 1 hour. Armor cannot be removed against your will while alive.'
+        'AC +1. Only integrate armor you are proficient with; attaching/removing takes 1 hour. Armor cannot be removed against your will while alive.'
       ]
     }, 'ERLW');
     for (const id of [
@@ -849,7 +850,9 @@ var CharacterRaceCatalog = (() => {
         },
         carapace: {
           name: 'Carapace',
-          traits: ['AC +1 unless wearing heavy armor; apply manually.']
+          acBonus: 1,
+          acBonusCondition: 'not-heavy',
+          traits: ['Carapace: +1 AC unless wearing heavy armor.']
         },
         acid: {
           name: 'Acid Spit',
