@@ -64,7 +64,7 @@ add('magic items',fs.existsSync(magicItemMechanics)?'covered':'partial',fs.exist
 
 const rulesText=read('firestore.rules');
 const ruleRevision=Number(rulesText.match(/Firestore Rules Revision:\s*(\d+)/)?.[1]||0);
-add('firestore schema',ruleRevision>=18&&rulesText.includes('schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]')?'covered':'partial',`Firestore rules revision ${ruleRevision}; character-sheet schema 14 expected for this parity iteration.`);
+add('firestore schema',ruleRevision>=19&&rulesText.includes('schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]')?'covered':'partial',`Firestore rules revision ${ruleRevision}; character-sheet schema 14 expected for this parity iteration.`);
 
 for(const row of report) console.log(`${row.status.toUpperCase().padEnd(8)} ${row.category}: ${row.detail}`);
 const incomplete=report.filter(r=>r.status!=='covered');
