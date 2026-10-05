@@ -150,13 +150,34 @@ var CharacterClassProgression=(()=>{
   };
   const classes=legacyClasses,subclasses=legacySubclasses;
   const editionOf=e=>e==='2024'?'2024':'2014';
+  const srdSubclassAliases={
+    berserker:'path-of-the-berserker',lore:'college-of-lore','life-domain':'life-domain',land:'circle-of-the-land',
+    champion:'champion','open-hand':'way-of-the-open-hand',devotion:'oath-of-devotion',hunter:'hunter',thief:'thief',
+    'draconic-bloodline':'draconic-bloodline',fiend:'the-fiend',evocation:'school-of-evocation',
+    'berserker-2024':'path-of-the-berserker','lore-2024':'college-of-lore','life-domain-2024':'life-domain',
+    'land-2024':'circle-of-the-land','champion-2024':'champion','open-hand-2024':'warrior-of-the-open-hand',
+    'devotion-2024':'oath-of-devotion','hunter-2024':'hunter','thief-2024':'thief',
+    'draconic-sorcery-2024':'draconic-sorcery','fiend-2024':'fiend-patron','evoker-2024':'evoker'
+  };
+  function srdClassFeatures(classId,edition){
+    return globalThis.CharacterSrdClassData?.editions?.[editionOf(edition)]?.classes?.[classId]?.features||null;
+  }
+  function srdSubclassFeatures(subclassId,edition){
+    const rows=globalThis.CharacterSrdClassData?.editions?.[editionOf(edition)]?.subclasses||{};
+    const alias=srdSubclassAliases[subclassId]||subclassId;
+    return rows[alias]?.features||null;
+  }
   function classFeatures(classId,edition='2014'){
+    const srd=srdClassFeatures(classId,edition);
+    if(Array.isArray(srd)&&srd.length)return srd;
     const detailed=detailedClasses[classId]?.[editionOf(edition)];
     return detailed||((classes[classId]?.features||[]).map(([name,level])=>feature(name,level,'Detailed rules text has not been added to the web catalogue yet.',{incomplete:true})));
   }
   function subclassFeatures(classId,subclassId,edition='2014'){
     const detailed=detailedSubclasses[subclassId];
     if(detailed&&detailed.classId===classId&&(!detailed.edition||detailed.edition===editionOf(edition)))return detailed.features;
+    const srd=srdSubclassFeatures(subclassId,edition);
+    if(Array.isArray(srd)&&srd.length)return srd;
     const old=subclasses[subclassId];
     if(old?.classId===classId)return old.features.map(([name,level])=>feature(name,level,'Detailed rules text has not been added to the web catalogue yet.',{incomplete:true}));
     return[];
