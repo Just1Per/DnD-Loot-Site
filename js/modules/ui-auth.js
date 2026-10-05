@@ -215,12 +215,11 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       // import happens only on a genuinely empty database.
       await importItemsIfEmpty();
 
-      // Start the large catalogue read in parallel. The user can see/select a
-      // campaign before item cards and Storage URLs have finished resolving.
-      itemsLoadPromise = loadItemsFromFirestore().catch(e => {
-        console.error("Item catalogue load failed:", e);
-        throw e;
-      });
+      // The large magical-item catalogue is intentionally lazy. It is loaded
+      // only after the user chooses "Load magical items" in the Library.
+      itemsLoadPromise = Promise.resolve();
+      magicItemLibraryLoaded = false;
+      magicItemLibraryLoading = false;
 
       await Promise.all([
         loadCampaigns(),
