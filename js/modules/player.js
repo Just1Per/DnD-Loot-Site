@@ -180,14 +180,12 @@ async function hardDeleteOwnCharacter(characterId) {
   ].join('\n');
   if(!confirm(warning))return;
   try {
-    const [savedSnapshot,sheetSnapshot]=await Promise.all([
-      getDocs(query(collection(db,'campaigns',campaignId,'saves'),where('characterId','==',characterId))),
-      getDoc(doc(db,'campaigns',campaignId,'characterSheets',characterId))
-    ]);
-    const operations=savedSnapshot.size+(sheetSnapshot.exists()?1:0)+1;
+    const ownSaved=saves.filter(save=>save.characterId===characterId&&(!save.userId||save.userId===auth.currentUser.uid));
+    const sheetSnapshot=await getDoc(doc(db,'campaigns',campaignId,'characterSheets',characterId));
+    const operations=ownSaved.length+(sheetSnapshot.exists()?1:0)+1;
     if(operations>500)throw Error('This character has too many linked records for one safe delete.');
     const batch=writeBatch(db);
-    savedSnapshot.forEach(snapshot=>batch.delete(snapshot.ref));
+    ownSaved.forEach(save=>batch.delete(doc(db,'campaigns',campaignId,'saves',save.id)));
     if(sheetSnapshot.exists())batch.delete(sheetSnapshot.ref);
     batch.delete(doc(db,'campaigns',campaignId,'characters',characterId));
     await batch.commit();
