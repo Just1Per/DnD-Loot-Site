@@ -26,6 +26,10 @@ var CharacterRulesCatalogStore=(()=>{
       id,name:row.name,subclassTitle:row.subclassTitle||'',edition:release(edition),
       features:(CP.classFeatures?.(id,edition)||[]).map(serializeFeature)
     }]));
+    const artificerFeatures=edition==='2024'
+      ? [['Spellcasting',1],["Tinker's Magic",1],['Replicate Magic Item',2],['Artificer Subclass',3],['Ability Score Improvement',4],['Subclass Feature',5],['Magic Item Tinker',6],['Flash of Genius',7],['Ability Score Improvement',8],['Subclass Feature',9],['Magic Item Adept',10],['Spell-Storing Item',11],['Ability Score Improvement',12],['Magic Item Savant',14],['Subclass Feature',15],['Ability Score Improvement',16],['Magic Item Master',18],['Epic Boon',19],['Soul of Artifice',20]]
+      : [['Magical Tinkering',1],['Spellcasting',1],['Infuse Item',2],['Artificer Specialist',3],['The Right Tool for the Job',3],['Ability Score Improvement',4],['Specialist Feature',5],['Tool Expertise',6],['Flash of Genius',7],['Ability Score Improvement',8],['Specialist Feature',9],['Magic Item Adept',10],['Spell-Storing Item',11],['Ability Score Improvement',12],['Magic Item Savant',14],['Specialist Feature',15],['Ability Score Improvement',16],['Magic Item Master',18],['Ability Score Improvement',19],['Soul of Artifice',20]];
+    classes.artificer={id:'artificer',name:'Artificer',subclassTitle:edition==='2024'?'Artificer Subclass':'Artificer Specialist',edition:release(edition),source:edition==='2024'?'EFOTA':'TCE',expanded:true,features:artificerFeatures.map(([name,level])=>serializeFeature({name,level,summary:'Global reference record; detailed feature summary is being expanded.',incomplete:true}))};
     const subclasses=Object.fromEntries(Object.values(S.all||{}).filter(row=>{
       if(edition==='2014')return row.edition==='2014';
       return row.edition==='2024'||row.edition==='2014';
