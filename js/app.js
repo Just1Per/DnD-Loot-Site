@@ -35,7 +35,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
 if (!document.querySelector('link[data-character-adobe-integration]')) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = new URL('../css/character-adobe-integration.css?v=20261005-companion-hp-v41', import.meta.url).href;
+  link.href = new URL('../css/character-adobe-integration.css?v=20261005-class-feature-choices-v43', import.meta.url).href;
   link.dataset.characterAdobeIntegration = 'true';
   document.head.appendChild(link);
 }
@@ -62,7 +62,7 @@ const FEATURE_FILES = [
   "./modules/character-feat-data.js",
   "./modules/character-feat-reference.js",
   "./modules/character-feat-rules.js",
-  "./modules/character-catalog.js",
+  "./modules/character-catalog.js",\n  "./modules/character-class-feature-choices.js",
   "./modules/character-adobe-data.js",
   "./modules/character-creature-data.js",
   "./modules/character-creature-data-1.js",
@@ -108,7 +108,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261005-companion-hp-v41");
+    moduleUrl.searchParams.set("v", "20261005-class-feature-choices-v43");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;
