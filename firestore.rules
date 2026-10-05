@@ -445,7 +445,7 @@ match /characterSheets/{charId} {
         && d.data.rulesChoices.grants.__adobe.keys().hasOnly(['data','used'])
         && d.data.rulesChoices.grants.__adobe.used == 0
         && d.data.rulesChoices.grants.__adobe.data is map
-        && d.data.rulesChoices.grants.__adobe.data.keys().hasOnly(['useExperience','hpMode','hpRolls','classLevels','pages','tabOrder','companion'])
+        && d.data.rulesChoices.grants.__adobe.data.keys().hasOnly(['useExperience','hpMode','hpRolls','classLevels','pages','tabOrder','companion','companions'])
         && d.data.rulesChoices.grants.__adobe.data.useExperience is bool
         && d.data.rulesChoices.grants.__adobe.data.hpMode in ['fixed','rolled','max']
         && d.data.rulesChoices.grants.__adobe.data.hpRolls is list
@@ -461,6 +461,9 @@ match /characterSheets/{charId} {
           || (d.data.rulesChoices.grants.__adobe.data.tabOrder is list
             && d.data.rulesChoices.grants.__adobe.data.tabOrder.size() <= 10))
         && d.data.rulesChoices.grants.__adobe.data.companion is map
+        && (!('companions' in d.data.rulesChoices.grants.__adobe.data)
+          || (d.data.rulesChoices.grants.__adobe.data.companions is list
+            && d.data.rulesChoices.grants.__adobe.data.companions.size() <= 12))
       ))
       && (d.schemaVersion < 10 || (d.data.actions is list && d.data.actions.size() <= 60))
       && d.data.abilities is map && d.data.saves is map && d.data.skills is map && d.data.coins is map
