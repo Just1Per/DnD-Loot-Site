@@ -22,6 +22,12 @@ try {
  change('build.humanOriginFeat','Musician');for(const [i,name] of ['Flute','Lute','Drum'].entries()){const el=document.querySelector(`[data-feat-key="origin-human"] [data-feat-choice="training${i}"]`);el.value='tool:'+name;el.onchange();}
  check('Musician Origin tool choices immediately reach derived proficiencies',CharacterSheetModel.derive(sheetSession.data,7).effects.proficiencies.includes('Lute')&&document.getElementById('sheetBuildSummary').textContent.includes('Flute'));
  closeCharacterSheet(true);
+ seed('dm');await openCharacterSheet('c1');await Promise.resolve();await Promise.resolve();
+ const dmPlus=document.querySelector('[data-dm-grant="feat"][data-delta="1"]');
+ check('Campaign DM gets bonus feat and ASI approval controls on the Feats page',!!dmPlus&&!!document.querySelector('[data-dm-grant="asi"][data-delta="1"]'));
+ const before=CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data.feats).remaining;dmPlus.click();
+ check('DM confirmation grants one additional feat choice',sheetSession.data.rulesChoices.grants.__dm.bonusFeats===1&&CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data.feats).remaining===before+1);
+ closeCharacterSheet(true);
 }catch(e){results.push({name:e.stack,pass:false});}
 document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
 })();

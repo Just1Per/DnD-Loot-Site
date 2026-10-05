@@ -9,6 +9,16 @@ var CharacterCatalog = (() => {
     const grants={};
     for(const [key,g] of Object.entries(raw?.grants||{}).slice(0,40)) {
       if(['__proto__','constructor','prototype'].includes(key) || !/^[a-zA-Z0-9_-]{1,100}$/.test(key) || !g || typeof g!=='object') continue;
+      if(key==='__dm'){
+        grants[key]={
+          bonusFeats:Math.max(0,Math.min(10,Math.trunc(Number(g.bonusFeats)||0))),
+          bonusAsis:Math.max(0,Math.min(10,Math.trunc(Number(g.bonusAsis)||0))),
+          usedAsis:Math.max(0,Math.min(10,Math.trunc(Number(g.usedAsis)||0))),
+          approvedBy:String(g.approvedBy||'').slice(0,128),
+          updatedAt:Math.max(0,Math.trunc(Number(g.updatedAt)||0))
+        };
+        continue;
+      }
       grants[key]={classId:String(g.classId||'').slice(0,30),ability:['int','wis','cha'].includes(g.ability)?g.ability:'int',spells:[0,1,2].map(i=>String(g.spells?.[i]||'').slice(0,100)),used:g.used?1:0};
     }
     const effects={};
@@ -105,7 +115,7 @@ var CharacterCatalog = (() => {
     return {name:`${spell.name} [${spell.edition}]`,level:spell.level,prepared:false,casting:spell.casting,range:spell.range,duration:spell.duration,components:spell.components,notes:`${spell.book}, p. ${spell.page} · ${spell.school}${spell.ritual?' · Ritual':''}\n\n${spell.description || 'Reference entry: consult this source for the complete rules.'}${spell.license?'\n\n'+spell.license:''}`,catalogId:spell.id};
   }
   function longRest(data) {
-    for(const g of Object.values(data.rulesChoices.grants)) g.used=0;
+    for(const [key,g] of Object.entries(data.rulesChoices.grants))if(!key.startsWith('__'))g.used=0;
     for(const slot of data.slots) slot.used=0;
     Feats.reset(data,'long');
   }

@@ -9,3 +9,25 @@ test('Numeric prerequisites block selection before the feat grants its own incre
 test('Profile normalizes and survives repeated normalization',()=>{const d=M.normalize({profile:{gender:'other',age:102,height:182,weight:76,size:'medium',hair:'Silver',skin:'Blue'},alignment:'Chaotic Good'});assert.deepEqual(M.normalize(d),d);assert.equal(d.profile.hair,'Silver');assert.equal(Object.keys(P.alignments).length,9);});
 test('PDF gear and background pack data have unique identifiers and edition labels',()=>{assert.equal(A.gear.length,106);assert.equal(new Set(A.gear.map(g=>g.id)).size,106);assert.ok(A.packs.find(p=>p.id==='background-noble-2014'));assert.ok(A.packs.find(p=>p.id==='background-noble-2024'));assert.equal(A.story.acolyte.personality.length,8);});
 test('Gear importer is create-only and safely repeatable',async()=>{const {gearTemplates,publishGear}=await import('../scripts/import-base-gear.mjs'),rows=gearTemplates(A),saved=new Map([[rows[0].id,{name:'DM customized'}]]);const db={doc:p=>p,runTransaction:fn=>fn({get:async p=>({exists:saved.has(p.split('/')[1])}),create:(p,v)=>saved.set(p.split('/')[1],v)})};assert.equal(rows.length,158);await publishGear(db,rows);await publishGear(db,rows);assert.equal(saved.size,158);assert.equal(saved.get(rows[0].id).name,'DM customized');assert.equal(rows.find(r=>r.name==='Shield').mechanics.kind,'shield');});
+
+test('DM-approved bonus feat and ASI choices extend only their intended budgets',()=>{
+ const d=build('wizard');d.rulesChoices.grants.__dm={bonusFeats:1,bonusAsis:1,usedAsis:0,approvedBy:'dm',updatedAt:1};
+ let b=P.budget(d,4,catalog.feats);assert.equal(b.remaining,2);assert.equal(b.asiRemaining,2);assert.equal(b.bonusFeatRemaining,1);assert.equal(b.bonusAsiRemaining,1);
+ const feat=catalog.feats.find(f=>f.edition==='2024'&&f.category==='G'&&f.minimumLevel<=4);d.rulesChoices.feats=[feat.id];b=P.budget(d,4,catalog.feats);assert.equal(b.normalRemaining,1,'bonus feat should be consumed before the normal advancement choice');
+ d.rulesChoices.grants.__dm.usedAsis=1;b=P.budget(d,4,catalog.feats);assert.equal(b.bonusAsiRemaining,0);assert.equal(b.asiRemaining,1);
+ d.advancement.asiSpent=1;b=P.budget(d,4,catalog.feats);assert.equal(b.asiRemaining,0);assert.equal(b.over,0);
+});
+
+test('DM bonus feat and ASI approvals extend progression without changing normal progression',()=>{
+ const data=M.normalize({build:{edition:'2024',classId:'fighter'},rulesChoices:{feats:[],grants:{__dm:{bonusFeats:1,bonusAsis:1,usedAsis:0}}}});
+ let b=R.budget(data,4,[]);
+ assert.equal(b.normalRemaining,1);
+ assert.equal(b.bonusFeatRemaining,1);
+ assert.equal(b.bonusAsiRemaining,1);
+ data.rulesChoices.grants.__dm.usedAsis=1;
+ b=R.budget(data,4,[]);
+ assert.equal(b.bonusAsiRemaining,0);
+ data.rulesChoices.grants.__dm.bonusFeats=0;
+ b=R.budget(data,4,[]);
+ assert.equal(b.bonusFeatRemaining,0);
+});

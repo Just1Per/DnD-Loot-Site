@@ -51,6 +51,7 @@ function closeCharacterSheet(force = false) {
     return false;
   ++sheetGeneration;
   closeSpellInformation();
+  if(typeof closeFeatInformation==='function')closeFeatInformation();
   closeAttackPicker();
   if(typeof stopEquipmentWatch!=='undefined'){stopEquipmentWatch?.();stopEquipmentWatch=null;}
   sheetSession = null;

@@ -110,4 +110,80 @@ for f in featrows:
     if f['source']=='PHB' and f['name']=='Grappler': mechanics[f['id']]['descriptionOverride']=f['description']
 js='/* Generated numeric feat facts; see scripts/build-rules-catalog.py and rules-attribution.html. */\nvar CharacterFeatData = '+json.dumps(mechanics,ensure_ascii=False,separators=(',',':'))+';\nif(typeof module!=="undefined" && module.exports) module.exports=CharacterFeatData;\n'
 (ROOT/'js/modules/character-feat-data.js').write_text(js)
+
+# Concise feat browsing reference. This intentionally stores feature headings and
+# structured facts, not arbitrary non-SRD source-book prose.
+def feat_feature_names(value, out=None):
+    out=[] if out is None else out
+    if isinstance(value,list):
+        for x in value: feat_feature_names(x,out)
+    elif isinstance(value,dict):
+        name=value.get('name')
+        if isinstance(name,str) and len(name)<100 and name not in out: out.append(name)
+        for k,x in value.items():
+            if k!='name': feat_feature_names(x,out)
+    return out
+
+def proficiency_names(groups):
+    out=[]
+    for group in groups or []:
+        for key,value in group.items():
+            if value is True: out.append(re.sub(r'([A-Z])',r' \1',key).strip().title())
+    return list(dict.fromkeys(out))
+
+def feat_reference(row):
+    names=[n for n in feat_feature_names(row.get('entries',[])) if n!=row['name']][:8]
+    facts=[]
+    ability=[]
+    for option in row.get('ability',[]):
+        fixed=[k.upper()+' +'+str(option[k]) for k in ('str','dex','con','int','wis','cha') if k in option]
+        if fixed: ability.append(', '.join(fixed))
+        choose=option.get('choose',{})
+        if choose.get('from'):
+            amount=choose.get('amount',1);count=choose.get('count',1)
+            ability.append((str(count)+' choices from ' if count>1 else '')+'/'.join(x.upper() for x in choose['from'])+' +'+str(amount))
+    if ability: facts.append('Ability increase: '+' or '.join(dict.fromkeys(ability)))
+    armor=proficiency_names(row.get('armorProficiencies'));weapons=proficiency_names(row.get('weaponProficiencies'));skills=proficiency_names(row.get('skillProficiencies'));expertise=proficiency_names(row.get('expertise'))
+    if armor: facts.append('Armor training: '+', '.join(armor))
+    if weapons: facts.append('Weapon training: '+', '.join(weapons))
+    if skills: facts.append('Skill proficiency: '+', '.join(skills))
+    if expertise: facts.append('Expertise: '+', '.join(expertise))
+    if row.get('toolProficiencies'): facts.append('Grants or lets you choose tool proficiency')
+    if row.get('languageProficiencies'): facts.append('Grants or lets you choose language proficiency')
+    if row.get('additionalSpells'): facts.append('Grants spellcasting options')
+    if row.get('repeatable'): facts.append('Repeatable')
+    requirements=[]
+    for req in row.get('prerequisite',[]):
+        if isinstance(req.get('level'),int): requirements.append('Level '+str(req['level'])+'+')
+        if req.get('ability'): requirements.append('Ability prerequisite')
+        if req.get('race'): requirements.append('Species prerequisite')
+        if req.get('class'): requirements.append('Class prerequisite')
+        if req.get('proficiency'): requirements.append('Proficiency prerequisite')
+        if req.get('spellcasting') or req.get('spellcasting2020'): requirements.append('Spellcasting prerequisite')
+        if req.get('campaign'): requirements.append('Campaign-specific prerequisite')
+    text=' '.join([row['name'],*names,*facts]).lower()
+    tags=[]
+    def tag(value):
+        if value not in tags: tags.append(value)
+    if ability: tag('ability')
+    if armor or re.search(r'\b(armor|shield)\b',text): tag('armor')
+    if row.get('additionalSpells') or re.search(r'\b(spell|magic|cantrip|ritual|caster)\b',text): tag('spells')
+    if skills or expertise or row.get('toolProficiencies') or row.get('languageProficiencies') or re.search(r'\b(skill|expertise|proficiency|tool|language)\b',text): tag('skills')
+    if re.search(r'\b(speed|move|movement|teleport|flight|fly|climb|jump|dash|step)\b',text): tag('movement')
+    if re.search(r'\b(hp|health|healing|defense|defence|armor|shield|resistance|ward|durable|tough|survivor|fortitude)\b',text): tag('defense')
+    if str(row.get('category','')).lower().startswith('fs') or re.search(r'\b(weapon|attack|strike|combat|duel|archer|crossbow|grappl|crusher|piercer|slasher|damage)\b',text): tag('combat')
+    if not tags: tag('other')
+    summary=' · '.join(facts)
+    if names: summary+=((' · ' if summary else '')+'Features: '+', '.join(names))
+    if not summary: summary='Source features: '+row['name']
+    if row['name']=='Survivor' and row['source']=='RHW':
+        summary='Reroll Initiative; gain a bonus when trying to recover from a failed save against being Charmed or Frightened. Features: Hypervigilance, Steel Yourself.'
+    return {'page':row.get('page',0),'category':row.get('category',''),'features':names,'facts':facts,'requirements':list(dict.fromkeys(requirements)),'tags':tags,'summary':summary}
+
+reference={'format':1,'sourceRevision':INDEX_REV,'records':{}}
+for row in feats:
+    if row.get('source','').startswith(('UA','PS')): continue
+    reference['records'][row['source']+'|'+row['name']]=feat_reference(row)
+refjs='/* Generated concise feat reference metadata. Feature names and structured facts only; non-SRD source prose is not copied. */\nvar CharacterFeatReference='+json.dumps(reference,ensure_ascii=False,separators=(',',':'))+';\nif(typeof globalThis!=="undefined")globalThis.CharacterFeatReference=CharacterFeatReference;\nif(typeof module!=="undefined"&&module.exports)module.exports=CharacterFeatReference;\n'
+(ROOT/'js/modules/character-feat-reference.js').write_text(refjs)
 print('Feat ability increase definitions:',sum(bool(m['ability']) for m in mechanics.values()))

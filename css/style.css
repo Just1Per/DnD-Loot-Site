@@ -1653,3 +1653,49 @@ input::placeholder, textarea::placeholder { color: #8a7355; font-style: italic; 
 button:disabled { opacity:.55; cursor:not-allowed; }
 #myLootGrid.character-loot-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); }
 @media(max-width:600px){.root-picker-row{align-items:flex-start;flex-direction:column}.vault-dialog{padding:16px}}
+
+
+.campaign-bulk-controls {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:8px 10px;
+  border:1px solid #c8b89a;
+  border-radius:9px;
+  background:#f4efe6;
+}
+.campaign-bulk-controls strong {
+  color:#5c1d1d;
+  font-family:"Cinzel",serif;
+  font-size:.72rem;
+  letter-spacing:.04em;
+}
+.campaign-bulk-controls .toolbar-btn {
+  padding:7px 10px;
+  font-size:.72rem;
+}
+
+
+/* DM campaign-library bulk controls */
+.campaign-bulk-controls{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:6px 0 0;
+  padding:7px 9px;
+  border:1px solid #d4af37;
+  border-radius:9px;
+  background:linear-gradient(180deg,#fffaf0,#f3e5cd);
+}
+.campaign-bulk-controls strong{
+  color:#5c1d1d;
+  font-size:.78rem;
+  letter-spacing:.03em;
+  margin-right:3px;
+}
+.campaign-bulk-controls .toolbar-btn{
+  padding:5px 9px;
+  font-size:.76rem;
+}

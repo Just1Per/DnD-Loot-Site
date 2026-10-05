@@ -41,3 +41,11 @@ test('browser loader verifies database catalogue and falls back on corrupted rel
  const good=await load(false);assert.equal(good.fetched,false);assert.equal(good.result.loadedFrom,'Firestore catalogue');
  const bad=await load(true);assert.equal(bad.fetched,true);assert.match(bad.result.loadedFrom,/unavailable/);
 });
+
+test('DM bonus advancement metadata survives normalization and long rest unchanged',()=>{
+ const d=M.normalize({rulesChoices:{grants:{__dm:{bonusFeats:2,bonusAsis:1,usedAsis:1,approvedBy:'dm',updatedAt:123}}}});
+ assert.deepEqual(d.rulesChoices.grants.__dm,{bonusFeats:2,bonusAsis:1,usedAsis:1,approvedBy:'dm',updatedAt:123});
+ C.longRest(d);
+ assert.deepEqual(d.rulesChoices.grants.__dm,{bonusFeats:2,bonusAsis:1,usedAsis:1,approvedBy:'dm',updatedAt:123});
+ assert.deepEqual(M.normalize(d).rulesChoices.grants.__dm,d.rulesChoices.grants.__dm);
+});

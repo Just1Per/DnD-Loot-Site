@@ -11,6 +11,10 @@
   sheetSession.identity.level=3;sheetSession.character.level=3;
   sheetSession.data.adobe.classLevels=[{classId:'sorcerer',level:3,subclassId:''}];
   fillSheetForm();updateSheetCalculations();
+  const slotOrbs=[...document.querySelectorAll('#sheetAutoSlotSummary [data-auto-slot-level="0"]')];
+  check('Generated spell summary uses clickable slot orbs instead of Use/Restore buttons',slotOrbs.length===4&&!document.querySelector('#sheetAutoSlotSummary [data-slot-use],#sheetAutoSlotSummary [data-slot-restore]'));
+  slotOrbs[0].click();check('Clicking a spell slot orb spends the slot',sheetSession.data.slots[0].used===1);
+  document.querySelector('#sheetAutoSlotSummary [data-auto-slot-level="0"][data-auto-slot-number="0"]').click();check('Clicking the filled slot orb restores it',sheetSession.data.slots[0].used===0);
   await document.getElementById('sheetGenerateSpells').onclick();
   const dialog=document.getElementById('sheetSpellGenerator');
   check('Generate spell sheet opens a responsive dialog with all eight magic schools',dialog.open&&dialog.querySelectorAll('#spellGeneratorSchool option').length===9&&CharacterCatalog.schools.length===8);
@@ -39,6 +43,14 @@
   human.value='Lucky';human.onchange();
   check('Choosing a build-granted feat in Feat catalogue updates the character build',sheetSession.data.build.humanOriginFeat==='Lucky');
   check('Generic feat reset buttons are no longer shown on the Feats page',!document.querySelector('[data-feat-reset]'));
+  document.getElementById('catalogFeatEdition').value='';renderCatalogFeatResults();
+  check('Feat browser renders the complete filtered list instead of truncating to 40',document.querySelectorAll('#catalogFeatResults .sheet-feat-results>article').length===CharacterCatalog.data.feats.length);
+  document.getElementById('catalogFeatEffect').value='armor';renderCatalogFeatResults();
+  check('Feat effect filter can isolate armor and shield related feats',[...document.querySelectorAll('[data-feat-info]')].length>0&&[...document.querySelectorAll('[data-feat-info]')].every(b=>featEffectTags(CharacterCatalog.find(b.dataset.featInfo,'feats')).includes('armor')));
+  document.getElementById('catalogFeatEffect').value='';document.getElementById('catalogFeatSearch').value='Survivor';renderCatalogFeatResults();
+  const survivorInfo=document.querySelector('[data-feat-info]');survivorInfo.click();
+  check('Feat information popup gives Survivor useful selection information',document.getElementById('sheetFeatInformation').open&&/Initiative/i.test(document.getElementById('sheetFeatInformation').textContent)&&/Charmed|Frightened/i.test(document.getElementById('sheetFeatInformation').textContent));
+  closeFeatInformation();
   closeCharacterSheet(true);
  }catch(e){results.push({name:e.stack,pass:false});}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
