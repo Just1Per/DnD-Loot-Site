@@ -25,8 +25,8 @@
    const edition=rulesEdition(),groups=CFC.status(sheetSession.data,entry,edition);
    if(!groups.length)return'';
    return '<section class="sheet-class-choice-panel"><div class="sheet-class-choice-title"><div><span class="sheet-eyebrow">CLASS FEATURE CHOICES</span><h5>Make your '+sheetEscape(E.className(entry.classId))+' choices</h5></div></div>'+groups.map(group=>{
-     const required=group.allowed,selected=group.picked||[],missing=Math.max(0,required-selected.length);
-     const status=missing?'<span class="sheet-choice-required">Choice required · '+missing+' remaining</span>':'<span class="sheet-choice-complete">Selected '+selected.length+' / '+required+'</span>';
+     const required=group.allowed,selected=group.picked||[],missing=Math.max(0,required-selected.length),invalid=Math.max(0,selected.length-(group.valid||[]).length);
+     const status=missing||invalid?'<span class="sheet-choice-required">'+(missing?'Choice required · '+missing+' remaining':invalid+' choice'+(invalid===1?'':'s')+' no longer qualifies')+'</span>':'<span class="sheet-choice-complete">Selected '+selected.length+' / '+required+'</span>';
      const slots=Array.from({length:required},(_,slot)=>{
        const current=selected[slot]||'',used=new Set(selected.filter((_,i)=>i!==slot));
        const options=group.options.map(opt=>{
