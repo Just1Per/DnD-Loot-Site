@@ -1,4 +1,13 @@
 /* Character-owned starting gear is saved with the private sheet. Campaign stock stays authoritative. */
+function inventorySideForGear(g){
+ const explicit=g.inventorySide==='left'||g.inventorySide==='right'?g.inventorySide:null;
+ if(explicit)return explicit;
+ const kind=CharacterEquipment.infer({name:g.name}).kind;
+ return g.equipped||g.location==='Worn'||['weapon','armor','shield'].includes(kind)?'left':'right';
+}
+function ensureInventorySide(g){if(!g.inventorySide)g.inventorySide=inventorySideForGear(g);return g.inventorySide;}
+function inventorySideLabel(side){return side==='left'?'Active gear':'Backpack';}
+
 function personalGearEntries() {
  const s=sheetSession;if(!s)return [];
  return s.data.personalGear.filter(g=>g.quantity>0&&g.carried).map(g=>({id:g.id,itemId:g.id,characterId:s.characterId,quantity:g.quantity,personal:true,item:{id:g.id,name:g.name,description:g.notes,properties:[{title:'Weight per unit (lb)',text:String(g.weight)}],mechanics:CharacterEquipment.infer({name:g.name})}}));
@@ -17,7 +26,7 @@ function addSheetGearTemplates(entries){
  if(!sheetSession)return[];readSheetForm();
  if(sheetSession.data.personalGear.length+entries.length>200){sheetStatus('A character can have up to 200 personal gear rows. Remove unused rows first.',true);return[];}
  const ids=[];
- for(const g of entries){const id='personal-'+crypto.randomUUID();ids.push(id);sheetSession.data.personalGear.push({id,name:g.unitName||g.name,quantity:Number(g.quantity)||1,weight:Number(g.weight)||inventoryUnitWeight({name:g.unitName||g.name})||0,location:'Backpack',carried:true,notes:g.notes||'',edition:g.edition||'2014'});}
+ for(const g of entries){const id='personal-'+crypto.randomUUID();ids.push(id);sheetSession.data.personalGear.push({id,name:g.unitName||g.name,quantity:Number(g.quantity)||1,weight:Number(g.weight)||inventoryUnitWeight({name:g.unitName||g.name})||0,location:'Backpack',carried:true,notes:g.notes||'',edition:g.edition||'2014',inventorySide:inventorySideForGear(g)});}
  sheetSession.dirty=true;refreshCharacterSheetInventory();sheetStatus('Added to this character. Save sheet to keep inventory changes.');return ids;
 }
 
@@ -45,7 +54,7 @@ function savePersonalGearEditor(){
  const name=dialog.querySelector('#personalEditName').value.trim(),quantity=Math.trunc(Number(dialog.querySelector('#personalEditQuantity').value)),weight=Number(dialog.querySelector('#personalEditWeight').value),location=dialog.querySelector('#personalEditLocation').value.trim();
  if(!name){sheetStatus('Item name is required.',true);return;}
  if(!Number.isFinite(quantity)||quantity<0||quantity>9999||!Number.isFinite(weight)||weight<0||weight>99999){sheetStatus('Enter a valid quantity and weight.',true);return;}
- g.name=name;g.quantity=quantity;g.weight=weight;g.location=location||'Backpack';g.carried=dialog.querySelector('#personalEditCarried').checked;g.notes=dialog.querySelector('#personalEditNotes').value.slice(0,500);
+ g.name=name;g.quantity=quantity;g.weight=weight;g.location=location||'Backpack';g.carried=dialog.querySelector('#personalEditCarried').checked;ensureInventorySide(g);g.notes=dialog.querySelector('#personalEditNotes').value.slice(0,500);
  s.dirty=true;dialog.close();refreshCharacterSheetInventory();sheetStatus('Item updated. Save the character sheet to keep it.');
 }
 function renderCharacterInventory(){
@@ -53,11 +62,11 @@ function renderCharacterInventory(){
  host.className='sheet-inventory-ledger';
  const coinLabels=['cp','sp','ep','gp','pp'].map(k=>document.querySelector(`[name="coins.${k}"]`)?.closest('label')).filter(Boolean);
  coinLabels.forEach(el=>el.remove());
- const esc=sheetEscape,own=s.data.personalGear,loot=inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0);
- const row=g=>`<tr data-personal-row="${esc(g.id)}"><td><input data-personal="name" aria-label="Item name" maxlength="160" value="${esc(g.name)}"><small>${g.edition} · Personal gear</small></td><td><input data-personal="quantity" aria-label="Quantity of ${esc(g.name)}" type="number" min="0" max="9999" step="1" value="${g.quantity}"></td><td><input data-personal="weight" aria-label="Weight each in pounds for ${esc(g.name)}" type="number" min="0" max="99999" step="0.001" value="${g.weight}"></td><td>${(g.quantity*g.weight).toFixed(2)}</td><td><input data-personal="location" aria-label="Storage location for ${esc(g.name)}" maxlength="80" value="${esc(g.location)}"><label class="sheet-carry"><input type="checkbox" data-personal="carried" ${g.carried?'checked':''}> Carried</label></td><td class="sheet-inventory-row-actions"><button type="button" data-edit-personal="${esc(g.id)}">Edit</button><button type="button" data-remove-personal="${esc(g.id)}" aria-label="Remove ${esc(g.name)}">×</button></td></tr>`;
+ const esc=sheetEscape,own=s.data.personalGear.map(ensureInventorySide),loot=inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0);
+ const row=g=>`<tr data-personal-row="${esc(g.id)}"><td><input data-personal="name" aria-label="Item name" maxlength="160" value="${esc(g.name)}"><small>${g.edition} · Personal gear</small></td><td><input data-personal="quantity" aria-label="Quantity of ${esc(g.name)}" type="number" min="0" max="9999" step="1" value="${g.quantity}"></td><td><input data-personal="weight" aria-label="Weight each in pounds for ${esc(g.name)}" type="number" min="0" max="99999" step="0.001" value="${g.weight}"></td><td>${(g.quantity*g.weight).toFixed(2)}</td><td><input data-personal="location" aria-label="Storage location for ${esc(g.name)}" maxlength="80" value="${esc(g.location)}"><label class="sheet-carry"><input type="checkbox" data-personal="carried" ${g.carried?'checked':''}> Carried</label></td><td class="sheet-inventory-row-actions"><button type="button" data-move-inventory="${esc(g.id)}" title="Move this item between Active gear and Backpack">${inventorySideLabel(inventorySideForGear(g))==='Active gear'?'→ Backpack':'← Active gear'}</button><button type="button" data-edit-personal="${esc(g.id)}">Edit</button><button type="button" data-remove-personal="${esc(g.id)}" aria-label="Remove ${esc(g.name)}">×</button></td></tr>`;
  const table=(title,rows)=>`<section class="sheet-inventory-column"><h4>${title}</h4><div class="sheet-inventory-scroll"><table class="sheet-inventory-table"><thead><tr><th>Adventuring gear</th><th>#</th><th>lb each</th><th>lb total</th><th>Location</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="6" class="sheet-empty">No items yet</td></tr>'}</tbody></table></div></section>`;
- const middle=Math.ceil(own.length/2);
- host.innerHTML=`<div class="sheet-inventory-main">${table('Equipment & supplies',own.slice(0,middle).map(row).join(''))}${table('Additional equipment',own.slice(middle).map(row).join(''))}<section class="sheet-inventory-column sheet-inventory-campaign"><h4>Campaign loot <small>${loot.length} stacks</small></h4><div id="sheetCampaignInventoryRows"></div></section><details class="sheet-inventory-settings"><summary>Equip personal gear & item notes</summary><div id="sheetPersonalEquipment"></div></details></div><aside class="sheet-inventory-sidebar"><h4>Treasure</h4><div id="sheetInventoryCoins"></div><h4>Weight carried</h4><div id="sheetInventoryTotals"></div><h4>Attuned magical items</h4><div id="sheetInventoryAttuned"></div></aside>`;
+ const left=own.filter(g=>inventorySideForGear(g)==='left'),right=own.filter(g=>inventorySideForGear(g)==='right');
+ host.innerHTML=`<div class="sheet-inventory-main"><div class="sheet-inventory-columns"><section class="sheet-inventory-column sheet-inventory-active"><h4>Active gear <small>Weapons, armor & equipped gear</small></h4><div class="sheet-inventory-scroll"><table class="sheet-inventory-table"><thead><tr><th>Item</th><th>#</th><th>lb each</th><th>lb total</th><th>Location</th><th></th></tr></thead><tbody>${left.map(row).join('')||'<tr><td colspan="6" class="sheet-empty">No active gear yet</td></tr>'}</tbody></table></div></section><section class="sheet-inventory-column sheet-inventory-backpack"><h4>Backpack <small>Stored gear & supplies</small></h4><div class="sheet-inventory-scroll"><table class="sheet-inventory-table"><thead><tr><th>Item</th><th>#</th><th>lb each</th><th>lb total</th><th>Location</th><th></th></tr></thead><tbody>${right.map(row).join('')||'<tr><td colspan="6" class="sheet-empty">No backpack items yet</td></tr>'}</tbody></table></div></section></div><section class="sheet-inventory-column sheet-inventory-campaign"><h4>Campaign loot <small>${loot.length} stacks</small></h4><div id="sheetCampaignInventoryRows"></div></section><details class="sheet-inventory-settings"><summary>Equip personal gear & item notes</summary><div id="sheetPersonalEquipment"></div></details></div><aside class="sheet-inventory-sidebar"><h4>Treasure</h4><div id="sheetInventoryCoins"></div><h4>Weight carried</h4><div id="sheetInventoryTotals"></div><h4>Attuned magical items</h4><div id="sheetInventoryAttuned"></div></aside>`;
  // Move existing coin inputs rather than duplicate them; they remain normal sheet fields.
  coinLabels.forEach(el=>host.querySelector('#sheetInventoryCoins').appendChild(el));
  host.querySelectorAll('[data-personal]').forEach(input=>input.onchange=()=>{
@@ -68,6 +77,7 @@ function renderCharacterInventory(){
   if(key==='weight')g.weight=Math.max(0,Math.min(99999,g.weight));
   s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Unsaved inventory changes');
  });
+ host.querySelectorAll('[data-move-inventory]').forEach(b=>b.onclick=()=>{readSheetForm();const g=s.data.personalGear.find(g=>g.id===b.dataset.moveInventory);if(!g)return;g.inventorySide=inventorySideForGear(g)==='left'?'right':'left';g.location=g.inventorySide==='left'?'Worn':'Backpack';s.dirty=true;refreshCharacterSheetInventory();sheetStatus(`${g.name} moved to ${inventorySideLabel(g.inventorySide)}. Save sheet to keep the change.`);});
  host.querySelectorAll('[data-edit-personal]').forEach(b=>b.onclick=()=>openPersonalGearEditor(b.dataset.editPersonal));
  host.querySelectorAll('[data-remove-personal]').forEach(b=>b.onclick=()=>{readSheetForm();s.data.personalGear=s.data.personalGear.filter(g=>g.id!==b.dataset.removePersonal);s.data.equipmentState.loadout=s.data.equipmentState.loadout.filter(g=>g.id!==b.dataset.removePersonal);s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Item removed. Save sheet to keep changes.');});
  const campaign=host.querySelector('#sheetCampaignInventoryRows');
@@ -114,7 +124,7 @@ function selectInventoryDefense(kind,id){
  if((chosen&&!state.loadout.some(c=>c.id===chosen.id)||template)&&state.loadout.length>=200){sheetStatus('Equipment selection limit reached.',true);renderInventoryDefense(CharacterSheetModel.derive(s.data,s.identity.level,sheetEquipmentLoot()));return;}
  if(template){
   if(s.data.personalGear.length>=200){sheetStatus('Personal inventory is full. Remove an unused row first.',true);return;}
-  const g={id:'personal-'+crypto.randomUUID(),name:template.name,quantity:1,weight:Number(template.weight)||0,location:'Worn',carried:true,notes:'',edition:template.edition};s.data.personalGear.push(g);chosen=personalGearEntries().find(e=>e.id===g.id);
+  const g={id:'personal-'+crypto.randomUUID(),name:template.name,quantity:1,weight:Number(template.weight)||0,location:'Worn',carried:true,notes:'',edition:template.edition,inventorySide:'left'};s.data.personalGear.push(g);chosen=personalGearEntries().find(e=>e.id===g.id);
  }
  for(const c of state.loadout){const e=sheetEquipmentLoot().find(e=>e.id===c.id),personal=s.data.personalGear.find(g=>g.id===c.id);if(CharacterEquipment.infer(e?.item||{name:personal?.name||''}).kind===kind)c.equipped=false;}
  if(chosen){let c=state.loadout.find(c=>c.id===chosen.id);if(!c){c=CharacterEquipment.choices({loadout:[{id:chosen.id}]}).loadout[0];state.loadout.push(c);}c.equipped=true;}
