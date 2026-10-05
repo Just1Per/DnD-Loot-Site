@@ -18,10 +18,13 @@ var CharacterBuildValidation=(()=>{
       const category=lower.includes('language')?'Language':lower.includes('skill')?'Skill':lower.includes('feat')?'Feat':lower.includes('tool')?'Proficiency':'Builder';
       add(rows,category,warning,category==='Feat'?'feats':'builder');
     }
-    for(const group of progression.classFeatureChoices||[]){
-      const className=globalThis.CharacterAdobeEngine?.className?.(group.classId)||group.classId||'Class';
-      if(group.missing>0)add(rows,'Class feature',`${className}: choose ${group.missing} more ${group.name}.`,'builder');
-      else if(!group.complete)add(rows,'Class feature',`${className}: review ${group.name}; one or more selections no longer qualify.`,'builder');
+    for(const entry of progression.classLevels||[]){
+      const className=globalThis.CharacterAdobeEngine?.className?.(entry.classId)||entry.classId||'Class';
+      const groups=globalThis.CharacterClassFeatureChoices?.status?.(data,entry,data?.build?.edition||'2014')||[];
+      for(const group of groups){
+        if(group.missing>0)add(rows,'Class feature',`${className}: choose ${group.missing} more ${group.name}.`,'builder');
+        else if(!group.complete)add(rows,'Class feature',`${className}: review ${group.name}; one or more selections no longer qualify.`,'builder');
+      }
     }
     const assigned=Number(progression.assignedLevel||0),target=Number(progression.targetLevel||identity.level||1);
     if(assigned<target)add(rows,'Class levels',`Assign ${target-assigned} remaining class level${target-assigned===1?'':'s'}.`,'builder');
