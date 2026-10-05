@@ -1673,3 +1673,29 @@
   #characterSheetDialog .sheet-panel{max-width:none;}
   #characterSheetDialog button:not(.sheet-slot-orb):not(.sheet-skill-orb):not(.sheet-info-button){min-height:38px;}
 }
+
+/* Page-level rhythm: every tab starts and spaces content the same way. */
+#characterSheetDialog .sheet-body{background:linear-gradient(180deg,#fffdf9,#fbf6ed);}
+#characterSheetDialog .sheet-panel{padding:22px 24px 28px;}
+#characterSheetDialog .sheet-panel>h3:first-child,
+#characterSheetDialog .sheet-panel>.sheet-repeat-title:first-child{
+  margin-top:0;
+}
+#characterSheetDialog .sheet-panel>h3:first-child{margin-bottom:18px;}
+#characterSheetDialog .sheet-panel>.sheet-help:first-of-type{margin-top:-8px;margin-bottom:16px;}
+#characterSheetDialog .sheet-panel :is(.sheet-grid,.sheet-metrics,.sheet-training-layout,.sheet-inventory-columns,.sheet-rules-grid)+:is(h4,.sheet-repeat-title){margin-top:18px;}
+#characterSheetDialog .sheet-panel>button[id^="sheetAdd"]{margin-top:10px;}
+#characterSheetDialog .sheet-check{
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 9px;
+  border:1px solid var(--vault-border-soft);
+  border-radius:8px;
+  background:#fffdf9;
+}
+#characterSheetDialog .sheet-check>span{margin:0!important;color:var(--vault-ink)!important;}
+#characterSheetDialog input[type="checkbox"],
+#characterSheetDialog input[type="radio"]{width:17px;height:17px;flex:0 0 auto;}
+@media(max-width:700px){#characterSheetDialog .sheet-panel{padding:16px 12px 22px;}}
