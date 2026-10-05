@@ -125,7 +125,8 @@ function initModalListeners() {
       level,
       userId: auth.currentUser.uid,
       active: true,
-      created: Date.now()
+      created: Date.now(),
+      lastSelectedAt: Date.now()
     };
 
     const newRef = await addDoc(

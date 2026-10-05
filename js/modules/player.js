@@ -133,8 +133,10 @@ function renderCharacterList() {
           <button class="btn-rename-char" type="button"
             data-char-id="${c.id}" data-char-name="${escapeHtml(c.name)}"
             data-char-class="${escapeHtml(c.class)}" data-char-level="${c.level||""}">Edit</button>
-          <button class="btn-delete-char cancel-button" type="button"
+          <button class="btn-archive-char cancel-button" type="button"
             data-char-id="${c.id}" data-char-name="${escapeHtml(c.name)}">${c.active===false?'Restore':'Archive'}</button>
+          <button class="btn-hard-delete-own-char dm-danger-btn" type="button"
+            data-char-id="${c.id}" data-char-name="${escapeHtml(c.name)}">Delete</button>
         </div>
       </div>`;
   }).join("");
@@ -142,9 +144,18 @@ function renderCharacterList() {
   el.querySelectorAll(".btn-sheet-char").forEach(btn=>btn.addEventListener("click",()=>openCharacterSheet(btn.dataset.charId)));
 
   el.querySelectorAll(".btn-select-char").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      selectedCharacter=characters.find(c=>c.id===btn.dataset.charId)||null;
-      renderCharacterList(); renderMyWishes(); renderCards();
+    btn.addEventListener("click", async ()=>{
+      const next=characters.find(c=>c.id===btn.dataset.charId)||null;
+      if(!next||next.userId!==auth.currentUser?.uid||!activeCampaign)return;
+      const stamp=Date.now();
+      try {
+        await updateDoc(doc(db,"campaigns",activeCampaign.id,"characters",next.id),{lastSelectedAt:stamp});
+        next.lastSelectedAt=stamp;
+        selectedCharacter=next;
+        renderCharacterList(); renderMyWishes(); renderCards();
+      } catch(error) {
+        alert(`Could not set active character: ${error.message}`);
+      }
     });
   });
 
@@ -155,7 +166,50 @@ function renderCharacterList() {
     );
   });
 
-  el.querySelectorAll(".btn-delete-char").forEach(btn=>btn.addEventListener("click",()=>runVaultButton(btn,()=>deleteCampaignCharacter(btn.dataset.charId))));
+  el.querySelectorAll(".btn-archive-char").forEach(btn=>btn.addEventListener("click",()=>runVaultButton(btn,()=>deleteCampaignCharacter(btn.dataset.charId))));
+  el.querySelectorAll(".btn-hard-delete-own-char").forEach(btn=>btn.addEventListener("click",()=>runVaultButton(btn,()=>hardDeleteOwnCharacter(btn.dataset.charId))));
+}
+
+async function hardDeleteOwnCharacter(characterId) {
+  if(!activeCampaign||!auth.currentUser)return;
+  const character=characters.find(c=>c.id===characterId);
+  if(!character||character.userId!==auth.currentUser.uid)return;
+  const campaignId=activeCampaign.id;
+  const ownedLoot=inventory.filter(entry=>entry.characterId===characterId&&entry.quantity>0);
+  if(ownedLoot.length){
+    alert(`"${character.name}" still owns ${ownedLoot.length} inventory entr${ownedLoot.length===1?'y':'ies'}. Move or ask your DM to unloot those items before permanently deleting the character so campaign stock stays correct.`);
+    return;
+  }
+  const warning=[
+    `Permanently delete "${character.name}"?`,
+    '',
+    'This cannot be undone.',
+    'The private character sheet and saved-item links for this character will also be deleted.'
+  ].join('\n');
+  if(!confirm(warning))return;
+  try {
+    const ownSaved=saves.filter(save=>save.characterId===characterId&&(!save.userId||save.userId===auth.currentUser.uid));
+    const sheetSnapshot=await getDoc(doc(db,'campaigns',campaignId,'characterSheets',characterId));
+    const operations=ownSaved.length+(sheetSnapshot.exists()?1:0)+1;
+    if(operations>500)throw Error('This character has too many linked records for one safe delete.');
+    const batch=writeBatch(db);
+    ownSaved.forEach(save=>batch.delete(doc(db,'campaigns',campaignId,'saves',save.id)));
+    if(sheetSnapshot.exists())batch.delete(sheetSnapshot.ref);
+    batch.delete(doc(db,'campaigns',campaignId,'characters',characterId));
+    await batch.commit();
+    if(sheetSession?.characterId===characterId)closeCharacterSheet(true);
+    if(selectedCharacter?.id===characterId)selectedCharacter=null;
+    if(activeCampaign?.id!==campaignId)return;
+    await loadCharacters();
+    await loadSaves();
+    populateOwnerFilter();
+    renderPlayerTab();
+    if(canManageCampaign())renderDMCharacters();
+    renderCards();
+  } catch(error) {
+    console.error('Own character delete failed:',error);
+    alert(`Could not delete character: ${error.message}`);
+  }
 }
 function renderMyLoot() {
   const el=document.getElementById('myLootGrid');if(!el)return;
