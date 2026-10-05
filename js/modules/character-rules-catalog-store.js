@@ -41,7 +41,7 @@ var CharacterRulesCatalogStore=(()=>{
   async function hydrate(edition){const remote=await loadEdition(edition);if(!remote)return false;window.CharacterClassProgression?.installReference?.(edition,remote);return true}
   function coverage(snapshot){
     const kinds={};for(const kind of KINDS){const rows=Object.values(snapshot?.[kind]||{}),incomplete=rows.filter(row=>row.partial||row.incomplete||(Array.isArray(row.features)&&row.features.some(f=>f.incomplete))).length;kinds[kind]={records:rows.length,complete:rows.length-incomplete,incomplete}}
-    const classes=Object.values(snapshot?.classes||{});kinds.classLevels={records:classes.length*20,complete:classes.reduce((n,row)=>n+new Set((row.features||[]).map(f=>Number(f.level)).filter(x=>x>=1&&x<=20)).size,0)};kinds.classLevels.incomplete=Math.max(0,kinds.classLevels.records-kinds.classLevels.complete);return kinds;
+    const classFeatures=Object.values(snapshot?.classes||{}).flatMap(row=>row.features||[]);kinds.classFeatureRecords={records:classFeatures.length,complete:classFeatures.filter(row=>!row.incomplete&&row.summary).length};kinds.classFeatureRecords.incomplete=kinds.classFeatureRecords.records-kinds.classFeatureRecords.complete;return kinds;
   }
   async function commitChunk(rows){const {db,writeBatch,doc}=D(),batch=writeBatch(db);for(const row of rows)batch.set(doc(db,...row.path),row.data);await batch.commit()}
   async function seedEdition(edition){
