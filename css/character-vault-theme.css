@@ -1450,3 +1450,17 @@
 .character-sheet .sheet-progression-feature footer{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
 .character-sheet .sheet-progression-feature footer span{padding:2px 5px;border-radius:5px;background:#f1e5d3;color:var(--vault-brown);font-size:8px}
 .character-sheet .sheet-progression-coverage{margin:0;padding:7px 10px;border-top:1px solid var(--vault-border-soft);color:var(--vault-muted);font-size:9px}
+
+
+/* Compact interactive spell slots on Overview */
+.sheet-slot-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.sheet-overview-spell-slots{grid-column:1/-1}
+.sheet-overview-slot-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sheet-overview-slot-head h4{margin:2px 0 0}
+.sheet-overview-slot-head>small{opacity:.7}
+.sheet-overview-slot-grid{display:flex;gap:10px 16px;align-items:center;flex-wrap:wrap}
+.sheet-overview-slot-level{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid rgba(122,82,39,.22);border-radius:10px;background:rgba(255,250,238,.58)}
+.sheet-overview-slot-level>span{min-width:24px;font-weight:700}
+.sheet-overview-slot-level>small{min-width:28px;opacity:.7;text-align:right}
+.sheet-overview-slot-level .sheet-slot-orb-row{margin:0}
+@media(max-width:700px){.sheet-overview-slot-head{align-items:flex-start;flex-direction:column}.sheet-slot-actions{justify-content:flex-start}}
