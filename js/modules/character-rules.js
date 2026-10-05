@@ -322,6 +322,35 @@ var CharacterRules = (() => {
     return p;
   }
   const classes = {
+    artificer: {
+      name: 'Artificer',
+      die: 8,
+      saves: [
+        'con',
+        'int'
+      ],
+      skills: [
+        'arcana',
+        'history',
+        'investigation',
+        'medicine',
+        'nature',
+        'perception',
+        'sleightOfHand'
+      ],
+      count: 2,
+      caster: 'half',
+      ability: 'int',
+      profs: [
+        'Light armor',
+        'Medium armor',
+        'Shields',
+        'Simple weapons',
+        'Thieves’ tools',
+        'Tinker’s tools',
+        'Choose one artisan tool'
+      ]
+    },
     barbarian: {
       name: 'Barbarian',
       die: 12,
