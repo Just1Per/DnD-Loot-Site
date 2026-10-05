@@ -64,8 +64,8 @@ function renderDmFeatApproval(){
   const grant=dmFeatGrant(),budget=CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data?.feats||[]);
   host.innerHTML=`<div class="sheet-repeat-title"><div><span class="sheet-eyebrow">DM APPROVALS</span><h4>Bonus advancement</h4></div><small>These are extra choices beyond normal class progression.</small></div>
     <div class="sheet-dm-approval-grid">
-      <article><span>Bonus feat choices</span><strong>${grant.bonusFeats||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="feat" data-delta="-1">−</button><button type="button" data-dm-grant="feat" data-delta="1">+</button></div>':''}</article>
-      <article><span>Bonus ASI choices</span><strong>${grant.bonusAsis||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="asi" data-delta="-1">−</button><button type="button" data-dm-grant="asi" data-delta="1">+</button></div>':''}</article>
+      <article><span>Bonus feat choices</span><strong>${grant.bonusFeats||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="feat" data-delta="-1">Remove approval</button><button type="button" data-dm-grant="feat" data-delta="1">Approve +1</button></div>':''}</article>
+      <article><span>Bonus ASI choices</span><strong>${grant.bonusAsis||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="asi" data-delta="-1">Remove approval</button><button type="button" data-dm-grant="asi" data-delta="1">Approve +1</button></div>':''}</article>
       <article><span>Normal ASI choices used</span><strong>${sheetSession.data.advancement.asiSpent}</strong><div><button type="button" data-asi-spend="-1" data-asi-kind="normal" ${!sheetSession.data.advancement.asiSpent?'disabled':''}>Undo</button><button type="button" data-asi-spend="1" data-asi-kind="normal" ${!budget.normalRemaining?'disabled':''}>Use normal ASI</button></div></article>
       <article><span>DM bonus ASIs used</span><strong>${grant.usedAsis||0} / ${grant.bonusAsis||0}</strong><div><button type="button" data-asi-spend="-1" data-asi-kind="bonus" ${!grant.usedAsis?'disabled':''}>Undo</button><button type="button" data-asi-spend="1" data-asi-kind="bonus" ${!budget.bonusAsiRemaining?'disabled':''}>Use bonus ASI</button></div></article>
     </div>
@@ -73,6 +73,7 @@ function renderDmFeatApproval(){
   host.querySelectorAll('[data-dm-grant]').forEach(button=>button.onclick=()=>{
     if(!canManageCampaign())return;
     readSheetForm();const g=dmFeatGrant(),key=button.dataset.dmGrant==='feat'?'bonusFeats':'bonusAsis',delta=Number(button.dataset.delta)||0;
+    const used=key==='bonusAsis'?Number(g.usedAsis)||0:0;if(delta<0&&(Number(g[key])||0)+delta<used)return sheetStatus('Undo the used bonus ASI before removing that DM approval.',true);
     g[key]=Math.max(0,Math.min(10,(Number(g[key])||0)+delta));g.approvedBy=auth.currentUser?.uid||'';g.updatedAt=Date.now();
     catalogChanged('DM bonus advancement approval changed. Save the character sheet to keep it.');renderDmFeatApproval();renderCatalogFeatResults();
   });
