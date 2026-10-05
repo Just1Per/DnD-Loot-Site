@@ -128,10 +128,10 @@ var CharacterClassFeatureChoices=(()=>{
     return out;
   }
   function groups(entry,edition='2014'){
-    const base=definitions[edition]?.[entry?.classId]||[];
-    const sub=subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[];
+    const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
+    const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));
     const rows=[...base,...sub];
-    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel).map(g=>({...g,key:groupKey(edition,entry.classId,(entry.subclassId?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0))||0)),options:g.options(entry,edition)}));
+    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel).map(g=>({...g,key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0))||0)),options:g.options(entry,edition)}));
   }
   function registerSubclass(edition,classId,subclassId,definition){
     edition=edition==='2024'?'2024':'2014';const key=safe(classId)+':'+safe(subclassId);
