@@ -10,7 +10,14 @@ function featEffectTags(feat){
   if(def?.ability?.length)tags.add('ability');
   if(def?.armorTraining?.length)tags.add('armor');
   if(def?.toolChoices?.length)tags.add('skills');
-  if(/^Magic Initiate/.test(feat?.name||''))tags.add('spells');
+  const name=String(feat?.name||'').toLowerCase(),summary=String(ref?.summary||feat?.description||'').toLowerCase();
+  if(/^magic initiate/.test(name)||/spell|cantrip|magic|invocation|casting/.test(summary))tags.add('spells');
+  if(/weapon|fighting|attack|damage|initiative|mastery|combat/.test(summary))tags.add('combat');
+  if(/armor|shield/.test(summary)||def?.armorTraining?.length)tags.add('armor');
+  if(/hit point|health|resistance|saving throw|defen[cs]|ward|ac /.test(summary))tags.add('defense');
+  if(/speed|movement|jump|teleport|fly|climb|swim/.test(summary))tags.add('movement');
+  if(/skill|proficiency|expertise|tool|language/.test(summary)||def?.toolChoices?.length)tags.add('skills');
+  if(!tags.size)tags.add('other');
   return [...tags];
 }
 function featPreviewText(feat){
@@ -38,14 +45,14 @@ function openFeatInformation(featId){
   if(def?.armorTraining?.length)facts.push('Armor training: '+def.armorTraining.map(v=>({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[v]||v)).join(', '));
   if(ability.length)facts.push(...ability);
   if(def?.repeatable)facts.push('Repeatable feat');
-  const licensed=String(feat.description||'').trim();
+  const licensed=String(feat.description||'').trim(),referenceSummary=featPreviewText(feat);
   d.innerHTML=`<header><div><span class="sheet-eyebrow">FEAT REFERENCE</span><h2 id="sheetFeatInformationTitle">${sheetEscape(feat.name)}</h2></div><button type="button" aria-label="Close feat information">Close</button></header>
     <div class="sheet-feat-facts"><p><strong>Rules:</strong> ${sheetEscape(feat.edition)}</p><p><strong>Category:</strong> ${sheetEscape(featCategoryLabel(feat))}</p><p><strong>Source:</strong> ${sheetEscape(feat.book||feat.source)}${feat.page?' · p. '+sheetEscape(feat.page):''}</p><p><strong>Minimum level:</strong> ${feat.minimumLevel||'None'}</p></div>
     <section class="sheet-summary-box"><h4>Quick summary</h4><p>${sheetEscape(featPreviewText(feat))}</p></section>
     ${facts.length?`<section class="sheet-summary-box"><h4>Structured benefits</h4><ul>${[...new Set(facts)].map(v=>'<li>'+sheetEscape(v)+'</li>').join('')}</ul></section>`:''}
     ${ref?.features?.length?`<section class="sheet-summary-box"><h4>Named features</h4><p>${ref.features.map(sheetEscape).join(' · ')}</p></section>`:''}
     ${req.length?`<section class="sheet-summary-box"><h4>Prerequisites</h4><p>${req.map(sheetEscape).join(' · ')}</p></section>`:''}
-    ${licensed?`<details open><summary>Licensed / bundled rules text</summary><p class="sheet-rule-text">${sheetEscape(licensed)}</p></details>`:'<p class="sheet-help">The site stores a concise mechanical reference for this non-SRD feat rather than copying the source book. Use the source/page above for the exact published wording.</p>'}`;
+    ${licensed&&!/consult the source|source reference only|complete rules/i.test(licensed)?`<details open><summary>Bundled rules text</summary><p class="sheet-rule-text">${sheetEscape(licensed)}</p></details>`:`<p class="sheet-help">${sheetEscape(referenceSummary)} The exact published wording remains in the listed source.</p>`}`;
   document.body.appendChild(d);d.querySelector('header button').onclick=closeFeatInformation;d.addEventListener('click',event=>{if(event.target===d)closeFeatInformation();});d.showModal();d.querySelector('header button').focus();
 }
 function dmFeatGrant(){
@@ -118,7 +125,7 @@ function renderSheetCatalogControls() {
     </div>
     <p id="sheetFeatBudget" role="status"></p><div id="catalogFeatResults"></div><div id="catalogSelectedFeats"></div><div id="catalogFeatGrants"></div>`;
   spells.innerHTML=`<h4>Choose spells from the catalogue</h4><p>2014 and 2024 entries are separate. Search matches spell names, schools and damage types. Adding a spell here is for exceptions/DM-approved additions and does not replace the class-aware Generate spell sheet workflow.</p><div class="sheet-grid"><label class="sheet-field">Rules<select id="catalogSpellEdition">${editions}<option value="">Both editions</option></select></label><label class="sheet-field">Class<select id="catalogSpellClass"><option value="">Any class</option>${['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard'].map(c=>`<option value="${c}">${c}</option>`).join('')}</select></label><label class="sheet-field">Level<select id="catalogSpellLevel"><option value="">Any level</option>${Array.from({length:10},(_,i)=>`<option value="${i}">${i||'Cantrip'}</option>`).join('')}</select></label><label class="sheet-field">School<select id="catalogSpellSchool"><option value="">Any school</option>${C.schools.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('')}</select></label><label class="sheet-field">Find spell<input id="catalogSpellSearch" type="search" placeholder="Name, school, damage type"></label></div><div id="catalogSpellResults"></div><button type="button" id="catalogLongRest">Long rest: reset spell slots & Magic Initiate uses</button>`;
-  document.getElementById('catalogFeatEdition').value=sheetSession.data.build.edition;
+  document.getElementById('catalogFeatEdition').value='';
   document.getElementById('catalogSpellEdition').value=sheetSession.data.build.edition;
   for(const id of ['catalogSpellEdition','catalogSpellClass','catalogSpellLevel','catalogSpellSchool','catalogSpellSearch'])document.getElementById(id).addEventListener(id.endsWith('Search')?'input':'change',renderCatalogSpellResults);
   for(const id of ['catalogFeatEdition','catalogFeatCategory','catalogFeatEffect','catalogFeatSource','catalogFeatLevel','catalogFeatSearch'])document.getElementById(id).addEventListener(id.endsWith('Search')?'input':'change',renderCatalogFeatResults);
