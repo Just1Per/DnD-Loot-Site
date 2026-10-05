@@ -103,6 +103,17 @@ var CharacterClassProgression=(()=>{
     const rows=unlocked(classId,20,subclassId,edition),complete=rows.filter(x=>!x.incomplete).length;
     return{records:rows.length,complete,incomplete:rows.length-complete,percent:rows.length?Math.round(complete/rows.length*100):0};
   }
-  return {classes,subclasses,detailedClasses,detailedSubclasses,classFeatures,subclassFeatures,subclassLevel,unlocked,gainedAt,byLevel,coverage};
+  const remote={2014:null,2024:null};
+  function installReference(edition,data){remote[editionOf(edition)]=data||null;}
+  const localClassFeatures=classFeatures,localSubclassFeatures=subclassFeatures;
+  classFeatures=function(classId,edition='2014'){
+    const e=editionOf(edition),rows=remote[e]?.classes?.[classId]?.features;
+    return Array.isArray(rows)&&rows.length?rows:localClassFeatures(classId,e);
+  };
+  subclassFeatures=function(classId,subclassId,edition='2014'){
+    const e=editionOf(edition),row=remote[e]?.subclasses?.[subclassId],rows=row?.features;
+    return row?.classId===classId&&Array.isArray(rows)&&rows.length?rows:localSubclassFeatures(classId,subclassId,e);
+  };
+  return {classes,subclasses,detailedClasses,detailedSubclasses,classFeatures:(...a)=>classFeatures(...a),subclassFeatures:(...a)=>subclassFeatures(...a),subclassLevel,unlocked,gainedAt,byLevel,coverage,installReference};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassProgression;

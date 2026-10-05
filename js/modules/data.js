@@ -47,6 +47,23 @@ async function syncUserDirectoryEntry(uid, profile) {
 }
 
 
+async function ensureGlobalCharacterRulesReference() {
+  const store=window.CharacterRulesCatalogStore;
+  if (!store) return;
+  for (const edition of ["2014", "2024"]) {
+    try {
+      const loaded = await store.hydrate(edition);
+      if (!loaded && isAdmin()) {
+        const seeded = await store.seedEdition(edition);
+        console.info("[rulesCatalog] seeded global reference", seeded);
+        await store.hydrate(edition);
+      }
+    } catch (e) {
+      console.warn("[rulesCatalog] using bundled fallback", edition, e?.message || e);
+    }
+  }
+}
+
 async function loadCurrentUser(firebaseUser) {
   const uidRef = doc(db, "users", firebaseUser.uid);
 
@@ -55,6 +72,7 @@ async function loadCurrentUser(firebaseUser) {
     if (uidSnap.exists()) {
       currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...uidSnap.data() };
       await syncUserDirectoryEntry(firebaseUser.uid, currentUser);
+      await ensureGlobalCharacterRulesReference();
       return;
     }
 
@@ -73,6 +91,7 @@ async function loadCurrentUser(firebaseUser) {
     await setDoc(uidRef, newUser);
     currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...newUser };
     await syncUserDirectoryEntry(firebaseUser.uid, currentUser);
+    await ensureGlobalCharacterRulesReference();
 
   } catch (e) {
     console.error("Failed loading current user:", e);
