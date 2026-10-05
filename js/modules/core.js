@@ -35,6 +35,8 @@ let myDMRequest      = null; // current user's global DM application
 let dmRequests       = [];   // all DM applications (admin only)
 let dashboardCharacters = []; // current user's recent characters across accessible campaigns
 let itemsLoadPromise = Promise.resolve();
+let magicItemLibraryLoaded = false;
+let magicItemLibraryLoading = false;
 let catalogVersion   = 0;     // master catalogue version used by IndexedDB cache
 
 const editingItems = new Set();

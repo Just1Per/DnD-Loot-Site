@@ -66,8 +66,46 @@ function rerenderCard(itemId) {
 
 const container = document.getElementById("card-container");
 
+function renderMagicItemLoadPrompt() {
+  if (!container || magicItemLibraryLoaded) return;
+  container.innerHTML = `<div class="library-load-gate" role="status">
+    <div class="library-load-gate-icon" aria-hidden="true">✦</div>
+    <h2>Magical Item Library</h2>
+    <p>Items are loaded only when you want to browse them, keeping campaign startup faster.</p>
+    <button type="button" id="loadMagicItemLibrary" class="btn-primary" ${magicItemLibraryLoading ? "disabled" : ""}>${magicItemLibraryLoading ? "Loading magical items…" : "Load magical items"}</button>
+  </div>`;
+  container.querySelector("#loadMagicItemLibrary")?.addEventListener("click", loadMagicItemLibrary);
+}
+
+async function loadMagicItemLibrary() {
+  if (!activeCampaign || magicItemLibraryLoading) return;
+  const campaignId = activeCampaign.id;
+  magicItemLibraryLoading = true;
+  renderMagicItemLoadPrompt();
+  try {
+    await Promise.all([loadItemsFromFirestore(), loadCampaignItems()]);
+    if (activeCampaign?.id !== campaignId) return;
+    if (canManageCampaign()) await loadCampaignSupply();
+    magicItemLibraryLoaded = true;
+    populateSourceFilter();
+    populateCampaignFilter();
+    renderCards();
+  } catch (error) {
+    console.error("Magical item library load failed:", error);
+    if (activeCampaign?.id === campaignId) {
+      magicItemLibraryLoaded = false;
+      renderMagicItemLoadPrompt();
+      alert(`Could not load magical items: ${error.message}`);
+    }
+  } finally {
+    magicItemLibraryLoading = false;
+    if (!magicItemLibraryLoaded && activeCampaign?.id === campaignId) renderMagicItemLoadPrompt();
+  }
+}
+
 function renderCards() {
   if (!container) return;
+  if (!magicItemLibraryLoaded) { renderMagicItemLoadPrompt(); return; }
 
   const filtered = applyFilters(visibleItems());
   const context  = buildRenderContext();
