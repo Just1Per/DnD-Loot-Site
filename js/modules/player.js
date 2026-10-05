@@ -144,10 +144,18 @@ function renderCharacterList() {
   el.querySelectorAll(".btn-sheet-char").forEach(btn=>btn.addEventListener("click",()=>openCharacterSheet(btn.dataset.charId)));
 
   el.querySelectorAll(".btn-select-char").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      selectedCharacter=characters.find(c=>c.id===btn.dataset.charId)||null;
-      if(selectedCharacter)rememberActiveCharacter(selectedCharacter.id);
-      renderCharacterList(); renderMyWishes(); renderCards();
+    btn.addEventListener("click", async ()=>{
+      const next=characters.find(c=>c.id===btn.dataset.charId)||null;
+      if(!next||next.userId!==auth.currentUser?.uid||!activeCampaign)return;
+      const stamp=Date.now();
+      try {
+        await updateDoc(doc(db,"campaigns",activeCampaign.id,"characters",next.id),{lastSelectedAt:stamp});
+        next.lastSelectedAt=stamp;
+        selectedCharacter=next;
+        renderCharacterList(); renderMyWishes(); renderCards();
+      } catch(error) {
+        alert(`Could not set active character: ${error.message}`);
+      }
     });
   });
 
@@ -191,7 +199,6 @@ async function hardDeleteOwnCharacter(characterId) {
     await batch.commit();
     if(sheetSession?.characterId===characterId)closeCharacterSheet(true);
     if(selectedCharacter?.id===characterId)selectedCharacter=null;
-    if(rememberedActiveCharacterId(campaignId)===characterId)rememberActiveCharacter('',campaignId);
     if(activeCampaign?.id!==campaignId)return;
     await loadCharacters();
     await loadSaves();
