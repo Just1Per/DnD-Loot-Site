@@ -17,3 +17,17 @@ test('DM-approved bonus feat and ASI choices extend only their intended budgets'
  d.rulesChoices.grants.__dm.usedAsis=1;b=P.budget(d,4,catalog.feats);assert.equal(b.bonusAsiRemaining,0);assert.equal(b.asiRemaining,1);
  d.advancement.asiSpent=1;b=P.budget(d,4,catalog.feats);assert.equal(b.asiRemaining,0);assert.equal(b.over,0);
 });
+
+test('DM bonus feat and ASI approvals extend progression without changing normal progression',()=>{
+ const data=M.normalize({build:{edition:'2024',classId:'fighter'},rulesChoices:{feats:[],grants:{__dm:{bonusFeats:1,bonusAsis:1,usedAsis:0}}}});
+ let b=R.budget(data,4,[]);
+ assert.equal(b.normalRemaining,1);
+ assert.equal(b.bonusFeatRemaining,1);
+ assert.equal(b.bonusAsiRemaining,1);
+ data.rulesChoices.grants.__dm.usedAsis=1;
+ b=R.budget(data,4,[]);
+ assert.equal(b.bonusAsiRemaining,0);
+ data.rulesChoices.grants.__dm.bonusFeats=0;
+ b=R.budget(data,4,[]);
+ assert.equal(b.bonusFeatRemaining,0);
+});
