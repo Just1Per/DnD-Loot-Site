@@ -1101,3 +1101,13 @@
 @media(max-width:600px){
   .sheet-feat-facts{grid-template-columns:1fr;}
 }
+
+
+/* Revision 25: universal two-column character inventory. */
+.character-sheet .sheet-inventory-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;}
+.character-sheet .sheet-inventory-column h4 small{display:block;margin-top:3px;color:var(--vault-muted);font:600 10px/1.3 Georgia,serif;letter-spacing:.02em;text-transform:none;}
+.character-sheet .sheet-inventory-active{box-shadow:inset 0 4px 0 var(--vault-gold),0 2px 8px rgba(43,26,14,.05);}
+.character-sheet .sheet-inventory-backpack{box-shadow:inset 0 4px 0 var(--vault-border),0 2px 8px rgba(43,26,14,.05);}
+.character-sheet .sheet-inventory-row-actions{white-space:nowrap;}
+.character-sheet .sheet-inventory-row-actions button[data-move-inventory]{font-size:10px;padding:4px 7px;}
+@media(max-width:760px){.character-sheet .sheet-inventory-columns{grid-template-columns:1fr;}}
