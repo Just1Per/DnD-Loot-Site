@@ -1111,3 +1111,41 @@
 .character-sheet .sheet-inventory-row-actions{white-space:nowrap;}
 .character-sheet .sheet-inventory-row-actions button[data-move-inventory]{font-size:10px;padding:4px 7px;}
 @media(max-width:760px){.character-sheet .sheet-inventory-columns{grid-template-columns:1fr;}}
+
+
+/* Revision 26: compact overview-style multi-companion combat cards. */
+.character-sheet .sheet-companion-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.character-sheet .sheet-companion-card{min-width:0;border:1px solid var(--vault-border);border-radius:12px;background:linear-gradient(180deg,#fffdf9,#f4eadb);box-shadow:0 3px 10px rgba(43,26,14,.07);overflow:hidden;}
+.character-sheet .sheet-companion-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:linear-gradient(135deg,#5c1d1d,#71302b);color:#fff8e8;border-bottom:2px solid var(--vault-gold);}
+.character-sheet .sheet-companion-card-head h4{margin:1px 0;color:#fff8e8;font:700 16px/1.2 Georgia,serif;}
+.character-sheet .sheet-companion-card-head small{color:#eadfc9;}
+.character-sheet .sheet-companion-card-head .sheet-eyebrow{color:var(--vault-gold);font-size:9px;}
+.character-sheet .sheet-companion-remove{padding:4px 7px;font-size:10px;}
+.character-sheet .sheet-companion-picker{padding:8px 10px 0;}
+.character-sheet .sheet-companion-picker-row{display:grid;grid-template-columns:1fr 1.6fr auto;gap:6px;align-items:center;}
+.character-sheet .sheet-companion-picker-row span{font-size:10px;color:var(--vault-muted);white-space:nowrap;}
+.character-sheet .sheet-companion-vitals{display:grid;grid-template-columns:repeat(4,1fr) 1.1fr 1.5fr;gap:5px;padding:9px 10px;}
+.character-sheet .sheet-companion-stat{padding:5px 4px;text-align:center;border:1px solid var(--vault-border-soft);border-radius:7px;background:#fffaf0;}
+.character-sheet .sheet-companion-stat small{display:block;font:700 9px/1 Cinzel,Georgia,serif;color:var(--vault-muted);text-transform:uppercase;}
+.character-sheet .sheet-companion-stat strong{display:block;margin-top:3px;font:700 16px/1 Georgia,serif;color:var(--vault-burgundy);}
+.character-sheet .sheet-companion-vitals label{font-size:9px;}
+.character-sheet .sheet-companion-vitals input,.character-sheet .sheet-companion-vitals select{width:100%;padding:5px;font-size:11px;}
+.character-sheet .sheet-companion-abilities{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:0 10px 9px;}
+.character-sheet .sheet-companion-ability{padding:5px 3px;text-align:center;border:1px solid var(--vault-border-soft);border-radius:7px;background:#fffdf8;}
+.character-sheet .sheet-companion-ability>span{display:block;font:700 8px/1 Cinzel,Georgia,serif;color:var(--vault-muted);text-transform:uppercase;}
+.character-sheet .sheet-companion-ability>strong{display:block;font:700 20px/1 Georgia,serif;color:var(--vault-burgundy);}
+.character-sheet .sheet-companion-ability>small{display:block;font-size:8px;white-space:nowrap;color:var(--vault-muted);}
+.character-sheet .sheet-companion-columns{display:grid;grid-template-columns:1fr 1.15fr;gap:8px;padding:0 10px 10px;}
+.character-sheet .sheet-companion-columns>section{min-width:0;padding:7px;border:1px solid var(--vault-border-soft);border-radius:8px;background:#fffaf0;}
+.character-sheet .sheet-companion-section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.character-sheet .sheet-companion-section-title h5{margin:0;color:var(--vault-burgundy);font:700 11px/1.2 Cinzel,Georgia,serif;text-transform:uppercase;}
+.character-sheet .sheet-companion-skill-list{display:grid;gap:2px;}
+.character-sheet .sheet-companion-skill{display:grid;grid-template-columns:1fr 30px 82px;gap:4px;align-items:center;padding:3px 0;border-bottom:1px solid #eadfce;font-size:10px;}
+.character-sheet .sheet-companion-skill span small{display:inline;margin-left:4px;color:var(--vault-muted);font-size:8px;}
+.character-sheet .sheet-companion-skill b{text-align:right;color:var(--vault-burgundy);}
+.character-sheet .sheet-companion-skill select{font-size:9px;padding:2px;}
+.character-sheet .sheet-companion-columns textarea{width:100%;box-sizing:border-box;margin-top:5px;min-height:45px;padding:5px;font-size:10px;}
+.character-sheet .sheet-companion-notes{margin:0 10px 10px;padding:6px;border-top:1px solid var(--vault-border-soft);}
+.character-sheet .sheet-companion-notes .sheet-grid{gap:6px;}
+@media(max-width:900px){.character-sheet .sheet-companion-cards{grid-template-columns:1fr;}.character-sheet .sheet-companion-vitals{grid-template-columns:repeat(4,1fr);}.character-sheet .sheet-companion-picker-row{grid-template-columns:1fr;}.character-sheet .sheet-companion-columns{grid-template-columns:1fr;}}
+@media print{.character-sheet .sheet-companion-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.character-sheet .sheet-companion-card{break-inside:avoid;box-shadow:none}.character-sheet .sheet-companion-card:nth-child(2n+1){break-after:avoid;}}
