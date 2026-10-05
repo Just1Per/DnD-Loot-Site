@@ -1,4 +1,4 @@
-// D&D Vault Firestore Rules Revision: 25
+// D&D Vault Firestore Rules Revision: 26
 // Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
@@ -12,6 +12,7 @@
 // Revision 23: validate multi-companion payloads and optional Companion/Rules page state
 // Revision 24: stop legacy advancement.companion schema from rejecting Adobe multi-companion saves
 // Revision 25: stable character-sheet envelope validation; content schema is versioned by the app
+// Revision 26: normalized global rules catalogue collections (classes, subclasses, species, backgrounds, feats, spells)
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
@@ -189,9 +190,18 @@ function saveCharacterBelongsTo(campaignId, data, uid) {
 match /rulesCatalog/{release} {
   allow read: if request.auth != null;
   allow write: if isAdmin();
+  // Legacy chunked spell/feat catalogue remains readable during migration.
   match /parts/{part} {
-    allow read: if request.auth != null;
+    allow read: if signedIn();
     allow write: if isAdmin();
+  }
+
+  // Normalized v2 reference records. These are global and never campaign-owned.
+  match /{kind}/{recordId} {
+    allow read: if signedIn()
+      && kind in ['classes', 'subclasses', 'species', 'backgrounds', 'feats', 'spells'];
+    allow create, update, delete: if isAdmin()
+      && kind in ['classes', 'subclasses', 'species', 'backgrounds', 'feats', 'spells'];
   }
 }
 
