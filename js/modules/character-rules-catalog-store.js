@@ -8,6 +8,7 @@ var CharacterRulesCatalogStore=(()=>{
   const D=()=>deps;
   const release=e=>e==='2024'?'2024':'2014';
   const path=(edition,part)=>['rulesCatalog',release(edition),'parts',part];
+  const CATALOG_VERSION=2026100502;
 
   function serializeFeature(row){
     return {
@@ -61,7 +62,7 @@ var CharacterRulesCatalogStore=(()=>{
     const {db,doc,setDoc}=D();if(!db||!doc||!setDoc)throw new Error('Firestore is not ready.');
     if(typeof window.isAdmin==='function'&&!window.isAdmin())throw new Error('Only a global admin can publish rules reference data.');
     const snapshot=localSnapshot(edition);if(!snapshot)throw new Error('Class catalogue is not loaded.');
-    const now=Date.now(),version=20261005;
+    const now=Date.now(),version=CATALOG_VERSION;
     await Promise.all([
       setDoc(doc(db,...path(edition,'classes')),{kind:'classes',edition,version,updatedAt:now,records:snapshot.classes}),
       setDoc(doc(db,...path(edition,'subclasses')),{kind:'subclasses',edition,version,updatedAt:now,records:snapshot.subclasses})
@@ -70,6 +71,6 @@ var CharacterRulesCatalogStore=(()=>{
     return {edition,classes:Object.keys(snapshot.classes).length,subclasses:Object.keys(snapshot.subclasses).length};
   }
   async function seedAll(){return Promise.all([seedEdition('2014'),seedEdition('2024')])}
-  return {localSnapshot,loadEdition,hydrate,seedEdition,seedAll};
+  return {CATALOG_VERSION,localSnapshot,loadEdition,hydrate,seedEdition,seedAll};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterRulesCatalogStore;
