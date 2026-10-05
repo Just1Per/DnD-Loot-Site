@@ -85,24 +85,6 @@ const canUseCharacters = () =>
 const myCharacters = () =>
   characters.filter(c => c.userId === auth.currentUser?.uid && c.active !== false);
 
-const activeCharacterStorageKey = (campaignId = activeCampaign?.id) =>
-  auth.currentUser?.uid && campaignId ? `dndVault:activeCharacter:${auth.currentUser.uid}:${campaignId}` : '';
-
-function rememberedActiveCharacterId(campaignId = activeCampaign?.id) {
-  const key = activeCharacterStorageKey(campaignId);
-  if (!key) return '';
-  try { return localStorage.getItem(key) || ''; } catch { return ''; }
-}
-
-function rememberActiveCharacter(characterId, campaignId = activeCampaign?.id) {
-  const key = activeCharacterStorageKey(campaignId);
-  if (!key) return;
-  try {
-    if (characterId) localStorage.setItem(key, characterId);
-    else localStorage.removeItem(key);
-  } catch {}
-}
-
 // ─── TIER HELPER ─────────────────────────────────────────────────────────────
 
 function getTier(level) {
