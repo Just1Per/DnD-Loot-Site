@@ -15,7 +15,7 @@ var CharacterClassFeatureChoices=(()=>{
     const rows=Object.entries(defs).filter(([id,def])=>{
       const ref=refs[(def.source||'')+'|'+(def.name||'')];
       return def?.edition==='2024'&&ref?.category==='FS';
-    }).map(([id,def])=>option(def.name,{source:def.source||'2024',featId:id,referenceComplete:true,automationComplete:['Archery','Defense'].includes(def.name)}));
+    }).map(([id,def])=>option(def.name,{source:def.source||'2024',featId:id,referenceComplete:true,automationComplete:false}));
     const seen=new Set();
     return rows.filter(row=>!seen.has(row.id)&&seen.add(row.id)).sort((a,b)=>a.name.localeCompare(b.name));
   }
