@@ -125,7 +125,8 @@ function initModalListeners() {
       level,
       userId: auth.currentUser.uid,
       active: true,
-      created: Date.now()
+      created: Date.now(),
+      lastSelectedAt: Date.now()
     };
 
     const newRef = await addDoc(
@@ -136,7 +137,6 @@ function initModalListeners() {
     const newChar = { id: newRef.id, ...data };
     characters.push(newChar);
     selectedCharacter = newChar;
-    rememberActiveCharacter(newChar.id, activeCampaign.id);
 
     document.getElementById("playerCharName").value = "";
     document.getElementById("playerCharLevel").value = "";
