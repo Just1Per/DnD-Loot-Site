@@ -1,4 +1,4 @@
-// D&D Vault Firestore Rules Revision: 26
+// D&D Vault Firestore Rules Revision: 27
 // Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
@@ -12,6 +12,7 @@
 // Revision 23: validate multi-companion payloads and optional Companion/Rules page state
 // Revision 24: stop legacy advancement.companion schema from rejecting Adobe multi-companion saves
 // Revision 25: stable character-sheet envelope validation; content schema is versioned by the app
+// Revision 27: character owners may permanently delete their own roster + private sheet records
 // Revision 26: normalized global rules catalogue collections (classes, subclasses, species, backgrounds, feats, spells)
 rules_version = '2';
 service cloud.firestore {
@@ -404,7 +405,8 @@ match /characters/{charId} {
     );
   allow update: if request.resource.data.userId == resource.data.userId
     && (isCampaignDM(campaignId) || (isActiveMember(campaignId) && resource.data.userId == request.auth.uid));
-  allow delete: if isCampaignDM(campaignId);
+  allow delete: if isCampaignDM(campaignId)
+    || (isActiveMember(campaignId) && resource.data.userId == request.auth.uid);
 }
 // Private character details are separate from the campaign's shared roster.
 match /characterSheets/{charId} {
@@ -437,7 +439,10 @@ match /characterSheets/{charId} {
   allow update: if mayUseSheet() && validSheet()
     && request.resource.data.schemaVersion >= resource.data.schemaVersion
     && request.resource.data.revision == resource.data.revision + 1;
-  allow delete: if isCampaignDM(campaignId);
+  allow delete: if isCampaignDM(campaignId)
+    || (isActiveMember(campaignId)
+      && exists(characterPath(campaignId, charId))
+      && get(characterPath(campaignId, charId)).data.userId == request.auth.uid);
 }
 match /saves/{saveId} {
   allow read: if isCampaignDM(campaignId)
