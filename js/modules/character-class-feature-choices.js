@@ -86,6 +86,20 @@ var CharacterClassFeatureChoices=(()=>{
     option('Witch Sight',{minLevel:15})
   ].map(row=>({...row,source:'SRD 5.2.1',referenceComplete:true,automationComplete:false}));
 
+  const subclassDefinitions={
+    '2014':{
+      'fighter:battle-master':[{
+        id:'maneuvers',name:'Battle Master Maneuvers',minLevel:3,
+        count:l=>pickTable([[3,3],[7,5],[10,7],[15,9]],l),
+        options:()=>[
+          "Commander's Strike",'Disarming Attack','Distracting Strike','Evasive Footwork','Feinting Attack','Goading Attack','Lunging Attack','Maneuvering Attack','Menacing Attack','Parry','Precision Attack','Pushing Attack','Rally','Riposte','Sweeping Attack','Trip Attack'
+        ].map(name=>option(name,{source:'PHB 2014',referenceComplete:true,automationComplete:false})),
+        referenceComplete:true
+      }]
+    },
+    '2024':{}
+  };
+
   const definitions={
     '2014':{
       fighter:[{id:'fighting-style',name:'Fighting Style',minLevel:1,count:()=>1,options:()=>fighter2014,referenceComplete:true}],
@@ -114,8 +128,14 @@ var CharacterClassFeatureChoices=(()=>{
     return out;
   }
   function groups(entry,edition='2014'){
-    const rows=definitions[edition]?.[entry?.classId]||[];
-    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel).map(g=>({...g,key:groupKey(edition,entry.classId,g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0))||0)),options:g.options(entry,edition)}));
+    const base=definitions[edition]?.[entry?.classId]||[];
+    const sub=subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[];
+    const rows=[...base,...sub];
+    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel).map(g=>({...g,key:groupKey(edition,entry.classId,(entry.subclassId?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0))||0)),options:g.options(entry,edition)}));
+  }
+  function registerSubclass(edition,classId,subclassId,definition){
+    edition=edition==='2024'?'2024':'2014';const key=safe(classId)+':'+safe(subclassId);
+    (subclassDefinitions[edition][key]||=[]).push(definition);
   }
   const selections=(data,group)=>normalize(data?.adobe?.classFeatureChoices)[group.key]||[];
   function hasSpell(data,name){return (data?.spells||[]).some(s=>String(s.name||'').toLowerCase().replace(/\s*\[[^\]]+\]\s*$/,'')===String(name).toLowerCase());}
@@ -147,6 +167,6 @@ var CharacterClassFeatureChoices=(()=>{
     data.adobe.classFeatureChoices[group.key]=current.slice(0,20).filter(Boolean);
     return data.adobe.classFeatureChoices[group.key];
   }
-  return{definitions,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;
