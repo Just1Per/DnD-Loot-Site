@@ -596,3 +596,71 @@
 .sheet-class-choice-card>footer{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .sheet-class-choice-card>footer span{padding:2px 6px;border-radius:5px;background:#f1e5d3;color:var(--vault-muted,#756654);font-size:9px}
 @media(max-width:720px){.sheet-class-choice-grid{grid-template-columns:1fr}.sheet-class-choice-card>header{flex-direction:column}.sheet-choice-required,.sheet-choice-complete{white-space:normal}}
+
+
+/* Overview character-completeness warnings */
+.sheet-overview-important{
+  margin:0 0 16px;
+  padding:12px 14px;
+  border:1px solid rgba(137,69,49,.32);
+  border-left:5px solid #8c3f32;
+  border-radius:10px;
+  background:linear-gradient(145deg,#fff8f2,#f6e8dc);
+  box-shadow:0 3px 10px rgba(61,34,24,.06);
+}
+.sheet-overview-important>header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:9px;
+}
+.sheet-overview-important>header h4{
+  margin:2px 0 0;
+  color:var(--vault-burgundy,#632d21);
+  font:700 15px/1.3 "Cinzel",Georgia,serif;
+}
+.sheet-overview-important>header>strong{
+  padding:4px 8px;
+  border-radius:999px;
+  background:#8c3f32;
+  color:#fff9ee;
+  font-size:11px;
+  white-space:nowrap;
+}
+.sheet-overview-important-list{display:grid;gap:7px}
+.sheet-overview-important-row{
+  display:grid;
+  grid-template-columns:24px minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  padding:8px 9px;
+  border:1px solid rgba(137,69,49,.17);
+  border-radius:8px;
+  background:rgba(255,253,249,.72);
+}
+.sheet-overview-important-icon{
+  display:grid;
+  place-items:center;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:#8c3f32;
+  color:#fff;
+  font-weight:800;
+}
+.sheet-overview-important-row small{
+  display:block;
+  margin-bottom:1px;
+  color:#8c3f32;
+  font:700 9px/1.2 "Cinzel",Georgia,serif;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+}
+.sheet-overview-important-row p{margin:0;color:var(--vault-ink,#382b24);font-size:12px;line-height:1.35}
+.sheet-overview-important-row button{min-width:48px}
+.sheet-overview-important-more{margin:2px 0 0;color:var(--vault-muted,#756654);font-size:11px}
+@media(max-width:620px){
+  .sheet-overview-important-row{grid-template-columns:24px minmax(0,1fr)}
+  .sheet-overview-important-row button{grid-column:2;justify-self:start}
+}
