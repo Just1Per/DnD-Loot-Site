@@ -1,4 +1,4 @@
-// D&D Vault Firestore Rules Revision: 23
+// D&D Vault Firestore Rules Revision: 24
 // Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
@@ -10,6 +10,7 @@
 // Revision 21: spell-generator filtering + Feats-page choice flow; permissions and schema unchanged
 // Revision 22: unified Vault character-sheet visual theme; permissions and schema unchanged
 // Revision 23: validate multi-companion payloads and optional Companion/Rules page state
+// Revision 24: stop legacy advancement.companion schema from rejecting Adobe multi-companion saves
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
@@ -437,9 +438,10 @@ match /characterSheets/{charId} {
         && d.data.advancement.hpRolls is list && d.data.advancement.hpRolls.size() <= 19
         && d.data.advancement.classLevels is list && d.data.advancement.classLevels.size() <= 20
         && d.data.advancement.extraPages is list && d.data.advancement.extraPages.size() <= 3
-        && d.data.advancement.companion is map
-        && d.data.advancement.companion.keys().hasOnly(['name','type','size','ac','hpMax','hpCurrent','speed','initiative','proficiency','abilities','saves','skills','senses','attacks','traits','notes'])
-        && d.data.advancement.companion.abilities is map))
+        // advancement.companion is a legacy schema. The current character sheet persists
+        // companion/familiar/wildshape records under rulesChoices.grants.__adobe.data.
+        // Keep accepting the old map when present, but do not require its obsolete shape.
+        && (!('companion' in d.data.advancement) || d.data.advancement.companion is map)))
       && (d.schemaVersion < 11 || (d.data.personalGear is list && d.data.personalGear.size() <= 200))
       && (d.schemaVersion < 12 || (
         d.data.rulesChoices.grants.__adobe is map
