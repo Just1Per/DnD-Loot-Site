@@ -1332,3 +1332,100 @@
 @media print{
   #characterSheetDialog .sheet-companion-cards{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
 }
+
+
+/* Rules reference expansion — combat, armor and weapons */
+.character-sheet #sheet-rules .sheet-help{
+  max-width:1100px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.character-sheet #sheet-rules .sheet-rules-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  align-items:start;
+}
+.character-sheet #sheet-rules .sheet-rules-feature,
+.character-sheet #sheet-rules .sheet-rules-table-card{
+  min-width:0;
+  border:1px solid var(--vault-border-soft);
+  border-radius:10px;
+  background:linear-gradient(180deg,#fffdf6 0%,#fff8e9 100%);
+  box-shadow:0 4px 12px rgba(67,38,20,.08), inset 0 3px 0 rgba(212,175,55,.32);
+  padding:14px 16px;
+}
+.character-sheet #sheet-rules .sheet-rules-feature h4,
+.character-sheet #sheet-rules .sheet-rules-table-card h4{
+  margin:0 0 9px;
+  color:var(--vault-burgundy);
+  font-family:Cinzel,Georgia,serif;
+  font-size:1rem;
+}
+.character-sheet #sheet-rules .sheet-rules-feature p{
+  margin:6px 0;
+  line-height:1.45;
+}
+.character-sheet #sheet-rules .sheet-rules-feature ul{
+  margin:6px 0 0 18px;
+  padding:0;
+}
+.character-sheet #sheet-rules .sheet-rules-feature li{
+  margin:4px 0;
+  line-height:1.35;
+}
+.character-sheet #sheet-rules .sheet-rules-wide{
+  grid-column:1 / -1;
+}
+.character-sheet #sheet-rules .sheet-rules-table-wrap{
+  width:100%;
+  overflow-x:auto;
+  border:1px solid rgba(92,29,29,.14);
+  border-radius:8px;
+}
+.character-sheet #sheet-rules .sheet-rules-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.88rem;
+}
+.character-sheet #sheet-rules .sheet-rules-table th{
+  background:var(--vault-burgundy);
+  color:#fff8e9;
+  font-family:Cinzel,Georgia,serif;
+  font-weight:700;
+  text-align:left;
+  padding:7px 8px;
+  white-space:nowrap;
+}
+.character-sheet #sheet-rules .sheet-rules-table td{
+  padding:6px 8px;
+  border-top:1px solid rgba(92,29,29,.12);
+  vertical-align:top;
+}
+.character-sheet #sheet-rules .sheet-rules-table tbody tr:nth-child(even){
+  background:rgba(212,175,55,.075);
+}
+.character-sheet #sheet-rules .sheet-rules-tip{
+  margin:9px 0 0;
+  padding:9px 11px;
+  border-left:3px solid var(--vault-gold,#d4af37);
+  background:rgba(212,175,55,.08);
+  border-radius:0 6px 6px 0;
+  font-size:.88rem;
+}
+@media (max-width:900px){
+  .character-sheet #sheet-rules .sheet-rules-grid{
+    grid-template-columns:1fr;
+  }
+  .character-sheet #sheet-rules .sheet-rules-wide{
+    grid-column:auto;
+  }
+}
+@media print{
+  .character-sheet #sheet-rules .sheet-rules-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .character-sheet #sheet-rules .sheet-rules-wide{
+    grid-column:1 / -1;
+  }
+}
