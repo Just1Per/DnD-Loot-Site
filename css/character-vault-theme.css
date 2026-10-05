@@ -1782,3 +1782,144 @@
     aspect-ratio:auto;
   }
 }
+
+
+/* Refined class progression reference: closed by default, polished when opened. */
+.character-sheet .sheet-progression-details{
+  margin-top:10px;
+  border:1px solid var(--vault-border-soft);
+  border-radius:12px;
+  background:linear-gradient(180deg,#fffdf8,#f6ecdc);
+  box-shadow:0 3px 10px rgba(43,26,14,.05);
+  overflow:hidden;
+}
+.character-sheet .sheet-progression-details>summary{
+  list-style:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 14px;
+  cursor:pointer;
+  user-select:none;
+  color:var(--vault-ink);
+  background:
+    linear-gradient(90deg,rgba(212,175,55,.11),transparent 34%),
+    linear-gradient(180deg,#fffdf9,#f2e6d4);
+  transition:background .16s,border-color .16s;
+}
+.character-sheet .sheet-progression-details>summary::-webkit-details-marker{display:none}
+.character-sheet .sheet-progression-details>summary:hover{
+  background:
+    linear-gradient(90deg,rgba(212,175,55,.18),transparent 38%),
+    linear-gradient(180deg,#fffefa,#f0e1cb);
+}
+.character-sheet .sheet-progression-summary-main{
+  min-width:0;
+  display:grid;
+  gap:2px;
+}
+.character-sheet .sheet-progression-summary-main>.sheet-eyebrow{
+  color:var(--vault-gold-deep);
+  font-size:8px;
+  letter-spacing:.12em;
+}
+.character-sheet .sheet-progression-summary-main>strong{
+  color:var(--vault-burgundy);
+  font:700 13px/1.25 "Cinzel",Georgia,serif;
+}
+.character-sheet .sheet-progression-summary-main>small{
+  color:var(--vault-muted);
+  font:400 10px/1.3 Georgia,"Times New Roman",serif;
+}
+.character-sheet .sheet-progression-summary-side{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.character-sheet .sheet-progression-count{
+  padding:4px 7px;
+  border:1px solid rgba(126,91,43,.22);
+  border-radius:999px;
+  background:#fff9eb;
+  color:var(--vault-brown);
+  font-size:9px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.character-sheet .sheet-progression-toggle-label{
+  color:var(--vault-muted);
+  font-size:9px;
+  white-space:nowrap;
+}
+.character-sheet .sheet-progression-toggle-close{display:none}
+.character-sheet .sheet-progression-details[open] .sheet-progression-toggle-open{display:none}
+.character-sheet .sheet-progression-details[open] .sheet-progression-toggle-close{display:inline}
+.character-sheet .sheet-progression-chevron{
+  width:8px;
+  height:8px;
+  border-right:2px solid var(--vault-burgundy);
+  border-bottom:2px solid var(--vault-burgundy);
+  transform:rotate(45deg);
+  transition:transform .16s ease;
+  margin:-3px 2px 2px 2px;
+}
+.character-sheet .sheet-progression-details[open] .sheet-progression-chevron{
+  transform:rotate(225deg);
+  margin:3px 2px -2px 2px;
+}
+.character-sheet .sheet-progression-details[open]>summary{
+  border-bottom:1px solid var(--vault-border-soft);
+}
+.character-sheet .sheet-progression-levels{
+  display:grid;
+  gap:10px;
+  padding:12px;
+  background:rgba(255,253,248,.72);
+}
+.character-sheet .sheet-progression-level{
+  position:relative;
+  padding:10px 10px 10px 13px;
+  border:1px solid rgba(148,111,65,.17);
+  border-left:4px solid var(--vault-gold);
+  border-radius:9px;
+  background:linear-gradient(180deg,#fffefb,#faf3e7);
+}
+.character-sheet .sheet-progression-level>header{
+  margin-bottom:8px;
+  padding-bottom:6px;
+  border-bottom:1px solid rgba(148,111,65,.12);
+}
+.character-sheet .sheet-progression-level>header strong{
+  font-size:11px;
+}
+.character-sheet .sheet-progression-features{
+  gap:8px;
+}
+.character-sheet .sheet-progression-feature{
+  padding:9px 10px;
+  border-radius:8px;
+  background:#fffdf9;
+  box-shadow:0 2px 5px rgba(43,26,14,.035);
+}
+.character-sheet .sheet-progression-feature>div strong{
+  font-size:11px;
+  line-height:1.25;
+}
+.character-sheet .sheet-progression-feature p{
+  margin-top:5px;
+  font-size:10px;
+  line-height:1.45;
+}
+@media(max-width:700px){
+  .character-sheet .sheet-progression-details>summary{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .character-sheet .sheet-progression-summary-side{
+    width:100%;
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+}
