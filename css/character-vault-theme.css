@@ -1149,3 +1149,283 @@
 .character-sheet .sheet-companion-notes .sheet-grid{gap:6px;}
 @media(max-width:900px){.character-sheet .sheet-companion-cards{grid-template-columns:1fr;}.character-sheet .sheet-companion-vitals{grid-template-columns:repeat(4,1fr);}.character-sheet .sheet-companion-picker-row{grid-template-columns:1fr;}.character-sheet .sheet-companion-columns{grid-template-columns:1fr;}}
 @media print{.character-sheet .sheet-companion-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.character-sheet .sheet-companion-card{break-inside:avoid;box-shadow:none}.character-sheet .sheet-companion-card:nth-child(2n+1){break-after:avoid;}}
+
+
+/* Revision 27: companion cards rebuilt to match the Overview visual language. */
+#characterSheetDialog #sheet-companion{
+  width:100%;
+  max-width:1180px;
+  margin-inline:auto;
+}
+#characterSheetDialog #sheet-companion > .sheet-repeat-title{
+  align-items:flex-end;
+  margin-bottom:8px;
+}
+#characterSheetDialog #sheet-companion > .sheet-repeat-title h3{
+  margin-bottom:0;
+}
+#characterSheetDialog #sheet-companion > .sheet-help{
+  max-width:900px;
+  margin:0 auto 16px;
+  text-align:center;
+}
+
+/* Three cards on a wide sheet, two at normal desktop width, one only when genuinely narrow. */
+#characterSheetDialog .sheet-companion-cards{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+  align-items:start;
+}
+#characterSheetDialog .sheet-companion-card{
+  min-width:0;
+  border:2px solid var(--vault-border)!important;
+  border-radius:14px 5px!important;
+  background:linear-gradient(145deg,#fffdf8,#f0e1c9)!important;
+  box-shadow:0 5px 16px rgba(43,26,14,.10),inset 0 3px 0 rgba(212,175,55,.45)!important;
+  overflow:hidden;
+}
+#characterSheetDialog .sheet-companion-card:hover{
+  border-color:var(--vault-burgundy)!important;
+  box-shadow:0 7px 20px rgba(43,26,14,.14),inset 0 3px 0 var(--vault-gold)!important;
+}
+#characterSheetDialog .sheet-companion-card-head{
+  min-height:54px;
+  padding:9px 11px!important;
+  background:linear-gradient(135deg,var(--vault-brown),#51321c)!important;
+  border-bottom:3px solid var(--vault-gold)!important;
+}
+#characterSheetDialog .sheet-companion-card-head h4{
+  margin:2px 0 0!important;
+  color:var(--vault-cream)!important;
+  font-family:"Cinzel",Georgia,serif!important;
+  font-size:15px!important;
+  letter-spacing:.025em;
+}
+#characterSheetDialog .sheet-companion-card-head .sheet-eyebrow{
+  color:#e8c967!important;
+  font-family:"Cinzel",Georgia,serif!important;
+  letter-spacing:.11em;
+}
+#characterSheetDialog .sheet-companion-remove{
+  border-color:var(--vault-gold)!important;
+  background:rgba(212,175,55,.12)!important;
+  color:var(--vault-cream)!important;
+}
+#characterSheetDialog .sheet-companion-picker{
+  padding:9px 10px 2px!important;
+}
+#characterSheetDialog .sheet-companion-picker-row{
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr) auto!important;
+  gap:5px;
+}
+#characterSheetDialog .sheet-companion-picker-row span{
+  color:var(--vault-muted);
+  font:700 9px/1 "Cinzel",Georgia,serif;
+  text-transform:uppercase;
+}
+#characterSheetDialog .sheet-companion-picker select{
+  min-width:0;
+  width:100%;
+  padding:6px 27px 6px 7px!important;
+  border:1px solid var(--vault-border-soft)!important;
+  border-radius:7px!important;
+  background:#fffdf9!important;
+  font-size:10px!important;
+}
+#characterSheetDialog .sheet-companion-vitals{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:5px!important;
+  padding:8px 10px!important;
+}
+#characterSheetDialog .sheet-companion-stat{
+  min-width:0;
+  padding:6px 3px!important;
+  border:1px solid var(--vault-border-soft)!important;
+  border-top:3px solid var(--vault-gold)!important;
+  border-radius:8px!important;
+  background:linear-gradient(180deg,#fffdf8,#f1e6d5)!important;
+}
+#characterSheetDialog .sheet-companion-stat small{
+  color:var(--vault-muted)!important;
+  font-family:"Cinzel",Georgia,serif!important;
+}
+#characterSheetDialog .sheet-companion-stat strong{
+  color:var(--vault-burgundy)!important;
+  font-size:17px!important;
+}
+#characterSheetDialog .sheet-companion-abilities{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:5px!important;
+  padding:2px 10px 9px!important;
+}
+#characterSheetDialog .sheet-companion-ability{
+  min-width:0;
+  padding:6px 2px!important;
+  border:1px solid var(--vault-border)!important;
+  border-radius:9px 4px!important;
+  background:linear-gradient(145deg,#fffdf7,#eee0c8)!important;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.65)!important;
+}
+#characterSheetDialog .sheet-companion-ability>span{
+  color:var(--vault-burgundy)!important;
+  font-family:"Cinzel",Georgia,serif!important;
+  font-size:9px!important;
+  font-weight:700;
+}
+#characterSheetDialog .sheet-companion-ability>strong{
+  color:var(--vault-burgundy)!important;
+  font-size:21px!important;
+}
+#characterSheetDialog .sheet-companion-ability>small{
+  color:var(--vault-muted)!important;
+  font-size:8px!important;
+}
+#characterSheetDialog .sheet-companion-columns{
+  display:grid;
+  grid-template-columns:1fr!important;
+  gap:7px!important;
+  padding:0 10px 10px!important;
+}
+#characterSheetDialog .sheet-companion-columns>section{
+  padding:8px!important;
+  border:1px solid var(--vault-border-soft)!important;
+  border-radius:9px!important;
+  background:rgba(255,253,249,.82)!important;
+  box-shadow:0 2px 7px rgba(43,26,14,.04)!important;
+}
+#characterSheetDialog .sheet-companion-section-title{
+  padding-bottom:4px;
+  border-bottom:1px solid var(--vault-border-soft);
+}
+#characterSheetDialog .sheet-companion-section-title h5{
+  color:var(--vault-burgundy)!important;
+  font-family:"Cinzel",Georgia,serif!important;
+  letter-spacing:.04em;
+}
+#characterSheetDialog .sheet-companion-skill{
+  grid-template-columns:minmax(0,1fr) 26px 76px!important;
+  padding:3px 0!important;
+  border-bottom:1px solid #eadfcd!important;
+}
+#characterSheetDialog .sheet-companion-skill b{
+  color:var(--vault-burgundy)!important;
+}
+#characterSheetDialog .sheet-companion-columns textarea{
+  border:1px solid var(--vault-border-soft)!important;
+  border-radius:7px!important;
+  background:#fffdf9!important;
+  color:var(--vault-ink)!important;
+}
+#characterSheetDialog .sheet-companion-notes{
+  margin:0 10px 10px!important;
+  border-top:1px solid var(--vault-border-soft)!important;
+}
+@media (min-width:761px) and (max-width:1080px){
+  #characterSheetDialog .sheet-companion-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+}
+@media (max-width:760px){
+  #characterSheetDialog .sheet-companion-cards{grid-template-columns:1fr!important;}
+  #characterSheetDialog .sheet-companion-picker-row{grid-template-columns:1fr!important;}
+}
+@media print{
+  #characterSheetDialog .sheet-companion-cards{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+}
+
+
+/* Rules reference expansion — combat, armor and weapons */
+.character-sheet #sheet-rules .sheet-help{
+  max-width:1100px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.character-sheet #sheet-rules .sheet-rules-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  align-items:start;
+}
+.character-sheet #sheet-rules .sheet-rules-feature,
+.character-sheet #sheet-rules .sheet-rules-table-card{
+  min-width:0;
+  border:1px solid var(--vault-border-soft);
+  border-radius:10px;
+  background:linear-gradient(180deg,#fffdf6 0%,#fff8e9 100%);
+  box-shadow:0 4px 12px rgba(67,38,20,.08), inset 0 3px 0 rgba(212,175,55,.32);
+  padding:14px 16px;
+}
+.character-sheet #sheet-rules .sheet-rules-feature h4,
+.character-sheet #sheet-rules .sheet-rules-table-card h4{
+  margin:0 0 9px;
+  color:var(--vault-burgundy);
+  font-family:Cinzel,Georgia,serif;
+  font-size:1rem;
+}
+.character-sheet #sheet-rules .sheet-rules-feature p{
+  margin:6px 0;
+  line-height:1.45;
+}
+.character-sheet #sheet-rules .sheet-rules-feature ul{
+  margin:6px 0 0 18px;
+  padding:0;
+}
+.character-sheet #sheet-rules .sheet-rules-feature li{
+  margin:4px 0;
+  line-height:1.35;
+}
+.character-sheet #sheet-rules .sheet-rules-wide{
+  grid-column:1 / -1;
+}
+.character-sheet #sheet-rules .sheet-rules-table-wrap{
+  width:100%;
+  overflow-x:auto;
+  border:1px solid rgba(92,29,29,.14);
+  border-radius:8px;
+}
+.character-sheet #sheet-rules .sheet-rules-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.88rem;
+}
+.character-sheet #sheet-rules .sheet-rules-table th{
+  background:var(--vault-burgundy);
+  color:#fff8e9;
+  font-family:Cinzel,Georgia,serif;
+  font-weight:700;
+  text-align:left;
+  padding:7px 8px;
+  white-space:nowrap;
+}
+.character-sheet #sheet-rules .sheet-rules-table td{
+  padding:6px 8px;
+  border-top:1px solid rgba(92,29,29,.12);
+  vertical-align:top;
+}
+.character-sheet #sheet-rules .sheet-rules-table tbody tr:nth-child(even){
+  background:rgba(212,175,55,.075);
+}
+.character-sheet #sheet-rules .sheet-rules-tip{
+  margin:9px 0 0;
+  padding:9px 11px;
+  border-left:3px solid var(--vault-gold,#d4af37);
+  background:rgba(212,175,55,.08);
+  border-radius:0 6px 6px 0;
+  font-size:.88rem;
+}
+@media (max-width:900px){
+  .character-sheet #sheet-rules .sheet-rules-grid{
+    grid-template-columns:1fr;
+  }
+  .character-sheet #sheet-rules .sheet-rules-wide{
+    grid-column:auto;
+  }
+}
+@media print{
+  .character-sheet #sheet-rules .sheet-rules-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .character-sheet #sheet-rules .sheet-rules-wide{
+    grid-column:1 / -1;
+  }
+}
