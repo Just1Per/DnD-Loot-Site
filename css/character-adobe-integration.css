@@ -576,3 +576,23 @@
 
 /* Overview spell-slot tracker */
 .sheet-slot-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.sheet-overview-spell-slots{grid-column:1/-1}.sheet-overview-slot-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:12px}.sheet-overview-slot-head h4{margin:2px 0 0}.sheet-overview-slot-head>small{opacity:.7}.sheet-overview-slot-grid{display:flex;gap:10px 16px;align-items:center;flex-wrap:wrap}.sheet-overview-slot-level{display:flex;align-items:center;gap:7px;padding:7px 9px;border:1px solid rgba(122,82,39,.22);border-radius:10px;background:rgba(255,250,238,.58)}.sheet-overview-slot-level>span{min-width:24px;font-weight:700}.sheet-overview-slot-level>small{min-width:28px;opacity:.7;text-align:right}.sheet-overview-slot-level .sheet-slot-orb-row{margin:0}@media(max-width:700px){.sheet-overview-slot-head{align-items:flex-start;flex-direction:column}.sheet-slot-actions{justify-content:flex-start}}
+
+
+/* Class/subclass feature choice workflow */
+.sheet-class-choice-panel{grid-column:1/-1;display:grid;gap:10px;margin:8px 0 4px;padding:12px;border:1px solid var(--vault-border-soft,#d8c9ae);border-radius:10px;background:linear-gradient(145deg,#fffdf8,#f5ecdf)}
+.sheet-class-choice-title h5{margin:2px 0 0;color:var(--vault-burgundy,#632d21);font:700 14px/1.3 "Cinzel",Georgia,serif}
+.sheet-class-choice-card{padding:11px;border:1px solid #d8c9ae;border-left:4px solid #b89554;border-radius:8px;background:#fffdf9}
+.sheet-class-choice-card.is-required{border-left-color:#9d4b3c;background:#fff8f3}
+.sheet-class-choice-card>header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:9px}
+.sheet-class-choice-card>header>div{display:grid;gap:2px}
+.sheet-class-choice-card>header strong{color:var(--vault-burgundy,#632d21)}
+.sheet-class-choice-card>header small{color:var(--vault-muted,#756654)}
+.sheet-choice-required,.sheet-choice-complete{padding:4px 7px;border-radius:999px;font-size:10px;font-weight:700;white-space:nowrap}
+.sheet-choice-required{background:#f4ddd6;color:#7f2f24}
+.sheet-choice-complete{background:#e9e1ca;color:#59431f}
+.sheet-class-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.sheet-class-choice-field{margin:0!important}
+.sheet-class-choice-field select{width:100%;min-width:0}
+.sheet-class-choice-card>footer{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sheet-class-choice-card>footer span{padding:2px 6px;border-radius:5px;background:#f1e5d3;color:var(--vault-muted,#756654);font-size:9px}
+@media(max-width:720px){.sheet-class-choice-grid{grid-template-columns:1fr}.sheet-class-choice-card>header{flex-direction:column}.sheet-choice-required,.sheet-choice-complete{white-space:normal}}
