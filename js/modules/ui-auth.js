@@ -136,6 +136,7 @@ function initModalListeners() {
     const newChar = { id: newRef.id, ...data };
     characters.push(newChar);
     selectedCharacter = newChar;
+    rememberActiveCharacter(newChar.id, activeCampaign.id);
 
     document.getElementById("playerCharName").value = "";
     document.getElementById("playerCharLevel").value = "";
