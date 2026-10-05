@@ -52,12 +52,13 @@ async function ensureGlobalCharacterRulesReference() {
   if (!store) return;
   for (const edition of ["2014", "2024"]) {
     try {
-      const loaded = await store.hydrate(edition);
-      if (!loaded && isAdmin()) {
+      const remote = await store.loadEdition(edition);
+      const stale = !remote || Number(remote.version || 0) < Number(store.CATALOG_VERSION || 0);
+      if (stale && isAdmin()) {
         const seeded = await store.seedEdition(edition);
-        console.info("[rulesCatalog] seeded global reference", seeded);
-        await store.hydrate(edition);
+        console.info("[rulesCatalog] published global reference", seeded);
       }
+      await store.hydrate(edition);
     } catch (e) {
       console.warn("[rulesCatalog] using bundled fallback", edition, e?.message || e);
     }

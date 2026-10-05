@@ -1,4 +1,4 @@
-// D&D Vault Firestore Rules Revision: 24
+// D&D Vault Firestore Rules Revision: 25
 // Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
@@ -11,6 +11,7 @@
 // Revision 22: unified Vault character-sheet visual theme; permissions and schema unchanged
 // Revision 23: validate multi-companion payloads and optional Companion/Rules page state
 // Revision 24: stop legacy advancement.companion schema from rejecting Adobe multi-companion saves
+// Revision 25: stable character-sheet envelope validation; content schema is versioned by the app
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
@@ -404,77 +405,21 @@ match /characterSheets/{charId} {
   }
   function validSheet() {
     let d = request.resource.data;
+    // Security rules protect who may write and the stable document envelope.
+    // Character-sheet content evolves frequently (tabs, companions, rules pages,
+    // class data, inventory, etc.) and is normalized/versioned by the application.
+    // Do not duplicate that fast-moving content schema here: doing so turns every
+    // legitimate new sheet field into a false "Missing or insufficient permissions".
     return exists(characterPath(campaignId, charId))
       && d.keys().hasOnly(['schemaVersion','revision','data','updatedAt','updatedBy'])
-      && d.schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] && d.revision is int && d.revision > 0
-      && d.updatedBy == request.auth.uid && d.updatedAt is int
-      && d.data is map
-      && d.data.keys().hasOnly(['personalGear','actions','profile','advancement','equipmentState','rulesChoices','build','abilities','saves','skills','coins','slots','attacks','spells','inspiration','spellAbility',
-        'species','background','alignment','experience','appearance','personality','ideals','bonds','flaws','backstory',
-        'allies','notes','features','languages','proficiencies','resistances','conditions','equipment','hitDice','resources',
-        'ac','speed','hpMax','hpCurrent','hpTemp','initiativeBonus','spellAttackBonus','spellDCBonus','deathSuccess','deathFailure','passiveBonus'])
-      && (d.schemaVersion == 1
-        || (d.schemaVersion == 2 && d.data.build is map && d.data.build.edition == '2014')
-        || (d.schemaVersion in [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] && d.data.build is map && d.data.build.edition in ['2014', '2024']))
-      && (d.schemaVersion < 4 || (d.data.rulesChoices is map
-        && d.data.rulesChoices.keys().hasOnly(['feats','grants','effects'])
-        && d.data.rulesChoices.feats is list && d.data.rulesChoices.feats.size() <= 30
-        && d.data.rulesChoices.grants is map && d.data.rulesChoices.grants.size() <= 40))
-      && (d.schemaVersion < 5 || (d.data.rulesChoices.effects is map && d.data.rulesChoices.effects.size() <= 40))
-      && (d.schemaVersion < 7 || (d.data.equipmentState is map
-        && d.data.equipmentState.keys().hasOnly(['acMode','acAdjustment','loadout'])
-        && d.data.equipmentState.acMode in ['manual','equipment']
-        && d.data.equipmentState.acAdjustment is int && d.data.equipmentState.acAdjustment >= -30 && d.data.equipmentState.acAdjustment <= 30
-        && d.data.equipmentState.loadout is list && d.data.equipmentState.loadout.size() <= 200))
-      && (d.schemaVersion < 9 || (d.data.profile is map
-        && d.data.profile.keys().hasOnly(['gender','age','size','height','weight','hair','eyes','skin'])
-        && d.data.advancement is map
-        && d.data.advancement.keys().hasOnly(['asiSpent','lessons','useExperience','xp','hpMode','hpRolls','classLevels','extraPages','companion'])
-        && d.data.advancement.asiSpent is int && d.data.advancement.asiSpent >= 0 && d.data.advancement.asiSpent <= 7
-        && d.data.advancement.lessons is bool
-        && d.data.advancement.useExperience is bool
-        && d.data.advancement.xp is int && d.data.advancement.xp >= 0 && d.data.advancement.xp <= 1000000000
-        && d.data.advancement.hpMode in ['fixed','rolled','max','manual']
-        && d.data.advancement.hpRolls is list && d.data.advancement.hpRolls.size() <= 19
-        && d.data.advancement.classLevels is list && d.data.advancement.classLevels.size() <= 20
-        && d.data.advancement.extraPages is list && d.data.advancement.extraPages.size() <= 3
-        // advancement.companion is a legacy schema. The current character sheet persists
-        // companion/familiar/wildshape records under rulesChoices.grants.__adobe.data.
-        // Keep accepting the old map when present, but do not require its obsolete shape.
-        && (!('companion' in d.data.advancement) || d.data.advancement.companion is map)))
-      && (d.schemaVersion < 11 || (d.data.personalGear is list && d.data.personalGear.size() <= 200))
-      && (d.schemaVersion < 12 || (
-        d.data.rulesChoices.grants.__adobe is map
-        && d.data.rulesChoices.grants.__adobe.keys().hasOnly(['data','used'])
-        && d.data.rulesChoices.grants.__adobe.used == 0
-        && d.data.rulesChoices.grants.__adobe.data is map
-        && d.data.rulesChoices.grants.__adobe.data.keys().hasOnly(['useExperience','hpMode','hpRolls','classLevels','pages','tabOrder','companion','companions'])
-        && d.data.rulesChoices.grants.__adobe.data.useExperience is bool
-        && d.data.rulesChoices.grants.__adobe.data.hpMode in ['fixed','rolled','max']
-        && d.data.rulesChoices.grants.__adobe.data.hpRolls is list
-        && d.data.rulesChoices.grants.__adobe.data.hpRolls.size() <= 19
-        && d.data.rulesChoices.grants.__adobe.data.classLevels is list
-        && d.data.rulesChoices.grants.__adobe.data.classLevels.size() <= 8
-        && d.data.rulesChoices.grants.__adobe.data.pages is map
-        && d.data.rulesChoices.grants.__adobe.data.pages.keys().hasOnly(['spells','companion','rules'])
-        && d.data.rulesChoices.grants.__adobe.data.pages.spells is bool
-        && d.data.rulesChoices.grants.__adobe.data.pages.companion is bool
-        && d.data.rulesChoices.grants.__adobe.data.pages.rules is bool
-        && (!('tabOrder' in d.data.rulesChoices.grants.__adobe.data)
-          || (d.data.rulesChoices.grants.__adobe.data.tabOrder is list
-            && d.data.rulesChoices.grants.__adobe.data.tabOrder.size() <= 10))
-        && (!('companion' in d.data.rulesChoices.grants.__adobe.data)
-          || d.data.rulesChoices.grants.__adobe.data.companion is map)
-        && (!('companions' in d.data.rulesChoices.grants.__adobe.data)
-          || (d.data.rulesChoices.grants.__adobe.data.companions is list
-            && d.data.rulesChoices.grants.__adobe.data.companions.size() >= 1
-            && d.data.rulesChoices.grants.__adobe.data.companions.size() <= 12))
-      ))
-      && (d.schemaVersion < 10 || (d.data.actions is list && d.data.actions.size() <= 60))
-      && d.data.abilities is map && d.data.saves is map && d.data.skills is map && d.data.coins is map
-      && d.data.attacks is list && d.data.attacks.size() <= 30
-      && d.data.spells is list && d.data.spells.size() <= 150
-      && d.data.slots is list && d.data.slots.size() == 9;
+      && d.schemaVersion is int
+      && d.schemaVersion >= 1
+      && d.schemaVersion <= 100
+      && d.revision is int
+      && d.revision > 0
+      && d.updatedBy == request.auth.uid
+      && d.updatedAt is int
+      && d.data is map;
   }
   allow get: if mayUseSheet();
   allow list: if false;

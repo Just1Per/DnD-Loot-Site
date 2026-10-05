@@ -62,7 +62,83 @@ var CharacterClassProgression=(()=>{
     feature('Ability Score Improvement',16,'Gain Ability Score Improvement or another feat you qualify for.'),feature('Action Surge (two uses)',17,'You have two Action Surge uses between rests, but can use it only once on a turn.'),feature('Indomitable (three uses)',17,'You can use Indomitable three times between Long Rests.'),
     feature('Subclass feature',18,'Gain the level 18 feature from your chosen Fighter subclass.'),feature('Epic Boon',19,'Gain an Epic Boon feat or another feat you qualify for.'),feature('Three Extra Attacks',20,'Attack four times instead of once when you take the Attack action.')
   ];
-  const detailedClasses={fighter:{'2014':fighter2014,'2024':fighter2024}};
+  const warlock2014=[
+    feature('Otherworldly Patron',1,'Choose your Warlock patron; patron features are added at Warlock levels 1, 6, 10, and 14.'),
+    feature('Pact Magic',1,'Cast Warlock spells using pact slots. Pact slots share one slot level and return after a short or long rest.'),
+    feature('Eldritch Invocations',2,'Choose supernatural invocations. Your number of known invocations increases as your Warlock level rises.'),
+    feature('Pact Boon',3,'Choose your pact boon, granting a defining pact benefit.'),
+    feature('Ability Score Improvement',4,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Otherworldly Patron feature',6,'Gain the level 6 feature from your chosen patron.'),
+    feature('Ability Score Improvement',8,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Otherworldly Patron feature',10,'Gain the level 10 feature from your chosen patron.'),
+    feature('Mystic Arcanum (6th level)',11,'Choose a 6th-level Warlock spell as an arcanum you can cast once per long rest.',{recharge:'long rest'}),
+    feature('Ability Score Improvement',12,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Mystic Arcanum (7th level)',13,'Choose a 7th-level Warlock spell as an arcanum you can cast once per long rest.',{recharge:'long rest'}),
+    feature('Otherworldly Patron feature',14,'Gain the level 14 feature from your chosen patron.'),
+    feature('Mystic Arcanum (8th level)',15,'Choose an 8th-level Warlock spell as an arcanum you can cast once per long rest.',{recharge:'long rest'}),
+    feature('Ability Score Improvement',16,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Mystic Arcanum (9th level)',17,'Choose a 9th-level Warlock spell as an arcanum you can cast once per long rest.',{recharge:'long rest'}),
+    feature('Ability Score Improvement',19,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Eldritch Master',20,'Spend a minute entreating your patron to recover expended Pact Magic slots.',{recharge:'long rest'})
+  ];
+  const warlock2024=[
+    feature('Eldritch Invocations',1,'Gain an Eldritch Invocation; your available invocation count increases with Warlock level.'),
+    feature('Pact Magic',1,'Cast prepared Warlock spells using pact slots that return after a short or long rest.'),
+    feature('Magical Cunning',2,'Perform a short ritual to recover expended Pact Magic slots without completing a Short Rest.',{recharge:'long rest'}),
+    feature('Warlock Subclass',3,'Choose a Warlock patron subclass; later subclass features arrive at levels 6, 10, and 14.'),
+    feature('Ability Score Improvement',4,'Gain Ability Score Improvement or another feat you qualify for.'),
+    feature('Subclass feature',6,'Gain the level 6 feature from your chosen Warlock subclass.'),
+    feature('Ability Score Improvement',8,'Gain Ability Score Improvement or another feat you qualify for.'),
+    feature('Contact Patron',9,'You can contact your patron through Contact Other Plane with special reliability and usage.'),
+    feature('Subclass feature',10,'Gain the level 10 feature from your chosen Warlock subclass.'),
+    feature('Mystic Arcanum (level 6 spell)',11,'Choose a level 6 Warlock spell as a Mystic Arcanum.',{recharge:'long rest'}),
+    feature('Ability Score Improvement',12,'Gain Ability Score Improvement or another feat you qualify for.'),
+    feature('Mystic Arcanum (level 7 spell)',13,'Choose a level 7 Warlock spell as a Mystic Arcanum.',{recharge:'long rest'}),
+    feature('Subclass feature',14,'Gain the level 14 feature from your chosen Warlock subclass.'),
+    feature('Mystic Arcanum (level 8 spell)',15,'Choose a level 8 Warlock spell as a Mystic Arcanum.',{recharge:'long rest'}),
+    feature('Ability Score Improvement',16,'Gain Ability Score Improvement or another feat you qualify for.'),
+    feature('Mystic Arcanum (level 9 spell)',17,'Choose a level 9 Warlock spell as a Mystic Arcanum.',{recharge:'long rest'}),
+    feature('Epic Boon',19,'Gain an Epic Boon feat or another feat you qualify for.'),
+    feature('Eldritch Master',20,'Magical Cunning improves so it restores all expended Pact Magic slots.')
+  ];
+  const wizard2014=[
+    feature('Spellcasting',1,'Use Intelligence to prepare and cast Wizard spells recorded in your spellbook.'),
+    feature('Arcane Recovery',1,'Once per day after a short rest, recover expended spell-slot levels based on your Wizard level.',{recharge:'long rest'}),
+    feature('Arcane Tradition',2,'Choose a Wizard tradition; it grants additional features as your Wizard level rises.'),
+    feature('Ability Score Improvement',4,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Arcane Tradition feature',6,'Gain the level 6 feature from your chosen Wizard tradition.'),
+    feature('Ability Score Improvement',8,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Arcane Tradition feature',10,'Gain the level 10 feature from your chosen Wizard tradition.'),
+    feature('Ability Score Improvement',12,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Arcane Tradition feature',14,'Gain the level 14 feature from your chosen Wizard tradition.'),
+    feature('Ability Score Improvement',16,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Spell Mastery',18,'Choose a level 1 and level 2 Wizard spell to cast at their lowest level without spending spell slots.'),
+    feature('Ability Score Improvement',19,'Increase ability scores or choose a feat, following the 2014 rules.'),
+    feature('Signature Spells',20,'Choose two level 3 Wizard spells as signature spells with special preparation and free-cast benefits.')
+  ];
+  const wizard2024=[
+    feature('Spellcasting',1,'Use Intelligence to prepare and cast Wizard spells from your spellbook; add two Wizard spells whenever you gain a Wizard level.'),
+    feature('Ritual Adept',1,'Cast eligible Wizard spells from your spellbook as rituals without preparing them.'),
+    feature('Arcane Recovery',1,'After a Short Rest, recover expended spell-slot levels based on your Wizard level.',{recharge:'long rest'}),
+    feature('Scholar',2,'Gain Expertise in one eligible Intelligence-based scholarly skill in which you are proficient.'),
+    feature('Wizard Subclass',3,'Choose a Wizard subclass; later subclass features arrive at levels 6, 10, and 14.'),
+    feature('Ability Score Improvement',4,'Gain Ability Score Improvement or another feat you qualify for.'),
+    feature('Memorize Spell',5,'After a Short Rest, replace one prepared level 1+ Wizard spell with another eligible spell from your spellbook.'),
+    feature('Subclass feature',6,'Gain the level 6 feature from your chosen Wizard subclass.'),
+    feature('Ability Score Improvement',8,'Gain Ability Score Improvement or another feat you qualify for.'),
+    feature('Subclass feature',10,'Gain the level 10 feature from your chosen Wizard subclass.'),
+    feature('Ability Score Improvement',12,'Gain Ability Score Improvement or another feat you qualify for.'),
+    feature('Subclass feature',14,'Gain the level 14 feature from your chosen Wizard subclass.'),
+    feature('Ability Score Improvement',16,'Gain Ability Score Improvement or another feat you qualify for.'),
+    feature('Spell Mastery',18,'Choose a level 1 and level 2 action-casting spell in your spellbook to cast at their lowest level without slots.'),
+    feature('Epic Boon',19,'Gain an Epic Boon feat or another feat you qualify for.'),
+    feature('Signature Spells',20,'Choose two level 3 Wizard spells as signature spells with special preparation and free-cast benefits.')
+  ];
+  const detailedClasses={
+    fighter:{'2014':fighter2014,'2024':fighter2024},
+    warlock:{'2014':warlock2014,'2024':warlock2024},
+    wizard:{'2014':wizard2014,'2024':wizard2024}
+  };
   const detailedSubclasses={
     undead:{classId:'warlock',name:'The Undead',edition:'2014',source:'VRGR',features:[
       feature('Expanded Spell List',1,'Your patron expands the Warlock spell options associated with this subclass.'),
