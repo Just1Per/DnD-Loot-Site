@@ -1,4 +1,4 @@
-// D&D Vault Firestore Rules Revision: 22
+// D&D Vault Firestore Rules Revision: 23
 // Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
@@ -9,6 +9,7 @@
 // Revision 20: expanded first-party race/background/subclass catalogues; permissions and schema unchanged
 // Revision 21: spell-generator filtering + Feats-page choice flow; permissions and schema unchanged
 // Revision 22: unified Vault character-sheet visual theme; permissions and schema unchanged
+// Revision 23: validate multi-companion payloads and optional Companion/Rules page state
 rules_version = '2';
 service cloud.firestore {
 match /databases/{database}/documents {
@@ -460,9 +461,11 @@ match /characterSheets/{charId} {
         && (!('tabOrder' in d.data.rulesChoices.grants.__adobe.data)
           || (d.data.rulesChoices.grants.__adobe.data.tabOrder is list
             && d.data.rulesChoices.grants.__adobe.data.tabOrder.size() <= 10))
-        && d.data.rulesChoices.grants.__adobe.data.companion is map
+        && (!('companion' in d.data.rulesChoices.grants.__adobe.data)
+          || d.data.rulesChoices.grants.__adobe.data.companion is map)
         && (!('companions' in d.data.rulesChoices.grants.__adobe.data)
           || (d.data.rulesChoices.grants.__adobe.data.companions is list
+            && d.data.rulesChoices.grants.__adobe.data.companions.size() >= 1
             && d.data.rulesChoices.grants.__adobe.data.companions.size() <= 12))
       ))
       && (d.schemaVersion < 10 || (d.data.actions is list && d.data.actions.size() <= 60))
