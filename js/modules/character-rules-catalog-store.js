@@ -4,7 +4,8 @@
  * This data is shared by every campaign. Campaign documents store selections only.
  */
 var CharacterRulesCatalogStore=(()=>{
-  const D=()=>window.__DND_VAULT_DEPS__||{};
+  const deps=window.__DND_VAULT_DEPS__||{};
+  const D=()=>deps;
   const release=e=>e==='2024'?'2024':'2014';
   const path=(edition,part)=>['rulesCatalog',release(edition),'parts',part];
 
