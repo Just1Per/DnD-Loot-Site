@@ -162,7 +162,10 @@ async function loadCharacters() {
   if (activeCampaign?.id !== id) return;
   characters = snap.docs.map(d => ({ ...d.data(), id: d.id }));
   const mine = myCharacters();
-  if (!mine.some(c => c.id === selectedCharacter?.id)) selectedCharacter = mine[0] || null;
+  const rememberedId = rememberedActiveCharacterId(id);
+  const remembered = mine.find(c => c.id === rememberedId) || null;
+  if (!mine.some(c => c.id === selectedCharacter?.id)) selectedCharacter = remembered || mine[0] || null;
+  if (selectedCharacter?.id) rememberActiveCharacter(selectedCharacter.id, id);
 }
 async function loadSaves() {
   const id = activeCampaign?.id; if (!id) { saves = []; return; }
