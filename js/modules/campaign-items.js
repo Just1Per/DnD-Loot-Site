@@ -36,12 +36,36 @@ async function runVaultButton(button,work) {
   try {await work();}catch(error){console.error(error);alert(error.message||'The action could not be completed.');}
   finally {if(button)button.disabled=false;}
 }
+function confirmCampaignInventoryUpgrade() {
+  return new Promise(resolve => {
+    const overlay=document.createElement('div');
+    overlay.className='vault-confirm-overlay';
+    overlay.setAttribute('role','presentation');
+    overlay.innerHTML=`<div class="vault-confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="inventoryUpgradeTitle" aria-describedby="inventoryUpgradeDescription">
+      <div class="vault-confirm-icon" aria-hidden="true">⚠</div>
+      <h2 id="inventoryUpgradeTitle">Upgrade Campaign Inventory?</h2>
+      <p id="inventoryUpgradeDescription">This will prepare a campaign copy of the magical-item catalogue while preserving existing saved items and loot ownership.</p>
+      <div class="vault-confirm-warning"><strong>Allow up to 2–5 minutes.</strong><span>The exact time depends on the size of the item catalogue and your connection.</span></div>
+      <p class="vault-confirm-note">Keep this page open while the upgrade is running. Do not start the upgrade again unless it is interrupted. Progress will be shown as items are processed, and an interrupted upgrade can safely be retried.</p>
+      <div class="vault-confirm-actions"><button type="button" class="toolbar-btn" data-upgrade-cancel>Cancel</button><button type="button" class="btn-primary" data-upgrade-confirm>Upgrade Inventory</button></div>
+    </div>`;
+    const finish=value=>{document.removeEventListener('keydown',onKey);overlay.remove();resolve(value);};
+    const onKey=event=>{if(event.key==='Escape')finish(false);};
+    overlay.querySelector('[data-upgrade-cancel]').addEventListener('click',()=>finish(false));
+    overlay.querySelector('[data-upgrade-confirm]').addEventListener('click',()=>finish(true));
+    overlay.addEventListener('click',event=>{if(event.target===overlay)finish(false);});
+    document.addEventListener('keydown',onKey);
+    document.body.appendChild(overlay);
+    overlay.querySelector('[data-upgrade-confirm]').focus();
+  });
+}
+
 function renderCampaignToolbar() {
   const bar=document.getElementById('campaignInventoryToolbar');if(!bar)return;
   if(activeCampaign?.inventoryVersion!==2){
     bar.innerHTML=canManageCampaign()?'<div class="dm-tool-card"><h2>Upgrade this campaign’s inventory</h2><p>Copy the existing catalogue into this campaign and preserve saved items and loot ownership. Existing root items and legacy records will remain unchanged.</p><button type="button" id="migrateCampaignInventory" class="btn-primary">Upgrade campaign inventory</button><p id="migrationProgress" aria-live="polite"></p></div>':'<p class="player-empty">Your DM needs to upgrade this campaign’s inventory before items are available.</p>';
     bar.querySelector('#migrateCampaignInventory')?.addEventListener('click',event=>runVaultButton(event.currentTarget,async()=>{
-      if(!confirm('Upgrade this campaign? Existing item details, visibility, saves and assigned loot will be preserved in campaign copies.'))return;
+      if(!await confirmCampaignInventoryUpgrade())return;
       const id=activeCampaign.id;let cursor=null,processed=0;
       do {const result=await vaultCall('vaultMigrateCampaign',{campaignId:id,cursor});processed+=result.migrated;
         if(activeCampaign?.id!==id)return;
