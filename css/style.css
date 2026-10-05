@@ -1675,3 +1675,27 @@ button:disabled { opacity:.55; cursor:not-allowed; }
   padding:7px 10px;
   font-size:.72rem;
 }
+
+
+/* DM campaign-library bulk controls */
+.campaign-bulk-controls{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:6px 0 0;
+  padding:7px 9px;
+  border:1px solid #d4af37;
+  border-radius:9px;
+  background:linear-gradient(180deg,#fffaf0,#f3e5cd);
+}
+.campaign-bulk-controls strong{
+  color:#5c1d1d;
+  font-size:.78rem;
+  letter-spacing:.03em;
+  margin-right:3px;
+}
+.campaign-bulk-controls .toolbar-btn{
+  padding:5px 9px;
+  font-size:.76rem;
+}
