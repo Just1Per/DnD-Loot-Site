@@ -88,7 +88,6 @@ async function loadMagicItemLibrary() {
     if (canManageCampaign()) await loadCampaignSupply();
     magicItemLibraryLoaded = true;
     populateSourceFilter();
-    populateCampaignFilter();
     renderCards();
   } catch (error) {
     console.error("Magical item library load failed:", error);
@@ -154,7 +153,6 @@ function applyFilters(list) {
   const search   = val("search").toLowerCase().trim();
   const rarity   = val("rarityFilter");
   const source   = val("sourceFilter");
-  const campaign = val("campaignFilter");
   const cls      = val("classFilter");
   const category = val("categoryFilter");
   const owner    = val("ownerFilter");
@@ -173,7 +171,6 @@ function applyFilters(list) {
 
     if (rarity   && item.rarity   !== rarity)   return false;
     if (source   && item.source   !== source)   return false;
-    if (campaign && item.campaign !== campaign) return false;
     if (category && item.category !== category) return false;
     if (cls      && !item.classes?.includes(cls)) return false;
     if (owner && !inventory.some(e=>e.itemId===item.id && e.characterId===owner && e.quantity>0)) return false;
