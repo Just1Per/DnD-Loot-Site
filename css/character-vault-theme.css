@@ -1450,3 +1450,226 @@
 .character-sheet .sheet-progression-feature footer{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
 .character-sheet .sheet-progression-feature footer span{padding:2px 5px;border-radius:5px;background:#f1e5d3;color:var(--vault-brown);font-size:8px}
 .character-sheet .sheet-progression-coverage{margin:0;padding:7px 10px;border-top:1px solid var(--vault-border-soft);color:var(--vault-muted);font-size:9px}
+
+
+/* Revision 29: unified visual language across every Character Sheet page.
+   Page-specific rules should control layout; these rules own shared controls,
+   actions, cards, text areas, tables and interaction states. */
+#characterSheetDialog.character-sheet{
+  --sheet-control-height:38px;
+  --sheet-control-radius:8px;
+  --sheet-card-radius:10px;
+  --sheet-control-bg:#fffdf9;
+  --sheet-control-border:var(--vault-border-soft);
+  --sheet-card-bg:linear-gradient(180deg,#fffdf9,#f7efe2);
+  --sheet-card-shadow:0 3px 10px rgba(43,26,14,.06);
+}
+#characterSheetDialog .sheet-panel{
+  width:100%;
+  max-width:1180px;
+  margin-inline:auto;
+  color:var(--vault-ink);
+}
+#characterSheetDialog .sheet-panel>p:not(.sheet-help),
+#characterSheetDialog .sheet-rule-text{
+  color:var(--vault-ink);
+  line-height:1.5;
+}
+#characterSheetDialog :is(
+  .sheet-field input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-field select,
+  .sheet-field textarea,
+  .sheet-hp-tools input,
+  .sheet-defense-selectors select,
+  .sheet-inventory-add select,
+  .sheet-equipment-controls select,
+  .sheet-class-level-row .sheet-subclass-select,
+  .sheet-companion-card input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-companion-card select,
+  .sheet-companion-card textarea,
+  .sheet-spell-generator input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-spell-generator select,
+  .sheet-catalog input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-catalog select,
+  .sheet-catalog textarea
+){
+  box-sizing:border-box;
+  min-height:var(--sheet-control-height);
+  padding:8px 10px;
+  border:1px solid var(--sheet-control-border)!important;
+  border-radius:var(--sheet-control-radius)!important;
+  background-color:var(--sheet-control-bg)!important;
+  color:var(--vault-ink)!important;
+  font:600 13px/1.3 Georgia,"Times New Roman",serif;
+  box-shadow:inset 0 1px 2px rgba(43,26,14,.05)!important;
+  transition:border-color .16s,box-shadow .16s,background-color .16s;
+}
+#characterSheetDialog :is(
+  .sheet-field textarea,
+  .sheet-companion-card textarea,
+  .sheet-catalog textarea
+){
+  min-height:92px;
+  line-height:1.45;
+  resize:vertical;
+}
+#characterSheetDialog #sheet-story textarea{min-height:128px;}
+#characterSheetDialog #sheet-inventory textarea{min-height:120px;}
+#characterSheetDialog :is(
+  .sheet-field input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-field select,.sheet-field textarea,
+  .sheet-hp-tools input,
+  .sheet-defense-selectors select,
+  .sheet-inventory-add select,
+  .sheet-equipment-controls select,
+  .sheet-class-level-row .sheet-subclass-select,
+  .sheet-companion-card input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-companion-card select,.sheet-companion-card textarea,
+  .sheet-spell-generator input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-spell-generator select,
+  .sheet-catalog input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-catalog select,.sheet-catalog textarea
+):hover{
+  border-color:var(--vault-border)!important;
+  background-color:#fffefa!important;
+}
+#characterSheetDialog :is(
+  .sheet-field input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-field select,.sheet-field textarea,
+  .sheet-hp-tools input,
+  .sheet-defense-selectors select,
+  .sheet-inventory-add select,
+  .sheet-equipment-controls select,
+  .sheet-class-level-row .sheet-subclass-select,
+  .sheet-companion-card input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-companion-card select,.sheet-companion-card textarea,
+  .sheet-spell-generator input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-spell-generator select,
+  .sheet-catalog input:not([type="checkbox"]):not([type="radio"]),
+  .sheet-catalog select,.sheet-catalog textarea
+):focus{
+  outline:none!important;
+  border-color:var(--vault-gold-deep)!important;
+  box-shadow:0 0 0 3px rgba(212,175,55,.18),inset 0 1px 2px rgba(43,26,14,.05)!important;
+}
+#characterSheetDialog :is(.sheet-field,.sheet-companion-vitals label,.sheet-spell-generator-filters label){
+  color:var(--vault-muted);
+  font:600 12px/1.3 Georgia,"Times New Roman",serif;
+}
+#characterSheetDialog :is(.sheet-field,.sheet-companion-vitals label)>span:first-child{
+  display:block;
+  margin-bottom:5px;
+  color:var(--vault-muted);
+  font-size:11px;
+  font-weight:700;
+}
+#characterSheetDialog button:not(.sheet-slot-orb):not(.sheet-skill-orb):not(.sheet-info-button){
+  min-height:34px;
+  padding:7px 11px;
+  border-radius:7px;
+  line-height:1.15;
+}
+#characterSheetDialog :is(
+  .sheet-repeat-title,
+  .sheet-page-manager-actions,
+  .sheet-slot-actions,
+  .sheet-actions,
+  .sheet-action-controls
+){
+  gap:8px;
+}
+#characterSheetDialog :is(
+  .sheet-editor-box,.sheet-repeat,.sheet-rule-summary,.sheet-resource-panel,
+  .sheet-catalog,.sheet-summary-box,.sheet-point-panel,
+  .sheet-spell-generation,.sheet-spell-class-summary>article,
+  .sheet-auto-slot-grid>article,.sheet-inventory-column,
+  .sheet-rules-feature,.sheet-rules-table-card,.sheet-progression-details
+){
+  border-color:var(--vault-border-soft);
+  border-radius:var(--sheet-card-radius);
+}
+#characterSheetDialog :is(.sheet-editor-box,.sheet-repeat,.sheet-catalog,.sheet-summary-box,.sheet-spell-generation,.sheet-inventory-column){
+  background:var(--sheet-card-bg);
+  box-shadow:var(--sheet-card-shadow);
+}
+#characterSheetDialog :is(.sheet-editor-box,.sheet-repeat,.sheet-catalog,.sheet-summary-box)>h4,
+#characterSheetDialog :is(.sheet-editor-box,.sheet-repeat,.sheet-catalog,.sheet-summary-box)>.sheet-repeat-title{
+  border-bottom:1px solid var(--vault-border-soft);
+}
+#characterSheetDialog .sheet-repeat-title{
+  min-height:38px;
+  align-items:center;
+}
+#characterSheetDialog .sheet-repeat-title :is(h3,h4,h5){margin-top:0;margin-bottom:0;}
+#characterSheetDialog details{
+  border-color:var(--vault-border-soft);
+}
+#characterSheetDialog details>summary{
+  color:var(--vault-burgundy);
+  font-family:"Cinzel",Georgia,serif;
+  font-weight:700;
+}
+#characterSheetDialog :is(.sheet-spell-table,.sheet-gear-table,.sheet-inventory-table,.sheet-summary-box table,.sheet-rules-table){
+  width:100%;
+  border-collapse:collapse;
+  background:#fffdf9;
+}
+#characterSheetDialog :is(.sheet-spell-table,.sheet-gear-table,.sheet-inventory-table,.sheet-summary-box table,.sheet-rules-table) th{
+  padding:8px 7px!important;
+  border-bottom:2px solid var(--vault-border)!important;
+  background:#eee3d2!important;
+  color:var(--vault-burgundy)!important;
+  font:700 11px/1.25 "Cinzel",Georgia,serif!important;
+  letter-spacing:.035em;
+}
+#characterSheetDialog :is(.sheet-spell-table,.sheet-gear-table,.sheet-inventory-table,.sheet-summary-box table,.sheet-rules-table) td{
+  padding:7px!important;
+  border-bottom:1px solid #dfd3bf!important;
+  color:var(--vault-ink);
+}
+#characterSheetDialog :is(.sheet-spell-table,.sheet-gear-table,.sheet-inventory-table,.sheet-summary-box table,.sheet-rules-table) tbody tr:hover{
+  background:rgba(212,175,55,.07)!important;
+}
+#characterSheetDialog :is(.sheet-spell-table-wrap,.sheet-summary-table-wrap,.sheet-rules-table-wrap){
+  border:1px solid var(--vault-border-soft);
+  border-radius:8px;
+  overflow:auto;
+  background:#fffdf9;
+}
+#characterSheetDialog #sheet-rules .sheet-rules-feature,
+#characterSheetDialog #sheet-rules .sheet-rules-table-card{
+  background:var(--sheet-card-bg);
+  box-shadow:var(--sheet-card-shadow),inset 0 3px 0 rgba(212,175,55,.32);
+}
+#characterSheetDialog .sheet-companion-columns textarea{
+  min-height:92px!important;
+  padding:8px 10px!important;
+  font-size:12px!important;
+}
+#characterSheetDialog .sheet-companion-vitals input,
+#characterSheetDialog .sheet-companion-vitals select{
+  min-height:34px!important;
+  padding:6px 28px 6px 8px!important;
+  font-size:11px!important;
+}
+#characterSheetDialog .sheet-companion-skill select{
+  min-height:30px!important;
+  padding:4px 24px 4px 6px!important;
+}
+#characterSheetDialog .sheet-spell-generator-row,
+#characterSheetDialog .sheet-feat-result,
+#characterSheetDialog .sheet-catalog-result{
+  border-color:var(--vault-border-soft);
+  background:#fffdf9;
+}
+#characterSheetDialog :is(.sheet-help,.sheet-empty){
+  line-height:1.45;
+}
+#characterSheetDialog :is(input,select,textarea,button):focus-visible{
+  outline:2px solid var(--vault-gold-deep);
+  outline-offset:2px;
+}
+@media(max-width:700px){
+  #characterSheetDialog .sheet-panel{max-width:none;}
+  #characterSheetDialog button:not(.sheet-slot-orb):not(.sheet-skill-orb):not(.sheet-info-button){min-height:38px;}
+}
