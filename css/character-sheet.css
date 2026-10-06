@@ -787,3 +787,99 @@
 @media(max-width:650px){.sheet-point-panel{grid-template-columns:1fr}.sheet-point-metrics{gap:6px}.sheet-point-metrics>div{min-width:80px;padding:6px}.sheet-ability-emblem{width:25px;height:25px}}
 @media print{.sheet-ability-emblem{width:20px;height:20px;margin-bottom:2px}.sheet-summary-ability{background:white;box-shadow:none}.sheet-point-panel{background:white}}
 @media print{.sheet-summary-ability{position:relative}.sheet-summary-ability .sheet-ability-emblem{position:absolute;left:4px;top:4px;width:12px;height:12px}}
+
+
+/* Character Sheet print page chooser */
+.sheet-print-dialog{
+  width:min(760px,calc(100vw - 28px));
+  max-height:min(86vh,820px);
+  padding:0;
+  border:1px solid #8f7654;
+  border-radius:14px;
+  background:#fffaf0;
+  color:#33281f;
+  box-shadow:0 24px 70px rgba(28,18,10,.28);
+}
+.sheet-print-dialog::backdrop{background:rgba(28,18,10,.48)}
+.sheet-print-dialog-card{display:grid;gap:0}
+.sheet-print-dialog-card>header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:18px;
+  padding:20px 22px 16px;
+  border-bottom:1px solid #dfcfb7;
+  background:linear-gradient(145deg,#fffdf8,#f1e2ca);
+}
+.sheet-print-dialog-card>header h2{
+  margin:3px 0 5px;
+  color:#5c1d1d;
+  font:700 22px/1.2 Cinzel,Georgia,serif;
+}
+.sheet-print-dialog-card>header p{margin:0;color:#6d5e50;font-size:12px}
+.sheet-print-dialog-card>header>[data-print-close]{
+  width:34px;height:34px;min-width:34px;padding:0;
+  border:1px solid #bba98e;border-radius:8px;
+  background:#fffaf0;color:#5c1d1d;font-size:20px;line-height:1;
+}
+.sheet-print-dialog-tools{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  padding:12px 22px;
+  border-bottom:1px solid #eadfce;
+  background:#fffdf9;
+}
+.sheet-print-dialog-tools button{
+  min-height:32px;padding:6px 10px;
+  border:1px solid #c8b79e;border-radius:7px;
+  background:#fffaf0;color:#5c1d1d;font-weight:700;
+}
+.sheet-print-dialog-tools span{margin-left:auto;color:#766657;font-size:11px;font-weight:700}
+.sheet-print-page-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  padding:16px 22px;
+  overflow:auto;
+  max-height:48vh;
+}
+.sheet-print-page-option{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:10px;
+  min-height:58px;
+  padding:10px 12px;
+  border:1px solid #dfcfb7;
+  border-radius:10px;
+  background:#fffdf9;
+  cursor:pointer;
+}
+.sheet-print-page-option:hover{border-color:#a98d60;background:#fff8eb}
+.sheet-print-page-option:has(input:checked){
+  border-color:#8b6b35;
+  box-shadow:inset 3px 0 0 #d4af37;
+  background:#fff8e7;
+}
+.sheet-print-page-option input{width:18px;height:18px;accent-color:#5c1d1d}
+.sheet-print-page-option span{display:grid;gap:2px}
+.sheet-print-page-option strong{color:#4e261f;font:700 12px/1.25 Cinzel,Georgia,serif}
+.sheet-print-page-option small{color:#857363;font-size:10px}
+.sheet-print-dialog-note{margin:0;padding:0 22px 14px;color:#766657;font-size:11px;line-height:1.45}
+.sheet-print-dialog-card>footer{
+  display:flex;justify-content:flex-end;gap:9px;
+  padding:14px 22px 18px;
+  border-top:1px solid #dfcfb7;
+  background:#f8efdf;
+}
+.sheet-print-dialog-card>footer button{
+  min-height:36px;padding:8px 13px;border-radius:8px;
+}
+@media(max-width:620px){
+  .sheet-print-page-grid{grid-template-columns:1fr;max-height:52vh}
+  .sheet-print-dialog-tools span{width:100%;margin-left:0}
+}
+@media print{
+  body.printing-character-sheet #characterSheetDialog [data-sheet-section].sheet-print-excluded{
+    display:none!important;
+  }
+}
