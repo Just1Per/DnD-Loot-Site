@@ -580,7 +580,7 @@ function sheetPrintPageOptions() {
   if(!dialog)return[];
   return [...dialog.querySelectorAll('[data-sheet-section]')].map(panel=>{
     const key=panel.dataset.sheetSection;
-    const tab=dialog.querySelector('[data-sheet-tab="'+CSS.escape(key)+'"]');
+    const tab=[...dialog.querySelectorAll('[data-sheet-tab]')].find(button=>button.dataset.sheetTab===key);
     const heading=panel.querySelector(':scope > h3');
     return {key,label:(tab?.textContent||heading?.textContent||key).trim()};
   });
