@@ -879,6 +879,9 @@
   .sheet-print-dialog-tools span{width:100%;margin-left:0}
 }
 @media print{
+  body.printing-character-sheet #characterSheetDialog [data-sheet-section]:not(.sheet-print-excluded){
+    display:block!important;
+  }
   body.printing-character-sheet #characterSheetDialog [data-sheet-section].sheet-print-excluded{
     display:none!important;
   }
