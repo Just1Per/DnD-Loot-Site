@@ -664,3 +664,142 @@
   .sheet-overview-important-row{grid-template-columns:24px minmax(0,1fr)}
   .sheet-overview-important-row button{grid-column:2;justify-self:start}
 }
+
+
+/* Revision 31: class controls stay compact; choices/reference use full width below. */
+.sheet-class-level-list{
+  display:grid;
+  gap:14px;
+  margin:.85rem 0;
+}
+.sheet-class-block{
+  display:grid;
+  gap:0;
+  border:1px solid #d9c9ad;
+  border-radius:12px;
+  background:#fffdf8;
+  overflow:hidden;
+  box-shadow:0 4px 14px rgba(74,48,16,.045);
+}
+.sheet-class-block .sheet-class-level-row{
+  border:0;
+  border-radius:0;
+  margin:0;
+  padding:12px 13px;
+  background:linear-gradient(180deg,#fffdf9,#f7eddd);
+}
+.sheet-class-block-content{
+  display:grid;
+  gap:12px;
+  padding:12px 13px 14px;
+  border-top:1px solid #e4d6c0;
+  background:#fffaf2;
+}
+.sheet-class-block-content:empty{display:none}
+.sheet-class-block .sheet-class-choice-panel{
+  margin:0;
+}
+.sheet-class-block .sheet-progression-details{
+  margin:0!important;
+  width:100%;
+  max-width:none;
+  box-sizing:border-box;
+}
+.sheet-class-block .sheet-progression-details>summary{
+  padding:14px 16px;
+}
+.sheet-class-block .sheet-progression-summary-main>strong{
+  font-size:15px;
+}
+.sheet-class-block .sheet-progression-summary-main>small{
+  font-size:11px;
+  line-height:1.45;
+}
+.sheet-class-block .sheet-progression-levels{
+  width:100%;
+}
+.sheet-class-block .sheet-progression-level{
+  padding:16px;
+}
+.sheet-class-block .sheet-progression-level>header{
+  margin-bottom:12px;
+}
+.sheet-class-block .sheet-progression-level-badge{
+  min-width:62px;
+  min-height:30px;
+  font-size:10px;
+}
+.sheet-class-block .sheet-progression-level-heading strong{
+  font-size:13px;
+}
+.sheet-class-block .sheet-progression-level-heading small{
+  font-size:10px;
+}
+.sheet-class-block .sheet-progression-level-count{
+  font-size:10px;
+}
+.sheet-class-block .sheet-progression-features{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  border:0;
+  border-radius:0;
+  overflow:visible;
+  background:transparent;
+}
+.sheet-class-block .sheet-progression-feature{
+  padding:12px 13px;
+  border:1px solid rgba(126,91,43,.16);
+  border-radius:9px;
+  background:#fffdf9;
+  box-shadow:0 2px 6px rgba(43,26,14,.035);
+}
+.sheet-class-block .sheet-progression-feature+.sheet-progression-feature{
+  border-top:1px solid rgba(126,91,43,.16);
+}
+.sheet-class-block .sheet-progression-feature.is-subclass{
+  border-left:4px solid var(--vault-burgundy,#632d21);
+  background:#fff9f2;
+}
+.sheet-class-block .sheet-progression-feature-heading strong{
+  font-size:12px;
+}
+.sheet-class-block .sheet-progression-feature p{
+  margin-top:7px;
+  font-size:11px;
+  line-height:1.55;
+}
+.sheet-class-block .sheet-progression-feature footer{
+  margin-top:8px;
+}
+.sheet-class-block .sheet-progression-feature footer span{
+  font-size:9px;
+}
+@media(max-width:980px){
+  .sheet-class-block .sheet-progression-features{
+    grid-template-columns:1fr;
+  }
+}
+@media(max-width:900px){
+  .sheet-class-block .sheet-class-level-row{
+    grid-template-columns:1fr auto;
+  }
+  .sheet-class-block .sheet-class-level-row .sheet-subclass-select,
+  .sheet-class-block .sheet-class-level-row small{
+    grid-column:1/-1;
+  }
+}
+@media(max-width:620px){
+  .sheet-class-block-content{
+    padding:10px;
+  }
+  .sheet-class-block .sheet-progression-details>summary{
+    padding:12px;
+  }
+  .sheet-class-block .sheet-progression-level{
+    padding:12px;
+  }
+  .sheet-class-block .sheet-progression-features{
+    grid-template-columns:1fr;
+  }
+}
