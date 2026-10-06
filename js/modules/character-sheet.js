@@ -53,6 +53,7 @@ function closeCharacterSheet(force = false) {
   closeSpellInformation();
   if(typeof closeFeatInformation==='function')closeFeatInformation();
   closeAttackPicker();
+  closeSheetPrintDialog();
   if(typeof stopEquipmentWatch!=='undefined'){stopEquipmentWatch?.();stopEquipmentWatch=null;}
   sheetSession = null;
   const dialog = document.getElementById('characterSheetDialog');
