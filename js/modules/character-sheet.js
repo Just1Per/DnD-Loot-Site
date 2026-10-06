@@ -53,6 +53,7 @@ function closeCharacterSheet(force = false) {
   closeSpellInformation();
   if(typeof closeFeatInformation==='function')closeFeatInformation();
   closeAttackPicker();
+  closeSheetPrintDialog();
   if(typeof stopEquipmentWatch!=='undefined'){stopEquipmentWatch?.();stopEquipmentWatch=null;}
   sheetSession = null;
   const dialog = document.getElementById('characterSheetDialog');
@@ -321,8 +322,7 @@ function renderCharacterSheet() {
   dialog.querySelector('#sheetExport').onclick = exportCharacterSheet;
   dialog.querySelector('#sheetPrint').onclick = () => {
     readSheetForm();
-    prepareSheetPrint();
-    window.print();
+    openSheetPrintDialog();
   };
 }
 function selectSheetTab(key) {
@@ -549,11 +549,23 @@ window.addEventListener('beforeunload', event => {
     event.returnValue = '';
   }
 });
-window.addEventListener('afterprint', () => document.body.classList.remove('printing-character-sheet'));
-function prepareSheetPrint() {
+function clearSheetPrintSelection() {
+  document.querySelectorAll('#characterSheetDialog [data-sheet-section].sheet-print-excluded').forEach(panel=>panel.classList.remove('sheet-print-excluded'));
+}
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('printing-character-sheet');
+  clearSheetPrintSelection();
+});
+function prepareSheetPrint(selectedSections = null) {
   if (!sheetSession || document.getElementById('tab-character-sheet').style.display === 'none')
     return;
   const dialog = document.getElementById('characterSheetDialog');
+  clearSheetPrintSelection();
+  if (selectedSections instanceof Set) {
+    dialog.querySelectorAll('[data-sheet-section]').forEach(panel=>{
+      panel.classList.toggle('sheet-print-excluded',!selectedSections.has(panel.dataset.sheetSection));
+    });
+  }
   dialog.querySelectorAll('.sheet-print-value').forEach(el => el.remove());
   dialog.querySelectorAll('textarea').forEach(input => {
     const mirror = document.createElement('div');
@@ -563,7 +575,61 @@ function prepareSheetPrint() {
   });
   document.body.classList.add('printing-character-sheet');
 }
-window.addEventListener('beforeprint', prepareSheetPrint);
+function sheetPrintPageOptions() {
+  const dialog=document.getElementById('characterSheetDialog');
+  if(!dialog)return[];
+  return [...dialog.querySelectorAll('[data-sheet-section]')].map(panel=>{
+    const key=panel.dataset.sheetSection;
+    const tab=[...dialog.querySelectorAll('[data-sheet-tab]')].find(button=>button.dataset.sheetTab===key);
+    const heading=panel.querySelector(':scope > h3');
+    return {key,label:(tab?.textContent||heading?.textContent||key).trim()};
+  });
+}
+function closeSheetPrintDialog() {
+  const printDialog=document.getElementById('sheetPrintDialog');
+  if(printDialog?.open)printDialog.close();
+  printDialog?.remove();
+}
+function openSheetPrintDialog() {
+  if(!sheetSession)return;
+  closeSheetPrintDialog();
+  const pages=sheetPrintPageOptions();
+  if(!pages.length)return;
+  const printDialog=document.createElement('dialog');
+  printDialog.id='sheetPrintDialog';
+  printDialog.className='vault-dialog sheet-print-dialog';
+  printDialog.setAttribute('aria-labelledby','sheetPrintDialogTitle');
+  printDialog.innerHTML=`<form method="dialog" class="sheet-print-dialog-card">
+    <header><div><span class="sheet-eyebrow">PRINT CHARACTER SHEET</span><h2 id="sheetPrintDialogTitle">Choose pages to print</h2><p>Select the character-sheet sections you want included.</p></div><button type="button" data-print-close aria-label="Close">×</button></header>
+    <div class="sheet-print-dialog-tools"><button type="button" data-print-all>Select all</button><button type="button" data-print-none>Clear all</button><span data-print-count></span></div>
+    <div class="sheet-print-page-grid">${pages.map((page,i)=>`<label class="sheet-print-page-option"><input type="checkbox" value="${sheetEscape(page.key)}" checked><span><strong>${sheetEscape(page.label)}</strong><small>Page ${i+1}</small></span></label>`).join('')}</div>
+    <p class="sheet-print-dialog-note">Your browser print window will open after this. You can still choose printer, copies, orientation and paper size there.</p>
+    <footer><button type="button" data-print-cancel>Cancel</button><button type="button" class="btn-primary" data-print-confirm>Print selected pages</button></footer>
+  </form>`;
+  document.body.appendChild(printDialog);
+  const checks=[...printDialog.querySelectorAll('input[type="checkbox"]')];
+  const count=printDialog.querySelector('[data-print-count]');
+  const confirm=printDialog.querySelector('[data-print-confirm]');
+  const update=()=>{const n=checks.filter(box=>box.checked).length;count.textContent=n+' of '+checks.length+' selected';confirm.disabled=n===0;};
+  checks.forEach(box=>box.addEventListener('change',update));
+  printDialog.querySelector('[data-print-all]').onclick=()=>{checks.forEach(box=>box.checked=true);update();};
+  printDialog.querySelector('[data-print-none]').onclick=()=>{checks.forEach(box=>box.checked=false);update();};
+  printDialog.querySelector('[data-print-close]').onclick=closeSheetPrintDialog;
+  printDialog.querySelector('[data-print-cancel]').onclick=closeSheetPrintDialog;
+  printDialog.addEventListener('cancel',event=>{event.preventDefault();closeSheetPrintDialog();});
+  confirm.onclick=()=>{
+    const selected=new Set(checks.filter(box=>box.checked).map(box=>box.value));
+    if(!selected.size)return;
+    closeSheetPrintDialog();
+    prepareSheetPrint(selected);
+    window.print();
+  };
+  update();
+  printDialog.showModal();
+}
+window.addEventListener('beforeprint', () => {
+  if (!document.body.classList.contains('printing-character-sheet')) prepareSheetPrint();
+});
 function renderSheetBuildControls() {
   const R = CharacterRules, M = CharacterSheetModel, f = sheetField;
   const options = object => [
