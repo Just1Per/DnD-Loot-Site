@@ -1923,3 +1923,227 @@
     flex-wrap:wrap;
   }
 }
+
+
+/* Revision 30: simplify Character Builder class reference hierarchy. */
+#characterSheetDialog .sheet-progression-details{
+  margin-top:10px;
+  border:1px solid var(--vault-border-soft);
+  border-radius:11px;
+  background:#fffdf9;
+  box-shadow:0 2px 7px rgba(43,26,14,.045);
+  overflow:hidden;
+}
+#characterSheetDialog .sheet-progression-details>summary{
+  list-style:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:13px 15px;
+  cursor:pointer;
+  background:#f8f0e3;
+  border:0;
+}
+#characterSheetDialog .sheet-progression-details>summary::-webkit-details-marker{display:none}
+#characterSheetDialog .sheet-progression-details>summary:hover{background:#f4ead9}
+#characterSheetDialog .sheet-progression-summary-main{
+  display:grid;
+  gap:3px;
+  min-width:0;
+}
+#characterSheetDialog .sheet-progression-summary-main>.sheet-eyebrow{
+  margin:0;
+  color:var(--vault-gold-deep);
+  font-size:8px;
+  letter-spacing:.13em;
+}
+#characterSheetDialog .sheet-progression-summary-main>strong{
+  color:var(--vault-burgundy);
+  font:700 14px/1.25 "Cinzel",Georgia,serif;
+}
+#characterSheetDialog .sheet-progression-summary-main>small{
+  color:var(--vault-muted);
+  font:400 10px/1.35 Georgia,"Times New Roman",serif;
+}
+#characterSheetDialog .sheet-progression-summary-side{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex:0 0 auto;
+}
+#characterSheetDialog .sheet-progression-count{
+  padding:4px 7px;
+  border:1px solid rgba(126,91,43,.2);
+  border-radius:999px;
+  background:#fffaf1;
+  color:var(--vault-brown);
+  font-size:9px;
+  font-weight:700;
+}
+#characterSheetDialog .sheet-progression-toggle-label{
+  color:var(--vault-muted);
+  font-size:9px;
+}
+#characterSheetDialog .sheet-progression-toggle-close{display:none}
+#characterSheetDialog .sheet-progression-details[open] .sheet-progression-toggle-open{display:none}
+#characterSheetDialog .sheet-progression-details[open] .sheet-progression-toggle-close{display:inline}
+#characterSheetDialog .sheet-progression-chevron{
+  width:8px;
+  height:8px;
+  border-right:2px solid var(--vault-burgundy);
+  border-bottom:2px solid var(--vault-burgundy);
+  transform:rotate(45deg);
+  transition:transform .16s ease;
+}
+#characterSheetDialog .sheet-progression-details[open] .sheet-progression-chevron{transform:rotate(225deg)}
+#characterSheetDialog .sheet-progression-details[open]>summary{
+  border-bottom:1px solid var(--vault-border-soft);
+}
+#characterSheetDialog .sheet-progression-levels{
+  display:grid;
+  gap:0;
+  padding:0;
+  background:#fffdf9;
+}
+#characterSheetDialog .sheet-progression-level{
+  padding:14px 15px 15px;
+  border:0;
+  border-left:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+#characterSheetDialog .sheet-progression-level+.sheet-progression-level{
+  border-top:1px solid rgba(126,91,43,.14);
+}
+#characterSheetDialog .sheet-progression-level>header{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  margin:0 0 10px;
+  padding:0;
+  border:0;
+}
+#characterSheetDialog .sheet-progression-level-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  min-height:28px;
+  padding:5px 8px;
+  border-radius:7px;
+  background:var(--vault-burgundy);
+  color:#fff8e9;
+  font:700 9px/1 "Cinzel",Georgia,serif;
+  letter-spacing:.03em;
+}
+#characterSheetDialog .sheet-progression-level-heading{
+  display:grid;
+  gap:1px;
+}
+#characterSheetDialog .sheet-progression-level-heading strong{
+  color:var(--vault-ink);
+  font:700 12px/1.2 "Cinzel",Georgia,serif;
+}
+#characterSheetDialog .sheet-progression-level-heading small{
+  color:var(--vault-muted);
+  font:400 9px/1.25 Georgia,"Times New Roman",serif;
+}
+#characterSheetDialog .sheet-progression-level-count{
+  color:var(--vault-muted);
+  font-size:9px;
+  white-space:nowrap;
+}
+#characterSheetDialog .sheet-progression-features{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:0;
+  border:1px solid rgba(126,91,43,.14);
+  border-radius:9px;
+  overflow:hidden;
+  background:#fff;
+}
+#characterSheetDialog .sheet-progression-feature{
+  padding:10px 11px;
+  border:0;
+  border-radius:0;
+  background:#fffdf9;
+  box-shadow:none;
+}
+#characterSheetDialog .sheet-progression-feature+.sheet-progression-feature{
+  border-top:1px solid rgba(126,91,43,.12);
+}
+#characterSheetDialog .sheet-progression-feature.is-subclass{
+  border-left:3px solid var(--vault-burgundy);
+  box-shadow:none;
+  background:#fffaf4;
+}
+#characterSheetDialog .sheet-progression-feature.is-incomplete{
+  opacity:.72;
+  border-style:solid;
+}
+#characterSheetDialog .sheet-progression-feature-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+#characterSheetDialog .sheet-progression-feature-heading strong{
+  color:var(--vault-burgundy);
+  font:700 11px/1.25 "Cinzel",Georgia,serif;
+}
+#characterSheetDialog .sheet-progression-feature-heading small{
+  padding:2px 5px;
+  border-radius:999px;
+  background:#efe1d5;
+  color:var(--vault-burgundy);
+  font-size:8px;
+  font-weight:700;
+  text-transform:uppercase;
+}
+#characterSheetDialog .sheet-progression-feature p{
+  margin:5px 0 0;
+  color:var(--vault-ink);
+  font-size:10px;
+  line-height:1.45;
+}
+#characterSheetDialog .sheet-progression-feature footer{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:7px;
+}
+#characterSheetDialog .sheet-progression-feature footer span{
+  padding:2px 6px;
+  border-radius:5px;
+  background:#f1e8da;
+  color:var(--vault-brown);
+  font-size:8px;
+}
+#characterSheetDialog .sheet-progression-coverage{
+  margin:0;
+  padding:9px 15px;
+  border-top:1px solid var(--vault-border-soft);
+  background:#faf4e9;
+  color:var(--vault-muted);
+  font-size:9px;
+}
+@media(max-width:700px){
+  #characterSheetDialog .sheet-progression-details>summary{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:9px;
+  }
+  #characterSheetDialog .sheet-progression-summary-side{
+    width:100%;
+    flex-wrap:wrap;
+  }
+  #characterSheetDialog .sheet-progression-level>header{
+    grid-template-columns:auto minmax(0,1fr);
+  }
+  #characterSheetDialog .sheet-progression-level-count{
+    grid-column:2;
+  }
+}
