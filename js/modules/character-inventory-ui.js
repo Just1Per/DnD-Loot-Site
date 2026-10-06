@@ -5,7 +5,7 @@ function inventorySideForGear(g){
  const kind=CharacterEquipment.infer({name:g.name}).kind;
  return g.equipped||g.location==='Worn'||['weapon','armor','shield'].includes(kind)?'left':'right';
 }
-function ensureInventorySide(g){if(!g.inventorySide)g.inventorySide=inventorySideForGear(g);return g.inventorySide;}
+function ensureInventorySide(g){if(!g.inventorySide)g.inventorySide=inventorySideForGear(g);return g;}
 function inventorySideLabel(side){return side==='left'?'Active gear':'Backpack';}
 
 function personalGearEntries() {
