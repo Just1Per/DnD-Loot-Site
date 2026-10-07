@@ -27,3 +27,13 @@ assert.equal(P.casterLevel([{classId:'paladin',level:1}],'2024'), 1, '2024 Palad
 assert.equal(P.hitDiceSummary([{classId:'fighter',level:3},{classId:'wizard',level:2}]), '3d10 + 2d6');
 
 console.log('SUCCESS character progression: XP, HP, hit dice and multiclass slots');
+
+for(const hpMode of ['fixed','max','rolled']) {
+ const hp=P.calculateHP({classLevels:[{classId:'fighter',level:2},{classId:'wizard',level:2}],constitution:8,hpMode,hpRolls:[3,2,1],bonuses:8,bonusSources:[{kind:'feat',name:'Tough',value:8}]});
+ assert.equal(hp.classHP+hp.constitutionHP+hp.minimumHP+hp.bonuses+hp.totalMinimumHP,hp.max);
+ assert.equal(hp.bonusSources[0].name,'Tough');
+ assert.equal(hp.bonusSources.reduce((sum,s)=>sum+s.value,0),hp.bonuses);
+}
+const low=P.calculateHP({classLevels:[{classId:'wizard',level:2}],constitution:1,hpMode:'rolled',hpRolls:[1]});
+assert.equal(low.minimumHP,5);assert.equal(low.max,2);
+console.log('SUCCESS HP source totals reconcile fixed, rolled, multiclass and minimum HP');

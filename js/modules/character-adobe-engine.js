@@ -22,7 +22,35 @@ var CharacterAdobeEngine=(()=>{
  function install(){if(CharacterSheetModel.__adobeIntegrated)return;const catalogNormalize=CharacterCatalog.normalize.bind(CharacterCatalog),modelNormalize=CharacterSheetModel.normalize.bind(CharacterSheetModel),modelDerive=CharacterSheetModel.derive.bind(CharacterSheetModel),modelDamage=CharacterSheetModel.damage.bind(CharacterSheetModel),load=characterSheetStore.load.bind(characterSheetStore),save=characterSheetStore.save.bind(characterSheetStore);
   CharacterCatalog.normalize=raw=>{const keep=raw?.grants?.[KEY]?.data,out=catalogNormalize(raw);if(keep)out.grants[KEY]={data:normalize(keep),used:0};return out};
   CharacterSheetModel.normalize=raw=>{const out=modelNormalize(raw);out.adobe=normalize(stored(raw));out.rulesChoices.grants[KEY]={data:out.adobe,used:0};return out};
-  CharacterSheetModel.derive=(raw,l,loot=[])=>{const d=CharacterSheetModel.normalize(raw),lv=level(d,l),r=modelDerive(d,lv,loot),classes=classLevels(d,lv),assigned=classLevels(d,lv,true),hp=P.calculateHP({classLevels:classes,constitution:r.scores.con,hpMode:d.adobe.hpMode,hpRolls:d.adobe.hpRolls,bonuses:hpBonus(d,r,lv)}),multi=assigned.length>1,slots=multi?P.spellSlots(classes,d.build.edition):(r.effects?.slotMax?[...r.effects.slotMax]:P.spellSlots(classes,d.build.edition)),access=spellAccess(d,lv),warlock=classes.filter(e=>e.classId==='warlock').reduce((s,e)=>s+e.level,0);if(access.length)r.effects.slotMax=Array.from({length:9},(_,i)=>Number(slots[i]||0));r.hpMax=hp.max;r.progression={targetLevel:lv,xp:P.xpProgress(d.experience),classLevels:classes,assignedClassLevels:assigned,assignedLevel:assigned.reduce((s,e)=>s+e.level,0),hp,hitDice:P.hitDiceSummary(classes),spellAccess:access,isSpellcaster:access.length>0,pact:warlock?{count:warlock===1?1:warlock<11?2:warlock<17?3:4,slotLevel:Math.min(5,Math.ceil(warlock/2))}:null,classFeatureChoices:typeof CharacterClassFeatureChoices!=='undefined'?classes.flatMap(e=>CharacterClassFeatureChoices.status(d,e,d.build.edition)):[]};return r};
+  CharacterSheetModel.derive=(raw,l,loot=[])=>{
+   const d=CharacterSheetModel.normalize(raw),lv=level(d,l),r=modelDerive(d,lv,loot);
+   const classes=classLevels(d,lv),assigned=classLevels(d,lv,true);
+   const hp=P.calculateHP({
+    classLevels:classes,constitution:r.scores.con,hpMode:d.adobe.hpMode,
+    hpRolls:d.adobe.hpRolls,bonuses:hpBonus(d,r,lv),bonusSources:r.effects.hpSources||[]
+   });
+   // Constitution changes are already counted by calculateHP, not added again.
+   hp.constitutionSources=[
+    ...(r.feats?.reports||[]).filter(f=>f.appliedAbilityIncreases?.con)
+     .map(f=>({kind:'feat',name:f.def.name,before:null,after:null})),
+    ...(r.magicItems?.reports||[]).flatMap(item=>(item.abilityChanges||[])
+     .filter(change=>change.ability==='con').map(change=>({kind:'item',name:item.name,...change})))
+   ];
+   const slots=assigned.length>1?P.spellSlots(classes,d.build.edition):
+    (r.effects?.slotMax?[...r.effects.slotMax]:P.spellSlots(classes,d.build.edition));
+   const access=spellAccess(d,lv),warlock=classes.filter(e=>e.classId==='warlock').reduce((sum,e)=>sum+e.level,0);
+   if(access.length)r.effects.slotMax=Array.from({length:9},(_,i)=>Number(slots[i]||0));
+   r.hpMax=hp.max;
+   r.progression={
+    targetLevel:lv,xp:P.xpProgress(d.experience),classLevels:classes,assignedClassLevels:assigned,
+    assignedLevel:assigned.reduce((sum,e)=>sum+e.level,0),hp,hitDice:P.hitDiceSummary(classes),
+    spellAccess:access,isSpellcaster:access.length>0,
+    pact:warlock?{count:warlock===1?1:warlock<11?2:warlock<17?3:4,slotLevel:Math.min(5,Math.ceil(warlock/2))}:null,
+    classFeatureChoices:typeof CharacterClassFeatureChoices!=='undefined'?
+     classes.flatMap(e=>CharacterClassFeatureChoices.status(d,e,d.build.edition)):[]
+   };
+   return r;
+  };
   // Core HP helpers use their original normalizer; restore the progression adapter.
   CharacterSheetModel.damage=(raw,amount)=>CharacterSheetModel.normalize(modelDamage(CharacterSheetModel.normalize(raw),amount));
   CharacterSheetModel.heal=(raw,amount,l=1)=>{const d=CharacterSheetModel.normalize(raw);d.hpCurrent=Math.min(CharacterSheetModel.derive(d,l).hpMax,d.hpCurrent+Math.max(0,Number(amount)||0));return d};

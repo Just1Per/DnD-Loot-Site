@@ -35,6 +35,29 @@
   const race=document.querySelector('[name="build.race"]');race.value='dwarf-2024';race.dispatchEvent(new Event('change',{bubbles:true}));
   check('Overview speed is derived from species without a manual speed field',!document.querySelector('[name="speed"]')&&document.getElementById('sheetOverviewReadout').textContent.includes(CharacterSheetModel.derive(sheetSession.data,sheetSession.identity.level).effects.speed+' ft'));
 
+  const tough=Object.keys(CharacterFeatData).find(id=>CharacterFeatData[id].name==='Tough'&&CharacterFeatData[id].edition==='2014');
+  sheetSession.identity.level=6;
+  sheetSession.data=CharacterSheetModel.normalize({build:{edition:'2014',classId:'warlock',scoreMode:'base'},abilities:{con:14},rulesChoices:{feats:[tough]},adobe:{classLevels:[{classId:'warlock',level:6,subclassId:''}]}});
+  renderSheetRows();fillSheetForm();updateSheetCalculations();
+  const calculated=()=>CharacterSheetModel.derive(sheetSession.data,sheetSession.identity.level,sheetEquipmentLoot());
+  let stats=calculated();
+  check('Combat HP panel names class, Constitution and Tough and matches derived HP',stats.hpMax===57&&document.getElementById('sheetHPDefense').textContent.includes('Warlock 6')&&document.getElementById('sheetHPDefense').textContent.includes('Constitution 14')&&document.getElementById('sheetHPDefense').textContent.includes('Tough (2014)')&&document.querySelector('#sheetHPDefense .sheet-hp-total dd').textContent==='57');
+  check('2014 level 6 Warlock renders exactly three invocation selectors',document.querySelectorAll('[data-choice-group="eldritch-invocations"]').length===3&&document.getElementById('sheetAdobeClasses').textContent.includes('2014 rules'));
+  const invocation=document.querySelector('[data-choice-group="eldritch-invocations"][data-choice-slot="2"]');invocation.value='beast-speech';invocation.onchange();readSheetForm();
+  check('Builder selection in a later invocation slot survives form normalization',sheetSession.data.adobe.classFeatureChoices['2014:warlock:eldritch-invocations'][2]==='beast-speech');
+  await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');readSheetForm();
+  check('Invocation slot positions persist through save and reopen',sheetSession.data.adobe.classFeatureChoices['2014:warlock:eldritch-invocations'][2]==='beast-speech');
+  const edition=document.querySelector('[name="build.edition"]');edition.value='2024';edition.dispatchEvent(new Event('change',{bubbles:true}));
+  check('Switching to 2024 uses its five invocation allowance and edition label',document.querySelectorAll('[data-choice-group="eldritch-invocations"]').length===5&&document.getElementById('sheetAdobeClasses').textContent.includes('2024 rules'));
+  check('Rules page explains and renders edition-specific invocation totals',document.getElementById('sheet-rules').textContent.includes('3 in 2014')&&document.getElementById('sheet-rules').textContent.includes('5 in 2024'));
+
+  sheetSession.data=CharacterSheetModel.normalize({build:{edition:'2024',classId:'warlock',scoreMode:'base',race:'dwarf-2024',backgroundFeat:'Tough'},abilities:{con:14},adobe:{classLevels:[{classId:'warlock',level:6,subclassId:''}]}});fillSheetForm();updateSheetCalculations();stats=calculated();
+  check('Origin Tough adds HP once alongside Dwarf toughness',stats.hpMax===63&&stats.progression.hp.bonusSources.filter(source=>source.name.includes('Tough')).length===1);
+  sheetSession.data.personalGear=[{id:'test-amulet',name:'Amulet of Health',quantity:1,weight:1,carried:true,location:'Worn',notes:''}];sheetSession.data.equipmentState.loadout=[{id:'test-amulet',equipped:true,attuned:true}];fillSheetForm();updateSheetCalculations();stats=calculated();
+  check('Attuned Constitution item contributes through CON once and is named in HP breakdown',stats.hpMax===75&&stats.progression.hp.constitutionHP===24&&document.getElementById('sheetHPDefense').textContent.includes('Amulet of Health')&&document.getElementById('sheetHPDefense').textContent.includes('14 → 19'));
+  sheetSession.data.equipmentState.loadout[0].attuned=false;updateSheetCalculations();stats=calculated();
+  check('Ending attunement removes the item HP benefit and its attribution',stats.hpMax===63&&!document.getElementById('sheetHPDefense').textContent.includes('Amulet of Health'));
+
  }catch(e){results.push({name:e.stack,pass:false})}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
 })();

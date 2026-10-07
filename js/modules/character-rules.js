@@ -1086,6 +1086,7 @@ var CharacterRules = (() => {
       initiativeBonus: r?.initiativePB ? Math.ceil(lvl / 4) + 1 : 0,
       darkvision: r?.darkvision || 0,
       hpBonus: b.race === 'hill-dwarf' ? lvl : (r?.hpPerLevel || 0) * lvl,
+      hpSources: (b.race === 'hill-dwarf' || r?.hpPerLevel) ? [{kind:'species',name:r?.name||'Species',value:(b.race === 'hill-dwarf' ? 1 : r.hpPerLevel)*lvl}] : [],
       innate: [],
       warnings: [],
       slotMax: null,
