@@ -76,38 +76,11 @@ function dmFeatGrant(){
   return grants.__dm||(grants.__dm={bonusFeats:0,bonusAsis:0,usedAsis:0,approvedBy:'',updatedAt:0});
 }
 function renderDmFeatApproval(){
-  const host=document.getElementById('sheetDmFeatApproval');if(!host||!sheetSession)return;
-  const grant=dmFeatGrant(),budget=CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data?.feats||[]);
-  const asiControls=(kind,used,remaining)=>canManageCampaign()?`<div><button type="button" data-asi-spend="-1" data-asi-kind="${kind}" ${!used?'disabled':''}>Undo</button><button type="button" data-asi-spend="1" data-asi-kind="${kind}" ${!remaining?'disabled':''}>Use ${kind} ASI</button></div>`:'';
-  host.innerHTML=`<div class="sheet-repeat-title"><div><span class="sheet-eyebrow">DM APPROVALS</span><h4>Bonus advancement</h4></div><small>These are extra choices beyond normal class progression.</small></div>
-    <div class="sheet-dm-approval-grid">
-      <article><span>Bonus feat choices</span><strong>${grant.bonusFeats||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="feat" data-delta="-1">Remove approval</button><button type="button" data-dm-grant="feat" data-delta="1">Approve +1</button></div>':''}</article>
-      <article><span>Bonus ASI choices</span><strong>${grant.bonusAsis||0}</strong>${canManageCampaign()?'<div><button type="button" data-dm-grant="asi" data-delta="-1">Remove approval</button><button type="button" data-dm-grant="asi" data-delta="1">Approve +1</button></div>':''}</article>
-      <article><span>Normal ASI choices used</span><strong>${sheetSession.data.advancement.asiSpent}</strong>${asiControls('normal',sheetSession.data.advancement.asiSpent,budget.normalRemaining)}</article>
-      <article><span>DM bonus ASIs used</span><strong>${grant.usedAsis||0} / ${grant.bonusAsis||0}</strong>${asiControls('bonus',grant.usedAsis,budget.bonusAsiRemaining)}</article>
-    </div>
-    <p class="sheet-help">${canManageCampaign()?'As DM, use +/− to confirm extra feat or ASI allowances for this character. Save the character sheet after changing approvals.':'ASI reservations and bonus allowances are managed by your campaign DM.'} An ASI choice reserves one advancement choice for ability scores; edit the actual scores on Abilities & skills.</p>`;
-  host.querySelectorAll('[data-dm-grant]').forEach(button=>button.onclick=()=>{
-    if(!canManageCampaign())return;
-    readSheetForm();const g=dmFeatGrant(),key=button.dataset.dmGrant==='feat'?'bonusFeats':'bonusAsis',delta=Number(button.dataset.delta)||0;
-    const used=key==='bonusAsis'?Number(g.usedAsis)||0:0;if(delta<0&&(Number(g[key])||0)+delta<used)return sheetStatus('Undo the used bonus ASI before removing that DM approval.',true);
-    g[key]=Math.max(0,Math.min(10,(Number(g[key])||0)+delta));g.approvedBy=auth.currentUser?.uid||'';g.updatedAt=Date.now();
-    catalogChanged('DM bonus advancement approval changed. Save the character sheet to keep it.');renderDmFeatApproval();renderCatalogFeatResults();
-  });
-  host.querySelectorAll('[data-asi-spend]').forEach(button=>button.onclick=()=>{
-    if(!canManageCampaign())return;
-    readSheetForm();const delta=Number(button.dataset.asiSpend)||0,kind=button.dataset.asiKind,b=CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data?.feats||[]);
-    if(kind==='bonus'){
-      const g=dmFeatGrant();if(delta>0&&!b.bonusAsiRemaining)return sheetStatus('No unused DM-approved bonus ASI remains.',true);
-      g.usedAsis=Math.max(0,Math.min(g.bonusAsis||0,(Number(g.usedAsis)||0)+delta));
-    }else{
-      const current=Number(sheetSession.data.advancement.asiSpent)||0;if(delta>0&&!b.normalRemaining)return sheetStatus('No normal advancement choice remains for an ASI.',true);
-      sheetSession.data.advancement.asiSpent=Math.max(0,Math.min(7,current+delta));
-      const input=document.querySelector('[name="advancement.asiSpent"]');if(input)input.value=sheetSession.data.advancement.asiSpent;
-    }
-    catalogChanged('ASI choice reservation changed. Save the character sheet to keep it.');renderDmFeatApproval();renderCatalogFeatResults();
-  });
+ const host=document.getElementById('sheetDmFeatApproval');if(!host||!sheetSession)return;
+ const grant=dmFeatGrant(),budget=CharacterPlayRules.budget(sheetSession.data,sheetSession.identity.level,CharacterCatalog.data?.feats||[]);
+ host.innerHTML=`<h4>Advancement choices</h4><p class="sheet-help">Normal ASI choices used: ${sheetSession.data.advancement.asiSpent} · Bonus feat choices: ${grant.bonusFeats||0} · Bonus ASIs: ${grant.usedAsis||0}/${grant.bonusAsis||0} · Remaining feat choices: ${budget.remaining}. Your campaign DM manages extra advancement in DM Tools.</p>`;
 }
+
 function renderSheetCatalog() {
   const session=sheetSession;
   if(!session)return;
@@ -337,9 +310,9 @@ function renderFeatEffectControls(report,level) {
   const {def,choice:c,warnings,automated}=report,esc=sheetEscape;
   const select=(label,field,rows,value)=>`<label class="sheet-field">${esc(label)}<select data-feat-choice="${field}">${rows.map(([key,text])=>`<option value="${esc(key)}" ${String(key)===String(value)?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
   let html='<div class="sheet-grid">';
-  const autoArmorPrereq=def.name==='Moderately Armored'&&['PHB','XPHB'].includes(def.source);
-  if(def.requirements.some(r=>r.manual)&&!autoArmorPrereq)html+=`<label class="sheet-check"><input type="checkbox" data-feat-choice="confirmed" ${c.confirmed?'checked':''}> Other prerequisites checked with DM (class features, spellcasting, etc.)</label>`;
-  if(autoArmorPrereq)html+='<p class="sheet-help">Prerequisite: Light armor training is checked automatically from your race, class and other feats.</p>';
+  const prereqs=featReference(CharacterCatalog.find(report.id,'feats')||def)?.requirements||[];
+  if(prereqs.length)html+='<p class="sheet-help"><strong>Prerequisites:</strong> '+prereqs.map(esc).join(' · ')+'. Review these when choosing this feat.</p>';
+  if(report.prerequisiteInfo?.length)html+='<p class="sheet-help">'+report.prerequisiteInfo.map(esc).join(' · ')+'</p>';
   if(def.ability.length>1)html+=select('Ability increase pattern','option',[[0,'One ability +2'],[1,'Two different abilities +1']],c.option);
   const ability=def.ability[c.option]||def.ability[0];
   if(ability?.choose)for(let i=0;i<(ability.choose.count||1);i++)html+=select('Ability +'+(ability.choose.amount||1)+' (maximum '+ability.max+')','ability'+i,[['','Choose ability'],...ability.choose.from.map(a=>[a,CharacterSheetModel.abilities[a]])],c.abilities[i]);

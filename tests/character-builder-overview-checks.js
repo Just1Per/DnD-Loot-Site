@@ -38,11 +38,7 @@
   sheetSession.data.adobe.classLevels=[{classId:'wizard',level:6,subclassId:''}];sheetSession.data.build.classId='wizard';fillSheetForm();updateSheetCalculations();
   check('Returning to a class restores its saved display choices',!!document.querySelector('.sheet-overview-class-feature p'));
   closeCharacterSheet(true);seed('dm');await openCharacterSheet('c1');
-  check('DM retains ASI reservation controls on Feats',!!document.querySelector('[data-asi-spend]'));
-  const undo=document.querySelector('[data-asi-spend="-1"][data-asi-kind="normal"]'),previous=sheetSession.data.advancement.asiSpent,staleHandler=undo.onclick;undo.click();
-  check('DM can update a normal ASI reservation on Feats',sheetSession.data.advancement.asiSpent===previous-1);
-  seed('player');const reserved=sheetSession.data.advancement.asiSpent;staleHandler();
-  check('A stale DM ASI handler cannot change reservations after switching to player',sheetSession.data.advancement.asiSpent===reserved);
+  check('DM advancement controls are absent from Feats',!document.querySelector('[data-asi-spend],[data-dm-grant]'));
   closeCharacterSheet(true);seed('player');delete testSheetDocs['campaigns/a/characterSheets/c1'];testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');
   sheetSession.data=CharacterSheetModel.normalize({build:{edition:'2024',classId:'wizard',backgroundFeat:'Tough',scoreMode:'base'},adobe:{classLevels:[{classId:'wizard',level:6,subclassId:''}]}});renderSheetRows();fillSheetForm();updateSheetCalculations();
   const toughId=CharacterFeatRules.entries(sheetSession.data).find(entry=>entry.origin).id;

@@ -1,4 +1,4 @@
-// D&D Vault Firestore Rules Revision: 27
+// D&D Vault Firestore Rules Revision: 28
 // Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
@@ -415,6 +415,10 @@ match /characterSheets/{charId} {
       || (isActiveMember(campaignId)
         && get(characterPath(campaignId, charId)).data.userId == request.auth.uid);
   }
+  function protectedAdvancement(data) {
+    let grant = data.get('rulesChoices', {}).get('grants', {}).get('__dm', {});
+    return [grant.get('bonusFeats', 0), grant.get('bonusAsis', 0), grant.get('usedAsis', 0), data.get('advancement', {}).get('asiSpent', 0)];
+  }
   function validSheet() {
     let d = request.resource.data;
     // Security rules protect who may write and the stable document envelope.
@@ -435,10 +439,12 @@ match /characterSheets/{charId} {
   }
   allow get: if mayUseSheet();
   allow list: if false;
-  allow create: if mayUseSheet() && validSheet() && request.resource.data.revision == 1;
+  allow create: if mayUseSheet() && validSheet() && request.resource.data.revision == 1
+    && (isCampaignDM(campaignId) || protectedAdvancement(request.resource.data.data) == [0,0,0,0]);
   allow update: if mayUseSheet() && validSheet()
     && request.resource.data.schemaVersion >= resource.data.schemaVersion
-    && request.resource.data.revision == resource.data.revision + 1;
+    && request.resource.data.revision == resource.data.revision + 1
+    && (isCampaignDM(campaignId) || protectedAdvancement(request.resource.data.data) == protectedAdvancement(resource.data.data));
   allow delete: if isCampaignDM(campaignId)
     || (isActiveMember(campaignId)
       && exists(characterPath(campaignId, charId))

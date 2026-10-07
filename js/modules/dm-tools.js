@@ -452,6 +452,7 @@ function renderDMCharacters() {
             <span class="level-badge">${c.level ? `Lvl ${escapeHtml(c.level)}` : "No level"}</span></div>
           <div class="admin-char-btns">
             <button type="button" class="edit-button btn-sm" data-dm-sheet="${escapeHtml(c.id)}">Character sheet</button>
+            <button type="button" class="edit-button btn-sm" data-dm-advancement="${escapeHtml(c.id)}">Bonus advancement</button>
             <button type="button" class="wish-view-btn btn-sm" data-dm-saved="${escapeHtml(c.id)}">Saved (${saved})</button>
             <button type="button" class="loot-button btn-sm" data-dm-loot="${escapeHtml(c.id)}">Looted (${looted})</button>
             <button type="button" class="edit-button btn-sm" data-dm-edit="${escapeHtml(c.id)}">Edit</button>
@@ -462,6 +463,7 @@ function renderDMCharacters() {
     </section>`).join("") || "<p>No characters or members in this campaign yet.</p>";
   for (const [action, handler] of Object.entries({
     sheet: c => openCharacterSheet(c.id),
+    advancement: c => openDMAdvancement(c.id),
     saved: c => openWishModal(c.id, c.name),
     loot: c => openCharacterLoot(c.id),
     edit: c => openEditCharacterModal(c.id, c.name, c.class, c.level || ""),
@@ -568,4 +570,31 @@ function refreshCharacterLoot() {
   grid.replaceChildren(...entries.map(e=>createCard(inventoryItem(e),{inventoryEntry:e})));
   if(!entries.length)grid.innerHTML='<p class="loot-empty">No looted items assigned to this character.</p>';
   observePendingImages(grid);
+}
+
+async function openDMAdvancement(characterId){
+ if(!activeCampaign||!canManageCampaign())return;
+ const campaignId=activeCampaign.id,character=characters.find(c=>c.id===characterId);if(!character)return;
+ document.getElementById('dmAdvancementDialog')?.remove();
+ const dialog=document.createElement('dialog');dialog.id='dmAdvancementDialog';dialog.className='vault-dialog dm-advancement-dialog';
+ dialog.setAttribute('aria-labelledby','dmAdvancementTitle');dialog.innerHTML=`<header><h2 id="dmAdvancementTitle">Advancement · ${escapeHtml(character.name)}</h2><button type="button" data-close-dm-advancement aria-label="Close advancement">×</button></header><p data-advancement-status role="status">Loading character…</p><div data-advancement-fields></div>`;
+ document.body.append(dialog);dialog.querySelector('[data-close-dm-advancement]').onclick=()=>dialog.close();dialog.addEventListener('close',()=>dialog.remove());dialog.showModal();
+ try{
+  const [saved,identitySnapshot]=await Promise.all([characterSheetStore.load(campaignId,characterId),getDoc(doc(db,'campaigns',campaignId,'characters',characterId))]);
+  if(!canManageCampaign()||activeCampaign?.id!==campaignId||!dialog.isConnected)return dialog.close();
+  if(!identitySnapshot.exists())throw Error('This character no longer exists.');
+  const previous=identitySnapshot.data(),identity={name:previous.name,class:previous.class,level:previous.level},data=CharacterSheetModel.normalize(saved.data),grant=data.rulesChoices.grants.__dm||{bonusFeats:0,bonusAsis:0,usedAsis:0},fields=dialog.querySelector('[data-advancement-fields]'),status=dialog.querySelector('[data-advancement-status]');
+  fields.innerHTML=`<p>Manage additional choices and ASI reservations for this character. Players select their feats on their own Feats page.</p><div class="sheet-grid two">${[['bonusFeats','Bonus feat choices',grant.bonusFeats,10],['bonusAsis','Bonus ASI choices',grant.bonusAsis,10],['usedAsis','Bonus ASIs used',grant.usedAsis,10],['asiSpent','Normal ASI choices used',data.advancement.asiSpent,7]].map(([key,label,value,max])=>`<label class="sheet-field">${label}<input type="number" data-dm-advancement="${key}" value="${Number(value)||0}" min="0" max="${max}" step="1"></label>`).join('')}</div><button type="button" data-save-dm-advancement>Save advancement</button>`;
+  status.textContent='Only campaign DMs can change these allowances.';
+  fields.querySelector('[data-save-dm-advancement]').onclick=async event=>{
+   if(!canManageCampaign()||activeCampaign?.id!==campaignId)return;
+   if(sheetSession?.campaignId===campaignId&&sheetSession.characterId===characterId&&sheetSession.dirty){status.textContent='Save or close the open character sheet before changing its advancement here.';return;}
+   const values={};for(const input of fields.querySelectorAll('input')){const value=Number(input.value);if(!Number.isInteger(value)||value<0||value>Number(input.max)){status.textContent='Enter whole numbers within the displayed limits.';return;}values[input.dataset.dmAdvancement]=value;}
+   if(values.usedAsis>values.bonusAsis){status.textContent='Used bonus ASIs cannot exceed the bonus ASI allowance.';return;}
+   const grant={bonusFeats:values.bonusFeats,bonusAsis:values.bonusAsis,usedAsis:values.usedAsis,approvedBy:auth.currentUser?.uid||'',updatedAt:Date.now()};data.rulesChoices.grants.__dm=grant;data.advancement.asiSpent=values.asiSpent;
+   event.target.disabled=true;
+   try{await characterSheetStore.save({campaignId,characterId,revision:saved.revision||0,data,identity,previousIdentity:previous});if(sheetSession?.campaignId===campaignId&&sheetSession.characterId===characterId)closeCharacterSheet(true);dialog.close();renderDMCharacters();}
+   catch(error){status.textContent=error.message;event.target.disabled=false;}
+  };
+ }catch(error){if(dialog.isConnected)dialog.querySelector('[data-advancement-status]').textContent=error.message;}
 }

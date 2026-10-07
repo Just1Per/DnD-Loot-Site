@@ -80,6 +80,10 @@
   sheetSession.data.equipmentState.loadout[0].attuned=false;updateSheetCalculations();stats=calculated();
   check('Ending attunement removes the item HP benefit and its attribution',stats.hpMax===63&&!document.getElementById('sheetHPDefense').textContent.includes('Amulet of Health'));
 
+  const armorFeat=Object.keys(CharacterFeatRules.definitions).find(id=>CharacterFeatRules.definitions[id].name==='Moderately Armored'&&CharacterFeatRules.definitions[id].edition==='2014');
+  sheetSession.data=CharacterSheetModel.normalize({build:{edition:'2014',classId:'wizard',scoreMode:'base'},abilities:{dex:13},rulesChoices:{feats:[armorFeat],effects:{[armorFeat]:{abilities:['dex']}}},adobe:{classLevels:[{classId:'wizard',level:5,subclassId:''},{classId:'warlock',level:1,subclassId:''}]}});fillSheetForm();updateSheetCalculations();
+  const multiclass=calculated();check('Core and browser adapters include Warlock light armor for a Wizard multiclass before evaluating feats',multiclass.effects.proficiencies.includes('Light armor')&&multiclass.effects.proficiencies.includes('Medium armor')&&multiclass.effects.proficiencies.includes('Shields')&&multiclass.feats.reports.find(r=>r.id===armorFeat).warnings.length===0);
+  check('Selected feats show informational prerequisites without a DM confirmation checkbox',!document.querySelector('[data-feat-choice="confirmed"]')&&document.getElementById('catalogSelectedFeats').textContent.includes('Light armor training: provided'));
  }catch(e){results.push({name:e.stack,pass:false})}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
 })();
