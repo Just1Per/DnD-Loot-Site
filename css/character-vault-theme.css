@@ -2432,3 +2432,8 @@
  body.printing-character-sheet #sheetOverviewReadout :is(.sheet-overview-important,.sheet-action-controls,.sheet-help,.sheet-overview-pin-heading>button){display:none!important}
  body.printing-character-sheet #sheetOverviewReadout .sheet-slot-orb{display:inline-block!important;width:10px!important;height:10px!important;min-width:10px!important;min-height:10px!important;padding:0!important}
 }
+
+.sheet-overview-feat-description{margin-top:8px;padding-top:8px;border-top:1px solid var(--vault-border-soft)}
+.sheet-overview-feat-description>div{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.sheet-overview-feat-description p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.45;margin:5px 0}
+@media print{.sheet-overview-feat-description{break-inside:avoid}.sheet-overview-feat-description button{display:none!important}}

@@ -28,6 +28,22 @@ function featPreviewText(feat){
   if(!parts.length)parts.push('Structured feat metadata is available below; use the listed source and page for complete source-book wording.');
   return parts.join(' ');
 }
+// Reuse the feat reference text, keeping full bundled descriptions when available.
+function featOverviewDescription(id){
+  const feat=CharacterCatalog.find(id,'feats'),def=CharacterFeatRules.definitions[id];
+  if(!feat&&!def)return '';
+  const text=String(feat?.description||'').trim();
+  if(text&&!/consult the source|source reference only|complete rules/i.test(text))return text;
+  const ref=featReference(feat||def);
+  return [...new Set([ref?.summary,...(ref?.facts||[])].filter(Boolean))].join('\n')||(feat?featPreviewText(feat):'');
+}
+function toggleFeatOverviewDescription(id){
+  if(!sheetSession)return;readSheetForm();
+  if(!CharacterFeatRules.entries(sheetSession.data).some(entry=>entry.id===id))return;
+  const selected=sheetSession.data.adobe.overviewFeatDescriptions;
+  sheetSession.data.adobe.overviewFeatDescriptions=selected.includes(id)?selected.filter(value=>value!==id):[...selected,id];
+  catalogChanged('Feat description display updated. Save the sheet to keep it.');
+}
 function closeFeatInformation(){const d=document.getElementById('sheetFeatInformation');if(d){if(d.open)d.close();d.remove();}}
 function openFeatInformation(featId){
   const feat=CharacterCatalog.find(featId,'feats');if(!feat)return;
@@ -267,13 +283,14 @@ function updateSheetCatalogGrants() {
   const data=sheetSession.data, C=CharacterCatalog;
   renderBuildFeatChoices();renderDmFeatApproval();
   const stats=CharacterSheetModel.derive(data,sheetSession.identity.level);
-  const signature=JSON.stringify([stats.scores,stats.pb,stats.feats.reports.map(r=>r.warnings),data.build.edition,data.build.race,data.build.background,data.build.backgroundFeat,data.build.humanOriginFeat,data.build.raceFeat,data.rulesChoices]);
+  const signature=JSON.stringify([stats.scores,stats.pb,stats.feats.reports.map(r=>r.warnings),data.build.edition,data.build.race,data.build.background,data.build.backgroundFeat,data.build.humanOriginFeat,data.build.raceFeat,data.rulesChoices,data.adobe.overviewFeatDescriptions]);
   if(signature===sheetCatalogSignature)return;
   sheetCatalogSignature=signature;
   const feats=document.getElementById('catalogSelectedFeats');
   feats.innerHTML='<h4>Your selected feats</h4>'+(stats.feats.reports.length?'<p class="sheet-help">Configure feat-specific choices here. Combat resources and rest recovery are tracked on the relevant gameplay sections.</p>':'<p class="sheet-help">No feat with additional catalogue controls is selected yet.</p>')+stats.feats.reports.map(report=>{
-    const f=C.find(report.id,'feats'),summary=f?featPreviewText(f):'Source-specific feat.';return `<article class="sheet-repeat" data-feat-key="${sheetEscape(report.key)}"><div class="sheet-repeat-title"><h4>${sheetEscape((f?.name||report.def.name)+' · '+report.def.edition)}${report.origin?' · '+sheetEscape(report.originLabel||'Variant Human'):''}</h4>${f?`<button type="button" class="sheet-info-button" data-selected-feat-info="${sheetEscape(f.id)}" aria-label="Information about ${sheetEscape(f.name)}">i</button>`:''}</div><p>${sheetEscape(f?f.book+', p. '+f.page:report.def.source)}</p><p class="sheet-help">${sheetEscape(summary)}</p>${renderFeatEffectControls(report,sheetSession.identity.level)}${report.origin?'':`<button type="button" data-remove-feat="${sheetEscape(report.key)}">Remove feat</button>`}</article>`;
+    const f=C.find(report.id,'feats'),summary=f?featPreviewText(f):'Source-specific feat.';return `<article class="sheet-repeat" data-feat-key="${sheetEscape(report.key)}"><div class="sheet-repeat-title"><h4>${sheetEscape((f?.name||report.def.name)+' · '+report.def.edition)}${report.origin?' · '+sheetEscape(report.originLabel||'Variant Human'):''}</h4>${f?`<button type="button" class="sheet-info-button" data-selected-feat-info="${sheetEscape(f.id)}" aria-label="Information about ${sheetEscape(f.name)}">i</button>`:''}</div><p>${sheetEscape(f?f.book+', p. '+f.page:report.def.source)}</p><p class="sheet-help">${sheetEscape(summary)}</p>${renderFeatEffectControls(report,sheetSession.identity.level)}<button type="button" data-feat-overview-description="${sheetEscape(report.id)}" aria-pressed="${data.adobe.overviewFeatDescriptions.includes(report.id)}">${data.adobe.overviewFeatDescriptions.includes(report.id)?'Remove description from Overview':'Add description to Overview'}</button>${report.origin?'':`<button type="button" data-remove-feat="${sheetEscape(report.key)}">Remove feat</button>`}</article>`;
   }).join('');
+  feats.querySelectorAll('[data-feat-overview-description]').forEach(button=>button.onclick=()=>toggleFeatOverviewDescription(button.dataset.featOverviewDescription));
   feats.querySelectorAll('[data-selected-feat-info]').forEach(button=>button.onclick=()=>openFeatInformation(button.dataset.selectedFeatInfo));
   feats.querySelectorAll('[data-remove-feat]').forEach(button=>button.onclick=()=>{readSheetForm();CharacterFeatRules.remove(sheetSession.data,button.dataset.removeFeat);catalogChanged();});
   feats.querySelectorAll('[data-feat-key]').forEach(article=>{
