@@ -7,9 +7,28 @@ function setupCharacterPlayUI(){
  profile.insertAdjacentHTML('beforeend',f('Alignment','alignment','select',{values:[['','Choose alignment'],...Object.keys(CharacterPlayRules.alignments).map(x=>[x,x]),...(sheetSession.data.alignment&&!Object.hasOwn(CharacterPlayRules.alignments,sheetSession.data.alignment)?[[sheetSession.data.alignment,sheetSession.data.alignment+' (saved)']]:[])]})+'<p id="sheetAlignmentHelp" class="sheet-help"></p>');
  story.querySelector('h3').after(profile);
  const preset=document.createElement('p');preset.id='sheetStoryPreset';preset.className='sheet-help';profile.after(preset);
+ const columns=document.createElement('div');columns.className='sheet-story-columns';
+ const left=document.createElement('div');left.className='sheet-story-left';
+ const right=document.createElement('div');right.className='sheet-story-right';columns.append(left,right);preset.after(columns);
+ left.append(profile);
+ for(const key of ['appearance','allies','enemies'])left.append(form.querySelector(`[name="${key}"]`).closest('label'));
+ right.append(preset);
  for(const key of ['personality','ideals','bonds','flaws']){
-  const area=form.querySelector(`[name="${key}"]`),select=document.createElement('select');select.dataset.storyChoice=key;select.setAttribute('aria-label',key+' suggestion');area.before(select);area.rows=3;
+  const area=form.querySelector(`[name="${key}"]`),label=area.closest('label'),control=document.createElement('div');
+  control.className='sheet-story-combobox';area.rows=1;area.readOnly=false;
+  area.setAttribute('role','combobox');area.setAttribute('aria-autocomplete','none');area.setAttribute('aria-expanded','false');area.setAttribute('aria-haspopup','listbox');area.setAttribute('aria-controls','sheetStoryOptions-'+key);
+  const toggle=document.createElement('button');toggle.type='button';toggle.className='sheet-story-toggle';toggle.dataset.storyToggle=key;toggle.textContent='▾';toggle.setAttribute('aria-label','Choose '+key+' suggestion');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls','sheetStoryOptions-'+key);
+  const options=document.createElement('div');options.id='sheetStoryOptions-'+key;options.className='sheet-story-options';options.dataset.storyChoice=key;options.setAttribute('role','listbox');options.setAttribute('aria-label',key+' suggestions');options.hidden=true;
+  area.before(control);control.append(area,toggle,options);right.append(label);
+  const close=()=>{options.hidden=true;area.setAttribute('aria-expanded','false');toggle.setAttribute('aria-expanded','false');};
+  const open=()=>{story.querySelectorAll('.sheet-story-options').forEach(list=>{if(list!==options){list.hidden=true;list.closest('.sheet-story-combobox').querySelectorAll('[aria-expanded]').forEach(el=>el.setAttribute('aria-expanded','false'));}});options.hidden=false;area.setAttribute('aria-expanded','true');toggle.setAttribute('aria-expanded','true');(options.querySelector('[aria-selected="true"]')||options.querySelector('button'))?.focus();};
+  toggle.onclick=()=>options.hidden?open():close();
+  area.addEventListener('keydown',event=>{if(event.altKey&&event.key==='ArrowDown'){event.preventDefault();open();}if(event.key==='Escape'){close();}});
+  control.addEventListener('focusout',event=>{if(event.relatedTarget&&!control.contains(event.relatedTarget))close();});
+  options.addEventListener('keydown',event=>{const buttons=[...options.querySelectorAll('button')],index=buttons.indexOf(document.activeElement);if(event.key==='Escape'){event.preventDefault();close();toggle.focus();}else if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){event.preventDefault();buttons[event.key==='Home'?0:event.key==='End'?buttons.length-1:(index+(event.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length]?.focus();}});
  }
+ story.addEventListener('click',event=>{story.querySelectorAll('.sheet-story-combobox').forEach(control=>{if(!control.contains(event.target)){control.querySelector('.sheet-story-options').hidden=true;control.querySelectorAll('[aria-expanded]').forEach(el=>el.setAttribute('aria-expanded','false'));}});});
+ const remaining=form.querySelector('[name="backstory"]').closest('.sheet-grid');remaining.classList.add('sheet-story-notes');
  updateStorySuggestions();
  const scoreMode=form.querySelector('[name="build.scoreMode"]')?.closest('label');if(scoreMode)document.querySelector('.sheet-point-panel').appendChild(scoreMode);
  const advancement=document.createElement('section');advancement.className='sheet-editor-box';advancement.innerHTML='<h4>Advancement</h4>'+f('ASI choices spent on ability scores instead of feats','advancement.asiSpent','number',{min:0,max:7})+'<p class="sheet-help">For 2014 ASIs already entered in your base scores, reserve their choices here. Do not also select an Ability Score Improvement feat for the same increase. Progression uses the class levels assigned in the Character Builder; multiclass levels are calculated separately for HP, hit dice, subclasses and spellcasting.</p>'+f('Warlock: one invocation spent on Lessons of the First Ones','advancement.lessons','checkbox')+'<p class="sheet-help">2024 Warlock, level 2+: reserves one invocation for an Origin feat. This does not grant an extra general feat.</p>';

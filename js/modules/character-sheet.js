@@ -227,6 +227,7 @@ function renderCharacterSheet() {
       'allies',
       'Allies & organizations'
     ],
+    ['enemies', 'Enemies'],
     [
       'backstory',
       'Backstory'
