@@ -616,13 +616,6 @@ function openSheetPrintDialog() {
 }
 window.addEventListener('beforeprint', () => {
   if (!document.body.classList.contains('printing-character-sheet')) prepareSheetPrint(new Set(['overview']));
-  if(document.body.classList.contains('printing-overview-only')){
-    const overview=document.getElementById('sheetOverviewReadout');
-    overview.style.removeProperty('zoom');
-    // A 254 mm content height also fits Letter paper with 9 mm margins. No content is cropped.
-    const height=overview.getBoundingClientRect().height;
-    if(height>960)overview.style.zoom=String(960/height);
-  }
 });
 function renderSheetBuildControls() {
   const R = CharacterRules, M = CharacterSheetModel, f = sheetField;
@@ -686,18 +679,7 @@ function renderSheetBuildControls() {
       ]),
       ...Object.entries(CharacterBackgrounds.legacy).map(([id,bg])=>[id,bg.name+' — 2014'])
     ]
-  }) }${ f('How your numbers are entered', 'build.scoreMode', 'select', {
-    values: [
-      [
-        'total',
-        'Final totals \u2014 ability / HP bonuses already included'
-      ],
-      [
-        'base',
-        'Base scores / HP \u2014 add origin bonuses automatically'
-      ]
-    ]
-  }) }${ f('Calculate class spell slots', 'build.autoSlots', 'checkbox') }</div><div class="sheet-grid" id="sheetManualIdentity">${ f('Custom class / subclasses', 'identity.class') }${ f('Custom race', 'species') }${ f('Custom background', 'background') }</div>
+  }) }<input type="hidden" name="build.scoreMode" value="base">${ f('Calculate class spell slots', 'build.autoSlots', 'checkbox') }</div><div class="sheet-grid" id="sheetManualIdentity">${ f('Custom class / subclasses', 'identity.class') }${ f('Custom race', 'species') }${ f('Custom background', 'background') }</div>
   <div class="sheet-grid two" data-build-for="half-elf">${ f('Ability +1 choice 1', 'build.abilityChoices.0', 'select', { values: abilityChoices }) }${ f('Ability +1 choice 2', 'build.abilityChoices.1', 'select', { values: abilityChoices }) }${ f('Racial skill choice 1', 'build.skillChoices.0', 'select', { values: skillChoices }) }${ f('Racial skill choice 2', 'build.skillChoices.1', 'select', { values: skillChoices }) }</div>
   <div class="sheet-grid two" data-build-for="human,half-elf,high-elf">${ f('Extra race language', 'build.extraLanguage', 'select', { values: languageChoices }) }</div>
   <div class="sheet-grid two" data-build-for="high-elf">${ f('Wizard cantrip (Intelligence)', 'build.cantrip', 'select', {

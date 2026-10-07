@@ -180,8 +180,8 @@ var CharacterEquipment = (() => {
       if(w.mastery)notes.push('Mastery: '+w.mastery+' (only if unlocked; effect manual).');
       attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
     }
-    // Defense uses actual armor in automatic mode, preserving manual confirmation otherwise.
-    let defense=armorEntry&&stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)?stats.feats.acBonus:0;
+    // Defense follows the owned armor actually worn, independent of the manual feat reminder.
+    const defense=armorEntry&&stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)?1:0;
     return {entries,attacks,warnings,attuned,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
   return {weapons,armor,normalize,infer,profile,choices,derive};

@@ -8,9 +8,9 @@ function inventorySideForGear(g){
 function ensureInventorySide(g){if(!g.inventorySide)g.inventorySide=inventorySideForGear(g);return g;}
 function inventorySideLabel(side){return side==='left'?'Active gear':'Backpack';}
 
-function personalGearEntries() {
+function personalGearEntries(includeInactive=false) {
  const s=sheetSession;if(!s)return [];
- return s.data.personalGear.filter(g=>g.quantity>0&&g.carried).map(g=>({id:g.id,itemId:g.id,characterId:s.characterId,quantity:g.quantity,personal:true,item:{id:g.id,name:g.name,description:g.notes,properties:[{title:'Weight per unit (lb)',text:String(g.weight)}],mechanics:CharacterEquipment.infer({name:g.name})}}));
+ return s.data.personalGear.filter(g=>includeInactive||g.quantity>0&&g.carried).map(g=>({id:g.id,itemId:g.id,characterId:s.characterId,quantity:g.quantity,personal:true,item:{id:g.id,name:g.name,description:g.notes,properties:[{title:'Weight per unit (lb)',text:String(g.weight)}],mechanics:CharacterEquipment.infer({name:g.name})}}));
 }
 function sheetBaseGear(){return [...CharacterAdobeData.gear,...(CharacterAdobeData.baseEquipment||[])];}
 function renderSheetGearPicker(){
@@ -57,15 +57,50 @@ function savePersonalGearEditor(){
  g.name=name;g.quantity=quantity;g.weight=weight;g.location=location||'Backpack';g.carried=dialog.querySelector('#personalEditCarried').checked;ensureInventorySide(g);g.notes=dialog.querySelector('#personalEditNotes').value.slice(0,500);
  s.dirty=true;dialog.close();refreshCharacterSheetInventory();sheetStatus('Item updated. Save the character sheet to keep it.');
 }
+function openInventoryItemInformation(id){
+ const entry=sheetEquipmentLoot().find(e=>e.id===id)||personalGearEntries(true).find(e=>e.id===id);if(!entry)return;
+ document.getElementById('sheetInventoryItemInformation')?.remove();
+ const dialog=document.createElement('dialog');dialog.id='sheetInventoryItemInformation';dialog.className='vault-dialog sheet-item-information';dialog.setAttribute('aria-labelledby','sheetItemInformationTitle');
+ const item=entry.item,esc=sheetEscape;
+ dialog.innerHTML=`<header><h2 id="sheetItemInformationTitle">${esc(item.name)}</h2><button type="button" data-close-item-info aria-label="Close item information">Close</button></header><div class="sheet-rule-text">${esc(item.description||'No description recorded.')}</div><dl>${(item.properties||[]).map(p=>`<dt>${esc(p.title)}</dt><dd>${esc(p.text)}</dd>`).join('')}</dl>${entry.personal?'<div class="sheet-feature-overview-controls"><button type="button" data-edit-info-item>Edit item</button><button type="button" data-store-info-item>Move to backpack</button><button type="button" data-remove-info-item>Remove item</button></div>':''}`;
+ document.getElementById('characterSheetDialog').append(dialog);
+ dialog.querySelector('[data-close-item-info]').onclick=()=>dialog.close();
+ dialog.addEventListener('close',()=>dialog.remove());
+ dialog.querySelector('[data-edit-info-item]')?.addEventListener('click',()=>{
+  dialog.close();openPersonalGearEditor(id);
+ });
+ dialog.querySelector('[data-store-info-item]')?.addEventListener('click',()=>{
+  readSheetForm();const g=sheetSession.data.personalGear.find(g=>g.id===id);if(!g)return;
+  g.inventorySide='right';g.location='Backpack';
+  const choice=sheetSession.data.equipmentState.loadout.find(c=>c.id===id);if(choice)choice.equipped=false;
+  sheetSession.dirty=true;dialog.close();refreshCharacterSheetInventory();
+  sheetStatus('Item moved to backpack. Save sheet to keep it.');
+ });
+ dialog.querySelector('[data-remove-info-item]')?.addEventListener('click',()=>{
+  readSheetForm();sheetSession.data.personalGear=sheetSession.data.personalGear.filter(g=>g.id!==id);
+  sheetSession.data.equipmentState.loadout=sheetSession.data.equipmentState.loadout.filter(c=>c.id!==id);
+  sheetSession.dirty=true;dialog.close();refreshCharacterSheetInventory();
+  sheetStatus('Item removed. Save sheet to keep changes.');
+ });
+ // Weapon overrides remain available without adding fields to every inventory row.
+ const controls=equipmentControls(entry);
+ controls.querySelectorAll('[data-gear=equipped],[data-gear=attuned]').forEach(input=>input.closest('label').remove());
+ if(controls.querySelector('select'))dialog.append(controls);
+ dialog.showModal();
+}
+function activeGearMarkup(entry){
+ const esc=sheetEscape,item=entry.item,choice=sheetSession.data.equipmentState.loadout.find(v=>v.id===entry.id)||{},description=String(item.description||'').replace(/\s+/g,' ').trim(),attune=CharacterMagicItems.requiresAttunement(item);
+ return `<article class="sheet-active-gear-row" data-active-gear="${esc(entry.id)}"><div><strong>${esc(item.name)}${entry.quantity>1?' × '+entry.quantity:''}</strong><p>${esc(description.slice(0,160))}${description.length>160?'…':''}</p></div><div class="sheet-active-gear-actions"><button type="button" data-active-equip="${esc(entry.id)}" aria-pressed="${!!choice.equipped}" ${entry.personal&&!choice.equipped&&!sheetSession.data.personalGear.some(g=>g.id===entry.id&&g.carried&&g.quantity>0)?'disabled title="Edit this item to carry it first"':''}>${choice.equipped?'Take off':'Wear'}</button>${attune?`<button type="button" data-active-attune="${esc(entry.id)}" aria-pressed="${!!choice.attuned}">${choice.attuned?'Unattune':'Attune'}</button>`:''}<button type="button" class="sheet-info-button" data-item-information="${esc(entry.id)}" aria-label="Information about ${esc(item.name)}">i</button></div></article>`;
+}
 function renderCharacterInventory(){
  const host=document.getElementById('sheetInventory'),s=sheetSession;if(!host||!s)return;
  host.className='sheet-inventory-ledger';
  const coinLabels=['cp','sp','ep','gp','pp'].map(k=>document.querySelector(`[name="coins.${k}"]`)?.closest('label')).filter(Boolean);
  coinLabels.forEach(el=>el.remove());
- const esc=sheetEscape,own=s.data.personalGear.map(ensureInventorySide),loot=inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0);
+ const esc=sheetEscape,own=s.data.personalGear.map(ensureInventorySide);
  const row=g=>`<tr data-personal-row="${esc(g.id)}"><td class="sheet-inventory-item"><textarea data-personal="name" aria-label="Item name" maxlength="160" rows="1">${esc(g.name)}</textarea><textarea data-personal="notes" class="sheet-inventory-description" aria-label="Notes for ${esc(g.name)}" placeholder="Description / notes…" maxlength="500" rows="1">${esc(g.notes||'')}</textarea></td><td class="sheet-inventory-quantity"><input data-personal="quantity" aria-label="Quantity of ${esc(g.name)}" type="number" min="0" max="9999" step="1" value="${g.quantity}"></td><td class="sheet-inventory-weight"><input data-personal="weight" aria-label="Weight each in pounds for ${esc(g.name)}" type="number" min="0" max="99999" step="0.001" value="${g.weight}"><small title="Total weight">${(g.quantity*g.weight).toFixed(2)} total</small></td><td class="sheet-inventory-row-actions"><div class="sheet-inventory-actions"><button type="button" data-move-inventory="${esc(g.id)}" aria-label="Move ${esc(g.name)} to ${inventorySideForGear(g)==='left'?'Backpack':'Active gear'}" title="Move to ${inventorySideForGear(g)==='left'?'Backpack':'Active gear'}">${inventorySideForGear(g)==='left'?'→':'←'}</button><button type="button" data-edit-personal="${esc(g.id)}" aria-label="Edit ${esc(g.name)}" title="Edit item, location and carried status">✎</button><button type="button" data-remove-personal="${esc(g.id)}" aria-label="Remove ${esc(g.name)}" title="Remove item">×</button></div></td></tr>`;
- const left=own.filter(g=>inventorySideForGear(g)==='left'),right=own.filter(g=>inventorySideForGear(g)==='right');
- host.innerHTML=`<div class="sheet-inventory-main"><div class="sheet-inventory-columns"><section class="sheet-inventory-column sheet-inventory-active"><h4>Active gear <small>Weapons, armor & equipped gear</small></h4><div class="sheet-inventory-scroll"><table class="sheet-inventory-table"><thead><tr><th>Item / description</th><th>#</th><th>lb each</th><th aria-label="Item actions"></th></tr></thead><tbody>${left.map(row).join('')||'<tr><td colspan="4" class="sheet-empty">No active gear yet</td></tr>'}</tbody></table></div></section><section class="sheet-inventory-column sheet-inventory-backpack"><h4>Backpack <small>Stored gear & supplies</small></h4><div class="sheet-inventory-scroll"><table class="sheet-inventory-table"><thead><tr><th>Item / description</th><th>#</th><th>lb each</th><th aria-label="Item actions"></th></tr></thead><tbody>${right.map(row).join('')||'<tr><td colspan="4" class="sheet-empty">No backpack items yet</td></tr>'}</tbody></table></div></section></div><section class="sheet-inventory-column sheet-inventory-campaign"><h4>Campaign loot <small>${loot.length} stacks</small></h4><div id="sheetCampaignInventoryRows"></div></section><details class="sheet-inventory-settings"><summary>Equip personal gear</summary><div id="sheetPersonalEquipment"></div></details></div><aside class="sheet-inventory-sidebar"><h4>Treasure</h4><div id="sheetInventoryCoins"></div><h4>Weight carried</h4><div id="sheetInventoryTotals"></div><h4>Attuned magical items</h4><div id="sheetInventoryAttuned"></div></aside>`;
+ const left=own.filter(g=>inventorySideForGear(g)==='left'),active=sheetEquipmentLoot().filter(e=>!e.personal).concat(personalGearEntries(true).filter(e=>left.some(g=>g.id===e.id))),right=own.filter(g=>inventorySideForGear(g)==='right');
+ host.innerHTML=`<div class="sheet-inventory-main"><div class="sheet-inventory-columns"><section class="sheet-inventory-column sheet-inventory-active"><h4>Active gear <small>Owned items · wear and attune here</small></h4><div class="sheet-active-gear-list">${active.map(activeGearMarkup).join('')||'<p class="sheet-empty">No active gear yet</p>'}</div></section><section class="sheet-inventory-column sheet-inventory-backpack"><h4>Backpack <small>Stored gear & supplies</small></h4><div class="sheet-inventory-scroll"><table class="sheet-inventory-table"><thead><tr><th>Item / description</th><th>#</th><th>lb each</th><th aria-label="Item actions"></th></tr></thead><tbody>${right.map(row).join('')||'<tr><td colspan="4" class="sheet-empty">No backpack items yet</td></tr>'}</tbody></table></div></section></div></div><aside class="sheet-inventory-sidebar"><h4>Treasure</h4><div id="sheetInventoryCoins"></div><h4>Weight carried</h4><div id="sheetInventoryTotals"></div><h4>Attuned magical items</h4><div id="sheetInventoryAttuned"></div></aside>`;
  // Move existing coin inputs rather than duplicate them; they remain normal sheet fields.
  coinLabels.forEach(el=>host.querySelector('#sheetInventoryCoins').appendChild(el));
  host.querySelectorAll('[data-personal]').forEach(input=>input.onchange=()=>{
@@ -79,11 +114,9 @@ function renderCharacterInventory(){
  host.querySelectorAll('[data-move-inventory]').forEach(b=>b.onclick=()=>{readSheetForm();const g=s.data.personalGear.find(g=>g.id===b.dataset.moveInventory);if(!g)return;g.inventorySide=inventorySideForGear(g)==='left'?'right':'left';g.location=g.inventorySide==='left'?'Worn':'Backpack';s.dirty=true;refreshCharacterSheetInventory();sheetStatus(`${g.name} moved to ${inventorySideLabel(g.inventorySide)}. Save sheet to keep the change.`);});
  host.querySelectorAll('[data-edit-personal]').forEach(b=>b.onclick=()=>openPersonalGearEditor(b.dataset.editPersonal));
  host.querySelectorAll('[data-remove-personal]').forEach(b=>b.onclick=()=>{readSheetForm();s.data.personalGear=s.data.personalGear.filter(g=>g.id!==b.dataset.removePersonal);s.data.equipmentState.loadout=s.data.equipmentState.loadout.filter(g=>g.id!==b.dataset.removePersonal);s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Item removed. Save sheet to keep changes.');});
- const campaign=host.querySelector('#sheetCampaignInventoryRows');
- for(const entry of loot){const item=inventoryItem(entry),wrap=document.createElement('details');wrap.className='sheet-inventory-loot';const summary=document.createElement('summary');const weight=inventoryUnitWeight(item);summary.textContent=`${item.name} · ${entry.quantity} × ${weight===null?'?':weight} lb`;wrap.append(summary,createCard(item,{inventoryEntry:entry}),equipmentControls(entry));campaign.append(wrap);}
- if(!loot.length)campaign.textContent='Claim visible campaign loot from the Library or ask your DM to assign it.';
- const controls=host.querySelector('#sheetPersonalEquipment');
- for(const g of own){const wrap=document.createElement('details'),summary=document.createElement('summary');summary.textContent=g.name;wrap.append(summary);const entry=personalGearEntries().find(e=>e.id===g.id);if(entry)wrap.append(equipmentControls(entry));controls.append(wrap);}
+ host.querySelectorAll('[data-item-information]').forEach(b=>b.onclick=()=>openInventoryItemInformation(b.dataset.itemInformation));
+ host.querySelectorAll('[data-active-equip]').forEach(b=>b.onclick=()=>{const c=s.data.equipmentState.loadout.find(v=>v.id===b.dataset.activeEquip);setSheetEquipmentChoice(b.dataset.activeEquip,'equipped',!c?.equipped);});
+ host.querySelectorAll('[data-active-attune]').forEach(b=>b.onclick=()=>{const c=s.data.equipmentState.loadout.find(v=>v.id===b.dataset.activeAttune);setSheetEquipmentChoice(b.dataset.activeAttune,'attuned',!c?.attuned);});
  observePendingImages(host);
 }
 function inventoryUnitWeight(item){
@@ -112,7 +145,7 @@ function renderInventoryDefense(stats) {
  const dex=p?.group==='heavy'?0:p?.group==='medium'?Math.min(2,stats.mods.dex):stats.mods.dex;
  const parts=p?[p.name+' '+p.baseAC,`DEX ${CharacterSheetModel.signed(dex)}${p.group==='heavy'?' (not applied)':p.group==='medium'?' (maximum +2)':''}`]:[stats.gear.baseLabel+' '+stats.gear.base];
  for(const [name,value] of [['shield',stats.gear.shield],['magic / racial bonuses',stats.gear.bonus],['Defense',stats.gear.defense]])if(value)parts.push(`${name} ${CharacterSheetModel.signed(value)}`);
- host.innerHTML=`<div class="sheet-defense-emblem"><svg viewBox="0 0 100 116" aria-hidden="true"><path d="M8 8 L50 2 L92 8 V53 Q92 87 50 112 Q8 87 8 53Z"/><path class="sheet-defense-inset" d="M15 14 L50 9 L85 14 V53 Q85 81 50 103 Q15 81 15 53Z"/></svg><div><small>ARMOR CLASS</small><strong>${stats.ac}</strong><span>${state.acMode==='equipment'?'AUTOMATIC':'MANUAL BASE'}</span></div></div><div class="sheet-defense-content"><h4>Armor & defenses</h4><div class="sheet-defense-selectors"><label>Armor<select id="sheetArmorSelect">${options('armor',armor)}</select></label><label>Shield<select id="sheetShieldSelect">${options('shield',shield)}</select></label></div><p class="sheet-defense-formula">${parts.map(x=>`<span>${esc(x)}</span>`).join('<b> + </b>')} <b>= ${stats.ac} AC</b></p><p class="sheet-help">Choose from your inventory, or add and equip standard gear. The engine automatically compares legal armor, natural armor, Barbarian/Monk defenses and Draconic Resilience, then adds shield and eligible magical bonuses.</p>${stats.gear.warnings.map(w=>`<p class="sheet-build-warning">${esc(w)}</p>`).join('')}${[armor,shield].some(e=>e&&(((typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(e.item))||!!e.item.attunement)))?'<p class="sheet-help">Magical benefits that require attunement use the item’s Attuned checkbox below.</p>':''}</div>`;
+ host.innerHTML=`<div class="sheet-defense-emblem"><svg viewBox="0 0 100 116" aria-hidden="true"><path d="M8 8 L50 2 L92 8 V53 Q92 87 50 112 Q8 87 8 53Z"/><path class="sheet-defense-inset" d="M15 14 L50 9 L85 14 V53 Q85 81 50 103 Q15 81 15 53Z"/></svg><div><small>ARMOR CLASS</small><strong>${stats.ac}</strong><span>${state.acMode==='equipment'?'AUTOMATIC':'MANUAL BASE'}</span></div></div><div class="sheet-defense-content"><h4>Armor & defenses</h4><div class="sheet-defense-selectors"><label>Armor<select id="sheetArmorSelect">${options('armor',armor)}</select></label><label>Shield<select id="sheetShieldSelect">${options('shield',shield)}</select></label></div><p class="sheet-defense-formula">${parts.map(x=>`<span>${esc(x)}</span>`).join('<b> + </b>')} <b>= ${stats.ac} AC</b></p><p class="sheet-help">Choose from your inventory, or add and equip standard gear. The engine automatically compares legal armor, natural armor, Barbarian/Monk defenses and Draconic Resilience, then adds shield and eligible magical bonuses.</p>${stats.gear.warnings.map(w=>`<p class="sheet-build-warning">${esc(w)}</p>`).join('')}${[armor,shield].some(e=>e&&(((typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(e.item))||!!e.item.attunement)))?'<p class="sheet-help">Magical benefits that require attunement use the item’s Attune button in Active gear.</p>':''}</div>`;
  for(const [id,kind] of [['sheetArmorSelect','armor'],['sheetShieldSelect','shield']])host.querySelector('#'+id).onchange=event=>selectInventoryDefense(kind,event.target.value);
 }
 function selectInventoryDefense(kind,id){
