@@ -20,10 +20,11 @@ function openAttackPicker(index=null){
  function modes(){
   const old=mode.value,a=current(),item=kind.value==='loot'?sheetEquipmentLoot().find(e=>e.id===ref.value)?.item:kind.value==='weapon'?{name:CharacterEquipment.weapons[ref.value]?.name}:null;
   const p=item?CharacterEquipment.profile(CharacterEquipment.infer(item),session.data.build.edition):null;
-  let values=[['normal',p?.props.includes('twoHanded')?'Normal (two hands required)':'Normal']];
+  const props=Array.isArray(p?.props)?p.props:[];
+  let values=[['normal',props.includes('twoHanded')?'Normal (two hands required)':'Normal']];
   if(p?.versatile)values.push(['twoHanded','Two hands (versatile)']);
-  if(p?.props.includes('thrown')||kind.value==='improvised'||kind.value==='loot'&&!p)values.push(['thrown','Thrown']);
-  if(p?.props.includes('light'))values.push(['offhand','Extra Light-weapon attack']);
+  if(props.includes('thrown')||kind.value==='improvised'||kind.value==='loot'&&!p)values.push(['thrown','Thrown']);
+  if(props.includes('light'))values.push(['offhand','Extra Light-weapon attack']);
   mode.innerHTML=values.map(([v,n])=>`<option value="${v}">${n}</option>`).join('');if(values.some(([v])=>v===old))mode.value=old;
   get('attackModeLabel').hidden=['spell','cantrip','racial','manual'].includes(kind.value);
   const spell=CharacterCatalog.find(ref.value);get('attackSlotLabel').hidden=kind.value!=='spell';

@@ -3,7 +3,13 @@ const build=(c='fighter',edition='2024')=>M.normalize({build:{classId:c,edition}
 test('Feat progression grants ordinary milestones and Fighter/Rogue extras',()=>{assert.equal(P.budget(build('wizard'),3,catalog.feats).remaining,0);assert.equal(P.budget(build('wizard'),4,catalog.feats).remaining,1);assert.equal(P.budget(build(),6,catalog.feats).remaining,2);assert.equal(P.budget(build('rogue'),10,catalog.feats).remaining,3);assert.equal(P.budget(build(),19,catalog.feats).remaining,7);});
 test('Feat/ASI choices share a finite budget and saved excess is reported',()=>{const d=build('wizard');d.advancement.asiSpent=1;assert.equal(P.budget(d,4,catalog.feats).remaining,0);d.rulesChoices.feats=['old-custom'];assert.equal(P.budget(d,4,catalog.feats).over,1);assert.equal(d.rulesChoices.feats.length,1);});
 test('Fighting Style cannot consume an unrestricted choice',()=>{const f=catalog.feats.find(f=>f.category==='FS');assert.equal(P.eligible(build(),1,f,catalog.feats),'');assert.ok(P.eligible(build('wizard'),20,f,catalog.feats));assert.equal(P.budget(build('paladin'),1,catalog.feats).style,0);assert.equal(P.budget(build('paladin'),2,catalog.feats).style,1);});
-test('Warlock Origin choice requires the selected invocation and level two',()=>{const d=build('warlock');d.advancement.lessons=true;assert.equal(P.budget(d,1,catalog.feats).lessons,0);assert.equal(P.budget(d,2,catalog.feats).lessons,1);});
+test('Warlock Origin choices use actual limited Lessons invocations, not the old checkbox',()=>{
+ const d=build('warlock');d.advancement.lessons=true;assert.equal(P.budget(d,2,catalog.feats).lessons,0);
+ d.adobe={classLevels:[{classId:'warlock',level:2,subclassId:''}],classFeatureChoices:{'2024:warlock:eldritch-invocations':['lessons-of-the-first-ones','lessons-of-the-first-ones']}};
+ assert.equal(P.budget(d,1,catalog.feats).lessons,0);assert.equal(P.budget(d,2,catalog.feats).lessons,2);
+ d.adobe.classFeatureChoices['2024:warlock:eldritch-invocations']=['armor-of-shadows','eldritch-mind','pact-of-the-tome','lessons-of-the-first-ones'];
+ assert.equal(P.budget(d,2,catalog.feats).lessons,0,'overflow invocations grant no additional Origin choices');
+});
 test('Variant Human 2014 starts with one eligible legacy feat',()=>{const d=build('wizard','2014'),feat=catalog.feats.find(f=>f.edition==='2014'&&f.name==='Alert');d.build.race='variant-human';assert.equal(P.eligible(d,1,feat,catalog.feats),'');d.build.raceFeat='Alert';assert.ok(P.eligible(d,1,feat,catalog.feats));});
 test('Numeric prerequisites block selection before the feat grants its own increase',()=>{const f=catalog.feats.find(f=>f.edition==='2024'&&f.name==='Grappler');assert.ok(P.eligible(build(),4,f,catalog.feats,{str:12,dex:10}));assert.equal(P.eligible(build(),4,f,catalog.feats,{str:13,dex:10}),'');});
 test('Profile normalizes and survives repeated normalization',()=>{const d=M.normalize({profile:{gender:'other',age:102,height:182,weight:76,size:'medium',hair:'Silver',skin:'Blue'},alignment:'Chaotic Good'});assert.deepEqual(M.normalize(d),d);assert.equal(d.profile.hair,'Silver');assert.equal(Object.keys(P.alignments).length,9);});
@@ -20,14 +26,14 @@ test('DM-approved bonus feat and ASI choices extend only their intended budgets'
 
 test('DM bonus feat and ASI approvals extend progression without changing normal progression',()=>{
  const data=M.normalize({build:{edition:'2024',classId:'fighter'},rulesChoices:{feats:[],grants:{__dm:{bonusFeats:1,bonusAsis:1,usedAsis:0}}}});
- let b=R.budget(data,4,[]);
+ let b=P.budget(data,4,[]);
  assert.equal(b.normalRemaining,1);
  assert.equal(b.bonusFeatRemaining,1);
  assert.equal(b.bonusAsiRemaining,1);
  data.rulesChoices.grants.__dm.usedAsis=1;
- b=R.budget(data,4,[]);
+ b=P.budget(data,4,[]);
  assert.equal(b.bonusAsiRemaining,0);
  data.rulesChoices.grants.__dm.bonusFeats=0;
- b=R.budget(data,4,[]);
+ b=P.budget(data,4,[]);
  assert.equal(b.bonusFeatRemaining,0);
 });

@@ -27,7 +27,10 @@ var CharacterPlayRules = (()=>{
   const total=known?levels.filter(n=>n<=level).length:0,spent=advancement(data.advancement).asiSpent;
   const dm=data.rulesChoices?.grants?.__dm||{},bonusFeats=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusFeats)||0))),bonusAsis=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusAsis)||0))),bonusAsiUsed=Math.max(0,Math.min(10,Math.trunc(Number(dm.usedAsis)||0)));
   const style=modern&&((classId==='fighter'&&level>=1)||(['paladin','ranger'].includes(classId)&&level>=2))?1:0;
-  const lessons=modern&&classId==='warlock'&&level>=2&&data.advancement?.lessons?1:0;
+  const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
+  const warlock=(data.adobe?.classLevels||[]).find(entry=>entry.classId==='warlock');
+  const invocations=modern&&warlock?CFC.status(data,{...warlock,level:Math.min(warlock.level,level)},'2024').find(group=>group.id==='eldritch-invocations'):null;
+  const lessons=invocations?.valid.filter(id=>id==='lessons-of-the-first-ones').length||0;
   let featUsed=0,styleUsed=0,lessonUsed=0;
   for(const id of data.rulesChoices.feats){const f=catalog.find(v=>v.id===id);if(f?.category==='FS'&&styleUsed<style)styleUsed++;else if(f?.category==='O'&&lessonUsed<lessons)lessonUsed++;else featUsed++;}
   const bonusFeatCovered=Math.min(featUsed,bonusFeats),normalFeatUsed=Math.max(0,featUsed-bonusFeatCovered);

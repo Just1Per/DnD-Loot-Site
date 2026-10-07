@@ -30,7 +30,7 @@ function arrangeCharacterSheetPage() {
   builder.id='sheet-builder';builder.className='sheet-panel';builder.dataset.sheetSection='builder';builder.setAttribute('role','tabpanel');builder.setAttribute('aria-labelledby','sheet-tab-builder');
   builder.innerHTML='<h3>Character builder</h3><p>Set your identity, rules, class and origins here.</p>';
   const overview=document.getElementById('sheet-overview'),identity=root.querySelector('.sheet-identity');
-  builder.append(identity,document.getElementById('sheetBuildControls'),document.getElementById('sheetBuildSummary'));
+  builder.append(document.getElementById('sheetBuildInfo'),identity,document.getElementById('sheetBuildControls'));
   body.appendChild(builder);
   const vitals=document.createElement('div');vitals.className='sheet-vital-editor';vitals.innerHTML='<h4>Vitals & character details</h4>';
   for(const child of [...overview.children])if(child.tagName!=='H3')vitals.appendChild(child);
@@ -60,7 +60,8 @@ function closeCharacterSheet(force = false) {
   if (dialog) {
     dialog.remove();
   }
-  document.body.classList.remove('printing-character-sheet');
+  document.body.classList.remove('printing-character-sheet','printing-overview-only');
+  document.getElementById('sheetOverviewReadout')?.style.removeProperty('zoom');
   document.getElementById('characterSheetChooser').replaceChildren();
   document.getElementById('characterSheetPage').innerHTML = '<p class="sheet-empty">Choose a character to open their sheet.</p>';
   return true;
@@ -182,7 +183,7 @@ function renderCharacterSheet() {
   ${ sheetSection('overview', 'The adventurer', `<div class="sheet-grid sheet-identity">${ field('Character name', 'identity.name') }${ field('Level', 'identity.level', 'number', {
     min: 1,
     max: 20
-  }) }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div id="sheetBuildControls"></div><div id="sheetBuildSummary" class="sheet-rule-summary"></div><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid two sheet-combat-defenses"><section id="sheetHPDefense" class="sheet-summary-box sheet-defense-panel sheet-hp-panel" aria-label="Maximum hit point calculation"></section><p class="sheet-derived-readout"><span>Armor Class</span><strong><output data-derived="ac"></output></strong><small>Calculated from worn armor, Dexterity, class/race defenses, shield, feats and magic items.</small></p></div>`) }
+  }) }${ field('Alignment', 'alignment') }${ field('Experience', 'experience') }</div><div id="sheetBuildControls"></div><section id="sheetBuildInfo" class="sheet-build-info"><details id="sheetBuildSummary"><summary id="sheetBuildSummaryTitle">Calculated from your choices</summary><div id="sheetBuildSummaryContent" class="sheet-rule-summary"></div></details><button type="button" id="sheetBuildOverviewToggle" aria-pressed="false">Add to Overview</button></section><div class="sheet-metrics"><div><span>Proficiency</span><strong data-derived="pb"></strong></div><div><span>Initiative</span><strong data-derived="initiative"></strong></div><div><span>Passive perception</span><strong data-derived="passive"></strong></div><div><span>Spell save DC</span><strong data-derived="spellDC"></strong></div></div><div class="sheet-grid two sheet-combat-defenses"><section id="sheetHPDefense" class="sheet-summary-box sheet-defense-panel sheet-hp-panel" aria-label="Maximum hit point calculation"></section><p class="sheet-derived-readout"><span>Armor Class</span><strong><output data-derived="ac"></output></strong><small>Calculated from worn armor, Dexterity, class/race defenses, shield, feats and magic items.</small></p></div>`) }
   ${ sheetSection('skills', 'Abilities, saving throws & skills', `<section class="sheet-summary-box sheet-point-panel">${field('Score method','build.scoreMethod','select',{values:[['manual','Manual / rolled'],['pointBuy','Point buy']]})}<div id="sheetPointBuySummary" aria-live="polite"></div></section><div id="sheetScoreModeNotice" class="sheet-help"></div><div class="sheet-abilities">${abilityOptions.map(([key,label])=>`<article class="sheet-ability"><h4>${label}</h4><strong data-ability-score="${key}" aria-label="Effective ${label} score"></strong><div class="sheet-ability-mod">Modifier <output data-derived="mods.${key}"></output></div>${field('Base score',`abilities.${key}`,'number',{min:1,max:30})}<p class="sheet-ability-breakdown" data-ability-breakdown="${key}"></p></article>`).join('')}</div>
   <div class="sheet-training-layout"><section class="sheet-editor-box"><h4>Saving throws</h4>${abilityOptions.map(([key,label])=>`<div class="sheet-check-row sheet-save-row"><strong>${label}</strong>${field('Proficient',`saves.${key}.proficient`,'checkbox')}${field('Bonus',`saves.${key}.bonus`,'number')}<output data-derived="saves.${key}"></output></div>`).join('')}${field('Passive perception bonus','passiveBonus','number')}</section>
   <section class="sheet-editor-box"><h4>Skills</h4><p class="sheet-help">Choose a circle; click it again to clear your manual choice. Automatic training from your character cannot be lowered here.</p><div class="sheet-skill-heading"><span>Skill</span><span>Half</span><span>Proficient</span><span>Expertise</span><span>Total</span></div>${Object.entries(M.skills).map(([key,[label,ability]])=>`<div class="sheet-skill-edit" data-skill-row="${key}"><span>${label} <small>${ability.toUpperCase()}</small><small data-skill-source="${key}"></small></span><input type="hidden" name="skills.${key}.rank" value="0">${[[0.5,'Half'],[1,'Proficient'],[2,'Expertise']].map(([rank,name])=>`<button type="button" class="sheet-skill-orb" data-skill="${key}" data-rank="${rank}" aria-label="${label}: ${name}" aria-pressed="false"><span aria-hidden="true"></span></button>`).join('')}<output data-derived="skills.${key}"></output></div>`).join('')}
@@ -373,12 +374,15 @@ function readSheetForm() {
   const data = structuredClone(CharacterSheetModel.normalize(s.data));
   data.identity = { ...s.identity || s.character };
   document.querySelectorAll('#characterSheetForm [name]').forEach(input => {
+    // Feats page owns these choices; legacy hidden selects cannot represent every source feat.
+    if(input.closest('[data-feat-catalogue-managed="true"]'))return;
     const keys = input.name.split('.'), last = keys.pop();
     let target = data;
     for (const key of keys)
       target = target[key];
     target[last] = input.type === 'checkbox' ? input.checked : input.type === 'number' || input.name.endsWith('.rank') ? Number(input.value) : input.value;
   });
+  if(!canManageCampaign())data.advancement.asiSpent=CharacterPlayRules.normalizeAdvancement(s.data.advancement).asiSpent;
   s.identity = {
     name: String(data.identity.name).trim(),
     class: String(data.identity.class).trim(),
@@ -392,11 +396,11 @@ function updateSheetCalculations() {
     return;
   const d = CharacterSheetModel.derive(s.data, s.identity?.level || s.character.level || 1, sheetEquipmentLoot());
   renderEquipmentCalculations(d);
+  updateSheetBuildSummary(d);
   renderCharacterOverview(d);
   updateCharacterPlayUI(d);
   updateInventoryTotals(d);
   renderInventoryDefense(d);
-  updateSheetBuildSummary(d);
   if (typeof updateSheetCatalogGrants === 'function') updateSheetCatalogGrants();
   document.querySelectorAll('#characterSheetDialog [data-derived]').forEach(el => {
     const path = el.dataset.derived, value = path.split('.').reduce((v, key) => v?.[key], d);
@@ -532,7 +536,8 @@ function clearSheetPrintSelection() {
   document.querySelectorAll('#characterSheetDialog [data-sheet-section].sheet-print-excluded').forEach(panel=>panel.classList.remove('sheet-print-excluded'));
 }
 window.addEventListener('afterprint', () => {
-  document.body.classList.remove('printing-character-sheet');
+  document.body.classList.remove('printing-character-sheet','printing-overview-only');
+  document.getElementById('sheetOverviewReadout')?.style.removeProperty('zoom');
   clearSheetPrintSelection();
 });
 function prepareSheetPrint(selectedSections = null) {
@@ -553,6 +558,7 @@ function prepareSheetPrint(selectedSections = null) {
     input.after(mirror);
   });
   document.body.classList.add('printing-character-sheet');
+  document.body.classList.toggle('printing-overview-only',selectedSections instanceof Set&&selectedSections.size===1&&selectedSections.has('overview'));
 }
 function sheetPrintPageOptions() {
   const dialog=document.getElementById('characterSheetDialog');
@@ -580,8 +586,8 @@ function openSheetPrintDialog() {
   printDialog.setAttribute('aria-labelledby','sheetPrintDialogTitle');
   printDialog.innerHTML=`<form method="dialog" class="sheet-print-dialog-card">
     <header><div><span class="sheet-eyebrow">PRINT CHARACTER SHEET</span><h2 id="sheetPrintDialogTitle">Choose pages to print</h2><p>Select the character-sheet sections you want included.</p></div><button type="button" data-print-close aria-label="Close">×</button></header>
-    <div class="sheet-print-dialog-tools"><button type="button" data-print-all>Select all</button><button type="button" data-print-none>Clear all</button><span data-print-count></span></div>
-    <div class="sheet-print-page-grid">${pages.map((page,i)=>`<label class="sheet-print-page-option"><input type="checkbox" value="${sheetEscape(page.key)}" checked><span><strong>${sheetEscape(page.label)}</strong><small>Page ${i+1}</small></span></label>`).join('')}</div>
+    <div class="sheet-print-dialog-tools"><button type="button" data-print-overview>One-page Overview</button><button type="button" data-print-all>Select all</button><button type="button" data-print-none>Clear all</button><span data-print-count></span></div>
+    <div class="sheet-print-page-grid">${pages.map((page,i)=>`<label class="sheet-print-page-option"><input type="checkbox" value="${sheetEscape(page.key)}" ${page.key==='overview'?'checked':''}><span><strong>${sheetEscape(page.label)}</strong><small>Page ${i+1}</small></span></label>`).join('')}</div>
     <p class="sheet-print-dialog-note">Your browser print window will open after this. You can still choose printer, copies, orientation and paper size there.</p>
     <footer><button type="button" data-print-cancel>Cancel</button><button type="button" class="btn-primary" data-print-confirm>Print selected pages</button></footer>
   </form>`;
@@ -591,6 +597,7 @@ function openSheetPrintDialog() {
   const confirm=printDialog.querySelector('[data-print-confirm]');
   const update=()=>{const n=checks.filter(box=>box.checked).length;count.textContent=n+' of '+checks.length+' selected';confirm.disabled=n===0;};
   checks.forEach(box=>box.addEventListener('change',update));
+  printDialog.querySelector('[data-print-overview]').onclick=()=>{checks.forEach(box=>box.checked=box.value==='overview');update();};
   printDialog.querySelector('[data-print-all]').onclick=()=>{checks.forEach(box=>box.checked=true);update();};
   printDialog.querySelector('[data-print-none]').onclick=()=>{checks.forEach(box=>box.checked=false);update();};
   printDialog.querySelector('[data-print-close]').onclick=closeSheetPrintDialog;
@@ -607,7 +614,14 @@ function openSheetPrintDialog() {
   printDialog.showModal();
 }
 window.addEventListener('beforeprint', () => {
-  if (!document.body.classList.contains('printing-character-sheet')) prepareSheetPrint();
+  if (!document.body.classList.contains('printing-character-sheet')) prepareSheetPrint(new Set(['overview']));
+  if(document.body.classList.contains('printing-overview-only')){
+    const overview=document.getElementById('sheetOverviewReadout');
+    overview.style.removeProperty('zoom');
+    // A 254 mm content height also fits Letter paper with 9 mm margins. No content is cropped.
+    const height=overview.getBoundingClientRect().height;
+    if(height>960)overview.style.zoom=String(960/height);
+  }
 });
 function renderSheetBuildControls() {
   const R = CharacterRules, M = CharacterSheetModel, f = sheetField;
@@ -1070,6 +1084,9 @@ function updateSheetBuildSummary(derived) {
   ].filter(([, n]) => n).map(([label, n]) => `${ label } ${ n } ft`).join(' \xB7 ');
   const naturalAC = e.naturalArmor ? e.naturalArmor.base + (e.naturalArmor.ability ? derived.mods[e.naturalArmor.ability] : 0) : null;
   const additional = `${ movement ? `<p><strong>Other movement:</strong> ${ sheetEscape(movement) }. See racial restrictions below.</p>` : '' }${ naturalAC !== null ? `<p><strong>Natural armor reference:</strong> AC ${ naturalAC } before shield or other effects. The automatic AC engine compares this against other legal formulas.</p>` : '' }${ e.immunities.length ? `<p><strong>Immunities:</strong> ${ sheetEscape(e.immunities.join(', ')) }</p>` : '' }${ e.raceAbility ? `<p><strong>Racial magic / feature:</strong> ${ sheetEscape(e.raceAbility.toUpperCase()) } · DC ${ 8 + derived.pb + derived.mods[e.raceAbility] } · spell attack ${ CharacterSheetModel.signed(derived.pb + derived.mods[e.raceAbility]) }</p>` : '' }`;
-  document.getElementById('sheetBuildSummary').innerHTML = `<h4>Calculated from your choices · ${ sheetEscape(b.edition) }</h4>${ raceInfo }${ additional }<p><strong>Class:</strong> ${ sheetEscape(c ? c.name + ' \u2014 ' + b.edition : 'Custom / manual') } · <strong>Background:</strong> ${ sheetEscape(bg ? bg.name + ' — ' + CharacterBackgrounds.sourceName(bg) : 'Custom / manual') }</p>${ e.originFeats?.length ? `<p><strong>Origin feats:</strong> ${ sheetEscape(e.originFeats.join(', ')) }</p>` : '' }<p>${ b.scoreMode === 'base' ? 'Origin bonuses are added to base abilities (up to 20) and base maximum HP.' : 'Your entered ability scores and maximum HP are treated as final totals; origin bonuses are shown for reference only.' } Manual notes and proficiencies remain separate.</p><div class="sheet-metrics">${ stat(b.edition === '2024' ? 'Background bonuses' : 'Race bonuses', asi) }${ stat('Walking speed', `${ e.speed } ft`) }${ stat('Size', e.size) }${ stat('Darkvision', e.darkvision ? `${ e.darkvision } ft` : 'None') }${ stat('Effective maximum HP', derived.hpMax) }${ stat('Hit dice', c ? `${ s.identity?.level || s.character.level || 1 }d${ c.die }` : s.data.hitDice || 'Manual') }</div><p><strong>Automatic skills:</strong> ${ sheetEscape(learnedSkills) }</p><p><strong>Class saving throws:</strong> ${ sheetEscape(e.saves.map(key => CharacterSheetModel.abilities[key]).join(', ') || 'Manual') }</p><p><strong>Languages:</strong> ${ sheetEscape(e.languages.join(', ') || 'Manual') }</p><p><strong>Equipment / tool proficiencies:</strong> ${ sheetEscape(e.proficiencies.join(', ') || 'Manual') }</p><p><strong>Resistances:</strong> ${ sheetEscape(e.resistances.join(', ') || 'None from race') }</p><ul>${ e.traits.map(trait => `<li>${ sheetEscape(trait) }</li>`).join('') }</ul>${ breath }${ e.innate.length ? `<p><strong>Granted racial spells:</strong> ${ sheetEscape(e.innate.join('; ')) }</p>` : '' }${ e.pact ? `<p><strong>Pact Magic:</strong> ${ e.pact.count } slot(s), level ${ e.pact.level }; recover on a short or long rest. Mystic Arcanum spells are separate and tracked manually.</p>` : '' }<p class="sheet-help">Traits below are reminders, not action buttons. Conditional bonuses, racial attacks, class features and unsupported conditional effects require manual entry. PB means proficiency bonus. <a href="rules-attribution.html" target="_blank" rel="noopener">Rules source & attribution</a></p>${ e.warnings.length ? `<div class="sheet-build-warning">${ e.warnings.map(w => `<p>${ sheetEscape(w) }</p>`).join('') }</div>` : '' }`;
+  document.getElementById('sheetBuildSummaryTitle').textContent='Calculated from your choices · '+b.edition;
+  const overviewToggle=document.getElementById('sheetBuildOverviewToggle'),pinned=s.data.adobe?.showCalculatedOnOverview===true;
+  overviewToggle.textContent=pinned?'Remove from Overview':'Add to Overview';overviewToggle.setAttribute('aria-pressed',String(pinned));
+  document.getElementById('sheetBuildSummaryContent').innerHTML = `${ raceInfo }${ additional }<p><strong>Class:</strong> ${ sheetEscape(c ? c.name + ' \u2014 ' + b.edition : 'Custom / manual') } · <strong>Background:</strong> ${ sheetEscape(bg ? bg.name + ' — ' + CharacterBackgrounds.sourceName(bg) : 'Custom / manual') }</p>${ e.originFeats?.length ? `<p><strong>Origin feats:</strong> ${ sheetEscape(e.originFeats.join(', ')) }</p>` : '' }<p>${ b.scoreMode === 'base' ? 'Origin bonuses are added to base abilities (up to 20) and base maximum HP.' : 'Your entered ability scores and maximum HP are treated as final totals; origin bonuses are shown for reference only.' } Manual notes and proficiencies remain separate.</p><div class="sheet-metrics">${ stat(b.edition === '2024' ? 'Background bonuses' : 'Race bonuses', asi) }${ stat('Walking speed', `${ e.speed } ft`) }${ stat('Size', e.size) }${ stat('Darkvision', e.darkvision ? `${ e.darkvision } ft` : 'None') }${ stat('Effective maximum HP', derived.hpMax) }${ stat('Hit dice', derived.progression?.hitDice || s.data.hitDice || 'Manual') }</div><p><strong>Automatic skills:</strong> ${ sheetEscape(learnedSkills) }</p><p><strong>Class saving throws:</strong> ${ sheetEscape(e.saves.map(key => CharacterSheetModel.abilities[key]).join(', ') || 'Manual') }</p><p><strong>Languages:</strong> ${ sheetEscape(e.languages.join(', ') || 'Manual') }</p><p><strong>Equipment / tool proficiencies:</strong> ${ sheetEscape(e.proficiencies.join(', ') || 'Manual') }</p><p><strong>Resistances:</strong> ${ sheetEscape(e.resistances.join(', ') || 'None from race') }</p><ul>${ e.traits.map(trait => `<li>${ sheetEscape(trait) }</li>`).join('') }</ul>${ breath }${ e.innate.length ? `<p><strong>Granted racial spells:</strong> ${ sheetEscape(e.innate.join('; ')) }</p>` : '' }${ e.pact ? `<p><strong>Pact Magic:</strong> ${ e.pact.count } slot(s), level ${ e.pact.level }; recover on a short or long rest. Mystic Arcanum spells are separate and tracked manually.</p>` : '' }<p class="sheet-help">Traits below are reminders, not action buttons. Conditional bonuses, racial attacks, class features and unsupported conditional effects require manual entry. PB means proficiency bonus. <a href="rules-attribution.html" target="_blank" rel="noopener">Rules source & attribution</a></p>${ e.warnings.length ? `<div class="sheet-build-warning">${ e.warnings.map(w => `<p>${ sheetEscape(w) }</p>`).join('') }</div>` : '' }`;
   updateAbilityAndSkillControls(derived);
 }

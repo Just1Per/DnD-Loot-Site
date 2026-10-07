@@ -1,0 +1,48 @@
+(async()=>{
+ const results=[],check=(name,ok)=>{results.push({name,pass:!!ok});if(!ok)throw Error(name)};
+ try{
+  seed('player');delete testSheetDocs['campaigns/a/characterSheets/c1'];testSheetDocs['campaigns/a/characters/c1']={...characters[0]};
+  await openCharacterSheet('c1');await Promise.resolve();
+  sheetSession.identity.level=6;
+  sheetSession.data=CharacterSheetModel.normalize({build:{edition:'2024',classId:'wizard',scoreMode:'base'},adobe:{classLevels:[{classId:'wizard',level:6,subclassId:''}]},advancement:{asiSpent:1}});
+  renderSheetRows();fillSheetForm();updateSheetCalculations();
+  const builder=document.getElementById('sheet-builder'),details=document.getElementById('sheetBuildSummary');
+  check('Builder removes Advancement controls and puts the closed calculated panel before identity',!builder.querySelector('[name="advancement.asiSpent"],[name="advancement.lessons"]')&&builder.querySelector('#sheetBuildInfo').nextElementSibling.classList.contains('sheet-identity')&&!details.hasAttribute('open'));
+  check('Players see ASI counts on Feats without reservation controls',!document.querySelector('[data-asi-spend]')&&document.getElementById('sheetDmFeatApproval').textContent.includes('Normal ASI choices used'));
+  const forged=document.createElement('input');forged.name='advancement.asiSpent';forged.type='number';forged.value='7';document.getElementById('characterSheetForm').append(forged);readSheetForm();forged.remove();
+  check('Player form reads preserve DM-managed ASI reservations',sheetSession.data.advancement.asiSpent===1);
+  details.setAttribute('open','');document.getElementById('sheetBuildOverviewToggle').click();
+  check('Calculated panel can be pinned while retaining its expanded Builder state',sheetSession.data.adobe.showCalculatedOnOverview===true&&details.hasAttribute('open')&&document.getElementById('sheetOverviewCalculated').textContent.includes('Effective maximum HP'));
+  const entry=sheetSession.data.adobe.classLevels[0],row=CharacterClassProgression.unlocked('wizard',6,'','2024').find(row=>row.name==='Arcane Recovery');
+  const key=CharacterClassProgression.overviewKey(entry,row,'2024');
+  const control=part=>[...document.querySelectorAll('[data-feature-overview]')].find(button=>button.dataset.featureOverview===key&&button.dataset.featurePart===part);
+  document.querySelector('.sheet-class-features').setAttribute('open','');control('enabled').click();
+  check('Arcane Recovery can be pinned with its name only',document.querySelector('.sheet-overview-class-feature strong').textContent==='Arcane Recovery'&&!document.querySelector('.sheet-overview-class-feature p'));
+  check('Class reference stays open when Overview choices change',document.querySelector('.sheet-class-features').hasAttribute('open'));
+  control('showDescription').click();
+  check('Description toggle displays the current class-reference description',document.querySelector('.sheet-overview-class-feature p').textContent===row.summary);
+  control('showName').click();
+  check('Feature description can be shown independently of its name',!document.querySelector('.sheet-overview-class-feature strong')&&!!document.querySelector('.sheet-overview-class-feature p'));
+  await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');readSheetForm();
+  check('Feature display choices and calculated panel survive save and reopen',sheetSession.data.adobe.overviewFeatures[key].enabled&&sheetSession.data.adobe.overviewFeatures[key].showDescription&&!sheetSession.data.adobe.overviewFeatures[key].showName&&document.getElementById('sheetOverviewCalculated'));
+  const con=document.querySelector('[name="abilities.con"]');con.value='18';con.dispatchEvent(new Event('change',{bubbles:true}));
+  const changed=CharacterSheetModel.derive(sheetSession.data,sheetSession.identity.level,sheetEquipmentLoot());
+  const hpMetric=[...document.querySelectorAll('#sheetOverviewCalculated .sheet-metrics>div')].find(metric=>metric.querySelector('span').textContent==='Effective maximum HP');
+  check('Pinned calculated information refreshes after ability changes',hpMetric.querySelector('strong').textContent===String(changed.hpMax));
+  document.querySelector('[data-remove-overview-feature]').click();document.querySelector('[data-overview-calculated]').click();
+  check('Overview removal buttons remove both feature and calculated information',!document.querySelector('.sheet-overview-class-feature')&&!document.getElementById('sheetOverviewCalculated'));
+  toggleClassFeatureOverview(key,'showDescription');
+  check('Description-only selection works directly from an unpinned feature',!!document.querySelector('.sheet-overview-class-feature p')&&!document.querySelector('.sheet-overview-class-feature strong'));
+  sheetSession.data.adobe.classLevels=[{classId:'fighter',level:6,subclassId:''}];sheetSession.data.build.classId='fighter';fillSheetForm();updateSheetCalculations();
+  check('Changing class hides pinned features from the previous class',!document.querySelector('.sheet-overview-class-feature'));
+  sheetSession.data.adobe.classLevels=[{classId:'wizard',level:6,subclassId:''}];sheetSession.data.build.classId='wizard';fillSheetForm();updateSheetCalculations();
+  check('Returning to a class restores its saved display choices',!!document.querySelector('.sheet-overview-class-feature p'));
+  closeCharacterSheet(true);seed('dm');await openCharacterSheet('c1');
+  check('DM retains ASI reservation controls on Feats',!!document.querySelector('[data-asi-spend]'));
+  const undo=document.querySelector('[data-asi-spend="-1"][data-asi-kind="normal"]'),previous=sheetSession.data.advancement.asiSpent,staleHandler=undo.onclick;undo.click();
+  check('DM can update a normal ASI reservation on Feats',sheetSession.data.advancement.asiSpent===previous-1);
+  seed('player');const reserved=sheetSession.data.advancement.asiSpent;staleHandler();
+  check('A stale DM ASI handler cannot change reservations after switching to player',sheetSession.data.advancement.asiSpent===reserved);
+ }catch(error){results.push({name:error.stack,pass:false});}
+ document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
+})();
