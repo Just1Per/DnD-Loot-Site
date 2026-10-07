@@ -2158,7 +2158,7 @@
 #characterSheetDialog .sheet-inventory-table :is(th,td):first-child{width:auto}
 #characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(2){width:38px}
 #characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(3){width:57px}
-#characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(4){width:70px;padding-top:4px}
+#characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(4){width:74px;padding-top:4px}
 #characterSheetDialog #sheet-inventory .sheet-inventory-table textarea{
   display:block;box-sizing:border-box;width:100%;min-width:0;max-width:100%;
   height:auto;min-height:17px;field-sizing:content;resize:none;overflow-wrap:anywhere;
@@ -2178,12 +2178,12 @@
 #characterSheetDialog .sheet-inventory-table .sheet-inventory-weight small{font-size:9px;white-space:normal;line-height:1.25;margin-top:3px}
 #characterSheetDialog .sheet-inventory-row-actions{display:table-cell;white-space:normal}
 #characterSheetDialog .sheet-inventory-actions{display:flex;gap:3px;flex-wrap:nowrap;align-items:center}
-#characterSheetDialog .sheet-inventory-actions button{
+#characterSheetDialog #sheet-inventory .sheet-inventory-actions button{
   display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;
-  flex:0 0 20px;width:20px;min-width:20px;min-height:22px;height:22px;
+  flex:0 0 20px;width:20px;max-width:20px;min-width:20px;min-height:22px;height:22px;margin:0;
   padding:0;font-size:13px;line-height:1;border-radius:4px;
 }
-#characterSheetDialog .sheet-inventory-actions button[data-move-inventory]{padding:0;font-size:13px}
+#characterSheetDialog #sheet-inventory .sheet-inventory-actions button[data-move-inventory]{padding:0;font-size:13px}
 @media print{
   #characterSheetDialog .sheet-inventory-row-actions,
   #characterSheetDialog .sheet-inventory-table th:last-child{display:none!important}
@@ -2205,3 +2205,18 @@
 #characterSheetDialog .sheet-story-options button:is(:hover,:focus-visible,[aria-selected="true"]){background:#f1e5d3;outline:1px solid var(--vault-gold)}
 @media(max-width:760px){#characterSheetDialog .sheet-story-columns{grid-template-columns:minmax(0,1fr)}}
 @media print{#characterSheetDialog :is(.sheet-story-toggle,.sheet-story-options){display:none!important}#characterSheetDialog .sheet-story-combobox{display:block}}
+
+/* Inventory ledger controls stay flush with the row, not the global editor boxes. */
+#characterSheetDialog #sheet-inventory .sheet-inventory-table textarea{
+  min-height:17px!important;padding:0!important;border:0!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+}
+#characterSheetDialog #sheet-inventory .sheet-inventory-table textarea:focus{
+  outline:1px solid var(--vault-gold);outline-offset:1px;background:#fff8e8!important;
+}
+#characterSheetDialog #sheet-inventory .sheet-inventory-actions{gap:3px;max-width:100%;justify-content:flex-end}
+#characterSheetDialog #sheet-inventory .sheet-inventory-actions button{
+  padding:0!important;min-height:22px!important;height:22px;line-height:1!important;
+  border:1px solid transparent;background:transparent;box-shadow:none;color:var(--vault-burgundy);
+}
+#characterSheetDialog #sheet-inventory .sheet-inventory-actions button:is(:hover,:focus-visible){border-color:var(--vault-gold);background:#f1e5d3}
