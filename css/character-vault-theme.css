@@ -2372,6 +2372,23 @@
 #sheetAttackPicker #attackPickerError{color:var(--vault-danger,#8b2d2d)}
 
 /* Combat defenses share a readable two-column row and stack on small screens. */
+.character-sheet .sheet-build-info,.character-sheet .sheet-overview-pin-heading {
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:10px;
+}
+.character-sheet .sheet-build-info { padding:8px 0 12px;margin-bottom:12px;border-bottom:1px solid var(--vault-border-soft); }
+.character-sheet .sheet-build-info summary,.character-sheet .sheet-overview-pin-heading summary { cursor:pointer;font-weight:bold;color:var(--vault-burgundy);padding:5px 0; }
+.character-sheet .sheet-build-info details,.character-sheet .sheet-overview-pin-heading details { min-width:0; }
+.character-sheet .sheet-feature-overview-controls { display:flex;flex-wrap:wrap;gap:6px;margin-top:8px; }
+#characterSheetPage #characterSheetDialog .sheet-feature-overview-controls button[aria-pressed=true],
+#characterSheetPage #characterSheetDialog #sheetBuildOverviewToggle[aria-pressed=true] { color:#fff7e8;background:var(--vault-burgundy);border-color:var(--vault-burgundy); }
+.character-sheet .sheet-overview-class-feature { padding:8px 0;border-bottom:1px solid var(--vault-border-soft); }
+.character-sheet .sheet-overview-class-feature:last-child { border-bottom:0; }
+.character-sheet .sheet-overview-class-feature>div { display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px; }
+.character-sheet .sheet-overview-class-feature>div>small { color:var(--vault-muted);font-size:11px; }
+.character-sheet .sheet-overview-class-feature>div>button { margin-left:auto;font-size:11px; }
+.character-sheet .sheet-overview-class-feature p { margin:6px 0;line-height:1.45;overflow-wrap:anywhere; }
+.character-sheet .sheet-build-info .sheet-rule-summary { margin-top:8px; }
+@media(max-width:550px) { .character-sheet .sheet-build-info,.character-sheet .sheet-overview-pin-heading { grid-template-columns:minmax(0,1fr); } .character-sheet .sheet-build-info>button,.character-sheet .sheet-overview-pin-heading>button { justify-self:start; } }
 #characterSheetPage #characterSheetDialog .sheet-combat-defenses { grid-template-columns:repeat(2,minmax(0,1fr)); }
 #characterSheetPage #characterSheetDialog .sheet-hp-panel { padding:12px 0;border-radius:0!important; }
 @media(max-width:700px) { #characterSheetPage #characterSheetDialog .sheet-combat-defenses { grid-template-columns:minmax(0,1fr); } }

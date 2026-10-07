@@ -4,6 +4,20 @@
 
 # Character builder: 2024 default, with 2014 support
 
+## Builder and Overview display
+
+Character Builder's calculated information is collapsed at the top and can be
+pinned to Overview. Each unlocked class/subclass reference feature has independent
+name and description display controls. Preferences are stored in the existing
+Adobe settings grant; descriptions remain live catalogue references, not copied
+text. Pins for a previous class, subclass, edition or higher level stay saved but
+are hidden until that feature is available again.
+
+The old Advancement editor is removed. Feats displays ASI reservations read-only
+for players, with reservation controls for the campaign DM. Lessons of the First
+Ones grants Origin choices from actual eligible invocation selections, including
+repeatable selections within the level limit, instead of an independent checkbox.
+
 ## HP breakdown and Warlock invocation limits
 
 Combat's maximum HP panel uses the advancement engine's actual calculation:

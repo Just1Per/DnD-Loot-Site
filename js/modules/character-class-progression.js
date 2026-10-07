@@ -211,6 +211,21 @@ var CharacterClassProgression=(()=>{
     const e=editionOf(edition),row=remote[e]?.subclasses?.[subclassId],rows=row?.features;
     return row?.classId===classId&&Array.isArray(rows)&&rows.length?rows:localSubclassFeatures(classId,subclassId,e);
   };
-  return {classes,subclasses,detailedClasses,detailedSubclasses,classFeatures:(...a)=>classFeatures(...a),subclassFeatures:(...a)=>subclassFeatures(...a),subclassLevel,unlocked,gainedAt,byLevel,coverage,installReference};
+  const overviewKey=(entry,row,edition)=>[editionOf(edition),entry.classId,row.source==='subclass'?entry.subclassId:'class',row.level,String(row.name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,100)].join(':');
+  function normalizeOverview(raw={}){
+    const out={};if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
+    for(const [key,value] of Object.entries(raw).slice(0,150)){
+      if(!/^(2014|2024):[a-z0-9:-]{1,250}$/.test(key)||!value||typeof value!=='object')continue;
+      out[key]={enabled:value.enabled===true,showName:value.showName!==false,showDescription:value.showDescription===true};
+    }
+    return out;
+  }
+  function overviewFeatures(data,entries){
+    const edition=data.build?.edition||'2014',preferences=normalizeOverview(data.adobe?.overviewFeatures),seen=new Set();
+    return (entries||[]).flatMap(entry=>unlocked(entry.classId,entry.level,entry.subclassId,edition).map(row=>({
+      ...row,classId:entry.classId,key:overviewKey(entry,row,edition)
+    }))).filter(row=>{const pref=preferences[row.key];if(!pref?.enabled||!pref.showName&&!pref.showDescription||seen.has(row.key))return false;seen.add(row.key);return true;}).map(row=>({...row,...preferences[row.key]}));
+  }
+  return {overviewKey,normalizeOverview,overviewFeatures,classes,subclasses,detailedClasses,detailedSubclasses,classFeatures:(...a)=>classFeatures(...a),subclassFeatures:(...a)=>subclassFeatures(...a),subclassLevel,unlocked,gainedAt,byLevel,coverage,installReference};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassProgression;
