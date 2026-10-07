@@ -35,7 +35,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
 if (!document.querySelector('link[data-character-adobe-integration]')) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = new URL('../css/character-adobe-integration.css?v=20261007-builder-overview-v60', import.meta.url).href;
+  link.href = new URL('../css/character-adobe-integration.css?v=20261007-print-feats-attacks-v61', import.meta.url).href;
   link.dataset.characterAdobeIntegration = 'true';
   document.head.appendChild(link);
 }
@@ -110,7 +110,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261007-builder-overview-v60");
+    moduleUrl.searchParams.set("v", "20261007-print-feats-attacks-v61");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;

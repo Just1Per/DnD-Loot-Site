@@ -60,7 +60,8 @@ function closeCharacterSheet(force = false) {
   if (dialog) {
     dialog.remove();
   }
-  document.body.classList.remove('printing-character-sheet');
+  document.body.classList.remove('printing-character-sheet','printing-overview-only');
+  document.getElementById('sheetOverviewReadout')?.style.removeProperty('zoom');
   document.getElementById('characterSheetChooser').replaceChildren();
   document.getElementById('characterSheetPage').innerHTML = '<p class="sheet-empty">Choose a character to open their sheet.</p>';
   return true;
@@ -373,6 +374,8 @@ function readSheetForm() {
   const data = structuredClone(CharacterSheetModel.normalize(s.data));
   data.identity = { ...s.identity || s.character };
   document.querySelectorAll('#characterSheetForm [name]').forEach(input => {
+    // Feats page owns these choices; legacy hidden selects cannot represent every source feat.
+    if(input.closest('[data-feat-catalogue-managed="true"]'))return;
     const keys = input.name.split('.'), last = keys.pop();
     let target = data;
     for (const key of keys)
@@ -533,7 +536,8 @@ function clearSheetPrintSelection() {
   document.querySelectorAll('#characterSheetDialog [data-sheet-section].sheet-print-excluded').forEach(panel=>panel.classList.remove('sheet-print-excluded'));
 }
 window.addEventListener('afterprint', () => {
-  document.body.classList.remove('printing-character-sheet');
+  document.body.classList.remove('printing-character-sheet','printing-overview-only');
+  document.getElementById('sheetOverviewReadout')?.style.removeProperty('zoom');
   clearSheetPrintSelection();
 });
 function prepareSheetPrint(selectedSections = null) {
@@ -554,6 +558,7 @@ function prepareSheetPrint(selectedSections = null) {
     input.after(mirror);
   });
   document.body.classList.add('printing-character-sheet');
+  document.body.classList.toggle('printing-overview-only',selectedSections instanceof Set&&selectedSections.size===1&&selectedSections.has('overview'));
 }
 function sheetPrintPageOptions() {
   const dialog=document.getElementById('characterSheetDialog');
@@ -581,8 +586,8 @@ function openSheetPrintDialog() {
   printDialog.setAttribute('aria-labelledby','sheetPrintDialogTitle');
   printDialog.innerHTML=`<form method="dialog" class="sheet-print-dialog-card">
     <header><div><span class="sheet-eyebrow">PRINT CHARACTER SHEET</span><h2 id="sheetPrintDialogTitle">Choose pages to print</h2><p>Select the character-sheet sections you want included.</p></div><button type="button" data-print-close aria-label="Close">×</button></header>
-    <div class="sheet-print-dialog-tools"><button type="button" data-print-all>Select all</button><button type="button" data-print-none>Clear all</button><span data-print-count></span></div>
-    <div class="sheet-print-page-grid">${pages.map((page,i)=>`<label class="sheet-print-page-option"><input type="checkbox" value="${sheetEscape(page.key)}" checked><span><strong>${sheetEscape(page.label)}</strong><small>Page ${i+1}</small></span></label>`).join('')}</div>
+    <div class="sheet-print-dialog-tools"><button type="button" data-print-overview>One-page Overview</button><button type="button" data-print-all>Select all</button><button type="button" data-print-none>Clear all</button><span data-print-count></span></div>
+    <div class="sheet-print-page-grid">${pages.map((page,i)=>`<label class="sheet-print-page-option"><input type="checkbox" value="${sheetEscape(page.key)}" ${page.key==='overview'?'checked':''}><span><strong>${sheetEscape(page.label)}</strong><small>Page ${i+1}</small></span></label>`).join('')}</div>
     <p class="sheet-print-dialog-note">Your browser print window will open after this. You can still choose printer, copies, orientation and paper size there.</p>
     <footer><button type="button" data-print-cancel>Cancel</button><button type="button" class="btn-primary" data-print-confirm>Print selected pages</button></footer>
   </form>`;
@@ -592,6 +597,7 @@ function openSheetPrintDialog() {
   const confirm=printDialog.querySelector('[data-print-confirm]');
   const update=()=>{const n=checks.filter(box=>box.checked).length;count.textContent=n+' of '+checks.length+' selected';confirm.disabled=n===0;};
   checks.forEach(box=>box.addEventListener('change',update));
+  printDialog.querySelector('[data-print-overview]').onclick=()=>{checks.forEach(box=>box.checked=box.value==='overview');update();};
   printDialog.querySelector('[data-print-all]').onclick=()=>{checks.forEach(box=>box.checked=true);update();};
   printDialog.querySelector('[data-print-none]').onclick=()=>{checks.forEach(box=>box.checked=false);update();};
   printDialog.querySelector('[data-print-close]').onclick=closeSheetPrintDialog;
@@ -608,7 +614,14 @@ function openSheetPrintDialog() {
   printDialog.showModal();
 }
 window.addEventListener('beforeprint', () => {
-  if (!document.body.classList.contains('printing-character-sheet')) prepareSheetPrint();
+  if (!document.body.classList.contains('printing-character-sheet')) prepareSheetPrint(new Set(['overview']));
+  if(document.body.classList.contains('printing-overview-only')){
+    const overview=document.getElementById('sheetOverviewReadout');
+    overview.style.removeProperty('zoom');
+    // A 254 mm content height also fits Letter paper with 9 mm margins. No content is cropped.
+    const height=overview.getBoundingClientRect().height;
+    if(height>960)overview.style.zoom=String(960/height);
+  }
 });
 function renderSheetBuildControls() {
   const R = CharacterRules, M = CharacterSheetModel, f = sheetField;

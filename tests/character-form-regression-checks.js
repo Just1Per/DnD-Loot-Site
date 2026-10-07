@@ -3,6 +3,28 @@
  try{
   seed('player');delete testSheetDocs['campaigns/a/characterSheets/c1'];testSheetDocs['campaigns/a/characters/c1']={...characters[0]};
   await openCharacterSheet('c1');await Promise.resolve();
+  // An armor profile has no weapon properties: both entry points must still open.
+  addSheetGearTemplates([{name:'Plate',quantity:1,weight:65,edition:'2024'}]);
+  for(const id of ['sheetOverviewAddAttack','sheetAddAttack']){
+   document.getElementById(id).click();
+   check(id+' opens with armor first in inventory',document.getElementById('sheetAttackPicker').open&&!document.getElementById('attackConfirm').disabled);
+   closeAttackPicker();
+  }
+  sheetSession.data.build.background='haunted-one-rthw';sheetSession.data.build.edition='2024';fillSheetForm();updateSheetCalculations();renderBuildFeatChoices();
+  const featSelect=document.querySelector('[data-build-feat-field="backgroundFeat"]');featSelect.value='Survivor';featSelect.onchange();
+  readSheetForm();readSheetForm();
+  check('Source-specific background feat survives repeated form reads and appears in Overview',sheetSession.data.build.backgroundFeat==='Survivor'&&document.querySelector('.sheet-overview-feats').textContent.includes('Survivor'));
+  const notice=document.querySelector('[data-warning-read]');notice.checked=true;notice.onchange();
+  const noticeKey=sheetSession.data.adobe.readBuildWarnings[0];
+  const notices=document.querySelector('.sheet-overview-important');notices.open=false;notices.ontoggle();
+  await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');readSheetForm();
+  check('Background feat and read/collapsed notices persist after save and reopen',sheetSession.data.build.backgroundFeat==='Survivor'&&sheetSession.data.adobe.readBuildWarnings.includes(noticeKey)&&sheetSession.data.adobe.importantCollapsed&&!document.querySelector('.sheet-overview-important').hasAttribute('open'));
+  openSheetPrintDialog();
+  check('Print chooser defaults to the one-page Overview',document.querySelectorAll('#sheetPrintDialog input:checked').length===1&&document.querySelector('#sheetPrintDialog input:checked').value==='overview');
+  document.querySelector('[data-print-all]').click();document.querySelector('[data-print-overview]').click();document.querySelector('[data-print-confirm]').click();
+  check('Overview print preset excludes all other pages',document.body.classList.contains('printing-overview-only')&&[...document.querySelectorAll('[data-sheet-section]')].every(panel=>panel.classList.contains('sheet-print-excluded')===(panel.dataset.sheetSection!=='overview')));
+  window.dispatchEvent(new Event('afterprint'));
+  check('After printing restores page selection',!document.body.classList.contains('printing-overview-only')&&!document.querySelector('.sheet-print-excluded'));
   const adobeBefore=JSON.stringify(sheetSession.data.adobe);
   delete sheetSession.data.adobe;
   readSheetForm();

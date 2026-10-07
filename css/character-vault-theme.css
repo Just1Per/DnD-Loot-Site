@@ -2392,3 +2392,43 @@
 #characterSheetPage #characterSheetDialog .sheet-combat-defenses { grid-template-columns:repeat(2,minmax(0,1fr)); }
 #characterSheetPage #characterSheetDialog .sheet-hp-panel { padding:12px 0;border-radius:0!important; }
 @media(max-width:700px) { #characterSheetPage #characterSheetDialog .sheet-combat-defenses { grid-template-columns:minmax(0,1fr); } }
+
+.sheet-overview-important>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;cursor:pointer;font-weight:700;color:var(--vault-burgundy)}
+.sheet-overview-important>summary::before{content:'▸'}
+.sheet-overview-important[open]>summary::before{content:'▾'}
+.sheet-overview-important>summary strong{margin-left:auto;font-size:12px}
+.sheet-overview-important-row{grid-template-columns:24px minmax(0,1fr) auto auto}
+.sheet-warning-ack{display:flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap}
+.sheet-warning-read{opacity:.65}
+@media(max-width:620px){.sheet-overview-important-row{grid-template-columns:24px minmax(0,1fr) auto}.sheet-warning-ack{grid-column:2}.sheet-overview-important-row button{grid-column:3;grid-row:2}.sheet-overview-important>summary{flex-wrap:wrap}}
+@media print{
+ @page{size:A4 portrait;margin:9mm}
+ body.printing-overview-only #characterSheetDialog>.sheet-header{display:none!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview{margin:0!important;padding:0!important;break-before:auto!important}
+ body.printing-character-sheet #sheetOverviewReadout{width:190mm!important;max-width:100%!important;margin:0!important;color:#000!important;font:10px/1.3 Arial,sans-serif!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-identity{display:grid!important;grid-template-columns:1fr 1.4fr!important;gap:8px!important;padding:0 0 7px!important;margin:0 0 8px!important;border-bottom:1px solid #555!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-summary-identity h3{font-size:18px!important;margin:0 0 4px!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-summary-identity dl{display:grid!important;grid-template-columns:1fr 1fr!important;gap:5px!important;font-size:10px!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-columns{display:grid!important;grid-template-columns:25mm 48mm minmax(0,1fr)!important;gap:3mm!important;align-items:start!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-abilities{display:grid!important;grid-template-columns:1fr!important;gap:7px!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-ability{position:static!important;display:grid!important;padding:6px 2px!important;min-height:0!important;height:auto!important;border:1px solid #999!important;border-radius:4px!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-ability-emblem{display:none!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-summary-ability h4{font:700 9px/1.3 Arial,sans-serif!important;margin:0 0 3px!important;padding:0!important;overflow-wrap:anywhere!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-ability>strong{font-size:24px!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-summary-ability>span{font-size:11px!important;padding:0!important;margin:2px 0 0!important}
+ body.printing-character-sheet #sheetOverviewReadout :is(.sheet-summary-checks,.sheet-summary-main){display:block!important;min-width:0!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-box{padding:5px 0!important;margin:0 0 5px!important;border-bottom:1px solid #aaa!important;break-inside:avoid!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-summary-box h4{font:700 10px/1.3 Arial,sans-serif!important;margin:0 0 4px!important;padding:0!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-summary-box p{font:10px/1.3 Arial,sans-serif!important;margin:3px 0!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-summary-skill{display:grid!important;grid-template-columns:10px minmax(0,1fr) 22px!important;gap:3px!important;font:10px/1.3 Arial,sans-serif!important;min-height:18px!important;padding:0!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-metrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;margin:0 0 5px!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-metrics>:is(div,button){display:grid!important;min-height:42px!important;padding:3px!important;color:#000!important;border-bottom:1px solid #999!important}
+ body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-metrics strong{font-size:20px!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-summary-metrics span{font:8px/1.3 Arial,sans-serif!important}
+ body.printing-character-sheet #sheetOverviewReadout table{width:100%!important;min-width:0!important;table-layout:fixed!important;font:9px/1.3 Arial,sans-serif!important}
+ body.printing-character-sheet #sheetOverviewReadout :is(td,th){padding:3px!important;overflow-wrap:anywhere!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-summary-table-wrap{overflow:visible!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-overview-feat-list>span{min-height:0!important;padding:2px 4px!important;font-size:10px!important;border-radius:3px!important}
+ body.printing-character-sheet #sheetOverviewReadout :is(.sheet-overview-important,.sheet-action-controls,.sheet-help,.sheet-overview-pin-heading>button){display:none!important}
+ body.printing-character-sheet #sheetOverviewReadout .sheet-slot-orb{display:inline-block!important;width:10px!important;height:10px!important;min-width:10px!important;min-height:10px!important;padding:0!important}
+}
