@@ -43,6 +43,23 @@
   check('DM can update a normal ASI reservation on Feats',sheetSession.data.advancement.asiSpent===previous-1);
   seed('player');const reserved=sheetSession.data.advancement.asiSpent;staleHandler();
   check('A stale DM ASI handler cannot change reservations after switching to player',sheetSession.data.advancement.asiSpent===reserved);
+  closeCharacterSheet(true);seed('player');delete testSheetDocs['campaigns/a/characterSheets/c1'];testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');
+  sheetSession.data=CharacterSheetModel.normalize({build:{edition:'2024',classId:'wizard',backgroundFeat:'Tough',scoreMode:'base'},adobe:{classLevels:[{classId:'wizard',level:6,subclassId:''}]}});renderSheetRows();fillSheetForm();updateSheetCalculations();
+  const toughId=CharacterFeatRules.entries(sheetSession.data).find(entry=>entry.origin).id;
+  const featButton=()=>document.querySelector('[data-feat-overview-description="'+toughId+'"]');
+  check('Selected background feat offers an unpressed description button',featButton()&&featButton().getAttribute('aria-pressed')==='false'&&!document.querySelector('.sheet-overview-feat-description'));
+  featButton().click();
+  check('Description button adds full reference text alongside the compact feat name',document.querySelector('.sheet-overview-feat-description p').textContent===featOverviewDescription(toughId)&&featOverviewDescription(toughId).length>20&&document.querySelector('.sheet-overview-feat-list').textContent.includes('Tough')&&featButton().getAttribute('aria-pressed')==='true');
+  readSheetForm();await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');
+  check('Feat description preference survives save and reopen',sheetSession.data.adobe.overviewFeatDescriptions.includes(toughId)&&!!document.querySelector('.sheet-overview-feat-description'));
+  document.querySelector('[data-remove-feat-description]').click();
+  check('Overview removal hides only the description and resets the Feats button',!document.querySelector('.sheet-overview-feat-description')&&document.querySelector('.sheet-overview-feat-list').textContent.includes('Tough')&&featButton().getAttribute('aria-pressed')==='false');
+  featButton().click();sheetSession.data.build.backgroundFeat='Alert';fillSheetForm();updateSheetCalculations();
+  check('Removing or changing a selected feat hides its pinned description',!document.querySelector('.sheet-overview-feat-description'));
+  sheetSession.data.build.background='haunted-one-rthw';sheetSession.data.build.backgroundFeat='Survivor';fillSheetForm();updateSheetCalculations();
+  const survivor=CharacterFeatRules.entries(sheetSession.data).find(entry=>entry.origin).id;
+  document.querySelector('[data-feat-overview-description="'+survivor+'"]').click();
+  check('Source-specific background feat descriptions can also be added',document.querySelector('.sheet-overview-feat-description').textContent.includes('Survivor')&&document.querySelector('.sheet-overview-feat-description p').textContent.length>20);
  }catch(error){results.push({name:error.stack,pass:false});}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
 })();
