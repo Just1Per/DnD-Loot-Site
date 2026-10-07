@@ -9,7 +9,7 @@
  for(const [k,v] of Object.entries({str:15,dex:15,con:15,int:8,wis:8,cha:8}))change('abilities.'+k,v);
  change('build.scoreMethod','pointBuy');await Promise.resolve();
  check('Standard point buy uses the 27-point budget',document.getElementById('sheetPointBuySummary').textContent.includes('27 / 27'));
- check('Point buy forces pre-bonus Base mode',sheetSession.data.build.scoreMode==='base'&&field('build.scoreMode').value==='base'&&field('build.scoreMode').disabled);
+ check('Point buy forces pre-bonus Base mode',sheetSession.data.build.scoreMode==='base'&&field('build.scoreMode').value==='base'&&field('build.scoreMode').type==='hidden');
  check('Point buy constrains all six base fields to 8 through 15',[...document.querySelectorAll('[name^="abilities."]')].every(input=>input.min==='8'&&input.max==='15'));
  check('Point buy explains that later bonuses are free',document.getElementById('sheetPointBuySummary').textContent.includes('applied afterward')&&document.getElementById('sheetPointBuySummary').textContent.includes('do not cost point-buy points'));
 
@@ -44,7 +44,7 @@
  // Rerender controls so save reads the actual feat state rather than stale named fields.
  renderCharacterSheet();await Promise.resolve();await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');await Promise.resolve();
  check('Point-buy preference survives saving and reopening',sheetSession.data.build.scoreMethod==='pointBuy'&&field('build.scoreMethod').value==='pointBuy');
- check('Saved point-buy sheets reopen in Base mode',sheetSession.data.build.scoreMode==='base'&&field('build.scoreMode').disabled);
+ check('Saved point-buy sheets reopen in Base mode',sheetSession.data.build.scoreMode==='base'&&field('build.scoreMode').type==='hidden');
  closeCharacterSheet(true);
  }catch(e){results.push({name:e.stack,pass:false});}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);

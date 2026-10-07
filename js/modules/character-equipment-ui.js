@@ -21,17 +21,23 @@ function equipmentControls(entry) {
   const el=document.createElement('div');el.className='sheet-equipment-controls';el.dataset.equipmentId=entry.id;
   const select=(label,key,options)=>`<label>${label}<select data-gear="${key}">${options.map(([value,name])=>`<option value="${value}" ${c[key]===value?'selected':''}>${sheetEscape(name)}</option>`).join('')}</select></label>`;
   el.innerHTML=`<label><input type="checkbox" data-gear="equipped" ${c.equipped?'checked':''}> Equipped / worn</label>${needsAttunement?`<label><input type="checkbox" data-gear="attuned" ${c.attuned?'checked':''}> Attuned</label>`:''}${m.kind==='weapon'&&p?select('Attack ability','ability',[['auto','Automatic (STR / DEX)'],...Object.entries(CharacterSheetModel.abilities)])+select('Weapon proficiency','proficiency',[['auto','From class / feats'],['yes','Proficient (other feature / DM)'],['no','Not proficient']])+select('Attack use','mode',[['normal','Normal'],...(p.versatile?[['twoHanded','Two-handed (versatile)']]:[]),...(p.props.includes('thrown')?[['thrown','Thrown']]:[]),...(p.props.includes('light')?[['offhand','Extra Light-weapon attack']]:[]),...(m.base==='lance'?[['mounted','Mounted']]:[])]):''}<small>${m.kind==='none'?'No automatic mechanics configured. Ask the DM to set the equipment fields on this item.':m.inferred?'Standard item recognized by its exact name. DM can customize its mechanics.':'Uses the equipment mechanics set by the DM.'}</small>`;
-  el.querySelectorAll('[data-gear]').forEach(input=>input.onchange=()=>{
-    readSheetForm();const s=sheetSession;
-    if(!sheetEquipmentLoot().some(e=>e.id===entry.id))return;
-    const state=s.data.equipmentState;let v=state.loadout.find(v=>v.id===entry.id);
-    if(!v){if(state.loadout.length>=200){sheetStatus('Equipment selection limit reached.',true);return;}v=CharacterEquipment.choices({loadout:[{id:entry.id}]}).loadout[0];state.loadout.push(v);}
-    if(input.dataset.gear==='attuned'&&input.checked){const owned=sheetEquipmentLoot();const count=state.loadout.filter(v=>v.attuned&&owned.some(e=>e.id===v.id&&(((typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(e.item))||!!e.item.attunement)))).length;if(count>=3){input.checked=false;sheetStatus('You already have three attuned items. End one attunement first.',true);return;}}
-    v[input.dataset.gear]=input.type==='checkbox'?input.checked:input.value;
-    if(v.equipped&&input.dataset.gear==='equipped'&&['armor','shield'].includes(m.kind))for(const other of state.loadout){const loot=sheetEquipmentLoot().find(e=>e.id===other.id);if(other.id!==v.id&&loot&&CharacterEquipment.infer(loot.item).kind===m.kind)other.equipped=false;}
-    s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Unsaved equipment changes');
-  });
+  el.querySelectorAll('[data-gear]').forEach(input=>input.onchange=()=>setSheetEquipmentChoice(entry.id,input.dataset.gear,input.type==='checkbox'?input.checked:input.value));
   return el;
+}
+function setSheetEquipmentChoice(id,key,value){
+ if(!sheetSession||!['equipped','attuned','ability','proficiency','mode'].includes(key))return;
+ readSheetForm();const s=sheetSession,owned=sheetEquipmentLoot(),entry=owned.find(e=>e.id===id)||personalGearEntries(true).find(e=>e.id===id);if(!entry)return;
+ if(['equipped','attuned'].includes(key)&&value&&!owned.some(e=>e.id===id))return sheetStatus('Carry this item before wearing or attuning it.',true);
+ const state=s.data.equipmentState,m=CharacterEquipment.infer(entry.item);let choice=state.loadout.find(v=>v.id===id);
+ if(!choice){if(state.loadout.length>=200)return sheetStatus('Equipment selection limit reached.',true);choice=CharacterEquipment.choices({loadout:[{id}]}).loadout[0];state.loadout.push(choice);}
+ if(key==='attuned'&&value&&!choice.attuned){
+  if(!CharacterMagicItems.requiresAttunement(entry.item))return;
+  const count=state.loadout.filter(v=>v.attuned&&owned.some(e=>e.id===v.id&&CharacterMagicItems.requiresAttunement(e.item))).length;
+  if(count>=3){refreshCharacterSheetInventory();return sheetStatus('You already have three attuned items. End one attunement first.',true);}
+ }
+ choice[key]=value;
+ if(key==='equipped'&&value&&['armor','shield'].includes(m.kind))for(const other of state.loadout){const e=owned.find(e=>e.id===other.id);if(other.id!==id&&e&&CharacterEquipment.infer(e.item).kind===m.kind)other.equipped=false;}
+ s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Equipment updated. Save sheet to keep it.');
 }
 function renderItemMechanicsEditor(item) {
   let host=document.getElementById('itemMechanicsEditor');

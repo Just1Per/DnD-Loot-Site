@@ -30,7 +30,6 @@ function setupCharacterPlayUI(){
  story.addEventListener('click',event=>{story.querySelectorAll('.sheet-story-combobox').forEach(control=>{if(!control.contains(event.target)){control.querySelector('.sheet-story-options').hidden=true;control.querySelectorAll('[aria-expanded]').forEach(el=>el.setAttribute('aria-expanded','false'));}});});
  const remaining=form.querySelector('[name="backstory"]').closest('.sheet-grid');remaining.classList.add('sheet-story-notes');remaining.classList.remove('two');
  updateStorySuggestions();
- const scoreMode=form.querySelector('[name="build.scoreMode"]')?.closest('label');if(scoreMode)document.querySelector('.sheet-point-panel').appendChild(scoreMode);
  const spells=document.getElementById('sheet-spells'),sheet=document.createElement('section');sheet.id='sheetSpellReadout';spells.querySelector('h3').after(sheet);
  const slots=spells.querySelector('.sheet-slot-grid');const slotDetails=document.createElement('details');slotDetails.className='sheet-spell-editor';slotDetails.innerHTML='<summary>Configure spell slot totals</summary>';slots.before(slotDetails);slotDetails.appendChild(slots);
  const rows=document.getElementById('sheetSpellRows'),edit=document.createElement('details');edit.id='sheetSpellEditor';edit.className='sheet-spell-editor';edit.innerHTML='<summary>Edit spell details / custom spells</summary>';rows.before(edit);edit.append(rows,document.getElementById('sheetAddSpell'));

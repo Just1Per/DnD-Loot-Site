@@ -22,14 +22,8 @@
     const method = root.querySelector('[name="build.scoreMethod"]');
     const mode = root.querySelector('[name="build.scoreMode"]');
     if (!method || !mode) return;
-    const enabled = method.value === 'pointBuy';
-    if (enabled) {
-      // Point buy always prices the score before race/background/feat increases.
-      mode.value = 'base';
-      if (sheetSession?.data?.build) sheetSession.data.build.scoreMode = 'base';
-    }
-    mode.disabled = enabled;
-    mode.closest('label')?.classList.toggle('sheet-point-locked', enabled);
+    mode.value = 'base';
+    if(sheetSession?.data?.build)sheetSession.data.build.scoreMode='base';
   }
 
   function applyLimitsAndValidity() {

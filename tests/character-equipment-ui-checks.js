@@ -7,16 +7,16 @@
   fixtureItems.push(sword,ring);items.push(sword,ring);
   fixtureInventory.push({id:'c1__sword',itemId:'sword',userId:'player',characterId:'c1',quantity:1,item:sword},{id:'c1__ring',itemId:'ring',userId:'player',characterId:'c1',quantity:4,item:ring});await loadCampaignInventory();
   await openCharacterSheet('c1');
-  check('Owned weapon appears automatically without adding manual attack rows',document.getElementById('sheetLootAttacks').textContent.includes('Longsword +1')&&sheetSession.data.attacks.length===0);
+  check('Owned weapon appears automatically without adding manual attack rows',document.querySelector('[data-active-gear="c1__sword"]').textContent.includes('Longsword +1')&&sheetSession.data.attacks.length===0);
   check('New sheets use automatic unarmored AC while loot starts in backpack',sheetSession.data.equipmentState.acMode==='equipment'&&document.querySelector('[data-derived="ac"]').textContent==='10');
-  const setGear=(id,key,value)=>{const input=document.querySelector(`[data-equipment-id="${id}"] [data-gear="${key}"]`);if(input.type==='checkbox')input.checked=value;else input.value=value;input.dispatchEvent(new Event('change',{bubbles:true}));};
+  const setGear=(id,key,value)=>{const button=document.querySelector(`[data-active-${key==='equipped'?'equip':'attune'}="${id}"]`);if((button.getAttribute('aria-pressed')==='true')!==value)button.click();};
   setGear('c1__ring','equipped',true);check('Unattuned magic item grants no AC',document.querySelector('[data-derived="ac"]').textContent==='10');
   setGear('c1__ring','attuned',true);check('Equipped attuned AC bonus applies once for a stack of four',document.querySelector('[data-derived="ac"]').textContent==='11'&&!document.querySelector('#sheetEquipmentSummary img'));
   const field=document.querySelector('[name="abilities.str"]');field.value='18';field.dispatchEvent(new Event('input',{bubbles:true}));setGear('c1__sword','equipped',true);
-  check('Equipment toggles preserve unsaved stats and calculate weapon damage',sheetSession.data.abilities.str===18&&document.getElementById('sheetLootAttacks').textContent.includes('1d8 + 5 slashing'));
+  check('Equipment toggles preserve unsaved stats and calculate weapon damage',sheetSession.data.abilities.str===18&&CharacterSheetModel.derive(sheetSession.data,sheetSession.identity.level,sheetEquipmentLoot()).gear.attacks.some(a=>a.damage==='1d8 + 5 slashing'));
   for(const el of document.querySelectorAll('#characterSheetForm input,select,textarea'))el.checkValidity=()=>true;
   await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');
-  check('Equipped and attuned states survive schema-eleven save and reopen',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===11&&document.querySelector('[data-derived="ac"]').textContent==='11');
+  check('Equipped and attuned states survive current-schema save and reopen',testSheetDocs['campaigns/a/characterSheets/c1'].schemaVersion===14&&document.querySelector('[data-derived="ac"]').textContent==='11');
   // Install listener test adapter only for this fixture; all callbacks are explicit.
   closeCharacterSheet(true);const listeners=[];equipmentSDK.onSnapshot=(q,next,error)=>{const l={next,error,stopped:false};listeners.push(l);return()=>l.stopped=true;};
   await openCharacterSheet('c1');
