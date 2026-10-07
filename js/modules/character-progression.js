@@ -115,7 +115,7 @@ var CharacterProgression = (() => {
     return Math.floor(Number(hitDie || 8) / 2) + 1;
   }
 
-  function calculateHP({classLevels, constitution = 10, hpMode = 'fixed', hpRolls = [], bonuses = 0} = {}) {
+  function calculateHP({classLevels, constitution = 10, hpMode = 'fixed', hpRolls = [], bonuses = 0, bonusSources = []} = {}) {
     const levels = normalizeClassLevels(classLevels);
     const conMod = abilityMod(constitution);
     const mode = ['fixed','max','rolled'].includes(hpMode) ? hpMode : 'fixed';
@@ -139,7 +139,13 @@ var CharacterProgression = (() => {
       }
     }
     const extra = Math.trunc(Number(bonuses) || 0);
-    return {max:Math.max(1, base + extra),base,bonuses:extra,conMod,mode,breakdown};
+    const classHP=breakdown.reduce((sum,row)=>sum+row.dieHP,0),constitutionHP=conMod*characterLevel;
+    const minimumHP=base-classHP-constitutionHP;
+    const sources=bonusSources.map(source=>({...source}));
+    const unassigned=extra-sources.reduce((sum,source)=>sum+Number(source.value||0),0);
+    if(unassigned)sources.push({kind:'other',name:'Other automatic bonuses',value:unassigned});
+    const totalMinimumHP=Math.max(1,base+extra)-(base+extra);
+    return {max:Math.max(1, base + extra),base,bonuses:extra,conMod,mode,breakdown,classHP,constitutionHP,minimumHP,totalMinimumHP,bonusSources:sources};
   }
 
   function casterLevel(classLevels, edition='2014') {

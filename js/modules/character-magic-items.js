@@ -78,16 +78,16 @@ var CharacterMagicItems=(()=>{
       const itemKey=clean(row.item.name);
       if(seen.has(itemKey))continue;
       seen.add(itemKey);
-      const changed=[];
+      const changed=[],abilityChanges=[];
       if(rule.abilityBonus)for(const [ability,bonus] of Object.entries(rule.abilityBonus)){
         if(!(ability in scores))continue;
         const before=scores[ability],next=before>20?before:Math.min(20,before+Number(bonus||0));
-        if(next!==before){scores[ability]=next;changed.push(`${ability.toUpperCase()} ${before}→${next}`);}
+        if(next!==before){scores[ability]=next;abilityChanges.push({ability,before,after:next});changed.push(`${ability.toUpperCase()} ${before}→${next}`);}
       }
       if(rule.abilityOverride)for(const [ability,value] of Object.entries(rule.abilityOverride)){
         if(!(ability in scores))continue;
         const before=scores[ability],next=Math.max(before,Number(value)||before);
-        if(next!==before){scores[ability]=next;changed.push(`${ability.toUpperCase()} ${before}→${next}`);}
+        if(next!==before){scores[ability]=next;abilityChanges.push({ability,before,after:next});changed.push(`${ability.toUpperCase()} ${before}→${next}`);}
       }
       for(const resistance of rule.resistances||[]){addUnique(effects.resistances,resistance);changed.push(`resistance: ${resistance}`);}
       if(rule.darkvision){
@@ -107,7 +107,7 @@ var CharacterMagicItems=(()=>{
         const before=Number(effects.climb||0),value=Number(effects.speed||0);
         effects.climb=Math.max(before,value);if(effects.climb!==before)changed.push(`climb speed ${effects.climb} ft`);
       }
-      if(changed.length)reports.push({name:row.item.name,effects:changed});
+      if(changed.length)reports.push({name:row.item.name,effects:changed,abilityChanges});
     }
     const overAttuned=active.filter(row=>row.needsAttunement&&row.choice.attuned&&!row.magicActive);
     for(const row of overAttuned)warnings.push(row.item.name+': exceeds three attunement slots; Adobe magic-item effects are inactive.');

@@ -6,6 +6,11 @@ var CharacterClassFeatureChoices=(()=>{
   const option=(name,extra={})=>({id:safe(name),name,...extra});
   const groupKey=(edition,classId,id)=>[edition,classId,id].map(safe).join(':');
   const pickTable=(rows,level)=>{let n=0;for(const [at,count] of rows)if(level>=at)n=count;return n};
+  const invocationProgression=Object.freeze({
+    '2014':Object.freeze([0,0,2,2,2,3,3,4,4,5,5,5,6,6,6,7,7,7,8,8,8]),
+    '2024':Object.freeze([0,1,3,3,3,5,5,6,6,7,7,7,8,8,8,9,9,9,10,10,10])
+  });
+  const invocationLimit=(level,edition='2014')=>invocationProgression[edition==='2024'?'2024':'2014'][Math.max(0,Math.min(20,Math.trunc(Number(level)||0)))];
 
   const fighter2014=[
     'Archery','Defense','Dueling','Great Weapon Fighting','Protection','Two-Weapon Fighting'
@@ -104,7 +109,7 @@ var CharacterClassFeatureChoices=(()=>{
     '2014':{
       fighter:[{id:'fighting-style',name:'Fighting Style',minLevel:1,count:()=>1,options:()=>fighter2014,referenceComplete:true}],
       warlock:[
-        {id:'eldritch-invocations',name:'Eldritch Invocations',minLevel:2,count:l=>pickTable([[2,2],[5,3],[7,4],[9,5],[12,6],[15,7],[18,8]],l),options:()=>inv2014,referenceComplete:true},
+        {id:'eldritch-invocations',name:'Eldritch Invocations',minLevel:2,count:l=>invocationLimit(l,'2014'),options:()=>inv2014,referenceComplete:true},
         {id:'pact-boon',name:'Pact Boon',minLevel:3,count:()=>1,options:()=>[
           option('Pact of the Blade',{source:'PHB 2014',referenceComplete:true,automationComplete:false}),
           option('Pact of the Chain',{source:'PHB 2014',referenceComplete:true,automationComplete:false}),
@@ -114,7 +119,7 @@ var CharacterClassFeatureChoices=(()=>{
     },
     '2024':{
       fighter:[{id:'fighting-style',name:'Fighting Style',minLevel:1,count:()=>1,options:fighter2024,referenceComplete:true}],
-      warlock:[{id:'eldritch-invocations',name:'Eldritch Invocations',minLevel:1,count:l=>pickTable([[1,1],[2,3],[5,5],[7,6],[9,7],[12,8],[15,9],[18,10]],l),options:()=>inv2024,referenceComplete:true}]
+      warlock:[{id:'eldritch-invocations',name:'Eldritch Invocations',minLevel:1,count:l=>invocationLimit(l,'2024'),options:()=>inv2024,referenceComplete:true}]
     }
   };
 
@@ -123,7 +128,7 @@ var CharacterClassFeatureChoices=(()=>{
     if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
     for(const [key,value] of Object.entries(raw).slice(0,60)){
       if(!/^[a-z0-9:-]{1,120}$/i.test(key)||!Array.isArray(value))continue;
-      out[key]=value.slice(0,20).map(v=>safe(v)).filter(Boolean);
+      out[key]=value.slice(0,20).map(v=>safe(v));
     }
     return out;
   }
@@ -137,7 +142,7 @@ var CharacterClassFeatureChoices=(()=>{
     edition=edition==='2024'?'2024':'2014';const key=safe(classId)+':'+safe(subclassId);
     (subclassDefinitions[edition][key]||=[]).push(definition);
   }
-  const selections=(data,group)=>normalize(data?.adobe?.classFeatureChoices)[group.key]||[];
+  const selections=(data,group)=>(normalize(data?.adobe?.classFeatureChoices)[group.key]||[]).slice(0,group.allowed);
   function hasSpell(data,name){return (data?.spells||[]).some(s=>String(s.name||'').toLowerCase().replace(/\s*\[[^\]]+\]\s*$/,'')===String(name).toLowerCase());}
   function prerequisite(option,group,data,entry){
     const reasons=[];
@@ -155,18 +160,29 @@ var CharacterClassFeatureChoices=(()=>{
   function status(data,entry,edition='2014'){
     return groups(entry,edition).map(group=>{
       const picked=selections(data,group).slice(0,group.allowed);
-      const valid=picked.filter(id=>{const opt=group.options.find(o=>o.id===id);return opt&&prerequisite(opt,group,data,entry).eligible;});
-      return{...group,picked,valid,missing:Math.max(0,group.allowed-picked.length),complete:picked.length===group.allowed&&valid.length===picked.length};
+      const seen=new Set(),valid=picked.filter(id=>{const opt=group.options.find(o=>o.id===id);if(!opt||seen.has(id)&&!opt.repeatable||!prerequisite(opt,group,data,entry).eligible)return false;seen.add(id);return true;});
+      const overflow=(normalize(data?.adobe?.classFeatureChoices)[group.key]||[]).slice(group.allowed).filter(Boolean);
+      return{...group,picked,valid,overflow,missing:Math.max(0,group.allowed-valid.length),complete:valid.length===group.allowed&&!overflow.length};
     });
   }
-  function set(data,group,index,value){
+  function set(data,entry,groupId,index,value){
+    // Recompute the allowance from class level and edition at the mutation boundary.
+    // A stale DOM group or a disabled option must never bypass the core rules.
+    const stored=(data?.adobe?.classLevels||[]).find(e=>e.classId===entry?.classId);
+    if(!stored)return false;
+    entry=stored;
+    const group=groups(entry,data?.build?.edition||'2014').find(g=>g.id===groupId);
+    if(!group||!Number.isInteger(index)||index<0||index>=group.allowed)return false;
     data.adobe||={};data.adobe.classFeatureChoices=normalize(data.adobe.classFeatureChoices);
-    const current=[...(data.adobe.classFeatureChoices[group.key]||[])];
-    const id=safe(value);
-    if(id)current[index]=id;else current.splice(index,1);
-    data.adobe.classFeatureChoices[group.key]=current.slice(0,20).filter(Boolean);
-    return data.adobe.classFeatureChoices[group.key];
+    const current=[...selections(data,group)],id=safe(value),option=group.options.find(o=>o.id===id);
+    if(id&&(!option||!prerequisite(option,group,data,entry).eligible||!option.repeatable&&current.some((v,i)=>i!==index&&v===id)))return false;
+    const next=[...current];while(next.length<=index)next.push('');next[index]=id;
+    const candidate={...data,adobe:{...data.adobe,classFeatureChoices:{...data.adobe.classFeatureChoices,[group.key]:next}}};
+    if(current.some((v,i)=>i!==index&&v&&prerequisite(group.options.find(o=>o.id===v)||{},group,data,entry).eligible&&!prerequisite(group.options.find(o=>o.id===v)||{},group,candidate,entry).eligible))return false;
+    while(next.length&&!next[next.length-1])next.pop();
+    data.adobe.classFeatureChoices[group.key]=next;
+    return true;
   }
-  return{definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

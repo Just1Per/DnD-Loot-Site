@@ -4,6 +4,23 @@
 
 # Character builder: 2024 default, with 2014 support
 
+## HP breakdown and Warlock invocation limits
+
+Combat's maximum HP panel uses the advancement engine's actual calculation:
+class hit dice, Constitution at every character level, species/feat bonuses and
+minimum-HP adjustments. Named item changes to Constitution are explained beside
+that contribution and are not added a second time. Origin Tough is applied once.
+
+Invocation limits use Warlock class level and the selected edition. Level 6 allows
+3 total in 2014 or 5 total in 2024. The Rules page reads the same progression table
+as the core choice engine. The core setter rejects extra slots, unknown choices,
+non-repeatable duplicates and unmet prerequisites. It keeps slot positions stable
+when an earlier slot is empty. Saved choices beyond a reduced allowance are
+preserved as inactive and reported; editing the group keeps only allowed slots.
+
+References: [2014 Warlock](https://www.dndbeyond.com/classes/7-warlock) and
+[2024 Warlock](https://www.dndbeyond.com/classes/2190885-warlock).
+
 New sheets default to **2024** and **Base scores / HP**. Previously saved sheets
 keep their edition; absent edition data means 2014. Previously manual sheets keep
 Final totals and are not guessed from free text. Choose the correct score mode

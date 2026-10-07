@@ -79,7 +79,7 @@ var CharacterFeatRules = (() => {
       const core=def.source==='PHB'||def.source==='XPHB'||def.source==='TCE';
       if(!core)continue;
       if(def.name==='Alert') {effects.initiativeBonus=def.edition==='2014'?(effects.initiativeBonus||0)+5:Math.max(effects.initiativeBonus||0,pb);automated.push('Initiative');}
-      if(def.name==='Tough'){effects.hpBonus+=2*level;automated.push('Maximum HP (+2 per level in Base mode)');}
+      if(def.name==='Tough'&&!entry.managedOrigin){effects.hpBonus+=2*level;(effects.hpSources||=[]).push({kind:'feat',name:'Tough ('+def.edition+')',value:2*level});automated.push('Maximum HP (+2 per level in Base mode)');}
       if(def.name==='Observant'&&def.edition==='2014'){passiveBonus+=5;automated.push('Passive Perception +5 (passive Investigation remains manual)');}
       if(def.name==='Resilient'&&!warnings.length){
         const a=c.abilities[0];
@@ -126,7 +126,7 @@ var CharacterFeatRules = (() => {
       if((def.name==='Mobile'&&def.source==='PHB')||(def.name==='Speedy'&&def.source==='XPHB')){speedBonus+=10;automated.push('Walking speed +10 ft');}
       if(def.name==='Athlete'&&def.source==='XPHB'){athleteClimb=true;automated.push('Climb speed equals effective walking speed');}
       if(def.name==='Boon of Speed'&&def.source==='XPHB'){speedBonus+=30;automated.push('Walking speed +30 ft');}
-      if(def.name==='Boon of Fortitude'&&def.source==='XPHB'){effects.hpBonus+=40;automated.push('Maximum HP +40 in Base mode');}
+      if(def.name==='Boon of Fortitude'&&def.source==='XPHB'){effects.hpBonus+=40;(effects.hpSources||=[]).push({kind:'feat',name:'Boon of Fortitude',value:40});automated.push('Maximum HP +40 in Base mode');}
       if(def.name==='Boon of Skill'&&def.source==='XPHB'){
         effects.skills.push(...skillNames);const key=c.expertise;
         if(skillNames.includes(key)&&!expertise.includes(key)&&(data.skills[key]?.rank||0)<2)expertise.push(key);else warnings.push('Choose one skill without expertise.');

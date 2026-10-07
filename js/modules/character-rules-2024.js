@@ -416,8 +416,10 @@ var CharacterRules2024 = (() => {
       e.traits.push(`${ name } (2024 Origin feat): ${ featText[name] || 'Choose spells in the Feat catalogue below; other effects remain manual.' }`);
       if (name === 'Alert')
         e.initiativeBonus = Math.max(e.initiativeBonus, Math.ceil(level / 4) + 1);
-      if (name === 'Tough')
+      if (name === 'Tough') {
         e.hpBonus += 2 * level;
+        (e.hpSources||=[]).push({kind:'feat',name:'Tough (2024 Origin feat)',value:2*level});
+      }
       if (name === 'Skilled') {
         const selected = new Set();
         for (const value of choices) {
