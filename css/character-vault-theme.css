@@ -2403,34 +2403,34 @@
 @media(max-width:620px){.sheet-overview-important-row{grid-template-columns:24px minmax(0,1fr) auto}.sheet-warning-ack{grid-column:2}.sheet-overview-important-row button{grid-column:3;grid-row:2}.sheet-overview-important>summary{flex-wrap:wrap}}
 @media print{
  @page{size:A4 portrait;margin:9mm}
- body.printing-overview-only #characterSheetDialog .sheet-header{display:none!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview{margin:0!important;padding:0!important;break-before:auto!important}
- body.printing-character-sheet #sheetOverviewReadout{width:100%!important;max-width:none!important;margin:0!important;color:#000!important;font:10px/1.3 Arial,sans-serif!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-identity{display:grid!important;grid-template-columns:1fr 1.4fr!important;gap:8px!important;padding:0 0 7px!important;margin:0 0 8px!important;border-bottom:1px solid #555!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-identity h3{font-size:18px!important;margin:0 0 4px!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-identity dl{display:grid!important;grid-template-columns:1fr 1fr!important;gap:5px!important;font-size:10px!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-columns{display:grid!important;grid-template-columns:25mm 48mm minmax(0,1fr)!important;gap:3mm!important;align-items:start!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-abilities{display:grid!important;grid-template-columns:1fr!important;gap:7px!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-ability{position:static!important;display:grid!important;padding:6px 2px!important;min-height:0!important;height:auto!important;border:1px solid #999!important;border-radius:4px!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-ability-emblem{display:none!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-ability h4{font:700 9px/1.3 Arial,sans-serif!important;margin:0 0 3px!important;padding:0!important;overflow-wrap:anywhere!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-ability>strong{font-size:24px!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-ability>span{font-size:11px!important;padding:0!important;margin:2px 0 0!important}
- body.printing-character-sheet #sheetOverviewReadout :is(.sheet-summary-checks,.sheet-summary-main){display:block!important;min-width:0!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-box{padding:5px 0!important;margin:0 0 5px!important;border-bottom:1px solid #aaa!important;break-inside:avoid!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-box h4{font:700 10px/1.3 Arial,sans-serif!important;margin:0 0 4px!important;padding:0!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-box p{font:10px/1.3 Arial,sans-serif!important;margin:3px 0!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-skill{display:grid!important;grid-template-columns:10px minmax(0,1fr) 22px!important;gap:3px!important;font:10px/1.3 Arial,sans-serif!important;min-height:18px!important;padding:0!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-metrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;margin:0 0 5px!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-metrics>:is(div,button){display:grid!important;min-height:42px!important;padding:3px!important;color:#000!important;border-bottom:1px solid #999!important}
- body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-metrics strong{font-size:20px!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-metrics span{font:8px/1.3 Arial,sans-serif!important}
- body.printing-character-sheet #sheetOverviewReadout table{width:100%!important;min-width:0!important;table-layout:fixed!important;font:9px/1.3 Arial,sans-serif!important}
- body.printing-character-sheet #sheetOverviewReadout :is(td,th){padding:3px!important;overflow-wrap:anywhere!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-table-wrap{overflow:visible!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-overview-feat-list>span{min-height:0!important;padding:2px 4px!important;font-size:10px!important;border-radius:3px!important}
- body.printing-character-sheet #sheetOverviewReadout :is(.sheet-overview-important,.sheet-action-controls,.sheet-help,.sheet-overview-pin-heading>button){display:none!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-slot-orb{display:inline-block!important;width:10px!important;height:10px!important;min-width:10px!important;min-height:10px!important;padding:0!important}
+ #characterSheetDialog:has(#sheet-overview:not(.sheet-print-excluded)) .sheet-header{display:none!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview{margin:0!important;padding:0!important;break-before:auto!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout{width:100%!important;max-width:none!important;margin:0!important;color:#000!important;font:10px/1.3 Arial,sans-serif!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-identity{display:grid!important;grid-template-columns:1fr 1.4fr!important;gap:8px!important;padding:0 0 7px!important;margin:0 0 8px!important;border-bottom:1px solid #555!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-identity h3{font-size:18px!important;margin:0 0 4px!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-identity dl{display:grid!important;grid-template-columns:1fr 1fr!important;gap:5px!important;font-size:10px!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-columns{display:grid!important;grid-template-columns:25mm 48mm minmax(0,1fr)!important;gap:3mm!important;align-items:start!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-abilities{display:grid!important;grid-template-columns:1fr!important;gap:7px!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-ability{position:static!important;display:grid!important;padding:6px 2px!important;min-height:0!important;height:auto!important;border:1px solid #999!important;border-radius:4px!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-ability-emblem{display:none!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-ability h4{font:700 9px/1.3 Arial,sans-serif!important;margin:0 0 3px!important;padding:0!important;overflow-wrap:anywhere!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-ability>strong{font-size:24px!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-ability>span{font-size:11px!important;padding:0!important;margin:2px 0 0!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout :is(.sheet-summary-checks,.sheet-summary-main){display:block!important;min-width:0!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-box{padding:5px 0!important;margin:0 0 5px!important;border-bottom:1px solid #aaa!important;break-inside:avoid!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-box h4{font:700 10px/1.3 Arial,sans-serif!important;margin:0 0 4px!important;padding:0!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-box p{font:10px/1.3 Arial,sans-serif!important;margin:3px 0!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-skill{display:grid!important;grid-template-columns:10px minmax(0,1fr) 22px!important;gap:3px!important;font:10px/1.3 Arial,sans-serif!important;min-height:18px!important;padding:0!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-metrics{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;margin:0 0 5px!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-metrics>:is(div,button){display:grid!important;min-height:42px!important;padding:3px!important;color:#000!important;border-bottom:1px solid #999!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-metrics strong{font-size:20px!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-metrics span{font:8px/1.3 Arial,sans-serif!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout table{width:100%!important;min-width:0!important;table-layout:fixed!important;font:9px/1.3 Arial,sans-serif!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout :is(td,th){padding:3px!important;overflow-wrap:anywhere!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-table-wrap{overflow:visible!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-overview-feat-list>span{min-height:0!important;padding:2px 4px!important;font-size:10px!important;border-radius:3px!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout :is(.sheet-overview-important,.sheet-action-controls,.sheet-help,.sheet-overview-pin-heading>button){display:none!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-slot-orb{display:inline-block!important;width:10px!important;height:10px!important;min-width:10px!important;min-height:10px!important;padding:0!important}
 }
 
 .sheet-overview-feat-description{margin-top:8px;padding-top:8px;border-top:1px solid var(--vault-border-soft)}
@@ -2463,7 +2463,7 @@
 .dm-advancement-dialog .sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
 .dm-advancement-dialog input{padding:8px;border:1px solid #8a7355;border-radius:4px}
 @media(max-width:700px){.sheet-journal-layout{grid-template-columns:minmax(0,1fr)}.sheet-journal-list{max-height:180px}#characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-identity:has(.sheet-overview-portrait){grid-template-columns:minmax(0,1fr) 72px}.sheet-summary-identity:has(.sheet-overview-portrait)>dl{grid-row:2;grid-column:1/-1}.sheet-overview-portrait{width:68px;height:68px;grid-column:2;grid-row:1}}
-@media print{body.printing-character-sheet #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-identity:has(.sheet-overview-portrait){grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 65px!important}.sheet-overview-portrait{width:60px;height:60px;grid-row:auto;grid-column:auto}.sheet-summary-identity:has(.sheet-overview-portrait)>dl{grid-row:auto;grid-column:auto}.sheet-journal-toolbar,.sheet-journal-categories,.sheet-journal-list{display:none!important}.sheet-journal-layout{display:block}.sheet-portrait-editor input,.sheet-portrait-editor button{display:none!important}}
+@media print{body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-identity:has(.sheet-overview-portrait){grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 65px!important}.sheet-overview-portrait{width:60px;height:60px;grid-row:auto;grid-column:auto}.sheet-summary-identity:has(.sheet-overview-portrait)>dl{grid-row:auto;grid-column:auto}.sheet-journal-toolbar,.sheet-journal-categories,.sheet-journal-list{display:none!important}.sheet-journal-layout{display:block}.sheet-portrait-editor input,.sheet-portrait-editor button{display:none!important}}
 
 /* Compact owned gear: controls stay inside each row, full text opens separately. */
 #characterSheetDialog .sheet-active-gear-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;padding:9px 0;border-bottom:1px solid var(--vault-border-soft);min-width:0}
@@ -2480,12 +2480,25 @@
 #sheetInventoryItemInformation .sheet-rule-text{white-space:pre-wrap;line-height:1.5;overflow-wrap:anywhere}
 #sheetInventoryItemInformation dl{font-size:13px}#sheetInventoryItemInformation dt{font-weight:700;margin-top:10px}#sheetInventoryItemInformation dd{margin:3px 0;white-space:pre-wrap;overflow-wrap:anywhere}
 @media print{
- body.printing-character-sheet :is(#characterSheetPage,#characterSheetDialog,#characterSheetForm){width:100%!important;max-width:none!important;min-height:0!important;height:auto!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}
- body.printing-character-sheet #characterSheetDialog .sheet-body{margin:0!important;padding:0!important}
- body.printing-character-sheet #sheetOverviewReadout{zoom:1!important;transform:none!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-summary-identity:has(.sheet-overview-portrait){grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 60px!important}
- body.printing-character-sheet #sheetOverviewReadout .sheet-overview-portrait{width:56px!important;height:56px!important}
+ body:has(#characterSheetDialog) :is(#characterSheetPage,#characterSheetDialog.character-sheet,#characterSheetDialog #characterSheetForm){width:100%!important;max-width:none!important;min-height:0!important;height:auto!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog .sheet-body{margin:0!important;padding:0!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout{zoom:1!important;transform:none!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-summary-identity:has(.sheet-overview-portrait){grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 60px!important}
+ body:has(#characterSheetDialog) #sheetOverviewReadout .sheet-overview-portrait{width:56px!important;height:56px!important}
 }
 
 #characterSheetDialog .sheet-inventory-columns{align-items:start}
 #characterSheetDialog .sheet-inventory-active{align-self:start;padding:8px 0;border:0;border-radius:0;background:transparent;box-shadow:none}
+
+/* Print surfaces must not inherit the screen frame or depend on transient events. */
+@media print{
+ body:has(#characterSheetDialog){min-height:0!important;height:auto!important;margin:0!important;padding:0!important;background:#fff!important}
+ body:has(#characterSheetDialog)>:not(#mainApp):not(#characterSheetDialog){display:none!important}
+ body:has(#characterSheetDialog)>#mainApp,body:has(#characterSheetDialog) #tab-character-sheet{display:block!important}
+ body:has(#characterSheetDialog) #mainApp>:not(#tab-character-sheet){display:none!important}
+ body:has(#characterSheetDialog) :is(#mainApp,#tab-character-sheet){width:100%!important;max-width:none!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}
+ #characterSheetChooser{display:none!important}
+ #characterSheetPage #characterSheetDialog #sheet-overview{width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important}
+ #sheetOverviewReadout :is(.sheet-summary-identity,.sheet-summary-columns){width:100%!important;max-width:none!important;box-sizing:border-box!important}
+ #characterSheetDialog [data-sheet-section].sheet-print-excluded{display:none!important}
+}
