@@ -2159,16 +2159,16 @@
 #characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(2){width:38px}
 #characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(3){width:57px}
 #characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(4){width:70px;padding-top:4px}
-#characterSheetDialog .sheet-inventory-table textarea{
+#characterSheetDialog #sheet-inventory .sheet-inventory-table textarea{
   display:block;box-sizing:border-box;width:100%;min-width:0;max-width:100%;
   height:auto;min-height:17px;field-sizing:content;resize:none;overflow-wrap:anywhere;
   border:0;border-radius:0;padding:0;background:transparent;
   color:var(--vault-ink);font:600 12px/1.35 Georgia,serif;
 }
-#characterSheetDialog .sheet-inventory-table textarea.sheet-inventory-description{
+#characterSheetDialog #sheet-inventory .sheet-inventory-table textarea.sheet-inventory-description{
   margin-top:2px;font-size:11px;font-weight:400;color:var(--vault-muted);
 }
-#characterSheetDialog .sheet-inventory-table textarea:focus{outline:1px solid var(--vault-gold);background:#fff8e8}
+#characterSheetDialog #sheet-inventory .sheet-inventory-table textarea:focus{outline:1px solid var(--vault-gold);background:#fff8e8}
 #characterSheetDialog .sheet-inventory-table input[type=number]{
   box-sizing:border-box;width:100%;padding:0;min-height:18px;font-size:11px;
   appearance:textfield;-moz-appearance:textfield;
@@ -2189,5 +2189,19 @@
   #characterSheetDialog .sheet-inventory-table th:last-child{display:none!important}
   #characterSheetDialog .sheet-inventory-scroll{overflow:visible}
   #characterSheetDialog .sheet-inventory-table{min-width:0}
-  #characterSheetDialog .sheet-inventory-table textarea{border:0;padding:0}
+  #characterSheetDialog #sheet-inventory .sheet-inventory-table textarea{border:0;padding:0}
 }
+
+/* Story: editable, wrapping dropdown controls without a duplicate text preview. */
+#characterSheetDialog .sheet-story-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start;margin-bottom:18px}
+#characterSheetDialog :is(.sheet-story-left,.sheet-story-right){display:grid;gap:14px;min-width:0}
+#characterSheetDialog .sheet-story-left .sheet-profile{grid-template-columns:repeat(2,minmax(0,1fr))}
+#characterSheetDialog .sheet-story-combobox{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 30px;align-items:start;border:1px solid var(--vault-border-soft);border-radius:7px;background:#fffdf9}
+#characterSheetDialog #sheet-story .sheet-story-combobox textarea{box-sizing:border-box;field-sizing:content;min-height:42px;height:auto;resize:none;overflow-wrap:anywhere;line-height:1.5;border:0;border-radius:7px;padding:9px;background:transparent}
+#characterSheetDialog .sheet-story-toggle{padding:6px 0;min-width:0;width:30px;min-height:38px;margin:0;align-self:start;border:0;background:transparent;color:var(--vault-burgundy);box-shadow:none}
+#characterSheetDialog .sheet-story-options{position:absolute;top:100%;left:0;right:0;z-index:20;max-height:320px;overflow:auto;padding:5px;border:1px solid var(--vault-border);border-radius:7px;background:#fffdf9;box-shadow:0 8px 20px #2b1a0e26}
+#characterSheetDialog .sheet-story-options[hidden]{display:none}
+#characterSheetDialog .sheet-story-options button{display:block;width:100%;margin:0;padding:8px 10px;text-align:left;white-space:normal;overflow-wrap:anywhere;line-height:1.45;font:inherit;color:var(--vault-ink);background:transparent;border:0;border-radius:4px;box-shadow:none;text-transform:none;letter-spacing:normal}
+#characterSheetDialog .sheet-story-options button:is(:hover,:focus-visible,[aria-selected="true"]){background:#f1e5d3;outline:1px solid var(--vault-gold)}
+@media(max-width:760px){#characterSheetDialog .sheet-story-columns{grid-template-columns:minmax(0,1fr)}}
+@media print{#characterSheetDialog :is(.sheet-story-toggle,.sheet-story-options){display:none!important}#characterSheetDialog .sheet-story-combobox{display:block}}

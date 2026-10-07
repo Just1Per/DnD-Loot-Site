@@ -128,12 +128,12 @@ function updateStorySuggestions(){
  const idealLabel=row=>typeof row==='string'?row:`${row.alignment||'Any'} · ${row.text}`;
  for(const key of ['personality','ideals','bonds','flaws']){
   const input=form.querySelector(`[name="${key}"]`),select=form.querySelector(`[data-story-choice="${key}"]`),rows=profile[key]||[],values=rows.map(valueOf);
-  select.innerHTML='<option value="">Choose a suggestion</option>'+rows.map((row,i)=>`<option value="${i}">${sheetEscape(key==='ideals'?idealLabel(row):valueOf(row))}</option>`).join('')+'<option value="other">Other — write my own</option>';
-  const current=sheetSession.data[key],index=values.indexOf(current);select.value=index>=0?String(index):current?'other':'';input.readOnly=index>=0;
-  let hint=key==='ideals'?select.parentElement?.querySelector('[data-ideal-alignment-hint]'):null;
-  if(key==='ideals'&&!hint){hint=document.createElement('small');hint.dataset.idealAlignmentHint='true';hint.className='sheet-help';select.after(hint);}
-  const updateHint=()=>{if(!hint)return;const row=rows[Number(select.value)];hint.textContent=select.value!==''&&select.value!=='other'&&row?.alignment?`Alignment tendency: ${row.alignment}. This is guidance only; it does not change your alignment automatically.`:'Ideals are marked with a suggested alignment tendency when relevant.';};
-  updateHint();
-  select.onchange=()=>{if(select.value==='other')input.readOnly=false;else{input.value=select.value===''?'':valueOf(rows[Number(select.value)]);input.readOnly=true;}updateHint();input.dispatchEvent(new Event('input',{bubbles:true}));if(select.value==='other')input.focus();};
+  select.innerHTML=rows.map((row,i)=>`<button type="button" role="option" data-story-option="${i}" aria-selected="${sheetSession.data[key]===valueOf(row)}">${sheetEscape(key==='ideals'?idealLabel(row):valueOf(row))}</button>`).join('')+'<button type="button" role="option" data-story-option="other" aria-selected="false">Other — write my own</button>';
+  input.readOnly=false;input.placeholder='Choose a suggestion or write your own';
+  let hint=key==='ideals'?input.closest('label').querySelector('[data-ideal-alignment-hint]'):null;
+  if(key==='ideals'&&!hint){hint=document.createElement('small');hint.dataset.idealAlignmentHint='true';hint.className='sheet-help';input.closest('.sheet-story-combobox').after(hint);}
+  const updateSelection=()=>{const index=values.indexOf(input.value);select.querySelectorAll('[data-story-option]').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.storyOption===(index<0?'other':String(index)))));if(hint){const row=rows[index];hint.textContent=row?.alignment?`Alignment tendency: ${row.alignment}. This is guidance only; it does not change your alignment automatically.`:'';}};
+  updateSelection();input.oninput=updateSelection;
+  select.querySelectorAll('[data-story-option]').forEach(button=>button.onclick=()=>{const choice=button.dataset.storyOption;if(choice!=='other')input.value=valueOf(rows[Number(choice)]);select.hidden=true;input.closest('.sheet-story-combobox').querySelectorAll('[aria-expanded]').forEach(el=>el.setAttribute('aria-expanded','false'));updateSelection();input.dispatchEvent(new Event('input',{bubbles:true}));input.focus();});
  }
 }

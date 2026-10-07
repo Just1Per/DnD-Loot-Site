@@ -106,6 +106,7 @@ var CharacterSheetModel = (() => {
     'flaws',
     'backstory',
     'allies',
+    'enemies',
     'notes',
     'features',
     'languages',
