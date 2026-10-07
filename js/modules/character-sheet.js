@@ -370,7 +370,8 @@ function readSheetForm() {
   const s = sheetSession;
   if (!s)
     return;
-  const data = structuredClone(s.data);
+  // Restore all nested sections (including persisted Adobe settings) before reading fields.
+  const data = structuredClone(CharacterSheetModel.normalize(s.data));
   data.identity = { ...s.identity || s.character };
   document.querySelectorAll('#characterSheetForm [name]').forEach(input => {
     if (input.name === 'speed' && input.readOnly)
