@@ -2148,45 +2148,46 @@
   }
 }
 
-/* Give both inventory columns the full ledger width and size rows to their contents. */
+/* Compact paper-sheet inventory: item and editable notes share one ledger cell. */
 #characterSheetDialog .sheet-inventory-main{grid-template-columns:minmax(0,1fr)}
 #characterSheetDialog .sheet-inventory-columns{grid-column:1/-1;min-width:0}
-#characterSheetDialog .sheet-inventory-column{container-type:inline-size}
 #characterSheetDialog .sheet-inventory-scroll{overflow-x:auto}
-#characterSheetDialog .sheet-inventory-row-actions{display:table-cell;white-space:normal}
-#characterSheetDialog .sheet-inventory-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-#characterSheetDialog .sheet-inventory-actions button{white-space:normal;max-width:100%;min-height:30px}
+#characterSheetDialog .sheet-inventory-table{table-layout:fixed;min-width:290px}
+#characterSheetDialog .sheet-inventory-table th{padding:5px 4px!important;font-size:10px!important}
+#characterSheetDialog .sheet-inventory-table td{padding:4px!important;vertical-align:top}
+#characterSheetDialog .sheet-inventory-table :is(th,td):first-child{width:auto}
+#characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(2){width:38px}
+#characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(3){width:57px}
+#characterSheetDialog .sheet-inventory-table :is(th,td):nth-child(4){width:70px;padding-top:4px}
 #characterSheetDialog .sheet-inventory-table textarea{
   display:block;box-sizing:border-box;width:100%;min-width:0;max-width:100%;
-  min-height:30px;field-sizing:content;resize:vertical;overflow-wrap:anywhere;
-  border:1px solid var(--vault-border-soft);border-radius:5px;padding:6px;
-  background:#fffdf9;color:var(--vault-ink);font:inherit;line-height:1.45;
+  height:auto;min-height:17px;field-sizing:content;resize:none;overflow-wrap:anywhere;
+  border:0;border-radius:0;padding:0;background:transparent;
+  color:var(--vault-ink);font:600 12px/1.35 Georgia,serif;
 }
-@media screen{
-  @container(max-width:620px){
-    #characterSheetDialog .sheet-inventory-table{display:block;min-width:0}
-    #characterSheetDialog .sheet-inventory-table thead{display:none}
-    #characterSheetDialog .sheet-inventory-table tbody{display:grid;gap:12px}
-    #characterSheetDialog .sheet-inventory-table tr{
-      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;
-      padding:10px;border:1px solid var(--vault-border-soft);border-radius:8px;background:#fffdf9;
-    }
-    #characterSheetDialog .sheet-inventory-table td{
-      display:block;width:auto;min-width:0;padding:0!important;border:0!important;
-    }
-    #characterSheetDialog .sheet-inventory-table td:is(:first-child,:nth-child(5),:last-child){grid-column:1/-1}
-    #characterSheetDialog .sheet-inventory-table td[data-label]::before{
-      content:attr(data-label);display:block;margin-bottom:4px;
-      color:var(--vault-muted);font-size:10px;font-weight:700;
-    }
-    #characterSheetDialog .sheet-inventory-table input[type=number]{
-      box-sizing:border-box;min-height:32px;padding:6px;border:1px solid var(--vault-border-soft);border-radius:5px;
-    }
-    #characterSheetDialog .sheet-inventory-table td:nth-child(4){font-size:14px;font-weight:700}
-  }
+#characterSheetDialog .sheet-inventory-table textarea.sheet-inventory-description{
+  margin-top:2px;font-size:11px;font-weight:400;color:var(--vault-muted);
 }
+#characterSheetDialog .sheet-inventory-table textarea:focus{outline:1px solid var(--vault-gold);background:#fff8e8}
+#characterSheetDialog .sheet-inventory-table input[type=number]{
+  box-sizing:border-box;width:100%;padding:0;min-height:18px;font-size:11px;
+  appearance:textfield;-moz-appearance:textfield;
+}
+#characterSheetDialog .sheet-inventory-table input[type=number]::-webkit-inner-spin-button,
+#characterSheetDialog .sheet-inventory-table input[type=number]::-webkit-outer-spin-button{appearance:none;margin:0}
+#characterSheetDialog .sheet-inventory-table .sheet-inventory-weight small{font-size:9px;white-space:normal;line-height:1.25;margin-top:3px}
+#characterSheetDialog .sheet-inventory-row-actions{display:table-cell;white-space:normal}
+#characterSheetDialog .sheet-inventory-actions{display:flex;gap:3px;flex-wrap:nowrap;align-items:center}
+#characterSheetDialog .sheet-inventory-actions button{
+  display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;
+  flex:0 0 20px;width:20px;min-width:20px;min-height:22px;height:22px;
+  padding:0;font-size:13px;line-height:1;border-radius:4px;
+}
+#characterSheetDialog .sheet-inventory-actions button[data-move-inventory]{padding:0;font-size:13px}
 @media print{
-  #characterSheetDialog .sheet-inventory-row-actions{display:none!important}
+  #characterSheetDialog .sheet-inventory-row-actions,
+  #characterSheetDialog .sheet-inventory-table th:last-child{display:none!important}
   #characterSheetDialog .sheet-inventory-scroll{overflow:visible}
-  #characterSheetDialog .sheet-inventory-table textarea{border:0;padding:0;resize:none}
+  #characterSheetDialog .sheet-inventory-table{min-width:0}
+  #characterSheetDialog .sheet-inventory-table textarea{border:0;padding:0}
 }
