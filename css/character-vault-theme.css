@@ -2220,3 +2220,66 @@
   border:1px solid transparent;background:transparent;box-shadow:none;color:var(--vault-burgundy);
 }
 #characterSheetDialog #sheet-inventory .sheet-inventory-actions button:is(:hover,:focus-visible){border-color:var(--vault-gold);background:#f1e5d3}
+
+/* Shared seamless character pages: compact controls on the parchment surface. */
+#characterSheetPage #characterSheetDialog{
+  --sheet-control-height:28px;--sheet-control-radius:3px;
+  --sheet-control-bg:transparent;--sheet-card-shadow:none;
+}
+#characterSheetPage #characterSheetDialog :is(
+  .sheet-field input:not([type=checkbox]):not([type=radio]),.sheet-field select,
+  .sheet-field textarea:not([role=combobox]),.sheet-hp-tools input,
+  .sheet-defense-selectors select,.sheet-inventory-add select,.sheet-equipment-controls select,
+  .sheet-class-level-row .sheet-subclass-select,.sheet-companion-card input:not([type=checkbox]):not([type=radio]),
+  .sheet-companion-card select,.sheet-companion-card textarea,
+  .sheet-spell-generator input:not([type=checkbox]):not([type=radio]),.sheet-spell-generator select,
+  .sheet-catalog input:not([type=checkbox]):not([type=radio]),.sheet-catalog select,.sheet-catalog textarea
+){
+  box-sizing:border-box;min-height:28px!important;padding:4px 6px!important;
+  border:0!important;border-bottom:1px solid var(--vault-border-soft)!important;
+  border-radius:0!important;background-color:transparent!important;box-shadow:none!important;
+  font:400 13px/1.45 Georgia,serif;color:var(--vault-ink);
+}
+#characterSheetPage #characterSheetDialog select{padding-right:26px!important;background-position:right 6px center}
+#characterSheetPage #characterSheetDialog textarea:not(.sheet-inventory-description):not([data-personal]):not([role=combobox]){
+  field-sizing:content;height:auto;min-height:36px!important;resize:vertical;overflow-wrap:anywhere;
+}
+#characterSheetPage #characterSheetDialog :is(.sheet-field input,.sheet-field select,.sheet-field textarea,.sheet-companion-card input,.sheet-companion-card select,.sheet-companion-card textarea,.sheet-catalog input,.sheet-catalog select):focus{
+  outline:1px solid var(--vault-gold)!important;outline-offset:1px;
+  background-color:#fff8e8!important;box-shadow:none!important;
+}
+#characterSheetPage #characterSheetDialog .sheet-field{gap:3px}
+#characterSheetPage #characterSheetDialog .sheet-field>span:first-child{margin-bottom:2px;font-size:11px}
+#characterSheetPage #characterSheetDialog .sheet-grid{gap:10px 14px}
+#characterSheetPage #characterSheetDialog .sheet-check{
+  min-height:28px;padding:4px 0;border:0;border-radius:0;background:transparent;
+}
+#characterSheetPage #characterSheetDialog :is(
+  .sheet-editor-box,.sheet-repeat,.sheet-rule-summary,.sheet-resource-panel,.sheet-summary-box,
+  .sheet-point-panel,.sheet-spell-generation,.sheet-spell-generator,.sheet-catalog,
+  .sheet-class-block,.sheet-rules-feature,.sheet-rules-table-card
+){
+  padding:10px 12px;border-radius:5px!important;
+  border-color:var(--vault-border-soft)!important;background:transparent!important;box-shadow:none!important;
+}
+#characterSheetPage #characterSheetDialog :is(.sheet-catalog-result,.sheet-feat-result,.sheet-spell-generator-row,.sheet-progression-feature){
+  padding:7px 8px;border-radius:3px;background:transparent;box-shadow:none;
+}
+#characterSheetPage #characterSheetDialog .sheet-panel button:not(.btn-primary):not(.sheet-slot-orb):not(.sheet-skill-orb):not(.sheet-info-button):not(.sheet-story-toggle):not([role=option]):not([data-move-inventory]):not([data-edit-personal]):not([data-remove-personal]):not(.sheet-summary-toggle){
+  min-height:28px;padding:4px 8px;border-radius:4px;box-shadow:none;line-height:1.3;
+}
+#characterSheetPage #characterSheetDialog :is(.sheet-spell-table,.sheet-gear-table,.sheet-rules-table) th{padding:5px 6px!important}
+#characterSheetPage #characterSheetDialog :is(.sheet-spell-table,.sheet-gear-table,.sheet-rules-table) td{padding:5px 6px!important}
+#characterSheetPage #characterSheetDialog .sheet-story-combobox{
+  border:0;border-bottom:1px solid var(--vault-border-soft);border-radius:0;background:transparent;
+}
+#characterSheetPage #characterSheetDialog .sheet-story-combobox textarea{
+  min-height:32px;padding:5px 2px;border:0!important;border-radius:0!important;
+  background-color:transparent!important;box-shadow:none!important;font-weight:400;
+}
+#characterSheetPage #characterSheetDialog .sheet-story-toggle{min-height:28px;padding:3px 0}
+#characterSheetPage #characterSheetDialog .sheet-story-columns{gap:18px}
+#characterSheetPage #characterSheetDialog :is(.sheet-story-left,.sheet-story-right){gap:12px}
+@media(max-width:700px){
+  #characterSheetPage #characterSheetDialog .sheet-panel{padding:12px 10px 16px}
+}
