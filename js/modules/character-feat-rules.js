@@ -40,7 +40,6 @@ var CharacterFeatRules = (() => {
     if(!def.requirements.length)return [];
     const numeric=def.requirements.filter(r=>level>=r.level && (!r.ability.length || r.ability.some(a=>Object.entries(a).every(([k,v])=>abilityKeys.includes(k)&&Number.isFinite(v)&&scores[k]>=v))));
     if(!numeric.length)return ['Level / ability prerequisite is not met.'];
-    if(numeric.every(r=>r.manual)&&!confirmed)return ['Confirm the remaining source prerequisites with your DM.'];
     return [];
   }
   function apply(data,level,effects,scores,skillNames,tools) {
@@ -58,7 +57,12 @@ var CharacterFeatRules = (() => {
       const moderatelyArmored=def.name==='Moderately Armored'&&['PHB','XPHB'].includes(def.source);
       const hasLightArmor=effects.proficiencies.some(v=>String(v).toLowerCase()==='light armor');
       warnings.push(...requirements(def,scores,level,c.confirmed||(moderatelyArmored&&hasLightArmor)));
-      if(moderatelyArmored&&!hasLightArmor)warnings.push('Requires Light armor training.');
+      report.prerequisiteInfo=moderatelyArmored?['Light armor training: '+(hasLightArmor?'provided by your character choices.':'not detected; review your character’s training.')]:[];
+      if(def.name==='War Caster'){
+        const classes=data.adobe?.classLevels?.length?data.adobe.classLevels:[{classId:data.build.classId,level}];
+        const spellcaster=classes.some(entry=>{const cls=R.classes[entry.classId];return cls?.caster&&Number(entry.level)>=(cls.caster==='half'&&data.build.edition==='2014'?2:1);})||!!effects.innate?.length||!!data.spells?.length||!!data.build.cantrip;
+        report.prerequisiteInfo.push('Spellcasting: '+(spellcaster?'detected from your class, species or selected spells.':'not detected; review your spellcasting features.'));
+      }
       if(warnings.length)continue;
       if(def.name==='Resilient'&&def.source==='XPHB'&&(effects.saves.includes(c.abilities[0])||data.saves[c.abilities[0]]?.proficient)){warnings.push('Choose an ability without saving throw proficiency.');continue;}
       const option=def.ability[c.option]||def.ability[0];

@@ -11,6 +11,7 @@
     "test:rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node character-sheet-rules-current.cjs && node firestore-adobe-access.cjs\"",
     "test:form": "DND_FORM_REGRESSION_ONLY=1 node dom.cjs",
     "test:builder": "DND_BUILDER_OVERVIEW_ONLY=1 node dom.cjs",
-    "test:story": "DND_STORY_REGRESSION_ONLY=1 node dom.cjs"
+    "test:story": "DND_STORY_REGRESSION_ONLY=1 node dom.cjs",
+    "test:journal-rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node character-journal-permissions.cjs\""
   }
 }

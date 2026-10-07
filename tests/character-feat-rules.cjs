@@ -34,8 +34,8 @@ test('Alert and Tough do not duplicate matching Origin bonuses; Variant Human wo
  d=M.normalize({build:{edition:'2014',race:'variant-human',raceFeat:'Alert',scoreMode:'base'}});assert.equal(M.derive(d,5).initiative,5);
  d=sheet('Alert',{},{});assert.equal(M.derive(d,9).initiative,4);
 });
-test('conditional Defense and Archery require confirmation and only affect appropriate values',()=>{
- let d=sheet('Defense',{armored:true},{ac:16});assert.equal(M.derive(d,4).ac,16);d.rulesChoices.effects[id('Defense')].confirmed=true;assert.equal(M.derive(d,4).ac,17);assert.equal(d.ac,16);
+test('conditional Defense and Archery apply without DM confirmation and affect appropriate values',()=>{
+ let d=sheet('Defense',{armored:true},{ac:16});assert.equal(M.derive(d,4).feats.acBonus,1);d.rulesChoices.effects[id('Defense')].armored=false;assert.equal(M.derive(d,4).feats.acBonus,0);assert.equal(d.ac,16);
  d=sheet('Archery',{confirmed:true},{attacks:[{ability:'dex',proficient:true,rangedWeapon:true},{ability:'dex',proficient:true,rangedWeapon:false}]});assert.deepEqual(M.derive(d,4).attacks,[4,2]);
 });
 test('feat recovery uses its own event and preserves other resources',()=>{
@@ -50,7 +50,7 @@ test('unrecognized feats remain removable and unsafe object keys cannot break ev
  const d=M.normalize({rulesChoices:{feats:['__proto__','toString','unknown-feat']}});assert.doesNotThrow(()=>M.derive(d,5));assert.equal(M.derive(d,5).feats.reports.length,2);F.remove(d,'unknown-feat');assert.equal(d.rulesChoices.feats.length,1);
 });
 test('2014 and 2024 editions of the same feat cannot stack their bonuses',()=>{
- const d=sheet('Alert',{}, {build:{edition:'2024',race:'human-2024',humanOriginFeat:'Alert'}},'PHB');assert.equal(M.derive(d,9).initiative,4);assert.match(M.derive(d,9).feats.reports[0].warnings.join(' '),/Duplicate/);
+ const d=sheet('Alert',{}, {build:{edition:'2024',race:'human-2024',humanOriginFeat:'Alert'}},'PHB');assert.equal(M.derive(d,9).initiative,4);assert.match(M.derive(d,9).feats.reports.find(r=>r.id===id('Alert','PHB')).warnings.join(' '),/Duplicate/);
 });
 test('ability breakdown records named feat gains and actual capped amounts',()=>{
  const d=sheet('Ability Score Improvement',{option:0,abilities:['str']},{abilities:{str:19}}),r=M.derive(d,4).feats.reports[0];
@@ -67,9 +67,10 @@ test('2014 Moderately Armored recognizes Light armor training and grants Medium 
  assert.equal(r.feats.reports[0].warnings.length,0);
  const invalid=sheet('Moderately Armored',{abilities:['dex'],confirmed:true},{build:{classId:'wizard'},abilities:{dex:13}},'PHB');
  const bad=M.derive(invalid,4);
- assert.ok(!bad.effects.proficiencies.includes('Medium armor'));
- assert.ok(!bad.effects.proficiencies.includes('Shields'));
- assert.match(bad.feats.reports[0].warnings.join(' '),/Light armor training/);
+ assert.ok(bad.effects.proficiencies.includes('Medium armor'));
+ assert.ok(bad.effects.proficiencies.includes('Shields'));
+ assert.equal(bad.feats.reports[0].warnings.length,0);
+ assert.match(bad.feats.reports[0].prerequisiteInfo.join(' '),/not detected/);
 });
 
 test('2024 Moderately Armored auto-checks Light armor but does not grant Shield training',()=>{
@@ -79,4 +80,19 @@ test('2024 Moderately Armored auto-checks Light armor but does not grant Shield 
  assert.ok(r.effects.proficiencies.includes('Medium armor'));
  assert.ok(!r.effects.proficiencies.includes('Shields'));
  assert.equal(r.feats.reports[0].warnings.length,0);
+});
+
+test('War Caster has no DM-confirmation gate while level and ability requirements still apply',()=>{
+ const d=sheet('War Caster',{abilities:['int']},{build:{classId:'wizard'},abilities:{int:13}});
+ const r=M.derive(d,4);assert.equal(r.feats.reports[0].warnings.length,0);assert.equal(r.scores.int,14);
+ assert.match(M.derive(d,3).feats.reports[0].warnings.join(' '),/prerequisite/);
+});
+test('Wizard multiclassed to Warlock receives Light armor before feats are evaluated',()=>{
+ const d=sheet('Moderately Armored',{abilities:['dex']},{build:{classId:'wizard'},abilities:{dex:13},rulesChoices:{}});
+ d.rulesChoices.grants.__adobe={data:{classLevels:[{classId:'wizard',level:3},{classId:'warlock',level:1}]},used:0};
+ const r=M.derive(d,4);assert.ok(r.effects.proficiencies.includes('Light armor'));assert.ok(r.effects.proficiencies.includes('Medium armor'));assert.match(r.feats.reports[0].prerequisiteInfo.join(' '),/provided/);assert.ok(!r.effects.saves.includes('cha'));
+});
+test('Multiclass Fighter grants medium armor and shields without starting-class heavy armor or saves',()=>{
+ const d=M.normalize({build:{classId:'wizard',edition:'2024'}});d.adobe={classLevels:[{classId:'wizard',level:3},{classId:'fighter',level:1}]};
+ const r=M.derive(d,4);assert.ok(r.effects.proficiencies.includes('Medium armor'));assert.ok(r.effects.proficiencies.includes('Shields'));assert.ok(!r.effects.proficiencies.includes('Heavy armor'));assert.ok(!r.effects.saves.includes('con'));
 });

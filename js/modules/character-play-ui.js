@@ -28,7 +28,7 @@ function setupCharacterPlayUI(){
   options.addEventListener('keydown',event=>{const buttons=[...options.querySelectorAll('button')],index=buttons.indexOf(document.activeElement);if(event.key==='Escape'){event.preventDefault();close();toggle.focus();}else if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){event.preventDefault();buttons[event.key==='Home'?0:event.key==='End'?buttons.length-1:(index+(event.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length]?.focus();}});
  }
  story.addEventListener('click',event=>{story.querySelectorAll('.sheet-story-combobox').forEach(control=>{if(!control.contains(event.target)){control.querySelector('.sheet-story-options').hidden=true;control.querySelectorAll('[aria-expanded]').forEach(el=>el.setAttribute('aria-expanded','false'));}});});
- const remaining=form.querySelector('[name="backstory"]').closest('.sheet-grid');remaining.classList.add('sheet-story-notes');
+ const remaining=form.querySelector('[name="backstory"]').closest('.sheet-grid');remaining.classList.add('sheet-story-notes');remaining.classList.remove('two');
  updateStorySuggestions();
  const scoreMode=form.querySelector('[name="build.scoreMode"]')?.closest('label');if(scoreMode)document.querySelector('.sheet-point-panel').appendChild(scoreMode);
  const spells=document.getElementById('sheet-spells'),sheet=document.createElement('section');sheet.id='sheetSpellReadout';spells.querySelector('h3').after(sheet);

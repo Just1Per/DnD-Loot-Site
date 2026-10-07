@@ -176,8 +176,8 @@ function renderCharacterSheet() {
     ],
     [
       'story',
-      'Story & notes'
-    ]
+      'Story'
+    ],['notes','Notes']
   ].map(([key, label], i) => `<button type="button" role="tab" id="sheet-tab-${ key }" data-sheet-tab="${ key }" aria-controls="sheet-${ key }" aria-selected="${ i === 0 }" tabindex="${ i === 0 ? 0 : -1 }">${ label }</button>`).join('') }</nav>
   <div class="sheet-body">
   ${ sheetSection('overview', 'The adventurer', `<div class="sheet-grid sheet-identity">${ field('Character name', 'identity.name') }${ field('Level', 'identity.level', 'number', {
@@ -233,17 +233,16 @@ function renderCharacterSheet() {
       'backstory',
       'Backstory'
     ],
-    [
-      'notes',
-      'Session notes'
-    ]
+
   ].map(([key, label]) => field(label, key, 'textarea', { rows: 5 })).join('') }</div>`) }
+  ${sheetSection('notes','Adventure journal','<div id="sheetJournal"></div>')}
   </div></form>`;
   arrangeCharacterSheetPage();
   renderSheetBuildControls();
   moveOriginFeatControls();
   refineCharacterBuilder();
   setupCharacterPlayUI();
+  setupCharacterJournal();
   if (typeof renderSheetCatalog === 'function') renderSheetCatalog();
   renderSheetRows();
   fillSheetForm();
@@ -389,6 +388,7 @@ function readSheetForm() {
     level: Number(data.identity.level)
   };
   s.data = CharacterSheetModel.normalize(data);
+  renderCharacterJournal();
 }
 function updateSheetCalculations() {
   const s = sheetSession;
@@ -398,6 +398,7 @@ function updateSheetCalculations() {
   renderEquipmentCalculations(d);
   updateSheetBuildSummary(d);
   renderCharacterOverview(d);
+  updateCharacterPortrait();
   updateCharacterPlayUI(d);
   updateInventoryTotals(d);
   renderInventoryDefense(d);

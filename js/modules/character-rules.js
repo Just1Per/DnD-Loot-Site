@@ -1287,6 +1287,13 @@ var CharacterRules = (() => {
     result.skills = [...new Set(result.skills)];
     result.languages = [...new Set(result.languages)];
     result.warnings = [...new Set(result.warnings)];
+    // Secondary classes grant their multiclass training, not starting-class saves or heavy armor.
+    const classLevels=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels||[];
+    const multiclassTraining={barbarian:['Shields','Simple weapons','Martial weapons'],bard:['Light armor'],cleric:['Light armor','Medium armor','Shields'],druid:['Light armor','Medium armor','Shields'],fighter:['Light armor','Medium armor','Shields','Simple weapons','Martial weapons'],monk:['Simple weapons','Shortswords'],paladin:['Light armor','Medium armor','Shields','Simple weapons','Martial weapons'],ranger:['Light armor','Medium armor','Shields','Simple weapons','Martial weapons'],rogue:['Light armor','Thieves’ tools'],warlock:['Light armor',...(b.edition==='2014'?['Simple weapons']:[])],artificer:['Light armor','Medium armor','Shields','Thieves’ tools','Tinker’s tools']};
+    // 2024 class multiclass traits: https://www.dndbeyond.com/sources/dnd/br-2024/character-classes
+    if(b.edition==='2024')Object.assign(multiclassTraining,{barbarian:['Shields','Martial weapons'],druid:['Light armor','Shields'],fighter:['Light armor','Medium armor','Shields','Martial weapons'],monk:[],paladin:['Light armor','Medium armor','Shields','Martial weapons'],ranger:['Light armor','Medium armor','Shields','Martial weapons']});
+    for(const entry of classLevels.slice(1))if(Number(entry.level)>0)result.proficiencies.push(...(multiclassTraining[entry.classId]||[]));
+    result.proficiencies=[...new Set(result.proficiencies)];
     return result;
   }
   return {
