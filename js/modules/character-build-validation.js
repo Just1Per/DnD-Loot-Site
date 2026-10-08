@@ -8,7 +8,7 @@ var CharacterBuildValidation=(()=>{
   };
   const looksIncomplete=message=>{
     const m=String(message||'');
-    if(/partially automated|source-specific .*partially|manual entry|reference only/i.test(m)&&!/choose|select|required/i.test(m))return false;
+    if(/selected on the Feats page|source-specific effects as manual|automation adapter|partially automated|source-specific .*partially|manual entry|reference only/i.test(m)&&!/choose (?:a|an|your)|required|missing/i.test(m))return false;
     return /choose|select|required|missing|different|no longer qualif|confirm/i.test(m);
   };
   function check(data,derived,identity={}){
@@ -17,6 +17,7 @@ var CharacterBuildValidation=(()=>{
       if(!looksIncomplete(warning))continue;
       const lower=warning.toLowerCase();
       const category=lower.includes('language')?'Language':lower.includes('skill')?'Skill':lower.includes('feat')?'Feat':lower.includes('tool')?'Proficiency':'Builder';
+      // Some origin feats ask for languages configured in Character Builder, not Feats.
       add(rows,category,warning,category==='Feat'?'feats':'builder');
     }
     for(const [index,entry] of (progression.classLevels||[]).entries()){
