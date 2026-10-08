@@ -17,8 +17,17 @@ function toggleClassFeatureOverview(key,part){
   const s=sheetSession,CP=CharacterClassProgression,d=CharacterSheetModel.derive(s.data,s.identity.level);
   if(!d.progression.classLevels.some(entry=>CP.unlocked(entry.classId,entry.level,entry.subclassId,s.data.build.edition).some(row=>CP.overviewKey(entry,row,s.data.build.edition)===key)))return;
   const current=CP.normalizeOverview(s.data.adobe.overviewFeatures)[key]||{enabled:false,showName:true,showDescription:false};
-  if(part==='enabled'){current.enabled=!current.enabled;if(current.enabled&&!current.showName&&!current.showDescription)current.showName=true;}
-  else if(['showName','showDescription'].includes(part)){if(!current.enabled){current.showName=false;current.showDescription=false;}current[part]=!current[part];current.enabled=current.showName||current.showDescription;}
+  if(part==='enabled'){
+    // Add/remove both pieces together; the individual controls remain independent.
+    const addBoth=!(current.enabled&&current.showName&&current.showDescription);
+    current.enabled=addBoth;current.showName=addBoth;current.showDescription=addBoth;
+  }
+  else if(['showName','showDescription'].includes(part)){
+    // Disabled entries may retain legacy default flags; start with neither part visible.
+    if(!current.enabled){current.showName=false;current.showDescription=false;}
+    current[part]=!current[part];
+    current.enabled=current.showName||current.showDescription;
+  }
   else return;
   s.data.adobe.overviewFeatures[key]=current;s.dirty=true;updateSheetCalculations();sheetStatus('Class feature display updated. Save the sheet to keep it.');
 }

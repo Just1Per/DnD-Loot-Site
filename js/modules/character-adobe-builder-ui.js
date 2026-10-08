@@ -54,7 +54,7 @@
  function featureOverviewControls(entry,row){
    const key=CP.overviewKey(entry,row,rulesEdition()),pref=sheetSession.data.adobe.overviewFeatures[key]||{enabled:false,showName:true,showDescription:false};
    const button=(part,label,active)=>`<button type="button" data-feature-overview="${sheetEscape(key)}" data-feature-part="${part}" aria-pressed="${active}">${label}</button>`;
-   return `<div class="sheet-feature-overview-controls" aria-label="Overview display for ${sheetEscape(row.name)}">${button('enabled',pref.enabled?'Remove from Overview':'Add to Overview',pref.enabled)}${button('showName','Name',pref.enabled&&pref.showName)}${button('showDescription','Description',pref.enabled&&pref.showDescription)}</div>`;
+   return `<div class="sheet-feature-overview-controls" aria-label="Overview display for ${sheetEscape(row.name)}">${button('showName',pref.enabled&&pref.showName?'Remove Name':'Add Name',pref.enabled&&pref.showName)}${button('showDescription',pref.enabled&&pref.showDescription?'Remove Description':'Add Description',pref.enabled&&pref.showDescription)}${button('enabled',pref.enabled&&pref.showName&&pref.showDescription?'Remove Both':'Add Both',pref.enabled&&pref.showName&&pref.showDescription)}</div>`;
  }
  function classFeatureMarkup(entry){
    const subclass=validSubclass(entry),edition=rulesEdition(),groups=CP?CP.byLevel(entry.classId,entry.level,entry.subclassId,edition):{},rows=Object.values(groups).flat(),coverage=CP?.coverage(entry.classId,entry.subclassId,edition);
