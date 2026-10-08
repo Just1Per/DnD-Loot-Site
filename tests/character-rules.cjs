@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');const M=require('../js/modules/character-sheet-model');const R=require('../js/modules/character-rules');
 const build=(race,extra={})=>M.normalize({abilities:{dex:14,int:12,con:12},hpMax:20,hpCurrent:20,build:{race,scoreMode:'base',...extra}});
-test('expanded catalog contains 79 races and twelve classes',()=>{assert.equal(Object.keys(R.races).length,79);assert.equal(Object.keys(R.classes).length,12)});
+test('expanded catalog contains 79 races and thirteen classes including Artificer',()=>{assert.equal(Object.keys(R.races).length,79);assert.equal(Object.keys(R.classes).length,13)});
 test('elf bonuses feed skills, attack and spell calculations',()=>{const d=M.derive(build('high-elf'),5);assert.equal(d.scores.dex,16);assert.equal(d.scores.int,13);assert.equal(d.skills.perception,3);assert.equal(d.spellDC,12);});
 test('switching race recalculates without stacking',()=>{const d=build('high-elf');const a=M.derive(d,1);d.build.race='human';const b=M.derive(d,1);d.build.race='';const c=M.derive(d,1);assert.deepEqual([a.scores.dex,b.scores.dex,c.scores.dex],[16,15,14]);assert.equal(d.abilities.dex,14)});
 test('legacy sheets use final totals and keep free-text race',()=>{const d=M.normalize({species:'My elf',abilities:{dex:16},build:{race:'high-elf'}});assert.equal(M.derive(d,1).scores.dex,16);assert.equal(d.species,'My elf');});

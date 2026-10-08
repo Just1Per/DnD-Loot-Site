@@ -243,11 +243,11 @@ async function enterCampaign(campaign) {
     items = []; inventory = []; campaignSupply = {}; itemState = {}; characters = []; saves = []; campaignMembers = []; campaignInvites = []; selectedCharacter = null;
     document.getElementById("activeCampaignName").textContent = activeCampaign.name;
     magicItemLibraryLoaded = false; magicItemLibraryLoading = false;
-    await Promise.all([loadCharacters(), loadSaves(), loadCampaignInventory()]);
+    await Promise.all([loadCharacters(), loadSaves(), loadCampaignInventory(), CampaignRules.load(activeCampaign)]);
     if (generation !== campaignLoadGeneration) return;
     if (canManageCampaign()) await Promise.all([loadCampaignMembers(), loadActiveCampaignInvites()]);
     if (generation !== campaignLoadGeneration) return;
-    showMainApp(); populateOwnerFilter(); renderMagicItemLoadPrompt();
+    CampaignRules.watch(activeCampaign);showMainApp(); populateOwnerFilter(); renderMagicItemLoadPrompt();
   } catch (error) {
     if (generation !== campaignLoadGeneration) return;
     activeCampaign = null; activeMembershipRole = null; items = []; inventory = [];
@@ -257,6 +257,7 @@ async function enterCampaign(campaign) {
 
 async function leaveCampaign() {
   if (!closeCharacterSheet()) return;
+  CampaignRules.stop();
   ++campaignLoadGeneration;
   items = []; inventory = []; campaignSupply = {};
   magicItemLibraryLoaded = false; magicItemLibraryLoading = false;

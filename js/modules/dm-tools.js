@@ -420,6 +420,7 @@ function renderDMTools() {
     </div>`;
 
   renderDMOverview();
+  renderCampaignRulesTools();
   renderDMMembers();
   renderDMInvites();
   renderDMCharacters();

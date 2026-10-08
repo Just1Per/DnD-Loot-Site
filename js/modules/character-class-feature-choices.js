@@ -14,13 +14,13 @@ var CharacterClassFeatureChoices=(()=>{
 
   const fighter2014=[
     'Archery','Defense','Dueling','Great Weapon Fighting','Protection','Two-Weapon Fighting'
-  ].map(name=>option(name,{source:'PHB 2014',referenceComplete:true,automationComplete:false}));
+  ].map(name=>option(name,{source:'PHB 2014',referenceComplete:true,automationComplete:['Archery','Defense','Dueling','Two-Weapon Fighting'].includes(name)}));
   function fighter2024(){
     const defs=globalThis.CharacterFeatData||{},refs=globalThis.CharacterFeatReference?.records||{};
     const rows=Object.entries(defs).filter(([id,def])=>{
       const ref=refs[(def.source||'')+'|'+(def.name||'')];
       return def?.edition==='2024'&&ref?.category==='FS';
-    }).map(([id,def])=>option(def.name,{source:def.source||'2024',featId:id,referenceComplete:true,automationComplete:false}));
+    }).map(([id,def])=>option(def.name,{source:def.source||'2024',featId:id,referenceComplete:true,automationComplete:['Archery','Defense','Dueling','Two-Weapon Fighting'].includes(def.name)}));
     const seen=new Set();
     return rows.filter(row=>!seen.has(row.id)&&seen.add(row.id)).sort((a,b)=>a.name.localeCompare(b.name));
   }
@@ -123,6 +123,14 @@ var CharacterClassFeatureChoices=(()=>{
     }
   };
 
+  for(const edition of ['2014','2024'])for(const classId of ['paladin','ranger']){
+    const names=classId==='paladin'?['Defense','Dueling','Great Weapon Fighting','Protection']:['Archery','Defense','Dueling','Two-Weapon Fighting'];
+    definitions[edition][classId]=[{id:'fighting-style',name:'Fighting Style',minLevel:2,count:()=>1,options:()=>edition==='2024'?fighter2024():fighter2014.filter(o=>names.includes(o.name)),referenceComplete:true}];
+  }
+  function styles(data){
+    const entries=data?.adobe?.classLevels||data?.rulesChoices?.grants?.__adobe?.data?.classLevels||[];
+    return entries.flatMap(entry=>status(data,entry,data?.build?.edition||'2014').filter(g=>g.id==='fighting-style').flatMap(g=>g.valid.map(id=>g.options.find(o=>o.id===id))));
+  }
   function normalize(raw={}){
     const out={};
     if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
@@ -175,6 +183,8 @@ var CharacterClassFeatureChoices=(()=>{
     if(!group||!Number.isInteger(index)||index<0||index>=group.allowed)return false;
     data.adobe||={};data.adobe.classFeatureChoices=normalize(data.adobe.classFeatureChoices);
     const current=[...selections(data,group)],id=safe(value),option=group.options.find(o=>o.id===id);
+    if(id&&typeof CampaignRules!=='undefined'&&!CampaignRules.allowed(option))return false;
+    if(id&&option?.featId&&typeof CampaignRules!=='undefined'&&!CampaignRules.selectableFeat(option.featId,globalThis.CharacterCatalog?.rawData?.feats||[]))return false;
     if(id&&(!option||!prerequisite(option,group,data,entry).eligible||!option.repeatable&&current.some((v,i)=>i!==index&&v===id)))return false;
     const next=[...current];while(next.length<=index)next.push('');next[index]=id;
     const candidate={...data,adobe:{...data.adobe,classFeatureChoices:{...data.adobe.classFeatureChoices,[group.key]:next}}};
@@ -183,6 +193,6 @@ var CharacterClassFeatureChoices=(()=>{
     data.adobe.classFeatureChoices[group.key]=next;
     return true;
   }
-  return{invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

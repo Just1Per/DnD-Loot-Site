@@ -119,7 +119,7 @@ async function openCharacterSheet(characterId) {
     };
     if (!stored.revision) {
       sheetSession.data.build.scoreMode = 'base';
-      sheetSession.data.build.edition = '2024';
+      sheetSession.data.build.edition = CampaignRules.editions().includes('2024')?'2024':'2014';
       sheetSession.data.equipmentState.acMode = 'equipment';
     }
     renderCharacterSheet();
@@ -130,6 +130,10 @@ async function openCharacterSheet(characterId) {
   }
 }
 function sheetField(label, path, type = 'text', options = {}) {
+  if(type==='select'&&typeof CampaignRules!=='undefined'){
+    const record=v=>path==='build.edition'?{edition:v}:path==='build.race'?{edition:CharacterRules.races[v]?.edition||'2014'}:path==='build.background'?{edition:CharacterRules.modern.backgrounds[v]?'2024':'2014'}:path==='build.classId'&&v==='artificer'?{edition:'2014'}:null;
+    options={...options,values:options.values.filter(([v])=>!v||CampaignRules.allowed(record(v)))};
+  }
   const name = sheetEscape(path), attrs = `name="${ name }" ${ options.min !== undefined ? `min="${ options.min }"` : '' } ${ options.max !== undefined ? `max="${ options.max }"` : '' }`;
   const input = type === 'textarea' ? `<textarea ${ attrs } rows="${ options.rows || 3 }"></textarea>` : type === 'select' ? `<select ${ attrs }>${ options.values.map(([v, l]) => `<option value="${ sheetEscape(v) }">${ sheetEscape(l) }</option>`).join('') }</select>` : `<input ${ attrs } type="${ type }" ${ type === 'number' ? 'step="1"' : '' }>`;
   return `<label class="sheet-field ${ type === 'checkbox' ? 'sheet-check' : '' }"><span>${ sheetEscape(label) }</span>${ input }</label>`;
@@ -254,6 +258,7 @@ function renderCharacterSheet() {
   form.addEventListener('input', event => {
     if (!event.target.name)
       return;
+    delete event.target.dataset.archivedValue;
     readSheetForm();
     if (event.target.name === 'build.classId' && CharacterRules.classes[s.data.build.classId]) {
       const selected = CharacterRules.classes[s.data.build.classId];
@@ -271,6 +276,7 @@ function renderCharacterSheet() {
   form.addEventListener('change', event => {
     if (!event.target.name)
       return;
+    delete event.target.dataset.archivedValue;
     readSheetForm();
     if (event.target.name === 'build.classId' && CharacterRules.classes[s.data.build.classId]) {
       const selected = CharacterRules.classes[s.data.build.classId];
@@ -361,8 +367,10 @@ function fillSheetForm() {
     const value = input.name.split('.').reduce((v, key) => v?.[key], data);
     if (input.type === 'checkbox')
       input.checked = !!value;
-    else
-      input.value = value ?? '';
+    else {
+      if(input.tagName==='SELECT'&&value&&!Array.from(input.options).some(o=>o.value===String(value))){input.dataset.archivedValue=String(value);if(!Array.from(input.options).some(o=>o.value===''))input.insertAdjacentHTML('afterbegin','<option value="">Existing choice unavailable in this campaign</option>');input.value='';}
+      else {delete input.dataset.archivedValue;input.value = value ?? '';}
+    }
   });
 }
 function readSheetForm() {
@@ -375,6 +383,7 @@ function readSheetForm() {
   document.querySelectorAll('#characterSheetForm [name]').forEach(input => {
     // Feats page owns these choices; legacy hidden selects cannot represent every source feat.
     if(input.closest('[data-feat-catalogue-managed="true"]'))return;
+    if(input.dataset.archivedValue)return;
     const keys = input.name.split('.'), last = keys.pop();
     let target = data;
     for (const key of keys)
@@ -656,7 +665,7 @@ function renderSheetBuildControls() {
       name
     ])
   ];
-  document.getElementById('sheetBuildControls').innerHTML = `<h4>Character builder</h4><p class="sheet-help">2024 is the standard for new sheets. 2014 options are clearly marked and remain available. In 2024, ability increases come from your background, including when using a legacy race. Class levels, multiclassing and subclasses are managed below. Expanded-book options are labelled with their source; mechanics that are not yet automated stay clearly marked as source/manual.</p><div class="sheet-grid">${ f('Rules version', 'build.edition', 'select', {
+  document.getElementById('sheetBuildControls').innerHTML = `<h4>Character builder</h4><p class="sheet-help">Choices follow the editions allowed by your campaign DM. Existing saved choices are retained when their edition is hidden. In 2024, ability increases come from your background, including when using a legacy race. Class levels, multiclassing and subclasses are managed below. Expanded-book options are labelled with their source; mechanics that are not yet automated stay clearly marked as source/manual.</p><div class="sheet-grid">${ f('Rules version', 'build.edition', 'select', {
     values: [
       [
         '2024',
@@ -904,7 +913,8 @@ function renderSheetBuildControls() {
     'Monstrous',
     'Setting specific',
     'Custom'
-  ].map(category => `<optgroup label="${ sheetEscape(category) }">${ Object.entries(R.races).filter(([, r]) => r.category === category).sort((a, b) => a[1].name.localeCompare(b[1].name)).map(([id, r]) => `<option value="${ sheetEscape(id) }">${ sheetEscape(r.name) } — ${ sheetEscape((r.edition === '2024' ? '2024 · ' : '2014 · ') + (r.source || r.book || 'D&D')) }</option>`).join('') }</optgroup>`).join('');
+  ].map(category => `<optgroup label="${ sheetEscape(category) }">${ Object.entries(R.races).filter(([, r]) => r.category === category&&CampaignRules.allowed({edition:r.edition||'2014'})).sort((a, b) => a[1].name.localeCompare(b[1].name)).map(([id, r]) => `<option value="${ sheetEscape(id) }">${ sheetEscape(r.name) } — ${ sheetEscape((r.edition === '2024' ? '2024 · ' : '2014 · ') + (r.source || r.book || 'D&D')) }</option>`).join('') }</optgroup>`).join('');
+  raceSelect.querySelectorAll('optgroup').forEach(group=>{if(!group.querySelector('option'))group.remove();});
   const backgroundSelect = document.querySelector('[name="build.background"]');
   const expandedBackgrounds = Object.entries(CharacterBackgrounds.expanded || {});
   const backgroundGroups = [
@@ -913,11 +923,10 @@ function renderSheetBuildControls() {
     ['2014 Player’s Handbook', Object.entries(CharacterBackgrounds.legacy)],
     ['Legacy expanded D&D', expandedBackgrounds.filter(([,bg])=>bg.edition==='2014')]
   ];
-  backgroundSelect.innerHTML = '<option value="">Custom / manual</option>' + backgroundGroups.map(([label,entries]) =>
-    entries.length ? `<optgroup label="${sheetEscape(label)}">${entries.sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([id,bg]) =>
+  backgroundSelect.innerHTML = '<option value="">Custom / manual</option>' + backgroundGroups.map(([label,rawEntries]) => {const entries=rawEntries.filter(([,bg])=>CampaignRules.backgroundAllowed({...bg,edition:bg.edition||(label.includes('2024')?'2024':'2014')}));return entries.length ? `<optgroup label="${sheetEscape(label)}">${entries.sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([id,bg]) =>
       `<option value="${sheetEscape(id)}">${sheetEscape(bg.name)} — ${sheetEscape(CharacterBackgrounds.sourceName(bg))}</option>`
     ).join('')}</optgroup>` : ''
-  ).join('');
+  }).join('');
 }
 function updateSheetBuildSummary(derived) {
   const s = sheetSession;
@@ -1070,6 +1079,7 @@ function updateSheetBuildSummary(derived) {
   document.getElementById('sheetBuildSummaryTitle').textContent='Calculated from your choices · '+b.edition;
   const overviewToggle=document.getElementById('sheetBuildOverviewToggle'),pinned=s.data.adobe?.showCalculatedOnOverview===true;
   overviewToggle.textContent=pinned?'Remove from Overview':'Add to Overview';overviewToggle.setAttribute('aria-pressed',String(pinned));
-  document.getElementById('sheetBuildSummaryContent').innerHTML = `${ raceInfo }${ additional }<p><strong>Class:</strong> ${ sheetEscape(c ? c.name + ' \u2014 ' + b.edition : 'Custom / manual') } · <strong>Background:</strong> ${ sheetEscape(bg ? bg.name + ' — ' + CharacterBackgrounds.sourceName(bg) : 'Custom / manual') }</p>${ e.originFeats?.length ? `<p><strong>Origin feats:</strong> ${ sheetEscape(e.originFeats.join(', ')) }</p>` : '' }<p>${ b.scoreMode === 'base' ? 'Origin bonuses are added to base abilities (up to 20) and base maximum HP.' : 'Your entered ability scores and maximum HP are treated as final totals; origin bonuses are shown for reference only.' } Manual notes and proficiencies remain separate.</p><div class="sheet-metrics">${ stat(b.edition === '2024' ? 'Background bonuses' : 'Race bonuses', asi) }${ stat('Walking speed', `${ e.speed } ft`) }${ stat('Size', e.size) }${ stat('Darkvision', e.darkvision ? `${ e.darkvision } ft` : 'None') }${ stat('Effective maximum HP', derived.hpMax) }${ stat('Hit dice', derived.progression?.hitDice || s.data.hitDice || 'Manual') }</div><p><strong>Automatic skills:</strong> ${ sheetEscape(learnedSkills) }</p><p><strong>Class saving throws:</strong> ${ sheetEscape(e.saves.map(key => CharacterSheetModel.abilities[key]).join(', ') || 'Manual') }</p><p><strong>Languages:</strong> ${ sheetEscape(e.languages.join(', ') || 'Manual') }</p><p><strong>Equipment / tool proficiencies:</strong> ${ sheetEscape(e.proficiencies.join(', ') || 'Manual') }</p><p><strong>Resistances:</strong> ${ sheetEscape(e.resistances.join(', ') || 'None from race') }</p><ul>${ e.traits.map(trait => `<li>${ sheetEscape(trait) }</li>`).join('') }</ul>${ breath }${ e.innate.length ? `<p><strong>Granted racial spells:</strong> ${ sheetEscape(e.innate.join('; ')) }</p>` : '' }${ e.pact ? `<p><strong>Pact Magic:</strong> ${ e.pact.count } slot(s), level ${ e.pact.level }; recover on a short or long rest. Mystic Arcanum spells are separate and tracked manually.</p>` : '' }<p class="sheet-help">Traits below are reminders, not action buttons. Conditional bonuses, racial attacks, class features and unsupported conditional effects require manual entry. PB means proficiency bonus. <a href="rules-attribution.html" target="_blank" rel="noopener">Rules source & attribution</a></p>${ e.warnings.length ? `<div class="sheet-build-warning">${ e.warnings.map(w => `<p>${ sheetEscape(w) }</p>`).join('') }</div>` : '' }`;
+  document.getElementById('sheetBuildSummaryContent').innerHTML = `${ raceInfo }${ additional }<p><strong>Class:</strong> ${ sheetEscape(c ? c.name + ' \u2014 ' + b.edition : 'Custom / manual') } · <strong>Background:</strong> ${ sheetEscape(bg ? bg.name + ' — ' + CharacterBackgrounds.sourceName(bg) : 'Custom / manual') }</p>${ e.originFeats?.length ? `<p><strong>Origin feats:</strong> ${ sheetEscape(e.originFeats.join(', ')) }</p>` : '' }<p>${ b.scoreMode === 'base' ? 'Origin bonuses are added to base abilities (up to 20) and base maximum HP.' : 'Your entered ability scores and maximum HP are treated as final totals; origin bonuses are shown for reference only.' } Manual notes and proficiencies remain separate.</p><div class="sheet-metrics">${ stat(b.edition === '2024' ? 'Background bonuses' : 'Race bonuses', asi) }${ stat('Walking speed', `${ e.speed } ft`) }${ stat('Size', e.size) }${ stat('Darkvision', e.darkvision ? `${ e.darkvision } ft` : 'None') }${ stat('Effective maximum HP', derived.hpMax) }${ stat('Hit dice', derived.progression?.hitDice || s.data.hitDice || 'Manual') }</div><p><strong>Automatic skills:</strong> ${ sheetEscape(learnedSkills) }</p><p><strong>Class saving throws:</strong> ${ sheetEscape(e.saves.map(key => CharacterSheetModel.abilities[key]).join(', ') || 'Manual') }</p><p><strong>Languages:</strong> ${ sheetEscape(e.languages.join(', ') || 'Manual') }</p><p><strong>Equipment / tool proficiencies:</strong> ${ sheetEscape(e.proficiencies.join(', ') || 'Manual') }</p><p><strong>Resistances:</strong> ${ sheetEscape(e.resistances.join(', ') || 'None from race') }</p><ul>${ e.traits.map(trait => `<li>${ sheetEscape(trait) }</li>`).join('') }</ul>${ breath }${ e.innate.length ? `<p><strong>Granted racial spells:</strong> ${ sheetEscape(e.innate.join('; ')) }</p>` : '' }${ e.pact ? `<p><strong>Pact Magic:</strong> ${ e.pact.count } slot(s), level ${ e.pact.level }; recover on a short or long rest. Mystic Arcanum spells are separate and tracked manually.</p>` : '' }<p class="sheet-help">Traits below are reminders, not action buttons. Conditional bonuses, racial attacks, class features and unsupported conditional effects require manual entry. PB means proficiency bonus. <a href="rules-attribution.html" target="_blank" rel="noopener">Rules source & attribution</a></p>${ e.warnings.length ? `<div class="sheet-build-warning">${ e.warnings.map(w => `<p>${ sheetEscape(w) } ${CharacterBuildValidation.check(s.data,derived,s.identity).issues.some(issue=>issue.message===w)?`<button type="button" data-sheet-fix-message="${sheetEscape(w)}">Fix</button>`:''}</p>`).join('') }</div>` : '' }`;
+  document.querySelectorAll('[data-sheet-fix-message]').forEach(button=>button.onclick=()=>focusSheetBuildIssue(CharacterBuildValidation.check(s.data,derived,s.identity).issues.find(issue=>issue.message===button.dataset.sheetFixMessage)));
   updateAbilityAndSkillControls(derived);
 }

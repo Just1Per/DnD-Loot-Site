@@ -27,6 +27,8 @@ var CharacterFeatRules = (() => {
         if(id)result.unshift({id,key,origin:true,managedOrigin:true,originLabel:label});
       }
     }
+    const CFC=typeof CharacterClassFeatureChoices==='undefined'?null:CharacterClassFeatureChoices;
+    for(const style of CFC?.styles(data)||[])if(style.featId&&!result.some(r=>r.id===style.featId))result.push({id:style.featId,key:'class-style-'+style.id,origin:true,classFeature:true,originLabel:'Class Fighting Style'});
     return result;
   }
   function trainingOptions(def,rules) {
@@ -48,7 +50,8 @@ var CharacterFeatRules = (() => {
     const origins={};for(const n of effects.originFeats||[])origins[n]=(origins[n]||0)+1;
     let acBonus=0,rangedBonus=0,passiveBonus=0,speedBonus=0,athleteClimb=false;
     for(const entry of entries(data)) {
-      const def=Object.hasOwn(definitions,entry.id)?definitions[entry.id]:null;
+      const bundled=Object.hasOwn(definitions,entry.id)?definitions[entry.id]:null;
+      const def=typeof CampaignRules==='undefined'?bundled:CampaignRules.definition(entry.id,bundled);
       if(!def){reports.push({...entry,def:{name:entry.id,edition:'Unknown',source:'Reference',ability:[],requirements:[]},choice:choice(),warnings:['No bundled automation definition; selection preserved.'],automated:[]});continue;}
       const c=choice(data.rulesChoices?.effects?.[entry.key]),warnings=[],automated=[],identity=def.name==='Mobile'&&def.source==='PHB'?'Speedy':def.name;
       const report={...entry,def,choice:c,warnings,automated};reports.push(report);
@@ -64,6 +67,7 @@ var CharacterFeatRules = (() => {
         report.prerequisiteInfo.push('Spellcasting: '+(spellcaster?'detected from your class, species or selected spells.':'not detected; review your spellcasting features.'));
       }
       if(warnings.length)continue;
+      if(def.campaignEffects){const hp=def.campaignEffects.hpPerLevel*Math.max(1,Math.min(20,level));effects.hpBonus+=hp;if(hp)(effects.hpSources||=[]).push({kind:'feat',name:def.name,value:hp});speedBonus+=def.campaignEffects.speedBonus;if(hp)automated.push('Campaign feat HP +'+hp);if(def.campaignEffects.speedBonus)automated.push('Speed +'+def.campaignEffects.speedBonus+' ft');}
       if(def.name==='Resilient'&&def.source==='XPHB'&&(effects.saves.includes(c.abilities[0])||data.saves[c.abilities[0]]?.proficient)){warnings.push('Choose an ability without saving throw proficiency.');continue;}
       const option=def.ability[c.option]||def.ability[0];
       if(option){
@@ -79,6 +83,10 @@ var CharacterFeatRules = (() => {
           if(data.build.scoreMode==='base')for(const [a,n] of Object.entries(increases)){const applied=Math.max(0,Math.min(n,option.max-scores[a]));scores[a]+=applied;report.appliedAbilityIncreases[a]=applied;}
           automated.push('Ability increase (maximum '+option.max+'); '+(data.build.scoreMode==='base'?'included in totals':'reference only in Final totals mode'));
         }
+      }
+      if(def.armorTraining?.length){
+        for(const type of def.armorTraining)effects.proficiencies.push({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[type]);
+        automated.push('Edition-specific armor/shield training');
       }
       const core=def.source==='PHB'||def.source==='XPHB'||def.source==='TCE';
       if(!core)continue;
@@ -123,10 +131,6 @@ var CharacterFeatRules = (() => {
         const selected=new Set();for(const value of c.training){const language=value.slice(9);if(!trainingOptions(def,R).includes(value)||selected.has(value)||effects.languages.includes(language)){warnings.push('Choose three different new languages.');continue;}selected.add(value);effects.languages.push(language);}
         automated.push('Three selected languages');
       }
-      if(def.armorTraining?.length){
-        for(const type of def.armorTraining)effects.proficiencies.push({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[type]);
-        automated.push('Edition-specific armor/shield training');
-      }
       if((def.name==='Mobile'&&def.source==='PHB')||(def.name==='Speedy'&&def.source==='XPHB')){speedBonus+=10;automated.push('Walking speed +10 ft');}
       if(def.name==='Athlete'&&def.source==='XPHB'){athleteClimb=true;automated.push('Climb speed equals effective walking speed');}
       if(def.name==='Boon of Speed'&&def.source==='XPHB'){speedBonus+=30;automated.push('Walking speed +30 ft');}
@@ -165,7 +169,7 @@ var CharacterFeatRules = (() => {
     });
   }
   function reset(data,event) {
-    if(event==='long')for(const grant of Object.values(data.rulesChoices.grants||{}))grant.used=0;
+    if(event==='long')for(const [key,grant] of Object.entries(data.rulesChoices.grants||{}))if(!key.startsWith('__'))grant.used=0;
     for(const e of entries(data))if(resource(definitions[e.id])?.resets.includes(event)&&data.rulesChoices.effects[e.key])data.rulesChoices.effects[e.key].used=0;
   }
   return {definitions,choice,entries,trainingOptions,apply,resource,reset,remove};

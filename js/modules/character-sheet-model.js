@@ -228,7 +228,7 @@ var CharacterSheetModel = (() => {
     const d = normalize(data), pb = proficiency(level), mods = {}, saves = {}, checks = {};
     // Keep class assignments available to core rules before feats/equipment are calculated.
     const assigned=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels;
-    if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')}))};
+    if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:typeof CharacterClassFeatureChoices==='undefined'?{}:CharacterClassFeatureChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
     const scores = {};
     for (const key of Object.keys(abilities)) {

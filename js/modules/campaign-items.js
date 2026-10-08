@@ -120,9 +120,10 @@ async function openRootPicker() {
   dialog.querySelector('#closeRootPicker').addEventListener('click',closeRootPicker);
   const paint=()=>{
     const q=dialog.querySelector('#rootPickerSearch').value.toLowerCase();const list=dialog.querySelector('#rootPickerResults');
-    const matches=rootItems.filter(i=>i.name?.toLowerCase().includes(q)).slice(0,100);
+    const matches=rootItems.filter(i=>CampaignRules.allowed(i)&&i.name?.toLowerCase().includes(q)).slice(0,100);
     list.innerHTML=matches.map(i=>`<div class="root-picker-row"><div><strong>${escapeHtml(i.name)}</strong><p>${escapeHtml(i.rarity||'')} · ${escapeHtml(i.category||'')}</p></div><button class="toolbar-btn" type="button" data-root-id="${escapeHtml(i.id)}">Add to Campaign</button></div>`).join('')||'<p>No matching items.</p>';
     list.querySelectorAll('[data-root-id]').forEach(b=>b.addEventListener('click',()=>runVaultButton(b,async()=>{
+      if(!CampaignRules.allowed(rootItems.find(i=>i.id===b.dataset.rootId)))throw new Error('This item edition is not available in this campaign.');
       const result=await vaultCall('vaultCopyCampaignItem',{campaignId:id,source:'root',sourceId:b.dataset.rootId});
       if(activeCampaign?.id!==id)return;
       await refreshCampaignData();closeRootPicker();openItemModal(items.find(i=>i.id===result.itemId));
@@ -133,6 +134,7 @@ function closeRootPicker(){const d=document.getElementById('rootPicker');if(d?.o
 function closeVaultAction(){const d=document.getElementById('vaultActionDialog');if(d?.open)d.close();}
 function openInventoryAction(item,action,entry=null) {
   if(!activeCampaign)return;
+  if(['claim','assign'].includes(action)&&!CampaignRules.allowed(item)){alert('This item edition is not available in this campaign.');return;}
   const manager=canManageCampaign();if(['assign','unloot','transfer'].includes(action)&&!manager)return;
   const choices=action==='transfer'?allPlayableCharacters().filter(c=>c.id!==entry?.characterId):action==='assign'?allPlayableCharacters():myCharacters();
   if(!entry&&!choices.length){alert('Create a character first.');return;}
