@@ -7,12 +7,14 @@
     "linkedom": "^0.18.13"
   },
   "scripts": {
-    "test": "node --test character-sheet-model.cjs character-rules.cjs character-catalog.cjs character-feat-rules.cjs character-feat-reference.cjs character-more-feats.cjs character-equipment.cjs character-magic-armor.cjs character-backgrounds.cjs character-background-feat-choices.cjs character-play-rules.cjs character-actions.cjs character-progression.cjs character-class-progression.cjs character-class-feature-choices.cjs character-subclasses.cjs character-expanded-options.cjs character-creatures.cjs character-spellcasting.cjs character-spell-schools.cjs character-adobe-page-manager-checks.cjs character-theme-checks.cjs character-magic-items.cjs campaign-store-bulk.cjs && node dom.cjs",
+    "test": "node --test campaign-builder-policy.cjs character-sheet-model.cjs character-rules.cjs character-catalog.cjs character-feat-rules.cjs character-feat-reference.cjs character-more-feats.cjs character-equipment.cjs character-magic-armor.cjs character-backgrounds.cjs character-background-feat-choices.cjs character-play-rules.cjs character-actions.cjs character-progression.cjs character-class-progression.cjs character-class-feature-choices.cjs character-subclasses.cjs character-expanded-options.cjs character-creatures.cjs character-spellcasting.cjs character-spell-schools.cjs character-adobe-page-manager-checks.cjs character-theme-checks.cjs character-magic-items.cjs campaign-store-bulk.cjs && node dom.cjs",
     "test:rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node character-sheet-rules-current.cjs && node firestore-adobe-access.cjs\"",
     "test:gear": "DND_GEAR_REGRESSION_ONLY=1 node dom.cjs",
     "test:form": "DND_FORM_REGRESSION_ONLY=1 node dom.cjs",
     "test:builder": "DND_BUILDER_OVERVIEW_ONLY=1 node dom.cjs",
     "test:story": "DND_STORY_REGRESSION_ONLY=1 node dom.cjs",
-    "test:journal-rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node character-journal-permissions.cjs\""
+    "test:journal-rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node character-journal-permissions.cjs\"",
+    "test:policy": "node --test campaign-builder-policy.cjs && DND_POLICY_REGRESSION_ONLY=1 node dom.cjs",
+    "test:policy-rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node campaign-builder-policy-rules.cjs\""
   }
 }

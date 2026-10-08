@@ -1,0 +1,58 @@
+(async()=>{
+ const results=[],check=(name,ok)=>{results.push({name,pass:!!ok});if(!ok)throw Error(name);};
+ const event=(el,type='change')=>el.dispatchEvent(new Event(type,{bubbles:true}));
+ try{
+  seed('player');delete testSheetDocs['campaigns/a/characterSheets/c1'];testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');
+  sheetSession.identity.level=2;sheetSession.data=CharacterSheetModel.normalize({build:{edition:'2014',classId:'paladin'},notes:'Keep notes',adobe:{classLevels:[{classId:'paladin',level:2,subclassId:''}]}});renderCharacterSheet();
+  document.querySelector('[data-up="0"]').click();
+  check('Level up increments the chosen class and character together',sheetSession.identity.level===3&&sheetSession.data.adobe.classLevels[0].level===3);
+  check('Multiclass excludes the already assigned class',![...document.querySelectorAll('#sheetDirectMulticlass option')].some(o=>o.value==='paladin'));
+  const style=()=>document.querySelector('[data-choice-group="fighting-style"]');style().value='defense';event(style());
+  check('Paladin Fighting Style is selected directly in Builder',CharacterClassFeatureChoices.styles(sheetSession.data).some(s=>s.name==='Defense')&&sheetSession.data.rulesChoices.feats.length===0);
+  const armorIds=addSheetGearTemplates([{name:'Chain Mail',weight:55,edition:'2014'}]);const armor=document.getElementById('sheetArmorSelect');armor.value=armorIds[0];armor.onchange({target:armor});check('Builder Defense uses actually worn armor in the core AC calculation',CharacterSheetModel.derive(sheetSession.data,3,sheetEquipmentLoot()).ac===17);
+  style().value='dueling';event(style());const duelingStats=CharacterSheetModel.derive(sheetSession.data,3,sheetEquipmentLoot());const sword=CharacterActions.resolve({kind:'weapon',ref:'longsword'},sheetSession.data,3,duelingStats,sheetEquipmentLoot(),CharacterCatalog.data.spells);check('Builder Dueling applies to standard weapon actions',sword.damage==='1d8 + 2 slashing');style().value='defense';event(style());
+  await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');
+  check('Level, style and unrelated notes survive save and reopen',sheetSession.identity.level===3&&CharacterClassFeatureChoices.styles(sheetSession.data).some(s=>s.name==='Defense')&&sheetSession.data.adobe.journal.some(n=>n.text==='Keep notes'));
+  const subclassFix=[...document.querySelectorAll('[data-build-warning-index]')].find(b=>b.closest('.sheet-overview-important-row').textContent.includes('Choose a subclass'));subclassFix.click();
+  check('Overview Fix highlights the actual missing subclass field',document.querySelector('[data-subclass="0"]').classList.contains('sheet-fix-target'));
+  const sub=document.querySelector('[data-subclass="0"]');sub.value='devotion';event(sub);
+  sheetSession.data.build.edition='2024';sheetSession.data.adobe.classLevels[0]={classId:'paladin',level:6,subclassId:'devotion-2024'};sheetSession.identity.level=6;renderCharacterSheet();
+  await document.getElementById('sheetGenerateSpells').onclick();
+  const divine=CharacterCatalog.rawData.spells.find(s=>s.name==='Divine Smite'&&s.edition==='2024');
+  check('Paladin generator selects and locks Divine Smite automatically',document.querySelector('[data-spell-pick][data-spell-id="'+divine.id+'"]').disabled);
+  const ordinary=[...document.querySelectorAll('[data-spell-pick]')].filter(el=>!el.disabled&&CharacterCatalog.find(el.dataset.spellId).level>0);
+  for(const input of ordinary.slice(0,6)){input.checked=true;event(input);}
+  check('Automatic spells do not consume the prepared allowance',!document.getElementById('spellGeneratorCount').classList.contains('is-invalid'));
+  document.getElementById('spellGeneratorApply').click();
+  const granted=CharacterSpellcasting.automaticGrants(CharacterSpellcasting.profiles(sheetSession.data,6,{})[0],CharacterCatalog.rawData.spells);
+  check('Generated sheet includes class and oath grants exactly once',granted.length===6&&granted.every(g=>sheetSession.data.spells.filter(s=>s.catalogId===g.id).length===1));
+  await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');
+  check('Always-prepared spells remain present after save and reopen',granted.every(g=>sheetSession.data.spells.some(s=>s.catalogId===g.id&&s.prepared)));
+  check('Gear picker shows complete clothing names',sheetBaseGear().some(g=>g.name.toLowerCase()==='fine clothes')&&!sheetBaseGear().some(g=>g.name==='Fine'));
+  const old=structuredClone(sheetSession.data);activeCampaign.allowedEditions=['2014'];renderCharacterSheet();
+  check('2014-only Builder hides 2024 races, backgrounds and edition choice',![...document.querySelectorAll('[name="build.edition"] option,[name="build.race"] option,[name="build.background"] option')].some(o=>/2024/.test(o.textContent)));
+  check('Allowed legacy backgrounds remain selectable',Array.from(document.querySelector('[name="build.background"]').options).some(o=>o.value==='acolyte'));
+  check('2014-only gear and spell catalogues hide 2024 records',sheetBaseGear().every(g=>g.edition!=='2024')&&CharacterCatalog.data.spells.every(s=>s.edition==='2014'));
+  readSheetForm();check('Policy filtering does not overwrite archived saved edition or spells',sheetSession.data.build.edition===old.build.edition&&JSON.stringify(sheetSession.data.spells)===JSON.stringify(old.spells));
+  activeCampaign.allowedEditions=['2024'];renderCharacterSheet();check('2024-only hides legacy options and Artificer',![...document.querySelectorAll('[name="build.race"] option,[name="build.background"] option,#sheetDirectMulticlass option')].some(o=>/2014|legacy/.test(o.textContent)||o.value==='artificer'));
+  check('Allowed current backgrounds remain selectable',Array.from(document.querySelector('[name="build.background"]').options).some(o=>o.value==='acolyte-2024'));
+  closeCharacterSheet(true);seed('dm');characters[0]={id:'c1',...testSheetDocs['campaigns/a/characters/c1']};CampaignRules.setOverrides('a',[]);await renderCampaignRulesTools();
+  const host=document.getElementById('dmCampaignRules');host.querySelector('[data-new-campaign-feat]').click();
+  host.querySelector('[data-feat-name]').value='Campaign Ward';host.querySelector('[data-feat-description]').value='A ward from our campaign.';host.querySelector('[data-feat-hp]').value='2';host.querySelector('[data-feat-speed]').value='5';host.querySelector('[data-feat-armor="medium"]').checked=true;
+  await host.querySelector('[data-save-campaign-feat]').onclick();const custom=CampaignRules.records().find(r=>r.name==='Campaign Ward');
+  check('DM saves a custom feat only inside its campaign',custom&&testWrites.some(w=>w.path==='campaigns/a/featCatalog/'+custom.id)&&!testWrites.some(w=>w.path.startsWith('rulesCatalog/')));
+  testSheetDocs['campaigns/a/characters/c2']={...characters[1]};host.querySelector('[data-feat-character]').value='c2';host.querySelector('[data-assign-campaign-feat]').click();await new Promise(resolve=>setTimeout(resolve,0));check('DM assigns a custom feat with its protected bonus allowance',testSheetDocs['campaigns/a/characterSheets/c2']?.data.rulesChoices.feats.includes(custom.id)&&testSheetDocs['campaigns/a/characterSheets/c2'].data.rulesChoices.grants.__dm.bonusFeats===1);
+  await openCharacterSheet('c1');sheetSession.data.rulesChoices.feats.push(custom.id);renderSheetRows();fillSheetForm();updateSheetCalculations();
+  const calculated=CharacterSheetModel.derive(sheetSession.data,6,sheetEquipmentLoot());
+  check('Custom feat applies explicit HP, speed and medium armor training',calculated.feats.reports.some(r=>r.id===custom.id&&r.automated.some(a=>a.includes('HP +12')))&&calculated.effects.proficiencies.includes('Medium armor'));
+  document.querySelector('[data-feat-overview-description="'+custom.id+'"]').click();check('Custom feat name and description can appear in Overview',document.querySelector('.sheet-overview-feat-list').textContent.includes('Campaign Ward')&&document.querySelector('.sheet-overview-feat-description').textContent.includes('A ward from our campaign.'));
+  await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');check('Custom feat and its Overview description survive save and reopen',sheetSession.data.rulesChoices.feats.includes(custom.id)&&sheetSession.data.adobe.overviewFeatDescriptions.includes(custom.id));
+  closeCharacterSheet(true);CampaignRules.setOverrides('a',[{...custom,hidden:true}]);check('Removed custom feats disappear from catalogue but retain their reference',!CharacterCatalog.data.feats.some(f=>f.id===custom.id)&&CharacterCatalog.find(custom.id,'feats').name==='Campaign Ward');
+  const standard=CharacterCatalog.rawData.feats.find(f=>f.edition==='2024'&&f.name==='Tough');CampaignRules.setOverrides('a',[{...custom,hidden:true},{id:standard.id,name:'Campaign Tough',description:'Changed for this campaign',edition:'2024',hidden:true}]);check('Removed standard feats disappear while retaining reference data',!CharacterCatalog.data.feats.some(f=>f.id===standard.id)&&CharacterCatalog.find(standard.id,'feats').name==='Campaign Tough');
+  await renderCampaignRulesTools();const reset=document.getElementById('dmCampaignRules').querySelector('[data-reset-campaign-feats]');await reset.onclick();check('Reset archives custom records instead of deleting character data',CampaignRules.records().some(r=>r.id===custom.id&&r.hidden)&&!testWrites.some(w=>w.path.includes('characterSheets')&&w.data===null));
+  check('Reset restores standard names and availability without changing source catalogue',CharacterCatalog.data.feats.some(f=>f.id===standard.id&&f.name==='Tough')&&CharacterCatalog.rawData.feats.find(f=>f.id===standard.id).name==='Tough');
+  const rulesHost=document.getElementById('dmCampaignRules'),saveEditions=rulesHost.querySelector('[data-save-editions]').onclick;rulesHost.querySelector('#dmAllowedEditions').value='2014';await saveEditions();check('DM rules selector saves the edition policy to the campaign root',activeCampaign.allowedEditions.length===1&&activeCampaign.allowedEditions[0]==='2014'&&testWrites.some(w=>w.path==='campaigns/a'&&w.data.allowedEditions?.[0]==='2014'));
+  const writes=testWrites.length;seed('player');await saveEditions();check('Stale DM policy controls cannot write after switching to player',testWrites.length===writes);await renderCampaignRulesTools();check('Players cannot open DM campaign rule controls',!document.getElementById('dmCampaignRules'));
+ }catch(error){results.push({name:'Policy UI regression: '+error.message,pass:false});console.error(error);}
+ document.getElementById('test-results').textContent=JSON.stringify(results);
+})();

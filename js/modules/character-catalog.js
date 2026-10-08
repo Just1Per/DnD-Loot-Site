@@ -63,7 +63,7 @@ var CharacterCatalog = (() => {
     })().catch(e=>{pending=null;throw e;});
     return pending;
   }
-  const find=(id,kind='spells')=>catalogue?.[kind]?.find(s=>s.id===id);
+  const find=(id,kind='spells')=>kind==='feats'&&typeof CampaignRules!=='undefined'?CampaignRules.feat(id,catalogue?.feats?.find(s=>s.id===id)):catalogue?.[kind]?.find(s=>s.id===id);
   const schools=Object.freeze(['Abjuration','Conjuration','Divination','Enchantment','Evocation','Illusion','Necromancy','Transmutation']);
   function spells({edition,legacy=false,classId='',level='',school='',search=''}={}) {
     const needle=String(search||'').trim().toLowerCase();
@@ -76,7 +76,7 @@ var CharacterCatalog = (() => {
         s.name,s.school,s.source,s.book,s.save,s.casting,s.range,
         ...(s.combat?.types||[])
       ].filter(Boolean).join(' ').toLowerCase();
-      return versionOk&&levelOk&&classOk&&schoolOk&&(!needle||searchable.includes(needle));
+      return (typeof CampaignRules==='undefined'||CampaignRules.allowed(s))&&versionOk&&levelOk&&classOk&&schoolOk&&(!needle||searchable.includes(needle));
     });
   }
   function grants(data) {
@@ -119,6 +119,6 @@ var CharacterCatalog = (() => {
     for(const slot of data.slots) slot.used=0;
     Feats.reset(data,'long');
   }
-  return {normalize,set,load,find,spells,schools,grants,validateGrant,spellRow,longRest,get data(){return catalogue;}};
+  return {normalize,set,load,find,spells,schools,grants,validateGrant,spellRow,longRest,get rawData(){return catalogue;},get data(){return !catalogue||typeof CampaignRules==='undefined'?catalogue:{...catalogue,feats:CampaignRules.feats(catalogue.feats),spells:catalogue.spells.filter(s=>CampaignRules.allowed(s))};}};
 })();
 if(typeof module!=='undefined' && module.exports) module.exports=CharacterCatalog;

@@ -103,6 +103,62 @@ var CharacterSpellcasting=(()=>{
     return classEntries(data,targetLevel).map(entry=>({...profile(entry.classId,entry.level,edition,scores),subclassId:entry.subclassId||''})).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
   }
 
+  // Always-prepared grants are separate from the player's preparation allowance.
+  // Source: published class/subclass progression tables (Basic Rules 2014/2024).
+  const grantTables={
+    '2014':{
+      devotion:[[3,'Protection from Evil and Good','Sanctuary'],[5,'Lesser Restoration','Zone of Truth'],[9,'Beacon of Hope','Dispel Magic'],[13,'Freedom of Movement','Guardian of Faith'],[17,'Commune','Flame Strike']],
+      ancients:[[3,'Ensnaring Strike','Speak with Animals'],[5,'Moonbeam','Misty Step'],[9,'Plant Growth','Protection from Energy'],[13,'Ice Storm','Stoneskin'],[17,'Commune with Nature','Tree Stride']],
+      vengeance:[[3,'Bane',"Hunter’s Mark"],[5,'Hold Person','Misty Step'],[9,'Haste','Protection from Energy'],[13,'Banishment','Dimension Door'],[17,'Hold Monster','Scrying']],
+      'life-domain':[[1,'Bless','Cure Wounds'],[3,'Lesser Restoration','Spiritual Weapon'],[5,'Beacon of Hope','Revivify'],[7,'Death Ward','Guardian of Faith'],[9,'Mass Cure Wounds','Raise Dead']]
+    },
+    '2024':{
+      devotion:[[3,'Protection from Evil and Good','Shield of Faith'],[5,'Aid','Zone of Truth'],[9,'Beacon of Hope','Dispel Magic'],[13,'Freedom of Movement','Guardian of Faith'],[17,'Commune','Flame Strike']],
+      ancients:[[3,'Ensnaring Strike','Speak with Animals'],[5,'Moonbeam','Misty Step'],[9,'Plant Growth','Protection from Energy'],[13,'Ice Storm','Stoneskin'],[17,'Commune with Nature','Tree Stride']],
+      vengeance:[[3,'Bane',"Hunter’s Mark"],[5,'Hold Person','Misty Step'],[9,'Haste','Protection from Energy'],[13,'Banishment','Dimension Door'],[17,'Hold Monster','Scrying']],
+      'life-domain':[[3,'Aid','Bless','Cure Wounds','Lesser Restoration'],[5,'Mass Healing Word','Revivify'],[7,'Aura of Life','Death Ward'],[9,'Greater Restoration','Mass Cure Wounds']],
+      fiend:[[3,'Burning Hands','Command','Scorching Ray','Suggestion'],[5,'Fireball','Stinking Cloud'],[7,'Fire Shield','Wall of Fire'],[9,'Geas','Insect Plague']],
+      'draconic-bloodline':[[3,'Alter Self','Chromatic Orb','Command',"Dragon’s Breath"],[5,'Fear','Fly'],[7,'Arcane Eye','Charm Monster'],[9,'Legend Lore','Summon Dragon']]
+    }
+  };
+  Object.assign(grantTables['2014'],{
+    'knowledge-domain':[[1,'Command','Identify'],[3,'Augury','Suggestion'],[5,'Nondetection','Speak with Dead'],[7,'Arcane Eye','Confusion'],[9,'Legend Lore','Scrying']],
+    'light-domain':[[1,'Burning Hands','Faerie Fire'],[3,'Flaming Sphere','Scorching Ray'],[5,'Daylight','Fireball'],[7,'Guardian of Faith','Wall of Fire'],[9,'Flame Strike','Scrying']],
+    'nature-domain':[[1,'Animal Friendship','Speak with Animals'],[3,'Barkskin','Spike Growth'],[5,'Plant Growth','Wind Wall'],[7,'Dominate Beast','Grasping Vine'],[9,'Insect Plague','Tree Stride']],
+    'tempest-domain':[[1,'Fog Cloud','Thunderwave'],[3,'Gust of Wind','Shatter'],[5,'Call Lightning','Sleet Storm'],[7,'Control Water','Ice Storm'],[9,'Destructive Wave','Insect Plague']],
+    'trickery-domain':[[1,'Charm Person','Disguise Self'],[3,'Mirror Image','Pass without Trace'],[5,'Blink','Dispel Magic'],[7,'Dimension Door','Polymorph'],[9,'Dominate Person','Modify Memory']],
+    'war-domain':[[1,'Divine Favor','Shield of Faith'],[3,'Magic Weapon','Spiritual Weapon'],[5,'Crusader’s Mantle','Spirit Guardians'],[7,'Freedom of Movement','Stoneskin'],[9,'Flame Strike','Hold Monster']],
+    oathbreaker:[[3,'Hellish Rebuke','Inflict Wounds'],[5,'Crown of Madness','Darkness'],[9,'Animate Dead','Bestow Curse'],[13,'Blight','Confusion'],[17,'Contagion','Dominate Person']],
+    crown:[[3,'Command','Compelled Duel'],[5,'Warding Bond','Zone of Truth'],[9,'Aura of Vitality','Spirit Guardians'],[13,'Banishment','Guardian of Faith'],[17,'Circle of Power','Geas']],
+    conquest:[[3,'Armor of Agathys','Command'],[5,'Hold Person','Spiritual Weapon'],[9,'Bestow Curse','Fear'],[13,'Dominate Beast','Stoneskin'],[17,'Cloudkill','Dominate Person']],
+    redemption:[[3,'Sanctuary','Sleep'],[5,'Calm Emotions','Hold Person'],[9,'Counterspell','Hypnotic Pattern'],[13,'Otiluke’s Resilient Sphere','Stoneskin'],[17,'Hold Monster','Wall of Force']],
+    glory:[[3,'Guiding Bolt','Heroism'],[5,'Enhance Ability','Magic Weapon'],[9,'Haste','Protection from Energy'],[13,'Compulsion','Freedom of Movement'],[17,'Commune','Flame Strike']],
+    watchers:[[3,'Alarm','Detect Magic'],[5,'Moonbeam','See Invisibility'],[9,'Counterspell','Nondetection'],[13,'Aura of Purity','Banishment'],[17,'Hold Monster','Scrying']]
+  });
+  Object.assign(grantTables['2024'],{
+    glory:[[3,'Guiding Bolt','Heroism'],[5,'Enhance Ability','Magic Weapon'],[9,'Haste','Protection from Energy'],[13,'Compulsion','Freedom of Movement'],[17,'Legend Lore','Yolande’s Regal Presence']],
+    'light-domain':[[3,'Burning Hands','Faerie Fire','Scorching Ray','See Invisibility'],[5,'Daylight','Fireball'],[7,'Arcane Eye','Wall of Fire'],[9,'Flame Strike','Scrying']],
+    'trickery-domain':[[3,'Charm Person','Disguise Self','Invisibility','Pass without Trace'],[5,'Hypnotic Pattern','Nondetection'],[7,'Confusion','Dimension Door'],[9,'Dominate Person','Modify Memory']],
+    'war-domain':[[3,'Guiding Bolt','Shield of Faith','Magic Weapon','Spiritual Weapon'],[5,'Crusader’s Mantle','Spirit Guardians'],[7,'Fire Shield','Freedom of Movement'],[9,'Hold Monster','Steel Wind Strike']],
+    archfey:[[3,'Calm Emotions','Faerie Fire','Misty Step','Phantasmal Force','Sleep'],[5,'Blink','Plant Growth'],[7,'Dominate Beast','Greater Invisibility'],[9,'Dominate Person','Seeming']],
+    celestial:[[3,'Aid','Cure Wounds','Guiding Bolt','Lesser Restoration','Light','Sacred Flame'],[5,'Daylight','Revivify'],[7,'Guardian of Faith','Wall of Fire'],[9,'Greater Restoration','Summon Celestial']],
+    'great-old-one':[[3,'Detect Thoughts','Dissonant Whispers','Phantasmal Force','Tasha’s Hideous Laughter'],[5,'Clairvoyance','Hunger of Hadar'],[7,'Confusion','Summon Aberration'],[9,'Modify Memory','Telekinesis']]
+  });
+  const spellKey=name=>String(name||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]/g,'');
+  function automaticGrants(p,catalogue=[]){
+    if(!p)return[];
+    const names=[];
+    if(p.edition==='2024'&&p.classId==='paladin'){if(p.level>=2)names.push('Divine Smite');if(p.level>=5)names.push('Find Steed');}
+    if(p.edition==='2024'&&p.classId==='ranger')names.push('Hunter’s Mark');
+    if(p.edition==='2024'&&p.classId==='warlock'&&p.level>=9)names.push('Contact Other Plane');
+    const subclass=String(p.subclassId||'').replace(/-2024$/,'').replace(/-patron$/,'').replace('draconic-sorcery','draconic-bloodline');
+    const tableEdition=String(p.subclassId||'').endsWith('-2024')?'2024':'2014';
+    for(const [minimum,...spells] of grantTables[tableEdition]?.[subclass]||[])if(p.level>=Math.max(minimum,p.edition==='2024'?3:1))names.push(...spells);
+    const seen=new Set();
+    return names.flatMap(name=>{const key=spellKey(name);if(seen.has(key))return[];seen.add(key);const spell=catalogue.find(s=>spellKey(s.name)===key&&s.edition===p.edition)||catalogue.find(s=>spellKey(s.name)===key&&s.edition===tableEdition);return spell?[{...spell,grantSource:p.classId+' / '+(p.subclassId||'class')}]:[];});
+  }
+  function countedSelections(p,rows,catalogue=[]){const ids=new Set(automaticGrants(p,catalogue).map(s=>s.id));return rows.filter(s=>!ids.has(s.catalogId));}
+
   function isPreparedToggleUseful(p){
     return !!p && (p.mode==='prepared'||p.mode==='spellbook');
   }
@@ -115,6 +171,6 @@ var CharacterSpellcasting=(()=>{
     return'Spells';
   }
 
-  return {profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
+  return {automaticGrants,countedSelections,grantTables,profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterSpellcasting;

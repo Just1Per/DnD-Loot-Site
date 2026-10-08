@@ -1,4 +1,4 @@
-// D&D Vault Firestore Rules Revision: 28
+// D&D Vault Firestore Rules Revision: 29
 // Character sheet schema: 14 — draggable tabs + page manager + companion database
 // Revision 14: campaign DMs may create characters for active campaign members
 // Revision 15: character-sheet visual parity iteration; permissions unchanged
@@ -364,13 +364,29 @@ match /campaigns/{campaignId} {
 
   // Campaign DMs can edit normal campaign settings, but cannot transfer
   allow update: if isCampaignDM(campaignId)
-    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["name", "description", "defaultItemVisible", "updatedAt", "inventoryVersion", "inventoryMigratedAt"])
-    && request.resource.data.name is string;
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["name", "description", "defaultItemVisible", "updatedAt", "inventoryVersion", "inventoryMigratedAt", "allowedEditions"])
+    && request.resource.data.name is string
+    && (!('allowedEditions' in request.resource.data) || (request.resource.data.allowedEditions is list && request.resource.data.allowedEditions.size() >= 1 && request.resource.data.allowedEditions.size() <= 2 && request.resource.data.allowedEditions.hasOnly(['2014', '2024']) && (request.resource.data.allowedEditions.size() == 1 || request.resource.data.allowedEditions.hasAll(['2014', '2024']))));
   allow delete: if isCampaignOwner(campaignId);
 
   // ---------------------------------------------------------------------
   // MEMBERS
   // ---------------------------------------------------------------------
+  match /featCatalog/{featId} {
+    allow read: if isCampaignDM(campaignId) || isActiveMember(campaignId);
+    allow create, update: if isCampaignDM(campaignId)
+      && featId.matches('^[a-zA-Z0-9_-]{1,100}$')
+      && request.resource.data.keys().hasOnly(['name','description','edition','hidden','custom','minimumLevel','hpPerLevel','speedBonus','armorTraining'])
+      && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 160
+      && request.resource.data.description is string && request.resource.data.description.size() <= 12000
+      && request.resource.data.edition in ['2014','2024']
+      && request.resource.data.hidden is bool && request.resource.data.custom is bool
+      && request.resource.data.minimumLevel is int && request.resource.data.minimumLevel >= 0 && request.resource.data.minimumLevel <= 20
+      && request.resource.data.hpPerLevel is int && request.resource.data.hpPerLevel >= 0 && request.resource.data.hpPerLevel <= 10
+      && request.resource.data.speedBonus is int && request.resource.data.speedBonus >= 0 && request.resource.data.speedBonus <= 60
+      && request.resource.data.armorTraining is list && request.resource.data.armorTraining.size() <= 4 && request.resource.data.armorTraining.hasOnly(['light','medium','heavy','shield']);
+    allow delete: if isCampaignDM(campaignId);
+  }
   match /members/{uid} {
     // Active campaign members may see the roster; an invited user may
     // read their own membership record.

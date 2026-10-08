@@ -2502,3 +2502,19 @@
  #sheetOverviewReadout :is(.sheet-summary-identity,.sheet-summary-columns){width:100%!important;max-width:none!important;box-sizing:border-box!important}
  #characterSheetDialog [data-sheet-section].sheet-print-excluded{display:none!important}
 }
+
+/* Campaign rule controls reuse the compact sheet palette and field rhythm. */
+#dmCampaignRules { background:linear-gradient(135deg,#faf3e4,#f0e3ca); border-color:#d4af37; color:#2b1a0e; }
+#dmCampaignRules h3 { color:#651313; }
+#dmCampaignRules label { display:grid; gap:.3rem; margin:.65rem 0; font-size:.85rem; }
+#dmCampaignRules input:not([type=checkbox]),#dmCampaignRules select,#dmCampaignRules textarea { box-sizing:border-box; width:100%; min-width:0; padding:.5rem .65rem; color:#2b1a0e; background:#fffaf0; border:1px solid #c5ac7b; border-radius:6px; font:inherit; }
+#dmCampaignRules .sheet-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:.75rem; }
+#dmCampaignRules .sheet-inline-controls { display:flex; flex-wrap:wrap; gap:.6rem; }
+#dmCampaignRules .sheet-inline-controls label { display:flex; align-items:center; }
+#dmCampaignRules details { border-top:1px solid #c5ac7b; padding:.6rem 0; }
+.sheet-fix-target { outline:3px solid #d4af37 !important; outline-offset:4px; scroll-margin:5rem; }
+#dmCampaignRules button { background:linear-gradient(#8b2525,#5c1d1d); color:#f8e4ab; border:1px solid #c79c32; border-radius:5px; padding:.45rem .7rem; font:inherit; font-size:.8rem; cursor:pointer; }
+#dmCampaignRules button:hover { background:#752222; }
+#dmCampaignRules button:focus-visible { outline:2px solid #d4af37; outline-offset:3px; }
+#dmCampaignRules .dm-tool-actions { align-items:center; }
+#dmToolsPanel .admin-char-btns { max-width:100%; flex-shrink:1; }

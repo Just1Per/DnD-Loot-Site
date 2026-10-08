@@ -101,14 +101,14 @@ function renderSheetCatalogControls() {
   const C=CharacterCatalog, esc=sheetEscape;
   const feats=document.getElementById('sheetFeatCatalog'), spells=document.getElementById('sheetSpellCatalog');
   if(!feats || !spells)return;
-  const editions='<option value="2014">2014</option><option value="2024">2024</option>';
+  const editions=CampaignRules.editions().map(v=>'<option value="'+v+'">'+v+'</option>').join('');
   const sources=[...new Set(C.data.feats.map(f=>f.source).filter(Boolean))].sort();
   const categories=[...new Set(C.data.feats.map(f=>String(f.category||'')))].sort((a,b)=>featCategoryLabel({category:a}).localeCompare(featCategoryLabel({category:b})));
-  feats.innerHTML=`<h3>Feat catalogue</h3><p>${esc(C.data.loadedFrom||'Rules catalogue')} · ${C.data.feats.length} feats. Every feat remains browseable; use the filters to narrow the list and the <strong>i</strong> button for a rules summary before choosing.</p>
+  feats.innerHTML=`<h3>Feat catalogue</h3><p>${esc(C.data.loadedFrom||'Rules catalogue')} · ${C.data.feats.length} feats. Campaign-approved feats are shown; use the filters to narrow the list and the <strong>i</strong> button for a rules summary before choosing.</p>
     <div id="catalogBuildFeatChoices" class="sheet-build-feat-choices"></div>
     <section id="sheetDmFeatApproval" class="sheet-dm-feat-approval"></section>
     <div class="sheet-grid sheet-feat-filters">
-      <label class="sheet-field">Rules<select id="catalogFeatEdition">${editions}<option value="">Both editions</option></select></label>
+      <label class="sheet-field">Rules<select id="catalogFeatEdition">${editions}${CampaignRules.editions().length===2?'<option value="">Both editions</option>':''}</select></label>
       <label class="sheet-field">Category<select id="catalogFeatCategory"><option value="">All categories</option>${categories.map(v=>`<option value="${esc(v)}">${esc(featCategoryLabel({category:v}))}</option>`).join('')}</select></label>
       <label class="sheet-field">Effect<select id="catalogFeatEffect"><option value="">Any effect</option><option value="ability">Ability increase</option><option value="armor">Armor / shields</option><option value="spells">Spells / magic</option><option value="skills">Skills / tools</option><option value="combat">Weapons / combat</option><option value="defense">Defense / HP</option><option value="movement">Movement</option><option value="other">Other</option></select></label>
       <label class="sheet-field">Source<select id="catalogFeatSource"><option value="">Any source</option>${sources.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}</select></label>
@@ -116,7 +116,7 @@ function renderSheetCatalogControls() {
       <label class="sheet-field">Find feat<input id="catalogFeatSearch" type="search" placeholder="Name, feature, benefit"></label>
     </div>
     <p id="sheetFeatBudget" role="status"></p><div id="catalogFeatResults"></div><div id="catalogSelectedFeats"></div><div id="catalogFeatGrants"></div>`;
-  spells.innerHTML=`<h4>Choose spells from the catalogue</h4><p>2014 and 2024 entries are separate. Search matches spell names, schools and damage types. Adding a spell here is for exceptions/DM-approved additions and does not replace the class-aware Generate spell sheet workflow.</p><div class="sheet-grid"><label class="sheet-field">Rules<select id="catalogSpellEdition">${editions}<option value="">Both editions</option></select></label><label class="sheet-field">Class<select id="catalogSpellClass"><option value="">Any class</option>${['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard'].map(c=>`<option value="${c}">${c}</option>`).join('')}</select></label><label class="sheet-field">Level<select id="catalogSpellLevel"><option value="">Any level</option>${Array.from({length:10},(_,i)=>`<option value="${i}">${i||'Cantrip'}</option>`).join('')}</select></label><label class="sheet-field">School<select id="catalogSpellSchool"><option value="">Any school</option>${C.schools.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('')}</select></label><label class="sheet-field">Find spell<input id="catalogSpellSearch" type="search" placeholder="Name, school, damage type"></label></div><div id="catalogSpellResults"></div><button type="button" id="catalogLongRest">Long rest: reset spell slots & Magic Initiate uses</button>`;
+  spells.innerHTML=`<h4>Choose spells from the catalogue</h4><p>Campaign-approved editions are shown. Search matches spell names, schools and damage types. Adding a spell here is for exceptions/DM-approved additions and does not replace the class-aware Generate spell sheet workflow.</p><div class="sheet-grid"><label class="sheet-field">Rules<select id="catalogSpellEdition">${editions}${CampaignRules.editions().length===2?'<option value="">Both editions</option>':''}</select></label><label class="sheet-field">Class<select id="catalogSpellClass"><option value="">Any class</option>${['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard'].filter(c=>c!=='artificer'||CampaignRules.editions().includes('2014')).map(c=>`<option value="${c}">${c}</option>`).join('')}</select></label><label class="sheet-field">Level<select id="catalogSpellLevel"><option value="">Any level</option>${Array.from({length:10},(_,i)=>`<option value="${i}">${i||'Cantrip'}</option>`).join('')}</select></label><label class="sheet-field">School<select id="catalogSpellSchool"><option value="">Any school</option>${C.schools.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('')}</select></label><label class="sheet-field">Find spell<input id="catalogSpellSearch" type="search" placeholder="Name, school, damage type"></label></div><div id="catalogSpellResults"></div><button type="button" id="catalogLongRest">Long rest: reset spell slots & Magic Initiate uses</button>`;
   document.getElementById('catalogFeatEdition').value='';
   document.getElementById('catalogSpellEdition').value=sheetSession.data.build.edition;
   for(const id of ['catalogSpellEdition','catalogSpellClass','catalogSpellLevel','catalogSpellSchool','catalogSpellSearch'])document.getElementById(id).addEventListener(id.endsWith('Search')?'input':'change',renderCatalogSpellResults);
@@ -138,7 +138,7 @@ function renderCatalogSpellResults() {
 function addCatalogSpells(ids, preparedId='') {
   readSheetForm();let added=0;
   for(const id of ids) {
-    const spell=CharacterCatalog.find(id);if(!spell || sheetSession.data.spells.some(s=>s.catalogId===id))continue;
+    const spell=CharacterCatalog.find(id);if(!spell || !CampaignRules.allowed(spell)||sheetSession.data.spells.some(s=>s.catalogId===id))continue;
     if(sheetSession.data.spells.length>=150){sheetStatus('Spellbook limit is 150 entries. Remove a spell first.',true);break;}
     const row=CharacterCatalog.spellRow(spell);if(id===preparedId)row.prepared=true;
     sheetSession.data.spells.push(row);added++;
@@ -158,8 +158,8 @@ function renderBuildFeatChoices() {
   const originFeats=uniqueByName(allFeats.filter(f=>f.edition==='2024'&&(f.category==='O'||String(f.category).toLowerCase()==='origin')));
   const legacyFeats=uniqueByName(allFeats.filter(f=>f.edition==='2014'));
   const optionList=(rows,current,prompt)=>{
-    const options=[['',prompt],...rows.map(f=>[f.name,f.name+' · '+(f.source||f.book||f.edition)])];
-    if(current&&!options.some(([value])=>value===current))options.push([current,current+' · saved/manual']);
+    const options=[['',prompt],...rows.map(f=>[CharacterFeatRules.definitions[f.id]?.name||f.name,f.name+' · '+(f.source||f.book||f.edition)])];
+    if(current&&!options.some(([value])=>value===current))options.push(['','Existing choice unavailable in this campaign']);
     return options.map(([value,label])=>'<option value="'+sheetEscape(value)+'" '+(value===current?'selected':'')+'>'+sheetEscape(label)+'</option>').join('');
   };
   const skillToolOptions=current=>{
@@ -172,7 +172,7 @@ function renderBuildFeatChoices() {
   const cards=[];
   if(b.edition==='2024'){
     const fixed=bg?.feat||'';
-    const backgroundChoices=Array.isArray(bg?.featChoices)?uniqueByName(allFeats.filter(f=>f.edition==='2024'&&bg.featChoices.includes(f.name))):[];
+    const backgroundChoices=Array.isArray(bg?.featChoices)?uniqueByName(allFeats.filter(f=>f.edition==='2024'&&bg.featChoices.includes(CharacterFeatRules.definitions[f.id]?.name||f.name))):[];
     if(backgroundChoices.length){
       cards.push('<article class="sheet-build-feat-card is-choice"><div><span class="sheet-eyebrow">BACKGROUND FEAT CHOICE</span><strong>'+sheetEscape(bg.featLabel||'Choose your background feat')+'</strong><small>'+sheetEscape(bg?.name||'Background')+' grants one feat from this source-specific list.</small></div><label class="sheet-field"><span>Feat</span><select data-build-feat-field="backgroundFeat">'+optionList(backgroundChoices,b.backgroundFeat,'Choose background feat')+'</select></label></article>');
     }else if(fixed){
@@ -239,6 +239,7 @@ function renderCatalogFeatResults() {
   host.querySelectorAll('[data-feat-info]').forEach(button=>button.onclick=()=>openFeatInformation(button.dataset.featInfo));
   host.querySelectorAll('[data-add-catalog-feat]').forEach(button=>button.onclick=()=>{
     readSheetForm();const feat=CharacterCatalog.find(button.dataset.addCatalogFeat,'feats'),data=sheetSession.data;
+    if(!CampaignRules.selectableFeat(feat?.id,CharacterCatalog.rawData.feats))return sheetStatus('This feat is not available in this campaign.',true);
     const denied=CharacterPlayRules.eligible(data,Number(sheetSession.identity.level),feat,CharacterCatalog.data.feats,CharacterSheetModel.derive(data,Number(sheetSession.identity.level)).scores);if(denied){sheetStatus(denied,true);return;}
     if(feat.minimumLevel>Number(sheetSession.identity.level)){sheetStatus(`This feat requires level ${feat.minimumLevel}.`,true);return;}
     if(data.build.edition==='2014' && data.build.race==='variant-human' && feat.edition==='2014' && !data.build.raceFeat){data.build.raceFeat=feat.name;fillSheetForm();}

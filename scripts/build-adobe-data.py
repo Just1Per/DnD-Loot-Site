@@ -34,7 +34,7 @@ for f in a.streams.glob('*.txt'):
   if 'var '+name+' =' in t:sources[name]=literal(block(t,'var '+name+' ='))
 gear=[]
 for key,v in sources['Base_GearList'].items():
- gear.append({'id':'gear-'+re.sub('[^a-z0-9]+','-',key.lower()).strip('-'),'name':v.get('infoname',v['name']).split(' [')[0], 'unitName':v['name'],'quantity':v.get('amount') or 1,'weight':v.get('weight') or 0,'price':re.search(r'\[(.*?)\]',v.get('infoname','')).group(1) if '[' in v.get('infoname','') else '', 'edition':'2014','category':v.get('type','Adventuring gear')})
+ gear.append({'id':'gear-'+re.sub('[^a-z0-9]+','-',key.lower()).strip('-'),'name':v['name'], 'unitName':v['name'],'quantity':v.get('amount') or 1,'weight':v.get('weight') or 0,'price':re.search(r'\[(.*?)\]',v.get('infoname','')).group(1) if '[' in v.get('infoname','') else '', 'edition':'2014','category':v.get('type','Adventuring gear')})
 packs=[{'id':k,'name':v['name'],'edition':'2014','items':[{'name':x[0],'quantity':x[1] or 1,'weight':x[2] or 0} for x in v['items']]} for k,v in sources['Base_PacksList'].items()]
 story={k:{'name':v['name'],**{out:[x[1] if isinstance(x,list) else x for x in v.get(field,[])] for out,field in [('personality','trait'),('ideals','ideal'),('bonds','bond'),('flaws','flaw')]}} for k,v in sources['Base_BackgroundList'].items()}
 if a.backgrounds:

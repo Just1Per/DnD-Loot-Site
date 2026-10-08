@@ -180,8 +180,16 @@ var CharacterEquipment = (() => {
       if(w.mastery)notes.push('Mastery: '+w.mastery+' (only if unlocked; effect manual).');
       attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
     }
+    const styles=typeof CharacterClassFeatureChoices==='undefined'?[]:CharacterClassFeatureChoices.styles(data);
+    for(const attack of attacks){
+      const entry=entries.find(e=>e.entry.id===attack.id),profile=entry?.profile;
+      if(!profile)continue;
+      if(styles.some(s=>s.name==='Archery')&&profile.rangeType==='ranged'&&!stats.feats.rangedBonus)attack.attack+=2;
+      if(styles.some(s=>s.name==='Dueling')&&profile.rangeType==='melee'&&!profile.props.includes('twoHanded')&&entry.choice.mode!=='twoHanded'&&!entries.some(e=>e.active&&e.entry.id!==attack.id&&e.mechanics.kind==='weapon'))attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>{const total=(sign==='−'?-1:1)*Number(n||0)+2;return dice+(total?' '+(total<0?'−':'+')+' '+Math.abs(total):'');});
+      if(styles.some(s=>s.name==='Two-Weapon Fighting')&&entry.choice.mode==='offhand'&&profile.props.includes('light')&&stats.mods[attack.ability]>0){attack.notes=attack.notes.map(note=>note.replace('positive ability damage omitted.','Fighting Style adds your ability modifier to damage.'));attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>dice+' + '+((sign==='−'?-1:1)*Number(n||0)+stats.mods[attack.ability]));}
+    }
     // Defense follows the owned armor actually worn, independent of the manual feat reminder.
-    const defense=armorEntry&&stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)?1:0;
+    const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
     return {entries,attacks,warnings,attuned,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
   return {weapons,armor,normalize,infer,profile,choices,derive};

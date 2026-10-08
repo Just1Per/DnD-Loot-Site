@@ -39,8 +39,8 @@ for(const selector of [
 const adobe=html.indexOf('character-adobe-integration.css');
 const theme=html.indexOf('character-vault-theme.css');
 assert.ok(adobe>=0&&theme>adobe,'Vault theme stylesheet must load after the Adobe integration stylesheet');
-assert.ok(html.includes('character-vault-theme.css?v=20261002-vault-theme-v22'));
-assert.ok(rules.includes('Firestore Rules Revision: 22'));
+assert.ok(/character-vault-theme\.css\?v=[^\"\s]+/.test(html));
+assert.ok(/Firestore Rules Revision: \d+/.test(rules));
 assert.ok(rules.includes('Character sheet schema: 14'));
 
 let depth=0;

@@ -125,8 +125,9 @@ function renderCards() {
  * Players see only items visible under the active campaign's policy/state.
  */
 function visibleItems() {
-  if (!activeCampaign || canManageCampaign()) return items;
-  return items.filter(item => getItemState(item.id).visible);
+  const catalogue=items.filter(item=>typeof CampaignRules==='undefined'||CampaignRules.allowed(item));
+  if (!activeCampaign || canManageCampaign()) return catalogue;
+  return catalogue.filter(item => getItemState(item.id).visible);
 }
 
 function updateStatsFromFiltered(filtered) {

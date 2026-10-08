@@ -35,12 +35,13 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
 if (!document.querySelector('link[data-character-adobe-integration]')) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = new URL('../css/character-adobe-integration.css?v=20261007-print-surface-v65', import.meta.url).href;
+  link.href = new URL('../css/character-adobe-integration.css?v=20261008-campaign-builder-v66', import.meta.url).href;
   link.dataset.characterAdobeIntegration = 'true';
   document.head.appendChild(link);
 }
 
 const FEATURE_FILES = [
+  "./modules/campaign-rules.js",
   "./modules/character-equipment.js",
   "./modules/character-magic-armor.js",
   "./modules/character-magic-item-data.js",
@@ -104,6 +105,7 @@ const FEATURE_FILES = [
   "./modules/admin.js",
   "./modules/player.js",
   "./modules/dm-tools.js",
+  "./modules/campaign-rules-ui.js",
   "./modules/ui-auth.js"
 ];
 
@@ -111,7 +113,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261007-print-surface-v65");
+    moduleUrl.searchParams.set("v", "20261008-campaign-builder-v66");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;

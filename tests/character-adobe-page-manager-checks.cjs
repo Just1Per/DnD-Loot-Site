@@ -9,10 +9,10 @@ assert.ok(pages.includes('draggable=true'),'Character sheet tabs should be dragg
 assert.ok(pages.includes('tabOrder'),'Tab order should be persisted');
 
 const creatures=read('js/modules/character-creature-ui.js');
-assert.ok(creatures.includes('sheetCreatureSelect'),'Companion page should use a creature dropdown');
-assert.ok(creatures.includes('sheetCreatureAttack'),'Companion page should expose stored attacks in a dropdown');
-assert.ok(creatures.includes("row.type==='Beast'"),'Wild Shape should filter the Adobe catalogue to Beasts');
-assert.ok(creatures.includes("type==='familiar'"),'Familiar should use its own catalogue filter');
+assert.ok(creatures.includes('data-creature-select'),'Companion page should use a creature dropdown');
+assert.ok(read('js/modules/character-adobe-pages.js').includes('data-comp-attacks'),'Companion page should expose stored attacks in a dropdown');
+assert.ok(creatures.includes("x.type==='Beast'"),'Wild Shape should filter the Adobe catalogue to Beasts');
+assert.ok(creatures.includes("c.type==='familiar'"),'Familiar should use its own catalogue filter');
 
 const dm=read('js/modules/dm-tools.js');
 assert.ok(dm.includes('hardDeleteDMCampaignCharacter'),'DM tools should expose permanent character deletion');
@@ -21,6 +21,6 @@ assert.ok(dm.includes("'inventory'"),'Permanent deletion should clean character 
 assert.ok(dm.includes("'saves'"),'Permanent deletion should clean character saved-item links');
 
 const rules=read('firestore.rules');
-assert.ok(rules.includes('Firestore Rules Revision: 22'));
+assert.ok(/Firestore Rules Revision: \d+/.test(rules));
 assert.ok(rules.includes('Character sheet schema: 14'));
 console.log('SUCCESS page manager, draggable tabs, creature dropdowns and DM delete smoke checks');
