@@ -30,7 +30,7 @@ var CharacterBuildValidation=(()=>{
       if(/tool/.test(m))return destination('Proficiency','builder','[name="build.tool"]');
       if(/human.*feat|feat.*human/.test(m))return destination('Feat','builder','[data-build-feat-field="humanOriginFeat"]');
       if(/race.*feat|racial feat/.test(m))return destination('Feat','builder','[data-build-feat-field="raceFeat"]');
-      if(/background feat|origin feat|feat/.test(m))return destination('Feat','feats','[data-build-feat-field="backgroundFeat"]');
+      if(/background feat|origin feat|feat/.test(m))return destination('Feat','builder','[name="build.backgroundFeat"]');
       if(/cantrip/.test(m))return destination('Spell','spells','#sheet-spells');
       if(/background/.test(m))return destination('Builder','builder','[name="build.background"]');
       return destination('Builder','builder','#sheetBuildControls');
