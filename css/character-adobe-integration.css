@@ -803,3 +803,12 @@
     grid-template-columns:1fr;
   }
 }
+
+/* Compact Class Reference actions, aligned with the existing parchment palette. */
+.sheet-feature-overview-controls{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.sheet-class-block .sheet-feature-overview-controls button{min-height:0;padding:4px 8px;font-size:10px;line-height:1.3;border-radius:6px;width:auto;max-width:100%;box-shadow:none}
+.sheet-class-block .sheet-feature-overview-controls button[aria-pressed="true"]{border-color:var(--vault-burgundy,#632d21)}
+/* Inline unresolved-field marker: appears only when a real validation issue matches. */
+#characterSheetDialog .sheet-field-needs-attention{position:relative}
+#characterSheetDialog .sheet-required-marker{display:inline-grid;place-items:center;vertical-align:middle;margin-left:6px;width:15px;height:15px;border-radius:50%;background:#a32d35;color:#fff;font:bold 11px/1 sans-serif;box-shadow:0 0 0 2px #fffaf2;cursor:help}
+#characterSheetDialog .sheet-field-needs-attention select,#characterSheetDialog .sheet-field-needs-attention input{border-color:#bc6466}
