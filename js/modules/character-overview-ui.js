@@ -41,6 +41,25 @@ function toggleClassFeatureOverview(key,part){
   else return;
   s.data.adobe.overviewFeatures[key]=current;s.dirty=true;updateSheetCalculations();sheetStatus('Class feature display updated. Save the sheet to keep it.');
 }
+function markUnfinishedCharacterFields(issues){
+ const root=document.getElementById('characterSheetDialog');if(!root)return;
+ root.querySelectorAll('.sheet-required-marker').forEach(marker=>marker.remove());
+ root.querySelectorAll('.sheet-field-needs-attention').forEach(el=>el.classList.remove('sheet-field-needs-attention'));
+ for(const issue of issues||[]){
+   if(!issue.target||!issue.tab)continue;
+   const page=root.querySelector('#sheet-'+issue.tab);if(!page)continue;
+   let candidates=[];
+   try{candidates=[...page.querySelectorAll(issue.target)];}catch(error){continue;}
+   const field=candidates.find(el=>!el.disabled&&!el.hidden&&'value' in el&&!el.value)||candidates.find(el=>!el.disabled&&!el.hidden);
+   if(!field)continue;
+   const wrapper=field.closest('label')||field.closest('.sheet-field')||field.parentElement;
+   if(!wrapper||wrapper.querySelector('.sheet-required-marker'))continue;
+   wrapper.classList.add('sheet-field-needs-attention');
+   const marker=document.createElement('span');marker.className='sheet-required-marker';marker.textContent='!';
+   marker.title=issue.message;marker.setAttribute('aria-label','Needs attention: '+issue.message);
+   wrapper.appendChild(marker);
+ }
+}
 function renderCharacterOverview(d) {
   const s=sheetSession,host=document.getElementById('sheetOverviewReadout');if(!s||!host)return;
   const M=CharacterSheetModel,b=s.data.build,e=d.effects,esc=sheetEscape,sign=M.signed;
@@ -64,6 +83,7 @@ function renderCharacterOverview(d) {
   const calculatedOpen=host.querySelector('#sheetOverviewCalculated')?.open===true;
   const calculatedMarkup=s.data.adobe?.showCalculatedOnOverview?`<section class="sheet-summary-box sheet-overview-calculated"><div class="sheet-overview-pin-heading"><details id="sheetOverviewCalculated" ${calculatedOpen?'open':''}><summary>Calculated from your choices · ${esc(b.edition)}</summary><div>${document.getElementById('sheetBuildSummaryContent')?.innerHTML||''}</div></details><button type="button" data-overview-calculated aria-pressed="true">Remove from Overview</button></div></section>`:'';
   const validation=globalThis.CharacterBuildValidation?.check?.(s.data,d,s.identity)||{complete:true,count:0,issues:[]};
+  markUnfinishedCharacterFields(validation.issues);
   const warningKey=issue=>JSON.stringify([issue.category,issue.message,issue.tab]);
   const readWarnings=s.data.adobe.readBuildWarnings;
   const unread=validation.issues.filter(issue=>!readWarnings.includes(warningKey(issue))).length;
