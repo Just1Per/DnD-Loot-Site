@@ -23,6 +23,8 @@ function toggleClassFeatureOverview(key,part){
     current.enabled=addBoth;current.showName=addBoth;current.showDescription=addBoth;
   }
   else if(['showName','showDescription'].includes(part)){
+    // Disabled entries may retain legacy default flags; start with neither part visible.
+    if(!current.enabled){current.showName=false;current.showDescription=false;}
     current[part]=!current[part];
     current.enabled=current.showName||current.showDescription;
   }
