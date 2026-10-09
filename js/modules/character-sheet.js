@@ -1008,6 +1008,7 @@ function updateSheetBuildSummary(derived) {
   ].includes(b.race);
   for (const option of extra.querySelectorAll('option'))
     option.disabled = !!option.value && (e.race?.languagePool ? !e.race.languagePool.includes(option.value) : false);
+  const bg = CharacterBackgrounds.get(b.background);
   updateBackgroundControls(derived);
   // Only present proficiencies actually granted by the selected background.
   for(let i=0;i<2;i++){
@@ -1027,7 +1028,7 @@ function updateSheetBuildSummary(derived) {
   show('species', !b.race);
   show('background', !b.background);
   document.getElementById('sheetModernOrigin').hidden = b.edition !== '2024';
-  const bg = CharacterBackgrounds.get(b.background);
+
   for (let i = 0; i < 3; i++) {
     const el = show(`build.backgroundAbilities.${ i }`, b.backgroundPattern === '111' || i < 2);
     el.closest('label').querySelector('span').textContent = `Background ability +${ b.backgroundPattern === '111' || i === 1 ? 1 : 2 }`;
