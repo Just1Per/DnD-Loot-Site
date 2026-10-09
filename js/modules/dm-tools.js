@@ -29,8 +29,8 @@ const DM_PLANNING_TOOLS = Object.freeze([
 ]);
 
 /** Render informational cards; setup guidance does not create or save campaign records. */
-function renderDMPlanningCards() {
-  return DM_PLANNING_TOOLS.map(tool => `
+function renderDMPlanningCards(onlyId=null) {
+  return DM_PLANNING_TOOLS.filter(tool=>!onlyId||tool.id===onlyId).map(tool => `
     <section class="dm-tool-card dm-planning-card" aria-labelledby="dm-planning-${tool.id}">
       <h2 id="dm-planning-${tool.id}">${escapeHtml(tool.title)}</h2>
       <p>${escapeHtml(tool.summary)}</p>
@@ -71,11 +71,33 @@ function ensureDMToolsUI() {
     else main.appendChild(panel);
   }
 
+  // Planning workspaces are separate DM-only top-level tabs, not dashboard cards.
+  const nav=document.querySelector("nav.tabs");
+  const dmButton=document.getElementById("dmTab");
+  const host=document.getElementById("mainApp");
+  for(const tool of DM_PLANNING_TOOLS){
+    const tabId='dm-'+tool.id;
+    if(nav&&!document.querySelector('[data-tab="'+tabId+'"]')){
+      const button=document.createElement('button');
+      button.type='button';button.className='tab';button.dataset.tab=tabId;
+      button.id='dmPlanningTab-'+tool.id;
+      button.textContent=tool.title;button.style.display='none';
+      const preceding=tool.id==='world'?dmButton:document.getElementById('dmPlanningTab-'+(tool.id==='chapters'?'world':'chapters'));
+      preceding?.after(button);
+      button.addEventListener('click',()=>showTab(tabId));
+    }
+    if(host&&!document.getElementById('tab-'+tabId)){
+      const panel=document.createElement('div');panel.id='tab-'+tabId;panel.className='tab-content';panel.style.display='none';
+      panel.innerHTML='<div class="dm-planning-workspace">'+renderDMPlanningCards(tool.id)+'</div>';
+      document.getElementById('tab-dm')?.after(panel);
+    }
+  }
+
   if (!document.getElementById("dmToolsStep3Styles")) {
     const style = document.createElement("style");
     style.id = "dmToolsStep3Styles";
     style.textContent = `
-      .dm-tools-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:20px 0;align-items:stretch}
+      .dm-tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0;align-items:stretch}\n      .dm-planning-workspace{max-width:860px;margin:20px auto}\n      .dm-planning-workspace .dm-planning-card{min-height:0}
       .dm-tool-card{background:#f4efe6;border:3px double #8a7355;border-radius:10px;padding:16px;min-width:0;box-sizing:border-box;display:flex;flex-direction:column}
       .dm-tool-card--wide{grid-column:1/-1}
       .dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide){height:100%;min-height:340px}
@@ -366,7 +388,7 @@ function renderDMTools() {
         </div>
       </section>
 
-      <!-- All five DM cards share one grid row and one consistent width. -->
+      <!-- Planning guides live in their own navigation tabs. -->
       <section class="dm-tool-card">
         <h2>Item Controls</h2>
         <p>Visibility, loot assignment and highlighting are campaign-scoped. Add catalogue copies or create your own campaign items in the Library. Set available quantities and player-looting permissions on each item.</p>
@@ -374,7 +396,6 @@ function renderDMTools() {
           <button id="dmOpenLibrary" class="btn-primary" type="button">Open Library Controls</button>
         </div>
       </section>
-      ${renderDMPlanningCards()}
 
       <section class="dm-tool-card dm-tool-card--wide">
         <h2>Members</h2>
