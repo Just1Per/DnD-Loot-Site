@@ -718,6 +718,10 @@ var CharacterRules = (() => {
     ]
   };
   const languages = [
+    'Common',
+    'Common Sign Language',
+    'Druidic',
+    "Thieves' Cant",
     'Abyssal',
     'Celestial',
     'Deep Speech',
