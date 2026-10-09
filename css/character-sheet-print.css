@@ -4,6 +4,7 @@
  @page { size:A4 portrait; margin:9mm; }
  #characterSheetDialog:has(.sheet-paper-page) .sheet-header,
  #characterSheetDialog [data-sheet-section].sheet-has-paper-view { display:none!important; }
+ body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog:has(.sheet-paper-page) .sheet-body { background:#fff!important; }
  #characterSheetDialog:has(.sheet-paper-page) #sheet-overview { background:#fff!important; }
  #characterSheetDialog .sheet-paper-page {
   display:block!important; break-before:page; break-inside:auto;
