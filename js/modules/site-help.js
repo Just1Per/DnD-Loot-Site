@@ -108,7 +108,7 @@ var SiteHelp=(()=>{
  function closeGuide(){const dialog=document.getElementById('siteGuideDialog');if(!dialog)return;const r=dialog.dataset.guideRole,check=dialog.querySelector('#siteGuideRemember');try{localStorage.setItem(key(r),check?.checked?'hidden':'show');}catch{}if(dialog.open)dialog.close();dialog.remove();returnFocus?.focus?.();}
  function navigate(action){
   if(!currentUser)return;
-  if(action==='player-guide'){openGuide('player');return;}
+  if(action==='player-guide'){closeGuide();openGuide('player');return;}
   closeGuide();
   if(action==='create'){if(isDM())openCampaignModal();else{showCampaignSelector();document.getElementById('dmApplicationPanel')?.scrollIntoView?.({block:'center'});}return;}
   if(action==='admin'){if(isAdmin())openAdminView();return;}
