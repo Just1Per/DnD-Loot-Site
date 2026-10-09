@@ -157,6 +157,14 @@ var CharacterSpellcasting=(()=>{
     const seen=new Set();
     return names.flatMap(name=>{const key=spellKey(name);if(seen.has(key))return[];seen.add(key);const spell=catalogue.find(s=>spellKey(s.name)===key&&s.edition===p.edition)||catalogue.find(s=>spellKey(s.name)===key&&s.edition===tableEdition);return spell?[{...spell,grantSource:p.classId+' / '+(p.subclassId||'class')}]:[];});
   }
+  function castingStats(p,derived,adjustments={}){
+    const modifier=Number(derived?.mods?.[p?.ability]||0),pb=Number(derived?.pb||0);
+    return {ability:p?.ability||'',modifier,attack:pb+modifier+(Number(adjustments.spellAttackBonus)||0),dc:8+pb+modifier+(Number(adjustments.spellDCBonus)||0)};
+  }
+  function selectionCounts(p,rows,catalogue=[]){
+    const ordinary=countedSelections(p,rows,catalogue);
+    return {cantrips:ordinary.filter(s=>s.level===0).length,leveled:ordinary.filter(s=>s.level>0).length,prepared:ordinary.filter(s=>s.level>0&&s.prepared).length,automatic:rows.filter(s=>s.level>0&&!ordinary.includes(s)).length};
+  }
   function countedSelections(p,rows,catalogue=[]){const ids=new Set(automaticGrants(p,catalogue).map(s=>s.id));return rows.filter(s=>!ids.has(s.catalogId));}
 
   function isPreparedToggleUseful(p){
@@ -171,6 +179,6 @@ var CharacterSpellcasting=(()=>{
     return'Spells';
   }
 
-  return {automaticGrants,countedSelections,grantTables,profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
+  return {castingStats,selectionCounts,automaticGrants,countedSelections,grantTables,profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterSpellcasting;

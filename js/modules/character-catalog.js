@@ -117,6 +117,7 @@ var CharacterCatalog = (() => {
   function longRest(data) {
     for(const [key,g] of Object.entries(data.rulesChoices.grants))if(!key.startsWith('__'))g.used=0;
     for(const slot of data.slots) slot.used=0;
+    if(data.adobe)data.adobe.pactSlotsUsed=0;
     Feats.reset(data,'long');
   }
   return {normalize,set,load,find,spells,schools,grants,validateGrant,spellRow,longRest,get rawData(){return catalogue;},get data(){return !catalogue||typeof CampaignRules==='undefined'?catalogue:{...catalogue,feats:CampaignRules.feats(catalogue.feats),spells:catalogue.spells.filter(s=>CampaignRules.allowed(s))};}};
