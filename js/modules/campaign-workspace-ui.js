@@ -6,8 +6,8 @@ var CampaignWorkspace = (() => {
   };
   let session = null, generation = 0, imageURL = null;
   const id = () => crypto.randomUUID().replaceAll('-','');
-  const permitted = () => !!activeCampaign && canManageCampaign();
-  const current = s => !!s && session === s && s.campaignId === activeCampaign?.id && s.uid === auth.currentUser?.uid && permitted();
+  const permitted = kind => !!activeCampaign && (configs[kind]?.canUse ? configs[kind].canUse() : canManageCampaign());
+  const current = s => !!s && session === s && s.campaignId === activeCampaign?.id && s.uid === auth.currentUser?.uid && permitted(s.kind);
   const escape = value => escapeHtml(String(value ?? ''));
   function status(message, error=false) {
     const host = session?.host.querySelector('[data-workspace-status]');
@@ -45,13 +45,13 @@ var CampaignWorkspace = (() => {
     const s=session;if(!current(s)||s.busy)return;
     if(s.dirty&&!confirm('Discard unsaved changes before opening another entry?'))return;
     const token=++generation;status('Loading…');
-    try{const record=await store.load(s.campaignId,s.kind,recordId);if(!current(s)||token!==generation)return;s.record=record;s.dirty=false;renderEditor();}
+    try{const record=await (configs[s.kind].loadRecord?configs[s.kind].loadRecord(s.campaignId,recordId):store.load(s.campaignId,s.kind,recordId));if(!current(s)||token!==generation)return;s.record=record;s.dirty=false;renderEditor();}
     catch(error){if(current(s)&&token===generation)status(error.message,true);}
   }
   function newRecord() {
     const s=session;if(!current(s)||s.busy)return;
     if(s.dirty&&!confirm('Discard unsaved changes before creating another entry?'))return;
-    ++generation;s.record={id:id(),revision:0,title:'',summary:'',content:'',privateNotes:'',data:configs[s.kind].normalize?configs[s.kind].normalize({}):{},archived:false};s.dirty=false;renderEditor();
+    ++generation;s.record={id:id(),revision:0,createdBy:s.uid,title:'',summary:'',content:'',privateNotes:'',data:configs[s.kind].normalize?configs[s.kind].normalize({}):{},archived:false};s.dirty=false;renderEditor();
   }
   async function save() {
     const s=session;if(!current(s)||s.busy)return;
@@ -101,7 +101,7 @@ var CampaignWorkspace = (() => {
   function renderEditor() {
     const s=session;if(!current(s))return;const config=configs[s.kind],r=s.record,page=s.host.querySelector('[data-workspace-page]');
     page.innerHTML=`<form data-workspace-form><div class="workspace-actions"><button type="submit" data-save-record>Save ${escape(config.noun)}</button><button type="button" data-archive-record>${r.archived?'Restore':'Archive'}</button><button type="button" data-preview-record>Player description</button><button type="button" data-print-record>Print</button></div><p data-workspace-status class="workspace-status" role="status"></p><div class="workspace-fields"><label class="workspace-field workspace-full">Title<input name="title" required maxlength="160" value="${escape(r.title)}"></label><label class="workspace-field workspace-full">Short summary<textarea name="summary" maxlength="1000">${escape(r.summary)}</textarea></label>${fieldsHTML(config,r.data)}<label class="workspace-field workspace-full">${escape(config.content)}<textarea name="content" maxlength="20000">${escape(r.content)}</textarea></label><label class="workspace-field workspace-full">${escape(config.secret)}<textarea name="privateNotes" maxlength="20000">${escape(r.privateNotes)}</textarea></label></div>${s.kind==='world'?'<label class="workspace-field">Image or map (PNG, JPEG, WebP · max 5 MB)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><p>Click the map to add a named location marker. Use the marker list to remove a marker.</p><div data-map class="workspace-map"></div><div data-marker-list></div>':''}<section data-workspace-links></section><div data-extra-editor></div></form><section class="workspace-preview" hidden data-player-preview><h3>Player description preview</h3><div class="workspace-prose"></div></section>`;
-    const form=page.querySelector('form');form.onsubmit=event=>{event.preventDefault();save();};form.oninput=()=>{s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};form.onchange=()=>{s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};
+    const form=page.querySelector('form');form.onsubmit=event=>{event.preventDefault();save();};form.oninput=event=>{if(!event.target.matches('[name],[data-record-field]'))return;s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};form.onchange=event=>{if(!event.target.matches('[name],[data-record-field]'))return;s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};
     page.querySelector('[data-archive-record]').onclick=archive;
     page.querySelector('[data-preview-record]').onclick=()=>{const preview=page.querySelector('[data-player-preview]');preview.hidden=!preview.hidden;preview.querySelector('div').textContent=draft().content;};
     page.querySelector('[data-print-record]').onclick=()=>printRecord();
@@ -113,7 +113,11 @@ var CampaignWorkspace = (() => {
       if(s.record.data.markers.length>=50){status('A map can have up to 50 markers.',true);return;}
       s.record.data.markers.push({x:Math.max(0,Math.min(1,(event.clientX-box.left)/box.width)),y:Math.max(0,Math.min(1,(event.clientY-box.top)/box.height)),label:label.trim().slice(0,160)});s.dirty=true;mapImage();renderMarkers();
     });
+    if(!canManageCampaign()){page.querySelector('[data-workspace-links]').remove();s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>button.hidden=true);}
     renderLinks();renderMarkers();mapImage();configs[s.kind].extra?.(page.querySelector('[data-extra-editor]'),s);
+    const editable=config.canEdit?config.canEdit(r):true;
+    if(!editable){form.querySelectorAll('[name],[data-record-field],[data-save-record],[data-archive-record]').forEach(control=>control.disabled=true);}
+    if(config.showPrivate&&!config.showPrivate(r))form.querySelector('[name=privateNotes]').closest('label').hidden=true;
     if(typeof SiteHelp!=='undefined')SiteHelp.refresh();
   }
   async function renderLinks() {
@@ -136,18 +140,23 @@ var CampaignWorkspace = (() => {
     document.body.classList.add('printing-workspace');window.print();
   }
   async function render(kind) {
-    if(!configs[kind]||!permitted())return;
+    if(!configs[kind]||!permitted(kind))return;
     if(current(session)&&session.kind===kind)return;
     clear(true);const config=configs[kind],panel=document.getElementById('tab-'+config.tab);if(!panel)return;
     panel.innerHTML=`<section class="campaign-workspace"><header class="workspace-heading"><h2>${escape(config.title)}</h2><button type="button" data-new-record>+ New ${escape(config.noun)}</button></header><p>${escape(config.help)}</p><div class="workspace-actions"><button type="button" data-workspace-kind="world">World entries</button><button type="button" data-workspace-kind="creature">Creatures &amp; NPCs</button></div><div class="workspace-layout"><aside class="workspace-sidebar"><label>Search<input type="search" data-workspace-search></label><label>Category<select data-workspace-category><option value="">All categories</option>${(config.categories||[]).map(value=>`<option>${escape(value)}</option>`).join('')}</select></label><label><input type="checkbox" data-workspace-archived> Show archived</label><div class="workspace-list" data-workspace-list></div></aside><article class="workspace-page" data-workspace-page><p data-workspace-status role="status">Loading campaign entries…</p></article></div></section>`;
     const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,kind,host:panel.firstElementChild,rows:[],record:null,dirty:false,busy:false};session=s;const token=++generation;
     s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>button.onclick=()=>switchKind(button.dataset.workspaceKind));
     s.host.querySelector('[data-new-record]').onclick=newRecord;s.host.querySelector('[data-workspace-search]').oninput=renderList;s.host.querySelector('[data-workspace-archived]').onchange=renderList;s.host.querySelector('[data-workspace-category]').onchange=renderList;
-    try{s.rows=await store.list(s.campaignId,kind);if(!current(s)||token!==generation)return;renderList();s.host.querySelector('[data-workspace-page]').innerHTML='<p>Select an entry, or create a new one.</p>';}
+    try{s.rows=await (config.list?config.list(s.campaignId):store.list(s.campaignId,kind));if(!current(s)||token!==generation)return;renderList();s.host.querySelector('[data-workspace-page]').innerHTML='<p>Select an entry, or create a new one.</p>';}
     catch(error){if(current(s))status(`Could not load: ${error.message}. Publish the updated Firestore rules if permission is denied.`,true);}
   }
-  function switchKind(kind){if(session?.busy)return;if(!clear())return;render(kind);}
+  function importCreature(record){
+    if(session?.kind!=='creature'||!current(session)||session.busy)return false;
+    if(session.dirty&&!confirm('Discard unsaved changes before importing this creature?'))return false;
+    session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize(record.data),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
+  }
+  function switchKind(kind){if(session?.busy)return;if(!clear())return;showTab(configs[kind].tab,false);render(kind);}
   window.addEventListener('beforeunload',event=>{if(session?.dirty){event.preventDefault();event.returnValue='';}});
   window.addEventListener('afterprint',()=>{document.body.classList.remove('printing-workspace');document.getElementById('workspacePrintSurface')?.replaceChildren();});
-  return {render,switchKind,clear,beforeNavigate,configs,store,get session(){return session;},draft,save,newRecord,openRecord,renderEditor,renderList,status,id};
+  return {render,importCreature,switchKind,clear,beforeNavigate,configs,store,get session(){return session;},draft,save,newRecord,openRecord,renderEditor,renderList,status,id};
 })();

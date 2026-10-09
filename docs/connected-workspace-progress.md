@@ -36,3 +36,9 @@ Validation: creature normalization/defaults, statistic bounds and independent sn
 Chapter Tracker saves ordered chapters, planned/current/completed status, introductions, objectives, scenes, rewards, session notes and starting/target levels. Shared link pickers connect world entries, creatures and chapters by ID; saves resolve links inside the current campaign and reject missing/cross-campaign references. Archive preserves linked masters.
 
 Milestone approvals record eligible characters and the target level, approver and timestamp. Approval is idempotent per character and does not choose class levels, HP or feats. Open sheet uses the existing builder. Browser checks confirm completing/approving a chapter leaves the character’s existing level unchanged.
+
+## Stage 4 — Licensed SRD catalogue
+
+The local catalogue contains 334 2014 and 341 2024 API records (675 total), each with source ID, edition, SRD version, Creative Commons licence, attribution and normalization notes. The importer uses only the two approved SRD endpoints, resumes through a local cache and atomically writes the completed JSON. API artwork is not downloaded or included. The bundled catalogue works without live API calls and is fetched only when opened.
+
+The creature editor searches by name/type/CR, filters allowed editions and creates an editable campaign copy with retained attribution. Global records are not mutated. All 675 entries pass normalization/statistic/source/unique-ID checks; browser coverage verifies a 7-HP Goblin import, source attribution and edition selection.
