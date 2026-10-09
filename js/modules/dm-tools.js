@@ -42,6 +42,16 @@ function renderDMPlanningCards(onlyId=null) {
     </section>`).join('');
 }
 
+/** Compact dashboard shortcuts; complete guides stay on the dedicated tabs. */
+function renderDMPlanningShortcuts(){
+  return DM_PLANNING_TOOLS.map(tool=>`
+    <section class="dm-tool-card dm-planning-shortcut">
+      <h2>${escapeHtml(tool.title)}</h2>
+      <p>${escapeHtml(tool.summary)}</p>
+      <div class="dm-tool-actions"><button class="btn-primary" type="button" data-open-dm-planning="${escapeHtml(tool.id)}">Open ${escapeHtml(tool.title)}</button></div>
+    </section>`).join('');
+}
+
 function ensureDMToolsUI() {
   // Safe to call repeatedly: tabs, panels and styles are created only once.
 
@@ -104,6 +114,8 @@ function ensureDMToolsUI() {
       .dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide){height:100%;min-height:340px}
       .dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide) .dm-tool-actions{margin-top:auto;padding-top:12px}
       .dm-planning-card{min-width:0}
+      .dm-planning-shortcut p{flex:1}
+      .dm-planning-shortcut .dm-tool-actions{margin-top:auto}
       @media(max-width:1250px){.dm-tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
       @media(max-width:850px){.dm-tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
       @media(max-width:560px){.dm-tools-grid{grid-template-columns:minmax(0,1fr)}.dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide){min-height:0}}
@@ -402,6 +414,8 @@ function renderDMTools() {
         </div>
       </section>
 
+      ${renderDMPlanningShortcuts()}
+
       <section class="dm-tool-card dm-tool-card--wide">
         <h2>Members</h2>
         <p>Change a member between Player and DM, invite another person, or remove campaign access without deleting their character data.</p>
@@ -503,6 +517,7 @@ function renderDMTools() {
   renderDMInvites();
   renderDMCharacters();
 
+  panel.querySelectorAll('[data-open-dm-planning]').forEach(button=>button.addEventListener('click',()=>showTab('dm-'+button.dataset.openDmPlanning)));
   document.getElementById("dmSaveCampaignSettings")?.addEventListener("click", saveDMCampaignSettings);
   document.getElementById("dmInviteMember")?.addEventListener("click", () => openUserModal());
   document.getElementById("dmOpenLibrary")?.addEventListener("click", () => showTab("library"));
