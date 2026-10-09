@@ -233,6 +233,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 
       ensureDMApprovalStyles();
       showCampaignSelector();
+      SiteHelp.onLogin();
 
       // Do not block the campaign selector on catalogue painting.
       itemsLoadPromise.catch(() => {});
@@ -247,6 +248,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     closeWishModal();
     closeEditCharacterModal();
     closeUserModal();
+    SiteHelp.onLogout();
     currentUser = null;
     activeCampaign = null;
     activeMembershipRole = null;
@@ -289,3 +291,5 @@ ensureDashboardShell();
 initTabs();
 initFilterListeners();
 initModalListeners();
+
+SiteHelp.init();

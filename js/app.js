@@ -1,4 +1,4 @@
-// D&D Item Vault — Step 8 modular bootstrap
+// CampaignAtlas — Step 8 modular bootstrap
 // This file stays as the single <script type="module"> entry point.
 // Feature code is loaded in a fixed order from ./modules/ so existing
 // cross-feature behavior remains unchanged while the codebase is split up.
@@ -35,7 +35,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
 if (!document.querySelector('link[data-character-adobe-integration]')) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = new URL('../css/character-adobe-integration.css?v=20261009-all-pages-print-v71', import.meta.url).href;
+  link.href = new URL('../css/character-adobe-integration.css?v=20261009-site-help-v72', import.meta.url).href;
   link.dataset.characterAdobeIntegration = 'true';
   document.head.appendChild(link);
 }
@@ -107,6 +107,8 @@ const FEATURE_FILES = [
   "./modules/player.js",
   "./modules/dm-tools.js",
   "./modules/campaign-rules-ui.js",
+  "./modules/site-help-data.js",
+  "./modules/site-help.js",
   "./modules/ui-auth.js"
 ];
 
@@ -114,7 +116,7 @@ function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261009-all-pages-print-v71");
+    moduleUrl.searchParams.set("v", "20261009-site-help-v72");
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;
@@ -129,9 +131,9 @@ try {
     await loadFeatureScript(file);
   }
   delete window.__DND_VAULT_DEPS__;
-  console.info(`[D&D Vault] Step 8 modules loaded (${FEATURE_FILES.length} files).`);
+  console.info(`[CampaignAtlas] Step 8 modules loaded (${FEATURE_FILES.length} files).`);
 } catch (error) {
-  console.error("[D&D Vault] Modular bootstrap failed:", error);
+  console.error("[CampaignAtlas] Modular bootstrap failed:", error);
   const display = document.getElementById("userDisplay");
   if (display) display.textContent = "App failed to load";
 }

@@ -95,11 +95,13 @@ function ensureDashboardShell() {
   box.classList.add("dashboard-shell");
   box.dataset.step6Ready = "true";
   box.innerHTML = `
-    <section id="publicLanding" class="vault-landing" aria-label="D&D Item Vault introduction">
+    <section id="publicLanding" class="vault-landing" aria-label="CampaignAtlas introduction">
       <div class="vault-landing-hero">
-        <span class="vault-kicker">Campaign-ready magic item library</span>
-        <h1 class="vault-landing-title">Your campaign's item vault.</h1>
-        <p class="vault-landing-copy">Keep magic items, character wishlists, loot ownership and DM visibility in one campaign-aware library. Players see what they should see; Dungeon Masters keep control of the rest.</p>
+        <span class="vault-kicker">CampaignAtlas · Your table. Your story.</span>
+        <h1 class="vault-landing-title">Everything your campaign needs in one place.</h1>
+        <p class="vault-landing-copy">Character building, character sheet creation, magical item library, inventory and campaign tools for fifth-edition tabletop roleplaying.</p>
+        <p class="site-planned-tools">Coming in Phase 3: one-shot ideas, world building and chapter trackers for game masters.</p>
+        <p class="site-legal-link"><a href="rules-attribution.html">Unofficial fan project · Rules Sources &amp; Legal Information</a></p>
         <div class="vault-landing-actions">
           <button type="button" class="btn-primary" data-landing-google>Continue with Google</button>
           <button type="button" class="vault-secondary-btn" data-landing-email>Use email login</button>
@@ -107,7 +109,7 @@ function ensureDashboardShell() {
       </div>
       <div class="vault-feature-grid">
         <article class="vault-feature-card"><strong>One vault, many campaigns</strong><p>Characters, saved items, visibility and loot stay separated by campaign.</p></article>
-        <article class="vault-feature-card"><strong>Built for players</strong><p>Create characters, save interesting items and keep a focused wishlist for each adventure.</p></article>
+        <article class="vault-feature-card"><strong>Built for players</strong><p>Build characters, print readable character and spell sheets, manage inventory and keep adventure notes.</p></article>
         <article class="vault-feature-card"><strong>Built for DMs</strong><p>Invite your group, manage members, reveal items and assign loot without changing the master catalogue.</p></article>
       </div>
     </section>
