@@ -2295,7 +2295,7 @@
 #characterSheetPage #characterSheetDialog :is(.sheet-catalog-result,.sheet-feat-result,.sheet-spell-generator-row,.sheet-progression-feature){
   padding:7px 8px;border-radius:3px;background:transparent;box-shadow:none;
 }
-#characterSheetPage #characterSheetDialog .sheet-panel button:not(.btn-primary):not(.sheet-slot-orb):not(.sheet-skill-orb):not(.sheet-info-button):not(.sheet-story-toggle):not([role=option]):not([data-move-inventory]):not([data-edit-personal]):not([data-remove-personal]):not(.sheet-summary-toggle){
+#characterSheetPage #characterSheetDialog .sheet-panel button:not(.btn-primary):not(.sheet-slot-orb):not(.sheet-skill-orb):not(.sheet-info-button):not(.vault-help-badge):not(.sheet-story-toggle):not([role=option]):not([data-move-inventory]):not([data-edit-personal]):not([data-remove-personal]):not(.sheet-summary-toggle){
   min-height:28px;padding:4px 8px;border-radius:4px;box-shadow:none;line-height:1.3;
 }
 #characterSheetPage #characterSheetDialog :is(.sheet-spell-table,.sheet-gear-table,.sheet-rules-table) th{padding:5px 6px!important}

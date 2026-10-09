@@ -1,0 +1,25 @@
+/* CampaignAtlas public identity; character-sheet layouts keep their own theme. */
+.site-brand{display:flex;flex-direction:column;gap:4px;min-width:0}
+.site-brand-subtitle{font:11px/1.4 Georgia,serif;color:#e0c688;letter-spacing:.4px}
+.site-planned-tools{font:14px/1.6 Georgia,serif;color:#765d40;margin:16px 0}.site-legal-link{font:13px/1.5 Georgia,serif;margin:16px 0}
+.site-eyebrow{font:700 11px/1.5 Georgia,serif;letter-spacing:2px;color:#8e6a2d}
+.site-legal-link a,.site-footer a{color:#752424;text-decoration:underline;text-underline-offset:3px}
+.site-footer{font:12px/1.6 Georgia,serif;letter-spacing:0;color:#6b5842}
+.site-footer>p{margin:8px auto;max-width:920px}
+.site-footer-identity{font-weight:700}
+.site-footer-notices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;max-width:920px;margin:18px auto;text-align:left}
+.site-footer-notices h2{font:700 13px/1.5 Georgia,serif;color:#732424;margin:0 0 5px}
+.legal-page{margin:0;background:linear-gradient(#f3e8d2,#e7d8bd);color:#3d3026;font:16px/1.75 Georgia,serif}
+.legal-header{padding:20px 24px;background:#3c2020;border-bottom:3px solid #b38b37;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;color:#e2cb98}
+.legal-page .legal-header>a{display:flex;align-items:center;gap:12px;font:700 24px/1.3 Georgia,serif;color:#dec075;text-decoration:none}
+.legal-header img{width:48px;height:48px;object-fit:contain}
+.legal-page main{max-width:860px;margin:44px auto;padding:0 24px 40px;overflow-wrap:anywhere}
+.legal-page h1{font:700 clamp(26px,4vw,36px)/1.3 Georgia,serif;color:#732424}
+.legal-page h2{font:700 23px/1.4 Georgia,serif;color:#732424;margin-top:30px}
+.legal-page p{margin:14px 0}
+.legal-page nav{margin:22px 0;padding:14px 0;border-block:1px solid #c9b48a}
+.legal-page a{color:#752424;text-underline-offset:3px}
+.legal-page section{scroll-margin-top:20px}
+.legal-page #fan-content,.legal-page #website-rights{padding-bottom:18px;border-bottom:1px solid #c9b48a}
+@media(max-width:600px){.site-header-left{min-width:0}.site-title{font-size:1.15rem;letter-spacing:1px}.site-brand-subtitle{font-size:10px}.site-footer-notices{grid-template-columns:minmax(0,1fr);gap:16px}}
+@media print{.legal-page{background:white;color:black}.legal-header{background:white;color:black;box-shadow:none}.legal-page main{margin:0;max-width:none}.legal-page a{color:inherit}}
