@@ -543,6 +543,7 @@ window.addEventListener('beforeunload', event => {
   }
 });
 function clearSheetPrintSelection() {
+  if(typeof CharacterSheetPrint!=='undefined')CharacterSheetPrint.clear();
   document.querySelectorAll('#characterSheetDialog [data-sheet-section].sheet-print-excluded').forEach(panel=>panel.classList.remove('sheet-print-excluded'));
 }
 window.addEventListener('afterprint', () => {
@@ -553,6 +554,7 @@ window.addEventListener('afterprint', () => {
 function prepareSheetPrint(selectedSections = null) {
   if (!sheetSession || document.getElementById('tab-character-sheet').style.display === 'none')
     return;
+  readSheetForm();updateSheetCalculations();
   const dialog = document.getElementById('characterSheetDialog');
   clearSheetPrintSelection();
   if (selectedSections instanceof Set) {
@@ -567,6 +569,7 @@ function prepareSheetPrint(selectedSections = null) {
     mirror.textContent = input.value;
     input.after(mirror);
   });
+  if(typeof CharacterSheetPrint!=='undefined')CharacterSheetPrint.prepare(selectedSections);
   document.body.classList.add('printing-character-sheet');
   document.body.classList.toggle('printing-overview-only',selectedSections instanceof Set&&selectedSections.size===1&&selectedSections.has('overview'));
 }
@@ -595,9 +598,9 @@ function openSheetPrintDialog() {
   printDialog.className='vault-dialog sheet-print-dialog';
   printDialog.setAttribute('aria-labelledby','sheetPrintDialogTitle');
   printDialog.innerHTML=`<form method="dialog" class="sheet-print-dialog-card">
-    <header><div><span class="sheet-eyebrow">PRINT CHARACTER SHEET</span><h2 id="sheetPrintDialogTitle">Choose pages to print</h2><p>Select the character-sheet sections you want included.</p></div><button type="button" data-print-close aria-label="Close">×</button></header>
+    <header><div><span class="sheet-eyebrow">PRINT CHARACTER SHEET</span><h2 id="sheetPrintDialogTitle">Choose pages to print</h2><p>Select the sections you want included. Each starts on a new page; long sections continue naturally.</p></div><button type="button" data-print-close aria-label="Close">×</button></header>
     <div class="sheet-print-dialog-tools"><button type="button" data-print-overview>One-page Overview</button><button type="button" data-print-all>Select all</button><button type="button" data-print-none>Clear all</button><span data-print-count></span></div>
-    <div class="sheet-print-page-grid">${pages.map((page,i)=>`<label class="sheet-print-page-option"><input type="checkbox" value="${sheetEscape(page.key)}" ${page.key==='overview'?'checked':''}><span><strong>${sheetEscape(page.label)}</strong><small>Page ${i+1}</small></span></label>`).join('')}</div>
+    <div class="sheet-print-page-grid">${pages.map((page,i)=>`<label class="sheet-print-page-option"><input type="checkbox" value="${sheetEscape(page.key)}" ${page.key==='overview'?'checked':''}><span><strong>${sheetEscape(page.label)}</strong><small>Section ${i+1}</small></span></label>`).join('')}</div>
     <p class="sheet-print-dialog-note">Your browser print window will open after this. You can still choose printer, copies, orientation and paper size there.</p>
     <footer><button type="button" data-print-cancel>Cancel</button><button type="button" class="btn-primary" data-print-confirm>Print selected pages</button></footer>
   </form>`;
