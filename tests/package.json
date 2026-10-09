@@ -15,6 +15,7 @@
     "test:story": "DND_STORY_REGRESSION_ONLY=1 node dom.cjs",
     "test:journal-rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node character-journal-permissions.cjs\"",
     "test:policy": "node --test campaign-builder-policy.cjs && DND_POLICY_REGRESSION_ONLY=1 node dom.cjs",
-    "test:policy-rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node campaign-builder-policy-rules.cjs\""
+    "test:policy-rules": "firebase emulators:exec --only firestore --project demo-vault-test --config ../firebase.test.json \"node campaign-builder-policy-rules.cjs\"",
+    "test:spellcasting": "node --test character-spellcasting.cjs && DND_SPELLCASTING_ONLY=1 node dom.cjs"
   }
 }

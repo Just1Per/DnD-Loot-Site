@@ -2538,3 +2538,22 @@
   outline: 2px solid var(--vault-burgundy);
   outline-offset: 3px;
 }
+
+#characterSheetDialog .sheet-class-spell-sheet { margin: 18px 0 24px; }
+#characterSheetDialog .sheet-class-spell-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--vault-gold);
+}
+#characterSheetDialog .sheet-class-spell-header h4 { margin: 3px 0; }
+#characterSheetDialog .sheet-class-spell-header p { margin: 3px 0; font-size: 12px; }
+#characterSheetDialog .sheet-class-spell-header button { flex-shrink: 0; }
+#characterSheetDialog .sheet-class-spell-metrics {
+  display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 10px 0;
+}
+#characterSheetDialog .sheet-class-spell-metrics div { display: grid; gap: 3px; }
+#characterSheetDialog .sheet-class-spell-metrics dt { font-size: 11px; color: var(--vault-muted); }
+#characterSheetDialog .sheet-class-spell-metrics dd { margin: 0; color: var(--vault-burgundy); font-weight: 700; }
+@media(max-width:600px) {
+  #characterSheetDialog .sheet-class-spell-header { align-items: flex-start; flex-direction: column; }
+}
+#characterSheetDialog .sheet-class-spell-name { min-width: 130px; }
