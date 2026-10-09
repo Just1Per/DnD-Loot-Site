@@ -1,4 +1,4 @@
-// CampaignAtlas — Step 8 modular bootstrap
+// CampaignAtlas — ordered runtime bootstrap
 // This file stays as the single <script type="module"> entry point.
 // Feature code is loaded in a fixed order from ./modules/ so existing
 // cross-feature behavior remains unchanged while the codebase is split up.
@@ -31,15 +31,18 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   ref, getDownloadURL, uploadBytes,
 });
 
+const ASSET_VERSION = "20261009-code-cleanup-v73";
+
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = new URL('../css/character-adobe-integration.css?v=20261009-site-help-v72', import.meta.url).href;
+  link.href = new URL(`../css/character-adobe-integration.css?v=${ASSET_VERSION}`, import.meta.url).href;
   link.dataset.characterAdobeIntegration = 'true';
   document.head.appendChild(link);
 }
 
+// Order matters: rules and stores precede their UI adapters; authentication starts last.
 const FEATURE_FILES = [
   "./modules/campaign-rules.js",
   "./modules/character-equipment.js",
@@ -112,11 +115,12 @@ const FEATURE_FILES = [
   "./modules/ui-auth.js"
 ];
 
+/** Load one shared-scope feature script and fail startup if it cannot be fetched. */
 function loadFeatureScript(relativePath) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     const moduleUrl = new URL(relativePath, import.meta.url);
-    moduleUrl.searchParams.set("v", "20261009-site-help-v72");
+    moduleUrl.searchParams.set("v", ASSET_VERSION);
     script.src = moduleUrl.href;
     script.async = false;
     script.dataset.dndVaultModule = relativePath;
@@ -131,7 +135,6 @@ try {
     await loadFeatureScript(file);
   }
   delete window.__DND_VAULT_DEPS__;
-  console.info(`[CampaignAtlas] Step 8 modules loaded (${FEATURE_FILES.length} files).`);
 } catch (error) {
   console.error("[CampaignAtlas] Modular bootstrap failed:", error);
   const display = document.getElementById("userDisplay");

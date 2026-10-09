@@ -1,10 +1,10 @@
 "use strict";
 
-// TABS / LISTENERS / AUTH / BOOT
-// Extracted from the working Step 7 app with behavior preserved.
+// Connects existing UI actions to the shared session and Firebase authentication.
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 
+/** Select a permitted app tab; sheet rendering can be deferred by its caller. */
 function showTab(tabId, render = true) {
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
   if (tabId === "admin") { openAdminView(); return; }
@@ -15,7 +15,6 @@ function showTab(tabId, render = true) {
   if (btn) btn.classList.add("active");
   const panel = document.getElementById(`tab-${tabId}`);
   if (panel) panel.style.display="block";
-  if (tabId==="admin")   { renderUserTable(); renderAdminStats(); }
   if (tabId==="dm")      { renderDMTools(); }
   if (tabId==="character-sheet" && render) { renderCharacterSheetTab(); }
   if (tabId==="player")  { renderPlayerTab(); }
@@ -32,6 +31,7 @@ function initTabs() {
 
 // ─── FILTER LISTENERS ────────────────────────────────────────────────────────
 
+/** Debounce free-text search; discrete filters update the existing card list immediately. */
 function initFilterListeners() {
   let searchTimer = null;
 
@@ -55,38 +55,31 @@ function initFilterListeners() {
 
 // ─── MODAL LISTENERS ─────────────────────────────────────────────────────────
 
+/** Bind modal actions once, including character creation and backdrop dismissal. */
 function initModalListeners() {
-  document.getElementById("openRootCatalogue")?.addEventListener("click", openRootCatalogue);
-  document.getElementById("addItemBtn")?.addEventListener("click",      ()=>openItemModal());
-  document.getElementById("closeItemModal")?.addEventListener("click",  closeItemModal);
-  document.getElementById("cancelItemModal")?.addEventListener("click", closeItemModal);
-  document.getElementById("saveItemModal")?.addEventListener("click",   saveItemModal);
+  // Each entry binds an existing action; optional controls may be absent.
+  const actions = {
+    openRootCatalogue,
+    addItemBtn: () => openItemModal(),
+    closeItemModal, cancelItemModal: closeItemModal, saveItemModal,
+    openAddUserBtn: () => openUserModal(),
+    closeUserModal, cancelUserModal: closeUserModal, saveUserModal,
+    closeEditCharModal: closeEditCharacterModal,
+    cancelEditCharModal: closeEditCharacterModal, saveEditCharModal: saveEditCharacter,
+    closeWishModal, closeWishModalBtn: closeWishModal,
+    openCreateCampaignBtn: () => openCampaignModal(),
+    closeCampaignModal, cancelCampaignModal: closeCampaignModal, saveCampaignModal,
+    leaveCampaignBtn: leaveCampaign
+  };
+  for (const [id, handler] of Object.entries(actions)) {
+    document.getElementById(id)?.addEventListener("click", handler);
+  }
 
   // Property editor — add new row
   document.getElementById("addPropertyBtn")?.addEventListener("click", ()=>{
     const list = document.getElementById("modal-properties-list");
     if (list) list.appendChild(createPropertyRow());
   });
-
-  document.getElementById("openAddUserBtn")?.addEventListener("click",  ()=>openUserModal());
-  document.getElementById("closeUserModal")?.addEventListener("click",  closeUserModal);
-  document.getElementById("cancelUserModal")?.addEventListener("click", closeUserModal);
-  document.getElementById("saveUserModal")?.addEventListener("click",   saveUserModal);
-
-  document.getElementById("closeEditCharModal")?.addEventListener("click",  closeEditCharacterModal);
-  document.getElementById("cancelEditCharModal")?.addEventListener("click", closeEditCharacterModal);
-  document.getElementById("saveEditCharModal")?.addEventListener("click",   saveEditCharacter);
-
-  document.getElementById("closeWishModal")?.addEventListener("click",    closeWishModal);
-  document.getElementById("closeWishModalBtn")?.addEventListener("click", closeWishModal);
-
-  document.getElementById("openCreateCampaignBtn")?.addEventListener("click", ()=>openCampaignModal());
-  document.getElementById("closeCampaignModal")?.addEventListener("click",    closeCampaignModal);
-  document.getElementById("cancelCampaignModal")?.addEventListener("click",   closeCampaignModal);
-  document.getElementById("saveCampaignModal")?.addEventListener("click",     saveCampaignModal);
-
-  // Leave campaign button
-  document.getElementById("leaveCampaignBtn")?.addEventListener("click", leaveCampaign);
 
   // Create character
   document.getElementById("playerCreateCharBtn")?.addEventListener("click", async () => {
@@ -181,6 +174,8 @@ document.getElementById("registerButton")?.addEventListener("click", async ()=>{
   } catch(e) { alert(e.message); }
 });
 
+// Clear selected campaign data immediately; the auth callback closes editors
+// and finishes clearing all loaded state after Firebase confirms sign-out.
 document.getElementById("logoutButton")?.addEventListener("click", async () => {
   activeCampaign = null;
   activeMembershipRole = null;
@@ -197,6 +192,7 @@ document.getElementById("logoutButton")?.addEventListener("click", async () => {
 });
 
 // ─── AUTH STATE ───────────────────────────────────────────────────────────────
+// Google, email login and restored sessions all finish through this callback.
 
 onAuthStateChanged(auth, async (firebaseUser) => {
   const loginControls = document.getElementById("loginControls");
@@ -234,6 +230,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       ensureDMApprovalStyles();
       showCampaignSelector();
       SiteHelp.onLogin();
+      console.info(`Successfully logged in as ${currentUser.name || firebaseUser.email || firebaseUser.uid}`);
 
       // Do not block the campaign selector on catalogue painting.
       itemsLoadPromise.catch(() => {});

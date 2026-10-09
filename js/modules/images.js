@@ -1,19 +1,20 @@
 "use strict";
 
-// IMAGE HELPERS
-// Extracted from the working Step 7 app with behavior preserved.
+// Resolve shared item art lazily and retain resolved URLs for the browser session.
 
 // ─── IMAGE HELPERS ────────────────────────────────────────────────────────────
 
+const IMAGE_VARIANT_WORDS = [
+  "common","uncommon","rare","very-rare","veryrare","legendary","artifact","minor","major",
+  "grey","gray","red","blue","green","black","white","yellow","purple","orange","bronze","silver","gold","plus"
+];
+
+/** Remove the same rarity/color/bonus variant tokens to locate shared artwork. */
 function getBaseImageId(itemId) {
   if (!itemId) return "";
   let base = itemId.toLowerCase();
-  const wordsToRemove = [
-    "common","uncommon","rare","very-rare","veryrare","legendary","artifact","minor","major",
-    "grey","gray","red","blue","green","black","white","yellow","purple","orange","bronze","silver","gold","plus"
-  ];
   base = base.replace(/\+/g, "").replace(/[0-9]/g, "");
-  wordsToRemove.forEach(word => {
+  IMAGE_VARIANT_WORDS.forEach(word => {
     const regex = new RegExp(`(?<=^|[-_\\s])${word}(?=[-_\\s]|$)`, "gi");
     base = base.replace(regex, "");
   });
@@ -57,6 +58,7 @@ async function resolveImageUrl(itemId) {
   return url || PLACEHOLDER_IMAGE;
 }
 
+// Resolve only visible cards; detached cards must not receive late image updates.
 const imageObserver = "IntersectionObserver" in window
   ? new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {

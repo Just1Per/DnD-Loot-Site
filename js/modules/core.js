@@ -14,14 +14,14 @@ const vaultCall = createCampaignStore(window.__DND_VAULT_DEPS__);
 // ─── STATE ────────────────────────────────────────────────────────────────────
 // Data flow: User → Campaign → Character → Item (owner = characterId)
 
-let rootItems = [];
-let inventory = [];
-let campaignSupply = {};
-let campaignLoadGeneration = 0;
-let items          = [];   // master item DB — always full, filtered by visibility
+let rootItems = []; // Global templates; campaign copies are held in items.
+let inventory = []; // Permitted ownership entries, identified by character/item and quantity.
+let campaignSupply = {}; // DM-only shared stock, capacity and revision keyed by campaign item ID.
+let campaignLoadGeneration = 0; // Invalidates asynchronous results when campaign access changes.
+let items          = [];   // active campaign copies; visibility and edition policy filter rendering
 let characters     = [];   // characters scoped to activeCampaign
 let saves          = [];   // saves scoped to activeCampaign
-let users          = [];   // all users (admin/DM use only)
+let users          = [];   // global account list (admin only); DMs use campaignMembers
 let campaigns      = [];   // campaigns the current user has access to
 let itemState      = {};   // campaign-specific state: visibility, loot, highlight, owner
 let currentUser    = null; // { uid, id, email, name, role:[], ... }
@@ -29,8 +29,8 @@ let activeCampaign = null; // campaign currently selected
 let activeMembershipRole = null; // "player" | "dm" | "owner" | "admin"
 let selectedCharacter = null;
 let pendingInvites   = [];   // pending invites matching the signed-in user's email
-let campaignInvites  = [];   // pending invites for the active campaign (admin/DM management)
-let campaignMembers  = [];   // active campaign roster for DM tools
+let campaignInvites  = [];   // pending invites for the active campaign (owner/DM management)
+let campaignMembers  = [];   // active campaign roster for owner/DM tools
 let myDMRequest      = null; // current user's global DM application
 let dmRequests       = [];   // all DM applications (admin only)
 let dashboardCharacters = []; // current user's recent characters across accessible campaigns
@@ -72,10 +72,12 @@ const hasRole = (role) => {
   return Array.isArray(r) ? r.includes(role) : r === role;
 };
 
+// Global account capabilities do not bypass campaign membership.
 const isAdmin  = () => hasRole("admin");
 const isDM     = () => hasRole("dm") || hasRole("admin"); // global capability: can create campaigns
 const isPlayer = () => hasRole("player") || hasRole("dm") || hasRole("admin");
 
+// Campaign management and playable characters use the current membership role.
 const canManageCampaign = () =>
   !!activeCampaign && ["owner", "dm"].includes(activeMembershipRole);
 
@@ -87,6 +89,7 @@ const myCharacters = () =>
 
 // ─── TIER HELPER ─────────────────────────────────────────────────────────────
 
+/** Translate a level to the existing item-rarity guidance; invalid/unset levels have no tier. */
 function getTier(level) {
   const lvl = parseInt(level) || 0;
   if (lvl >= 17) return { tier: 4, label: "Tier 4", rarity: "Very Rare & Legendary", color: "#d45050", bg: "rgba(212,80,80,0.12)" };
@@ -105,7 +108,7 @@ function availableCampaigns() {
 }
 
 // ─── PROPERTY EDITOR HELPERS ──────────────────────────────────────────────────
-// Your improved visual property editor replacing the raw JSON textarea
+// Visual item-property rows. Text is escaped before insertion into their HTML.
 
 function escapeHtml(value) {
   return String(value)
@@ -146,6 +149,7 @@ function renderPropertyEditor(properties = []) {
   properties.forEach(p => el.appendChild(createPropertyRow(p)));
 }
 
+/** Read only non-empty property rows, preserving their current display order. */
 function getPropertiesFromEditor() {
   return [...document.querySelectorAll(".property-edit-row")]
     .map(row => ({

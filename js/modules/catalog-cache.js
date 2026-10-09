@@ -1,7 +1,6 @@
 "use strict";
 
-// MASTER CATALOGUE CACHE
-// Extracted from the working Step 7 app with behavior preserved.
+// Versioned master catalogue cache. Campaign copies and private ownership are not cached here.
 
 // ─── MASTER CATALOGUE CACHE (INDEXEDDB) ──────────────────────────────────────
 
@@ -10,7 +9,7 @@
  * every /items document. Step 7 keeps a local IndexedDB copy and performs only
  * one tiny Firestore metadata read on normal refreshes.
  *
- * /items/__catalog_meta__
+ * /items/catalog_meta
  *   version: timestamp-like integer
  *   itemCount: number
  *   updatedAt: number
@@ -39,6 +38,7 @@ function openCatalogCacheDB() {
   });
 }
 
+/** Cache failures are recoverable: return null so the loader can read Firestore. */
 async function readCatalogCache() {
   let dbHandle;
 
@@ -70,6 +70,7 @@ function catalogItemsForCache() {
   });
 }
 
+/** Cache a versioned snapshot only after its IndexedDB transaction completes. */
 async function writeCatalogCache(version = catalogVersion) {
   let dbHandle;
 
@@ -159,20 +160,25 @@ async function fetchFreshCatalog() {
   return { freshItems, embeddedMeta };
 }
 
+/** Write the shared cache-invalidation record; callers retain their own recovery behavior. */
+async function writeCatalogMetadata(version) {
+  await setDoc(doc(db, "items", CATALOG_META_ID), {
+    _type: "catalog-meta",
+    version,
+    itemCount: rootItems.length,
+    updatedAt: version
+  }, { merge: true });
+  catalogVersion = version;
+}
+
+/** Upgrade an unversioned catalogue during an admin visit, then cache the same version. */
 async function seedCatalogMetaIfNeeded() {
   if (!isAdmin()) return catalogVersion;
 
   const version = Date.now();
 
   try {
-    await setDoc(doc(db, "items", CATALOG_META_ID), {
-      _type: "catalog-meta",
-      version,
-      itemCount: rootItems.length,
-      updatedAt: version
-    }, { merge: true });
-
-    catalogVersion = version;
+    await writeCatalogMetadata(version);
     await writeCatalogCache(catalogVersion);
     return catalogVersion;
   } catch (e) {
@@ -181,20 +187,14 @@ async function seedCatalogMetaIfNeeded() {
   }
 }
 
+/** Invalidate other clients after a root edit without undoing a successful item save. */
 async function markCatalogChanged() {
   // Every master-item mutation is admin-only, so the existing /items rule lets
   // the same admin update this metadata document as well.
   const version = Date.now();
 
   try {
-    await setDoc(doc(db, "items", CATALOG_META_ID), {
-      _type: "catalog-meta",
-      version,
-      itemCount: rootItems.length,
-      updatedAt: version
-    }, { merge: true });
-
-    catalogVersion = version;
+    await writeCatalogMetadata(version);
   } catch (e) {
     // Do not undo a successful item edit just because cache invalidation failed.
     console.warn("Item saved, but catalogue version could not be updated.", e);
