@@ -15,6 +15,9 @@ Global account roles and campaign membership are independent. `isAdmin()` grants
 | Accounts and navigation | `ui-auth`, `dashboard`, `data` | Bind existing UI actions, load/create UID profiles, load accessible campaigns, restore the dashboard, clear private state on sign-out. |
 | Campaign permissions | `invitations`, `dm-approval`, `admin`, `dm-tools` | Campaign invitations/membership, global DM applications, global account/root management, campaign-only management and bonus advancement. |
 | Campaign data and policies | `campaign-store`, `campaign-items`, `campaign-rules`, `campaign-rules-ui` | Transactional loot/stock changes, campaign item copies, edition filtering, campaign feat overrides and custom feats. |
+| Connected campaign workspace | `campaign-workspace-store`, `campaign-workspace-ui`, `campaign-creatures`, `campaign-creatures-ui`, `campaign-chapters-ui`, `campaign-encounters`, `campaign-encounters-ui` | Campaign journal, shared masters/references, explicit milestones, independently saved combat state and private/public print modes. |
+| One-shot scope | `campaign-one-shots-store`, `campaign-one-shots-ui` | Proposals/approval, invitations, bounded roster transactions, adventure-specific sheet context and private encounter copies. |
+| SRD creatures | `campaign-monster-import`, `campaign-monster-catalog-ui` | Normalize approved SRD data, retain licensing metadata, lazily search the local catalogue and make campaign copies. |
 | Library | `library`, `library-state`, `catalog-cache`, `images` | Card editors/rendering, filters and lookup maps, versioned root-item caching, lazy artwork resolution. |
 | Player records | `player` | Own character lists, saved items and private looted-item views. |
 | Character sheet | `character-sheet`, `character-sheet-model`, `character-sheet-store`, `character-build-validation` | Sheet UI/session, normalized data and derived values, revision-checked persistence, actionable incomplete-build notices. |

@@ -9,6 +9,7 @@ function sheetCharacters() {
 function renderCharacterSheetChooser(selectedId = sheetSession?.characterId) {
   const host=document.getElementById('characterSheetChooser');
   if(!host)return;
+  if(sheetSession?.adventureId){host.innerHTML='<strong>One-shot character · '+sheetEscape(sheetSession.identity.name)+'</strong><span>Separate from main campaign characters</span>';return;}
   const choices=sheetCharacters();
   host.innerHTML=`<label for="sheetCharacterSelect">Character sheet</label><select id="sheetCharacterSelect"><option value="">Choose a character</option>${choices.map(c=>`<option value="${sheetEscape(c.id)}" ${c.id===selectedId?'selected':''}>${sheetEscape(c.name)}${c.active===false?' · Archived':''}</option>`).join('')}</select><span>Private to the player and campaign DM</span>`;
   host.querySelector('select').onchange=event=>{if(event.target.value)openCharacterSheet(event.target.value);else renderCharacterSheetChooser();};
@@ -22,7 +23,8 @@ function renderCharacterSheetTab() {
   document.getElementById('sheetGoToCharacters').onclick=()=>showTab('player');
 }
 function leaveCharacterSheet() {
-  if(closeCharacterSheet())showTab('player');
+  const adventure=!!sheetSession?.adventureId;
+  if(closeCharacterSheet())showTab(adventure?'dm-one-shots':'player');
 }
 function arrangeCharacterSheetPage() {
   const root=document.getElementById('characterSheetDialog'),body=root.querySelector('.sheet-body');
@@ -66,11 +68,12 @@ function closeCharacterSheet(force = false) {
   document.getElementById('characterSheetPage').innerHTML = '<p class="sheet-empty">Choose a character to open their sheet.</p>';
   return true;
 }
-async function openCharacterSheet(characterId) {
-  const character = characters.find(c => c.id === characterId);
-  if (!activeCampaign || !character || !canManageCampaign() && character.userId !== auth.currentUser?.uid)
+async function openCharacterSheet(characterId, context = {}) {
+  if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.beforeNavigate("character-sheet"))return;
+  const character = context.adventureId ? context.character : characters.find(c => c.id === characterId);
+  if (!activeCampaign || !character || !canManageCampaign() && character.userId !== auth.currentUser?.uid && !(context.adventureId && context.oneShot?.data?.approved && context.oneShot.data.hostUid===auth.currentUser?.uid))
     return;
-  if(sheetSession?.characterId===characterId && sheetSession.campaignId===activeCampaign.id){showTab('character-sheet',false);renderCharacterSheetChooser();return;}
+  if(sheetSession?.characterId===characterId && sheetSession.campaignId===activeCampaign.id && (sheetSession.adventureId||null)===(context.adventureId||null)){showTab('character-sheet',false);renderCharacterSheetChooser();return;}
   if (!closeCharacterSheet()){renderCharacterSheetChooser();return;}
   const generation = ++sheetGeneration, campaignId = activeCampaign.id;
   const dialog = document.createElement('section');
@@ -83,7 +86,7 @@ async function openCharacterSheet(characterId) {
   showTab('character-sheet',false);
   dialog.querySelector('[data-sheet-close]').onclick = leaveCharacterSheet;
   try {
-    const stored = await characterSheetStore.load(campaignId, characterId);
+    const stored = await characterSheetStore.load(campaignId, characterId, context.adventureId || null);
     if (generation !== sheetGeneration || activeCampaign?.id !== campaignId)
       return;
     if (![
@@ -106,6 +109,8 @@ async function openCharacterSheet(characterId) {
     sheetSession = {
       campaignId,
       characterId,
+      adventureId:context.adventureId || null,
+      oneShot:context.oneShot || null,
       character: { ...character },
       identity: {
         name: character.name || '',
@@ -123,6 +128,7 @@ async function openCharacterSheet(characterId) {
       sheetSession.data.equipmentState.acMode = 'equipment';
     }
     renderCharacterSheet();
+    renderCharacterSheetChooser(characterId);
     watchSheetEquipment();
   } catch (error) {
     if (generation === sheetGeneration)
@@ -147,7 +153,7 @@ function renderCharacterSheet() {
     return;
   const M = CharacterSheetModel, dialog = document.getElementById('characterSheetDialog');
   const abilityOptions = Object.entries(M.abilities), field = sheetField;
-  dialog.innerHTML = `<form id="characterSheetForm" novalidate><header class="sheet-header"><div><span class="sheet-eyebrow">${ sheetEscape(activeCampaign.name) } · PRIVATE CHARACTER JOURNAL</span><h2 id="sheetTitle">${ sheetEscape(s.character.name) }</h2><p>${ sheetEscape(s.character.class || 'Adventurer') } · Level ${ sheetEscape(s.character.level || 1) }${ s.character.active === false ? ' \xB7 Archived' : '' }</p></div><div class="sheet-actions"><button type="button" id="sheetExport">Export JSON</button><button type="button" id="sheetPrint">Print</button><button type="button" data-sheet-close>My characters</button><button type="submit" class="btn-primary" id="sheetSave">Save sheet</button></div></header>
+  dialog.innerHTML = `<form id="characterSheetForm" novalidate><header class="sheet-header"><div><span class="sheet-eyebrow">${ sheetEscape(activeCampaign.name) } · PRIVATE CHARACTER JOURNAL</span><h2 id="sheetTitle">${ sheetEscape(s.character.name) }</h2><p>${ sheetEscape(s.character.class || 'Adventurer') } · Level ${ sheetEscape(s.character.level || 1) }${ s.character.active === false ? ' \xB7 Archived' : '' }</p></div><div class="sheet-actions"><button type="button" id="sheetExport">Export JSON</button><button type="button" id="sheetPrint">Print</button><button type="button" data-sheet-close>${s.adventureId?'One Shots':'My characters'}</button><button type="submit" class="btn-primary" id="sheetSave">Save sheet</button></div></header>
   <div class="sheet-feedback"><p id="sheetStatus" role="status" aria-live="polite">${ s.revision ? 'Saved sheet loaded.' : 'New sheet \u2014 fill in your character and save.' }</p><span>Only you and your campaign DM can open this sheet.</span></div>
   <nav class="sheet-tabs" role="tablist" aria-label="Character sheet sections">${ [
     [
@@ -450,6 +456,7 @@ async function saveCharacterSheet() {
     return;
   }
   readSheetForm();
+  if(s.adventureId && s.identity.level>Number(s.oneShot.data.targetLevel)){sheetStatus('This one-shot allows characters up to level '+s.oneShot.data.targetLevel+'.',true);return;}
   if (!s.identity.name) {
     sheetStatus('Enter a character name.', true);
     return;
@@ -472,6 +479,7 @@ async function saveCharacterSheet() {
   try {
     const revision = await characterSheetStore.save({
       campaignId: s.campaignId,
+      adventureId:s.adventureId || null,
       characterId: s.characterId,
       revision: s.revision,
       data,
@@ -490,10 +498,10 @@ async function saveCharacterSheet() {
       identity: s.identity,
       data: s.data
     });
-    const character = characters.find(c => c.id === s.characterId);
+    const character = !s.adventureId && characters.find(c => c.id === s.characterId);
     if (character)
       Object.assign(character, identity);
-    if (selectedCharacter?.id === s.characterId)
+    if (!s.adventureId && selectedCharacter?.id === s.characterId)
       Object.assign(selectedCharacter, identity);
     document.getElementById('sheetTitle').textContent = identity.name;
     renderCharacterList();
@@ -528,7 +536,7 @@ function exportCharacterSheet() {
       character: s.identity,
       campaign: activeCampaign.name,
       data: s.data,
-      inventory: inventory.filter(e => e.characterId === s.characterId)
+      inventory: s.adventureId ? [] : inventory.filter(e => e.characterId === s.characterId)
     }, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob), link = document.createElement('a');
   link.href = url;

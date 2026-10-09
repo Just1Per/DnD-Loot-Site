@@ -17,7 +17,7 @@ import {
   setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId, onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-import { ref, getDownloadURL, uploadBytes }
+import { ref, getDownloadURL, uploadBytes, getBlob }
   from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
 // The feature files are intentionally loaded as ordered browser scripts.
@@ -28,10 +28,10 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword,
   collection, getDocs, addDoc, doc, getDoc,
   setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId, onSnapshot,
-  ref, getDownloadURL, uploadBytes,
+  ref, getDownloadURL, uploadBytes, getBlob,
 });
 
-const ASSET_VERSION = "20261009-dm-planning-v75";
+const ASSET_VERSION = "20261009-connected-workspace-v80-s6";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -45,6 +45,11 @@ if (!document.querySelector('link[data-character-adobe-integration]')) {
 // Order matters: rules and stores precede their UI adapters; authentication starts last.
 const FEATURE_FILES = [
   "./modules/campaign-rules.js",
+  "./modules/campaign-workspace-store.js",
+  "./modules/campaign-one-shots-store.js",
+  "./modules/campaign-creatures.js",
+  "./modules/campaign-monster-import.js",
+  "./modules/campaign-encounters.js",
   "./modules/character-equipment.js",
   "./modules/character-magic-armor.js",
   "./modules/character-magic-item-data.js",
@@ -109,6 +114,12 @@ const FEATURE_FILES = [
   "./modules/admin.js",
   "./modules/player.js",
   "./modules/dm-tools.js",
+  "./modules/campaign-workspace-ui.js",
+  "./modules/campaign-creatures-ui.js",
+  "./modules/campaign-chapters-ui.js",
+  "./modules/campaign-monster-catalog-ui.js",
+  "./modules/campaign-encounters-ui.js",
+  "./modules/campaign-one-shots-ui.js",
   "./modules/campaign-rules-ui.js",
   "./modules/site-help-data.js",
   "./modules/site-help.js",

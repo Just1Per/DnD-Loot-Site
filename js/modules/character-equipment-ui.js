@@ -2,7 +2,7 @@
 function sheetEquipmentLoot() {
   const s=sheetSession;
   if(!s||activeCampaign?.id!==s.campaignId)return [];
-  return inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0).map(e=>({...e,item:inventoryItem(e)})).concat(personalGearEntries());
+  return (s.adventureId?[]:inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0)).map(e=>({...e,item:inventoryItem(e)})).concat(personalGearEntries());
 }
 function renderEquipmentCalculations(stats) {
   let host=document.getElementById('sheetEquipmentSummary');
@@ -60,7 +60,7 @@ let stopEquipmentWatch=null;
 function watchSheetEquipment() {
   stopEquipmentWatch?.();stopEquipmentWatch=null;
   const s=sheetSession, sdk=equipmentSDK;
-  if(!s||!sdk.onSnapshot)return;
+  if(!s||s.adventureId||!sdk.onSnapshot)return;
   const valid=()=>sheetSession===s&&activeCampaign?.id===s.campaignId&&sdk.auth.currentUser;
   const inventoryRef=sdk.collection(sdk.db,'campaigns',s.campaignId,'inventory');
   const filters=[sdk.where('characterId','==',s.characterId)];

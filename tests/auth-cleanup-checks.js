@@ -19,7 +19,7 @@
   check('Login success is reported after dashboard data loads',logReady[0]===true);
   check('Login message contains no password or account object',logs[0].length===1&&!logs[0][0].includes('never-log-this'));
   check('Player startup does not load global admin account lists',!calls.includes('users')&&!calls.includes('dm-requests'));
-  check('Startup retains the player guide and account display',document.getElementById('siteGuideDialog').dataset.guideRole==='player'&&document.getElementById('userDisplay').textContent==='Mira');
+  check('Startup keeps guide manually available and the account display',!document.getElementById('siteGuideDialog')?.open&&!document.getElementById('siteGuideButton').hidden&&document.getElementById('userDisplay').textContent==='Mira');
   SiteHelp.onLogout();logs.length=0;calls.length=0;
   testSheetDocs['users/login-admin']={name:'Atlas admin',email:'admin@example.test',role:['admin']};
   auth.currentUser={uid:'login-admin',email:'admin@example.test'};await testAuthCallback(auth.currentUser);

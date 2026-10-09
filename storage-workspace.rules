@@ -1,0 +1,21 @@
+rules_version = '2';
+// MERGE the functions and match below into your existing Storage rules; do not
+// replace existing item-image rules with this isolated, emulator-tested file.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function workspaceDM(campaignId) {
+      let campaign = /databases/(default)/documents/campaigns/$(campaignId);
+      let member = /databases/(default)/documents/campaigns/$(campaignId)/members/$(request.auth.uid);
+      return request.auth != null && firestore.exists(campaign)
+        && (firestore.get(campaign).data.ownerId == request.auth.uid
+          || (firestore.exists(member) && firestore.get(member).data.status == 'active' && firestore.get(member).data.role == 'dm'));
+    }
+    match /campaign-world-images/{campaignId}/{entryId}/{imageId} {
+      allow read: if workspaceDM(campaignId);
+      allow write: if resource == null && request.resource != null && workspaceDM(campaignId)
+        && request.resource.size > 0 && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType in ['image/png','image/jpeg','image/webp'];
+      // Immutable uploads. Replacing a map creates a fresh path; existing images remain.
+    }
+  }
+}

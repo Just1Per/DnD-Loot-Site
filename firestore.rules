@@ -369,6 +369,107 @@ match /campaigns/{campaignId} {
     && (!('allowedEditions' in request.resource.data) || (request.resource.data.allowedEditions is list && request.resource.data.allowedEditions.size() >= 1 && request.resource.data.allowedEditions.size() <= 2 && request.resource.data.allowedEditions.hasOnly(['2014', '2024']) && (request.resource.data.allowedEditions.size() == 1 || request.resource.data.allowedEditions.hasAll(['2014', '2024']))));
   allow delete: if isCampaignOwner(campaignId);
 
+  // Connected campaign workspace. Public descriptions and private notes are separate.
+  function workspaceCollection(kind) {
+    return kind == 'world' ? 'worldEntries' : kind == 'creature' ? 'creatures' : kind == 'chapter' ? 'chapters' : kind == 'encounter' ? 'encounters' : 'oneShots';
+  }
+  function validWorkspace(d, kind) {
+    return d.keys().hasOnly(['kind','schemaVersion','revision','title','summary','content','data','archived','createdBy','createdAt','updatedBy','updatedAt'])
+      && d.keys().hasAll(['kind','schemaVersion','revision','title','summary','content','data','archived','createdBy','createdAt','updatedBy','updatedAt'])
+      && d.kind == kind && d.schemaVersion == 1 && d.revision is int && d.revision > 0
+      && d.title is string && d.title.size() > 0 && d.title.size() <= 160
+      && d.summary is string && d.summary.size() <= 1000
+      && d.content is string && d.content.size() <= 20000
+      && d.data is map && d.data.keys().size() <= 60 && d.archived is bool
+      && d.createdBy is string && d.createdAt is int && d.updatedAt is int
+      && d.updatedBy == request.auth.uid;
+  }
+  match /{workspace}/{recordId} {
+    function supported() { return workspace in ['worldEntries','creatures','chapters','encounters','oneShots']; }
+    function kind() { return workspace == 'worldEntries' ? 'world' : workspace == 'creatures' ? 'creature' : workspace == 'chapters' ? 'chapter' : workspace == 'encounters' ? 'encounter' : 'oneShot'; }
+    allow read: if supported() && isCampaignDM(campaignId);
+    allow create: if supported() && workspace != 'oneShots' && isCampaignDM(campaignId) && validWorkspace(request.resource.data, kind())
+      && request.resource.data.revision == 1 && request.resource.data.createdBy == request.auth.uid;
+    allow update: if supported() && workspace != 'oneShots' && isCampaignDM(campaignId) && validWorkspace(request.resource.data, kind())
+      && request.resource.data.revision == resource.data.revision + 1
+      && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt;
+    // Archive retains IDs and related records. Hard deletion is intentionally unavailable.
+  }
+  function canReadShot(d) {
+    return isCampaignDM(campaignId) || (isActiveMember(campaignId) && (d.createdBy == request.auth.uid || d.data.hostUid == request.auth.uid || request.auth.uid in d.data.participantUids));
+  }
+  function canPrepShot(d) {
+    return isCampaignDM(campaignId) || (isActiveMember(campaignId) && ((d.data.approved && d.data.hostUid == request.auth.uid) || (!d.data.approved && d.createdBy == request.auth.uid)));
+  }
+  function validShot(d) {
+    return validWorkspace(d, 'oneShot') && d.data.approved is bool && d.data.hostUid is string
+      && d.data.participantUids is list && d.data.participantUids.size() <= 20
+      && d.data.targetLevel is int && d.data.targetLevel >= 1 && d.data.targetLevel <= 20
+      && d.data.rosterMode in ['DM pre-generated','Player-created','Mixed'];
+  }
+  match /oneShots/{shotId} {
+    function parent() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)).data; }
+    function accepted() { return isActiveMember(campaignId) && exists(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/participants/$(request.auth.uid)) && get(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/participants/$(request.auth.uid)).data.status == 'accepted' && request.auth.uid in parent().data.participantUids; }
+    function manager() { return isCampaignDM(campaignId) || (isActiveMember(campaignId) && parent().data.approved && parent().data.hostUid == request.auth.uid); }
+    allow get: if canReadShot(resource.data) || (isActiveMember(campaignId) && !exists(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)));
+    allow list: if canReadShot(resource.data);
+    allow create: if validShot(request.resource.data) && request.resource.data.revision == 1 && request.resource.data.createdBy == request.auth.uid
+      && (isCampaignDM(campaignId) || (isActiveMember(campaignId) && !request.resource.data.data.approved && request.resource.data.data.hostUid == '' && request.resource.data.data.participantUids.size() == 0));
+    allow update: if validShot(request.resource.data) && canPrepShot(resource.data)
+      && request.resource.data.revision == resource.data.revision + 1
+      && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt
+      && (isCampaignDM(campaignId) || (request.resource.data.data.approved == resource.data.data.approved && request.resource.data.data.hostUid == resource.data.data.hostUid && request.resource.data.data.participantUids == resource.data.data.participantUids && (request.resource.data.data.targetLevel == resource.data.data.targetLevel && request.resource.data.data.rosterMode == resource.data.data.rosterMode || !resource.data.data.approved && resource.data.createdBy == request.auth.uid) && request.resource.data.data.get('links',[]) == resource.data.data.get('links',[])));
+    match /encounters/{encounterId} {
+      allow read: if manager();
+      allow create: if manager() && validWorkspace(request.resource.data, 'encounter') && request.resource.data.revision == 1 && request.resource.data.createdBy == request.auth.uid;
+      allow update: if manager() && validWorkspace(request.resource.data, 'encounter') && request.resource.data.revision == resource.data.revision + 1 && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt;
+    }
+    match /participants/{uid} {
+      allow read: if manager() || (isActiveMember(campaignId) && uid == request.auth.uid);
+      allow create: if isCampaignDM(campaignId) && request.resource.data.keys().hasOnly(['uid','status','invitedBy','updatedAt']) && request.resource.data.uid == uid && request.resource.data.status == 'invited' && request.resource.data.invitedBy == request.auth.uid && exists(memberPath(campaignId,uid)) && get(memberPath(campaignId,uid)).data.status == 'active';
+      allow update: if isActiveMember(campaignId) && uid == request.auth.uid && uid in parent().data.participantUids && request.resource.data.status in ['accepted','declined'] && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt']);
+    }
+    match /rosterState/main {
+      allow read: if manager() || accepted();
+      allow create, update: if (manager() || accepted())
+        && request.resource.data.keys().hasOnly(['count','lastCharacterId','updatedBy']) && request.resource.data.updatedBy == request.auth.uid
+        && request.resource.data.count is int && request.resource.data.count >= 1 && request.resource.data.count <= 20
+        && ((!exists(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/rosterState/main) && request.resource.data.count == 1) || request.resource.data.count == resource.data.count + 1)
+        && getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/characters/$(request.resource.data.lastCharacterId)).data.createdBy == request.auth.uid
+        && getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/characters/$(request.resource.data.lastCharacterId)).data.sequence == request.resource.data.count;
+    }
+    match /characters/{characterId} {
+      function assigned(uid) { return uid == '' || (uid in parent().data.participantUids && exists(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/participants/$(uid)) && get(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/participants/$(uid)).data.status == 'accepted'); }
+      function validCharacter(d) { return d.keys().hasOnly(['name','class','level','userId','createdBy','createdAt','active','sequence']) && d.name is string && d.name.size() > 0 && d.name.size() <= 160 && d.class is string && d.class.size() <= 160 && d.level is int && d.level >= 1 && d.level <= parent().data.targetLevel && d.userId is string && d.active is bool && d.sequence is int; }
+      allow read: if manager() || (accepted() && resource.data.userId == request.auth.uid);
+      allow create: if validCharacter(request.resource.data) && request.resource.data.createdBy == request.auth.uid
+        && ((manager() && assigned(request.resource.data.userId)) || (accepted() && parent().data.approved && parent().data.rosterMode in ['Player-created','Mixed'] && request.resource.data.userId == request.auth.uid))
+        && getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/rosterState/main).data.lastCharacterId == characterId
+        && getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/rosterState/main).data.count == request.resource.data.sequence;
+      allow update: if validCharacter(request.resource.data) && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt && request.resource.data.sequence == resource.data.sequence
+        && ((manager() && assigned(request.resource.data.userId)) || (accepted() && resource.data.userId == request.auth.uid && request.resource.data.userId == resource.data.userId));
+    }
+    match /characterSheets/{characterId} {
+      function owns() { return accepted() && get(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/characters/$(characterId)).data.userId == request.auth.uid; }
+      function protectedGrant(data) { let grant=data.get('rulesChoices',{}).get('grants',{}).get('__dm',{});return [grant.get('bonusFeats',0),grant.get('bonusAsis',0),grant.get('usedAsis',0),data.get('advancement',{}).get('asiSpent',0)]; }
+      function valid(d) { return d.keys().hasOnly(['schemaVersion','revision','data','updatedAt','updatedBy']) && d.schemaVersion is int && d.schemaVersion >= 1 && d.schemaVersion <= 100 && d.revision is int && d.data is map && d.updatedBy == request.auth.uid && d.updatedAt is int && exists(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/characters/$(characterId)); }
+      allow read: if manager() || owns();
+      allow create: if (manager() || owns()) && valid(request.resource.data) && request.resource.data.revision == 1 && (manager() || protectedGrant(request.resource.data.data) == [0,0,0,0]);
+      allow update: if (manager() || owns()) && valid(request.resource.data) && request.resource.data.revision == resource.data.revision + 1 && (manager() || protectedGrant(request.resource.data.data) == protectedGrant(resource.data.data));
+    }
+  }
+  match /workspaceSecrets/{secretId} {
+    allow read: if isCampaignDM(campaignId) || (resource.data.kind == 'oneShot' && canPrepShot(get(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(resource.data.recordId)).data));
+    allow create, update: if (isCampaignDM(campaignId) || (request.resource.data.kind == 'oneShot' && canPrepShot(getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(request.resource.data.recordId)).data)))
+      && request.resource.data.keys().hasOnly(['kind','recordId','notes','updatedBy','updatedAt'])
+      && request.resource.data.kind in ['world','creature','chapter','encounter','oneShot']
+      && request.resource.data.recordId is string
+      && secretId == request.resource.data.kind + '-' + request.resource.data.recordId
+      && request.resource.data.notes is string && request.resource.data.notes.size() <= 20000
+      && request.resource.data.updatedBy == request.auth.uid && request.resource.data.updatedAt is int
+      && existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspaceCollection(request.resource.data.kind))/$(request.resource.data.recordId));
+  }
+
   // ---------------------------------------------------------------------
   // MEMBERS
   // ---------------------------------------------------------------------

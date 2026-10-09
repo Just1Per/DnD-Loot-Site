@@ -1,0 +1,4 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),C=require('../js/modules/campaign-creatures');
+test('story NPCs have optional combat; monsters and bosses require it',()=>{assert.equal(C.normalize({category:'Story NPC'}).combatEnabled,false);assert.equal(C.normalize({category:'Boss'}).combatEnabled,true);assert.equal(C.normalize({category:'Monster',hp:45,ac:16}).hp,45)});
+test('encounter snapshots are independent of their master creature',()=>{const record={id:'knight',revision:2,title:'Skeletal Knight',data:{category:'Monster',hp:45,ac:16}};const snapshot=C.snapshot(record);snapshot.stats.hp=1;assert.equal(record.data.hp,45);assert.equal(snapshot.templateRevision,2)});
+test('invalid combat statistics are rejected',()=>{for(const data of [{hp:-1},{ac:41},{str:31},{speed:1.5}])assert.throws(()=>C.normalize(data))});

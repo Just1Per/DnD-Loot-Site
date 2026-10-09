@@ -20,6 +20,9 @@
     "test:print": "DND_PRINT_ONLY=1 node dom.cjs",
     "test:help": "DND_HELP_ONLY=1 node dom.cjs",
     "test:auth-cleanup": "node --test runtime-cleanup.cjs && DND_AUTH_CLEANUP_ONLY=1 node dom.cjs",
-    "test:dm-planning": "DND_DM_PLANNING_ONLY=1 node dom.cjs"
+    "test:dm-planning": "DND_DM_PLANNING_ONLY=1 node dom.cjs",
+    "test:workspace": "node --test workspace-store.cjs campaign-creatures.cjs campaign-monster-import.cjs campaign-encounters.cjs",
+    "test:workspace-rules": "cd .. && firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/workspace-rules.cjs && node tests/workspace-storage-rules.cjs && node tests/workspace-one-shots-rules.cjs\"",
+    "test:workspace-browser": "node workspace-browser.cjs"
   }
 }

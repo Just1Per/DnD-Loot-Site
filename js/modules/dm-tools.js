@@ -37,7 +37,7 @@ function renderDMPlanningCards(onlyId=null) {
       <details data-dm-planning-guide="${tool.id}">
         <summary>${escapeHtml(tool.guide)}</summary>
         <ol>${tool.steps.map(([title, text]) => `<li><strong>${escapeHtml(title)}</strong><p>${escapeHtml(text)}</p></li>`).join('')}</ol>
-        <p class="dm-planning-status">Setup guide · Saving records and managing rosters are planned next.</p>
+        <p class="dm-planning-status">Setup guide · Open the dedicated tab to save entries and manage this campaign.</p>
       </details>
     </section>`).join('');
 }
@@ -91,7 +91,7 @@ function ensureDMToolsUI() {
       const button=document.createElement('button');
       button.type='button';button.className='tab';button.dataset.tab=tabId;
       button.id='dmPlanningTab-'+tool.id;
-      button.textContent=tool.title;button.style.display='none';
+      button.textContent=tool.title;button.style.display=tool.id==='one-shots'&&canUseCharacters()?'inline-block':'none';
       const preceding=tool.id==='world'?dmButton:document.getElementById('dmPlanningTab-'+(tool.id==='chapters'?'world':'chapters'));
       preceding?.after(button);
       button.addEventListener('click',()=>showTab(tabId));
@@ -370,15 +370,15 @@ function renderDMTools() {
   const panel = document.getElementById("dmToolsPanel");
   if (!panel) return;
 
+  for(const tool of DM_PLANNING_TOOLS){
+    const tab=document.getElementById('dmPlanningTab-'+tool.id);
+    if(tab)tab.style.display=activeCampaign&&(canManageCampaign()||tool.id==='one-shots'&&canUseCharacters())?'inline-block':'none';
+  }
   if (!activeCampaign || !canManageCampaign()) {
     panel.innerHTML = `<div class="dm-tool-card"><p>You do not have DM access to this campaign.</p></div>`;
     return;
   }
 
-  for(const tool of DM_PLANNING_TOOLS){
-    const tab=document.getElementById('dmPlanningTab-'+tool.id);
-    if(tab)tab.style.display=activeCampaign&&canManageCampaign()?'inline-block':'none';
-  }
   panel.innerHTML = `
     <div class="dm-tools-grid">
       <section class="dm-tool-card dm-tool-card--wide">

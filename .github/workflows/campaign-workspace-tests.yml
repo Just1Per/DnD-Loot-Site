@@ -1,0 +1,41 @@
+name: Campaign workspace checks
+on:
+  pull_request:
+    paths:
+      - 'js/modules/campaign-*.js'
+      - 'js/modules/character-sheet*.js'
+      - 'js/modules/character-equipment-ui.js'
+      - 'js/modules/ui-auth.js'
+      - 'js/modules/dm-tools.js'
+      - 'firestore.rules'
+      - 'storage-workspace.rules'
+      - 'firebase.workspace-test.json'
+      - 'data/rules/monsters.json'
+      - 'tests/**'
+      - '.github/workflows/campaign-workspace-tests.yml'
+permissions:
+  contents: read
+jobs:
+  workspace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Install test dependencies
+        run: npm ci --prefix tests
+      - name: Workspace engines and catalogue
+        run: npm --prefix tests run test:workspace
+      - name: Planning navigation and manual-guide login
+        run: |
+          DND_DM_PLANNING_ONLY=1 node tests/dom.cjs
+          DND_AUTH_CLEANUP_ONLY=1 node tests/dom.cjs
+      - name: Firestore and private image permissions
+        run: npm --prefix tests run test:workspace-rules
