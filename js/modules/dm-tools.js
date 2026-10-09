@@ -75,10 +75,15 @@ function ensureDMToolsUI() {
     const style = document.createElement("style");
     style.id = "dmToolsStep3Styles";
     style.textContent = `
-      .dm-tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0}
-      .dm-tool-card{background:#f4efe6;border:3px double #8a7355;border-radius:10px;padding:18px}
+      .dm-tools-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:20px 0;align-items:stretch}
+      .dm-tool-card{background:#f4efe6;border:3px double #8a7355;border-radius:10px;padding:16px;min-width:0;box-sizing:border-box;display:flex;flex-direction:column}
       .dm-tool-card--wide{grid-column:1/-1}
-      .dm-planning-grid{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;align-items:start}
+      .dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide){height:100%;min-height:340px}
+      .dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide) .dm-tool-actions{margin-top:auto;padding-top:12px}
+      .dm-planning-card{min-width:0}
+      @media(max-width:1250px){.dm-tools-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+      @media(max-width:850px){.dm-tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+      @media(max-width:560px){.dm-tools-grid{grid-template-columns:minmax(0,1fr)}.dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide){min-height:0}}
       .dm-planning-card{min-width:0}
       .dm-planning-card summary{cursor:pointer;color:#5c1d1d;font-weight:700;font-size:.78rem;line-height:1.5;padding:8px 0}
       .dm-planning-card summary:focus-visible{outline:2px solid #9b1d1d;outline-offset:3px}
@@ -361,7 +366,7 @@ function renderDMTools() {
         </div>
       </section>
 
-      <div class="dm-planning-grid" aria-label="Campaign planning tools">
+      <!-- All five DM cards share one grid row and one consistent width. -->
       <section class="dm-tool-card">
         <h2>Item Controls</h2>
         <p>Visibility, loot assignment and highlighting are campaign-scoped. Add catalogue copies or create your own campaign items in the Library. Set available quantities and player-looting permissions on each item.</p>
@@ -369,8 +374,7 @@ function renderDMTools() {
           <button id="dmOpenLibrary" class="btn-primary" type="button">Open Library Controls</button>
         </div>
       </section>
-        ${renderDMPlanningCards()}
-      </div>
+      ${renderDMPlanningCards()}
 
       <section class="dm-tool-card dm-tool-card--wide">
         <h2>Members</h2>
