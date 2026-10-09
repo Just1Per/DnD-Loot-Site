@@ -13,12 +13,32 @@ var CharacterBuildValidation=(()=>{
   };
   function check(data,derived,identity={}){
     const rows=[],effects=derived?.effects||{},progression=derived?.progression||{},warnings=effects.warnings||[];
+    // Route warning *choices* to their owning form, not to a tab inferred from
+    // the occurrence of words like "feat" in the message.
+    const missingIndex=key=>Math.max(0,(data.build?.[key]||[]).findIndex(v=>!v));
+    const routeWarning=message=>{
+      const m=String(message||'').toLowerCase();
+      const destination=(category,tab,target)=>({category,tab,target});
+      if(/standard language/.test(m))return destination('Language','builder',`[name="build.standardLanguages.${missingIndex('standardLanguages')}"]`);
+      if(/background language/.test(m))return destination('Language','builder',`[name="build.backgroundLanguages.${missingIndex('backgroundLanguages')}"]`);
+      if(/language/.test(m))return destination('Language','builder','[name="build.extraLanguage"]');
+      if(/background abilit/.test(m))return destination('Ability','builder',`[name="build.backgroundAbilities.${missingIndex('backgroundAbilities')}"]`);
+      if(/background skill/.test(m))return destination('Skill','builder','[name="build.backgroundSkills.0"]');
+      if(/racial skill/.test(m))return destination('Skill','builder',`[name="build.skillChoices.${missingIndex('skillChoices')}"]`);
+      if(/skill/.test(m))return destination('Skill','builder',`[name="build.classSkills.${missingIndex('classSkills')}"]`);
+      if(/background tool/.test(m))return destination('Proficiency','builder','[name="build.backgroundTool"]');
+      if(/tool/.test(m))return destination('Proficiency','builder','[name="build.tool"]');
+      if(/human.*feat|feat.*human/.test(m))return destination('Feat','builder','[data-build-feat-field="humanOriginFeat"]');
+      if(/race.*feat|racial feat/.test(m))return destination('Feat','builder','[data-build-feat-field="raceFeat"]');
+      if(/background feat|origin feat|feat/.test(m))return destination('Feat','builder','[name="build.backgroundFeat"]');
+      if(/cantrip/.test(m))return destination('Spell','spells','#sheet-spells');
+      if(/background/.test(m))return destination('Builder','builder','[name="build.background"]');
+      return destination('Builder','builder','#sheetBuildControls');
+    };
     for(const warning of warnings){
       if(!looksIncomplete(warning))continue;
-      const lower=warning.toLowerCase();
-      const category=lower.includes('language')?'Language':lower.includes('skill')?'Skill':lower.includes('feat')?'Feat':lower.includes('tool')?'Proficiency':'Builder';
-      // Some origin feats ask for languages configured in Character Builder, not Feats.
-      add(rows,category,warning,category==='Feat'?'feats':'builder');
+      const route=routeWarning(warning);
+      add(rows,route.category,warning,route.tab,'warning',route.target);
     }
     for(const [index,entry] of (progression.classLevels||[]).entries()){
       const className=globalThis.CharacterAdobeEngine?.className?.(entry.classId)||entry.classId||'Class';
@@ -39,7 +59,6 @@ var CharacterBuildValidation=(()=>{
     }
     const featWarnings=(derived?.feats?.reports||[]).flatMap(r=>(r.warnings||[]).map(w=>({name:r.def?.displayName||r.def?.name||r.id,warning:w,key:r.key})));
     for(const {name,warning,key} of featWarnings)if(looksIncomplete(warning))add(rows,'Feat',`${name}: ${warning}`,'feats','warning',`[data-feat-key="${key}"]`);
-    const missingIndex=key=>Math.max(0,(data.build?.[key]||[]).findIndex(v=>!v));
     for(const issue of rows)if(!issue.target){
       const m=issue.message.toLowerCase();
       issue.target=issue.category==='Feat'?(m.includes('human')?'[data-build-feat-field="humanOriginFeat"]':m.includes('race')?'[data-build-feat-field="raceFeat"]':'[data-build-feat-field="backgroundFeat"]'):

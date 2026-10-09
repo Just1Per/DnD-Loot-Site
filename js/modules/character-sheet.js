@@ -660,7 +660,7 @@ function renderSheetBuildControls() {
       '',
       'Choose language'
     ],
-    ...R.languages.map(name => [
+    ...R.languages.filter(name => !['Druidic',"Thieves' Cant"].includes(name)).map(name => [
       name,
       name
     ])
@@ -1009,6 +1009,15 @@ function updateSheetBuildSummary(derived) {
   for (const option of extra.querySelectorAll('option'))
     option.disabled = !!option.value && (e.race?.languagePool ? !e.race.languagePool.includes(option.value) : false);
   updateBackgroundControls(derived);
+  // Only present proficiencies actually granted by the selected background.
+  for(let i=0;i<2;i++){
+    const field=form.querySelector('[name="build.backgroundTools.'+i+'"]');
+    if(!field)continue;
+    const kind=bg?.toolChoices?.[i];
+    const allowed=kind?CharacterBackgrounds.toolOptions(kind,R):[];
+    setOptions('build.backgroundTools.'+i,allowed.map(value=>[value,value]),b.backgroundTools?.[i]||'','Choose allowed tool');
+    field.closest('label').hidden=!kind;
+  }
   for (const name of [
       'build.abilityChoices.0',
       'build.abilityChoices.1'

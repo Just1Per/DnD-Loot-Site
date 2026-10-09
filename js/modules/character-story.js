@@ -107,13 +107,44 @@ var CharacterStory = (()=>{
    ]
   };
  }
+ // Keep existing personality options; add original alignment-flavoured prompts.
+ // Alignment tags are inspiration only, never character restrictions.
+ function enrichPersonality(profile,bg){
+  const existing=profile.personality||[];
+  if(existing.length>=8)return profile;
+  const name=String(bg?.name||'adventurer').replace(/\\s*—.*$/,'').replace(/\\s*\\(.*?\\)$/,'');
+  const tags=[
+   [/acolyte|cultist|pilgrim|moonwell|initiate|temple/i,['my faith','sacred tradition','strangers seeking guidance','an old vow']],
+   [/soldier|guard|watch|marine|mercenary|legion|squire|knight|fist|veteran|warden/i,['my service','military discipline','those under my protection','a fallen comrade']],
+   [/criminal|smuggl|pirate|bounty|spy|operative|shadowmaster|zhentarim/i,['the underworld','unspoken deals','outcasts and fugitives','a dangerous secret']],
+   [/sage|scholar|scribe|lore|archaeol|rune|investigator|inquisitive|mythal/i,['my studies','the written record','curious minds','an unanswered question']],
+   [/artisan|crafter|engineer|shipwright|cannith|guild|merchant|trader/i,['my craft','fair workmanship','those who depend on my skill','an unfinished commission']],
+   [/noble|courtier|vassal|heir|house agent|alliance|scion/i,['my household','ancient obligations','people without influence','a family promise']],
+   [/entertainer|gladiator|celebrity|witchlight|rakdos|prismari|silverquill/i,['the stage','the art of performance','people in need of joy','a disastrous show']],
+   [/sailor|fisher|wildspacer|astral|traveler|wayfarer|wanderer|guide|outlander/i,['life on the move','the rhythm of the road','lost travelers','a place left behind']],
+   [/hermit|haunted|mist|spirit|feylost|ruined|aberrant|dead magic/i,['my strange past','omens and silence','those whom others fear','a troubling memory']],
+   [/athlete|giant|uthgardt|tribe|gruul/i,['physical trials','the discipline of training','weaker companions','a challenge unfinished']],
+   [/farmer|folk hero|urchin|caretaker|selesnya|golgari|witherbloom/i,['ordinary survival','the needs of a community','those without shelter','the place I call home']],
+   [/student|mage|sorcery|quandrix|simic|izzet|spellfire/i,['difficult study','bold experiments','fellow students','a dangerous discovery']],
+   [/gambler|charlatan|failed merchant|plaintiff|rival intern|faceless|rewarded/i,['hard-won experience','risk and opportunity','people willing to trust me','a debt from long ago']]
+  ];
+  const [life,custom,people,memory]=(tags.find(([re])=>re.test(name))||[null,['my days as a '+name,'lessons from my former life','others walking my old path','a promise from those days']])[1];
+  const extra=[
+   'I hold myself to the standards of '+custom+' even when no one is watching. (Lawful-leaning)',
+   'I challenge the customs of '+life+' whenever they obstruct a better path. (Chaotic-leaning)',
+   'I make time to protect '+people+' even if doing so costs me dearly. (Good-leaning)',
+   'What I learned from '+life+' taught me to secure my advantage before helping anyone else. (Evil-leaning)',
+   'I consider both sides of every dispute through the lens of '+memory+' before I choose a side. (Neutral-leaning)'
+  ];
+  return {...profile,personality:existing.concat(extra.slice(0,8-existing.length))};
+ }
  function get(background){
   const key=String(background||'').replace(/-20(?:14|24)$/,''),canonical=alias[key]||key;
   const adobe=typeof CharacterAdobeData!=='undefined'?CharacterAdobeData.story:null;
-  if(adobe?.[canonical])return {...adobe[canonical],ideals:(adobe[canonical].ideals||[]).map(parsedIdeal),source:'Adobe sheet table'};
-  const p=profiles[canonical];if(p)return expanded(canonical,p);
   const known=typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds.get(background):null;
-  if(known)return genericKnownBackground(known);
+  if(adobe?.[canonical])return enrichPersonality({...adobe[canonical],ideals:(adobe[canonical].ideals||[]).map(parsedIdeal),source:'Adobe sheet table'},known||{name:canonical});
+  const p=profiles[canonical];if(p)return enrichPersonality(expanded(canonical,p),known||{name:canonical});
+  if(known)return enrichPersonality(genericKnownBackground(known),known);
   return {source:'Custom background — write your own',personality:[],ideals:[],bonds:[],flaws:[]};
  }
  return {get};

@@ -1,10 +1,20 @@
 function focusSheetBuildIssue(issue){
- if(!issue)return;const tab=issue.tab||'builder';selectSheetTab(tab);
- const targets=issue.target?[...document.querySelectorAll(issue.target)]:[];let field=targets.find(el=>!el.value)||targets[0];
- if(!field)field=document.getElementById('sheet-'+tab);
- for(let node=field;node;node=node.parentElement)if(node.tagName==='DETAILS')node.open=true;
- if(field&&!['INPUT','SELECT','TEXTAREA','BUTTON'].includes(field.tagName))field=field.querySelector('select,input,button')||field;
- field?.scrollIntoView?.({block:'center',behavior:'smooth'});field?.focus?.();field?.classList.add('sheet-fix-target');setTimeout(()=>field?.classList.remove('sheet-fix-target'),2500);
+ if(!issue)return;
+ const root=document.getElementById('characterSheetDialog');
+ const tab=issue.tab||'builder';
+ const page=root?.querySelector('#sheet-'+tab);
+ const tabButton=root?.querySelector('[data-sheet-tab="'+tab+'"]');
+ if(!page||!tabButton||tabButton.hidden){sheetStatus('This setup notice has no available destination. Please report it.');return;}
+ selectSheetTab(tab);
+ // Target only the active character sheet, never an unrelated or hidden form.
+ let targets=[];
+ try{if(issue.target)targets=[...page.querySelectorAll(issue.target)];}catch(error){console.warn('Invalid character warning target',issue.target,error);}
+ let field=targets.find(el=>!el.disabled&&!el.hidden&&('value' in el)&&!el.value)||targets.find(el=>!el.disabled&&!el.hidden);
+ if(!field){sheetStatus('Could not locate the setting for this notice. Please report it.');console.warn('Unresolved character warning',issue);return;}
+ for(let node=field;node&&node!==root;node=node.parentElement){if(node.tagName==='DETAILS')node.open=true;if(node.hidden)node.hidden=false;}
+ if(!['INPUT','SELECT','TEXTAREA','BUTTON'].includes(field.tagName))field=field.querySelector('select:not([disabled]),input:not([disabled]),button:not([disabled])')||field;
+ field.scrollIntoView?.({block:'center',behavior:'smooth'});field.focus?.();field.classList.add('sheet-fix-target');
+ setTimeout(()=>field.classList.remove('sheet-fix-target'),2500);
 }
 /* A display-only journal page. Editable fields remain in their dedicated tabs. */
 function toggleCalculatedOverview(){
@@ -31,6 +41,25 @@ function toggleClassFeatureOverview(key,part){
   else return;
   s.data.adobe.overviewFeatures[key]=current;s.dirty=true;updateSheetCalculations();sheetStatus('Class feature display updated. Save the sheet to keep it.');
 }
+function markUnfinishedCharacterFields(issues){
+ const root=document.getElementById('characterSheetDialog');if(!root)return;
+ root.querySelectorAll('.sheet-required-marker').forEach(marker=>marker.remove());
+ root.querySelectorAll('.sheet-field-needs-attention').forEach(el=>el.classList.remove('sheet-field-needs-attention'));
+ for(const issue of issues||[]){
+   if(!issue.target||!issue.tab)continue;
+   const page=root.querySelector('#sheet-'+issue.tab);if(!page)continue;
+   let candidates=[];
+   try{candidates=[...page.querySelectorAll(issue.target)];}catch(error){continue;}
+   const field=candidates.find(el=>!el.disabled&&!el.hidden&&'value' in el&&!el.value)||candidates.find(el=>!el.disabled&&!el.hidden);
+   if(!field)continue;
+   const wrapper=field.closest('label')||field.closest('.sheet-field')||field.parentElement;
+   if(!wrapper||wrapper.querySelector('.sheet-required-marker'))continue;
+   wrapper.classList.add('sheet-field-needs-attention');
+   const marker=document.createElement('span');marker.className='sheet-required-marker';marker.textContent='!';
+   marker.title=issue.message;marker.setAttribute('aria-label','Needs attention: '+issue.message);
+   wrapper.appendChild(marker);
+ }
+}
 function renderCharacterOverview(d) {
   const s=sheetSession,host=document.getElementById('sheetOverviewReadout');if(!s||!host)return;
   const M=CharacterSheetModel,b=s.data.build,e=d.effects,esc=sheetEscape,sign=M.signed;
@@ -54,6 +83,7 @@ function renderCharacterOverview(d) {
   const calculatedOpen=host.querySelector('#sheetOverviewCalculated')?.open===true;
   const calculatedMarkup=s.data.adobe?.showCalculatedOnOverview?`<section class="sheet-summary-box sheet-overview-calculated"><div class="sheet-overview-pin-heading"><details id="sheetOverviewCalculated" ${calculatedOpen?'open':''}><summary>Calculated from your choices · ${esc(b.edition)}</summary><div>${document.getElementById('sheetBuildSummaryContent')?.innerHTML||''}</div></details><button type="button" data-overview-calculated aria-pressed="true">Remove from Overview</button></div></section>`:'';
   const validation=globalThis.CharacterBuildValidation?.check?.(s.data,d,s.identity)||{complete:true,count:0,issues:[]};
+  markUnfinishedCharacterFields(validation.issues);
   const warningKey=issue=>JSON.stringify([issue.category,issue.message,issue.tab]);
   const readWarnings=s.data.adobe.readBuildWarnings;
   const unread=validation.issues.filter(issue=>!readWarnings.includes(warningKey(issue))).length;
