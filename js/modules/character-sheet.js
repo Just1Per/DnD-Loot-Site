@@ -67,6 +67,7 @@ function closeCharacterSheet(force = false) {
   return true;
 }
 async function openCharacterSheet(characterId) {
+  if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.beforeNavigate("character-sheet"))return;
   const character = characters.find(c => c.id === characterId);
   if (!activeCampaign || !character || !canManageCampaign() && character.userId !== auth.currentUser?.uid)
     return;

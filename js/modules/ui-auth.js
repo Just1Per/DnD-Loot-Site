@@ -16,6 +16,7 @@ function showTab(tabId, render = true) {
   if (btn) btn.classList.add("active");
   const panel = document.getElementById(`tab-${tabId}`);
   if (panel) panel.style.display="block";
+  if (tabId==="dm-chapters") CampaignWorkspace.render("chapter");
   if (tabId==="dm-world") CampaignWorkspace.render("world");
   if (tabId==="dm")      { renderDMTools(); }
   if (tabId==="character-sheet" && render) { renderCharacterSheetTab(); }

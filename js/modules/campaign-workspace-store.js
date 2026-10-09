@@ -39,6 +39,14 @@ function createCampaignWorkspaceStore(sdk) {
       const target = recordRef(campaignId, kind, id), snapshot = await tx.get(target);
       const old = snapshot.data();
       if ((old?.revision || 0) !== revision) throw Error('Changed in another window. Your draft is preserved; reload after copying your edits.');
+      // References resolve inside this campaign. Validate them before any transaction writes.
+      const links = normalized.data.links || [];
+      if (!Array.isArray(links) || links.length > 40) throw Error('An entry can link up to 40 records.');
+      for (const link of links) {
+        if (link.kind === kind && link.id === id) throw Error('An entry cannot link to itself.');
+        const linked = await tx.get(recordRef(campaignId, link.kind, link.id));
+        if (!linked.exists()) throw Error('A linked record no longer exists. Remove that link before saving.');
+      }
       const now = Date.now(), {privateNotes, ...fields} = normalized;
       const next = {...fields, kind, schemaVersion:1, revision:revision+1, createdBy:old?.createdBy || uid, createdAt:old?.createdAt || now, updatedBy:uid, updatedAt:now};
       tx.set(target, next);

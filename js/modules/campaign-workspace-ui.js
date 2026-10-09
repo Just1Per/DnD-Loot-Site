@@ -62,17 +62,17 @@ var CampaignWorkspace = (() => {
     try{
       const saved=await store.save({campaignId:s.campaignId,kind:s.kind,id:s.record.id,revision:s.record.revision,input});
       if(!current(s))return;
-      s.record=saved;s.dirty=snapshot!==JSON.stringify(draft());
+      const latest=draft();s.dirty=snapshot!==JSON.stringify(latest);s.record={...saved,data:latest.data,archived:latest.archived};
       const index=s.rows.findIndex(row=>row.id===saved.id);if(index<0)s.rows.push(saved);else s.rows[index]=saved;
-      renderList();status(s.dirty?'Saved. Newer edits are still unsaved.':'All changes saved.');
-    }catch(error){if(current(s))status(`Could not save: ${error.message}`,true);}
+      renderList();status(s.dirty?'Saved. Newer edits are still unsaved.':'All changes saved.');return true;
+    }catch(error){if(current(s))status(`Could not save: ${error.message}`,true);return false;}
     finally{s.busy=false;if(current(s))form.querySelector('[data-save-record]').disabled=false;}
   }
   async function archive() {
     const s=session;if(!current(s)||s.busy)return;
     if(!s.record.revision){status('Save this entry before archiving.',true);return;}
     if(!confirm(s.record.archived?'Restore this entry?':'Archive this entry? Related records will be retained.'))return;
-    const previous=s.record.archived;s.record.archived=!previous;await save();
+    const previous=s.record.archived;s.record.archived=!previous;const saved=await save();if(!saved&&current(s))s.record.archived=previous;
     if(current(s)&&s.record.archived!==previous&& !s.dirty)renderEditor();
   }
   async function mapImage() {
@@ -100,7 +100,7 @@ var CampaignWorkspace = (() => {
   }
   function renderEditor() {
     const s=session;if(!current(s))return;const config=configs[s.kind],r=s.record,page=s.host.querySelector('[data-workspace-page]');
-    page.innerHTML=`<form data-workspace-form><div class="workspace-actions"><button type="submit" data-save-record>Save ${escape(config.noun)}</button><button type="button" data-archive-record>${r.archived?'Restore':'Archive'}</button><button type="button" data-preview-record>Player description</button><button type="button" data-print-record>Print</button></div><p data-workspace-status class="workspace-status" role="status"></p><div class="workspace-fields"><label class="workspace-field workspace-full">Title<input name="title" required maxlength="160" value="${escape(r.title)}"></label><label class="workspace-field workspace-full">Short summary<textarea name="summary" maxlength="1000">${escape(r.summary)}</textarea></label>${fieldsHTML(config,r.data)}<label class="workspace-field workspace-full">${escape(config.content)}<textarea name="content" maxlength="20000">${escape(r.content)}</textarea></label><label class="workspace-field workspace-full">${escape(config.secret)}<textarea name="privateNotes" maxlength="20000">${escape(r.privateNotes)}</textarea></label></div>${s.kind==='world'?'<label class="workspace-field">Image or map (PNG, JPEG, WebP · max 5 MB)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><p>Click the map to add a named location marker. Use the marker list to remove a marker.</p><div data-map class="workspace-map"></div><div data-marker-list></div>':''}<div data-extra-editor></div></form><section class="workspace-preview" hidden data-player-preview><h3>Player description preview</h3><div class="workspace-prose"></div></section>`;
+    page.innerHTML=`<form data-workspace-form><div class="workspace-actions"><button type="submit" data-save-record>Save ${escape(config.noun)}</button><button type="button" data-archive-record>${r.archived?'Restore':'Archive'}</button><button type="button" data-preview-record>Player description</button><button type="button" data-print-record>Print</button></div><p data-workspace-status class="workspace-status" role="status"></p><div class="workspace-fields"><label class="workspace-field workspace-full">Title<input name="title" required maxlength="160" value="${escape(r.title)}"></label><label class="workspace-field workspace-full">Short summary<textarea name="summary" maxlength="1000">${escape(r.summary)}</textarea></label>${fieldsHTML(config,r.data)}<label class="workspace-field workspace-full">${escape(config.content)}<textarea name="content" maxlength="20000">${escape(r.content)}</textarea></label><label class="workspace-field workspace-full">${escape(config.secret)}<textarea name="privateNotes" maxlength="20000">${escape(r.privateNotes)}</textarea></label></div>${s.kind==='world'?'<label class="workspace-field">Image or map (PNG, JPEG, WebP · max 5 MB)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><p>Click the map to add a named location marker. Use the marker list to remove a marker.</p><div data-map class="workspace-map"></div><div data-marker-list></div>':''}<section data-workspace-links></section><div data-extra-editor></div></form><section class="workspace-preview" hidden data-player-preview><h3>Player description preview</h3><div class="workspace-prose"></div></section>`;
     const form=page.querySelector('form');form.onsubmit=event=>{event.preventDefault();save();};form.oninput=()=>{s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};form.onchange=()=>{s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};
     page.querySelector('[data-archive-record]').onclick=archive;
     page.querySelector('[data-preview-record]').onclick=()=>{const preview=page.querySelector('[data-player-preview]');preview.hidden=!preview.hidden;preview.querySelector('div').textContent=draft().content;};
@@ -113,8 +113,20 @@ var CampaignWorkspace = (() => {
       if(s.record.data.markers.length>=50){status('A map can have up to 50 markers.',true);return;}
       s.record.data.markers.push({x:Math.max(0,Math.min(1,(event.clientX-box.left)/box.width)),y:Math.max(0,Math.min(1,(event.clientY-box.top)/box.height)),label:label.trim().slice(0,160)});s.dirty=true;mapImage();renderMarkers();
     });
-    renderMarkers();mapImage();configs[s.kind].extra?.(page.querySelector('[data-extra-editor]'),s);
+    renderLinks();renderMarkers();mapImage();configs[s.kind].extra?.(page.querySelector('[data-extra-editor]'),s);
     if(typeof SiteHelp!=='undefined')SiteHelp.refresh();
+  }
+  async function renderLinks() {
+    const s=session,recordId=s?.record?.id,host=s?.host.querySelector('[data-workspace-links]');if(!current(s)||!host)return;
+    const kinds=['world','creature','chapter','encounter'].filter(kind=>configs[kind]);
+    try{
+      const lists=await Promise.all(kinds.map(async kind=>(await store.list(s.campaignId,kind)).map(row=>({...row,kind}))));
+      if(!current(s)||s.record.id!==recordId||!host.isConnected)return;
+      const rows=lists.flat(),links=s.record.data.links||[];
+      host.innerHTML=`<h3>Connected campaign entries</h3><div class="workspace-actions"><select data-link-picker aria-label="Entry to link"><option value="">Choose a location, creature, chapter or encounter…</option>${rows.filter(row=>!row.archived&&row.id!==recordId&&!links.some(link=>link.id===row.id&&link.kind===row.kind)).map(row=>`<option value="${row.kind}:${escape(row.id)}">${escape(configs[row.kind].title)} · ${escape(row.title)}</option>`).join('')}</select><button type="button" data-add-link>Add link</button></div>${links.map((link,index)=>{const row=rows.find(row=>row.id===link.id&&row.kind===link.kind);return `<p>${escape(row?.title||'Unavailable entry')}${row?.archived?' (archived)':''} <button type="button" data-remove-link="${index}">Remove link</button></p>`;}).join('')}`;
+      host.querySelector('[data-add-link]').onclick=()=>{const value=host.querySelector('select').value;if(!value)return;const [kind,id]=value.split(':');s.record.data.links||=[];if(s.record.data.links.length>=40){status('An entry can have up to 40 links.',true);return;}s.record.data.links.push({kind,id});s.dirty=true;renderLinks();};
+      host.querySelectorAll('[data-remove-link]').forEach(button=>button.onclick=()=>{s.record.data.links.splice(Number(button.dataset.removeLink),1);s.dirty=true;renderLinks();});
+    }catch(error){if(current(s)&&s.record.id===recordId)host.textContent='Could not load linked entries: '+error.message;}
   }
   function renderMarkers(){const s=session,host=s?.host.querySelector('[data-marker-list]');if(!host)return;host.innerHTML=(s.record.data.markers||[]).map((pin,i)=>`<p>${i+1}. ${escape(pin.label)} <button type="button" data-remove-marker="${i}" aria-label="Remove ${escape(pin.label)}">Remove</button></p>`).join('');host.querySelectorAll('[data-remove-marker]').forEach(button=>button.onclick=()=>{s.record.data.markers.splice(Number(button.dataset.removeMarker),1);s.dirty=true;renderMarkers();mapImage();});}
   function printRecord(includeSecrets=false) {

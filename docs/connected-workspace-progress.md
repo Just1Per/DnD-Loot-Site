@@ -30,3 +30,9 @@ Emulator fixtures use demo projects and never modify a live campaign. The browse
 World Building now switches between world entries and a searchable/category-filtered unified creature library. Story NPCs, monsters, bosses and companions share one record, with appearance, personality, voice, goals, relationships, optional combat, abilities, saving throws, actions, resistances and boss mechanics. The live card updates without closing the editor. Templates have an explicit revision and can be snapshotted for encounters.
 
 Validation: creature normalization/defaults, statistic bounds and independent snapshots have unit coverage; the browser verifies creating, saving and reopening a 45-HP/16-AC monster and its live card.
+
+## Stage 3 — Chapters and shared references
+
+Chapter Tracker saves ordered chapters, planned/current/completed status, introductions, objectives, scenes, rewards, session notes and starting/target levels. Shared link pickers connect world entries, creatures and chapters by ID; saves resolve links inside the current campaign and reject missing/cross-campaign references. Archive preserves linked masters.
+
+Milestone approvals record eligible characters and the target level, approver and timestamp. Approval is idempotent per character and does not choose class levels, HP or feats. Open sheet uses the existing builder. Browser checks confirm completing/approving a chapter leaves the character’s existing level unchanged.
