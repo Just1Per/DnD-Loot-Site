@@ -43,7 +43,7 @@ function renderDMPlanningCards(onlyId=null) {
 }
 
 function ensureDMToolsUI() {
-  if (document.getElementById("dmTab") && document.getElementById("tab-dm")) return;
+  // Safe to call repeatedly: tabs, panels and styles are created only once.
 
   const tabs = document.querySelector("nav.tabs");
   const adminTab = document.getElementById("adminTab");
@@ -98,12 +98,13 @@ function ensureDMToolsUI() {
     style.id = "dmToolsStep3Styles";
     style.textContent = `
       .dm-tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0;align-items:stretch}\n      .dm-planning-workspace{max-width:860px;margin:20px auto}\n      .dm-planning-workspace .dm-planning-card{min-height:0}
+      .dm-planning-workspace details:not([open])>ol{display:none}
       .dm-tool-card{background:#f4efe6;border:3px double #8a7355;border-radius:10px;padding:16px;min-width:0;box-sizing:border-box;display:flex;flex-direction:column}
       .dm-tool-card--wide{grid-column:1/-1}
       .dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide){height:100%;min-height:340px}
       .dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide) .dm-tool-actions{margin-top:auto;padding-top:12px}
       .dm-planning-card{min-width:0}
-      @media(max-width:1250px){.dm-tools-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+      @media(max-width:1250px){.dm-tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
       @media(max-width:850px){.dm-tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
       @media(max-width:560px){.dm-tools-grid{grid-template-columns:minmax(0,1fr)}.dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide){min-height:0}}
       .dm-planning-card{min-width:0}
@@ -362,6 +363,10 @@ function renderDMTools() {
     return;
   }
 
+  for(const tool of DM_PLANNING_TOOLS){
+    const tab=document.getElementById('dmPlanningTab-'+tool.id);
+    if(tab)tab.style.display=activeCampaign&&canManageCampaign()?'inline-block':'none';
+  }
   panel.innerHTML = `
     <div class="dm-tools-grid">
       <section class="dm-tool-card dm-tool-card--wide">
