@@ -14,6 +14,7 @@
     field(key).value+=' My own addition.';field(key).dispatchEvent(new Event('input',{bubbles:true}));
     check(key+' accepts edits to a suggestion',sheetSession.data[key].endsWith('My own addition.'));
   }
+  for(const key of ['ideals','bonds','flaws'])check(key+' has at least eight distinct suggestions',new Set(CharacterStory.get('acolyte-2024')[key].map(row=>typeof row==='string'?row:row.text)).size>=8);
   const prior=sheetSession.data.personality;
   field('build.background').value='criminal-2024';field('build.background').dispatchEvent(new Event('change',{bubbles:true}));
   check('Background switching refreshes suggestions without losing custom text',sheetSession.data.personality===prior&&document.querySelector('[data-story-choice="personality"] [data-story-option="0"]').textContent!==CharacterStory.get('acolyte-2024').personality[0]);
@@ -43,6 +44,17 @@
   document.getElementById('sheetJournalDelete').click();check('Individual notes can be deleted without losing other categories',sheetSession.data.adobe.journal.length===1);
   const migrated=CharacterSheetModel.normalize({notes:'Legacy session record'});const again=CharacterSheetModel.normalize(migrated);
   check('Legacy session notes migrate once to the Notes journal',again.adobe.journal.length===1&&again.adobe.journal[0].category==='Sessions'&&again.adobe.journal[0].text==='Legacy session record'&&!again.notes);
+  sheetSession.data.adobe.pages.companion=true;sheetSession.data.adobe.companions=[CharacterAdobeEngine.normalize({companion:{name:'Owl'}}).companion,CharacterAdobeEngine.normalize({companion:{name:'Wolf',skillRank:{perception:1}}}).companion];updateSheetCalculations();selectSheetTab('companion');
+  const skillsPanel=()=>document.querySelector('[data-companion-skills="0"]');
+  check('Companion skills start open with a keyboard-accessible summary',skillsPanel().hasAttribute('open')&&skillsPanel().querySelector('summary'));
+  skillsPanel().removeAttribute('open');skillsPanel().dispatchEvent(new Event('toggle'));
+  check('Companion skills collapse independently without deleting skill values',sheetSession.data.adobe.companions[0].skillsCollapsed===true&&sheetSession.data.adobe.companions[1].skillsCollapsed===false&&sheetSession.data.adobe.companions[1].skillRank.perception===1);
+  const companionName=document.querySelector('[data-companion-index="0"] [data-companion-field="name"]');companionName.value='Night Owl';companionName.dispatchEvent(new Event('change',{bubbles:true}));
+  check('Companion skill disclosure survives rerendering other fields',!skillsPanel().hasAttribute('open'));
+  await saveCharacterSheet();closeCharacterSheet(true);await openCharacterSheet('c1');selectSheetTab('companion');
+  check('Companion skill disclosure and stored skills survive save and reopen',!skillsPanel().hasAttribute('open')&&sheetSession.data.adobe.companions[1].skillRank.perception===1);
+  skillsPanel().setAttribute('open','');skillsPanel().dispatchEvent(new Event('toggle'));
+  check('Companion skills reopen without changing other companions',sheetSession.data.adobe.companions[0].skillsCollapsed===false&&document.querySelector('[data-companion-skills="1"]').hasAttribute('open'));
   closeCharacterSheet(true);seed('dm');delete testSheetDocs['campaigns/a/characterSheets/c1'];testSheetDocs['campaigns/a/characters/c1']={...characters[0]};renderDMTools();
   check('DM Tools lists advancement actions for every campaign character',document.querySelectorAll('[data-dm-advancement]').length===characters.length);
   await openDMAdvancement('c1');const bonus=document.querySelector('#dmAdvancementDialog [data-dm-advancement="bonusFeats"]');bonus.value='2';await document.querySelector('[data-save-dm-advancement]').onclick({target:document.querySelector('[data-save-dm-advancement]')});

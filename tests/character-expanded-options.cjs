@@ -49,3 +49,18 @@ assert.equal(races['sea-elf-mpmm'].edition,'2014');
 assert.equal(races['human-2024'].edition,'2024');
 
 console.log('SUCCESS expanded first-party backgrounds, subclasses and species catalogues');
+
+// Every supported background retains its old prompts and gets eight distinct choices.
+global.CharacterBackgrounds=Backgrounds;
+global.CharacterAdobeData=require('../js/modules/character-adobe-data');
+const Story=require('../js/modules/character-story');
+for(const [backgroundId,bg] of [...Object.entries(Backgrounds.modern),...Object.entries(Backgrounds.legacy),...Object.entries(Backgrounds.expanded)]){
+ const profile=Story.get(backgroundId);
+ for(const key of ['personality','ideals','bonds','flaws']){
+  assert.ok(profile[key].length>=8,backgroundId+' '+key+' has eight choices');
+  assert.equal(new Set(profile[key].map(row=>typeof row==='string'?row:row.text)).size,profile[key].length,backgroundId+' '+key+' choices are distinct');
+ }
+ for(const row of profile.ideals)assert.ok(['Lawful','Chaotic','Good','Evil','Neutral','Any'].includes(row.alignment));
+}
+assert.ok(Story.get('acolyte-2024').ideals[0].text.includes(global.CharacterAdobeData.story.acolyte.ideals[0].replace(/\s*\([^)]*\)$/,'')),'original ideal stays first');
+console.log('SUCCESS eight Story choices for all supported backgrounds');
