@@ -9,12 +9,14 @@ function showTab(tabId, render = true) {
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
   if (tabId === "admin") { openAdminView(); return; }
   if ((tabId === "dm" || ["dm-world","dm-chapters","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
+  if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c=>c.style.display="none");
   const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
   if (btn) btn.classList.add("active");
   const panel = document.getElementById(`tab-${tabId}`);
   if (panel) panel.style.display="block";
+  if (tabId==="dm-world") CampaignWorkspace.render("world");
   if (tabId==="dm")      { renderDMTools(); }
   if (tabId==="character-sheet" && render) { renderCharacterSheetTab(); }
   if (tabId==="player")  { renderPlayerTab(); }
@@ -252,6 +254,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     selectedCharacter = null;
 
     ++campaignLoadGeneration;
+    CampaignWorkspace.clear(true);
     closeCharacterSheet(true); closeVaultAction(); closeRootPicker(); closeItemModal();
     rootItems = []; inventory = []; campaignSupply = {};
     items = [];

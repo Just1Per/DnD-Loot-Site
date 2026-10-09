@@ -8,7 +8,9 @@
       "tests/**",
       "docs/**",
       "firebase.test.json",
-      "scripts/**"
+      "scripts/**",
+      "firebase.workspace-test.json",
+      "storage-workspace.rules"
     ]
   },
   "functions": [

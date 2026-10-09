@@ -1,0 +1,16 @@
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const {initializeTestEnvironment,assertFails,assertSucceeds}=require('@firebase/rules-unit-testing');
+const sdk=require('firebase/firestore');
+const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-store');
+(async()=>{const env=await initializeTestEnvironment({projectId:'demo-vault-test',firestore:{host:'127.0.0.1',port:8080,rules:fs.readFileSync('firestore.rules','utf8')}});let count=0;const check=async(name,fn)=>{await fn();console.log('PASS',name);count++};try{
+ await env.clearFirestore();await env.withSecurityRulesDisabled(async context=>{for(const [path,data]of Object.entries({'campaigns/a':{ownerId:'owner',name:'Test'},'campaigns/b':{ownerId:'other',name:'Other'},'campaigns/a/members/dm':{role:'dm',status:'active'},'campaigns/a/members/player':{role:'player',status:'active'},'campaigns/a/members/revoked':{role:'dm',status:'inactive'},'users/admin':{role:['admin']}}))await sdk.setDoc(sdk.doc(context.firestore(),path),data)});
+ const db=Object.fromEntries(['owner','dm','player','revoked','admin','outsider'].map(uid=>[uid,env.authenticatedContext(uid).firestore()]));
+ const store=createCampaignWorkspaceStore({...sdk,db:db.dm,auth:{currentUser:{uid:'dm'}}});const args={campaignId:'a',kind:'world',id:'north',revision:0,input:{title:'North',content:'A cold land',privateNotes:'Secret cult',data:{category:'Region'}}};
+ await check('DM saves world description and secret together',async()=>{await assertSucceeds(store.save(args));assert.equal((await sdk.getDoc(sdk.doc(db.dm,'campaigns/a/worldEntries/north'))).data().privateNotes,undefined)});
+ await check('Owner can read world and its secrets',async()=>{await assertSucceeds(sdk.getDoc(sdk.doc(db.owner,'campaigns/a/worldEntries/north')));await assertSucceeds(sdk.getDoc(sdk.doc(db.owner,'campaigns/a/workspaceSecrets/world-north')))});
+ await check('Players, outsiders, removed DMs and global admins cannot read private workspace',async()=>{for(const uid of ['player','outsider','revoked','admin'])for(const path of ['worldEntries/north','workspaceSecrets/world-north'])await assertFails(sdk.getDoc(sdk.doc(db[uid],'campaigns/a/'+path)))});
+ await check('Another campaign and forged global privileges cannot authorize a write',async()=>{await assertFails(store.save({...args,campaignId:'b'}));for(const uid of ['player','outsider','revoked','admin'])await assertFails(sdk.setDoc(sdk.doc(db[uid],'campaigns/a/worldEntries/forged'),{title:'Forged'}))});
+ await check('Stale revisions and immutable author changes fail',async()=>{await assert.rejects(store.save(args),/another window/);await assertFails(sdk.updateDoc(sdk.doc(db.dm,'campaigns/a/worldEntries/north'),{revision:2,createdBy:'player'}))});
+ await check('Archive preserves record and secrets; hard deletion fails',async()=>{await store.save({...args,revision:1,input:{...args.input,archived:true}});await assertFails(sdk.deleteDoc(sdk.doc(db.dm,'campaigns/a/worldEntries/north')));assert.equal((await sdk.getDoc(sdk.doc(db.dm,'campaigns/a/workspaceSecrets/world-north'))).data().notes,'Secret cult')});
+ console.log('SUCCESS',count,'workspace permission checks');
+ }finally{await env.cleanup()}})().catch(error=>{console.error(error);process.exitCode=1});

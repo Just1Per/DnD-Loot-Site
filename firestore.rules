@@ -369,6 +369,44 @@ match /campaigns/{campaignId} {
     && (!('allowedEditions' in request.resource.data) || (request.resource.data.allowedEditions is list && request.resource.data.allowedEditions.size() >= 1 && request.resource.data.allowedEditions.size() <= 2 && request.resource.data.allowedEditions.hasOnly(['2014', '2024']) && (request.resource.data.allowedEditions.size() == 1 || request.resource.data.allowedEditions.hasAll(['2014', '2024']))));
   allow delete: if isCampaignOwner(campaignId);
 
+  // Connected campaign workspace. Public descriptions and private notes are separate.
+  function workspaceCollection(kind) {
+    return kind == 'world' ? 'worldEntries' : kind == 'creature' ? 'creatures' : kind == 'chapter' ? 'chapters' : kind == 'encounter' ? 'encounters' : 'oneShots';
+  }
+  function validWorkspace(d, kind) {
+    return d.keys().hasOnly(['kind','schemaVersion','revision','title','summary','content','data','archived','createdBy','createdAt','updatedBy','updatedAt'])
+      && d.keys().hasAll(['kind','schemaVersion','revision','title','summary','content','data','archived','createdBy','createdAt','updatedBy','updatedAt'])
+      && d.kind == kind && d.schemaVersion == 1 && d.revision is int && d.revision > 0
+      && d.title is string && d.title.size() > 0 && d.title.size() <= 160
+      && d.summary is string && d.summary.size() <= 1000
+      && d.content is string && d.content.size() <= 20000
+      && d.data is map && d.data.keys().size() <= 60 && d.archived is bool
+      && d.createdBy is string && d.createdAt is int && d.updatedAt is int
+      && d.updatedBy == request.auth.uid;
+  }
+  match /{workspace}/{recordId} {
+    function supported() { return workspace in ['worldEntries','creatures','chapters','encounters','oneShots']; }
+    function kind() { return workspace == 'worldEntries' ? 'world' : workspace == 'creatures' ? 'creature' : workspace == 'chapters' ? 'chapter' : workspace == 'encounters' ? 'encounter' : 'oneShot'; }
+    allow read: if supported() && isCampaignDM(campaignId);
+    allow create: if supported() && isCampaignDM(campaignId) && validWorkspace(request.resource.data, kind())
+      && request.resource.data.revision == 1 && request.resource.data.createdBy == request.auth.uid;
+    allow update: if supported() && isCampaignDM(campaignId) && validWorkspace(request.resource.data, kind())
+      && request.resource.data.revision == resource.data.revision + 1
+      && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt;
+    // Archive retains IDs and related records. Hard deletion is intentionally unavailable.
+  }
+  match /workspaceSecrets/{secretId} {
+    allow read: if isCampaignDM(campaignId);
+    allow create, update: if isCampaignDM(campaignId)
+      && request.resource.data.keys().hasOnly(['kind','recordId','notes','updatedBy','updatedAt'])
+      && request.resource.data.kind in ['world','creature','chapter','encounter','oneShot']
+      && request.resource.data.recordId is string
+      && secretId == request.resource.data.kind + '-' + request.resource.data.recordId
+      && request.resource.data.notes is string && request.resource.data.notes.size() <= 20000
+      && request.resource.data.updatedBy == request.auth.uid && request.resource.data.updatedAt is int
+      && existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspaceCollection(request.resource.data.kind))/$(request.resource.data.recordId));
+  }
+
   // ---------------------------------------------------------------------
   // MEMBERS
   // ---------------------------------------------------------------------
