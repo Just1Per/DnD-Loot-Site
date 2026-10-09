@@ -17,6 +17,7 @@ function createCampaignStore(sdk) {
   };
   const ref = (cid, kind, key) => doc(db, 'campaigns', id(cid), kind, id(key));
   const invId = (character, item) => id(character) + '__' + id(item);
+  // Bound only campaign-editable item fields; ownership and stock have separate documents.
   const clean = (v = {}) => {
     const name = String(v.name || '').trim();
     if (!name)
@@ -39,6 +40,7 @@ function createCampaignStore(sdk) {
       imageBaseId: String(v.imageBaseId || '')
     };
   };
+  /** Verify campaign membership inside the same transaction as its protected mutations. */
   async function access(tx, cid, dmOnly = false) {
     if (!uid())
       fail('Sign in first.');
@@ -54,6 +56,7 @@ function createCampaignStore(sdk) {
       dm
     };
   }
+  /** Save a campaign copy against its stock revision without rewriting the global template. */
   async function saveItem(d) {
     const key = d.itemId || doc(collection(db, 'campaigns', id(d.campaignId), 'items')).id;
     await runTransaction(db, async tx => {

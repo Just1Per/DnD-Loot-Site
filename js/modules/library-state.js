@@ -1,7 +1,6 @@
 "use strict";
 
-// LIBRARY STATE / FILTERING / RENDER PIPELINE
-// Extracted from the working Step 7 app with behavior preserved.
+// Derives Library cards from permitted campaign items and private inventory/saved records.
 
 // ─── LOCAL STATE PATCH ────────────────────────────────────────────────────────
 
@@ -12,6 +11,7 @@ function patchItem(itemId, changes) {
   return items[idx];
 }
 
+/** Legacy card-state shape, derived from current ownership rather than a single stored owner. */
 function getItemState(itemId) {
   const item=items.find(i=>i.id===itemId)||{};
   const entries=inventory.filter(e=>e.itemId===itemId&&e.quantity>0);
@@ -19,6 +19,7 @@ function getItemState(itemId) {
     owner:entries.length===1?entries[0].characterId:null,receivedDate:entries[0]?.receivedAt||null};
 }
 function patchItemState(itemId,changes) { return patchItem(itemId,changes); }
+/** Only visibility/highlighting can be patched here; quantities use inventory transactions. */
 async function persistItemState(itemId,changes) {
   if(!canManageCampaign())throw Error('Campaign DM access is required.');
   const safe={};for(const k of ['visible','highlighted'])if(k in changes)safe[k]=!!changes[k];
@@ -30,6 +31,7 @@ async function persistItemState(itemId,changes) {
 
 // ─── SINGLE-CARD RE-RENDER ────────────────────────────────────────────────────
 
+/** Build lookup maps once per render instead of searching every list for every card. */
 function buildRenderContext() {
   const charactersById = new Map(characters.map(c => [c.id, c]));
   const usersById      = new Map(users.map(u => [u.id, u]));
@@ -77,6 +79,7 @@ function renderMagicItemLoadPrompt() {
   container.querySelector("#loadMagicItemLibrary")?.addEventListener("click", loadMagicItemLibrary);
 }
 
+/** Load on request and ignore a result if the player changes campaigns before it arrives. */
 async function loadMagicItemLibrary() {
   if (!activeCampaign || magicItemLibraryLoading) return;
   const campaignId = activeCampaign.id;

@@ -2,6 +2,7 @@
 function createCharacterSheetStore(sdk) {
   const {db, doc, getDoc, runTransaction, auth} = sdk;
   const path = (campaignId, characterId) => doc(db, 'campaigns', campaignId, 'characterSheets', characterId);
+  // Fresh nested objects per sheet prevent companion/page defaults being shared across characters.
   const adobeDefaults = () => ({
     useExperience: false,
     hpMode: 'fixed',
@@ -19,6 +20,7 @@ function createCharacterSheetStore(sdk) {
       attacks:'',traits:'',notes:''
     }
   });
+  /** Keep the existing grants envelope used by Firestore rules and older saved sheets. */
   function persistedData(raw) {
     const data = structuredClone(raw || {});
     data.rulesChoices ||= {feats:[],grants:{},effects:{}};
@@ -33,9 +35,9 @@ function createCharacterSheetStore(sdk) {
     const snapshot = await getDoc(path(campaignId, characterId));
     if (!snapshot.exists())
       return {schemaVersion:1,revision:0,data:{}};
-    const stored = snapshot.data();
-    return stored;
+    return snapshot.data();
   }
+  /** Atomically reject stale sheet/identity revisions before updating both documents. */
   async function save({campaignId, characterId, revision, data, identity, previousIdentity}) {
     const actor = auth.currentUser?.uid;
     if (!actor)
@@ -47,11 +49,7 @@ function createCharacterSheetStore(sdk) {
         throw Error('This character no longer exists.');
       if ((sheet.data()?.revision || 0) !== revision)
         throw Error('This sheet was changed in another window or by your DM. Your edits are still here. Export a backup, then close and reopen the sheet to load the latest version.');
-      for (const key of [
-          'name',
-          'class',
-          'level'
-        ])
+      for (const key of ['name', 'class', 'level'])
         if (String(character.data()[key] ?? '') !== String(previousIdentity[key] ?? ''))
           throw Error('Character details changed while this sheet was open. Export your edits, then reopen the sheet.');
       const next = revision + 1;
@@ -66,10 +64,7 @@ function createCharacterSheetStore(sdk) {
       return next;
     });
   }
-  return {
-    load,
-    save
-  };
+  return { load, save };
 }
 if (typeof module !== 'undefined' && module.exports)
   module.exports = { createCharacterSheetStore };

@@ -1,7 +1,7 @@
 "use strict";
 
-// DATA LOADERS
-// Extracted from the working Step 7 app with behavior preserved.
+// Loads account, catalogue and campaign data into core.js state.
+// Async campaign reads must check the captured campaign ID before publishing results.
 
 // ─── DATA LOADERS ─────────────────────────────────────────────────────────────
 
@@ -47,6 +47,7 @@ async function syncUserDirectoryEntry(uid, profile) {
 }
 
 
+/** Hydrate each rules edition; only global admins may publish a stale reference. */
 async function ensureGlobalCharacterRulesReference() {
   const store=window.CharacterRulesCatalogStore;
   if (!store) return;
@@ -55,8 +56,7 @@ async function ensureGlobalCharacterRulesReference() {
       const remote = await store.loadEdition(edition);
       const stale = !remote || Number(remote.version || 0) < Number(store.CATALOG_VERSION || 0);
       if (stale && isAdmin()) {
-        const seeded = await store.seedEdition(edition);
-        console.info("[rulesCatalog] published global reference", seeded);
+        await store.seedEdition(edition);
       }
       await store.hydrate(edition);
     } catch (e) {
@@ -65,32 +65,29 @@ async function ensureGlobalCharacterRulesReference() {
   }
 }
 
+/** Load or create the UID-based account before optional directory/rules synchronization. */
 async function loadCurrentUser(firebaseUser) {
   const uidRef = doc(db, "users", firebaseUser.uid);
 
   try {
     const uidSnap = await getDoc(uidRef);
+    let profile;
     if (uidSnap.exists()) {
-      currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...uidSnap.data() };
-      await syncUserDirectoryEntry(firebaseUser.uid, currentUser);
-      await ensureGlobalCharacterRulesReference();
-      return;
+      profile = uidSnap.data();
+    } else {
+      // New accounts use the Auth UID. Campaign membership is granted separately.
+      const email = firebaseUser.email || "";
+      profile = {
+        email,
+        emailLower: normalizeEmail(email),
+        name: firebaseUser.displayName || email || "New User",
+        role: ["viewer"],
+        created: Date.now()
+      };
+      await setDoc(uidRef, profile);
     }
 
-    // Foundation V2.4: new accounts are always created under their real
-    // Firebase Auth UID. We no longer create or scan email-derived temp users.
-    // Campaign access is granted separately through campaign invitations.
-    const email = firebaseUser.email || "";
-    const newUser = {
-      email,
-      emailLower: normalizeEmail(email),
-      name: firebaseUser.displayName || email || "New User",
-      role: ["viewer"],
-      created: Date.now()
-    };
-
-    await setDoc(uidRef, newUser);
-    currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...newUser };
+    currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...profile };
     await syncUserDirectoryEntry(firebaseUser.uid, currentUser);
     await ensureGlobalCharacterRulesReference();
 
@@ -131,10 +128,6 @@ async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
     && cacheAge < CATALOG_NO_META_TTL_MS;
 
   if (!forceRefresh && (versionMatch || legacyCacheFresh)) {
-    console.debug(
-      `[catalog] IndexedDB hit — ${cached.items.length} items, version ${cachedVersion || "legacy"}`
-    );
-
     // First admin visit upgrades the database to proper versioned caching.
     if (serverVersion === 0 && isAdmin()) {
       await seedCatalogMetaIfNeeded();
@@ -142,7 +135,6 @@ async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
     return;
   }
 
-  console.debug("[catalog] refreshing master catalogue from Firestore");
   const { freshItems, embeddedMeta } = await fetchFreshCatalog();
 
   catalogVersion = serverVersion || Number(embeddedMeta?.version) || 0;
@@ -156,6 +148,7 @@ async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
 }
 
 
+/** Restore the remembered own character, ignoring results from a campaign left mid-read. */
 async function loadCharacters() {
   const id = activeCampaign?.id; if (!id) { characters = []; selectedCharacter = null; return; }
   const snap = await getDocs(collection(db, "campaigns", id, "characters"));
@@ -165,6 +158,7 @@ async function loadCharacters() {
   const remembered = [...mine].sort((a,b)=>(Number(b.lastSelectedAt)||0)-(Number(a.lastSelectedAt)||0))[0] || null;
   if (!mine.some(c => c.id === selectedCharacter?.id)) selectedCharacter = remembered || mine[0] || null;
 }
+/** Campaign DMs read the campaign list; other members query only their own saved items. */
 async function loadSaves() {
   const id = activeCampaign?.id; if (!id) { saves = []; return; }
   const reference = collection(db, "campaigns", id, "saves");
@@ -189,6 +183,7 @@ async function loadUsers() {
   }
 }
 
+/** Load the active roster for campaign management, rather than the global user directory. */
 async function loadCampaignMembers() {
   if (!activeCampaign || !canManageCampaign()) {
     campaignMembers = [];

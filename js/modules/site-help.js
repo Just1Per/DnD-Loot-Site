@@ -1,10 +1,12 @@
 'use strict';
 var SiteHelp=(()=>{
+ // Versioned guide preferences and weakly held DOM badges survive UI refreshes without leaks.
  const D=SiteHelpData,VERSION='1',decorated=new WeakMap();
  let tip=null,active=null,pinned=false,hideTimer=null,refreshTimer=null,observer=null,returnFocus=null;
  const norm=v=>String(v||'').replace(/\s+/g,' ').trim().toLowerCase();
  function titleOf(node){const copy=node.cloneNode(true);copy.querySelectorAll('input,select,textarea,button,small,.sheet-help,.vault-help-badge').forEach(e=>e.remove());return copy.textContent.replace(/\s+/g,' ').trim();}
  function context(node){return node.closest('[data-sheet-section]')?.dataset.sheetSection|| (node.closest('#dmToolsPanel,#tab-dm')?'campaign':node.closest('#itemModal')?'item':node.closest('#userModal')?'account':node.closest('#campaignModal')?'campaign':'entry');}
+ /** Prefer exact field metadata before contextual fallbacks for dynamic editors. */
  function explain(control,label=''){
   const key=control.name||'',id=control.id||'',ctx=context(control),name=norm(label||control.getAttribute('aria-label')||control.placeholder||key||id);
   if(D.fields[key])return D.fields[key];if(D.ids[id])return D.ids[id];
@@ -46,22 +48,25 @@ var SiteHelp=(()=>{
  function boxText(label){const key=norm(label).replace(/^[^a-z]+/,'');return D.boxes[key]||(/spell sheet|generated spell/.test(key)?D.boxes.spells:/pact magic/.test(key)?'Warlock’s separate slot pool. Mark spent Pact Magic slots here; short or long rest restores them.':/class features|class reference|features unlocked/.test(key)?D.boxes['class reference']:/point buy/.test(key)?D.boxes['point buy']:/calculated from/.test(key)?D.boxes['calculated from your choices']:null);}
  function hide(){clearTimeout(hideTimer);if(active){active.removeAttribute('aria-describedby');active.setAttribute('aria-expanded','false');}active=null;pinned=false;if(tip)tip.hidden=true;}
  function position(){if(!active||!tip)return;const rect=active.getBoundingClientRect?.()||{left:8,right:24,top:8,bottom:24},width=tip.getBoundingClientRect?.().width||300,height=tip.getBoundingClientRect?.().height||100;const vw=window.innerWidth||360,vh=window.innerHeight||800;tip.style.left=Math.max(8,Math.min(rect.left,vw-width-8))+'px';tip.style.top=(rect.bottom+8+height<=vh?rect.bottom+8:Math.max(8,rect.top-height-8))+'px';}
+ /** Put tooltips in the active native dialog’s top layer so they remain readable. */
  function show(button){clearTimeout(hideTimer);if(active!==button)hide();active=button;const modal=button.closest('dialog');(modal?.open?modal:document.body).appendChild(tip);tip.textContent=button._vaultHelp;tip.hidden=false;button.setAttribute('aria-describedby',tip.id);button.setAttribute('aria-expanded','true');position();}
- function badge(host,title,text,control=null){
+ /** Help is never a form value; prevent clicks from toggling its surrounding label/summary. */
+ function badge(host,title,text){
   if(!text||decorated.get(host)?.isConnected)return;
-  const b=document.createElement('button');b.type='button';b.className='vault-help-badge';b.textContent='?';b.setAttribute('aria-label','Help: '+title);b.setAttribute('aria-expanded','false');b._vaultHelp=text;b._vaultHelpControl=control;decorated.set(host,b);
+  const b=document.createElement('button');b.type='button';b.className='vault-help-badge';b.textContent='?';b.setAttribute('aria-label','Help: '+title);b.setAttribute('aria-expanded','false');b._vaultHelp=text;decorated.set(host,b);
   if(host.tagName==='INPUT'&&host.closest('#loginControls')){const group=document.createElement('span');group.className='vault-help-login-field';host.before(group);group.append(host,b);}
   else if(host.tagName==='INPUT'||host.tagName==='SELECT'||host.tagName==='TEXTAREA'||host.tagName==='BUTTON')host.after(b);else host.appendChild(b);
   b.addEventListener('pointerenter',()=>show(b));b.addEventListener('pointerleave',()=>{if(!pinned)hideTimer=setTimeout(hide,200);});b.addEventListener('focus',()=>show(b));b.addEventListener('blur',()=>{if(!pinned)hide();});
   b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(active===b&&pinned)hide();else{show(b);pinned=true;}});
  }
+ /** Decorate new controls once, restoring badges if a renderer replaced their heading. */
  function refresh(){
   if(!tip)return;
   document.querySelectorAll('input:not([type=hidden]),select,textarea').forEach(control=>{
    if(control.closest('.vault-help-dialog,.sheet-paper-page,#test-results'))return;
    const label=control.closest('label')||[...document.querySelectorAll('label[for]')].find(l=>l.htmlFor===control.id&&control.id);
    const title=label?titleOf(label):control.getAttribute('aria-label')||control.placeholder||control.name||control.id;
-   if(!title)return;const span=label?.querySelector(':scope > span');badge(span||label||control,title,explain(control,title),control);
+   if(!title)return;const span=label?.querySelector(':scope > span');badge(span||label||control,title,explain(control,title));
   });
   document.querySelectorAll('h2,h3,h4,legend,details>summary').forEach(heading=>{
    if(heading.closest('.vault-help-dialog,.sheet-paper-page,#card-container,.sheet-progression-feature,.sheet-spell-information'))return;
@@ -74,6 +79,7 @@ var SiteHelp=(()=>{
   const guide=document.getElementById('siteGuideButton');if(guide)guide.hidden=!currentUser;
   if(active&&!active.isConnected)hide();
  }
+ // Static instructions and navigation actions; opening a guide does not write campaign data.
  const guides={
   player:{title:'Player guide',intro:'Join your table, build your character and keep your items and adventure records together.',steps:[
    ['Join a campaign','Ask your DM to invite the email you use to log in. On the dashboard, accept the invitation, then open the campaign. Each campaign has its own membership role.','invitations','View invitations'],
@@ -105,7 +111,10 @@ var SiteHelp=(()=>{
  function roles(){return isAdmin()?['player','dm','admin']:isDM()||canManageCampaign()?['player','dm']:['player'];}
  function key(r){return 'dnd-guide-'+VERSION+'-'+(currentUser?.uid||currentUser?.id||'')+'-'+r;}
  function suppressed(r){try{return localStorage.getItem(key(r))==='hidden';}catch{return false;}}
- function closeGuide(){const dialog=document.getElementById('siteGuideDialog');if(!dialog)return;const r=dialog.dataset.guideRole,check=dialog.querySelector('#siteGuideRemember');try{localStorage.setItem(key(r),check?.checked?'hidden':'show');}catch{}if(dialog.open)dialog.close();dialog.remove();returnFocus?.focus?.();}
+ /** Preferences are optional: unavailable browser storage must not block navigation. */
+ function rememberGuide(dialog){try{localStorage.setItem(key(dialog.dataset.guideRole),dialog.querySelector('#siteGuideRemember')?.checked?'hidden':'show');}catch{}}
+ function closeGuide(){const dialog=document.getElementById('siteGuideDialog');if(!dialog)return;rememberGuide(dialog);if(dialog.open)dialog.close();dialog.remove();returnFocus?.focus?.();}
+ /** Recheck live permissions before taking a guide shortcut into an existing editor. */
  function navigate(action){
   if(!currentUser)return;
   if(action==='player-guide'){closeGuide();openGuide('player');return;}
@@ -119,10 +128,11 @@ var SiteHelp=(()=>{
   if(!currentUser)return;hide();const allowed=roles(),r=allowed.includes(requested)?requested:role();const old=document.getElementById('siteGuideDialog');if(old){if(old.open)old.close();old.remove();}else returnFocus=document.activeElement;
   const g=guides[r],dialog=document.createElement('dialog');dialog.id='siteGuideDialog';dialog.className='vault-help-dialog';dialog.dataset.guideRole=r;dialog.setAttribute('aria-labelledby','siteGuideTitle');
   dialog.innerHTML='<header><div><small>GET STARTED · CAMPAIGNATLAS</small><h2 id="siteGuideTitle">'+g.title+'</h2><p>'+g.intro+'</p></div><button type="button" data-guide-close aria-label="Close guide">×</button></header><nav aria-label="Choose a guide">'+allowed.map(k=>'<button type="button" data-guide-role="'+k+'" aria-pressed="'+(k===r)+'">'+guides[k].title+'</button>').join('')+'</nav><ol>'+g.steps.map(([title,text,action,label])=>'<li><h3>'+title+'</h3><p>'+text+'</p><button type="button" data-guide-action="'+action+'">'+label+'</button></li>').join('')+'</ol><footer><label><input type="checkbox" id="siteGuideRemember" '+(suppressed(r)?'checked':'')+'> Don’t open this guide automatically after login</label><p>You can always reopen it with Guide in the header. The small ? buttons explain fields as you go.</p><button type="button" class="btn-primary" data-guide-close>Done</button></footer>';
-  document.body.appendChild(dialog);dialog.querySelectorAll('[data-guide-role]').forEach(b=>b.onclick=()=>{const check=dialog.querySelector('#siteGuideRemember');try{localStorage.setItem(key(r),check.checked?'hidden':'show');}catch{}openGuide(b.dataset.guideRole);});dialog.querySelectorAll('[data-guide-action]').forEach(b=>b.onclick=()=>navigate(b.dataset.guideAction));dialog.querySelectorAll('[data-guide-close]').forEach(b=>b.onclick=closeGuide);dialog.addEventListener('cancel',event=>{event.preventDefault();closeGuide();});dialog.addEventListener('click',event=>{if(event.target===dialog)closeGuide();});dialog.showModal();
+  document.body.appendChild(dialog);dialog.querySelectorAll('[data-guide-role]').forEach(b=>b.onclick=()=>{rememberGuide(dialog);openGuide(b.dataset.guideRole);});dialog.querySelectorAll('[data-guide-action]').forEach(b=>b.onclick=()=>navigate(b.dataset.guideAction));dialog.querySelectorAll('[data-guide-close]').forEach(b=>b.onclick=closeGuide);dialog.addEventListener('cancel',event=>{event.preventDefault();closeGuide();});dialog.addEventListener('click',event=>{if(event.target===dialog)closeGuide();});dialog.showModal();
  }
  function onLogin(){refresh();if(currentUser&&!suppressed(accountRole()))openGuide(accountRole());}
  function onLogout(){hide();const d=document.getElementById('siteGuideDialog');if(d){if(d.open)d.close();d.remove();}const b=document.getElementById('siteGuideButton');if(b)b.hidden=true;}
+ /** Install one tooltip, one Guide button and observation of dynamically rendered forms. */
  function init(){
   if(tip)return;tip=document.createElement('div');tip.id='vaultContextHelp';tip.className='vault-context-help';tip.setAttribute('role','tooltip');tip.hidden=true;document.body.appendChild(tip);tip.addEventListener('pointerenter',()=>clearTimeout(hideTimer));tip.addEventListener('pointerleave',()=>{if(!pinned)hideTimer=setTimeout(hide,200);});
   const button=document.createElement('button');button.id='siteGuideButton';button.type='button';button.className='toolbar-btn';button.textContent='? Guide';button.hidden=!currentUser;button.onclick=()=>openGuide();document.getElementById('logoutButton')?.before(button);

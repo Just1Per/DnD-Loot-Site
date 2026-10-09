@@ -1,6 +1,7 @@
 'use strict';
 /* Campaign-local policy. Source catalogues and existing character selections are never deleted. */
 var CampaignRules=(()=>{
+ // Overrides are keyed by campaign ID; unavailable tracks deployments without policy rules.
  const overrides=new Map(),unavailable=new Set();let unsubscribe=[];
  const stop=()=>{unsubscribe.forEach(fn=>fn());unsubscribe=[];};
  const active=()=>typeof activeCampaign==='undefined'?null:activeCampaign;
@@ -12,8 +13,13 @@ var CampaignRules=(()=>{
   if(/2014|\bPHB\b|\bDMG\b|\bMM\b/i.test(text))return'2014';
   return null; // Edition-neutral equipment and homebrew remain available.
  }
- const allowed=(row,campaign=active())=>!recordEdition(row)||editions(campaign).includes(recordEdition(row));
+ /** Edition-neutral records remain selectable; infer a version once per record. */
+ function allowed(row,campaign=active()){
+  const edition=recordEdition(row);
+  return !edition||editions(campaign).includes(edition);
+ }
  const records=(campaign=active())=>overrides.get(campaign?.id)||[];
+ /** Bound campaign-editable facts; bundled definitions and saved selections stay separate. */
  function normalize(raw){
   const number=(v,min,max)=>Math.max(min,Math.min(max,Math.trunc(Number(v)||0)));
   return {name:String(raw.name||'').trim().slice(0,160),description:String(raw.description||'').slice(0,12000),edition:raw.edition==='2014'?'2014':'2024',hidden:raw.hidden===true,custom:raw.custom===true,minimumLevel:number(raw.minimumLevel,0,20),hpPerLevel:number(raw.hpPerLevel,0,10),speedBonus:number(raw.speedBonus,0,60),armorTraining:[...new Set((raw.armorTraining||[]).filter(v=>['light','medium','heavy','shield'].includes(v)))]};
@@ -45,6 +51,7 @@ var CampaignRules=(()=>{
    setOverrides(campaign.id,snapshot.docs.map(d=>({id:d.id,...d.data()})));unavailable.delete(campaign.id);
   }catch(error){if(error.code==='permission-denied'&&!campaign.allowedEditions){unavailable.add(campaign.id);setOverrides(campaign.id,[]);return;}throw error;}
  }
+ /** Replace listeners on campaign changes and ignore snapshots from an old campaign. */
  function watch(campaign=active()){
   stop();const sdk=globalThis.__DND_VAULT_DEPS__;if(!campaign||!sdk?.onSnapshot||unavailable.has(campaign.id))return;
   let previous=JSON.stringify([editions(campaign),records(campaign)]);
