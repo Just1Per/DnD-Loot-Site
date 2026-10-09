@@ -107,11 +107,10 @@ var CharacterStory = (()=>{
    ]
   };
  }
- // Keep existing personality options; add original alignment-flavoured prompts.
+ // Keep source suggestions and supplement every known background with original prompts.
  // Alignment tags are inspiration only, never character restrictions.
- function enrichPersonality(profile,bg){
+ function enrichTraits(profile,bg){
   const existing=profile.personality||[];
-  if(existing.length>=8)return profile;
   const name=String(bg?.name||'adventurer').replace(/\\s*—.*$/,'').replace(/\\s*\\(.*?\\)$/,'');
   const tags=[
    [/acolyte|cultist|pilgrim|moonwell|initiate|temple/i,['my faith','sacred tradition','strangers seeking guidance','an old vow']],
@@ -136,15 +135,50 @@ var CharacterStory = (()=>{
    'What I learned from '+life+' taught me to secure my advantage before helping anyone else. (Evil-leaning)',
    'I consider both sides of every dispute through the lens of '+memory+' before I choose a side. (Neutral-leaning)'
   ];
-  return {...profile,personality:existing.concat(extra.slice(0,8-existing.length))};
+  const fill=(rows,extraRows)=>{
+   const result=[...(rows||[])],seen=new Set(result.map(row=>typeof row==='string'?row:row.text));
+   for(const row of extraRows){if(result.length>=8)break;const text=typeof row==='string'?row:row.text;if(!seen.has(text)){result.push(row);seen.add(text);}}
+   return result;
+  };
+  return {...profile,personality:fill(existing,extra),
+   ideals:fill(profile.ideals,[
+    ideal('Integrity: I keep my promises to '+people+' even when an easier path appears.','Lawful'),
+    ideal('Discovery: The lessons of '+life+' are a starting point, never a limit on what I can become.','Chaotic'),
+    ideal('Kindness: I measure success by the lives I improve, especially among '+people+'.','Good'),
+    ideal('Power: I will turn the secrets of '+life+' into influence that others cannot take away.','Evil'),
+    ideal('Prudence: I protect what matters without letting the past decide every choice.','Neutral'),
+    ideal('Excellence: I want my actions to honor the best lessons of '+custom+'.','Any'),
+    ideal('Independence: I choose my own path while accepting responsibility for its consequences.','Any'),
+    ideal('Legacy: What I learned from '+life+' should survive through those who follow me.','Any')
+   ]),
+   bonds:fill(profile.bonds,[
+    'I owe my life to someone I met during '+life+', and I intend to repay that debt.',
+    'I carry a keepsake that reminds me of '+memory+' and will not willingly part with it.',
+    'A friend among '+people+' disappeared, and I am determined to find them.',
+    'I promised to pass on the lessons of '+custom+' to someone who needs them.',
+    'I left unfinished business in '+life+' that I must return to settle.',
+    'I want to make a safe home for someone who shared '+life+' with me.',
+    'I am searching for the truth behind '+memory+'.',
+    'Someone from '+life+' believes in me when I cannot believe in myself.'
+   ]),
+   flaws:fill(profile.flaws,[
+    'I become defensive when strangers criticize '+custom+'.',
+    'I hide mistakes that might disappoint '+people+', even when honesty would help.',
+    'I chase any clue connected to '+memory+' without thinking through the danger.',
+    'I compare new companions to people from '+life+' before giving them a fair chance.',
+    'I insist on solving problems alone because asking for help feels like failure.',
+    'I spend resources too freely when they might win respect from '+people+'.',
+    'I put off difficult conversations by returning to familiar routines from '+life+'.',
+    'I let an old grudge from '+life+' cloud my judgment of new opportunities.'
+   ])};
  }
  function get(background){
   const key=String(background||'').replace(/-20(?:14|24)$/,''),canonical=alias[key]||key;
   const adobe=typeof CharacterAdobeData!=='undefined'?CharacterAdobeData.story:null;
   const known=typeof CharacterBackgrounds!=='undefined'?CharacterBackgrounds.get(background):null;
-  if(adobe?.[canonical])return enrichPersonality({...adobe[canonical],ideals:(adobe[canonical].ideals||[]).map(parsedIdeal),source:'Adobe sheet table'},known||{name:canonical});
-  const p=profiles[canonical];if(p)return enrichPersonality(expanded(canonical,p),known||{name:canonical});
-  if(known)return enrichPersonality(genericKnownBackground(known),known);
+  if(adobe?.[canonical])return enrichTraits({...adobe[canonical],ideals:(adobe[canonical].ideals||[]).map(parsedIdeal),source:'Adobe sheet table'},known||{name:canonical});
+  const p=profiles[canonical];if(p)return enrichTraits(expanded(canonical,p),known||{name:canonical});
+  if(known)return enrichTraits(genericKnownBackground(known),known);
   return {source:'Custom background — write your own',personality:[],ideals:[],bonds:[],flaws:[]};
  }
  return {get};

@@ -86,7 +86,7 @@ var CharacterFeatRules = (() => {
       }
       if(def.armorTraining?.length){
         for(const type of def.armorTraining)effects.proficiencies.push({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[type]);
-        automated.push('Edition-specific armor/shield training');
+        automated.push('Armor training: '+def.armorTraining.map(type=>({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[type])).join(', '));
       }
       const core=def.source==='PHB'||def.source==='XPHB'||def.source==='TCE';
       if(!core)continue;

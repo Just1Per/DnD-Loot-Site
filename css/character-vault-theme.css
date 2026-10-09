@@ -2518,3 +2518,23 @@
 #dmCampaignRules button:focus-visible { outline:2px solid #d4af37; outline-offset:3px; }
 #dmCampaignRules .dm-tool-actions { align-items:center; }
 #dmToolsPanel .admin-char-btns { max-width:100%; flex-shrink:1; }
+
+/* Native disclosure retains keyboard access and keeps creature skill lists compact. */
+#characterSheetDialog .sheet-companion-skills > summary {
+  cursor: pointer;
+  justify-content: flex-start;
+  gap: 7px;
+  color: var(--vault-burgundy);
+  font: 700 11px/1.2 Cinzel, Georgia, serif;
+  text-transform: uppercase;
+}
+#characterSheetDialog .sheet-companion-skills > summary::before {
+  content: '▸';
+  font-size: 14px;
+}
+#characterSheetDialog .sheet-companion-skills[open] > summary::before { content: '▾'; }
+#characterSheetDialog .sheet-companion-skills > summary small { margin-left: auto; }
+#characterSheetDialog .sheet-companion-skills > summary:focus-visible {
+  outline: 2px solid var(--vault-burgundy);
+  outline-offset: 3px;
+}

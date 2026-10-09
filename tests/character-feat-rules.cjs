@@ -96,3 +96,15 @@ test('Multiclass Fighter grants medium armor and shields without starting-class 
  const d=M.normalize({build:{classId:'wizard',edition:'2024'}});d.adobe={classLevels:[{classId:'wizard',level:3},{classId:'fighter',level:1}]};
  const r=M.derive(d,4);assert.ok(r.effects.proficiencies.includes('Medium armor'));assert.ok(r.effects.proficiencies.includes('Shields'));assert.ok(!r.effects.proficiencies.includes('Heavy armor'));assert.ok(!r.effects.saves.includes('con'));
 });
+
+test('shield-granting feats activate worn shields and explain their actual training',()=>{
+ for(const [name,source,shields] of [['Moderately Armored','PHB',true],['Moderately Armored','XPHB',false],['Lightly Armored','XPHB',true]]){
+  const d=sheet(name,{abilities:['dex']},{build:{classId:'rogue'},abilities:{dex:14}},source);
+  d.equipmentState.loadout=[{id:'shield',equipped:true}];
+  const result=M.derive(d,4,[{id:'shield',quantity:1,item:{name:'Shield'}}]);
+  assert.equal(result.effects.proficiencies.includes('Shields'),shields);
+  assert.equal(result.gear.shield,source==='PHB'||shields?2:0);
+  const training=result.feats.reports[0].automated.find(text=>text.startsWith('Armor training:'));
+  assert.equal(training.includes('Shields'),shields);
+ }
+});
