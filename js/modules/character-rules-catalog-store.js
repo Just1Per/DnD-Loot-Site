@@ -9,6 +9,27 @@ var CharacterRulesCatalogStore=(()=>{
   const LICENSE={'2014':{source:'SRD 5.1',license:'CC-BY-4.0'},'2024':{source:'SRD 5.2.1',license:'CC-BY-4.0'}};
   const safeId=id=>String(id||'record').replaceAll('/','_').slice(0,500);
   const jsonSafe=value=>JSON.parse(JSON.stringify(value,(key,v)=>typeof v==='function'||v===undefined?undefined:v));
+  // Firestore does not allow an array directly inside another array.
+  // Encode only nested arrays as tagged maps and restore them on reads.
+  const NESTED_ARRAY_TAG='__rulesCatalogNestedArray';
+  const firestoreSafe=(value,insideArray=false)=>{
+    if(Array.isArray(value)){
+      if(insideArray)return {[NESTED_ARRAY_TAG]:JSON.stringify(value)};
+      return value.map(item=>firestoreSafe(item,true));
+    }
+    if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).map(([key,item])=>[key,firestoreSafe(item,false)]));
+    return value;
+  };
+  const restoreFirestoreArrays=value=>{
+    if(Array.isArray(value))return value.map(restoreFirestoreArrays);
+    if(value&&typeof value==='object'){
+      if(Object.keys(value).length===1&&typeof value[NESTED_ARRAY_TAG]==='string'){
+        try{return restoreFirestoreArrays(JSON.parse(value[NESTED_ARRAY_TAG]));}catch(error){return value;}
+      }
+      return Object.fromEntries(Object.entries(value).map(([key,item])=>[key,restoreFirestoreArrays(item)]));
+    }
+    return value;
+  };
   const feature=row=>jsonSafe({name:String(row?.name||''),level:Number(row?.level||0),summary:String(row?.summary||''),source:String(row?.source||'class'),action:String(row?.action||''),recharge:String(row?.recharge||''),incomplete:!!row?.incomplete});
   function artificer(edition){
     const rows=edition==='2024'
@@ -34,7 +55,7 @@ var CharacterRulesCatalogStore=(()=>{
   async function readMeta(edition){const {db,doc,getDoc}=D();if(!db||!doc||!getDoc)return null;try{const s=await getDoc(doc(db,'rulesCatalog',release(edition)));return s.exists()?s.data():null}catch(e){return null}}
   async function readKind(edition,kind){
     const {db,collection,getDocs}=D();if(!db||!collection||!getDocs||!KINDS.includes(kind))return{};
-    try{const snap=await getDocs(collection(db,'rulesCatalog',release(edition),kind)),out={};snap.docs.forEach(d=>{const row=d.data();if(Number(row.catalogVersion||0)===CATALOG_VERSION)out[row.id||d.id]=row});return out}
+    try{const snap=await getDocs(collection(db,'rulesCatalog',release(edition),kind)),out={};snap.docs.forEach(d=>{const row=restoreFirestoreArrays(d.data());if(Number(row.catalogVersion||0)===CATALOG_VERSION)out[row.id||d.id]=row});return out}
     catch(e){console.warn('[rulesCatalog] read failed',edition,kind,e?.message||e);return{}}
   }
   async function loadEdition(edition){edition=release(edition);const meta=await readMeta(edition);if(!meta)return null;const [classes,subclasses]=await Promise.all([readKind(edition,'classes'),readKind(edition,'subclasses')]);return Object.keys(classes).length&&Object.keys(subclasses).length?{classes,subclasses,version:Number(meta.version||0),meta}:null}
@@ -43,7 +64,7 @@ var CharacterRulesCatalogStore=(()=>{
     const kinds={};for(const kind of KINDS){const rows=Object.values(snapshot?.[kind]||{}),incomplete=rows.filter(row=>row.partial||row.incomplete||(Array.isArray(row.features)&&row.features.some(f=>f.incomplete))).length;kinds[kind]={records:rows.length,complete:rows.length-incomplete,incomplete}}
     const classFeatures=Object.values(snapshot?.classes||{}).flatMap(row=>row.features||[]);kinds.classFeatureRecords={records:classFeatures.length,complete:classFeatures.filter(row=>!row.incomplete&&row.summary).length};kinds.classFeatureRecords.incomplete=kinds.classFeatureRecords.records-kinds.classFeatureRecords.complete;return kinds;
   }
-  async function commitChunk(rows){const {db,writeBatch,doc}=D(),batch=writeBatch(db);for(const row of rows)batch.set(doc(db,...row.path),row.data);await batch.commit()}
+  async function commitChunk(rows){const {db,writeBatch,doc}=D(),batch=writeBatch(db);for(const row of rows)batch.set(doc(db,...row.path),firestoreSafe(row.data));await batch.commit()}
   async function seedEdition(edition){
     edition=release(edition);const {db,doc,setDoc,writeBatch}=D();if(!db||!doc||!setDoc||!writeBatch)throw new Error('Firestore is not ready.');if(typeof window.isAdmin==='function'&&!window.isAdmin())throw new Error('Only a global admin can publish rules reference data.');
     const snapshot=await localSnapshot(edition);if(!snapshot)throw new Error('Rules catalogue is not loaded.');const now=Date.now(),writes=[];
