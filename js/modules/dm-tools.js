@@ -91,7 +91,7 @@ function ensureDMToolsUI() {
       const button=document.createElement('button');
       button.type='button';button.className='tab';button.dataset.tab=tabId;
       button.id='dmPlanningTab-'+tool.id;
-      button.textContent=tool.title;button.style.display=tool.id==='one-shots'&&canUseCharacters()?'inline-block':'none';
+      button.textContent=tool.title;button.style.display=activeCampaign&&canManageCampaign()?'inline-block':'none';
       const preceding=tool.id==='world'?dmButton:document.getElementById('dmPlanningTab-'+(tool.id==='chapters'?'world':'chapters'));
       preceding?.after(button);
       button.addEventListener('click',()=>showTab(tabId));
@@ -372,7 +372,7 @@ function renderDMTools() {
 
   for(const tool of DM_PLANNING_TOOLS){
     const tab=document.getElementById('dmPlanningTab-'+tool.id);
-    if(tab)tab.style.display=activeCampaign&&(canManageCampaign()||tool.id==='one-shots'&&canUseCharacters())?'inline-block':'none';
+    if(tab)tab.style.display=activeCampaign&&canManageCampaign()?'inline-block':'none';
   }
   if (!activeCampaign || !canManageCampaign()) {
     panel.innerHTML = `<div class="dm-tool-card"><p>You do not have DM access to this campaign.</p></div>`;
