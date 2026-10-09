@@ -5,6 +5,7 @@ const fakeAuth={currentUser:{uid:'dm',email:'dm@example.test'}};
 const fakeWrite=async(path,data)=> { if(testFailWrite) throw new Error('Simulated permission-denied'); testWrites.push({path,data}); };
 window.__DND_VAULT_DEPS__={db:{},auth:fakeAuth,storage:{},provider:{},
  doc:(_, ...path)=>path.join('/'), collection:(_, ...path)=>path.join('/'),
+ addDoc:async(path,data)=>{if(window.testCreateGate)await window.testCreateGate;await fakeWrite(path,data);const id="created-"+testWrites.length;testSheetDocs[path+"/"+id]=structuredClone(data);return {id};},
  setDoc:fakeWrite,updateDoc:fakeWrite,deleteDoc:path=>fakeWrite(path,null),
  writeBatch:()=>{const writes=[];return {set:(p,d)=>writes.push([p,d]),update:(p,d)=>writes.push([p,d]),delete:p=>writes.push([p,null]),commit:async()=>{if(testFailWrite)throw Error('Simulated permission-denied');for(const [p,d] of writes) await fakeWrite(p,d);}}},
  getDocs:async()=>({docs:[]}),getDoc:async p=>{if(testSheetFail)throw Object.assign(Error('Permission denied'),{code:'permission-denied'});return {exists:()=>!!testSheetDocs[p],data:()=>structuredClone(testSheetDocs[p])};},

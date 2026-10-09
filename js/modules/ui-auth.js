@@ -81,62 +81,31 @@ function initModalListeners() {
     if (list) list.appendChild(createPropertyRow());
   });
 
-  // Create character
-  document.getElementById("playerCreateCharBtn")?.addEventListener("click", async () => {
-    if (!activeCampaign) {
-      alert("No active campaign.");
-      return;
+  // Create a campaign identity first; the sheet owns all editable character details.
+  document.getElementById("playerCreateCharBtn")?.addEventListener("click", async event => {
+    const button = event.currentTarget;
+    if (button.disabled) return;
+    if (!activeCampaign || !auth.currentUser) { alert("Choose a campaign first."); return; }
+    if (!canUseCharacters()) { alert("You do not have permission to create characters in this campaign."); return; }
+    if (myCharacters().length >= 10) { alert("You can have a maximum of 10 active characters in one campaign."); return; }
+    // Capture the scope before the write so a campaign switch cannot mix character lists.
+    const campaignId = activeCampaign.id, userId = auth.currentUser.uid;
+    const stamp = Date.now();
+    const data = { name: "New character", class: "", level: 1, userId, active: true, created: stamp, lastSelectedAt: stamp };
+    button.disabled = true;
+    try {
+      const newRef = await addDoc(collection(db, "campaigns", campaignId, "characters"), data);
+      if (activeCampaign?.id !== campaignId || auth.currentUser?.uid !== userId) return;
+      const newChar = { id: newRef.id, ...data };
+      if (!characters.some(character => character.id === newChar.id)) characters.push(newChar);
+      selectedCharacter = newChar;
+      renderPlayerTab(); populateOwnerFilter(); renderCards();
+      await openCharacterSheet(newChar.id);
+    } catch (error) {
+      alert(`Could not create character: ${error.message}`);
+    } finally {
+      button.disabled = false;
     }
-
-    if (!canUseCharacters()) {
-      alert("You do not have permission to create characters in this campaign.");
-      return;
-    }
-
-    if (myCharacters().length >= 10) {
-      alert("You can have a maximum of 10 active characters in one campaign.");
-      return;
-    }
-
-    const name  = document.getElementById("playerCharName").value.trim();
-    const cls   = document.getElementById("playerCharClass").value;
-    const level = parseInt(document.getElementById("playerCharLevel").value) || null;
-
-    if (!name) {
-      alert("Enter a character name.");
-      return;
-    }
-
-    if (level !== null && (level < 1 || level > 20)) {
-      alert("Level must be 1–20.");
-      return;
-    }
-
-    const data = {
-      name,
-      class: cls,
-      level,
-      userId: auth.currentUser.uid,
-      active: true,
-      created: Date.now(),
-      lastSelectedAt: Date.now()
-    };
-
-    const newRef = await addDoc(
-      collection(db, "campaigns", activeCampaign.id, "characters"),
-      data
-    );
-
-    const newChar = { id: newRef.id, ...data };
-    characters.push(newChar);
-    selectedCharacter = newChar;
-
-    document.getElementById("playerCharName").value = "";
-    document.getElementById("playerCharLevel").value = "";
-
-    renderPlayerTab();
-    populateOwnerFilter();
-    renderCards();
   });
 
   document.querySelectorAll(".modal").forEach(modal=>{

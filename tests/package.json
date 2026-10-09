@@ -19,6 +19,7 @@
     "test:spellcasting": "node --test character-spellcasting.cjs && DND_SPELLCASTING_ONLY=1 node dom.cjs",
     "test:print": "DND_PRINT_ONLY=1 node dom.cjs",
     "test:help": "DND_HELP_ONLY=1 node dom.cjs",
-    "test:auth-cleanup": "node --test runtime-cleanup.cjs && DND_AUTH_CLEANUP_ONLY=1 node dom.cjs"
+    "test:auth-cleanup": "node --test runtime-cleanup.cjs && DND_AUTH_CLEANUP_ONLY=1 node dom.cjs",
+    "test:character-create": "DND_CHARACTER_CREATE_ONLY=1 node dom.cjs"
   }
 }

@@ -83,7 +83,7 @@ var SiteHelp=(()=>{
  const guides={
   player:{title:'Player guide',intro:'Join your table, build your character and keep your items and adventure records together.',steps:[
    ['Join a campaign','Ask your DM to invite the email you use to log in. On the dashboard, accept the invitation, then open the campaign. Each campaign has its own membership role.','invitations','View invitations'],
-   ['Create and select your character','Open My Character, enter a name, class and starting level, then create the character. Set the active character before saving wish-list items or claiming loot.','player','My Character'],
+   ['Create and select your character','Open My Character and click + Create new character. Enter its name in the sheet and choose its class and levels in Character Builder. Save the sheet to update the character list. Set the active character before saving wish-list items or claiming loot.','player','My Character'],
    ['Complete your build','Open Character sheet → Character Builder. Choose edition, species, background and class levels. Overview notices have Fix buttons that take you to unfinished choices. Use Level up for an existing class.','sheet','Character sheet'],
    ['Abilities, feats and spells','Enter base rolled scores or choose Point buy. Complete feat choices, then generate spells for each casting class. Each class has its own preparation allowance and casting ability; Warlock Pact Magic is tracked separately.','sheet','Build your sheet'],
    ['Loot and use equipment','Library shows items made visible by your DM. Claiming depends on the item’s claim mode and shared stock. Owned items appear in Active Gear: wear, take off, attune and open i for full details. Saved items are a wish list.','library','Library'],
