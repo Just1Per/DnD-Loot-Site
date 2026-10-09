@@ -24,3 +24,9 @@ Replacing a map uses an immutable new path. Unreferenced uploads are retained ra
 - `PLAYWRIGHT_PATH=<installed Playwright module> node tests/workspace-browser.cjs`
 
 Emulator fixtures use demo projects and never modify a live campaign. The browser fixture mocks Firebase while using native forms, file inputs and page layout.
+
+## Stage 2 — Creatures & NPCs
+
+World Building now switches between world entries and a searchable/category-filtered unified creature library. Story NPCs, monsters, bosses and companions share one record, with appearance, personality, voice, goals, relationships, optional combat, abilities, saving throws, actions, resistances and boss mechanics. The live card updates without closing the editor. Templates have an explicit revision and can be snapshotted for encounters.
+
+Validation: creature normalization/defaults, statistic bounds and independent snapshots have unit coverage; the browser verifies creating, saving and reopening a 45-HP/16-AC monster and its live card.
