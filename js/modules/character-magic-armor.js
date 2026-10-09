@@ -17,7 +17,7 @@ var CharacterMagicArmor = (() => {
     'spellguard shield':{kind:'shield',base:'',acBonus:0,source:'Adobe: Spellguard Shield'}
   };
   const armorNames=Object.entries(E.armor).sort((a,b)=>b[1].name.length-a[1].name.length);
-  const clean=value=>String(value||'').trim().toLowerCase().replace(/\s+/g,' ');
+  const clean=value=>String(value||'').trim().toLowerCase().replace(/[‐‑–—-]/g,' ').replace(/halfplate/g,'half plate').replace(/\s+/g,' ');
   function bonusFromName(name){
     const a=name.match(/(?:^|\s|,|\()\+([123])(?:\s|$|\))/),b=name.match(/^\+([123])\s+/);
     return Number((a||b)?.[1]||0);
@@ -47,10 +47,40 @@ var CharacterMagicArmor = (() => {
     const base=E.armor[mechanics.base];
     return base?base.baseAC+Number(mechanics.acBonus||0):null;
   }
-  // Prefer explicit stored mechanics. For legacy root/campaign items, provide
-  // the Adobe magic-armor mapping before falling back to the generic name parser.
-  E.infer=item=>item?.mechanics?baseInfer(item):(infer(item)||baseInfer(item));
-  return {special,infer,expectedAC};
+  // Legacy item properties are structured attributes, not free-form description rules.
+  function acAttribute(item){
+    const property=(item.properties||[]).find(p=>/^(ac|armor class|armour class|ac bonus|armor class bonus)$/i.test(String(p?.title||'').trim()));
+    const value=item.ac ?? item.armorClass ?? property?.text;
+    if(value===undefined||value===null||String(value).trim()==='')return null;
+    const raw=String(value).trim(),match=raw.match(/^(?:AC\s*[:=]?\s*)?([+]?[0-9]+)(?:\s*(?:$|[+(]|bonus|to\b))/i);
+    if(!match)return null;
+    const amount=Number(match[1]);
+    if(amount<0||amount>30)return null;
+    return {amount,bonus:match[1].startsWith('+')||/bonus/i.test(property?.title||'')};
+  }
+  function resolve(item={}){
+    const stored=baseInfer(item),name=clean(item.name),attribute=acAttribute(item);
+    const candidate=infer(item);
+    // Longest-name matching keeps Half Plate distinct from Plate.
+    const type=(item.properties||[]).find(p=>/^(armor type|armour type|base armor|base armour)$/i.test(String(p?.title||'').trim()))?.text;
+    const base=baseFromName(clean(item.armorType||type||name));
+    const shield=/\bshield\b/.test(name);
+    let mechanics=!item.mechanics&&candidate?candidate:stored;
+    if(stored.kind==='armor'&&!E.armor[stored.base]&&base)mechanics={...stored,base};
+    if(stored.kind==='none'&&(candidate||attribute&&(base||shield)))mechanics={...E.normalize({kind:shield?'shield':'armor',base:base||candidate?.base||'',acBonus:candidate?.acBonus||bonusFromName(name)}),source:candidate?.source,inferred:true};
+    if(!['armor','shield'].includes(mechanics.kind))return mechanics;
+    if(attribute){
+      const normal=mechanics.kind==='shield'?2:E.armor[mechanics.base]?.baseAC;
+      if(normal!==undefined){
+        // A total such as 16 + DEX already contains Half Plate's +1.
+        // Store its difference from mundane armor to avoid counting it twice.
+        mechanics={...mechanics,acBonus:attribute.bonus||attribute.amount<(mechanics.kind==='shield'?2:4)?attribute.amount:attribute.amount-normal};
+      }
+    }
+    return mechanics;
+  }
+  E.infer=resolve;
+  return {special,infer,expectedAC,acAttribute};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterMagicArmor=CharacterMagicArmor;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterMagicArmor;

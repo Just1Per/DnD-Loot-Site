@@ -89,7 +89,7 @@ var CharacterEquipment = (() => {
   function derive(data,stats,loot=[]) {
     const c=choices(data.equipmentState),warnings=[],sources=[],attacks=[],seen=new Set(),names=new Set();
     const owned=loot.filter(e=>e&&Number(e.quantity)>0&&typeof e.id==='string'&&!seen.has(e.id)&&seen.add(e.id));
-    const entries=owned.map(e=>({entry:e,item:e.item||{},choice:c.loadout.find(v=>v.id===e.id)||{id:e.id,equipped:false,attuned:false,ability:'auto',proficiency:'auto',mode:'normal'},mechanics:infer(e.item)}));
+    const entries=owned.map(e=>({entry:e,item:e.item||{},choice:c.loadout.find(v=>v.id===e.id)||{id:e.id,equipped:false,attuned:false,ability:'auto',proficiency:'auto',mode:'normal'},mechanics:CharacterEquipment.infer(e.item)}));
     let armorEntry=null,shieldEntry=null,attuned=0,bonus=0;
     // Only owned items can consume an attunement slot. Quantity never multiplies bonuses.
     for(const r of entries){
