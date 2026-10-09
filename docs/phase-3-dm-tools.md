@@ -1,6 +1,6 @@
 # CampaignAtlas — Phase 3: game-master workspace
 
-Status: planned after Phase 2. These tools are not implemented or advertised as available in Phase 2.
+Status: Phase 3 foundation. DM Tools now has World Building, Chapter Tracker and One Shots cards beside Item Controls, with expandable setup guides. Editors, persistence, delegated hosting and one-shot rosters are proposed below; the guide cards do not save records.
 
 ## Product direction
 
@@ -8,13 +8,15 @@ Everything your campaign needs in one place: character building and printable sh
 
 Keep the burgundy/gold palette, parchment surfaces and compact, readable Overview design. Build the new workspace inside the current campaign, retaining the existing distinction between global account roles and campaign membership.
 
-## Proposed implementation order
+## Approved direction and delivery order
 
-1. **DM workspace foundation.** Add clearly named DM Tools navigation for Adventures, World and Chapters. Reuse existing campaign membership and permissions. Keep campaign management (members, edition policy, feats, loot and bonus advancement) accessible. Define campaign-scoped storage and migration/versioning before adding editors.
-2. **One-shot ideas and adventures.** Save original ideas with title, level range, player count, estimated duration, premise and hooks. Expand an idea into scenes, encounters, NPCs, locations, rewards and preparation notes. Support drafts, editing, search, duplication and archive, plus a compact printable run sheet. Start with a manual editor and original templates; automatic idea generation needs its own scope decision.
-3. **World building.** Create linked locations, regions, NPCs, factions and organizations with custom fields and notes. Cross-reference existing characters and campaign items rather than duplicate them. Allow the DM to choose what players can see, keeping secrets private by default. Add map/image uploads only with explicit ownership, storage and size rules.
-4. **Chapter tracker.** Order chapters and scenes, mark planned/active/completed, track objectives and session recaps, and link relevant world records and rewards. Show the next chapter and unresolved hooks in a compact campaign summary. Provide a player-visible recap separate from DM notes.
-5. **Connections and finishing.** Link chapters to adventures and world entries, add search and filters, restore archived entries, export/print selected records, and extend role guides and contextual ? help to every new editor.
+1. **Workspace foundation (this delivery).** Four matching cards: Item Controls, World Building, Chapter Tracker and One Shots. Add descriptions, practical setup guides and contextual ? help inside DM Tools. Preserve the existing membership, item controls and character management.
+2. **World editor.** Campaign introduction, linked regions, locations, NPCs and factions. Keep player-facing descriptions separate from private DM notes. Add save/reopen, search, revision conflict handling, archive and compact print.
+3. **Chapter editor.** Ordered planned/active/completed chapters with scenes, objectives, linked world entries, recaps and an explicit milestone plan. The DM confirms and applies level changes in Character Builder.
+4. **One-shot editor.** Focused adventures and side missions, linked to world entries and chapters, with scenes, delegated hosts, invitations and separate character rosters. Offer DM-created pre-generated sheets, player-created sheets or a mixture.
+5. **Connections and finishing.** Publish chosen player material, cross-link records, restore archives, print selected run sheets and extend the role guides. No automatic idea-generation service is included in this plan.
+
+See [Phase 3 architecture](phase-3-architecture.md) for data boundaries, permissions, character integration and acceptance tests.
 
 ## Acceptance criteria for each delivery
 

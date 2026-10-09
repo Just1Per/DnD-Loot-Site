@@ -5,6 +5,43 @@
 
 // ─── DM TOOLS — ROADMAP STEP 3.1 ──────────────────────────────────────────────
 
+// Planning guides establish the workspace before campaign record editors are added.
+// Keep these descriptions independent from storage so future editors can reuse them.
+const DM_PLANNING_TOOLS = Object.freeze([
+  { id: 'world', title: 'World Building', summary: 'Describe the world your campaign takes place in: its atmosphere, history, places, people and the conflicts that make it feel alive.', guide: 'How to describe your world', steps: [
+    ['Start with the world’s promise', 'Write a short introduction: what makes this setting different, what life is like, and what the characters can explore. Pick a tone, such as heroic, mysterious or dangerous.'],
+    ['Describe what players experience', 'For each location, describe what characters see, hear and smell, then add a landmark, a local person and a problem they can interact with. Start with the party’s first location and expand as needed.'],
+    ['Connect people and places', 'Link regions, locations, NPCs and factions. Record what each faction wants and how its actions affect the world. Reuse these entries in chapters and one-shots.'],
+    ['Keep discoveries separate from secrets', 'Prepare a player-facing description alongside private DM notes. Publish discoveries deliberately; hidden motives, future events and unrevealed locations stay private.']
+  ] },
+  { id: 'chapters', title: 'Chapter Tracker', summary: 'Organize your campaign like a book, with ordered chapters, clear objectives and recaps. Plan milestones for a campaign that levels up by chapter.', guide: 'How to plan campaign chapters', steps: [
+    ['Give each chapter a purpose', 'Choose a title, a starting situation and the key question or objective. Divide it into scenes and link the locations, NPCs and encounters involved.'],
+    ['Track the story’s progress', 'Order chapters and mark them planned, active or completed. Record unresolved hooks and a session recap so you know where to begin next time.'],
+    ['Plan chapter-based leveling', 'Record the expected starting level and the milestone or target level for completing the chapter. The DM confirms earned milestones and applies level-ups through Character Builder; completing a chapter must not silently change sheets.'],
+    ['Share the recap', 'Keep encounter plans and future revelations in DM notes. Prepare a separate recap for players containing only what their characters have discovered.']
+  ] },
+  { id: 'one-shots', title: 'One Shots', summary: 'Plan a self-contained adventure or side mission in your campaign’s world. Use a separate roster with DM-made characters, or let invited players create their own.', guide: 'How to set up a one-shot', steps: [
+    ['Keep the adventure focused', 'Write a hook, a clear goal and an ending. Choose a level, player count and session length, then plan a small number of scenes with room to shorten or extend the adventure.'],
+    ['Choose who prepares and runs it', 'The campaign DM can create the adventure or invite a player to prepare and host it. Hosting gives access only to that one-shot, including its preparation notes, not campaign-wide DM tools or secrets.'],
+    ['Choose the character setup', 'Plan a set of pre-generated sheets for the DM to assign, allow each invited player to build a sheet, or combine both. Keep multiple sheets in the one-shot roster and choose the campaign’s allowed editions and any agreed character restrictions.'],
+    ['Return to the campaign deliberately', 'One-shot HP, resources, loot and leveling stay on its own sheets. At the end, record the outcome and let the campaign DM decide which story events or rewards carry into the main campaign.']
+  ] }
+]);
+
+/** Render informational cards; setup guidance does not create or save campaign records. */
+function renderDMPlanningCards() {
+  return DM_PLANNING_TOOLS.map(tool => `
+    <section class="dm-tool-card dm-planning-card" aria-labelledby="dm-planning-${tool.id}">
+      <h2 id="dm-planning-${tool.id}">${escapeHtml(tool.title)}</h2>
+      <p>${escapeHtml(tool.summary)}</p>
+      <details data-dm-planning-guide="${tool.id}">
+        <summary>${escapeHtml(tool.guide)}</summary>
+        <ol>${tool.steps.map(([title, text]) => `<li><strong>${escapeHtml(title)}</strong><p>${escapeHtml(text)}</p></li>`).join('')}</ol>
+        <p class="dm-planning-status">Setup guide · Saving records and managing rosters are planned next.</p>
+      </details>
+    </section>`).join('');
+}
+
 function ensureDMToolsUI() {
   if (document.getElementById("dmTab") && document.getElementById("tab-dm")) return;
 
@@ -41,6 +78,14 @@ function ensureDMToolsUI() {
       .dm-tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0}
       .dm-tool-card{background:#f4efe6;border:3px double #8a7355;border-radius:10px;padding:18px}
       .dm-tool-card--wide{grid-column:1/-1}
+      .dm-planning-grid{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;align-items:start}
+      .dm-planning-card{min-width:0}
+      .dm-planning-card summary{cursor:pointer;color:#5c1d1d;font-weight:700;font-size:.78rem;line-height:1.5;padding:8px 0}
+      .dm-planning-card summary:focus-visible{outline:2px solid #9b1d1d;outline-offset:3px}
+      .dm-planning-card ol{padding-left:20px;color:#5c1d1d;font-size:.78rem;line-height:1.5}
+      .dm-planning-card li{margin:12px 0}
+      .dm-planning-card li p{margin:4px 0}
+      .dm-planning-status{border-top:1px solid #c8b89a;padding-top:10px;font-style:italic}
       .dm-tool-card h2{font-family:"Cinzel",serif;color:#5c1d1d;font-size:1rem;letter-spacing:1px;margin:0 0 12px;text-transform:uppercase}
       .dm-tool-card p{color:#6f6253;font-size:.78rem;line-height:1.5}
       .dm-overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
@@ -316,6 +361,7 @@ function renderDMTools() {
         </div>
       </section>
 
+      <div class="dm-planning-grid" aria-label="Campaign planning tools">
       <section class="dm-tool-card">
         <h2>Item Controls</h2>
         <p>Visibility, loot assignment and highlighting are campaign-scoped. Add catalogue copies or create your own campaign items in the Library. Set available quantities and player-looting permissions on each item.</p>
@@ -323,6 +369,8 @@ function renderDMTools() {
           <button id="dmOpenLibrary" class="btn-primary" type="button">Open Library Controls</button>
         </div>
       </section>
+        ${renderDMPlanningCards()}
+      </div>
 
       <section class="dm-tool-card dm-tool-card--wide">
         <h2>Members</h2>
