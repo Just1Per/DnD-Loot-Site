@@ -5,7 +5,7 @@
  * concise original summaries, and source pointers rather than copied book prose. */
 var CharacterRulesCatalogStore=(()=>{
   const deps=window.__DND_VAULT_DEPS__||{},D=()=>deps,release=e=>e==='2024'?'2024':'2014';
-  const CATALOG_VERSION=2026100503,KINDS=['classes','subclasses','species','backgrounds','feats','spells'];
+  const CATALOG_VERSION=2026100901,KINDS=['classes','subclasses','species','backgrounds','feats','spells'];
   const LICENSE={'2014':{source:'SRD 5.1',license:'CC-BY-4.0'},'2024':{source:'SRD 5.2.1',license:'CC-BY-4.0'}};
   const safeId=id=>String(id||'record').replaceAll('/','_').slice(0,500);
   const jsonSafe=value=>JSON.parse(JSON.stringify(value,(key,v)=>typeof v==='function'||v===undefined?undefined:v));
