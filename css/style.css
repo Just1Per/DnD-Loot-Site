@@ -1039,6 +1039,8 @@ body {
   margin-bottom: 10px;
 }
 
+.player-section > .player-create-row { margin-bottom: 12px; }
+
 .player-create-row {
   display: flex;
   gap: 8px;

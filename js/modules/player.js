@@ -111,7 +111,7 @@ function renderCharacterList() {
   const mine = characters.filter(c=>c.userId===auth.currentUser?.uid);
   const el   = document.getElementById("myCharacterList");
   if (!el) return;
-  if (!mine.length) { el.innerHTML=`<p class="player-empty">No characters yet — create one below.</p>`; return; }
+  if (!mine.length) { el.innerHTML=`<p class="player-empty">No characters yet — use + Create new character above.</p>`; return; }
   el.innerHTML = mine.map(c=>{
     const tier = getTier(c.level);
     const tierBadge = tier
@@ -121,7 +121,7 @@ function renderCharacterList() {
       <div class="character-card ${selectedCharacter?.id===c.id?"character-card--active":""}">
         <div class="character-card-info">
           <span class="character-card-name">${escapeHtml(c.name)}</span>
-          <span class="character-card-class">${escapeHtml(c.class)}${c.level?" · Level "+c.level:""}</span>
+          <span class="character-card-class">${escapeHtml(c.class)}${c.level?(c.class?" · ":"")+"Level "+c.level:""}</span>
           ${tierBadge}
         </div>
         <div class="character-card-actions">
@@ -130,9 +130,6 @@ function renderCharacterList() {
             ? `<button class="btn-select-char" type="button" data-char-id="${c.id}">Set Active</button>`
             : `<span class="active-badge">✓ Active</span>`
           }
-          <button class="btn-rename-char" type="button"
-            data-char-id="${c.id}" data-char-name="${escapeHtml(c.name)}"
-            data-char-class="${escapeHtml(c.class)}" data-char-level="${c.level||""}">Edit</button>
           <button class="btn-archive-char cancel-button" type="button"
             data-char-id="${c.id}" data-char-name="${escapeHtml(c.name)}">${c.active===false?'Restore':'Archive'}</button>
           <button class="btn-hard-delete-own-char dm-danger-btn" type="button"
@@ -157,13 +154,6 @@ function renderCharacterList() {
         alert(`Could not set active character: ${error.message}`);
       }
     });
-  });
-
-  el.querySelectorAll(".btn-rename-char").forEach(btn=>{
-    btn.addEventListener("click", ()=>
-      openEditCharacterModal(btn.dataset.charId, btn.dataset.charName,
-        btn.dataset.charClass, btn.dataset.charLevel)
-    );
   });
 
   el.querySelectorAll(".btn-archive-char").forEach(btn=>btn.addEventListener("click",()=>runVaultButton(btn,()=>deleteCampaignCharacter(btn.dataset.charId))));

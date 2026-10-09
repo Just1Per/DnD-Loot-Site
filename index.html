@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261005-inventory-upgrade-warning-v34">
+  <link rel="stylesheet" href="css/style.css?v=20261009-sheet-first-characters-v74">
   <link rel="stylesheet" href="css/button-theme.css">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="stylesheet" href="css/character-sheet.css?v=20261009-site-help-v72">
@@ -177,22 +177,11 @@
         <p class="player-section-sub">
           The <strong>active</strong> character is used when you save or loot items in this campaign.
         </p>
-        <div id="myCharacterList" class="character-list"></div>
-        <div class="player-create-form">
-          <h3>Create New Character</h3>
-          <div class="player-create-row">
-            <input type="text"   id="playerCharName"  placeholder="Character name…" autocomplete="off">
-            <select id="playerCharClass">
-              <option>Artificer</option><option>Barbarian</option><option>Bard</option>
-              <option>Cleric</option><option>Druid</option><option>Fighter</option>
-              <option>Monk</option><option>Paladin</option><option>Ranger</option>
-              <option>Rogue</option><option>Sorcerer</option><option>Warlock</option>
-              <option>Wizard</option>
-            </select>
-            <input type="number" id="playerCharLevel" placeholder="Level (1–20)" min="1" max="20">
-            <button id="playerCreateCharBtn" type="button">+ Create</button>
-          </div>
+        <div class="player-create-row">
+          <button id="playerCreateCharBtn" type="button">+ Create new character</button>
         </div>
+        <div id="myCharacterList" class="character-list"></div>
+
       </div>
 
       <div class="player-section">
@@ -484,6 +473,6 @@
       </div>
     </div><!-- /tab-admin -->
   <section id="rootCatalogueScreen" style="display:none"></section>
-  <script type="module" src="js/app.js?v=20261009-code-cleanup-v73"></script>
+  <script type="module" src="js/app.js?v=20261009-sheet-first-characters-v74"></script>
 </body>
 </html>
