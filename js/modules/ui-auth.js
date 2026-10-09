@@ -9,6 +9,7 @@ function showTab(tabId, render = true) {
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
   if (tabId === "admin") { openAdminView(); return; }
   if ((tabId === "dm" || ["dm-world","dm-chapters"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
+  if(tabId==="dm-one-shots"&&(!activeCampaign||!canUseCharacters()))return;
   if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c=>c.style.display="none");
@@ -16,6 +17,7 @@ function showTab(tabId, render = true) {
   if (btn) btn.classList.add("active");
   const panel = document.getElementById(`tab-${tabId}`);
   if (panel) panel.style.display="block";
+  if(render&&tabId==="dm-one-shots") CampaignWorkspace.render("oneShot");
   if (render&&tabId==="dm-chapters") CampaignWorkspace.render("chapter");
   if (render&&tabId==="dm-world") CampaignWorkspace.render("world");
   if (tabId==="dm")      { renderDMTools(); }

@@ -18,6 +18,7 @@ var CampaignWorkspace = (() => {
     ++generation; session=null;
     if(imageURL){URL.revokeObjectURL(imageURL);imageURL=null;}
     document.querySelectorAll('.campaign-workspace').forEach(host=>host.remove());
+    document.getElementById('workspaceMonsterCatalog')?.remove();
     return true;
   }
   function beforeNavigate(tab) {
@@ -60,11 +61,11 @@ var CampaignWorkspace = (() => {
     try{if(configs[s.kind].normalize)input.data=configs[s.kind].normalize(input.data);}catch(error){status(error.message,true);return;}
     const snapshot=JSON.stringify(draft());s.busy=true;form.querySelector('[data-save-record]').disabled=true;status('Saving…');
     try{
-      const saved=await store.save({campaignId:s.campaignId,kind:s.kind,id:s.record.id,revision:s.record.revision,input});
+      const saved=await (configs[s.kind].saveRecord||store.save)({campaignId:s.campaignId,kind:s.kind,id:s.record.id,revision:s.record.revision,input});
       if(!current(s))return;
       const latest=draft();s.dirty=snapshot!==JSON.stringify(latest);s.record={...saved,data:latest.data,archived:latest.archived};
       const index=s.rows.findIndex(row=>row.id===saved.id);if(index<0)s.rows.push(saved);else s.rows[index]=saved;
-      renderList();status(s.dirty?'Saved. Newer edits are still unsaved.':'All changes saved.');return true;
+      renderList();if(!s.dirty)configs[s.kind].onSaved?.(s.host.querySelector('[data-extra-editor]'),s);status(s.dirty?'Saved. Newer edits are still unsaved.':'All changes saved.');return true;
     }catch(error){if(current(s))status(`Could not save: ${error.message}`,true);return false;}
     finally{s.busy=false;if(current(s))form.querySelector('[data-save-record]').disabled=false;}
   }
@@ -100,11 +101,11 @@ var CampaignWorkspace = (() => {
   }
   function renderEditor() {
     const s=session;if(!current(s))return;const config=configs[s.kind],r=s.record,page=s.host.querySelector('[data-workspace-page]');
-    page.innerHTML=`<form data-workspace-form><div class="workspace-actions"><button type="submit" data-save-record>Save ${escape(config.noun)}</button><button type="button" data-archive-record>${r.archived?'Restore':'Archive'}</button><button type="button" data-preview-record>Player description</button><button type="button" data-print-record>Print</button></div><p data-workspace-status class="workspace-status" role="status"></p><div class="workspace-fields"><label class="workspace-field workspace-full">Title<input name="title" required maxlength="160" value="${escape(r.title)}"></label><label class="workspace-field workspace-full">Short summary<textarea name="summary" maxlength="1000">${escape(r.summary)}</textarea></label>${fieldsHTML(config,r.data)}<label class="workspace-field workspace-full">${escape(config.content)}<textarea name="content" maxlength="20000">${escape(r.content)}</textarea></label><label class="workspace-field workspace-full">${escape(config.secret)}<textarea name="privateNotes" maxlength="20000">${escape(r.privateNotes)}</textarea></label></div>${s.kind==='world'?'<label class="workspace-field">Image or map (PNG, JPEG, WebP · max 5 MB)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><p>Click the map to add a named location marker. Use the marker list to remove a marker.</p><div data-map class="workspace-map"></div><div data-marker-list></div>':''}<section data-workspace-links></section><div data-extra-editor></div></form><section class="workspace-preview" hidden data-player-preview><h3>Player description preview</h3><div class="workspace-prose"></div></section>`;
+    page.innerHTML=`<form data-workspace-form><div class="workspace-actions"><button type="submit" data-save-record>Save ${escape(config.noun)}</button><button type="button" data-archive-record>${r.archived?'Restore':'Archive'}</button><button type="button" data-preview-record>Player description</button><button type="button" data-print-record>Print</button></div><p data-workspace-status class="workspace-status" role="status"></p><div class="workspace-fields"><label class="workspace-field workspace-full">Title<input name="title" required maxlength="160" value="${escape(r.title)}"></label><label class="workspace-field workspace-full">Short summary<textarea name="summary" maxlength="1000">${escape(r.summary)}</textarea></label>${fieldsHTML(config,r.data)}<label class="workspace-field workspace-full">${escape(config.content)}<textarea name="content" maxlength="20000">${escape(r.content)}</textarea></label><label class="workspace-field workspace-full">${escape(config.secret)}<textarea name="privateNotes" maxlength="20000">${escape(r.privateNotes)}</textarea></label></div>${s.kind==='world'?'<label class="workspace-field">Image or map (PNG, JPEG, WebP · max 5 MB)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><p>Click the map to add a named location marker. Use the marker list to remove a marker.</p><div data-map class="workspace-map"></div><div data-marker-list></div>':''}<label class="workspace-field" data-private-print><span><input type="checkbox" data-print-private> Include private preparation and statistics in print</span></label><section data-workspace-links></section><div data-extra-editor></div></form><section class="workspace-preview" hidden data-player-preview><h3>Player description preview</h3><div class="workspace-prose"></div></section>`;
     const form=page.querySelector('form');form.onsubmit=event=>{event.preventDefault();save();};form.oninput=event=>{if(!event.target.matches('[name],[data-record-field]'))return;s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};form.onchange=event=>{if(!event.target.matches('[name],[data-record-field]'))return;s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};
     page.querySelector('[data-archive-record]').onclick=archive;
     page.querySelector('[data-preview-record]').onclick=()=>{const preview=page.querySelector('[data-player-preview]');preview.hidden=!preview.hidden;preview.querySelector('div').textContent=draft().content;};
-    page.querySelector('[data-print-record]').onclick=()=>printRecord();
+    page.querySelector('[data-print-record]').onclick=()=>printRecord(page.querySelector('[data-print-private]').checked);
     page.querySelector('[data-map-upload]')?.addEventListener('change',event=>upload(event.target.files[0]));
     page.querySelector('[data-map]')?.addEventListener('click',event=>{
       if(!event.target.matches('img')||s.busy)return;
@@ -113,11 +114,13 @@ var CampaignWorkspace = (() => {
       if(s.record.data.markers.length>=50){status('A map can have up to 50 markers.',true);return;}
       s.record.data.markers.push({x:Math.max(0,Math.min(1,(event.clientX-box.left)/box.width)),y:Math.max(0,Math.min(1,(event.clientY-box.top)/box.height)),label:label.trim().slice(0,160)});s.dirty=true;mapImage();renderMarkers();
     });
-    if(!canManageCampaign()){page.querySelector('[data-workspace-links]').remove();s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>button.hidden=true);}
+    if(!canManageCampaign()||config.hideLinks)page.querySelector('[data-workspace-links]').remove();
+    if(!canManageCampaign())s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>button.hidden=true);
     renderLinks();renderMarkers();mapImage();configs[s.kind].extra?.(page.querySelector('[data-extra-editor]'),s);
     const editable=config.canEdit?config.canEdit(r):true;
+    for(const key of config.lockFields?.(r)||[])form.querySelector(`[data-record-field="${key}"]`).disabled=true;
     if(!editable){form.querySelectorAll('[name],[data-record-field],[data-save-record],[data-archive-record]').forEach(control=>control.disabled=true);}
-    if(config.showPrivate&&!config.showPrivate(r))form.querySelector('[name=privateNotes]').closest('label').hidden=true;
+    if(config.showPrivate&&!config.showPrivate(r)){form.querySelector('[name=privateNotes]').closest('label').hidden=true;form.querySelector('[data-private-print]').hidden=true;}
     if(typeof SiteHelp!=='undefined')SiteHelp.refresh();
   }
   async function renderLinks() {
@@ -126,26 +129,35 @@ var CampaignWorkspace = (() => {
     try{
       const lists=await Promise.all(kinds.map(async kind=>(await store.list(s.campaignId,kind)).map(row=>({...row,kind}))));
       if(!current(s)||s.record.id!==recordId||!host.isConnected)return;
-      const rows=lists.flat(),links=s.record.data.links||[];
+      const rows=lists.flat(),links=s.record.data.links||[],incoming=rows.filter(row=>(row.data?.links||[]).some(link=>link.id===recordId&&link.kind===s.kind));
       host.innerHTML=`<h3>Connected campaign entries</h3><div class="workspace-actions"><select data-link-picker aria-label="Entry to link"><option value="">Choose a location, creature, chapter or encounter…</option>${rows.filter(row=>!row.archived&&row.id!==recordId&&!links.some(link=>link.id===row.id&&link.kind===row.kind)).map(row=>`<option value="${row.kind}:${escape(row.id)}">${escape(configs[row.kind].title)} · ${escape(row.title)}</option>`).join('')}</select><button type="button" data-add-link>Add link</button></div>${links.map((link,index)=>{const row=rows.find(row=>row.id===link.id&&row.kind===link.kind);return `<p>${escape(row?.title||'Unavailable entry')}${row?.archived?' (archived)':''} <button type="button" data-remove-link="${index}">Remove link</button></p>`;}).join('')}`;
+      if(incoming.length)host.insertAdjacentHTML('beforeend',`<h4>Referenced by</h4><p>${incoming.map(row=>escape(configs[row.kind].title)+' · '+escape(row.title)+(row.archived?' (archived)':'')).join('<br>')}</p>`);
       host.querySelector('[data-add-link]').onclick=()=>{const value=host.querySelector('select').value;if(!value)return;const [kind,id]=value.split(':');s.record.data.links||=[];if(s.record.data.links.length>=40){status('An entry can have up to 40 links.',true);return;}s.record.data.links.push({kind,id});s.dirty=true;renderLinks();};
       host.querySelectorAll('[data-remove-link]').forEach(button=>button.onclick=()=>{s.record.data.links.splice(Number(button.dataset.removeLink),1);s.dirty=true;renderLinks();});
     }catch(error){if(current(s)&&s.record.id===recordId)host.textContent='Could not load linked entries: '+error.message;}
   }
   function renderMarkers(){const s=session,host=s?.host.querySelector('[data-marker-list]');if(!host)return;host.innerHTML=(s.record.data.markers||[]).map((pin,i)=>`<p>${i+1}. ${escape(pin.label)} <button type="button" data-remove-marker="${i}" aria-label="Remove ${escape(pin.label)}">Remove</button></p>`).join('');host.querySelectorAll('[data-remove-marker]').forEach(button=>button.onclick=()=>{s.record.data.markers.splice(Number(button.dataset.removeMarker),1);s.dirty=true;renderMarkers();mapImage();});}
   function printRecord(includeSecrets=false) {
-    const s=session;if(!current(s))return;const input=draft();let surface=document.getElementById('workspacePrintSurface');
+    const s=session;if(!current(s))return;includeSecrets=includeSecrets&&(!configs[s.kind].showPrivate||configs[s.kind].showPrivate(s.record));const input=draft();let surface=document.getElementById('workspacePrintSurface');
     if(!surface){surface=document.createElement('article');surface.id='workspacePrintSurface';document.body.append(surface);}
-    surface.innerHTML=`<h1>${escape(input.title)}</h1><p>${escape(input.summary)}</p><div class="workspace-prose">${escape(input.content)}</div>${includeSecrets?`<section><h2>DM notes</h2><div class="workspace-prose">${escape(input.privateNotes)}</div></section>`:''}`;
+    surface.innerHTML=`<h1>${escape(input.title)}</h1><p>${escape(input.summary)}</p><div class="workspace-prose">${escape(input.content)}</div>${includeSecrets&&input.privateNotes?`<section><h2>DM notes</h2><div class="workspace-prose">${escape(input.privateNotes)}</div></section>`:''}`;
+    const image=s.host.querySelector('[data-map] img');if(image)surface.insertAdjacentHTML('beforeend',`<img src="${escape(image.src)}" alt="${escape(input.title)}"><p>${(input.data.markers||[]).map((pin,i)=>`${i+1}. ${escape(pin.label)}`).join(' · ')}</p>`);
+    if(includeSecrets){
+      surface.insertAdjacentHTML('beforeend',configs[s.kind].fields.filter(([key])=>input.data[key]!==''&&input.data[key]!=null).map(([key,label])=>`<section><h2>${escape(label)}</h2><div class="workspace-prose">${escape(input.data[key])}</div></section>`).join(''));
+      if(input.data.combatants)surface.insertAdjacentHTML('beforeend',`<h2>Round ${Number(input.data.round)||1}</h2>`+CampaignEncounters.ordered(input.data).map(row=>`<section><h2>${escape(row.name)}</h2><p>Initiative ${row.initiative} · AC ${row.stats.ac} · HP ${row.hp} / ${row.maxHp} · Temporary HP ${row.tempHp}</p><p>${escape(row.conditions.join(', '))}${row.concentration?' · Concentrating':''}</p><div class="workspace-prose">${escape([row.stats.actions,row.stats.traits,row.stats.legendaryActions,row.stats.phases].filter(Boolean).join('\n\n'))}</div></section>`).join(''));
+    }
+    const sources=[input.data.source,...(input.data.combatants||[]).map(row=>row.stats.source)].filter(Boolean);
+    const uniqueSources=[...new Map(sources.map(source=>[source.attribution+' '+source.license,source])).values()];
+    if(uniqueSources.length)surface.insertAdjacentHTML('beforeend','<section><h2>Rules sources</h2>'+uniqueSources.map(source=>`<p class="workspace-prose">${escape(source.attribution)} ${escape(source.changes)} Licence: ${escape(source.license)}</p>`).join('')+'</section>');
     document.body.classList.add('printing-workspace');window.print();
   }
   async function render(kind) {
     if(!configs[kind]||!permitted(kind))return;
     if(current(session)&&session.kind===kind)return;
-    clear(true);const config=configs[kind],panel=document.getElementById('tab-'+config.tab);if(!panel)return;
+    if(!clear())return;const config=configs[kind],panel=document.getElementById('tab-'+config.tab);if(!panel)return;
     panel.innerHTML=`<section class="campaign-workspace"><header class="workspace-heading"><h2>${escape(config.title)}</h2><button type="button" data-new-record>+ New ${escape(config.noun)}</button></header><p>${escape(config.help)}</p><div class="workspace-actions"><button type="button" data-workspace-kind="world">World entries</button><button type="button" data-workspace-kind="creature">Creatures &amp; NPCs</button><button type="button" data-workspace-kind="encounter">Encounters</button></div><div class="workspace-layout"><aside class="workspace-sidebar"><label>Search<input type="search" data-workspace-search></label><label>Category<select data-workspace-category><option value="">All categories</option>${(config.categories||[]).map(value=>`<option>${escape(value)}</option>`).join('')}</select></label><label><input type="checkbox" data-workspace-archived> Show archived</label><div class="workspace-list" data-workspace-list></div></aside><article class="workspace-page" data-workspace-page><p data-workspace-status role="status">Loading campaign entries…</p></article></div></section>`;
     const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,kind,host:panel.firstElementChild,rows:[],record:null,dirty:false,busy:false};session=s;const token=++generation;
-    s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>button.onclick=()=>switchKind(button.dataset.workspaceKind));
+    s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>{button.hidden=!canManageCampaign()||!!config.hideNavigation;button.onclick=()=>switchKind(button.dataset.workspaceKind)});
     s.host.querySelector('[data-new-record]').onclick=newRecord;s.host.querySelector('[data-workspace-search]').oninput=renderList;s.host.querySelector('[data-workspace-archived]').onchange=renderList;s.host.querySelector('[data-workspace-category]').onchange=renderList;
     try{s.rows=await (config.list?config.list(s.campaignId):store.list(s.campaignId,kind));if(!current(s)||token!==generation)return;renderList();s.host.querySelector('[data-workspace-page]').innerHTML='<p>Select an entry, or create a new one.</p>';}
     catch(error){if(current(s))status(`Could not load: ${error.message}. Publish the updated Firestore rules if permission is denied.`,true);}

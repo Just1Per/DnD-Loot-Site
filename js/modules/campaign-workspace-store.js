@@ -43,6 +43,7 @@ function createCampaignWorkspaceStore(sdk) {
       const links = normalized.data.links || [];
       if (!Array.isArray(links) || links.length > 40) throw Error('An entry can link up to 40 records.');
       for (const link of links) {
+        if(kind==='oneShot'&&old?.data?.approved&&old.data.hostUid===uid)continue;
         if (link.kind === kind && link.id === id) throw Error('An entry cannot link to itself.');
         const linked = await tx.get(recordRef(campaignId, link.kind, link.id));
         if (!linked.exists()) throw Error('A linked record no longer exists. Remove that link before saving.');

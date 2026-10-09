@@ -48,3 +48,22 @@ The creature editor searches by name/type/CR, filters allowed editions and creat
 Encounters use explicit creature snapshots with unique combatant IDs. Initiative, temporary HP, damage/healing, conditions, concentration, rounds and reset affect only this encounter. Updating statistics from the master is an explicit action and preserves/clamps current HP. Saved creature templates and other encounters remain unchanged.
 
 Four engine tests and a real browser scenario verify six independent combatants, damage, rounds, saved state and an unchanged master card.
+
+## Stage 6 — Scoped one-shots and integration
+
+Active players can propose adventures. The campaign DM approves a scoped host, chooses a level limit/creation mode and invites participants; invitees accept their own invitation. Approved hosts manage multiple pre-generated full sheets and assignment. Accepted participants can create their own sheets in Player-created/Mixed mode. A transactional roster counter caps each adventure at 20 sheets.
+
+Adventure identity and sheets live below `oneShots/{id}`. Their full builder, personal gear, HP, notes and resources remain separate from campaign characters and inventory. Campaign editions/feat policy still apply. The host can run private encounter copies or add homebrew opponents; copying and combat never modify a campaign encounter or creature master. Revocation ends server access.
+
+The UI includes incoming references, contextual field help and explicit player-description versus private run-sheet printing. Print hides application chrome and retains SRD attribution. Manual login guides remain manually opened. No production merge, rule publication or deployment is performed by this PR.
+
+### Final verification
+
+- 179 existing engine tests pass.
+- 16 workspace/store/creature/import/encounter tests pass, including all 675 catalogue records.
+- 11 planning navigation and 9 account/manual-guide DOM checks pass.
+- Firestore/Storage emulator scenarios verify world permissions, immutable maps and ten one-shot permission/transaction scenarios, including actual filtered queries, host revocation, independent sheets and private combat copies.
+- Real Chromium verifies save/reopen, unsaved navigation, map uploads/markers, private preview/print, compact mobile layout, shared creatures, chapter references/milestones, catalogue edition hiding, combat independence, approved hosts, homebrew opponents, invitations, isolated full sheets and player proposals.
+- An A4 encounter run sheet was rendered and visually inspected after removing the banner/footer from print.
+
+The old aggregate DOM suite remains red on stale character UI expectations that already fail on unchanged PR #79. Comparing both runs found no new failures; the planning and manual-guide assertions were updated for the current behavior. Do not report that aggregate suite as green. The new dedicated GitHub workflow runs workspace engines/catalogue, planning/login checks and permission emulators.

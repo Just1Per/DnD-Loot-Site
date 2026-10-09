@@ -31,7 +31,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   ref, getDownloadURL, uploadBytes, getBlob,
 });
 
-const ASSET_VERSION = "20261009-connected-workspace-v80-s4";
+const ASSET_VERSION = "20261009-connected-workspace-v80-s6";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -46,6 +46,7 @@ if (!document.querySelector('link[data-character-adobe-integration]')) {
 const FEATURE_FILES = [
   "./modules/campaign-rules.js",
   "./modules/campaign-workspace-store.js",
+  "./modules/campaign-one-shots-store.js",
   "./modules/campaign-creatures.js",
   "./modules/campaign-monster-import.js",
   "./modules/campaign-encounters.js",
@@ -118,6 +119,7 @@ const FEATURE_FILES = [
   "./modules/campaign-chapters-ui.js",
   "./modules/campaign-monster-catalog-ui.js",
   "./modules/campaign-encounters-ui.js",
+  "./modules/campaign-one-shots-ui.js",
   "./modules/campaign-rules-ui.js",
   "./modules/site-help-data.js",
   "./modules/site-help.js",

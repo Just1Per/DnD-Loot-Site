@@ -1,7 +1,7 @@
 /* Private per-character document, with optimistic concurrency checks. */
 function createCharacterSheetStore(sdk) {
   const {db, doc, getDoc, runTransaction, auth} = sdk;
-  const path = (campaignId, characterId) => doc(db, 'campaigns', campaignId, 'characterSheets', characterId);
+  const path = (campaignId, characterId, adventureId) => adventureId ? doc(db, 'campaigns', campaignId, 'oneShots', adventureId, 'characterSheets', characterId) : doc(db, 'campaigns', campaignId, 'characterSheets', characterId);
   // Fresh nested objects per sheet prevent companion/page defaults being shared across characters.
   const adobeDefaults = () => ({
     useExperience: false,
@@ -31,19 +31,19 @@ function createCharacterSheetStore(sdk) {
     delete data.adobe;
     return data;
   }
-  async function load(campaignId, characterId) {
-    const snapshot = await getDoc(path(campaignId, characterId));
+  async function load(campaignId, characterId, adventureId = null) {
+    const snapshot = await getDoc(path(campaignId, characterId, adventureId));
     if (!snapshot.exists())
       return {schemaVersion:1,revision:0,data:{}};
     return snapshot.data();
   }
   /** Atomically reject stale sheet/identity revisions before updating both documents. */
-  async function save({campaignId, characterId, revision, data, identity, previousIdentity}) {
+  async function save({campaignId, characterId, revision, data, identity, previousIdentity, adventureId = null}) {
     const actor = auth.currentUser?.uid;
     if (!actor)
       throw Error('Sign in before saving.');
     return runTransaction(db, async tx => {
-      const sheetRef = path(campaignId, characterId), characterRef = doc(db, 'campaigns', campaignId, 'characters', characterId);
+      const sheetRef = path(campaignId, characterId, adventureId), characterRef = adventureId ? doc(db, 'campaigns', campaignId, 'oneShots', adventureId, 'characters', characterId) : doc(db, 'campaigns', campaignId, 'characters', characterId);
       const sheet = await tx.get(sheetRef), character = await tx.get(characterRef);
       if (!character.exists())
         throw Error('This character no longer exists.');

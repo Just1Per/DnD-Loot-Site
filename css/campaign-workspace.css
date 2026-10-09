@@ -35,3 +35,14 @@
 .campaign-workspace button:focus-visible{outline:2px solid #9b1d1d;outline-offset:3px}
 .campaign-workspace .workspace-list button{background:#fdfbf7;color:#5c1d1d;border-color:#c8b89a}
 .campaign-workspace textarea[name=summary]{min-height:65px}
+/* Form layout must never override hidden private fields or player previews. */
+.campaign-workspace [hidden],.workspace-sheet-dialog [hidden]{display:none!important}
+@media print{
+ body.printing-workspace{background:#fff!important;margin:0!important;padding:0!important;display:block!important}
+ body.printing-workspace>:not(#workspacePrintSurface){display:none!important}
+ body.printing-workspace #workspacePrintSurface{margin:0!important;padding:0!important;line-height:1.35!important}
+ #workspacePrintSurface h1{font:700 20pt Georgia,serif!important;margin:0 0 12pt!important}
+ #workspacePrintSurface h2{font:700 13pt Georgia,serif!important;margin:12pt 0 4pt!important}
+ #workspacePrintSurface p{margin:4pt 0!important}
+ #workspacePrintSurface section{margin:0 0 10pt!important}
+}
