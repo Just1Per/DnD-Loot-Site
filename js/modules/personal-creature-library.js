@@ -13,6 +13,12 @@ var PersonalCreatureLibrary=(()=>{
  };
  async function list(){const rows=await sdk.getDocs(location());return rows.docs.map(row=>({id:row.id,...row.data()})).sort((a,b)=>a.title.localeCompare(b.title));}
  async function add(record){const uid=owner(),values=assert(record),now=Date.now(),id=crypto.randomUUID().replaceAll('-','');await sdk.setDoc(sdk.doc(location(),id),{...values,createdBy:uid,createdAt:now,updatedAt:now});return id;}
- async function remove(id){if(!/^[a-zA-Z0-9_-]{1,100}$/.test(id))throw Error('Invalid template ID.');await sdk.deleteDoc(sdk.doc(location(),id));}
- return{list,add,remove};
+ async function update(id,record){
+  if(!/^[a-zA-Z0-9_-]{1,100}$/.test(id))throw Error('Invalid template ID.');
+  const uid=owner(),values=assert(record),ref=sdk.doc(location(),id),previous=await sdk.getDoc(ref);
+  if(!previous.exists()||previous.data().createdBy!==uid)throw Error('Template is unavailable.');
+  await sdk.updateDoc(ref,{...values,updatedAt:Date.now()});
+}
+async function remove(id){if(!/^[a-zA-Z0-9_-]{1,100}$/.test(id))throw Error('Invalid template ID.');await sdk.deleteDoc(sdk.doc(location(),id));}
+ return{list,add,update,remove};
 })();
