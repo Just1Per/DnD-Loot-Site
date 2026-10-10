@@ -16,7 +16,7 @@ const sdk={
  updateDoc:async(path,changes)=>{if(!rows.has(path))throw Error('Not found');rows.set(path,{...rows.get(path),...structuredClone(changes)});},
  deleteDoc:async path=>{rows.delete(path);}
 };
-const scope={window:{__DND_VAULT_DEPS__:sdk},CampaignCreatures:{normalize:value=>structuredClone(value)},structuredClone,crypto:require('node:crypto').webcrypto};
+const scope={window:{__DND_VAULT_DEPS__:sdk},CampaignCreatures:{normalize:value=>structuredClone(value)},structuredClone,crypto:require('node:crypto').webcrypto,console,process};
 vm.createContext(scope);
 vm.runInContext(fs.readFileSync('js/modules/personal-creature-library.js','utf8'),scope);
 const lib=scope.PersonalCreatureLibrary;
