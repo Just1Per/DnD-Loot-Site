@@ -870,21 +870,17 @@
 }
 
 
-/* Story tab: keep the four background traits compact, balanced and readable. */
-#sheet-story .sheet-story-layout{width:100%;min-width:0}
-#sheet-story .sheet-story-traits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
-#sheet-story .sheet-story-field{min-width:0;padding:14px;border:1px solid var(--sheet-border,#d7cabb);border-radius:10px;background:#fffdf8}
-#sheet-story .sheet-story-field .sheet-field{min-width:0;width:100%;margin:0}
-#sheet-story .sheet-story-field textarea{box-sizing:border-box;display:block;width:100%;min-width:0;min-height:112px;resize:vertical;overflow-wrap:anywhere;white-space:pre-wrap}
-#sheet-story .sheet-story-field-personality,
-#sheet-story .sheet-story-field-ideals,
-#sheet-story .sheet-story-field-bonds,
-#sheet-story .sheet-story-field-flaws{border-top:3px solid #7c4141}
-#sheet-story .sheet-story-field-appearance,
-#sheet-story .sheet-story-field-backstory{grid-column:1/-1}
-#sheet-story .sheet-story-field-appearance textarea,
-#sheet-story .sheet-story-field-backstory textarea{min-height:130px}
+/* Story tab: style existing fields without changing sheet bindings or markup. */
+#sheet-story .sheet-grid.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+#sheet-story .sheet-grid.two>.sheet-field{box-sizing:border-box;min-width:0;padding:14px;border:1px solid var(--sheet-border,#d7cabb);border-radius:10px;background:#fffdf8}
+#sheet-story .sheet-grid.two>.sheet-field textarea{box-sizing:border-box;display:block;max-width:100%;min-width:0;min-height:112px;resize:vertical;overflow-wrap:anywhere;white-space:pre-wrap}
+#sheet-story .sheet-grid.two>.sheet-field:has([name="personality"]),
+#sheet-story .sheet-grid.two>.sheet-field:has([name="ideals"]),
+#sheet-story .sheet-grid.two>.sheet-field:has([name="bonds"]),
+#sheet-story .sheet-grid.two>.sheet-field:has([name="flaws"]){border-top:3px solid #7c4141}
+#sheet-story .sheet-grid.two>.sheet-field:has([name="appearance"]),
+#sheet-story .sheet-grid.two>.sheet-field:has([name="backstory"]){grid-column:1/-1}
 @media(max-width:760px){
-  #sheet-story .sheet-story-traits{grid-template-columns:minmax(0,1fr);gap:12px}
-  #sheet-story .sheet-story-field{grid-column:1/-1;padding:12px}
+  #sheet-story .sheet-grid.two{grid-template-columns:minmax(0,1fr);gap:12px}
+  #sheet-story .sheet-grid.two>.sheet-field{grid-column:1/-1;padding:12px}
 }
