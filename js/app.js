@@ -48,6 +48,7 @@ const FEATURE_FILES = [
   "./modules/campaign-workspace-store.js",
   "./modules/campaign-one-shots-store.js",
   "./modules/campaign-creatures.js",
+  "./modules/personal-creature-library.js",
   "./modules/campaign-monster-import.js",
   "./modules/campaign-encounters.js",
   "./modules/character-equipment.js",
