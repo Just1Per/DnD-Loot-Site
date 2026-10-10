@@ -247,6 +247,25 @@ match /users/{userId} {
 
   allow delete: if isAdmin();
 
+  // DM-owned creature templates, separate from global SRD and campaign copies.
+  match /creatureTemplates/{templateId} {
+    function validTemplate(d) {
+      return d.keys().hasOnly(['title','summary','content','data','sourceCampaignId','createdBy','createdAt','updatedAt'])
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 160
+        && d.summary is string && d.summary.size() <= 1000
+        && d.content is string && d.content.size() <= 20000
+        && d.sourceCampaignId is string && d.sourceCampaignId.size() <= 100
+        && d.data is map && d.data.keys().size() <= 60
+        && d.createdBy == userId && d.createdAt is int && d.updatedAt is int;
+    }
+    allow read: if isSelf(userId);
+    allow create: if isSelf(userId) && validTemplate(request.resource.data)
+      && templateId.matches('^[a-zA-Z0-9_-]{1,100}$');
+    allow update: if isSelf(userId) && validTemplate(request.resource.data)
+      && request.resource.data.createdAt == resource.data.createdAt;
+    allow delete: if isSelf(userId);
+  }
+
   // Fast campaign lookup index. This is NOT authoritative permission;
   // campaigns/{campaignId}/members/{uid} remains authoritative.
   match /campaigns/{campaignId} {

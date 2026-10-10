@@ -96,7 +96,7 @@ var CampaignWorkspace = (() => {
       await sdk.uploadBytes(sdk.ref(sdk.storage,path),file,{contentType:file.type});
       if(!current(s)||s.record.id!==recordId)return;
       s.record.data.imagePath=path;s.record.data.markers=[];s.dirty=true;await mapImage();status('Image uploaded. Save this entry to keep its reference.');
-    }catch(error){if(current(s))status(`Upload failed: ${error.message}. Check the campaign map Storage rules.`,true);}
+    }catch(error){if(current(s)){const denied=error?.code==='storage/unauthorized';status(denied?'Map upload blocked by Firebase Storage permissions. The campaign-world-images rule must be merged and published in Firebase Console → Storage → Rules (hosting and Firestore deploys do not publish Storage rules).':'Map upload failed: '+error.message,true);}}
     finally{s.busy=false;}
   }
   function renderEditor() {
@@ -165,7 +165,7 @@ var CampaignWorkspace = (() => {
   function importCreature(record){
     if(session?.kind!=='creature'||!current(session)||session.busy)return false;
     if(session.dirty&&!confirm('Discard unsaved changes before importing this creature?'))return false;
-    session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize(record.data),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
+    session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize((()=>{const d=structuredClone(record.data||{});for(const k of ['links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete d[k];return d;})()),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
   }
   function switchKind(kind){if(session?.busy)return;if(!clear())return;showTab(configs[kind].tab,false);render(kind);}
   window.addEventListener('beforeunload',event=>{if(session?.dirty){event.preventDefault();event.returnValue='';}});
