@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
- const W=CampaignWorkspace,C=CampaignCreatures;
+ const W=CampaignWorkspace,C=CampaignCreatures,e=escapeHtml;
  const textFields=[['appearance','Appearance'],['personality','Personality'],['voice','Voice and mannerisms'],['goals','Goals'],['relationships','Relationships'],['saves','Saving throws'],['skills','Skills'],['resistances','Resistances'],['immunities','Immunities'],['senses','Senses'],['languages','Languages'],['cr','Challenge rating'],['actions','Attacks and actions'],['traits','Traits and special abilities'],['legendaryActions','Legendary actions'],['phases','Boss phases and story progression']];
  function card(host,s){
   if(!host)return;const draft=W.draft();if(!draft)return;
@@ -37,18 +37,37 @@
           if(!permitted())return;const record=rows.find(row=>row.id===button.dataset.personalId);
           if(record&&W.importCreature(record))dialog.close();
         });
-        list.querySelectorAll('[data-edit-template]').forEach(button=>button.onclick=async()=>{
+        list.querySelectorAll('[data-edit-template]').forEach(button=>button.onclick=()=>{
           if(!permitted())return;
           const record=rows.find(row=>row.id===button.dataset.editTemplate);if(!record)return;
-          const title=prompt('Template name',record.title);if(title===null)return;
-          const summary=prompt('Short description',record.summary||'');if(summary===null)return;
-          button.disabled=true;
-          try{
-            await PersonalCreatureLibrary.update(record.id,{...record,title,summary});
-            record.title=title.trim();record.summary=summary;draw();
-            dialog.querySelector('[data-personal-status]').textContent='Template updated.';
-          }catch(error){dialog.querySelector('[data-personal-status]').textContent='Update failed: '+error.message;}
-          finally{button.disabled=false;}
+          const editor=document.createElement('dialog');editor.className='workspace-sheet-dialog';
+          const data=C.normalize(record.data||{});
+          const entries=[['category','Entry type','select'],['edition','Rules edition','select'],['combatEnabled','Include combat stats','check'],['ac','Armor class','number'],['hp','Maximum HP','number'],['speed','Speed (ft.)','number'],...C.abilities.map(key=>[key,key.toUpperCase(),'number']),...textFields.map(([key,label])=>[key,label,'text'])];
+          const control=([key,label,type])=>{
+            const value=data[key];
+            if(type==='select'){const options=key==='category'?C.categories:['Homebrew','2014','2024'];return '<label class="workspace-field">'+e(label)+'<select data-template-field="'+key+'">'+options.map(v=>'<option value="'+e(v)+'" '+(v===value?'selected':'')+'>'+e(v)+'</option>').join('')+'</select></label>';}
+            if(type==='check')return '<label class="workspace-field"><input type="checkbox" data-template-field="'+key+'" '+(value?'checked':'')+'> '+e(label)+'</label>';
+            if(type==='number')return '<label class="workspace-field">'+e(label)+'<input type="number" min="0" max="'+(key==='hp'?10000:key==='speed'?600:key==='ac'?40:30)+'" data-template-field="'+key+'" value="'+Number(value??0)+'"></label>';
+            return '<label class="workspace-field">'+e(label)+'<textarea data-template-field="'+key+'" maxlength="20000">'+e(value||'')+'</textarea></label>';
+          };
+          editor.innerHTML='<header class="workspace-heading"><h2>Edit personal creature</h2><button type="button" data-template-cancel>Close</button></header><form data-template-form><div class="workspace-fields"><label class="workspace-field workspace-full">Name<input name="title" maxlength="160" required value="'+e(record.title)+'"></label><label class="workspace-field workspace-full">Summary<textarea name="summary" maxlength="1000">'+e(record.summary||'')+'</textarea></label><label class="workspace-field workspace-full">Story description<textarea name="content" maxlength="20000">'+e(record.content||'')+'</textarea></label>'+entries.map(control).join('')+'</div><p data-template-feedback role="status"></p><div class="workspace-actions"><button type="submit">Save changes</button><button type="button" data-template-cancel>Cancel</button></div></form>';
+          document.body.append(editor);editor.showModal();
+          editor.querySelectorAll('[data-template-cancel]').forEach(b=>b.onclick=()=>editor.close());
+          editor.addEventListener('close',()=>editor.remove());
+          editor.querySelector('[data-template-form]').onsubmit=async event=>{
+            event.preventDefault();if(!permitted()){editor.close();return;}
+            const form=event.currentTarget;if(!form.reportValidity())return;
+            const next=structuredClone(data);
+            form.querySelectorAll('[data-template-field]').forEach(input=>{const key=input.dataset.templateField;next[key]=input.type==='checkbox'?input.checked:input.type==='number'?Number(input.value):input.value;});
+            const saveButton=form.querySelector('[type=submit]');saveButton.disabled=true;
+            try{
+              const updated={...record,title:form.elements.namedItem('title').value.trim(),summary:form.elements.namedItem('summary').value,content:form.elements.namedItem('content').value,data:C.normalize(next)};
+              await PersonalCreatureLibrary.update(record.id,updated);
+              Object.assign(record,updated);draw();editor.close();
+              dialog.querySelector('[data-personal-status]').textContent='Template updated. Campaign copies remain unchanged.';
+            }catch(error){form.querySelector('[data-template-feedback]').textContent='Save failed: '+error.message;}
+            finally{saveButton.disabled=false;}
+          };
         });
         list.querySelectorAll('[data-delete-template]').forEach(button=>button.onclick=async()=>{
           if(!permitted())return;
