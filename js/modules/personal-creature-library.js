@@ -8,6 +8,8 @@ var PersonalCreatureLibrary=(()=>{
   const title=String(record?.title||'').trim();
   if(!title||title.length>160)throw Error('Creature name must be 1–160 characters.');
   const summary=String(record.summary||''),content=String(record.content||''),data=CampaignCreatures.normalize(record.data||{});
+  // Personal templates must not carry links, pinned maps or campaign-only IDs into another campaign.
+  for(const key of ['links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete data[key];
   if(summary.length>1000||content.length>20000||JSON.stringify(data).length>90000)throw Error('Creature entry is too large.');
   return{title,summary,content,data,sourceCampaignId:String(record.sourceCampaignId||'').slice(0,100)};
  };
