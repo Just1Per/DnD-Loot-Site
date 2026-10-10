@@ -11,8 +11,10 @@
   host.querySelector('[data-save-personal-creature]').onclick=async event=>{
     const button=event.currentTarget,record=W.draft();
     if(!record?.title?.trim()){W.status('Enter a creature name first.',true);return;}
+    const campaignId=activeCampaign?.id,uid=auth.currentUser?.uid;
+    if(!campaignId||!uid||!canManageCampaign())return;
     button.disabled=true;
-    try{await PersonalCreatureLibrary.add({...record,sourceCampaignId:activeCampaign.id});W.status('Saved an independent copy in your personal creature library.');}
+    try{await PersonalCreatureLibrary.add({...record,sourceCampaignId:campaignId});if(activeCampaign?.id===campaignId&&auth.currentUser?.uid===uid)W.status('Saved an independent copy in your personal creature library.');}
     catch(error){W.status('Personal library save failed: '+error.message,true);}
     finally{button.disabled=false;}
   };
@@ -63,6 +65,7 @@
             try{
               const updated={...record,title:form.elements.namedItem('title').value.trim(),summary:form.elements.namedItem('summary').value,content:form.elements.namedItem('content').value,data:C.normalize(next)};
               await PersonalCreatureLibrary.update(record.id,updated);
+              if(!permitted()){editor.close();dialog.close();return;}
               Object.assign(record,updated);draw();editor.close();
               dialog.querySelector('[data-personal-status]').textContent='Template updated. Campaign copies remain unchanged.';
             }catch(error){form.querySelector('[data-template-feedback]').textContent='Save failed: '+error.message;}
@@ -75,6 +78,7 @@
           button.disabled=true;
           try{
             await PersonalCreatureLibrary.remove(record.id);
+            if(!permitted()){dialog.close();return;}
             rows.splice(rows.findIndex(row=>row.id===record.id),1);draw();
             dialog.querySelector('[data-personal-status]').textContent='Personal template deleted. Campaign copies were not changed.';
           }catch(error){dialog.querySelector('[data-personal-status]').textContent='Delete failed: '+error.message;}
