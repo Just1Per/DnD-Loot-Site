@@ -31,7 +31,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   ref, getDownloadURL, uploadBytes, getBlob,
 });
 
-const ASSET_VERSION = "20261009-connected-workspace-v80-s6";
+const ASSET_VERSION = "20261009-dm-planning-access-v81";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {

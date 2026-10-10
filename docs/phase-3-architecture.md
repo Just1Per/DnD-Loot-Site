@@ -2,6 +2,8 @@
 
 Implemented in PR #80 through six staged commits, on top of PR #79. Existing campaign records and character sheets require no migration. The interface retains the parchment/burgundy/gold theme, DM Tools shortcuts and dedicated planning tabs. Help remains manually opened.
 
+Planning tabs and their editors are visible only to campaign DMs and owners. Players cannot open World Building, Chapter Tracker or One Shots through navigation or direct editor rendering. Existing adventure-scoped participant/host data permissions remain separate from access to these DM planning pages.
+
 ## Records and access
 
 All paths below start at `campaigns/{campaignId}/`. Workspace records have immutable IDs, author/timestamps, schema version and incrementing revision. Saves reject stale revisions and retain the draft. Archive preserves references; hard deletion is unavailable.

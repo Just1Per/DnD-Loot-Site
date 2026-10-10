@@ -14,8 +14,12 @@
   check('Planning headings retain contextual help',[...cards].every(card=>card.querySelector('h2 .vault-help-badge')));
   const before=testWrites.length;document.getElementById('dmOpenLibrary').click();
   check('Existing Library controls remain functional without planning writes',document.getElementById('tab-library').style.display!=='none'&&testWrites.length===before);
-  seed('player');renderDMTools();check('Player can open one-shots but not campaign world or chapters',document.getElementById('dmPlanningTab-one-shots').style.display!=='none'&&['world','chapters'].every(id=>document.getElementById('dmPlanningTab-'+id).style.display==='none'));
-  seed('admin','player');renderDMTools();check('Global admin does not grant campaign planning rights',document.getElementById('dmPlanningTab-world').style.display==='none');
+  seed('player');renderDMTools();check('Players cannot see any DM planning tab',['world','chapters','one-shots'].every(id=>document.getElementById('dmPlanningTab-'+id).style.display==='none'));
+  showTab('player');for(const id of ['world','chapters','one-shots']){showTab('dm-'+id);check('Player direct navigation is blocked: '+id,document.getElementById('tab-dm-'+id).style.display==='none');}
+  await CampaignWorkspace.render('oneShot');check('Player cannot render the one-shot planning editor directly',!CampaignWorkspace.session);
+  seed('admin','player');renderDMTools();check('Global admin does not grant campaign planning rights',['world','chapters','one-shots'].every(id=>document.getElementById('dmPlanningTab-'+id).style.display==='none'));
+  seed('dm','player');renderDMTools();check('Global DM role does not expose another campaign’s planning tabs',['world','chapters','one-shots'].every(id=>document.getElementById('dmPlanningTab-'+id).style.display==='none'));
+  seed('dm','owner');renderDMTools();check('Campaign owner retains all planning tabs',['world','chapters','one-shots'].every(id=>document.getElementById('dmPlanningTab-'+id).style.display!=='none'));
   seed('dm');activeCampaign=null;renderDMTools();check('No campaign leaves a guarded planning empty state',document.getElementById('dmPlanningTab-world').style.display==='none');
  }catch(error){results.push({name:error.stack,pass:false})}
  finally{seed('dm')}
