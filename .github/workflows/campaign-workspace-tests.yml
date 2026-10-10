@@ -41,6 +41,8 @@ jobs:
         run: npm --prefix tests run test:ui
       - name: Workspace engines and catalogue
         run: npm --prefix tests run test:workspace
+      - name: World, chapters, encounters and scoped player adventure flows
+        run: npm --prefix tests run test:workspace-browser
       - name: Planning navigation and manual-guide login
         run: |
           DND_DM_PLANNING_ONLY=1 node tests/dom.cjs
