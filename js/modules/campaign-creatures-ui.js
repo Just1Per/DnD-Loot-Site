@@ -32,10 +32,34 @@
         const matches=rows.filter(row=>[row.title,row.summary,row.data?.category].join(' ').toLowerCase().includes(q));
         dialog.querySelector('[data-personal-status]').textContent=matches.length+' saved templates';
         const list=dialog.querySelector('[data-personal-results]');
-        list.innerHTML=matches.map(row=>'<button type="button" data-personal-id="'+escapeHtml(row.id)+'">'+escapeHtml(row.title)+'<small>'+escapeHtml(row.data?.category||'Creature')+'</small></button>').join('')||'<p>No matching templates.</p>';
+        list.innerHTML=matches.map(row=>'<div class="workspace-actions" data-template-row="'+escapeHtml(row.id)+'"><button type="button" data-personal-id="'+escapeHtml(row.id)+'">'+escapeHtml(row.title)+' · '+escapeHtml(row.data?.category||'Creature')+'</button><button type="button" data-edit-template="'+escapeHtml(row.id)+'" aria-label="Edit '+escapeHtml(row.title)+'">Edit</button><button type="button" data-delete-template="'+escapeHtml(row.id)+'" aria-label="Delete '+escapeHtml(row.title)+'">Delete</button></div>').join('')||'<p>No matching templates.</p>';
         list.querySelectorAll('[data-personal-id]').forEach(button=>button.onclick=()=>{
           if(!permitted())return;const record=rows.find(row=>row.id===button.dataset.personalId);
           if(record&&W.importCreature(record))dialog.close();
+        });
+        list.querySelectorAll('[data-edit-template]').forEach(button=>button.onclick=async()=>{
+          if(!permitted())return;
+          const record=rows.find(row=>row.id===button.dataset.editTemplate);if(!record)return;
+          const title=prompt('Template name',record.title);if(title===null)return;
+          const summary=prompt('Short description',record.summary||'');if(summary===null)return;
+          button.disabled=true;
+          try{
+            await PersonalCreatureLibrary.update(record.id,{...record,title,summary});
+            record.title=title.trim();record.summary=summary;draw();
+            dialog.querySelector('[data-personal-status]').textContent='Template updated.';
+          }catch(error){dialog.querySelector('[data-personal-status]').textContent='Update failed: '+error.message;}
+          finally{button.disabled=false;}
+        });
+        list.querySelectorAll('[data-delete-template]').forEach(button=>button.onclick=async()=>{
+          if(!permitted())return;
+          const record=rows.find(row=>row.id===button.dataset.deleteTemplate);if(!record||!confirm('Delete personal template "'+record.title+'"? Campaign copies will stay unchanged.'))return;
+          button.disabled=true;
+          try{
+            await PersonalCreatureLibrary.remove(record.id);
+            rows.splice(rows.findIndex(row=>row.id===record.id),1);draw();
+            dialog.querySelector('[data-personal-status]').textContent='Personal template deleted. Campaign copies were not changed.';
+          }catch(error){dialog.querySelector('[data-personal-status]').textContent='Delete failed: '+error.message;}
+          finally{button.disabled=false;}
         });
       };
       dialog.querySelector('[data-personal-search]').oninput=draw;draw();
