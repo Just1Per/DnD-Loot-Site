@@ -213,7 +213,7 @@ function renderCharacterSheet() {
     'gp',
     'pp'
   ].map(key => field(key.toUpperCase(), `coins.${ key }`, 'number', { min: 0 })).join('') }</div>${ field('Equipment notes', 'equipment', 'textarea', { rows: 8 }) }`) }
-  ${ sheetSection('story', 'The person behind the adventure', `<div class="sheet-story-layout"><div class="sheet-story-traits">${ [
+  ${ sheetSection('story', 'The person behind the adventure', `<div class="sheet-grid two">${ [
     [
       'appearance',
       'Appearance'
@@ -244,7 +244,7 @@ function renderCharacterSheet() {
       'Backstory'
     ],
 
-  ].map(([key, label]) => `<div class="sheet-story-field sheet-story-field-${key}">${field(label, key, 'textarea', { rows: 5 })}</div>`).join('') }</div></div>`) }
+  ].map(([key, label]) => field(label, key, 'textarea', { rows: 5 })).join('') }</div>`) }
   ${sheetSection('notes','Adventure journal','<div id="sheetJournal"></div>')}
   </div></form>`;
   arrangeCharacterSheetPage();
