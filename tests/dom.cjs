@@ -2,11 +2,23 @@ const fs=require('fs'),vm=require('vm'),path=require('path'),{webcrypto}=require
 const {parseHTML}=require('linkedom');
 const {window}=parseHTML(fs.readFileSync(path.join(__dirname,'../index.html'),'utf8'));const {document}=window;
 const sandbox={TextEncoder,fetch:async()=>({ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(__dirname,'../data/rules/catalog.json'),'utf8'))}),document,console,URLSearchParams,URL,Map,Set,Promise,setTimeout,clearTimeout,queueMicrotask,structuredClone,crypto:webcrypto,Event:window.Event,MutationObserver:window.MutationObserver,IntersectionObserver:class{observe(){}unobserve(){}disconnect(){}},location:{search:''},navigator:{},Image:class{},localStorage:{getItem:()=>null,setItem:()=>{}},window:null};sandbox.window=sandbox;sandbox.addEventListener=window.addEventListener.bind(window);sandbox.dispatchEvent=window.dispatchEvent.bind(window);sandbox.print=()=>{};
-window.HTMLElement.prototype.setCustomValidity=function(){};
-window.HTMLElement.prototype.checkValidity=function(){return true};
+// LinkeDOM has no constraint-validation implementation. Model the constraints
+// exercised by these tests; browser checks remain the authority for native behavior.
+Object.defineProperty(window.HTMLInputElement.prototype,'checked',{get(){return this.hasAttribute('checked')},set(value){this.toggleAttribute('checked',!!value)}});
+window.HTMLElement.prototype.setCustomValidity=function(message){this._customValidationMessage=String(message)};
+window.HTMLElement.prototype.checkValidity=function(){
+ if(this.tagName==='FORM')return [...this.querySelectorAll('input,select,textarea')].every(control=>control.checkValidity());
+ if(this.disabled||this.type==='hidden')return true;
+ if(this._customValidationMessage)return false;
+ const value=String(this.value??'');if(this.required&&!value)return false;
+ if(this.type==='number'&&value){const number=Number(value);if(!Number.isFinite(number))return false;if(this.min!==undefined&&this.min!==''&&number<Number(this.min))return false;if(this.max!==undefined&&this.max!==''&&number>Number(this.max))return false;}
+ if(this.type==='email'&&value&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))return false;
+ return true;
+};
+window.HTMLElement.prototype.reportValidity=function(){return this.checkValidity()};
 window.HTMLElement.prototype.showModal=function(){this.open=true};window.HTMLElement.prototype.close=function(){this.open=false;this.dispatchEvent(new window.Event('close'))};window.HTMLElement.prototype.focus=function(){};
 Object.defineProperty(window.HTMLSelectElement.prototype,'value',{get(){const o=[...this.querySelectorAll('option')].find(o=>o.selected)||this.querySelector('option');return o?.getAttribute('value')??o?.textContent??''},set(value){for(const o of this.querySelectorAll('option'))o.removeAttribute('selected');const chosen=[...this.querySelectorAll('option')].find(o=>(o.getAttribute('value')??o.textContent)===String(value));if(chosen)chosen.setAttribute('selected','');}});
-const ctx=vm.createContext(sandbox);const run=async f=>vm.runInContext(fs.readFileSync(f,'utf8'),ctx,{filename:f});
+const ctx=vm.createContext(sandbox);const run=async f=>{if(process.env.DND_TEST_TRACE)console.log('UI suite:',path.basename(f));return vm.runInContext(fs.readFileSync(f,'utf8'),ctx,{filename:f});};
 (async()=>{
  await run(path.join(__dirname,'dom-setup.js'));await run(path.join(__dirname,'dom-fixture.js'));
  vm.runInContext('function createCampaignStore(){return window.__DND_VAULT_DEPS__.vaultCall}',ctx);

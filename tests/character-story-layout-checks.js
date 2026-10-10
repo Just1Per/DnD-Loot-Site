@@ -4,7 +4,7 @@
   seed('player');delete testSheetDocs['campaigns/a/characterSheets/c1'];testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');
   const field=key=>document.querySelector('#characterSheetForm [name="'+key+'"]');
   check('Appearance, allies and enemies live on the left', ['appearance','allies','enemies'].every(key=>field(key).closest('.sheet-story-left')));
-  check('Four traits have one editable wrapping control each on the right', ['personality','ideals','bonds','flaws'].every(key=>field(key).closest('.sheet-story-right')&&field(key).getAttribute('role')==='combobox'&&!field(key).readOnly&&document.querySelectorAll('[name="'+key+'"]').length===1));
+  check('Four traits have one editable wrapping control each on the right', ['personality','ideals','bonds','flaws'].every(key=>field(key).closest('.sheet-story-right')&&!field(key).hasAttribute('role')&&field(key).labels!==null&&!field(key).readOnly&&document.querySelectorAll('[name="'+key+'"]').length===1));
   field('build.background').value='acolyte-2024';field('build.background').dispatchEvent(new Event('change',{bubbles:true}));
   for(const key of ['personality','ideals','bonds','flaws']){
     const list=document.querySelector('[data-story-choice="'+key+'"]'),button=list.querySelector('[data-story-option="0"]');

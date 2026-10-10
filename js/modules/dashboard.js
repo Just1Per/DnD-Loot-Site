@@ -100,7 +100,7 @@ function ensureDashboardShell() {
         <span class="vault-kicker">CampaignAtlas · Your table. Your story.</span>
         <h1 class="vault-landing-title">Everything your campaign needs in one place.</h1>
         <p class="vault-landing-copy">Character building, character sheet creation, magical item library, inventory and campaign tools for fifth-edition tabletop roleplaying.</p>
-        <p class="site-planned-tools">Coming in Phase 3: one-shot ideas, world building and chapter trackers for game masters.</p>
+        <p class="site-planned-tools">World building, chapters, encounters and one-shots help game masters prepare their campaigns.</p>
         <p class="site-legal-link"><a href="rules-attribution.html">Unofficial fan project · Rules Sources &amp; Legal Information</a></p>
         <div class="vault-landing-actions">
           <button type="button" class="btn-primary" data-landing-google>Continue with Google</button>
@@ -141,6 +141,7 @@ function ensureDashboardShell() {
 function renderPublicLanding() {
   ensureDashboardShell();
   hideAllScreens();
+  document.getElementById('siteScreenTitle').textContent='CampaignAtlas';
   const screen = document.getElementById("campaignSelectorScreen");
   if (screen) screen.style.display = "flex";
   const landing = document.getElementById("publicLanding");
@@ -151,6 +152,7 @@ function renderPublicLanding() {
 
 function renderDashboard() {
   ensureDashboardShell();
+  document.getElementById('siteScreenTitle').textContent='Dashboard · CampaignAtlas';
   if (!auth.currentUser || !currentUser) { renderPublicLanding(); return; }
 
   const landing = document.getElementById("publicLanding");

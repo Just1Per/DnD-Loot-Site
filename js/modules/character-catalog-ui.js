@@ -64,10 +64,10 @@ function openFeatInformation(featId){
   const licensed=String(feat.description||'').trim(),referenceSummary=featPreviewText(feat);
   d.innerHTML=`<header><div><span class="sheet-eyebrow">FEAT REFERENCE</span><h2 id="sheetFeatInformationTitle">${sheetEscape(feat.name)}</h2></div><button type="button" aria-label="Close feat information">Close</button></header>
     <div class="sheet-feat-facts"><p><strong>Rules:</strong> ${sheetEscape(feat.edition)}</p><p><strong>Category:</strong> ${sheetEscape(featCategoryLabel(feat))}</p><p><strong>Source:</strong> ${sheetEscape(feat.book||feat.source)}${feat.page?' · p. '+sheetEscape(feat.page):''}</p><p><strong>Minimum level:</strong> ${feat.minimumLevel||'None'}</p></div>
-    <section class="sheet-summary-box"><h4>Quick summary</h4><p>${sheetEscape(featPreviewText(feat))}</p></section>
-    ${facts.length?`<section class="sheet-summary-box"><h4>Structured benefits</h4><ul>${[...new Set(facts)].map(v=>'<li>'+sheetEscape(v)+'</li>').join('')}</ul></section>`:''}
-    ${ref?.features?.length?`<section class="sheet-summary-box"><h4>Named features</h4><p>${ref.features.map(sheetEscape).join(' · ')}</p></section>`:''}
-    ${req.length?`<section class="sheet-summary-box"><h4>Prerequisites</h4><p>${req.map(sheetEscape).join(' · ')}</p></section>`:''}
+    <section class="sheet-summary-box"><h3>Quick summary</h3><p>${sheetEscape(featPreviewText(feat))}</p></section>
+    ${facts.length?`<section class="sheet-summary-box"><h3>Structured benefits</h3><ul>${[...new Set(facts)].map(v=>'<li>'+sheetEscape(v)+'</li>').join('')}</ul></section>`:''}
+    ${ref?.features?.length?`<section class="sheet-summary-box"><h3>Named features</h3><p>${ref.features.map(sheetEscape).join(' · ')}</p></section>`:''}
+    ${req.length?`<section class="sheet-summary-box"><h3>Prerequisites</h3><p>${req.map(sheetEscape).join(' · ')}</p></section>`:''}
     ${licensed&&!/consult the source|source reference only|complete rules/i.test(licensed)?`<details open><summary>Bundled rules text</summary><p class="sheet-rule-text">${sheetEscape(licensed)}</p></details>`:`<p class="sheet-help">${sheetEscape(referenceSummary)} The exact published wording remains in the listed source.</p>`}`;
   document.body.appendChild(d);d.querySelector('header button').onclick=closeFeatInformation;d.addEventListener('click',event=>{if(event.target===d)closeFeatInformation();});d.showModal();d.querySelector('header button').focus();
 }

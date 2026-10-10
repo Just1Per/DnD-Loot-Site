@@ -34,7 +34,7 @@ The campaign DM can copy an encounter into a one-shot, including only that encou
 
 ## One-shot permissions and sheets
 
-An active campaign player can propose an unapproved adventure. The author can edit its preparation until approval, but cannot approve a host or issue invitations. The campaign DM approves a host, sets the target level/creation mode and invites existing members. Hosting grants preparation, combat and roster access for that adventure only. It never changes campaign membership or grants campaign secrets. Revoking the host or active membership immediately ends server-authorized access.
+Players enter **My One Shots** from My Characters. This separate entry has no campaign workspace navigation or links to campaign records. World Building, Chapter Tracker and the DM One Shots planning tab remain DM-only. An active campaign player can propose an unapproved adventure. The author can edit its preparation until approval, but cannot approve a host or issue invitations. The campaign DM approves a host, sets the target level/creation mode and invites existing members. Hosting grants preparation, combat and roster access for that adventure only. It never changes campaign membership or grants campaign secrets. Revoking the host or active membership immediately ends server-authorized access.
 
 Accepted participants edit their own assigned sheets and can create sheets when Player-created/Mixed mode allows it. Managers can create multiple pre-generated sheets and assign them to accepted participants. Participants cannot accept for others, reassign sheets, change host permissions, widen level limits or set protected DM advancement grants. Creation uses a bounded transactional counter, not a client-only limit.
 

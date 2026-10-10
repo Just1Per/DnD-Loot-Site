@@ -1,7 +1,7 @@
 'use strict';
 var SiteHelp=(()=>{
- // Versioned guide preferences and weakly held DOM badges survive UI refreshes without leaks.
- const D=SiteHelpData,VERSION='1',decorated=new WeakMap();
+ // Weakly held badges survive dynamic form refreshes without duplicating controls.
+ const D=SiteHelpData,decorated=new WeakMap();
  let tip=null,active=null,pinned=false,hideTimer=null,refreshTimer=null,observer=null,returnFocus=null;
  const norm=v=>String(v||'').replace(/\s+/g,' ').trim().toLowerCase();
  function titleOf(node){const copy=node.cloneNode(true);copy.querySelectorAll('input,select,textarea,button,small,.sheet-help,.vault-help-badge').forEach(e=>e.remove());return copy.textContent.replace(/\s+/g,' ').trim();}
@@ -66,6 +66,7 @@ var SiteHelp=(()=>{
   if(!text||decorated.get(host)?.isConnected)return;
   const b=document.createElement('button');b.type='button';b.className='vault-help-badge';b.textContent='?';b.setAttribute('aria-label','Help: '+title);b.setAttribute('aria-expanded','false');b._vaultHelp=text;decorated.set(host,b);
   if(host.tagName==='INPUT'&&host.closest('#loginControls')){const group=document.createElement('span');group.className='vault-help-login-field';host.before(group);group.append(host,b);}
+  else if(host.tagName==='SUMMARY'&&!host.closest('#sheet-overview')){const row=document.createElement('div');row.className='vault-help-disclosure';const details=host.parentElement;details.before(row);row.append(details,b);}
   else if(host.tagName==='INPUT'||host.tagName==='SELECT'||host.tagName==='TEXTAREA'||host.tagName==='BUTTON')host.after(b);else host.appendChild(b);
   b.addEventListener('pointerenter',()=>show(b));b.addEventListener('pointerleave',()=>{if(!pinned)hideTimer=setTimeout(hide,200);});b.addEventListener('focus',()=>show(b));b.addEventListener('blur',()=>{if(!pinned)hide();});
   b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(active===b&&pinned)hide();else{show(b);pinned=true;}});
@@ -120,11 +121,7 @@ var SiteHelp=(()=>{
  function accountRole(){return isAdmin()?'admin':isDM()?'dm':'player';}
  function role(){return activeCampaign&&document.getElementById('mainApp')?.style.display!=='none'?(canManageCampaign()?'dm':'player'):accountRole();}
  function roles(){return isAdmin()?['player','dm','admin']:isDM()||canManageCampaign()?['player','dm']:['player'];}
- function key(r){return 'dnd-guide-'+VERSION+'-'+(currentUser?.uid||currentUser?.id||'')+'-'+r;}
- function suppressed(r){try{return localStorage.getItem(key(r))==='hidden';}catch{return false;}}
- /** Preferences are optional: unavailable browser storage must not block navigation. */
- function rememberGuide(dialog){try{localStorage.setItem(key(dialog.dataset.guideRole),dialog.querySelector('#siteGuideRemember')?.checked?'hidden':'show');}catch{}}
- function closeGuide(){const dialog=document.getElementById('siteGuideDialog');if(!dialog)return;rememberGuide(dialog);if(dialog.open)dialog.close();dialog.remove();returnFocus?.focus?.();}
+ function closeGuide(){const dialog=document.getElementById('siteGuideDialog');if(!dialog)return;if(dialog.open)dialog.close();dialog.remove();returnFocus?.focus?.();}
  /** Recheck live permissions before taking a guide shortcut into an existing editor. */
  function navigate(action){
   if(!currentUser)return;
@@ -138,8 +135,8 @@ var SiteHelp=(()=>{
  function openGuide(requested=role()){
   if(!currentUser)return;hide();const allowed=roles(),r=allowed.includes(requested)?requested:role();const old=document.getElementById('siteGuideDialog');if(old){if(old.open)old.close();old.remove();}else returnFocus=document.activeElement;
   const g=guides[r],dialog=document.createElement('dialog');dialog.id='siteGuideDialog';dialog.className='vault-help-dialog';dialog.dataset.guideRole=r;dialog.setAttribute('aria-labelledby','siteGuideTitle');
-  dialog.innerHTML='<header><div><small>GET STARTED · CAMPAIGNATLAS</small><h2 id="siteGuideTitle">'+g.title+'</h2><p>'+g.intro+'</p></div><button type="button" data-guide-close aria-label="Close guide">×</button></header><nav aria-label="Choose a guide">'+allowed.map(k=>'<button type="button" data-guide-role="'+k+'" aria-pressed="'+(k===r)+'">'+guides[k].title+'</button>').join('')+'</nav><ol>'+g.steps.map(([title,text,action,label])=>'<li><h3>'+title+'</h3><p>'+text+'</p><button type="button" data-guide-action="'+action+'">'+label+'</button></li>').join('')+'</ol><footer><label><input type="checkbox" id="siteGuideRemember" '+(suppressed(r)?'checked':'')+'> Don’t open this guide automatically after login</label><p>You can always reopen it with Guide in the header. The small ? buttons explain fields as you go.</p><button type="button" class="btn-primary" data-guide-close>Done</button></footer>';
-  document.body.appendChild(dialog);dialog.querySelectorAll('[data-guide-role]').forEach(b=>b.onclick=()=>{rememberGuide(dialog);openGuide(b.dataset.guideRole);});dialog.querySelectorAll('[data-guide-action]').forEach(b=>b.onclick=()=>navigate(b.dataset.guideAction));dialog.querySelectorAll('[data-guide-close]').forEach(b=>b.onclick=closeGuide);dialog.addEventListener('cancel',event=>{event.preventDefault();closeGuide();});dialog.addEventListener('click',event=>{if(event.target===dialog)closeGuide();});dialog.showModal();
+  dialog.innerHTML='<header><div><small>GET STARTED · CAMPAIGNATLAS</small><h2 id="siteGuideTitle">'+g.title+'</h2><p>'+g.intro+'</p></div><button type="button" data-guide-close aria-label="Close guide">×</button></header><nav aria-label="Choose a guide">'+allowed.map(k=>'<button type="button" data-guide-role="'+k+'" aria-pressed="'+(k===r)+'">'+guides[k].title+'</button>').join('')+'</nav><ol>'+g.steps.map(([title,text,action,label])=>'<li><h3>'+title+'</h3><p>'+text+'</p><button type="button" data-guide-action="'+action+'">'+label+'</button></li>').join('')+'</ol><footer><p>You can always reopen it with Guide in the header. The small ? buttons explain fields as you go.</p><button type="button" class="btn-primary" data-guide-close>Done</button></footer>';
+  document.body.appendChild(dialog);dialog.querySelectorAll('[data-guide-role]').forEach(b=>b.onclick=()=>{openGuide(b.dataset.guideRole);});dialog.querySelectorAll('[data-guide-action]').forEach(b=>b.onclick=()=>navigate(b.dataset.guideAction));dialog.querySelectorAll('[data-guide-close]').forEach(b=>b.onclick=closeGuide);dialog.addEventListener('cancel',event=>{event.preventDefault();closeGuide();});dialog.addEventListener('click',event=>{if(event.target===dialog)closeGuide();});dialog.showModal();
  }
  // Guides are opt-in: keep contextual hints and the header Guide button, but never show a modal on login.
  function onLogin(){refresh();const button=document.getElementById('siteGuideButton');if(button)button.hidden=!currentUser;}

@@ -102,9 +102,9 @@ function openItemModal(item=null,{scope='campaign'}={}) {
   const unlimited=options.querySelector('#modal-unlimited');const remaining=options.querySelector('#modal-remaining');
   if(unlimited){const sync=()=>{remaining.disabled=unlimited.checked;};unlimited.addEventListener('change',sync);sync();}
   renderItemMechanicsEditor(item);
-  document.getElementById('itemModal').style.display='flex';
+  openVaultModal('itemModal');
 }
-function closeItemModal(){document.getElementById('itemModal').style.display='none';itemEditor=null;}
+function closeItemModal(){closeVaultModal('itemModal');itemEditor=null;}
 async function saveItemModal() {
   const editor=itemEditor;if(!editor)return;
   await runVaultButton(document.getElementById('saveItemModal'),async()=>{

@@ -1,0 +1,86 @@
+/* Shared site components. Character Overview retains its current visual rules. */
+:root {
+  --ui-paper:#fdfbf7; --ui-paper-soft:#f4efe6; --ui-parchment:#e9dfcf;
+  --ui-ink:#342d26; --ui-muted:#655744; --ui-heading:#5c1d1d;
+  --ui-primary:#9b1d1d; --ui-primary-hover:#651313; --ui-cream:#f5e6c8;
+  --ui-gold:#d4af37; --ui-accent-text:#7d6608; --ui-border:#8a7355;
+  --ui-border-soft:#c8b89a; --ui-danger:#8b2d2d; --ui-success:#3f642e;
+}
+.site-skip-link{position:fixed;top:8px;left:8px;z-index:100001;transform:translateY(-150%);padding:10px 16px;background:var(--ui-paper);color:var(--ui-heading);border:2px solid var(--ui-heading)}
+.site-skip-link:focus{transform:none}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+#siteMain{outline:none}
+#authStatus:empty,#playerCharacterStatus:empty{display:none}
+#authStatus{max-width:320px;margin:0;color:var(--ui-cream);font:13px/1.4 Georgia,serif}
+.player-create-toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.modal{width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:16px;border:0;box-sizing:border-box;inset:0}
+.modal::backdrop{background:#21140580}
+.modal .modal-content{max-height:calc(100dvh - 32px)}
+:is(#mainApp,#campaignSelectorScreen,#tab-admin,#rootCatalogueScreen,.modal) button:not(.vault-help-badge):not(#tab-character-sheet button){
+  min-height:30px;padding:6px 10px;border:1px solid var(--ui-border-soft)!important;
+  border-radius:5px;background:var(--ui-paper-soft)!important;color:var(--ui-heading)!important;
+  font-size:12px!important;line-height:1.35;box-shadow:none!important;text-shadow:none!important;
+}
+:is(#mainApp,#campaignSelectorScreen,#tab-admin,#rootCatalogueScreen,.modal) :is(.btn-primary.btn-primary,.save-edit-button.save-edit-button,.toolbar-btn.toolbar-btn):not(#tab-character-sheet button){
+  background:var(--ui-primary)!important;color:var(--ui-cream)!important;border-color:var(--ui-primary-hover)!important;
+}
+:is(#mainApp,#campaignSelectorScreen,#tab-admin,#rootCatalogueScreen,.modal) :is(.cancel-button,.dm-danger-btn,[data-dm-hard-delete]):not(#tab-character-sheet button){background:var(--ui-paper)!important;color:var(--ui-heading)!important}
+:is(#mainApp,#tab-admin,#rootCatalogueScreen,.modal) :is(.dm-danger-btn.dm-danger-btn,[data-dm-hard-delete][data-dm-hard-delete]):not(#tab-character-sheet button){color:var(--ui-danger)!important;border-color:var(--ui-danger)!important}
+:is(#mainApp,#campaignSelectorScreen,#tab-admin,#rootCatalogueScreen,.modal) button:not(.vault-help-badge):not(#tab-character-sheet button):hover{border-color:var(--ui-heading)!important}
+:is(#mainApp,#campaignSelectorScreen,#tab-admin,#rootCatalogueScreen,.modal) button:not(#tab-character-sheet button):focus-visible{outline:2px solid var(--ui-heading);outline-offset:3px}
+:is(#mainApp,#campaignSelectorScreen,#tab-admin,#rootCatalogueScreen,.modal) button:not(#tab-character-sheet button):disabled{cursor:default;opacity:.6}
+.campaign-context-label,.btn-leave-campaign{color:var(--ui-muted)}
+:is(.dm-overview-stat span,.dm-member-meta,.supply-label,.campaign-item-toolbar){color:var(--ui-muted);font-size:12px}
+#dmCampaignRules{background:var(--ui-paper-soft);border-color:var(--ui-border-soft)}
+#dmCampaignRules :is(input,select,textarea){color:var(--ui-ink);font-size:14px}
+/* Only non-Overview help targets change; Overview's badges are deferred. */
+button.vault-help-badge.vault-help-badge:not(#sheet-overview button),
+#characterSheetPage #characterSheetDialog button.vault-help-badge.vault-help-badge:not(#sheet-overview button){width:24px;min-width:24px;height:24px;min-height:24px;flex-basis:24px;margin-left:6px}
+.vault-help-disclosure{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.vault-help-disclosure>details{flex:1;min-width:0}
+.sheet-panel:not(#sheet-overview) .sheet-eyebrow{color:var(--ui-heading)!important}
+.sheet-panel:not(#sheet-overview) :is(.sheet-help,.sheet-field>span){color:var(--ui-muted)}
+#sheetSpellGenerator .sheet-field>span,.sheet-print-page-option small,.sheet-portrait-preview>span{color:var(--ui-muted)!important}
+.sheet-print-page-option small{font-size:12px}
+.sheet-page-navigation{display:flex;align-items:center;gap:8px;min-width:0}
+.sheet-page-navigation>.sheet-tabs{flex:1;min-width:0;margin:0}
+#sheetAddPageButton{flex-shrink:0;margin:6px 12px 6px 0;min-height:30px}
+@media print{.sheet-page-navigation{display:none!important}}
+.sheet-story-combobox{position:relative}
+.sheet-story-combobox>label{display:block;margin-bottom:4px}
+.sheet-story-options button[aria-pressed=true]{background:var(--ui-parchment);color:var(--ui-heading)}
+#characterSheetPage #characterSheetDialog .sheet-companion-cards:has(>.sheet-companion-card:only-child){grid-template-columns:minmax(0,640px)!important}
+#characterSheetPage #characterSheetDialog .sheet-companion-card{min-width:0}
+.sheet-spell-table-wrap:focus-visible{outline:2px solid var(--ui-heading);outline-offset:3px}
+@media(max-width:650px){.site-header{flex-wrap:wrap}.login-controls{flex-wrap:wrap}#authStatus{max-width:100%;width:100%}}
+@media print{.site-skip-link,#siteScreenTitle{display:none!important}}
+
+.site-boot-panel{max-width:900px;margin:36px auto;padding:24px;color:var(--ui-ink);background:var(--ui-paper);border:1px solid var(--ui-border-soft);border-radius:8px}
+.site-boot-panel h2{color:var(--ui-heading)}
+.sheet-builder-nav{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 18px;padding:10px 0;border-block:1px solid var(--ui-border-soft)}
+.sheet-builder-nav a{padding:6px 10px;color:var(--ui-heading);background:var(--ui-paper-soft);border:1px solid var(--ui-border-soft);border-radius:4px;font-size:12px;text-decoration:none}
+.sheet-builder-nav a:focus-visible{outline:2px solid var(--ui-heading);outline-offset:2px}
+#sheetBuildControls>[id]{scroll-margin-top:20px}
+@media print{.sheet-builder-nav,.site-boot-panel{display:none!important}}
+/* Readable captions keep gold decorative rather than using it for small text. */
+:is(#mainApp,#campaignSelectorScreen,#tab-admin,#rootCatalogueScreen,#characterLootDialog,.modal) :is(.dashboard-stat-label,.dashboard-subtitle,.dashboard-panel-note,.dashboard-account-row>span,.player-section-sub,.character-card-class,.player-empty,.admin-section-sub,.modal-label small,.role-checks small,.owner-badge,.item-type,.campaign-tag,.item-description,.card-footer,.supply-label):not(#tab-character-sheet *){color:var(--ui-muted)!important}
+:is(#mainApp,#characterLootDialog) .tier-badge{color:#245375!important;background:#e7f1f1!important}
+.visibility-bulk-rarity .uncommon.rarity-pill{color:#286b2e!important}
+#characterLootDialog button{min-height:30px;padding:6px 10px;border:1px solid var(--ui-border-soft)!important;border-radius:5px;background:var(--ui-paper-soft)!important;color:var(--ui-heading)!important;font-size:12px!important;box-shadow:none!important;text-shadow:none!important}
+#characterLootDialog button:focus-visible{outline:2px solid var(--ui-heading);outline-offset:3px}
+#characterLootDialog .delete-item-button{color:var(--ui-danger)!important;border-color:var(--ui-danger)!important}
+#characterSheetPage #characterSheetDialog #sheet-feats .sheet-build-feat-card.is-granted small{color:var(--ui-muted)!important}
+#sheetSpellGenerator .sheet-spell-generator-filters .sheet-field>span,#sheetFeatInformation .sheet-eyebrow{color:var(--ui-heading)!important}
+#characterSheetPage #characterSheetDialog #sheet-skills input[type=checkbox]{width:24px;height:24px;min-width:24px}
+#characterSheetPage #characterSheetDialog #sheet-spells .sheet-slot-orb{width:24px;height:24px;min-width:24px}
+#characterSheetPage #characterSheetDialog #sheet-inventory summary{min-height:24px;line-height:24px}
+:is(#campaignSelectorScreen,#mainApp) :is(.dashboard-card-meta,.dashboard-empty){color:var(--ui-muted)!important}
+/* Ownership is conveyed by its badge; dimming the entire card obscures its text. */
+#mainApp .item-card.looted:not(#tab-character-sheet *),#characterLootDialog .item-card.looted{opacity:1}
+
+/* Keep the new main landmark visible when legacy print rules hide body siblings. */
+@media print{
+ body.printing-character-sheet>#siteMain{display:block!important;margin:0!important;padding:0!important;max-width:none!important}
+ body.printing-character-sheet>#siteMain>:not(#mainApp){display:none!important}
+ body.printing-character-sheet #mainApp{display:block!important}
+}

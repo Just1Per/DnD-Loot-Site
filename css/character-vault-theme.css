@@ -377,8 +377,6 @@
 /* Metrics, abilities, HP and point-buy cards */
 #characterSheetPage .sheet-metrics>div,
 #characterSheetDialog .sheet-metrics>div,
-#characterSheetPage .sheet-hp-tools,
-#characterSheetDialog .sheet-hp-tools,
 #characterSheetPage .sheet-slot-grid>div,
 #characterSheetDialog .sheet-slot-grid>div,
 #characterSheetPage .sheet-derived-readout,
@@ -421,9 +419,7 @@
   background:var(--vault-paper);
   color:var(--vault-burgundy);
 }
-.character-sheet .sheet-ability-breakdown,
-.character-sheet .sheet-ability-total,
-.character-sheet .sheet-point-cost {
+.character-sheet .sheet-ability-breakdown {
   color:var(--vault-muted);
 }
 .character-sheet .sheet-point-panel {
@@ -577,8 +573,7 @@
   background:var(--vault-paper);
   color:var(--vault-burgundy);
 }
-.character-sheet .sheet-attunement-line,
-.character-sheet .sheet-inventory-loot {
+.character-sheet .sheet-attunement-line {
   border-color:var(--vault-border-soft);
 }
 
@@ -685,13 +680,11 @@
   background:linear-gradient(145deg,#fffdf8,#f1e5d0);
 }
 .character-sheet .sheet-build-feat-card,
-.character-sheet .sheet-class-level-row,
-.character-sheet .sheet-feature-chip {
+.character-sheet .sheet-class-level-row {
   border-color:#d8c9ae;
   background:#fffaf0;
 }
-.character-sheet .sheet-build-feat-card.is-granted,
-.character-sheet .sheet-feature-chip.is-subclass {
+.character-sheet .sheet-build-feat-card.is-granted {
   border-color:#b89554;
   background:#f3e0b9;
 }
@@ -764,8 +757,6 @@
   color:#7c2727;
 }
 .character-sheet .sheet-spell-editor,
-.character-sheet .sheet-gear-reference,
-.character-sheet .sheet-creature-attack-picker,
 .character-sheet .sheet-multiclass-tools {
   border:1px solid var(--vault-border-soft);
   border-radius:9px;
@@ -973,28 +964,6 @@
   border-radius:10px;
   background:linear-gradient(120deg,#fffaf0,#f3e5cd);
 }
-.character-sheet .sheet-dm-approval-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-  gap:10px;
-}
-.character-sheet .sheet-dm-approval-grid article {
-  display:grid;
-  gap:7px;
-  padding:10px;
-  border:1px solid #d8c9ae;
-  border-radius:8px;
-  background:#fffdf9;
-}
-.character-sheet .sheet-dm-approval-grid article>strong {
-  font:700 24px/1 Georgia,serif;
-  color:var(--vault-burgundy);
-}
-.character-sheet .sheet-dm-approval-grid article>div {
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
 .character-sheet .sheet-feat-filters {
   grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   align-items:end;
@@ -1124,8 +1093,7 @@
   height:18px;
   min-width:18px;
 }
-.character-sheet .sheet-auto-slot-orbs small,
-.character-sheet .sheet-pact-slot-help {
+.character-sheet .sheet-auto-slot-orbs small {
   font-size:10px;
 }
 @media(max-width:600px){
@@ -2493,7 +2461,7 @@
 /* Print surfaces must not inherit the screen frame or depend on transient events. */
 @media print{
  body:has(#characterSheetDialog){min-height:0!important;height:auto!important;margin:0!important;padding:0!important;background:#fff!important}
- body:has(#characterSheetDialog)>:not(#mainApp):not(#characterSheetDialog){display:none!important}
+ body:has(#characterSheetDialog)>:not(#siteMain):not(#mainApp):not(#characterSheetDialog){display:none!important}
  body:has(#characterSheetDialog)>#mainApp,body:has(#characterSheetDialog) #tab-character-sheet{display:block!important}
  body:has(#characterSheetDialog) #mainApp>:not(#tab-character-sheet){display:none!important}
  body:has(#characterSheetDialog) :is(#mainApp,#tab-character-sheet){width:100%!important;max-width:none!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}
@@ -2504,19 +2472,7 @@
 }
 
 /* Campaign rule controls reuse the compact sheet palette and field rhythm. */
-#dmCampaignRules { background:linear-gradient(135deg,#faf3e4,#f0e3ca); border-color:#d4af37; color:#2b1a0e; }
-#dmCampaignRules h3 { color:#651313; }
-#dmCampaignRules label { display:grid; gap:.3rem; margin:.65rem 0; font-size:.85rem; }
-#dmCampaignRules input:not([type=checkbox]),#dmCampaignRules select,#dmCampaignRules textarea { box-sizing:border-box; width:100%; min-width:0; padding:.5rem .65rem; color:#2b1a0e; background:#fffaf0; border:1px solid #c5ac7b; border-radius:6px; font:inherit; }
-#dmCampaignRules .sheet-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:.75rem; }
-#dmCampaignRules .sheet-inline-controls { display:flex; flex-wrap:wrap; gap:.6rem; }
-#dmCampaignRules .sheet-inline-controls label { display:flex; align-items:center; }
-#dmCampaignRules details { border-top:1px solid #c5ac7b; padding:.6rem 0; }
 .sheet-fix-target { outline:3px solid #d4af37 !important; outline-offset:4px; scroll-margin:5rem; }
-#dmCampaignRules button { background:linear-gradient(#8b2525,#5c1d1d); color:#f8e4ab; border:1px solid #c79c32; border-radius:5px; padding:.45rem .7rem; font:inherit; font-size:.8rem; cursor:pointer; }
-#dmCampaignRules button:hover { background:#752222; }
-#dmCampaignRules button:focus-visible { outline:2px solid #d4af37; outline-offset:3px; }
-#dmCampaignRules .dm-tool-actions { align-items:center; }
 #dmToolsPanel .admin-char-btns { max-width:100%; flex-shrink:1; }
 
 /* Native disclosure retains keyboard access and keeps creature skill lists compact. */

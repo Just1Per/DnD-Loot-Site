@@ -8,7 +8,7 @@
  check('Armor controls show a shield badge and automatic unarmored AC',!!document.querySelector('#sheetInventoryDefense svg')&&ac()===13);
  choose('armor','base:equipment-leather');check('Selecting standard light armor adds, equips and applies full DEX',ac()===14&&sheetSession.data.personalGear.some(g=>g.name==='Leather')&&document.querySelector('.sheet-defense-formula').textContent.includes('DEX +3'));
  choose('armor','base:equipment-scale-mail');check('Medium armor caps positive DEX at two',ac()===16&&document.querySelector('.sheet-defense-formula').textContent.includes('maximum +2'));
- choose('shield','base:equipment-shield');check('Shield adds two and stays in sync with Overview',ac()===18&&document.querySelector('.sheet-defense-emblem strong').textContent==='18');
+ choose('shield','base:equipment-shield');check('Shield adds two and stays in sync with Overview',ac()===18&&document.querySelector('#sheetInventoryDefense .sheet-defense-emblem strong').textContent==='18');
  choose('armor','base:equipment-plate');check('Heavy armor excludes DEX',ac()===20&&document.querySelector('.sheet-defense-formula').textContent.includes('not applied'));
  const count=sheetSession.data.personalGear.length,id=sheetSession.data.personalGear.find(g=>g.name==='Leather').id;choose('armor',id);check('Reselecting owned armor does not duplicate it',sheetSession.data.personalGear.length===count&&ac()===16);
  change('abilities.dex',8);choose('armor',sheetSession.data.personalGear.find(g=>g.name==='Scale Mail').id);check('Medium armor still applies negative DEX',ac()===15);

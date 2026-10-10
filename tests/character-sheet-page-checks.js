@@ -6,11 +6,11 @@ try {
  check('Character sheet main tab is immediately after My Character',document.getElementById('playerTab').nextElementSibling.id==='characterSheetTab');
  showTab('character-sheet');await Promise.resolve();await Promise.resolve();
  check('Main tab opens own character as a page without a dialog',!!sheetSession&&document.getElementById('characterSheetDialog').parentElement.id==='characterSheetPage'&&!document.querySelector('dialog#characterSheetDialog')&&document.getElementById('tab-character-sheet').style.display==='block');
- check('Overview is read-only with editing panels separate',document.getElementById('sheet-skills').hidden&&document.getElementById('sheet-combat').hidden&&!document.querySelector('#sheet-overview input,#sheet-overview select,#sheet-overview textarea')&&document.getElementById('sheet-builder').hidden&&document.getElementById('sheetBuildControls').closest('[data-sheet-section]').id==='sheet-builder');
+ check('Overview is read-only with editing panels separate',document.getElementById('sheet-skills').hidden&&document.getElementById('sheet-combat').hidden&&!document.querySelector('#sheet-overview input[name],#sheet-overview select,#sheet-overview textarea')&&document.getElementById('sheet-builder').hidden&&document.getElementById('sheetBuildControls').closest('[data-sheet-section]').id==='sheet-builder');
  const fields=[...document.querySelectorAll('#characterSheetForm [name]')].map(el=>el.name);check('Page layout reuses original fields without duplicate inputs',new Set(fields).size===fields.length);
- const notes=document.querySelector('[name="notes"]');notes.value='Unfinished draft';notes.dispatchEvent(new Event('input',{bubbles:true}));
+ const notes=document.querySelector('[name="appearance"]');notes.value='Unfinished draft';notes.dispatchEvent(new Event('input',{bubbles:true}));
  const session=sheetSession;showTab('library');prepareSheetPrint();check('Printing another tab does not expose a hidden character draft',!document.body.classList.contains('printing-character-sheet'));showTab('character-sheet');
- check('Main navigation preserves dirty character form and session',sheetSession===session&&sheetSession.dirty&&document.querySelector('[name="notes"]').value==='Unfinished draft');
+ check('Main navigation preserves dirty character form and session',sheetSession===session&&sheetSession.dirty&&document.querySelector('[name="appearance"]').value==='Unfinished draft');
  await openCharacterSheet('c1');check('Same-character shortcut retains unsaved draft',sheetSession===session&&sheetSession.dirty);
  check('Player chooser excludes other players characters',!document.querySelector('#sheetCharacterSelect [value="c2"]'));
  characters.push({id:'c3',name:'Second hero',class:'Rogue',level:1,userId:'player'});renderCharacterSheetChooser();window.confirm=()=>false;await openCharacterSheet('c3');

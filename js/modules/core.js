@@ -3,13 +3,33 @@
 // Shared dependencies exposed by /js/app.js during ordered startup.
 const {
   db, storage, auth, provider, signInWithPopup, signOut,
-  onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail,
   collection, getDocs, addDoc, doc, getDoc,
   setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch,
   ref, getDownloadURL, uploadBytes
 } = window.__DND_VAULT_DEPS__;
 
 const vaultCall = createCampaignStore(window.__DND_VAULT_DEPS__);
+
+// Legacy editors now share native modal focus containment and return-to-trigger.
+const vaultModalOpeners = new WeakMap();
+function openVaultModal(id) {
+  const dialog = document.getElementById(id);
+  if (!dialog || dialog.open) return;
+  vaultModalOpeners.set(dialog, document.activeElement);
+  dialog.style.display = 'flex';
+  dialog.showModal();
+  dialog.querySelector('input:not([disabled]),select:not([disabled]),textarea:not([disabled]),button')?.focus();
+}
+function closeVaultModal(id) {
+  const dialog = document.getElementById(id);
+  if (!dialog) return;
+  if (dialog.open) dialog.close();
+  dialog.style.display = 'none';
+  const opener = vaultModalOpeners.get(dialog);
+  if (opener?.isConnected) opener.focus();
+  vaultModalOpeners.delete(dialog);
+}
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 // Data flow: User → Campaign → Character → Item (owner = characterId)

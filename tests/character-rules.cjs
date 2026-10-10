@@ -118,3 +118,5 @@ test('2024 class base proficiencies and level-one half-caster slots differ from 
  const d=build('',{edition:'2024',classId:'druid'});assert.ok(!M.derive(d,1).effects.proficiencies.includes('Medium armor'));d.build.classId='wizard';assert.ok(M.derive(d,1).effects.classData.skills.includes('nature'));
 });
 test('2024 species cannot silently supply traits to a 2014 sheet',()=>{const e=M.derive(build('dwarf-2024'),1).effects;assert.equal(e.race,null);assert.equal(e.hpBonus,0);assert.ok(e.warnings.some(w=>w.includes('requires 2024')));});
+
+test('Generic Human Magic Initiate survives core normalization with separate spell choices',()=>{const data=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:'Magic Initiate'},rulesChoices:{grants:{human:{classId:'wizard',ability:'int',spells:['one','two','three'],used:1}}}});const reopened=M.normalize(data);assert.equal(reopened.build.humanOriginFeat,'Magic Initiate');assert.equal(reopened.rulesChoices.grants.human.classId,'wizard');assert.equal(reopened.rulesChoices.grants.human.used,1);});

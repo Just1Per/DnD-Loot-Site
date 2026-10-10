@@ -30,7 +30,6 @@
 #tab-admin .cancel-button,
 .character-card-actions .btn-select-char,
 .character-card-actions .btn-rename-char,
-.character-card-actions .btn-delete-char,
 .visibility-bulk .vis-show-btn,
 .visibility-bulk .vis-hide-btn {
   background: var(--action-bg) !important;
@@ -65,7 +64,6 @@
 #tab-admin .cancel-button:hover,
 .character-card-actions .btn-select-char:hover,
 .character-card-actions .btn-rename-char:hover,
-.character-card-actions .btn-delete-char:hover,
 .visibility-bulk .vis-show-btn:hover,
 .visibility-bulk .vis-hide-btn:hover {
   background: var(--action-bg-hover) !important;
@@ -88,17 +86,11 @@
 }
 
 /* Hidden remains neutral/muted rather than grey */
-.item-card .visibility-toggle-btn.hidden-item {
-  background: rgba(138, 115, 85, 0.10) !important;
-  border-color: #a99474 !important;
-  color: #6f604c !important;
-}
 
 /* Destructive actions: same badge shape, only a restrained crimson cue */
 .item-card .delete-item-button,
 #tab-admin [data-delete-user],
-#tab-admin [data-delete-char],
-.character-card-actions .btn-delete-char {
+#tab-admin [data-delete-char] {
   background: var(--action-danger-bg) !important;
   border-color: rgba(139,45,45,0.55) !important;
   color: var(--action-danger) !important;
@@ -106,8 +98,7 @@
 
 .item-card .delete-item-button:hover,
 #tab-admin [data-delete-user]:hover,
-#tab-admin [data-delete-char]:hover,
-.character-card-actions .btn-delete-char:hover {
+#tab-admin [data-delete-char]:hover {
   background: var(--action-danger-hover) !important;
   border-color: var(--action-danger) !important;
   color: #6b1717 !important;

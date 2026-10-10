@@ -21,6 +21,8 @@ var CharacterRules2024 = (() => {
     'Crafter',
     'Healer',
     'Lucky',
+    // The current catalogue chooses the class separately; retain qualified legacy saves too.
+    'Magic Initiate',
     'Magic Initiate (Cleric)',
     'Magic Initiate (Druid)',
     'Magic Initiate (Wizard)',

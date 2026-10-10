@@ -34,11 +34,11 @@ function openWishModal(charId, charName) {
             </div>
           </div>`;
       }).join("");
-  document.getElementById("wishModal").style.display = "flex";
+  openVaultModal('wishModal');
   observePendingImages(grid);
 }
 
-function closeWishModal() { document.getElementById("wishModal").style.display = "none"; }
+function closeWishModal() { closeVaultModal('wishModal'); }
 
 // ─── VISIBILITY BULK CONTROLS ─────────────────────────────────────────────────
 
@@ -160,10 +160,7 @@ function renderCharacterList() {
   });
 
   el.querySelectorAll(".btn-rename-char").forEach(btn=>{
-    btn.addEventListener("click", ()=>
-      openEditCharacterModal(btn.dataset.charId, btn.dataset.charName,
-        btn.dataset.charClass, btn.dataset.charLevel)
-    );
+    btn.addEventListener("click", async ()=>{await openCharacterSheet(btn.dataset.charId);selectSheetTab('builder');document.querySelector('[name="identity.name"]')?.focus();});
   });
 
   el.querySelectorAll(".btn-archive-char").forEach(btn=>btn.addEventListener("click",()=>runVaultButton(btn,()=>deleteCampaignCharacter(btn.dataset.charId))));
@@ -266,10 +263,10 @@ function openEditCharacterModal(charId, charName, charClass, charLevel = "") {
   document.getElementById("editChar-level").value = charLevel;
 
   document.getElementById("editCharModal").dataset.charId = charId;
-  document.getElementById("editCharModal").style.display  = "flex";
+  openVaultModal('editCharModal');
 }
 
-function closeEditCharacterModal() { document.getElementById("editCharModal").style.display = "none"; }
+function closeEditCharacterModal() { closeVaultModal('editCharModal'); }
 
 async function saveEditCharacter() {
   const charId   = document.getElementById("editCharModal").dataset.charId;
