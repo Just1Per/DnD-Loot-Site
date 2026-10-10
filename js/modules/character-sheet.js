@@ -24,7 +24,7 @@ function renderCharacterSheetTab() {
 }
 function leaveCharacterSheet() {
   const adventure=!!sheetSession?.adventureId;
-  if(closeCharacterSheet())showTab(adventure?'dm-one-shots':'player');
+  if(closeCharacterSheet())showTab(adventure?(canManageCampaign()?'dm-one-shots':'player-adventures'):'player');
 }
 function arrangeCharacterSheetPage() {
   const root=document.getElementById('characterSheetDialog'),body=root.querySelector('.sheet-body');

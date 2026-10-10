@@ -96,7 +96,7 @@ function renderCampaignToolbar() {
 async function openRootCatalogue() {
   if(!isAdmin())return;
   await runVaultButton(document.getElementById('openRootCatalogue'),async()=>{
-    await itemsLoadPromise;hideAllScreens();
+    await itemsLoadPromise;hideAllScreens();document.getElementById('siteScreenTitle').textContent='Root Catalogue · CampaignAtlas';
     document.getElementById('rootCatalogueScreen').style.display='block';renderRootCatalogue();
   });
 }

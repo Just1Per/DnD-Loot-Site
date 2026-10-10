@@ -175,7 +175,7 @@ async function openUserModal(user = null) {
     if (emailHelp) emailHelp.textContent = "This is the authenticated account email.";
     if (roleTitle) roleTitle.textContent = "Roles";
     if (roleHelp) roleHelp.textContent = "Global roles control account capabilities. Inside each campaign, membership decides whether the user is a player or DM.";
-    modal.style.display = "flex";
+    openVaultModal(modal.id);
     return;
   }
 
@@ -202,7 +202,7 @@ async function openUserModal(user = null) {
   if (roleHelp) roleHelp.textContent = "This role applies only inside the current campaign. It does not grant global admin access.";
 
   if (registeredResults) registeredResults.innerHTML = `<small>Loading registered users…</small>`;
-  modal.style.display = "flex";
+  openVaultModal(modal.id);
 
   if (registeredSearch && !registeredSearch.dataset.bound) {
     registeredSearch.dataset.bound = "1";
@@ -221,7 +221,7 @@ async function openUserModal(user = null) {
 }
 
 function closeUserModal() {
-  document.getElementById("userModal").style.display = "none";
+  closeVaultModal('userModal');
   clearRegisteredInviteSelection();
   setInviteRoleCheckboxMode(false);
 }
@@ -329,10 +329,10 @@ function openCampaignModal(campaign = null) {
   document.getElementById("campaign-name").value        = campaign?.name        || "";
   document.getElementById("campaign-description").value = campaign?.description || "";
   document.getElementById("campaignModal").dataset.editId = campaign?.id || "";
-  document.getElementById("campaignModal").style.display  = "flex";
+  openVaultModal('campaignModal');
 }
 
-function closeCampaignModal() { document.getElementById("campaignModal").style.display = "none"; }
+function closeCampaignModal() { closeVaultModal('campaignModal'); }
 
 async function saveCampaignModal() {
   const editId = document.getElementById("campaignModal").dataset.editId;
@@ -431,6 +431,7 @@ function openAdminView() {
   if (!isAdmin() || !auth.currentUser) return;
   adminReturnTab = document.querySelector(".tabs .tab.active")?.dataset.tab || "library";
   hideAllScreens();
+  document.getElementById('siteScreenTitle').textContent='Admin · CampaignAtlas';
   document.getElementById("tab-admin").style.display = "block";
   document.getElementById("adminPanel").style.display = "block";
   document.getElementById("adminTab").setAttribute("aria-pressed", "true");

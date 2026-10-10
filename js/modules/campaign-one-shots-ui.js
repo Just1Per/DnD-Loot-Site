@@ -39,14 +39,16 @@ var CampaignOneShots=(()=>{
   }catch(error){if(host.isConnected)host.textContent='Could not load roster: '+error.message;}
  }
  W.configs.oneShot={title:'One Shots',tab:'dm-one-shots',noun:'one-shot',categories:[],fields:[['status','Adventure status','select',['Draft','Ready','Running','Completed']],['targetLevel','Character level limit','number'],['players','Intended player count','number'],['duration','Session length (minutes)','number',null,1440],['rosterMode','Character creation mode','select',['DM pre-generated','Player-created','Mixed']]],content:'Player hook and adventure introduction',secret:'Private scenes, encounters, rewards and run notes',help:'Create a side adventure, approve its host and invite participants. Character sheets live in this one-shot and remain independent of the main campaign.',normalize,extra:paint,onSaved:paint,lockFields:record=>record.data.approved&&!canManageCampaign()?['targetLevel','rosterMode']:[],canUse:()=>activeCampaign&&canManageCampaign(),canEdit:prep,showPrivate:prep,list:campaignId=>store.accessible(campaignId,canManageCampaign()),loadRecord};
+ // Players enter their own scoped adventures from My Characters, never a DM planning tab.
+ W.configs.playerAdventure={...W.configs.oneShot,title:'My One Shots',tab:'player-adventures',hideNavigation:true,hideLinks:true,help:'Propose a side adventure, respond to invitations and open your assigned sheets. Only an approved host can prepare and run an adventure; campaign DM tools remain private.',canUse:()=>activeCampaign&&canUseCharacters(),saveRecord:args=>W.store.save({...args,kind:'oneShot'})};
  /** Reuse the tracker UI with an adventure-scoped store and the server-enforced host grant. */
  async function openEncounters(s){
   if(s.busy||!manager(s.record)||!W.clear())return;
-  const scoped=store.encounters(s.campaignId,s.record.id),campaignId=s.campaignId,uid=s.uid,record=s.record;
-  W.configs.adventureEncounter={...W.configs.encounter,title:record.title+' · Encounters',tab:'dm-one-shots',hideLinks:true,hideNavigation:true,canUse:()=>activeCampaign?.id===campaignId&&auth.currentUser?.uid===uid&&canManageCampaign(),list:()=>scoped.list(),loadRecord:(campaignId,id)=>scoped.load(campaignId,'encounter',id),saveRecord:args=>scoped.save(args)};
-  showTab('dm-one-shots',false);await W.render('adventureEncounter');
+  const scoped=store.encounters(s.campaignId,s.record.id),campaignId=s.campaignId,uid=s.uid,record=s.record,returnTab=W.configs[s.kind].tab;
+  W.configs.adventureEncounter={...W.configs.encounter,title:record.title+' · Encounters',tab:returnTab,hideLinks:true,hideNavigation:true,canUse:()=>activeCampaign?.id===campaignId&&auth.currentUser?.uid===uid&&canUseCharacters()&&manager(record),list:()=>scoped.list(),loadRecord:(campaignId,id)=>scoped.load(campaignId,'encounter',id),saveRecord:args=>scoped.save(args)};
+  showTab(returnTab,false);await W.render('adventureEncounter');
   if(W.session?.kind!=='adventureEncounter')return;
-  const button=document.createElement('button');button.type='button';button.textContent='Back to one-shots';button.dataset.backOneShots='';button.onclick=()=>{if(W.clear())showTab('dm-one-shots')};W.session.host.querySelector('.workspace-heading').append(button);
+  const button=document.createElement('button');button.type='button';button.textContent='Back to one-shots';button.dataset.backOneShots='';button.onclick=()=>{if(W.clear())showTab(returnTab)};W.session.host.querySelector('.workspace-heading').append(button);
  }
  return{store,manager,prep,openEncounters};
 })();

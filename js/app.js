@@ -9,7 +9,7 @@ import { db, storage, auth, provider, signInWithPopup, signOut }
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
 import {
@@ -25,13 +25,13 @@ import { ref, getDownloadURL, uploadBytes, getBlob }
 // its shared runtime state or requiring a bundler.
 window.__DND_VAULT_DEPS__ = Object.freeze({
   db, storage, auth, provider, signInWithPopup, signOut,
-  onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail,
   collection, getDocs, addDoc, doc, getDoc,
   setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId, onSnapshot,
   ref, getDownloadURL, uploadBytes, getBlob,
 });
 
-const ASSET_VERSION = "20261009-dm-planning-access-v81";
+const ASSET_VERSION = "20261010-ui-cleanup-v82";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -141,13 +141,20 @@ function loadFeatureScript(relativePath) {
   });
 }
 
+// Preload downloads in parallel; execution below stays ordered for shared-scope dependencies.
+for (const file of FEATURE_FILES) {
+  const preload=document.createElement('link');preload.rel='preload';preload.as='script';
+  const url=new URL(file,import.meta.url);url.searchParams.set('v',ASSET_VERSION);preload.href=url.href;document.head.append(preload);
+}
 try {
   for (const file of FEATURE_FILES) {
     await loadFeatureScript(file);
   }
   delete window.__DND_VAULT_DEPS__;
+  document.dispatchEvent(new Event('campaignatlas:ready'));
 } catch (error) {
   console.error("[CampaignAtlas] Modular bootstrap failed:", error);
+  document.dispatchEvent(new Event('campaignatlas:failed'));
   const display = document.getElementById("userDisplay");
   if (display) display.textContent = "App failed to load";
 }

@@ -7,6 +7,7 @@
 /** Select a permitted app tab; sheet rendering can be deferred by its caller. */
 function showTab(tabId, render = true) {
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
+  if(tabId==='player-adventures'&&(!activeCampaign||!canUseCharacters()))return;
   if (tabId === "admin") { openAdminView(); return; }
   if ((tabId === "dm" || ["dm-world","dm-chapters","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
   if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
@@ -16,6 +17,8 @@ function showTab(tabId, render = true) {
   if (btn) btn.classList.add("active");
   const panel = document.getElementById(`tab-${tabId}`);
   if (panel) panel.style.display="block";
+  const title=document.getElementById('siteScreenTitle');if(title)title.textContent=(btn?.textContent||'Campaign')+' · CampaignAtlas';
+  if(render&&tabId==='player-adventures')CampaignWorkspace.render('playerAdventure');
   if(render&&tabId==="dm-one-shots") CampaignWorkspace.render("oneShot");
   if (render&&tabId==="dm-chapters") CampaignWorkspace.render("chapter");
   if (render&&tabId==="dm-world") CampaignWorkspace.render("world");
@@ -64,6 +67,7 @@ function initModalListeners() {
   // Each entry binds an existing action; optional controls may be absent.
   const actions = {
     openRootCatalogue,
+    playerAdventuresBtn:()=>showTab('player-adventures'),
     addItemBtn: () => openItemModal(),
     closeItemModal, cancelItemModal: closeItemModal, saveItemModal,
     openAddUserBtn: () => openUserModal(),
@@ -102,59 +106,35 @@ function initModalListeners() {
       return;
     }
 
-    const name  = document.getElementById("playerCharName").value.trim();
-    const cls   = document.getElementById("playerCharClass").value;
-    const level = parseInt(document.getElementById("playerCharLevel").value) || null;
+    const button=document.getElementById('playerCreateCharBtn'),status=document.getElementById('playerCharacterStatus');
+    const campaignId=activeCampaign.id;
+    button.disabled=true;status.textContent='Creating character…';
+    try {
+      const data={name:'New adventurer',class:'',level:1,userId:auth.currentUser.uid,active:true,created:Date.now(),lastSelectedAt:Date.now()};
+      const newRef=await addDoc(collection(db,'campaigns',campaignId,'characters'),data);
+      if(activeCampaign?.id!==campaignId)return;
+      const character={id:newRef.id,...data};characters.push(character);selectedCharacter=character;
+      renderPlayerTab();populateOwnerFilter();renderCards();
+      status.textContent='Character created. Complete its identity and choices in the sheet.';
+      await openCharacterSheet(character.id);selectSheetTab('builder');
+      document.querySelector('[name="identity.name"]')?.focus();
+    } catch(error) { status.textContent='Could not create character: '+error.message; }
+    finally { button.disabled=false; }
 
-    if (!name) {
-      alert("Enter a character name.");
-      return;
-    }
-
-    if (level !== null && (level < 1 || level > 20)) {
-      alert("Level must be 1–20.");
-      return;
-    }
-
-    const data = {
-      name,
-      class: cls,
-      level,
-      userId: auth.currentUser.uid,
-      active: true,
-      created: Date.now(),
-      lastSelectedAt: Date.now()
-    };
-
-    const newRef = await addDoc(
-      collection(db, "campaigns", activeCampaign.id, "characters"),
-      data
-    );
-
-    const newChar = { id: newRef.id, ...data };
-    characters.push(newChar);
-    selectedCharacter = newChar;
-
-    document.getElementById("playerCharName").value = "";
-    document.getElementById("playerCharLevel").value = "";
-
-    renderPlayerTab();
-    populateOwnerFilter();
-    renderCards();
   });
 
   document.querySelectorAll(".modal").forEach(modal=>{
-    modal.addEventListener("click", e=>{ if(e.target===modal) modal.style.display="none"; });
+    modal.addEventListener("click", e=>{ if(e.target===modal) closeVaultModal(modal.id); });
   });
   document.addEventListener("keydown", e=>{
-    if (e.key==="Escape") document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
+    if (e.key==="Escape") document.querySelectorAll(".modal").forEach(m=>closeVaultModal(m.id));
   });
 }
 
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 
 document.getElementById("loginButton")?.addEventListener("click", async ()=>{
-  try { await signInWithPopup(auth, provider); } catch(e) { console.error(e); }
+  try { document.getElementById('authStatus').textContent='Opening Google sign-in…';await signInWithPopup(auth, provider); } catch(e) {document.getElementById('authStatus').textContent='Could not sign in. '+e.message;}
 });
 
 document.getElementById("emailLoginButton")?.addEventListener("click", async ()=>{
@@ -164,7 +144,7 @@ document.getElementById("emailLoginButton")?.addEventListener("click", async ()=
       document.getElementById("emailInput").value,
       document.getElementById("passwordInput").value
     );
-  } catch(e) { alert(e.message); }
+  } catch(e) { document.getElementById('authStatus').textContent='Could not sign in. '+e.message; }
 });
 
 document.getElementById("registerButton")?.addEventListener("click", async ()=>{
@@ -174,8 +154,19 @@ document.getElementById("registerButton")?.addEventListener("click", async ()=>{
       document.getElementById("emailInput").value,
       document.getElementById("passwordInput").value
     );
-    alert("Account created. If this email has a pending campaign invitation, it will appear on the campaign screen.");
-  } catch(e) { alert(e.message); }
+    document.getElementById('authStatus').textContent='Account created. Pending campaign invitations will appear on your dashboard.';
+  } catch(e) { document.getElementById('authStatus').textContent='Could not create account. '+e.message; }
+});
+
+// Recovery feedback stays in the login header; password emails are sent only on request.
+document.getElementById('resetPasswordButton')?.addEventListener('click',async()=>{
+  const email=document.getElementById('emailInput'),button=document.getElementById('resetPasswordButton'),status=document.getElementById('authStatus');
+  email.required=true;
+  if(!email.checkValidity()){status.textContent='Enter your email address to request a password reset.';email.reportValidity();email.focus();return;}
+  button.disabled=true;status.textContent='Requesting password reset…';
+  try { await sendPasswordResetEmail(auth,email.value.trim());status.textContent='If this email has a password account, reset instructions have been sent. Check your inbox, then return to Login.'; }
+  catch(error){status.textContent=error.code==='auth/too-many-requests'?'Too many requests. Please try again later.':'Could not request a reset. Check your connection and try again.';}
+  finally {button.disabled=false;}
 });
 
 // Clear selected campaign data immediately; the auth callback closes editors

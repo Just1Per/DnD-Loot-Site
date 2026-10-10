@@ -103,53 +103,7 @@ function ensureDMToolsUI() {
     }
   }
 
-  if (!document.getElementById("dmToolsStep3Styles")) {
-    const style = document.createElement("style");
-    style.id = "dmToolsStep3Styles";
-    style.textContent = `
-      .dm-tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0;align-items:stretch}\n      .dm-planning-workspace{max-width:860px;margin:20px auto}\n      .dm-planning-workspace .dm-planning-card{min-height:0}
-      .dm-planning-workspace details:not([open])>ol{display:none}
-      .dm-tool-card{background:#f4efe6;border:3px double #8a7355;border-radius:10px;padding:16px;min-width:0;box-sizing:border-box;display:flex;flex-direction:column}
-      .dm-tool-card--wide{grid-column:1/-1}
-      .dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide){height:100%;min-height:340px}
-      .dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide) .dm-tool-actions{margin-top:auto;padding-top:12px}
-      .dm-planning-card{min-width:0}
-      .dm-planning-shortcut p{flex:1}
-      .dm-planning-shortcut .dm-tool-actions{margin-top:auto}
-      @media(max-width:1250px){.dm-tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-      @media(max-width:850px){.dm-tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-      @media(max-width:560px){.dm-tools-grid{grid-template-columns:minmax(0,1fr)}.dm-tools-grid>.dm-tool-card:not(.dm-tool-card--wide){min-height:0}}
-      .dm-planning-card{min-width:0}
-      .dm-planning-card summary{cursor:pointer;color:#5c1d1d;font-weight:700;font-size:.78rem;line-height:1.5;padding:8px 0}
-      .dm-planning-card summary:focus-visible{outline:2px solid #9b1d1d;outline-offset:3px}
-      .dm-planning-card ol{padding-left:20px;color:#5c1d1d;font-size:.78rem;line-height:1.5}
-      .dm-planning-card li{margin:12px 0}
-      .dm-planning-card li p{margin:4px 0}
-      .dm-planning-status{border-top:1px solid #c8b89a;padding-top:10px;font-style:italic}
-      .dm-tool-card h2{font-family:"Cinzel",serif;color:#5c1d1d;font-size:1rem;letter-spacing:1px;margin:0 0 12px;text-transform:uppercase}
-      .dm-tool-card p{color:#6f6253;font-size:.78rem;line-height:1.5}
-      .dm-overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
-      .dm-overview-stat{background:#fdfbf7;border:2px solid #8a7355;border-radius:8px;padding:12px;text-align:center}
-      .dm-overview-stat strong{display:block;font-family:"Cinzel",serif;color:#5c1d1d;font-size:1.1rem}
-      .dm-overview-stat span{font-size:.65rem;text-transform:uppercase;letter-spacing:.6px;color:#8a7355}
-      .dm-settings-grid{display:grid;grid-template-columns:1fr;gap:10px}
-      .dm-settings-grid label{display:flex;flex-direction:column;gap:5px;font-size:.72rem;font-weight:700;color:#5c1d1d;text-transform:uppercase;letter-spacing:.5px}
-      .dm-settings-grid input[type="text"],.dm-settings-grid textarea{background:#fdfbf7;border:2px solid #8a7355;border-radius:7px;padding:8px 10px;color:#333;font:inherit;text-transform:none;letter-spacing:normal}
-      .dm-settings-grid textarea{min-height:90px;resize:vertical}
-      .dm-checkbox-row{flex-direction:row!important;align-items:center;gap:8px!important;text-transform:none!important;font-weight:600!important}
-      .dm-member-list,.dm-invite-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-      .dm-member-row,.dm-invite-row{display:flex;gap:10px;align-items:center;justify-content:space-between;background:#fdfbf7;border:1px solid #c8b89a;border-radius:8px;padding:10px}
-      .dm-member-main{min-width:0;display:flex;flex-direction:column;gap:3px}
-      .dm-member-name{font-family:"Cinzel",serif;font-weight:700;color:#5c1d1d;font-size:.76rem}
-      .dm-member-meta{font-size:.66rem;color:#8a7355;word-break:break-all}
-      .dm-member-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-      .dm-member-actions select{background:#fdfbf7;border:1px solid #c79c32;border-radius:4px;color:#7d6608;font-family:"Cinzel",serif;font-size:.62rem;font-weight:700;padding:4px 7px;text-transform:uppercase}
-      .dm-danger-btn{background:rgba(92,29,29,.08)!important;border:1px solid #8b3a3a!important;color:#7a2424!important}
-      .dm-tool-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-      @media(max-width:700px){.dm-member-row,.dm-invite-row{align-items:flex-start;flex-direction:column}.dm-member-actions{justify-content:flex-start}}
-    `;
-    document.head.appendChild(style);
-  }
+
 }
 
 function memberLabel(member) {
@@ -386,13 +340,23 @@ function renderDMTools() {
         <div id="dmOverviewStats" class="dm-overview-grid"></div>
       </section>
 
+      <!-- Planning guides live in their own navigation tabs. -->
+      <section class="dm-tool-card">
+        <h2>Item Controls</h2>
+        <p>Visibility, loot assignment and highlighting are campaign-scoped. Add catalogue copies or create your own campaign items in the Library. Set available quantities and player-looting permissions on each item.</p>
+        <div class="dm-tool-actions">
+          <button id="dmOpenLibrary" class="btn-primary" type="button">Open Library Controls</button>
+        </div>
+      </section>
+
       <section class="dm-tool-card">
         <h2>Campaign Settings</h2>
-        <div class="dm-settings-grid">
-          <label>Campaign Name
+        <p>Edit the campaign name, description and default item visibility.</p>
+        <details class="dm-card-settings"><summary>Edit campaign settings</summary><div class="dm-settings-grid">
+          <label><span>Campaign Name</span>
             <input id="dmCampaignName" type="text" value="${escapeHtml(activeCampaign.name || "")}">
           </label>
-          <label>Description
+          <label><span>Description</span>
             <textarea id="dmCampaignDescription">${escapeHtml(activeCampaign.description || "")}</textarea>
           </label>
           <label class="dm-checkbox-row">
@@ -402,16 +366,7 @@ function renderDMTools() {
           <div class="dm-tool-actions">
             <button id="dmSaveCampaignSettings" class="btn-primary" type="button">Save Settings</button>
           </div>
-        </div>
-      </section>
-
-      <!-- Planning guides live in their own navigation tabs. -->
-      <section class="dm-tool-card">
-        <h2>Item Controls</h2>
-        <p>Visibility, loot assignment and highlighting are campaign-scoped. Add catalogue copies or create your own campaign items in the Library. Set available quantities and player-looting permissions on each item.</p>
-        <div class="dm-tool-actions">
-          <button id="dmOpenLibrary" class="btn-primary" type="button">Open Library Controls</button>
-        </div>
+        </div></details>
       </section>
 
       ${renderDMPlanningShortcuts()}

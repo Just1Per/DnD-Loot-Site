@@ -16,14 +16,6 @@
   padding-bottom: 10px;
   border-bottom: 1px solid var(--sheet-border,#d8c9ae);
 }
-.sheet-derived-field input,
-.sheet-derived-field select {
-  background: #eee6d7;
-  color: var(--sheet-muted,#756654);
-  border-color: #d3c3a6;
-  opacity: .9;
-}
-.sheet-point-locked { opacity: .78; }
 .sheet-level-up-callout {
   margin: .8rem 0;
   padding: 14px;
@@ -60,39 +52,6 @@
   font-weight:700;
 }
 .sheet-hp-roll-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(190px,1fr)); gap: .6rem; margin-top: .7rem; }
-.sheet-add-page-menu { position: relative; margin-left: auto; align-self: stretch; }
-.sheet-add-page-menu > summary {
-  list-style: none;
-  cursor: pointer;
-  min-width: 4.8rem;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  padding: 0 12px;
-  font-size: .85rem;
-  font-weight: 700;
-  color:#632d21;
-  border: 1px dashed #b69a68;
-  border-radius: 7px;
-  background:#f8efde;
-  user-select: none;
-}
-.sheet-add-page-menu[open] > summary { background:#ead7b2; }
-.sheet-add-page-menu > summary::-webkit-details-marker { display: none; }
-.sheet-add-page-menu > div {
-  position: absolute;
-  right: 0;
-  z-index: 25;
-  width: min(320px,80vw);
-  display: grid;
-  gap: .35rem;
-  padding: .65rem;
-  border: 1px solid #b69a68;
-  border-radius: 9px;
-  background: var(--sheet-paper,#fffcf5);
-  box-shadow: 0 14px 34px #24160f38;
-}
-.sheet-add-page-menu button { width: 100%; text-align: left; }
 #sheet-companion,#sheet-rules {
   background:linear-gradient(180deg,#fffdf8,#fffaf1);
 }
@@ -129,21 +88,15 @@
 @media (max-width: 760px) {
   .sheet-rules-grid { grid-template-columns: 1fr; }
   .sheet-companion-skills .sheet-skill-edit { grid-template-columns: 1fr 1fr; }
-  .sheet-add-page-menu { margin-left: 0; }
   .sheet-adobe-progression { padding:14px; }
 }
 @media print {
-  .sheet-add-page-menu,
   [data-remove-optional-page],
-  .sheet-level-up-callout button,
-  .sheet-class-level-row button { display: none !important; }
+.sheet-level-up-callout button,
+.sheet-class-level-row button { display: none !important; }
   .sheet-rules-grid { grid-template-columns: 1fr 1fr; }
   .sheet-adobe-progression,.sheet-class-level-row,.sheet-rules-grid > section { box-shadow:none; }
 }
-
-.sheet-add-page-menu > summary:hover { background:#ead5aa; border-color:#8c6721; }
-.sheet-add-page-menu[open] > summary { box-shadow:0 0 0 2px rgba(212,175,55,.22); }
-.sheet-add-page-menu > div button { font-family:"Cinzel",Georgia,serif; }
 #sheet-companion .sheet-ability {
   background:#fffaf0;
   border-color:#d8c9ae;
@@ -165,14 +118,6 @@
 
 .sheet-class-features { flex-basis:100%; margin:.15rem 0 .25rem; }
 .sheet-class-features summary { cursor:pointer; color:#6b4b2a; font-weight:700; }
-.sheet-feature-chip-list { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.5rem; }
-.sheet-feature-chip {
-  display:inline-flex; gap:.35rem; align-items:center;
-  padding:.28rem .5rem; border:1px solid #d8c9ae; border-radius:999px;
-  background:#fffaf0; color:#513a20; font-size:.78rem;
-}
-.sheet-feature-chip.is-subclass { border-color:#b69a68; background:#f4e3bd; }
-.sheet-feature-chip small { opacity:.65; }
 
 /* Sheet page manager + draggable tabs */
 .sheet-tabs [data-sheet-tab] { cursor:grab; }
@@ -250,16 +195,6 @@
   padding:12px 18px 16px;
   border-top:1px solid #e2d6c0;
 }
-
-.sheet-creature-picker { margin:1rem 0 1.25rem; }
-.sheet-creature-attack-picker {
-  margin-top:.8rem;
-  padding:.8rem;
-  border:1px solid #d8c9ae;
-  border-radius:9px;
-  background:#fffaf0;
-}
-.sheet-creature-attack-picker .sheet-help { margin:.45rem 0 0; }
 
 
 /* Revision 19: generated spell sheet, inventory editor and clearer multiclass tools */

@@ -16,12 +16,12 @@ function setupCharacterPlayUI(){
  for(const key of ['personality','ideals','bonds','flaws']){
   const area=form.querySelector(`[name="${key}"]`),label=area.closest('label'),control=document.createElement('div');
   control.className='sheet-story-combobox';area.rows=1;area.readOnly=false;
-  area.setAttribute('role','combobox');area.setAttribute('aria-autocomplete','none');area.setAttribute('aria-expanded','false');area.setAttribute('aria-haspopup','listbox');area.setAttribute('aria-controls','sheetStoryOptions-'+key);
+  area.setAttribute('aria-controls','sheetStoryOptions-'+key);
   const toggle=document.createElement('button');toggle.type='button';toggle.className='sheet-story-toggle';toggle.dataset.storyToggle=key;toggle.textContent='▾';toggle.setAttribute('aria-label','Choose '+key+' suggestion');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls','sheetStoryOptions-'+key);
-  const options=document.createElement('div');options.id='sheetStoryOptions-'+key;options.className='sheet-story-options';options.dataset.storyChoice=key;options.setAttribute('role','listbox');options.setAttribute('aria-label',key+' suggestions');options.hidden=true;
-  area.before(control);control.append(area,toggle,options);right.append(label);
-  const close=()=>{options.hidden=true;area.setAttribute('aria-expanded','false');toggle.setAttribute('aria-expanded','false');};
-  const open=()=>{story.querySelectorAll('.sheet-story-options').forEach(list=>{if(list!==options){list.hidden=true;list.closest('.sheet-story-combobox').querySelectorAll('[aria-expanded]').forEach(el=>el.setAttribute('aria-expanded','false'));}});options.hidden=false;area.setAttribute('aria-expanded','true');toggle.setAttribute('aria-expanded','true');(options.querySelector('[aria-selected="true"]')||options.querySelector('button'))?.focus();};
+  const options=document.createElement('div');options.id='sheetStoryOptions-'+key;options.className='sheet-story-options';options.dataset.storyChoice=key;options.setAttribute('role','group');options.setAttribute('aria-label',key+' suggestions');options.hidden=true;
+  area.id='sheetStoryText-'+key;label.htmlFor=area.id;label.before(control);control.append(label,area,toggle,options);right.append(control);
+  const close=()=>{options.hidden=true;toggle.setAttribute('aria-expanded','false');};
+  const open=()=>{story.querySelectorAll('.sheet-story-options').forEach(list=>{if(list!==options){list.hidden=true;list.closest('.sheet-story-combobox').querySelectorAll('[aria-expanded]').forEach(el=>el.setAttribute('aria-expanded','false'));}});options.hidden=false;toggle.setAttribute('aria-expanded','true');(options.querySelector('[aria-pressed="true"]')||options.querySelector('button'))?.focus();};
   toggle.onclick=()=>options.hidden?open():close();
   area.addEventListener('keydown',event=>{if(event.altKey&&event.key==='ArrowDown'){event.preventDefault();open();}if(event.key==='Escape'){close();}});
   control.addEventListener('focusout',event=>{if(event.relatedTarget&&!control.contains(event.relatedTarget))close();});

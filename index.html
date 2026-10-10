@@ -13,18 +13,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261005-inventory-upgrade-warning-v34">
-  <link rel="stylesheet" href="css/button-theme.css">
+  <link rel="stylesheet" href="css/style.css?v=20261010-ui-cleanup-v82">
+  <link rel="stylesheet" href="css/button-theme.css?v=20261010-ui-cleanup-v82">
   <link rel="icon" type="image/png" href="/favicon.png">
-  <link rel="stylesheet" href="css/character-sheet.css?v=20261009-site-help-v72">
-  <link rel="stylesheet" href="css/character-adobe-integration.css?v=20261006-class-features-layout-v50" data-character-adobe-integration="true">
-  <link rel="stylesheet" href="css/character-vault-theme.css?v=20261009-site-help-v72" data-character-vault-theme="true">
-  <link rel="stylesheet" href="css/character-sheet-print.css?v=20261009-site-help-v72">
-  <link rel="stylesheet" href="css/site-help.css?v=20261009-site-help-v72">
-  <link rel="stylesheet" href="css/site-identity.css?v=20261009-site-help-v72">
-  <link rel="stylesheet" href="css/campaign-workspace.css?v=20261009-dm-planning-access-v81">
+  <link rel="stylesheet" href="css/character-sheet.css?v=20261010-ui-cleanup-v82">
+  <link rel="stylesheet" href="css/character-adobe-integration.css?v=20261010-ui-cleanup-v82" data-character-adobe-integration="true">
+  <link rel="stylesheet" href="css/character-vault-theme.css?v=20261010-ui-cleanup-v82" data-character-vault-theme="true">
+  <link rel="stylesheet" href="css/character-sheet-print.css?v=20261010-ui-cleanup-v82">
+  <link rel="stylesheet" href="css/site-help.css?v=20261010-ui-cleanup-v82">
+  <link rel="stylesheet" href="css/site-identity.css?v=20261010-ui-cleanup-v82">
+  <link rel="stylesheet" href="css/campaign-workspace.css?v=20261010-ui-cleanup-v82">
+  <link rel="stylesheet" href="css/dm-tools.css?v=20261010-ui-cleanup-v82">
+  <link rel="stylesheet" href="css/site-ui.css?v=20261010-ui-cleanup-v82">
 </head>
 <body>
+  <a class="site-skip-link" href="#siteMain">Skip to content</a>
 
   <!-- ══════════════════════════════════════════════════════════════════════
        GLOBAL HEADER — always visible
@@ -37,13 +40,15 @@
     <div class="site-header-right">
       <div id="loginControls" class="login-controls">
         <button id="loginButton" type="button">Google Login</button>
-        <input type="email"    id="emailInput"    placeholder="Email"    autocomplete="email">
-        <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password">
+        <input aria-label="Email" type="email"    id="emailInput"    placeholder="Email"    autocomplete="email">
+        <input aria-label="Password" type="password" id="passwordInput" placeholder="Password" autocomplete="current-password">
         <button id="registerButton"   type="button">Register</button>
+        <button id="resetPasswordButton" type="button">Forgot password?</button>
         <button id="emailLoginButton" type="button">Login</button>
       </div>
       <span id="userDisplay" class="user-display">Not logged in</span>
       <button id="adminTab" type="button" class="toolbar-btn" style="display:none">Admin</button>
+      <p id="authStatus" role="status" aria-live="polite"></p>
       <button id="logoutButton" type="button" style="display:none">Logout</button>
     </div>
   </header>
@@ -51,6 +56,16 @@
   <!-- ══════════════════════════════════════════════════════════════════════
        CAMPAIGN SELECTOR SCREEN
   ══════════════════════════════════════════════════════════════════════ -->
+  <main id="siteMain" tabindex="-1">
+  <h1 class="sr-only" id="siteScreenTitle">CampaignAtlas</h1>
+  <section id="siteBootPanel" class="site-boot-panel" aria-label="CampaignAtlas introduction">
+    <h2>Everything your campaign needs in one place.</h2>
+    <p>Character sheets, inventory and campaign tools for fifth-edition tabletop roleplaying.</p>
+    <p><a href="rules-attribution.html">Unofficial fan project · Rules Sources &amp; Legal Information</a></p>
+    <p id="siteBootStatus" role="status" aria-live="polite">Loading CampaignAtlas…</p>
+    <button id="siteBootRetry" type="button" hidden>Try again</button>
+    <noscript>Enable JavaScript to sign in and use campaign tools.</noscript>
+  </section>
   <div id="campaignSelectorScreen" class="fullscreen-overlay" style="display:none">
     <div class="campaign-selector-box">
 
@@ -161,7 +176,7 @@
 
       <div id="campaignInventoryToolbar"></div>
       <p id="campaignStats" class="campaign-stats" aria-live="polite"></p>
-      <div id="card-container" class="card-container" role="list" aria-label="Magic items"></div>
+      <div id="card-container" class="card-container" aria-label="Magic items"></div>
     </div><!-- /tab-library -->
 
     <!-- ════════════════════════════════════════════════════════════════
@@ -178,22 +193,10 @@
         <p class="player-section-sub">
           The <strong>active</strong> character is used when you save or loot items in this campaign.
         </p>
+        <div class="player-create-toolbar"><button id="playerAdventuresBtn" type="button">My One Shots</button><button id="playerCreateCharBtn" type="button" class="btn-primary">+ Create New Character</button></div>
+        <p id="playerCharacterStatus" role="status" aria-live="polite"></p>
         <div id="myCharacterList" class="character-list"></div>
-        <div class="player-create-form">
-          <h3>Create New Character</h3>
-          <div class="player-create-row">
-            <input type="text"   id="playerCharName"  placeholder="Character name…" autocomplete="off">
-            <select id="playerCharClass">
-              <option>Artificer</option><option>Barbarian</option><option>Bard</option>
-              <option>Cleric</option><option>Druid</option><option>Fighter</option>
-              <option>Monk</option><option>Paladin</option><option>Ranger</option>
-              <option>Rogue</option><option>Sorcerer</option><option>Warlock</option>
-              <option>Wizard</option>
-            </select>
-            <input type="number" id="playerCharLevel" placeholder="Level (1–20)" min="1" max="20">
-            <button id="playerCreateCharBtn" type="button">+ Create</button>
-          </div>
-        </div>
+
       </div>
 
       <div class="player-section">
@@ -217,12 +220,13 @@
     ════════════════════════════════════════════════════════════════ -->
 
 
+  <section id="tab-player-adventures" class="tab-content" style="display:none" aria-label="Your one-shot adventures"></section>
   </div><!-- /mainApp -->
 
   <!-- ══════════════════════════════════════════════════════════════════════
        MODAL: ADD / EDIT ITEM
   ══════════════════════════════════════════════════════════════════════ -->
-  <div id="itemModal" class="modal" style="display:none"
+  <dialog id="itemModal" class="modal" style="display:none"
     aria-modal="true" role="dialog" aria-labelledby="itemModalTitle">
     <div class="modal-box">
       <div class="modal-header">
@@ -293,12 +297,12 @@
         <button class="save-edit-button" id="saveItemModal"   type="button">Save Item</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <!-- ══════════════════════════════════════════════════════════════════════
        MODAL: ADD / EDIT USER
   ══════════════════════════════════════════════════════════════════════ -->
-  <div id="userModal" class="modal" style="display:none"
+  <dialog id="userModal" class="modal" style="display:none"
     aria-modal="true" role="dialog" aria-labelledby="userModalTitle">
     <div class="modal-box modal-box--sm">
       <div class="modal-header">
@@ -357,12 +361,12 @@
         <button class="save-edit-button" id="saveUserModal"   type="button">Save User</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <!-- ══════════════════════════════════════════════════════════════════════
        MODAL: EDIT CHARACTER
   ══════════════════════════════════════════════════════════════════════ -->
-  <div id="editCharModal" class="modal" style="display:none"
+  <dialog id="editCharModal" class="modal" style="display:none"
     aria-modal="true" role="dialog" aria-labelledby="editCharModalTitle">
     <div class="modal-box modal-box--sm">
       <div class="modal-header">
@@ -393,12 +397,12 @@
         <button class="save-edit-button" id="saveEditCharModal"   type="button">Save</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <!-- ══════════════════════════════════════════════════════════════════════
        MODAL: CHARACTER SAVED ITEMS
   ══════════════════════════════════════════════════════════════════════ -->
-  <div id="wishModal" class="modal" style="display:none"
+  <dialog id="wishModal" class="modal" style="display:none"
     aria-modal="true" role="dialog" aria-labelledby="wishModalCharName">
     <div class="modal-box modal-box--wide">
       <div class="modal-header">
@@ -412,12 +416,12 @@
         <button class="cancel-button" id="closeWishModalBtn" type="button">Close</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <!-- ══════════════════════════════════════════════════════════════════════
        MODAL: CREATE / EDIT CAMPAIGN
   ══════════════════════════════════════════════════════════════════════ -->
-  <div id="campaignModal" class="modal" style="display:none"
+  <dialog id="campaignModal" class="modal" style="display:none"
     aria-modal="true" role="dialog" aria-labelledby="campaignModalTitle">
     <div class="modal-box modal-box--sm">
       <div class="modal-header">
@@ -441,17 +445,9 @@
         <button class="save-edit-button" id="saveCampaignModal"   type="button">Save Campaign</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
-  <footer class="site-footer">
-    <p class="site-footer-identity">CampaignAtlas · Character sheets, inventory and campaign tools for fifth-edition tabletop roleplaying.</p>
-    <p><a href="rules-attribution.html">Unofficial fan project · Rules Sources &amp; Legal Information</a></p>
-    <div class="site-footer-notices">
-      <section aria-labelledby="footerFanTitle"><h2 id="footerFanTitle">Fan Content notice</h2><p>CampaignAtlas is an unofficial fan project made under the <a href="https://company.wizards.com/en/legal/fancontentpolicy">Fan Content Policy</a>. Wizards of the Coast has not approved or endorsed it. Some materials used belong to Wizards of the Coast LLC. © Wizards of the Coast LLC.</p></section>
-      <section aria-labelledby="footerCCTitle"><h2 id="footerCCTitle">Creative Commons attribution</h2><p>SRD-derived rules material comes from SRD 5.1 and SRD 5.2.1 by Wizards of the Coast LLC under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. <a href="rules-attribution.html#creative-commons">Full attribution, changes and source coverage</a>. This licence does not cover non-SRD references or all website content.</p></section>
-    </div>
-    <p>© 2026 DKDM — CampaignAtlas’s original website code and interface. Third-party content retains its own licences and rights.</p>
-  </footer>
+
 
     <div id="tab-admin" class="tab-content" style="display:none">
       <div id="adminPanel" style="display:none">
@@ -485,6 +481,17 @@
       </div>
     </div><!-- /tab-admin -->
   <section id="rootCatalogueScreen" style="display:none"></section>
-  <script type="module" src="js/app.js?v=20261009-dm-planning-access-v81"></script>
+  </main>
+  <footer class="site-footer">
+    <p class="site-footer-identity">CampaignAtlas · Character sheets, inventory and campaign tools for fifth-edition tabletop roleplaying.</p>
+    <p><a href="rules-attribution.html">Unofficial fan project · Rules Sources &amp; Legal Information</a></p>
+    <div class="site-footer-notices">
+      <section aria-labelledby="footerFanTitle"><h2 id="footerFanTitle">Fan Content notice</h2><p>CampaignAtlas is an unofficial fan project made under the <a href="https://company.wizards.com/en/legal/fancontentpolicy">Fan Content Policy</a>. Wizards of the Coast has not approved or endorsed it. Some materials used belong to Wizards of the Coast LLC. © Wizards of the Coast LLC.</p></section>
+      <section aria-labelledby="footerCCTitle"><h2 id="footerCCTitle">Creative Commons attribution</h2><p>SRD-derived rules material comes from SRD 5.1 and SRD 5.2.1 by Wizards of the Coast LLC under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. <a href="rules-attribution.html#creative-commons">Full attribution, changes and source coverage</a>. This licence does not cover non-SRD references or all website content.</p></section>
+    </div>
+    <p>© 2026 DKDM — CampaignAtlas’s original website code and interface. Third-party content retains its own licences and rights.</p>
+  </footer>
+  <script src="js/boot-status.js?v=20261010-ui-cleanup"></script>
+  <script type="module" id="siteAppScript" src="js/app.js?v=20261010-ui-cleanup-v82"></script>
 </body>
 </html>

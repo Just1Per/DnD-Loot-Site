@@ -170,78 +170,6 @@ body {
   gap: 10px;
 }
 
-.campaign-selector-card {
-  background: #f4efe6;
-  border: 2px solid #8a7355;
-  border-radius: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  text-align: left;
-  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-  width: 100%;
-}
-
-.campaign-selector-card:hover {
-  border-color: #d4af37;
-  box-shadow: 0 4px 16px rgba(212,175,55,0.2);
-  transform: translateY(-2px);
-}
-
-.campaign-selector-name {
-  font-family: "Cinzel", serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #5c1d1d;
-  display: block;
-}
-
-.campaign-selector-desc {
-  font-size: 0.76rem;
-  color: #8a7355;
-  font-style: italic;
-  display: block;
-  margin-top: 3px;
-}
-
-.campaign-selector-role {
-  display: inline-block;
-  margin-top: 7px;
-  padding: 2px 7px;
-  border-radius: 999px;
-  border: 1px solid rgba(92,29,29,0.25);
-  background: rgba(92,29,29,0.08);
-  color: #5c1d1d;
-  font-family: "Cinzel", serif;
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-}
-
-.campaign-selector-arrow {
-  color: #d4af37;
-  font-size: 1.2rem;
-  flex-shrink: 0;
-}
-
-.campaign-selector-empty {
-  background: #f4efe6;
-  border: 2px dashed #c8b89a;
-  border-radius: 10px;
-  padding: 28px 20px;
-  text-align: center;
-}
-
-.campaign-selector-empty p {
-  color: #8a7355;
-  font-style: italic;
-  font-size: 0.84rem;
-  line-height: 1.6;
-}
-
 .dm-selector-actions {
   display: flex;
   justify-content: center;
@@ -583,10 +511,6 @@ body {
 }
 
 /* Hidden from players — subtle grey tint for DM/admin */
-.item-card.hidden-from-players {
-  opacity: 0.55;
-  border-style: dashed;
-}
 
 /* ─── WATERMARK ──────────────────────────────────────────────────────────── */
 .watermark {
@@ -615,10 +539,19 @@ body {
   z-index: 10;
 }
 
-.loot-button, .highlight-button, .edit-button, .clone-button,
-.save-edit-button, .cancel-button, .save-item-button, .delete-item-button,
-.btn-sm, .btn-select-char, .btn-rename-char, .btn-delete-char,
-.wish-view-btn, .visibility-toggle-btn {
+.loot-button,
+.highlight-button,
+.edit-button,
+.clone-button,
+.save-edit-button,
+.cancel-button,
+.save-item-button,
+.delete-item-button,
+.btn-sm,
+.btn-select-char,
+.btn-rename-char,
+.wish-view-btn,
+.visibility-toggle-btn {
   border: none;
   border-radius: 6px;
   color: white;
@@ -632,10 +565,18 @@ body {
   opacity: 0.9;
 }
 
-.loot-button:hover, .highlight-button:hover, .edit-button:hover, .clone-button:hover,
-.save-edit-button:hover, .cancel-button:hover, .save-item-button:hover,
-.delete-item-button:hover, .btn-sm:hover, .btn-select-char:hover,
-.btn-rename-char:hover, .btn-delete-char:hover, .wish-view-btn:hover,
+.loot-button:hover,
+.highlight-button:hover,
+.edit-button:hover,
+.clone-button:hover,
+.save-edit-button:hover,
+.cancel-button:hover,
+.save-item-button:hover,
+.delete-item-button:hover,
+.btn-sm:hover,
+.btn-select-char:hover,
+.btn-rename-char:hover,
+.wish-view-btn:hover,
 .visibility-toggle-btn:hover { transform: scale(1.06); opacity: 1; }
 
 .loot-button        { background: #8b0000; }
@@ -652,7 +593,6 @@ body {
 
 /* Visibility toggle */
 .visibility-toggle-btn.visible  { background: #27ae60; }
-.visibility-toggle-btn.hidden-item { background: #777; }
 
 /* Save item button */
 .save-item-button {
@@ -663,31 +603,7 @@ body {
 
 .save-item-button.saved { background: #d4af37; color: #2b1b00; }
 
-.no-char-hint {
-  font-size: 0.65rem;
-  color: #8a7355;
-  font-style: italic;
-  padding: 4px 6px;
-  align-self: center;
-}
-
 /* ─── SAVE INFO BLOCKS ───────────────────────────────────────────────────── */
-.wish-admin-block {
-  background: rgba(212,175,55,0.14);
-  border-left: 3px solid #d4af37;
-  font-size: 0.7rem;
-  color: #5c1d1d;
-  margin: 4px 10px 0;
-  padding: 4px 8px;
-  border-radius: 0 4px 4px 0;
-}
-
-.wish-count-block {
-  font-size: 0.7rem;
-  color: #c79c32;
-  font-weight: bold;
-  padding: 3px 10px 0;
-}
 
 /* ─── CARD HEADER ────────────────────────────────────────────────────────── */
 .card-header { border-bottom: 1px solid #8a7355; padding: 10px 12px 8px; }
@@ -722,7 +638,6 @@ body {
 .meta-tag.artifact   { background: rgba(192,57,43,0.18);   color: #78281f; }
 .meta-tag.campaign-tag { background: rgba(212,175,55,0.18); color: #7d6608; }
 
-.edit-name,
 .card-header select,
 .card-header input {
   width: 100%;
@@ -734,13 +649,6 @@ body {
   font-size: 0.82rem;
   margin-bottom: 6px;
   padding: 6px;
-}
-
-.edit-name {
-  font-family: "Cinzel", serif;
-  font-size: 13px;
-  font-weight: bold;
-  text-transform: uppercase;
 }
 
 .class-selector { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
@@ -766,55 +674,6 @@ body {
   border-top: 1px solid #8a7355;
   border-bottom: 1px solid #8a7355;
   display: block;
-}
-
-.card-image-edit {
-  position: relative;
-  background: #f5f2eb;
-  border-top: 1px solid #8a7355;
-  border-bottom: 1px solid #8a7355;
-}
-
-.card-art--edit {
-  width: 100%;
-  height: 2.1in;
-  object-fit: contain;
-  display: block;
-  opacity: 0.82;
-}
-
-.upload-image-btn--overlay {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(44,110,138,0.92);
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.3) !important;
-  color: white;
-  cursor: pointer;
-  font-size: 0.67rem;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  padding: 5px 12px;
-  text-transform: uppercase;
-  transition: background 0.15s, transform 0.15s;
-  white-space: nowrap;
-}
-
-.upload-image-btn--overlay:hover {
-  background: rgba(44,110,138,1);
-  transform: translateX(-50%) scale(1.04);
-}
-
-.upload-progress {
-  font-size: 0.65rem;
-  color: #2c6e8a;
-  font-style: italic;
-  font-weight: bold;
-  padding: 4px 6px;
-  align-self: center;
-  animation: pulse 1s ease-in-out infinite;
 }
 
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
@@ -855,8 +714,7 @@ body {
   padding-top: 6px;
 }
 
-.card-body textarea,
-.edit-description {
+.card-body textarea {
   width: 100%;
   min-height: 80px;
   background: #fdfbf7;
@@ -871,31 +729,6 @@ body {
 }
 
 /* ─── OWNER BLOCK ────────────────────────────────────────────────────────── */
-.owner-block {
-  padding: 6px 12px 8px;
-  background: rgba(76,127,255,0.06);
-  border-top: 1px solid #e8e2d5;
-}
-
-.owner-label {
-  display: block;
-  font-family: "Cinzel", serif;
-  font-size: 0.65rem;
-  color: #8a7355;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-
-.owner-block select {
-  width: 100%;
-  background: #fdfbf7;
-  border: 2px solid #8a7355;
-  border-radius: 6px;
-  color: #5c1d1d;
-  font-size: 0.8rem;
-  padding: 4px 8px;
-}
 
 .owner-badge {
   font-size: 0.72rem;
@@ -944,8 +777,6 @@ body {
   font-weight: 700;
   padding: 2px 6px;
 }
-
-.level-badge--empty { color: #b0a090; border-color: #c8b89a; background: transparent; }
 
 /* ─── PLAYER TAB ─────────────────────────────────────────────────────────── */
 .player-section {
@@ -1021,7 +852,6 @@ body {
 
 .btn-select-char { background: linear-gradient(180deg,#9b1d1d,#651313); border: 2px solid #d4af37 !important; }
 .btn-rename-char { background: linear-gradient(180deg,#6c3483,#4a235a); }
-.btn-delete-char { background: #c0392b; }
 
 .player-create-form {
   background: #fdfbf7;
@@ -1151,24 +981,6 @@ body {
   line-height: 1.5;
 }
 
-.admin-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
-  gap: 10px;
-}
-
-.stat-card {
-  background: #fdfbf7;
-  border: 2px solid #8a7355;
-  border-radius: 8px;
-  padding: 12px 8px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
 .stat-num { font-family: "Cinzel", serif; font-size: 1.8rem; color: #5c1d1d; line-height: 1; }
 .stat-label { font-size: 0.65rem; color: #8a7355; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -1200,10 +1012,6 @@ body {
 .user-table tr:last-child td { border-bottom: none; }
 .user-table tr:hover td { background: #f9f5ed; }
 
-.table-actions { display: flex; flex-direction: column; gap: 5px; align-items: flex-start; }
-
-.chars-cell { min-width: 260px; }
-
 .admin-char-row {
   display: flex;
   align-items: flex-start;
@@ -1216,11 +1024,8 @@ body {
 .admin-char-row:last-child { border-bottom: none; }
 
 .admin-char-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
-.admin-char-name { font-family: "Cinzel", serif; font-size: 0.76rem; font-weight: 700; color: #5c1d1d; }
-.admin-char-class { font-size: 0.7rem; color: #8a7355; font-style: italic; }
 .char-campaign { font-size: 0.65rem; color: #7d6608; font-style: italic; }
 .admin-char-btns { display: flex; gap: 4px; flex-wrap: wrap; flex-shrink: 0; }
-.no-chars { font-size: 0.72rem; color: #b0a090; font-style: italic; }
 
 .role-badge {
   background: rgba(212,175,55,0.18);
@@ -1598,8 +1403,6 @@ input::placeholder, textarea::placeholder { color: #8a7355; font-style: italic; 
   .modal-form-grid { grid-template-columns: 1fr; }
   .modal-label.full { grid-column: 1; }
   .watermark { font-size: 3rem; }
-  .admin-stats-grid { grid-template-columns: repeat(3, 1fr); }
-  .chars-cell { min-width: 0; }
   .loot-ref-grid { grid-template-columns: 1fr; }
   .wish-modal-grid { grid-template-columns: 1fr 1fr; }
   .campaign-selector-box { padding: 24px 18px; }
@@ -1607,14 +1410,17 @@ input::placeholder, textarea::placeholder { color: #8a7355; font-style: italic; 
 }
 
 @media (max-width: 480px) {
-  .admin-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .mini-card-grid   { grid-template-columns: 1fr 1fr; }
   .wish-modal-grid  { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .item-card, .mini-card, .wish-modal-card, .campaign-selector-card { transition: none; }
-  .item-card:hover, .mini-card:hover, .wish-modal-card:hover, .campaign-selector-card:hover { transform: none; }
+  .item-card,
+.mini-card,
+.wish-modal-card { transition: none; }
+  .item-card:hover,
+.mini-card:hover,
+.wish-modal-card:hover { transform: none; }
 }
 
 

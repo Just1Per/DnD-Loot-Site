@@ -193,11 +193,11 @@ function updateStorySuggestions(){
  const idealLabel=row=>typeof row==='string'?row:`${row.alignment||'Any'} · ${row.text}`;
  for(const key of ['personality','ideals','bonds','flaws']){
   const input=form.querySelector(`[name="${key}"]`),select=form.querySelector(`[data-story-choice="${key}"]`),rows=profile[key]||[],values=rows.map(valueOf);
-  select.innerHTML=rows.map((row,i)=>`<button type="button" role="option" data-story-option="${i}" aria-selected="${sheetSession.data[key]===valueOf(row)}">${sheetEscape(key==='ideals'?idealLabel(row):valueOf(row))}</button>`).join('')+'<button type="button" role="option" data-story-option="other" aria-selected="false">Other — write my own</button>';
+  select.innerHTML=rows.map((row,i)=>`<button type="button" data-story-option="${i}" aria-pressed="${sheetSession.data[key]===valueOf(row)}">${sheetEscape(key==='ideals'?idealLabel(row):valueOf(row))}</button>`).join('')+'<button type="button" data-story-option="other" aria-pressed="false">Other — write my own</button>';
   input.readOnly=false;input.placeholder='Choose a suggestion or write your own';
-  let hint=key==='ideals'?input.closest('label').querySelector('[data-ideal-alignment-hint]'):null;
+  let hint=key==='ideals'?input.closest('.sheet-story-combobox').querySelector('[data-ideal-alignment-hint]'):null;
   if(key==='ideals'&&!hint){hint=document.createElement('small');hint.dataset.idealAlignmentHint='true';hint.className='sheet-help';input.closest('.sheet-story-combobox').after(hint);}
-  const updateSelection=()=>{const index=values.indexOf(input.value);select.querySelectorAll('[data-story-option]').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.storyOption===(index<0?'other':String(index)))));if(hint){const row=rows[index];hint.textContent=row?.alignment?`Alignment tendency: ${row.alignment}. This is guidance only; it does not change your alignment automatically.`:'';}};
+  const updateSelection=()=>{const index=values.indexOf(input.value);select.querySelectorAll('[data-story-option]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.storyOption===(index<0?'other':String(index)))));if(hint){const row=rows[index];hint.textContent=row?.alignment?`Alignment tendency: ${row.alignment}. This is guidance only; it does not change your alignment automatically.`:'';}};
   updateSelection();input.oninput=updateSelection;
   select.querySelectorAll('[data-story-option]').forEach(button=>button.onclick=()=>{const choice=button.dataset.storyOption;if(choice!=='other')input.value=valueOf(rows[Number(choice)]);select.hidden=true;input.closest('.sheet-story-combobox').querySelectorAll('[aria-expanded]').forEach(el=>el.setAttribute('aria-expanded','false'));updateSelection();input.dispatchEvent(new Event('input',{bubbles:true}));input.focus();});
  }
