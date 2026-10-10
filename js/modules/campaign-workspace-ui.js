@@ -96,7 +96,7 @@ var CampaignWorkspace = (() => {
       await sdk.uploadBytes(sdk.ref(sdk.storage,path),file,{contentType:file.type});
       if(!current(s)||s.record.id!==recordId)return;
       s.record.data.imagePath=path;s.record.data.markers=[];s.dirty=true;await mapImage();status('Image uploaded. Save this entry to keep its reference.');
-    }catch(error){if(current(s))status(`Upload failed: ${error.message}. Check the campaign map Storage rules.`,true);}
+    }catch(error){if(current(s)){const denied=error?.code==='storage/unauthorized';status(denied?'Map upload blocked by Firebase Storage permissions. The campaign-world-images rule must be merged and published in Firebase Console → Storage → Rules (hosting and Firestore deploys do not publish Storage rules).':'Map upload failed: '+error.message,true);}}
     finally{s.busy=false;}
   }
   function renderEditor() {
