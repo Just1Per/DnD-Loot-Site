@@ -23,13 +23,16 @@
     const campaignId=activeCampaign.id,uid=auth.currentUser.uid;
     const dialog=document.createElement('dialog');dialog.className='workspace-sheet-dialog';
     dialog.innerHTML='<header class="workspace-heading"><h2>My Creature Library</h2><button type="button" data-personal-close>Close</button></header><p>Import an independent copy into this campaign. Your personal template remains unchanged.</p><label class="workspace-field">Search<input type="search" data-personal-search></label><p role="status" data-personal-status>Loading…</p><div class="workspace-list" data-personal-results></div>';
+    const previousFocus=document.activeElement;
     document.body.append(dialog);dialog.showModal();
     dialog.querySelector('[data-personal-close]').onclick=()=>dialog.close();
-    dialog.addEventListener('close',()=>dialog.remove());
+    dialog.addEventListener('close',()=>{dialog.remove();if(previousFocus?.isConnected)previousFocus.focus();});
+    dialog.querySelector('[data-personal-search]')?.focus();
     const permitted=()=>dialog.isConnected&&activeCampaign?.id===campaignId&&auth.currentUser?.uid===uid&&canManageCampaign();
     try{
       const rows=await PersonalCreatureLibrary.list();if(!permitted()){dialog.close();return;}
       const draw=()=>{
+        if(!permitted())return;
         const q=dialog.querySelector('[data-personal-search]').value.toLowerCase();
         const matches=rows.filter(row=>[row.title,row.summary,row.data?.category].join(' ').toLowerCase().includes(q));
         dialog.querySelector('[data-personal-status]').textContent=matches.length+' saved templates';
@@ -53,9 +56,11 @@
             return '<label class="workspace-field">'+e(label)+'<textarea data-template-field="'+key+'" maxlength="20000">'+e(value||'')+'</textarea></label>';
           };
           editor.innerHTML='<header class="workspace-heading"><h2>Edit personal creature</h2><button type="button" data-template-cancel>Close</button></header><form data-template-form><div class="workspace-fields"><label class="workspace-field workspace-full">Name<input name="title" maxlength="160" required value="'+e(record.title)+'"></label><label class="workspace-field workspace-full">Summary<textarea name="summary" maxlength="1000">'+e(record.summary||'')+'</textarea></label><label class="workspace-field workspace-full">Story description<textarea name="content" maxlength="20000">'+e(record.content||'')+'</textarea></label>'+entries.map(control).join('')+'</div><p data-template-feedback role="status"></p><div class="workspace-actions"><button type="submit">Save changes</button><button type="button" data-template-cancel>Cancel</button></div></form>';
+          const editTrigger=button;
           document.body.append(editor);editor.showModal();
+          editor.querySelector('[name=title]')?.focus();
           editor.querySelectorAll('[data-template-cancel]').forEach(b=>b.onclick=()=>editor.close());
-          editor.addEventListener('close',()=>editor.remove());
+          editor.addEventListener('close',()=>{editor.remove();if(editTrigger.isConnected)editTrigger.focus();});
           editor.querySelector('[data-template-form]').onsubmit=async event=>{
             event.preventDefault();if(!permitted()){editor.close();return;}
             const form=event.currentTarget;if(!form.reportValidity())return;
