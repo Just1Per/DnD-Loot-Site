@@ -165,7 +165,7 @@ var CampaignWorkspace = (() => {
   function importCreature(record){
     if(session?.kind!=='creature'||!current(session)||session.busy)return false;
     if(session.dirty&&!confirm('Discard unsaved changes before importing this creature?'))return false;
-    session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize(record.data),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
+    session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize((()=>{const d=structuredClone(record.data||{});for(const k of ['links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete d[k];return d;})()),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
   }
   function switchKind(kind){if(session?.busy)return;if(!clear())return;showTab(configs[kind].tab,false);render(kind);}
   window.addEventListener('beforeunload',event=>{if(session?.dirty){event.preventDefault();event.returnValue='';}});
