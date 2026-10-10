@@ -37,10 +37,23 @@
         const matches=rows.filter(row=>[row.title,row.summary,row.data?.category].join(' ').toLowerCase().includes(q));
         dialog.querySelector('[data-personal-status]').textContent=matches.length+' saved templates';
         const list=dialog.querySelector('[data-personal-results]');
-        list.innerHTML=matches.map(row=>'<div class="workspace-actions" data-template-row="'+escapeHtml(row.id)+'"><button type="button" data-personal-id="'+escapeHtml(row.id)+'">'+escapeHtml(row.title)+' · '+escapeHtml(row.data?.category||'Creature')+'</button><button type="button" data-edit-template="'+escapeHtml(row.id)+'" aria-label="Edit '+escapeHtml(row.title)+'">Edit</button><button type="button" data-delete-template="'+escapeHtml(row.id)+'" aria-label="Delete '+escapeHtml(row.title)+'">Delete</button></div>').join('')||'<p>No matching templates.</p>';
+        list.innerHTML=matches.map(row=>'<div class="workspace-actions" data-template-row="'+escapeHtml(row.id)+'"><button type="button" data-personal-id="'+escapeHtml(row.id)+'">'+escapeHtml(row.title)+' · '+escapeHtml(row.data?.category||'Creature')+'</button><button type="button" data-duplicate-template="'+escapeHtml(row.id)+'" aria-label="Duplicate '+escapeHtml(row.title)+'">Duplicate</button><button type="button" data-edit-template="'+escapeHtml(row.id)+'" aria-label="Edit '+escapeHtml(row.title)+'">Edit</button><button type="button" data-delete-template="'+escapeHtml(row.id)+'" aria-label="Delete '+escapeHtml(row.title)+'">Delete</button></div>').join('')||'<p>No matching templates.</p>';
         list.querySelectorAll('[data-personal-id]').forEach(button=>button.onclick=()=>{
           if(!permitted())return;const record=rows.find(row=>row.id===button.dataset.personalId);
           if(record&&W.importCreature(record))dialog.close();
+        });
+        list.querySelectorAll('[data-duplicate-template]').forEach(button=>button.onclick=async()=>{
+          if(!permitted())return;
+          const record=rows.find(row=>row.id===button.dataset.duplicateTemplate);if(!record)return;
+          button.disabled=true;
+          try{
+            const title=(record.title.slice(0,153)+' (Copy)').slice(0,160);
+            const id=await PersonalCreatureLibrary.add({...record,title});
+            if(!permitted()){dialog.close();return;}
+            rows.push({...structuredClone(record),id,title});rows.sort((a,b)=>a.title.localeCompare(b.title));draw();
+            dialog.querySelector('[data-personal-status]').textContent='Independent personal copy created.';
+          }catch(error){if(permitted())dialog.querySelector('[data-personal-status]').textContent='Duplicate failed: '+error.message;}
+          finally{button.disabled=false;}
         });
         list.querySelectorAll('[data-edit-template]').forEach(button=>button.onclick=()=>{
           if(!permitted())return;
