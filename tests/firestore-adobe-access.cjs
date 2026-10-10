@@ -41,7 +41,10 @@ const {createCharacterSheetStore}=require('../js/modules/character-sheet-store')
  assert.ok(Array.isArray(raw.data.rulesChoices.grants.__adobe.data.tabOrder));
  assert.equal(raw.data.advancement.hpMode,'fixed');
  assert.ok(Array.isArray(raw.data.advancement.classLevels));
- await assertFails(deleteDoc(doc(player,'campaigns/a/characters/c1')));
+ // Owners may delete their own character under the current lifecycle rules.
+ await assertFails(deleteDoc(doc(env.authenticatedContext('other').firestore(),'campaigns/a/characters/c1')));
+ await assertSucceeds(deleteDoc(doc(player,'campaigns/a/characters/c1')));
+ await env.withSecurityRulesDisabled(c=>setDoc(doc(c.firestore(),'campaigns/a/characters/c1'),{...identity,userId:'player'}));
  await assertSucceeds(deleteDoc(doc(dm,'campaigns/a/characterSheets/c1')));
  await assertSucceeds(deleteDoc(doc(dm,'campaigns/a/characters/c1')));
  await env.cleanup();

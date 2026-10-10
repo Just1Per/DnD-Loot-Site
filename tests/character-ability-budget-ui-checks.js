@@ -23,7 +23,7 @@
  change('abilities.str',15);
  change('abilities.int',7);await Promise.resolve();
  check('Scores below 8 are invalid in point-buy mode',!field('abilities.int').checkValidity()&&field('abilities.int').min==='8');
- change('abilities.int',8);
+ change('abilities.int',8);await Promise.resolve();
 
  const reset=document.querySelector('[data-point-buy-reset]');
  check('Point buy provides a reset-to-8 control',!!reset);

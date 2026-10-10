@@ -2,11 +2,11 @@ name: Campaign workspace checks
 on:
   pull_request:
     paths:
-      - 'js/modules/campaign-*.js'
-      - 'js/modules/character-sheet*.js'
-      - 'js/modules/character-equipment-ui.js'
-      - 'js/modules/ui-auth.js'
-      - 'js/modules/dm-tools.js'
+      - 'index.html'
+      - 'css/**'
+      - 'js/boot-status.js'
+      - 'js/app.js'
+      - 'js/modules/**'
       - 'firestore.rules'
       - 'storage-workspace.rules'
       - 'firebase.workspace-test.json'
@@ -31,11 +31,28 @@ jobs:
           java-version: 21
       - name: Install test dependencies
         run: npm ci --prefix tests
+      - name: Install Chromium
+        run: npx --prefix tests playwright install --with-deps chromium
+      - name: Install PDF text verification
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - name: Character engines and UI fixtures
+        run: npm --prefix tests test
+      - name: Non-Overview accessibility, keyboard, layout and print
+        run: npm --prefix tests run test:ui
       - name: Workspace engines and catalogue
         run: npm --prefix tests run test:workspace
       - name: Planning navigation and manual-guide login
         run: |
           DND_DM_PLANNING_ONLY=1 node tests/dom.cjs
           DND_AUTH_CLEANUP_ONLY=1 node tests/dom.cjs
+      - name: Character sheet permissions and persistence
+        run: npm --prefix tests run test:rules
       - name: Firestore and private image permissions
         run: npm --prefix tests run test:workspace-rules
+      - name: Upload UI screenshots and print checks
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: campaignatlas-ui-checks
+          path: /tmp/campaignatlas-ui-checks
+          if-no-files-found: ignore
