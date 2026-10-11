@@ -1,40 +1,63 @@
-# World Building image uploads — Firebase Storage deployment
+# World Building image uploads — Firebase Storage permissions
 
-If uploading a world map fails with `storage/unauthorized` for
-`campaign-world-images/{campaignId}/{entryId}/{imageId}`, the upload path in
-`js/modules/campaign-workspace-ui.js` already matches the example rules in
-`storage-workspace.rules`.
+World Building uploads files to `campaign-world-images/{campaignId}/{entryId}/{imageId}`.
+If uploads fail with `storage/unauthorized`, the **published Firebase Storage rules**
+probably do not yet contain that path. This is separate from Firestore security
+rules (`firestore.rules`).
 
-**Important:** `firebase.json` deploys Firestore rules and Hosting, but does not
-declare production Storage rules. A successful Hosting or Firestore deployment
-therefore does **not** install `storage-workspace.rules`.
+## Production rules: one authoritative file
 
-## Action for Firebase project owner
+The repository's [`storage.rules`](../storage.rules) combines the existing
+Firebase Storage rules supplied by the project owner with one new match:
 
-1. Open **Firebase Console → Storage → Rules** for the correct project/bucket.
-2. Take a backup of your *existing* Storage rules.
-3. Merge the `workspaceDM` function and the
-   `campaign-world-images/{campaignId}/{entryId}/{imageId}` match from
-   [storage-workspace.rules](../storage-workspace.rules) **inside your existing**
-   `service firebase.storage { match /b/{bucket}/o { ... } }` scope.
-   **Do not replace your entire existing ruleset**—it may contain item and
-   campaign-item image permissions.
-4. Publish the merged Storage rules, then retry an image upload using a
-   campaign owner or active campaign DM account.
-5. Verify reads work after refreshing World Building and that unrelated
-   authenticated accounts cannot upload or read private campaign maps.
+- `dnd-item-images/{fileName}`: public read; admins create, update and delete
+- `campaign-item-images/{campaignId}/{fileName}`: owners and active members
+  read; owners/active DMs create, update and delete
+- `campaign-world-images/{campaignId}/{entryId}/{imageId}`: owners/active DMs
+  read and create; existing images cannot be replaced or deleted
 
-The rule requires authenticated campaign ownership or an active DM membership,
-PNG/JPEG/WebP content type and an image size of 1–5 MiB. It allows creating new
-immutable objects, not overwriting old image files.
+The world-map path accepts PNG/JPEG/WebP with the same **less than 5 MiB** limit
+as the original `validImage()` helper. It doesn't make private campaign maps
+visible to players. Unmatched paths remain denied.
 
-If it still fails after publishing, confirm the signed-in UID is the campaign
-`ownerId` or an active `members/{uid}` record with `role: 'dm'`, and confirm
-the Storage project and bucket match the project being tested.
+## Deploying the rules
 
-## Verification
+**Important:** the current GitHub Actions workflows deploy Firebase Hosting
+only. A green Hosting preview or merge run **does not publish Storage rules**.
+Merely merging the pull request therefore will not fix `storage/unauthorized`.
 
-`firebase.workspace-test.json` points the Storage emulator at
-`storage-workspace.rules`. Emulator tests prove behavior of the **repository
-rule sample**; they cannot prove that Firebase Console has the same rules.
-Deployment requires an explicit Storage-rule publish by the project owner.
+The safe deployment sequence is:
+
+1. In Firebase Console, confirm project `dnd-loot-site`, and select the
+   **Storage bucket used by the website**.
+2. Back up the currently published Storage rules before making changes.
+3. After merging the Storage rules PR, either publish the *complete*
+   [`storage.rules`](../storage.rules) file in
+   **Firebase Console → Storage → Rules**, or run
+   `firebase deploy --only storage --project dnd-loot-site`
+   from a checked-out copy of the updated repository with Firebase CLI access.
+   The `storage` rules mapping is declared in `firebase.json`.
+4. Verify that the deployed text still contains the existing
+   `dnd-item-images` and `campaign-item-images` permissions.
+5. Try uploading a small PNG map from World Building as the campaign owner
+   or an active DM. Refresh the World Building entry to verify the read path.
+   Verify a player/nonmember cannot access the map.
+
+Do **not** copy the older isolated `storage-workspace.rules` example into
+production; it omits item-image rules. That file has been replaced by the
+complete ruleset.
+
+If the upload is still denied, check the signed-in UID, membership status,
+`campaigns/{campaignId}.ownerId`, active member `role: 'dm'`, Firebase
+project and Storage bucket. A Storage deployment cannot be verified merely
+by passing emulator tests.
+
+## Automated verification
+
+`firebase.workspace-test.json` and
+`tests/workspace-storage-rules.cjs` both read `storage.rules`.
+The Storage emulator tests cover item images, map images, owner/DM/player
+permissions, MIME/size restrictions, and immutable map uploads.
+
+The repository intentionally does **not** automatically deploy Storage rules
+when opening or merging a PR; that is a separate production security change.
