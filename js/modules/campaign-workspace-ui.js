@@ -136,14 +136,7 @@ var CampaignWorkspace = (() => {
       host.querySelectorAll('[data-open-link]').forEach(button=>button.onclick=async()=>{
         const link=links[Number(button.dataset.openLink)];
         if(!link||!configs[link.kind]||!current(s))return;
-        if(s.dirty&&!confirm('Discard unsaved edits before opening this connected entry?'))return;
-        ++generation;
-        const targetKind=link.kind,targetId=link.id;
-        if(targetKind===s.kind){await openRecord(targetId);return;}
-        if(!clear(true))return;
-        showTab(configs[targetKind].tab,false);
-        await render(targetKind);
-        if(session?.kind===targetKind&&session.campaignId===s.campaignId)await openRecord(targetId);
+        await navigateTo(link.kind,link.id);
       });
       host.querySelectorAll('[data-remove-link]').forEach(button=>button.onclick=()=>{s.record.data.links.splice(Number(button.dataset.removeLink),1);s.dirty=true;renderLinks();});
     }catch(error){if(current(s)&&s.record.id===recordId)host.textContent='Could not load linked entries: '+error.message;}
