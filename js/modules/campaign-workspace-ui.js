@@ -130,10 +130,15 @@ var CampaignWorkspace = (() => {
       const lists=await Promise.all(kinds.map(async kind=>(await store.list(s.campaignId,kind)).map(row=>({...row,kind}))));
       if(!current(s)||s.record.id!==recordId||!host.isConnected)return;
       const rows=lists.flat(),links=s.record.data.links||[],incoming=rows.filter(row=>(row.data?.links||[]).some(link=>link.id===recordId&&link.kind===s.kind));
-      host.innerHTML=`<h3>Connected campaign entries</h3><div class="workspace-actions"><select data-link-picker aria-label="Entry to link"><option value="">Choose a location, creature, chapter or encounter…</option>${rows.filter(row=>!row.archived&&row.id!==recordId&&!links.some(link=>link.id===row.id&&link.kind===row.kind)).map(row=>`<option value="${row.kind}:${escape(row.id)}">${escape(configs[row.kind].title)} · ${escape(row.title)}</option>`).join('')}</select><button type="button" data-add-link>Add link</button></div>${links.map((link,index)=>{const row=rows.find(row=>row.id===link.id&&row.kind===link.kind);return `<p>${escape(row?.title||'Unavailable entry')}${row?.archived?' (archived)':''} <button type="button" data-remove-link="${index}">Remove link</button></p>`;}).join('')}`;
+      host.innerHTML=`<h3>Connected campaign entries</h3><div class="workspace-actions"><select data-link-picker aria-label="Entry to link"><option value="">Choose a location, creature, chapter or encounter…</option>${rows.filter(row=>!row.archived&&row.id!==recordId&&!links.some(link=>link.id===row.id&&link.kind===row.kind)).map(row=>`<option value="${row.kind}:${escape(row.id)}">${escape(configs[row.kind].title)} · ${escape(row.title)}</option>`).join('')}</select><button type="button" data-add-link>Add link</button></div>${links.map((link,index)=>{const row=rows.find(row=>row.id===link.id&&row.kind===link.kind);return `<p>${escape(configs[link.kind]?.title||link.kind)} · ${escape(row?.title||'Unavailable entry')}${row?.archived?' (archived)':''} ${row?`<button type="button" data-open-link="${index}">Open</button>`:''} <button type="button" data-remove-link="${index}">Remove link</button></p>`;}).join('')}`;
       if(incoming.length)host.insertAdjacentHTML('beforeend',`<h4>Referenced by</h4><p>${incoming.map(row=>escape(configs[row.kind].title)+' · '+escape(row.title)+(row.archived?' (archived)':'')).join('<br>')}</p>`);
-      host.querySelector('[data-add-link]').onclick=()=>{const value=host.querySelector('select').value;if(!value)return;const [kind,id]=value.split(':');s.record.data.links||=[];if(s.record.data.links.length>=40){status('An entry can have up to 40 links.',true);return;}s.record.data.links.push({kind,id});s.dirty=true;renderLinks();};
-      host.querySelectorAll('[data-remove-link]').forEach(button=>button.onclick=()=>{s.record.data.links.splice(Number(button.dataset.removeLink),1);s.dirty=true;renderLinks();});
+      host.querySelector('[data-add-link]').onclick=()=>{const value=host.querySelector('select').value;if(!value)return;const [kind,id]=value.split(':');s.record.data.links||=[];if(s.record.data.links.length>=40){status('An entry can have up to 40 links.',true);return;}s.record.data.links.push({kind,id});s.dirty=true;renderLinks();configs[s.kind].onEdit?.(s.host.querySelector('[data-extra-editor]'),s);};
+      host.querySelectorAll('[data-open-link]').forEach(button=>button.onclick=async()=>{
+        const link=links[Number(button.dataset.openLink)];
+        if(!link||!configs[link.kind]||!current(s))return;
+        await navigateTo(link.kind,link.id);
+      });
+      host.querySelectorAll('[data-remove-link]').forEach(button=>button.onclick=()=>{s.record.data.links.splice(Number(button.dataset.removeLink),1);s.dirty=true;renderLinks();configs[s.kind].onEdit?.(s.host.querySelector('[data-extra-editor]'),s);});
     }catch(error){if(current(s)&&s.record.id===recordId)host.textContent='Could not load linked entries: '+error.message;}
   }
   function renderMarkers(){const s=session,host=s?.host.querySelector('[data-marker-list]');if(!host)return;host.innerHTML=(s.record.data.markers||[]).map((pin,i)=>`<p>${i+1}. ${escape(pin.label)} <button type="button" data-remove-marker="${i}" aria-label="Remove ${escape(pin.label)}">Remove</button></p>`).join('');host.querySelectorAll('[data-remove-marker]').forEach(button=>button.onclick=()=>{s.record.data.markers.splice(Number(button.dataset.removeMarker),1);s.dirty=true;renderMarkers();mapImage();});}
@@ -167,8 +172,21 @@ var CampaignWorkspace = (() => {
     if(session.dirty&&!confirm('Discard unsaved changes before importing this creature?'))return false;
     session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize((()=>{const d=structuredClone(record.data||{});for(const k of ['links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete d[k];return d;})()),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
   }
+  async function navigateTo(kind,recordId){
+    const old=session;
+    if(!configs[kind]||!permitted(kind)||!recordId)return false;
+    if(old?.dirty&&!confirm('Discard unsaved campaign workspace edits before navigating?'))return false;
+    if(old?.busy)return false;
+    if(old?.kind===kind){await openRecord(recordId);return true;}
+    if(!clear(true))return false;
+    showTab(configs[kind].tab,false);
+    await render(kind);
+    if(session?.kind!==kind||session.campaignId!==activeCampaign?.id)return false;
+    await openRecord(recordId);
+    return true;
+  }
   function switchKind(kind){if(session?.busy)return;if(!clear())return;showTab(configs[kind].tab,false);render(kind);}
   window.addEventListener('beforeunload',event=>{if(session?.dirty){event.preventDefault();event.returnValue='';}});
   window.addEventListener('afterprint',()=>{document.body.classList.remove('printing-workspace');document.getElementById('workspacePrintSurface')?.replaceChildren();});
-  return {render,importCreature,switchKind,clear,beforeNavigate,configs,store,get session(){return session;},draft,save,newRecord,openRecord,renderEditor,renderList,status,id};
+  return {render,importCreature,switchKind,navigateTo,clear,beforeNavigate,configs,store,get session(){return session;},draft,save,newRecord,openRecord,renderEditor,renderList,status,id};
 })();
