@@ -141,6 +141,7 @@ var CampaignWorkspace = (() => {
         const targetKind=link.kind,targetId=link.id;
         if(targetKind===s.kind){await openRecord(targetId);return;}
         if(!clear(true))return;
+        showTab(configs[targetKind].tab,false);
         await render(targetKind);
         if(session?.kind===targetKind&&session.campaignId===s.campaignId)await openRecord(targetId);
       });
