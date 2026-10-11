@@ -893,3 +893,8 @@
 #characterSheetDialog .sheet-body > #sheet-story{grid-area:auto / 1 / auto / -1;justify-self:stretch;align-self:start;width:100%;max-width:100%;min-width:0;box-sizing:border-box}
 #characterSheetDialog #sheet-story > .sheet-grid.two{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
 #characterSheetDialog #sheet-story .sheet-grid.two > .sheet-field{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+
+/* Story is its own full-width tab, never a sidebar or shrink-to-fit grid child. */
+#characterSheetDialog #sheet-story:not([hidden]){display:block;position:relative;float:none;clear:both;margin-inline:0;min-width:0;width:100%;max-width:none}
+#characterSheetDialog #sheet-story > .sheet-grid.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-content:stretch;align-content:start}
+@media(max-width:760px){#characterSheetDialog #sheet-story > .sheet-grid.two{grid-template-columns:minmax(0,1fr)}}
