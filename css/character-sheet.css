@@ -898,3 +898,6 @@
 #characterSheetDialog #sheet-story:not([hidden]){display:block;position:relative;float:none;clear:both;margin-inline:0;min-width:0;width:100%;max-width:none}
 #characterSheetDialog #sheet-story > .sheet-grid.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-content:stretch;align-content:start}
 @media(max-width:760px){#characterSheetDialog #sheet-story > .sheet-grid.two{grid-template-columns:minmax(0,1fr)}}
+
+/* Story suggestions must not create a nested grid that collapses trait inputs. */
+#characterSheetDialog .sheet-story-combobox { display:block !important; min-width:0; width:100%; }
