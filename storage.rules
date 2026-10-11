@@ -1,0 +1,89 @@
+rules_version = '2';
+// Production Storage rules. Preserve item-image permissions when adding new paths.
+// Firebase Hosting deployments do not publish these rules; deploy Storage separately.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && firestore.exists(
+          /databases/(default)/documents/users/$(request.auth.uid)
+        )
+        && "admin" in firestore.get(
+          /databases/(default)/documents/users/$(request.auth.uid)
+        ).data.role;
+    }
+
+    function isCampaignOwner(campaignId) {
+      return signedIn()
+        && firestore.exists(
+          /databases/(default)/documents/campaigns/$(campaignId)
+        )
+        && firestore.get(
+          /databases/(default)/documents/campaigns/$(campaignId)
+        ).data.ownerId == request.auth.uid;
+    }
+
+    function isActiveMember(campaignId) {
+      return signedIn()
+        && firestore.exists(
+          /databases/(default)/documents/campaigns/$(campaignId)/members/$(request.auth.uid)
+        )
+        && firestore.get(
+          /databases/(default)/documents/campaigns/$(campaignId)/members/$(request.auth.uid)
+        ).data.status == "active";
+    }
+
+    function isCampaignDM(campaignId) {
+      return isCampaignOwner(campaignId)
+        || (
+          isActiveMember(campaignId)
+          && firestore.get(
+            /databases/(default)/documents/campaigns/$(campaignId)/members/$(request.auth.uid)
+          ).data.role == "dm"
+        );
+    }
+
+    function validImage() {
+      return request.resource != null
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp)');
+    }
+
+    // Root catalogue images. Unchanged from previously published rules.
+    match /dnd-item-images/{fileName} {
+      allow read: if true;
+      allow create, update: if isAdmin() && validImage();
+      allow delete: if isAdmin();
+    }
+
+    // Campaign item images. Unchanged from previously published rules.
+    match /campaign-item-images/{campaignId}/{fileName} {
+      allow read: if isCampaignOwner(campaignId)
+        || isActiveMember(campaignId);
+
+      allow create, update: if isCampaignDM(campaignId)
+        && validImage();
+
+      allow delete: if isCampaignDM(campaignId);
+    }
+
+    // World Building maps. New images are private to the owner and active DMs.
+    // Uploads use unique names, so replacing a map creates a new immutable object.
+    match /campaign-world-images/{campaignId}/{entryId}/{imageId} {
+      allow read: if isCampaignDM(campaignId);
+      allow create: if resource == null
+        && isCampaignDM(campaignId)
+        && validImage();
+    }
+
+    // Everything else remains denied.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

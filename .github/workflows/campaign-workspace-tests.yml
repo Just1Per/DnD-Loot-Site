@@ -8,7 +8,7 @@ on:
       - 'js/app.js'
       - 'js/modules/**'
       - 'firestore.rules'
-      - 'storage-workspace.rules'
+      - 'storage.rules'
       - 'firebase.workspace-test.json'
       - 'data/rules/monsters.json'
       - 'tests/**'
