@@ -76,7 +76,9 @@ service firebase.storage {
     // Uploads use unique names, so replacing a map creates a new immutable object.
     match /campaign-world-images/{campaignId}/{entryId}/{imageId} {
       allow read: if isCampaignDM(campaignId);
-      allow create: if isCampaignDM(campaignId) && validImage();
+      allow create: if resource == null
+        && isCampaignDM(campaignId)
+        && validImage();
     }
 
     // Everything else remains denied.
