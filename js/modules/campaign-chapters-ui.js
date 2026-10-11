@@ -17,8 +17,7 @@
      }).join('');
      container.querySelectorAll('[data-chapter-open]').forEach(button=>button.onclick=()=>{
        const [kind,id]=button.dataset.chapterOpen.split(':');
-       if(s.dirty&&!confirm('Discard unsaved chapter changes before opening the linked entry?'))return;
-       W.switchKind(kind);W.openRecord(id);
+       W.navigateTo(kind,id);
      });
    }).catch(error=>{if(container.isConnected&&W.session===s&&s.record.id===chapterId)container.textContent='Could not load chapter connections: '+error.message;});
    host.querySelectorAll('[data-approve-milestone]').forEach(button=>button.onclick=async()=>{
