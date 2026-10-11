@@ -130,9 +130,20 @@ var CampaignWorkspace = (() => {
       const lists=await Promise.all(kinds.map(async kind=>(await store.list(s.campaignId,kind)).map(row=>({...row,kind}))));
       if(!current(s)||s.record.id!==recordId||!host.isConnected)return;
       const rows=lists.flat(),links=s.record.data.links||[],incoming=rows.filter(row=>(row.data?.links||[]).some(link=>link.id===recordId&&link.kind===s.kind));
-      host.innerHTML=`<h3>Connected campaign entries</h3><div class="workspace-actions"><select data-link-picker aria-label="Entry to link"><option value="">Choose a location, creature, chapter or encounter…</option>${rows.filter(row=>!row.archived&&row.id!==recordId&&!links.some(link=>link.id===row.id&&link.kind===row.kind)).map(row=>`<option value="${row.kind}:${escape(row.id)}">${escape(configs[row.kind].title)} · ${escape(row.title)}</option>`).join('')}</select><button type="button" data-add-link>Add link</button></div>${links.map((link,index)=>{const row=rows.find(row=>row.id===link.id&&row.kind===link.kind);return `<p>${escape(row?.title||'Unavailable entry')}${row?.archived?' (archived)':''} <button type="button" data-remove-link="${index}">Remove link</button></p>`;}).join('')}`;
+      host.innerHTML=`<h3>Connected campaign entries</h3><div class="workspace-actions"><select data-link-picker aria-label="Entry to link"><option value="">Choose a location, creature, chapter or encounter…</option>${rows.filter(row=>!row.archived&&row.id!==recordId&&!links.some(link=>link.id===row.id&&link.kind===row.kind)).map(row=>`<option value="${row.kind}:${escape(row.id)}">${escape(configs[row.kind].title)} · ${escape(row.title)}</option>`).join('')}</select><button type="button" data-add-link>Add link</button></div>${links.map((link,index)=>{const row=rows.find(row=>row.id===link.id&&row.kind===link.kind);return `<p>${escape(configs[link.kind]?.title||link.kind)} · ${escape(row?.title||'Unavailable entry')}${row?.archived?' (archived)':''} ${row?`<button type="button" data-open-link="${index}">Open</button>`:''} <button type="button" data-remove-link="${index}">Remove link</button></p>`;}).join('')}`;
       if(incoming.length)host.insertAdjacentHTML('beforeend',`<h4>Referenced by</h4><p>${incoming.map(row=>escape(configs[row.kind].title)+' · '+escape(row.title)+(row.archived?' (archived)':'')).join('<br>')}</p>`);
       host.querySelector('[data-add-link]').onclick=()=>{const value=host.querySelector('select').value;if(!value)return;const [kind,id]=value.split(':');s.record.data.links||=[];if(s.record.data.links.length>=40){status('An entry can have up to 40 links.',true);return;}s.record.data.links.push({kind,id});s.dirty=true;renderLinks();};
+      host.querySelectorAll('[data-open-link]').forEach(button=>button.onclick=async()=>{
+        const link=links[Number(button.dataset.openLink)];
+        if(!link||!configs[link.kind]||!current(s))return;
+        if(s.dirty&&!confirm('Discard unsaved edits before opening this connected entry?'))return;
+        ++generation;
+        const targetKind=link.kind,targetId=link.id;
+        if(targetKind===s.kind){await openRecord(targetId);return;}
+        if(!clear(true))return;
+        await render(targetKind);
+        if(session?.kind===targetKind&&session.campaignId===s.campaignId)await openRecord(targetId);
+      });
       host.querySelectorAll('[data-remove-link]').forEach(button=>button.onclick=()=>{s.record.data.links.splice(Number(button.dataset.removeLink),1);s.dirty=true;renderLinks();});
     }catch(error){if(current(s)&&s.record.id===recordId)host.textContent='Could not load linked entries: '+error.message;}
   }
