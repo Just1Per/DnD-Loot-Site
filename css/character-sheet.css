@@ -873,7 +873,7 @@
 /* Story tab: style existing fields without changing sheet bindings or markup. */
 #sheet-story .sheet-grid.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
 #sheet-story .sheet-grid.two>.sheet-field{box-sizing:border-box;min-width:0;padding:14px;border:1px solid var(--sheet-border,#d7cabb);border-radius:10px;background:#fffdf8}
-#sheet-story .sheet-grid.two>.sheet-field textarea{box-sizing:border-box;display:block;max-width:100%;min-width:0;min-height:112px;resize:vertical;overflow-wrap:anywhere;white-space:pre-wrap}
+#sheet-story .sheet-grid.two>.sheet-field textarea{box-sizing:border-box;display:block;width:100%;max-width:100%;min-width:0;min-height:112px;resize:vertical;overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.5}
 #sheet-story .sheet-grid.two>.sheet-field:has([name="personality"]),
 #sheet-story .sheet-grid.two>.sheet-field:has([name="ideals"]),
 #sheet-story .sheet-grid.two>.sheet-field:has([name="bonds"]),
@@ -884,3 +884,7 @@
   #sheet-story .sheet-grid.two{grid-template-columns:minmax(0,1fr);gap:12px}
   #sheet-story .sheet-grid.two>.sheet-field{grid-column:1/-1;padding:12px}
 }
+
+/* Keep input focus visible inside Story cards, including keyboard navigation. */
+#sheet-story .sheet-grid.two>.sheet-field:focus-within{border-color:#946b44;box-shadow:0 0 0 2px rgba(148,107,68,.14)}
+#sheet-story .sheet-grid.two>.sheet-field textarea:focus-visible{outline:2px solid #946b44;outline-offset:2px}
