@@ -10,7 +10,8 @@
       "firebase.test.json",
       "scripts/**",
       "firebase.workspace-test.json",
-      "storage-workspace.rules"
+      "storage-workspace.rules",
+      "storage.rules"
     ]
   },
   "functions": [
@@ -29,5 +30,8 @@
   ],
   "firestore": {
     "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }
