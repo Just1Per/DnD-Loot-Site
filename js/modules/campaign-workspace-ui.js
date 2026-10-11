@@ -179,8 +179,21 @@ var CampaignWorkspace = (() => {
     if(session.dirty&&!confirm('Discard unsaved changes before importing this creature?'))return false;
     session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize((()=>{const d=structuredClone(record.data||{});for(const k of ['links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete d[k];return d;})()),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
   }
+  async function navigateTo(kind,recordId){
+    const old=session;
+    if(!configs[kind]||!permitted(kind)||!recordId)return false;
+    if(old?.dirty&&!confirm('Discard unsaved campaign workspace edits before navigating?'))return false;
+    if(old?.busy)return false;
+    if(old?.kind===kind){await openRecord(recordId);return true;}
+    if(!clear(true))return false;
+    showTab(configs[kind].tab,false);
+    await render(kind);
+    if(session?.kind!==kind||session.campaignId!==activeCampaign?.id)return false;
+    await openRecord(recordId);
+    return true;
+  }
   function switchKind(kind){if(session?.busy)return;if(!clear())return;showTab(configs[kind].tab,false);render(kind);}
   window.addEventListener('beforeunload',event=>{if(session?.dirty){event.preventDefault();event.returnValue='';}});
   window.addEventListener('afterprint',()=>{document.body.classList.remove('printing-workspace');document.getElementById('workspacePrintSurface')?.replaceChildren();});
-  return {render,importCreature,switchKind,clear,beforeNavigate,configs,store,get session(){return session;},draft,save,newRecord,openRecord,renderEditor,renderList,status,id};
+  return {render,importCreature,switchKind,navigateTo,clear,beforeNavigate,configs,store,get session(){return session;},draft,save,newRecord,openRecord,renderEditor,renderList,status,id};
 })();
