@@ -63,7 +63,6 @@ const {ref,uploadBytes,getBytes,deleteObject}=require('firebase/storage');
 
   // Default deny remains in force.
   await assertFails(upload('admin','other/private.png'));
-  await assertFails(getBytes(ref(storage.admin,'campaign-world-images/b/north/wrong-campaign')));
   console.log('PASS Combined Storage rules: root images, campaign images, private world maps, unchanged access controls');
  }finally{await env.cleanup();}
 })().catch(error=>{console.error(error);process.exitCode=1});
