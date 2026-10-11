@@ -8,7 +8,8 @@
    const target=Number(W.draft()?.data.targetLevel)||0;
    host.innerHTML=`<section class="workspace-card" data-chapter-prep><h3>Chapter preparation</h3><p>Linked NPCs, creatures, locations and encounters are listed below. Add or remove connections in <strong>Connected campaign entries</strong>.</p><div data-chapter-connections role="status">Loading connections…</div></section><section class="workspace-card"><h3>Milestone approvals</h3><p>Confirm who earned the target level, then open their sheet to choose class levels, HP and features. Approval does not silently change their level.</p>${characters.filter(character=>character.active!==false).map(character=>{const approval=(s.record.data.milestones||[]).find(row=>row.characterId===character.id);return `<p>${escapeHtml(character.name)} · level ${Number(character.level)||1}${approval?' · Approved level '+Number(approval.targetLevel):''} <button type="button" data-approve-milestone="${escapeHtml(character.id)}" ${!target||Number(character.level)>=target?'disabled':''}>Approve milestone</button> <button type="button" data-milestone-sheet="${escapeHtml(character.id)}">Open sheet</button></p>`;}).join('')}</section>`;
    const chapterId=s.record.id,campaignId=s.campaignId,uid=s.uid,container=host.querySelector('[data-chapter-connections]');
-   Promise.all(['world','creature','encounter'].map(async kind=>({kind,rows:await W.store.list(campaignId,kind)}))).then(groups=>{
+   const connections=s.chapterConnectionsPromise||(s.chapterConnectionsPromise=Promise.all(['world','creature','encounter'].map(async kind=>({kind,rows:await W.store.list(campaignId,kind)}))));
+   connections.then(groups=>{
      if(!container.isConnected||W.session!==s||s.record.id!==chapterId||activeCampaign?.id!==campaignId||auth.currentUser?.uid!==uid)return;
      const links=s.record.data.links||[],sections=[['world','Locations & lore'],['creature','NPCs & creatures'],['encounter','Encounters']];
      container.innerHTML=sections.map(([kind,label])=>{
@@ -19,7 +20,7 @@
        const [kind,id]=button.dataset.chapterOpen.split(':');
        W.navigateTo(kind,id);
      });
-   }).catch(error=>{if(container.isConnected&&W.session===s&&s.record.id===chapterId)container.textContent='Could not load chapter connections: '+error.message;});
+   }).catch(error=>{s.chapterConnectionsPromise=null;if(container.isConnected&&W.session===s&&s.record.id===chapterId)container.textContent='Could not load chapter connections: '+error.message;});
    host.querySelectorAll('[data-approve-milestone]').forEach(button=>button.onclick=async()=>{
      const input=W.draft(),level=Number(input?.data.targetLevel),character=characters.find(row=>row.id===button.dataset.approveMilestone);
      if(!character||!level||level<=Number(character.level)){W.status('Choose a target above the character’s current level.',true);return;}
