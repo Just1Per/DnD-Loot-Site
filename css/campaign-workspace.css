@@ -35,6 +35,25 @@
 .campaign-workspace button:focus-visible{outline:2px solid #9b1d1d;outline-offset:3px}
 .campaign-workspace .workspace-list button{background:#fdfbf7;color:#5c1d1d;border-color:#c8b89a}
 .campaign-workspace textarea[name=summary]{min-height:65px}
+.world-category-shortcuts{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.world-category-shortcuts button[aria-pressed=true]{outline:2px solid #8a7355;outline-offset:2px}
+.world-category-shortcuts span{display:inline-block;min-width:1.2em;margin-left:4px}
+.world-archived-filter{display:flex;align-items:center;gap:6px}
+.world-browse-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.world-browse-controls label{min-width:220px;margin:0}
+.world-browse-controls button{min-height:40px}
+[data-world-sharing-overview],[data-world-results]{font: .85rem/1.5 Georgia,serif;color:#66584a;overflow-wrap:anywhere}
+.world-editor-section{padding:18px;margin:18px 0;border:1px solid #c8b89a;border-radius:6px;background:#fdfbf7;min-width:0}
+.world-editor-section h3{font:700 1.1rem Cinzel,Georgia,serif;margin:0 0 12px}
+.world-editor-section>p{font: .9rem/1.6 Georgia,serif;color:#66584a}
+.world-editor-private{background:#efe7d9;border-left:4px solid #a78946}
+.world-map-tools summary{font:700 1rem Cinzel,Georgia,serif;cursor:pointer;min-height:32px}
+.world-visibility-badge{display:block;margin-top:8px;font:700 .75rem/1.5 Georgia,serif;color:#66584a;overflow-wrap:anywhere}
+.world-visibility-badge[data-visibility=shared]{color:#36553b}
+.world-visibility-badge[data-visibility=changed],.world-visibility-badge[data-visibility=draft]{color:#732424}
+.workspace-list button[aria-current=true]{border-color:#9b1d1d;box-shadow:inset 3px 0 #9b1d1d}
+.world-editor-section .campaign-world-sharing{margin-top:16px}
+@media(max-width:760px){.world-editor-section{padding:14px}.world-browse-controls{align-items:stretch}.world-browse-controls label{min-width:0;flex:1 1 200px}}
 /* Form layout must never override hidden private fields or player previews. */
 .campaign-workspace [hidden],.workspace-sheet-dialog [hidden]{display:none!important}
 @media print{

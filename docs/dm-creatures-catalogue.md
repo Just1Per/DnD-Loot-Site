@@ -4,7 +4,7 @@ Campaign owners and active campaign DMs have a dedicated **Creatures & NPCs** ta
 
 The tab lists the campaign's existing Story NPCs, monsters, bosses and companions. Search, category filters, archived entries, save/reopen, private tactics, combat statistics and player-description preview retain their existing behavior. **Import SRD creature** and **My Creature Library** are available above the list even before selecting or creating an entry. An import creates an unsaved independent campaign draft; Save keeps it. Finishing a slow campaign-list request preserves an imported draft.
 
-Existing World Builder creature buttons and linked creatures in chapter preparation open this dedicated tab. Unsaved-change confirmations apply to these transitions and top-level tab navigation. Leaving the workspace or changing campaigns clears its catalogue dialogs.
+Linked creatures in chapter preparation open this dedicated tab. World Building focuses on setting entries; the top-level Creatures & NPCs tab opens creature preparation. Unsaved-change confirmations apply to these transitions and top-level tab navigation. Leaving the workspace or changing campaigns clears its catalogue dialogs.
 
 ## Records and privacy
 
