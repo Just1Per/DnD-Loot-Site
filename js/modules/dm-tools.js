@@ -352,6 +352,7 @@ function renderDMTools() {
       <section class="dm-tool-card">
         <h2>Campaign Settings</h2>
         <p>Edit the campaign name, description and default item visibility.</p>
+        <div class="dm-tool-actions"><button id="dmEditCampaignHome" class="btn-primary" type="button">Edit campaign front page</button></div>
         <details class="dm-card-settings"><summary>Edit campaign settings</summary><div class="dm-settings-grid">
           <label><span>Campaign Name</span>
             <input id="dmCampaignName" type="text" value="${escapeHtml(activeCampaign.name || "")}">
@@ -474,6 +475,7 @@ function renderDMTools() {
 
   panel.querySelectorAll('[data-open-dm-planning]').forEach(button=>button.addEventListener('click',()=>showTab('dm-'+button.dataset.openDmPlanning)));
   document.getElementById("dmSaveCampaignSettings")?.addEventListener("click", saveDMCampaignSettings);
+  document.getElementById("dmEditCampaignHome")?.addEventListener("click", () => { showTab('campaign-home'); if(document.getElementById('tab-campaign-home')?.style.display==='block')CampaignHome.edit(); });
   document.getElementById("dmInviteMember")?.addEventListener("click", () => openUserModal());
   document.getElementById("dmOpenLibrary")?.addEventListener("click", () => showTab("library"));
 }
