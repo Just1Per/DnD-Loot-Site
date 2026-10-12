@@ -10,7 +10,7 @@ function showTab(tabId, render = true) {
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
   if(tabId==='player-adventures'&&(!activeCampaign||!canUseCharacters()))return;
   if (tabId === "admin") { openAdminView(); return; }
-  if ((tabId === "dm" || ["dm-world","dm-chapters","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
+  if ((tabId === "dm" || ["dm-world","dm-creatures","dm-chapters","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
   if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
   if (typeof CampaignHome!=="undefined" && !CampaignHome.beforeNavigate(tabId)) return;
   if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate(tabId))return;
@@ -29,6 +29,7 @@ function showTab(tabId, render = true) {
   if(render&&tabId==="dm-one-shots") CampaignWorkspace.render("oneShot");
   if (render&&tabId==="dm-chapters") CampaignWorkspace.render("chapter");
   if (render&&tabId==="dm-world") CampaignWorkspace.render("world");
+  if (render&&tabId==="dm-creatures") CampaignWorkspace.render("creature");
   if (tabId==="dm")      { renderDMTools(); }
   if (tabId==="character-sheet" && render) { renderCharacterSheetTab(); }
   if (tabId==="player")  { renderPlayerTab(); }

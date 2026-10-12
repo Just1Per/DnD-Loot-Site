@@ -6,18 +6,20 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 | --- | --- | --- | --- |
 | P0 | DM-customizable campaign front page | Merged PR #89 | Description and campaign information/table rules on the left; large campaign map or intro image at the upper right; readable mobile stacking; DM edit/preview/save; member read access; safe conflict handling. |
 | P0 | Campaign cover uploads | Merged into review stack, PR #90 | DM file upload, authenticated member reads, immutable replacements, removal and PNG/JPEG/WebP/size checks. |
-| P0 | Inline front-page editor | Implemented, pending review | Edit the front page directly without a popup; text on the left, image preview and upload on the right; on-page save/preview/cancel; preserve draft and permission protections. |
+| P0 | Inline front-page editor | Merged into review stack, PR #94; CI passed | Edit the front page directly without a popup; text on the left, image preview and upload on the right; on-page save/preview/cancel; preserve draft and permission protections. |
 | P1 | Player campaign information | Merged into review stack, PR #91 | DM explicitly selects World Builder entries to share; members get a deeper campaign guide from a link beneath the front page; private notes and unrevealed records remain inaccessible. |
 | P1 | Player NPC catalogue | Merged into review stack, PR #92 | Only DM-revealed NPCs appear; searchable names and player-facing descriptions; hidden identities, motives and combat prep stay private. |
-| P1 | Player chapter overview and notes | Draft PR #93 | DM publishes completed chapters deliberately; players see the published recap and can save their own chapter notes; unrevealed chapter plans remain private. |
-| P2 | Dedicated DM Creatures & NPCs tab | Queued | Move creature authoring/catalogue access into a clear dedicated tab while preserving existing records, SRD attribution, personal templates and encounter references. |
+| P1 | Player chapter overview and notes | Merged into review stack, PR #93 | DM publishes completed chapters deliberately; players see the published recap and can save their own chapter notes; unrevealed chapter plans remain private. |
+| P2 | Dedicated DM Creatures & NPCs tab | Implemented, pending review | Move creature authoring/catalogue access into a clear dedicated tab while preserving existing records, SRD attribution, personal templates and encounter references. |
 | P2 | World Builder cleanup | Queued | Focus on setting, locations, factions and player-facing campaign information; distinguish drafts, shared content and DM secrets; keep existing IDs, links, maps and uploads. |
 | P2 | Chapter Tracker cleanup | Queued | Clear chapter preparation, completion, recap and publish actions; separate DM planning from player-visible recap; retain milestone approval and character independence. |
 | Paused | One Shots cleanup | Paused by owner | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
 
+PRs #90–#94 were merged into their parent feature branches. Draft integration PR #95 targets `main` to bring those changes onto the default branch for review. Subsequent deliveries target `main`; reviewing the integration first keeps their feature diffs focused. No integration merge or production deployment is authorized automatically.
+
 ## DM-only navigation and paused work
 
-World Building, Chapter Tracker and One Shots are DM-only authoring tabs. Players use Campaign information, NPC catalogue and Chapter overview instead. Re-evaluate visibility whenever entering a campaign, including transitions from a campaign the user manages to one where they are only a player. Direct tab selection must enforce the same restriction.
+World Building, Creatures & NPCs, Chapter Tracker and One Shots are DM-only authoring tabs. Players use Campaign information, NPC catalogue and Chapter overview instead. Re-evaluate visibility whenever entering a campaign, including transitions from a campaign the user manages to one where they are only a player. Direct tab selection must enforce the same restriction.
 
 Pause all One Shots feature development. Existing records and behavior are retained; run regression checks when shared infrastructure changes, but do not redesign or expand One Shots while paused.
 

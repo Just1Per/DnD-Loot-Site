@@ -42,7 +42,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.locator('[data-information-search]').fill('unmet');if(await page.locator('[data-information-id]').count())throw Error('NPC search fails');await page.locator('[data-information-search]').fill('harbor');if(await page.locator('[data-information-id]').count()!==1)throw Error('NPC summary search fails');
  await page.setViewportSize({width:390,height:844});if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('NPC catalogue overflows mobile');await page.addScriptTag({content:require('axe-core').source});
  const violations=await page.evaluate(async()=> (await axe.run('#tab-campaign-npcs',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations);if(violations.length)throw Error('NPC accessibility: '+violations.map(row=>row.id).join(','));
- for(const kind of ['world','chapters','one-shots']){
+ for(const kind of ['world','creatures','chapters','one-shots']){
    if(await page.locator('#dmPlanningTab-'+kind).isVisible())throw Error('Player transition retains DM tab: '+kind);
    await page.evaluate(kind=>showTab('dm-'+kind),kind);
    if(await page.locator('#tab-dm-'+kind).isVisible())throw Error('Player can open DM tab directly: '+kind);
