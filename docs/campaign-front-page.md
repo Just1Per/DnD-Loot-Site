@@ -27,7 +27,7 @@ The browser tests use mocked Firebase data and verify inline editing, right-side
 
 ## Release requirement
 
-The new save operation requires the updated `firestore.rules`; uploaded covers also require the included `storage.rules`. Authenticated image reads need the bucket’s GET CORS configuration to include the intended production/preview origins (see `docs/world-map-storage-deployment.md`). Review and publish those rules to the intended Firebase project together with the application release through the existing manual approval process. Hosting preview automation does not publish Firestore rules. No production deployment or rules publication is part of this implementation.
+The new save operation requires the updated `firestore.rules`; uploaded covers also require the included `storage.rules`. Authenticated image reads need the bucket’s GET CORS configuration to include the intended production/preview origins (see `docs/world-map-storage-deployment.md`). Each preview has a separate hostname; allowing only firebaseapp.com and web.app does not authorize the PR preview origin. Review and publish those rules to the intended Firebase project together with the application release through the existing manual approval process. Hosting preview automation does not publish Firestore rules or bucket CORS. No production deployment or rules publication is part of this implementation.
 
 ## Follow-up backlog
 
@@ -38,3 +38,7 @@ The new save operation requires the updated `firestore.rules`; uploaded covers a
 Cover uploads, curated campaign information, revealed NPCs and completed chapter recaps are implemented in the review stack; see `docs/campaign-experience-backlog.md` for their review status.
 
 Unused uploads are retained when an editor is cancelled or a cover is replaced. Object cleanup is a separate maintenance task; this feature does not delete saved or potentially referenced artwork.
+
+The editor shows a newly uploaded file directly from its local copy, including full-page draft Preview; it does not download the same file again to show the draft. This copy is released when the editor closes and is never stored in the campaign document. Saved and reopened pages still use authenticated Storage reads.
+
+Failed uploaded-image reads display an accessible explanation and **Try loading image again**, both in the editor and on the saved page. A read that stays pending shows timeout guidance after 20 seconds rather than leaving **Loading campaign image…** indefinitely. The Firebase SDK can continue its background retries; UI retries share an existing pending request for the same account and immutable image path. Late results from a timed-out or closed view do not change the visible page, and changing accounts starts a separately scoped read. Retrying reads preserves the saved reference and revision. Failed uploads allow choosing the same file again. An image description is required to save a cover, with visible guidance beside the save controls. For upload/save/read diagnosis and the separate production Storage rules and CORS requirements, see [Campaign image permissions and CORS](world-map-storage-deployment.md).
