@@ -4,7 +4,7 @@ Campaigns open on **Campaign home**, a member-facing introduction using the exis
 
 Campaign owners and active campaign DMs can select **Edit front page**, either from Campaign home or Campaign Settings in DM Tools. The editor saves a tagline, introduction, table expectations, optional HTTPS cover-image URL, accessible image description and artwork credit. Preview shows the current draft; cancelling a changed draft asks before discarding it. Existing campaigns use their description until an introduction is saved.
 
-All front-page text is visible to campaign members. DM secrets remain in the separate private world/chapter/encounter workspace. Images are supplied by URL in this first version; file uploads are a follow-up. Use publicly accessible artwork, rather than private world-map URLs. Failed cover images fall back to the readable introduction.
+All front-page text is visible to campaign members. DM secrets remain in the separate private world/chapter/encounter workspace. Images can be supplied by HTTPS URL or uploaded as PNG/JPEG/WebP files smaller than 5 MB. Uploaded covers are read through authenticated Storage requests and browser object URLs; they do not use public download tokens. Each replacement creates an immutable `campaign-cover-images/{campaignId}/{imageId}` object. Members may read covers, while only campaign managers may upload. Private world-map paths cannot be used as cover references. Failed cover images fall back to the readable introduction.
 
 ## Persistence and permission checks
 
@@ -25,7 +25,7 @@ The browser tests use mocked Firebase data and verify save/reopen, preview, esca
 
 ## Release requirement
 
-The new save operation requires the updated `firestore.rules`. Review and publish those rules to the intended Firebase project together with the application release through the existing manual approval process. Hosting preview automation does not publish Firestore rules. No production deployment or rules publication is part of this implementation.
+The new save operation requires the updated `firestore.rules`; uploaded covers also require the included `storage.rules`. Authenticated image reads need the bucket’s GET CORS configuration to include the intended production/preview origins (see `docs/world-map-storage-deployment.md`). Review and publish those rules to the intended Firebase project together with the application release through the existing manual approval process. Hosting preview automation does not publish Firestore rules. No production deployment or rules publication is part of this implementation.
 
 ## Follow-up backlog
 
@@ -33,3 +33,5 @@ The new save operation requires the updated `firestore.rules`. Review and publis
 2. Separate saved drafts from the member-visible introduction, if DMs need an explicit publish step.
 3. Curated player-visible chapter recaps and world links, preserving the private workspace boundary.
 4. Extend monster/NPC catalogue discovery and personal templates already present on main, rather than duplicating their storage or editors.
+
+Unused uploads are retained when an editor is cancelled or a cover is replaced. Object cleanup is a separate maintenance task; this feature does not delete saved or potentially referenced artwork.

@@ -2,7 +2,7 @@
 
 // Member-facing campaign introduction. DM secrets belong in the private workspace.
 var CampaignHome = (() => {
-  const {runTransaction} = window.__DND_VAULT_DEPS__;
+  const {runTransaction, getBlob, ref, storage, uploadBytes} = window.__DND_VAULT_DEPS__;
   const limits = {tagline:160, introduction:6000, expectations:4000, imageUrl:2000, imageAlt:240, imageCredit:240};
   let session = null;
   const text = value => typeof value === 'string' ? value.trim() : '';
@@ -17,29 +17,56 @@ var CampaignHome = (() => {
     const result = {};
     for (const [key, max] of Object.entries(limits)) result[key] = text(data?.[key]).slice(0, max);
     result.imageUrl = imageUrl(result.imageUrl);
+    result.imagePath = /^campaign-cover-images\/[A-Za-z0-9_-]{1,100}\/[A-Za-z0-9_-]{1,100}$/.test(data?.imagePath || '') ? data.imagePath : '';
+    if (result.imagePath) result.imageUrl = '';
     result.revision = Number.isSafeInteger(data?.revision) && data.revision > 0 ? data.revision : 0;
     return result;
   }
   function contents(data, campaign) {
     const introduction = data.introduction || text(campaign.description);
+    const hasImage = !!(data.imageUrl || data.imagePath);
     return `<article class="campaign-book" aria-label="Campaign introduction">
-      <div class="campaign-book-opening${data.imageUrl ? ' campaign-book-opening--illustrated' : ''}"><div class="campaign-book-copy">
+      <div class="campaign-book-opening${hasImage ? ' campaign-book-opening--illustrated' : ''}"><div class="campaign-book-copy">
       <div class="campaign-book-title"><p class="campaign-book-eyebrow">Your campaign</p><h2>${escapeHtml(campaign.name || 'An unwritten adventure')}</h2>${data.tagline ? `<p class="campaign-book-tagline">${escapeHtml(data.tagline)}</p>` : ''}<div class="campaign-book-rule" aria-hidden="true"></div></div>
       <div class="campaign-book-chapters"><section><h3>The adventure begins</h3><p class="campaign-book-prose">${escapeHtml(introduction || 'Your story begins here. Your DM can add an introduction to welcome the party to this campaign.')}</p></section>
       ${data.expectations ? `<section><h3>Campaign information &amp; table rules</h3><p class="campaign-book-prose">${escapeHtml(data.expectations)}</p></section>` : ''}</div></div>
-      ${data.imageUrl ? `<figure class="campaign-book-cover"><img src="${escapeHtml(data.imageUrl)}" alt="${escapeHtml(data.imageAlt)}" referrerpolicy="no-referrer">${data.imageCredit ? `<figcaption>${escapeHtml(data.imageCredit)}</figcaption>` : ''}</figure>` : ''}</div>
+      ${hasImage ? `<figure class="campaign-book-cover"><img ${data.imagePath ? `data-cover-path="${escapeHtml(data.imagePath)}" hidden` : `src="${escapeHtml(data.imageUrl)}"`} alt="${escapeHtml(data.imageAlt)}" referrerpolicy="no-referrer">${data.imagePath ? '<p data-cover-status role="status">Loading campaign image…</p>' : ''}${data.imageCredit ? `<figcaption>${escapeHtml(data.imageCredit)}</figcaption>` : ''}</figure>` : ''}</div>
     </article>`;
   }
   function bindImages(root) {
     root.querySelectorAll('.campaign-book-cover img').forEach(img => {
       const failed = () => { img.closest('figure').hidden = true; img.closest('.campaign-book-opening').classList.remove('campaign-book-opening--illustrated'); };
       img.addEventListener('error', failed, {once:true});
-      if (img.complete && !img.naturalWidth) failed();
+      if (img.hasAttribute('src') && img.complete && !img.naturalWidth) failed();
+      if (img.dataset.coverPath) loadImage(img, failed);
     });
+  }
+  function releaseImages(root) {
+    root?.querySelectorAll('.campaign-book-cover img').forEach(img => {
+      if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
+    });
+  }
+  async function loadImage(img, failed) {
+    const campaignId = activeCampaign?.id, uid = auth.currentUser?.uid, path = img.dataset.coverPath;
+    const current = () => img.isConnected && activeCampaign?.id === campaignId && auth.currentUser?.uid === uid;
+    try {
+      if (!path.startsWith(`campaign-cover-images/${campaignId}/`)) throw Error('Invalid campaign image.');
+      const blob = await getBlob(ref(storage, path), 5 * 1024 * 1024);
+      if (!current()) return;
+      img.src = URL.createObjectURL(blob); img.hidden = false;
+      img.closest('figure').querySelector('[data-cover-status]')?.remove();
+    } catch {
+      if (current()) {
+        failed();
+        const status = document.getElementById('campaignHomeStatus');
+        if (status) status.textContent = 'The campaign image could not be loaded. You can still read the introduction.';
+      }
+    }
   }
   function render() {
     const root = document.getElementById('tab-campaign-home');
     if (!root) return;
+    releaseImages(root);
     root.replaceChildren();
     if (!activeCampaign || !auth.currentUser) return;
     root.innerHTML = `<div class="campaign-home-shell">
@@ -55,17 +82,18 @@ var CampaignHome = (() => {
     if (!force && session?.busy) return false;
     if (!force && session?.dirty && !confirm('Discard unsaved front-page changes?')) return false;
     const dialog = document.getElementById('campaignHomeEditor');
+    releaseImages(dialog);
     if (dialog?.open) dialog.close();
     dialog?.remove();
     session = null;
-    if (force) document.getElementById('tab-campaign-home')?.replaceChildren();
+    if (force) {releaseImages(document.getElementById('tab-campaign-home'));document.getElementById('tab-campaign-home')?.replaceChildren();}
     return true;
   }
   function beforeNavigate(tab) { return tab === 'campaign-home' || clear(); }
   function edit() {
     if (!activeCampaign || !canManageCampaign() || session) return;
     const data = normalize(activeCampaign.frontPage);
-    session = {id:activeCampaign.id, uid:auth.currentUser.uid, revision:data.revision, dirty:false, busy:false};
+    session = {id:activeCampaign.id, uid:auth.currentUser.uid, revision:data.revision, imagePath:data.imagePath, dirty:false, busy:false};
     const dialog = document.createElement('dialog');
     dialog.id = 'campaignHomeEditor'; dialog.className = 'campaign-home-editor';
     dialog.setAttribute('aria-labelledby', 'campaignHomeEditorTitle');
@@ -79,25 +107,38 @@ var CampaignHome = (() => {
     ];
     dialog.innerHTML = `<form><h2 id="campaignHomeEditorTitle">Shape your campaign’s front page</h2><p>Everything here is visible to campaign members. Keep secrets in your DM workspace.</p>
       ${fields.map(([key,label,type,placeholder]) => `<label><span>${label}</span>${type === 'textarea' ? `<textarea name="${key}" rows="5" maxlength="${limits[key]}" placeholder="${placeholder}">${escapeHtml(data[key])}</textarea>` : `<input name="${key}" type="${type}" maxlength="${limits[key]}" placeholder="${placeholder}" value="${escapeHtml(data[key])}">`}</label>`).join('')}
-      <p class="campaign-home-hint">Use a publicly accessible image you have permission to share. Add a description when using a cover image.</p>
+      <label><span>Upload a campaign map or intro image</span><input type="file" accept="image/png,image/jpeg,image/webp" data-home-upload></label>
+      <p data-home-image-source>${data.imagePath ? 'An uploaded image is selected.' : 'Use an image URL or upload a file.'}</p>
+      <button type="button" class="cancel-button" data-home-remove-image>Remove image</button>
+      <p class="campaign-home-hint">PNG, JPEG or WebP, smaller than 5 MB. Uploaded covers are visible only to campaign members. Add an image description and save the front page to keep your selection.</p>
       <p data-home-editor-status role="status" aria-live="polite"></p><div class="campaign-home-editor-actions"><button type="submit" class="btn-primary">Save front page</button><button type="button" class="vault-secondary-btn" data-home-preview>Preview</button><button type="button" class="cancel-button" data-home-cancel>Cancel</button></div>
       <div data-home-preview-surface hidden></div></form>`;
     document.body.appendChild(dialog);
     const form = dialog.querySelector('form');
-    form.addEventListener('input', () => {
+    form.addEventListener('input', event => {
       if (!session) return;
       session.dirty = true;
+      if (event.target === form.elements.imageUrl) {session.imagePath = '';dialog.querySelector('[data-home-image-source]').textContent = 'Using the image URL.';}
       form.elements.imageUrl.setCustomValidity('');
       form.elements.imageAlt.setCustomValidity('');
-      form.elements.imageAlt.required = !!form.elements.imageUrl.value.trim();
+      form.elements.imageAlt.required = !!(form.elements.imageUrl.value.trim() || session.imagePath);
       dialog.querySelector('[data-home-preview-surface]').hidden = true;
     });
-    form.elements.imageAlt.required = !!data.imageUrl;
+    form.elements.imageAlt.required = !!(data.imageUrl || data.imagePath);
+    dialog.querySelector('[data-home-upload]').addEventListener('change', event => upload(event.target.files[0], form));
+    dialog.querySelector('[data-home-remove-image]').addEventListener('click', () => {
+      session.imagePath = ''; session.dirty = true; form.elements.imageUrl.value = '';
+      form.elements.imageAlt.required = false; form.elements.imageAlt.setCustomValidity('');form.elements.imageUrl.setCustomValidity('');
+      dialog.querySelector('[data-home-upload]').value = '';
+      dialog.querySelector('[data-home-image-source]').textContent = 'No image selected. Save to remove the cover.';
+      releaseImages(dialog);dialog.querySelector('[data-home-preview-surface]').hidden = true;
+    });
     form.addEventListener('submit', save);
     dialog.querySelector('[data-home-cancel]').addEventListener('click', () => clear());
     dialog.addEventListener('cancel', event => {event.preventDefault();clear();});
     dialog.querySelector('[data-home-preview]').addEventListener('click', () => {
       const surface = dialog.querySelector('[data-home-preview-surface]');
+      releaseImages(surface);
       surface.innerHTML = contents(readForm(form), activeCampaign);
       surface.hidden = false; bindImages(surface);
       surface.scrollIntoView({block:'nearest'});
@@ -105,7 +146,30 @@ var CampaignHome = (() => {
     dialog.showModal();
   }
   function readForm(form) {
-    return normalize(Object.fromEntries(Object.keys(limits).map(key => [key, form.elements[key].value])));
+    return normalize({...Object.fromEntries(Object.keys(limits).map(key => [key, form.elements[key].value])),imagePath:session?.imagePath || ''});
+  }
+  async function upload(file, form) {
+    const current = session;
+    if (!file || !current || current.busy || current.id !== activeCampaign?.id || current.uid !== auth.currentUser?.uid || !canManageCampaign()) return;
+    const status = form.querySelector('[data-home-editor-status]');
+    if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size >= 5*1024*1024) {status.textContent='Choose a PNG, JPEG or WebP image smaller than 5 MB.';return;}
+    current.busy = true;status.textContent = 'Uploading campaign image…';
+    for (const control of form.elements) control.disabled = true;
+    try {
+      const path = `campaign-cover-images/${current.id}/${crypto.randomUUID()}`;
+      await uploadBytes(ref(storage, path), file, {contentType:file.type});
+      if (session !== current || current.id !== activeCampaign?.id || current.uid !== auth.currentUser?.uid || !canManageCampaign()) return;
+      current.imagePath = path;current.dirty = true;
+      form.elements.imageUrl.value = '';form.elements.imageUrl.setCustomValidity('');form.elements.imageAlt.required = true;
+      form.querySelector('[data-home-image-source]').textContent = `Uploaded: ${file.name}`;
+      releaseImages(form);form.querySelector('[data-home-preview-surface]').hidden = true;
+      status.textContent = 'Image uploaded. Add a description and save the front page.';
+    } catch (error) {
+      if (session === current) status.textContent = error.code === 'storage/unauthorized' ? 'Upload denied. The campaign cover Storage rules must be published before uploads work.' : `Could not upload: ${error.message}`;
+    } finally {
+      current.busy = false;
+      if (session === current) for (const control of form.elements) control.disabled = false;
+    }
   }
   async function save(event) {
     event.preventDefault();
@@ -116,7 +180,7 @@ var CampaignHome = (() => {
       form.elements.imageUrl.setCustomValidity('Use an HTTPS image URL without a username or password.');
       form.reportValidity(); return;
     }
-    if (data.imageUrl && !data.imageAlt) {
+    if ((data.imageUrl || data.imagePath) && !data.imageAlt) {
       form.elements.imageAlt.setCustomValidity('Describe the cover image for readers who cannot see it.');
       form.reportValidity(); return;
     }
