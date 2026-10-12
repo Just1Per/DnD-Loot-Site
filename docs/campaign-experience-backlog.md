@@ -4,19 +4,27 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 
 | Priority | Delivery | Status | Acceptance criteria |
 | --- | --- | --- | --- |
-| P0 | DM-customizable campaign front page | Draft PR #89 | Description and campaign information/table rules on the left; large campaign map or intro image at the upper right; readable mobile stacking; DM edit/preview/save; member read access; safe conflict handling. |
-| P1 | Player campaign information | Next | DM explicitly selects World Builder entries to share; members get a deeper campaign guide from a link beneath the front page; private notes and unrevealed records remain inaccessible. |
-| P1 | Player NPC catalogue | Queued | Only DM-revealed NPCs appear; searchable names and player-facing descriptions; hidden identities, motives and combat prep stay private. |
-| P1 | Player chapter overview and notes | Queued | DM publishes completed chapters deliberately; players see the published recap and can save their own chapter notes; unrevealed chapter plans remain private. |
+| P0 | DM-customizable campaign front page | Merged PR #89 | Description and campaign information/table rules on the left; large campaign map or intro image at the upper right; readable mobile stacking; DM edit/preview/save; member read access; safe conflict handling. |
+| P0 | Campaign cover uploads | Merged into review stack, PR #90 | DM file upload, authenticated member reads, immutable replacements, removal and PNG/JPEG/WebP/size checks. |
+| P0 | Inline front-page editor | Implemented, pending review | Edit the front page directly without a popup; text on the left, image preview and upload on the right; on-page save/preview/cancel; preserve draft and permission protections. |
+| P1 | Player campaign information | Merged into review stack, PR #91 | DM explicitly selects World Builder entries to share; members get a deeper campaign guide from a link beneath the front page; private notes and unrevealed records remain inaccessible. |
+| P1 | Player NPC catalogue | Merged into review stack, PR #92 | Only DM-revealed NPCs appear; searchable names and player-facing descriptions; hidden identities, motives and combat prep stay private. |
+| P1 | Player chapter overview and notes | Draft PR #93 | DM publishes completed chapters deliberately; players see the published recap and can save their own chapter notes; unrevealed chapter plans remain private. |
 | P2 | Dedicated DM Creatures & NPCs tab | Queued | Move creature authoring/catalogue access into a clear dedicated tab while preserving existing records, SRD attribution, personal templates and encounter references. |
 | P2 | World Builder cleanup | Queued | Focus on setting, locations, factions and player-facing campaign information; distinguish drafts, shared content and DM secrets; keep existing IDs, links, maps and uploads. |
 | P2 | Chapter Tracker cleanup | Queued | Clear chapter preparation, completion, recap and publish actions; separate DM planning from player-visible recap; retain milestone approval and character independence. |
-| P2 | One Shots cleanup | Queued | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
+| Paused | One Shots cleanup | Paused by owner | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
+
+## DM-only navigation and paused work
+
+World Building, Chapter Tracker and One Shots are DM-only authoring tabs. Players use Campaign information, NPC catalogue and Chapter overview instead. Re-evaluate visibility whenever entering a campaign, including transitions from a campaign the user manages to one where they are only a player. Direct tab selection must enforce the same restriction.
+
+Pause all One Shots feature development. Existing records and behavior are retained; run regression checks when shared infrastructure changes, but do not redesign or expand One Shots while paused.
 
 ## Front-page follow-ups
 
-- Cover uploads with campaign-member read access, format/size checks and artwork descriptions. PR #89 starts with publicly accessible HTTPS image URLs.
-- Links below the front page to Campaign information, NPC catalogue and Chapter overview as those pages are delivered.
+- Cover uploads are implemented in PR #90, with authenticated member reads and format/size validation.
+- Links below the front page open Campaign information, NPC catalogue and Chapter overview in the current review stack.
 - Optional campaign layout/section preferences after the first layout is reviewed.
 
 ## Public information boundary

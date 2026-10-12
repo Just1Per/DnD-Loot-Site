@@ -47,6 +47,18 @@ jobs:
         run: npm --prefix tests run test:campaign-home
       - name: Campaign home permissions and revision conflicts
         run: npm --prefix tests run test:campaign-home-rules
+      - name: Player campaign information sharing and accessibility
+        run: npm --prefix tests run test:campaign-information
+      - name: Player campaign information permissions
+        run: npm --prefix tests run test:campaign-information-rules
+      - name: Revealed NPC catalogue and permissions
+        run: |
+          npm --prefix tests run test:campaign-npcs
+          npm --prefix tests run test:campaign-npcs-rules
+      - name: Completed chapters and private player notes
+        run: |
+          npm --prefix tests run test:campaign-chapters
+          npm --prefix tests run test:campaign-chapters-rules
       - name: Planning navigation and manual-guide login
         run: |
           DND_DM_PLANNING_ONLY=1 node tests/dom.cjs

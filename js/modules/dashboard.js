@@ -233,6 +233,7 @@ function renderCampaignSelector() {
 async function enterCampaign(campaign) {
   if(typeof CampaignHome!=="undefined"&&!CampaignHome.clear())return;
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
+  if(typeof CampaignInformation!=="undefined"&&!CampaignInformation.clear())return;
   closeCharacterLoot(); closeWishModal(); closeEditCharacterModal(); closeItemModal();
   closeCharacterSheet(true); closeVaultAction(); closeRootPicker();
   const generation = ++campaignLoadGeneration;
@@ -264,6 +265,7 @@ async function enterCampaign(campaign) {
 async function leaveCampaign() {
   if(typeof CampaignHome!=="undefined"&&!CampaignHome.clear())return;
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
+  if(typeof CampaignInformation!=="undefined"&&!CampaignInformation.clear())return;
   if (!closeCharacterSheet()) return;
   CampaignRules.stop();
   ++campaignLoadGeneration;
@@ -327,7 +329,8 @@ function showMainApp() {
     renderAdminDMRequests();
   }
 
-  if (canManageCampaign()) renderDMTools();
+  // Refresh private navigation even when entering as a player after a DM campaign.
+  renderDMTools();
 
   renderCampaignToolbar();
   showTab("campaign-home");

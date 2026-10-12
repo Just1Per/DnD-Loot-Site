@@ -81,6 +81,13 @@ service firebase.storage {
         && validImage();
     }
 
+    // Campaign covers are shared with active members, but only DMs may upload.
+    // Immutable object names prevent overwriting another saved cover.
+    match /campaign-cover-images/{campaignId}/{imageId} {
+      allow read: if isCampaignOwner(campaignId) || isActiveMember(campaignId);
+      allow create: if resource == null && isCampaignDM(campaignId) && validImage();
+    }
+
     // Everything else remains denied.
     match /{allPaths=**} {
       allow read, write: if false;

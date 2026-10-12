@@ -379,12 +379,14 @@ match /campaigns/{campaignId} {
   function validFrontPage(page) {
     return page is map
       && page.keys().hasAll(['tagline', 'introduction', 'expectations', 'imageUrl', 'imageAlt', 'imageCredit', 'revision'])
-      && page.keys().hasOnly(['tagline', 'introduction', 'expectations', 'imageUrl', 'imageAlt', 'imageCredit', 'revision'])
+      && page.keys().hasOnly(['tagline', 'introduction', 'expectations', 'imageUrl', 'imagePath', 'imageAlt', 'imageCredit', 'revision'])
       && page.tagline is string && page.tagline.size() <= 160
       && page.introduction is string && page.introduction.size() <= 6000
       && page.expectations is string && page.expectations.size() <= 4000
       && page.imageUrl is string && page.imageUrl.size() <= 2000
       && (page.imageUrl == '' || (page.imageUrl.matches('https://[A-Za-z0-9.-]+(:[0-9]+)?/.*') && page.imageAlt.size() > 0))
+      && (!('imagePath' in page) || (page.imagePath is string && page.imagePath.size() <= 240
+        && (page.imagePath == '' || (page.imagePath.matches('campaign-cover-images/' + campaignId + '/[A-Za-z0-9_-]{1,100}') && page.imageAlt.size() > 0 && page.imageUrl == ''))))
       && page.imageAlt is string && page.imageAlt.size() <= 240
       && page.imageCredit is string && page.imageCredit.size() <= 240
       && page.revision is int && page.revision > 0;
@@ -406,6 +408,83 @@ match /campaigns/{campaignId} {
   allow delete: if isCampaignOwner(campaignId);
 
   // Connected campaign workspace. Public descriptions and private notes are separate.
+  match /playerInformation/{recordId} {
+    function validPublication(d) {
+      let source = get(/databases/$(database)/documents/campaigns/$(campaignId)/worldEntries/$(recordId)).data;
+      return d.keys().hasAll(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 160
+        && d.summary is string && d.summary.size() <= 1000
+        && d.content is string && d.content.size() <= 20000
+        && d.category is string && d.category.size() <= 80
+        && d.sourceRevision is int && d.sourceRevision > 0 && d.sourceRevision == source.revision
+        && source.kind == 'world' && source.archived == false
+        && d.title == source.title && d.summary == source.summary && d.content == source.content
+        && d.category == (('category' in source.data) ? source.data.category : 'World')
+        && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
+    }
+    allow read: if isCampaignOwner(campaignId) || isActiveMember(campaignId);
+    allow create: if isCampaignDM(campaignId) && validPublication(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validPublication(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    allow delete: if isCampaignDM(campaignId);
+  }
+
+  match /playerNPCs/{recordId} {
+    function validNPC(d) {
+      let source = get(/databases/$(database)/documents/campaigns/$(campaignId)/creatures/$(recordId)).data;
+      return d.keys().hasAll(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 160
+        && d.summary is string && d.summary.size() <= 1000
+        && d.content is string && d.content.size() <= 20000
+        && d.category == 'Story NPC' && source.data.category == 'Story NPC'
+        && d.sourceRevision is int && d.sourceRevision > 0 && d.sourceRevision == source.revision
+        && source.kind == 'creature' && source.archived == false
+        && d.title == source.title && d.summary == source.summary && d.content == source.content
+        && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
+    }
+    allow read: if isCampaignOwner(campaignId) || isActiveMember(campaignId);
+    allow create: if isCampaignDM(campaignId) && validNPC(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validNPC(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    allow delete: if isCampaignDM(campaignId);
+  }
+
+  match /playerChapters/{recordId} {
+    function validChapter(d) {
+      let source = get(/databases/$(database)/documents/campaigns/$(campaignId)/chapters/$(recordId)).data;
+      let recap = ('playerRecap' in source.data && source.data.playerRecap != '') ? source.data.playerRecap : source.content;
+      return d.keys().hasAll(['title','summary','content','category','order','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['title','summary','content','category','order','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 160
+        && d.summary is string && d.summary.size() <= 1000
+        && d.content is string && d.content.size() <= 20000
+        && d.category == 'Completed' && source.data.status == 'Completed'
+        && d.order is int && d.order >= 0 && d.order <= 9999 && d.order == source.data.order
+        && d.sourceRevision is int && d.sourceRevision > 0 && d.sourceRevision == source.revision
+        && source.kind == 'chapter' && source.archived == false
+        && d.title == source.title && d.summary == source.summary && d.content == recap
+        && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
+    }
+    allow read: if isCampaignOwner(campaignId) || isActiveMember(campaignId);
+    allow create: if isCampaignDM(campaignId) && validChapter(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validChapter(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    allow delete: if isCampaignDM(campaignId);
+
+    match /notes/{uid} {
+      function ownMember() { return (isCampaignOwner(campaignId) || isActiveMember(campaignId)) && request.auth.uid == uid; }
+      function chapterPath() { return /databases/$(database)/documents/campaigns/$(campaignId)/playerChapters/$(recordId); }
+      function validNotes(d) {
+        return d.keys().hasAll(['text','revision','updatedBy','updatedAt'])
+          && d.keys().hasOnly(['text','revision','updatedBy','updatedAt'])
+          && d.text is string && d.text.size() <= 8000
+          && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == uid;
+      }
+      allow get: if ownMember() && exists(chapterPath());
+      allow create: if ownMember() && existsAfter(chapterPath()) && validNotes(request.resource.data) && request.resource.data.revision == 1;
+      allow update: if ownMember() && existsAfter(chapterPath()) && validNotes(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    }
+  }
+
   function workspaceCollection(kind) {
     return kind == 'world' ? 'worldEntries' : kind == 'creature' ? 'creatures' : kind == 'chapter' ? 'chapters' : kind == 'encounter' ? 'encounters' : 'oneShots';
   }
@@ -428,7 +507,13 @@ match /campaigns/{campaignId} {
       && request.resource.data.revision == 1 && request.resource.data.createdBy == request.auth.uid;
     allow update: if supported() && workspace != 'oneShots' && isCampaignDM(campaignId) && validWorkspace(request.resource.data, kind())
       && request.resource.data.revision == resource.data.revision + 1
-      && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt;
+      && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt
+      && (workspace != 'worldEntries' || request.resource.data.archived == false
+        || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/playerInformation/$(recordId)))
+      && (workspace != 'creatures' || (request.resource.data.archived == false && 'category' in request.resource.data.data && request.resource.data.data.category == 'Story NPC')
+        || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/playerNPCs/$(recordId)))
+      && (workspace != 'chapters' || (request.resource.data.archived == false && 'status' in request.resource.data.data && request.resource.data.data.status == 'Completed')
+        || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/playerChapters/$(recordId)));
     // Archive retains IDs and related records. Hard deletion is intentionally unavailable.
   }
   function canReadShot(d) {

@@ -2,7 +2,7 @@
 
 // Member-facing campaign introduction. DM secrets belong in the private workspace.
 var CampaignHome = (() => {
-  const {runTransaction} = window.__DND_VAULT_DEPS__;
+  const {runTransaction, getBlob, ref, storage, uploadBytes} = window.__DND_VAULT_DEPS__;
   const limits = {tagline:160, introduction:6000, expectations:4000, imageUrl:2000, imageAlt:240, imageCredit:240};
   let session = null;
   const text = value => typeof value === 'string' ? value.trim() : '';
@@ -17,35 +17,71 @@ var CampaignHome = (() => {
     const result = {};
     for (const [key, max] of Object.entries(limits)) result[key] = text(data?.[key]).slice(0, max);
     result.imageUrl = imageUrl(result.imageUrl);
+    result.imagePath = /^campaign-cover-images\/[A-Za-z0-9_-]{1,100}\/[A-Za-z0-9_-]{1,100}$/.test(data?.imagePath || '') ? data.imagePath : '';
+    if (result.imagePath) result.imageUrl = '';
     result.revision = Number.isSafeInteger(data?.revision) && data.revision > 0 ? data.revision : 0;
     return result;
   }
   function contents(data, campaign) {
     const introduction = data.introduction || text(campaign.description);
+    const hasImage = !!(data.imageUrl || data.imagePath);
     return `<article class="campaign-book" aria-label="Campaign introduction">
-      <div class="campaign-book-opening${data.imageUrl ? ' campaign-book-opening--illustrated' : ''}"><div class="campaign-book-copy">
+      <div class="campaign-book-opening${hasImage ? ' campaign-book-opening--illustrated' : ''}"><div class="campaign-book-copy">
       <div class="campaign-book-title"><p class="campaign-book-eyebrow">Your campaign</p><h2>${escapeHtml(campaign.name || 'An unwritten adventure')}</h2>${data.tagline ? `<p class="campaign-book-tagline">${escapeHtml(data.tagline)}</p>` : ''}<div class="campaign-book-rule" aria-hidden="true"></div></div>
       <div class="campaign-book-chapters"><section><h3>The adventure begins</h3><p class="campaign-book-prose">${escapeHtml(introduction || 'Your story begins here. Your DM can add an introduction to welcome the party to this campaign.')}</p></section>
       ${data.expectations ? `<section><h3>Campaign information &amp; table rules</h3><p class="campaign-book-prose">${escapeHtml(data.expectations)}</p></section>` : ''}</div></div>
-      ${data.imageUrl ? `<figure class="campaign-book-cover"><img src="${escapeHtml(data.imageUrl)}" alt="${escapeHtml(data.imageAlt)}" referrerpolicy="no-referrer">${data.imageCredit ? `<figcaption>${escapeHtml(data.imageCredit)}</figcaption>` : ''}</figure>` : ''}</div>
+      ${hasImage ? `<figure class="campaign-book-cover"><img ${data.imagePath ? `data-cover-path="${escapeHtml(data.imagePath)}" hidden` : `src="${escapeHtml(data.imageUrl)}"`} alt="${escapeHtml(data.imageAlt)}" referrerpolicy="no-referrer">${data.imagePath ? '<p data-cover-status role="status">Loading campaign image…</p>' : ''}${data.imageCredit ? `<figcaption>${escapeHtml(data.imageCredit)}</figcaption>` : ''}</figure>` : ''}</div>
     </article>`;
   }
   function bindImages(root) {
     root.querySelectorAll('.campaign-book-cover img').forEach(img => {
-      const failed = () => { img.closest('figure').hidden = true; img.closest('.campaign-book-opening').classList.remove('campaign-book-opening--illustrated'); };
+      const failed = () => {
+        img.closest('figure').hidden = true;
+        const opening = img.closest('.campaign-book-opening');
+        if (!opening?.classList.contains('campaign-book-opening--editing')) opening?.classList.remove('campaign-book-opening--illustrated');
+        const empty = img.closest('[data-home-image-preview]')?.querySelector('[data-home-image-empty]'); if (empty) empty.hidden = false;
+      };
       img.addEventListener('error', failed, {once:true});
-      if (img.complete && !img.naturalWidth) failed();
+      if (img.hasAttribute('src') && img.complete && !img.naturalWidth) failed();
+      if (img.dataset.coverPath) loadImage(img, failed);
     });
+  }
+  function releaseImages(root) {
+    root?.querySelectorAll('.campaign-book-cover img').forEach(img => {
+      if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
+    });
+  }
+  async function loadImage(img, failed) {
+    const campaignId = activeCampaign?.id, uid = auth.currentUser?.uid, path = img.dataset.coverPath;
+    const current = () => img.isConnected && activeCampaign?.id === campaignId && auth.currentUser?.uid === uid;
+    try {
+      if (!path.startsWith(`campaign-cover-images/${campaignId}/`)) throw Error('Invalid campaign image.');
+      const blob = await getBlob(ref(storage, path), 5 * 1024 * 1024);
+      if (!current()) return;
+      img.src = URL.createObjectURL(blob); img.hidden = false;
+      img.closest('figure').querySelector('[data-cover-status]')?.remove();
+    } catch {
+      if (current()) {
+        failed();
+        const status = document.getElementById('campaignHomeStatus');
+        if (status) status.textContent = 'The campaign image could not be loaded. You can still read the introduction.';
+      }
+    }
   }
   function render() {
     const root = document.getElementById('tab-campaign-home');
     if (!root) return;
+    if (session) {
+      if (session.id === activeCampaign?.id && session.uid === auth.currentUser?.uid && canManageCampaign() && document.getElementById('campaignHomeEditor')?.isConnected) return;
+      clear(true);
+    }
+    releaseImages(root);
     root.replaceChildren();
     if (!activeCampaign || !auth.currentUser) return;
     root.innerHTML = `<div class="campaign-home-shell">
       <div class="campaign-home-toolbar"><p>A place for your party’s story.</p>${canManageCampaign() ? '<button type="button" class="btn-primary" data-edit-campaign-home>Edit front page</button>' : ''}</div>
       ${contents(normalize(activeCampaign.frontPage), activeCampaign)}
-      <nav class="campaign-home-links" aria-label="Campaign shortcuts"><button type="button" class="btn-primary" data-home-tab="library">Explore the item library</button>${canUseCharacters() ? '<button type="button" class="vault-secondary-btn" data-home-tab="player">My characters</button>' : ''}${canManageCampaign() ? '<button type="button" class="vault-secondary-btn" data-home-tab="dm">Prepare the campaign</button>' : ''}</nav>
+      <nav class="campaign-home-links" aria-label="Campaign shortcuts"><button type="button" class="btn-primary" data-home-tab="campaign-information">Campaign information</button><button type="button" class="vault-secondary-btn" data-home-tab="campaign-npcs">NPC catalogue</button><button type="button" class="vault-secondary-btn" data-home-tab="campaign-chapters">Chapter overview</button><button type="button" class="vault-secondary-btn" data-home-tab="library">Explore the item library</button>${canUseCharacters() ? '<button type="button" class="vault-secondary-btn" data-home-tab="player">My characters</button>' : ''}${canManageCampaign() ? '<button type="button" class="vault-secondary-btn" data-home-tab="dm">Prepare the campaign</button>' : ''}</nav>
       <p id="campaignHomeStatus" role="status" aria-live="polite"></p></div>`;
     root.querySelector('[data-edit-campaign-home]')?.addEventListener('click', edit);
     root.querySelectorAll('[data-home-tab]').forEach(button => button.addEventListener('click', () => showTab(button.dataset.homeTab)));
@@ -54,69 +90,129 @@ var CampaignHome = (() => {
   function clear(force = false) {
     if (!force && session?.busy) return false;
     if (!force && session?.dirty && !confirm('Discard unsaved front-page changes?')) return false;
-    const dialog = document.getElementById('campaignHomeEditor');
-    if (dialog?.open) dialog.close();
-    dialog?.remove();
+    clearTimeout(session?.previewTimer);
+    const editor = document.getElementById('campaignHomeEditor');
+    releaseImages(editor); editor?.remove();
     session = null;
-    if (force) document.getElementById('tab-campaign-home')?.replaceChildren();
+    if (force) {releaseImages(document.getElementById('tab-campaign-home'));document.getElementById('tab-campaign-home')?.replaceChildren();}
     return true;
   }
   function beforeNavigate(tab) { return tab === 'campaign-home' || clear(); }
+  function updateImagePreview(form) {
+    if (!form.isConnected || !session || session.id !== activeCampaign?.id || session.uid !== auth.currentUser?.uid) return;
+    const host = form.querySelector('[data-home-image-preview]'), data = readForm(form);
+    releaseImages(host);
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = contents(data, activeCampaign);
+    const figure = wrapper.querySelector('figure');
+    host.replaceChildren();
+    if (figure) host.appendChild(figure);
+    const empty = document.createElement('div');
+    empty.dataset.homeImageEmpty = ''; empty.className = 'campaign-home-image-empty'; empty.hidden = !!figure;
+    empty.innerHTML = '<p>A map of your world.<br>An image to begin the story.</p><p>Choose an image below.</p>';
+    host.appendChild(empty); bindImages(host);
+  }
+  function setPreview(form, preview) {
+    const surface = form.querySelector('[data-home-preview-surface]');
+    releaseImages(surface); surface.replaceChildren();
+    form.querySelector('[data-home-edit-fields]').hidden = preview;
+    surface.hidden = !preview; form.dataset.preview = String(preview);
+    form.querySelector('[data-home-preview]').textContent = preview ? 'Back to editing' : 'Preview';
+    if (preview) {surface.innerHTML = contents(readForm(form), activeCampaign); bindImages(surface);}
+  }
   function edit() {
     if (!activeCampaign || !canManageCampaign() || session) return;
+    const root = document.getElementById('tab-campaign-home'), article = root?.querySelector('.campaign-book');
+    if (!article) return;
     const data = normalize(activeCampaign.frontPage);
-    session = {id:activeCampaign.id, uid:auth.currentUser.uid, revision:data.revision, dirty:false, busy:false};
-    const dialog = document.createElement('dialog');
-    dialog.id = 'campaignHomeEditor'; dialog.className = 'campaign-home-editor';
-    dialog.setAttribute('aria-labelledby', 'campaignHomeEditorTitle');
-    const fields = [
-      ['tagline','A line to set the scene','text','A tale of…'],
-      ['introduction','Campaign introduction','textarea','Welcome the party to your world.'],
-      ['expectations','Important campaign information & table rules','textarea','Tone, play style, session plans and any table agreements.'],
-      ['imageUrl','Campaign map or intro image URL (HTTPS)','url','https://…'],
-      ['imageAlt','Cover image description','text','Describe the artwork for readers who cannot see it.'],
-      ['imageCredit','Artwork credit','text','Artist or source']
-    ];
-    dialog.innerHTML = `<form><h2 id="campaignHomeEditorTitle">Shape your campaign’s front page</h2><p>Everything here is visible to campaign members. Keep secrets in your DM workspace.</p>
-      ${fields.map(([key,label,type,placeholder]) => `<label><span>${label}</span>${type === 'textarea' ? `<textarea name="${key}" rows="5" maxlength="${limits[key]}" placeholder="${placeholder}">${escapeHtml(data[key])}</textarea>` : `<input name="${key}" type="${type}" maxlength="${limits[key]}" placeholder="${placeholder}" value="${escapeHtml(data[key])}">`}</label>`).join('')}
-      <p class="campaign-home-hint">Use a publicly accessible image you have permission to share. Add a description when using a cover image.</p>
-      <p data-home-editor-status role="status" aria-live="polite"></p><div class="campaign-home-editor-actions"><button type="submit" class="btn-primary">Save front page</button><button type="button" class="vault-secondary-btn" data-home-preview>Preview</button><button type="button" class="cancel-button" data-home-cancel>Cancel</button></div>
-      <div data-home-preview-surface hidden></div></form>`;
-    document.body.appendChild(dialog);
-    const form = dialog.querySelector('form');
-    form.addEventListener('input', () => {
+    session = {id:activeCampaign.id, uid:auth.currentUser.uid, revision:data.revision, imagePath:data.imagePath, dirty:false, busy:false, previewTimer:null};
+    const field = (key,label,type='text',placeholder='') => `<label><span>${label}</span>${type === 'textarea' ? `<textarea name="${key}" rows="6" maxlength="${limits[key]}" placeholder="${placeholder}">${escapeHtml(data[key])}</textarea>` : `<input name="${key}" type="${type}" maxlength="${limits[key]}" placeholder="${placeholder}" value="${escapeHtml(data[key])}">`}</label>`;
+    const form = document.createElement('form');
+    form.id = 'campaignHomeEditor'; form.className = 'campaign-book campaign-home-editor';
+    // Show editing fields before reporting validity when saving from preview mode.
+    form.noValidate = true;
+    form.setAttribute('aria-labelledby', 'campaignHomeEditorTitle');
+    form.innerHTML = `<header class="campaign-home-edit-header"><h2 id="campaignHomeEditorTitle" class="sr-only">Edit campaign front page</h2><p>Editing your front page. Save when it is ready for the party.</p><div class="campaign-home-editor-actions"><button type="submit" class="btn-primary">Save front page</button><button type="button" class="vault-secondary-btn" data-home-preview>Preview</button><button type="button" class="cancel-button" data-home-cancel>Cancel</button></div><p data-home-editor-status role="status" aria-live="polite"></p></header>
+      <div class="campaign-book-opening campaign-book-opening--illustrated campaign-book-opening--editing" data-home-edit-fields>
+        <div class="campaign-book-copy"><div class="campaign-book-title"><p class="campaign-book-eyebrow">Your campaign</p><h2>${escapeHtml(activeCampaign.name || 'An unwritten adventure')}</h2>${field('tagline','A line to set the scene','text','A tale of…')}<div class="campaign-book-rule" aria-hidden="true"></div></div><div class="campaign-book-chapters">${field('introduction','Campaign introduction','textarea','Welcome the party to your world.')}${field('expectations','Important campaign information & table rules','textarea','Tone, play style, session plans and table agreements.')}</div></div>
+        <aside class="campaign-home-image-tools" aria-label="Campaign image controls"><div data-home-image-preview></div>
+          <label class="campaign-home-upload-control"><span>Upload image</span><input type="file" accept="image/png,image/jpeg,image/webp" data-home-upload></label>
+          <p class="campaign-home-hint">PNG, JPEG or WebP, smaller than 5 MB. Uploaded images are visible only to campaign members.</p>
+          <p data-home-image-source>${data.imagePath ? 'An uploaded image is selected.' : 'Use an image URL or upload a file.'}</p>
+          ${field('imageUrl','Or use an HTTPS image URL','url','https://…')}${field('imageAlt','Image description','text','Describe the map or artwork.')}${field('imageCredit','Artwork credit','text','Artist or source')}
+          <button type="button" class="cancel-button" data-home-remove-image>Remove image</button>
+        </aside></div><div data-home-preview-surface hidden></div>`;
+    releaseImages(article); article.replaceWith(form);
+    root.querySelector('[data-edit-campaign-home]').hidden = true;
+    root.querySelector('.campaign-home-toolbar p').textContent = 'Shape the page your party will see.';
+    form.addEventListener('input', event => {
       if (!session) return;
       session.dirty = true;
-      form.elements.imageUrl.setCustomValidity('');
-      form.elements.imageAlt.setCustomValidity('');
-      form.elements.imageAlt.required = !!form.elements.imageUrl.value.trim();
-      dialog.querySelector('[data-home-preview-surface]').hidden = true;
+      if (event.target === form.elements.imageUrl) {
+        session.imagePath = ''; form.querySelector('[data-home-image-source]').textContent = 'Using the image URL.';
+        clearTimeout(session.previewTimer); session.previewTimer = setTimeout(() => updateImagePreview(form), 300);
+      }
+      if (event.target === form.elements.imageAlt) {
+        const img = form.querySelector('[data-home-image-preview] img'); if (img) img.alt = form.elements.imageAlt.value;
+      }
+      if (event.target === form.elements.imageCredit) {
+        const figure = form.querySelector('[data-home-image-preview] figure');
+        if (figure) {let caption = figure.querySelector('figcaption');if (!caption) {caption = document.createElement('figcaption');figure.appendChild(caption);}caption.textContent = form.elements.imageCredit.value;}
+      }
+      form.elements.imageUrl.setCustomValidity(''); form.elements.imageAlt.setCustomValidity('');
+      form.elements.imageAlt.required = !!(form.elements.imageUrl.value.trim() || session.imagePath);
     });
-    form.elements.imageAlt.required = !!data.imageUrl;
+    form.elements.imageAlt.required = !!(data.imageUrl || data.imagePath);
+    form.querySelector('[data-home-upload]').addEventListener('change', event => upload(event.target.files[0], form));
+    form.querySelector('[data-home-remove-image]').addEventListener('click', () => {
+      session.imagePath = ''; session.dirty = true; form.elements.imageUrl.value = '';
+      form.elements.imageAlt.required = false; form.elements.imageAlt.setCustomValidity('');form.elements.imageUrl.setCustomValidity('');
+      form.querySelector('[data-home-upload]').value = '';
+      form.querySelector('[data-home-image-source]').textContent = 'No image selected. Save to remove the cover.';
+      updateImagePreview(form);
+    });
     form.addEventListener('submit', save);
-    dialog.querySelector('[data-home-cancel]').addEventListener('click', () => clear());
-    dialog.addEventListener('cancel', event => {event.preventDefault();clear();});
-    dialog.querySelector('[data-home-preview]').addEventListener('click', () => {
-      const surface = dialog.querySelector('[data-home-preview-surface]');
-      surface.innerHTML = contents(readForm(form), activeCampaign);
-      surface.hidden = false; bindImages(surface);
-      surface.scrollIntoView({block:'nearest'});
-    });
-    dialog.showModal();
+    form.querySelector('[data-home-cancel]').addEventListener('click', () => {if (clear()) {render();root.querySelector('[data-edit-campaign-home]')?.focus();}});
+    form.querySelector('[data-home-preview]').addEventListener('click', () => setPreview(form, form.dataset.preview !== 'true'));
+    updateImagePreview(form); form.elements.tagline.focus({preventScroll:true});
   }
   function readForm(form) {
-    return normalize(Object.fromEntries(Object.keys(limits).map(key => [key, form.elements[key].value])));
+    return normalize({...Object.fromEntries(Object.keys(limits).map(key => [key, form.elements[key].value])),imagePath:session?.imagePath || ''});
+  }
+  async function upload(file, form) {
+    const current = session;
+    if (!file || !current || current.busy || current.id !== activeCampaign?.id || current.uid !== auth.currentUser?.uid || !canManageCampaign()) return;
+    const status = form.querySelector('[data-home-editor-status]');
+    if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size >= 5*1024*1024) {status.textContent='Choose a PNG, JPEG or WebP image smaller than 5 MB.';return;}
+    current.busy = true;status.textContent = 'Uploading campaign image…';
+    for (const control of form.elements) control.disabled = true;
+    try {
+      const path = `campaign-cover-images/${current.id}/${crypto.randomUUID()}`;
+      await uploadBytes(ref(storage, path), file, {contentType:file.type});
+      if (session !== current || current.id !== activeCampaign?.id || current.uid !== auth.currentUser?.uid || !canManageCampaign()) return;
+      current.imagePath = path;current.dirty = true;
+      form.elements.imageUrl.value = '';form.elements.imageUrl.setCustomValidity('');form.elements.imageAlt.required = true;
+      form.querySelector('[data-home-image-source]').textContent = `Uploaded: ${file.name}`;
+      updateImagePreview(form);
+      status.textContent = 'Image uploaded. Add a description and save the front page.';
+    } catch (error) {
+      if (session === current) status.textContent = error.code === 'storage/unauthorized' ? 'Upload denied. Ask the site administrator to enable campaign image uploads.' : `Could not upload: ${error.message}`;
+    } finally {
+      current.busy = false;
+      if (session === current) for (const control of form.elements) control.disabled = false;
+    }
   }
   async function save(event) {
     event.preventDefault();
     const current = session, form = event.currentTarget;
     if (!current || current.busy || current.id !== activeCampaign?.id || current.uid !== auth.currentUser?.uid || !canManageCampaign()) return;
+    if (form.dataset.preview === 'true') setPreview(form, false);
     const data = readForm(form);
     if (form.elements.imageUrl.value.trim() && !data.imageUrl) {
       form.elements.imageUrl.setCustomValidity('Use an HTTPS image URL without a username or password.');
       form.reportValidity(); return;
     }
-    if (data.imageUrl && !data.imageAlt) {
+    if ((data.imageUrl || data.imagePath) && !data.imageAlt) {
       form.elements.imageAlt.setCustomValidity('Describe the cover image for readers who cannot see it.');
       form.reportValidity(); return;
     }
