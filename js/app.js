@@ -31,7 +31,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   ref, getDownloadURL, uploadBytes, getBlob,
 });
 
-const ASSET_VERSION = "20261012-navigation-v1";
+const ASSET_VERSION = "20261012-creature-editor-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
