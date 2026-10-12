@@ -133,6 +133,7 @@ var SiteHelpData=(()=>{
   'campaign settings':'Edit the current campaign’s name, description and default item visibility. Save Settings applies these choices to this campaign.',
   'members':'Members of the current campaign. Its owner and DMs manage invitations and campaign roles; these do not change global account roles.',
   'world building':'Explains how to describe the campaign setting and connect places, people and factions. Open the journal to save world entries and private maps, then connect reusable creatures, chapters and encounters.',
+  'creatures & npcs':'Create reusable campaign masters for Story NPCs, monsters, bosses and companions. Import SRD copies or personal templates, link them to chapters and encounters, and reveal saved NPC descriptions deliberately. Secrets and combat statistics stay private.',
   'chapter tracker':'Explains chapter order, objectives, recaps and milestone leveling. Expand the setup guide; completing chapters and changing character levels are not automated here.',
   'one shots':'Explains adventures with a separate roster, DM-made sheets or player-built sheets. Delegated hosting and roster management are planned features, not available controls yet.',
   'item controls':'Manage the campaign’s item copies, visibility and stock. Campaign edits do not rewrite the global catalogue.',

@@ -14,6 +14,12 @@ const DM_PLANNING_TOOLS = Object.freeze([
     ['Connect people and places', 'Link regions, locations, NPCs and factions. Record what each faction wants and how its actions affect the world. Reuse these entries in chapters and one-shots.'],
     ['Keep discoveries separate from secrets', 'Prepare a player-facing description alongside private DM notes. Publish discoveries deliberately; hidden motives, future events and unrevealed locations stay private.']
   ] },
+  { id: 'creatures', title: 'Creatures & NPCs', summary: 'Keep the people and monsters of your campaign together. Create master cards, import SRD creatures or reuse your personal templates.', guide: 'How to prepare creatures and NPCs', steps: [
+    ['Create a campaign master', 'Choose Story NPC, Monster, Boss or Companion. Describe the character, then add combat statistics when needed. Keep secrets and tactics in the private fields.'],
+    ['Reuse your catalogue', 'Import an editable SRD copy or a creature from My Creature Library. Source attribution stays with the copy; changes do not overwrite the source or personal template.'],
+    ['Connect the campaign', 'Link a master to world entries, chapters and encounters. Encounter combatants have independent HP and conditions, so running combat preserves the master card.'],
+    ['Reveal NPCs deliberately', 'Save a Story NPC, then choose Reveal NPC to share its story description with campaign members. Statistics, goals and hidden motives remain private.']
+  ] },
   { id: 'chapters', title: 'Chapter Tracker', summary: 'Organize your campaign like a book, with ordered chapters, clear objectives and recaps. Plan milestones for a campaign that levels up by chapter.', guide: 'How to plan campaign chapters', steps: [
     ['Give each chapter a purpose', 'Choose a title, a starting situation and the key question or objective. Divide it into scenes and link the locations, NPCs and encounters involved.'],
     ['Track the story’s progress', 'Order chapters and mark them planned, active or completed. Record unresolved hooks and a session recap so you know where to begin next time.'],
@@ -85,6 +91,7 @@ function ensureDMToolsUI() {
   const nav=document.querySelector("nav.tabs");
   const dmButton=document.getElementById("dmTab");
   const host=document.getElementById("mainApp");
+  let preceding=dmButton;
   for(const tool of DM_PLANNING_TOOLS){
     const tabId='dm-'+tool.id;
     if(nav&&!document.querySelector('[data-tab="'+tabId+'"]')){
@@ -92,10 +99,10 @@ function ensureDMToolsUI() {
       button.type='button';button.className='tab';button.dataset.tab=tabId;
       button.id='dmPlanningTab-'+tool.id;
       button.textContent=tool.title;button.style.display=activeCampaign&&canManageCampaign()?'inline-block':'none';
-      const preceding=tool.id==='world'?dmButton:document.getElementById('dmPlanningTab-'+(tool.id==='chapters'?'world':'chapters'));
-      preceding?.after(button);
+      if(preceding)preceding.after(button);else nav.append(button);
       button.addEventListener('click',()=>showTab(tabId));
     }
+    preceding=document.getElementById('dmPlanningTab-'+tool.id)||preceding;
     if(host&&!document.getElementById('tab-'+tabId)){
       const panel=document.createElement('div');panel.id='tab-'+tabId;panel.className='tab-content';panel.style.display='none';
       panel.innerHTML='<div class="dm-planning-workspace">'+renderDMPlanningCards(tool.id)+'</div>';
