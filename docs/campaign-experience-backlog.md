@@ -6,7 +6,7 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 | --- | --- | --- | --- |
 | P0 | DM-customizable campaign front page | Draft PR #89 | Description and campaign information/table rules on the left; large campaign map or intro image at the upper right; readable mobile stacking; DM edit/preview/save; member read access; safe conflict handling. |
 | P0 | Campaign cover uploads | Implemented, pending review | DM file upload, authenticated member reads, immutable replacements, removal and PNG/JPEG/WebP/size checks. |
-| P1 | Player campaign information | Next | DM explicitly selects World Builder entries to share; members get a deeper campaign guide from a link beneath the front page; private notes and unrevealed records remain inaccessible. |
+| P1 | Player campaign information | Implemented, pending review | DM explicitly selects World Builder entries to share; members get a deeper campaign guide from a link beneath the front page; private notes and unrevealed records remain inaccessible. |
 | P1 | Player NPC catalogue | Queued | Only DM-revealed NPCs appear; searchable names and player-facing descriptions; hidden identities, motives and combat prep stay private. |
 | P1 | Player chapter overview and notes | Queued | DM publishes completed chapters deliberately; players see the published recap and can save their own chapter notes; unrevealed chapter plans remain private. |
 | P2 | Dedicated DM Creatures & NPCs tab | Queued | Move creature authoring/catalogue access into a clear dedicated tab while preserving existing records, SRD attribution, personal templates and encounter references. |
@@ -16,7 +16,7 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 
 ## Front-page follow-ups
 
-- Cover uploads are implemented in the follow-up PR stacked on #89, with authenticated member reads and format/size validation.
+- Cover uploads are implemented in draft PR #90 stacked on #89, with authenticated member reads and format/size validation.
 - Links below the front page to Campaign information, NPC catalogue and Chapter overview as those pages are delivered.
 - Optional campaign layout/section preferences after the first layout is reviewed.
 
