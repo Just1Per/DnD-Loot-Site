@@ -28,6 +28,7 @@
     "test:ui": "node ui-cleanup-browser.cjs",
     "test:navigation": "node navigation-browser.cjs",
     "test:campaign-home": "node campaign-home-browser.cjs",
+    "test:campaign-image-cors": "node --test campaign-image-cors.cjs",
     "test:campaign-home-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-home-rules.cjs\"",
     "test:campaign-information": "node campaign-information-browser.cjs",
     "test:campaign-information-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-information-rules.cjs\"",
