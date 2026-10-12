@@ -1,0 +1,21 @@
+# Returning to a campaign and saving before leaving
+
+Refreshing the page restores the signed-in user's campaign and active tab in the same browser tab. Character sheets also restore the selected character and section. DM workspaces restore a saved entry and workspace kind, including the encounter list. New unsaved workspace records return to the list. Explicitly leaving a campaign remembers the dashboard; explicitly signing out removes that account's remembered destination.
+
+The sessionStorage cache contains locations only: campaign, tab, character, section, workspace kind and saved record IDs. It never contains sheet data or editor drafts. Saved data is loaded again on refresh. This is not draft recovery or a shareable URL.
+
+Campaign membership is checked again before restoring a destination. DM tabs require campaign management permission, even when the account has a global DM role. Unauthorized or missing campaigns return to the dashboard; removed characters and entries fall back to an accessible sheet or list. Invalid cached data and unavailable browser storage cannot prevent normal navigation. Startup and campaign reads discard responses belonging to an earlier account.
+
+Leaving a changed character sheet through its close button, another tab, character chooser, campaign exit, catalogue/admin navigation or logout opens a keyboard-accessible dialog:
+
+- **Save and continue** uses the existing validated, revision-checked sheet transaction and continues only after a successful save with no remaining changes.
+- **Leave without saving** discards the draft and continues.
+- **Stay here** or Escape retains the draft and current location.
+
+Validation errors, denied saves and revision conflicts keep the dialog and draft available. Choices are disabled while saving. Changing accounts cancels the pending continuation, and the transaction rechecks the captured account and editor session before writing.
+
+Browser-controlled refresh/close warnings still use the browser's own buttons. Browsers do not allow a custom Save button in that warning. Save the sheet before refreshing or closing the browser; only saved data can be reopened.
+
+## Verification
+
+`npm --prefix tests run test:navigation` uses real browser reloads and the application's authentication/startup loaders against an isolated Firebase fixture. It covers saved destinations, current permissions, account isolation, failed/conflicting/pending saves, validation, logout, focus containment, Escape, mobile layout and axe checks. It also verifies malformed or missing destinations and disabled storage. Existing character, workspace, front-page and Firestore permission suites remain in use. No One Shots feature work is included.

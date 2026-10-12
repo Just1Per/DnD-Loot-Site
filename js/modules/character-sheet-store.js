@@ -38,13 +38,14 @@ function createCharacterSheetStore(sdk) {
     return snapshot.data();
   }
   /** Atomically reject stale sheet/identity revisions before updating both documents. */
-  async function save({campaignId, characterId, revision, data, identity, previousIdentity, adventureId = null}) {
+  async function save({campaignId, characterId, revision, data, identity, previousIdentity, adventureId = null, isCurrent = () => true}) {
     const actor = auth.currentUser?.uid;
     if (!actor)
       throw Error('Sign in before saving.');
     return runTransaction(db, async tx => {
       const sheetRef = path(campaignId, characterId, adventureId), characterRef = adventureId ? doc(db, 'campaigns', campaignId, 'oneShots', adventureId, 'characters', characterId) : doc(db, 'campaigns', campaignId, 'characters', characterId);
       const sheet = await tx.get(sheetRef), character = await tx.get(characterRef);
+      if(auth.currentUser?.uid!==actor||!isCurrent())throw Error('Character access changed. Reopen the sheet before saving.');
       if (!character.exists())
         throw Error('This character no longer exists.');
       if ((sheet.data()?.revision || 0) !== revision)

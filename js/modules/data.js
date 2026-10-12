@@ -66,11 +66,12 @@ async function ensureGlobalCharacterRulesReference() {
 }
 
 /** Load or create the UID-based account before optional directory/rules synchronization. */
-async function loadCurrentUser(firebaseUser) {
+async function loadCurrentUser(firebaseUser,{isCurrent=()=>true}={}) {
   const uidRef = doc(db, "users", firebaseUser.uid);
 
   try {
     const uidSnap = await getDoc(uidRef);
+    if(!isCurrent())return;
     let profile;
     if (uidSnap.exists()) {
       profile = uidSnap.data();
@@ -87,8 +88,10 @@ async function loadCurrentUser(firebaseUser) {
       await setDoc(uidRef, profile);
     }
 
-    currentUser = { uid: firebaseUser.uid, id: firebaseUser.uid, ...profile };
+    if(!isCurrent())return;
+    currentUser = { ...profile, uid: firebaseUser.uid, id: firebaseUser.uid };
     await syncUserDirectoryEntry(firebaseUser.uid, currentUser);
+    if(!isCurrent())return;
     await ensureGlobalCharacterRulesReference();
 
   } catch (e) {
@@ -150,9 +153,9 @@ async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
 
 /** Restore the remembered own character, ignoring results from a campaign left mid-read. */
 async function loadCharacters() {
-  const id = activeCampaign?.id; if (!id) { characters = []; selectedCharacter = null; return; }
+  const id = activeCampaign?.id,uid=auth.currentUser?.uid; if (!id) { characters = []; selectedCharacter = null; return; }
   const snap = await getDocs(collection(db, "campaigns", id, "characters"));
-  if (activeCampaign?.id !== id) return;
+  if (activeCampaign?.id !== id || auth.currentUser?.uid!==uid) return;
   characters = snap.docs.map(d => ({ ...d.data(), id: d.id }));
   const mine = myCharacters();
   const remembered = [...mine].sort((a,b)=>(Number(b.lastSelectedAt)||0)-(Number(a.lastSelectedAt)||0))[0] || null;
@@ -160,10 +163,10 @@ async function loadCharacters() {
 }
 /** Campaign DMs read the campaign list; other members query only their own saved items. */
 async function loadSaves() {
-  const id = activeCampaign?.id; if (!id) { saves = []; return; }
+  const id = activeCampaign?.id,uid=auth.currentUser?.uid; if (!id) { saves = []; return; }
   const reference = collection(db, "campaigns", id, "saves");
-  const snap = await getDocs(canManageCampaign() ? reference : query(reference, where("userId", "==", auth.currentUser.uid)));
-  if (activeCampaign?.id === id) saves = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+  const snap = await getDocs(canManageCampaign() ? reference : query(reference, where("userId", "==", uid)));
+  if (activeCampaign?.id === id && auth.currentUser?.uid===uid) saves = snap.docs.map(d => ({ ...d.data(), id: d.id }));
 }
 async function loadItemState() { return loadCampaignItems(); }
 
@@ -190,9 +193,9 @@ async function loadCampaignMembers() {
     return;
   }
 
-  const id = activeCampaign.id;
+  const id = activeCampaign.id,uid=auth.currentUser?.uid;
   const snap = await getDocs(collection(db, "campaigns", id, "members"));
-  if (activeCampaign?.id !== id) return;
+  if (activeCampaign?.id !== id || auth.currentUser?.uid!==uid) return;
 
   campaignMembers = snap.docs
     .map(d => ({ id: d.id, uid: d.id, ...d.data() }))

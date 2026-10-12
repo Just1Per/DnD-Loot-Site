@@ -24,7 +24,8 @@ function renderCharacterSheetTab() {
 }
 function leaveCharacterSheet() {
   const adventure=!!sheetSession?.adventureId;
-  if(closeCharacterSheet())showTab(adventure?(canManageCampaign()?'dm-one-shots':'player-adventures'):'player');
+  const action=()=>{closeCharacterSheet(true);showTab(adventure?(canManageCampaign()?'dm-one-shots':'player-adventures'):'player');};
+  if(SheetNavigation.guard(action))action();
 }
 function arrangeCharacterSheetPage() {
   const root=document.getElementById('characterSheetDialog'),body=root.querySelector('.sheet-body');
@@ -49,8 +50,8 @@ function sheetStatus(message, error = false) {
   el.classList.toggle('sheet-error', error);
 }
 function closeCharacterSheet(force = false) {
-  if (!force && sheetSession?.dirty && !confirm('Discard unsaved character sheet changes?'))
-    return false;
+  if(!force&&!SheetNavigation.guard(()=>closeCharacterSheet(true)))return false;
+  if(typeof SheetNavigation!=='undefined')SheetNavigation.cancel();
   ++sheetGeneration;
   closeSpellInformation();
   if(typeof closeFeatInformation==='function')closeFeatInformation();
@@ -74,8 +75,9 @@ async function openCharacterSheet(characterId, context = {}) {
   if (!activeCampaign || !character || !canManageCampaign() && character.userId !== auth.currentUser?.uid && !(context.adventureId && context.oneShot?.data?.approved && context.oneShot.data.hostUid===auth.currentUser?.uid))
     return;
   if(sheetSession?.characterId===characterId && sheetSession.campaignId===activeCampaign.id && (sheetSession.adventureId||null)===(context.adventureId||null)){showTab('character-sheet',false);renderCharacterSheetChooser();return;}
-  if (!closeCharacterSheet()){renderCharacterSheetChooser();return;}
-  const generation = ++sheetGeneration, campaignId = activeCampaign.id;
+  if(!SheetNavigation.guard(()=>openCharacterSheet(characterId,context))){renderCharacterSheetChooser();return;}
+  closeCharacterSheet(true);
+  const generation = ++sheetGeneration, campaignId = activeCampaign.id, uid=auth.currentUser.uid;
   const dialog = document.createElement('section');
   dialog.id = 'characterSheetDialog';
   dialog.className = 'character-sheet';
@@ -87,7 +89,7 @@ async function openCharacterSheet(characterId, context = {}) {
   dialog.querySelector('[data-sheet-close]').onclick = leaveCharacterSheet;
   try {
     const stored = await characterSheetStore.load(campaignId, characterId, context.adventureId || null);
-    if (generation !== sheetGeneration || activeCampaign?.id !== campaignId)
+    if (generation !== sheetGeneration || activeCampaign?.id !== campaignId || auth.currentUser?.uid!==uid)
       return;
     if (![
         1,
@@ -107,6 +109,7 @@ async function openCharacterSheet(characterId, context = {}) {
       ].includes(stored.schemaVersion))
       throw Error('This sheet uses a newer format. Update the website before editing it.');
     sheetSession = {
+      uid,
       campaignId,
       characterId,
       adventureId:context.adventureId || null,
@@ -130,6 +133,7 @@ async function openCharacterSheet(characterId, context = {}) {
     renderCharacterSheet();
     renderCharacterSheetChooser(characterId);
     watchSheetEquipment();
+    AppNavigation.remember();
   } catch (error) {
     if (generation === sheetGeneration)
       sheetStatus(`Could not open sheet: ${ error.message }${ error.code === 'permission-denied' ? ' Publish the character-sheet Firestore rules and confirm campaign access.' : '' }`, true);
@@ -341,6 +345,7 @@ function selectSheetTab(key) {
     button.setAttribute('aria-selected', String(selected));
     button.tabIndex = selected ? 0 : -1;
   });
+  AppNavigation.remember();
 }
 function renderSheetRows() {
   const s = sheetSession, field = sheetField;
@@ -444,16 +449,17 @@ function addSheetRow(key) {
   sheetStatus('Unsaved changes');
   document.querySelector(`#${ key === 'attacks' ? 'sheetAttackRows' : 'sheetSpellRows' } article:last-child input`)?.focus();
 }
-async function saveCharacterSheet() {
+async function saveCharacterSheet({reportValidation=true}={}) {
   const s = sheetSession;
-  if (!s || s.saving)
-    return;
+  if (!s || s.saving || (s.uid && s.uid!==auth.currentUser?.uid))
+    return false;
   const form = document.getElementById('characterSheetForm');
   const invalid = [...form.querySelectorAll('input,select,textarea')].find(input => !input.checkValidity());
   if (invalid) {
     selectSheetTab(invalid.closest('[data-sheet-section]').dataset.sheetSection);
-    invalid.reportValidity();
-    return;
+    sheetStatus(invalid.validationMessage||'Correct the highlighted sheet field before saving.',true);
+    if(reportValidation)invalid.reportValidity();
+    return false;
   }
   readSheetForm();
   if(s.adventureId && s.identity.level>Number(s.oneShot.data.targetLevel)){sheetStatus('This one-shot allows characters up to level '+s.oneShot.data.targetLevel+'.',true);return;}
@@ -484,9 +490,10 @@ async function saveCharacterSheet() {
       revision: s.revision,
       data,
       identity,
-      previousIdentity: s.character
+      previousIdentity: s.character,
+      isCurrent:()=>sheetSession===s&&activeCampaign?.id===s.campaignId&&(!s.uid||auth.currentUser?.uid===s.uid)
     });
-    if (sheetSession !== s || activeCampaign?.id !== s.campaignId)
+    if (sheetSession !== s || activeCampaign?.id !== s.campaignId || (s.uid&&auth.currentUser?.uid!==s.uid))
       return;
     s.revision = revision;
     s.character = {
@@ -508,9 +515,11 @@ async function saveCharacterSheet() {
     renderDMCharacters();
     populateOwnerFilter();
     sheetStatus(s.dirty ? 'Saved. Newer edits are still unsaved.' : 'All changes saved.');
+    return !s.dirty;
   } catch (error) {
     if (sheetSession === s)
       sheetStatus(`Could not save: ${ error.message }`, true);
+    return false;
   } finally {
     s.saving = false;
     if (sheetSession === s)
