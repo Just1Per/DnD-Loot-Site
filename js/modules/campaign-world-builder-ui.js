@@ -1,0 +1,101 @@
+'use strict';
+// World preparation keeps its saved records; sharing remains a deliberate snapshot.
+(()=>{
+ const W=CampaignWorkspace,config=W.configs.world,e=value=>escapeHtml(String(value??''));
+ const sharing=createCampaignInformationStore(window.__DND_VAULT_DEPS__);
+ const labels={private:'Private draft',shared:'Shared with players',changed:'Versions differ',unknown:'Sharing unknown',archived:'Archived'};
+ const current=s=>W.session===s&&activeCampaign?.id===s.campaignId&&auth.currentUser?.uid===s.uid&&canManageCampaign();
+ function visibility(s,row){
+  if(row.archived)return 'archived';
+  if(!s.worldSharingLoaded&&!s.worldKnown.has(row.id))return 'unknown';
+  const published=s.worldPublications.get(row.id);
+  return !published?'private':published.sourceRevision===row.revision?'shared':'changed';
+ }
+ function entryState(_host,s){
+  if(!current(s)||!s.record)return;
+  const state=s.host.querySelector('[data-world-entry-state]');if(!state)return;
+  const kind=visibility(s,s.record);
+  state.textContent=!s.record.revision?'New draft · Save before sharing.':s.dirty?'Unsaved changes · Players still see the previously shared version, if any.':labels[kind];
+  state.dataset.visibility=s.dirty?'draft':kind;
+ }
+ function listed(s){
+  if(!current(s))return;
+  const archived=s.host.querySelector('[data-workspace-archived]').checked;
+  const rows=s.rows.filter(row=>!!row.archived===archived),category=s.host.querySelector('[data-workspace-category]').value;
+  s.host.querySelectorAll('[data-world-category]').forEach(button=>{
+   const value=button.dataset.worldCategory,count=rows.filter(row=>!value||row.data?.category===value).length;
+   button.setAttribute('aria-pressed',String(value===category));button.querySelector('span').textContent=count;
+  });
+  const visibilitySelect=s.host.querySelector('[data-world-visibility]');
+  visibilitySelect.disabled=archived||!s.worldSharingLoaded;if(archived)visibilitySelect.value='';
+  const filter=s.worldSharingLoaded&&!archived?visibilitySelect.value:'',list=s.host.querySelector('[data-workspace-list]');
+  list.querySelector('[data-world-filter-empty]')?.remove();let shown=0;
+  list.querySelectorAll('[data-open-record]').forEach(button=>{
+   const row=s.rows.find(row=>row.id===button.dataset.openRecord);if(!row)return;
+   const kind=visibility(s,row),badge=document.createElement('span');
+   badge.className='world-visibility-badge';badge.dataset.visibility=kind;badge.textContent=labels[kind];button.append(badge);
+   button.hidden=!!filter&&kind!==filter;if(!button.hidden)shown++;
+   if(s.record?.id===row.id)button.setAttribute('aria-current','true');
+  });
+  if(!shown&&list.querySelector('[data-open-record]')){
+   const message=document.createElement('p');message.dataset.worldFilterEmpty='';message.textContent='No world entries match these filters.';list.append(message);
+  }else if(!shown&&s.rows.length)list.querySelector('p').textContent='No world entries match these filters.';
+  s.host.querySelector('[data-world-results]').textContent=`${shown} of ${rows.length} ${archived?'archived':'active'} world entries shown.`;
+  entryState(null,s);
+ }
+ function replacePublications(s,rows){
+  s.worldPublications=new Map(rows.map(row=>[row.id,row]));s.worldKnown.clear();s.worldSharingLoaded=true;W.renderList();
+ }
+ async function refreshSharing(s){
+  if(!current(s))return;
+  const token=++s.worldSharingRequest;s.worldUnsubscribe?.();s.worldUnsubscribe=null;
+  s.worldSharingLoaded=false;s.worldKnown.clear();s.worldPublications.clear();
+  const select=s.host.querySelector('[data-world-visibility]'),button=s.host.querySelector('[data-world-refresh]'),status=s.host.querySelector('[data-world-sharing-overview]');
+  select.disabled=true;button.disabled=true;status.textContent='Loading player-sharing status…';W.renderList();
+  const active=()=>current(s)&&token===s.worldSharingRequest;
+  try{
+   const rows=await sharing.list(s.campaignId);if(!active())return;
+   replacePublications(s,rows);status.textContent='Saving keeps preparation private. Share descriptions deliberately.';
+   let denied=false;
+   s.worldUnsubscribe=sharing.watch(s.campaignId,updates=>{if(active()&&!denied)replacePublications(s,updates);},error=>{
+    if(!active())return;denied=true;s.worldUnsubscribe?.();s.worldUnsubscribe=null;
+    s.worldSharingLoaded=false;s.worldKnown.clear();s.worldPublications.clear();select.disabled=true;select.value='';
+    status.textContent=`Sharing status is unavailable: ${error.message}. Refresh to try again.`;W.renderList();
+   });
+  }catch(error){if(active()){select.value='';status.textContent=`Could not load sharing status: ${error.message}. Refresh to try again.`;W.renderList();}}
+  finally{if(active())button.disabled=false;}
+ }
+ function toolbar(host,s){
+  s.worldPublications=new Map();s.worldKnown=new Set();s.worldSharingLoaded=false;s.worldSharingRequest=0;
+  host.innerHTML=`<nav class="world-category-shortcuts" aria-label="World entry categories">${['',...config.categories].map(category=>`<button type="button" data-world-category="${e(category)}" aria-pressed="${!category}">${e(category||'All entries')} <span>0</span></button>`).join('')}</nav><div class="world-browse-controls"><label class="workspace-field"><span>Player visibility</span><select data-world-visibility disabled><option value="">All entries</option><option value="private">Private drafts</option><option value="shared">Shared with players</option><option value="changed">Versions differ</option></select></label><button type="button" data-world-refresh>Refresh sharing status</button></div><p data-world-sharing-overview role="status"></p><p data-world-results role="status"></p>`;
+  host.querySelectorAll('[data-world-category]').forEach(button=>button.onclick=()=>{s.host.querySelector('[data-workspace-category]').value=button.dataset.worldCategory;W.renderList();});
+  host.querySelector('[data-world-visibility]').onchange=()=>W.renderList();host.querySelector('[data-world-refresh]').onclick=()=>refreshSharing(s);
+  for(const label of s.host.querySelectorAll('.workspace-sidebar label')){
+   const span=document.createElement('span');for(const node of [...label.childNodes])if(node.nodeType===3)span.append(node);
+   label.prepend(span);const checkbox=label.querySelector('[data-workspace-archived]');if(checkbox){span.prepend(checkbox);span.className='world-archived-filter';}
+  }
+  refreshSharing(s);
+ }
+ const textarea=(name,label,value,max=20000,field=false)=>`<label class="workspace-field"><span>${e(label)}</span><textarea ${field?`data-record-field="${name}"`:`name="${name}"`} maxlength="${max}">${e(value)}</textarea></label>`;
+ config.editorBody=record=>`<p class="world-visibility-badge" data-world-entry-state role="status"></p>
+  <section class="world-editor-section"><h3>Entry details</h3><div class="workspace-fields"><label class="workspace-field workspace-full"><span>Title</span><input name="title" required maxlength="160" value="${e(record.title)}"></label><label class="workspace-field"><span>Category</span><select data-record-field="category">${config.categories.map(category=>`<option ${record.data?.category===category?'selected':''}>${e(category)}</option>`).join('')}</select></label>${textarea('summary','Short summary',record.summary,1000)}</div></section>
+  <section class="world-editor-section"><h3>Description for players</h3><p>Describe what the party can discover. Saving does not share this text; use the sharing controls below when it is ready.</p>${textarea('content','Player description',record.content)}<div data-extra-editor></div></section>
+  <section class="world-editor-section world-editor-private"><h3>DM preparation</h3><p>These notes and connections stay private, even when you share the description.</p>${textarea('privateNotes','DM secrets',record.privateNotes)}${textarea('connections','Related places and people',record.data?.connections,20000,true)}</section>
+  <details class="world-editor-section world-map-tools" open><summary>Private map &amp; markers</summary><p>Maps and location markers are for your preparation. They are excluded from shared descriptions and player-description printouts.</p><label class="workspace-field"><span>Image or map (PNG, JPEG, WebP · max 5 MB)</span><input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><p>Click the map to add a named location marker. Use the marker list to remove a marker.</p><div data-map class="workspace-map"></div><div data-marker-list></div></details>
+  <section class="world-editor-section world-editor-private"><h3>Campaign connections</h3><p>Reuse saved locations, factions, NPCs, chapters and encounters. These links stay in your DM workspace.</p><section data-workspace-links></section></section>
+  <label class="workspace-field" data-private-print><span><input type="checkbox" data-print-private> Include private preparation and maps in print</span></label>`;
+ config.toolbar=toolbar;config.onListed=listed;config.hideNavigation=true;
+ config.searchText=row=>[row.content,row.data?.connections].join(' ');
+ config.help='Build your world, regions, locations, factions and lore. Keep player descriptions separate from DM preparation, then share discoveries when your party is ready.';
+ config.extra=(_host,s)=>{
+  if(s.record.revision){const index=s.rows.findIndex(row=>row.id===s.record.id);if(index>=0)s.rows[index]={...s.rows[index],...s.record};}
+  W.renderList();entryState(null,s);
+ };
+ config.onEdit=entryState;config.onSaved=entryState;
+ config.onPublicationChange=(s,published)=>{
+  if(!current(s))return;
+  s.worldKnown.add(s.record.id);if(published)s.worldPublications.set(s.record.id,published);else s.worldPublications.delete(s.record.id);
+  W.renderList();
+ };
+ config.onClear=s=>{++s.worldSharingRequest;s.worldUnsubscribe?.();};
+})();

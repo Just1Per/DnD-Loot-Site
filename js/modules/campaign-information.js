@@ -75,7 +75,7 @@ var CampaignInformation = (() => {
     section._sharingState=state;
     const refresh=async()=>{
       const token=++requestToken;loaded=false;state();
-      try{const result=await sharingStore.load(s.campaignId,s.record.id);if(!active()||token!==requestToken)return;published=result;loaded=true;section.querySelector('[data-sharing-status]').textContent=published?`Shared with players${published.sourceRevision!==s.record.revision?' — saved changes have not been shared yet.':'.'}`:'Not shared. Save changes before sharing this entry.';state();}
+      try{const result=await sharingStore.load(s.campaignId,s.record.id);if(!active()||token!==requestToken)return;published=result;loaded=true;CampaignWorkspace.configs[s.kind].onPublicationChange?.(s,published);section.querySelector('[data-sharing-status]').textContent=published?`Shared with players${published.sourceRevision!==s.record.revision?' — saved changes have not been shared yet.':'.'}`:'Not shared. Save changes before sharing this entry.';state();}
       catch(error){if(active()&&token===requestToken)section.querySelector('[data-sharing-status]').textContent=`Could not load sharing status: ${error.message}`;}
     };
     section.querySelector('[data-refresh-sharing]').onclick=refresh;
@@ -84,7 +84,7 @@ var CampaignInformation = (() => {
       if(!active()||busy||s.busy||s.dirty||!loaded||s.record.archived||(npc&&s.record.data.category!=='Story NPC')||(chapter&&s.record.data.status!=='Completed'))return;
       if(!confirm('Share this saved player description with campaign members? DM secrets and maps stay private.'))return;
       busy=true;s.busy=true;state();
-      try{published=await sharingStore.publish({campaignId:s.campaignId,id:s.record.id,sourceRevision:s.record.revision,publishedRevision:published?.revision||0,isCurrent:active});if(active())section.querySelector('[data-sharing-status]').textContent='Shared with campaign members.';}
+      try{published=await sharingStore.publish({campaignId:s.campaignId,id:s.record.id,sourceRevision:s.record.revision,publishedRevision:published?.revision||0,isCurrent:active});if(active()){CampaignWorkspace.configs[s.kind].onPublicationChange?.(s,published);section.querySelector('[data-sharing-status]').textContent='Shared with campaign members.';}}
       catch(error){if(active())section.querySelector('[data-sharing-status]').textContent=`Could not share: ${error.message}`;}
       finally{busy=false;s.busy=false;state();}
     };
@@ -92,7 +92,7 @@ var CampaignInformation = (() => {
       if(!active()||busy||s.busy||!published||!loaded)return;
       if(!confirm('Remove this entry from player campaign information? Your private world entry is kept.'))return;
       busy=true;s.busy=true;state();
-      try{await sharingStore.unpublish({campaignId:s.campaignId,id:s.record.id,publishedRevision:published.revision,isCurrent:active});if(active()){published=null;section.querySelector('[data-sharing-status]').textContent=npc?'Removed from the NPC catalogue. Your creature entry is kept.':chapter?'Removed from chapter overview. Your private chapter and players’ personal notes are kept.':'Removed from player information. Your world entry is kept.';}}
+      try{await sharingStore.unpublish({campaignId:s.campaignId,id:s.record.id,publishedRevision:published.revision,isCurrent:active});if(active()){published=null;CampaignWorkspace.configs[s.kind].onPublicationChange?.(s,null);section.querySelector('[data-sharing-status]').textContent=npc?'Removed from the NPC catalogue. Your creature entry is kept.':chapter?'Removed from chapter overview. Your private chapter and players’ personal notes are kept.':'Removed from player information. Your world entry is kept.';}}
       catch(error){if(active())section.querySelector('[data-sharing-status]').textContent=`Could not remove: ${error.message}`;}
       finally{busy=false;s.busy=false;state();}
     };
