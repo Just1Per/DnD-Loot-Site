@@ -127,6 +127,44 @@ and an active player, and verify outsiders cannot read it. Console/network
 evidence is necessary to diagnose production; fixture/emulator passes alone
 cannot establish the deployed rules or CORS settings.
 
+### Proposed configuration when the current CORS settings are empty
+
+The owner reported `null` from the CORS-only inspection command. Read-only
+Cloud Storage GET preflights for the configured bucket returned no CORS
+headers for `https://dnd-loot-site.firebaseapp.com` or the web.app origin.
+Together these support missing browser-read CORS configuration. The cover
+folder exists in the configured Firebase Storage bucket; this is separate
+from provisioning Storage or saving a front-page document.
+
+[`scripts/campaign-image-cors.json`](../scripts/campaign-image-cors.json) is the
+proposed complete configuration **for an empty CORS configuration**. It allows
+GET only from the two production Hosting origins. It does not grant public
+object access, modify Storage/Firestore rules or allow arbitrary preview origins.
+
+Before an approved publication, back up the latest complete bucket metadata and
+recheck that the current CORS fields are still empty. If CORS entries exist,
+preserve them and append only the needed GET entry instead of replacing them.
+In Cloud Shell, this preparation is read-only with respect to the bucket:
+
+```sh
+DND_CORS_REVIEW_DIR="$(mktemp -d /tmp/dnd-cors-review.XXXXXX)"
+gcloud storage buckets describe gs://dnd-loot-site.firebasestorage.app --format=json > "$DND_CORS_REVIEW_DIR/bucket-before.json"
+gcloud storage buckets describe gs://dnd-loot-site.firebasestorage.app --format="json(cors_config,cors)"
+```
+
+Review the JSON file and obtain the owner's approval before running the
+following publication command with a local copy of the reviewed file:
+
+```sh
+gcloud storage buckets update gs://dnd-loot-site.firebasestorage.app --cors-file=scripts/campaign-image-cors.json
+```
+
+This command changes production bucket CORS; it is not run by tests, CI,
+Hosting previews or the onboarding setup. After publication, refresh the real
+site, upload a cover, add its image description and save the front page. Reload
+and verify it as the DM and an active player. Check browser network errors if
+the image still cannot load; a CORS repair alone does not verify read permissions.
+
 ## Automated verification
 
 `firebase.workspace-test.json` and
