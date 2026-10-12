@@ -1,29 +1,29 @@
 "use strict";
 // Campaign copies, private supply/inventory, and server-validated inventory operations.
 async function loadCampaignItems() {
-  const id=activeCampaign?.id;if(!id){items=[];return;}
+  const id=activeCampaign?.id,uid=auth.currentUser?.uid;if(!id){items=[];return;}
   if(activeCampaign.inventoryVersion!==2){items=[];return;}
   const ref=collection(db,'campaigns',id,'items');
   const snap=await getDocs(canManageCampaign()?ref:query(ref,where('visible','==',true)));
-  if(activeCampaign?.id!==id)return;
+  if(activeCampaign?.id!==id||auth.currentUser?.uid!==uid)return;
   items=snap.docs.map(d=>({...d.data(),id:d.id,campaign:activeCampaign.name}));
   populateSourceFilter();populateCampaignFilter();
 }
 async function loadCampaignSupply() {
-  const id=activeCampaign?.id;if(!id||!canManageCampaign()){campaignSupply={};return;}
+  const id=activeCampaign?.id,uid=auth.currentUser?.uid;if(!id||!canManageCampaign()){campaignSupply={};return;}
   const snap=await getDocs(collection(db,'campaigns',id,'supply'));
-  if(activeCampaign?.id===id)campaignSupply=Object.fromEntries(snap.docs.map(d=>[d.id,d.data()]));
+  if(activeCampaign?.id===id&&auth.currentUser?.uid===uid)campaignSupply=Object.fromEntries(snap.docs.map(d=>[d.id,d.data()]));
 }
 async function loadCampaignInventory() {
-  const id=activeCampaign?.id;if(!id){inventory=[];return;}
+  const id=activeCampaign?.id,uid=auth.currentUser?.uid;if(!id){inventory=[];return;}
   const ref=collection(db,'campaigns',id,'inventory');
-  const snap=await getDocs(canManageCampaign()?ref:query(ref,where('userId','==',auth.currentUser.uid)));
-  if(activeCampaign?.id===id)inventory=snap.docs.map(d=>({...d.data(),id:d.id}));
+  const snap=await getDocs(canManageCampaign()?ref:query(ref,where('userId','==',uid)));
+  if(activeCampaign?.id===id&&auth.currentUser?.uid===uid)inventory=snap.docs.map(d=>({...d.data(),id:d.id}));
 }
 async function refreshCampaignData() {
-  const id=activeCampaign?.id;if(!id)return;
+  const id=activeCampaign?.id,uid=auth.currentUser?.uid;if(!id)return;
   await Promise.all([loadCampaignItems(),loadCampaignInventory(),loadSaves(),loadCampaignSupply()]);
-  if(activeCampaign?.id!==id)return;
+  if(activeCampaign?.id!==id||auth.currentUser?.uid!==uid)return;
   renderCards();renderPlayerTab();renderDMCharacters();renderDMOverview();renderCampaignToolbar();refreshCharacterSheetInventory();
 }
 function inventoryItem(entry) {
@@ -95,6 +95,7 @@ function renderCampaignToolbar() {
 }
 async function openRootCatalogue() {
   if(!isAdmin())return;
+  if(!SheetNavigation.guard(openRootCatalogue))return;
   await runVaultButton(document.getElementById('openRootCatalogue'),async()=>{
     await itemsLoadPromise;hideAllScreens();document.getElementById('siteScreenTitle').textContent='Root Catalogue · CampaignAtlas';
     document.getElementById('rootCatalogueScreen').style.display='block';renderRootCatalogue();

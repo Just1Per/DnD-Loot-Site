@@ -26,7 +26,7 @@
   check('Admin startup still loads global users and DM requests',calls.includes('users')&&calls.includes('dm-requests')&&logs[0][0]==='Successfully logged in as Atlas admin');
   SiteHelp.onLogout();logs.length=0;
   loadCampaigns=async()=>{throw Error('Simulated dashboard failure')};
-  await testAuthCallback(account);
+  auth.currentUser=account;await testAuthCallback(account);
   check('Failed startup never emits a successful-login message',logs.length===0&&errors.some(args=>args[0]==='Startup failed:'));
   check('Failed startup keeps the existing account error state',document.getElementById('userDisplay').textContent==='Failed to load account');
   auth.currentUser=null;await testAuthCallback(null);

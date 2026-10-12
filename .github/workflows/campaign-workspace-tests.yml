@@ -39,6 +39,8 @@ jobs:
         run: npm --prefix tests test
       - name: Non-Overview accessibility, keyboard, layout and print
         run: npm --prefix tests run test:ui
+      - name: Refresh restoration and save before leaving character sheets
+        run: npm --prefix tests run test:navigation
       - name: Workspace engines and catalogue
         run: npm --prefix tests run test:workspace
       - name: World, chapters, encounters and scoped player adventure flows

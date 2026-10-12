@@ -48,7 +48,7 @@ var CampaignWorkspace = (() => {
     const s=session;if(!current(s)||s.busy)return;
     if(s.dirty&&!confirm('Discard unsaved changes before opening another entry?'))return;
     const token=++generation;status('Loading…');
-    try{const record=await (configs[s.kind].loadRecord?configs[s.kind].loadRecord(s.campaignId,recordId):store.load(s.campaignId,s.kind,recordId));if(!current(s)||token!==generation)return;s.record=record;s.dirty=false;renderEditor();}
+    try{const record=await (configs[s.kind].loadRecord?configs[s.kind].loadRecord(s.campaignId,recordId):store.load(s.campaignId,s.kind,recordId));if(!current(s)||token!==generation)return;s.record=record;s.dirty=false;renderEditor();AppNavigation.remember();}
     catch(error){if(current(s)&&token===generation)status(error.message,true);}
   }
   function newRecord() {
@@ -56,7 +56,7 @@ var CampaignWorkspace = (() => {
     if(configs[s.kind].initialData&&!s.rowsLoaded){status('Wait for campaign entries to load before creating a new one.');return;}
     if(s.dirty&&!confirm('Discard unsaved changes before creating another entry?'))return;
     const data=configs[s.kind].initialData?.(s)||{};
-    ++generation;s.record={id:id(),revision:0,createdBy:s.uid,title:'',summary:'',content:'',privateNotes:'',data:configs[s.kind].normalize?configs[s.kind].normalize(data):data,archived:false};s.dirty=false;renderEditor();
+    ++generation;s.record={id:id(),revision:0,createdBy:s.uid,title:'',summary:'',content:'',privateNotes:'',data:configs[s.kind].normalize?configs[s.kind].normalize(data):data,archived:false};s.dirty=false;renderEditor();AppNavigation.remember();
   }
   async function save() {
     const s=session;if(!current(s)||s.busy)return;
@@ -69,7 +69,7 @@ var CampaignWorkspace = (() => {
       if(!current(s))return;
       const latest=draft();s.dirty=snapshot!==JSON.stringify(latest);s.record={...saved,data:latest.data,archived:latest.archived};
       const index=s.rows.findIndex(row=>row.id===saved.id);if(index<0)s.rows.push(saved);else s.rows[index]=saved;
-      renderList();if(!s.dirty)configs[s.kind].onSaved?.(s.host.querySelector('[data-extra-editor]'),s);status(s.dirty?'Saved. Newer edits are still unsaved.':'All changes saved.');return true;
+      AppNavigation.remember();renderList();if(!s.dirty)configs[s.kind].onSaved?.(s.host.querySelector('[data-extra-editor]'),s);status(s.dirty?'Saved. Newer edits are still unsaved.':'All changes saved.');return true;
     }catch(error){if(current(s))status(`Could not save: ${error.message}`,true);return false;}
     finally{s.busy=false;if(current(s)){form.querySelector('[data-save-record]').disabled=false;configs[s.kind].onSaveSettled?.(s.host.querySelector('[data-extra-editor]'),s);}}
   }
@@ -166,7 +166,7 @@ var CampaignWorkspace = (() => {
     if(current(session)&&session.kind===kind)return;
     if(!clear())return;const config=configs[kind],panel=document.getElementById('tab-'+config.tab);if(!panel)return;
     panel.innerHTML=`<section class="campaign-workspace"><header class="workspace-heading"><h2>${escape(config.title)}</h2><button type="button" data-new-record>+ New ${escape(config.noun)}</button></header><p>${escape(config.help)}</p><div class="workspace-actions" data-workspace-navigation><button type="button" data-workspace-kind="world">World entries</button><button type="button" data-workspace-kind="creature">Creatures &amp; NPCs</button><button type="button" data-workspace-kind="encounter">Encounters</button></div><div data-workspace-tools></div><div class="workspace-layout"><aside class="workspace-sidebar"><label>Search<input type="search" data-workspace-search></label><label>Category<select data-workspace-category><option value="">All categories</option>${(config.categories||[]).map(value=>`<option>${escape(value)}</option>`).join('')}</select></label><label><input type="checkbox" data-workspace-archived> Show archived</label><div class="workspace-list" data-workspace-list></div></aside><article class="workspace-page" data-workspace-page><p data-workspace-status role="status">Loading campaign entries…</p></article></div></section>`;
-    const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,kind,host:panel.firstElementChild,rows:[],rowsLoaded:false,record:null,dirty:false,busy:false};session=s;const token=++generation;
+    const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,kind,host:panel.firstElementChild,rows:[],rowsLoaded:false,record:null,dirty:false,busy:false};session=s;const token=++generation;AppNavigation.remember();
     s.host.querySelector('[data-new-record]').disabled=!!config.initialData;
     s.host.querySelector('[data-workspace-navigation]').hidden=!!config.hideNavigation;
     config.toolbar?.(s.host.querySelector('[data-workspace-tools]'),s);

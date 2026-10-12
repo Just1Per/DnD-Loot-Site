@@ -36,6 +36,7 @@ async function loadMyPendingInvites() {
     console.warn("UID-targeted invitation lookup unavailable; using email invitations only:", e?.message || e);
   }
 
+  if(auth.currentUser?.uid!==uid)return;
   pendingInvites = [...inviteMap.values()]
     .filter(invite => invite.status === "pending")
     .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
@@ -49,9 +50,9 @@ async function loadActiveCampaignInvites() {
     return;
   }
 
-  const id = activeCampaign.id;
+  const id = activeCampaign.id,uid=auth.currentUser?.uid;
   const snap = await getDocs(query(collection(db, "campaignInvites"), where("campaignId", "==", id)));
-  if (activeCampaign?.id !== id) return;
+  if (activeCampaign?.id !== id || auth.currentUser?.uid!==uid) return;
 
   campaignInvites = snap.docs
     .map(d => ({ id: d.id, ...d.data() }))
@@ -239,11 +240,11 @@ async function loadCampaigns() {
     .filter(r => r.status === "active");
 
   const indexedCampaignDocs = await Promise.all(
-    refs.map(r => getDoc(doc(db, "campaigns", r.id)))
+    refs.map(async r=>{try{return await getDoc(doc(db,"campaigns",r.id));}catch(error){if(['permission-denied','not-found'].includes(error.code))return null;throw error;}})
   );
 
   indexedCampaignDocs.forEach((snap, idx) => {
-    if (!snap.exists()) return;
+    if (!snap?.exists()) return;
     const refData = refs[idx];
     campaignMap.set(snap.id, {
       id: snap.id,
@@ -260,6 +261,7 @@ async function loadCampaigns() {
   // referenced by their own users/{uid}/campaigns index. Pending invitations
   // are loaded separately from campaignInvites.
 
+  if(auth.currentUser?.uid!==uid)return;
   campaigns = [...campaignMap.values()]
     .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 }

@@ -9,6 +9,7 @@ function showTab(tabId, render = true) {
   if (['campaign-home','campaign-information','campaign-npcs','campaign-chapters'].includes(tabId) && !activeCampaign) return;
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
   if(tabId==='player-adventures'&&(!activeCampaign||!canUseCharacters()))return;
+  if(tabId!=="character-sheet"&&!SheetNavigation.guard(()=>showTab(tabId,render)))return;
   if (tabId === "admin") { openAdminView(); return; }
   if ((tabId === "dm" || ["dm-world","dm-creatures","dm-chapters","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
   if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
@@ -34,6 +35,7 @@ function showTab(tabId, render = true) {
   if (tabId==="character-sheet" && render) { renderCharacterSheetTab(); }
   if (tabId==="player")  { renderPlayerTab(); }
   if (tabId==="library") { renderVisibilityControls(); }
+  AppNavigation.remember(tabId);
 }
 
 function initTabs() {
@@ -179,7 +181,9 @@ document.getElementById('resetPasswordButton')?.addEventListener('click',async()
 
 // Clear selected campaign data immediately; the auth callback closes editors
 // and finishes clearing all loaded state after Firebase confirms sign-out.
-document.getElementById("logoutButton")?.addEventListener("click", async () => {
+async function logoutFromSite(){
+  if(!SheetNavigation.guard(logoutFromSite))return;
+  AppNavigation.clear();
   CampaignHome.clear(true);
   CampaignInformation.clear(true);
   activeCampaign = null;
@@ -194,12 +198,22 @@ document.getElementById("logoutButton")?.addEventListener("click", async () => {
   dmRequests = [];
   dashboardCharacters = [];
   await signOut(auth);
-});
+}
+document.getElementById("logoutButton")?.addEventListener("click",logoutFromSite);
 
 // ─── AUTH STATE ───────────────────────────────────────────────────────────────
 // Google, email login and restored sessions all finish through this callback.
 
+let authStartupGeneration=0;
 onAuthStateChanged(auth, async (firebaseUser) => {
+  const generation=++authStartupGeneration;
+  const current=()=>generation===authStartupGeneration&&auth.currentUser?.uid===firebaseUser?.uid;
+  AppNavigation.cancelRestore();
+  if(currentUser?.uid!==firebaseUser?.uid){
+    ++campaignLoadGeneration;SheetNavigation.cancel();closeCharacterSheet(true);CampaignWorkspace.clear(true);CampaignHome.clear(true);
+    activeCampaign=null;activeMembershipRole=null;characters=[];selectedCharacter=null;inventory=[];saves=[];campaignMembers=[];campaignInvites=[];
+    hideAllScreens();
+  }
   CampaignInformation.onAccountChanged(firebaseUser?.uid);
   const loginControls = document.getElementById("loginControls");
   const logoutBtn     = document.getElementById("logoutButton");
@@ -207,7 +221,8 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 
   if (firebaseUser) {
     try {
-      await loadCurrentUser(firebaseUser);
+      await loadCurrentUser(firebaseUser,{isCurrent:current});
+      if(!current())return;
 
       display.textContent = currentUser.name || firebaseUser.email;
 
@@ -231,10 +246,14 @@ onAuthStateChanged(auth, async (firebaseUser) => {
         isAdmin() ? Promise.all([loadUsers(), loadDMRequests()]) : Promise.resolve()
       ]);
 
+      if(!current())return;
       await loadDashboardCharacters();
+      if(!current())return;
 
       ensureDMApprovalStyles();
       showCampaignSelector();
+      await AppNavigation.restore(firebaseUser.uid);
+      if(!current())return;
       SiteHelp.onLogin();
       console.info(`Successfully logged in as ${currentUser.name || firebaseUser.email || firebaseUser.uid}`);
 
@@ -242,6 +261,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       itemsLoadPromise.catch(() => {});
 
     } catch (e) {
+      if(!current())return;
       console.error("Startup failed:", e);
       display.textContent = "Failed to load account";
     }

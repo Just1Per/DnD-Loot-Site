@@ -429,6 +429,7 @@ function renderAdminStats() {}
 let adminReturnTab = "library";
 function openAdminView() {
   if (!isAdmin() || !auth.currentUser) return;
+  if(!SheetNavigation.guard(openAdminView))return;
   if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate('admin'))return;
   adminReturnTab = document.querySelector(".tabs .tab.active")?.dataset.tab || "library";
   hideAllScreens();
@@ -438,6 +439,7 @@ function openAdminView() {
   document.getElementById("adminTab").setAttribute("aria-pressed", "true");
   renderUserTable();
   renderAdminDMRequests();
+  AppNavigation.remember('admin');
 }
 function closeAdminView() {
   document.getElementById("adminTab").setAttribute("aria-pressed", "false");

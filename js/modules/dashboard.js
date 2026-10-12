@@ -35,6 +35,7 @@ async function loadDashboardCharacters() {
     })
   );
 
+  if(auth.currentUser?.uid!==uid)return;
   dashboardCharacters = results
     .flat()
     .filter(c => c.active !== false)
@@ -231,6 +232,8 @@ function renderCampaignSelector() {
 }
 
 async function enterCampaign(campaign) {
+  if(!SheetNavigation.guard(()=>enterCampaign(campaign)))return false;
+  const uid=auth.currentUser?.uid;if(!uid)return false;
   if(typeof CampaignHome!=="undefined"&&!CampaignHome.clear())return;
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
   if(typeof CampaignInformation!=="undefined"&&!CampaignInformation.clear())return;
@@ -240,10 +243,10 @@ async function enterCampaign(campaign) {
   hideAllScreens();
   try {
     const fresh = await getDoc(doc(db, "campaigns", campaign.id));
-    const membership = await getDoc(doc(db, "campaigns", campaign.id, "members", auth.currentUser.uid));
-    if (generation !== campaignLoadGeneration) return;
+    const membership = await getDoc(doc(db, "campaigns", campaign.id, "members", uid));
+    if (generation !== campaignLoadGeneration || auth.currentUser?.uid!==uid) return false;
     if (!fresh.exists()) throw new Error("Campaign no longer exists.");
-    const owner = fresh.data().ownerId === auth.currentUser.uid;
+    const owner = fresh.data().ownerId === uid;
     if (!owner && (!membership.exists() || membership.data().status !== "active")) throw new Error("You no longer have access to this campaign.");
     activeCampaign = { ...fresh.data(), id: fresh.id };
     activeMembershipRole = owner ? "owner" : membership.data().role;
@@ -251,22 +254,24 @@ async function enterCampaign(campaign) {
     document.getElementById("activeCampaignName").textContent = activeCampaign.name;
     magicItemLibraryLoaded = false; magicItemLibraryLoading = false;
     await Promise.all([loadCharacters(), loadSaves(), loadCampaignInventory(), CampaignRules.load(activeCampaign)]);
-    if (generation !== campaignLoadGeneration) return;
+    if (generation !== campaignLoadGeneration || auth.currentUser?.uid!==uid) return false;
     if (canManageCampaign()) await Promise.all([loadCampaignMembers(), loadActiveCampaignInvites()]);
-    if (generation !== campaignLoadGeneration) return;
-    CampaignRules.watch(activeCampaign);showMainApp(); populateOwnerFilter(); renderMagicItemLoadPrompt();
+    if (generation !== campaignLoadGeneration || auth.currentUser?.uid!==uid) return false;
+    CampaignRules.watch(activeCampaign);showMainApp(); populateOwnerFilter(); renderMagicItemLoadPrompt();return true;
   } catch (error) {
-    if (generation !== campaignLoadGeneration) return;
+    if (generation !== campaignLoadGeneration || auth.currentUser?.uid!==uid) return false;
     activeCampaign = null; activeMembershipRole = null; items = []; inventory = [];
-    alert(`Could not open campaign: ${error.message}`); showCampaignSelector();
+    alert(`Could not open campaign: ${error.message}`); AppNavigation.clear(uid);showCampaignSelector();return false;
   }
 }
 
 async function leaveCampaign() {
+  if(!SheetNavigation.guard(leaveCampaign))return;
   if(typeof CampaignHome!=="undefined"&&!CampaignHome.clear())return;
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
   if(typeof CampaignInformation!=="undefined"&&!CampaignInformation.clear())return;
   if (!closeCharacterSheet()) return;
+  AppNavigation.dashboard();
   CampaignRules.stop();
   ++campaignLoadGeneration;
   items = []; inventory = []; campaignSupply = {};

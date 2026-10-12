@@ -57,6 +57,13 @@
   color:#e3d4c2;
   font-size:13px
 }
+.sheet-leave-dialog{box-sizing:border-box;width:min(520px,calc(100vw - 32px));padding:24px;border:3px double #8a7355;border-radius:10px;background:#fdfbf7;color:#473b30}
+.sheet-leave-dialog::backdrop{background:rgba(28,18,10,.48)}
+.sheet-leave-dialog h2{font:700 1.3rem Cinzel,Georgia,serif;color:#5c1d1d;margin:0 0 16px}
+.sheet-leave-dialog p{line-height:1.6;overflow-wrap:anywhere}
+.sheet-leave-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.sheet-leave-actions button{min-height:44px}
+.sheet-leave-dialog :focus-visible{outline:3px solid #732424;outline-offset:3px}
 .sheet-actions {
   display:flex;
   flex-wrap:wrap;
