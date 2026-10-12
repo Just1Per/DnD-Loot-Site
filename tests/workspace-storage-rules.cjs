@@ -61,6 +61,23 @@ const {ref,uploadBytes,getBytes,deleteObject}=require('firebase/storage');
   await assertFails(upload('dm','campaign-world-images/a/north/map')); // Immutable uploads
   await assertFails(deleteObject(ref(storage.owner,'campaign-world-images/a/north/map')));
 
+  // Covers are member-readable and immutable; players cannot upload or delete.
+  await assertSucceeds(upload('dm','campaign-cover-images/a/cover'));
+  await assertSucceeds(upload('owner','campaign-cover-images/a/owner-cover'));
+  await assertSucceeds(getBytes(ref(storage.player,'campaign-cover-images/a/cover')));
+  for(const uid of ['admin','inactiveDm','outsider']){
+   await assertFails(getBytes(ref(storage[uid],'campaign-cover-images/a/cover')));
+   await assertFails(upload(uid,'campaign-cover-images/a/forged-'+uid));
+  }
+  await assertFails(getBytes(ref(anon,'campaign-cover-images/a/cover')));
+  await assertFails(upload('player','campaign-cover-images/a/player'));
+  await assertFails(upload('dm','campaign-cover-images/b/wrong-campaign'));
+  await assertFails(upload('dm','campaign-cover-images/a/cover'));
+  await assertFails(upload('dm','campaign-cover-images/a/svg',png,'image/svg+xml'));
+  await assertFails(upload('dm','campaign-cover-images/a/too-large',new Uint8Array(5*1024*1024)));
+  await assertFails(deleteObject(ref(storage.owner,'campaign-cover-images/a/cover')));
+  console.log('PASS Campaign covers: member reads, manager uploads, immutable paths, MIME/size limits');
+
   // Default deny remains in force.
   await assertFails(upload('admin','other/private.png'));
   console.log('PASS Combined Storage rules: root images, campaign images, private world maps, unchanged access controls');

@@ -49,6 +49,14 @@ const {doc, setDoc, getDoc, updateDoc} = require('firebase/firestore');
       await assertSucceeds(write('dm',{...page,revision:3,imageUrl:'',imageAlt:'',imageCredit:''}));
       await assertSucceeds(updateDoc(doc(db.dm,'campaigns/a'),{description:'Updated summary',defaultItemVisible:false}));
     });
+    await check('Uploaded covers stay in their own campaign and cannot mix URL sources',async()=>{
+      const cover={...page,imageUrl:'',imagePath:'campaign-cover-images/a/map',revision:4};
+      await assertSucceeds(write('dm',cover));
+      await assertFails(write('dm',{...cover,imagePath:'campaign-cover-images/b/map',revision:5}));
+      await assertFails(write('dm',{...cover,imageUrl:page.imageUrl,revision:5}));
+      await assertFails(write('dm',{...cover,imageAlt:'',revision:5}));
+      await assertFails(write('dm',{...cover,imagePath:'campaign-world-images/a/north/map',revision:5}));
+    });
     console.log('SUCCESS',count,'campaign front-page permission checks');
   } finally {await env.cleanup();}
 })().catch(error=>{console.error(error);process.exitCode=1});

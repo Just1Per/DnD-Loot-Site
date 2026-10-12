@@ -379,12 +379,14 @@ match /campaigns/{campaignId} {
   function validFrontPage(page) {
     return page is map
       && page.keys().hasAll(['tagline', 'introduction', 'expectations', 'imageUrl', 'imageAlt', 'imageCredit', 'revision'])
-      && page.keys().hasOnly(['tagline', 'introduction', 'expectations', 'imageUrl', 'imageAlt', 'imageCredit', 'revision'])
+      && page.keys().hasOnly(['tagline', 'introduction', 'expectations', 'imageUrl', 'imagePath', 'imageAlt', 'imageCredit', 'revision'])
       && page.tagline is string && page.tagline.size() <= 160
       && page.introduction is string && page.introduction.size() <= 6000
       && page.expectations is string && page.expectations.size() <= 4000
       && page.imageUrl is string && page.imageUrl.size() <= 2000
       && (page.imageUrl == '' || (page.imageUrl.matches('https://[A-Za-z0-9.-]+(:[0-9]+)?/.*') && page.imageAlt.size() > 0))
+      && (!('imagePath' in page) || (page.imagePath is string && page.imagePath.size() <= 240
+        && (page.imagePath == '' || (page.imagePath.matches('campaign-cover-images/' + campaignId + '/[A-Za-z0-9_-]{1,100}') && page.imageAlt.size() > 0 && page.imageUrl == ''))))
       && page.imageAlt is string && page.imageAlt.size() <= 240
       && page.imageCredit is string && page.imageCredit.size() <= 240
       && page.revision is int && page.revision > 0;
