@@ -31,7 +31,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   ref, getDownloadURL, uploadBytes, getBlob,
 });
 
-const ASSET_VERSION = "20261012-npc-catalogue-v1";
+const ASSET_VERSION = "20261012-chapter-overview-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -47,6 +47,7 @@ const FEATURE_FILES = [
   "./modules/campaign-rules.js",
   "./modules/campaign-workspace-store.js",
   "./modules/campaign-information-store.js",
+  "./modules/chapter-notes-store.js",
   "./modules/campaign-one-shots-store.js",
   "./modules/campaign-creatures.js",
   "./modules/personal-creature-library.js",
@@ -125,6 +126,7 @@ const FEATURE_FILES = [
   "./modules/campaign-one-shots-ui.js",
   "./modules/campaign-rules-ui.js",
   "./modules/campaign-information.js",
+  "./modules/chapter-notes-ui.js",
   "./modules/site-help-data.js",
   "./modules/site-help.js",
   "./modules/ui-auth.js"

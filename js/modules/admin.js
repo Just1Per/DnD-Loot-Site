@@ -429,6 +429,7 @@ function renderAdminStats() {}
 let adminReturnTab = "library";
 function openAdminView() {
   if (!isAdmin() || !auth.currentUser) return;
+  if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate('admin'))return;
   adminReturnTab = document.querySelector(".tabs .tab.active")?.dataset.tab || "library";
   hideAllScreens();
   document.getElementById('siteScreenTitle').textContent='Admin · CampaignAtlas';

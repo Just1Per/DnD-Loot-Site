@@ -30,7 +30,9 @@
     "test:campaign-information": "node campaign-information-browser.cjs",
     "test:campaign-information-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-information-rules.cjs\"",
     "test:campaign-npcs": "node campaign-npcs-browser.cjs",
-    "test:campaign-npcs-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-npcs-rules.cjs\""
+    "test:campaign-npcs-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-npcs-rules.cjs\"",
+    "test:campaign-chapters": "node campaign-chapters-browser.cjs",
+    "test:campaign-chapters-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-chapters-rules.cjs\""
   },
   "devDependencies": {
     "playwright": "1.51.1",
