@@ -53,6 +53,18 @@
 .world-visibility-badge[data-visibility=changed],.world-visibility-badge[data-visibility=draft]{color:#732424}
 .workspace-list button[aria-current=true]{border-color:#9b1d1d;box-shadow:inset 3px 0 #9b1d1d}
 .world-editor-section .campaign-world-sharing{margin-top:16px}
+.chapter-progress-shortcuts{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.chapter-progress-shortcuts button[aria-pressed=true]{outline:2px solid #8a7355;outline-offset:2px}
+.chapter-progress-shortcuts span{margin-left:4px}
+.chapter-archived-filter{display:flex;align-items:center;gap:6px}
+.chapter-list-order,.chapter-browse-status,.chapter-editor-state{font:.85rem/1.5 Georgia,serif;color:#66584a;overflow-wrap:anywhere}
+.chapter-list-order{display:block;margin-bottom:4px}
+.chapter-editor-section{padding:18px;margin:18px 0;border:1px solid #c8b89a;border-radius:6px;background:#fdfbf7;min-width:0}
+.chapter-editor-section h3{font:700 1.1rem Cinzel,Georgia,serif;margin:0 0 12px}
+.chapter-editor-section>p{font:.9rem/1.6 Georgia,serif;color:#66584a}
+.chapter-editor-private{background:#efe7d9;border-left:4px solid #a78946}
+.chapter-editor-section .campaign-world-sharing{margin-top:16px}
+@media(max-width:760px){.chapter-editor-section{padding:14px}}
 @media(max-width:760px){.world-editor-section{padding:14px}.world-browse-controls{align-items:stretch}.world-browse-controls label{min-width:0;flex:1 1 200px}}
 /* Form layout must never override hidden private fields or player previews. */
 .campaign-workspace [hidden],.workspace-sheet-dialog [hidden]{display:none!important}

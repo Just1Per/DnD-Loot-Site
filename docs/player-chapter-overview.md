@@ -6,6 +6,8 @@ Campaign members open **Chapter overview** from the front page or main navigatio
 
 In Chapter Tracker, write a **Player recap**, save the chapter as **Completed**, and select **Share completed chapter**. The shared version contains the saved title, summary, order and player recap. If no recap is set, the introduction is used. The player-description preview and non-private print use the same recap/introduction choice.
 
+The DM editor groups chapter details, player recaps, private preparation, linked entries and milestone approvals into separate sections. Progress shortcuts and search filter the chapter list while preserving its selected editor. See `docs/chapter-tracker-workflow.md` for the preparation and approval workflow.
+
 Completing a chapter does not automatically publish it or change character levels. Private preparation, scenes, objectives, rewards, session notes, connections and milestone approvals remain private. Later saves do not update the shared recap; use **Update shared version** deliberately.
 
 Removing a chapter from the overview keeps the private chapter. Archiving it or returning its status to Planned/Current atomically removes its shared snapshot. Restoring/completing it again does not silently publish it.
