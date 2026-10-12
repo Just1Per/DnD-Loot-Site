@@ -51,6 +51,10 @@ jobs:
         run: npm --prefix tests run test:campaign-information
       - name: Player campaign information permissions
         run: npm --prefix tests run test:campaign-information-rules
+      - name: Revealed NPC catalogue and permissions
+        run: |
+          npm --prefix tests run test:campaign-npcs
+          npm --prefix tests run test:campaign-npcs-rules
       - name: Planning navigation and manual-guide login
         run: |
           DND_DM_PLANNING_ONLY=1 node tests/dom.cjs

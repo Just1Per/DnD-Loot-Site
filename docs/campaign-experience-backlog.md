@@ -7,12 +7,18 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 | P0 | DM-customizable campaign front page | Draft PR #89 | Description and campaign information/table rules on the left; large campaign map or intro image at the upper right; readable mobile stacking; DM edit/preview/save; member read access; safe conflict handling. |
 | P0 | Campaign cover uploads | Implemented, pending review | DM file upload, authenticated member reads, immutable replacements, removal and PNG/JPEG/WebP/size checks. |
 | P1 | Player campaign information | Implemented, pending review | DM explicitly selects World Builder entries to share; members get a deeper campaign guide from a link beneath the front page; private notes and unrevealed records remain inaccessible. |
-| P1 | Player NPC catalogue | Queued | Only DM-revealed NPCs appear; searchable names and player-facing descriptions; hidden identities, motives and combat prep stay private. |
+| P1 | Player NPC catalogue | Implemented, pending review | Only DM-revealed NPCs appear; searchable names and player-facing descriptions; hidden identities, motives and combat prep stay private. |
 | P1 | Player chapter overview and notes | Queued | DM publishes completed chapters deliberately; players see the published recap and can save their own chapter notes; unrevealed chapter plans remain private. |
 | P2 | Dedicated DM Creatures & NPCs tab | Queued | Move creature authoring/catalogue access into a clear dedicated tab while preserving existing records, SRD attribution, personal templates and encounter references. |
 | P2 | World Builder cleanup | Queued | Focus on setting, locations, factions and player-facing campaign information; distinguish drafts, shared content and DM secrets; keep existing IDs, links, maps and uploads. |
 | P2 | Chapter Tracker cleanup | Queued | Clear chapter preparation, completion, recap and publish actions; separate DM planning from player-visible recap; retain milestone approval and character independence. |
-| P2 | One Shots cleanup | Queued | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
+| Paused | One Shots cleanup | Paused by owner | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
+
+## DM-only navigation and paused work
+
+World Building, Chapter Tracker and One Shots are DM-only authoring tabs. Players use Campaign information, NPC catalogue and the forthcoming Chapter overview instead. Re-evaluate visibility whenever entering a campaign, including transitions from a campaign the user manages to one where they are only a player. Direct tab selection must enforce the same restriction.
+
+Pause all One Shots feature development. Existing records and behavior are retained; run regression checks when shared infrastructure changes, but do not redesign or expand One Shots while paused.
 
 ## Front-page follow-ups
 

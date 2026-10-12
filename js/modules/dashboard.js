@@ -329,7 +329,8 @@ function showMainApp() {
     renderAdminDMRequests();
   }
 
-  if (canManageCampaign()) renderDMTools();
+  // Refresh private navigation even when entering as a player after a DM campaign.
+  renderDMTools();
 
   renderCampaignToolbar();
   showTab("campaign-home");
