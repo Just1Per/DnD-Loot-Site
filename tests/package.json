@@ -26,7 +26,9 @@
     "test:workspace-browser": "node workspace-browser.cjs",
     "test:ui": "node ui-cleanup-browser.cjs",
     "test:campaign-home": "node campaign-home-browser.cjs",
-    "test:campaign-home-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-home-rules.cjs\""
+    "test:campaign-home-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-home-rules.cjs\"",
+    "test:campaign-information": "node campaign-information-browser.cjs",
+    "test:campaign-information-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-information-rules.cjs\""
   },
   "devDependencies": {
     "playwright": "1.51.1",

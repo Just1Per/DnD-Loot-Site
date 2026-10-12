@@ -408,6 +408,27 @@ match /campaigns/{campaignId} {
   allow delete: if isCampaignOwner(campaignId);
 
   // Connected campaign workspace. Public descriptions and private notes are separate.
+  match /playerInformation/{recordId} {
+    function validPublication(d) {
+      let source = get(/databases/$(database)/documents/campaigns/$(campaignId)/worldEntries/$(recordId)).data;
+      return d.keys().hasAll(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 160
+        && d.summary is string && d.summary.size() <= 1000
+        && d.content is string && d.content.size() <= 20000
+        && d.category is string && d.category.size() <= 80
+        && d.sourceRevision is int && d.sourceRevision > 0 && d.sourceRevision == source.revision
+        && source.kind == 'world' && source.archived == false
+        && d.title == source.title && d.summary == source.summary && d.content == source.content
+        && d.category == (('category' in source.data) ? source.data.category : 'World')
+        && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
+    }
+    allow read: if isCampaignOwner(campaignId) || isActiveMember(campaignId);
+    allow create: if isCampaignDM(campaignId) && validPublication(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validPublication(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    allow delete: if isCampaignDM(campaignId);
+  }
+
   function workspaceCollection(kind) {
     return kind == 'world' ? 'worldEntries' : kind == 'creature' ? 'creatures' : kind == 'chapter' ? 'chapters' : kind == 'encounter' ? 'encounters' : 'oneShots';
   }
@@ -430,7 +451,9 @@ match /campaigns/{campaignId} {
       && request.resource.data.revision == 1 && request.resource.data.createdBy == request.auth.uid;
     allow update: if supported() && workspace != 'oneShots' && isCampaignDM(campaignId) && validWorkspace(request.resource.data, kind())
       && request.resource.data.revision == resource.data.revision + 1
-      && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt;
+      && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt
+      && (workspace != 'worldEntries' || request.resource.data.archived == false
+        || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/playerInformation/$(recordId)));
     // Archive retains IDs and related records. Hard deletion is intentionally unavailable.
   }
   function canReadShot(d) {
