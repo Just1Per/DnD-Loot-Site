@@ -27,7 +27,7 @@ The browser tests use mocked Firebase data and verify inline editing, right-side
 
 ## Release requirement
 
-The new save operation requires the updated `firestore.rules`; uploaded covers also require the included `storage.rules`. Authenticated image reads need the bucket’s GET CORS configuration to include the intended production/preview origins (see `docs/world-map-storage-deployment.md`). Review and publish those rules to the intended Firebase project together with the application release through the existing manual approval process. Hosting preview automation does not publish Firestore rules. No production deployment or rules publication is part of this implementation.
+The new save operation requires the updated `firestore.rules`; uploaded covers also require the included `storage.rules`. Authenticated image reads need the bucket’s GET CORS configuration to include the intended production/preview origins (see `docs/world-map-storage-deployment.md`). Each preview has a separate hostname; allowing only firebaseapp.com and web.app does not authorize the PR preview origin. Review and publish those rules to the intended Firebase project together with the application release through the existing manual approval process. Hosting preview automation does not publish Firestore rules or bucket CORS. No production deployment or rules publication is part of this implementation.
 
 ## Follow-up backlog
 

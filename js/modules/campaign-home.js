@@ -106,7 +106,7 @@ var CampaignHome = (() => {
       if (current()) {
         const message = error.code === 'storage/unauthorized' ? 'You do not have access to this campaign image. Ask the campaign DM to check image access.'
           : error.code === 'storage/object-not-found' ? 'The saved campaign image could not be found. Ask the campaign DM to upload it again.'
-          : error.code === 'storage/read-timeout' ? 'The campaign image is taking too long to load. Try loading it again. If this continues, ask the site administrator to check image loading.'
+          : error.code === 'storage/read-timeout' ? `${img.closest('#campaignHomeEditor')?'':'Your front page is saved. '}The campaign image is taking too long to load. Try loading it again. If this continues, ask the site administrator to check image loading.`
           : 'The campaign image could not be loaded. Try loading it again. Your campaign text is still available.';
         failed(message);
       }

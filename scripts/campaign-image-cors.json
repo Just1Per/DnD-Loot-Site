@@ -2,7 +2,8 @@
   {
     "origin": [
       "https://dnd-loot-site.firebaseapp.com",
-      "https://dnd-loot-site.web.app"
+      "https://dnd-loot-site.web.app",
+      "https://dnd-loot-site--pr100-fix-campaign-cover-r-rwzl3lvf.web.app"
     ],
     "method": ["GET"],
     "maxAgeSeconds": 3600

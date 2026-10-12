@@ -138,8 +138,10 @@ from provisioning Storage or saving a front-page document.
 
 [`scripts/campaign-image-cors.json`](../scripts/campaign-image-cors.json) is the
 proposed complete configuration **for an empty CORS configuration**. It allows
-GET only from the two production Hosting origins. It does not grant public
-object access, modify Storage/Firestore rules or allow arbitrary preview origins.
+GET only from the two production Hosting origins and the exact PR #100 preview
+origin. It does not grant public object access, modify Storage/Firestore rules
+or allow arbitrary preview origins. A production-only CORS entry does not cover
+the separate hostname used by a Hosting preview.
 
 Before an approved publication, back up the latest complete bucket metadata and
 recheck that the current CORS fields are still empty. If CORS entries exist,
@@ -164,6 +166,39 @@ Hosting previews or the onboarding setup. After publication, refresh the real
 site, upload a cover, add its image description and save the front page. Reload
 and verify it as the DM and an active player. Check browser network errors if
 the image still cannot load; a CORS repair alone does not verify read permissions.
+
+### Complete Cloud Shell repair without a previous session's variables
+
+An error reading `/cors.json` means the directory variable was empty. It occurs
+before publication, so that attempt did not change bucket CORS. Copy the entire
+block below into one Cloud Shell session when approving this repair; the final
+command publishes bucket CORS. The subshell stops on errors, retains a metadata
+backup, and prepares a complete configuration preserving existing entries.
+
+```sh
+(
+  set -eu
+  DND_CORS_REPAIR_DIR="$(mktemp -d /tmp/dnd-cors-repair.XXXXXX)"
+  DND_CORS_SOURCE_URL="https://raw.githubusercontent.com/Just1Per/DnD-Loot-Site/fix/campaign-cover-retry/scripts"
+  gcloud storage buckets describe gs://dnd-loot-site.firebasestorage.app --format=json > "$DND_CORS_REPAIR_DIR/bucket-before.json"
+  curl -fsSL "$DND_CORS_SOURCE_URL/campaign-image-cors.json" -o "$DND_CORS_REPAIR_DIR/desired.json"
+  curl -fsSL "$DND_CORS_SOURCE_URL/prepare-campaign-image-cors.cjs" -o "$DND_CORS_REPAIR_DIR/prepare.cjs"
+  node "$DND_CORS_REPAIR_DIR/prepare.cjs" "$DND_CORS_REPAIR_DIR/bucket-before.json" "$DND_CORS_REPAIR_DIR/desired.json" "$DND_CORS_REPAIR_DIR/cors.json"
+  gcloud storage buckets update gs://dnd-loot-site.firebasestorage.app --cors-file="$DND_CORS_REPAIR_DIR/cors.json"
+)
+```
+
+`prepare-campaign-image-cors.cjs` performs no network or bucket writes. It checks
+the bucket identity, rejects malformed/ambiguous CORS input, preserves prior
+entries and their response headers, and adds only missing GET origins. It refuses
+wildcard or write-method additions. The final update is a separate production
+action, authorized by the owner running it. For a pinned, reviewed repair, use
+the commit-specific source URL from the PR instead of a moving branch URL.
+
+After a successful update, reload the PR #100 preview and the main site. A
+saved-page image timeout now also confirms that the front page itself is saved;
+an image read failure does not roll back the Firestore save. If loading still
+fails, inspect the actual browser Storage request and current bucket metadata.
 
 ## Automated verification
 

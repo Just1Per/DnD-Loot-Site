@@ -189,6 +189,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.evaluate(()=>{window.pauseCoverRead=true;window.finishCoverRead=null;CampaignHome.render()});await page.waitForFunction(()=>!!window.finishCoverRead);
  await page.clock.fastForward(20001);await page.waitForSelector('[data-cover-retry]');
  if(!(await page.locator('[data-cover-status]').textContent()).includes('taking too long'))throw Error('A hanging download leaves the loading message forever');
+ if(!(await page.locator('[data-cover-status]').textContent()).includes('Your front page is saved.'))throw Error('Saved-page image timeout does not distinguish image loading from saving');
  await page.evaluate(()=>{window.pauseCoverRead=false;window.finishCoverRead()});await page.waitForTimeout(100);
  if(!await page.locator('[data-cover-retry]').isVisible()||!await page.locator('.campaign-book-cover img').evaluate(img=>img.hidden))throw Error('A timed-out read unexpectedly changed the visible image');
  await page.locator('[data-cover-retry]').click();await page.waitForFunction(()=>document.querySelector('#tab-campaign-home img')?.naturalWidth>0);

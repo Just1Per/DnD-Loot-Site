@@ -12,6 +12,8 @@ on:
       - 'firebase.workspace-test.json'
       - 'data/rules/monsters.json'
       - 'tests/**'
+      - 'scripts/campaign-image-cors.json'
+      - 'scripts/prepare-campaign-image-cors.cjs'
       - '.github/workflows/campaign-workspace-tests.yml'
 permissions:
   contents: read
@@ -47,6 +49,8 @@ jobs:
         run: npm --prefix tests run test:workspace-browser
       - name: Campaign home save/reopen, access, accessibility and layout
         run: npm --prefix tests run test:campaign-home
+      - name: Campaign image CORS preparation preserves existing bucket configuration
+        run: npm --prefix tests run test:campaign-image-cors
       - name: Campaign home permissions and revision conflicts
         run: npm --prefix tests run test:campaign-home-rules
       - name: Player campaign information sharing and accessibility
