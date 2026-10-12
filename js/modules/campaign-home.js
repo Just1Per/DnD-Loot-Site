@@ -4,6 +4,7 @@
 var CampaignHome = (() => {
   const {runTransaction, getBlob, ref, storage, uploadBytes} = window.__DND_VAULT_DEPS__;
   const limits = {tagline:160, introduction:6000, expectations:4000, imageUrl:2000, imageAlt:240, imageCredit:240};
+  const imageReadTimeoutMs = 20000, pendingReads = new Map(), imageLoads = new WeakMap();
   let session = null;
   const text = value => typeof value === 'string' ? value.trim() : '';
   function imageUrl(value) {
@@ -60,20 +61,42 @@ var CampaignHome = (() => {
   }
   function releaseImages(root) {
     root?.querySelectorAll('.campaign-book-cover img').forEach(img => {
+      imageLoads.get(img)?.cancel?.();imageLoads.delete(img);
       if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
     });
   }
+  function readCover(path, uid) {
+    const key = JSON.stringify([uid, path]);
+    if (!pendingReads.has(key)) {
+      // The SDK owns network retries. Reuse a pending read so UI retries do not
+      // start several background downloads of the same immutable object.
+      const request = getBlob(ref(storage, path), 5 * 1024 * 1024);
+      pendingReads.set(key, request);
+      const remove = () => {if (pendingReads.get(key) === request) pendingReads.delete(key);};
+      request.then(remove, remove);
+    }
+    return pendingReads.get(key);
+  }
   async function loadImage(img, failed) {
     const campaignId = activeCampaign?.id, uid = auth.currentUser?.uid, path = img.dataset.coverPath;
-    const current = () => img.isConnected && activeCampaign?.id === campaignId && auth.currentUser?.uid === uid;
     const retry = img.closest('figure').querySelector('[data-cover-retry]');
     if (retry?.disabled) return;
+    const attempt = {};imageLoads.set(img, attempt);let timer;
+    const current = () => imageLoads.get(img) === attempt && img.isConnected && activeCampaign?.id === campaignId && auth.currentUser?.uid === uid;
     if (retry) retry.disabled = true;
     const status = img.closest('figure').querySelector('[data-cover-status]');
     if (status) status.textContent = 'Loading campaign image…';
     try {
       if (!path.startsWith(`campaign-cover-images/${campaignId}/`)) throw Error('Invalid campaign image.');
-      const blob = await getBlob(ref(storage, path), 5 * 1024 * 1024);
+      // The uploaded file is already in this editor. Do not download it again
+      // merely to show a draft; saved/reopened pages still use authenticated reads.
+      const local = session?.id === campaignId && session.uid === uid && session.imagePath === path ? session.imageFile : null;
+      const request = local ? Promise.resolve(local) : readCover(path, uid);
+      const interrupted = new Promise((_, reject) => {
+        attempt.cancel = () => reject(Object.assign(Error('Image view closed'), {code:'storage/canceled'}));
+        timer = setTimeout(() => reject(Object.assign(Error('Image read timed out'), {code:'storage/read-timeout'})), imageReadTimeoutMs);
+      });
+      const blob = await Promise.race([request, interrupted]);
       if (!current()) return;
       if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
       img.src = URL.createObjectURL(blob); img.hidden = false;
@@ -83,10 +106,12 @@ var CampaignHome = (() => {
       if (current()) {
         const message = error.code === 'storage/unauthorized' ? 'You do not have access to this campaign image. Ask the campaign DM to check image access.'
           : error.code === 'storage/object-not-found' ? 'The saved campaign image could not be found. Ask the campaign DM to upload it again.'
+          : error.code === 'storage/read-timeout' ? 'The campaign image is taking too long to load. Try loading it again. If this continues, ask the site administrator to check image loading.'
           : 'The campaign image could not be loaded. Try loading it again. Your campaign text is still available.';
         failed(message);
       }
     } finally {
+      clearTimeout(timer);if (imageLoads.get(img) === attempt) imageLoads.delete(img);
       if (retry?.isConnected) retry.disabled = false;
     }
   }
@@ -171,7 +196,7 @@ var CampaignHome = (() => {
       if (!session) return;
       session.dirty = true;
       if (event.target === form.elements.imageUrl) {
-        session.imagePath = ''; form.querySelector('[data-home-image-source]').textContent = 'Using the image URL.';
+        session.imagePath = '';session.imageFile = null; form.querySelector('[data-home-image-source]').textContent = 'Using the image URL.';
         clearTimeout(session.previewTimer); session.previewTimer = setTimeout(() => updateImagePreview(form), 300);
       }
       if (event.target === form.elements.imageAlt) {
@@ -187,7 +212,7 @@ var CampaignHome = (() => {
     form.elements.imageAlt.required = !!(data.imageUrl || data.imagePath);
     form.querySelector('[data-home-upload]').addEventListener('change', event => upload(event.target.files[0], form));
     form.querySelector('[data-home-remove-image]').addEventListener('click', () => {
-      session.imagePath = ''; session.dirty = true; form.elements.imageUrl.value = '';
+      session.imagePath = '';session.imageFile = null; session.dirty = true; form.elements.imageUrl.value = '';
       form.elements.imageAlt.required = false; form.elements.imageAlt.setCustomValidity('');form.elements.imageUrl.setCustomValidity('');
       form.querySelector('[data-home-upload]').value = '';
       form.querySelector('[data-home-image-source]').textContent = 'No image selected. Save to remove the cover.';
@@ -212,7 +237,7 @@ var CampaignHome = (() => {
       const path = `campaign-cover-images/${current.id}/${crypto.randomUUID()}`;
       await uploadBytes(ref(storage, path), file, {contentType:file.type});
       if (session !== current || current.id !== activeCampaign?.id || current.uid !== auth.currentUser?.uid || !canManageCampaign()) return;
-      current.imagePath = path;current.dirty = true;
+      current.imagePath = path;current.imageFile = file;current.dirty = true;
       form.elements.imageUrl.value = '';form.elements.imageUrl.setCustomValidity('');form.elements.imageAlt.required = true;
       form.querySelector('[data-home-image-source]').textContent = `Uploaded: ${file.name}`;
       updateImagePreview(form);

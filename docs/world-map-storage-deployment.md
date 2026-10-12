@@ -74,6 +74,12 @@ Cover upload, front-page save and image display are separate operations:
    GET. Check read permissions, the saved object still exists, and bucket CORS.
    Retry reads with **Try loading image again**. This does not upload a new
    object or change the saved page.
+5. **Loading campaign image…** never finishes after a successful upload:
+   the browser may be blocking an authenticated read while the Firebase SDK
+   retries it. Newly uploaded drafts preview the local file; saved/reopened
+   covers still need the authorized remote read. The UI gives timeout guidance
+   after 20 seconds and retains the saved image path. A timeout is not proof
+   that the upload or save failed.
 
 The file chooser resets after an attempted upload so choosing the same file can
 retry a failed upload. The editor retains its existing cover and text on failure.
@@ -89,6 +95,12 @@ configuration, for example:
 
 ```sh
 gcloud storage buckets describe gs://dnd-loot-site.firebasestorage.app --format=json > /tmp/dnd-storage-bucket-before.json
+```
+
+For a read-only inspection of just the CORS settings in Google Cloud Shell:
+
+```sh
+gcloud storage buckets describe gs://dnd-loot-site.firebasestorage.app --format="json(cors_config,cors)"
 ```
 
 The following is an example **additional entry**, not a replacement for an
