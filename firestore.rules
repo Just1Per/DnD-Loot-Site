@@ -376,6 +376,20 @@ match /campaigns/{campaignId} {
   allow read: if isCampaignOwner(campaignId)
     || isActiveMember(campaignId);
 
+  function validFrontPage(page) {
+    return page is map
+      && page.keys().hasAll(['tagline', 'introduction', 'expectations', 'imageUrl', 'imageAlt', 'imageCredit', 'revision'])
+      && page.keys().hasOnly(['tagline', 'introduction', 'expectations', 'imageUrl', 'imageAlt', 'imageCredit', 'revision'])
+      && page.tagline is string && page.tagline.size() <= 160
+      && page.introduction is string && page.introduction.size() <= 6000
+      && page.expectations is string && page.expectations.size() <= 4000
+      && page.imageUrl is string && page.imageUrl.size() <= 2000
+      && (page.imageUrl == '' || (page.imageUrl.matches('https://[A-Za-z0-9.-]+(:[0-9]+)?/.*') && page.imageAlt.size() > 0))
+      && page.imageAlt is string && page.imageAlt.size() <= 240
+      && page.imageCredit is string && page.imageCredit.size() <= 240
+      && page.revision is int && page.revision > 0;
+  }
+
   allow create: if canCreateCampaigns()
     && request.resource.data.ownerId == request.auth.uid
     && request.resource.data.dmId == request.auth.uid
@@ -383,7 +397,10 @@ match /campaigns/{campaignId} {
 
   // Campaign DMs can edit normal campaign settings, but cannot transfer
   allow update: if isCampaignDM(campaignId)
-    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["name", "description", "defaultItemVisible", "updatedAt", "inventoryVersion", "inventoryMigratedAt", "allowedEditions"])
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["name", "description", "defaultItemVisible", "updatedAt", "inventoryVersion", "inventoryMigratedAt", "allowedEditions", "frontPage"])
+    && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['frontPage'])
+      || (validFrontPage(request.resource.data.frontPage)
+        && request.resource.data.frontPage.revision == (('frontPage' in resource.data) ? resource.data.frontPage.revision + 1 : 1)))
     && request.resource.data.name is string
     && (!('allowedEditions' in request.resource.data) || (request.resource.data.allowedEditions is list && request.resource.data.allowedEditions.size() >= 1 && request.resource.data.allowedEditions.size() <= 2 && request.resource.data.allowedEditions.hasOnly(['2014', '2024']) && (request.resource.data.allowedEditions.size() == 1 || request.resource.data.allowedEditions.hasAll(['2014', '2024']))));
   allow delete: if isCampaignOwner(campaignId);

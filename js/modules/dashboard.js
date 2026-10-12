@@ -231,6 +231,7 @@ function renderCampaignSelector() {
 }
 
 async function enterCampaign(campaign) {
+  if(typeof CampaignHome!=="undefined"&&!CampaignHome.clear())return;
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
   closeCharacterLoot(); closeWishModal(); closeEditCharacterModal(); closeItemModal();
   closeCharacterSheet(true); closeVaultAction(); closeRootPicker();
@@ -261,6 +262,7 @@ async function enterCampaign(campaign) {
 }
 
 async function leaveCampaign() {
+  if(typeof CampaignHome!=="undefined"&&!CampaignHome.clear())return;
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
   if (!closeCharacterSheet()) return;
   CampaignRules.stop();
@@ -328,6 +330,6 @@ function showMainApp() {
   if (canManageCampaign()) renderDMTools();
 
   renderCampaignToolbar();
-  showTab("library");
+  showTab("campaign-home");
 }
 

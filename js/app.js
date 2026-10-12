@@ -31,7 +31,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   ref, getDownloadURL, uploadBytes, getBlob,
 });
 
-const ASSET_VERSION = "20261010-personal-creatures-v1";
+const ASSET_VERSION = "20261012-campaign-home-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -110,6 +110,7 @@ const FEATURE_FILES = [
   "./modules/invitations.js",
   "./modules/library-state.js",
   "./modules/dashboard.js",
+  "./modules/campaign-home.js",
   "./modules/campaign-items.js",
   "./modules/library.js",
   "./modules/admin.js",
