@@ -54,6 +54,7 @@ function createCampaignWorkspaceStore(sdk) {
       tx.set(secretRef(campaignId, kind, id), {kind, recordId:id, notes:privateNotes, updatedBy:uid, updatedAt:now});
       if (kind === 'world' && normalized.archived) tx.delete(doc(db, 'campaigns', campaignId, 'playerInformation', id));
       if (kind === 'creature' && (normalized.archived || normalized.data.category !== 'Story NPC')) tx.delete(doc(db, 'campaigns', campaignId, 'playerNPCs', id));
+      if (kind === 'chapter' && (normalized.archived || normalized.data.status !== 'Completed')) tx.delete(doc(db, 'campaigns', campaignId, 'playerChapters', id));
       return {...next, id, privateNotes};
     });
   }

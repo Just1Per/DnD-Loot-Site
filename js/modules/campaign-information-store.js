@@ -3,8 +3,8 @@
 /** Deliberate snapshots of saved player descriptions, separate from DM preparation. */
 function createCampaignInformationStore(sdk, kind = 'world') {
   const {db, auth, doc, collection, getDoc, getDocs, runTransaction} = sdk;
-  const sources = {world:'worldEntries',creature:'creatures'};
-  const publications = {world:'playerInformation',creature:'playerNPCs'};
+  const sources = {world:'worldEntries',creature:'creatures',chapter:'chapters'};
+  const publications = {world:'playerInformation',creature:'playerNPCs',chapter:'playerChapters'};
   if (!Object.hasOwn(sources,kind)) throw Error('Unsupported player catalogue.');
   const validId = value => {
     if (!/^[A-Za-z0-9_-]{1,100}$/.test(value || '')) throw Error('Invalid campaign entry ID.');
@@ -15,7 +15,12 @@ function createCampaignInformationStore(sdk, kind = 'world') {
   function snapshot(source) {
     if (source.kind !== kind || source.archived) throw Error('Only saved, active entries can be shared.');
     if (kind === 'creature' && source.data?.category !== 'Story NPC') throw Error('Only Story NPCs can be revealed in the NPC catalogue.');
+    if (kind === 'chapter' && source.data?.status !== 'Completed') throw Error('Only completed chapters can be shared.');
     const fields = {title:source.title,summary:source.summary,content:source.content,category:source.data?.category || 'World',sourceRevision:source.revision};
+    if(kind==='chapter'){
+      fields.content=source.data.playerRecap || source.content;fields.category='Completed';fields.order=source.data.order;
+      if(!Number.isInteger(fields.order)||fields.order<0||fields.order>9999)throw Error('Set the chapter order before sharing.');
+    }
     for (const [key,max] of Object.entries({title:160,summary:1000,content:20000,category:80})) {
       if (typeof fields[key] !== 'string' || fields[key].length > max) throw Error('This entry has invalid player-facing text.');
     }

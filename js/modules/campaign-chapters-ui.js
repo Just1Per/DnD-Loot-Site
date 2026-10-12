@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
  const W=CampaignWorkspace;
- W.configs.chapter={title:'Chapter Tracker',tab:'dm-chapters',noun:'chapter',categories:[],fields:[['order','Chapter order','number',null,9999],['status','Story progress','select',['Planned','Current','Completed']],['startingLevel','Expected starting level','number'],['targetLevel','Milestone target level (0 = no level-up)','number'],['objectives','Objectives','textarea'],['scenes','Scenes','textarea'],['rewards','Planned rewards','textarea'],['sessionNotes','Session notes and recap','textarea']],content:'Chapter introduction',secret:'Private chapter preparation',help:'Link the same locations and creatures to several chapters. Completing a chapter records story progress; milestone approvals are separate from choosing class levels.',normalize:data=>{
+ W.configs.chapter={title:'Chapter Tracker',tab:'dm-chapters',noun:'chapter',categories:[],fields:[['order','Chapter order','number',null,9999],['status','Story progress','select',['Planned','Current','Completed']],['startingLevel','Expected starting level','number'],['targetLevel','Milestone target level (0 = no level-up)','number'],['playerRecap','Player recap (share only after completion)','textarea'],['objectives','Objectives','textarea'],['scenes','Scenes','textarea'],['rewards','Planned rewards','textarea'],['sessionNotes','Private session notes','textarea']],content:'Chapter introduction',secret:'Private chapter preparation',help:'Link the same locations and creatures to several chapters. Completing a chapter records story progress; sharing its recap and approving milestones are separate actions.',normalize:data=>{
    const result=structuredClone(data||{});result.status=['Planned','Current','Completed'].includes(result.status)?result.status:'Planned';
    for(const [key,fallback,max]of [['order',1,9999],['startingLevel',1,20],['targetLevel',0,20]]){const n=result[key]==null?fallback:Number(result[key]);if(!Number.isInteger(n)||n<0||n>max)throw Error(`${key} must be a whole number from 0 to ${max}.`);result[key]=n;}return result;
  },extra:(host,s)=>{
@@ -29,5 +29,6 @@
    });
    host.querySelectorAll('[data-milestone-sheet]').forEach(button=>button.onclick=()=>openCharacterSheet(button.dataset.milestoneSheet));
  }};
+ W.configs.chapter.playerContent=input=>input.data.playerRecap||input.content;
  W.configs.chapter.onEdit=W.configs.chapter.extra;
 })();
