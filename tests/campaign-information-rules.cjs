@@ -51,7 +51,7 @@ const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-s
    await assertFails(sdk.updateDoc(sdk.doc(db.dm,'campaigns/a/worldEntries/north'),{archived:true,revision:3}));
    await workspace.save({...source,revision:2,input:{...source.input,archived:true}});
    assert.equal(await stores.player.load('a','north'),null);
-   await assert.rejects(stores.dm.publish({...publish,sourceRevision:3}),/active world entries/);
+   await assert.rejects(stores.dm.publish({...publish,sourceRevision:3}),/active entries/);
    await workspace.save({...source,revision:3,input:source.input});
    assert.equal(await stores.player.load('a','north'),null);
   });

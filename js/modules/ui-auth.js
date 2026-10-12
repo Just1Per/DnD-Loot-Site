@@ -6,14 +6,14 @@
 
 /** Select a permitted app tab; sheet rendering can be deferred by its caller. */
 function showTab(tabId, render = true) {
-  if (['campaign-home','campaign-information'].includes(tabId) && !activeCampaign) return;
+  if (['campaign-home','campaign-information','campaign-npcs'].includes(tabId) && !activeCampaign) return;
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
   if(tabId==='player-adventures'&&(!activeCampaign||!canUseCharacters()))return;
   if (tabId === "admin") { openAdminView(); return; }
   if ((tabId === "dm" || ["dm-world","dm-chapters","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
   if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
   if (typeof CampaignHome!=="undefined" && !CampaignHome.beforeNavigate(tabId)) return;
-  if(tabId!=='campaign-information' && typeof CampaignInformation!=='undefined')CampaignInformation.clear();
+  if(!['campaign-information','campaign-npcs'].includes(tabId) && typeof CampaignInformation!=='undefined')CampaignInformation.clear();
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c=>c.style.display="none");
   const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
@@ -24,6 +24,7 @@ function showTab(tabId, render = true) {
   if(render&&tabId==='player-adventures')CampaignWorkspace.render('playerAdventure');
   if(render&&tabId==='campaign-home')CampaignHome.render();
   if(render&&tabId==='campaign-information')CampaignInformation.render();
+  if(render&&tabId==='campaign-npcs')CampaignInformation.render('creature');
   if(render&&tabId==="dm-one-shots") CampaignWorkspace.render("oneShot");
   if (render&&tabId==="dm-chapters") CampaignWorkspace.render("chapter");
   if (render&&tabId==="dm-world") CampaignWorkspace.render("world");
