@@ -1,6 +1,6 @@
 # Campaign front page
 
-Campaigns open on **Campaign home**, a member-facing introduction using the existing parchment, burgundy and gold palette. The Library, character sheets and DM workspaces remain available through their existing tabs and the home page’s shortcuts.
+Campaigns open on **Campaign home**, a member-facing introduction using the existing parchment, burgundy and gold palette. On desktop, the description and campaign information/table rules sit on the left, with a large campaign map or intro image at the upper right. On narrow screens the columns stack; maps retain their full image rather than being cropped. The Library, character sheets and DM workspaces remain available through their existing tabs and the home page’s shortcuts.
 
 Campaign owners and active campaign DMs can select **Edit front page**, either from Campaign home or Campaign Settings in DM Tools. The editor saves a tagline, introduction, table expectations, optional HTTPS cover-image URL, accessible image description and artwork credit. Preview shows the current draft; cancelling a changed draft asks before discarding it. Existing campaigns use their description until an introduction is saved.
 

@@ -23,15 +23,16 @@ var CampaignHome = (() => {
   function contents(data, campaign) {
     const introduction = data.introduction || text(campaign.description);
     return `<article class="campaign-book" aria-label="Campaign introduction">
-      ${data.imageUrl ? `<figure class="campaign-book-cover"><img src="${escapeHtml(data.imageUrl)}" alt="${escapeHtml(data.imageAlt)}" referrerpolicy="no-referrer">${data.imageCredit ? `<figcaption>${escapeHtml(data.imageCredit)}</figcaption>` : ''}</figure>` : ''}
+      <div class="campaign-book-opening${data.imageUrl ? ' campaign-book-opening--illustrated' : ''}"><div class="campaign-book-copy">
       <div class="campaign-book-title"><p class="campaign-book-eyebrow">Your campaign</p><h2>${escapeHtml(campaign.name || 'An unwritten adventure')}</h2>${data.tagline ? `<p class="campaign-book-tagline">${escapeHtml(data.tagline)}</p>` : ''}<div class="campaign-book-rule" aria-hidden="true"></div></div>
       <div class="campaign-book-chapters"><section><h3>The adventure begins</h3><p class="campaign-book-prose">${escapeHtml(introduction || 'Your story begins here. Your DM can add an introduction to welcome the party to this campaign.')}</p></section>
-      ${data.expectations ? `<section><h3>What to expect at the table</h3><p class="campaign-book-prose">${escapeHtml(data.expectations)}</p></section>` : ''}</div>
+      ${data.expectations ? `<section><h3>Campaign information &amp; table rules</h3><p class="campaign-book-prose">${escapeHtml(data.expectations)}</p></section>` : ''}</div></div>
+      ${data.imageUrl ? `<figure class="campaign-book-cover"><img src="${escapeHtml(data.imageUrl)}" alt="${escapeHtml(data.imageAlt)}" referrerpolicy="no-referrer">${data.imageCredit ? `<figcaption>${escapeHtml(data.imageCredit)}</figcaption>` : ''}</figure>` : ''}</div>
     </article>`;
   }
   function bindImages(root) {
     root.querySelectorAll('.campaign-book-cover img').forEach(img => {
-      const failed = () => { img.closest('figure').hidden = true; };
+      const failed = () => { img.closest('figure').hidden = true; img.closest('.campaign-book-opening').classList.remove('campaign-book-opening--illustrated'); };
       img.addEventListener('error', failed, {once:true});
       if (img.complete && !img.naturalWidth) failed();
     });
@@ -71,8 +72,8 @@ var CampaignHome = (() => {
     const fields = [
       ['tagline','A line to set the scene','text','A tale of…'],
       ['introduction','Campaign introduction','textarea','Welcome the party to your world.'],
-      ['expectations','What players can expect','textarea','Tone, play style, session plans and any table agreements.'],
-      ['imageUrl','Cover image URL (HTTPS)','url','https://…'],
+      ['expectations','Important campaign information & table rules','textarea','Tone, play style, session plans and any table agreements.'],
+      ['imageUrl','Campaign map or intro image URL (HTTPS)','url','https://…'],
       ['imageAlt','Cover image description','text','Describe the artwork for readers who cannot see it.'],
       ['imageCredit','Artwork credit','text','Artist or source']
     ];
