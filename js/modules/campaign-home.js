@@ -35,13 +35,25 @@ var CampaignHome = (() => {
   }
   function bindImages(root) {
     root.querySelectorAll('.campaign-book-cover img').forEach(img => {
-      const failed = () => {
+      const failed = (message = 'This image could not be displayed. Try a different PNG, JPEG or WebP image.') => {
+        if (img.dataset.coverPath) {
+          img.hidden = true;
+          const figure = img.closest('figure');
+          let status = figure.querySelector('[data-cover-status]');
+          if (!status) {status = document.createElement('p');status.dataset.coverStatus = '';status.setAttribute('role', 'status');figure.append(status);}
+          status.textContent = message;
+          if (!figure.querySelector('[data-cover-retry]')) {
+            const retry = document.createElement('button');retry.type = 'button';retry.dataset.coverRetry = '';retry.textContent = 'Try loading image again';
+            retry.addEventListener('click', () => loadImage(img, failed));figure.append(retry);
+          }
+          return;
+        }
         img.closest('figure').hidden = true;
         const opening = img.closest('.campaign-book-opening');
         if (!opening?.classList.contains('campaign-book-opening--editing')) opening?.classList.remove('campaign-book-opening--illustrated');
         const empty = img.closest('[data-home-image-preview]')?.querySelector('[data-home-image-empty]'); if (empty) empty.hidden = false;
       };
-      img.addEventListener('error', failed, {once:true});
+      img.addEventListener('error', () => failed());
       if (img.hasAttribute('src') && img.complete && !img.naturalWidth) failed();
       if (img.dataset.coverPath) loadImage(img, failed);
     });
@@ -54,18 +66,28 @@ var CampaignHome = (() => {
   async function loadImage(img, failed) {
     const campaignId = activeCampaign?.id, uid = auth.currentUser?.uid, path = img.dataset.coverPath;
     const current = () => img.isConnected && activeCampaign?.id === campaignId && auth.currentUser?.uid === uid;
+    const retry = img.closest('figure').querySelector('[data-cover-retry]');
+    if (retry?.disabled) return;
+    if (retry) retry.disabled = true;
+    const status = img.closest('figure').querySelector('[data-cover-status]');
+    if (status) status.textContent = 'Loading campaign image…';
     try {
       if (!path.startsWith(`campaign-cover-images/${campaignId}/`)) throw Error('Invalid campaign image.');
       const blob = await getBlob(ref(storage, path), 5 * 1024 * 1024);
       if (!current()) return;
+      if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
       img.src = URL.createObjectURL(blob); img.hidden = false;
       img.closest('figure').querySelector('[data-cover-status]')?.remove();
-    } catch {
+      img.closest('figure').querySelector('[data-cover-retry]')?.remove();
+    } catch (error) {
       if (current()) {
-        failed();
-        const status = document.getElementById('campaignHomeStatus');
-        if (status) status.textContent = 'The campaign image could not be loaded. You can still read the introduction.';
+        const message = error.code === 'storage/unauthorized' ? 'You do not have access to this campaign image. Ask the campaign DM to check image access.'
+          : error.code === 'storage/object-not-found' ? 'The saved campaign image could not be found. Ask the campaign DM to upload it again.'
+          : 'The campaign image could not be loaded. Try loading it again. Your campaign text is still available.';
+        failed(message);
       }
+    } finally {
+      if (retry?.isConnected) retry.disabled = false;
     }
   }
   function render() {
@@ -199,7 +221,11 @@ var CampaignHome = (() => {
       if (session === current) status.textContent = error.code === 'storage/unauthorized' ? 'Upload denied. Ask the site administrator to enable campaign image uploads.' : `Could not upload: ${error.message}`;
     } finally {
       current.busy = false;
-      if (session === current) for (const control of form.elements) control.disabled = false;
+      if (session === current) {
+        for (const control of form.elements) control.disabled = false;
+        // Selecting the same file must trigger change again after a failed attempt.
+        form.querySelector('[data-home-upload]').value = '';
+      }
     }
   }
   async function save(event) {
@@ -208,16 +234,18 @@ var CampaignHome = (() => {
     if (!current || current.busy || current.id !== activeCampaign?.id || current.uid !== auth.currentUser?.uid || !canManageCampaign()) return;
     if (form.dataset.preview === 'true') setPreview(form, false);
     const data = readForm(form);
+    const status = form.querySelector('[data-home-editor-status]');
     if (form.elements.imageUrl.value.trim() && !data.imageUrl) {
+      status.textContent = 'Use an HTTPS image URL, or upload a PNG, JPEG or WebP image.';
       form.elements.imageUrl.setCustomValidity('Use an HTTPS image URL without a username or password.');
       form.reportValidity(); return;
     }
     if ((data.imageUrl || data.imagePath) && !data.imageAlt) {
+      status.textContent = 'Add an image description before saving the front page.';
       form.elements.imageAlt.setCustomValidity('Describe the cover image for readers who cannot see it.');
       form.reportValidity(); return;
     }
     if (!form.reportValidity()) return;
-    const status = form.querySelector('[data-home-editor-status]');
     current.busy = true; status.textContent = 'Saving your campaign front page…';
     // Lock the captured draft until the transaction finishes.
     for (const control of form.elements) control.disabled = true;

@@ -1,4 +1,4 @@
-# World Building image uploads — Firebase Storage permissions
+# Campaign image uploads — Firebase Storage permissions and CORS
 
 World Building uploads files to `campaign-world-images/{campaignId}/{entryId}/{imageId}`.
 If uploads fail with `storage/unauthorized`, the **published Firebase Storage rules**
@@ -8,13 +8,15 @@ rules (`firestore.rules`).
 ## Production rules: one authoritative file
 
 The repository's [`storage.rules`](../storage.rules) combines the existing
-Firebase Storage rules supplied by the project owner with one new match:
+Firebase Storage rules supplied by the project owner with campaign image matches:
 
 - `dnd-item-images/{fileName}`: public read; admins create, update and delete
 - `campaign-item-images/{campaignId}/{fileName}`: owners and active members
   read; owners/active DMs create, update and delete
 - `campaign-world-images/{campaignId}/{entryId}/{imageId}`: owners/active DMs
   read and create; existing images cannot be replaced or deleted
+- `campaign-cover-images/{campaignId}/{imageId}`: owners/active DMs create;
+  owners and active members read; existing images cannot be replaced or deleted
 
 The world-map path accepts PNG/JPEG/WebP with the same **less than 5 MiB** limit
 as the original `validImage()` helper. It doesn't make private campaign maps
@@ -51,6 +53,67 @@ If the upload is still denied, check the signed-in UID, membership status,
 `campaigns/{campaignId}.ownerId`, active member `role: 'dm'`, Firebase
 project and Storage bucket. A Storage deployment cannot be verified merely
 by passing emulator tests.
+
+## Campaign cover troubleshooting
+
+Cover upload, front-page save and image display are separate operations:
+
+1. **Upload denied** (`storage/unauthorized`): check the published Storage rules
+   contain `campaign-cover-images`, the website uses bucket
+   `dnd-loot-site.firebasestorage.app`, and the account owns the campaign or is
+   an active campaign DM. A global DM role alone does not grant campaign access.
+2. **Image uploaded** followed by **Add an image description**: enter the
+   accessible image description, then select **Save front page**. Uploading
+   alone does not save the campaign's image reference.
+3. **Could not save**: inspect the Firestore error. Campaign settings need the
+   current `frontPage` rules in `firestore.rules`; Storage rules do not authorize
+   saving a Firestore campaign document. A revision conflict requires reopening
+   the latest page while retaining a copy of the draft.
+4. **The campaign image could not be loaded** after a successful upload or save:
+   inspect the browser Console/Network response for the authenticated Storage
+   GET. Check read permissions, the saved object still exists, and bucket CORS.
+   Retry reads with **Try loading image again**. This does not upload a new
+   object or change the saved page.
+
+The file chooser resets after an attempted upload so choosing the same file can
+retry a failed upload. The editor retains its existing cover and text on failure.
+
+## Authenticated image reads and CORS
+
+`getBlob` reads member-only covers and DM-only maps with authentication. Browser
+reads require the bucket's CORS configuration to allow GET from the actual site
+origin. Upload success does not demonstrate that this read configuration works.
+
+Before any approved production change, inspect and back up the current bucket
+configuration, for example:
+
+```sh
+gcloud storage buckets describe gs://dnd-loot-site.firebasestorage.app --format=json > /tmp/dnd-storage-bucket-before.json
+```
+
+The following is an example **additional entry**, not a replacement for an
+unknown existing CORS configuration:
+
+```json
+{
+  "origin": ["https://dnd-loot-site.web.app", "https://dnd-loot-site.firebaseapp.com"],
+  "method": ["GET"],
+  "maxAgeSeconds": 3600
+}
+```
+
+Use the address bar's exact origin for any custom domain or Hosting preview
+that needs access. Preserve existing CORS entries, combine this entry into a
+complete JSON array, review the resulting diff, and obtain the project owner's
+approval before applying it. `gcloud storage buckets update --cors-file` replaces
+the entire configuration, so do not supply the example entry by itself.
+
+CORS does not grant Storage object permissions. Preserve the authenticated
+Storage rules; do not replace `getBlob` with public download-token URLs to
+bypass the read failure. Verify an actual uploaded cover after refresh as a DM
+and an active player, and verify outsiders cannot read it. Console/network
+evidence is necessary to diagnose production; fixture/emulator passes alone
+cannot establish the deployed rules or CORS settings.
 
 ## Automated verification
 

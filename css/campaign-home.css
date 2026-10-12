@@ -8,6 +8,8 @@
 .campaign-book-cover{margin:28px 28px 28px 0;min-width:0;background:#ede4d5;border:1px solid #c8b89a;border-radius:4px;overflow:hidden}
 .campaign-book-cover img{display:block;width:100%;height:auto;max-height:600px;object-fit:contain}
 .campaign-book-cover figcaption{padding:8px 20px;font-size:.8rem;color:#66584a;overflow-wrap:anywhere}
+.campaign-book-cover [data-cover-status]{margin:20px;overflow-wrap:anywhere}
+.campaign-book-cover [data-cover-retry]{margin:0 20px 20px;max-width:calc(100% - 40px)}
 .campaign-book-title{padding:clamp(28px,4vw,44px) clamp(20px,3vw,36px) 16px;text-align:left}
 .campaign-book-eyebrow{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:#66584a;margin:0 0 14px}
 .campaign-book h2,.campaign-book h3{font-family:"Cinzel",serif;color:#5c1d1d;overflow-wrap:anywhere}

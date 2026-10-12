@@ -38,3 +38,5 @@ The new save operation requires the updated `firestore.rules`; uploaded covers a
 Cover uploads, curated campaign information, revealed NPCs and completed chapter recaps are implemented in the review stack; see `docs/campaign-experience-backlog.md` for their review status.
 
 Unused uploads are retained when an editor is cancelled or a cover is replaced. Object cleanup is a separate maintenance task; this feature does not delete saved or potentially referenced artwork.
+
+Failed uploaded-image reads display an accessible explanation and **Try loading image again**, both in the editor and on the saved page. Retrying reads preserves the saved reference and revision. Failed uploads allow choosing the same file again. An image description is required to save a cover, with visible guidance beside the save controls. For upload/save/read diagnosis and the separate production Storage rules and CORS requirements, see [Campaign image permissions and CORS](world-map-storage-deployment.md).
