@@ -47,6 +47,8 @@ jobs:
         run: npm --prefix tests run test:workspace
       - name: World, chapters, encounters and scoped player adventure flows
         run: npm --prefix tests run test:workspace-browser
+      - name: Creature and NPC preparation, optional combat and template preservation
+        run: npm --prefix tests run test:creature-editor
       - name: Campaign home save/reopen, access, accessibility and layout
         run: npm --prefix tests run test:campaign-home
       - name: Campaign image CORS preparation preserves existing bucket configuration

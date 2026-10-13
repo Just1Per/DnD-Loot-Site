@@ -1,7 +1,40 @@
 'use strict';
 (()=>{
  const W=CampaignWorkspace,C=CampaignCreatures,e=escapeHtml;
- const textFields=[['appearance','Appearance'],['personality','Personality'],['voice','Voice and mannerisms'],['goals','Goals'],['relationships','Relationships'],['saves','Saving throws'],['skills','Skills'],['resistances','Resistances'],['immunities','Immunities'],['senses','Senses'],['languages','Languages'],['cr','Challenge rating'],['actions','Attacks and actions'],['traits','Traits and special abilities'],['legendaryActions','Legendary actions'],['phases','Boss phases and story progression']];
+ const textFields=[['appearance','Appearance'],['personality','Personality'],['voice','Voice and mannerisms'],['goals','Goals'],['relationships','Relationships'],['size','Size'],['creatureType','Creature type'],['movement','Movement modes'],['saves','Saving throws'],['skills','Skills'],['resistances','Resistances'],['immunities','Immunities'],['vulnerabilities','Vulnerabilities'],['conditionImmunities','Condition immunities'],['senses','Senses'],['languages','Languages'],['cr','Challenge rating'],['actions','Attacks and actions'],['traits','Traits and special abilities'],['bonusActions','Bonus actions'],['reactions','Reactions'],['legendaryActions','Legendary actions'],['phases','Boss phases and story progression']];
+ const fields=[['category','Entry type','select',C.categories],['edition','Rules edition','select',['Homebrew','2014','2024']],['combatEnabled','Use combat statistics','checkbox'],['ac','Armor class','number',null,40],['hp','Maximum hit points','number',null,10000],['speed','Speed (ft.)','number',null,600],...C.abilities.map(key=>[key,key.toUpperCase(),'number',null,30]),...textFields.map(([key,label])=>[key,label,['size','creatureType','cr'].includes(key)?'text':'textarea'])];
+ function field(key,data,template=false){
+  const [,label,type,options,max]=fields.find(row=>row[0]===key),attr=`data-${template?'template':'record'}-field="${key}"`,value=data[key];
+  const input=type==='select'?`<select ${attr}>${options.map(v=>`<option value="${e(v)}" ${v===value?'selected':''}>${e(v)}</option>`).join('')}</select>`:type==='checkbox'?`<input type="checkbox" ${attr} ${value?'checked':''}>`:type==='number'?`<input type="number" ${attr} min="${key==='hp'||C.abilities.includes(key)?1:0}" max="${max}" step="1" value="${Number(value)}">`:type==='text'?`<input type="text" ${attr} maxlength="20000" value="${e(String(value??''))}">`:`<textarea ${attr} maxlength="20000">${e(String(value??''))}</textarea>`;
+  return `<label class="workspace-field${type==='checkbox'?' creature-combat-choice':''}"><span>${e(label)}</span>${input}</label>`;
+ }
+ const textarea=(name,label,value,max=20000)=>`<label class="workspace-field"><span>${e(label)}</span><textarea name="${name}" maxlength="${max}">${e(value||'')}</textarea></label>`;
+ function editorBody(record,template=false){
+  // Fill missing legacy fields without hiding invalid saved values; validation
+  // must let the DM correct those values instead of preventing the editor opening.
+  const d={...C.normalize(),...structuredClone(record.data||{})},group=keys=>keys.map(key=>field(key,d,template)).join('');
+  return `<section class="creature-editor-section"><h3>Identity &amp; introduction</h3><div class="workspace-fields"><label class="workspace-field workspace-full"><span>Name</span><input name="title" required maxlength="160" value="${e(record.title||'')}"></label>${group(['category','edition'])}</div>${textarea('summary','Short summary',record.summary,1000)}${textarea('content','Story description',record.content)}<p>${template?'Personal templates create independent campaign copies when imported.':'Saving keeps this entry in the DM workspace. Reveal a saved Story NPC deliberately using the player visibility controls below.'}</p></section>
+   <section class="creature-editor-section creature-editor-private"><h3>Roleplaying &amp; private preparation</h3><p>Prepare how this person looks, speaks and acts. Goals and relationships stay private when you reveal an NPC.</p><div class="workspace-fields">${group(['appearance','personality','voice','goals','relationships'])}</div>${template?'':textarea('privateNotes','Secrets and private tactics',record.privateNotes)}</section>
+   <section class="creature-editor-section creature-editor-private"><h3>Combat preparation</h3>${field('combatEnabled',d,template)}<p data-creature-combat-help></p><details data-creature-combat ${d.combatEnabled?'open':''}><summary data-creature-combat-summary>Combat statistics</summary><div class="workspace-fields">${group(['size','creatureType','cr','ac','hp','speed','movement'])}</div><div class="workspace-fields creature-ability-fields">${group(C.abilities)}</div><details data-creature-defenses><summary>Defenses, skills &amp; senses</summary><div class="workspace-fields">${group(['saves','skills','resistances','immunities','vulnerabilities','conditionImmunities','senses','languages'])}</div></details><details data-creature-actions ${d.combatEnabled?'open':''}><summary>Actions &amp; special abilities</summary><div class="workspace-fields">${group(['traits','actions','bonusActions','reactions'])}</div></details><details data-creature-advanced ${d.category==='Boss'||d.legendaryActions||d.phases?'open':''}><summary>Legendary actions &amp; boss phases</summary><div class="workspace-fields">${group(['legendaryActions','phases'])}</div></details></details></section>
+   ${template?'':`<section class="creature-editor-section creature-editor-private"><h3>Connected campaign entries</h3><section data-workspace-links></section></section><section class="creature-editor-section creature-editor-private"><h3>DM reference &amp; player visibility</h3><p>The reference card is private preparation. Players receive only the saved name, summary and story description when you reveal a Story NPC.</p><div data-extra-editor></div></section><label class="workspace-field" data-private-print><span><input type="checkbox" data-print-private> Include private preparation and statistics in print</span></label>`}`;
+ }
+ function bindEditor(form,template=false){
+  if(!form||form.dataset.creatureEditorBound)return;form.dataset.creatureEditorBound='true';
+  const find=key=>form.querySelector(`[data-${template?'template':'record'}-field="${key}"]`);
+  const update=()=>{
+   const required=['Monster','Boss'].includes(find('category').value),checkbox=find('combatEnabled');
+   if(required)checkbox.checked=true;checkbox.disabled=required;
+   form.querySelector('[data-creature-combat]').open=checkbox.checked;
+   if(checkbox.checked)form.querySelector('[data-creature-actions]').open=true;
+   if(find('category').value==='Boss')form.querySelector('[data-creature-advanced]').open=true;
+   form.querySelector('[data-creature-combat-summary]').textContent=checkbox.checked?'Combat statistics':'Stored combat statistics (not in use)';
+   form.querySelector('[data-creature-combat-help]').textContent=required?'Monsters and bosses always use combat statistics.':'Combat is optional for Story NPCs and Companions. Turning it off keeps all stored statistics, actions and phases.';
+  };
+  form.addEventListener('change',event=>{if(event.target===find('category')||event.target===find('combatEnabled'))update();});
+  // Native validation must be able to focus invalid fields inside closed sections.
+  form.addEventListener('invalid',event=>{for(let parent=event.target.parentElement;parent&&parent!==form;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;},true);
+  update();
+ }
  async function openPersonalLibrary(){
     if(!activeCampaign||!canManageCampaign())return;
     const campaignId=activeCampaign.id,uid=auth.currentUser.uid;
@@ -44,18 +77,11 @@
           if(!permitted())return;
           const record=rows.find(row=>row.id===button.dataset.editTemplate);if(!record)return;
           const editor=document.createElement('dialog');editor.id='workspacePersonalCreatureEditor';editor.className='workspace-sheet-dialog';
-          const data=C.normalize(record.data||{});
-          const entries=[['category','Entry type','select'],['edition','Rules edition','select'],['combatEnabled','Include combat stats','check'],['ac','Armor class','number'],['hp','Maximum HP','number'],['speed','Speed (ft.)','number'],...C.abilities.map(key=>[key,key.toUpperCase(),'number']),...textFields.map(([key,label])=>[key,label,'text'])];
-          const control=([key,label,type])=>{
-            const value=data[key];
-            if(type==='select'){const options=key==='category'?C.categories:['Homebrew','2014','2024'];return '<label class="workspace-field">'+e(label)+'<select data-template-field="'+key+'">'+options.map(v=>'<option value="'+e(v)+'" '+(v===value?'selected':'')+'>'+e(v)+'</option>').join('')+'</select></label>';}
-            if(type==='check')return '<label class="workspace-field"><input type="checkbox" data-template-field="'+key+'" '+(value?'checked':'')+'> '+e(label)+'</label>';
-            if(type==='number')return '<label class="workspace-field">'+e(label)+'<input type="number" min="0" max="'+(key==='hp'?10000:key==='speed'?600:key==='ac'?40:30)+'" data-template-field="'+key+'" value="'+Number(value??0)+'"></label>';
-            return '<label class="workspace-field">'+e(label)+'<textarea data-template-field="'+key+'" maxlength="20000">'+e(value||'')+'</textarea></label>';
-          };
-          editor.innerHTML='<header class="workspace-heading"><h2>Edit personal creature</h2><button type="button" data-template-cancel>Close</button></header><form data-template-form><div class="workspace-fields"><label class="workspace-field workspace-full">Name<input name="title" maxlength="160" required value="'+e(record.title)+'"></label><label class="workspace-field workspace-full">Summary<textarea name="summary" maxlength="1000">'+e(record.summary||'')+'</textarea></label><label class="workspace-field workspace-full">Story description<textarea name="content" maxlength="20000">'+e(record.content||'')+'</textarea></label>'+entries.map(control).join('')+'</div><p data-template-feedback role="status"></p><div class="workspace-actions"><button type="submit">Save changes</button><button type="button" data-template-cancel>Cancel</button></div></form>';
+          const data={...C.normalize(),...structuredClone(record.data||{})};
+          editor.innerHTML='<header class="workspace-heading"><h2>Edit personal creature</h2><button type="button" data-template-cancel>Close</button></header><form data-template-form>'+editorBody(record,true)+'<p data-template-feedback role="status"></p><div class="workspace-actions"><button type="submit">Save changes</button><button type="button" data-template-cancel>Cancel</button></div></form>';
           const editTrigger=button;
           document.body.append(editor);editor.showModal();
+          bindEditor(editor.querySelector('form'),true);
           editor.querySelector('[name=title]')?.focus();
           editor.querySelectorAll('[data-template-cancel]').forEach(b=>b.onclick=()=>editor.close());
           editor.addEventListener('close',()=>{editor.remove();if(editTrigger.isConnected)editTrigger.focus();});
@@ -98,9 +124,14 @@
  }
  function card(host,s){
   if(!host)return;const draft=W.draft();if(!draft)return;
+  bindEditor(host.closest('form'));
   let d;try{d=C.normalize(draft.data)}catch(error){host.textContent=error.message;return;}
   const e=escapeHtml;
-  host.innerHTML=`<div class="workspace-actions"><button type="button" data-creature-catalog>Import SRD creature</button><button type="button" data-personal-creatures>My Creature Library</button><button type="button" data-save-personal-creature>Save to My Library</button></div><section class="workspace-card"><h3>${e(draft.title||'Unnamed creature')}</h3><p>${e(d.category)} · ${e(d.edition)}${d.cr?' · CR '+e(d.cr):''}</p>${d.combatEnabled?`<div class="workspace-stats"><div><strong>${d.ac}</strong><span>AC</span></div><div><strong>${d.hp}</strong><span>Maximum HP</span></div><div><strong>${d.speed}</strong><span>ft.</span></div></div><div class="workspace-abilities">${C.abilities.map(key=>`<div>${key.toUpperCase()}<strong> ${d[key]}</strong> (${Math.floor((d[key]-10)/2)>=0?'+':''}${Math.floor((d[key]-10)/2)})</div>`).join('')}</div><h4>Actions</h4><div class="workspace-prose">${e(d.actions)}</div><h4>Traits</h4><div class="workspace-prose">${e(d.traits)}</div>`:`<div class="workspace-prose">${e(d.appearance)}\n${e(d.personality)}</div>`}${d.source?`<p class="workspace-prose">${e(d.source.attribution)}<br>Source: ${e(d.source.provider)} · SRD ${e(d.source.srdVersion)}<br>Changes: ${e(d.source.changes)}</p>`:''}<h4>Additional rules</h4><div class="workspace-prose">${e([d.movement,d.saves,d.skills,d.resistances&&'Resistances: '+d.resistances,d.immunities&&'Immunities: '+d.immunities,d.vulnerabilities&&'Vulnerabilities: '+d.vulnerabilities,d.conditionImmunities&&'Condition immunities: '+d.conditionImmunities,d.senses,d.languages,d.bonusActions&&'Bonus actions: '+d.bonusActions,d.reactions&&'Reactions: '+d.reactions,d.legendaryActions,d.phases].filter(Boolean).join('\n\n'))}</div></section>`;
+  const rules=[d.movement,d.saves,d.skills,d.resistances&&'Resistances: '+d.resistances,d.immunities&&'Immunities: '+d.immunities,d.vulnerabilities&&'Vulnerabilities: '+d.vulnerabilities,d.conditionImmunities&&'Condition immunities: '+d.conditionImmunities,d.senses,d.languages,d.bonusActions&&'Bonus actions: '+d.bonusActions,d.reactions&&'Reactions: '+d.reactions,d.legendaryActions,d.phases].filter(Boolean).join('\n\n');
+  host.innerHTML=`<div class="workspace-actions"><button type="button" data-creature-catalog>Import SRD creature</button><button type="button" data-personal-creatures>My Creature Library</button><button type="button" data-save-personal-creature>Save to My Library</button></div><section class="workspace-card"><h3>${e(draft.title||'Unnamed creature')}</h3><p>${e(d.category)} · ${e(d.edition)}${d.combatEnabled&&d.cr?' · CR '+e(d.cr):''}</p>
+   <div class="workspace-prose">${e([draft.content,d.appearance,d.personality].filter(Boolean).join('\n\n'))}</div>
+   ${d.combatEnabled?`<div class="workspace-stats"><div><strong>${d.ac}</strong><span>AC</span></div><div><strong>${d.hp}</strong><span>Maximum HP</span></div><div><strong>${d.speed}</strong><span>ft.</span></div></div><div class="workspace-abilities">${C.abilities.map(key=>`<div>${key.toUpperCase()}<strong> ${d[key]}</strong> (${Math.floor((d[key]-10)/2)>=0?'+':''}${Math.floor((d[key]-10)/2)})</div>`).join('')}</div><h4>Actions</h4><div class="workspace-prose">${e(d.actions)}</div><h4>Traits</h4><div class="workspace-prose">${e(d.traits)}</div>${rules?`<h4>Additional rules</h4><div class="workspace-prose">${e(rules)}</div>`:''}`:''}
+   ${d.source?`<p class="workspace-prose">${e(d.source.attribution)}<br>Source: ${e(d.source.provider)} · SRD ${e(d.source.srdVersion)}<br>Changes: ${e(d.source.changes)}</p>`:''}</section>`;
   host.querySelector('[data-creature-catalog]').onclick=()=>CampaignMonsterCatalog.open();
   host.querySelector('[data-save-personal-creature]').onclick=async event=>{
     const button=event.currentTarget,record=W.draft();
@@ -114,5 +145,5 @@
   };
   host.querySelector('[data-personal-creatures]').onclick=openPersonalLibrary;
  }
- W.configs.creature={title:'Creatures & NPCs',tab:'dm-creatures',noun:'creature',categories:C.categories,normalize:C.normalize,fields:[['category','Entry type','select'],['edition','Rules edition','select',['Homebrew','2014','2024']],['combatEnabled','Include combat statistics','checkbox'],['ac','Armor class','number',null,40],['hp','Maximum hit points','number',null,10000],['speed','Speed (ft.)','number',null,600],...C.abilities.map(key=>[key,key.toUpperCase(),'number',null,30]),...textFields.map(([key,label])=>[key,label,'textarea'])],content:'Story description',secret:'Secrets and private tactics',help:'Create one master card and reuse it in world entries, chapters and encounters. Combat encounters have their own HP and conditions.',toolbar,extra:card,onEdit:card};
+ W.configs.creature={title:'Creatures & NPCs',tab:'dm-creatures',noun:'creature',categories:C.categories,normalize:C.normalize,fields,editorBody,content:'Story description',secret:'Secrets and private tactics',help:'Start with the story and roleplaying. Add combat preparation when needed, then reuse the saved master in chapters and independent encounters.',toolbar,extra:card,onEdit:card};
 })();
