@@ -38,6 +38,8 @@
 .campaign-home-editor input,.campaign-home-editor textarea{width:100%;min-width:0;box-sizing:border-box;padding:11px;border:1px solid #8a7355;border-radius:5px;background:#fffefa;color:#473b30;font:inherit;resize:vertical}
 .campaign-home-editor-actions{display:flex;gap:10px;flex-wrap:wrap}
 .campaign-home-hint{font-size:.85rem;line-height:1.5;margin:0}
+.campaign-home-image-error{margin:0;color:#732424;font-weight:600;line-height:1.5}
+.campaign-home-editor [aria-invalid=true]{border:2px solid #732424}
 .campaign-home-editor [role=status]:empty{display:none}
 .campaign-home-shell :focus-visible,.campaign-home-editor :focus-visible{outline:3px solid #732424;outline-offset:3px}
 @media(max-width:780px){.campaign-book-opening--illustrated{grid-template-columns:1fr}.campaign-book-cover{margin:0 20px 24px}.campaign-book-cover img{max-height:420px}.campaign-home-image-tools{padding:0 20px 24px}}

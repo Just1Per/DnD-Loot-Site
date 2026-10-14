@@ -12,10 +12,11 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 | P1 | Player campaign information | Integrated into main by PR #95 | DM explicitly selects World Builder entries to share; members get a deeper campaign guide from a link beneath the front page; private notes and unrevealed records remain inaccessible. |
 | P1 | Player NPC catalogue | Integrated into main by PR #95 | Only DM-revealed NPCs appear; searchable names and player-facing descriptions; hidden identities, motives and combat prep stay private. |
 | P1 | Player chapter overview and notes | Integrated into main by PR #95 | DM publishes completed chapters deliberately; players see the published recap and can save their own chapter notes; unrevealed chapter plans remain private. |
+| P1 | Consolidated DM and player navigation | Design approved; queued after image-save feedback | Player destinations: Home, Journal (campaign guide, known NPCs, completed chapters), My Character (sheet, equipment/loot, saved items), Library. DMs additionally receive one DM Workspace with Overview, World, Creatures & NPCs, Chapters, Party & Loot. Campaign settings/members/invites move to a header action. Preserve records, permission checks, refresh restoration, draft guards and existing styling; One Shots remains paused. |
 | P2 | Dedicated DM Creatures & NPCs tab | Merged PR #96; CI passed | Move creature authoring/catalogue access into a clear dedicated tab while preserving existing records, SRD attribution, personal templates and encounter references. |
 | P2 | World Builder cleanup | Merged PR #97; CI passed | Focus on setting, locations, factions and player-facing campaign information; distinguish drafts, shared content and DM secrets; keep existing IDs, links, maps and uploads. |
 | P2 | Chapter Tracker cleanup | Merged PR #98; CI passed | Clear chapter preparation, completion, recap and publish actions; separate DM planning from player-visible recap; retain milestone approval and character independence. |
-| P3 | Creature & NPC editor cleanup | Implemented, pending review | Story-first NPC preparation and optional combat-stat sections; preserve hidden statistics, boss phases, source attribution, personal templates and encounter snapshots when toggling sections. |
+| P3 | Creature & NPC editor cleanup | Merged PR #101 | Story-first NPC preparation and optional combat-stat sections; preserve hidden statistics, boss phases, source attribution, personal templates and encounter snapshots when toggling sections. |
 | P3 | Campaign front-page layout preferences | Queued | Offer limited book-style layout/section options after reviewing the current page; preserve the existing default, accessible images and saved text. |
 | Paused | One Shots cleanup | Paused by owner | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
 
@@ -29,6 +30,7 @@ Pause all One Shots feature development. Existing records and behavior are retai
 
 ## Front-page follow-ups
 
+- Image-save feedback: keep successful filenames visible, place the required description by the preview and associate validation errors with the field without losing the uploaded draft. Prepared for review; verify the owner's reported save behavior separately from authenticated image-read/CORS configuration.
 - Cover uploads are implemented in PR #90, with authenticated member reads and format/size validation.
 - Links below the front page open Campaign information, NPC catalogue and Chapter overview in the current review stack.
 - Optional campaign layout/section preferences after the first layout is reviewed.
