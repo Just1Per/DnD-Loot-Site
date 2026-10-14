@@ -60,6 +60,17 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  if(await page.locator('.campaign-book-cover img').getAttribute('alt')!=='The Storm Coast under a golden sky')throw Error('Cover description missing');
  const coverBox=await page.locator('#tab-campaign-home .campaign-book-cover').boundingBox(), titleBox=await page.locator('#tab-campaign-home .campaign-book-title').boundingBox();
  if(coverBox.x<=titleBox.x+titleBox.width-2)throw Error('Desktop cover is not to the right of the description');
+ const homeSizing=await page.locator('#tab-campaign-home .campaign-home-shell').evaluate(shell=>{
+  const style=getComputedStyle(shell),box=shell.getBoundingClientRect();
+  return {maxWidth:style.maxWidth,width:box.width,viewport:innerWidth,
+    coverHeight:getComputedStyle(shell.querySelector('.campaign-book-cover img')).maxHeight};
+ });
+ if(homeSizing.maxWidth!=='none'||homeSizing.width<=1040||homeSizing.width>homeSizing.viewport)
+  throw Error('Campaign Home should fill available desktop width without the 1040px limit: '+JSON.stringify(homeSizing));
+ if(homeSizing.coverHeight==='600px')
+  throw Error('Campaign cover still uses its old 600px height restriction');
+ console.log('PASS Full-width campaign Home and larger desktop illustration');
+
  console.log('PASS DM save, player-facing preview, safe text and accessible artwork');
  await page.locator('[data-edit-campaign-home]').click();
  if(await page.locator('[name=tagline]').inputValue()!=='Beyond the horizon')throw Error('Saved draft not restored');
