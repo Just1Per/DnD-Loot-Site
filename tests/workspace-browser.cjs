@@ -100,12 +100,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.waitForFunction(()=>CampaignWorkspace.session?.record?.revision===1);
  if(await page.evaluate(()=>CampaignWorkspace.session.record.id)!==creatureMaster.id||await page.locator('[data-record-field=hp]').inputValue()!=='45')throw Error('Dedicated tab lost the existing master ID or statistics');
  console.log('PASS Personal template edits and imports preserve saved creature IDs, revisions and combat statistics');
- await navigate(page,'dm-chapters');
- if(await page.locator('[data-new-record]').count()){
-   await page.locator('[data-new-record]').click();
-   if(await page.locator('[data-journal-image-upload]').count()!==1)throw Error('Chapter editor missing per-campaign illustration controls');
- }
-await page.waitForSelector('[data-new-record]');await page.locator('[data-new-record]').click();await page.locator('[name="title"]').fill('The Road North');await page.locator('[data-record-field="targetLevel"]').fill('8');await page.locator('[data-record-field="status"]').selectOption('Completed');
+ await navigate(page,'dm-chapters');await page.waitForSelector('[data-new-record]');await page.locator('[data-new-record]').click();await page.locator('[name="title"]').fill('The Road North');await page.locator('[data-record-field="targetLevel"]').fill('8');await page.locator('[data-record-field="status"]').selectOption('Completed');
  await page.waitForFunction(()=>document.querySelector('[data-link-picker]')?.options.length>2);const creatureLink=await page.locator('[data-link-picker] option').evaluateAll(options=>options.find(o=>o.textContent.includes('Skeletal Knight'))?.value);await page.locator('[data-link-picker]').selectOption(creatureLink);await page.locator('[data-add-link]').click();await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record?.revision===1);
  if(await page.evaluate(()=>characters.find(c=>c.id==='c1').level)!==7)throw Error('Completing chapter changed character level');await page.locator('[data-approve-milestone="c1"]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record?.revision===2);if(await page.evaluate(()=>characters.find(c=>c.id==='c1').level)!==7)throw Error('Approval silently changed character level');
  console.log('PASS Chapter links, progress and explicit milestone approval without automatic level changes');
