@@ -1,7 +1,7 @@
 'use strict';
 /* On-demand, source-linked D&D lookup. Responses are never written to the catalogue or Firestore. */
 var AiLookup=(()=>{
- const selector='.item-card,[data-spell-info],[data-generated-spell-info],[data-item-information],[data-feat-info],[data-selected-feat-info],[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]';
+ const selector='#tab-library .toolbar,#sheet-feats>h3,#sheet-spells>h3,.item-card,[data-spell-info],[data-generated-spell-info],[data-item-information],[data-feat-info],[data-selected-feat-info],[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]';
  const icon='<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18V4.8A1.8 1.8 0 0 1 4.8 3H8a4 4 0 0 1 4 4 4 4 0 0 1 4-4h3.2A1.8 1.8 0 0 1 21 4.8V18h-5a4 4 0 0 0-4 3 4 4 0 0 0-4-3H3Z"/></svg>';
  let dialog=null,focusReturn=null,runSerial=0,lastRequest=0,observer=null,queued=new Set(),queuedFrame=0;
  // Bootstrap removes the dependency bridge once all modules are loaded; keep our reference.
@@ -15,6 +15,9 @@ var AiLookup=(()=>{
   try{return CharacterCatalog.find(id,kind==='feat'?'feats':undefined)||null;}catch(_){return null;}
  }
  function itemFor(node){
+  if(node.matches('#tab-library .toolbar'))return info('item','');
+  if(node.matches('#sheet-feats>h3'))return info('feat','', '',edition());
+  if(node.matches('#sheet-spells>h3'))return info('spell','', '',edition());
   if(node.matches('.item-card')){
    const id=node.dataset.itemId;
    const item=(typeof items!=='undefined'?items:[]).find(row=>row.id===id)
@@ -53,6 +56,8 @@ var AiLookup=(()=>{
   return null;
  }
  function buttonFor(node){
+  if(node.matches('#tab-library .toolbar'))return {host:node,after:false};
+  if(node.matches('#sheet-feats>h3,#sheet-spells>h3'))return {host:node,after:false};
   if(node.matches('.item-card')){
    const h=node.querySelector('.card-header .item-name');
    return h&&{host:h,after:false};
@@ -67,7 +72,7 @@ var AiLookup=(()=>{
   if(!node.isConnected||node.closest('#aiLookupDialog')||node.dataset.aiLookupDecorated)return;
   const target=buttonFor(node);if(!target?.host)return;
   const context=itemFor(node);if(!context)return;
-  const dynamic=node.matches('[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]');
+  const dynamic=node.matches('#tab-library .toolbar,#sheet-feats>h3,#sheet-spells>h3,[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]');
   if(!dynamic&&(!context.name||/^(choose|select|—)/i.test(context.name)))return;
   const button=document.createElement('button');
   button.type='button';button.className='ai-lookup-icon';button.innerHTML=icon;
