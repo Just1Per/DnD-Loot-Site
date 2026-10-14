@@ -1,7 +1,7 @@
 'use strict';
 /* On-demand, source-linked D&D lookup. Responses are never written to the catalogue or Firestore. */
 var AiLookup=(()=>{
- const selector='.item-card,[data-spell-info],[data-generated-spell-info],[data-feat-info],[data-selected-feat-info],[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]';
+ const selector='.item-card,[data-spell-info],[data-generated-spell-info],[data-item-information],[data-feat-info],[data-selected-feat-info],[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]';
  const icon='<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18V4.8A1.8 1.8 0 0 1 4.8 3H8a4 4 0 0 1 4 4 4 4 0 0 1 4-4h3.2A1.8 1.8 0 0 1 21 4.8V18h-5a4 4 0 0 0-4 3 4 4 0 0 0-4-3H3Z"/></svg>';
  let dialog=null,focusReturn=null,runSerial=0,lastRequest=0,observer=null,queued=new Set(),queuedFrame=0;
  // Bootstrap removes the dependency bridge once all modules are loaded; keep our reference.
@@ -29,6 +29,11 @@ var AiLookup=(()=>{
    const row=typeof sheetSession!=='undefined'?sheetSession?.data?.spells?.[Number(node.dataset.generatedSpellInfo)]:null;
    const found=catalog(row?.catalogId,'spell');
    return info('spell',found?.name||row?.name,row?.book||found?.source||'',found?.edition||edition(),row?.level===0?'Cantrip':row?.level!=null?'Spell level '+row.level:'');
+  }
+  if(node.matches('[data-item-information]')){
+   const name=node.closest('[data-active-gear]')?.querySelector('strong')?.textContent?.replace(/\\s+×\\s+\\d+$/,'');
+   const item=(typeof items!=='undefined'?items:[]).find(row=>row.name===name);
+   return info('item',name,item?.source||'','',item?.category||'');
   }
   if(node.matches('[data-feat-info],[data-selected-feat-info]')){
    const row=catalog(node.dataset.featInfo||node.dataset.selectedFeatInfo,'feat');
