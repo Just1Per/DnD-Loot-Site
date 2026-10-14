@@ -1,12 +1,12 @@
 /* Campaign-book presentation, scoped away from character sheets and DM tools. */
-.campaign-home-shell{width:100%;box-sizing:border-box;margin:0 auto;padding:20px 16px 48px}
+.campaign-home-shell{width:100%;max-width:none;box-sizing:border-box;margin:0;padding:20px 16px 48px}
 .campaign-home-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;color:#66584a}
 .campaign-home-toolbar p{margin:0}
 .campaign-book{background:#fdfbf7;border:3px double #8a7355;border-radius:8px;overflow:hidden;box-shadow:0 12px 32px rgba(55,32,18,.13);color:#473b30}
-.campaign-book-opening--illustrated{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);align-items:start}
+.campaign-book-opening--illustrated{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);align-items:stretch}
 .campaign-book-copy{min-width:0}
-.campaign-book-cover{margin:28px 28px 28px 0;min-width:0;background:#ede4d5;border:1px solid #c8b89a;border-radius:4px;overflow:hidden}
-.campaign-book-cover img{display:block;width:100%;height:auto;max-height:min(78vh,880px);object-fit:contain}
+.campaign-book-cover{margin:28px 28px 28px 0;min-width:0;min-height:clamp(320px,42vw,640px);background:#ede4d5;border:1px solid #c8b89a;border-radius:4px;overflow:hidden}
+.campaign-book-cover img{display:block;width:100%;height:100%;min-height:clamp(320px,42vw,640px);max-height:min(80vh,900px);object-fit:cover;object-position:center}
 .campaign-book-cover figcaption{padding:8px 20px;font-size:.8rem;color:#66584a;overflow-wrap:anywhere}
 .campaign-book-cover [data-cover-status]{margin:20px;overflow-wrap:anywhere}
 .campaign-book-cover [data-cover-retry]{margin:0 20px 20px;max-width:calc(100% - 40px)}
@@ -42,5 +42,5 @@
 .campaign-home-editor [aria-invalid=true]{border:2px solid #732424}
 .campaign-home-editor [role=status]:empty{display:none}
 .campaign-home-shell :focus-visible,.campaign-home-editor :focus-visible{outline:3px solid #732424;outline-offset:3px}
-@media(max-width:780px){.campaign-book-opening--illustrated{grid-template-columns:1fr}.campaign-book-cover{margin:0 20px 24px}.campaign-book-cover img{max-height:420px}.campaign-home-image-tools{padding:0 20px 24px}}
+@media(max-width:780px){.campaign-book-opening--illustrated{grid-template-columns:1fr}.campaign-book-cover{margin:0 20px 24px;min-height:0}.campaign-book-cover img{height:auto;min-height:0;max-height:420px;object-fit:contain}.campaign-home-image-tools{padding:0 20px 24px}}
 @media(max-width:580px){.campaign-home-shell{padding:16px 10px 32px}.campaign-home-toolbar{align-items:flex-start;flex-direction:column}.campaign-home-links>*{flex:1 1 200px}}
