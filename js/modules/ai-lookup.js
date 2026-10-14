@@ -151,7 +151,7 @@ var AiLookup=(()=>{
   d.querySelector('#aiLookupEdition').value=['2014','2024'].includes(context.edition)?context.edition:'';
   d.querySelector('#aiLookupSource').value=context.source;
   d.dataset.extra=context.extra||'';
-  resetOutput();syncLink();d.querySelector('#aiLookupRun').disabled=false;
+  resetOutput();syncLink();d.querySelector('#aiLookupRun').disabled=false;d.querySelector('#aiLookupRun').textContent='Search with Gemini';
   if(deps().aiLookupConfigured===false)d.querySelector('#aiLookupStatus').textContent='Gemini is not configured yet. Your site owner must enable Firebase AI Logic and App Check. You can use the Google search link in the meantime.';
   d.showModal();d.querySelector('#aiLookupName').focus();
  }
@@ -196,7 +196,7 @@ var AiLookup=(()=>{
     frame.title='Google Search suggestions';
     frame.setAttribute('sandbox','allow-popups allow-popups-to-escape-sandbox');
     frame.setAttribute('referrerpolicy','no-referrer');
-    frame.srcdoc=rendered;box.append(frame);box.hidden=false;
+    frame.setAttribute('srcdoc',rendered);box.append(frame);box.hidden=false;
    }
    d.querySelector('#aiLookupStatus').textContent=urls.size?'AI-generated overview. Open a source to confirm the details.':'Unverified AI overview: Google provided no linked sources. Confirm everything in the official book.';
   }catch(error){
