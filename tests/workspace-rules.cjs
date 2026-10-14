@@ -7,6 +7,20 @@ const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-s
  const db=Object.fromEntries(['owner','dm','player','revoked','admin','outsider'].map(uid=>[uid,env.authenticatedContext(uid).firestore()]));
  const store=createCampaignWorkspaceStore({...sdk,db:db.dm,auth:{currentUser:{uid:'dm'}}});const args={campaignId:'a',kind:'world',id:'north',revision:0,input:{title:'North',content:'A cold land',privateNotes:'Secret cult',data:{category:'Region'}}};
  await check('DM saves world description and secret together',async()=>{await assertSucceeds(store.save(args));assert.equal((await sdk.getDoc(sdk.doc(db.dm,'campaigns/a/worldEntries/north'))).data().privateNotes,undefined)});
+ await check('Illustrations are bound to exactly one campaign, record kind and ID',async()=>{
+  const scoped={path:'campaign-journal-images/a/world/painted/image-1',alt:'A valley',caption:'Northern valley',uploadedBy:'dm',uploadedAt:Date.now()};
+  const input={title:'Painted country',content:'Tall mountains',privateNotes:'Spoiler',data:{category:'Region',journalImage:scoped}};
+  const save=async(id,meta)=>store.save({campaignId:'a',kind:'world',id,revision:0,input:{...input,data:{category:'Region',journalImage:meta}}});
+  await assertSucceeds(save('painted',scoped));
+  const saved=(await sdk.getDoc(sdk.doc(db.dm,'campaigns/a/worldEntries/painted'))).data();
+  assert.equal(saved.data.journalImage.path,scoped.path);
+  await assertFails(save('wrong-campaign',{...scoped,path:'campaign-journal-images/b/world/wrong-campaign/image-1'}));
+  await assertFails(save('wrong-record',{...scoped,path:'campaign-journal-images/a/world/other/image-1'}));
+  await assertFails(save('wrong-kind',{...scoped,path:'campaign-journal-images/a/creature/wrong-kind/image-1'}));
+  await assertFails(save('wrong-path',{...scoped,path:'https://example.com/external-image.png'}));
+  await assertFails(save('bad-meta',{...scoped,caption:'x'.repeat(501)}));
+  await assertFails(sdk.getDoc(sdk.doc(db.player,'campaigns/a/worldEntries/painted')));
+ });
  await check('Owner can read world and its secrets',async()=>{await assertSucceeds(sdk.getDoc(sdk.doc(db.owner,'campaigns/a/worldEntries/north')));await assertSucceeds(sdk.getDoc(sdk.doc(db.owner,'campaigns/a/workspaceSecrets/world-north')))});
  await check('Players, outsiders, removed DMs and global admins cannot read private workspace',async()=>{for(const uid of ['player','outsider','revoked','admin'])for(const path of ['worldEntries/north','workspaceSecrets/world-north'])await assertFails(sdk.getDoc(sdk.doc(db[uid],'campaigns/a/'+path)))});
  await check('Another campaign and forged global privileges cannot authorize a write',async()=>{await assertFails(store.save({...args,campaignId:'b'}));for(const uid of ['player','outsider','revoked','admin'])await assertFails(sdk.setDoc(sdk.doc(db[uid],'campaigns/a/worldEntries/forged'),{title:'Forged'}))});
