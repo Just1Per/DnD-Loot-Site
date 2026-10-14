@@ -10,6 +10,8 @@ var AppShell=(()=>{
  function ensure(){
   const main=document.getElementById('mainApp'),navigation=document.getElementById('campaignSectionNavigation');if(!main||!navigation)return;
   const group=navigation.querySelector('[data-section-group="dm"]');
+  if(!document.getElementById('dmPartyTab')){const button=document.createElement('button');button.id='dmPartyTab';button.type='button';button.className='tab';button.dataset.tab='dm-party';button.textContent='Party & Loot';button.onclick=()=>showTab('dm-party');group.append(button);}
+  if(!document.getElementById('tab-dm-party')){const panel=document.createElement('section');panel.id='tab-dm-party';panel.className='tab-content';panel.style.display='none';panel.setAttribute('aria-label','Party & Loot');panel.innerHTML='<div id="dmPartyPanel"><h2>Party &amp; Loot</h2><p>Character sheets, inventories, saved items and campaign loot.</p><div class="dm-tools-grid"></div></div>';main.append(panel);}
   for(const tab of dm){
    let button=document.querySelector('.tab[data-tab="'+tab+'"]');
    if(tab==='dm'){

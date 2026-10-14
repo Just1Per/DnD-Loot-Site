@@ -28,14 +28,15 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
  await page.evaluate(()=>{auditSeed('dm');showTab('dm')});
  const cards=page.locator('#dmToolsPanel .dm-tools-grid > .dm-tool-card:not(.dm-tool-card--wide)');
  const headings=await cards.locator('h2').evaluateAll(nodes=>nodes.map(node=>node.textContent.replace(/\?/g,'').trim()));
- check('Five desktop DM cards appear in the requested order',JSON.stringify(headings)===JSON.stringify(['Item Controls','World Building','Creatures & NPCs','Chapter Tracker','One Shots']));
+ check('Three preparation cards appear in the requested order',JSON.stringify(headings)===JSON.stringify(['World Building','Creatures & NPCs','Chapter Tracker']));
  check('Primary site actions use burgundy',await page.locator('#dmOpenLibrary').evaluate(node=>getComputedStyle(node).backgroundColor==='rgb(155, 29, 29)'));
  const positions=await cards.evaluateAll(nodes=>nodes.map(node=>({y:node.getBoundingClientRect().y,height:node.getBoundingClientRect().height})));
- check('Five desktop DM cards share one row',positions.every(point=>Math.abs(point.y-positions[0].y)<1));
+ check('Three preparation cards share one row',positions.every(point=>Math.abs(point.y-positions[0].y)<1));
  check('DM card heights follow content without a 340 px minimum',await cards.first().evaluate(node=>getComputedStyle(node).minHeight!=='340px'));
  await page.setViewportSize({width:390,height:844});
  check('DM layout fits mobile',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await page.setViewportSize({width:1440,height:1000});
+ await page.evaluate(()=>showTab('dm-party'));
  for(const modal of ['itemModal','userModal','editCharModal','wishModal','campaignModal']){
   await page.locator('#dmOpenLibrary').focus();
   await page.evaluate(id=>openVaultModal(id),modal);
