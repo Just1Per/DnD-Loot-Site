@@ -85,10 +85,14 @@ service firebase.storage {
     // Unlike campaign covers, these illustrations remain private to active DMs
     // even when a world description or NPC is revealed to players.
     match /campaign-journal-images/{campaignId}/{kind}/{entryId}/{imageId} {
-      allow read: if kind in ['world', 'creature', 'chapter', 'encounter']
-        && isCampaignDM(campaignId);
+      function supportedJournalKind() {
+        return kind == 'world' || kind == 'creature'
+          || kind == 'chapter' || kind == 'encounter';
+      }
+      allow read: if supportedJournalKind() && isCampaignDM(campaignId);
+      // New unique objects only; nothing can overwrite or delete an existing image.
       allow create: if resource == null
-        && kind in ['world', 'creature', 'chapter', 'encounter']
+        && supportedJournalKind()
         && isCampaignDM(campaignId)
         && validImage();
     }
