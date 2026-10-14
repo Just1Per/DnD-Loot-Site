@@ -76,7 +76,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.locator('[data-home-cancel]').click();
  if(!(await page.locator('.campaign-book').textContent()).includes('Beyond the horizon'))throw Error('Cancel modified published content');
  console.log('PASS Saved content reopens and cancelling protects the draft');
- await page.locator('[data-tab=dm]').click();
+ await page.locator('#campaignSettingsButton').click();
  await page.locator('#dmEditCampaignHome').click();
  if(!await page.locator('#tab-campaign-home form#campaignHomeEditor').isVisible())throw Error('Campaign settings do not open the inline front-page editor');
  await page.locator('[name=tagline]').fill('Conflicting update');

@@ -6,12 +6,13 @@
 
 /** Select a permitted app tab; sheet rendering can be deferred by its caller. */
 function showTab(tabId, render = true) {
+  tabId=AppShell.resolve(tabId);
   if (['campaign-home','campaign-information','campaign-npcs','campaign-chapters'].includes(tabId) && !activeCampaign) return;
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
-  if(tabId==='player-adventures'&&(!activeCampaign||!canUseCharacters()))return;
+  if(['player','player-adventures'].includes(tabId)&&(!activeCampaign||!canUseCharacters()))return;
   if(tabId!=="character-sheet"&&!SheetNavigation.guard(()=>showTab(tabId,render)))return;
   if (tabId === "admin") { openAdminView(); return; }
-  if ((tabId === "dm" || ["dm-world","dm-creatures","dm-chapters","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
+  if ((tabId === "dm" || ["dm-world","dm-creatures","dm-chapters","dm-party","dm-settings","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
   if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
   if (typeof CampaignHome!=="undefined" && !CampaignHome.beforeNavigate(tabId)) return;
   if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate(tabId))return;
@@ -21,7 +22,7 @@ function showTab(tabId, render = true) {
   if (btn) btn.classList.add("active");
   const panel = document.getElementById(`tab-${tabId}`);
   if (panel) panel.style.display="block";
-  const title=document.getElementById('siteScreenTitle');if(title)title.textContent=(btn?.textContent||'Campaign')+' · CampaignAtlas';
+  AppShell.update(tabId);
   if(render&&tabId==='player-adventures')CampaignWorkspace.render('playerAdventure');
   if(render&&tabId==='campaign-home')CampaignHome.render();
   if(render&&tabId==='campaign-information')CampaignInformation.render();
@@ -31,7 +32,7 @@ function showTab(tabId, render = true) {
   if (render&&tabId==="dm-chapters") CampaignWorkspace.render("chapter");
   if (render&&tabId==="dm-world") CampaignWorkspace.render("world");
   if (render&&tabId==="dm-creatures") CampaignWorkspace.render("creature");
-  if (tabId==="dm")      { renderDMTools(); }
+  if (['dm','dm-settings','dm-party'].includes(tabId)) { renderDMTools(); }
   if (tabId==="character-sheet" && render) { renderCharacterSheetTab(); }
   if (tabId==="player")  { renderPlayerTab(); }
   if (tabId==="library") { renderVisibilityControls(); }
@@ -42,6 +43,7 @@ function initTabs() {
   document.getElementById("adminTab").addEventListener("click", openAdminView);
   document.getElementById("closeAdminView").addEventListener("click", closeAdminView);
   document.querySelectorAll(".tab").forEach(btn=>{
+    if(btn.id.startsWith("dmPlanningTab-"))return;
     btn.addEventListener("click", ()=>showTab(btn.dataset.tab));
   });
 }

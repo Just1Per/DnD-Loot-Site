@@ -2,7 +2,7 @@
 async function renderCampaignRulesTools(){
  document.getElementById('dmCampaignRules')?.remove();
  const campaign=activeCampaign;if(!campaign||!canManageCampaign())return;
- const grid=document.querySelector('#dmToolsPanel .dm-tools-grid');if(!grid)return;
+ const grid=document.querySelector('#campaignSettingsPanel .dm-tools-grid')||document.querySelector('#dmToolsPanel .dm-tools-grid');if(!grid)return;
  document.getElementById('dmCampaignRules')?.remove();
  const host=document.createElement('section');host.id='dmCampaignRules';host.className='dm-tool-card dm-tool-card--wide';
  host.innerHTML='<h2>Campaign rules & feat catalogue</h2><p>Choose the rules players can browse. Hidden editions and feats are removed from new choices; existing character selections are preserved. Changes apply only to this campaign.</p><label>Available rules<select id="dmAllowedEditions"><option value="both">2014 and 2024</option><option value="2014">2014 only</option><option value="2024">2024 only</option></select></label><div class="dm-tool-actions"><button type="button" data-save-editions>Save rules</button><button type="button" data-new-campaign-feat>+ Custom feat</button><button type="button" data-reset-campaign-feats>Reset feats to default</button></div><p data-rules-status role="status"></p><label>Find feat<input type="search" data-feat-search placeholder="Name…"></label><label>Campaign feat<select data-campaign-feat></select></label><div data-campaign-feat-editor></div>';

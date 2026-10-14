@@ -19,3 +19,9 @@ Browser-controlled refresh/close warnings still use the browser's own buttons. B
 ## Verification
 
 `npm --prefix tests run test:navigation` uses real browser reloads and the application's authentication/startup loaders against an isolated Firebase fixture. It covers saved destinations, current permissions, account isolation, failed/conflicting/pending saves, validation, logout, focus containment, Escape, mobile layout and axe checks. It also verifies malformed or missing destinations and disabled storage. Existing character, workspace, front-page and Firestore permission suites remain in use. No One Shots feature work is included.
+
+## Grouped campaign navigation
+
+Home, Journal, My Character, Library and the campaign-DM-only DM Workspace are the primary destinations. Journal groups the campaign guide, known NPCs and completed chapters; the existing member-facing snapshots remain the source for those pages. My Character groups the existing character list and full sheet. DM workspaces retain their concrete routes inside secondary navigation. The Settings header action opens campaign settings, members, invitations and rules together. It requires campaign management permission, including for global administrators.
+
+Remember concrete subsections rather than group names, so refresh and returning from Admin restore the actual page. Home shortcuts open the relevant Journal subsection directly, and returning to Journal retains its last visited subsection. Existing Save/Discard/Stay guards run before changing the visible navigation. No data migration, permission rules changes or One Shots feature development are included.

@@ -31,7 +31,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   ref, getDownloadURL, uploadBytes, getBlob,
 });
 
-const ASSET_VERSION = "20261014-cover-save-feedback-v1";
+const ASSET_VERSION = "20261014-navigation-groups-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -132,6 +132,7 @@ const FEATURE_FILES = [
   "./modules/site-help.js",
   "./modules/sheet-navigation.js",
   "./modules/navigation-state.js",
+  "./modules/app-shell.js",
   "./modules/ui-auth.js"
 ];
 
