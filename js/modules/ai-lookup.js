@@ -58,7 +58,8 @@ var AiLookup=(()=>{
    return h&&{host:h,after:false};
   }
   if(node.matches('[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]')){
-   return {host:node,after:true};
+   // Keep the independent book button outside labels so it never toggles form values.
+   return {host:node.closest('label')||node,after:true};
   }
   return {host:node,after:true};
  }
