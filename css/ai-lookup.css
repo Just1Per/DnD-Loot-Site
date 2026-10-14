@@ -1,0 +1,63 @@
+/* AI Lookup is a lightweight reference tool, not an item editor or inventory action. */
+.ai-lookup-icon{
+  display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
+  width:29px;min-width:29px;height:29px;margin-left:6px;padding:4px;
+  border:1px solid #a48a5d;border-radius:7px;background:#f8eacb;color:#663829;
+  cursor:pointer;box-shadow:0 1px 3px rgba(55,33,13,.12);
+}
+.ai-lookup-icon:hover{background:#eed6a7;border-color:#875e32}
+.ai-lookup-icon:focus-visible{outline:3px solid #9b1d1d;outline-offset:2px}
+.item-card .item-name .ai-lookup-icon{font-size:initial;letter-spacing:normal;text-transform:none}
+.sheet-feat-results article>.ai-lookup-icon,.sheet-catalog-results article>.ai-lookup-icon{flex:0 0 29px}
+.sheet-class-spell-name .ai-lookup-icon{margin-top:3px}
+.ai-lookup-dialog{
+  box-sizing:border-box;width:min(740px,calc(100vw - 24px));max-width:none;
+  max-height:min(90dvh,900px);padding:0;border:2px solid #947348;
+  border-radius:14px;background:#fffaf0;color:#342d26;
+  box-shadow:0 24px 75px rgba(25,15,9,.42);overflow:auto;
+}
+.ai-lookup-dialog::backdrop{background:rgba(18,13,9,.7);backdrop-filter:blur(3px)}
+.ai-lookup-head{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  background:linear-gradient(120deg,#352923,#593929);color:#fff7e7;
+  border-bottom:3px solid #d4af37;padding:14px 18px;
+}
+.ai-lookup-heading{display:flex;gap:12px;align-items:center}
+.ai-lookup-heading>svg{width:28px;height:28px;color:#e6c883}
+.ai-lookup-heading small{font-size:10px;letter-spacing:.11em;color:#e5d1a8}
+.ai-lookup-heading h2{margin:2px 0 0;color:#fff8ea;font:700 1.25rem/1.2 Cinzel,Georgia,serif}
+.ai-lookup-close{font-size:25px;min-width:40px;min-height:40px;border:1px solid #caaf79;border-radius:7px;background:#f8e6bf;color:#4b2c20;cursor:pointer}
+.ai-lookup-content{padding:18px;display:grid;gap:13px}
+.ai-lookup-intro,.ai-lookup-privacy{margin:0;line-height:1.55;font-size:.85rem}
+.ai-lookup-privacy{color:#776452;font-size:.75rem}
+.ai-lookup-fields{display:grid;grid-template-columns:1.5fr 1fr;gap:10px 13px}
+.ai-lookup-fields label{display:grid;gap:5px;color:#5c1d1d;font:700 .77rem/1.3 Georgia,serif}
+.ai-lookup-fields input,.ai-lookup-fields select{
+  box-sizing:border-box;width:100%;min-width:0;min-height:40px;padding:8px;
+  font:400 15px/1.3 Georgia,serif;border:1px solid #bba782;border-radius:6px;
+  background:#fffdf8;color:#342d26;
+}
+.ai-lookup-dialog :is(button,a,input,select):focus-visible{outline:3px solid #9b1d1d;outline-offset:2px}
+.ai-lookup-status{font-size:.82rem;line-height:1.5;color:#654728}
+.ai-lookup-status:empty{display:none}
+.ai-lookup-answer{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;background:#f7eedc;border-left:4px solid #b28a48;border-radius:6px;padding:14px}
+.ai-lookup-sources h3,.ai-lookup-suggestions h3{margin:0 0 8px;color:#5c1d1d;font:700 .9rem Cinzel,Georgia,serif}
+.ai-lookup-sources ul{margin:0;padding-left:20px;display:grid;gap:5px}
+.ai-lookup-sources a{color:#6f251d;overflow-wrap:anywhere}
+.ai-lookup-suggestions iframe{display:block;width:100%;height:110px;border:0;background:transparent}
+.ai-lookup-dialog [hidden]{display:none!important}
+.ai-lookup-actions{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:13px 18px;background:#f1e6d0;border-top:1px solid #ccba94;
+}
+.ai-lookup-actions a{color:#5c1d1d;font-weight:700;font-size:.82rem}
+.ai-lookup-actions button{min-height:40px;padding:9px 17px;border-radius:7px}
+.ai-lookup-actions button:disabled{opacity:.65;cursor:wait}
+@media(max-width:620px){
+  .ai-lookup-dialog{width:calc(100vw - 12px);max-height:calc(100dvh - 12px)}
+  .ai-lookup-fields{grid-template-columns:1fr}
+  .ai-lookup-content{padding:12px}
+  .ai-lookup-actions{flex-wrap:wrap;padding:12px}
+  .ai-lookup-actions button{width:100%}
+}
+@media print{.ai-lookup-icon,.ai-lookup-dialog{display:none!important}}
