@@ -2254,7 +2254,7 @@
 }
 #characterSheetPage #characterSheetDialog :is(
   .sheet-editor-box,.sheet-repeat,.sheet-rule-summary,.sheet-resource-panel,.sheet-summary-box,
-  .sheet-point-panel,.sheet-spell-generation,.sheet-spell-generator,.sheet-catalog,
+  .sheet-point-panel,.sheet-spell-generation,.sheet-catalog,
   .sheet-class-block,.sheet-rules-feature,.sheet-rules-table-card
 ){
   padding:10px 12px;border-radius:5px!important;

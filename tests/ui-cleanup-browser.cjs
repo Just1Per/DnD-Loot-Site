@@ -83,6 +83,33 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
  await page.evaluate(()=>{sheetSession.data.build.classId='druid';sheetSession.data.adobe.classLevels=[{classId:'druid',level:3,subclassId:''},{classId:'cleric',level:3,subclassId:''}];renderCharacterSheet()});
  await page.evaluate(()=>selectSheetTab('spells'));
  check('Class spell tables are labelled keyboard scroll regions',await page.locator('.sheet-spell-table-wrap').evaluateAll(nodes=>nodes.length>=2&&nodes.every(node=>node.tabIndex===0&&node.getAttribute('role')==='region'&&node.getAttribute('aria-label'))));
+ await page.locator('[data-generate-class]').first().click();
+ await page.waitForFunction(()=>document.getElementById('sheetSpellGenerator')?.open);
+ const generator=page.locator('#sheetSpellGenerator');
+ check('Spell generator modal keeps opaque paper surface and no inset card padding',await generator.evaluate(dialog=>{
+   const style=getComputedStyle(dialog);
+   return style.backgroundColor!=='rgba(0, 0, 0, 0)'&&style.backgroundColor!=='transparent'
+     &&style.paddingTop==='0px'&&style.boxShadow!=='none'
+     &&getComputedStyle(dialog).display==='grid';
+ }));
+ check('Spell generator header, filters, spell list and footer stay inside the desktop dialog',await generator.evaluate(dialog=>{
+   const box=dialog.getBoundingClientRect(),head=dialog.querySelector('.sheet-page-manager-head').getBoundingClientRect(),footer=dialog.querySelector('.sheet-page-manager-actions').getBoundingClientRect(),list=dialog.querySelector('.sheet-spell-generator-results').getBoundingClientRect();
+   return box.width>600&&box.left>=0&&box.right<=innerWidth&&head.top>=box.top&&footer.bottom<=box.bottom+1&&list.height>80;
+ }));
+ await page.screenshot({path:path.join(out,'spell-generator-desktop.png')});
+ await page.setViewportSize({width:390,height:640});
+ check('Spell generator mobile dialog fits viewport and allows scrolling to spells',await generator.evaluate(dialog=>{
+   const rect=dialog.getBoundingClientRect(),body=dialog.querySelector('.sheet-spell-generator-body'),list=dialog.querySelector('.sheet-spell-generator-results'),footer=dialog.querySelector('.sheet-page-manager-actions').getBoundingClientRect();
+   const style=getComputedStyle(body);
+   return rect.left>=-1&&rect.right<=innerWidth+1&&rect.top>=-1&&rect.bottom<=innerHeight+1
+     &&style.overflowY==='auto'&&list.getBoundingClientRect().height>=150
+     &&footer.bottom<=innerHeight+1&&!!dialog.querySelector('#spellGeneratorApply');
+ }));
+ await page.screenshot({path:path.join(out,'spell-generator-mobile.png')});
+ await page.keyboard.press('Escape');
+ check('Spell generator closes with Escape without applying draft spells',await page.evaluate(()=>!document.getElementById('sheetSpellGenerator').open));
+ await page.setViewportSize({width:1440,height:1000});
+
  for(const tab of ['builder','skills','combat','spells','inventory','feats','story','notes','companion','rules']){
   await page.evaluate(tab=>{selectSheetTab(tab);SiteHelp.refresh()},tab);await wait(100);
   const violations=await page.evaluate(async()=> (await axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa','best-practice']}})).violations.map(v=>({id:v.id,targets:v.nodes.map(n=>n.target)})));
