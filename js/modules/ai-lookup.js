@@ -4,7 +4,9 @@ var AiLookup=(()=>{
  const selector='.item-card,[data-spell-info],[data-generated-spell-info],[data-feat-info],[data-selected-feat-info],[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]';
  const icon='<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18V4.8A1.8 1.8 0 0 1 4.8 3H8a4 4 0 0 1 4 4 4 4 0 0 1 4-4h3.2A1.8 1.8 0 0 1 21 4.8V18h-5a4 4 0 0 0-4 3 4 4 0 0 0-4-3H3Z"/></svg>';
  let dialog=null,focusReturn=null,runSerial=0,lastRequest=0,observer=null,queued=new Set(),queuedFrame=0;
- const deps=()=>window.__DND_VAULT_DEPS__||{};
+ // Bootstrap removes the dependency bridge once all modules are loaded; keep our reference.
+ const lookupDeps=window.__DND_VAULT_DEPS__||{};
+ const deps=()=>lookupDeps;
  const norm=v=>String(v??'').replace(/\s+/g,' ').trim().slice(0,160);
  const edition=()=>typeof sheetSession!=='undefined'?sheetSession?.data?.build?.edition||'':'';
  const info=(kind,name,source='',ruleEdition='',extra='')=>({kind,name:norm(name),source:norm(source),edition:norm(ruleEdition),extra:norm(extra)});
