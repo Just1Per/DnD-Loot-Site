@@ -41,7 +41,7 @@
   check('DM Saved popup uses the same full item cards without loot actions',
    !!document.querySelector('#wishModalGrid .saved-item-card .property-block')&&
    !!document.querySelector('#wishModalGrid .saved-remove-button')&&
-   !document.querySelector('#wishModalGrid .loot-button,.assign-button,.use-button'));
+   !document.querySelector('#wishModalGrid .loot-button,#wishModalGrid .assign-button,#wishModalGrid .use-button'));
   closeWishModal();
  }catch(e){results.push({name:e.stack,pass:false});}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
