@@ -1,12 +1,12 @@
 /* Campaign-book presentation, scoped away from character sheets and DM tools. */
-.campaign-home-shell{max-width:1040px;margin:0 auto;padding:20px 16px 48px}
+.campaign-home-shell{width:100%;box-sizing:border-box;margin:0 auto;padding:20px 16px 48px}
 .campaign-home-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;color:#66584a}
 .campaign-home-toolbar p{margin:0}
 .campaign-book{background:#fdfbf7;border:3px double #8a7355;border-radius:8px;overflow:hidden;box-shadow:0 12px 32px rgba(55,32,18,.13);color:#473b30}
 .campaign-book-opening--illustrated{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);align-items:start}
 .campaign-book-copy{min-width:0}
 .campaign-book-cover{margin:28px 28px 28px 0;min-width:0;background:#ede4d5;border:1px solid #c8b89a;border-radius:4px;overflow:hidden}
-.campaign-book-cover img{display:block;width:100%;height:auto;max-height:600px;object-fit:contain}
+.campaign-book-cover img{display:block;width:100%;height:auto;max-height:min(78vh,880px);object-fit:contain}
 .campaign-book-cover figcaption{padding:8px 20px;font-size:.8rem;color:#66584a;overflow-wrap:anywhere}
 .campaign-book-cover [data-cover-status]{margin:20px;overflow-wrap:anywhere}
 .campaign-book-cover [data-cover-retry]{margin:0 20px 20px;max-width:calc(100% - 40px)}
