@@ -33,8 +33,8 @@ export { app };
 // Public reCAPTCHA Enterprise SITE key (not a secret). Fill this only after registering
 // the production domain under Firebase Console > Security > App Check.
 // Never put a Gemini Developer API secret key into the browser.
-const AI_LOOKUP_RECAPTCHA_SITE_KEY = "";
-export const aiLookupConfigured = 6LfO6O4tAAAAAMjmMccSvNtQXPkVKnbTwtXyDCAL;
+const AI_LOOKUP_RECAPTCHA_SITE_KEY = "6LfO6O4tAAAAAMjmMccSvNtQXPkVKnbTwtXyDCAL";
+export const aiLookupConfigured = !!AI_LOOKUP_RECAPTCHA_SITE_KEY;
 if (aiLookupConfigured) {
   initializeAppCheck(app, {
     provider: new ReCaptchaEnterpriseProvider(AI_LOOKUP_RECAPTCHA_SITE_KEY),
