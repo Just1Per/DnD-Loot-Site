@@ -183,20 +183,37 @@ var CampaignHome = (() => {
       <div class="campaign-book-opening campaign-book-opening--illustrated campaign-book-opening--editing" data-home-edit-fields>
         <div class="campaign-book-copy"><div class="campaign-book-title"><p class="campaign-book-eyebrow">Your campaign</p><h2>${escapeHtml(activeCampaign.name || 'An unwritten adventure')}</h2>${field('tagline','A line to set the scene','text','A tale of…')}<div class="campaign-book-rule" aria-hidden="true"></div></div><div class="campaign-book-chapters">${field('introduction','Campaign introduction','textarea','Welcome the party to your world.')}${field('expectations','Important campaign information & table rules','textarea','Tone, play style, session plans and table agreements.')}</div></div>
         <aside class="campaign-home-image-tools" aria-label="Campaign image controls"><div data-home-image-preview></div>
+          ${field('imageAlt','Image description','text','Describe the map or artwork.')}
+          <p id="campaignHomeImageHint" class="campaign-home-hint">Required when using an image. Briefly describe what the party can see in the map or artwork.</p>
+          <p id="campaignHomeImageError" class="campaign-home-image-error" hidden></p>
           <label class="campaign-home-upload-control"><span>Upload image</span><input type="file" accept="image/png,image/jpeg,image/webp" data-home-upload></label>
           <p class="campaign-home-hint">PNG, JPEG or WebP, smaller than 5 MB. Uploaded images are visible only to campaign members.</p>
           <p data-home-image-source>${data.imagePath ? 'An uploaded image is selected.' : 'Use an image URL or upload a file.'}</p>
-          ${field('imageUrl','Or use an HTTPS image URL','url','https://…')}${field('imageAlt','Image description','text','Describe the map or artwork.')}${field('imageCredit','Artwork credit','text','Artist or source')}
+          ${field('imageUrl','Or use an HTTPS image URL','url','https://…')}${field('imageCredit','Artwork credit','text','Artist or source')}
           <button type="button" class="cancel-button" data-home-remove-image>Remove image</button>
         </aside></div><div data-home-preview-surface hidden></div>`;
     releaseImages(article); article.replaceWith(form);
     root.querySelector('[data-edit-campaign-home]').hidden = true;
     root.querySelector('.campaign-home-toolbar p').textContent = 'Shape the page your party will see.';
+    form.elements.imageAlt.setAttribute('aria-describedby', 'campaignHomeImageHint campaignHomeImageError');
+    form.addEventListener('invalid', event => {
+      const control = event.target;
+      form.querySelector('[data-home-editor-status]').textContent = control === form.elements.imageAlt
+        ? 'Add an image description before saving the front page.'
+        : `Could not save yet: ${control.validationMessage}`;
+      control.setAttribute('aria-invalid', 'true');
+      if (control === form.elements.imageAlt) {
+        const error = form.querySelector('#campaignHomeImageError');
+        error.textContent = 'Describe the image, then choose Save front page. Your selected image is still in the draft.';
+        error.hidden = false;
+      }
+    }, true);
     form.addEventListener('input', event => {
       if (!session) return;
       session.dirty = true;
       if (event.target === form.elements.imageUrl) {
         session.imagePath = '';session.imageFile = null; form.querySelector('[data-home-image-source]').textContent = 'Using the image URL.';
+        form.querySelector('[data-home-upload]').value = '';
         clearTimeout(session.previewTimer); session.previewTimer = setTimeout(() => updateImagePreview(form), 300);
       }
       if (event.target === form.elements.imageAlt) {
@@ -207,6 +224,10 @@ var CampaignHome = (() => {
         if (figure) {let caption = figure.querySelector('figcaption');if (!caption) {caption = document.createElement('figcaption');figure.appendChild(caption);}caption.textContent = form.elements.imageCredit.value;}
       }
       form.elements.imageUrl.setCustomValidity(''); form.elements.imageAlt.setCustomValidity('');
+      if (event.target.validity?.valid) event.target.removeAttribute('aria-invalid');
+      if (form.elements.imageAlt.value.trim() || !(form.elements.imageUrl.value.trim() || session.imagePath)) {
+        form.elements.imageAlt.removeAttribute('aria-invalid');form.querySelector('#campaignHomeImageError').hidden = true;
+      }
       form.elements.imageAlt.required = !!(form.elements.imageUrl.value.trim() || session.imagePath);
     });
     form.elements.imageAlt.required = !!(data.imageUrl || data.imagePath);
@@ -214,6 +235,7 @@ var CampaignHome = (() => {
     form.querySelector('[data-home-remove-image]').addEventListener('click', () => {
       session.imagePath = '';session.imageFile = null; session.dirty = true; form.elements.imageUrl.value = '';
       form.elements.imageAlt.required = false; form.elements.imageAlt.setCustomValidity('');form.elements.imageUrl.setCustomValidity('');
+      form.elements.imageAlt.removeAttribute('aria-invalid');form.querySelector('#campaignHomeImageError').hidden = true;
       form.querySelector('[data-home-upload]').value = '';
       form.querySelector('[data-home-image-source]').textContent = 'No image selected. Save to remove the cover.';
       updateImagePreview(form);
@@ -230,26 +252,31 @@ var CampaignHome = (() => {
     const current = session;
     if (!file || !current || current.busy || current.id !== activeCampaign?.id || current.uid !== auth.currentUser?.uid || !canManageCampaign()) return;
     const status = form.querySelector('[data-home-editor-status]');
-    if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size >= 5*1024*1024) {status.textContent='Choose a PNG, JPEG or WebP image smaller than 5 MB.';return;}
+    if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size >= 5*1024*1024) {status.textContent='Choose a PNG, JPEG or WebP image smaller than 5 MB.';form.querySelector('[data-home-upload]').value = '';return;}
     current.busy = true;status.textContent = 'Uploading campaign image…';
     for (const control of form.elements) control.disabled = true;
+    let uploaded = false;
     try {
       const path = `campaign-cover-images/${current.id}/${crypto.randomUUID()}`;
       await uploadBytes(ref(storage, path), file, {contentType:file.type});
       if (session !== current || current.id !== activeCampaign?.id || current.uid !== auth.currentUser?.uid || !canManageCampaign()) return;
       current.imagePath = path;current.imageFile = file;current.dirty = true;
+      uploaded = true;
       form.elements.imageUrl.value = '';form.elements.imageUrl.setCustomValidity('');form.elements.imageAlt.required = true;
       form.querySelector('[data-home-image-source]').textContent = `Uploaded: ${file.name}`;
       updateImagePreview(form);
-      status.textContent = 'Image uploaded. Add a description and save the front page.';
+      status.textContent = form.elements.imageAlt.value.trim()
+        ? 'Image uploaded and selected. Choose Save front page to save your changes.'
+        : 'Image uploaded and selected. Add an image description below the preview, then choose Save front page.';
     } catch (error) {
       if (session === current) status.textContent = error.code === 'storage/unauthorized' ? 'Upload denied. Ask the site administrator to enable campaign image uploads.' : `Could not upload: ${error.message}`;
     } finally {
       current.busy = false;
       if (session === current) {
         for (const control of form.elements) control.disabled = false;
-        // Selecting the same file must trigger change again after a failed attempt.
-        form.querySelector('[data-home-upload]').value = '';
+        // Keep the successful selection visible. Failed attempts reset the
+        // chooser so selecting the same file triggers a retry.
+        if (!uploaded) form.querySelector('[data-home-upload]').value = '';
       }
     }
   }
