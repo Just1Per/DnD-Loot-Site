@@ -235,7 +235,7 @@ var CampaignHome = (() => {
     form.querySelector('[data-home-remove-image]').addEventListener('click', () => {
       session.imagePath = '';session.imageFile = null; session.dirty = true; form.elements.imageUrl.value = '';
       form.elements.imageAlt.required = false; form.elements.imageAlt.setCustomValidity('');form.elements.imageUrl.setCustomValidity('');
-      form.elements.imageAlt.removeAttribute('aria-invalid');form.querySelector('#campaignHomeImageError').hidden = true;
+      form.elements.imageAlt.removeAttribute('aria-invalid');form.elements.imageUrl.removeAttribute('aria-invalid');form.querySelector('#campaignHomeImageError').hidden = true;
       form.querySelector('[data-home-upload]').value = '';
       form.querySelector('[data-home-image-source]').textContent = 'No image selected. Save to remove the cover.';
       updateImagePreview(form);
@@ -263,6 +263,7 @@ var CampaignHome = (() => {
       current.imagePath = path;current.imageFile = file;current.dirty = true;
       uploaded = true;
       form.elements.imageUrl.value = '';form.elements.imageUrl.setCustomValidity('');form.elements.imageAlt.required = true;
+      form.elements.imageUrl.removeAttribute('aria-invalid');
       form.querySelector('[data-home-image-source]').textContent = `Uploaded: ${file.name}`;
       updateImagePreview(form);
       status.textContent = form.elements.imageAlt.value.trim()
