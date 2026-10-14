@@ -8,15 +8,15 @@
 let savedItemLoadKey='';
 function ensureSavedItemDetails() {
   if(!activeCampaign||!auth.currentUser)return;
-  const key=activeCampaign.id+':'+auth.currentUser.uid;
+  const campaignId=activeCampaign.id,uid=auth.currentUser.uid,key=campaignId+':'+uid;
   if(savedItemLoadKey===key)return;
   savedItemLoadKey=key;
   loadCampaignItems().then(()=>{
-    if(activeCampaign?.id!==key.split(':')[0]||auth.currentUser?.uid!==key.split(':')[1])return;
+    if(activeCampaign?.id!==campaignId||auth.currentUser?.uid!==uid)return;
     renderMyWishes();
     const modal=document.getElementById('wishModal');
     if(modal?.open&&modal.dataset.characterId)renderWishModalContent(modal.dataset.characterId);
-  }).catch(error=>console.warn('Saved item details could not be loaded:',error));
+  }).catch(error=>{if(savedItemLoadKey===key)savedItemLoadKey='';console.warn('Saved item details could not be loaded:',error);});
 }
 function savedItemCard(save) {
   const item=items.find(item=>item.id===save.itemId);
