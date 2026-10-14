@@ -79,7 +79,7 @@ const workspaceTabs = ['dm-world', 'dm-creatures', 'dm-chapters'];
     }
 
     const primary = tab => page.locator('#primaryNavigation [data-tab="' + tab + '"]');
-    const secondary = tab => page.locator('#campaignSectionNavigation [data-tab="' + tab + '"]');
+    const secondary = tab => page.locator('.tab[data-tab="' + tab + '"]');
     const settings = () => page.locator('[data-tab="dm-settings"]');
     async function rememberDocs() { docs = await page.evaluate(() => structuredClone(testSheetDocs)); }
     async function assertPrimary(tab) {

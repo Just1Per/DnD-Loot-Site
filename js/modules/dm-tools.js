@@ -330,6 +330,7 @@ function renderDMTools() {
   const panel = document.getElementById("dmToolsPanel");
   if (!panel) return;
   document.querySelector('#campaignSettingsPanel .dm-tools-grid')?.replaceChildren();
+  document.querySelector('#dmPartyPanel .dm-tools-grid')?.replaceChildren();
 
   for(const tool of DM_PLANNING_TOOLS){
     const tab=document.getElementById('dmPlanningTab-'+tool.id);
@@ -337,6 +338,7 @@ function renderDMTools() {
   }
   if (!activeCampaign || !canManageCampaign()) {
     panel.innerHTML = `<div class="dm-tool-card"><p>You do not have DM access to this campaign.</p></div>`;
+    if(typeof DMWorkspaceShell!=="undefined")DMWorkspaceShell.update(AppShell.route);
     return;
   }
 
@@ -348,7 +350,7 @@ function renderDMTools() {
       </section>
 
       <!-- Planning guides live in their own navigation tabs. -->
-      <section class="dm-tool-card">
+      <section class="dm-tool-card" data-dm-party-card>
         <h2>Item Controls</h2>
         <p>Visibility, loot assignment and highlighting are campaign-scoped. Add catalogue copies or create your own campaign items in the Library. Set available quantities and player-looting permissions on each item.</p>
         <div class="dm-tool-actions">
@@ -388,7 +390,7 @@ function renderDMTools() {
         <div id="dmMemberList" class="dm-member-list"></div>
       </section>
 
-      <section class="dm-tool-card dm-tool-card--wide">
+      <section class="dm-tool-card dm-tool-card--wide" data-dm-party-card>
         <h2>Characters &amp; Items</h2>
         <div id="dmCharacterList"></div>
       </section>
@@ -397,7 +399,7 @@ function renderDMTools() {
         <div id="dmPendingInvites" class="dm-invite-list"></div>
       </section>
               <!-- Loot rarity reference — collapsible -->
-        <details class="admin-section loot-ref-panel">
+        <details class="admin-section loot-ref-panel" data-dm-party-card>
           <summary>📖 Magic Item Rarity Progression by Level</summary>
           <div class="loot-ref-grid">
 
@@ -486,6 +488,7 @@ function renderDMTools() {
   document.getElementById("dmInviteMember")?.addEventListener("click", () => openUserModal());
   document.getElementById("dmOpenLibrary")?.addEventListener("click", () => showTab("library"));
   AppShell.organizeDMTools();
+  if(typeof DMWorkspaceShell!=="undefined")DMWorkspaceShell.organizeDMTools();
 }
 
 // Campaign character management. Include preserved characters of former members.

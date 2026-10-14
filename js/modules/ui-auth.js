@@ -23,6 +23,7 @@ function showTab(tabId, render = true) {
   const panel = document.getElementById(`tab-${tabId}`);
   if (panel) panel.style.display="block";
   AppShell.update(tabId);
+  DMWorkspaceShell.update(tabId);
   if(render&&tabId==='player-adventures')CampaignWorkspace.render('playerAdventure');
   if(render&&tabId==='campaign-home')CampaignHome.render();
   if(render&&tabId==='campaign-information')CampaignInformation.render();
@@ -43,7 +44,7 @@ function initTabs() {
   document.getElementById("adminTab").addEventListener("click", openAdminView);
   document.getElementById("closeAdminView").addEventListener("click", closeAdminView);
   document.querySelectorAll(".tab").forEach(btn=>{
-    if(btn.id.startsWith("dmPlanningTab-"))return;
+    if(btn.id.startsWith("dmPlanningTab-")||btn.id==="dmPartyTab")return;
     btn.addEventListener("click", ()=>showTab(btn.dataset.tab));
   });
 }

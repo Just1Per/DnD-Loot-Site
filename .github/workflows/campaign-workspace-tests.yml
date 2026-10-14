@@ -49,6 +49,8 @@ jobs:
         run: npm --prefix tests run test:workspace
       - name: World, chapters, encounters and scoped player adventure flows
         run: npm --prefix tests run test:workspace-browser
+      - name: Shared DM workspace and draft-preserving references
+        run: npm --prefix tests run test:dm-workspace
       - name: Creature and NPC preparation, optional combat and template preservation
         run: npm --prefix tests run test:creature-editor
       - name: Campaign home save/reopen, access, accessibility and layout
