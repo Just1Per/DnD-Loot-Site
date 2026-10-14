@@ -71,7 +71,7 @@ var AiLookup=(()=>{
   node.dataset.aiLookupDecorated='true';
  }
  function enhance(root){
-  if(!(root instanceof Element))return;
+  if(root?.nodeType!==1)return;
   if(root.matches(selector))decorate(root);
   root.querySelectorAll(selector).forEach(decorate);
  }
@@ -79,7 +79,7 @@ var AiLookup=(()=>{
   if(!(root instanceof Element))return;
   queued.add(root);
   if(queuedFrame)return;
-  queuedFrame=requestAnimationFrame(()=>{
+  queuedFrame=1;queueMicrotask(()=>{
    queuedFrame=0;const nodes=[...queued];queued.clear();nodes.forEach(enhance);
   });
  }
@@ -207,7 +207,7 @@ var AiLookup=(()=>{
   if(observer)return;ensureDialog();
   queue(document.body);
   observer=new MutationObserver(records=>{
-   for(const record of records)for(const child of record.addedNodes)if(child instanceof Element&&child.id!=='aiLookupDialog'&&!child.closest('#aiLookupDialog'))queue(child);
+   for(const record of records)for(const child of record.addedNodes)if(child?.nodeType===1&&child.id!=='aiLookupDialog'&&!child.closest('#aiLookupDialog'))queue(child);
   });
   observer.observe(document.body,{childList:true,subtree:true});
  }
