@@ -59,6 +59,27 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
  await page.screenshot({path:path.join(out,'saved-items-mobile.png')});
  await page.setViewportSize({width:1440,height:1000});
  await page.screenshot({path:path.join(out,'saved-items-desktop.png')});
+ await page.locator('#myWishGrid .ai-lookup-icon').first().click();
+ check('Book icon opens editable lookup without automatically calling Gemini',
+  await page.locator('#aiLookupDialog').evaluate(node=>node.open)
+  &&await page.locator('#aiLookupName').inputValue()==='Healing Potion'
+  &&await page.evaluate(()=>testLookupCalls.length)===0);
+ await page.locator('#aiLookupEdition').selectOption('2024');
+ await page.locator('#aiLookupRun').click();
+ await page.waitForFunction(()=>document.getElementById('aiLookupAnswer')?.textContent.includes('A short grounded factual overview.'));
+ check('Grounded Gemini lookup sends edition and shows sources and required search suggestions',
+  await page.evaluate(()=>testLookupCalls.some(prompt=>prompt.includes('Entry name: Healing Potion')&&prompt.includes('Rules edition: 2024')))
+  &&await page.locator('#aiLookupSources a').count()===1
+  &&await page.locator('#aiLookupSuggestions iframe[sandbox]').count()===1);
+ await page.setViewportSize({width:390,height:640});
+ check('Grounded AI Lookup dialog fits narrow mobile browser',
+  await page.locator('#aiLookupDialog').evaluate(d=>{const b=d.getBoundingClientRect();return b.left>=-1&&b.right<=innerWidth+1&&b.top>=-1&&b.bottom<=innerHeight+1}));
+ await page.screenshot({path:path.join(out,'ai-lookup-mobile.png')});
+ await page.keyboard.press('Escape');
+ check('Book lookup closes with Escape without modifying saved items',
+  await page.evaluate(()=>!document.getElementById('aiLookupDialog').open&&saves.length===1));
+ await page.setViewportSize({width:1440,height:1000});
+
  await page.evaluate(()=>{saves=[];renderMyWishes()});
 
  check('My Characters has one sheet-first create action',await page.locator('#playerCreateCharBtn').count()===1&&await page.locator('#playerCharName,#playerCharClass,#playerCharLevel').count()===0);

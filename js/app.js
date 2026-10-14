@@ -3,7 +3,7 @@
 // Feature code is loaded in a fixed order from ./modules/ so existing
 // cross-feature behavior remains unchanged while the codebase is split up.
 
-import { db, storage, auth, provider, signInWithPopup, signOut }
+import { app, aiLookupConfigured, db, storage, auth, provider, signInWithPopup, signOut }
   from "./firebase.js";
 
 import {
@@ -20,6 +20,26 @@ import {
 import { ref, getDownloadURL, uploadBytes, getBlob }
   from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
+// AI Logic is loaded only when the user explicitly starts a lookup.
+let aiLookupModel = null;
+async function lookupAI(prompt) {
+  if (!aiLookupConfigured) throw Error('Firebase AI Logic is not configured. Register App Check first.');
+  if (!auth.currentUser) throw Error('Sign in before searching.');
+  if (!aiLookupModel) {
+    const { getAI, getGenerativeModel, GoogleAIBackend } =
+      await import('https://www.gstatic.com/firebasejs/12.16.0/firebase-ai.js');
+    aiLookupModel = getGenerativeModel(getAI(app, { backend: new GoogleAIBackend() }), {
+      model: 'gemini-3.8-flash',
+      tools: [{ googleSearch: {} }]
+    });
+  }
+  const result = await aiLookupModel.generateContent(prompt);
+  return {
+    text: result.response.text(),
+    metadata: result.response.candidates?.[0]?.groundingMetadata || null
+  };
+}
+
 // The feature files are intentionally loaded as ordered browser scripts.
 // This is the lowest-risk way to split the existing app without changing
 // its shared runtime state or requiring a bundler.
@@ -29,9 +49,10 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   collection, getDocs, addDoc, doc, getDoc,
   setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId, onSnapshot,
   ref, getDownloadURL, uploadBytes, getBlob,
+  lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261014-dm-workspace-v1";
+const ASSET_VERSION = "20261014-ai-lookup-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -130,6 +151,7 @@ const FEATURE_FILES = [
   "./modules/chapter-notes-ui.js",
   "./modules/site-help-data.js",
   "./modules/site-help.js",
+  "./modules/ai-lookup.js",
   "./modules/sheet-navigation.js",
   "./modules/navigation-state.js",
   "./modules/app-shell.js",
