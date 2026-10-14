@@ -1526,3 +1526,6 @@ button:disabled { opacity:.55; cursor:not-allowed; }
 .saved-item-card .saved-item-unavailable{display:grid;place-items:center;min-height:130px;background:#eee5d6;color:#866b48;font:700 2rem Georgia,serif}
 #myWishGrid.character-loot-grid .item-card,#wishModalGrid .item-card{min-width:0}
 @media(max-width:600px){.saved-item-card .card-buttons{align-items:flex-start}.saved-move-label{width:100%}}
+
+/* The character Saved dialog uses the same responsive columns as My Loot. */
+#wishModalGrid.wish-modal-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:22px;align-items:start}
