@@ -49,6 +49,17 @@
    dialog.querySelector('#aiLookupName').value===spell.name&&
    dialog.querySelector('#aiLookupEdition').value===spell.edition);
   dialog.close();examples.remove();
+  const toolbar=document.querySelector('#tab-library .toolbar');
+  AiLookup.enhance(toolbar);
+  const custom=toolbar.querySelector('.ai-lookup-icon');
+  check('Library toolbar offers manual lookup for items missing from every catalogue',
+   !!custom);
+  custom.click();
+  check('Manual search starts empty for a non-SRD name and never auto-queries Google',
+   dialog.querySelector('#aiLookupName').value===''&&
+   dialog.querySelector('#aiLookupKind').value==='item'&&testLookupCalls.length===1);
+  dialog.close();
+
   const userGuide=document.getElementById('siteGuideButton');
   check('The top Guide explains the open-book AI Lookup meaning',!!userGuide&&
    SiteHelp.openGuide&&
