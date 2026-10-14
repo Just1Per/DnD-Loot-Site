@@ -14,6 +14,11 @@ function createCard(item,context={}) {
   const canEdit=root?isAdmin():manager;
   const state=root?{}:getItemState(item.id);
   const entry=context.inventoryEntry||null;
+  const savedEntry=context.savedEntry||null;
+  const savedMode=!!savedEntry;
+  const savedCanRemove=savedMode&&(manager||savedEntry.userId===auth.currentUser?.uid);
+  const savedCanMove=savedMode&&savedEntry.userId===auth.currentUser?.uid;
+  const savedCharacters=savedCanMove?myCharacters().filter(c=>c.active!==false):[];
   const owned=inventory.filter(e=>e.itemId===item.id&&e.quantity>0);
   const mine=owned.filter(e=>e.userId===auth.currentUser?.uid);
   const isSaved=!root&&saves.some(s=>s.itemId===item.id&&s.characterId===selectedCharacter?.id);
@@ -21,11 +26,19 @@ function createCard(item,context={}) {
   const card=document.createElement('div');card.className='item-card';if(/^[a-z-]+$/.test(rarity))card.classList.add(rarity);
   card.dataset.itemId=item.id;
   if(!root&&state.highlighted)card.classList.add('highlighted');
-  if(!root&&state.looted)card.classList.add('looted');
+  if(!root&&state.looted&&!savedMode)card.classList.add('looted');
+  if(savedMode)card.classList.add('saved-item-card');
   const quantity=entry?.quantity??(manager?owned:mine).reduce((n,e)=>n+e.quantity,0);
   const stock=campaignSupply[item.id];
   const canClaim=!root&&!entry&&canUseCharacters()&&item.visible&&item.lootMode==='player';
   card.innerHTML=`<div class="card-buttons">
+    ${savedMode? `
+      <span class="saved-item-label">★ Saved · Not in inventory</span>
+      ${savedCanRemove?'<button type="button" class="saved-remove-button">Remove saved</button>':''}
+      ${savedCanMove&&savedCharacters.length>1?`<label class="saved-move-label">Save for
+        <select class="saved-character-target" aria-label="Move saved item to character">${savedCharacters.map(c=>`<option value="${escapeHtml(c.id)}" ${c.id===savedEntry.characterId?'selected':''}>${escapeHtml(c.name)}</option>`).join('')}</select>
+        </label><button type="button" class="saved-move-button">Move saved</button>`:''}
+    ` : `
     ${canEdit?`<button type="button" class="edit-button">${root?'Edit Root Item':'Edit Campaign Item'}</button><button type="button" class="clone-button">Clone</button><button type="button" class="delete-item-button">Delete</button>`:''}
     ${manager?`<button type="button" class="visibility-toggle-btn">${item.visible?'Visible':'Hidden'}</button><button type="button" class="highlight-button">${item.highlighted?'Highlighted':'Highlight'}</button>`:''}
     ${manager&&!entry?'<button type="button" class="assign-button">Assign</button>':''}
@@ -33,21 +46,25 @@ function createCard(item,context={}) {
     ${!root&&!entry&&canUseCharacters()&&item.visible?`<button type="button" class="save-item-button" ${!selectedCharacter?'disabled title="Select your active character first"':''}>${isSaved?'★ Saved':'☆ Save'}</button>`:''}
     ${entry&&manager?'<button type="button" class="unloot-button">Unloot</button><button type="button" class="transfer-button">Transfer</button>':''}
     ${entry&&(manager||entry.userId===auth.currentUser?.uid)?'<button type="button" class="use-button">Use</button>':''}
+    `}
     </div>
     <div class="card-header"><h2 class="item-name">${escapeHtml(item.name)}</h2><p class="item-type">${escapeHtml(item.category||'')}${item.attunement?' · Requires Attunement':''}</p>
     <div class="card-meta"><span class="meta-tag ${escapeHtml(rarity)}">${escapeHtml(item.rarity||'')}</span>${item.source?`<span class="meta-tag">${escapeHtml(item.source)}</span>`:''}
     ${!root?`<span class="meta-tag campaign-tag" title="Locked to this campaign">🔒 ${escapeHtml(activeCampaign?.name||'')}</span>`:''}</div>
-    ${!root&&quantity?`<p class="inventory-quantity">${entry?'Owned':manager?'Assigned':'You own'}: ${quantity}</p>`:''}
-    ${manager&&stock?`<p class="supply-label">Available: ${stock.unlimited?'Unlimited':(stock.capacity-stock.claimed)} · ${item.lootMode==='player'?'Player looting':'DM assignment only'}</p>`:''}
-    ${!root&&!manager&&!entry?`<p class="supply-label">${item.lootMode!=='player'?'DM assignment only':'Player looting enabled'}</p>`:''}</div>
-    ${itemImageMarkup(item,'card-art')}
+    ${!root&&!savedMode&&quantity?`<p class="inventory-quantity">${entry?'Owned':manager?'Assigned':'You own'}: ${quantity}</p>`:''}
+    ${manager&&!savedMode&&stock?`<p class="supply-label">Available: ${stock.unlimited?'Unlimited':(stock.capacity-stock.claimed)} · ${item.lootMode==='player'?'Player looting':'DM assignment only'}</p>`:''}
+    ${!root&&!manager&&!entry&&!savedMode?`<p class="supply-label">${item.lootMode!=='player'?'DM assignment only':'Player looting enabled'}</p>`:''}</div>
+    ${context.savedUnavailable?'<div class="card-art saved-item-unavailable" role="img" aria-label="Item details unavailable">?</div>':itemImageMarkup(item,'card-art')}
     <div class="card-body"><div class="item-description">${escapeHtml(item.description||'')}</div>${(item.properties||[]).map(p=>`<div class="property-block"><span class="property-title">${escapeHtml(p.title)}:</span> ${escapeHtml(p.text)}</div>`).join('')}${item.quote?`<i>${escapeHtml(item.quote)}</i>`:''}</div>
-    ${manager&&!entry&&owned.length?`<div class="owner-badge">${owned.map(e=>`${escapeHtml(characters.find(c=>c.id===e.characterId)?.name||'Character')} × ${e.quantity}`).join(' · ')}</div>`:''}
+    ${savedMode?`<div class="owner-badge">Saved for: ${escapeHtml(characters.find(c=>c.id===savedEntry.characterId)?.name||'Character')}</div>`:''}
+    ${manager&&!savedMode&&!entry&&owned.length?`<div class="owner-badge">${owned.map(e=>`${escapeHtml(characters.find(c=>c.id===e.characterId)?.name||'Character')} × ${e.quantity}`).join(' · ')}</div>`:''}
     <div class="card-footer">${root?'Root Catalogue':'D&D Campaign Vault'}</div>`;
   const on=(selector,work)=>card.querySelector(selector)?.addEventListener('click',event=>{
     // The page-based sheet keeps its draft while the item editor is open.
     return runVaultButton(event.currentTarget,work);
   });
+  on('.saved-remove-button',()=>removeSavedItem(savedEntry));
+  on('.saved-move-button',()=>moveSavedItem(savedEntry,card.querySelector('.saved-character-target')?.value));
   on('.edit-button',()=>{closeCharacterLoot();openItemModal(item,{scope:root?'root':'campaign'});});
   on('.clone-button',async()=>{
     if(root){const id=crypto.randomUUID();const data={...rootItemData(item),imageBaseId:item.imageBaseId||item.id};await setDoc(doc(db,'items',id),{...data,name:`${item.name} (Copy)`});rootItems.push({...data,id,name:`${item.name} (Copy)`});await markCatalogChanged();renderRootCatalogue();}
