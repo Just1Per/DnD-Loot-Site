@@ -14,6 +14,9 @@ var CampaignCreatures = (() => {
   }
   function snapshot(record) {
     const data=normalize(record.data);
+    // A personal creature template is reusable across campaigns: do not export
+    // a private illustration path owned by the original campaign.
+    delete data.journalImage;
     return {templateId:record.id,templateRevision:record.revision,name:record.title,stats:data};
   }
   return {normalize,snapshot,abilities,categories};

@@ -15,6 +15,7 @@ var CampaignWorkspace = (() => {
   }
   function clear(force=false) {
     if(!force && session?.dirty && !confirm('Discard unsaved campaign workspace changes?')) return false;
+    session?.journalImageController?.dispose();
     if(session)configs[session.kind].onClear?.(session);
     ++generation; session=null;
     if(imageURL){URL.revokeObjectURL(imageURL);imageURL=null;}
@@ -104,9 +105,18 @@ var CampaignWorkspace = (() => {
     finally{s.busy=false;}
   }
   function renderEditor() {
-    const s=session;if(!current(s))return;const config=configs[s.kind],r=s.record,page=s.host.querySelector('[data-workspace-page]');
+    const s=session;if(!current(s))return;
+    s.journalImageController?.dispose();s.journalImageController=null;const config=configs[s.kind],r=s.record,page=s.host.querySelector('[data-workspace-page]');
     page.innerHTML=`<form data-workspace-form><div class="workspace-actions"><button type="submit" data-save-record>Save ${escape(config.noun)}</button><button type="button" data-archive-record>${r.archived?'Restore':'Archive'}</button><button type="button" data-preview-record>Player description</button><button type="button" data-print-record>Print</button></div><p data-workspace-status class="workspace-status" role="status"></p>${config.editorBody?config.editorBody(r):`<div class="workspace-fields"><label class="workspace-field workspace-full">Title<input name="title" required maxlength="160" value="${escape(r.title)}"></label><label class="workspace-field workspace-full">Short summary<textarea name="summary" maxlength="1000">${escape(r.summary)}</textarea></label>${fieldsHTML(config,r.data)}<label class="workspace-field workspace-full">${escape(config.content)}<textarea name="content" maxlength="20000">${escape(r.content)}</textarea></label><label class="workspace-field workspace-full">${escape(config.secret)}<textarea name="privateNotes" maxlength="20000">${escape(r.privateNotes)}</textarea></label></div>${s.kind==='world'?'<label class="workspace-field">Image or map (PNG, JPEG, WebP · max 5 MB)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><p>Click the map to add a named location marker. Use the marker list to remove a marker.</p><div data-map class="workspace-map"></div><div data-marker-list></div>':''}<label class="workspace-field" data-private-print><span><input type="checkbox" data-print-private> Include private preparation and statistics in print</span></label><section data-workspace-links></section><div data-extra-editor></div>`}</form><section class="workspace-preview" hidden data-player-preview><h3>Player description preview</h3><div class="workspace-prose"></div></section>`;
-    const form=page.querySelector('form');form.onsubmit=event=>{event.preventDefault();save();};form.oninput=event=>{if(!event.target.matches('[name],[data-record-field]'))return;s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};form.onchange=event=>{if(!event.target.matches('[name],[data-record-field]'))return;s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};
+    const form=page.querySelector('form');
+    if(canManageCampaign()&&s.kind!=='oneShot'&&typeof CampaignJournalImages!=='undefined'){
+      s.journalImageController=CampaignJournalImages.mount(form,s,{
+        isCurrent:()=>current(s),
+        changed:()=>{s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);},
+        status
+      });
+    }
+    form.onsubmit=event=>{event.preventDefault();save();};form.oninput=event=>{if(!event.target.matches('[name],[data-record-field]'))return;s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};form.onchange=event=>{if(!event.target.matches('[name],[data-record-field]'))return;s.dirty=true;configs[s.kind].onEdit?.(page.querySelector('[data-extra-editor]'),s);};
     page.querySelector('[data-archive-record]').onclick=archive;
     page.querySelector('[data-preview-record]').onclick=()=>{const preview=page.querySelector('[data-player-preview]'),input=draft();preview.hidden=!preview.hidden;preview.querySelector('div').textContent=config.playerContent?config.playerContent(input):input.content;};
     page.querySelector('[data-print-record]').onclick=()=>printRecord(page.querySelector('[data-print-private]').checked);
@@ -151,6 +161,13 @@ var CampaignWorkspace = (() => {
     if(!surface){surface=document.createElement('article');surface.id='workspacePrintSurface';document.body.append(surface);}
     const publicContent=!includeSecrets&&configs[s.kind].playerContent?configs[s.kind].playerContent(input):input.content;
     surface.innerHTML=`<h1>${escape(input.title)}</h1><p>${escape(input.summary)}</p><div class="workspace-prose">${escape(publicContent)}</div>${includeSecrets&&input.privateNotes?`<section><h2>DM notes</h2><div class="workspace-prose">${escape(input.privateNotes)}</div></section>`:''}`;
+    const illustration=includeSecrets?s.host.querySelector('[data-journal-image-view]'):null;
+    if(illustration){
+      const figure=document.createElement('figure'),copy=illustration.cloneNode(true);
+      copy.alt=input.data.journalImage?.alt||input.title;figure.append(copy);
+      if(input.data.journalImage?.caption){const caption=document.createElement('figcaption');caption.textContent=input.data.journalImage.caption;figure.append(caption);}
+      surface.append(figure);
+    }
     const image=includeSecrets?s.host.querySelector('[data-map] img'):null;if(image)surface.insertAdjacentHTML('beforeend',`<img src="${escape(image.src)}" alt="${escape(input.title)}"><p>${(input.data.markers||[]).map((pin,i)=>`${i+1}. ${escape(pin.label)}`).join(' · ')}</p>`);
     if(includeSecrets){
       surface.insertAdjacentHTML('beforeend',configs[s.kind].fields.filter(([key])=>input.data[key]!==''&&input.data[key]!=null).map(([key,label])=>`<section><h2>${escape(label)}</h2><div class="workspace-prose">${escape(input.data[key])}</div></section>`).join(''));
@@ -178,7 +195,7 @@ var CampaignWorkspace = (() => {
   function importCreature(record){
     if(session?.kind!=='creature'||!current(session)||session.busy)return false;
     if(session.dirty&&!confirm('Discard unsaved changes before importing this creature?'))return false;
-    session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize((()=>{const d=structuredClone(record.data||{});for(const k of ['links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete d[k];return d;})()),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
+    session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize((()=>{const d=structuredClone(record.data||{});for(const k of ['journalImage','links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete d[k];return d;})()),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
   }
   async function navigateTo(kind,recordId){
     const old=session;

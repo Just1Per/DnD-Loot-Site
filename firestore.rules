@@ -488,6 +488,19 @@ match /campaigns/{campaignId} {
   function workspaceCollection(kind) {
     return kind == 'world' ? 'worldEntries' : kind == 'creature' ? 'creatures' : kind == 'chapter' ? 'chapters' : kind == 'encounter' ? 'encounters' : 'oneShots';
   }
+  // Require private illustrations to reference precisely this campaign and record.
+  // Publishing a world entry or NPC never copies these paths to player documents.
+  function validJournalIllustration(data, kind, recordId) {
+    return !('journalImage' in data)
+      || (data.journalImage is map
+        && data.journalImage.keys().hasAll(['path','alt','caption','uploadedBy','uploadedAt'])
+        && data.journalImage.keys().hasOnly(['path','alt','caption','uploadedBy','uploadedAt'])
+        && data.journalImage.path is string
+        && data.journalImage.path.matches('campaign-journal-images/' + campaignId + '/' + kind + '/' + recordId + '/[a-zA-Z0-9_-]{1,100}')
+        && data.journalImage.alt is string && data.journalImage.alt.size() <= 200
+        && data.journalImage.caption is string && data.journalImage.caption.size() <= 500
+        && data.journalImage.uploadedBy is string && data.journalImage.uploadedAt is int);
+  }
   function validWorkspace(d, kind) {
     return d.keys().hasOnly(['kind','schemaVersion','revision','title','summary','content','data','archived','createdBy','createdAt','updatedBy','updatedAt'])
       && d.keys().hasAll(['kind','schemaVersion','revision','title','summary','content','data','archived','createdBy','createdAt','updatedBy','updatedAt'])
@@ -504,8 +517,10 @@ match /campaigns/{campaignId} {
     function kind() { return workspace == 'worldEntries' ? 'world' : workspace == 'creatures' ? 'creature' : workspace == 'chapters' ? 'chapter' : workspace == 'encounters' ? 'encounter' : 'oneShot'; }
     allow read: if supported() && isCampaignDM(campaignId);
     allow create: if supported() && workspace != 'oneShots' && isCampaignDM(campaignId) && validWorkspace(request.resource.data, kind())
+      && validJournalIllustration(request.resource.data.data, kind(), recordId)
       && request.resource.data.revision == 1 && request.resource.data.createdBy == request.auth.uid;
     allow update: if supported() && workspace != 'oneShots' && isCampaignDM(campaignId) && validWorkspace(request.resource.data, kind())
+      && validJournalIllustration(request.resource.data.data, kind(), recordId)
       && request.resource.data.revision == resource.data.revision + 1
       && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt
       && (workspace != 'worldEntries' || request.resource.data.archived == false

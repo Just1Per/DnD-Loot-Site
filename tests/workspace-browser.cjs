@@ -57,6 +57,29 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.screenshot({path:'/tmp/world80-desktop.png'});await page.setViewportSize({width:390,height:850});await page.screenshot({path:'/tmp/world80-mobile.png'});if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Mobile overflow');
  await page.setViewportSize({width:1440,height:1000});await navigate(page,'dm-creatures');await page.waitForSelector('[data-new-record]');await page.locator('[data-new-record]').click();await page.locator('[name="title"]').fill('Skeletal Knight');await page.locator('[data-record-field="category"]').selectOption('Monster');await page.locator('[data-record-field="hp"]').fill('45');await page.locator('[data-record-field="ac"]').fill('16');await page.locator('[data-record-field="actions"]').fill('Longsword: +5 to hit; 1d8 + 3 slashing damage.');await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record?.revision===1);if(!(await page.locator('[data-extra-editor]').textContent()).includes('45'))throw Error('Creature card not updated');await page.locator('[data-open-record]').click();await page.waitForFunction(()=>!CampaignWorkspace.session?.dirty);if(await page.locator('[data-record-field="hp"]').inputValue()!=='45')throw Error('Creature HP not persisted');
  console.log('PASS Shared monster card save/reopen and live preview');
+ const imageFile={name:'portrait.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWQAAAABJRU5ErkJggg==','base64')};
+ if(await page.locator('[data-journal-image-upload]').count()!==1)throw Error('Monster editor missing the private campaign illustration upload');
+ await page.locator('[data-journal-image-upload]').setInputFiles(imageFile);
+ await page.waitForFunction(()=>!!CampaignWorkspace.session.record.data.journalImage?.path);
+ const imageScope=await page.evaluate(()=>({campaign:CampaignWorkspace.session.campaignId,kind:CampaignWorkspace.session.kind,entry:CampaignWorkspace.session.record.id,path:CampaignWorkspace.session.record.data.journalImage.path}));
+ if(imageScope.path.split('/').slice(0,4).join('/')!==['campaign-journal-images',imageScope.campaign,imageScope.kind,imageScope.entry].join('/'))
+  throw Error('Uploaded creature illustration was not scoped to its own campaign and entry: '+imageScope.path);
+ await page.waitForSelector('[data-journal-image-preview] img');
+ await page.locator('[data-journal-image-alt]').fill('A skeletal knight under moonlight');
+ await page.locator('[data-journal-image-caption]').fill('A dangerous guardian');
+ await page.locator('[data-save-record]').click();
+ await page.waitForFunction(()=>CampaignWorkspace.session.record.revision===2);
+ await page.locator('[data-open-record]').click();
+ await page.waitForFunction(()=>!CampaignWorkspace.session.dirty);
+ if(await page.locator('[data-journal-image-alt]').inputValue()!=='A skeletal knight under moonlight'
+   ||await page.locator('[data-journal-image-caption]').inputValue()!=='A dangerous guardian'
+   ||await page.locator('[data-journal-image-preview] img').count()!==1)
+  throw Error('Campaign creature illustration did not persist across reopen');
+ await page.locator('[data-preview-record]').click();
+ if((await page.locator('[data-player-preview]').textContent()).includes('dangerous guardian'))
+  throw Error('DM-only creature image details were leaked through player preview');
+ console.log('PASS Monster illustration is private, per-campaign, saved, and reopened');
+
  const creatureMaster=await page.evaluate(()=>({id:CampaignWorkspace.session.record.id,revision:CampaignWorkspace.session.record.revision}));
  await page.locator('[data-save-personal-creature]').click();
  await page.waitForFunction(()=>document.querySelector('[data-workspace-status]')?.textContent.includes('Saved an independent copy'));
@@ -74,7 +97,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await navigate(page,'dm-creatures');
  await page.waitForSelector('[data-open-record]');
  await page.locator('[data-open-record]').click();
- await page.waitForFunction(()=>CampaignWorkspace.session?.record?.revision===1);
+ await page.waitForFunction(expected=>CampaignWorkspace.session?.record?.revision===expected,creatureMaster.revision);
  if(await page.evaluate(()=>CampaignWorkspace.session.record.id)!==creatureMaster.id||await page.locator('[data-record-field=hp]').inputValue()!=='45')throw Error('Dedicated tab lost the existing master ID or statistics');
  console.log('PASS Personal template edits and imports preserve saved creature IDs, revisions and combat statistics');
  await navigate(page,'dm-chapters');await page.waitForSelector('[data-new-record]');await page.locator('[data-new-record]').click();await page.locator('[name="title"]').fill('The Road North');await page.locator('[data-record-field="targetLevel"]').fill('8');await page.locator('[data-record-field="status"]').selectOption('Completed');

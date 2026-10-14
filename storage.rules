@@ -81,6 +81,22 @@ service firebase.storage {
         && validImage();
     }
 
+    // Journal art belongs to precisely one campaign, record type and entry.
+    // Unlike campaign covers, these illustrations remain private to active DMs
+    // even when a world description or NPC is revealed to players.
+    match /campaign-journal-images/{campaignId}/{kind}/{entryId}/{imageId} {
+      function supportedJournalKind() {
+        return kind == 'world' || kind == 'creature'
+          || kind == 'chapter' || kind == 'encounter';
+      }
+      allow read: if supportedJournalKind() && isCampaignDM(campaignId);
+      // New unique objects only; nothing can overwrite or delete an existing image.
+      allow create: if resource == null
+        && supportedJournalKind()
+        && isCampaignDM(campaignId)
+        && validImage();
+    }
+
     // Campaign covers are shared with active members, but only DMs may upload.
     // Immutable object names prevent overwriting another saved cover.
     match /campaign-cover-images/{campaignId}/{imageId} {

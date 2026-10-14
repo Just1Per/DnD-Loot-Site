@@ -61,6 +61,25 @@ const {ref,uploadBytes,getBytes,deleteObject}=require('firebase/storage');
   await assertFails(upload('dm','campaign-world-images/a/north/map')); // Immutable uploads
   await assertFails(deleteObject(ref(storage.owner,'campaign-world-images/a/north/map')));
 
+  // Journal illustrations are isolated by campaign, record type and entry ID.
+  for(const kind of ['world','creature','chapter','encounter']){
+    const path='campaign-journal-images/a/'+kind+'/entry-'+kind+'/illustration';
+    await assertSucceeds(upload('dm',path));
+    await assertSucceeds(getBytes(ref(storage.owner,path)));
+    await assertFails(upload('dm',path)); // Immutable path, never overwrite
+    await assertFails(deleteObject(ref(storage.owner,path)));
+    for(const uid of ['player','inactiveDm','outsider']){
+      await assertFails(getBytes(ref(storage[uid],path)));
+      await assertFails(upload(uid,'campaign-journal-images/a/'+kind+'/entry-'+kind+'/forged-'+uid));
+    }
+    await assertFails(getBytes(ref(anon,path)));
+    await assertFails(upload('dm','campaign-journal-images/b/'+kind+'/other/foreign'));
+  }
+  await assertFails(upload('dm','campaign-journal-images/a/invalid/entry/file'));
+  await assertFails(upload('dm','campaign-journal-images/a/world/map/not-an-image',png,'text/plain'));
+  await assertFails(upload('dm','campaign-journal-images/a/world/map/too-big',new Uint8Array(5*1024*1024)));
+  console.log('PASS Campaign-bound journal images: private DM reads, immutable uploads and strict campaign isolation');
+
   // Covers are member-readable and immutable; players cannot upload or delete.
   await assertSucceeds(upload('dm','campaign-cover-images/a/cover'));
   await assertSucceeds(upload('owner','campaign-cover-images/a/owner-cover'));
