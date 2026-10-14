@@ -97,7 +97,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await navigate(page,'dm-creatures');
  await page.waitForSelector('[data-open-record]');
  await page.locator('[data-open-record]').click();
- await page.waitForFunction(()=>CampaignWorkspace.session?.record?.revision===1);
+ await page.waitForFunction(expected=>CampaignWorkspace.session?.record?.revision===expected,creatureMaster.revision);
  if(await page.evaluate(()=>CampaignWorkspace.session.record.id)!==creatureMaster.id||await page.locator('[data-record-field=hp]').inputValue()!=='45')throw Error('Dedicated tab lost the existing master ID or statistics');
  console.log('PASS Personal template edits and imports preserve saved creature IDs, revisions and combat statistics');
  await navigate(page,'dm-chapters');await page.waitForSelector('[data-new-record]');await page.locator('[data-new-record]').click();await page.locator('[name="title"]').fill('The Road North');await page.locator('[data-record-field="targetLevel"]').fill('8');await page.locator('[data-record-field="status"]').selectOption('Completed');
