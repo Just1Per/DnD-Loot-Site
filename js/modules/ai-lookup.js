@@ -26,7 +26,7 @@ var AiLookup=(()=>{
   if(node.matches('[data-generated-spell-info]')){
    const row=typeof sheetSession!=='undefined'?sheetSession?.data?.spells?.[Number(node.dataset.generatedSpellInfo)]:null;
    const found=catalog(row?.catalogId,'spell');
-   return info('spell',row?.name||found?.name,row?.book||found?.source||'',found?.edition||edition(),row?.level===0?'Cantrip':row?.level!=null?'Spell level '+row.level:'');
+   return info('spell',found?.name||row?.name,row?.book||found?.source||'',found?.edition||edition(),row?.level===0?'Cantrip':row?.level!=null?'Spell level '+row.level:'');
   }
   if(node.matches('[data-feat-info],[data-selected-feat-info]')){
    const row=catalog(node.dataset.featInfo||node.dataset.selectedFeatInfo,'feat');
@@ -76,7 +76,7 @@ var AiLookup=(()=>{
   root.querySelectorAll(selector).forEach(decorate);
  }
  function queue(root){
-  if(!(root instanceof Element))return;
+  if(root?.nodeType!==1)return;
   queued.add(root);
   if(queuedFrame)return;
   queuedFrame=1;queueMicrotask(()=>{
