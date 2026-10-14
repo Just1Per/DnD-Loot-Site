@@ -60,14 +60,16 @@ var AiLookup=(()=>{
  function decorate(node){
   if(!node.isConnected||node.closest('#aiLookupDialog')||node.dataset.aiLookupDecorated)return;
   const target=buttonFor(node);if(!target?.host)return;
-  const context=itemFor(node);if(!context?.name||/^(choose|select|—)/i.test(context.name))return;
+  const context=itemFor(node);if(!context)return;
+  const dynamic=node.matches('[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]');
+  if(!dynamic&&(!context.name||/^(choose|select|—)/i.test(context.name)))return;
   const button=document.createElement('button');
   button.type='button';button.className='ai-lookup-icon';button.innerHTML=icon;
-  button.title='AI Lookup: '+context.name;
-  button.setAttribute('aria-label','AI Lookup for '+context.name);
+  button.title='AI Lookup: '+(context.name||context.kind);
+  button.setAttribute('aria-label','AI Lookup for '+(context.name||context.kind));
   button.addEventListener('click',event=>{
    event.preventDefault();event.stopPropagation();
-   const current=itemFor(node);if(current?.name)open(current,button);
+   const current=itemFor(node);if(current)open(current,button);
   });
   if(target.after)target.host.after(button);else target.host.append(button);
   node.dataset.aiLookupDecorated='true';
