@@ -4,6 +4,9 @@ from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getFirestore }
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
+import { initializeAppCheck, ReCaptchaEnterpriseProvider }
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app-check.js";
+
 import { getStorage }
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 
@@ -26,6 +29,18 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+export { app };
+// Public reCAPTCHA Enterprise SITE key (not a secret). Fill this only after registering
+// the production domain under Firebase Console > Security > App Check.
+// Never put a Gemini Developer API secret key into the browser.
+const AI_LOOKUP_RECAPTCHA_SITE_KEY = "";
+export const aiLookupConfigured = !!AI_LOOKUP_RECAPTCHA_SITE_KEY;
+if (aiLookupConfigured) {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider(AI_LOOKUP_RECAPTCHA_SITE_KEY),
+    isTokenAutoRefreshEnabled: true
+  });
+}
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const auth = getAuth(app);
