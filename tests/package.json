@@ -36,7 +36,8 @@
     "test:campaign-npcs-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-npcs-rules.cjs\"",
     "test:campaign-chapters": "node campaign-chapters-browser.cjs",
     "test:campaign-chapters-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-chapters-rules.cjs\"",
-    "test:app-navigation": "node app-navigation-browser.cjs"
+    "test:app-navigation": "node app-navigation-browser.cjs",
+    "test:dm-workspace": "node dm-workspace-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.51.1",
