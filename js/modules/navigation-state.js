@@ -1,7 +1,7 @@
 'use strict';
 // Only locations, never editor data. One browser tab and authenticated UID at a time.
 var AppNavigation=(()=>{
- const tabs=new Set(['campaign-home','campaign-information','campaign-npcs','campaign-chapters','library','player','character-sheet','dm','dm-world','dm-creatures','dm-chapters','dm-one-shots','player-adventures','admin']);
+ const tabs=new Set(['campaign-home','campaign-information','campaign-npcs','campaign-chapters','library','player','character-sheet','dm','dm-world','dm-creatures','dm-chapters','dm-party','dm-settings','dm-one-shots','player-adventures','admin']);
  const kinds=new Set(['world','creature','chapter','encounter','oneShot','playerAdventure']);
  const sections=new Set(['overview','skills','combat','spells','inventory','builder','feats','story','companion','rules']);
  const validId=value=>typeof value==='string'&&/^[A-Za-z0-9_-]{1,100}$/.test(value);
@@ -31,7 +31,7 @@ var AppNavigation=(()=>{
   return true;
  }
  function remember(tab){
-  tab??=document.getElementById('tab-admin')?.style.display==='block'?'admin':document.querySelector('.tabs .tab.active')?.dataset.tab;
+  tab??=document.getElementById('tab-admin')?.style.display==='block'?'admin':typeof AppShell!=='undefined'?AppShell.route:document.querySelector('.tabs .tab.active')?.dataset.tab;
   if(!allowed(tab))return;
   const route={version:1,campaignId:activeCampaign.id,tab};
   if(tab==='character-sheet'&&sheetSession?.campaignId===activeCampaign.id){

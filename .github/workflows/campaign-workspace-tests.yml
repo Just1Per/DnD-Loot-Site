@@ -43,6 +43,8 @@ jobs:
         run: npm --prefix tests run test:ui
       - name: Refresh restoration and save before leaving character sheets
         run: npm --prefix tests run test:navigation
+      - name: Grouped campaign navigation, settings, roles and refresh
+        run: npm --prefix tests run test:app-navigation
       - name: Workspace engines and catalogue
         run: npm --prefix tests run test:workspace
       - name: World, chapters, encounters and scoped player adventure flows

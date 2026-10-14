@@ -1,3 +1,4 @@
+const {navigate}=require('./app-navigation-fixture.cjs');
 // Real reloads and navigation against an isolated Firebase fixture, never production.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
@@ -38,11 +39,11 @@ const root=path.resolve(__dirname,'..');
  }
  async function rememberDocs(){docs=await page.evaluate(()=>structuredClone(testSheetDocs));}
  await boot();await page.evaluate(()=>enterCampaign(campaigns[0]));
- await page.locator('[data-tab=campaign-npcs]').click();await rememberDocs();await boot('player',true);
+ await navigate(page,'campaign-npcs');await rememberDocs();await boot('player',true);
  assert.equal(await page.locator('#tab-campaign-npcs').isVisible(),true,'reload should restore campaign/player tab');
  console.log('PASS Real authentication reload restores the campaign and active player tab');
 
- await page.locator('[data-tab=character-sheet]').click();await page.waitForSelector('#characterSheetForm');
+ await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');
  await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('A red cloak');
  await page.locator('[data-tab=library]').click();
  assert.equal(await page.locator('#sheetLeaveDialog').isVisible(),true);assert.equal(await page.locator('#tab-character-sheet').isVisible(),true);
@@ -53,7 +54,7 @@ const root=path.resolve(__dirname,'..');
  assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/characterSheets/c1'].data.appearance),'A red cloak');
  console.log('PASS Save/stay choices retain edits and only continue after a successful save');
 
- await page.locator('[data-tab=character-sheet]').click();await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();
+ await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();
  await rememberDocs();await boot('player',true);await page.waitForSelector('#characterSheetForm');
  assert.equal(await page.evaluate(()=>sheetSession.characterId),'c1');assert.equal(await page.locator('[data-sheet-tab=story]').getAttribute('aria-selected'),'true');assert.equal(await page.locator('[name=appearance]').inputValue(),'A red cloak');
  const cache=await page.evaluate(()=>sessionStorage.getItem('campaignatlas.navigation.v1.player'));assert.ok(!cache.includes('cloak')&&!cache.includes('appearance'),'navigation cache must not contain editor data');
@@ -61,17 +62,17 @@ const root=path.resolve(__dirname,'..');
  await page.waitForSelector('#sheetLeaveDialog',{state:'detached'});assert.equal(await page.locator('#tab-player').isVisible(),true);assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/characterSheets/c1'].data.appearance),'A red cloak');
  console.log('PASS Reload restores character/section and saved data; discard never saves a draft');
 
- await page.locator('[data-tab=character-sheet]').click();await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('Keep this draft after failure');
+ await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('Keep this draft after failure');
  await page.evaluate(()=>window.failNavigationSave=true);await page.locator('[data-tab=campaign-home]').click();await page.locator('[data-sheet-leave-save]').click();
  await page.waitForFunction(()=>document.querySelector('[data-sheet-leave-status]').textContent.includes('permission denied'));assert.equal(await page.locator('#tab-character-sheet').isVisible(),true);assert.equal(await page.locator('[name=appearance]').inputValue(),'Keep this draft after failure');
  await page.evaluate(()=>window.failNavigationSave=false);await page.locator('[data-sheet-leave-save]').click();await page.waitForSelector('#sheetLeaveDialog',{state:'detached'});
- await page.locator('[data-tab=character-sheet]').click();await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=builder]').click();await page.locator('[name="identity.name"]').fill('');
+ await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=builder]').click();await page.locator('[name="identity.name"]').fill('');
  await page.locator('[data-tab=library]').click();await page.locator('[data-sheet-leave-save]').click();await page.waitForFunction(()=>document.querySelector('[data-sheet-leave-status]').textContent.includes('name'));
  assert.equal(await page.locator('#sheetLeaveDialog').isVisible(),true,'invalid sheet must stay open');await page.locator('[data-sheet-leave-stay]').click();await page.locator('[name="identity.name"]').fill('Thorin');
  await page.locator('[data-tab=library]').click();await page.locator('[data-sheet-leave-discard]').click();await page.waitForSelector('#sheetLeaveDialog',{state:'detached'});
  console.log('PASS Save failure/retry and invalid fields cannot close the sheet or lose its draft');
 
- await page.locator('[data-tab=character-sheet]').click();await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('Switching characters draft');
+ await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('Switching characters draft');
  await page.locator('#sheetCharacterSelect').selectOption('c2');assert.equal(await page.locator('#sheetLeaveDialog').isVisible(),true);await page.locator('[data-sheet-leave-discard]').click();await page.waitForFunction(()=>sheetSession?.characterId==='c2');
  await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('Another draft');await page.locator('#leaveCampaignBtn').click();assert.equal(await page.locator('#sheetLeaveDialog').isVisible(),true);await page.locator('[data-sheet-leave-stay]').click();
  await page.locator('[data-sheet-close]').click();
@@ -81,23 +82,23 @@ const root=path.resolve(__dirname,'..');
  await page.locator('[data-sheet-close]').click();await page.locator('[data-sheet-leave-discard]').click();await page.waitForSelector('#sheetLeaveDialog',{state:'detached'});
  console.log('PASS Character switching/campaign exit, Escape, focus containment and mobile/axe checks');
 
- await page.locator('[data-tab=character-sheet]').click();await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('A conflict must preserve this draft');
+ await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('A conflict must preserve this draft');
  await page.evaluate(()=>testSheetDocs['campaigns/a/characterSheets/c1'].revision++);await page.locator('[data-tab=library]').click();await page.locator('[data-sheet-leave-save]').click();
  await page.waitForFunction(()=>document.querySelector('[data-sheet-leave-status]').textContent.includes('another window'));assert.equal(await page.locator('[name=appearance]').inputValue(),'A conflict must preserve this draft');await page.locator('[data-sheet-leave-discard]').click();await page.waitForSelector('#sheetLeaveDialog',{state:'detached'});
- await page.locator('[data-tab=character-sheet]').click();await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('A pending save');
+ await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('A pending save');
  await page.evaluate(()=>window.pauseNavigationSave=true);await page.locator('[data-tab=library]').click();await page.locator('[data-sheet-leave-save]').click();await page.waitForFunction(()=>!!window.finishNavigationSave);
  assert.equal(await page.locator('[data-sheet-leave-stay]').isDisabled(),true);await page.keyboard.press('Escape');assert.equal(await page.locator('#sheetLeaveDialog').isVisible(),true);await page.evaluate(()=>window.finishNavigationSave());await page.waitForSelector('#sheetLeaveDialog',{state:'detached'});
  assert.equal(await page.locator('#tab-library').isVisible(),true);
- await page.locator('[data-tab=character-sheet]').click();await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('An old account draft');
+ await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('An old account draft');
  const revision=await page.evaluate(()=>sheetSession.revision);await page.evaluate(()=>{window.finishNavigationSave=null;window.pauseNavigationSave=true});await page.locator('[data-tab=library]').click();await page.locator('[data-sheet-leave-save]').click();await page.waitForFunction(()=>!!window.finishNavigationSave);
  await page.evaluate(async()=>{auth.currentUser={uid:'other',email:'other@example.test'};await testAuthCallback(auth.currentUser);window.finishNavigationSave()});await page.waitForTimeout(100);
  assert.equal(await page.locator('#sheetLeaveDialog').count(),0);assert.equal(await page.locator('#characterSheetDialog').count(),0);assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/characterSheets/c1'].revision),revision,'late save must not write after an account change');
  console.log('PASS Revision conflicts, pending-save blocking and account changes preserve sheet isolation');
 
- await rememberDocs();await boot('dm');await page.evaluate(()=>enterCampaign(campaigns[0]));await page.locator('#dmPlanningTab-world').click();await page.waitForSelector('[data-new-record]');await page.locator('[data-new-record]').click();await page.locator('[name=title]').fill('Saved location');await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session.record.revision===1);
+ await rememberDocs();await boot('dm');await page.evaluate(()=>enterCampaign(campaigns[0]));await navigate(page,'dm-world');await page.waitForSelector('[data-new-record]');await page.locator('[data-new-record]').click();await page.locator('[name=title]').fill('Saved location');await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session.record.revision===1);
  const worldId=await page.evaluate(()=>CampaignWorkspace.session.record.id);await rememberDocs();await boot('dm',true);
  assert.equal(await page.locator('#tab-dm-world').isVisible(),true);assert.equal(await page.evaluate(()=>CampaignWorkspace.session.record.id),worldId);assert.equal(await page.locator('[name=title]').inputValue(),'Saved location');
- await page.locator('#dmPlanningTab-chapters').click();await page.waitForSelector('[data-chapter-encounters]');await page.locator('[data-chapter-encounters]').click();await rememberDocs();await boot('dm',true);assert.equal(await page.evaluate(()=>CampaignWorkspace.session.kind),'encounter');
+ await navigate(page,'dm-chapters');await page.waitForSelector('[data-chapter-encounters]');await page.locator('[data-chapter-encounters]').click();await rememberDocs();await boot('dm',true);assert.equal(await page.evaluate(()=>CampaignWorkspace.session.kind),'encounter');
  console.log('PASS Reload restores a saved DM entry and the encounter workspace kind');
 
  docs['campaigns/a/members/dm'].role='player';docs['campaigns/a'].ownerId='another-owner';await boot('dm',true);assert.equal(await page.locator('#tab-campaign-home').isVisible(),true);assert.equal(await page.locator('#dmPlanningTab-world').isVisible(),false);
@@ -106,7 +107,7 @@ const root=path.resolve(__dirname,'..');
  docs['campaigns/a/members/other'].status='inactive';await boot('other',true);assert.equal(await page.locator('#campaignSelectorScreen').isVisible(),true);assert.equal(await page.locator('#characterSheetDialog').count(),0);
  console.log('PASS Fresh role/membership checks and UID-scoped cache block stale/tampered private routes');
  docs['campaigns/a/members/player'].status='active';await boot('player');await page.locator('#leaveCampaignBtn').click();await page.waitForFunction(()=>activeCampaign===null);await rememberDocs();await boot('player',true);assert.equal(await page.locator('#campaignSelectorScreen').isVisible(),true,'explicit exit should stay on the dashboard after reload');
- await page.evaluate(()=>enterCampaign(campaigns[0]));await page.locator('[data-tab=character-sheet]').click();await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('Save before logout');await page.locator('#logoutButton').click();await page.locator('[data-sheet-leave-save]').click();await page.waitForFunction(()=>auth.currentUser===null);
+ await page.evaluate(()=>enterCampaign(campaigns[0]));await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('Save before logout');await page.locator('#logoutButton').click();await page.locator('[data-sheet-leave-save]').click();await page.waitForFunction(()=>auth.currentUser===null);
  assert.equal(await page.evaluate(()=>sessionStorage.getItem('campaignatlas.navigation.v1.player')),null);assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/characterSheets/c1'].data.appearance),'Save before logout');
  console.log('PASS Explicit campaign exit and save-before-logout clear remembered destinations correctly');
  await page.evaluate(()=>sessionStorage.setItem('campaignatlas.navigation.v1.player','{malformed'));await boot('player',true);assert.equal(await page.locator('#campaignSelectorScreen').isVisible(),true);

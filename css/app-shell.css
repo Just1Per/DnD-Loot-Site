@@ -1,0 +1,14 @@
+/* Campaign navigation keeps the existing parchment/book palette. */
+#mainApp [hidden]{display:none!important}
+#primaryNavigation{gap:8px;flex-wrap:wrap;padding:10px 20px;border-bottom:2px solid #a78946}
+#primaryNavigation .tab,#campaignSectionNavigation button{transition:none}
+#primaryNavigation .tab{margin:0;border-radius:5px;min-height:44px}
+#mainApp #primaryNavigation .tab.active,#mainApp .campaign-section-navigation [aria-current=page]{background:#732424!important;color:#f5e6c8!important;border-color:#732424!important}
+.campaign-section-navigation{padding:12px 20px;margin:0;border-bottom:1px solid #c8b89a;background:#f4efe6}
+.campaign-section-navigation>[data-section-group]{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.campaign-section-navigation .tab{border-radius:5px;margin:0;min-height:40px}
+#mainApp #campaignSettingsButton{min-width:44px;min-height:40px;margin-left:auto;border-radius:5px;display:inline-flex;align-items:center;gap:6px}
+#campaignSettingsPanel{max-width:1100px;margin:24px auto}
+.campaign-section-navigation button:focus-visible,#primaryNavigation button:focus-visible{outline:3px solid #732424;outline-offset:3px}
+@media(max-width:650px){#primaryNavigation{padding:10px 12px;gap:6px}#mainApp #primaryNavigation .tab{flex:1 1 auto}.campaign-section-navigation{padding:10px 12px}.campaign-context-bar{flex-wrap:wrap}#campaignSettingsButton span{display:none}}
+@media print{#primaryNavigation,.campaign-section-navigation,#campaignSettingsButton{display:none!important}}

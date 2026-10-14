@@ -3,7 +3,7 @@ const results=JSON.parse(document.getElementById('test-results').textContent);
 const check=(name,ok)=>{results.push({name,pass:!!ok});if(!ok)throw Error(name)};
 try {
  seed('player');closeCharacterSheet(true);testSheetDocs['campaigns/a/characters/c1']={name:'Thorin',class:'Fighter',level:7,userId:'player'};delete testSheetDocs['campaigns/a/characterSheets/c1'];
- check('Character sheet main tab is immediately after My Character',document.getElementById('playerTab').nextElementSibling.id==='characterSheetTab');
+ check('Character sheet is grouped under My Character instead of duplicated in main navigation',document.getElementById('characterSheetTab').closest('[data-section-group]')?.dataset.sectionGroup==='character'&&!document.getElementById('primaryNavigation').contains(document.getElementById('characterSheetTab')));
  showTab('character-sheet');await Promise.resolve();await Promise.resolve();
  check('Main tab opens own character as a page without a dialog',!!sheetSession&&document.getElementById('characterSheetDialog').parentElement.id==='characterSheetPage'&&!document.querySelector('dialog#characterSheetDialog')&&document.getElementById('tab-character-sheet').style.display==='block');
  check('Overview is read-only with editing panels separate',document.getElementById('sheet-skills').hidden&&document.getElementById('sheet-combat').hidden&&!document.querySelector('#sheet-overview input[name],#sheet-overview select,#sheet-overview textarea')&&document.getElementById('sheet-builder').hidden&&document.getElementById('sheetBuildControls').closest('[data-sheet-section]').id==='sheet-builder');

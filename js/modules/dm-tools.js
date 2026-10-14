@@ -70,7 +70,7 @@ function ensureDMToolsUI() {
     btn.type = "button";
     btn.dataset.tab = "dm";
     btn.style.display = "none";
-    btn.textContent = "DM Tools";
+    btn.textContent = "DM Workspace";
     if (adminTab?.parentElement === tabs) tabs.insertBefore(btn, adminTab);
     else tabs.appendChild(btn);
   }
@@ -109,8 +109,7 @@ function ensureDMToolsUI() {
       document.getElementById('tab-dm')?.after(panel);
     }
   }
-
-
+  if(typeof AppShell!=='undefined')AppShell.ensure();
 }
 
 function memberLabel(member) {
@@ -330,6 +329,7 @@ function renderDMTools() {
   ensureDMToolsUI();
   const panel = document.getElementById("dmToolsPanel");
   if (!panel) return;
+  document.querySelector('#campaignSettingsPanel .dm-tools-grid')?.replaceChildren();
 
   for(const tool of DM_PLANNING_TOOLS){
     const tab=document.getElementById('dmPlanningTab-'+tool.id);
@@ -356,7 +356,7 @@ function renderDMTools() {
         </div>
       </section>
 
-      <section class="dm-tool-card">
+      <section class="dm-tool-card" data-dm-settings-card>
         <h2>Campaign Settings</h2>
         <p>Edit the campaign name, description and default item visibility.</p>
         <div class="dm-tool-actions"><button id="dmEditCampaignHome" class="btn-primary" type="button">Edit campaign front page</button></div>
@@ -379,7 +379,7 @@ function renderDMTools() {
 
       ${renderDMPlanningShortcuts()}
 
-      <section class="dm-tool-card dm-tool-card--wide">
+      <section class="dm-tool-card dm-tool-card--wide" data-dm-settings-card>
         <h2>Members</h2>
         <p>Change a member between Player and DM, invite another person, or remove campaign access without deleting their character data.</p>
         <div class="dm-tool-actions">
@@ -392,7 +392,7 @@ function renderDMTools() {
         <h2>Characters &amp; Items</h2>
         <div id="dmCharacterList"></div>
       </section>
-      <section class="dm-tool-card dm-tool-card--wide">
+      <section class="dm-tool-card dm-tool-card--wide" data-dm-settings-card>
         <h2>Pending Invitations</h2>
         <div id="dmPendingInvites" class="dm-invite-list"></div>
       </section>
@@ -485,6 +485,7 @@ function renderDMTools() {
   document.getElementById("dmEditCampaignHome")?.addEventListener("click", () => { showTab('campaign-home'); if(document.getElementById('tab-campaign-home')?.style.display==='block')CampaignHome.edit(); });
   document.getElementById("dmInviteMember")?.addEventListener("click", () => openUserModal());
   document.getElementById("dmOpenLibrary")?.addEventListener("click", () => showTab("library"));
+  AppShell.organizeDMTools();
 }
 
 // Campaign character management. Include preserved characters of former members.

@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="css/campaign-information.css?v=20261012-campaign-information-v1">
   <link rel="stylesheet" href="css/dm-tools.css?v=20261012-dm-creatures-v1">
   <link rel="stylesheet" href="css/site-ui.css?v=20261010-ui-cleanup-v82">
+  <link rel="stylesheet" href="css/app-shell.css?v=20261014-navigation-groups-v1">
 </head>
 <body>
   <a class="site-skip-link" href="#siteMain">Skip to content</a>
@@ -94,20 +95,30 @@
     <div class="campaign-context-bar">
       <span class="campaign-context-label">Campaign:</span>
       <span id="activeCampaignName" class="campaign-context-name">—</span>
+      <button id="campaignSettingsButton" class="tab campaign-settings-button" data-tab="dm-settings" type="button" aria-label="Campaign settings" title="Campaign settings" style="display:none">⚙ <span>Settings</span></button>
       <button id="leaveCampaignBtn" type="button" class="btn-leave-campaign">
         ← Change Campaign
       </button>
     </div>
 
     <!-- ── TABS ──────────────────────────────────────────────────────── -->
-    <nav class="tabs" aria-label="Main navigation">
-      <button class="tab" data-tab="campaign-home" type="button">Campaign home</button>
-      <button class="tab" data-tab="campaign-information" type="button">Campaign information</button>
-      <button class="tab" data-tab="campaign-npcs" type="button">NPC catalogue</button>
-      <button class="tab" data-tab="campaign-chapters" type="button">Chapter overview</button>
-      <button class="tab active" data-tab="library" type="button">Library</button>
+    <nav id="primaryNavigation" class="tabs" aria-label="Main navigation">
+      <button class="tab" data-tab="campaign-home" type="button">Home</button>
+      <button class="tab" data-tab="journal" type="button">Journal</button>
       <button class="tab" data-tab="player" id="playerTab" type="button" style="display:none">My Character</button>
-      <button class="tab" data-tab="character-sheet" id="characterSheetTab" type="button" style="display:none">Character sheet</button>
+      <button class="tab active" data-tab="library" type="button">Library</button>
+    </nav>
+    <nav id="campaignSectionNavigation" class="campaign-section-navigation" aria-label="Campaign sections" hidden>
+      <div data-section-group="journal" hidden>
+        <button class="tab" data-tab="campaign-information" type="button">Campaign guide</button>
+        <button class="tab" data-tab="campaign-npcs" type="button">Known NPCs</button>
+        <button class="tab" data-tab="campaign-chapters" type="button">Completed chapters</button>
+      </div>
+      <div data-section-group="character" hidden>
+        <button type="button" data-character-list>My characters &amp; items</button>
+        <button class="tab" data-tab="character-sheet" id="characterSheetTab" type="button">Character sheet</button>
+      </div>
+      <div data-section-group="dm" hidden></div>
     </nav>
 
     <!-- ════════════════════════════════════════════════════════════════
@@ -502,6 +513,6 @@
     <p>© 2026 DKDM — CampaignAtlas’s original website code and interface. Third-party content retains its own licences and rights.</p>
   </footer>
   <script src="js/boot-status.js?v=20261010-ui-cleanup"></script>
-  <script type="module" id="siteAppScript" src="js/app.js?v=20261014-cover-save-feedback-v1"></script>
+  <script type="module" id="siteAppScript" src="js/app.js?v=20261014-navigation-groups-v1"></script>
 </body>
 </html>

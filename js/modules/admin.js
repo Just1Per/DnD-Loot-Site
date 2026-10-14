@@ -431,7 +431,7 @@ function openAdminView() {
   if (!isAdmin() || !auth.currentUser) return;
   if(!SheetNavigation.guard(openAdminView))return;
   if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate('admin'))return;
-  adminReturnTab = document.querySelector(".tabs .tab.active")?.dataset.tab || "library";
+  adminReturnTab = typeof AppShell!=="undefined" ? AppShell.route : document.querySelector(".tabs .tab.active")?.dataset.tab || "library";
   hideAllScreens();
   document.getElementById('siteScreenTitle').textContent='Admin · CampaignAtlas';
   document.getElementById("tab-admin").style.display = "block";
