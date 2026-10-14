@@ -29,6 +29,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
  const cards=page.locator('#dmToolsPanel .dm-tools-grid > .dm-tool-card:not(.dm-tool-card--wide)');
  const headings=await cards.locator('h2').evaluateAll(nodes=>nodes.map(node=>node.textContent.replace(/\?/g,'').trim()));
  check('Three preparation cards appear in the requested order',JSON.stringify(headings)===JSON.stringify(['World Building','Creatures & NPCs','Chapter Tracker']));
+ check('DM tools grid uses five desktop columns',await page.locator('.dm-tools-grid').first().evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(' ').length===5));
  check('Primary site actions use burgundy',await page.locator('#dmOpenLibrary').evaluate(node=>getComputedStyle(node).backgroundColor==='rgb(155, 29, 29)'));
  const positions=await cards.evaluateAll(nodes=>nodes.map(node=>({y:node.getBoundingClientRect().y,height:node.getBoundingClientRect().height})));
  check('Three preparation cards share one row',positions.every(point=>Math.abs(point.y-positions[0].y)<1));
@@ -46,6 +47,20 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
   check(modal+' closes and returns focus',await page.evaluate(id=>!document.getElementById(id).open&&document.activeElement.id==='dmOpenLibrary',modal));
  }
  await page.evaluate(()=>{auditSeed('player');showTab('player')});
+ await page.evaluate(()=>{saves=[{id:'c1__potion',itemId:'potion',characterId:'c1',userId:'player',created:1}];renderMyWishes()});
+ check('Saved shows full item description and properties with bookmark controls',
+  await page.locator('#myWishGrid .saved-item-card').count()===1
+  &&(await page.locator('#myWishGrid .saved-item-card .item-description').textContent()).includes('Full potion description')
+  &&(await page.locator('#myWishGrid .saved-item-card .property-block').textContent()).includes('Restore health')
+  &&await page.locator('#myWishGrid .saved-remove-button').count()===1
+  &&await page.locator('#myWishGrid .loot-button,#myWishGrid .use-button,#myWishGrid .assign-button').count()===0);
+ await page.setViewportSize({width:390,height:844});
+ check('Saved full item cards fit mobile',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ await page.screenshot({path:path.join(out,'saved-items-mobile.png')});
+ await page.setViewportSize({width:1440,height:1000});
+ await page.screenshot({path:path.join(out,'saved-items-desktop.png')});
+ await page.evaluate(()=>{saves=[];renderMyWishes()});
+
  check('My Characters has one sheet-first create action',await page.locator('#playerCreateCharBtn').count()===1&&await page.locator('#playerCharName,#playerCharClass,#playerCharLevel').count()===0);
  await page.locator('#playerCreateCharBtn').click();await page.waitForSelector('#sheetBuildControls');
  check('Create opens the new character in its builder',await page.evaluate(()=>sheetSession?.identity?.name==='New adventurer'&&!document.getElementById('sheet-builder').hidden));

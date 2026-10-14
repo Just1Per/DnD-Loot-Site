@@ -5,37 +5,72 @@
 
 // ─── SAVE MODAL ───────────────────────────────────────────────────────────────
 
-function openWishModal(charId, charName) {
-  const savedItems = saves
-    .filter(s=>s.characterId===charId)
-    .map(s=>items.find(i=>i.id===s.itemId))
-    .filter(Boolean);
-  document.getElementById("wishModalCharName").textContent = `${charName}'s Saved Items`;
-  const grid = document.getElementById("wishModalGrid");
-  grid.innerHTML = savedItems.length===0
-    ? `<p class="player-empty" style="grid-column:1/-1">No saved items for this character.</p>`
-    : savedItems.map(item=>{
-        const rc=(item.rarity||"").toLowerCase().replaceAll(" ","-");
-        return `
-          <div class="wish-modal-card ${escapeHtml(rc)}">
-            ${itemImageMarkup(item, "wish-modal-art")}
-            <div class="wish-modal-body">
-              <div class="wish-modal-name">${escapeHtml(item.name)}</div>
-              <div class="card-meta" style="margin-top:4px">
-                ${item.rarity  ?`<span class="meta-tag ${escapeHtml(rc)}">${escapeHtml(item.rarity)}</span>`:""}
-                ${item.category?`<span class="meta-tag">${escapeHtml(item.category)}</span>`:""}
-                ${item.attunement?`<span class="meta-tag">Attunement</span>`:""}
-              </div>
-              ${(item.properties||[]).slice(0,2).map(p=>`
-                <div class="wish-modal-prop">
-                  <span class="property-title">${escapeHtml(p.title)}:</span>
-                  ${escapeHtml(p.text.substring(0,120))}${p.text.length>120?"…":""}
-                </div>`).join("")}
-            </div>
-          </div>`;
-      }).join("");
-  openVaultModal('wishModal');
+let savedItemLoadKey='';
+function ensureSavedItemDetails() {
+  if(!activeCampaign||!auth.currentUser)return;
+  const campaignId=activeCampaign.id,uid=auth.currentUser.uid,key=campaignId+':'+uid;
+  if(savedItemLoadKey===key)return;
+  savedItemLoadKey=key;
+  loadCampaignItems().then(()=>{
+    if(activeCampaign?.id!==campaignId||auth.currentUser?.uid!==uid)return;
+    renderMyWishes();
+    const modal=document.getElementById('wishModal');
+    if(modal?.open&&modal.dataset.characterId)renderWishModalContent(modal.dataset.characterId);
+  }).catch(error=>{if(savedItemLoadKey===key)savedItemLoadKey='';console.warn('Saved item details could not be loaded:',error);});
+}
+function savedItemCard(save) {
+  const item=items.find(item=>item.id===save.itemId);
+  // Retain an actionable saved record when its catalogue item is hidden or unavailable.
+  const fallback={id:save.itemId,name:'Saved item unavailable',description:'This item is currently unavailable in the campaign Library. Your save is retained, but its details cannot be shown.'};
+  return createCard(item||fallback,{savedEntry:save,savedUnavailable:!item});
+}
+function renderWishModalContent(charId) {
+  const grid=document.getElementById('wishModalGrid');
+  if(!grid)return;
+  const records=saves.filter(save=>save.characterId===charId);
+  grid.replaceChildren(...records.map(savedItemCard));
+  if(!records.length)grid.innerHTML='<p class="player-empty">No saved items for this character.</p>';
+  if(records.some(save=>!items.some(item=>item.id===save.itemId)))ensureSavedItemDetails();
   observePendingImages(grid);
+}
+function openWishModal(charId,charName) {
+  const character=characters.find(c=>c.id===charId);
+  if(!character||(!canManageCampaign()&&character.userId!==auth.currentUser?.uid))return;
+  document.getElementById('wishModalCharName').textContent=`${charName}'s Saved Items`;
+  document.getElementById('wishModal').dataset.characterId=charId;
+  renderWishModalContent(charId);
+  openVaultModal('wishModal');
+}
+async function removeSavedItem(save) {
+  const id=activeCampaign?.id,uid=auth.currentUser?.uid;
+  const existing=saves.find(row=>row.id===save?.id);
+  if(!id||!uid||!existing||(!canManageCampaign()&&existing.userId!==uid))return;
+  await deleteDoc(doc(db,'campaigns',id,'saves',existing.id));
+  if(activeCampaign?.id!==id||auth.currentUser?.uid!==uid)return;
+  await loadSaves();renderMyWishes();renderCards();
+  const modal=document.getElementById('wishModal');
+  if(modal?.open&&modal.dataset.characterId)renderWishModalContent(modal.dataset.characterId);
+}
+async function moveSavedItem(save,targetId) {
+  const id=activeCampaign?.id,uid=auth.currentUser?.uid;
+  const existing=saves.find(row=>row.id===save?.id);
+  const character=myCharacters().find(c=>c.id===targetId&&c.active!==false);
+  if(!id||!uid||!existing||existing.userId!==uid||!character||existing.characterId===targetId)return;
+  if(saves.some(row=>row.itemId===existing.itemId&&row.characterId===targetId)){
+    alert('This item is already saved for that character.');return;
+  }
+  const item=items.find(row=>row.id===existing.itemId);
+  if(!item?.visible){alert('This saved item is no longer visible in the Library, so it cannot be moved.');return;}
+  const batch=writeBatch(db);
+  batch.delete(doc(db,'campaigns',id,'saves',existing.id));
+  batch.set(doc(db,'campaigns',id,'saves',targetId+'__'+existing.itemId),{
+    itemId:existing.itemId,characterId:targetId,userId:uid,created:Date.now()
+  });
+  await batch.commit();
+  if(activeCampaign?.id!==id||auth.currentUser?.uid!==uid)return;
+  await loadSaves();renderMyWishes();renderCards();
+  const modal=document.getElementById('wishModal');
+  if(modal?.open&&modal.dataset.characterId)renderWishModalContent(modal.dataset.characterId);
 }
 
 function closeWishModal() { closeVaultModal('wishModal'); }
@@ -220,20 +255,16 @@ function renderMyLoot() {
 }
 
 function renderMyWishes() {
-  const el = document.getElementById("myWishGrid");
-  if (!el) return;
-  const mine = myCharacters();
-  if (!mine.length) { el.innerHTML=`<p class="player-empty">Create a character to save items.</p>`; return; }
-  const myCharIds = mine.map(c=>c.id);
-  const saved = saves
-    .filter(s=>myCharIds.includes(s.characterId))
-    .map(s=>{
-      const item=items.find(i=>i.id===s.itemId);
-      const char=characters.find(c=>c.id===s.characterId);
-      return item?{...item,_wishChar:char?.name||"?"}:null;
-    }).filter(Boolean);
-  if (!saved.length) { el.innerHTML=`<p class="player-empty">No saved items yet. Click ☆ Save on any item.</p>`; return; }
-  el.innerHTML = saved.map(item=>createMiniCard(item,"wish",item._wishChar)).join("");
+  const el=document.getElementById('myWishGrid');
+  if(!el)return;
+  el.classList.add('character-loot-grid');
+  const ownedChars=myCharacters();
+  if(!ownedChars.length){el.innerHTML='<p class="player-empty">Create a character to save items.</p>';return;}
+  const ids=new Set(ownedChars.map(c=>c.id));
+  const records=saves.filter(save=>ids.has(save.characterId));
+  if(!records.length){el.innerHTML='<p class="player-empty">No saved items yet. Click ☆ Save on any item in the Library.</p>';return;}
+  el.replaceChildren(...records.map(savedItemCard));
+  if(records.some(save=>!items.some(item=>item.id===save.itemId)))ensureSavedItemDetails();
   observePendingImages(el);
 }
 

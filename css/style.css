@@ -1515,3 +1515,17 @@ button:disabled { opacity:.55; cursor:not-allowed; }
 /* Campaign inventory upgrade confirmation */
 .vault-confirm-overlay{position:fixed;inset:0;z-index:12000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(22,15,10,.72);backdrop-filter:blur(3px)}
 .vault-confirm-dialog{width:min(560px,100%);padding:30px;border:1px solid rgba(122,82,39,.45);border-radius:18px;background:#fffaf0;box-shadow:0 24px 70px rgba(0,0,0,.32);text-align:center}.vault-confirm-icon{font-size:2.4rem;line-height:1;margin-bottom:10px}.vault-confirm-dialog h2{margin:0 0 12px}.vault-confirm-dialog>p{line-height:1.55}.vault-confirm-warning{display:flex;flex-direction:column;gap:5px;margin:20px 0;padding:16px;border:1px solid rgba(151,91,24,.38);border-radius:12px;background:rgba(214,154,64,.12)}.vault-confirm-warning strong{font-size:1.08rem}.vault-confirm-warning span,.vault-confirm-note{opacity:.8}.vault-confirm-note{font-size:.92rem}.vault-confirm-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px;flex-wrap:wrap}.vault-confirm-actions button{min-width:150px}
+
+/* Saved bookmarks share the Looted item-card design, but never represent inventory. */
+.saved-item-card .card-buttons{align-items:center;gap:7px}
+.saved-item-label{font:700 .73rem/1.35 Cinzel,Georgia,serif;color:#684824;margin-right:auto}
+.saved-move-label{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.75rem;color:#5c1d1d}
+.saved-character-target{max-width:180px;min-width:110px;padding:5px 8px;border:1px solid #ab916a;border-radius:6px;background:#fffaf0;color:#342d26}
+.saved-item-card .saved-remove-button{background:#5c1d1d;color:#fff8ea;border:1px solid #b99a60;border-radius:6px;padding:6px 10px}
+.saved-item-card .saved-move-button{background:#f1e2bd;color:#5c1d1d;border:1px solid #b99a60;border-radius:6px;padding:6px 10px}
+.saved-item-card .saved-item-unavailable{display:grid;place-items:center;min-height:130px;background:#eee5d6;color:#866b48;font:700 2rem Georgia,serif}
+#myWishGrid.character-loot-grid .item-card,#wishModalGrid .item-card{min-width:0}
+@media(max-width:600px){.saved-item-card .card-buttons{align-items:flex-start}.saved-move-label{width:100%}}
+
+/* The character Saved dialog uses the same responsive columns as My Loot. */
+#wishModalGrid.wish-modal-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:22px;align-items:start}
