@@ -1,0 +1,11 @@
+# Page editors
+
+Campaign item editing lives inside Library. Root catalogue editing uses a separate page with an explicit return destination. Back retains browse filters and returns keyboard focus to the original action or its replacement after a card redraw. The existing field IDs, mechanics, properties, image upload, supply revision and backend save operation are preserved.
+
+Create Campaign is a standalone setup page, available before campaign selection to approved creators. Existing campaign edit links open Settings, where settings, membership and invitations already live. Setup captures one campaign ID and actor, then writes the campaign, owner membership and user index in stages. A partial failure retains the same setup in memory and offers Retry; leaving and reopening incomplete setup resumes that ID. Account cleanup clears the session. This recovery is in memory; refreshing during incomplete setup can still require administrator recovery of an unindexed campaign.
+
+Large Saved and character identity dialogs are removed. Party Saved and Looted actions open Wishlist and Gear & Loot. Edit opens the real sheet Builder, preserving its existing validation, progression and save behavior.
+
+Dirty item/setup pages offer Save and continue, Leave without saving, and Stay here. Native dialogs remain for short decisions. Page navigation, campaign switching, admin/root entry, sheet entry and logout use the same guard. Browser refresh/close prompts for unsaved work. Saving locks form interaction and prevents duplicate submissions or exits. Failures retain the fields and display inline feedback. A refresh failure after a successful item save reports that the item was saved. Delayed upload/save completions recheck actor and editor identity before publishing state.
+
+Validation: `test:page-editors` uses real application entry points and deterministic Firebase responses for Library/root placement, successful/failed saves, native draft guards, keyboard focus, sheet/logout transitions, stale uploads, partial setup retry/resume, role boundaries, mobile widths and WCAG A/AA. Existing bookmark, navigation, UI/PDF print and Firestore/Storage permission suites apply. These fixtures do not verify production network availability.

@@ -58,7 +58,7 @@ function rerenderCard(itemId) {
     oldCard.replaceWith(card);
     observePendingImages(card);
   }
-  refreshCharacterLoot(itemId);
+  if(typeof CharacterWorkspace!=='undefined')CharacterWorkspace.refresh(false);
   renderDMCharacters();
   renderDMOverview();
   refreshStatsBar();
@@ -120,7 +120,7 @@ function renderCards() {
   container.replaceChildren(fragment);
   updateStatsFromFiltered(filtered);
   observePendingImages(container);
-  refreshCharacterLoot();
+  if(typeof CharacterWorkspace!=='undefined')CharacterWorkspace.refresh(false);
 }
 
 /**

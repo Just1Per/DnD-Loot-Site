@@ -232,13 +232,14 @@ function renderCampaignSelector() {
 }
 
 async function enterCampaign(campaign) {
+  if(!PageEditors.guard(()=>enterCampaign(campaign)))return false;
   if(!SheetNavigation.guard(()=>enterCampaign(campaign)))return false;
   const uid=auth.currentUser?.uid;if(!uid)return false;
   if(typeof CampaignHome!=="undefined"&&!CampaignHome.clear())return;
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
   if(typeof CampaignInformation!=="undefined"&&!CampaignInformation.clear())return;
-  closeCharacterLoot(); closeWishModal(); closeEditCharacterModal(); closeItemModal();
-  closeCharacterSheet(true); CharacterWorkspace.clear(); closeVaultAction(); closeRootPicker();
+     closeItemModal();
+  closeCharacterSheet(true); CharacterWorkspace.clear(); PageEditors.clear(); closeVaultAction(); closeRootPicker();
   const generation = ++campaignLoadGeneration;
   hideAllScreens();
   try {
@@ -266,6 +267,7 @@ async function enterCampaign(campaign) {
 }
 
 async function leaveCampaign() {
+  if(!PageEditors.guard(leaveCampaign))return;
   if(!SheetNavigation.guard(leaveCampaign))return;
   if(typeof CampaignHome!=="undefined"&&!CampaignHome.clear())return;
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
@@ -277,10 +279,9 @@ async function leaveCampaign() {
   items = []; inventory = []; campaignSupply = {};
   magicItemLibraryLoaded = false; magicItemLibraryLoading = false;
   closeVaultAction(); closeRootPicker(); closeItemModal();
-  closeCharacterLoot();
-  closeWishModal();
-  closeEditCharacterModal();
+
   CharacterWorkspace.clear();
+  PageEditors.clear();
   activeCampaign       = null;
   activeMembershipRole = null;
   selectedCharacter    = null;
@@ -297,6 +298,7 @@ async function leaveCampaign() {
 // ─── SCREEN MANAGEMENT ────────────────────────────────────────────────────────
 
 function hideAllScreens() {
+  if(typeof PageEditors!=='undefined')PageEditors.hide();
   const root = document.getElementById("rootCatalogueScreen");
   if (root) root.style.display = "none";
   document.getElementById("tab-admin").style.display = "none";

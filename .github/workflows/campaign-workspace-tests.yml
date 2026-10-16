@@ -47,6 +47,8 @@ jobs:
         run: npm --prefix tests run test:app-navigation
       - name: Shared character sheet, gear and bookmark context
         run: npm --prefix tests run test:character-workspace
+      - name: Page editors, dirty drafts and retryable campaign setup
+        run: npm --prefix tests run test:page-editors
       - name: Workspace engines and catalogue
         run: npm --prefix tests run test:workspace
       - name: World, chapters, encounters and scoped player adventure flows

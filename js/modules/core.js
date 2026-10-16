@@ -14,6 +14,7 @@ const vaultCall = createCampaignStore(window.__DND_VAULT_DEPS__);
 // Legacy editors now share native modal focus containment and return-to-trigger.
 const vaultModalOpeners = new WeakMap();
 function openVaultModal(id) {
+  if(typeof PageEditors!=='undefined'&&PageEditors.handles(id))return PageEditors.open(id);
   const dialog = document.getElementById(id);
   if (!dialog || dialog.open) return;
   vaultModalOpeners.set(dialog, document.activeElement);
@@ -22,6 +23,7 @@ function openVaultModal(id) {
   dialog.querySelector('input:not([disabled]),select:not([disabled]),textarea:not([disabled]),button')?.focus();
 }
 function closeVaultModal(id) {
+  if(typeof PageEditors!=='undefined'&&PageEditors.handles(id))return PageEditors.close(id);
   const dialog = document.getElementById(id);
   if (!dialog) return;
   if (dialog.open) dialog.close();
@@ -29,6 +31,7 @@ function closeVaultModal(id) {
   const opener = vaultModalOpeners.get(dialog);
   if (opener?.isConnected) opener.focus();
   vaultModalOpeners.delete(dialog);
+  return true;
 }
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
