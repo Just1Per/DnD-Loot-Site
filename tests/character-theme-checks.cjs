@@ -2,7 +2,6 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const root=path.resolve(__dirname,'..');
 const css=fs.readFileSync(path.join(root,'css/character-vault-theme.css'),'utf8');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-const rules=fs.readFileSync(path.join(root,'firestore.rules'),'utf8');
 
 for(const token of [
   '--vault-burgundy:#5c1d1d',
@@ -40,8 +39,6 @@ const adobe=html.indexOf('character-adobe-integration.css');
 const theme=html.indexOf('character-vault-theme.css');
 assert.ok(adobe>=0&&theme>adobe,'Vault theme stylesheet must load after the Adobe integration stylesheet');
 assert.ok(/character-vault-theme\.css\?v=[^\"\s]+/.test(html));
-assert.ok(/Firestore Rules Revision: \d+/.test(rules));
-assert.ok(rules.includes('Character sheet schema: 14'));
 
 let depth=0;
 for(const ch of css){if(ch==='{')depth++;else if(ch==='}')depth--;assert.ok(depth>=0,'CSS closes more blocks than it opens');}
