@@ -49,8 +49,10 @@ jobs:
           const fs=require('node:fs');
           const file='/tmp/campaignatlas-ui-checks/engine-dom.log';
           if(fs.existsSync(file)) {
-            const text=fs.readFileSync(file,'utf8').slice(-10000);
-            console.error('::error title=Engine and DOM output::'+text.replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
+            const lines=fs.readFileSync(file,'utf8').split('\n');
+            const failures=lines.flatMap((line,index)=>/^not ok |AssertionError|^Error:|^TypeError:/.test(line)?[index]:[]);
+            const excerpts=failures.length?failures.slice(0,8).map(index=>lines.slice(Math.max(0,index-2),index+32).join('\n')):[lines.slice(-28).join('\n')];
+            for(const excerpt of excerpts)console.error('::error title=Engine and DOM output::'+excerpt.slice(0,3500).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
           }
           NODE
       - name: Non-Overview accessibility, keyboard, layout and print
