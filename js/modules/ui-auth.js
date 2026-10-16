@@ -9,7 +9,7 @@ function showTab(tabId, render = true) {
   tabId=AppShell.resolve(tabId);
   if (['campaign-home','campaign-information','campaign-npcs','campaign-chapters'].includes(tabId) && !activeCampaign) return;
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
-  if(['player','player-adventures'].includes(tabId)&&(!activeCampaign||!canUseCharacters()))return;
+  if(['player','character-loot','character-wishlist','player-adventures'].includes(tabId)&&(!activeCampaign||!canUseCharacters()))return;
   if(tabId!=="character-sheet"&&!SheetNavigation.guard(()=>showTab(tabId,render)))return;
   if (tabId === "admin") { openAdminView(); return; }
   if ((tabId === "dm" || ["dm-world","dm-creatures","dm-chapters","dm-party","dm-settings","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
@@ -37,6 +37,7 @@ function showTab(tabId, render = true) {
   if (tabId==="character-sheet" && render) { renderCharacterSheetTab(); }
   if (tabId==="player")  { renderPlayerTab(); }
   if (tabId==="library") { renderVisibilityControls(); }
+  CharacterWorkspace.update(tabId);
   AppNavigation.remember(tabId);
 }
 
@@ -44,7 +45,9 @@ function initTabs() {
   document.getElementById("adminTab").addEventListener("click", openAdminView);
   document.getElementById("closeAdminView").addEventListener("click", closeAdminView);
   document.querySelectorAll(".tab").forEach(btn=>{
-    if(btn.id.startsWith("dmPlanningTab-")||btn.id==="dmPartyTab")return;
+    if(btn.id.startsWith("dmPlanningTab-")||btn.id==="dmPartyTab"||["character-loot","character-wishlist"].includes(btn.dataset.tab))return;
+    if(btn.id==="playerTab"){btn.addEventListener("click",()=>CharacterWorkspace.open(null,"character-sheet"));return;}
+    if(btn.id==="characterSheetTab"){btn.addEventListener("click",()=>CharacterWorkspace.open(CharacterWorkspace.context?.characterId,"character-sheet"));return;}
     btn.addEventListener("click", ()=>showTab(btn.dataset.tab));
   });
 }
@@ -189,6 +192,7 @@ async function logoutFromSite(){
   AppNavigation.clear();
   CampaignHome.clear(true);
   CampaignInformation.clear(true);
+  CharacterWorkspace.clear();
   activeCampaign = null;
   activeMembershipRole = null;
   selectedCharacter = null;
@@ -210,6 +214,8 @@ document.getElementById("logoutButton")?.addEventListener("click",logoutFromSite
 let authStartupGeneration=0;
 onAuthStateChanged(auth, async (firebaseUser) => {
   const generation=++authStartupGeneration;
+  CharacterWorkspace.clear();
+  if(sheetSession&&sheetSession.uid!==firebaseUser?.uid)closeCharacterSheet(true);
   SiteConfirmation.cancel();
   const current=()=>generation===authStartupGeneration&&auth.currentUser?.uid===firebaseUser?.uid;
   AppNavigation.cancelRestore();
@@ -316,6 +322,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 
 ensureDMToolsUI();
+CharacterWorkspace.ensure();
 ensureDashboardStyles();
 ensureDashboardShell();
 initTabs();

@@ -39,7 +39,8 @@
     "test:app-navigation": "node app-navigation-browser.cjs",
     "test:dm-workspace": "node dm-workspace-browser.cjs",
     "test:simple-world": "node simple-world-browser.cjs",
-    "test:archive-dialog": "node archive-dialog-browser.cjs"
+    "test:archive-dialog": "node archive-dialog-browser.cjs",
+    "test:character-workspace": "node character-workspace-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.51.1",

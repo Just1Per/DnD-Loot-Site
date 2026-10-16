@@ -1,0 +1,68 @@
+.character-workspace-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 18px 0;
+  padding: 18px 20px;
+  border: 1px solid #c8b89a;
+  border-radius: 12px;
+  background: #fffaf0;
+  color: #2e251b;
+}
+.character-workspace-header[hidden] { display: none; }
+.character-workspace-picker {
+  display: flex;
+  flex: 0 1 270px;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.character-workspace-picker label { font-weight: 700; }
+.character-workspace-picker select {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px;
+  border: 1px solid #8b785a;
+  border-radius: 6px;
+  background: #fff;
+  color: #2e251b;
+  font: inherit;
+}
+.character-workspace-context { flex: 1 1 250px; min-width: 0; }
+.character-workspace-context strong { font-size: 1.2rem; }
+.character-workspace-context p { margin: 5px 0 0; overflow-wrap: anywhere; }
+.character-workspace-panel { padding: 8px 0 24px; }
+.character-workspace-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.character-workspace-panel-heading h2 { margin: 0; }
+.character-workspace-panel [data-character-panel-description] { margin: 12px 0 18px; }
+.character-workspace-panel .character-loot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+.character-workspace-panel .item-card, .character-workspace-panel .mini-card { min-width: 0; }
+.character-workspace-legacy-chooser { display: none !important; }
+.character-workspace-manage .player-section:has(#myLootGrid),
+.character-workspace-manage .player-section:has(#myWishGrid) { display: none; }
+.character-workspace-header button:focus-visible,
+.character-workspace-picker select:focus-visible {
+  outline: 3px solid #684708;
+  outline-offset: 3px;
+}
+@media (max-width: 580px) {
+  .character-workspace-header { gap: 12px; padding: 14px; }
+  .character-workspace-picker, .character-workspace-context { flex-basis: 100%; }
+  .character-workspace-panel-heading { align-items: stretch; }
+  .character-workspace-panel-heading [data-character-panel-actions] { width: 100%; }
+  .character-workspace-panel-heading button { max-width: 100%; white-space: normal; }
+}
+
+#mainApp #characterWorkspaceHeader button{min-height:44px}

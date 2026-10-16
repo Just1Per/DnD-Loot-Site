@@ -238,7 +238,7 @@ async function enterCampaign(campaign) {
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
   if(typeof CampaignInformation!=="undefined"&&!CampaignInformation.clear())return;
   closeCharacterLoot(); closeWishModal(); closeEditCharacterModal(); closeItemModal();
-  closeCharacterSheet(true); closeVaultAction(); closeRootPicker();
+  closeCharacterSheet(true); CharacterWorkspace.clear(); closeVaultAction(); closeRootPicker();
   const generation = ++campaignLoadGeneration;
   hideAllScreens();
   try {
@@ -280,6 +280,7 @@ async function leaveCampaign() {
   closeCharacterLoot();
   closeWishModal();
   closeEditCharacterModal();
+  CharacterWorkspace.clear();
   activeCampaign       = null;
   activeMembershipRole = null;
   selectedCharacter    = null;

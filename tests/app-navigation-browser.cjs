@@ -130,7 +130,8 @@ const workspaceTabs = ['dm-world', 'dm-creatures', 'dm-chapters'];
 
     await secondary('campaign-information').click();
     await primary('player').click();
-    await assertPanel('player');
+    await page.waitForSelector('#characterSheetForm');
+    await assertPanel('character-sheet');
     await assertPrimary('player');
     await page.evaluate(() => showTab('character-sheet'));
     await page.waitForSelector('#characterSheetForm');
