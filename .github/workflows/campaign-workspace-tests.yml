@@ -59,6 +59,8 @@ jobs:
         run: npm --prefix tests run test:creature-editor
       - name: Campaign home save/reopen, access, accessibility and layout
         run: npm --prefix tests run test:campaign-home
+      - name: Book layouts, live draft previews and standard compatibility
+        run: npm --prefix tests run test:campaign-layouts
       - name: Campaign image CORS preparation preserves existing bucket configuration
         run: npm --prefix tests run test:campaign-image-cors
       - name: Campaign home permissions and revision conflicts

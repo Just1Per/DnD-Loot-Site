@@ -4,6 +4,13 @@
 var CampaignHome = (() => {
   const {runTransaction, getBlob, ref, storage, uploadBytes} = window.__DND_VAULT_DEPS__;
   const limits = {tagline:160, introduction:6000, expectations:4000, imageUrl:2000, imageAlt:240, imageCredit:240};
+  const layouts = [
+    {id:'classic',name:'Classic',subtitle:'Standard',description:'The familiar introduction on the left, with your image on the right.'},
+    {id:'chronicle',name:'Chronicle',subtitle:'An open campaign book',description:'A grand chapter heading, facing pages and a bookplate for your artwork.'},
+    {id:'atlas',name:'Atlas',subtitle:'A world waiting to be explored',description:'A wide map or illustration above the title and two columns of campaign notes.'},
+    {id:'grimoire',name:'Grimoire',subtitle:'A leather-bound adventure',description:'A burgundy title band, gold detailing and an illustration beside the story.'}
+  ];
+  const layoutId = value => layouts.some(layout=>layout.id===value) ? value : 'classic';
   const imageReadTimeoutMs = 20000, pendingReads = new Map(), imageLoads = new WeakMap();
   let session = null;
   const text = value => typeof value === 'string' ? value.trim() : '';
@@ -20,13 +27,14 @@ var CampaignHome = (() => {
     result.imageUrl = imageUrl(result.imageUrl);
     result.imagePath = /^campaign-cover-images\/[A-Za-z0-9_-]{1,100}\/[A-Za-z0-9_-]{1,100}$/.test(data?.imagePath || '') ? data.imagePath : '';
     if (result.imagePath) result.imageUrl = '';
+    result.layout = layoutId(data?.layout);
     result.revision = Number.isSafeInteger(data?.revision) && data.revision > 0 ? data.revision : 0;
     return result;
   }
   function contents(data, campaign) {
     const introduction = data.introduction || text(campaign.description);
     const hasImage = !!(data.imageUrl || data.imagePath);
-    return `<article class="campaign-book" aria-label="Campaign introduction">
+    return `<article class="campaign-book" data-home-layout="${layoutId(data.layout)}" aria-label="Campaign introduction">
       <div class="campaign-book-opening${hasImage ? ' campaign-book-opening--illustrated' : ''}"><div class="campaign-book-copy">
       <div class="campaign-book-title"><p class="campaign-book-eyebrow">Your campaign</p><h2>${escapeHtml(campaign.name || 'An unwritten adventure')}</h2>${data.tagline ? `<p class="campaign-book-tagline">${escapeHtml(data.tagline)}</p>` : ''}<div class="campaign-book-rule" aria-hidden="true"></div></div>
       <div class="campaign-book-chapters"><section><h3>The adventure begins</h3><p class="campaign-book-prose">${escapeHtml(introduction || 'Your story begins here. Your DM can add an introduction to welcome the party to this campaign.')}</p></section>
@@ -172,14 +180,19 @@ var CampaignHome = (() => {
     const root = document.getElementById('tab-campaign-home'), article = root?.querySelector('.campaign-book');
     if (!article) return;
     const data = normalize(activeCampaign.frontPage);
-    session = {id:activeCampaign.id, uid:auth.currentUser.uid, revision:data.revision, imagePath:data.imagePath, dirty:false, busy:false, previewTimer:null};
+    session = {id:activeCampaign.id, uid:auth.currentUser.uid, revision:data.revision, imagePath:data.imagePath, layout:data.layout, dirty:false, busy:false, previewTimer:null};
     const field = (key,label,type='text',placeholder='') => `<label><span>${label}</span>${type === 'textarea' ? `<textarea name="${key}" rows="6" maxlength="${limits[key]}" placeholder="${placeholder}">${escapeHtml(data[key])}</textarea>` : `<input name="${key}" type="${type}" maxlength="${limits[key]}" placeholder="${placeholder}" value="${escapeHtml(data[key])}">`}</label>`;
     const form = document.createElement('form');
     form.id = 'campaignHomeEditor'; form.className = 'campaign-book campaign-home-editor';
     // Show editing fields before reporting validity when saving from preview mode.
     form.noValidate = true;
     form.setAttribute('aria-labelledby', 'campaignHomeEditorTitle');
-    form.innerHTML = `<header class="campaign-home-edit-header"><h2 id="campaignHomeEditorTitle" class="sr-only">Edit campaign front page</h2><p>Editing your front page. Save when it is ready for the party.</p><div class="campaign-home-editor-actions"><button type="submit" class="btn-primary">Save front page</button><button type="button" class="vault-secondary-btn" data-home-preview>Preview</button><button type="button" class="cancel-button" data-home-cancel>Cancel</button></div><p data-home-editor-status role="status" aria-live="polite"></p></header>
+    form.innerHTML = `<header class="campaign-home-edit-header"><h2 id="campaignHomeEditorTitle" class="sr-only">Edit campaign front page</h2><p>Editing your front page. Save when it is ready for the party.</p><div class="campaign-home-editor-actions"><button type="submit" class="btn-primary">Save front page</button><button type="button" class="vault-secondary-btn" data-home-preview>Preview</button><button type="button" class="vault-secondary-btn" data-home-layout-options aria-expanded="false" aria-controls="campaignHomeLayoutOptions">Layout options</button><button type="button" class="cancel-button" data-home-cancel>Cancel</button></div><p data-home-editor-status role="status" aria-live="polite"></p></header>
+      <section id="campaignHomeLayoutOptions" class="campaign-home-layout-options" hidden>
+        <fieldset><legend>Choose your campaign’s opening page</legend><p>Preview a layout here. Your text and image stay the same; Save front page shares the choice with your party.</p>
+        <div class="campaign-home-layout-grid">${layouts.map(layout=>`<label class="campaign-home-layout-choice"><input type="radio" name="homeLayout" value="${layout.id}" ${data.layout===layout.id?'checked':''}><span class="campaign-home-layout-name">${layout.name}${layout.id==='classic'?' · Standard':''}</span><span class="campaign-home-layout-sample" data-layout-sample="${layout.id}" aria-hidden="true"><i class="layout-sample-title"></i><i class="layout-sample-copy"></i><i class="layout-sample-art"></i></span><span class="campaign-home-layout-subtitle">${layout.subtitle}</span><span class="campaign-home-layout-description">${layout.description}</span></label>`).join('')}</div>
+        </fieldset>
+      </section>
       <div class="campaign-book-opening campaign-book-opening--illustrated campaign-book-opening--editing" data-home-edit-fields>
         <div class="campaign-book-copy"><div class="campaign-book-title"><p class="campaign-book-eyebrow">Your campaign</p><h2>${escapeHtml(activeCampaign.name || 'An unwritten adventure')}</h2>${field('tagline','A line to set the scene','text','A tale of…')}<div class="campaign-book-rule" aria-hidden="true"></div></div><div class="campaign-book-chapters">${field('introduction','Campaign introduction','textarea','Welcome the party to your world.')}${field('expectations','Important campaign information & table rules','textarea','Tone, play style, session plans and table agreements.')}</div></div>
         <aside class="campaign-home-image-tools" aria-label="Campaign image controls"><div data-home-image-preview></div>
@@ -230,6 +243,15 @@ var CampaignHome = (() => {
       }
       form.elements.imageAlt.required = !!(form.elements.imageUrl.value.trim() || session.imagePath);
     });
+    const layoutPanel=form.querySelector('#campaignHomeLayoutOptions'), layoutButton=form.querySelector('[data-home-layout-options]');
+    layoutButton.addEventListener('click',()=>{layoutPanel.hidden=!layoutPanel.hidden;layoutButton.setAttribute('aria-expanded',String(!layoutPanel.hidden));});
+    layoutPanel.addEventListener('keydown',event=>{if(event.key==='Escape'&&!session?.busy){event.preventDefault();event.stopPropagation();layoutPanel.hidden=true;layoutButton.setAttribute('aria-expanded','false');layoutButton.focus();}});
+    layoutPanel.addEventListener('change',event=>{
+      if(event.target.name!=='homeLayout'||!session||session.busy)return;
+      session.layout=layoutId(event.target.value);session.dirty=true;
+      setPreview(form,true);
+      form.querySelector('[data-home-editor-status]').textContent=layouts.find(layout=>layout.id===session.layout).name+' layout selected. Save front page to share it with your party.';
+    });
     form.elements.imageAlt.required = !!(data.imageUrl || data.imagePath);
     form.querySelector('[data-home-upload]').addEventListener('change', event => upload(event.target.files[0], form));
     form.querySelector('[data-home-remove-image]').addEventListener('click', () => {
@@ -246,7 +268,7 @@ var CampaignHome = (() => {
     updateImagePreview(form); form.elements.tagline.focus({preventScroll:true});
   }
   function readForm(form) {
-    return normalize({...Object.fromEntries(Object.keys(limits).map(key => [key, form.elements[key].value])),imagePath:session?.imagePath || ''});
+    return normalize({...Object.fromEntries(Object.keys(limits).map(key => [key, form.elements[key].value])),imagePath:session?.imagePath || '',layout:session?.layout || 'classic'});
   }
   async function upload(file, form) {
     const current = session;
@@ -304,6 +326,8 @@ var CampaignHome = (() => {
     for (const control of form.elements) control.disabled = true;
     try {
       data.revision = current.revision + 1;
+      // Preserve the legacy payload when using the unchanged standard layout.
+      if(data.layout==='classic')delete data.layout;
       const campaignRef = doc(db, 'campaigns', current.id);
       await runTransaction(db, async transaction => {
         if (session !== current || activeCampaign?.id !== current.id || auth.currentUser?.uid !== current.uid || !canManageCampaign()) throw Error('Campaign access changed. Reopen the campaign before saving.');

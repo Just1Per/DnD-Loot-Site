@@ -57,6 +57,16 @@ const {doc, setDoc, getDoc, updateDoc} = require('firebase/firestore');
       await assertFails(write('dm',{...cover,imageAlt:'',revision:5}));
       await assertFails(write('dm',{...cover,imagePath:'campaign-world-images/a/north/map',revision:5}));
     });
+    await check('Only supported optional layouts can be saved, with unchanged membership and revision checks',async()=>{
+      let revision=5;
+      for(const layout of ['classic','chronicle','atlas','grimoire'])await assertSucceeds(write('dm',{...page,layout,revision:revision++}));
+      for(const layout of ['untrusted-css',null,{},true,12])await assertFails(write('dm',{...page,layout,revision}));
+      for(const uid of ['player','revoked','outsider','admin'])await assertFails(write(uid,{...page,layout:'atlas',revision}));
+      await assertFails(write('dm',{...page,layout:'atlas',revision},'b'));
+      await assertFails(write('dm',{...page,layout:'atlas',revision:revision-1}));
+      await assertSucceeds(write('dm',{...page,revision}));
+      assert.equal(Object.hasOwn((await getDoc(doc(db.player,'campaigns/a'))).data().frontPage,'layout'),false);
+    });
     console.log('SUCCESS',count,'campaign front-page permission checks');
   } finally {await env.cleanup();}
 })().catch(error=>{console.error(error);process.exitCode=1});
