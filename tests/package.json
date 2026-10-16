@@ -38,7 +38,8 @@
     "test:campaign-chapters-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-chapters-rules.cjs\"",
     "test:app-navigation": "node app-navigation-browser.cjs",
     "test:dm-workspace": "node dm-workspace-browser.cjs",
-    "test:simple-world": "node simple-world-browser.cjs"
+    "test:simple-world": "node simple-world-browser.cjs",
+    "test:archive-dialog": "node archive-dialog-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.51.1",

@@ -210,6 +210,7 @@ document.getElementById("logoutButton")?.addEventListener("click",logoutFromSite
 let authStartupGeneration=0;
 onAuthStateChanged(auth, async (firebaseUser) => {
   const generation=++authStartupGeneration;
+  SiteConfirmation.cancel();
   const current=()=>generation===authStartupGeneration&&auth.currentUser?.uid===firebaseUser?.uid;
   AppNavigation.cancelRestore();
   if(currentUser?.uid!==firebaseUser?.uid){

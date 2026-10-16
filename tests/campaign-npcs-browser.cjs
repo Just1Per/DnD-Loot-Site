@@ -1,4 +1,4 @@
-const {navigate}=require('./app-navigation-fixture.cjs');
+const {navigate,archiveEntry}=require('./app-navigation-fixture.cjs');
 // Real browser integration against a deterministic Firebase fixture; never touches production.
 const fs=require('node:fs'),path=require('node:path');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
@@ -58,7 +58,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  if(await page.evaluate(id=>!!testSheetDocs['campaigns/a/playerNPCs/'+id],recordId))throw Error('Reclassified NPC stays revealed');
  if(!await page.locator('[data-publish-npc]').isDisabled())throw Error('Monster can be revealed as NPC');
  await page.locator('[data-record-field=category]').selectOption('Story NPC');await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record.revision===4);await page.waitForFunction(()=>!document.querySelector('[data-publish-npc]').disabled);await page.locator('[data-publish-npc]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Shared with campaign members'));
- await page.locator('[data-archive-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record.archived);if(await page.evaluate(id=>!!testSheetDocs['campaigns/a/playerNPCs/'+id],recordId))throw Error('Archived NPC remains revealed');
+ await archiveEntry(page);await page.waitForFunction(()=>CampaignWorkspace.session?.record.archived);if(await page.evaluate(id=>!!testSheetDocs['campaigns/a/playerNPCs/'+id],recordId))throw Error('Archived NPC remains revealed');
  console.log('PASS Reclassification and archive unshare NPCs while keeping private masters');
  if(errors.length)throw Error(errors.join('\n'));
  }finally{await browser.close()}
