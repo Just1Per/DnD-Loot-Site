@@ -57,5 +57,9 @@ const ctx=vm.createContext(sandbox);const run=async f=>{if(process.env.DND_TEST_
  await run(path.join(__dirname,'character-ability-budget-ui-checks.js'));
  }
  const results=JSON.parse(document.getElementById('test-results').textContent);fs.writeFileSync(path.join(__dirname,'dom-results.json'),JSON.stringify(results,null,2));
- for(const r of results)console.log(r.pass?'PASS':'FAIL',r.name);if(results.some(r=>!r.pass))process.exitCode=1;else console.log(`SUCCESS ${results.length} DOM checks`);
+ for(const r of results){
+  console.log(r.pass?'PASS':'FAIL',r.name);
+  if(!r.pass&&process.env.GITHUB_ACTIONS)console.error('::error title=DOM regression::'+String(r.name).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
+ }
+ if(results.some(r=>!r.pass))process.exitCode=1;else console.log(`SUCCESS ${results.length} DOM checks`);
 })().catch(e=>{console.error(e);process.exitCode=1;});
