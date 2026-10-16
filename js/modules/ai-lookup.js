@@ -120,6 +120,17 @@ var AiLookup=(()=>{
    'Context: '+(context.extra||'None')
   ].join('\n');
  }
+ // Keep actionable provider errors readable without exposing request URLs or account data.
+ function errorNotice(error){
+  const message=String(error?.message||error||'').toLowerCase();
+  if(/prepayment credits are depleted|prepay(?:ment)? (?:credits|balance).*depleted|no credits/.test(message))
+   return {kind:'billing',message:'Gemini is not available because this project has no prepaid API credits remaining. The project owner needs to open Google AI Studio → Projects → Billing and add prepaid credits. You can still use Search on Google.'};
+  if(/(permission.denied|403|app.check|attestation|unauthorized)/.test(message))
+   return {kind:'configuration',message:'Gemini access was denied. The project owner should check Firebase AI Logic, App Check registration and the website domains. Search on Google is still available.'};
+  if(/429|resource.exhausted|quota|rate.limit/.test(message))
+   return {kind:'quota',message:'Gemini has reached a usage limit. Check API quotas and billing in Google AI Studio, or try again later. Search on Google is still available.'};
+  return {kind:'other',message:'Gemini lookup could not complete. Check Firebase AI Logic and the project billing settings, or use Search on Google.'};
+ }
  function ensureDialog(){
   if(dialog?.isConnected)return dialog;
   dialog=document.createElement('dialog');dialog.id='aiLookupDialog';dialog.className='ai-lookup-dialog';dialog.setAttribute('aria-labelledby','aiLookupTitle');
@@ -127,7 +138,7 @@ var AiLookup=(()=>{
    '<div class="ai-lookup-content"><p class="ai-lookup-intro">A short, AI-generated explanation of a rules entry. Not official rules text; confirm mechanics in your sourcebook.</p>'+
    '<div class="ai-lookup-fields"><label>Entry name<input id="aiLookupName" type="text" maxlength="160" autocomplete="off"></label><label>Type<select id="aiLookupKind"><option value="spell">Spell</option><option value="feat">Feat</option><option value="item">Item</option><option value="subclass">Subclass</option><option value="creature">Creature / NPC</option></select></label><label>Edition<select id="aiLookupEdition"><option value="">Not specified</option><option value="2014">2014</option><option value="2024">2024</option></select></label><label>Sourcebook (optional)<input id="aiLookupSource" type="text" maxlength="160"></label></div>'+
    '<p class="ai-lookup-privacy">Runs only when you press Search with Gemini. The entry name and reference fields are sent to Google. Results are not saved to the campaign database.</p>'+
-   '<div id="aiLookupStatus" class="ai-lookup-status" role="status" aria-live="polite"></div><div id="aiLookupAnswer" class="ai-lookup-answer" hidden></div><section id="aiLookupSources" class="ai-lookup-sources" hidden><h3>Sources to verify</h3><ul></ul></section><section id="aiLookupSuggestions" class="ai-lookup-suggestions" hidden><h3>Google Search suggestions</h3></section></div>'+
+   '<div id="aiLookupStatus" class="ai-lookup-status" role="status" aria-live="polite"></div><a id="aiLookupBilling" href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" hidden>Manage Gemini API billing ↗</a><div id="aiLookupAnswer" class="ai-lookup-answer" hidden></div><section id="aiLookupSources" class="ai-lookup-sources" hidden><h3>Sources to verify</h3><ul></ul></section><section id="aiLookupSuggestions" class="ai-lookup-suggestions" hidden><h3>Google Search suggestions</h3></section></div>'+
    '<footer class="ai-lookup-actions"><a id="aiLookupGoogle" target="_blank" rel="noopener noreferrer">Search on Google <span aria-hidden="true">↗</span></a><button type="button" id="aiLookupRun" class="btn-primary">Search with Gemini</button></footer>';
   document.body.append(dialog);
   dialog.querySelector('.ai-lookup-close').onclick=()=>dialog.close();
@@ -148,6 +159,7 @@ var AiLookup=(()=>{
  function resetOutput(){
   const d=ensureDialog();
   d.querySelector('#aiLookupStatus').textContent='';
+  d.querySelector('#aiLookupBilling').hidden=true;
   for(const id of ['aiLookupAnswer','aiLookupSources','aiLookupSuggestions']){
    const node=d.querySelector('#'+id);node.hidden=true;
    if(id==='aiLookupSuggestions')node.querySelector('iframe')?.remove();
@@ -213,7 +225,9 @@ var AiLookup=(()=>{
   }catch(error){
    if(serial!==runSerial||!d.open)return;
    console.warn('AI Lookup failed:',error);
-   d.querySelector('#aiLookupStatus').textContent='Gemini lookup failed or is not enabled. Check your Firebase AI Logic configuration and project quota, or use Search on Google.';
+   const notice=errorNotice(error);
+   d.querySelector('#aiLookupStatus').textContent=notice.message;
+   d.querySelector('#aiLookupBilling').hidden=notice.kind!=='billing';
   }finally{
    if(serial===runSerial&&d.open){button.disabled=false;button.textContent='Search with Gemini';}
   }
@@ -229,5 +243,5 @@ var AiLookup=(()=>{
  if(typeof document!=='undefined'){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
  }
- return {open,enhance,buildPrompt:promptFor,lookupUrl:googleUrl};
+ return {open,enhance,buildPrompt:promptFor,lookupUrl:googleUrl,errorNotice};
 })();
