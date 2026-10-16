@@ -33,13 +33,26 @@ function openCatalogCacheDB() {
       }
     };
 
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => {
+      const handle=request.result;
+      const tx=handle.transaction(CATALOG_CACHE_STORE,'readwrite');
+      const store=tx.objectStore(CATALOG_CACHE_STORE);
+      for(const key of ['master-items','master-items-reviewed-v1',catalogAudienceKey(true)])store.delete(key);
+      tx.oncomplete=()=>resolve(handle);
+      tx.onerror=()=>{handle.close();reject(tx.error);};
+      tx.onabort=()=>{handle.close();reject(tx.error);};
+    };
     request.onerror   = () => reject(request.error);
   });
 }
 
 /** Cache failures are recoverable: return null so the loader can read Firestore. */
-async function readCatalogCache() {
+function catalogAudienceKey(administrator = isAdmin()) {
+  return CATALOG_CACHE_KEY + ':' + SharedCataloguePolicy.audience(administrator);
+}
+
+async function readCatalogCache({administrator = isAdmin()} = {}) {
+  if(administrator)return null;
   let dbHandle;
 
   try {
@@ -48,7 +61,7 @@ async function readCatalogCache() {
 
     return await new Promise((resolve, reject) => {
       const tx = dbHandle.transaction(CATALOG_CACHE_STORE, "readonly");
-      const request = tx.objectStore(CATALOG_CACHE_STORE).get(CATALOG_CACHE_KEY);
+      const request = tx.objectStore(CATALOG_CACHE_STORE).get(catalogAudienceKey(administrator));
       request.onsuccess = () => resolve(request.result || null);
       request.onerror   = () => reject(request.error);
     });
@@ -73,17 +86,15 @@ function catalogItemsForCache() {
 /** Cache a versioned snapshot only after its IndexedDB transaction completes. */
 async function writeCatalogCache(version = catalogVersion) {
   let dbHandle;
+  const administrator=isAdmin();
+  // Unreviewed administrator data must not persist for another local account.
+  if(administrator)return;
+  const record={key:catalogAudienceKey(administrator),version:Number(version)||0,cachedAt:Date.now(),
+    items:catalogItemsForCache().filter(item=>administrator||SharedCataloguePolicy.approved(item))};
 
   try {
     dbHandle = await openCatalogCacheDB();
     if (!dbHandle) return;
-
-    const record = {
-      key: CATALOG_CACHE_KEY,
-      version: Number(version) || 0,
-      cachedAt: Date.now(),
-      items: catalogItemsForCache()
-    };
 
     await new Promise((resolve, reject) => {
       const tx = dbHandle.transaction(CATALOG_CACHE_STORE, "readwrite");
@@ -108,7 +119,8 @@ async function clearCatalogCache() {
 
     await new Promise((resolve, reject) => {
       const tx = dbHandle.transaction(CATALOG_CACHE_STORE, "readwrite");
-      tx.objectStore(CATALOG_CACHE_STORE).delete(CATALOG_CACHE_KEY);
+      // Clear old unreviewed and administrator snapshots on explicit recovery.
+      tx.objectStore(CATALOG_CACHE_STORE).clear();
       tx.oncomplete = () => resolve();
       tx.onerror    = () => reject(tx.error);
     });
@@ -119,12 +131,12 @@ async function clearCatalogCache() {
 
 function applyCatalogItems(sourceItems) {
   rootItems = (sourceItems || [])
-    .filter(item => item?.id && item.id !== CATALOG_META_ID)
+    .filter(item => item?.id && item.id !== CATALOG_META_ID && (isAdmin() || SharedCataloguePolicy.approved(item)))
     .map(raw => ({
       ...raw,
       // Optional Step 7+ thumbnail field: if you later store direct WebP/JPEG
       // thumbnail URLs in Firestore, cards can paint them immediately.
-      imageUrl: raw.imageUrl || raw.thumbnailUrl || raw.thumbUrl || getCachedImageUrl(raw.id)
+      imageUrl: raw.artwork?.status==='none'?'':raw.imageUrl || raw.thumbnailUrl || raw.thumbUrl || getCachedImageUrl(raw.id)
     }));
 
   populateSourceFilter();
@@ -143,8 +155,9 @@ async function readCatalogMeta() {
   }
 }
 
-async function fetchFreshCatalog() {
-  const snap = await getDocs(collection(db, "items"));
+async function fetchFreshCatalog({administrator = isAdmin()} = {}) {
+  const reference=collection(db,"items");
+  const snap = await getDocs(administrator?reference:query(reference,where('catalogueStatus','==',SharedCataloguePolicy.STATUS)));
 
   let embeddedMeta = null;
   const freshItems = [];
@@ -154,7 +167,7 @@ async function fetchFreshCatalog() {
       embeddedMeta = d.data();
       return;
     }
-    freshItems.push({ id: d.id, ...d.data() });
+    freshItems.push({ ...d.data(), id: d.id });
   });
 
   return { freshItems, embeddedMeta };

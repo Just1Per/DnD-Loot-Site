@@ -74,7 +74,7 @@ const CATALOG_META_ID = "catalog_meta";
 const CATALOG_CACHE_DB         = "dnd-item-vault-cache";
 const CATALOG_CACHE_DB_VERSION = 1;
 const CATALOG_CACHE_STORE      = "catalog";
-const CATALOG_CACHE_KEY        = "master-items";
+const CATALOG_CACHE_KEY        = "master-items-reviewed-v1";
 const CATALOG_NO_META_TTL_MS   = 24 * 60 * 60 * 1000;
 
 const ALL_CLASSES = [

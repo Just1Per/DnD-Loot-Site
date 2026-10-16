@@ -58,6 +58,20 @@ async function resolveImageUrl(itemId) {
   return url || PLACEHOLDER_IMAGE;
 }
 
+async function loadArchivedItemImage(img) {
+  const campaignId=activeCampaign?.id,uid=auth.currentUser?.uid,path=img.dataset.privateItemImagePath;
+  if(!uid||!campaignId||!canManageCampaign()||!path?.startsWith(`campaign-catalogue-images/${campaignId}/`))return;
+  delete img.dataset.privateItemImagePath;
+  try {
+    const blob=await window.__DND_VAULT_DEPS__.getBlob(ref(storage,path),10*1024*1024);
+    if(!img.isConnected||auth.currentUser?.uid!==uid||activeCampaign?.id!==campaignId||!canManageCampaign())return;
+    const url=URL.createObjectURL(blob);
+    img.addEventListener('load',()=>URL.revokeObjectURL(url),{once:true});
+    img.addEventListener('error',()=>URL.revokeObjectURL(url),{once:true});
+    img.src=url;
+  } catch { /* Keep the placeholder when private artwork cannot be read. */ }
+}
+
 // Resolve only visible cards; detached cards must not receive late image updates.
 const imageObserver = "IntersectionObserver" in window
   ? new IntersectionObserver((entries, observer) => {
@@ -66,6 +80,8 @@ const imageObserver = "IntersectionObserver" in window
 
         const img = entry.target;
         observer.unobserve(img);
+
+        if(img.dataset.privateItemImagePath){loadArchivedItemImage(img);return;}
 
         const itemId = img.dataset.imageItemId;
         if (!itemId) return;
@@ -84,9 +100,10 @@ const imageObserver = "IntersectionObserver" in window
   : null;
 
 function observePendingImages(root = document) {
-  const pending = root.querySelectorAll?.("img[data-image-item-id]") || [];
+  const pending = root.querySelectorAll?.("img[data-image-item-id], img[data-private-item-image-path]") || [];
 
   pending.forEach(img => {
+    if(img.dataset.privateItemImagePath){if(imageObserver)imageObserver.observe(img);else loadArchivedItemImage(img);return;}
     const itemId = img.dataset.imageItemId;
     const cached = getCachedImageUrl(itemId);
 
@@ -109,6 +126,12 @@ function observePendingImages(root = document) {
 }
 
 function itemImageMarkup(item, className, extraAttrs = "") {
+  if(item.archivedImage){
+    const path=item.archivedImage.path||'',prefix=`campaign-catalogue-images/${activeCampaign?.id}/`;
+    const allowed=canManageCampaign()&&path.startsWith(prefix)&&/^[a-f0-9]{64}\/[a-f0-9]{64}$/.test(path.slice(prefix.length));
+    return `<img src="${PLACEHOLDER_IMAGE}" class="${className}" alt="${escapeHtml(item.name||'')}" loading="lazy" decoding="async"${allowed?` data-private-item-image-path="${escapeHtml(path)}"`:''} ${extraAttrs}>`;
+  }
+  if(item.artwork?.status==='none')return `<img src="${PLACEHOLDER_IMAGE}" class="${className}" alt="${escapeHtml(item.name||'')}" loading="lazy" ${extraAttrs}>`;
   const imageId = item.imageBaseId || item.id;
   const cached = item.imageUrl || getCachedImageUrl(imageId);
   const src = cached || PLACEHOLDER_IMAGE;

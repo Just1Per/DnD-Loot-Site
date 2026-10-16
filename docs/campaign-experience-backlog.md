@@ -4,7 +4,7 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 
 | Priority | Delivery | Status | Acceptance criteria |
 | --- | --- | --- | --- |
-| P0 | Audit and restrict shared item catalogue | Next delivery; target campaign confirmed | Inventory root items and artwork, record evidence separately for text and images, preserve reviewed private copies before removing shared records, refresh caches and leave other campaign gear intact. |
+| P0 | Audit and restrict shared item catalogue | Audit #119 merged; item-by-item report #120 and reviewed migration prepared; production unchanged | Inventory root items and artwork, record evidence separately for text and images, preserve reviewed private copies before removing shared records, refresh caches and leave other campaign gear intact. |
 | P0 | Refresh restoration and save before leaving sheets | Merged PR #99; CI passed | Reload the active campaign, permitted tab and selected character/section or saved DM entry; offer save/discard/stay on sheet exits; retain drafts on save failure and recheck campaign access. |
 | P0 | Reported campaign cover upload/display failure | Owner verified production loading after CORS repair | Identify the actual upload/save/read error; verify Storage rules and authenticated-read CORS; preserve member-only image access. Production changes require approval. |
 | P0 | DM-customizable campaign front page | Merged PR #89 | Description and campaign information/table rules on the left; large campaign map or intro image at the upper right; readable mobile stacking; DM edit/preview/save; member read access; safe conflict handling. |
@@ -13,20 +13,20 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 | P1 | Player campaign information | Integrated into main by PR #95 | DM explicitly selects World Builder entries to share; members get a deeper campaign guide from a link beneath the front page; private notes and unrevealed records remain inaccessible. |
 | P1 | Player NPC catalogue | Integrated into main by PR #95 | Only DM-revealed NPCs appear; searchable names and player-facing descriptions; hidden identities, motives and combat prep stay private. |
 | P1 | Player chapter overview and notes | Integrated into main by PR #95 | DM publishes completed chapters deliberately; players see the published recap and can save their own chapter notes; unrevealed chapter plans remain private. |
-| P1 | Consolidated DM and player navigation | Navigation and DM workspace merged (#103–#105); character/page editors prepared for integration | Player destinations: Home, Journal (campaign guide, known NPCs, completed chapters), My Character (sheet, equipment/loot, saved items), Library. DMs additionally receive one DM Workspace with Overview, World, Creatures & NPCs, Chapters, Party & Loot. Campaign settings/members/invites move to a header action. Preserve records, permission checks, refresh restoration, draft guards and existing styling; One Shots remains paused. |
+| P1 | Consolidated DM and player navigation | Navigation/workspace #103–#105 and character/page integration #117 merged | Player destinations: Home, Journal (campaign guide, known NPCs, completed chapters), My Character (sheet, equipment/loot, saved items), Library. DMs additionally receive one DM Workspace with Overview, World, Creatures & NPCs, Chapters, Party & Loot. Campaign settings/members/invites move to a header action. Preserve records, permission checks, refresh restoration, draft guards and existing styling; One Shots remains paused. |
 | P1 | Simple World entry creation | Merged into main (#112) | Name and Description first; optional preparation collapsed; preserve categories, records, private notes, images/maps, connections and sharing. |
-| P1 | Explanatory archive/restore dialogs | Reviewed in #113; awaiting integration into main | Explain preservation, archived lists, player visibility, restoration and saved draft changes; accessible Cancel/confirm actions. |
-| P2 | Shared UI styling consistency | Reviewed in #114; awaiting integration into main | Match buttons, fields, optional sections, uploads and dialogs to the existing palette; test focus, contrast, mobile and print. |
-| P2 | Shared character sheet, gear and wishlist | Reviewed in #115; awaiting integration into main | Reconcile with full Saved cards/actions from #107; preserve character isolation, active loot target, guards and print. |
-| P2 | Page-based item and campaign editors | Reviewed in #116; awaiting integration into main | Retain actor/session checks, draft protection and error recovery while moving large forms onto pages. |
+| P1 | Explanatory archive/restore dialogs | Merged into main via #117 | Explain preservation, archived lists, player visibility, restoration and saved draft changes; accessible Cancel/confirm actions. |
+| P2 | Shared UI styling consistency | Merged into main via #117 | Match buttons, fields, optional sections, uploads and dialogs to the existing palette; test focus, contrast, mobile and print. |
+| P2 | Shared character sheet, gear and wishlist | Merged into main via #117 | Reconcile with full Saved cards/actions from #107; preserve character isolation, active loot target, guards and print. |
+| P2 | Page-based item and campaign editors | Merged into main via #117 | Retain actor/session checks, draft protection and error recovery while moving large forms onto pages. |
 | P2 | Dedicated DM Creatures & NPCs tab | Merged PR #96; CI passed | Move creature authoring/catalogue access into a clear dedicated tab while preserving existing records, SRD attribution, personal templates and encounter references. |
 | P2 | World Builder cleanup | Merged PR #97; CI passed | Focus on setting, locations, factions and player-facing campaign information; distinguish drafts, shared content and DM secrets; keep existing IDs, links, maps and uploads. |
 | P2 | Chapter Tracker cleanup | Merged PR #98; CI passed | Clear chapter preparation, completion, recap and publish actions; separate DM planning from player-visible recap; retain milestone approval and character independence. |
 | P3 | Creature & NPC editor cleanup | Merged PR #101 | Story-first NPC preparation and optional combat-stat sections; preserve hidden statistics, boss phases, source attribution, personal templates and encounter snapshots when toggling sections. |
-| P3 | Campaign front-page layout preferences | Implemented; awaiting review | Offer limited book-style layout/section options after reviewing the current page; preserve the existing default, accessible images and saved text. |
+| P3 | Campaign front-page layout preferences | Merged into main (#118) | Offer limited book-style layout/section options after reviewing the current page; preserve the existing default, accessible images and saved text. |
 | Paused | One Shots cleanup | Paused by owner | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
 
-PRs #90–#94 were originally merged into their parent feature branches. Integration PR #95 has since been merged onto `main`. PRs #113–#116 were reviewed and merged into their feature-branch bases after #112 reached main. Their combined changes are preserved in a dedicated integration PR targeting `main`. New layout and catalogue PRs also target `main` to avoid further parent-branch merges. Merge and production deployment continue to require the owner’s approval.
+PRs #90–#94 were originally merged into their parent feature branches. Integration PR #95 has since been merged onto `main`. PRs #113–#116 were reviewed and merged into their feature-branch bases after #112 reached main. Their combined changes reached `main` through #117. Book layouts #118 and the first read-only item audit #119 have also merged. New layout and catalogue PRs also target `main` to avoid further parent-branch merges. Merge and production deployment continue to require the owner’s approval.
 
 ## DM-only navigation and paused work
 
@@ -39,7 +39,7 @@ Pause all One Shots feature development. Existing records and behavior are retai
 - Image-save feedback: keep successful filenames visible, place the required description by the preview and associate validation errors with the field without losing the uploaded draft. Prepared for review; verify the owner's reported save behavior separately from authenticated image-read/CORS configuration.
 - Cover uploads are implemented in PR #90, with authenticated member reads and format/size validation.
 - Links below the front page open Campaign information, NPC catalogue and Chapter overview in the current review stack.
-- Optional campaign layout/section preferences after the first layout is reviewed.
+- Book layouts are implemented in #118: Classic remains standard, with Chronicle, Atlas and Grimoire available from Layout options.
 
 ## Public information boundary
 
@@ -56,3 +56,7 @@ Inspect existing workflows and keep the working data model unless a specific cha
 ## Validation for every delivery
 
 Run the relevant browser and Firestore permission checks plus affected existing character/workspace tests. Check DM and player roles, save/reopen, conflict/failure recovery, unsaved navigation, keyboard/axe accessibility and mobile layout. Preserve readable character and workspace print output.
+
+## Reviewed shared item follow-up
+
+The October 16 report covers 659 root items: 331 concept candidates for verified SRD replacements, 22 rename/authorship/permission cases and 306 current editions to withhold without further evidence. These are recommendations, not a production approval list. See [the Danish report](reports/item-catalogue-review-2026-10-16.md) and [the operator migration and access design](reviewed-item-catalogue.md). Private-copy verification, artwork/token retirement, explicit approval markers and cache/import boundaries are implemented for review. No production migration or rule publication has been run. Existing private campaign/inventory copies require a separate reviewed cleanup; keep IDs, quantities and character mechanics intact.

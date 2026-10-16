@@ -26,13 +26,24 @@ const {ref,uploadBytes,getBytes,deleteObject}=require('firebase/storage');
   const png=new Uint8Array([1,2,3]),contentType='image/png';
   const upload=(uid,path,bytes=png,mime=contentType)=>uploadBytes(ref(storage[uid],path),bytes,{contentType:mime});
 
-  // Preserve root catalog public reads, administrator writes and removal.
+  // Legacy root art requires administrator access; tokens are retired separately.
   await assertSucceeds(upload('admin','dnd-item-images/sword.png'));
-  await assertSucceeds(getBytes(ref(anon,'dnd-item-images/sword.png')));
+  await assertFails(getBytes(ref(anon,'dnd-item-images/sword.png')));
+  await assertSucceeds(getBytes(ref(storage.admin,'dnd-item-images/sword.png')));
+  await assertFails(getBytes(ref(storage.dm,'dnd-item-images/sword.png')));
   await assertFails(upload('dm','dnd-item-images/forged.png'));
   await assertSucceeds(upload('admin','dnd-item-images/sword.png',new Uint8Array([4])));
   await assertFails(deleteObject(ref(storage.player,'dnd-item-images/sword.png')));
   await assertSucceeds(deleteObject(ref(storage.admin,'dnd-item-images/sword.png')));
+
+  // Operator-preserved catalogue artwork is readable by this campaign's DMs only.
+  const archived='campaign-catalogue-images/a/source-hash/image-hash';
+  await env.withSecurityRulesDisabled(async context=>{await uploadBytes(ref(context.storage(),archived),png,{contentType});});
+  for(const uid of ['owner','dm'])await assertSucceeds(getBytes(ref(storage[uid],archived)));
+  for(const uid of ['player','inactiveDm','outsider','admin'])await assertFails(getBytes(ref(storage[uid],archived)));
+  await assertFails(getBytes(ref(anon,archived)));
+  await assertFails(upload('owner','campaign-catalogue-images/a/new/file'));
+  await assertFails(deleteObject(ref(storage.dm,archived)));
 
   // Preserve item-image uploads by campaign owner/active DM and reads by active members.
   await assertSucceeds(upload('owner','campaign-item-images/a/owner.png'));

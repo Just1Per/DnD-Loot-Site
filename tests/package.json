@@ -42,7 +42,10 @@
     "test:archive-dialog": "node archive-dialog-browser.cjs",
     "test:character-workspace": "node character-workspace-browser.cjs",
     "test:page-editors": "node page-editors-browser.cjs",
-    "test:campaign-layouts": "node campaign-layouts-browser.cjs"
+    "test:campaign-layouts": "node campaign-layouts-browser.cjs",
+    "test:catalogue-migration": "node --test item-catalogue-migration.cjs",
+    "test:reviewed-catalogue": "node reviewed-catalogue-browser.cjs",
+    "test:catalogue-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/reviewed-catalogue-rules.cjs && node tests/item-catalogue-migration-emulator.cjs && node tests/character-equipment-rules.cjs\""
   },
   "devDependencies": {
     "playwright": "1.51.1",

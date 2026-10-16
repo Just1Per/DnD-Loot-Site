@@ -14,6 +14,8 @@ on:
       - 'tests/**'
       - 'scripts/campaign-image-cors.json'
       - 'scripts/prepare-campaign-image-cors.cjs'
+      - 'scripts/item-catalogue-migration*.mjs'
+      - 'scripts/prepare-item-review-manifest.mjs'
       - '.github/workflows/campaign-workspace-tests.yml'
 permissions:
   contents: read
@@ -42,6 +44,11 @@ jobs:
           mkdir -p /tmp/campaignatlas-ui-checks
           set -o pipefail
           npm --prefix tests test 2>&1 | tee /tmp/campaignatlas-ui-checks/engine-dom.log
+      - name: Reviewed catalogue migration and read boundaries
+        run: |
+          npm --prefix tests run test:catalogue-migration
+          npm --prefix tests run test:reviewed-catalogue
+          npm --prefix tests run test:catalogue-rules
       - name: Report failed engine output in check annotations
         if: failure()
         run: |

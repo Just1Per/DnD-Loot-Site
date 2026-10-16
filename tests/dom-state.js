@@ -17,7 +17,7 @@ function seed(role='dm',membership=role){
  fixtureItems=[potion,{...potion,id:'hidden',name:'Secret Item',visible:false},{...potion,id:'dm-only',name:'DM Award',lootMode:'dm'}];
  fixtureInventory=[{id:'e1',itemId:'potion',characterId:'c1',userId:'player',quantity:2,item:potion},{id:'e2',itemId:'potion',characterId:'c2',userId:'other',quantity:3,item:potion}];
  fixtureSupply={potion:{capacity:5,claimed:0,unlimited:false,revision:8},hidden:{capacity:1,claimed:0,unlimited:false,revision:1},'dm-only':{capacity:1,claimed:0,unlimited:false,revision:1}};
- rootItems=[{...potion,id:'root-potion',name:'Root Healing Potion'}];
+ rootItems=[{...potion,id:'root-potion',name:'Root Healing Potion',catalogueStatus:'approved-v1'}];
  items=structuredClone(fixtureItems).filter(i=>canManageCampaign()||i.visible);inventory=structuredClone(fixtureInventory).filter(e=>canManageCampaign()||e.userId===role);campaignSupply=canManageCampaign()?structuredClone(fixtureSupply):{};
  selectedCharacter=myCharacters()[0]||null;saves=[];users=role==='admin'?[{id:'player',name:'Alice',role:['player']}]:[];
  magicItemLibraryLoaded=true;magicItemLibraryLoading=false;itemsLoadPromise=Promise.resolve();document.getElementById('search').value='';document.getElementById('ownerFilter').value='';

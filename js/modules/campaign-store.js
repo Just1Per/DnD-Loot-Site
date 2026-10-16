@@ -26,6 +26,7 @@ function createCampaignStore(sdk) {
     if (imageUrl && !/^https:\/\//i.test(imageUrl))
       fail('Image URL must use HTTPS.');
     return {
+      ...(['2014','2024'].includes(v.edition)?{edition:v.edition}:{}),
       ...(v.mechanics ? {mechanics:(typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment')).normalize(v.mechanics)} : {}),
       name: name.slice(0, 200),
       description: String(v.description || '').slice(0, 30000),
@@ -67,7 +68,12 @@ function createCampaignStore(sdk) {
         fail('Stock changed while this editor was open. Close and reopen the item before saving.');
       const claimed = s?.claimed || 0;
       tx.set(ir, {
+        ...(old.data()?.edition?{edition:old.data().edition}:{}),
         ...clean(d.item),
+        ...(old.data()?.rights?{rights:old.data().rights}:{}),
+        ...(old.data()?.artwork&&!d.item?.imageUrl?{artwork:old.data().artwork}:{}),
+        ...(old.data()?.catalogueArchive?{catalogueArchive:old.data().catalogueArchive}:{}),
+        ...(old.data()?.archivedImage&&!d.item?.imageUrl?{archivedImage:old.data().archivedImage}:{}),
         campaignId: d.campaignId,
         rootItemId: old.data()?.rootItemId || null,
         visible: !!d.visible,
@@ -110,12 +116,17 @@ function createCampaignStore(sdk) {
       if (!source.exists() || d.sourceId === 'catalog_meta')
         fail('Source item not found.');
       const raw = source.data();
+      if(root&&raw.catalogueStatus!=='approved-v1')
+        fail('This template has not been approved for the shared catalogue.');
       tx.set(ref(d.campaignId, 'items', key), {
         ...clean(raw),
         name: root ? raw.name : raw.name + ' (Copy)',
         campaignId: d.campaignId,
         rootItemId: root ? d.sourceId : raw.rootItemId || null,
-        imageBaseId: raw.imageBaseId || (root ? d.sourceId : ''),
+        imageBaseId: raw.artwork?.status==='none'?'':raw.imageBaseId || (root ? d.sourceId : ''),
+        ...(raw.artwork?{artwork:raw.artwork}:{}),
+        ...(raw.rights?{rights:raw.rights}:{}),
+        ...(!root&&raw.archivedImage?{archivedImage:raw.archivedImage}:{}),
         visible: false,
         highlighted: false,
         lootMode: 'dm',
@@ -292,6 +303,7 @@ function createCampaignStore(sdk) {
   async function migrate(d) {
     await runTransaction(db, tx => access(tx, d.campaignId, true));
     const parts = [
+      where('catalogueStatus','==','approved-v1'),
       orderBy(documentId()),
       limit(50)
     ];

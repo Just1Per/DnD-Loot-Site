@@ -191,7 +191,9 @@ match /rulesCatalog/{release} {
 }
 
 match /items/{itemId} {
-  allow read: if true;
+  // Rules are not filters: catalogue clients query this exact publication marker.
+  allow read: if isAdmin() || itemId == 'catalog_meta'
+    || resource.data.catalogueStatus == 'approved-v1';
   allow write: if isAdmin();
 }
 
@@ -748,6 +750,11 @@ function validStock(d) {
  && d.claimed is int && d.claimed >= 0
  && d.unlimited is bool && (d.unlimited || d.claimed <= d.capacity)
  && d.revision is int && d.revision > 0 && d.updatedAt is int;
+}
+match /catalogueArchives/{archiveId} {
+ allow read: if isCampaignDM(campaignId);
+ // Original exports and migration receipts are written only by the operator SDK.
+ allow write: if false;
 }
 match /items/{itemId} {
  allow read: if isCampaignDM(campaignId) || (isActiveMember(campaignId) && resource.data.visible == true);
