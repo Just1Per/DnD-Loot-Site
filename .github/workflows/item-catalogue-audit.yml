@@ -1,0 +1,32 @@
+name: Read-only shared item catalogue audit
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit-item-catalogue.mjs'
+      - 'scripts/build-srd-item-hashes.mjs'
+      - 'data/rules/srd-magic-item-text-hashes.json'
+      - 'tests/item-catalogue-audit.cjs'
+      - '.github/workflows/item-catalogue-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test audit and evidence boundaries
+        run: node --test tests/item-catalogue-audit.cjs
+      - name: Read public item metadata and compare pinned SRD fingerprints
+        run: node scripts/audit-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-audit.json'
+      - name: Upload prose-free audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-item-catalogue-audit
+          path: ${{ runner.temp }}/item-catalogue-audit.json
+          if-no-files-found: error
+          retention-days: 7
