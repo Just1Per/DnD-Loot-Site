@@ -59,6 +59,8 @@ jobs:
         run: npm --prefix tests run test:campaign-image-cors
       - name: Campaign home permissions and revision conflicts
         run: npm --prefix tests run test:campaign-home-rules
+      - name: Simple world entry creation and preserved optional preparation
+        run: npm --prefix tests run test:simple-world
       - name: Player campaign information sharing and accessibility
         run: npm --prefix tests run test:campaign-information
       - name: Player campaign information permissions

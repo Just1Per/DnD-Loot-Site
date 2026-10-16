@@ -4,6 +4,8 @@ World Building is a campaign-owner/DM workspace for Worlds, Regions, Locations, 
 
 ## Browsing and preparation
 
+Creation starts with **Add place → Name → Description → Save**. New entries use Location unless another category filter was selected. Other entry types remain available in Entry type & summary. Name and Description appear first; sharing, notes, images/maps, connections, entry options and print start collapsed. Closing a section preserves its existing values. The illustration editor now sits inside Images & maps, after the description.
+
 Category shortcuts show counts for active entries, or archived entries when **Show archived** is selected. They synchronize with the sidebar category filter. Search matches titles, summaries, descriptions and related-place/person text. Filtering keeps the selected editor and its unsaved text open.
 
 Player-visibility badges and filters distinguish **Private draft**, **Shared with players** and **Versions differ**. “Versions differ” compares the saved entry revision with the explicitly shared snapshot revision; it does not automatically publish an update. New entries and unsaved edits have a separate editor status. Archived entries show **Archived** and bypass the visibility filter.
@@ -27,6 +29,8 @@ Player-description printing excludes private notes, connections, world maps and 
 World entries, private notes and maps remain DM-only. This delivery adds no collections, schema changes or permission-rule changes. Published descriptions remain restricted to authenticated campaign members. Existing public-information, character and One Shots behavior is retained; One Shots feature work remains paused.
 
 ## Validation
+
+`npm --prefix tests run test:simple-world` covers simple creation, private save, collapsed-field preservation, deliberate sharing, keyboard, mobile and axe checks.
 
 `npm --prefix tests run test:campaign-information` covers category/visibility filtering, version changes, description/connection search, retained editor text, failed/queued sharing reads, archive/restore, late navigation, mobile layout, axe accessibility and existing player publication flows.
 
