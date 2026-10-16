@@ -363,7 +363,8 @@ match /campaigns/{campaignId} {
   function validFrontPage(page) {
     return page is map
       && page.keys().hasAll(['tagline', 'introduction', 'expectations', 'imageUrl', 'imageAlt', 'imageCredit', 'revision'])
-      && page.keys().hasOnly(['tagline', 'introduction', 'expectations', 'imageUrl', 'imagePath', 'imageAlt', 'imageCredit', 'revision'])
+      && page.keys().hasOnly(['tagline', 'introduction', 'expectations', 'imageUrl', 'imagePath', 'imageAlt', 'imageCredit', 'revision', 'layout'])
+      && (!('layout' in page) || page.layout in ['classic','chronicle','atlas','grimoire'])
       && page.tagline is string && page.tagline.size() <= 160
       && page.introduction is string && page.introduction.size() <= 6000
       && page.expectations is string && page.expectations.size() <= 4000
