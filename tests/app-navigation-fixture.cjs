@@ -8,4 +8,9 @@ async function navigate(page,tab){
  if(tab==='dm-one-shots'&&!await button.isVisible()){await page.locator('[data-dm-legacy-adventures] > summary').click();}
  await button.click();
 }
-module.exports={navigate};
+async function expandWorldTools(page){
+ if(await page.locator('[data-world-basics]').count()){
+  for(const detail of await page.locator('[data-world-option]').all())if(!await detail.evaluate(node=>node.open))await detail.locator(':scope > summary').click();
+ }
+}
+module.exports={navigate,expandWorldTools};

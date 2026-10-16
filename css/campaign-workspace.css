@@ -103,3 +103,11 @@
 .journal-image-fields input[type=file]{width:100%;max-width:100%}
 .journal-image-note{margin:0;font-size:.77rem;line-height:1.5;color:#6d5b47}
 @media(max-width:620px){.journal-image-editor{padding:12px}.journal-image-heading{flex-wrap:wrap}.journal-image-preview{max-height:310px}.journal-image-preview img{max-height:275px}}
+
+/* The first World task is a name and description; preparation is optional. */
+.world-entry-basics textarea{min-height:220px}
+.world-editor-section>summary{cursor:pointer;font:700 1rem/1.5 Cinzel,Georgia,serif;color:#5c1d1d;min-height:36px}
+.world-editor-section[open]>summary{margin-bottom:16px}
+.world-editor-section .world-map-tools{padding:14px 0 0}
+.world-entry-basics input::placeholder{color:#70614f}
+@media(max-width:760px){.world-entry-basics textarea{min-height:180px}}

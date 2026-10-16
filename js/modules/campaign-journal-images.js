@@ -32,7 +32,8 @@ var CampaignJournalImages=(()=>{
    '<label class="workspace-field">Caption (optional)<input type="text" maxlength="500" data-journal-image-caption placeholder="A short caption"></label></div>'+
    '<div class="workspace-actions"><button type="button" data-journal-image-remove>Remove illustration</button></div><p class="journal-image-note">Uploading does not save or publish the entry. Choose Save above to keep the reference. Replacing an image keeps the old file immutable.</p>';
   const first=form.querySelector('.chapter-editor-main > section, .world-editor-section, .creature-editor-section, form > section, section');
-  if(first)first.after(host);else form.append(host);
+  const mount=form.querySelector('[data-journal-image-mount]');
+  if(mount)mount.append(host);else if(first)first.after(host);else form.append(host);
   const pick=host.querySelector('[data-journal-image-upload]'),alt=host.querySelector('[data-journal-image-alt]'),
     caption=host.querySelector('[data-journal-image-caption]'),remove=host.querySelector('[data-journal-image-remove]'),
     preview=host.querySelector('[data-journal-image-preview]');
