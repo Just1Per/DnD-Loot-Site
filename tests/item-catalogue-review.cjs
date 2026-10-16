@@ -20,7 +20,7 @@ test('review output and annotation transport preserve metadata while excluding o
  await ready;const report=review.reviewCatalogue([row('a','My Item','Homebrew',{description:'PRIVATE SYNTHETIC DESCRIPTION',quote:'PRIVATE QUOTE',imageUrl:'https://example.invalid/?token=PRIVATE',properties:[{title:'PRIVATE TITLE',text:'PRIVATE PROPERTY'}]})],ref());
  const json=JSON.stringify(report),md=review.reviewMarkdown(report);for(const marker of ['PRIVATE SYNTHETIC','PRIVATE QUOTE','PRIVATE PROPERTY','PRIVATE TITLE','token=PRIVATE'])assert.ok(!json.includes(marker)&&!md.includes(marker));
  const chunks=review.annotationChunks(report);const content=chunks.map(x=>x.split('::').at(-1).split(':').slice(1).join(':')).join('');assert.deepEqual(JSON.parse(gunzipSync(Buffer.from(content,'base64'))),report);
- assert.ok(chunks.every(x=>x.length<3200));assert.ok(md.includes('My Item'));
+ assert.ok(chunks.every(x=>x.length<18200));assert.ok(chunks.length<=10);assert.ok(md.includes('My Item'));
 });
 test('exact text candidates still require a separate decision and artwork review',async()=>{
  await ready;const report=review.reviewCatalogue([row('a','Test Shield, +1','SRD',{description:'Independently written test prose.'})],ref());assert.equal(report.counts.currentTextExactSrd,1);assert.equal(report.counts.approved,0);assert.equal(report.counts.artworkUnverified,1);

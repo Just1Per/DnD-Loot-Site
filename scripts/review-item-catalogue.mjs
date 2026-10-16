@@ -51,7 +51,10 @@ export function reviewMarkdown(report){
 }
 export function annotationChunks(report){
  const encoded=gzipSync(Buffer.from(JSON.stringify(report))).toString('base64'),hash=digest(JSON.stringify(report));
- const chunks=encoded.match(/.{1,3000}/g)||[];
+ // Actions exposes at most ten notices per step. Keep a complete 659-item
+ // metadata report within that limit while staying below annotation size limits.
+ const chunks=encoded.match(/.{1,18000}/g)||[];
+ if(chunks.length>10)throw Error('Report exceeds annotation transport capacity; use the complete artifact instead.');
  return chunks.map((part,i)=>`::notice title=Item review metadata ${i+1}/${chunks.length}::${hash}:${part}`);
 }
 async function main(){
