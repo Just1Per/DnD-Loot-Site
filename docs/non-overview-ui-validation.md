@@ -66,3 +66,7 @@ The aggregate suite contained stale expectations reproduced on unchanged main. T
 Authentication and campaign data in browser tests are deterministic fixtures; password-reset delivery and a production signed-in session require deployment smoke testing. Permission checks use actual local Firebase emulators. No real recovery email is sent. Browser tests run in Chromium, not Safari or Firefox. Cold/repeat loading times on real devices remain a deployment measurement, not a performance claim based on fixture timing.
 
 The separate product proposals (27: standalone characters; 28: optional compact combined print mode) are outside P1/P2/P3 and are not implemented here.
+
+## Campaign control consistency
+
+Settings fields and member-role selects share paper surfaces, readable text, borders and a 42px minimum height. DM sidebar actions have 44px targets. Workspace/cover upload buttons and optional-section focus use the campaign palette. Styles are scoped away from character sheets and print; verify Settings at 390px and retain the full existing UI/print checks.

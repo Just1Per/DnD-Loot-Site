@@ -1,0 +1,11 @@
+/* Shared campaign controls, scoped away from the character sheet and its print. */
+#campaignSettingsPanel :is(input:not([type=checkbox]):not([type=hidden]),select,textarea){box-sizing:border-box;max-width:100%;min-width:0;min-height:42px;padding:9px 11px;border:1px solid var(--ui-border,#8a7355);border-radius:5px;background:var(--ui-paper,#fdfbf7);color:var(--ui-ink,#342d26);font:14px/1.5 Georgia,serif;letter-spacing:normal;text-transform:none}
+#mainApp #campaignSettingsPanel textarea{min-height:110px;resize:vertical}
+#campaignSettingsPanel input[type=checkbox],.campaign-workspace input[type=checkbox]{width:20px;height:20px;min-width:20px;accent-color:#732424;vertical-align:middle}
+#campaignSettingsPanel :is(input,select,textarea):focus-visible,.campaign-workspace :is(input,select,textarea,summary):focus-visible{outline:3px solid #732424;outline-offset:3px}
+.campaign-workspace summary{overflow-wrap:anywhere}
+:is(.campaign-workspace,.campaign-home-editor) input[type=file]{max-width:100%;font:inherit}
+:is(.campaign-workspace,.campaign-home-editor) input[type=file]::file-selector-button{min-height:36px;margin-right:10px;padding:7px 12px;border:1px solid #8a7355;border-radius:4px;background:#732424;color:#f5e6c8;font:inherit;cursor:pointer}
+:is(.campaign-workspace,.campaign-home-editor) input[type=file]:disabled::file-selector-button{opacity:.6;cursor:default}
+#mainApp #dmWorkspaceSidebar button{min-height:44px;transition:none}
+@media(max-width:650px){#campaignSettingsPanel .dm-member-actions{justify-content:flex-start}#campaignSettingsPanel .dm-member-actions select{flex:1 1 auto}#campaignSettingsPanel :is(input,select,textarea){font-size:16px}}
