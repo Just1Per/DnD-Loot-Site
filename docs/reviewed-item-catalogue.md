@@ -62,7 +62,15 @@ node scripts/audit-item-catalogue.mjs --public-project dnd-loot-site \
   --snapshot "$HOME/private-item-snapshot.json"
 ```
 
-After public rules are restricted, use an authenticated operator export of the complete root collection in the same Firestore REST document format. A public approved-only subset is explicitly labelled and rejected as migration input. The public workflow may use a read-only `runQuery` POST after its full GET is denied; it never treats that subset as a full database audit or gains private access.
+After public rules are restricted, the authenticated read-only operator export retains the complete root collection in the same Firestore REST document format:
+
+```sh
+node scripts/item-catalogue-migration.mjs snapshot \
+  --project dnd-loot-site --bucket dnd-loot-site.firebasestorage.app \
+  --output "$HOME/private-item-snapshot.json"
+```
+
+This command also refuses public CI and repository-local output. A public approved-only subset is explicitly labelled and rejected as migration input. The public workflow may use a read-only `runQuery` POST after its full GET is denied; it never treats that subset as a full database audit or gains private access.
 
 Build a plan offline, pinning the destination's ID, exact name and owner UID:
 

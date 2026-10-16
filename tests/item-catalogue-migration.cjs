@@ -73,3 +73,9 @@ test('private plan output is refused inside the repository before reading source
  const result=spawnSync(process.execPath,[path.join(__dirname,'../scripts/item-catalogue-migration.mjs'),'plan','--snapshot','missing','--manifest','missing','--output',path.join(__dirname,'private-plan.json')],{encoding:'utf8'});
  assert.notEqual(result.status,0);assert.match(result.stderr,/outside the repository/);
 });
+test('authenticated snapshots retain typed documents using only the read port',async()=>{
+ await ready;const {snapshot}=fixture();let calls=0;
+ const result=await M.captureCatalogue({listSources:async()=>{calls++;return snapshot.documents;}},snapshot.project);
+ assert.equal(calls,1);assert.equal(result.completeRootCatalogue,true);assert.deepEqual(result.documents,snapshot.documents);
+ await assert.rejects(M.captureCatalogue({listSources:async()=>snapshot.documents},'demo-other'),/different project/);
+});

@@ -9,6 +9,12 @@ export const POLICY='approved-v1';
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 const id=value=>typeof value==='string'&&value.length>0&&value.length<200&&!value.includes('/');
 export const fieldsHash=fields=>digest(stableJson(fields));
+export async function captureCatalogue(port,project){
+ check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(project||''),'Invalid project');
+ const documents=await port.listSources();documentsToRows(documents);
+ check(documents.every(document=>document.name.startsWith(`projects/${project}/databases/(default)/documents/items/`)),'Export returned a different project');
+ return {format:1,project,collection:'items',scope:'complete-root',completeRootCatalogue:true,documents};
+}
 export function encode(value){
  if(value===null)return {nullValue:null};
  if(typeof value==='string')return {stringValue:value};
@@ -132,6 +138,16 @@ export async function migrateCatalogue(plan,port,{apply=false,confirmPlanSha256=
 async function main(){
  const [mode,...args]=process.argv.slice(2),options={};
  for(let i=0;i<args.length;i++){check(/^--[a-z-]+$/.test(args[i])&&args[i+1]&&!args[i+1].startsWith('--'),'Expected named option values');check(!options[args[i]],'Duplicate option');options[args[i]]=args[++i];}
+ if(mode==='snapshot'){
+  check(!process.env.GITHUB_ACTIONS,'Private original snapshots must not be exported in public CI');
+  check(Object.keys(options).every(key=>['--project','--bucket','--output'].includes(key)),'Unknown snapshot option');
+  const output=path.resolve(options['--output']||'.'),checkout=path.resolve(fileURLToPath(new URL('..',import.meta.url)));
+  check(output!==checkout&&!output.startsWith(checkout+path.sep),'Private snapshot must live outside the repository');
+  const {createMigrationPort}=await import('./item-catalogue-migration-firebase.mjs');
+  const port=await createMigrationPort({project:options['--project'],bucket:options['--bucket'],backupDirectory:path.dirname(output)});
+  const snapshot=await captureCatalogue(port,options['--project']);await writePrivateFile(output,snapshot);
+  console.log(JSON.stringify({documents:snapshot.documents.length,completeRootCatalogue:true,writes:0}));return;
+ }
  if(mode==='plan'){
   const allowed=['--snapshot','--manifest','--project','--campaign','--campaign-name','--owner','--output'];check(Object.keys(options).every(key=>allowed.includes(key)),'Unknown plan option');
   const output=path.resolve(options['--output']||'.'),checkout=path.resolve(fileURLToPath(new URL('..',import.meta.url)));
