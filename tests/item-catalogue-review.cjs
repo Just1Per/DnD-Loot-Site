@@ -25,3 +25,15 @@ test('review output and annotation transport preserve metadata while excluding o
 test('exact text candidates still require a separate decision and artwork review',async()=>{
  await ready;const report=review.reviewCatalogue([row('a','Test Shield, +1','SRD',{description:'Independently written test prose.'})],ref());assert.equal(report.counts.currentTextExactSrd,1);assert.equal(report.counts.approved,0);assert.equal(report.counts.artworkUnverified,1);
 });
+test('bonus spelling, curated SRD renames and parameterized families preserve review boundaries',async()=>{
+ await ready;const reference=ref();reference.entries.push(
+  {id:'weapon',name:'Longsword (+1)',edition:'2014'},
+  {id:'pack',name:'Handy Haversack',edition:'2014'},
+  {id:'flame',name:'Flame Tongue (Longsword)',edition:'2014'});
+ const report=review.reviewCatalogue([row('a','+1 Longsword',"Dungeon Master's Guide"),row('b',"Heward's Handy Haversack","Dungeon Master's Guide"),row('c','Flame Tongue',"Dungeon Master's Guide"),row('d','Flame Tongue of Vecna',"Dungeon Master's Guide"),row('e','Rod of the Pact Keeper +1',"Dungeon Master's Guide")],reference);
+ assert.equal(report.records[0].recommendation,'keep-concept-with-srd');
+ assert.equal(report.records[1].recommendation,'rewrite-or-review');assert.equal(report.records[1].matchKind,'renamed-srd');
+ assert.equal(report.records[2].matchKind,'select-base-variant');assert.equal(report.records[3].recommendation,'withhold-current');
+ assert.equal(report.records[4].recommendation,'withhold-current');
+ assert.ok(report.records.every(row=>!row.approved));
+});
