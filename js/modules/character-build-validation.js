@@ -52,9 +52,10 @@ var CharacterBuildValidation=(()=>{
     if(assigned<target)add(rows,'Class levels',`Assign ${target-assigned} remaining class level${target-assigned===1?'':'s'}.`,'builder','warning',assigned?'[data-up]':'[name="build.classId"]');
     for(const [index,entry] of (progression.classLevels||[]).entries()){
       if(entry.subclassId)continue;
-      const candidates=globalThis.CharacterSubclassData?.forClass?.(entry.classId)||[];
-      const compatible=candidates.filter(row=>!globalThis.CharacterSubclassData?.compatible||globalThis.CharacterSubclassData.compatible(row,data?.build?.edition||'2014'));
-      const min=compatible.length?Math.min(...compatible.map(r=>Number(r.minimumLevel)||99)):99;
+      const subclasses=globalThis.CharacterSubclassData,edition=data?.build?.edition||'2014';
+      const candidates=subclasses?.forClass?.(entry.classId)||[];
+      const compatible=candidates.filter(row=>!subclasses.compatible||subclasses.compatible(row,edition));
+      const min=compatible.length?Math.min(...compatible.map(row=>Number(subclasses.effectiveMinimum?subclasses.effectiveMinimum(row,edition):row.minimumLevel)||99)):99;
       if(Number(entry.level)>=min)add(rows,'Subclass',`Choose a subclass for ${globalThis.CharacterAdobeEngine?.className?.(entry.classId)||entry.classId}.`,'builder','warning',`[data-subclass="${index}"]`);
     }
     const featWarnings=(derived?.feats?.reports||[]).flatMap(r=>(r.warnings||[]).map(w=>({name:r.def?.displayName||r.def?.name||r.id,warning:w,key:r.key})));

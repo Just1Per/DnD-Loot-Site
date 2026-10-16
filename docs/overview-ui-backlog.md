@@ -2,6 +2,8 @@
 
 The user requested completing non-Overview P1/P2/P3 work first. Overview rendering, styling and design were not redesigned in this PR.
 
+The subsequently reported premature subclass warning is a separate correctness fix: Overview must use the subclass picker's edition-aware minimum, including level 3 for 2024 legacy options and the original class-specific unlock levels for 2014 characters. This does not redesign Overview or complete the deferred styling items below.
+
 | Priority | Remaining point | Acceptance check |
 | --- | --- | --- |
 | P2 | Enlarge and space Overview help controls (C05) | At least 24 px targets, accessible names, keyboard focus, no overlap with adjacent actions or dense stats. |

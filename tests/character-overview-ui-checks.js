@@ -29,6 +29,19 @@
   change('build.classId','wizard');change('identity.level',5);document.getElementById('catalogSpellClass').value='wizard';document.getElementById('catalogSpellLevel').value='';document.getElementById('catalogSpellEdition').value='2024';document.getElementById('catalogSpellBrowseAll').checked=true;document.getElementById('catalogSpellSearch').value='Fireball';renderCatalogSpellResults();document.querySelector('[data-spell-info]').click();check('Spell catalogue info is available before adding a spell',!!document.getElementById('sheetSpellInformation'));
   closeSpellInformation();sheetSession.data.spells.push({name:'Custom',notes:'<script>alert(1)</script>',level:0});renderSheetRows();fillSheetForm();openSpellInformation({index:1});check('Custom spell notes display as text, never executable HTML',document.getElementById('sheetSpellInformation').textContent.includes('<script>')&&!document.querySelector('#sheetSpellInformation script'));
   closeCharacterSheet(true);check('Closing character removes private spell popup',!document.getElementById('sheetSpellInformation'));
+  await openCharacterSheet('c1');
+  sheetSession.identity.level=2;sheetSession.data=CharacterSheetModel.normalize({build:{edition:'2024',classId:'wizard'},adobe:{classLevels:[{classId:'wizard',level:2,subclassId:''}]}});renderCharacterSheet();
+  const subclassRows=()=>[...document.querySelectorAll('#sheetOverviewReadout .sheet-overview-important-row')].filter(row=>row.textContent.includes('Choose a subclass'));
+  check('2024 level-2 Overview has no premature subclass Fix or unlocked picker',subclassRows().length===0&&!document.querySelector('[data-subclass="0"]'));
+  sheetSession.identity.level=3;sheetSession.data.adobe.classLevels[0].level=3;renderCharacterSheet();
+  check('2024 level-3 Overview offers subclass Fix when the picker unlocks',subclassRows().length===1&&!!document.querySelector('[data-subclass="0"]'));
+  subclassRows()[0].querySelector('[data-build-warning-index]').click();
+  check('Eligible subclass Fix opens and highlights the unlocked picker',document.querySelector('[data-subclass="0"]').classList.contains('sheet-fix-target')&&!document.getElementById('sheet-builder').hidden);
+  const subclass=document.querySelector('[data-subclass="0"]');subclass.value='evocation';subclass.dispatchEvent(new Event('change',{bubbles:true}));
+  check('Choosing an eligible legacy subclass clears the 2024 Overview warning',sheetSession.data.adobe.classLevels[0].subclassId==='evocation'&&subclassRows().length===0);
+  sheetSession.identity.level=2;sheetSession.data.adobe.classLevels[0]={classId:'wizard',level:2,subclassId:''};renderCharacterSheet();
+  check('Reducing a 2024 class below level 3 removes the subclass warning again',subclassRows().length===0);
+  closeCharacterSheet(true);
  }catch(e){results.push({name:e.stack,pass:false});}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
 })();
