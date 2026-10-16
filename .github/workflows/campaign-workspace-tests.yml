@@ -38,7 +38,21 @@ jobs:
       - name: Install PDF text verification
         run: sudo apt-get update && sudo apt-get install -y poppler-utils
       - name: Character engines and UI fixtures
-        run: npm --prefix tests test
+        run: |
+          mkdir -p /tmp/campaignatlas-ui-checks
+          set -o pipefail
+          npm --prefix tests test 2>&1 | tee /tmp/campaignatlas-ui-checks/engine-dom.log
+      - name: Report failed engine output in check annotations
+        if: failure()
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs');
+          const file='/tmp/campaignatlas-ui-checks/engine-dom.log';
+          if(fs.existsSync(file)) {
+            const text=fs.readFileSync(file,'utf8').slice(-10000);
+            console.error('::error title=Engine and DOM output::'+text.replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
+          }
+          NODE
       - name: Non-Overview accessibility, keyboard, layout and print
         run: npm --prefix tests run test:ui
       - name: Refresh restoration and save before leaving character sheets
