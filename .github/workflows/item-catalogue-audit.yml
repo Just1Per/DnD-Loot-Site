@@ -27,6 +27,12 @@ jobs:
         run: node scripts/audit-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-audit.json'
       - name: Generate conservative item-by-item review without publishing original prose
         run: node scripts/review-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-review.json' --markdown '${{ runner.temp }}/item-catalogue-review.md' --annotations
+      - name: Readable review metadata batch two
+        run: node scripts/review-item-catalogue.mjs --annotations-from '${{ runner.temp }}/item-catalogue-review.json' --annotation-batch 1
+      - name: Readable review metadata batch three
+        run: node scripts/review-item-catalogue.mjs --annotations-from '${{ runner.temp }}/item-catalogue-review.json' --annotation-batch 2
+      - name: Readable review metadata batch four
+        run: node scripts/review-item-catalogue.mjs --annotations-from '${{ runner.temp }}/item-catalogue-review.json' --annotation-batch 3
       - name: Upload prose-free audit report
         uses: actions/upload-artifact@v4
         with:

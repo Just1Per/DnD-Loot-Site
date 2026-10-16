@@ -51,23 +51,25 @@ export function reviewMarkdown(report){
 }
 export function annotationChunks(report){
  const encoded=gzipSync(Buffer.from(JSON.stringify(report))).toString('base64'),hash=digest(JSON.stringify(report));
- // Actions exposes at most ten notices per step. Keep a complete 659-item
- // metadata report within that limit while staying below annotation size limits.
- const chunks=encoded.match(/.{1,18000}/g)||[];
- if(chunks.length>10)throw Error('Report exceeds annotation transport capacity; use the complete artifact instead.');
+ // Check notices truncate messages at 4 KiB and allow ten notices per step.
+ // Emit bounded chunks in separate batches; the complete artifact is canonical.
+ const chunks=encoded.match(/.{1,3000}/g)||[];
+ if(chunks.length>40)throw Error('Report exceeds annotation transport capacity; use the complete artifact instead.');
  return chunks.map((part,i)=>`::notice title=Item review metadata ${i+1}/${chunks.length}::${hash}:${part}`);
 }
 async function main(){
- let project='',input='',output='',markdown='',annotations=false;
+ let project='',input='',output='',markdown='',annotations=false,annotationsFrom='',batch=0;
  for(let i=2;i<process.argv.length;i++){
-  const key=process.argv[i];if(key==='--public-project')project=process.argv[++i];else if(key==='--from-json')input=process.argv[++i];else if(key==='--report')output=process.argv[++i];else if(key==='--markdown')markdown=process.argv[++i];else if(key==='--annotations')annotations=true;else throw Error('Unknown argument: '+key);
+  const key=process.argv[i];if(key==='--public-project')project=process.argv[++i];else if(key==='--from-json')input=process.argv[++i];else if(key==='--report')output=process.argv[++i];else if(key==='--markdown')markdown=process.argv[++i];else if(key==='--annotations')annotations=true;else if(key==='--annotations-from')annotationsFrom=process.argv[++i];else if(key==='--annotation-batch')batch=Number(process.argv[++i]);else throw Error('Unknown argument: '+key);
  }
+ if(!Number.isInteger(batch)||batch<0||batch>3)throw Error('Invalid annotation batch');
+ if(annotationsFrom){const report=JSON.parse(await fs.readFile(annotationsFrom,'utf8'));for(const line of annotationChunks(report).slice(batch*10,batch*10+10))console.log(line);return;}
  if(!output||(!project&&!input)||(project&&input))throw Error('Use (--public-project PROJECT | --from-json SNAPSHOT) --report NEWFILE [--markdown NEWFILE] [--annotations]');
  const source=input?JSON.parse(await fs.readFile(input,'utf8')):await readPublicCatalogue(project);
  const reference=JSON.parse(await fs.readFile(new URL('../data/rules/srd-magic-item-text-hashes.json',import.meta.url),'utf8'));
  const report=reviewCatalogue(documentsToRows(source.documents),reference);
  await writePrivateFile(output,report);if(markdown)await fs.writeFile(markdown,reviewMarkdown(report),{mode:0o600,flag:'wx'});
  console.log(JSON.stringify(report.counts));
- if(annotations)for(const line of annotationChunks(report))console.log(line);
+ if(annotations)for(const line of annotationChunks(report).slice(batch*10,batch*10+10))console.log(line);
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{console.error(error.message);process.exitCode=1});
