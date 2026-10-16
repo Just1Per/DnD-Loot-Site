@@ -1,7 +1,7 @@
 'use strict';
 // Only locations, never editor data. One browser tab and authenticated UID at a time.
 var AppNavigation=(()=>{
- const tabs=new Set(['campaign-home','campaign-information','campaign-npcs','campaign-chapters','library','player','character-sheet','dm','dm-world','dm-creatures','dm-chapters','dm-party','dm-settings','dm-one-shots','player-adventures','admin']);
+ const tabs=new Set(['campaign-home','campaign-information','campaign-npcs','campaign-chapters','library','player','character-sheet','character-loot','character-wishlist','dm','dm-world','dm-creatures','dm-chapters','dm-party','dm-settings','dm-one-shots','player-adventures','admin']);
  const kinds=new Set(['world','creature','chapter','encounter','oneShot','playerAdventure']);
  const sections=new Set(['overview','skills','combat','spells','inventory','builder','feats','story','companion','rules']);
  const validId=value=>typeof value==='string'&&/^[A-Za-z0-9_-]{1,100}$/.test(value);
@@ -27,13 +27,14 @@ var AppNavigation=(()=>{
   if(tab==='admin')return isAdmin();
   if(tab==='dm'||tab.startsWith('dm-'))return canManageCampaign();
   if(tab==='character-sheet')return canManageCampaign()||canUseCharacters();
-  if(tab==='player'||tab==='player-adventures')return canUseCharacters();
+  if(['player','character-loot','character-wishlist','player-adventures'].includes(tab))return canUseCharacters();
   return true;
  }
  function remember(tab){
   tab??=document.getElementById('tab-admin')?.style.display==='block'?'admin':typeof AppShell!=='undefined'?AppShell.route:document.querySelector('.tabs .tab.active')?.dataset.tab;
   if(!allowed(tab))return;
   const route={version:1,campaignId:activeCampaign.id,tab};
+  if(['character-loot','character-wishlist'].includes(tab)&&typeof CharacterWorkspace!=='undefined'){const character=CharacterWorkspace.context;if(character?.campaignId===activeCampaign.id&&validId(character.characterId))route.characterId=character.characterId;}
   if(tab==='character-sheet'&&sheetSession?.campaignId===activeCampaign.id){
    if(sheetSession.adventureId){route.tab=canManageCampaign()?'dm-one-shots':'player-adventures';route.workspaceKind=canManageCampaign()?'oneShot':'playerAdventure';route.recordId=sheetSession.adventureId;}
    else{route.characterId=sheetSession.characterId;route.sheetTab=document.querySelector('[data-sheet-tab][aria-selected=true]')?.dataset.sheetTab;}
@@ -53,6 +54,8 @@ var AppNavigation=(()=>{
    if(tab==='character-sheet'&&route.characterId&&sheetCharacters().some(character=>character.id===route.characterId)){
     await openCharacterSheet(route.characterId);
     if(sheetSession?.characterId===route.characterId&&auth.currentUser?.uid===uid){const button=document.querySelector(`[data-sheet-tab="${route.sheetTab||'overview'}"]`);selectSheetTab(button&&!button.hidden?button.dataset.sheetTab:'overview');}
+   }else if(['character-loot','character-wishlist'].includes(tab)){
+    await CharacterWorkspace.open(sheetCharacters().some(row=>row.id===route.characterId)?route.characterId:null,tab);
    }else if(route.workspaceKind&&CampaignWorkspace.configs[route.workspaceKind]?.tab===tab){
     showTab(tab,false);await CampaignWorkspace.render(route.workspaceKind);
     const s=CampaignWorkspace.session,row=s?.rows.find(entry=>entry.id===route.recordId);

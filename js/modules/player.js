@@ -140,6 +140,7 @@ function renderPlayerTab() {
   renderCharacterList();
   renderMyLoot();
   renderMyWishes();
+  if(typeof CharacterWorkspace!=="undefined")CharacterWorkspace.refresh(false);
 }
 
 function renderCharacterList() {
@@ -255,6 +256,7 @@ function renderMyLoot() {
 }
 
 function renderMyWishes() {
+  if(typeof CharacterWorkspace!=="undefined")CharacterWorkspace.refresh(false);
   const el=document.getElementById('myWishGrid');
   if(!el)return;
   el.classList.add('character-loot-grid');

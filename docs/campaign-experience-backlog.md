@@ -15,8 +15,8 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 | P1 | Consolidated DM and player navigation | Navigation and DM workspace merged (#103–#105); character/page-editor follow-ups remain | Player destinations: Home, Journal (campaign guide, known NPCs, completed chapters), My Character (sheet, equipment/loot, saved items), Library. DMs additionally receive one DM Workspace with Overview, World, Creatures & NPCs, Chapters, Party & Loot. Campaign settings/members/invites move to a header action. Preserve records, permission checks, refresh restoration, draft guards and existing styling; One Shots remains paused. |
 | P1 | Simple World entry creation | PR #112, pending review | Name and Description first; optional preparation collapsed; preserve categories, records, private notes, images/maps, connections and sharing. |
 | P1 | Explanatory archive/restore dialogs | PR #113, pending review | Explain preservation, archived lists, player visibility, restoration and saved draft changes; accessible Cancel/confirm actions. |
-| P2 | Shared UI styling consistency | Implemented, pending review | Match buttons, fields, optional sections, uploads and dialogs to the existing palette; test focus, contrast, mobile and print. |
-| P2 | Shared character sheet, gear and wishlist | Unfinished local work preserved | Reconcile with full Saved cards/actions from #107; preserve character isolation, active loot target, guards and print. |
+| P2 | Shared UI styling consistency | PR #114, pending review | Match buttons, fields, optional sections, uploads and dialogs to the existing palette; test focus, contrast, mobile and print. |
+| P2 | Shared character sheet, gear and wishlist | Implemented, pending review | Reconcile with full Saved cards/actions from #107; preserve character isolation, active loot target, guards and print. |
 | P2 | Page-based item and campaign editors | Unfinished local work preserved | Retain actor/session checks, draft protection and error recovery while moving large forms onto pages. |
 | P2 | Dedicated DM Creatures & NPCs tab | Merged PR #96; CI passed | Move creature authoring/catalogue access into a clear dedicated tab while preserving existing records, SRD attribution, personal templates and encounter references. |
 | P2 | World Builder cleanup | Merged PR #97; CI passed | Focus on setting, locations, factions and player-facing campaign information; distinguish drafts, shared content and DM secrets; keep existing IDs, links, maps and uploads. |
@@ -25,7 +25,7 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 | P3 | Campaign front-page layout preferences | Queued | Offer limited book-style layout/section options after reviewing the current page; preserve the existing default, accessible images and saved text. |
 | Paused | One Shots cleanup | Paused by owner | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
 
-PRs #90–#94 were originally merged into their parent feature branches. Integration PR #95 has since been merged onto `main`. Subsequent deliveries target `main`; review earlier dependent PRs first to keep feature diffs focused. Merge and production deployment continue to require the owner's approval.
+PRs #90–#94 were originally merged into their parent feature branches. Integration PR #95 has since been merged onto `main`. The current review stack (#112 onward) targets each preceding feature branch to keep diffs focused. Review in order and retarget each dependent PR to `main` after its predecessor is merged; do not merge dependent PRs into their feature-branch bases. Merge and production deployment continue to require the owner's approval.
 
 ## DM-only navigation and paused work
 
