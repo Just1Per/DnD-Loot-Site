@@ -7,6 +7,12 @@
   AiLookup.enhance(card);
   const icon=card.querySelector('.ai-lookup-icon');
   check('Every Library item gets an accessible compact book lookup control',!!icon&&icon.getAttribute('aria-label').includes('Healing Potion')&&icon.querySelector('svg'));
+  const exhausted=AiLookup.errorNotice({message:'AI: Error fetching: [429] Your prepayment credits are depleted. Please go to AI Studio to manage billing.'});
+  check('Depleted prepaid Gemini credits show actionable billing guidance before generic 429 handling',
+   exhausted.kind==='billing'&&exhausted.message.includes('Google AI Studio')&&exhausted.message.includes('Search on Google'));
+  check('Other quota and App Check errors are distinguished from depleted billing',
+   AiLookup.errorNotice({message:'[429] Resource exhausted: rate limit exceeded.'}).kind==='quota'&&
+   AiLookup.errorNotice({message:'App Check attestation failed. [403]'}).kind==='configuration');
   const writes=testWrites.length,lootActions=callLog.length;
   icon.click();
   const dialog=document.getElementById('aiLookupDialog');
