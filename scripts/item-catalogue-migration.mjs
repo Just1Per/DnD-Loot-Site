@@ -54,6 +54,7 @@ export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaig
    archiveId:'catalogue-'+digest(row.id).slice(0,32),replacement:replacement?encodeFields(replacement):null};
  });
  const plan={format:1,project,campaignId,campaignName,ownerId,manifestSha256:digest(stableJson(manifest)),
+  originalCatalogueMetadata:snapshot.documents.filter(document=>document.name.split('/').at(-1)==='catalog_meta'),
   retireLegacyArtwork:manifest.retireLegacyArtwork===true,allApproved:items.every(item=>item.approved),items};
  return {...plan,planSha256:digest(stableJson(plan))};
 }
@@ -133,6 +134,8 @@ async function main(){
  for(let i=0;i<args.length;i++){check(/^--[a-z-]+$/.test(args[i])&&args[i+1]&&!args[i+1].startsWith('--'),'Expected named option values');check(!options[args[i]],'Duplicate option');options[args[i]]=args[++i];}
  if(mode==='plan'){
   const allowed=['--snapshot','--manifest','--project','--campaign','--campaign-name','--owner','--output'];check(Object.keys(options).every(key=>allowed.includes(key)),'Unknown plan option');
+  const output=path.resolve(options['--output']||'.'),checkout=path.resolve(fileURLToPath(new URL('..',import.meta.url)));
+  check(!output.startsWith(checkout+path.sep)&&output!==checkout,'Private plan must live outside the repository');
   const snapshot=JSON.parse(await fs.readFile(options['--snapshot'],'utf8')),manifest=JSON.parse(await fs.readFile(options['--manifest'],'utf8'));
   const plan=buildMigrationPlan(snapshot,manifest,{project:options['--project'],campaignId:options['--campaign'],campaignName:options['--campaign-name'],ownerId:options['--owner']});
   await writePrivateFile(options['--output'],plan);console.log(JSON.stringify({planSha256:plan.planSha256,items:plan.items.length,allApproved:plan.allApproved,writes:0}));return;

@@ -105,7 +105,7 @@ async function openRootCatalogue() {
 function renderRootCatalogue() {
   if(!isAdmin())return;
   const screen=document.getElementById('rootCatalogueScreen');const search=screen.querySelector('#rootSearch')?.value||'';
-  screen.innerHTML='<div class="admin-section"><button id="backFromRoot" class="toolbar-btn" type="button">← Back to Admin</button><h2>Root Catalogue</h2><p>Shared templates. Edits do not change existing campaign copies.</p><button id="createRootItem" class="toolbar-btn" type="button">+ Create Root Item</button><input id="rootSearch" class="search-input" aria-label="Search root items" placeholder="Search root items…"><div id="rootCards" class="card-container"></div></div>';
+  screen.innerHTML='<div class="admin-section"><button id="backFromRoot" class="toolbar-btn" type="button">← Back to Admin</button><h2>Root Catalogue</h2><p>Shared templates. Edits do not change existing campaign copies. New and edited templates remain unpublished until their publication review.</p><button id="createRootItem" class="toolbar-btn" type="button">+ Create Root Item</button><input id="rootSearch" class="search-input" aria-label="Search root items" placeholder="Search root items…"><div id="rootCards" class="card-container"></div></div>';
   screen.querySelector('#rootSearch').value=search;
   const paint=()=>{const q=screen.querySelector('#rootSearch').value.toLowerCase();const grid=screen.querySelector('#rootCards');grid.replaceChildren(...rootItems.filter(i=>i.name?.toLowerCase().includes(q)).map(i=>createCard(i,{root:true})));observePendingImages(grid);};
   screen.querySelector('#rootSearch').addEventListener('input',paint);

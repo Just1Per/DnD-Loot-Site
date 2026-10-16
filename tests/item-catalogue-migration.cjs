@@ -68,3 +68,8 @@ test('the decision worksheet cannot automatically approve or apply editorial rec
  const draft=draftManifest(report,'target');assert.equal(draft.decisions[0].action,'review');assert.equal(draft.decisions[0].approved,false);assert.equal(draft.retireLegacyArtwork,false);
  assert.throws(()=>draftManifest({...report,completeRootCatalogue:false},'target'),/complete root/);
 });
+test('private plan output is refused inside the repository before reading source data',async()=>{
+ const {spawnSync}=require('node:child_process'),path=require('node:path');
+ const result=spawnSync(process.execPath,[path.join(__dirname,'../scripts/item-catalogue-migration.mjs'),'plan','--snapshot','missing','--manifest','missing','--output',path.join(__dirname,'private-plan.json')],{encoding:'utf8'});
+ assert.notEqual(result.status,0);assert.match(result.stderr,/outside the repository/);
+});

@@ -3,8 +3,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {createRequire} from 'node:module';
 import {digest} from './build-srd-item-hashes.mjs';
-import {decodeValue,documentsToRows,stableJson} from './audit-item-catalogue.mjs';
-import {fieldsHash,encodeFields,POLICY,privateDocuments} from './item-catalogue-migration.mjs';
+import {documentsToRows} from './audit-item-catalogue.mjs';
+import {fieldsHash,encodeFields,POLICY} from './item-catalogue-migration.mjs';
 
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 const exists=async file=>{try{await fs.access(file);return true;}catch{return false;}};
@@ -73,12 +73,12 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
  const marker=item=>({sourceId:item.id,sourceSha256:item.sourceSha256});
  let artwork=[],backupReady=false;
  async function privateFile(file,content){
-  if(await exists(file)){const old=await fs.readFile(file);check(digest(old)===digest(content),'Backup content differs; refusing overwrite');return;}
+  if(await exists(file)){const stat=await fs.lstat(file);check(stat.isFile()&&!stat.isSymbolicLink()&&(stat.mode&0o077)===0,'Existing backup file is not private');const old=await fs.readFile(file);check(digest(old)===digest(content),'Backup content differs; refusing overwrite');return;}
   await fs.writeFile(file,content,{flag:'wx',mode:0o600});
  }
  function itemAssetPaths(item){
   const data=documentsToRows([item.source])[0].data;
-  const names=new Set([`dnd-item-images/${baseImageId(data.imageBaseId||item.id)}.png`,`dnd-item-images/${item.id}.png`]);
+  const names=new Set();
   for(const key of ['imageUrl','thumbnailUrl','thumbUrl','image'])if(typeof data[key]==='string'&&data[key]){
    const value=data[key];let found='';
    try{const url=new URL(value);if(url.protocol==='https:'&&url.hostname==='firebasestorage.googleapis.com'){
@@ -86,7 +86,7 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    }else if(url.protocol==='https:'&&url.hostname==='storage.googleapis.com'&&url.pathname.startsWith('/'+bucketName+'/'))found=decodeURIComponent(url.pathname.slice(bucketName.length+2));}catch{}
    if(found.startsWith('dnd-item-images/'))names.add(found);else if(!/^\.?\/?placeholder\.png$/.test(value))names.add('UNRESOLVED:'+key);
   }
-  return names;
+  return new Set([...names,`dnd-item-images/${baseImageId(data.imageBaseId||item.id)}.png`,`dnd-item-images/${item.id}.png`]);
  }
  const port={
   async verifyTarget(plan){
@@ -150,7 +150,7 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    }
    return assets;
   },
-  async assetsForItem(item,assets){const names=itemAssetPaths(item);return assets.filter(asset=>names.has(asset.sourcePath));},
+  async assetsForItem(item,assets){return [...itemAssetPaths(item)].map(name=>assets.find(asset=>asset.sourcePath===name)).filter(Boolean);},
   async copyPrivate(plan,item,documents){
    await transact(async get=>{
     const source=await get('items/'+item.id),old=await get(copyPath(plan,item)),journal=await get(archivePath(plan,item));
