@@ -9,3 +9,13 @@
 :is(.campaign-workspace,.campaign-home-editor) input[type=file]:disabled::file-selector-button{opacity:.6;cursor:default}
 #mainApp #dmWorkspaceSidebar button{min-height:44px;transition:none}
 @media(max-width:650px){#campaignSettingsPanel .dm-member-actions{justify-content:flex-start}#campaignSettingsPanel .dm-member-actions select{flex:1 1 auto}#campaignSettingsPanel :is(input,select,textarea){font-size:16px}}
+.item-card .item-attribution {
+  margin: 1rem 0 0;
+  padding-top: .6rem;
+  border-top: 1px solid #b49b70;
+  color: #5b4935;
+  font-size: .8rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.item-card .item-attribution a { color: #742a26; text-decoration: underline; }

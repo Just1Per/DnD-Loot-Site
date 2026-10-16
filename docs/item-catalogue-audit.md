@@ -16,7 +16,7 @@ The auditor requires an exact normalized name/description match for an SRD text 
 
 ## Run the read-only audit
 
-The GitHub workflow **Read-only shared item catalogue audit** runs on changes to the audit code and can be manually rerun after it is merged. It makes unauthenticated GET requests to the already-public root collection, follows every page, and requires no Firebase service-account secret. It reads no campaign, character, inventory or personal data. A denied read stays denied; the workflow does not weaken rules or create credentials.
+The GitHub workflow **Read-only shared item catalogue audit** runs on changes to the audit code and can be manually rerun after it is merged. It makes unauthenticated GET requests to the root collection and follows every page. With the workflow’s explicit `--allow-reviewed-only` option, a denied full read falls back to the read-only `runQuery` POST for approved templates. That result is clearly labelled `completeRootCatalogue: false`, cannot be used for migration and never includes hidden originals. Neither path requires a Firebase service-account secret. It reads no campaign, character, inventory or personal data. A denied read stays denied; the workflow does not weaken rules or create credentials.
 
 The artifact `shared-item-catalogue-audit` contains document IDs, names, source labels, content fingerprints and review flags. It excludes descriptions, quotes, property text and tokenized image URLs. A compact count/source summary also appears in a check notice. Artifacts expire after seven days.
 
@@ -44,3 +44,5 @@ All commands are read-only. No `--apply` or mutation operation exists.
 6. Verify anonymous/other-DM denial, destination-DM access, permitted SRD sharing, normal looting and character sheets, plus every old image path/token affected by the migration.
 
 The campaign ID supplied by the owner is kept in the task context, not published in this public document. Actual production migration remains a separate reviewed operation. The owner's production merge/deployment restriction still applies.
+
+The item-by-item Danish report and guarded migration/access design are linked from [reviewed-item-catalogue.md](reviewed-item-catalogue.md).

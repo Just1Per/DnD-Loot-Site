@@ -24,9 +24,9 @@ jobs:
       - name: Test audit and evidence boundaries
         run: node --test tests/item-catalogue-audit.cjs tests/item-catalogue-review.cjs
       - name: Read public item metadata and compare pinned SRD fingerprints
-        run: node scripts/audit-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-audit.json'
+        run: node scripts/audit-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-audit.json' --allow-reviewed-only
       - name: Generate conservative item-by-item review without publishing original prose
-        run: node scripts/review-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-review.json' --markdown '${{ runner.temp }}/item-catalogue-review.md' --annotations
+        run: node scripts/review-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-review.json' --markdown '${{ runner.temp }}/item-catalogue-review.md' --annotations --allow-reviewed-only
       - name: Readable review metadata batch two
         run: node scripts/review-item-catalogue.mjs --annotations-from '${{ runner.temp }}/item-catalogue-review.json' --annotation-batch 1
       - name: Readable review metadata batch three

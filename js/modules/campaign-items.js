@@ -105,7 +105,7 @@ async function openRootCatalogue() {
 function renderRootCatalogue() {
   if(!isAdmin())return;
   const screen=document.getElementById('rootCatalogueScreen');const search=screen.querySelector('#rootSearch')?.value||'';
-  screen.innerHTML='<div class="admin-section"><button id="backFromRoot" class="toolbar-btn" type="button">← Back to Admin</button><h2>Root Catalogue</h2><p>Shared templates. Edits do not change existing campaign copies.</p><button id="createRootItem" class="toolbar-btn" type="button">+ Create Root Item</button><input id="rootSearch" class="search-input" aria-label="Search root items" placeholder="Search root items…"><div id="rootCards" class="card-container"></div></div>';
+  screen.innerHTML='<div class="admin-section"><button id="backFromRoot" class="toolbar-btn" type="button">← Back to Admin</button><h2>Root Catalogue</h2><p>Shared templates. Edits do not change existing campaign copies. New and edited templates remain unpublished until their publication review.</p><button id="createRootItem" class="toolbar-btn" type="button">+ Create Root Item</button><input id="rootSearch" class="search-input" aria-label="Search root items" placeholder="Search root items…"><div id="rootCards" class="card-container"></div></div>';
   screen.querySelector('#rootSearch').value=search;
   const paint=()=>{const q=screen.querySelector('#rootSearch').value.toLowerCase();const grid=screen.querySelector('#rootCards');grid.replaceChildren(...rootItems.filter(i=>i.name?.toLowerCase().includes(q)).map(i=>createCard(i,{root:true})));observePendingImages(grid);};
   screen.querySelector('#rootSearch').addEventListener('input',paint);
@@ -116,16 +116,18 @@ async function openRootPicker() {
   if(!canManageCampaign()||activeCampaign.inventoryVersion!==2)return;
   await itemsLoadPromise;
   let dialog=document.getElementById('rootPicker');
-  if(!dialog){dialog=document.createElement('dialog');dialog.id='rootPicker';dialog.className='vault-dialog';document.body.appendChild(dialog);}
+  if(!dialog){dialog=document.createElement('dialog');dialog.id='rootPicker';dialog.className='vault-dialog';dialog.setAttribute('aria-labelledby','rootPickerTitle');document.body.appendChild(dialog);}
   const id=activeCampaign.id;
-  dialog.innerHTML='<div class="character-loot-heading"><h2>Add a campaign copy</h2><button type="button" id="closeRootPicker" class="cancel-button">Close</button></div><input id="rootPickerSearch" class="search-input" placeholder="Search root catalogue" aria-label="Search root catalogue"><div id="rootPickerResults"></div>';
+  dialog.innerHTML='<div class="character-loot-heading"><h2 id="rootPickerTitle">Add a campaign copy</h2><button type="button" id="closeRootPicker" class="cancel-button">Close</button></div><p>Choose from shared templates reviewed for publication. Your existing campaign items stay in your campaign.</p><input id="rootPickerSearch" class="search-input" placeholder="Search shared templates" aria-label="Search shared templates"><div id="rootPickerResults" aria-live="polite"></div>';
   dialog.querySelector('#closeRootPicker').addEventListener('click',closeRootPicker);
   const paint=()=>{
     const q=dialog.querySelector('#rootPickerSearch').value.toLowerCase();const list=dialog.querySelector('#rootPickerResults');
-    const matches=rootItems.filter(i=>CampaignRules.allowed(i)&&i.name?.toLowerCase().includes(q)).slice(0,100);
-    list.innerHTML=matches.map(i=>`<div class="root-picker-row"><div><strong>${escapeHtml(i.name)}</strong><p>${escapeHtml(i.rarity||'')} · ${escapeHtml(i.category||'')}</p></div><button class="toolbar-btn" type="button" data-root-id="${escapeHtml(i.id)}">Add to Campaign</button></div>`).join('')||'<p>No matching items.</p>';
+    const matches=rootItems.filter(i=>SharedCataloguePolicy.approved(i)&&CampaignRules.allowed(i)&&i.name?.toLowerCase().includes(q)).slice(0,100);
+    list.innerHTML=matches.map(i=>`<div class="root-picker-row"><div><strong>${escapeHtml(i.name)}</strong><p>${escapeHtml(i.rarity||'')} · ${escapeHtml(i.category||'')}</p></div><button class="toolbar-btn" type="button" data-root-id="${escapeHtml(i.id)}">Add to Campaign</button></div>`).join('')||'<p>No reviewed templates match your search. Your campaign items and owned equipment remain available in the Library.</p>';
     list.querySelectorAll('[data-root-id]').forEach(b=>b.addEventListener('click',()=>runVaultButton(b,async()=>{
-      if(!CampaignRules.allowed(rootItems.find(i=>i.id===b.dataset.rootId)))throw new Error('This item edition is not available in this campaign.');
+      const source=rootItems.find(i=>i.id===b.dataset.rootId);
+      if(!SharedCataloguePolicy.approved(source))throw new Error('This template is no longer approved for sharing.');
+      if(!CampaignRules.allowed(source))throw new Error('This item edition is not available in this campaign.');
       const result=await vaultCall('vaultCopyCampaignItem',{campaignId:id,source:'root',sourceId:b.dataset.rootId});
       if(activeCampaign?.id!==id)return;
       await refreshCampaignData();closeRootPicker();openItemModal(items.find(i=>i.id===result.itemId));

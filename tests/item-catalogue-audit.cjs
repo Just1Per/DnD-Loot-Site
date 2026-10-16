@@ -5,6 +5,17 @@ const build=()=>import('../scripts/build-srd-item-hashes.mjs');
 const syntheticText='A lantern fills the old road with a gentle blue light.';
 async function reference(){const {buildReference}=await build();return buildReference([{edition:'2014',document:JSON.stringify([{pk:'srd-2014',fields:{name:'Synthetic reference fixture',publisher:'wizards-of-the-coast',licenses:['cc-by-40'],permalink:'https://example.test/srd'}}]),items:JSON.stringify([{model:'api_v2.magicitem',pk:'test-lantern',fields:{document:'srd-2014',name:'Road Lantern',desc:syntheticText}}])}]);}
 const row=(id,data)=>({id,data});
+test('restricted public audits use an explicitly labelled read-only query and never claim a full snapshot',async()=>{
+ const {readPublicCatalogue}=await load();const calls=[];
+ const snapshot=await readPublicCatalogue('demo-vault-test',{allowReviewedOnlyFallback:true,fetcher:async(url,options)=>{
+  calls.push({url:String(url),options});
+  if(options.method==='GET')return {status:403,ok:false};
+  assert.ok(String(url).endsWith('/documents:runQuery'));assert.equal(options.headers.Authorization,undefined);
+  const query=JSON.parse(options.body).structuredQuery;assert.equal(query.where.fieldFilter.field.fieldPath,'catalogueStatus');assert.equal(query.where.fieldFilter.value.stringValue,'approved-v1');
+  return {ok:true,json:async()=>[{document:{name:'projects/demo-vault-test/databases/(default)/documents/items/reviewed',fields:{catalogueStatus:{stringValue:'approved-v1'}}}}]};
+ }});
+ assert.equal(calls.length,2);assert.equal(snapshot.completeRootCatalogue,false);assert.equal(snapshot.scope,'reviewed-public-only');assert.equal(snapshot.documents.length,1);
+});
 test('source-book names, SRD labels and claimed licence fields cannot approve copied prose',async()=>{
  const {auditCatalogue}=await load(),r=await reference();
  const report=auditCatalogue([row('wotc',{name:'Road Lantern',source:'SRD 5.1',licensedText:true,license:'CC-BY-4.0',description:'Different, unverified prose.'})],r);

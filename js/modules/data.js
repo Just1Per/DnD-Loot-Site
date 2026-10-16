@@ -105,8 +105,11 @@ async function loadCurrentUser(firebaseUser,{isCurrent=()=>true}={}) {
  * Cards paint immediately with cached/placeholder art and resolve images near the viewport.
  */
 async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
+  const catalogueUid=auth.currentUser?.uid,administrator=isAdmin();
+  const current=()=>auth.currentUser?.uid===catalogueUid&&isAdmin()===administrator;
   const metaPromise = readCatalogMeta();
-  const cached = forceRefresh ? null : await readCatalogCache();
+  const cached = forceRefresh ? null : await readCatalogCache({administrator});
+  if(!current())return;
 
   // Paint cached catalogue immediately. This is the main perceived-speed win:
   // filters/cards can exist before any large Firestore read occurs.
@@ -116,6 +119,7 @@ async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
   }
 
   const serverMeta = await metaPromise;
+  if(!current())return;
   const serverVersion = Number(serverMeta?.version) || 0;
   const cachedVersion = Number(cached?.version) || 0;
   const cacheAge = cached?.cachedAt ? Date.now() - cached.cachedAt : Infinity;
@@ -138,7 +142,8 @@ async function loadItemsFromFirestore({ forceRefresh = false } = {}) {
     return;
   }
 
-  const { freshItems, embeddedMeta } = await fetchFreshCatalog();
+  const { freshItems, embeddedMeta } = await fetchFreshCatalog({administrator});
+  if(!current())return;
 
   catalogVersion = serverVersion || Number(embeddedMeta?.version) || 0;
   applyCatalogItems(freshItems);

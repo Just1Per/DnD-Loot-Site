@@ -54,11 +54,18 @@ service firebase.storage {
         && request.resource.contentType.matches('image/(png|jpeg|webp)');
     }
 
-    // Root catalogue images. Unchanged from previously published rules.
+    // Unreviewed legacy art is not part of the shared catalogue. Existing token
+    // URLs must separately be retired by the reviewed operator migration.
     match /dnd-item-images/{fileName} {
-      allow read: if true;
+      allow read: if isAdmin();
       allow create, update: if isAdmin() && validImage();
       allow delete: if isAdmin();
+    }
+
+    // Preserved originals are DM-only, with no client writes or token URLs.
+    match /campaign-catalogue-images/{campaignId}/{assetId}/{digest} {
+      allow read: if isCampaignDM(campaignId);
+      allow write: if false;
     }
 
     // Campaign item images. Unchanged from previously published rules.

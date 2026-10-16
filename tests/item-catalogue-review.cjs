@@ -25,6 +25,9 @@ test('review output and annotation transport preserve metadata while excluding o
 test('exact text candidates still require a separate decision and artwork review',async()=>{
  await ready;const report=review.reviewCatalogue([row('a','Test Shield, +1','SRD',{description:'Independently written test prose.'})],ref());assert.equal(report.counts.currentTextExactSrd,1);assert.equal(report.counts.approved,0);assert.equal(report.counts.artworkUnverified,1);
 });
+test('an approved-only public subset is visibly labelled and cannot masquerade as all database items',async()=>{
+ await ready;const report=review.reviewCatalogue([],ref(),{scope:'reviewed-public-only',completeRootCatalogue:false});assert.equal(report.completeRootCatalogue,false);assert.match(review.reviewMarkdown(report),/ikke en gennemgang af alle root-poster/);
+});
 test('bonus spelling, curated SRD renames and parameterized families preserve review boundaries',async()=>{
  await ready;const reference=ref();reference.entries.push(
   {id:'weapon',name:'Longsword (+1)',edition:'2014'},

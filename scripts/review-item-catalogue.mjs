@@ -26,8 +26,8 @@ const proprietaryNames=/\b(vecna|kas|tasha|mordenkainen|bigby|fizban|tiamat|baha
 const wotcSources=/dungeon master|tasha|xanathar|wildemount|bigby|fizban|frostmaiden|heroes of krynn|theros|baldur|minsc|wizards|volo|mordenkainen|ravenloft|dragonlance|eberron|ravnica|strixhaven|witchlight|spelljammer|dragon queen|tyranny|storm king|yawni?ng portal|saltmarsh|avernus|phandelver|lost mine|elemental evil|princes of|out of the abyss|annihilation|planescape|netherdeep|keys from|golden vault|acquisitions|dragon heist|mad mage|adventurers league|book of many|shattered obelisk|giants|journeys through|candlekeep|domains of delight|practically complete guide|sword coast|vecna/i;
 const small=value=>typeof value==='string'?value.replace(/[\x00-\x1f\x7f]/g,' ').slice(0,200):'';
 
-export function reviewCatalogue(rows,reference){
- return reviewAudit(auditCatalogue(rows,reference),reference,new Map(rows.map(row=>[row.id,row.data])));
+export function reviewCatalogue(rows,reference,scope={}){
+ return reviewAudit(auditCatalogue(rows,reference,scope),reference,new Map(rows.map(row=>[row.id,row.data])));
 }
 export function reviewAudit(audit,reference,raw=new Map()){
  if(audit.referenceRevision!==reference.revision)throw Error('Audit/reference revision mismatch');
@@ -60,13 +60,13 @@ export function reviewAudit(audit,reference,raw=new Map()){
    approved:false};
  });
  const count=key=>records.filter(row=>row.recommendation===key).length;
- return {format:1,generatedAt:audit.generatedAt,referenceRevision:audit.referenceRevision,
+ return {format:1,generatedAt:audit.generatedAt,referenceRevision:audit.referenceRevision,completeRootCatalogue:audit.completeRootCatalogue!==false,catalogueScope:audit.scope||'complete-root',
   scope:'Foreløbig redaktionel vurdering baseret på kildeoplysninger, navne, tekstfingeraftryk og registrerede ekstra tekstfelter. Ikke en juridisk afgørelse eller en automatisk godkendelsesliste. Et manglende match beviser ikke krænkelse.',
   counts:{items:records.length,keepConceptWithSrd:count('keep-concept-with-srd'),rewriteOrReview:count('rewrite-or-review'),withholdCurrent:count('withhold-current'),currentTextExactSrd:records.filter(row=>row.currentTextExactSrd).length,approved:0,artworkUnverified:records.length},records};
 }
 const cell=value=>String(value||'').replace(/\|/g,'\\|').replace(/[\r\n]/g,' ');
 export function reviewMarkdown(report){
- const lines=['# Gennemgang af det fælles item-katalog','',`Genereret: ${report.generatedAt}. Items: **${report.counts.items}**.`,'',report.scope,'',
+ const lines=['# Gennemgang af det fælles item-katalog','',`Genereret: ${report.generatedAt}. Items: **${report.counts.items}**.`,'',...(report.completeRootCatalogue===false?['**Afgrænset til godkendte offentlige poster.** Dette er ikke en gennemgang af alle root-poster eller private originaler. Rapporten kan ikke bruges som migrationsgrundlag.','']:[]),report.scope,'',
   '**Ingen nuværende poster er automatisk godkendt.** SRD-gruppen er kandidater til at beholde i en dokumenteret SRD-udgave. “Hold tilbage” betyder, at den nuværende udgave bør fjernes fra deling uden anden rettighedsdokumentation; det er ikke en sikker juridisk dom. Billeder vurderes separat.','',
   '| Anbefaling | Antal |','| --- | ---: |',`| Behold konceptet som en verificeret SRD-version | ${report.counts.keepConceptWithSrd} |`,`| Omskriv, omdøb eller dokumentér forfatterens rettigheder | ${report.counts.rewriteOrReview} |`,`| Hold den nuværende udgave ude af fælleskataloget | ${report.counts.withholdCurrent} |`,'',
   '## Sådan skal listen læses','',
@@ -93,16 +93,16 @@ export function annotationChunks(report){
  return chunks.map((part,i)=>`::notice title=Item review metadata ${i+1}/${chunks.length}::${hash}:${part}`);
 }
 async function main(){
- let project='',input='',output='',markdown='',annotations=false,annotationsFrom='',batch=0;
+ let project='',input='',output='',markdown='',annotations=false,annotationsFrom='',batch=0,allowReviewedOnlyFallback=false;
  for(let i=2;i<process.argv.length;i++){
-  const key=process.argv[i];if(key==='--public-project')project=process.argv[++i];else if(key==='--from-json')input=process.argv[++i];else if(key==='--report')output=process.argv[++i];else if(key==='--markdown')markdown=process.argv[++i];else if(key==='--annotations')annotations=true;else if(key==='--annotations-from')annotationsFrom=process.argv[++i];else if(key==='--annotation-batch')batch=Number(process.argv[++i]);else throw Error('Unknown argument: '+key);
+  const key=process.argv[i];if(key==='--public-project')project=process.argv[++i];else if(key==='--from-json')input=process.argv[++i];else if(key==='--report')output=process.argv[++i];else if(key==='--markdown')markdown=process.argv[++i];else if(key==='--annotations')annotations=true;else if(key==='--allow-reviewed-only')allowReviewedOnlyFallback=true;else if(key==='--annotations-from')annotationsFrom=process.argv[++i];else if(key==='--annotation-batch')batch=Number(process.argv[++i]);else throw Error('Unknown argument: '+key);
  }
  if(!Number.isInteger(batch)||batch<0||batch>3)throw Error('Invalid annotation batch');
  if(annotationsFrom){const report=JSON.parse(await fs.readFile(annotationsFrom,'utf8'));for(const line of annotationChunks(report).slice(batch*10,batch*10+10))console.log(line);return;}
  if(!output||(!project&&!input)||(project&&input))throw Error('Use (--public-project PROJECT | --from-json SNAPSHOT) --report NEWFILE [--markdown NEWFILE] [--annotations]');
- const source=input?JSON.parse(await fs.readFile(input,'utf8')):await readPublicCatalogue(project);
+ const source=input?JSON.parse(await fs.readFile(input,'utf8')):await readPublicCatalogue(project,{allowReviewedOnlyFallback});
  const reference=JSON.parse(await fs.readFile(new URL('../data/rules/srd-magic-item-text-hashes.json',import.meta.url),'utf8'));
- const report=reviewCatalogue(documentsToRows(source.documents),reference);
+ const report=reviewCatalogue(documentsToRows(source.documents),reference,{scope:source.scope||'complete-root',completeRootCatalogue:source.completeRootCatalogue!==false});
  await writePrivateFile(output,report);if(markdown)await fs.writeFile(markdown,reviewMarkdown(report),{mode:0o600,flag:'wx'});
  console.log(JSON.stringify(report.counts));
  if(annotations)for(const line of annotationChunks(report).slice(batch*10,batch*10+10))console.log(line);
