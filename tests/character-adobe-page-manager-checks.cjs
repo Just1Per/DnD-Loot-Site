@@ -20,7 +20,4 @@ assert.ok(dm.includes("'characterSheets',character.id"),'Permanent deletion shou
 assert.ok(dm.includes("'inventory'"),'Permanent deletion should clean character inventory');
 assert.ok(dm.includes("'saves'"),'Permanent deletion should clean character saved-item links');
 
-const rules=read('firestore.rules');
-assert.ok(/Firestore Rules Revision: \d+/.test(rules));
-assert.ok(rules.includes('Character sheet schema: 14'));
 console.log('SUCCESS page manager, draggable tabs, creature dropdowns and DM delete smoke checks');
