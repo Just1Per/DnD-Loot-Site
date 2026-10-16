@@ -38,7 +38,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
  check('DM layout fits mobile',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await page.setViewportSize({width:1440,height:1000});
  await page.evaluate(()=>showTab('dm-party'));
- for(const modal of ['itemModal','userModal','editCharModal','wishModal','campaignModal']){
+ for(const modal of ['userModal']){
   await page.locator('#dmOpenLibrary').focus();
   await page.evaluate(id=>openVaultModal(id),modal);
   for(let i=0;i<12;i++)await page.keyboard.press('Tab');
@@ -47,19 +47,19 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
   check(modal+' closes and returns focus',await page.evaluate(id=>!document.getElementById(id).open&&document.activeElement.id==='dmOpenLibrary',modal));
  }
  await page.evaluate(()=>{auditSeed('player');showTab('player')});
- await page.evaluate(()=>{saves=[{id:'c1__potion',itemId:'potion',characterId:'c1',userId:'player',created:1}];renderMyWishes()});
+ await page.evaluate(()=>{saves=[{id:'c1__potion',itemId:'potion',characterId:'c1',userId:'player',created:1}];renderMyWishes();CharacterWorkspace.open('c1','character-wishlist')});
  check('Saved shows full item description and properties with bookmark controls',
-  await page.locator('#myWishGrid .saved-item-card').count()===1
-  &&(await page.locator('#myWishGrid .saved-item-card .item-description').textContent()).includes('Full potion description')
-  &&(await page.locator('#myWishGrid .saved-item-card .property-block').textContent()).includes('Restore health')
-  &&await page.locator('#myWishGrid .saved-remove-button').count()===1
-  &&await page.locator('#myWishGrid .loot-button,#myWishGrid .use-button,#myWishGrid .assign-button').count()===0);
+  await page.locator('#characterWishlistGrid .saved-item-card').count()===1
+  &&(await page.locator('#characterWishlistGrid .saved-item-card .item-description').textContent()).includes('Full potion description')
+  &&(await page.locator('#characterWishlistGrid .saved-item-card .property-block').textContent()).includes('Restore health')
+  &&await page.locator('#characterWishlistGrid .saved-remove-button').count()===1
+  &&await page.locator('#characterWishlistGrid .loot-button,#characterWishlistGrid .use-button,#characterWishlistGrid .assign-button').count()===0);
  await page.setViewportSize({width:390,height:844});
  check('Saved full item cards fit mobile',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await page.screenshot({path:path.join(out,'saved-items-mobile.png')});
  await page.setViewportSize({width:1440,height:1000});
  await page.screenshot({path:path.join(out,'saved-items-desktop.png')});
- await page.locator('#myWishGrid .ai-lookup-icon').first().click();
+ await page.locator('#characterWishlistGrid .ai-lookup-icon').first().click();
  check('Book icon opens editable lookup without automatically calling Gemini',
   await page.locator('#aiLookupDialog').evaluate(node=>node.open)
   &&await page.locator('#aiLookupName').inputValue()==='Healing Potion'
@@ -80,7 +80,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
   await page.evaluate(()=>!document.getElementById('aiLookupDialog').open&&saves.length===1));
  await page.setViewportSize({width:1440,height:1000});
 
- await page.evaluate(()=>{saves=[];renderMyWishes()});
+ await page.evaluate(()=>{saves=[];renderMyWishes();showTab('player')});
 
  check('My Characters has one sheet-first create action',await page.locator('#playerCreateCharBtn').count()===1&&await page.locator('#playerCharName,#playerCharClass,#playerCharLevel').count()===0);
  await page.locator('#playerCreateCharBtn').click();await page.waitForSelector('#sheetBuildControls');
@@ -185,6 +185,6 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
  await boot.evaluate(()=>{document.getElementById('siteAppScript')?.remove();const script=document.createElement('script');script.id='siteAppScript';document.body.append(script);script.dispatchEvent(new Event('error'))});
  check('SDK/module failure offers visible retry feedback',await boot.locator('#siteBootRetry').isVisible()&&(await boot.locator('#siteBootStatus').textContent()).includes('could not finish'));
  await boot.evaluate(()=>document.dispatchEvent(new Event('campaignatlas:ready')));check('Completed startup removes the loading panel',await boot.locator('#siteBootPanel').count()===0);await boot.close();
- check('No unexpected browser runtime errors',errors.length===0);
+ check('No unexpected browser runtime errors: '+JSON.stringify(errors),errors.length===0);
  console.log('SUCCESS',passed,'UI browser checks');
  }finally{await browser.close()}})().catch(error=>{console.error(error);process.exitCode=1});

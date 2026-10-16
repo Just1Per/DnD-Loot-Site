@@ -1,4 +1,4 @@
-const {expandWorldTools}=require('./app-navigation-fixture.cjs');
+const {expandWorldTools,archiveEntry}=require('./app-navigation-fixture.cjs');
 // Real browser integration against a deterministic Firebase fixture; never touches production.
 const fs=require('node:fs'),path=require('node:path');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
@@ -118,12 +118,12 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await expandWorldTools(page);await page.locator('[data-unpublish-world]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Removed from player information'));
  if(await page.evaluate(id=>!!testSheetDocs['campaigns/a/worldEntries/'+id],recordId)!==true)throw Error('Unpublish removed source world data');
  await expandWorldTools(page);await page.locator('[data-publish-world]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Shared with campaign members'));
- await page.locator('[data-archive-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record.archived);
+ await archiveEntry(page);await page.waitForFunction(()=>CampaignWorkspace.session?.record.archived);
  if(await page.evaluate(id=>!!testSheetDocs['campaigns/a/playerInformation/'+id],recordId))throw Error('Archive retains player publication');
  console.log('PASS DM unpublishes without deleting world data; archiving removes the shared snapshot');
  await page.locator('[data-workspace-archived]').check();
  if(await page.locator('[data-open-record] .world-visibility-badge').textContent()!=='Archived')throw Error('Archived world entry has an incorrect visibility label');
- await page.locator('[data-archive-record]').click();await page.waitForFunction(()=>!CampaignWorkspace.session.record.archived);
+ await archiveEntry(page);await page.waitForFunction(()=>!CampaignWorkspace.session.record.archived);
  await page.locator('[data-workspace-archived]').uncheck();
  if(await page.locator('[data-open-record] .world-visibility-badge').filter({hasText:'Private draft'}).count()!==1)throw Error('Restoring a world entry republishes it or mislabels its visibility');
  await page.evaluate(()=>window.pauseInformation=true);await page.locator('[data-world-refresh]').click();await page.waitForFunction(()=>!!window.finishInformation);

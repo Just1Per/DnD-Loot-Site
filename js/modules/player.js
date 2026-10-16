@@ -3,7 +3,7 @@
 // SAVED ITEMS / FILTERS / PLAYER TAB / CHARACTER EDITING
 // Extracted from the working Step 7 app with behavior preserved.
 
-// ─── SAVE MODAL ───────────────────────────────────────────────────────────────
+// ─── SAVED ITEMS ───────────────────────────────────────────────────────────────
 
 let savedItemLoadKey='';
 function ensureSavedItemDetails() {
@@ -14,8 +14,6 @@ function ensureSavedItemDetails() {
   loadCampaignItems().then(()=>{
     if(activeCampaign?.id!==campaignId||auth.currentUser?.uid!==uid)return;
     renderMyWishes();
-    const modal=document.getElementById('wishModal');
-    if(modal?.open&&modal.dataset.characterId)renderWishModalContent(modal.dataset.characterId);
   }).catch(error=>{if(savedItemLoadKey===key)savedItemLoadKey='';console.warn('Saved item details could not be loaded:',error);});
 }
 function savedItemCard(save) {
@@ -24,23 +22,7 @@ function savedItemCard(save) {
   const fallback={id:save.itemId,name:'Saved item unavailable',description:'This item is currently unavailable in the campaign Library. Your save is retained, but its details cannot be shown.'};
   return createCard(item||fallback,{savedEntry:save,savedUnavailable:!item});
 }
-function renderWishModalContent(charId) {
-  const grid=document.getElementById('wishModalGrid');
-  if(!grid)return;
-  const records=saves.filter(save=>save.characterId===charId);
-  grid.replaceChildren(...records.map(savedItemCard));
-  if(!records.length)grid.innerHTML='<p class="player-empty">No saved items for this character.</p>';
-  if(records.some(save=>!items.some(item=>item.id===save.itemId)))ensureSavedItemDetails();
-  observePendingImages(grid);
-}
-function openWishModal(charId,charName) {
-  const character=characters.find(c=>c.id===charId);
-  if(!character||(!canManageCampaign()&&character.userId!==auth.currentUser?.uid))return;
-  document.getElementById('wishModalCharName').textContent=`${charName}'s Saved Items`;
-  document.getElementById('wishModal').dataset.characterId=charId;
-  renderWishModalContent(charId);
-  openVaultModal('wishModal');
-}
+function openWishModal(charId) {return CharacterWorkspace.open(charId,'character-wishlist');}
 async function removeSavedItem(save) {
   const id=activeCampaign?.id,uid=auth.currentUser?.uid;
   const existing=saves.find(row=>row.id===save?.id);
@@ -48,8 +30,6 @@ async function removeSavedItem(save) {
   await deleteDoc(doc(db,'campaigns',id,'saves',existing.id));
   if(activeCampaign?.id!==id||auth.currentUser?.uid!==uid)return;
   await loadSaves();renderMyWishes();renderCards();
-  const modal=document.getElementById('wishModal');
-  if(modal?.open&&modal.dataset.characterId)renderWishModalContent(modal.dataset.characterId);
 }
 async function moveSavedItem(save,targetId) {
   const id=activeCampaign?.id,uid=auth.currentUser?.uid;
@@ -69,11 +49,8 @@ async function moveSavedItem(save,targetId) {
   await batch.commit();
   if(activeCampaign?.id!==id||auth.currentUser?.uid!==uid)return;
   await loadSaves();renderMyWishes();renderCards();
-  const modal=document.getElementById('wishModal');
-  if(modal?.open&&modal.dataset.characterId)renderWishModalContent(modal.dataset.characterId);
 }
 
-function closeWishModal() { closeVaultModal('wishModal'); }
 
 // ─── VISIBILITY BULK CONTROLS ─────────────────────────────────────────────────
 
@@ -140,6 +117,7 @@ function renderPlayerTab() {
   renderCharacterList();
   renderMyLoot();
   renderMyWishes();
+  if(typeof CharacterWorkspace!=="undefined")CharacterWorkspace.refresh(false);
 }
 
 function renderCharacterList() {
@@ -255,6 +233,7 @@ function renderMyLoot() {
 }
 
 function renderMyWishes() {
+  if(typeof CharacterWorkspace!=="undefined")CharacterWorkspace.refresh(false);
   const el=document.getElementById('myWishGrid');
   if(!el)return;
   el.classList.add('character-loot-grid');
@@ -286,67 +265,8 @@ function createMiniCard(item, mode, extra="") {
     </div>`;
 }
 
-// ─── EDIT CHARACTER MODAL ─────────────────────────────────────────────────────
+// ─── CHARACTER IDENTITY PAGE ─────────────────────────────────────────────────────
 
-function openEditCharacterModal(charId, charName, charClass, charLevel = "") {
-  document.getElementById("editChar-name").value  = charName;
-  document.getElementById("editChar-class").value = charClass;
-  document.getElementById("editChar-level").value = charLevel;
-
-  document.getElementById("editCharModal").dataset.charId = charId;
-  openVaultModal('editCharModal');
+async function openEditCharacterModal(charId) {
+  if(await CharacterWorkspace.open(charId,'character-sheet')){selectSheetTab('builder');document.querySelector('[name="identity.name"]')?.focus();}
 }
-
-function closeEditCharacterModal() { closeVaultModal('editCharModal'); }
-
-async function saveEditCharacter() {
-  const charId   = document.getElementById("editCharModal").dataset.charId;
-  const character = characters.find(c => c.id === charId);
-  if (!activeCampaign || !character || (!canManageCampaign() && character.userId !== auth.currentUser?.uid)) return;
-  const campaignId = activeCampaign.id;
-  const newName  = document.getElementById("editChar-name").value.trim();
-  const newClass = document.getElementById("editChar-class").value;
-  const newLevel = parseInt(document.getElementById("editChar-level").value) || null;
-
-  if (!newName) {
-    alert("Character name is required.");
-    return;
-  }
-
-  if (newLevel !== null && (newLevel < 1 || newLevel > 20)) {
-    alert("Level must be 1–20.");
-    return;
-  }
-
-  const changes = {
-    name: newName,
-    class: newClass,
-    level: newLevel
-  };
-
-  try {
-    await updateDoc(doc(db, "campaigns", campaignId, "characters", charId), changes);
-  } catch (error) {
-    alert(`Could not save character: ${error.message}`);
-    return;
-  }
-  if (activeCampaign?.id !== campaignId) return;
-
-  const idx = characters.findIndex(c => c.id === charId);
-  if (idx !== -1) characters[idx] = { ...characters[idx], ...changes };
-
-  if (selectedCharacter?.id === charId) selectedCharacter = characters[idx];
-
-  closeEditCharacterModal();
-  populateOwnerFilter();
-  renderPlayerTab();
-
-  if (isAdmin()) {
-    renderUserTable();
-    renderAdminStats();
-  }
-
-  if (canManageCampaign()) renderDMCharacters();
-  renderCards();
-}
-

@@ -65,10 +65,10 @@ function createCard(item,context={}) {
   });
   on('.saved-remove-button',()=>removeSavedItem(savedEntry));
   on('.saved-move-button',()=>moveSavedItem(savedEntry,card.querySelector('.saved-character-target')?.value));
-  on('.edit-button',()=>{closeCharacterLoot();openItemModal(item,{scope:root?'root':'campaign'});});
+  on('.edit-button',()=>{openItemModal(item,{scope:root?'root':'campaign'});});
   on('.clone-button',async()=>{
     if(root){const id=crypto.randomUUID();const data={...rootItemData(item),imageBaseId:item.imageBaseId||item.id};await setDoc(doc(db,'items',id),{...data,name:`${item.name} (Copy)`});rootItems.push({...data,id,name:`${item.name} (Copy)`});await markCatalogChanged();renderRootCatalogue();}
-    else {const id=activeCampaign.id;const result=await vaultCall('vaultCopyCampaignItem',{campaignId:id,source:'campaign',sourceId:item.id});if(activeCampaign?.id!==id)return;await refreshCampaignData();closeCharacterLoot();openItemModal(items.find(i=>i.id===result.itemId));}
+    else {const id=activeCampaign.id;const result=await vaultCall('vaultCopyCampaignItem',{campaignId:id,source:'campaign',sourceId:item.id});if(activeCampaign?.id!==id)return;await refreshCampaignData();openItemModal(items.find(i=>i.id===result.itemId));}
   });
   on('.delete-item-button',async()=>{
     if(!confirm(`Delete "${item.name}" ${root?'from the root catalogue':'from this campaign'}?`))return;
@@ -102,8 +102,10 @@ let itemEditor=null;
 function openItemModal(item=null,{scope='campaign'}={}) {
   if(scope==='root'?!isAdmin():!canManageCampaign())return;
   if(scope==='campaign'&&activeCampaign.inventoryVersion!==2){alert('Upgrade this campaign first.');return;}
+  if(!PageEditors.guard(()=>openItemModal(item,{scope})))return;
+  if(!SheetNavigation.guard(()=>openItemModal(item,{scope})))return;
   const stock=campaignSupply[item?.id];
-  itemEditor={scope,itemId:item?.id||null,campaignId:scope==='campaign'?activeCampaign.id:null,stockRevision:stock?.revision??null,imageBaseId:item?.imageBaseId||''};
+  itemEditor={uid:auth.currentUser?.uid,scope,itemId:item?.id||null,campaignId:scope==='campaign'?activeCampaign.id:null,stockRevision:stock?.revision??null,imageBaseId:item?.imageBaseId||''};
   document.getElementById('itemModalTitle').textContent=`${item?'Edit':'Create'} ${scope==='root'?'Root':'Campaign'} Item`;
   for(const key of ['name','category','rarity','source','description','quote'])document.getElementById(`modal-${key}`).value=item?.[key]||({category:'Wondrous Item',rarity:'Common'}[key]||'');
   const campaignField=document.getElementById('modal-campaign');campaignField.value=scope==='campaign'?activeCampaign.name:'Root Catalogue';campaignField.readOnly=true;campaignField.setAttribute('aria-readonly','true');campaignField.title='Locked: campaign ownership is set automatically.';
@@ -121,28 +123,59 @@ function openItemModal(item=null,{scope='campaign'}={}) {
   renderItemMechanicsEditor(item);
   openVaultModal('itemModal');
 }
-function closeItemModal(){closeVaultModal('itemModal');itemEditor=null;}
+function closeItemModal(){
+  if(closeVaultModal('itemModal')===false)return false;
+  itemEditor=null;return true;
+}
+function currentItemEditor(editor){
+  return !!editor&&itemEditor===editor&&PageEditors.session('itemModal')?.editor===editor&&editor.uid===auth.currentUser?.uid&&
+    (editor.scope==='root'?isAdmin():activeCampaign?.id===editor.campaignId&&canManageCampaign());
+}
 async function saveItemModal() {
-  const editor=itemEditor;if(!editor)return;
-  await runVaultButton(document.getElementById('saveItemModal'),async()=>{
-    if(editor.scope==='campaign'&&activeCampaign?.id!==editor.campaignId)throw Error('The active campaign changed. Reopen the editor.');
+  const editor=itemEditor,button=document.getElementById('saveItemModal');
+  if(!currentItemEditor(editor)||button.disabled)return false;
+  const session=PageEditors.session('itemModal');
+  button.disabled=true;PageEditors.setSaving(session,true);
+  PageEditors.status('itemModal','Saving item…');
+  try {
     const item={};for(const key of ['name','category','rarity','source','description','quote'])item[key]=document.getElementById(`modal-${key}`).value;
     if(!item.name.trim())throw Error('Name is required.');
     item.mechanics=readItemMechanicsEditor();
-    item.attunement=document.getElementById('modal-attunement').checked;item.properties=getPropertiesFromEditor();item.classes=[...document.querySelectorAll('#modal-classes input:checked')].map(i=>i.value);item.imageUrl=document.getElementById('modal-imageUrl').value.trim();item.imageBaseId=editor.imageBaseId;
+    item.attunement=document.getElementById('modal-attunement').checked;
+    item.properties=getPropertiesFromEditor();item.classes=[...document.querySelectorAll('#modal-classes input:checked')].map(i=>i.value);
+    item.imageUrl=document.getElementById('modal-imageUrl').value.trim();item.imageBaseId=editor.imageBaseId;
     if(item.imageUrl&&!/^https:\/\//i.test(item.imageUrl))throw Error('Image URL must use HTTPS.');
+    // Snapshot the complete form before upload; a late response cannot read a replacement editor.
+    const policy=editor.scope==='campaign'?{
+      remaining:Number(document.getElementById('modal-remaining').value),
+      unlimited:document.getElementById('modal-unlimited').checked,
+      visible:document.getElementById('modal-visible').checked,
+      lootMode:document.getElementById('modal-lootMode').value
+    }:null;
+    if(policy&&(!Number.isSafeInteger(policy.remaining)||policy.remaining<0||policy.remaining>1000000))throw Error('Available quantity must be a whole number from 0 to 1000000.');
     const file=document.getElementById('modal-imageFile').files?.[0];
     if(file){editor.itemId ||= crypto.randomUUID();item.imageUrl=await uploadItemImage(editor.itemId,file,{campaignId:editor.campaignId});}
+    if(!currentItemEditor(editor))return false;
     if(editor.scope==='root') {
-      if(!isAdmin())throw Error('Root catalogue editing requires an admin account.');
-      const id=editor.itemId||crypto.randomUUID();await setDoc(doc(db,'items',id),item);
+      const id=editor.itemId ||= crypto.randomUUID();await setDoc(doc(db,'items',id),item);
+      if(!currentItemEditor(editor))return false;
       const idx=rootItems.findIndex(i=>i.id===id);if(idx<0)rootItems.push({...item,id});else rootItems[idx]={...item,id};
-      await markCatalogChanged();closeItemModal();renderRootCatalogue();
+      await markCatalogChanged();
+      if(!currentItemEditor(editor))return false;
+      renderRootCatalogue();PageEditors.markSaved('itemModal');closeItemModal();
     } else {
-      const remaining=Number(document.getElementById('modal-remaining').value);
-      if(!Number.isSafeInteger(remaining)||remaining<0||remaining>1000000)throw Error('Available quantity must be a whole number from 0 to 1000000.');
-      await vaultCall('vaultSaveCampaignItem',{...editor,item,remaining,unlimited:document.getElementById('modal-unlimited').checked,visible:document.getElementById('modal-visible').checked,lootMode:document.getElementById('modal-lootMode').value});
-      closeItemModal();if(activeCampaign?.id===editor.campaignId)await refreshCampaignData();
+      await vaultCall('vaultSaveCampaignItem',{scope:editor.scope,itemId:editor.itemId,campaignId:editor.campaignId,stockRevision:editor.stockRevision,imageBaseId:editor.imageBaseId,item,...policy});
+      if(!currentItemEditor(editor))return false;
+      PageEditors.markSaved('itemModal');closeItemModal();
+      try {await refreshCampaignData();PageEditors.returnFocus(session,true);}
+      catch(error){if(auth.currentUser?.uid===editor.uid&&activeCampaign?.id===editor.campaignId)alert('Your item is saved. Could not refresh the Library: '+error.message);}
     }
-  });
+    return true;
+  } catch(error) {
+    if(currentItemEditor(editor))PageEditors.status('itemModal',error.message||'The item could not be saved.',true);
+    return false;
+  } finally {
+    PageEditors.setSaving(session,false);
+    if(itemEditor===editor||!itemEditor)button.disabled=false;
+  }
 }

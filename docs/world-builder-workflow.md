@@ -22,6 +22,8 @@ The editor separates:
 
 Saving retains preparation privately. Sharing publishes only the saved title, summary, description and category through the existing sanitized snapshot transaction. Later saves remain private until explicitly shared again. Archive removes the publication atomically; restore does not republish it.
 
+Archive and Restore open a site dialog explaining archived-list access, preserved records and player visibility. Cancel is initially focused and Escape cancels. If the editor has unsaved changes, the dialog explains that confirmation saves them too. Account/campaign/record changes invalidate the pending confirmation; failed saves restore the previous archive flag. Character archive messages separately explain retained sheets, equipment and bookmarks.
+
 ## Print and permission boundaries
 
 Player-description printing excludes private notes, connections, world maps and marker labels. Selecting **Include private preparation and maps in print** produces the DM copy with that preparation. On-screen preview continues to show only the player description.

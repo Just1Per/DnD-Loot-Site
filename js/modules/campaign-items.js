@@ -95,6 +95,7 @@ function renderCampaignToolbar() {
 }
 async function openRootCatalogue() {
   if(!isAdmin())return;
+  if(!PageEditors.guard(openRootCatalogue))return;
   if(!SheetNavigation.guard(openRootCatalogue))return;
   await runVaultButton(document.getElementById('openRootCatalogue'),async()=>{
     await itemsLoadPromise;hideAllScreens();document.getElementById('siteScreenTitle').textContent='Root Catalogue · CampaignAtlas';
@@ -159,7 +160,13 @@ function openInventoryAction(item,action,entry=null) {
 async function deleteCampaignCharacter(characterId) {
   if(!activeCampaign)return;
   const character=characters.find(c=>c.id===characterId);if(!character)return;
-  if(!confirm(`${character.active===false?'Restore':'Archive'} "${character.name}"? Items and saved items will be preserved.`))return;
+  const campaignId=activeCampaign.id,uid=auth.currentUser?.uid,restore=character.active===false;
+  const valid=()=>activeCampaign?.id===campaignId&&auth.currentUser?.uid===uid&&(canManageCampaign()||canUseCharacters()&&character.userId===uid)&&characters.includes(character);
+  if(!valid()||!await SiteConfirmation.ask({title:(restore?'Restore':'Archive')+' “'+character.name+'”?',confirmLabel:restore?'Restore character':'Archive character',isCurrent:valid,paragraphs:[
+    restore?'This character will be available in the active character list again.':'This character will be marked Archived and will no longer be an active target for new Library saves or loot.',
+    'The character sheet, equipment, existing inventory and saved items are kept. This does not permanently delete the character.',
+    restore?'Use Set Active if you want Library actions to use this character.':'You can restore the character later from Manage characters or the DM party list.'
+  ]})||!valid())return;
   const id=activeCampaign.id;
   await vaultCall('vaultDeleteCharacter',{campaignId:id,characterId});
   if(activeCampaign?.id!==id)return;

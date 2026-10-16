@@ -6,13 +6,12 @@
  check('DM sees campaign character inventory quantities',document.querySelector('[data-dm-loot="c1"]').textContent==='Looted (2)'&&document.querySelector('[data-dm-loot="c2"]').textContent==='Looted (3)');
  check('DM gets campaign item editor, not root editor',document.querySelector('#card-container .edit-button').textContent==='Edit Campaign Item');
  await click('[data-dm-loot="c1"]');
- check('DM character popup shows full item cards with quantity',document.querySelector('#characterLootCards .item-description').textContent==='Full potion description'&&document.querySelector('#characterLootCards .inventory-quantity').textContent==='Owned: 2');
- check('DM popup has unloot and transfer controls',!!document.querySelector('#characterLootCards .unloot-button')&&!!document.querySelector('#characterLootCards .transfer-button'));
- await click('#characterLootCards .unloot-button');
+ check('DM character page shows full item cards with quantity',document.querySelector('#characterLootGrid .item-description').textContent==='Full potion description'&&document.querySelector('#characterLootGrid .inventory-quantity').textContent==='Owned: 2');
+ check('DM character page has unloot and transfer controls',!!document.querySelector('#characterLootGrid .unloot-button')&&!!document.querySelector('#characterLootGrid .transfer-button'));
+ await click('#characterLootGrid .unloot-button');
  check('Unloot opens quantity dialog',document.getElementById('vaultActionDialog').open&&document.querySelector('#actionQuantity').value==='1');
  await click('#confirmInventoryAction');
- check('Unloot runs inventory operation and refreshes owned quantity',callLog.at(-1).name==='vaultInventoryAction'&&callLog.at(-1).data.action==='unloot'&&document.querySelector('#characterLootCards .inventory-quantity').textContent==='Owned: 1');
- closeCharacterLoot();
+ check('Unloot runs inventory operation and refreshes owned quantity',callLog.at(-1).name==='vaultInventoryAction'&&callLog.at(-1).data.action==='unloot'&&document.querySelector('#characterLootGrid .inventory-quantity').textContent==='Owned: 1');
  openItemModal(items[0]);
  check('Campaign field is readonly and matches current campaign',document.getElementById('modal-campaign').readOnly&&document.getElementById('modal-campaign').value==='Storm Coast');
  check('DM editor includes supply and looting mode',!!document.getElementById('modal-remaining')&&!!document.getElementById('modal-unlimited')&&!!document.getElementById('modal-lootMode'));

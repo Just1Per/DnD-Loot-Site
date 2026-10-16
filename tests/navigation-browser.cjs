@@ -73,7 +73,7 @@ const root=path.resolve(__dirname,'..');
  console.log('PASS Save failure/retry and invalid fields cannot close the sheet or lose its draft');
 
  await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('Switching characters draft');
- await page.locator('#sheetCharacterSelect').selectOption('c2');assert.equal(await page.locator('#sheetLeaveDialog').isVisible(),true);await page.locator('[data-sheet-leave-discard]').click();await page.waitForFunction(()=>sheetSession?.characterId==='c2');
+ await page.locator('#characterWorkspacePicker').selectOption('c2');assert.equal(await page.locator('#sheetLeaveDialog').isVisible(),true);await page.locator('[data-sheet-leave-discard]').click();await page.waitForFunction(()=>sheetSession?.characterId==='c2');
  await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('Another draft');await page.locator('#leaveCampaignBtn').click();assert.equal(await page.locator('#sheetLeaveDialog').isVisible(),true);await page.locator('[data-sheet-leave-stay]').click();
  await page.locator('[data-sheet-close]').click();
  await page.addScriptTag({content:require('axe-core').source});const violations=await page.evaluate(async()=> (await axe.run('#sheetLeaveDialog',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations);assert.deepEqual(violations.map(row=>row.id),[]);
@@ -82,7 +82,7 @@ const root=path.resolve(__dirname,'..');
  await page.locator('[data-sheet-close]').click();await page.locator('[data-sheet-leave-discard]').click();await page.waitForSelector('#sheetLeaveDialog',{state:'detached'});
  console.log('PASS Character switching/campaign exit, Escape, focus containment and mobile/axe checks');
 
- await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('A conflict must preserve this draft');
+ await page.evaluate(()=>CharacterWorkspace.open('c1','character-sheet'));await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('A conflict must preserve this draft');
  await page.evaluate(()=>testSheetDocs['campaigns/a/characterSheets/c1'].revision++);await page.locator('[data-tab=library]').click();await page.locator('[data-sheet-leave-save]').click();
  await page.waitForFunction(()=>document.querySelector('[data-sheet-leave-status]').textContent.includes('another window'));assert.equal(await page.locator('[name=appearance]').inputValue(),'A conflict must preserve this draft');await page.locator('[data-sheet-leave-discard]').click();await page.waitForSelector('#sheetLeaveDialog',{state:'detached'});
  await navigate(page,'character-sheet');await page.waitForSelector('#characterSheetForm');await page.locator('[data-sheet-tab=story]').click();await page.locator('[name=appearance]').fill('A pending save');
