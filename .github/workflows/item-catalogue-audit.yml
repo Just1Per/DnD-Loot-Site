@@ -4,8 +4,10 @@ on:
     paths:
       - 'scripts/audit-item-catalogue.mjs'
       - 'scripts/build-srd-item-hashes.mjs'
+      - 'scripts/review-item-catalogue.mjs'
       - 'data/rules/srd-magic-item-text-hashes.json'
       - 'tests/item-catalogue-audit.cjs'
+      - 'tests/item-catalogue-review.cjs'
       - '.github/workflows/item-catalogue-audit.yml'
   workflow_dispatch:
 permissions:
@@ -20,13 +22,24 @@ jobs:
         with:
           node-version: 22
       - name: Test audit and evidence boundaries
-        run: node --test tests/item-catalogue-audit.cjs
+        run: node --test tests/item-catalogue-audit.cjs tests/item-catalogue-review.cjs
       - name: Read public item metadata and compare pinned SRD fingerprints
         run: node scripts/audit-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-audit.json'
+      - name: Generate conservative item-by-item review without publishing original prose
+        run: node scripts/review-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-review.json' --markdown '${{ runner.temp }}/item-catalogue-review.md' --annotations
+      - name: Readable review metadata batch two
+        run: node scripts/review-item-catalogue.mjs --annotations-from '${{ runner.temp }}/item-catalogue-review.json' --annotation-batch 1
+      - name: Readable review metadata batch three
+        run: node scripts/review-item-catalogue.mjs --annotations-from '${{ runner.temp }}/item-catalogue-review.json' --annotation-batch 2
+      - name: Readable review metadata batch four
+        run: node scripts/review-item-catalogue.mjs --annotations-from '${{ runner.temp }}/item-catalogue-review.json' --annotation-batch 3
       - name: Upload prose-free audit report
         uses: actions/upload-artifact@v4
         with:
           name: shared-item-catalogue-audit
-          path: ${{ runner.temp }}/item-catalogue-audit.json
+          path: |
+            ${{ runner.temp }}/item-catalogue-audit.json
+            ${{ runner.temp }}/item-catalogue-review.json
+            ${{ runner.temp }}/item-catalogue-review.md
           if-no-files-found: error
           retention-days: 7
