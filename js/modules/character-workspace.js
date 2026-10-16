@@ -156,6 +156,7 @@ var CharacterWorkspace = (() => {
     if (!routes.has(tab) || tab === 'player') return false;
     const character = id ? choices().find(row => row.id === id) : fallback();
     if (id && !character) return false;
+    if(typeof PageEditors!=='undefined'&&!PageEditors.guard(()=>open(id,section)))return false;
     const sameSheet = tab === 'character-sheet' && character && sheetSession?.characterId === character.id && sheetSession.campaignId === activeCampaign.id && sheetSession.uid === auth.currentUser.uid && !sheetSession.adventureId;
     if (!sameSheet && !SheetNavigation.guard(() => open(id, section))) { renderHeader(current?.section || 'character-sheet'); return false; }
     const previous = current ? {...current} : null;

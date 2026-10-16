@@ -586,52 +586,9 @@ async function hardDeleteDMCampaignCharacter(character) {
   }
 }
 
-let characterLootView = null;
-let characterLootReturnFocus = null;
-function ensureCharacterLootDialog() {
-  let dialog = document.getElementById("characterLootDialog");
-  if (dialog) return dialog;
-  dialog = document.createElement("dialog");
-  dialog.id = "characterLootDialog";
-  dialog.className = "character-loot-dialog";
-  dialog.setAttribute("aria-labelledby", "characterLootTitle");
-  dialog.innerHTML = `<div class="character-loot-heading"><h2 id="characterLootTitle"></h2>
-    <button type="button" class="cancel-button" id="closeCharacterLoot">Close</button></div>
-    <div id="characterLootCards" class="character-loot-grid"></div>`;
-  document.body.appendChild(dialog);
-  dialog.querySelector("#closeCharacterLoot").addEventListener("click", closeCharacterLoot);
-  dialog.addEventListener("cancel", event => { event.preventDefault(); closeCharacterLoot(); });
-  dialog.addEventListener("close", () => { characterLootView = null; });
-  return dialog;
-}
 function openCharacterLoot(characterId) {
-  if (!activeCampaign || !canManageCampaign()) return;
-  if (!characters.some(c => c.id === characterId)) return;
-  characterLootReturnFocus = document.activeElement;
-  characterLootView = { campaignId: activeCampaign.id, characterId };
-  const dialog = ensureCharacterLootDialog();
-  refreshCharacterLoot();
-  if (!dialog.open) dialog.showModal();
-}
-function closeCharacterLoot() {
-  characterLootView = null;
-  const dialog = document.getElementById("characterLootDialog");
-  if (dialog?.open) dialog.close();
-  dialog?.querySelector("#characterLootCards")?.replaceChildren();
-  if (characterLootReturnFocus?.isConnected) characterLootReturnFocus.focus();
-  characterLootReturnFocus = null;
-}
-function refreshCharacterLoot() {
-  if(!characterLootView)return;
-  const {campaignId,characterId}=characterLootView;
-  const character=characters.find(c=>c.id===characterId);
-  if(!canManageCampaign()||activeCampaign?.id!==campaignId||!character){closeCharacterLoot();return;}
-  const grid=document.getElementById('characterLootCards');
-  const entries=inventory.filter(e=>e.characterId===characterId&&e.quantity>0);
-  document.getElementById('characterLootTitle').textContent=`${character.name}'s Looted Items (${entries.reduce((n,e)=>n+e.quantity,0)})`;
-  grid.replaceChildren(...entries.map(e=>createCard(inventoryItem(e),{inventoryEntry:e})));
-  if(!entries.length)grid.innerHTML='<p class="loot-empty">No looted items assigned to this character.</p>';
-  observePendingImages(grid);
+  if(!activeCampaign||!canManageCampaign())return false;
+  return CharacterWorkspace.open(characterId,'character-loot');
 }
 
 async function openDMAdvancement(characterId){

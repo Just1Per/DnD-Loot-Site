@@ -6,8 +6,9 @@ loadCampaignInventory=async()=>{inventory=structuredClone(fixtureInventory).filt
 loadCampaignSupply=async()=>{campaignSupply=canManageCampaign()?structuredClone(fixtureSupply):{};};
 loadSaves=async()=>{};
 function seed(role='dm',membership=role){
+ PageEditors.clear();CharacterWorkspace.clear();
  closeCharacterSheet(true);
- closeCharacterLoot();closeVaultAction();closeRootPicker();closeItemModal();
+ closeVaultAction();closeRootPicker();closeItemModal();
  currentUser={id:role,uid:role,name:'Test '+role,role:[role]};auth.currentUser={uid:role,email:role+'@example.test'};
  activeCampaign={id:'a',name:'Storm Coast',ownerId:'dm',dmId:'dm',inventoryVersion:2};activeMembershipRole=membership;
  campaigns=[activeCampaign];campaignMembers=[{uid:'dm',role:'dm',displayName:'DM'},{uid:'player',role:'player',displayName:'Alice'},{uid:'other',role:'player',displayName:'Bob'}];

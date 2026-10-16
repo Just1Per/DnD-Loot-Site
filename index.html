@@ -32,7 +32,8 @@
   <link rel="stylesheet" href="css/dm-workspace-shell.css?v=20261014-dm-workspace-v1">
   <link rel="stylesheet" href="css/site-confirmation.css?v=20261016-campaign-controls-v1">
   <link rel="stylesheet" href="css/campaign-controls.css?v=20261016-campaign-controls-v1">
-  <link rel="stylesheet" href="css/character-workspace.css?v=20261016-character-area-v1">
+  <link rel="stylesheet" href="css/character-workspace.css?v=20261016-page-editors-v1">
+  <link rel="stylesheet" href="css/page-editors.css?v=20261016-page-editors-v1">
 </head>
 <body>
   <a class="site-skip-link" href="#siteMain">Skip to content</a>
@@ -390,61 +391,6 @@
   </dialog>
 
   <!-- ══════════════════════════════════════════════════════════════════════
-       MODAL: EDIT CHARACTER
-  ══════════════════════════════════════════════════════════════════════ -->
-  <dialog id="editCharModal" class="modal" style="display:none"
-    aria-modal="true" role="dialog" aria-labelledby="editCharModalTitle">
-    <div class="modal-box modal-box--sm">
-      <div class="modal-header">
-        <h2 id="editCharModalTitle">Edit Character</h2>
-        <button class="modal-close" id="closeEditCharModal" type="button" aria-label="Close">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-form-grid">
-          <label class="modal-label full">Character Name
-            <input type="text" id="editChar-name" placeholder="Character name" autocomplete="off">
-          </label>
-          <label class="modal-label">Class
-            <select id="editChar-class">
-              <option>Artificer</option><option>Barbarian</option><option>Bard</option>
-              <option>Cleric</option><option>Druid</option><option>Fighter</option>
-              <option>Monk</option><option>Paladin</option><option>Ranger</option>
-              <option>Rogue</option><option>Sorcerer</option><option>Warlock</option>
-              <option>Wizard</option>
-            </select>
-          </label>
-          <label class="modal-label">Level (1–20)
-            <input type="number" id="editChar-level" placeholder="e.g. 5" min="1" max="20">
-          </label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="cancel-button"    id="cancelEditCharModal" type="button">Cancel</button>
-        <button class="save-edit-button" id="saveEditCharModal"   type="button">Save</button>
-      </div>
-    </div>
-  </dialog>
-
-  <!-- ══════════════════════════════════════════════════════════════════════
-       MODAL: CHARACTER SAVED ITEMS
-  ══════════════════════════════════════════════════════════════════════ -->
-  <dialog id="wishModal" class="modal" style="display:none"
-    aria-modal="true" role="dialog" aria-labelledby="wishModalCharName">
-    <div class="modal-box modal-box--wide">
-      <div class="modal-header">
-        <h2 id="wishModalCharName">Saved Items</h2>
-        <button class="modal-close" id="closeWishModal" type="button" aria-label="Close">✕</button>
-      </div>
-      <div class="modal-body">
-        <div id="wishModalGrid" class="wish-modal-grid"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="cancel-button" id="closeWishModalBtn" type="button">Close</button>
-      </div>
-    </div>
-  </dialog>
-
-  <!-- ══════════════════════════════════════════════════════════════════════
        MODAL: CREATE / EDIT CAMPAIGN
   ══════════════════════════════════════════════════════════════════════ -->
   <dialog id="campaignModal" class="modal" style="display:none"
@@ -518,6 +464,6 @@
     <p>© 2026 DKDM — CampaignAtlas’s original website code and interface. Third-party content retains its own licences and rights.</p>
   </footer>
   <script src="js/boot-status.js?v=20261010-ui-cleanup"></script>
-  <script type="module" id="siteAppScript" src="js/app.js?v=20261016-character-area-v1"></script>
+  <script type="module" id="siteAppScript" src="js/app.js?v=20261016-page-editors-v1"></script>
 </body>
 </html>

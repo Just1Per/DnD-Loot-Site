@@ -322,87 +322,10 @@ async function saveUserModal() {
   }
 }
 
-// ─── CAMPAIGN MODAL ───────────────────────────────────────────────────────────
-
-function openCampaignModal(campaign = null) {
-  document.getElementById("campaignModalTitle").textContent = campaign ? "Edit Campaign" : "Create Campaign";
-  document.getElementById("campaign-name").value        = campaign?.name        || "";
-  document.getElementById("campaign-description").value = campaign?.description || "";
-  document.getElementById("campaignModal").dataset.editId = campaign?.id || "";
-  openVaultModal('campaignModal');
-}
-
-function closeCampaignModal() { closeVaultModal('campaignModal'); }
-
-async function saveCampaignModal() {
-  const editId = document.getElementById("campaignModal").dataset.editId;
-  const name   = document.getElementById("campaign-name").value.trim();
-
-  if (!name) {
-    alert("Campaign name is required.");
-    return;
-  }
-
-  const description = document.getElementById("campaign-description").value.trim();
-
-  if (editId) {
-    await updateDoc(
-      doc(db, "campaigns", editId),
-      { name, description, updatedAt: Date.now() }
-    );
-
-    const idx = campaigns.findIndex(c => c.id === editId);
-    if (idx !== -1) {
-      campaigns[idx] = { ...campaigns[idx], name, description, updatedAt: Date.now() };
-    }
-
-  } else {
-    const data = {
-      name,
-      description,
-      dmId: auth.currentUser.uid,
-      ownerId: auth.currentUser.uid,
-      defaultItemVisible: true,
-      inventoryVersion: 2,
-      created: Date.now(),
-      updatedAt: Date.now()
-    };
-
-    const newRef = await addDoc(collection(db, "campaigns"), data);
-
-    // Authoritative membership + fast per-user index.
-    await Promise.all([
-      setDoc(
-        doc(db, "campaigns", newRef.id, "members", auth.currentUser.uid),
-        {
-          uid: auth.currentUser.uid,
-          role: "dm",
-          status: "active",
-          joinedAt: Date.now()
-        },
-        { merge: true }
-      ),
-      setDoc(
-        doc(db, "users", auth.currentUser.uid, "campaigns", newRef.id),
-        {
-          role: "dm",
-          status: "active",
-          joinedAt: Date.now()
-        },
-        { merge: true }
-      )
-    ]);
-
-    campaigns.push({
-      id: newRef.id,
-      membershipRole: "dm",
-      ...data
-    });
-  }
-
-  closeCampaignModal();
-  renderCampaignSelector();
-}
+// Campaign setup is a page; editing an existing campaign opens Settings.
+function openCampaignModal(campaign=null){return PageEditors.openCampaign(campaign);}
+function closeCampaignModal(){return PageEditors.close('campaignModal');}
+function saveCampaignModal(){return PageEditors.saveCampaign();}
 
 // ─── ADMIN: USER TABLE ────────────────────────────────────────────────────────
 
@@ -429,6 +352,7 @@ function renderAdminStats() {}
 let adminReturnTab = "library";
 function openAdminView() {
   if (!isAdmin() || !auth.currentUser) return;
+  if(!PageEditors.guard(openAdminView))return;
   if(!SheetNavigation.guard(openAdminView))return;
   if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate('admin'))return;
   adminReturnTab = typeof AppShell!=="undefined" ? AppShell.route : document.querySelector(".tabs .tab.active")?.dataset.tab || "library";

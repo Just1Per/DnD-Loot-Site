@@ -37,12 +37,11 @@
   check('A hidden or unavailable saved item is retained with a safe removal action',
    !!document.querySelector('#myWishGrid .saved-item-unavailable')&&
    !!document.querySelector('#myWishGrid .saved-remove-button'));
-  seed('dm');saves=[bookmark];openWishModal('c1','Thorin');
-  check('DM Saved popup uses the same full item cards without loot actions',
-   !!document.querySelector('#wishModalGrid .saved-item-card .property-block')&&
-   !!document.querySelector('#wishModalGrid .saved-remove-button')&&
-   !document.querySelector('#wishModalGrid .loot-button,#wishModalGrid .assign-button,#wishModalGrid .use-button'));
-  closeWishModal();
+  seed('dm');saves=[bookmark];await openWishModal('c1','Thorin');
+  check('DM Saved page uses the same full item cards without loot actions',
+   !!document.querySelector('#characterWishlistGrid .saved-item-card .property-block')&&
+   !!document.querySelector('#characterWishlistGrid .saved-remove-button')&&
+   !document.querySelector('#characterWishlistGrid .loot-button,#characterWishlistGrid .assign-button,#characterWishlistGrid .use-button'));
  }catch(e){results.push({name:e.stack,pass:false});}
  document.getElementById('test-results').textContent=JSON.stringify(results,null,2);
 })();

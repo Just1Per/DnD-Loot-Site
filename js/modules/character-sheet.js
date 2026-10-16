@@ -70,6 +70,7 @@ function closeCharacterSheet(force = false) {
   return true;
 }
 async function openCharacterSheet(characterId, context = {}) {
+  if(typeof PageEditors!=='undefined'&&!PageEditors.guard(()=>openCharacterSheet(characterId,context)))return;
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.beforeNavigate("character-sheet"))return;
   const character = context.adventureId ? context.character : characters.find(c => c.id === characterId);
   if (!activeCampaign || !character || !canManageCampaign() && character.userId !== auth.currentUser?.uid && !(context.adventureId && context.oneShot?.data?.approved && context.oneShot.data.hostUid===auth.currentUser?.uid))

@@ -16,8 +16,8 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 | P1 | Simple World entry creation | PR #112, pending review | Name and Description first; optional preparation collapsed; preserve categories, records, private notes, images/maps, connections and sharing. |
 | P1 | Explanatory archive/restore dialogs | PR #113, pending review | Explain preservation, archived lists, player visibility, restoration and saved draft changes; accessible Cancel/confirm actions. |
 | P2 | Shared UI styling consistency | PR #114, pending review | Match buttons, fields, optional sections, uploads and dialogs to the existing palette; test focus, contrast, mobile and print. |
-| P2 | Shared character sheet, gear and wishlist | Implemented, pending review | Reconcile with full Saved cards/actions from #107; preserve character isolation, active loot target, guards and print. |
-| P2 | Page-based item and campaign editors | Unfinished local work preserved | Retain actor/session checks, draft protection and error recovery while moving large forms onto pages. |
+| P2 | Shared character sheet, gear and wishlist | PR #115, pending review | Reconcile with full Saved cards/actions from #107; preserve character isolation, active loot target, guards and print. |
+| P2 | Page-based item and campaign editors | Implemented, pending review | Retain actor/session checks, draft protection and error recovery while moving large forms onto pages. |
 | P2 | Dedicated DM Creatures & NPCs tab | Merged PR #96; CI passed | Move creature authoring/catalogue access into a clear dedicated tab while preserving existing records, SRD attribution, personal templates and encounter references. |
 | P2 | World Builder cleanup | Merged PR #97; CI passed | Focus on setting, locations, factions and player-facing campaign information; distinguish drafts, shared content and DM secrets; keep existing IDs, links, maps and uploads. |
 | P2 | Chapter Tracker cleanup | Merged PR #98; CI passed | Clear chapter preparation, completion, recap and publish actions; separate DM planning from player-visible recap; retain milestone approval and character independence. |

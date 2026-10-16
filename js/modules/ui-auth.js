@@ -13,6 +13,7 @@ function showTab(tabId, render = true) {
   if(tabId!=="character-sheet"&&!SheetNavigation.guard(()=>showTab(tabId,render)))return;
   if (tabId === "admin") { openAdminView(); return; }
   if ((tabId === "dm" || ["dm-world","dm-creatures","dm-chapters","dm-party","dm-settings","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
+  if(!PageEditors.beforeNavigate(tabId,render))return;
   if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
   if (typeof CampaignHome!=="undefined" && !CampaignHome.beforeNavigate(tabId)) return;
   if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate(tabId))return;
@@ -88,9 +89,6 @@ function initModalListeners() {
     closeItemModal, cancelItemModal: closeItemModal, saveItemModal,
     openAddUserBtn: () => openUserModal(),
     closeUserModal, cancelUserModal: closeUserModal, saveUserModal,
-    closeEditCharModal: closeEditCharacterModal,
-    cancelEditCharModal: closeEditCharacterModal, saveEditCharModal: saveEditCharacter,
-    closeWishModal, closeWishModalBtn: closeWishModal,
     openCreateCampaignBtn: () => openCampaignModal(),
     closeCampaignModal, cancelCampaignModal: closeCampaignModal, saveCampaignModal,
     leaveCampaignBtn: leaveCampaign
@@ -188,11 +186,13 @@ document.getElementById('resetPasswordButton')?.addEventListener('click',async()
 // Clear selected campaign data immediately; the auth callback closes editors
 // and finishes clearing all loaded state after Firebase confirms sign-out.
 async function logoutFromSite(){
+  if(!PageEditors.guard(logoutFromSite))return;
   if(!SheetNavigation.guard(logoutFromSite))return;
   AppNavigation.clear();
   CampaignHome.clear(true);
   CampaignInformation.clear(true);
   CharacterWorkspace.clear();
+  PageEditors.clear();
   activeCampaign = null;
   activeMembershipRole = null;
   selectedCharacter = null;
@@ -215,6 +215,7 @@ let authStartupGeneration=0;
 onAuthStateChanged(auth, async (firebaseUser) => {
   const generation=++authStartupGeneration;
   CharacterWorkspace.clear();
+  PageEditors.clear();
   if(sheetSession&&sheetSession.uid!==firebaseUser?.uid)closeCharacterSheet(true);
   SiteConfirmation.cancel();
   const current=()=>generation===authStartupGeneration&&auth.currentUser?.uid===firebaseUser?.uid;
@@ -277,9 +278,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     }
 
   } else {
-    closeCharacterLoot();
-    closeWishModal();
-    closeEditCharacterModal();
+
     closeUserModal();
     SiteHelp.onLogout();
     CampaignHome.clear(true);
@@ -323,6 +322,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 
 ensureDMToolsUI();
 CharacterWorkspace.ensure();
+PageEditors.ensure();
 ensureDashboardStyles();
 ensureDashboardShell();
 initTabs();

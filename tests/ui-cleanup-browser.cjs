@@ -38,7 +38,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
  check('DM layout fits mobile',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await page.setViewportSize({width:1440,height:1000});
  await page.evaluate(()=>showTab('dm-party'));
- for(const modal of ['itemModal','userModal','editCharModal','wishModal','campaignModal']){
+ for(const modal of ['userModal']){
   await page.locator('#dmOpenLibrary').focus();
   await page.evaluate(id=>openVaultModal(id),modal);
   for(let i=0;i<12;i++)await page.keyboard.press('Tab');
