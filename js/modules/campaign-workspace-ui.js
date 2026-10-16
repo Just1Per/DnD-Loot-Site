@@ -15,6 +15,7 @@ var CampaignWorkspace = (() => {
   }
   function clear(force=false) {
     if(!force && session?.dirty && !confirm('Discard unsaved campaign workspace changes?')) return false;
+    if(typeof SiteConfirmation!=='undefined')SiteConfirmation.cancel();
     session?.journalImageController?.dispose();
     if(session)configs[session.kind].onClear?.(session);
     ++generation; session=null;
@@ -77,7 +78,15 @@ var CampaignWorkspace = (() => {
   async function archive() {
     const s=session;if(!current(s)||s.busy)return;
     if(!s.record.revision){status('Save this entry before archiving.',true);return;}
-    if(!confirm(s.record.archived?'Restore this entry?':'Archive this entry? Related records will be retained.'))return;
+    const record=s.record,restore=record.archived,shared=['world','creature','chapter'].includes(s.kind);
+    const valid=()=>current(s)&&s.record===record&&!s.busy;
+    const accepted=await SiteConfirmation.ask({title:(restore?'Restore':'Archive')+' “'+record.title+'”?',confirmLabel:restore?'Restore entry':'Archive entry',isCurrent:valid,paragraphs:[
+      restore?'This entry will return to the active list.':'This entry will move to the archived list. Find it again using Show archived.',
+      'The entry is kept, including its notes, illustrations, maps and connections. Archiving does not delete it.',
+      shared?(restore?'Restoring does not share it with players. Review it and explicitly share it again when ready.':'If shared, it will be removed from the player journal. Related entries'+(s.kind==='chapter'?' and players’ personal chapter notes':'')+' are kept.'):'Related campaign records are kept.',
+      s.dirty?'Your current unsaved changes will also be saved when you confirm.':''
+    ]});
+    if(!accepted||!valid())return;
     const previous=s.record.archived;s.record.archived=!previous;const saved=await save();if(!saved&&current(s))s.record.archived=previous;
     if(current(s)&&s.record.archived!==previous&& !s.dirty)renderEditor();
   }

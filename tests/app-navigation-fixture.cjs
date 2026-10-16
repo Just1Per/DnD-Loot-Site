@@ -13,4 +13,8 @@ async function expandWorldTools(page){
   for(const detail of await page.locator('[data-world-option]').all())if(!await detail.evaluate(node=>node.open))await detail.locator(':scope > summary').click();
  }
 }
-module.exports={navigate,expandWorldTools};
+async function archiveEntry(page){
+ await page.locator('[data-archive-record]').click();
+ await page.locator('#siteConfirmationDialog [data-site-confirm]').click();
+}
+module.exports={navigate,expandWorldTools,archiveEntry};
