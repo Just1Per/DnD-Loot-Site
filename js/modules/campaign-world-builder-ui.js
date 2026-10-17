@@ -5,6 +5,19 @@
  const sharing=createCampaignInformationStore(window.__DND_VAULT_DEPS__);
  const labels={private:'Private draft',shared:'Shared with players',changed:'Versions differ',unknown:'Sharing unknown',archived:'Archived'};
  const current=s=>W.session===s&&activeCampaign?.id===s.campaignId&&auth.currentUser?.uid===s.uid&&canManageCampaign();
+ function categories(s){
+  const custom=[...new Set([...(s?.rows||[]).map(row=>row.data?.category),s?.record?.data?.category].filter(value=>typeof value==='string'&&value&&!config.categories.includes(value)))].sort((a,b)=>a.localeCompare(b));
+  return [...config.categories,...custom];
+ }
+ function categoryFilters(s){
+  const values=categories(s),key=JSON.stringify(values);if(key===s.worldCategoryKey)return false;
+  s.worldCategoryKey=key;
+  const select=s.host.querySelector('[data-workspace-category]'),selected=select.value;
+  select.innerHTML='<option value="">All categories</option>'+values.map(value=>`<option value="${e(value)}">${e(value)}</option>`).join('');
+  select.value=values.includes(selected)?selected:'';
+  s.host.querySelector('.world-category-shortcuts').innerHTML=['',...values].map(value=>`<button type="button" data-world-category="${e(value)}" aria-pressed="${value===select.value}">${e(value||'All entries')} <span>0</span></button>`).join('');
+  return selected!==select.value;
+ }
  function visibility(s,row){
   if(row.archived)return 'archived';
   if(!s.worldSharingLoaded&&!s.worldKnown.has(row.id))return 'unknown';
@@ -20,6 +33,7 @@
  }
  function listed(s){
   if(!current(s))return;
+  if(categoryFilters(s))return W.renderList();
   const archived=s.host.querySelector('[data-workspace-archived]').checked;
   const rows=s.rows.filter(row=>!!row.archived===archived),category=s.host.querySelector('[data-workspace-category]').value;
   s.host.querySelectorAll('[data-world-category]').forEach(button=>{
@@ -68,8 +82,9 @@
  }
  function toolbar(host,s){
   s.worldPublications=new Map();s.worldKnown=new Set();s.worldSharingLoaded=false;s.worldSharingRequest=0;
-  host.innerHTML=`<nav class="world-category-shortcuts" aria-label="World entry categories">${['',...config.categories].map(category=>`<button type="button" data-world-category="${e(category)}" aria-pressed="${!category}">${e(category||'All entries')} <span>0</span></button>`).join('')}</nav><div class="world-browse-controls"><label class="workspace-field"><span>Player visibility</span><select data-world-visibility disabled><option value="">All entries</option><option value="private">Private drafts</option><option value="shared">Shared with players</option><option value="changed">Versions differ</option></select></label><button type="button" data-world-refresh>Refresh sharing status</button></div><p data-world-sharing-overview role="status"></p><p data-world-results role="status"></p>`;
-  host.querySelectorAll('[data-world-category]').forEach(button=>button.onclick=()=>{s.host.querySelector('[data-workspace-category]').value=button.dataset.worldCategory;W.renderList();});
+  host.innerHTML=`<nav class="world-category-shortcuts" aria-label="World entry categories"></nav><div class="world-browse-controls"><label class="workspace-field"><span>Player visibility</span><select data-world-visibility disabled><option value="">All entries</option><option value="private">Private drafts</option><option value="shared">Shared with players</option><option value="changed">Versions differ</option></select></label><button type="button" data-world-refresh>Refresh sharing status</button></div><p data-world-sharing-overview role="status"></p><p data-world-results role="status"></p>`;
+  categoryFilters(s);
+  host.querySelector('.world-category-shortcuts').onclick=event=>{const button=event.target.closest('[data-world-category]');if(!button)return;s.host.querySelector('[data-workspace-category]').value=button.dataset.worldCategory;W.renderList();};
   host.querySelector('[data-world-visibility]').onchange=()=>W.renderList();host.querySelector('[data-world-refresh]').onclick=()=>refreshSharing(s);
   for(const label of s.host.querySelectorAll('.workspace-sidebar label')){
    const span=document.createElement('span');for(const node of [...label.childNodes])if(node.nodeType===3)span.append(node);
@@ -78,19 +93,32 @@
   refreshSharing(s);
  }
  const textarea=(name,label,value,max=20000,field=false)=>`<label class="workspace-field"><span>${e(label)}</span><textarea ${field?`data-record-field="${name}"`:`name="${name}"`} maxlength="${max}">${e(value)}</textarea></label>`;
+ const categoryField=record=>`<label class="workspace-field"><span>Entry type</span><select data-record-field="category">${categories(W.session).map(value=>`<option value="${e(value)}" ${record.data?.category===value?'selected':''}>${e(value)}</option>`).join('')}<option value="" data-world-custom-option>Custom…</option></select></label><label class="workspace-field" data-world-custom-field hidden><span>Custom category name</span><input name="worldCustomCategory" maxlength="80" placeholder="For example, Religion or Trade route" aria-describedby="worldCustomCategoryHelp" disabled><small id="worldCustomCategoryHelp">Use 1–80 characters. Saved categories can be reused for other entries.</small></label>`;
  config.editorBody=record=>`<p class="world-visibility-badge" data-world-entry-state role="status"></p>
   <section class="world-editor-section world-entry-basics" data-world-basics><h3>${record.revision?'Describe this place or entry':'Add a place to your world'}</h3><p>Give it a name and describe the area. Saving keeps it private until you choose to share it.</p><label class="workspace-field"><span>Name</span><input name="title" required maxlength="160" placeholder="For example, Hollow Harbor" value="${e(record.title)}"></label>${textarea('content','Description',record.content)}</section>
   <details class="world-editor-section" data-world-option="sharing"><summary>Share with players</summary><p>Share the saved description when the party discovers it. Private notes, maps and illustrations stay with the DM.</p><div data-extra-editor></div></details>
   <details class="world-editor-section world-editor-private" data-world-option="notes"><summary>DM notes (optional)</summary>${textarea('privateNotes','Private DM notes',record.privateNotes)}</details>
   <details class="world-editor-section" data-world-option="images"><summary>Images &amp; maps (optional)</summary><div data-journal-image-mount></div><details class="world-map-tools" data-world-option="map"><summary>Private map &amp; markers</summary><p>Use a map when you want to add named location markers. Maps and markers remain private.</p><label class="workspace-field"><span>Map (PNG, JPEG, WebP · max 5 MB)</span><input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><div data-map class="workspace-map"></div><div data-marker-list></div></details></details>
   <details class="world-editor-section world-editor-private" data-world-option="connections"><summary>Connections (optional)</summary><p>Connect saved locations, factions, NPCs, chapters and encounters. Connections stay in your DM workspace.</p>${textarea('connections','Related places and people',record.data?.connections,20000,true)}<section data-workspace-links></section></details>
-  <details class="world-editor-section" data-world-option="options"><summary>Entry type &amp; summary (optional)</summary><label class="workspace-field"><span>Entry type</span><select data-record-field="category">${config.categories.map(category=>`<option ${record.data?.category===category?'selected':''}>${e(category)}</option>`).join('')}</select></label>${textarea('summary','Short summary',record.summary,1000)}</details>
+  <details class="world-editor-section" data-world-option="options"><summary>Entry type &amp; summary (optional)</summary>${categoryField(record)}${textarea('summary','Short summary',record.summary,1000)}</details>
   <details class="world-editor-section" data-world-option="print"><summary>Print options</summary><label class="workspace-field" data-private-print><span><input type="checkbox" data-print-private> Include private preparation, illustrations and maps in print</span></label></details>`;
  config.initialData=s=>({category:s.host.querySelector('[data-workspace-category]')?.value||'Location'});
  config.toolbar=toolbar;config.onListed=listed;config.hideNavigation=true;
  config.searchText=row=>[row.content,row.data?.connections].join(' ');
  config.help='Build your world, regions, locations, factions and lore. Keep player descriptions separate from DM preparation, then share discoveries when your party is ready.';
  config.extra=(_host,s)=>{
+  const select=s.host.querySelector('[data-record-field="category"]'),field=s.host.querySelector('[data-world-custom-field]'),input=field.querySelector('input'),option=select.querySelector('[data-world-custom-option]');
+  input.value=config.categories.includes(s.record.data?.category)?'':s.record.data?.category||'';
+  const syncCustom=()=>{
+   const custom=select.selectedOptions[0]===option;
+   field.hidden=!custom;input.disabled=!custom;input.required=custom;
+   input.setCustomValidity(custom&&!input.value.trim()?'Enter a custom category name.':'');
+   // Drafts and saves read the actual label from the existing category field.
+   if(custom)option.value=input.value.trim();
+  };
+  select.addEventListener('change',()=>{syncCustom();if(!field.hidden)input.focus();});
+  input.addEventListener('input',syncCustom);
+  input.addEventListener('invalid',()=>field.closest('details').open=true);
   if(s.record.revision){const index=s.rows.findIndex(row=>row.id===s.record.id);if(index>=0)s.rows[index]={...s.rows[index],...s.record};}
   W.renderList();entryState(null,s);
  };

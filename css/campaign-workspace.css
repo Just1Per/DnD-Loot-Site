@@ -48,6 +48,7 @@
 .campaign-workspace .workspace-list button{background:#fdfbf7;color:#5c1d1d;border-color:#c8b89a}
 .campaign-workspace textarea[name=summary]{min-height:65px}
 .world-category-shortcuts{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.world-category-shortcuts button{max-width:100%;overflow-wrap:anywhere}
 .world-category-shortcuts button[aria-pressed=true]{outline:2px solid #8a7355;outline-offset:2px}
 .world-category-shortcuts span{display:inline-block;min-width:1.2em;margin-left:4px}
 .world-archived-filter{display:flex;align-items:center;gap:6px}
