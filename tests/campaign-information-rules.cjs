@@ -30,6 +30,16 @@ const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-s
    await assertFails(sdk.getDocs(sdk.collection(env.unauthenticatedContext().firestore(),'campaigns/a/playerInformation')));
    await assertFails(stores.player.list('b'));
   });
+  await check('DM custom World categories publish as plain text without granting player editing or secret access',async()=>{
+   const input={...source.input,title:'The Old Faith',data:{...source.input.data,category:'Religion & traditions'}};
+   await workspace.save({...source,id:'faith',input});
+   await assertSucceeds(stores.dm.publish({campaignId:'a',id:'faith',sourceRevision:1,publishedRevision:0}));
+   const row=await assertSucceeds(stores.player.load('a','faith'));
+   assert.equal(row.category,'Religion & traditions');assert.equal(row.privateNotes,undefined);
+   await assertFails(sdk.getDoc(sdk.doc(db.player,'campaigns/a/worldEntries/faith')));
+   await assertFails(sdk.getDoc(sdk.doc(db.player,'campaigns/a/workspaceSecrets/world-faith')));
+   await assertFails(sdk.updateDoc(sdk.doc(db.player,'campaigns/a/playerInformation/faith'),{category:'My category'}));
+  });
   await check('Player writes, global admin privileges and cross-campaign publication are denied',async()=>{
    for(const uid of ['player','revoked','admin','outsider'])await assertFails(stores[uid].publish({...publish,publishedRevision:1}));
    await assertFails(stores.dm.publish({...publish,campaignId:'b'}));
@@ -45,7 +55,7 @@ const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-s
   });
   await check('Rules reject injected secrets, mismatched source text and unsupported extra fields',async()=>{
    const row=await stores.dm.load('a','north');delete row.id;
-   for(const change of [{privateNotes:'Secret'},{imagePath:'private-map'},{content:source.input.privateNotes},{sourceRevision:1}])await assertFails(sdk.setDoc(sdk.doc(db.dm,'campaigns/a/playerInformation/north'),{...row,revision:3,...change}));
+   for(const change of [{privateNotes:'Secret'},{imagePath:'private-map'},{content:source.input.privateNotes},{category:'Different category'},{sourceRevision:1}])await assertFails(sdk.setDoc(sdk.doc(db.dm,'campaigns/a/playerInformation/north'),{...row,revision:3,...change}));
   });
   await check('Archive atomically unpublishes; restoring never reveals the entry automatically',async()=>{
    await assertFails(sdk.updateDoc(sdk.doc(db.dm,'campaigns/a/worldEntries/north'),{archived:true,revision:3}));
