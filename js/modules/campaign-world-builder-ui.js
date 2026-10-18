@@ -93,7 +93,7 @@
   refreshSharing(s);
  }
  const textarea=(name,label,value,max=20000,field=false)=>`<label class="workspace-field"><span>${e(label)}</span><textarea ${field?`data-record-field="${name}"`:`name="${name}"`} maxlength="${max}">${e(value)}</textarea></label>`;
- const categoryField=record=>`<label class="workspace-field"><span>Entry type</span><select data-record-field="category">${categories(W.session).map(value=>`<option value="${e(value)}" ${record.data?.category===value?'selected':''}>${e(value)}</option>`).join('')}<option value="" data-world-custom-option>Custom…</option></select></label><label class="workspace-field" data-world-custom-field hidden><span>Custom category name</span><input name="worldCustomCategory" maxlength="80" placeholder="For example, Religion or Trade route" aria-describedby="worldCustomCategoryHelp" disabled><small id="worldCustomCategoryHelp">Use 1–80 characters. Saved categories can be reused for other entries.</small></label>`;
+ const categoryField=record=>`<label class="workspace-field"><span>Entry type</span><select data-record-field="category">${categories(W.session).map(value=>`<option value="${e(value)}" ${record.data?.category===value?'selected':''}>${e(value)}</option>`).join('')}<option value="" data-world-custom-option>Custom…</option></select></label><label class="workspace-field" data-world-custom-field hidden><span>Custom category name</span><input name="worldCustomCategory" maxlength="80" placeholder="For example, Religion or Trade route" aria-describedby="worldCustomCategoryHelp" disabled><small id="worldCustomCategoryHelp">Use 1–80 characters. Save the entry to add this type beside World, Region, Location, Faction and Lore. You can then reuse it for other entries.</small></label>`;
  config.editorBody=record=>`<p class="world-visibility-badge" data-world-entry-state role="status"></p>
   <section class="world-editor-section world-entry-basics" data-world-basics><h3>${record.revision?'Describe this place or entry':'Add a place to your world'}</h3><p>Give it a name and describe the area. Saving keeps it private until you choose to share it.</p><label class="workspace-field"><span>Name</span><input name="title" required maxlength="160" placeholder="For example, Hollow Harbor" value="${e(record.title)}"></label>${textarea('content','Description',record.content)}</section>
   <details class="world-editor-section" data-world-option="sharing"><summary>Share with players</summary><p>Share the saved description when the party discovers it. Private notes, maps and illustrations stay with the DM.</p><div data-extra-editor></div></details>
@@ -107,6 +107,7 @@
  config.searchText=row=>[row.content,row.data?.connections].join(' ');
  config.help='Build your world, regions, locations, factions and lore. Keep player descriptions separate from DM preparation, then share discoveries when your party is ready.';
  config.extra=(_host,s)=>{
+  s.worldSavedCategory=s.record.revision?s.record.data?.category:null;
   const select=s.host.querySelector('[data-record-field="category"]'),field=s.host.querySelector('[data-world-custom-field]'),input=field.querySelector('input'),option=select.querySelector('[data-world-custom-option]');
   input.value=config.categories.includes(s.record.data?.category)?'':s.record.data?.category||'';
   const syncCustom=()=>{
@@ -122,7 +123,24 @@
   if(s.record.revision){const index=s.rows.findIndex(row=>row.id===s.record.id);if(index>=0)s.rows[index]={...s.rows[index],...s.record};}
   W.renderList();entryState(null,s);
  };
- config.onEdit=entryState;config.onSaved=entryState;
+ config.onEdit=entryState;
+ config.onSaved=(_host,s)=>{
+  if(!current(s))return;
+  const category=s.record.data?.category;
+  if(category&&category!==s.worldSavedCategory){
+   // The previous type/search/visibility filter can otherwise hide a successfully saved entry.
+   s.host.querySelector('[data-workspace-category]').value=category;
+   const search=s.host.querySelector('[data-workspace-search]'),query=search.value.toLowerCase();
+   const searchable=[s.record.title,s.record.summary,category,config.searchText(s.record)].join(' ').toLowerCase();
+   if(query&&!searchable.includes(query))search.value='';
+   s.host.querySelector('[data-workspace-archived]').checked=!!s.record.archived;
+   const visible=s.host.querySelector('[data-world-visibility]');
+   if(visible.value&&visible.value!==visibility(s,s.record))visible.value='';
+   s.worldSavedCategory=category;W.renderList();
+  }
+  entryState(null,s);
+ };
+ config.savedMessage=s=>'All changes saved. Entry type: '+(s.record.data?.category||'Location')+'.';
  config.onPublicationChange=(s,published)=>{
   if(!current(s))return;
   s.worldKnown.add(s.record.id);if(published)s.worldPublications.set(s.record.id,published);else s.worldPublications.delete(s.record.id);

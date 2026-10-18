@@ -8,6 +8,10 @@ Creation starts with **Add place → Name → Description → Save**. New entrie
 
 Category shortcuts show counts for active entries, or archived entries when **Show archived** is selected. They synchronize with the sidebar category filter. Search matches titles, summaries, descriptions and related-place/person text. Filtering keeps the selected editor and its unsaved text open.
 
+Choose **Custom…** under **Entry type & summary → Entry type**, enter a name such as **Religion**, and save the entry. The type is stored on that campaign's world entry and appears beside World, Region, Location, Faction and Lore as a reusable category shortcut and sidebar filter. No separate collection or manual move is needed. Unsaved type names are not created as empty categories.
+
+After creating an entry or changing its saved type, the list selects that type. A search or visibility filter is cleared only if it would hide that saved entry; the active/archived view follows the saved entry for this type change. Saving ordinary edits keeps the existing browsing filters. The save confirmation names the entry type. This fixes creating Religion while World was selected: the record previously saved correctly but remained hidden by the old World filter. Category choices are rebuilt from saved campaign entries after reopening and stay scoped to that campaign.
+
 Player-visibility badges and filters distinguish **Private draft**, **Shared with players** and **Versions differ**. “Versions differ” compares the saved entry revision with the explicitly shared snapshot revision; it does not automatically publish an update. New entries and unsaved edits have a separate editor status. Archived entries show **Archived** and bypass the visibility filter.
 
 Sharing metadata is read from `playerInformation`, with live updates when Firebase subscriptions are available. If that metadata cannot be read, badges show **Sharing unknown** and visibility filtering is disabled. Refresh retries without replacing the editor. Workspace navigation and campaign/account changes invalidate pending reads and subscriptions, and queued callbacks after a permission failure cannot restore stale metadata.
