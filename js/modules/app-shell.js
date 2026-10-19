@@ -1,12 +1,12 @@
 'use strict';
 // Navigation groups existing, independently authorized routes. No campaign data lives here.
 var AppShell=(()=>{
- const journal=['campaign-information','campaign-npcs','campaign-chapters'];
+ const journal=['campaign-journal','campaign-information','campaign-npcs','campaign-chapters'];
  const dm=['dm','dm-world','dm-creatures','dm-chapters','dm-party','dm-one-shots'];
- let route='campaign-home',lastJournal='campaign-information';
- const titles={'campaign-home':'Home','campaign-information':'Campaign guide','campaign-npcs':'Known NPCs','campaign-chapters':'Completed chapters',player:'My Character','character-sheet':'Character sheet','character-loot':'Gear & Loot','character-wishlist':'Wishlist',library:'Library',dm:'DM Workspace','dm-world':'World','dm-creatures':'Creatures & NPCs','dm-chapters':'Chapters','dm-party':'Party & Loot','dm-settings':'Campaign settings','dm-one-shots':'One Shots','player-adventures':'My One Shots'};
+ let route='campaign-home';
+ const titles={'campaign-journal':'Party journal','campaign-home':'Home','campaign-information':'Campaign guide','campaign-npcs':'Known NPCs','campaign-chapters':'Completed chapters',player:'My Character','character-sheet':'Character sheet','character-loot':'Gear & Loot','character-wishlist':'Wishlist',library:'Library',dm:'DM Workspace','dm-world':'World','dm-creatures':'Creatures & NPCs','dm-chapters':'Chapters','dm-party':'Party & Loot','dm-settings':'Campaign settings','dm-one-shots':'One Shots','player-adventures':'My One Shots'};
  function primary(tab){return journal.includes(tab)?'journal':['player','character-sheet','character-loot','character-wishlist','player-adventures'].includes(tab)?'player':dm.includes(tab)?'dm':tab;}
- function resolve(tab){return tab==='journal'?lastJournal:tab;}
+ function resolve(tab){return tab==='journal'?'campaign-journal':tab;}
  function ensure(){
   const main=document.getElementById('mainApp'),navigation=document.getElementById('campaignSectionNavigation');if(!main||!navigation)return;
   const group=navigation.querySelector('[data-section-group="dm"]');
@@ -32,7 +32,7 @@ var AppShell=(()=>{
   document.querySelectorAll('#dmToolsPanel [data-dm-settings-card]').forEach(card=>target.append(card));
  }
  function update(tab){
-  ensure();route=tab;if(journal.includes(tab))lastJournal=tab;
+  ensure();route=tab;
   const selected=primary(tab),group=journal.includes(tab)?'journal':['player','character-sheet','character-loot','character-wishlist','player-adventures'].includes(tab)?'character':dm.includes(tab)?'dm':null;
   const secondary=document.getElementById('campaignSectionNavigation');
   if(secondary){secondary.hidden=!group;secondary.setAttribute('aria-label',group==='dm'?'DM workspace sections':group==='journal'?'Journal sections':'Character sections');
