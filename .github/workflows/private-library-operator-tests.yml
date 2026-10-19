@@ -1,0 +1,52 @@
+name: Private library operator checks
+on:
+  pull_request:
+    paths:
+      - 'Start-ItemMigration.ps1'
+      - 'scripts/**'
+      - 'tests/private-output.cjs'
+      - 'tests/authorized-library-migration.cjs'
+      - 'tests/private-item-library.cjs'
+      - 'tests/item-catalogue-migration.cjs'
+      - '.github/workflows/private-library-operator-tests.yml'
+permissions:
+  contents: read
+jobs:
+  private-output:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Preserve exact source and report bytes on Windows
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Private output ACL/mode checks and immutable migration safeguards
+        shell: node {0}
+        run: |
+          const {spawnSync}=require('node:child_process');
+          const result=spawnSync(process.execPath,['--test','--test-reporter=tap','tests/private-output.cjs','tests/authorized-library-migration.cjs','tests/private-item-library.cjs','tests/item-catalogue-migration.cjs','tests/item-catalogue-decisions.cjs'],{encoding:'utf8',maxBuffer:10*1024*1024});
+          process.stdout.write(result.stdout||'');process.stderr.write(result.stderr||'');
+          if(result.status!==0){
+            const failures=(result.stdout||'').split(/(?=^not ok )/m).filter(part=>part.startsWith('not ok ')).map(part=>part.split(/(?=^# Subtest:|^ok |^1\.\.)/m)[0]).join('\n');
+            const detail=(String(result.error||'')+'\n'+failures+'\n'+result.stderr).slice(0,14000).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A');
+            console.error('::error title=Private operator test output::'+detail);process.exit(1);
+          }
+      - name: Verify packaged code and tests independently from the checkout
+        shell: python
+        run: |
+          import hashlib, pathlib, subprocess, tempfile, zipfile
+          package=pathlib.Path('scripts/operator-packages/campaignatlas-windows-library-migration-operator.zip')
+          checksum=package.with_suffix('.sha256').read_text().split()[0]
+          assert hashlib.sha256(package.read_bytes()).hexdigest()==checksum
+          with tempfile.TemporaryDirectory(prefix='campaignatlas-package-') as directory:
+              with zipfile.ZipFile(package) as bundle:
+                  for name in bundle.namelist():
+                      assert not name.startswith('/') and '..' not in pathlib.PurePosixPath(name).parts
+                  bundle.extractall(directory)
+              root=pathlib.Path(directory)/'campaignatlas-windows-library-migration-operator'
+              subprocess.run(['node','--test','tests/private-output.cjs','tests/authorized-library-migration.cjs','tests/private-item-library.cjs','tests/item-catalogue-migration.cjs'],cwd=root,check=True)
