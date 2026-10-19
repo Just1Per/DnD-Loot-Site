@@ -3,6 +3,7 @@ param(
     [ValidateSet('Prepare','Check','Apply')][string]$Action='Prepare',
     [string]$CampaignId,
     [string]$OwnerId,
+    [string]$ArchiveBucket,
     [string]$PlanDirectory,
     [string]$BackupDirectory,
     [string]$ConfirmPlan
@@ -14,7 +15,7 @@ if ($Action -eq 'Prepare') {
     if ($BackupDirectory -or $ConfirmPlan) { throw 'BackupDirectory and ConfirmPlan are not preparation options.' }
 } else {
     if (-not $PlanDirectory) { throw 'Supply -PlanDirectory from the completed preparation.' }
-    if ($CampaignId -or $OwnerId) { throw 'Check/apply use the identity already bound to the saved plan.' }
+    if ($CampaignId -or $OwnerId -or $ArchiveBucket) { throw 'Check/apply use the identity already bound to the saved plan.' }
     if ($Action -eq 'Apply' -and $ConfirmPlan -notmatch '^[a-f0-9]{64}$') { throw 'Apply requires -ConfirmPlan with the exact printed SHA-256.' }
     if ($Action -eq 'Check' -and $ConfirmPlan) { throw 'Check does not accept production confirmation.' }
 }
@@ -30,6 +31,7 @@ try {
     }
     $nodeArgs=@((Join-Path $PSScriptRoot 'scripts/prepare-authorized-library-migration.mjs'),$Action.ToLowerInvariant())
     if ($CampaignId) { $nodeArgs+=@('--campaign',$CampaignId) }
+    if ($ArchiveBucket) { $nodeArgs+=@('--archive-bucket',$ArchiveBucket) }
     if ($OwnerId) { $nodeArgs+=@('--owner',$OwnerId) }
     if ($PlanDirectory) { $nodeArgs+=@('--directory',$PlanDirectory) }
     if ($BackupDirectory) { $nodeArgs+=@('--backup-dir',$BackupDirectory) }

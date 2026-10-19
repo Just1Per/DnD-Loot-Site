@@ -1,3 +1,4 @@
+import {assertArchiveStorage} from './archive-storage.mjs';
 import {createPrivateDirectory,assertPrivateDirectory,privateOutputBase} from './private-output.mjs';
 /** Adopt the owner's delegated recommendations, then bind them to fresh data. */
 import fs from 'node:fs/promises';
@@ -13,7 +14,7 @@ const check=(condition,message)=>{if(!condition)throw Error(message);};
 const root=fileURLToPath(new URL('..',import.meta.url));
 const project='dnd-loot-site',bucket='dnd-loot-site.firebasestorage.app';
 const read=async file=>JSON.parse(await fs.readFile(file,'utf8'));
-export function authorizedLibraryPlan(proposals,snapshot,authorization,{ownerId,now=new Date().toISOString()}={}){
+export function authorizedLibraryPlan(proposals,snapshot,authorization,{ownerId,storage,now=new Date().toISOString()}={}){
  check(authorization?.format===1&&authorization.method==='owner-delegated-recommendations'&&authorization.destination==='owner-private-library','Explicit owner delegation to the private library is required');
  check(authorization.proposalSha256===digest(stableJson(proposals))&&authorization.referenceRevision===proposals.referenceRevision,'Recommendations changed after the recorded delegation');
  const counts={total:proposals.decisions.length,publish:proposals.decisions.filter(row=>row.action==='publish').length,retire:proposals.decisions.filter(row=>row.action==='retire').length};
@@ -28,17 +29,17 @@ export function authorizedLibraryPlan(proposals,snapshot,authorization,{ownerId,
  worksheet.authorization={method:authorization.method,recordedAt:authorization.recordedAt,source:authorization.source,instruction:authorization.instruction,proposalSha256:authorization.proposalSha256};
  worksheet.note='Owner delegated adoption of these exact recommendations. Approval is based on that delegation, not an assertion that the owner individually reviewed each item. Originals and illustrations are privately preserved before shared cleanup.';
  for(const decision of worksheet.decisions){decision.approved=true;decision.reviewedBy=authorization.reviewedBy;decision.reviewedAt=now;}
- const plan=buildMigrationPlan(snapshot,worksheet,{project,libraryOwnerId:ownerId});
- return {manifest:worksheet,plan,summary:{...counts,approved:counts.total,destination:'owner-private-library',planSha256:plan.planSha256,productionWrites:0}};
+ const plan=buildMigrationPlan(snapshot,worksheet,{project,libraryOwnerId:ownerId,...storage?{storage}:{}});
+ return {manifest:worksheet,plan,summary:{...counts,approved:counts.total,...storage?{storage}:{},destination:'owner-private-library',planSha256:plan.planSha256,productionWrites:0}};
 }
-export async function prepareAuthorizedRun(proposals,authorization,port,{ownerId,campaignId,save,now}={}){
+export async function prepareAuthorizedRun(proposals,authorization,port,{ownerId,campaignId,storage,save,now}={}){
  check((!!ownerId)!=(!!campaignId),'Specify either the library owner UID or an existing own campaign to identify its owner');
  if(campaignId)ownerId=(await port.inspectTarget(campaignId)).ownerId;
  check(typeof ownerId==='string'&&ownerId&&!ownerId.includes('/'),'The exact library owner UID is unavailable');
  try{
   const snapshot=await captureCatalogue(port,project);
   await save('root-snapshot.json',snapshot);
-  const prepared=authorizedLibraryPlan(proposals,snapshot,authorization,{ownerId,now});
+  const prepared=authorizedLibraryPlan(proposals,snapshot,authorization,{ownerId,storage,now});
   await save('authorized-decisions.json',prepared.manifest);
   await save('library-migration-plan.json',prepared.plan);
   // Existing target, inventory, source-revision, IAM and artwork checks stay intact.
@@ -52,7 +53,7 @@ export async function prepareAuthorizedRun(proposals,authorization,port,{ownerId
 }
 async function main(){
  const [mode,...args]=process.argv.slice(2),options={};
- const allowed=mode==='prepare'?['--owner','--campaign','--directory','--source-directory']:['--directory','--backup-dir','--confirm-plan'];
+ const allowed=mode==='prepare'?['--owner','--campaign','--directory','--source-directory','--archive-bucket']:['--directory','--backup-dir','--confirm-plan'];
  check(['prepare','check','apply'].includes(mode),'Use prepare, check or apply');
  for(let i=0;i<args.length;i+=2){check(allowed.includes(args[i])&&args[i+1]&&!args[i+1].startsWith('--')&&!options[args[i]],'Invalid or duplicate named option');options[args[i]]=args[i+1];}
  check(!process.env.GITHUB_ACTIONS,'Private production preparation is an owner-run local action, never public CI');
@@ -70,8 +71,9 @@ async function main(){
   console.error('Private output directory: '+directory);
   await assertPrivateDirectory(directory);
   await assertPrivateOutput(path.join(directory,'root-snapshot.json'));
-  const port=await createMigrationPort({project,bucket,backupDirectory:path.join(directory,'private-backup')});
-  const result=await prepareAuthorizedRun(proposals,authorization,port,{ownerId:options['--owner'],campaignId:options['--campaign'],save:(name,data)=>writePrivateFile(path.join(directory,name),data)});
+  const storage=assertArchiveStorage({sourceBucket:bucket,archiveBucket:options['--archive-bucket']||'dnd-loot-site-private-item-library'});
+  const port=await createMigrationPort({project,bucket,archiveBucket:storage.archiveBucket,backupDirectory:path.join(directory,'private-backup')});
+  const result=await prepareAuthorizedRun(proposals,authorization,port,{ownerId:options['--owner'],campaignId:options['--campaign'],storage,save:(name,data)=>writePrivateFile(path.join(directory,name),data)});
   console.log(JSON.stringify({...result.status,directory},null,2));return;
  }
  check(options['--directory'],'Specify the private plan directory');
@@ -81,7 +83,8 @@ async function main(){
  const plan=assertPlan(await read(path.join(directory,'library-migration-plan.json')));
  check(plan.project===project&&plan.destination?.type==='private-library','Only the pinned production private-library plan is accepted');
  const backupDirectory=path.resolve(options['--backup-dir']||path.join(directory,'private-backup'));
- const port=await createMigrationPort({project,bucket,backupDirectory});
+ check(plan.storage,'Prepare a fresh plan that pins the separate archive bucket; old plans cannot be applied by this launcher');
+ const port=await createMigrationPort({project,bucket,archiveBucket:plan.storage.archiveBucket,backupDirectory});
  console.log(JSON.stringify(await migrateCatalogue(plan,port,{apply:mode==='apply',confirmPlanSha256:options['--confirm-plan']}),null,2));
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{console.error(error.message);process.exitCode=1;});

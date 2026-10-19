@@ -6,6 +6,8 @@ Extract the new ZIP to a separate folder. Open PowerShell in the folder containi
 
 ## First run: read-only preparation
 
+The separate archive must exist first: follow [the archive setup instructions](separate-private-archive.md). This changes only the new bucket; the preparation below remains read-only.
+
 If Application Default Credentials have not been configured for your authorized Google account, sign in once:
 
 ```powershell
@@ -48,12 +50,8 @@ The tool rejects extra allow grants, foreign owners, malformed ACL results, repa
 
 Download the code package anywhere convenient, including Desktop if necessary; private output uses the separate local protected location. A package directory and a private output directory serve different purposes. Keep durable backups in a protected location you retain; do not delete the output folder after applying.
 
-## If preparation reports “Private archive requires uniform bucket-level access”
+## Separate private archive setup
 
-Do not enable uniform access or apply the migration yet. Inspect the existing bucket using the same local Application Default Credentials:
+If preparation reports “Private archive requires uniform bucket-level access”, do not change the existing bucket. Follow [the separate archive instructions](separate-private-archive.md) to create a new private destination and prepare a fresh plan. The updated launcher defaults to `dnd-loot-site-private-item-library`; `-ArchiveBucket NAME` selects a different new bucket during Prepare. Old plans without source/destination bucket bindings are rejected by Check/Apply.
 
-```powershell
-node .\scripts\audit-storage-access.mjs
-```
-
-This command only reads bucket metadata, bucket IAM and all current object ACL/token metadata with pagination. It prints aggregate counts, not object names, email addresses, URLs, tokens or file contents. Copy the complete printed JSON into the support chat. It writes no local capture or production data and changes no permissions. The existing archive privacy gate remains in place. A complete scan is evidence for planning, not proof that changing access is safe: inherited IAM, Firebase rules and application dependencies require separate consideration. If the command fails, share its bounded error rather than raw debug logs.
+The read-only diagnostic remains available as `node .\scripts\audit-storage-access.mjs`. It prints aggregate counts without object names, tokens or identities and changes no permissions.

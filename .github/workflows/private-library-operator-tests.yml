@@ -6,6 +6,7 @@ on:
       - 'scripts/**'
       - 'tests/private-output.cjs'
       - 'tests/storage-access-audit.cjs'
+      - 'tests/separate-archive-storage.cjs'
       - 'tests/authorized-library-migration.cjs'
       - 'tests/private-item-library.cjs'
       - 'tests/item-catalogue-migration.cjs'
@@ -30,7 +31,7 @@ jobs:
         shell: node {0}
         run: |
           const {spawnSync}=require('node:child_process');
-          const result=spawnSync(process.execPath,['--test','--test-reporter=tap','tests/private-output.cjs','tests/storage-access-audit.cjs','tests/authorized-library-migration.cjs','tests/private-item-library.cjs','tests/item-catalogue-migration.cjs','tests/item-catalogue-decisions.cjs'],{encoding:'utf8',maxBuffer:10*1024*1024});
+          const result=spawnSync(process.execPath,['--test','--test-reporter=tap','tests/private-output.cjs','tests/storage-access-audit.cjs','tests/separate-archive-storage.cjs','tests/authorized-library-migration.cjs','tests/private-item-library.cjs','tests/item-catalogue-migration.cjs','tests/item-catalogue-decisions.cjs'],{encoding:'utf8',maxBuffer:10*1024*1024});
           process.stdout.write(result.stdout||'');process.stderr.write(result.stderr||'');
           if(result.status!==0){
             const failures=(result.stdout||'').split(/(?=^not ok )/m).filter(part=>part.startsWith('not ok ')).map(part=>part.split(/(?=^# Subtest:|^ok |^1\.\.)/m)[0]).join('\n');
@@ -50,4 +51,4 @@ jobs:
                       assert not name.startswith('/') and '..' not in pathlib.PurePosixPath(name).parts
                   bundle.extractall(directory)
               root=pathlib.Path(directory)/'campaignatlas-windows-library-migration-operator'
-              subprocess.run(['node','--test','tests/private-output.cjs','tests/storage-access-audit.cjs','tests/authorized-library-migration.cjs','tests/private-item-library.cjs','tests/item-catalogue-migration.cjs'],cwd=root,check=True)
+              subprocess.run(['node','--test','tests/private-output.cjs','tests/storage-access-audit.cjs','tests/separate-archive-storage.cjs','tests/authorized-library-migration.cjs','tests/private-item-library.cjs','tests/item-catalogue-migration.cjs'],cwd=root,check=True)

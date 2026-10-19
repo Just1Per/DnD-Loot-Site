@@ -4,6 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {digest} from './build-srd-item-hashes.mjs';
 import {stableJson,documentsToRows,writePrivateFile,decodeValue} from './audit-item-catalogue.mjs';
+import {assertArchiveStorage} from './archive-storage.mjs';
 import {assertArtworkPolicy} from './item-artwork-policy.mjs';
 
 export const POLICY='approved-v1';
@@ -44,7 +45,7 @@ function reviewedPayload(decision,source,artworkPolicy){
   rights:{...rights,reviewedBy:decision.reviewedBy,reviewedAt:decision.reviewedAt}};
 }
 export const isLibraryPlan=plan=>plan.destination?.type==='private-library';
-export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaignName,ownerId,libraryOwnerId}={}){
+export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaignName,ownerId,libraryOwnerId,storage}={}){
  check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(project||''),'Invalid project');
  check(snapshot.project===project&&snapshot.collection==='items','Snapshot must identify the same project and root items collection');
  check(snapshot.completeRootCatalogue!==false,'A reviewed-only public subset cannot be used as a migration snapshot');
@@ -69,7 +70,8 @@ export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaig
   return {id:row.id,sourceSha256:decision.sourceSha256,source:document,action:decision.action,approved:!!approved,
    archiveId:'catalogue-'+digest(row.id).slice(0,32),replacement:replacement?encodeFields(replacement):null};
  });
- const plan={format:1,project,...(library?{ownerId,destination:{type:'private-library',ownerId}}:{campaignId,campaignName,ownerId}),manifestSha256:digest(stableJson(manifest)),
+ if(storage)assertArchiveStorage(storage);
+ const plan={format:1,project,...storage?{storage}:{},...(library?{ownerId,destination:{type:'private-library',ownerId}}:{campaignId,campaignName,ownerId}),manifestSha256:digest(stableJson(manifest)),
   originalCatalogueMetadata:snapshot.documents.filter(document=>document.name.split('/').at(-1)==='catalog_meta'),
   artworkPolicy:{...artworkPolicy},retireLegacyArtwork:manifest.retireLegacyArtwork===true,allApproved:items.every(item=>item.approved),items};
  return {...plan,planSha256:digest(stableJson(plan))};
@@ -77,6 +79,7 @@ export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaig
 export function assertPlan(plan){
  const {planSha256,...body}=plan;
  check(sha(planSha256)&&planSha256===digest(stableJson(body)),'Plan digest mismatch');
+ if(plan.storage)assertArchiveStorage(plan.storage);
  // Revalidate the stored sources, not just the plan checksum.
  check(Array.isArray(plan.items)&&plan.items.length>0&&new Set(plan.items.map(item=>item.id)).size===plan.items.length,'Invalid plan items');
  check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(plan.project||'')&&id(plan.ownerId),'Invalid plan target');
@@ -100,11 +103,11 @@ const cleanFields=['name','description','category','rarity','source','attunement
 export function privateDocuments(plan,item,assets=[]){
  const marker={sourceId:item.id,sourceSha256:item.sourceSha256,manifestSha256:plan.manifestSha256};
  const fields=Object.fromEntries(cleanFields.filter(key=>item.source.fields[key]!==undefined).map(key=>[key,item.source.fields[key]]));
- const archivedImage=assets[0]?{archivedImage:{path:assets[0].privatePath,sha256:assets[0].sha256}}:{};
+ const archivedImage=assets[0]?{archivedImage:{path:assets[0].privatePath,sha256:assets[0].sha256,...assets[0].bucket?{bucket:assets[0].bucket}:{}}}:{};
  const copy={...fields,...encodeFields({...isLibraryPlan(plan)?{ownerId:plan.ownerId,recordType:'archive',reuseStatus:'archive-only'}:{campaignId:plan.campaignId},rootItemId:item.id,visible:false,highlighted:false,lootMode:'dm',imageUrl:'',imageBaseId:'',catalogueArchive:marker,...archivedImage})};
  const archive=encodeFields({...marker,originalUpdateTime:item.source.updateTime});
  archive.original={mapValue:{fields:item.source.fields}};
- archive.assets=encode(assets.map(asset=>({sourcePath:asset.sourcePath,privatePath:asset.privatePath,sha256:asset.sha256,generation:asset.generation})));
+ archive.assets=encode(assets.map(asset=>({sourcePath:asset.sourcePath,privatePath:asset.privatePath,sha256:asset.sha256,generation:asset.generation,...asset.bucket?{bucket:asset.bucket}:{}})));
  for(const value of [copy,archive])check(Buffer.byteLength(JSON.stringify(value))<700000,'Private record is too large; use a separate durable export');
  let template;
  if(isLibraryPlan(plan)&&item.action==='publish'){
@@ -177,10 +180,10 @@ async function main(){
  }
  check(['check','apply'].includes(mode),'Use plan, check or apply');
  check(!process.env.GITHUB_ACTIONS,'Production migration is a local operator action, never a public CI job');
- const allowed=['--plan','--bucket','--backup-dir','--confirm-plan'];check(Object.keys(options).every(key=>allowed.includes(key)),'Unknown migration option');
+ const allowed=['--plan','--bucket','--archive-bucket','--backup-dir','--confirm-plan'];check(Object.keys(options).every(key=>allowed.includes(key)),'Unknown migration option');
  const plan=assertPlan(JSON.parse(await fs.readFile(options['--plan'],'utf8')));
  const {createMigrationPort}=await import('./item-catalogue-migration-firebase.mjs');
- const port=await createMigrationPort({project:plan.project,bucket:options['--bucket'],backupDirectory:options['--backup-dir']});
+ const port=await createMigrationPort({project:plan.project,bucket:options['--bucket'],archiveBucket:options['--archive-bucket']||plan.storage?.archiveBucket,backupDirectory:options['--backup-dir']});
  console.log(JSON.stringify(await migrateCatalogue(plan,port,{apply:mode==='apply',confirmPlanSha256:options['--confirm-plan']})));
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{console.error(error.message);process.exitCode=1});
