@@ -1,0 +1,17 @@
+/* Restore native-dialog positioning after the global margin reset.
+   Legacy .modal overlays intentionally continue to fill the viewport. */
+dialog:not(.modal){position:fixed;inset:0;margin:auto;box-sizing:border-box;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px)}
+dialog:not([open]){display:none!important}
+:where(dialog:not(.modal)){width:min(900px,calc(100vw - 32px));padding:24px;overflow:auto;background:var(--ui-paper,#fdfbf7);color:var(--ui-ink,#342d26);border:3px double var(--ui-border,#8a7355);border-radius:12px;box-shadow:0 20px 60px #21140555;font:16px/1.5 Georgia,serif;overflow-wrap:anywhere}
+:where(dialog)::backdrop{background:#21140580}
+/* Body-mounted popups do not inherit .character-sheet or #mainApp controls. */
+body>dialog :where(h2,h3){font-family:Cinzel,Georgia,serif;color:var(--ui-heading,#5c1d1d);line-height:1.4}
+body>dialog :where(header){display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+body>dialog :where(button){min-height:44px;padding:8px 14px;border:1px solid var(--ui-border,#8a7355);border-radius:5px;background:var(--ui-paper-soft,#f4efe6);color:var(--ui-heading,#5c1d1d);font:inherit;line-height:1.4;cursor:pointer;white-space:normal}
+body>dialog :where(button.btn-primary){background:var(--ui-primary,#9b1d1d);color:var(--ui-cream,#f5e6c8)}
+body>dialog :where(input[type=text],input[type=search],input[type=number],input[type=email],select,textarea){box-sizing:border-box;max-width:100%;min-width:0;padding:8px;border:1px solid var(--ui-border,#8a7355);border-radius:5px;background:var(--ui-paper,#fdfbf7);color:var(--ui-ink,#342d26);font:inherit}
+body>dialog :where(.sheet-field){display:flex;flex-direction:column;gap:5px;margin:10px 0}
+body>dialog :where(.sheet-help){color:var(--ui-muted,#655744);line-height:1.5}
+body>dialog :where(.sheet-rule-text){white-space:pre-wrap;line-height:1.65;margin:14px 0}
+dialog :where(button,input,select,textarea,a):focus-visible{outline:3px solid var(--ui-heading,#5c1d1d);outline-offset:3px}
+@media(max-width:580px){:where(dialog:not(.modal)){padding:16px}body>dialog :where(header){gap:8px}}

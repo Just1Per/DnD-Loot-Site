@@ -64,6 +64,8 @@ jobs:
             for(const excerpt of excerpts)console.error('::error title=Engine and DOM output::'+excerpt.slice(0,3500).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
           }
           NODE
+      - name: Centered native dialogs, spell details and unsaved-draft prompts
+        run: npm --prefix tests run test:dialogs
       - name: Non-Overview accessibility, keyboard, layout and print
         run: npm --prefix tests run test:ui
       - name: Refresh restoration and save before leaving character sheets
