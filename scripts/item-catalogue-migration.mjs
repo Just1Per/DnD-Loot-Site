@@ -43,13 +43,17 @@ function reviewedPayload(decision,source,artworkPolicy){
  return {...item,quote:'',properties:[],...images,imageBaseId:typeof original.imageBaseId==='string'&&original.imageBaseId?original.imageBaseId:source.name.split('/').at(-1),artwork:{status:'generated',origin:artworkPolicy.origin,evidence:artworkPolicy.evidence},catalogueStatus:POLICY,
   rights:{...rights,reviewedBy:decision.reviewedBy,reviewedAt:decision.reviewedAt}};
 }
-export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaignName,ownerId}={}){
+export const isLibraryPlan=plan=>plan.destination?.type==='private-library';
+export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaignName,ownerId,libraryOwnerId}={}){
  check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(project||''),'Invalid project');
  check(snapshot.project===project&&snapshot.collection==='items','Snapshot must identify the same project and root items collection');
  check(snapshot.completeRootCatalogue!==false,'A reviewed-only public subset cannot be used as a migration snapshot');
- check(id(campaignId)&&id(ownerId)&&typeof campaignName==='string'&&campaignName.trim(),'Pin target campaign ID, name and owner');
+ const library=libraryOwnerId!==undefined;
+ if(library){check(id(libraryOwnerId)&&!campaignId&&!campaignName&&!ownerId,'Specify only the exact library owner UID');ownerId=libraryOwnerId;}
+ else check(id(campaignId)&&id(ownerId)&&typeof campaignName==='string'&&campaignName.trim(),'Pin target campaign ID, name and owner');
  check(manifest?.format===1&&Array.isArray(manifest.decisions),'Expected a decision manifest');
- check(manifest.targetCampaignId===campaignId,'Manifest target campaign mismatch');
+ if(library)check(manifest.targetLibraryOwnerId===libraryOwnerId&&!manifest.targetCampaignId,'Manifest must explicitly target this private library, not a campaign');
+ else check(manifest.targetCampaignId===campaignId&&!manifest.targetLibraryOwnerId,'Manifest target campaign mismatch');
  const artworkPolicy=assertArtworkPolicy(manifest.artworkPolicy);
  const rows=documentsToRows(snapshot.documents).filter(row=>row.id!=='catalog_meta'&&row.data._type!=='catalog-meta');
  const decisions=new Map();for(const decision of manifest.decisions){check(id(decision.id)&&!decisions.has(decision.id),'Invalid or duplicate manifest ID');decisions.set(decision.id,decision);}
@@ -65,7 +69,7 @@ export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaig
   return {id:row.id,sourceSha256:decision.sourceSha256,source:document,action:decision.action,approved:!!approved,
    archiveId:'catalogue-'+digest(row.id).slice(0,32),replacement:replacement?encodeFields(replacement):null};
  });
- const plan={format:1,project,campaignId,campaignName,ownerId,manifestSha256:digest(stableJson(manifest)),
+ const plan={format:1,project,...(library?{ownerId,destination:{type:'private-library',ownerId}}:{campaignId,campaignName,ownerId}),manifestSha256:digest(stableJson(manifest)),
   originalCatalogueMetadata:snapshot.documents.filter(document=>document.name.split('/').at(-1)==='catalog_meta'),
   artworkPolicy:{...artworkPolicy},retireLegacyArtwork:manifest.retireLegacyArtwork===true,allApproved:items.every(item=>item.approved),items};
  return {...plan,planSha256:digest(stableJson(plan))};
@@ -75,7 +79,9 @@ export function assertPlan(plan){
  check(sha(planSha256)&&planSha256===digest(stableJson(body)),'Plan digest mismatch');
  // Revalidate the stored sources, not just the plan checksum.
  check(Array.isArray(plan.items)&&plan.items.length>0&&new Set(plan.items.map(item=>item.id)).size===plan.items.length,'Invalid plan items');
- check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(plan.project||'')&&id(plan.campaignId)&&id(plan.ownerId)&&typeof plan.campaignName==='string'&&plan.campaignName.trim(),'Invalid plan target');
+ check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(plan.project||'')&&id(plan.ownerId),'Invalid plan target');
+ if(isLibraryPlan(plan))check(plan.destination.ownerId===plan.ownerId&&!plan.campaignId&&!plan.campaignName&&Object.keys(plan.destination).every(key=>['type','ownerId'].includes(key)),'Invalid library destination');
+ else check(!plan.destination&&id(plan.campaignId)&&typeof plan.campaignName==='string'&&plan.campaignName.trim(),'Invalid plan target');
  check(plan.allApproved===plan.items.every(item=>item.approved===true),'Inconsistent plan approvals');
  assertArtworkPolicy(plan.artworkPolicy);
  for(const item of plan.items){
@@ -95,12 +101,18 @@ export function privateDocuments(plan,item,assets=[]){
  const marker={sourceId:item.id,sourceSha256:item.sourceSha256,manifestSha256:plan.manifestSha256};
  const fields=Object.fromEntries(cleanFields.filter(key=>item.source.fields[key]!==undefined).map(key=>[key,item.source.fields[key]]));
  const archivedImage=assets[0]?{archivedImage:{path:assets[0].privatePath,sha256:assets[0].sha256}}:{};
- const copy={...fields,...encodeFields({campaignId:plan.campaignId,rootItemId:item.id,visible:false,highlighted:false,lootMode:'dm',imageUrl:'',imageBaseId:'',catalogueArchive:marker,...archivedImage})};
+ const copy={...fields,...encodeFields({...isLibraryPlan(plan)?{ownerId:plan.ownerId,recordType:'archive',reuseStatus:'archive-only'}:{campaignId:plan.campaignId},rootItemId:item.id,visible:false,highlighted:false,lootMode:'dm',imageUrl:'',imageBaseId:'',catalogueArchive:marker,...archivedImage})};
  const archive=encodeFields({...marker,originalUpdateTime:item.source.updateTime});
  archive.original={mapValue:{fields:item.source.fields}};
  archive.assets=encode(assets.map(asset=>({sourcePath:asset.sourcePath,privatePath:asset.privatePath,sha256:asset.sha256,generation:asset.generation})));
  for(const value of [copy,archive])check(Buffer.byteLength(JSON.stringify(value))<700000,'Private record is too large; use a separate durable export');
- return {copy,archive};
+ let template;
+ if(isLibraryPlan(plan)&&item.action==='publish'){
+  const clean=Object.fromEntries(Object.entries(item.replacement).filter(([key])=>!['catalogueStatus','imageUrl','imageBaseId','thumbnailUrl','thumbUrl','artwork'].includes(key)));
+  template={...encodeFields({ownerId:plan.ownerId,reuseStatus:'reviewed-template',sourceSha256:item.sourceSha256,manifestSha256:plan.manifestSha256}),item:{mapValue:{fields:clean}},assets:archive.assets};
+ }
+ if(template)check(Buffer.byteLength(JSON.stringify(template))<700000,'Private template is too large');
+ return {copy,archive,...template?{template}:{}};
 }
 
 /** Port operations are injected, so dry-run and failure boundaries are testable. */
@@ -156,11 +168,11 @@ async function main(){
   console.log(JSON.stringify({documents:snapshot.documents.length,completeRootCatalogue:true,writes:0}));return;
  }
  if(mode==='plan'){
-  const allowed=['--snapshot','--manifest','--project','--campaign','--campaign-name','--owner','--output'];check(Object.keys(options).every(key=>allowed.includes(key)),'Unknown plan option');
+  const allowed=['--snapshot','--manifest','--project','--campaign','--campaign-name','--owner','--library-owner','--output'];check(Object.keys(options).every(key=>allowed.includes(key)),'Unknown plan option');
   const output=path.resolve(options['--output']||'.'),checkout=path.resolve(fileURLToPath(new URL('..',import.meta.url)));
   check(!output.startsWith(checkout+path.sep)&&output!==checkout,'Private plan must live outside the repository');
   const snapshot=JSON.parse(await fs.readFile(options['--snapshot'],'utf8')),manifest=JSON.parse(await fs.readFile(options['--manifest'],'utf8'));
-  const plan=buildMigrationPlan(snapshot,manifest,{project:options['--project'],campaignId:options['--campaign'],campaignName:options['--campaign-name'],ownerId:options['--owner']});
+  const plan=buildMigrationPlan(snapshot,manifest,{project:options['--project'],campaignId:options['--campaign'],campaignName:options['--campaign-name'],ownerId:options['--owner'],libraryOwnerId:options['--library-owner']});
   await writePrivateFile(options['--output'],plan);console.log(JSON.stringify({planSha256:plan.planSha256,items:plan.items.length,allApproved:plan.allApproved,writes:0}));return;
  }
  check(['check','apply'].includes(mode),'Use plan, check or apply');

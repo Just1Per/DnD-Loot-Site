@@ -20,7 +20,7 @@ function harness(){
    return {docs:[...docs].filter(([k])=>k.startsWith(prefix+'/')&&k.split('/').length===prefix.split('/').length+1).map(([k,v])=>({id:k.split('/').at(-1),data:()=>v}))};
   },
   query:x=>x,where:()=>null,limit:()=>null,orderBy:()=>null,startAfter:()=>null,documentId:()=>null,
-  runTransaction:async(_,work)=>work({get:async path=>snap(path)}),
+  runTransaction:async(_,work)=>{const pending=[];const result=await work({get:async path=>snap(path),set:(path,data)=>pending.push([path,structuredClone(data)])});for(const [path,data]of pending)docs.set(path,data);return result;},
   increment:n=>({__inc:n}),
   writeBatch:()=>{const updates=[];return {update:(path,patch)=>updates.push([path,patch]),commit:async()=>{for(const [path,patch] of updates){const old=docs.get(path)||{},next={...old};for(const [k,v] of Object.entries(patch))next[k]=v&&typeof v==='object'&&'__inc' in v?(Number(old[k])||0)+v.__inc:v;docs.set(path,next);}}}}
  };
@@ -38,4 +38,14 @@ test('DM bulk unlimited preserves stock counts while making all supplies unlimit
  const {docs,store}=harness();await store('vaultBulkItemPolicy',{campaignId:'a',mode:'unlimited'});
  assert.equal(docs.get('campaigns/a/supply/a').unlimited,true);assert.equal(docs.get('campaigns/a/supply/a').capacity,1);assert.equal(docs.get('campaigns/a/supply/a').claimed,0);assert.equal(docs.get('campaigns/a/supply/a').revision,2);
  assert.equal(docs.get('campaigns/a/supply/b').unlimited,true);assert.equal(docs.get('campaigns/a/supply/b').capacity,3);assert.equal(docs.get('campaigns/a/supply/b').claimed,1);assert.equal(docs.get('campaigns/a/supply/b').revision,5);
+});
+
+test('editing an imported private-library copy preserves its provenance and private artwork references',async()=>{
+ const {docs,store}=harness(),item=docs.get('campaigns/a/items/a');
+ item.librarySource={ownerId:'dm',entryId:'reviewed-template',sourceSha256:'a'.repeat(64),planSha256:'b'.repeat(64)};
+ item.libraryImages=[{path:'campaign-catalogue-images/a/'+'c'.repeat(64)+'/'+'d'.repeat(64),sha256:'d'.repeat(64)}];item.archivedImage=item.libraryImages[0];
+ const before=structuredClone(item);
+ await store('vaultSaveCampaignItem',{campaignId:'a',itemId:'a',stockRevision:1,item:{...item,name:'Edited independent copy'},remaining:1,visible:false});
+ const saved=docs.get('campaigns/a/items/a');assert.deepEqual(saved.librarySource,before.librarySource);assert.deepEqual(saved.libraryImages,before.libraryImages);assert.deepEqual(saved.archivedImage,before.archivedImage);assert.equal(saved.name,'Edited independent copy');
+ assert.equal([...docs.keys()].some(key=>key.startsWith('privateItemLibraries/')),false);
 });

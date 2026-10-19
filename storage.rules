@@ -67,6 +67,13 @@ service firebase.storage {
       allow delete: if isAdmin();
     }
 
+    // Personal item libraries are independent from campaign membership.
+    match /private-item-library-images/{ownerId}/{assetId}/{digest} {
+      allow read: if signedIn() && request.auth.uid == ownerId
+        && assetId.matches('[a-f0-9]{64}') && digest.matches('[a-f0-9]{64}');
+      allow write: if false;
+    }
+
     // Preserved originals are DM-only, with no client writes or token URLs.
     match /campaign-catalogue-images/{campaignId}/{assetId}/{digest} {
       allow read: if isCampaignDM(campaignId);
