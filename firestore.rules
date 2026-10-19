@@ -216,6 +216,14 @@ match /config/{configId} {
 // USERS
 // IMPORTANT: users may NEVER grant themselves roles/capabilities.
 // -----------------------------------------------------------------------
+// Private archives and reviewed reusable templates are operator-managed.
+// Global administrators and campaign DMs receive no access to another owner's library.
+match /privateItemLibraries/{ownerId}/{kind}/{entryId} {
+  allow read: if signedIn() && request.auth.uid == ownerId
+    && kind in ['records','originals','templates'];
+  allow write: if false;
+}
+
 match /users/{userId} {
   allow read: if isSelf(userId) || isAdmin();
 

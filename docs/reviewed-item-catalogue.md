@@ -1,5 +1,7 @@
 # Reviewed shared items and private preservation
 
+The owner-private library is now an alternative to campaign-bound preservation. For the new workflow, follow [the private item library guide](private-item-library.md): explicitly target an owner UID, rebuild the plan and keep original archives separate from reviewed reusable templates. Existing campaign-target plans are not automatically redirected, and existing campaign items are not relocated.
+
 The review report is in [the Danish item-by-item report](reports/item-catalogue-review-2026-10-16.md). Its 331 SRD concept candidates, 22 rewrite/permission cases and 306 current editions to withhold are proposals, not an approved production allowlist. No original publisher descriptions or tokenized artwork URLs are included in that report. A licensed replacement is different from preserving the existing book version. SRD 5.1/2014 and SRD 5.2/2024 candidates must be selected deliberately; do not silently change character mechanics or editions.
 
 ## Shared catalogue behavior
