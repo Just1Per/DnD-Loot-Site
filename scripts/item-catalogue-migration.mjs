@@ -134,7 +134,7 @@ export async function migrateCatalogue(plan,port,{apply=false,confirmPlanSha256=
   check(source&&source.updateTime===item.source.updateTime&&fieldsHash(source.fields)===item.sourceSha256,'Source changed after review: '+item.id);
  }
  const assets=await port.inspectArtwork(plan);
- const summary={items:plan.items.length,publish:plan.items.filter(item=>item.action==='publish').length,retire:plan.items.filter(item=>item.action==='retire').length,legacyArtwork:assets.length,unresolvedArtwork:assets.unresolved?.length||0,writes:0,dryRun:!apply,allApproved:plan.allApproved};
+ const summary={items:plan.items.length,publish:plan.items.filter(item=>item.action==='publish').length,retire:plan.items.filter(item=>item.action==='retire').length,legacyArtwork:assets.length,unresolvedArtwork:assets.unresolved?.length||0,...assets.diagnostics?{artworkResolution:assets.diagnostics}:{},writes:0,dryRun:!apply,allApproved:plan.allApproved};
  if(!apply)return summary;
  // Backup includes every original document and legacy object before any database write.
  await port.backup(plan,assets);

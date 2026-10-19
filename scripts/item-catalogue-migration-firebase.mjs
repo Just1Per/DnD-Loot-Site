@@ -99,13 +99,15 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
  function itemAssetPaths(item,{explicitOnly=false}={}){
   const data=documentsToRows([item.source])[0].data;
   const names=new Set();
-  for(const key of ['imageUrl','thumbnailUrl','thumbUrl','image'])if(typeof data[key]==='string'&&data[key]){
+  for(const key of ['imageUrl','thumbnailUrl','thumbUrl'])if(typeof data[key]==='string'&&data[key]){
    const value=data[key];let found='';
    try{const url=new URL(value);if(url.protocol==='https:'&&url.hostname==='firebasestorage.googleapis.com'){
     const match=url.pathname.match(/^\/v0\/b\/([^/]+)\/o\/(.+)$/);if(match&&decodeURIComponent(match[1])===bucketName)found=decodeURIComponent(match[2]);
    }else if(url.protocol==='https:'&&url.hostname==='storage.googleapis.com'&&url.pathname.startsWith('/'+bucketName+'/'))found=decodeURIComponent(url.pathname.slice(bucketName.length+2));}catch{}
    if(/^dnd-item-images\/[^/]+$/.test(found))names.add(found);else if(!/^\.?\/?placeholder\.png$/.test(value))names.add('UNRESOLVED:'+key);
   }
+  // The website does not render the legacy `image` metadata field. Preserve it
+  // in archive.original, but do not fetch external metadata links or require them.
   return explicitOnly?names:new Set([...names,`dnd-item-images/${baseImageId(data.imageBaseId||item.id)}.png`,`dnd-item-images/${item.id}.png`]);
  }
  const port={
@@ -214,6 +216,14 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
     asset.shared=users.some(item=>item.action==='publish');
     asset.retired=users.some(item=>item.action==='retire');
    }
+   const unresolvedByReason={};for(const issue of artwork.unresolved)unresolvedByReason[issue.field]=(unresolvedByReason[issue.field]||0)+1;
+   let legacyImageMetadata=0,itemsWithStoredArtwork=0;
+   for(const item of plan.items){
+    const data=documentsToRows([item.source])[0].data;
+    if(typeof data.image==='string'&&data.image)legacyImageMetadata++;
+    if([...itemAssetPaths(item)].some(name=>artwork.some(asset=>asset.sourcePath===name)))itemsWithStoredArtwork++;
+   }
+   artwork.diagnostics={policy:'website-image-fields-and-id-fallback-v1',legacyImageMetadataPreserved:legacyImageMetadata,storedArtwork:artwork.length,itemsWithStoredArtwork,itemsWithoutStoredArtwork:plan.items.length-itemsWithStoredArtwork,unresolvedByReason};
    return artwork;
   },
   async backup(plan,assets){
