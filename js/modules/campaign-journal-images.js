@@ -25,7 +25,7 @@ var CampaignJournalImages=(()=>{
   const host=document.createElement('section');
   host.className='workspace-card journal-image-editor';
   host.dataset.journalImageEditor='';
-  host.innerHTML='<div class="journal-image-heading"><div><h3>Entry illustration</h3><p>Private to this campaign’s DMs. Images never become public just because you share this entry’s text.</p></div><span class="journal-image-private">DM ONLY</span></div>'+
+  host.innerHTML='<div class="journal-image-heading"><div><h3>Entry illustration</h3><p>Private by default. Save the entry, then use Player illustration to share the saved image separately from its text.</p></div><span class="journal-image-private">PRIVATE DRAFT</span></div>'+
    '<div data-journal-image-preview class="journal-image-preview" aria-live="polite"><p>No illustration added.</p></div>'+
    '<div class="workspace-fields journal-image-fields"><label class="workspace-field">Illustration (PNG, JPEG, WebP · under 5 MB)<input type="file" accept="image/png,image/jpeg,image/webp" data-journal-image-upload></label>'+
    '<label class="workspace-field">Accessible description<input type="text" maxlength="200" data-journal-image-alt placeholder="Describe the image for accessibility"></label>'+
@@ -84,6 +84,8 @@ var CampaignJournalImages=(()=>{
    }
    busy=true;session.busy=true;pick.disabled=true;remove.disabled=true;status('Uploading private campaign illustration…');
    try{
+    const bitmap=await createImageBitmap(file);bitmap.close();
+    if(!active())return;
     const path=scopedPath(campaignId,kind,recordId,crypto.randomUUID().replaceAll('-',''));
     await sdk.uploadBytes(sdk.ref(sdk.storage,path),file,{contentType:file.type});
     if(!active())return;

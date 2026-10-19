@@ -401,11 +401,31 @@ match /campaigns/{campaignId} {
   allow delete: if isCampaignOwner(campaignId);
 
   // Connected campaign workspace. Public descriptions and private notes are separate.
+  // Images are a deliberate snapshot separate from the published text.
+  function validSharedImage(d, kind, recordId) {
+    let source = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspaceCollection(kind))/$(recordId)).data;
+    return !('image' in d) || (d.image is map
+      && d.image.keys().hasAll(['path','alt','caption']) && d.image.keys().hasOnly(['path','alt','caption'])
+      && d.image.path is string && d.image.path.matches('campaign-journal-images/' + campaignId + '/' + kind + '/' + recordId + '/[a-zA-Z0-9_-]{1,100}')
+      && d.image.alt is string && d.image.alt.size() <= 200
+      && d.image.caption is string && d.image.caption.size() <= 500
+      && 'journalImage' in source.data
+      && ((d.image.path == source.data.journalImage.path && d.image.alt == source.data.journalImage.alt && d.image.caption == source.data.journalImage.caption)
+        || (resource != null && 'image' in resource.data && d.image == resource.data.image)));
+  }
+  function imageOnlyUpdate(d, kind, recordId) {
+    let source = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspaceCollection(kind))/$(recordId)).data;
+    return d.diff(resource.data).affectedKeys().hasOnly(['image','revision','updatedBy','updatedAt'])
+      && source.archived == false
+      && (kind != 'creature' || source.data.category == 'Story NPC')
+      && (kind != 'chapter' || source.data.status == 'Completed')
+      && d.revision is int && d.updatedAt is int && d.updatedBy == request.auth.uid;
+  }
   match /playerInformation/{recordId} {
     function validPublication(d) {
       let source = get(/databases/$(database)/documents/campaigns/$(campaignId)/worldEntries/$(recordId)).data;
       return d.keys().hasAll(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
-        && d.keys().hasOnly(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt','image'])
         && d.title is string && d.title.size() > 0 && d.title.size() <= 160
         && d.summary is string && d.summary.size() <= 1000
         && d.content is string && d.content.size() <= 20000
@@ -417,8 +437,8 @@ match /campaigns/{campaignId} {
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
     }
     allow read: if isCampaignOwner(campaignId) || isActiveMember(campaignId);
-    allow create: if isCampaignDM(campaignId) && validPublication(request.resource.data) && request.resource.data.revision == 1;
-    allow update: if isCampaignDM(campaignId) && validPublication(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    allow create: if isCampaignDM(campaignId) && validSharedImage(request.resource.data, 'world', recordId) && validPublication(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validSharedImage(request.resource.data, 'world', recordId) && (validPublication(request.resource.data) || imageOnlyUpdate(request.resource.data, 'world', recordId)) && request.resource.data.revision == resource.data.revision + 1;
     allow delete: if isCampaignDM(campaignId);
   }
 
@@ -426,7 +446,7 @@ match /campaigns/{campaignId} {
     function validNPC(d) {
       let source = get(/databases/$(database)/documents/campaigns/$(campaignId)/creatures/$(recordId)).data;
       return d.keys().hasAll(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
-        && d.keys().hasOnly(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt','image'])
         && d.title is string && d.title.size() > 0 && d.title.size() <= 160
         && d.summary is string && d.summary.size() <= 1000
         && d.content is string && d.content.size() <= 20000
@@ -437,8 +457,8 @@ match /campaigns/{campaignId} {
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
     }
     allow read: if isCampaignOwner(campaignId) || isActiveMember(campaignId);
-    allow create: if isCampaignDM(campaignId) && validNPC(request.resource.data) && request.resource.data.revision == 1;
-    allow update: if isCampaignDM(campaignId) && validNPC(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    allow create: if isCampaignDM(campaignId) && validSharedImage(request.resource.data, 'creature', recordId) && validNPC(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validSharedImage(request.resource.data, 'creature', recordId) && (validNPC(request.resource.data) || imageOnlyUpdate(request.resource.data, 'creature', recordId)) && request.resource.data.revision == resource.data.revision + 1;
     allow delete: if isCampaignDM(campaignId);
   }
 
@@ -447,7 +467,7 @@ match /campaigns/{campaignId} {
       let source = get(/databases/$(database)/documents/campaigns/$(campaignId)/chapters/$(recordId)).data;
       let recap = ('playerRecap' in source.data && source.data.playerRecap != '') ? source.data.playerRecap : source.content;
       return d.keys().hasAll(['title','summary','content','category','order','sourceRevision','revision','updatedBy','updatedAt'])
-        && d.keys().hasOnly(['title','summary','content','category','order','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['title','summary','content','category','order','sourceRevision','revision','updatedBy','updatedAt','image'])
         && d.title is string && d.title.size() > 0 && d.title.size() <= 160
         && d.summary is string && d.summary.size() <= 1000
         && d.content is string && d.content.size() <= 20000
@@ -459,8 +479,8 @@ match /campaigns/{campaignId} {
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
     }
     allow read: if isCampaignOwner(campaignId) || isActiveMember(campaignId);
-    allow create: if isCampaignDM(campaignId) && validChapter(request.resource.data) && request.resource.data.revision == 1;
-    allow update: if isCampaignDM(campaignId) && validChapter(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    allow create: if isCampaignDM(campaignId) && validSharedImage(request.resource.data, 'chapter', recordId) && validChapter(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validSharedImage(request.resource.data, 'chapter', recordId) && (validChapter(request.resource.data) || imageOnlyUpdate(request.resource.data, 'chapter', recordId)) && request.resource.data.revision == resource.data.revision + 1;
     allow delete: if isCampaignDM(campaignId);
 
     match /notes/{uid} {
@@ -515,6 +535,9 @@ match /campaigns/{campaignId} {
     allow update: if supported() && workspace != 'oneShots' && isCampaignDM(campaignId) && validWorkspace(request.resource.data, kind())
       && validJournalIllustration(request.resource.data.data, kind(), recordId)
       && request.resource.data.revision == resource.data.revision + 1
+      && (workspace == 'encounters' || workspace == 'oneShots' || 'journalImage' in request.resource.data.data
+        || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspace == 'worldEntries' ? 'playerInformation' : workspace == 'creatures' ? 'playerNPCs' : 'playerChapters')/$(recordId))
+        || !('image' in getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspace == 'worldEntries' ? 'playerInformation' : workspace == 'creatures' ? 'playerNPCs' : 'playerChapters')/$(recordId)).data))
       && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt
       && (workspace != 'worldEntries' || request.resource.data.archived == false
         || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/playerInformation/$(recordId)))

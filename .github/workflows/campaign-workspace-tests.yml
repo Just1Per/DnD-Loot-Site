@@ -84,6 +84,10 @@ jobs:
         run: npm --prefix tests run test:creature-editor
       - name: Bulk SRD selection, private imports and safe retries
         run: npm --prefix tests run test:creature-bulk-import
+      - name: Saved player illustrations and exact image permissions
+        run: |
+          npm --prefix tests run test:player-images
+          npm --prefix tests run test:player-images-rules
       - name: Notebook design, separate image sharing and private notes
         run: npm --prefix tests run test:notebook-design
       - name: Campaign home save/reopen, access, accessibility and layout

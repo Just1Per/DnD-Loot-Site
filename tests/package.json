@@ -47,7 +47,9 @@
     "test:campaign-layouts": "node campaign-layouts-browser.cjs",
     "test:catalogue-migration": "node --test item-catalogue-migration.cjs",
     "test:reviewed-catalogue": "node reviewed-catalogue-browser.cjs",
-    "test:catalogue-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/reviewed-catalogue-rules.cjs && node tests/item-catalogue-migration-emulator.cjs && node tests/character-equipment-rules.cjs\""
+    "test:catalogue-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/reviewed-catalogue-rules.cjs && node tests/item-catalogue-migration-emulator.cjs && node tests/character-equipment-rules.cjs\"",
+    "test:player-images": "node player-image-sharing-browser.cjs",
+    "test:player-images-rules": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/player-image-sharing-rules.cjs\""
   },
   "devDependencies": {
     "playwright": "1.51.1",
