@@ -67,3 +67,14 @@ test('nonempty markers and other unexpected objects still block; a changed marke
  await assert.rejects(h.port.retireArtwork(h.plan,assets),/folder marker changed/);assert.equal(h.source.objects.size,3);assert.deepEqual(h.source.events,[]);
  }finally{await h.cleanup()}
 });
+test('transient Firestore GET responses retry with bounded backoff and no response-body or URL disclosure',async()=>{
+ const [,F]=await ready;const waits=[],logs=[],calls=[];let attempts=0,cancelled=0;
+ const result=await F.firestoreReadResponse(async(url,options)=>{calls.push(options.method);assert.ok(options.signal);return ++attempts<4?{status:503,body:{cancel:async()=>{cancelled++}}}:{status:200}},'https://example.invalid/PRIVATE_PATH',{method:'GET'},{sleep:async ms=>waits.push(ms),onRetry:message=>logs.push(message)});
+ assert.equal(result.status,200);assert.deepEqual(waits,[1000,2000,4000]);assert.equal(cancelled,3);assert.equal(calls.length,4);assert.doesNotMatch(logs.join('\n'),/PRIVATE_PATH|example.invalid/);
+});
+test('persistent read failures stop after four attempts; writes and authorization errors are never retried',async()=>{
+ const [,F]=await ready;
+ for(const [method,status,expected] of [['GET',503,4],['GET',403,1],['GET',401,1],['GET',404,1],['POST',503,1],['DELETE',503,1]]){
+ let calls=0;const response=await F.firestoreReadResponse(async()=>{calls++;return {status}},'https://example.invalid',{method},{sleep:async()=>{},onRetry:()=>{}});assert.equal(response.status,status);assert.equal(calls,expected);
+ }
+});

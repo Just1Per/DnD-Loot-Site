@@ -17,6 +17,18 @@ const baseImageId=value=>{
  for(const word of ['common','uncommon','rare','very-rare','veryrare','legendary','artifact','minor','major','grey','gray','red','blue','green','black','white','yellow','purple','orange','bronze','silver','gold','plus'])base=base.replace(new RegExp(`(?<=^|[-_\\s])${word}(?=[-_\\s]|$)`,'gi'),'');
  return base.replace(/[-_\s]+/g,'-').replace(/^[-_]+|[-_]+$/g,'')||value;
 };
+/** Retry only idempotent GET responses; transaction/commit POSTs are never replayed. */
+export async function firestoreReadResponse(fetcher,url,options,{sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms)),onRetry=message=>console.error(message)}={}){
+ const retryable=new Set([429,502,503,504]);
+ for(let attempt=0;;attempt++){
+  const response=await fetcher(url,{...options,signal:AbortSignal.timeout(60000)});
+  if((options.method||'GET')!=='GET'||!retryable.has(response.status)||attempt>=3)return response;
+  try{await response.body?.cancel();}catch{} // Release a failed response without logging its body.
+  const delay=1000*2**attempt;
+  onRetry('Firestore read temporarily unavailable ('+response.status+'); retry '+(attempt+1)+'/3 in '+delay/1000+' s.');
+  await sleep(delay);
+ }
+}
 export async function createMigrationPort({project,bucket:bucketName,archiveBucket:archiveBucketName=bucketName,backupDirectory,services}){
  check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(project||''),'Invalid project');
  check(typeof bucketName==='string'&&/^[a-z0-9][a-z0-9._-]+$/.test(bucketName),'Specify the exact Storage bucket');
@@ -49,7 +61,7 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
  const prefix=`projects/${project}/databases/(default)/documents/`,api=(services?services.firestoreOrigin:'https://firestore.googleapis.com')+'/v1/';
  async function request(suffix,{method='GET',body,missing=false}={}){
   const token=await credential.getAccessToken();
-  const response=await fetcher(api+suffix,{method,headers:{Authorization:'Bearer '+token.access_token,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(60000)});
+  const response=await firestoreReadResponse(fetcher,api+suffix,{method,headers:{Authorization:'Bearer '+token.access_token,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});
   if(response.status===404&&missing)return null;
   check(response.ok,'Firestore operation failed ('+response.status+'); no response body is logged');
   return response.status===204?{}:response.json();
