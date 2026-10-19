@@ -23,7 +23,7 @@ for relative in list(files):
     if ((relative.startswith('scripts/') and relative.endswith('.mjs')) or (relative.startswith('tests/') and relative.endswith('.cjs'))) and current.is_file():
         files[relative] = current.read_bytes()
 for relative in ['Start-ItemMigration.ps1', 'scripts/private-output.mjs', 'scripts/private-output-windows.ps1',
-                 'tests/private-output.cjs', 'scripts/archive-storage.mjs', 'tests/separate-archive-storage.cjs', 'scripts/audit-storage-access.mjs', 'tests/storage-access-audit.cjs', 'docs/windows-item-library-operator.md',
+                 'tests/private-output.cjs', 'scripts/archive-storage.mjs', 'scripts/diagnose-library-images.mjs', 'tests/separate-archive-storage.cjs', 'scripts/audit-storage-access.mjs', 'tests/storage-access-audit.cjs', 'docs/windows-item-library-operator.md',
                  'docs/authorized-library-migration.md', 'docs/separate-private-archive.md']:
     files[relative] = (ROOT / relative).read_bytes()
 files['README.md'] = (ROOT / 'docs/windows-item-library-operator.md').read_bytes().replace(b'(separate-private-archive.md)', b'(docs/separate-private-archive.md)')

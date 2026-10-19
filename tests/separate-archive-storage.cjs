@@ -78,3 +78,8 @@ test('persistent read failures stop after four attempts; writes and authorizatio
  let calls=0;const response=await F.firestoreReadResponse(async()=>{calls++;return {status}},'https://example.invalid',{method},{sleep:async()=>{},onRetry:()=>{}});assert.equal(response.status,status);assert.equal(calls,expected);
  }
 });
+test('offline image diagnostic reports only format counts, without private URLs, values or tokens',async()=>{
+ const {imageReferenceSummary}=await import('../scripts/diagnose-library-images.mjs');
+ const plan={storage:{sourceBucket:'private-bucket'},items:['https://firebasestorage.googleapis.com/v0/b/private-bucket/o/dnd-item-images%2FSECRET.png?token=SECRET_TOKEN','/SECRET.png','dnd-item-images/SECRET.png','https://SECRET.example/SECRET','gs://private-bucket/SECRET','placeholder.png'].map(value=>({source:{fields:{imageUrl:{stringValue:value},imageBaseId:{stringValue:'SECRET'}}}}))};
+ const result=imageReferenceSummary(plan);assert.equal(result.items,6);assert.equal(result.withImageBaseId,6);assert.deepEqual(result.referenceFormats.imageUrl,{'firebase-source-bucket':1,'root-relative':1,'storage-relative':1,'other-https':1,'gs-uri':1,placeholder:1});assert.doesNotMatch(JSON.stringify(result),/SECRET|private-bucket/);
+});
