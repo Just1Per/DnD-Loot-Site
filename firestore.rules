@@ -400,6 +400,18 @@ match /campaigns/{campaignId} {
     && (!('allowedEditions' in request.resource.data) || (request.resource.data.allowedEditions is list && request.resource.data.allowedEditions.size() >= 1 && request.resource.data.allowedEditions.size() <= 2 && request.resource.data.allowedEditions.hasOnly(['2014', '2024']) && (request.resource.data.allowedEditions.size() == 1 || request.resource.data.allowedEditions.hasAll(['2014', '2024']))));
   allow delete: if isCampaignOwner(campaignId);
 
+  // Empty notebook categories belong to the campaign, even before its first entry.
+  match /workspaceCategories/{categoryId} {
+    allow read: if isCampaignDM(campaignId);
+    allow create: if isCampaignDM(campaignId)
+      && categoryId.matches('[a-zA-Z0-9_-]{1,100}')
+      && request.resource.data.keys().hasAll(['kind','name','createdBy','createdAt'])
+      && request.resource.data.keys().hasOnly(['kind','name','createdBy','createdAt'])
+      && request.resource.data.kind in ['world','chapter']
+      && request.resource.data.name is string && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 80
+      && request.resource.data.createdBy == request.auth.uid && request.resource.data.createdAt is int;
+  }
+
   // Connected campaign workspace. Public descriptions and private notes are separate.
   // Images are a deliberate snapshot separate from the published text.
   function validSharedImage(d, kind, recordId) {
@@ -502,7 +514,7 @@ match /campaigns/{campaignId} {
     return kind == 'world' ? 'worldEntries' : kind == 'creature' ? 'creatures' : kind == 'chapter' ? 'chapters' : kind == 'encounter' ? 'encounters' : 'oneShots';
   }
   // Require private illustrations to reference precisely this campaign and record.
-  // Publishing a world entry or NPC never copies these paths to player documents.
+  // An image is player-readable only after its separate, validated publication.
   function validJournalIllustration(data, kind, recordId) {
     return !('journalImage' in data)
       || (data.journalImage is map
