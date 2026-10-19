@@ -71,7 +71,7 @@ var CampaignWorkspace = (() => {
       if(!current(s))return;
       const latest=draft();s.dirty=snapshot!==JSON.stringify(latest);s.record={...saved,data:latest.data,archived:latest.archived};
       const index=s.rows.findIndex(row=>row.id===saved.id);if(index<0)s.rows.push(saved);else s.rows[index]=saved;
-      AppNavigation.remember();renderList();if(!s.dirty)configs[s.kind].onSaved?.(s.host.querySelector('[data-extra-editor]'),s);status(s.dirty?'Saved. Newer edits are still unsaved.':'All changes saved.');return true;
+      AppNavigation.remember();renderList();if(!s.dirty)configs[s.kind].onSaved?.(s.host.querySelector('[data-extra-editor]'),s);status(s.dirty?'Saved. Newer edits are still unsaved.':configs[s.kind].savedMessage?.(s)||'All changes saved.');return true;
     }catch(error){if(current(s))status(`Could not save: ${error.message}`,true);return false;}
     finally{s.busy=false;if(current(s)){form.querySelector('[data-save-record]').disabled=false;configs[s.kind].onSaveSettled?.(s.host.querySelector('[data-extra-editor]'),s);}}
   }
