@@ -66,6 +66,8 @@ jobs:
           NODE
       - name: Centered native dialogs, spell details and unsaved-draft prompts
         run: npm --prefix tests run test:dialogs
+      - name: Campaign UI consistency, mobile targets and responsive party actions
+        run: npm --prefix tests run test:ui-consistency
       - name: Non-Overview accessibility, keyboard, layout and print
         run: npm --prefix tests run test:ui
       - name: Refresh restoration and save before leaving character sheets

@@ -19,3 +19,14 @@
   overflow-wrap: anywhere;
 }
 .item-card .item-attribution a { color: #742a26; text-decoration: underline; }
+
+/* Party actions live outside the old #dmToolsPanel after workspace navigation. */
+#dmCharacterList .admin-char-btns{max-width:100%;min-width:0;flex-shrink:1;gap:8px}
+#dmCharacterList :is(h3,.admin-char-info){overflow-wrap:anywhere}
+#mainApp #dmCharacterList .admin-char-btns button:not(.vault-help-badge){min-height:44px;max-width:100%;white-space:normal;overflow-wrap:anywhere;padding:9px 12px}
+@media screen and (max-width:650px){
+ #mainApp button:not(.vault-help-badge):not(#tab-character-sheet button){min-height:44px}
+ #dmCharacterList .admin-char-btns{width:100%}
+ .site-header button:not(.vault-help-badge){min-height:44px}
+ .campaign-workspace :is(input:not([type=checkbox]):not([type=radio]),select,textarea){font-size:16px}
+}
