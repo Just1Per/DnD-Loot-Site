@@ -67,5 +67,16 @@ const separate=process.env.TEST_SEPARATE_ARCHIVE==='1';
   console.log('PASS Storage orchestration copies/verifies assets without tokens, rejects public IAM, retains shared art and moves retired-only art privately');
   port=await createMigrationPort(options);const resumed=await M.migrateCatalogue(plan,port,{apply:true,confirmPlanSha256:plan.planSha256});assert.equal(resumed.writes,0);
   console.log('PASS Restarting the real adapter proves completion and performs no duplicate root writes');
+  if(separate){
+   const L=await import('../scripts/private-item-library.mjs'),item=plan.items.find(item=>item.action==='publish');
+   const template=await adminGet('privateItemLibraries/owner/templates/'+item.archiveId);
+   const imported=L.buildLibraryImportPlan(template,{project:'demo-vault-test',ownerId:'owner',entryId:item.archiveId,campaignId:'target',campaignName:'Synthetic campaign',requestId:'separate-archive-import'});
+   assert.equal((await L.importLibraryTemplate(imported,port)).writes,0);
+   assert.equal((await L.importLibraryTemplate(imported,port,{apply:true,confirmPlanSha256:imported.planSha256})).writes,1);
+   const copy=await adminGet('campaigns/target/items/'+imported.itemId);assert.equal(copy.fields.visible.booleanValue,false);
+   assert.ok(objects.has(copy.fields.archivedImage.mapValue.fields.path.stringValue));
+   assert.equal((await L.importLibraryTemplate(imported,port,{apply:true,confirmPlanSha256:imported.planSha256})).alreadyImported,true);
+   console.log('PASS Separate private library artwork imports into a private campaign copy on the original fine-grained bucket and retries safely');
+  }
  }finally{await env.cleanup();await fs.rm(directory,{recursive:true,force:true});}
 })().catch(error=>{console.error(error);process.exitCode=1;});
