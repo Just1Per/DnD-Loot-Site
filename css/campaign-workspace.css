@@ -118,3 +118,24 @@
 .world-editor-section .world-map-tools{padding:14px 0 0}
 .world-entry-basics input::placeholder{color:#70614f}
 @media(max-width:760px){.world-entry-basics textarea{min-height:180px}}
+
+/* The notebook reuses existing fields and immutable campaign image references. */
+.notebook-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:16px 0}
+.notebook-choice{display:flex;align-items:center;gap:8px;font-size:.9rem}
+.notebook-controls nav{display:flex;flex-wrap:wrap;gap:6px}
+.notebook-controls nav button[aria-pressed=true]{outline:2px solid #742b35;outline-offset:2px}
+.campaign-notebook .workspace-page{background:#fffefa;border:1px solid #c9bda9;box-shadow:0 8px 24px #45352112;padding:clamp(16px,3vw,36px)}
+.campaign-notebook .workspace-sidebar{background:#f7f3eb;border:1px solid #c9bda9}
+.campaign-notebook .world-browse-controls{display:none}
+.campaign-notebook .notebook-sheet{display:flex;flex-direction:column;gap:16px;color:#362f28}
+.campaign-notebook .notebook-sheet>.workspace-field{margin:0;color:#362f28}
+.campaign-notebook [name=title]{font-family:Georgia,serif;font-size:1.7rem;border:0;border-bottom:1px solid #c9bda9;border-radius:0;background:transparent}
+.campaign-notebook [name=content]{min-height:260px;line-height:1.8;background:#fffefa;font-family:Georgia,serif;font-size:1.05rem}
+.notebook-private-notes{border-left:3px solid #9a794a;background:#f3edde;padding:14px;color:#362f28}
+.notebook-private-notes h3{font-family:Georgia,serif;font-size:1rem;margin:0 0 8px}
+.campaign-notebook .notebook-private-notes textarea{min-height:80px;background:#fffcf5}
+.notebook-preparation{margin-top:24px;border-top:1px solid #c9bda9;padding-top:14px}
+.notebook-preparation>summary{cursor:pointer;min-height:44px;line-height:1.5}
+.notebook-published-preview{max-width:850px;width:calc(100% - 32px);box-sizing:border-box}
+.notebook-published-preview img{display:block;height:auto;max-height:60vh;object-fit:contain}
+@media(max-width:760px){.campaign-notebook .workspace-layout{grid-template-columns:1fr}.campaign-notebook .workspace-list{max-height:220px}.notebook-controls{align-items:stretch}.notebook-controls>details{width:100%}.campaign-notebook [name=title]{font-size:1.35rem}.campaign-notebook .notebook-sheet{min-width:0}.notebook-private-notes{padding:10px}.campaign-notebook [name=content]{min-height:200px}}

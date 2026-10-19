@@ -16,6 +16,7 @@ var CampaignWorkspace = (() => {
   function clear(force=false) {
     if(!force && session?.dirty && !confirm('Discard unsaved campaign workspace changes?')) return false;
     if(typeof SiteConfirmation!=='undefined')SiteConfirmation.cancel();
+    session?.publishedPreviewDispose?.();
     session?.journalImageController?.dispose();
     if(session)configs[session.kind].onClear?.(session);
     ++generation; session=null;
@@ -45,6 +46,7 @@ var CampaignWorkspace = (() => {
     list.innerHTML=rows.map(row=>`<button type="button" data-open-record="${escape(row.id)}">${escape(row.title)}<small>${escape(row.data?.category||row.data?.status||'Draft')}${row.summary?' · '+escape(row.summary.slice(0,90)):''}</small></button>`).join('')||'<p>No entries yet.</p>';
     list.querySelectorAll('[data-open-record]').forEach(button=>button.onclick=()=>openRecord(button.dataset.openRecord));
     configs[s.kind].onListed?.(s);
+    notebookCategoryButtons(s);
   }
   async function openRecord(recordId) {
     const s=session;if(!current(s)||s.busy)return;
@@ -57,7 +59,7 @@ var CampaignWorkspace = (() => {
     const s=session;if(!current(s)||s.busy)return;
     if(configs[s.kind].initialData&&!s.rowsLoaded){status('Wait for campaign entries to load before creating a new one.');return;}
     if(s.dirty&&!confirm('Discard unsaved changes before creating another entry?'))return;
-    const data=configs[s.kind].initialData?.(s)||{};
+    const data=configs[s.kind].initialData?.(s)||{};if(s.kind==='chapter')data.category=s.host.querySelector('[data-workspace-category]').value||'';
     ++generation;s.record={id:id(),revision:0,createdBy:s.uid,title:'',summary:'',content:'',privateNotes:'',data:configs[s.kind].normalize?configs[s.kind].normalize(data):data,archived:false};s.dirty=false;renderEditor();AppNavigation.remember();
   }
   async function save() {
@@ -113,8 +115,107 @@ var CampaignWorkspace = (() => {
     }catch(error){if(current(s)){const denied=error?.code==='storage/unauthorized';status(denied?'Map upload blocked by Firebase Storage permissions. The campaign-world-images rule must be merged and published in Firebase Console → Storage → Rules (hosting and Firestore deploys do not publish Storage rules).':'Map upload failed: '+error.message,true);}}
     finally{s.busy=false;}
   }
+  async function publishedPreview(s){
+    if(!current(s)||!s.record)return;
+    s.publishedPreviewDispose?.();
+    const recordId=s.record.id,dialog=document.createElement('dialog');dialog.className='workspace-sheet-dialog notebook-published-preview';
+    dialog.innerHTML='<h2>Published player page</h2><p role="status" data-published-preview-content>Loading the shared version…</p><button type="button" data-close-published-preview>Close</button>';
+    document.body.append(dialog);dialog.showModal();let url=null;
+    const dispose=()=>{if(url){URL.revokeObjectURL(url);url=null;}dialog.remove();};s.publishedPreviewDispose=dispose;
+    dialog.querySelector('button').onclick=()=>dialog.close();dialog.addEventListener('close',dispose,{once:true});
+    const active=()=>current(s)&&s.record.id===recordId&&dialog.isConnected;
+    try{
+      const row=await createCampaignInformationStore(sdk,s.kind).load(s.campaignId,recordId);if(!active())return;
+      const host=dialog.querySelector('[data-published-preview-content]');host.replaceChildren();
+      if(!row){host.textContent='This page is not shared with players.';return;}
+      const title=document.createElement('h3'),text=document.createElement('div');title.textContent=row.title;text.className='workspace-prose';text.textContent=row.content;host.append(title,text);
+      if(row.image){
+        const prefix=`campaign-journal-images/${s.campaignId}/${s.kind}/${recordId}/`;
+        if(!row.image.path?.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(row.image.path.slice(prefix.length)))throw Error('Invalid shared illustration.');
+        const blob=await sdk.getBlob(sdk.ref(sdk.storage,row.image.path),6*1024*1024);if(!active())return;
+        url=URL.createObjectURL(blob);const image=document.createElement('img');image.src=url;image.alt=row.image.alt||'Shared illustration';image.style.maxWidth='100%';host.append(image);
+        if(row.image.caption){const caption=document.createElement('p');caption.textContent=row.image.caption;host.append(caption);}
+      }
+    }catch(error){if(active())dialog.querySelector('[data-published-preview-content]').textContent='Could not load the published page: '+error.message;}
+  }
+  function notebookKey(s){return 'campaign-notebook-v1:'+s.uid+':'+s.campaignId+':'+s.kind;}
+  function notebookMode(s){
+    s.host.classList.toggle('campaign-notebook',!!s.notebook);
+    for(const [label,hidden] of s.notebookSidebar||[])label.hidden=s.notebook||hidden;
+    if(!s.notebook||!s.record)return;
+    const form=s.host.querySelector('[data-workspace-form]');if(!form)return;
+    const sheet=document.createElement('section');sheet.className='notebook-sheet';sheet.dataset.notebookSheet='';
+    const title=form.querySelector('[name=title]').closest('label'),description=form.querySelector('[name=content]').closest('label'),notes=form.querySelector('[name=privateNotes]').closest('label');
+    const noteBox=document.createElement('aside');noteBox.className='notebook-private-notes';
+    const heading=document.createElement('h3');heading.textContent='Private DM notes';noteBox.append(heading,notes);
+    notes.querySelector('textarea').rows=3;
+    if(s.kind==='chapter'){
+      const category=document.createElement('label');category.className='workspace-field';category.textContent='Category';
+      const select=document.createElement('select');select.dataset.recordField='category';
+      for(const name of notebookCategories(s)){const option=document.createElement('option');option.value=name;option.textContent=name||'Chapters';select.append(option);}
+      select.value=s.record.data.category||'';category.append(select);sheet.append(category);
+    }
+    const previewButton=document.createElement('button');previewButton.type='button';previewButton.dataset.notebookPublishedPreview='';previewButton.textContent='View published player page';
+    previewButton.onclick=()=>publishedPreview(s);
+    sheet.append(title,description,noteBox,previewButton);
+    form.querySelector('[data-preview-record]').textContent='Preview draft description';
+    s.host.querySelector('[data-player-preview] h3').textContent='Draft player description · DM preview';
+    const illustration=form.querySelector('[data-journal-image-editor]');if(illustration)sheet.append(illustration);
+    const sharing=form.querySelector('[data-extra-editor]');if(sharing)sheet.append(sharing);
+    const advanced=document.createElement('details');advanced.className='notebook-preparation';advanced.dataset.notebookPreparation='';
+    const summary=document.createElement('summary');summary.textContent='More preparation, connections and print options';advanced.append(summary);
+    const status=form.querySelector('[data-workspace-status]');
+    for(const child of [...form.children])if(child!==status&&!child.matches('.workspace-actions'))advanced.append(child);
+    form.append(sheet,advanced);
+    form.addEventListener('invalid',event=>{for(let node=event.target.parentElement;node&&node!==form;node=node.parentElement)if(node.tagName==='DETAILS')node.open=true;},true);
+  }
+  function notebookCategories(s){
+    return ['',...new Set([...(s.notebookCategories||[]).map(row=>row.name),...s.rows.map(row=>row.data?.category),s.record?.data?.category].filter(value=>typeof value==='string'&&value))].sort((a,b)=>a.localeCompare(b));
+  }
+  function notebookCategoryButtons(s){
+    const host=s.host.querySelector('[data-notebook-categories]');if(!host)return;
+    const select=s.host.querySelector('[data-workspace-category]'),selected=select.value;
+    const names=notebookCategories(s);
+    if(s.kind==='chapter')select.innerHTML=names.map(name=>'<option value="'+escape(name)+'">'+escape(name||'All categories')+'</option>').join('');
+    if(names.includes(selected))select.value=selected;
+    host.innerHTML=s.kind==='chapter'?names.map(name=>'<button type="button" data-notebook-category="'+escape(name)+'" aria-pressed="'+(name===select.value)+'">'+escape(name||'All chapters')+' <span>'+s.rows.filter(row=>!row.archived&&(!name||row.data?.category===name)).length+'</span></button>').join(''):'';
+    host.querySelectorAll('[data-notebook-category]').forEach(button=>button.onclick=()=>{select.value=button.dataset.notebookCategory;notebookCategoryButtons(s);renderList();});
+  }
+  function notebookToolbar(s){
+    if(!['world','chapter'].includes(s.kind))return;
+    try{s.notebook=localStorage.getItem(notebookKey(s))==='true';}catch{s.notebook=false;}
+    s.notebookSidebar=[...s.host.querySelectorAll('.workspace-sidebar label')].filter(label=>label.querySelector('[data-workspace-search],[data-workspace-category]')).map(label=>[label,label.hidden]);
+    const host=document.createElement('section');host.className='notebook-controls';
+    host.innerHTML='<label class="notebook-choice"><input type="checkbox" data-notebook-mode> Notebook layout</label><nav data-notebook-categories aria-label="Notebook categories"></nav><details data-add-notebook-category><summary>Add category</summary><div class="workspace-actions"><label class="workspace-field">Category name<input data-notebook-category-name maxlength="80"></label><button type="button" data-save-notebook-category>Add category</button></div><p data-notebook-category-status role="status"></p></details>';
+    s.host.querySelector('[data-workspace-tools]').append(host);
+    const toggle=host.querySelector('[data-notebook-mode]');toggle.checked=s.notebook;
+    toggle.onchange=()=>{
+      if(!current(s)||s.busy){toggle.checked=s.notebook;return;}
+      if(s.record)s.record={...s.record,...draft()};s.notebook=toggle.checked;
+      try{localStorage.setItem(notebookKey(s),String(s.notebook));}catch{}
+      if(s.notebook){s.host.querySelector('[data-workspace-search]').value='';const visibility=s.host.querySelector('[data-world-visibility]');if(visibility)visibility.value='';}
+      if(s.record)renderEditor();else notebookMode(s);renderList();
+    };
+    const add=host.querySelector('[data-save-notebook-category]'),feedback=host.querySelector('[data-notebook-category-status]');
+    add.onclick=async()=>{
+      if(!current(s)||s.busy||s.categoryBusy)return;
+      const name=host.querySelector('[data-notebook-category-name]').value.trim();
+      if(!name||name.length>80){feedback.textContent='Enter a name of 1–80 characters.';return;}
+      if([...notebookCategories(s),...(configs[s.kind].categories||[])].some(value=>value.toLowerCase()===name.toLowerCase())){feedback.textContent='That category already exists.';return;}
+      const request=s.categoryRequest?.name===name?s.categoryRequest:{id:id(),name};s.categoryRequest=request;s.categoryBusy=true;add.disabled=true;
+      try{
+        const category=await store.addCategory({campaignId:s.campaignId,kind:s.kind,...request,isCurrent:()=>current(s)});
+        if(!current(s))return;
+        s.notebookCategories.push(category);s.categoryRequest=null;notebookCategoryButtons(s);renderList();s.host.querySelector('[data-workspace-category]').value=name;renderList();
+        feedback.textContent='Category saved. It is available before you create its first entry.';host.querySelector('[data-notebook-category-name]').value='';
+      }catch(error){if(current(s))feedback.textContent='Could not save category: '+error.message;}
+      finally{s.categoryBusy=false;if(current(s))add.disabled=false;}
+    };
+    notebookMode(s);
+  }
   function renderEditor() {
     const s=session;if(!current(s))return;
+    s.publishedPreviewDispose?.();
     s.journalImageController?.dispose();s.journalImageController=null;const config=configs[s.kind],r=s.record,page=s.host.querySelector('[data-workspace-page]');
     page.innerHTML=`<form data-workspace-form><div class="workspace-actions"><button type="submit" data-save-record>Save ${escape(config.noun)}</button><button type="button" data-archive-record>${r.archived?'Restore':'Archive'}</button><button type="button" data-preview-record>Player description</button><button type="button" data-print-record>Print</button></div><p data-workspace-status class="workspace-status" role="status"></p>${config.editorBody?config.editorBody(r):`<div class="workspace-fields"><label class="workspace-field workspace-full">Title<input name="title" required maxlength="160" value="${escape(r.title)}"></label><label class="workspace-field workspace-full">Short summary<textarea name="summary" maxlength="1000">${escape(r.summary)}</textarea></label>${fieldsHTML(config,r.data)}<label class="workspace-field workspace-full">${escape(config.content)}<textarea name="content" maxlength="20000">${escape(r.content)}</textarea></label><label class="workspace-field workspace-full">${escape(config.secret)}<textarea name="privateNotes" maxlength="20000">${escape(r.privateNotes)}</textarea></label></div>${s.kind==='world'?'<label class="workspace-field">Image or map (PNG, JPEG, WebP · max 5 MB)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><p>Click the map to add a named location marker. Use the marker list to remove a marker.</p><div data-map class="workspace-map"></div><div data-marker-list></div>':''}<label class="workspace-field" data-private-print><span><input type="checkbox" data-print-private> Include private preparation and statistics in print</span></label><section data-workspace-links></section><div data-extra-editor></div>`}</form><section class="workspace-preview" hidden data-player-preview><h3>Player description preview</h3><div class="workspace-prose"></div></section>`;
     const form=page.querySelector('form');
@@ -144,6 +245,7 @@ var CampaignWorkspace = (() => {
     for(const key of config.lockFields?.(r)||[])form.querySelector(`[data-record-field="${key}"]`).disabled=true;
     if(!editable){form.querySelectorAll('[name],[data-record-field],[data-save-record],[data-archive-record]').forEach(control=>control.disabled=true);}
     if(config.showPrivate&&!config.showPrivate(r)){form.querySelector('[name=privateNotes]').closest('label').hidden=true;form.querySelector('[data-private-print]').hidden=true;}
+    notebookMode(s);
     if(typeof SiteHelp!=='undefined')SiteHelp.refresh();
   }
   async function renderLinks() {
@@ -192,14 +294,19 @@ var CampaignWorkspace = (() => {
     if(current(session)&&session.kind===kind)return;
     if(!clear())return;const config=configs[kind],panel=document.getElementById('tab-'+config.tab);if(!panel)return;
     panel.innerHTML=`<section class="campaign-workspace"><header class="workspace-heading"><h2>${escape(config.title)}</h2><button type="button" data-new-record>+ New ${escape(config.noun)}</button></header><p>${escape(config.help)}</p><div class="workspace-actions" data-workspace-navigation><button type="button" data-workspace-kind="world">World entries</button><button type="button" data-workspace-kind="creature">Creatures &amp; NPCs</button><button type="button" data-workspace-kind="encounter">Encounters</button></div><div data-workspace-tools></div><div class="workspace-layout"><aside class="workspace-sidebar"><label>Search<input type="search" data-workspace-search></label><label>Category<select data-workspace-category><option value="">All categories</option>${(config.categories||[]).map(value=>`<option>${escape(value)}</option>`).join('')}</select></label><label><input type="checkbox" data-workspace-archived> Show archived</label><div class="workspace-list" data-workspace-list></div></aside><article class="workspace-page" data-workspace-page><p data-workspace-status role="status">Loading campaign entries…</p></article></div></section>`;
-    const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,kind,host:panel.firstElementChild,rows:[],rowsLoaded:false,record:null,dirty:false,busy:false};session=s;const token=++generation;AppNavigation.remember();
+    const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,kind,host:panel.firstElementChild,rows:[],notebookCategories:[],rowsLoaded:false,record:null,dirty:false,busy:false};session=s;const token=++generation;AppNavigation.remember();
     s.host.querySelector('[data-new-record]').disabled=!!config.initialData;
     s.host.querySelector('[data-workspace-navigation]').hidden=!!config.hideNavigation;
     config.toolbar?.(s.host.querySelector('[data-workspace-tools]'),s);
+    notebookToolbar(s);
     s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>{button.hidden=!canManageCampaign()||!!config.hideNavigation;button.onclick=()=>switchKind(button.dataset.workspaceKind)});
     s.host.querySelector('[data-new-record]').onclick=newRecord;s.host.querySelector('[data-workspace-search]').oninput=renderList;s.host.querySelector('[data-workspace-archived]').onchange=renderList;s.host.querySelector('[data-workspace-category]').onchange=renderList;
     try{s.rows=await (config.list?config.list(s.campaignId):store.list(s.campaignId,kind));if(!current(s))return;s.rowsLoaded=true;s.host.querySelector('[data-new-record]').disabled=false;if(token!==generation)return;renderList();if(!s.record)s.host.querySelector('[data-workspace-page]').innerHTML='<p>Select an entry, or create a new one.</p>';}
     catch(error){if(current(s))status(`Could not load: ${error.message}. Publish the updated Firestore rules if permission is denied.`,true);}
+    if(['world','chapter'].includes(kind)){
+      try{s.notebookCategories=await store.listCategories(s.campaignId,kind);if(current(s)){notebookCategoryButtons(s);renderList();}}
+      catch(error){if(current(s))s.host.querySelector('[data-notebook-category-status]').textContent='Saved categories unavailable: '+error.message;}
+    }
   }
   function importCreature(record){
     if(session?.kind!=='creature'||!current(session)||session.busy)return false;

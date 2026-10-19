@@ -68,6 +68,24 @@ function createCampaignWorkspaceStore(sdk) {
       return {...next, id, privateNotes};
     });
   }
-  return {list, load, save, normalize, collections};
+  async function listCategories(campaignId,kind){
+    actor();if(!['world','chapter'].includes(kind))throw Error('Unsupported notebook.');
+    const rows=await getDocs(collection(db,'campaigns',validId(campaignId),'workspaceCategories'));
+    return rows.docs.map(row=>({...row.data(),id:row.id})).filter(row=>row.kind===kind);
+  }
+  async function addCategory({campaignId,kind,id,name,isCurrent=()=>true}){
+    const uid=actor();name=String(name||'').trim();
+    if(!['world','chapter'].includes(kind)||!name||name.length>80)throw Error('Enter a category name of 1–80 characters.');
+    return runTransaction(db,async tx=>{
+      const ref=doc(db,'campaigns',validId(campaignId),'workspaceCategories',validId(id)),previous=await tx.get(ref);
+      if(auth.currentUser?.uid!==uid||!isCurrent())throw Error('Campaign access changed.');
+      if(previous.exists()){
+        if(previous.data().kind!==kind||previous.data().name!==name)throw Error('Category ID is already in use.');
+        return {...previous.data(),id};
+      }
+      const data={kind,name,createdBy:uid,createdAt:Date.now()};tx.set(ref,data);return {...data,id};
+    });
+  }
+  return {list, load, save, normalize, collections,listCategories,addCategory};
 }
 if (typeof module !== 'undefined') module.exports = {createCampaignWorkspaceStore};

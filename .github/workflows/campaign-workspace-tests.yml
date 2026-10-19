@@ -88,6 +88,10 @@ jobs:
         run: |
           npm --prefix tests run test:player-images
           npm --prefix tests run test:player-images-rules
+      - name: Saved notebook editor and private campaign categories
+        run: |
+          npm --prefix tests run test:notebook-editor
+          npm --prefix tests run test:notebook-categories-rules
       - name: Notebook design, separate image sharing and private notes
         run: npm --prefix tests run test:notebook-design
       - name: Campaign home save/reopen, access, accessibility and layout
