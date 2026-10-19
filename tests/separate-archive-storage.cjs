@@ -46,3 +46,24 @@ test('changed private bytes, tokens, anonymous access and changed source generat
  }finally{await h.cleanup()}
  }
 });
+test('only the exact zero-byte root folder marker is skipped and left untouched during retirement',async()=>{
+ const h=await fixture();try{
+ h.source.objects.set('dnd-item-images/',{bytes:Buffer.alloc(0),metadata:{size:'0',generation:'9',contentType:'application/x-www-form-urlencoded;charset=UTF-8'}});
+ const assets=await h.port.inspectArtwork(h.plan);assert.equal(assets.length,2);assert.ok(assets.every(asset=>asset.sourcePath!=='dnd-item-images/'));
+ await h.port.backup(h.plan,assets);await h.port.copyAndVerifyArtwork(h.plan,assets);await h.port.retireArtwork(h.plan,assets);
+ assert.ok(h.source.objects.has('dnd-item-images/'));assert.ok(!h.source.events.includes('delete:dnd-item-images/'));assert.equal(h.archive.objects.size,2);
+ }finally{await h.cleanup()}
+});
+test('nonempty markers and other unexpected objects still block; a changed marker prevents retirement',async()=>{
+ for(const name of ['dnd-item-images/','dnd-item-images/other']){
+ const h=await fixture();try{
+ h.source.objects.set(name,{bytes:Buffer.from('x'),metadata:{size:name.endsWith('/')?'1':'0',contentType:'application/x-www-form-urlencoded;charset=UTF-8'}});
+ await assert.rejects(h.port.inspectArtwork(h.plan),/Unexpected legacy object type/);assert.deepEqual(h.source.events,[]);
+ }finally{await h.cleanup()}
+ }
+ const h=await fixture();try{
+ const assets=await h.port.inspectArtwork(h.plan);await h.port.backup(h.plan,assets);await h.port.copyAndVerifyArtwork(h.plan,assets);
+ h.source.objects.set('dnd-item-images/',{bytes:Buffer.from('x'),metadata:{size:'1'}});
+ await assert.rejects(h.port.retireArtwork(h.plan,assets),/folder marker changed/);assert.equal(h.source.objects.size,3);assert.deepEqual(h.source.events,[]);
+ }finally{await h.cleanup()}
+});

@@ -10,6 +10,7 @@ import {assertLibraryImportPlan} from './private-item-library.mjs';
 import {fieldsHash,encodeFields,POLICY,isLibraryPlan} from './item-catalogue-migration.mjs';
 
 const check=(ok,message)=>{if(!ok)throw Error(message);};
+const emptyLegacyMarker=(file,meta)=>file.name==='dnd-item-images/'&&String(meta.size)==='0';
 const exists=async file=>{try{await fs.access(file);return true;}catch{return false;}};
 const baseImageId=value=>{
  let base=String(value||'').toLowerCase().replace(/\+/g,'').replace(/[0-9]/g,'');
@@ -181,7 +182,7 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
    const metadataBackup=path.join(backupDirectory,'artwork-metadata.json');
    artwork=await exists(metadataBackup)?JSON.parse(await fs.readFile(metadataBackup,'utf8')):[];
    if(artwork.length){const saved=JSON.parse(await fs.readFile(path.join(backupDirectory,'plan.json'),'utf8'));check(saved.planSha256===plan.planSha256,'Backup belongs to a different plan');}
-   for(const file of files){const [meta]=await file.getMetadata();check(Number(meta.size)<10*1024*1024,'Legacy object requires separate large-file backup');check(/^image\/(png|jpeg|webp|gif)$/.test(meta.contentType||''),'Unexpected legacy object type; review before migration');
+   for(const file of files){const [meta]=await file.getMetadata();if(emptyLegacyMarker(file,meta))continue;check(Number(meta.size)<10*1024*1024,'Legacy object requires separate large-file backup');check(/^image\/(png|jpeg|webp|gif)$/.test(meta.contentType||''),'Unexpected legacy object type; review before migration');
     const old=artwork.find(asset=>asset.sourcePath===file.name);
     if(old)check(old.generation===String(meta.generation),'Legacy artwork changed since backup');
     else{check(!await exists(metadataBackup),'New artwork appeared after backup');artwork.push({sourcePath:file.name,generation:String(meta.generation),metageneration:String(meta.metageneration),metadata:meta});}}
@@ -268,7 +269,10 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
    // Move only exclusively retired artwork out of shared Storage. Retained and
    // unrelated generated illustrations stay in place, including their URLs.
    const expected=new Set(assets.map(asset=>asset.sourcePath));const [fresh]=await bucket.getFiles({prefix:'dnd-item-images/'});
-   check(fresh.every(file=>expected.has(file.name)),'New legacy artwork appeared; review before retirement');
+   for(const file of fresh){
+    if(file.name==='dnd-item-images/'){const [meta]=await file.getMetadata();check(emptyLegacyMarker(file,meta),'Legacy folder marker changed; review before retirement');continue;}
+    check(expected.has(file.name),'New legacy artwork appeared; review before retirement');
+   }
    for(const asset of assets){const destination=archiveBucket.file(asset.privatePath),[bytes]=await destination.download({validation:'crc32c'}),[meta]=await destination.getMetadata();check(digest(bytes)===asset.sha256&&!meta.metadata?.firebaseStorageDownloadTokens,'Private artwork changed; refusing shared-object removal');
     const anonymous=await fetcher('https://storage.googleapis.com/'+archiveBucketName+'/'+asset.privatePath.split('/').map(encodeURIComponent).join('/'),{method:'HEAD',redirect:'error',signal:AbortSignal.timeout(30000)});
     check([401,403].includes(anonymous.status),'Private artwork privacy must be verified before shared-object removal');
