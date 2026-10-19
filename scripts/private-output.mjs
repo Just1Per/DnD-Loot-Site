@@ -21,7 +21,7 @@ async function windowsAcl(target,action,directory){
  for(const root of [process.env.OneDrive,process.env.OneDriveConsumer,process.env.OneDriveCommercial,path.join(os.homedir(),'OneDrive')].filter(Boolean)){const sync=path.resolve(root).toLowerCase(),value=path.resolve(target).toLowerCase();if(value===sync||value.startsWith(sync+path.sep))throw Error('Private exports must be outside OneDrive. Use the default local output directory.');}
  const binary=path.join(process.env.SystemRoot||'C:\\Windows','System32','WindowsPowerShell','v1.0','powershell.exe');
  let result;try{result=await execute(binary,['-NoLogo','-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',windowsScript,'-Action',action,'-LiteralPath',target],{windowsHide:true,timeout:30000,maxBuffer:128*1024});}
- catch{throw Error('Could not verify/create the private Windows directory or file. Use a local NTFS profile folder without junctions or shared ACLs; do not use OneDrive.');}
+ catch(error){const detail=String(error.stderr||error.message||'ACL inspection failed').trim().slice(0,800);throw Error('Windows ACL check failed: '+detail+' Use a local profile folder without junctions or shared access.');}
  let report;try{report=JSON.parse(result.stdout.trim());}catch{throw Error('Windows ACL inspection returned an invalid result. No private output was written.');}
  validateWindowsAcl(report,{directory});return target;
 }

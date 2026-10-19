@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory=$true)][ValidateSet('Create','Inspect')][string]$Action,
     [Parameter(Mandatory=$true)][string]$LiteralPath
 )
+try {
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().User
@@ -50,3 +51,5 @@ $rules = @($acl.GetAccessRules($true,$true,[System.Security.Principal.SecurityId
     @{ sid=$_.IdentityReference.Value; allow=($_.AccessControlType -eq 'Allow'); rights=[int64]$_.FileSystemRights; inheritOnly=(($_.PropagationFlags -band [System.Security.AccessControl.PropagationFlags]::InheritOnly) -ne 0) }
 })
 @{ currentSid=$identity.Value; ownerSid=$acl.GetOwner([System.Security.Principal.SecurityIdentifier]).Value; directory=[bool]$item.PSIsContainer; reparse=(($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0); protected=[bool]$acl.AreAccessRulesProtected; rules=$rules } | ConvertTo-Json -Depth 5 -Compress
+
+} catch { [Console]::Error.WriteLine($_.Exception.Message); exit 1 }

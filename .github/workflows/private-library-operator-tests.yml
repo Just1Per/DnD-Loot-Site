@@ -24,7 +24,15 @@ jobs:
         with:
           node-version: 24
       - name: Private output ACL/mode checks and immutable migration safeguards
-        run: node --test tests/private-output.cjs tests/authorized-library-migration.cjs tests/private-item-library.cjs tests/item-catalogue-migration.cjs tests/item-catalogue-decisions.cjs
+        shell: node {0}
+        run: |
+          const {spawnSync}=require('node:child_process');
+          const result=spawnSync(process.execPath,['--test','--test-reporter=tap','tests/private-output.cjs','tests/authorized-library-migration.cjs','tests/private-item-library.cjs','tests/item-catalogue-migration.cjs','tests/item-catalogue-decisions.cjs'],{encoding:'utf8',maxBuffer:10*1024*1024});
+          process.stdout.write(result.stdout||'');process.stderr.write(result.stderr||'');
+          if(result.status!==0){
+            const detail=(String(result.error||'')+'\n'+result.stdout+'\n'+result.stderr).slice(-14000).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A');
+            console.error('::error title=Private operator test output::'+detail);process.exit(1);
+          }
       - name: Verify packaged code and tests independently from the checkout
         shell: python
         run: |
