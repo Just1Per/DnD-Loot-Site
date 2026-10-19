@@ -18,6 +18,8 @@ on:
       - 'scripts/item-catalogue-migration*.mjs'
       - 'scripts/item-artwork-policy.mjs'
       - 'scripts/private-item-library.mjs'
+      - 'scripts/prepare-authorized-library-migration.mjs'
+      - 'docs/reports/catalogue-recommendation-authorization.json'
       - 'scripts/prepare-item-review-manifest.mjs'
       - '.github/workflows/campaign-workspace-tests.yml'
 permissions:
@@ -55,6 +57,7 @@ jobs:
       - name: Owner-private item library and manual import boundaries
         run: |
           npm --prefix tests run test:private-item-library
+          npm --prefix tests run test:authorized-library-plan
           npm --prefix tests run test:private-item-library-emulator
       - name: Report failed engine output in check annotations
         if: failure()
