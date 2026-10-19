@@ -47,3 +47,13 @@ POSIX platforms retain directory/file mode checks (0700/0600). Native Windows us
 The tool rejects extra allow grants, foreign owners, malformed ACL results, reparse points/junctions, OneDrive paths and ancestors that let untrusted accounts replace path components. It does not silently tighten existing folders or disable permission checks. If a selected folder fails, choose a new local profile folder or use the default. The helper invokes a bundled local script with literal path arguments; no path is evaluated as PowerShell code. No file contents or credentials are printed by ACL inspection.
 
 Download the code package anywhere convenient, including Desktop if necessary; private output uses the separate local protected location. A package directory and a private output directory serve different purposes. Keep durable backups in a protected location you retain; do not delete the output folder after applying.
+
+## If preparation reports “Private archive requires uniform bucket-level access”
+
+Do not enable uniform access or apply the migration yet. Inspect the existing bucket using the same local Application Default Credentials:
+
+```powershell
+node .\scripts\audit-storage-access.mjs
+```
+
+This command only reads bucket metadata, bucket IAM and all current object ACL/token metadata with pagination. It prints aggregate counts, not object names, email addresses, URLs, tokens or file contents. Copy the complete printed JSON into the support chat. It writes no local capture or production data and changes no permissions. The existing archive privacy gate remains in place. A complete scan is evidence for planning, not proof that changing access is safe: inherited IAM, Firebase rules and application dependencies require separate consideration. If the command fails, share its bounded error rather than raw debug logs.
