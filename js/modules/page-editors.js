@@ -159,6 +159,7 @@ var PageEditors = (() => {
   }
 
   function guard(action) {
+    if(typeof CampaignJournal!=='undefined'&&!CampaignJournal.guard(action))return false;
     if (entering || !active) return true;
     const s = active;
     if (!current(s)) { clear(); return true; }

@@ -7,7 +7,7 @@
 /** Select a permitted app tab; sheet rendering can be deferred by its caller. */
 function showTab(tabId, render = true) {
   tabId=AppShell.resolve(tabId);
-  if (['campaign-home','campaign-information','campaign-npcs','campaign-chapters'].includes(tabId) && !activeCampaign) return;
+  if (['campaign-home','campaign-journal','campaign-information','campaign-npcs','campaign-chapters'].includes(tabId) && !activeCampaign) return;
   if (tabId === "character-sheet" && (!activeCampaign || !(canUseCharacters() || canManageCampaign()))) return;
   if(['player','character-loot','character-wishlist','player-adventures'].includes(tabId)&&(!activeCampaign||!canUseCharacters()))return;
   if(tabId!=="character-sheet"&&!SheetNavigation.guard(()=>showTab(tabId,render)))return;
@@ -17,6 +17,7 @@ function showTab(tabId, render = true) {
   if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
   if (typeof CampaignHome!=="undefined" && !CampaignHome.beforeNavigate(tabId)) return;
   if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate(tabId))return;
+  if(typeof CampaignJournal!=='undefined'&&!CampaignJournal.beforeNavigate(tabId))return;
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c=>c.style.display="none");
   const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
@@ -27,6 +28,7 @@ function showTab(tabId, render = true) {
   DMWorkspaceShell.update(tabId);
   if(render&&tabId==='player-adventures')CampaignWorkspace.render('playerAdventure');
   if(render&&tabId==='campaign-home')CampaignHome.render();
+  if(render&&tabId==='campaign-journal')CampaignJournal.render();
   if(render&&tabId==='campaign-information')CampaignInformation.render();
   if(render&&tabId==='campaign-npcs')CampaignInformation.render('creature');
   if(render&&tabId==='campaign-chapters')CampaignInformation.render('chapter');
@@ -191,6 +193,7 @@ async function logoutFromSite(){
   AppNavigation.clear();
   CampaignHome.clear(true);
   CampaignInformation.clear(true);
+  CampaignJournal.clear();
   CharacterWorkspace.clear();
   PageEditors.clear();
   activeCampaign = null;
@@ -226,6 +229,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     hideAllScreens();
   }
   CampaignInformation.onAccountChanged(firebaseUser?.uid);
+  CampaignJournal.onAccountChanged(firebaseUser?.uid);
   const loginControls = document.getElementById("loginControls");
   const logoutBtn     = document.getElementById("logoutButton");
   const display       = document.getElementById("userDisplay");
@@ -283,6 +287,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     SiteHelp.onLogout();
     CampaignHome.clear(true);
     CampaignInformation.clear(true);
+    CampaignJournal.clear();
     currentUser = null;
     activeCampaign = null;
     activeMembershipRole = null;

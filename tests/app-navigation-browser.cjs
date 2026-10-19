@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
 
 const root = path.resolve(__dirname, '..');
-const journalTabs = ['campaign-information', 'campaign-npcs', 'campaign-chapters'];
+const journalTabs = ['campaign-journal','campaign-information', 'campaign-npcs', 'campaign-chapters'];
 const workspaceTabs = ['dm-world', 'dm-creatures', 'dm-chapters'];
 
 (async () => {
@@ -104,7 +104,7 @@ const workspaceTabs = ['dm-world', 'dm-creatures', 'dm-chapters'];
     assert.equal(await page.locator('#campaignSectionNavigation').isVisible(), false);
 
     await primary('journal').click();
-    await assertPanel('campaign-information');
+    await assertPanel('campaign-journal');
     await assertPrimary('journal');
     assert.deepEqual(await page.locator('#campaignSectionNavigation button:visible').evaluateAll(rows => rows.map(row => row.dataset.tab)), journalTabs);
     for (const tab of journalTabs) {
@@ -149,7 +149,7 @@ const workspaceTabs = ['dm-world', 'dm-creatures', 'dm-chapters'];
     await primary('journal').click();
     await page.locator('[data-sheet-leave-save]').click();
     await page.waitForSelector('#sheetLeaveDialog', {state: 'detached'});
-    await assertPanel('campaign-information');
+    await assertPanel('campaign-journal');
     await assertPrimary('journal');
     assert.equal(await page.evaluate(() => testSheetDocs['campaigns/a/characterSheets/c1'].data.appearance), 'A red cloak');
     await page.evaluate(() => showTab('character-sheet'));
@@ -159,11 +159,11 @@ const workspaceTabs = ['dm-world', 'dm-creatures', 'dm-chapters'];
     await primary('journal').click();
     await page.locator('[data-sheet-leave-discard]').click();
     await page.waitForSelector('#sheetLeaveDialog', {state: 'detached'});
-    await assertPanel('campaign-information');
+    await assertPanel('campaign-journal');
     assert.equal(await page.evaluate(() => testSheetDocs['campaigns/a/characterSheets/c1'].data.appearance), 'A red cloak');
     for (const tab of ['dm', 'dm-settings', ...workspaceTabs, 'dm-one-shots']) {
       await page.evaluate(tab => showTab(tab), tab);
-      await assertPanel('campaign-information');
+      await assertPanel('campaign-journal');
       await assertPrimary('journal');
     }
     console.log('PASS My Character remains selected for the sheet; Journal save/discard/stay and direct private route restrictions');

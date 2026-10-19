@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="css/campaign-controls.css?v=20261019-party-mobile-v1">
   <link rel="stylesheet" href="css/character-workspace.css?v=20261016-page-editors-v1">
   <link rel="stylesheet" href="css/page-editors.css?v=20261016-page-editors-v1">
+  <link rel="stylesheet" href="css/campaign-journal.css?v=20261019-shared-journal-v1">
   <link rel="stylesheet" href="css/dialogs.css?v=20261019-dialog-centering-v1">
 </head>
 <body>
@@ -117,6 +118,7 @@
     </nav>
     <nav id="campaignSectionNavigation" class="campaign-section-navigation" aria-label="Campaign sections" hidden>
       <div data-section-group="journal" hidden>
+        <button class="tab" data-tab="campaign-journal" type="button">Party journal</button>
         <button class="tab" data-tab="campaign-information" type="button">Campaign guide</button>
         <button class="tab" data-tab="campaign-npcs" type="button">Known NPCs</button>
         <button class="tab" data-tab="campaign-chapters" type="button">Completed chapters</button>
@@ -131,6 +133,7 @@
     <!-- ════════════════════════════════════════════════════════════════
          LIBRARY TAB
     ════════════════════════════════════════════════════════════════ -->
+    <section id="tab-campaign-journal" class="tab-content" style="display:none" aria-label="Party journal"></section>
     <section id="tab-campaign-home" class="tab-content" style="display:none" aria-label="Campaign home"></section>
     <section id="tab-campaign-information" class="tab-content" style="display:none" aria-label="Campaign information"></section>
     <section id="tab-campaign-npcs" class="tab-content" style="display:none" aria-label="NPC catalogue"></section>
@@ -465,6 +468,6 @@
     <p>© 2026 DKDM — CampaignAtlas’s original website code and interface. Third-party content retains its own licences and rights.</p>
   </footer>
   <script src="js/boot-status.js?v=20261010-ui-cleanup"></script>
-  <script type="module" id="siteAppScript" src="js/app.js?v=20261019-player-image-sharing-v1"></script>
+  <script type="module" id="siteAppScript" src="js/app.js?v=20261019-shared-journal-v1"></script>
 </body>
 </html>

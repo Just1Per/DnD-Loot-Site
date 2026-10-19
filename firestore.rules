@@ -498,6 +498,43 @@ match /campaigns/{campaignId} {
     }
   }
 
+  // Private session drafts belong to their author, even when the reader is a DM.
+  function journalMember() { return isCampaignOwner(campaignId) || isActiveMember(campaignId); }
+  function validRecap(d) {
+    return d.keys().hasAll(['title','body','authorName','characterName','remember','nextTime','sessionDate','sessionNumber','authorId','revision','updatedAt'])
+      && d.title is string && d.title.size() > 0 && d.title.size() <= 160
+      && d.body is string && d.body.size() > 0 && d.body.size() <= 12000
+      && d.authorName is string && d.authorName.size() > 0 && d.authorName.size() <= 100
+      && d.characterName is string && d.characterName.size() <= 100
+      && d.remember is string && d.remember.size() <= 2000
+      && d.nextTime is string && d.nextTime.size() <= 2000
+      && d.sessionDate is string && d.sessionDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+      && d.sessionNumber is int && d.sessionNumber >= 1 && d.sessionNumber <= 9999
+      && d.authorId == request.auth.uid && d.updatedAt is int
+      && d.revision is int && d.revision > 0;
+  }
+  match /journalDrafts/{uid}/entries/{entryId} {
+    function ownDraft() { return journalMember() && request.auth.uid == uid; }
+    function validDraft(d) { return validRecap(d) && d.keys().hasOnly(['title','body','authorName','characterName','remember','nextTime','sessionDate','sessionNumber','authorId','revision','updatedAt']); }
+    allow read: if ownDraft();
+    allow create: if ownDraft() && validDraft(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if ownDraft() && validDraft(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+  }
+  match /journalRecaps/{entryId} {
+    function validPublication(d) {
+      let draft = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/journalDrafts/$(request.auth.uid)/entries/$(entryId)).data;
+      return validRecap(d) && d.keys().hasOnly(['title','body','authorName','characterName','remember','nextTime','sessionDate','sessionNumber','authorId','revision','updatedAt','sourceRevision'])
+        && d.sourceRevision == draft.revision && d.authorId == draft.authorId
+        && d.title == draft.title && d.body == draft.body && d.authorName == draft.authorName
+        && d.characterName == draft.characterName && d.remember == draft.remember && d.nextTime == draft.nextTime
+        && d.sessionDate == draft.sessionDate && d.sessionNumber == draft.sessionNumber;
+    }
+    allow read: if journalMember();
+    allow create: if journalMember() && validPublication(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if journalMember() && resource.data.authorId == request.auth.uid && validPublication(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    allow delete: if journalMember() && resource.data.authorId == request.auth.uid;
+  }
+
   function workspaceCollection(kind) {
     return kind == 'world' ? 'worldEntries' : kind == 'creature' ? 'creatures' : kind == 'chapter' ? 'chapters' : kind == 'encounter' ? 'encounters' : 'oneShots';
   }
