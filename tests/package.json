@@ -53,7 +53,8 @@
     "test:notebook-editor": "node notebook-editor-browser.cjs",
     "test:notebook-categories-rules": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/notebook-categories-rules.cjs\"",
     "test:private-item-library": "node --test private-item-library.cjs",
-    "test:private-item-library-emulator": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/private-item-library-emulator.cjs && node tests/private-item-library-rules.cjs\""
+    "test:private-item-library-emulator": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/private-item-library-emulator.cjs && node tests/private-item-library-rules.cjs\"",
+    "test:authorized-library-plan": "node --test authorized-library-migration.cjs"
   },
   "devDependencies": {
     "playwright": "1.51.1",

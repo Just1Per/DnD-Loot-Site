@@ -15,6 +15,8 @@ An original archive is distinct from a reusable template. Retired items remain a
 
 ## Prepare a library-targeted migration
 
+The owner has now delegated adoption of the exact recorded recommendations. The [authorized migration runner](authorized-library-migration.md) automates snapshot capture, manifest preparation, library targeting and read-only checks without individual item review. The manual workflow below remains available for separately selected decisions.
+
 Use Node 22/24, Java 21 for emulator tests and the locked dependencies under `functions/`. Operator commands use POSIX private-directory permissions; run them in Linux, macOS or Ubuntu/WSL with exports under the Linux home directory rather than a Windows/OneDrive folder. Keep credentials and private exports out of Git and chat.
 
 1. Capture a fresh complete root snapshot using the existing read-only operator capture. Confirm the project, actual owner UID and existing owner account. A campaign's visible item list does not prove completeness or image availability.
