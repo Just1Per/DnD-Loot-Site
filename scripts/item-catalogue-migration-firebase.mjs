@@ -139,7 +139,7 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
    if(!apply)return {itemId:plan.itemId,writes:0,dryRun:true,images:copies.length};
    await createPrivateDirectory(backupDirectory,{allowExisting:true});
    const audit=path.join(backupDirectory,'library-import-'+plan.planSha256+'.json');await privateFile(audit,Buffer.from(JSON.stringify(plan,null,2)));
-   const handle=await fs.open(audit,'r');try{await handle.sync();}finally{await handle.close();}
+   const handle=await fs.open(audit,'r+');try{await handle.sync();}finally{await handle.close();}
    for(const asset of copies){
     const destination=bucket.file(asset.path),[present]=await destination.exists();
     if(!present)await destination.save(asset.bytes,{resumable:false,validation:'crc32c',preconditionOpts:{ifGenerationMatch:0},metadata:{contentType:asset.contentType,cacheControl:'private, no-store',metadata:{librarySha256:asset.sha256}}});
@@ -233,7 +233,7 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
    await privateFile(path.join(backupDirectory,'artwork-metadata.json'),Buffer.from(JSON.stringify(assets,null,2)));
    for(const asset of assets){const backup=path.join(backupDirectory,digest(asset.sourcePath)+'.bin');const data=await exists(backup)?await fs.readFile(backup):(await bucket.file(asset.sourcePath,{generation:asset.generation}).download({validation:'crc32c'}))[0];asset.sha256=digest(data);await privateFile(backup,data);}
    // Flush the backup files before performing any destructive operation.
-   for(const name of await fs.readdir(backupDirectory)){const handle=await fs.open(path.join(backupDirectory,name),'r');try{await handle.sync();}finally{await handle.close();}}
+   for(const name of await fs.readdir(backupDirectory)){const handle=await fs.open(path.join(backupDirectory,name),'r+');try{await handle.sync();}finally{await handle.close();}}
    backupReady=true;
   },
   async copyAndVerifyArtwork(plan,assets){
