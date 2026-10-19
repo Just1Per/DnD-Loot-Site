@@ -345,7 +345,12 @@ var CampaignHome = (() => {
       document.getElementById('campaignHomeStatus').textContent = 'Your campaign front page is saved.';
       document.querySelector('[data-edit-campaign-home]')?.focus();
     } catch (error) {
-      if (session === current) status.textContent = `Could not save: ${error.message}`;
+      if (session === current) {
+        const denied = error.code === 'permission-denied' || /permission denied|missing or insufficient permissions/i.test(error.message || '');
+        status.textContent = `Could not save: ${error.message}` + (denied
+          ? ' Your draft is still in this editor. Ask the site administrator to check your campaign editing access' + (data.layout ? ' and support for the selected layout.' : '.')
+          : '');
+      }
     } finally {
       current.busy = false;
       if (session === current) for (const control of form.elements) control.disabled = false;

@@ -36,6 +36,17 @@ const {ref,uploadBytes,getBytes,deleteObject}=require('firebase/storage');
   await assertFails(deleteObject(ref(storage.player,'dnd-item-images/sword.png')));
   await assertSucceeds(deleteObject(ref(storage.admin,'dnd-item-images/sword.png')));
 
+  // A backend-only registry publishes generated art retained with shared items.
+  await assertSucceeds(upload('admin','dnd-item-images/retained.png'));
+  await assertFails(setDoc(doc(env.authenticatedContext('admin').firestore(),'catalogueArtwork/retained.png'),{status:'generated',path:'dnd-item-images/retained.png'}));
+  await env.withSecurityRulesDisabled(async context=>{await setDoc(doc(context.firestore(),'catalogueArtwork/retained.png'),{status:'generated',path:'dnd-item-images/retained.png'});});
+  await assertSucceeds(getBytes(ref(anon,'dnd-item-images/retained.png')));
+  await assertSucceeds(getBytes(ref(storage.player,'dnd-item-images/retained.png')));
+  await assertFails(upload('player','dnd-item-images/retained.png'));
+  await env.withSecurityRulesDisabled(async context=>{await setDoc(doc(context.firestore(),'catalogueArtwork/retained.png'),{status:'generated',path:'dnd-item-images/different.png'});});
+  await assertFails(getBytes(ref(anon,'dnd-item-images/retained.png')));
+  console.log('PASS Generated art is published by an exact backend registry; clients cannot forge publication');
+
   // Operator-preserved catalogue artwork is readable by this campaign's DMs only.
   const archived='campaign-catalogue-images/a/source-hash/image-hash';
   await env.withSecurityRulesDisabled(async context=>{await uploadBytes(ref(context.storage(),archived),png,{contentType});});

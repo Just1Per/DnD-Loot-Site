@@ -25,6 +25,8 @@
     "test:workspace-rules": "cd .. && firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/workspace-rules.cjs && node tests/workspace-storage-rules.cjs && node tests/workspace-one-shots-rules.cjs\"",
     "test:workspace-browser": "node workspace-browser.cjs",
     "test:creature-editor": "node creature-editor-browser.cjs",
+    "test:creature-bulk-import": "node creature-bulk-import-browser.cjs",
+    "test:notebook-design": "node notebook-design-browser.cjs",
     "test:ui": "node ui-cleanup-browser.cjs",
     "test:navigation": "node navigation-browser.cjs",
     "test:campaign-home": "node campaign-home-browser.cjs",

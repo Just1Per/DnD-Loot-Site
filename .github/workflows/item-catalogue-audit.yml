@@ -5,14 +5,41 @@ on:
       - 'scripts/audit-item-catalogue.mjs'
       - 'scripts/build-srd-item-hashes.mjs'
       - 'scripts/review-item-catalogue.mjs'
+      - 'scripts/prepare-srd-replacement-batch.mjs'
+      - 'scripts/prepare-item-catalogue-decisions.mjs'
+      - 'scripts/build-item-catalogue-review.mjs'
+      - 'scripts/item-catalogue-review-view.html'
+      - 'scripts/item-catalogue-migration-firebase.mjs'
+      - 'scripts/item-catalogue-migration.mjs'
+      - 'scripts/item-artwork-policy.mjs'
+      - 'docs/reports/item-replacements-batch-01.*'
+      - 'docs/reports/item-catalogue-decisions.*'
       - 'data/rules/srd-magic-item-text-hashes.json'
       - 'tests/item-catalogue-audit.cjs'
       - 'tests/item-catalogue-review.cjs'
+      - 'tests/srd-replacement-batch.cjs'
+      - 'tests/item-catalogue-decisions.cjs'
+      - 'tests/item-catalogue-review-browser.cjs'
       - '.github/workflows/item-catalogue-audit.yml'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
+  visual_review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+      - name: Install review browser dependencies
+        run: npm ci --prefix tests --no-audit --no-fund
+      - name: Install Chromium
+        run: npx --prefix tests playwright install --with-deps chromium
+      - name: Verify the self-contained review view
+        run: node --test tests/item-catalogue-review-browser.cjs
   audit:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
@@ -21,8 +48,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Install operator dependencies
+        run: npm ci --prefix functions --no-audit --no-fund
       - name: Test audit and evidence boundaries
-        run: node --test tests/item-catalogue-audit.cjs tests/item-catalogue-review.cjs
+        run: node --test tests/item-catalogue-audit.cjs tests/item-catalogue-review.cjs tests/srd-replacement-batch.cjs tests/item-catalogue-migration.cjs tests/item-catalogue-decisions.cjs
       - name: Read public item metadata and compare pinned SRD fingerprints
         run: node scripts/audit-item-catalogue.mjs --public-project dnd-loot-site --report '${{ runner.temp }}/item-catalogue-audit.json' --allow-reviewed-only
       - name: Generate conservative item-by-item review without publishing original prose

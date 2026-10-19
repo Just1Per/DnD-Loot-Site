@@ -54,10 +54,15 @@ service firebase.storage {
         && request.resource.contentType.matches('image/(png|jpeg|webp)');
     }
 
-    // Unreviewed legacy art is not part of the shared catalogue. Existing token
-    // URLs must separately be retired by the reviewed operator migration.
+    // Generated illustrations retained with reviewed items remain available.
+    // Only the operator can write the publication registry. Retired-only images
+    // move to DM-private Storage; existing tokens are removed after verification.
     match /dnd-item-images/{fileName} {
-      allow read: if isAdmin();
+      allow read: if isAdmin() || (
+        firestore.exists(/databases/(default)/documents/catalogueArtwork/$(fileName))
+        && firestore.get(/databases/(default)/documents/catalogueArtwork/$(fileName)).data.status == 'generated'
+        && firestore.get(/databases/(default)/documents/catalogueArtwork/$(fileName)).data.path == 'dnd-item-images/' + fileName
+      );
       allow create, update: if isAdmin() && validImage();
       allow delete: if isAdmin();
     }

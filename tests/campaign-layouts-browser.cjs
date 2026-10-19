@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
 (async()=>{
- const root=path.resolve(__dirname,'..'),browser=await chromium.launch({headless:true});
+ const root=path.resolve(__dirname,'..'),browser=await chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE});
  try{
  const page=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];page.on('pageerror',error=>{errors.push(error.message);console.error('Browser error:',error.message)});
  let html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'').replace(/<link\b[^>]*href="([^"]*)"[^>]*>/gi,(tag,href)=>href.startsWith('css/')?'<style>'+fs.readFileSync(path.join(root,href.split('?')[0]),'utf8')+'</style>':'');
@@ -10,7 +10,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.evaluate(data=>{window.__testCatalog=data;window.print=()=>{};window.fetch=async()=>({ok:true,json:async()=>window.__testCatalog});window.alert=()=>{};window.confirm=()=>true;window.prompt=()=> 'Old Bridge'},JSON.parse(fs.readFileSync(path.join(root,'data/rules/catalog.json'),'utf8')));
  for(const file of ['dom-setup.js','dom-fixture.js'])await page.addScriptTag({path:path.join(__dirname,file)});
  await page.evaluate(()=>{const deps=window.__DND_VAULT_DEPS__;deps.where=(field,op,value)=>({field,op,value});deps.query=(path,...filters)=>({path,filters});deps.getDocs=async query=>{const p=typeof query==='string'?query:query.path,filters=query.filters||[];return {docs:Object.entries(testSheetDocs).filter(([key,data])=>key.startsWith(p+'/')&&key.slice(p.length+1).indexOf('/')<0&&filters.every(f=>{const value=f.field.split('.').reduce((d,k)=>d?.[k],data);return f.op==='array-contains'?value?.includes(f.value):value===f.value})).map(([key,data])=>({id:key.split('/').at(-1),data:()=>structuredClone(data)}))}};deps.ref=(_,p)=>p;deps.uploadBytes=async(p)=>{window.lastUpload=p};deps.getBlob=async()=>new Blob([Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWQAAAABJRU5ErkJggg=='),c=>c.charCodeAt(0))],{type:'image/png'})});
- await page.evaluate(()=>{const deps=window.__DND_VAULT_DEPS__, original=deps.runTransaction;deps.runTransaction=async(...args)=>{if(window.testTransactionFailure)throw Error('Permission denied');if(window.pauseHomeRead)return original(args[0],tx=>args[1]({...tx,get:async path=>{await new Promise(resolve=>window.finishHomeRead=resolve);return tx.get(path)}}));return original(...args)}});
+ await page.evaluate(()=>{const deps=window.__DND_VAULT_DEPS__, original=deps.runTransaction;deps.runTransaction=async(...args)=>{if(window.testTransactionFailure)throw Object.assign(Error('Missing or insufficient permissions.'),{code:'permission-denied'});if(window.pauseHomeRead)return original(args[0],tx=>args[1]({...tx,get:async path=>{await new Promise(resolve=>window.finishHomeRead=resolve);return tx.get(path)}}));return original(...args)}});
  await page.evaluate(()=>{const deps=window.__DND_VAULT_DEPS__, original=deps.uploadBytes;deps.uploadBytes=async(...args)=>{if(window.failCoverUpload)throw Object.assign(Error('Denied'),{code:'storage/unauthorized'});if(window.pauseCoverUpload)await new Promise(resolve=>window.finishCoverUpload=resolve);return original(...args)}});
  await page.evaluate(()=>{const deps=window.__DND_VAULT_DEPS__,original=deps.getBlob;window.coverReads=0;deps.getBlob=async(...args)=>{++window.coverReads;if(window.failCoverRead)throw Object.assign(Error('Image read failed'),{code:window.failCoverRead});if(window.pauseCoverRead)await new Promise(resolve=>window.finishCoverRead=resolve);return original(...args)}});
  await page.addScriptTag({content:'function createCampaignStore(){return window.__DND_VAULT_DEPS__.vaultCall}'});
@@ -69,7 +69,8 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.evaluate(()=>window.confirm=()=>true);await page.locator('[data-home-cancel]').click();assert.equal(await article().getAttribute('data-home-layout'),'chronicle');
  await page.locator('[data-edit-campaign-home]').click();await page.locator('[data-home-layout-options]').click();await pick('atlas');
  await page.evaluate(()=>testTransactionFailure=true);await page.locator('#campaignHomeEditor button[type=submit]').click();
- await page.waitForFunction(()=>document.querySelector('[data-home-editor-status]').textContent.includes('Permission denied'));
+ await page.waitForFunction(()=>document.querySelector('[data-home-editor-status]').textContent.includes('Missing or insufficient permissions'));
+ assert.match(await page.locator('[data-home-editor-status]').textContent(),/draft is still in this editor.*selected layout/);
  assert.equal(await choice('atlas').isChecked(),true);assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a'].frontPage.layout),'chronicle');
  await page.evaluate(()=>{testTransactionFailure=false;testSheetDocs['campaigns/a'].frontPage.revision=3;});
  await page.locator('#campaignHomeEditor button[type=submit]').click();await page.waitForFunction(()=>document.querySelector('[data-home-editor-status]').textContent.includes('Another DM'));
@@ -111,6 +112,22 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.setViewportSize({width:1440,height:1000});
  await page.evaluate(()=>{activeCampaign.frontPage={...testSheetDocs['campaigns/a'].frontPage,layout:'grimoire'};CampaignHome.render();});
  await page.emulateMedia({media:'print'});assert.equal(await article().locator('h2').evaluate(node=>getComputedStyle(node).color),'rgb(92, 29, 29)');await page.emulateMedia({media:'screen'});
+ for(const id of ['classic','chronicle','atlas','grimoire']){
+  await page.evaluate(()=>{const saved=structuredClone(testSheetDocs['campaigns/a'].frontPage);seed('dm');activeCampaign.frontPage=saved;showMainApp();});
+  const before=await page.evaluate(()=>structuredClone(testSheetDocs['campaigns/a'].frontPage));
+  await page.locator('[data-edit-campaign-home]').click();await page.locator('[data-home-layout-options]').click();await pick(id);
+  await page.locator('#campaignHomeEditor button[type=submit]').click();await page.waitForSelector('#campaignHomeEditor',{state:'detached'});
+  const saved=await page.evaluate(()=>structuredClone(testSheetDocs['campaigns/a'].frontPage));
+  assert.equal(saved.layout||'classic',id);assert.equal(saved.revision,before.revision+1);
+  for(const field of ['tagline','introduction','expectations','imageUrl','imagePath','imageAlt','imageCredit'])assert.equal(saved[field],before[field],id+' retains '+field);
+  // Rebuild the application state from persisted fixture data rather than keeping the preview object.
+  for(const role of ['dm','player']){
+   await page.evaluate(role=>{const stored=structuredClone(testSheetDocs['campaigns/a'].frontPage);seed(role);activeCampaign.frontPage=stored;showMainApp();},role);
+   assert.equal(await article().getAttribute('data-home-layout'),id,id+' reopens for '+role);
+   if(role==='player')assert.equal(await page.locator('[data-edit-campaign-home]').count(),0);
+  }
+ }
+ console.log('PASS Every layout saves, increments its revision once, preserves text/private image fields and reopens for both DMs and players');
  assert.deepEqual(errors,[]);
  console.log('PASS No-image/long-text layouts remain accessible, fit narrow screens and retain readable print headings');
  }finally{await browser.close()}

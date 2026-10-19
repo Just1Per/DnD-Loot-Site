@@ -76,7 +76,7 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
   if(await exists(file)){const stat=await fs.lstat(file);check(stat.isFile()&&!stat.isSymbolicLink()&&(stat.mode&0o077)===0,'Existing backup file is not private');const old=await fs.readFile(file);check(digest(old)===digest(content),'Backup content differs; refusing overwrite');return;}
   await fs.writeFile(file,content,{flag:'wx',mode:0o600});
  }
- function itemAssetPaths(item){
+ function itemAssetPaths(item,{explicitOnly=false}={}){
   const data=documentsToRows([item.source])[0].data;
   const names=new Set();
   for(const key of ['imageUrl','thumbnailUrl','thumbUrl','image'])if(typeof data[key]==='string'&&data[key]){
@@ -84,11 +84,17 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    try{const url=new URL(value);if(url.protocol==='https:'&&url.hostname==='firebasestorage.googleapis.com'){
     const match=url.pathname.match(/^\/v0\/b\/([^/]+)\/o\/(.+)$/);if(match&&decodeURIComponent(match[1])===bucketName)found=decodeURIComponent(match[2]);
    }else if(url.protocol==='https:'&&url.hostname==='storage.googleapis.com'&&url.pathname.startsWith('/'+bucketName+'/'))found=decodeURIComponent(url.pathname.slice(bucketName.length+2));}catch{}
-   if(found.startsWith('dnd-item-images/'))names.add(found);else if(!/^\.?\/?placeholder\.png$/.test(value))names.add('UNRESOLVED:'+key);
+   if(/^dnd-item-images\/[^/]+$/.test(found))names.add(found);else if(!/^\.?\/?placeholder\.png$/.test(value))names.add('UNRESOLVED:'+key);
   }
-  return new Set([...names,`dnd-item-images/${baseImageId(data.imageBaseId||item.id)}.png`,`dnd-item-images/${item.id}.png`]);
+  return explicitOnly?names:new Set([...names,`dnd-item-images/${baseImageId(data.imageBaseId||item.id)}.png`,`dnd-item-images/${item.id}.png`]);
  }
  const port={
+  async inspectTarget(campaignId){
+   check(typeof campaignId==='string'&&campaignId.length>0&&campaignId.length<200&&!campaignId.includes('/'),'Exact campaign ID required');
+   const target=await read('campaigns/'+campaignId),fields=target?.fields||{};
+   check(typeof fields.name?.stringValue==='string'&&fields.name.stringValue&&typeof fields.ownerId?.stringValue==='string'&&fields.ownerId.stringValue,'Target campaign name/owner are unavailable');
+   return {campaignId,campaignName:fields.name.stringValue,ownerId:fields.ownerId.stringValue,inventoryVersion:Number(fields.inventoryVersion?.integerValue)||0};
+  },
   async verifyTarget(plan){
    const target=await read('campaigns/'+plan.campaignId),fields=target?.fields||{};
    check(fields.ownerId?.stringValue===plan.ownerId&&fields.name?.stringValue===plan.campaignName,'Target campaign name/owner do not match the pinned plan');
@@ -122,7 +128,21 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
     if(old)check(old.generation===String(meta.generation),'Legacy artwork changed since backup');
     else{check(!await exists(metadataBackup),'New artwork appeared after backup');artwork.push({sourcePath:file.name,generation:String(meta.generation),metageneration:String(meta.metageneration),metadata:meta});}}
    artwork.unresolved=[];
-   for(const item of plan.items)for(const asset of itemAssetPaths(item))if(asset.startsWith('UNRESOLVED:'))artwork.unresolved.push({id:item.id,field:asset.slice(11)});
+   for(const item of plan.items){
+    for(const asset of itemAssetPaths(item,{explicitOnly:true})){
+     if(asset.startsWith('UNRESOLVED:'))artwork.unresolved.push({id:item.id,field:asset.slice(11)});
+     else if(!artwork.some(row=>row.sourcePath===asset))artwork.unresolved.push({id:item.id,field:'missing referenced object'});
+    }
+    const data=documentsToRows([item.source])[0].data;
+    if(data.imageBaseId&&![...itemAssetPaths(item)].some(name=>artwork.some(row=>row.sourcePath===name)))artwork.unresolved.push({id:item.id,field:'missing imageBaseId object'});
+   }
+   // Shared illustrations may be used by several variants. Preserve every asset
+   // used by a retained item, even when another item using it is retired.
+   for(const asset of artwork){
+    const users=plan.items.filter(item=>itemAssetPaths(item).has(asset.sourcePath));
+    asset.shared=users.some(item=>item.action==='publish');
+    asset.retired=users.some(item=>item.action==='retire');
+   }
    return artwork;
   },
   async backup(plan,assets){
@@ -164,6 +184,7 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
   async verifyPrivate(plan,item,documents){
    const copy=await read(copyPath(plan,item)),journal=await read(archivePath(plan,item));
    check(copy&&fieldsHash(copy.fields)===fieldsHash(documents.copy)&&journal?.fields.original?.mapValue&&fieldsHash(journal.fields.original.mapValue.fields)===item.sourceSha256,'Original/private-copy verification failed');
+   check(fieldsHash({assets:journal.fields.assets})===fieldsHash({assets:documents.archive.assets}),'Private image references were not preserved exactly');
   },
   async verifyNoNewSources(plan){const ids=new Set(plan.items.map(item=>item.id));check((await list('items')).every(doc=>doc.name.split('/').at(-1)==='catalog_meta'||ids.has(doc.name.split('/').at(-1))),'New root items appeared; stop and rebuild review');},
   async publishOrRetire(plan,item){
@@ -172,17 +193,22 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
     check(copy&&journal&&fieldsHash(copy.fields)===journal.fields.copySha256?.stringValue,'Private copy is missing or changed');
     check(source?.updateTime===item.source.updateTime&&fieldsHash(source.fields)===item.sourceSha256,'Source changed before retirement');
     const root=item.action==='publish'?{update:{name:item.source.name,fields:item.replacement},currentDocument:{updateTime:item.source.updateTime}}:{delete:item.source.name,currentDocument:{updateTime:item.source.updateTime}};
-    return [root,
+    const sharedArtwork=item.action==='publish'?artwork.filter(asset=>asset.shared&&itemAssetPaths(item).has(asset.sourcePath)).map(asset=>({update:{name:prefix+'catalogueArtwork/'+asset.sourcePath.slice('dnd-item-images/'.length),fields:encodeFields({status:'generated',path:asset.sourcePath,sha256:asset.sha256,origin:plan.artworkPolicy.origin,evidence:plan.artworkPolicy.evidence})}})):[];
+    const hiddenArtwork=item.action==='retire'?artwork.filter(asset=>!asset.shared&&asset.retired&&itemAssetPaths(item).has(asset.sourcePath)).map(asset=>({delete:prefix+'catalogueArtwork/'+asset.sourcePath.slice('dnd-item-images/'.length)})):[];
+    return [root,...sharedArtwork,...hiddenArtwork,
      {update:{name:journal.name,fields:{...journal.fields,...encodeFields({completed:true})}},currentDocument:{updateTime:journal.updateTime}},
      {update:{name:prefix+'items/catalog_meta',fields:encodeFields({_type:'catalog-meta',policy:POLICY,updatedAt:Date.now()})},updateMask:{fieldPaths:['_type','policy','updatedAt']},updateTransforms:[{fieldPath:'version',increment:{integerValue:'1'}}]}];
    });
   },
   async retireArtwork(plan,assets){
-   // Delete only the exact backed-up generations, after all root copies verify.
+   // Move only exclusively retired artwork out of shared Storage. Retained and
+   // unrelated generated illustrations stay in place, including their URLs.
    const expected=new Set(assets.map(asset=>asset.sourcePath));const [fresh]=await bucket.getFiles({prefix:'dnd-item-images/'});
    check(fresh.every(file=>expected.has(file.name)),'New legacy artwork appeared; review before retirement');
-   for(const asset of assets){const [bytes]=await bucket.file(asset.privatePath).download({validation:'crc32c'});check(digest(bytes)===asset.sha256,'Private artwork changed; refusing legacy deletion');
-    const source=bucket.file(asset.sourcePath),[present]=await source.exists();if(present)await source.delete({ifGenerationMatch:asset.generation});}
+   for(const asset of assets){const [bytes]=await bucket.file(asset.privatePath).download({validation:'crc32c'});check(digest(bytes)===asset.sha256,'Private artwork changed; refusing shared-object removal');
+    const source=bucket.file(asset.sourcePath),[present]=await source.exists();
+    if(asset.shared){check(present,'Retained generated artwork is missing');const [sharedBytes]=await source.download({validation:'crc32c'});check(digest(sharedBytes)===asset.sha256,'Retained generated artwork changed');}
+    else if(asset.retired&&present)await source.delete({ifGenerationMatch:asset.generation});}
   },
   async verifyFinal(plan){
    const all=await list('items'),byId=new Map(all.map(doc=>[doc.name.split('/').at(-1),doc]));

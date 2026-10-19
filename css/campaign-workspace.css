@@ -10,6 +10,12 @@
 .workspace-list{display:flex;flex-direction:column;gap:8px;max-height:65vh;overflow:auto}
 .workspace-list button{text-align:left;white-space:normal;overflow-wrap:anywhere}
 .workspace-list small{display:block;font-family:Georgia,serif;font-size:.72rem;text-transform:none;margin-top:3px}
+.catalogue-creature-row{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #c8b89a;border-radius:6px;background:#fdfbf7;color:#5c1d1d}
+.catalogue-creature-row label{display:flex;align-items:center;gap:12px;flex:1;min-width:0;cursor:pointer;min-height:44px;overflow-wrap:anywhere}
+.catalogue-creature-row input{width:20px;height:20px;flex-shrink:0;accent-color:#742b35}
+.catalogue-creature-row button{flex-shrink:0}
+.catalogue-selection-actions{position:sticky;top:0;background:#f4efe6;padding:10px 0;z-index:1;flex-wrap:wrap}
+@media(max-width:480px){.catalogue-creature-row{flex-wrap:wrap}.catalogue-creature-row label{flex-basis:100%}}
 .workspace-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .workspace-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .workspace-full{grid-column:1/-1}
