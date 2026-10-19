@@ -1,0 +1,41 @@
+name: Private library operator checks
+on:
+  pull_request:
+    paths:
+      - 'Start-ItemMigration.ps1'
+      - 'scripts/**'
+      - 'tests/private-output.cjs'
+      - 'tests/authorized-library-migration.cjs'
+      - 'tests/private-item-library.cjs'
+      - 'tests/item-catalogue-migration.cjs'
+      - '.github/workflows/private-library-operator-tests.yml'
+permissions:
+  contents: read
+jobs:
+  private-output:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Private output ACL/mode checks and immutable migration safeguards
+        run: node --test tests/private-output.cjs tests/authorized-library-migration.cjs tests/private-item-library.cjs tests/item-catalogue-migration.cjs tests/item-catalogue-decisions.cjs
+      - name: Verify packaged code and tests independently from the checkout
+        shell: python
+        run: |
+          import hashlib, pathlib, subprocess, tempfile, zipfile
+          package=pathlib.Path('scripts/operator-packages/campaignatlas-windows-library-migration-operator.zip')
+          checksum=package.with_suffix('.sha256').read_text().split()[0]
+          assert hashlib.sha256(package.read_bytes()).hexdigest()==checksum
+          with tempfile.TemporaryDirectory(prefix='campaignatlas-package-') as directory:
+              with zipfile.ZipFile(package) as bundle:
+                  for name in bundle.namelist():
+                      assert not name.startswith('/') and '..' not in pathlib.PurePosixPath(name).parts
+                  bundle.extractall(directory)
+              root=pathlib.Path(directory)/'campaignatlas-windows-library-migration-operator'
+              subprocess.run(['node','--test','tests/private-output.cjs','tests/authorized-library-migration.cjs','tests/private-item-library.cjs','tests/item-catalogue-migration.cjs'],cwd=root,check=True)

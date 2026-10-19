@@ -11,7 +11,8 @@
       "firebase.test.json",
       "scripts/**",
       "firebase.workspace-test.json",
-      "storage.rules"
+      "storage.rules",
+      "Start-ItemMigration.ps1"
     ]
   },
   "functions": [

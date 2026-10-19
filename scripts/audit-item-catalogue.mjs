@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {writePrivateBytes} from './private-output.mjs';
 import {digest,normalizedText,nameKey} from './build-srd-item-hashes.mjs';
 export const stableJson=value=>JSON.stringify(value&&typeof value==='object'?Array.isArray(value)?value.map(v=>JSON.parse(stableJson(v))):Object.fromEntries(Object.keys(value).sort().map(key=>[key,JSON.parse(stableJson(value[key]))])):value);
 const short=value=>typeof value==='string'?value.replace(/[\x00-\x1f\x7f]/g,' ').slice(0,200):'';
@@ -87,7 +88,7 @@ export function auditCatalogue(rows,reference,{project='offline',scope='complete
 }
 export async function writePrivateFile(file,data){
  // Refuse to overwrite a prior snapshot or report; local exports are private.
- await fs.writeFile(file,JSON.stringify(data,null,2)+'\n',{mode:0o600,flag:'wx'});
+ await writePrivateBytes(file,JSON.stringify(data,null,2)+'\n');
 }
 async function main(){
  let project='',input='',report='',snapshot='',allowReviewedOnlyFallback=false,referenceFile=new URL('../data/rules/srd-magic-item-text-hashes.json',import.meta.url);

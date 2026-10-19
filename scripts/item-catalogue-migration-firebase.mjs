@@ -1,10 +1,12 @@
+import {createPrivateDirectory,assertPrivateFile,writePrivateBytes} from './private-output.mjs';
 /** Operator-only Firebase adapter. Never imported by the website or public CI. */
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {createRequire} from 'node:module';
 import {digest} from './build-srd-item-hashes.mjs';
-import {documentsToRows} from './audit-item-catalogue.mjs';
-import {fieldsHash,encodeFields,POLICY} from './item-catalogue-migration.mjs';
+import {documentsToRows,decodeValue} from './audit-item-catalogue.mjs';
+import {assertLibraryImportPlan} from './private-item-library.mjs';
+import {fieldsHash,encodeFields,POLICY,isLibraryPlan} from './item-catalogue-migration.mjs';
 
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 const exists=async file=>{try{await fs.access(file);return true;}catch{return false;}};
@@ -68,13 +70,15 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
   try{const writes=await work(get);if(writes.length){await commit(writes,transaction);committed=true;}}
   finally{if(!committed)await request(database+':rollback',{method:'POST',body:{transaction}}).catch(()=>{});}
  }
- const archivePath=(plan,item)=>`campaigns/${plan.campaignId}/catalogueArchives/${item.archiveId}`;
- const copyPath=(plan,item)=>`campaigns/${plan.campaignId}/items/${item.archiveId}`;
+ const libraryRoot=ownerId=>`privateItemLibraries/${ownerId}`;
+ const archivePath=(plan,item)=>isLibraryPlan(plan)?`${libraryRoot(plan.ownerId)}/originals/${item.archiveId}`:`campaigns/${plan.campaignId}/catalogueArchives/${item.archiveId}`;
+ const copyPath=(plan,item)=>isLibraryPlan(plan)?`${libraryRoot(plan.ownerId)}/records/${item.archiveId}`:`campaigns/${plan.campaignId}/items/${item.archiveId}`;
+ const templatePath=(plan,item)=>`${libraryRoot(plan.ownerId)}/templates/${item.archiveId}`;
  const marker=item=>({sourceId:item.id,sourceSha256:item.sourceSha256});
  let artwork=[],backupReady=false;
  async function privateFile(file,content){
-  if(await exists(file)){const stat=await fs.lstat(file);check(stat.isFile()&&!stat.isSymbolicLink()&&(stat.mode&0o077)===0,'Existing backup file is not private');const old=await fs.readFile(file);check(digest(old)===digest(content),'Backup content differs; refusing overwrite');return;}
-  await fs.writeFile(file,content,{flag:'wx',mode:0o600});
+  if(await exists(file)){await assertPrivateFile(file);const old=await fs.readFile(file);check(digest(old)===digest(content),'Backup content differs; refusing overwrite');return;}
+  await writePrivateBytes(file,content);
  }
  function itemAssetPaths(item,{explicitOnly=false}={}){
   const data=documentsToRows([item.source])[0].data;
@@ -89,6 +93,56 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
   return explicitOnly?names:new Set([...names,`dnd-item-images/${baseImageId(data.imageBaseId||item.id)}.png`,`dnd-item-images/${item.id}.png`]);
  }
  const port={
+  async importLibraryTemplate(plan,{apply=false}={}){
+   assertLibraryImportPlan(plan);check(plan.project===project,'Import project does not match the connected project');
+   const sourceRelative=plan.source.name.slice(prefix.length),destinationRelative=`campaigns/${plan.campaignId}/items/${plan.itemId}`;
+   const source=await read(sourceRelative),campaign=await read('campaigns/'+plan.campaignId),owner=await read('users/'+plan.ownerId);
+   check(owner&&campaign?.fields.ownerId?.stringValue===plan.ownerId&&campaign.fields.name?.stringValue===plan.campaignName,'Import is restricted to the library owner’s exact own campaign');
+   check(Number(campaign.fields.inventoryVersion?.integerValue)===2,'Upgrade the destination inventory before importing');
+   check(source?.updateTime===plan.source.updateTime&&fieldsHash(source.fields)===plan.sourceSha256,'Reviewed library template changed; rebuild the import plan');
+   const assets=decodeValue(source.fields.assets),copies=[];
+   if(assets.length){
+    const [metadata]=await bucket.getMetadata(),[policy]=await bucket.iam.getPolicy({requestedPolicyVersion:3});
+    check(metadata.iamConfiguration?.uniformBucketLevelAccess?.enabled===true&&!(policy.bindings||[]).some(binding=>(binding.members||[]).some(member=>['allUsers','allAuthenticatedUsers'].includes(member))),'Library artwork requires a private bucket without public IAM');
+   }
+   for(const asset of assets){
+    const file=bucket.file(asset.privatePath),[meta]=await file.getMetadata(),[bytes]=await file.download({validation:'crc32c'});
+    check(bytes.length<10*1024*1024&&/^image\/(png|jpeg|webp|gif)$/.test(meta.contentType||'')&&!meta.metadata?.firebaseStorageDownloadTokens&&digest(bytes)===asset.sha256,'Library illustration changed, has tokens or is not a verified bounded image');
+    copies.push({...asset,path:`campaign-catalogue-images/${plan.campaignId}/${digest(asset.privatePath)}/${asset.sha256}`,bytes,contentType:meta.contentType});
+   }
+   const fields={...source.fields.item.mapValue.fields,...encodeFields({campaignId:plan.campaignId,rootItemId:null,visible:false,highlighted:false,lootMode:'dm',imageUrl:'',imageBaseId:'',librarySource:{ownerId:plan.ownerId,entryId:plan.entryId,sourceSha256:plan.sourceSha256,planSha256:plan.planSha256},...copies[0]?{archivedImage:{path:copies[0].path,sha256:copies[0].sha256}}:{},libraryImages:copies.map(asset=>({path:asset.path,sha256:asset.sha256}))})};
+   check(Buffer.byteLength(JSON.stringify(fields))<700000,'Imported item is too large');
+   const old=await read(destinationRelative);
+   if(old){
+    check(fieldsHash(old.fields)===fieldsHash(fields),'Existing import was edited; never overwrite it');
+    for(const asset of copies){const file=bucket.file(asset.path),[bytes]=await file.download({validation:'crc32c'}),[meta]=await file.getMetadata();check(digest(bytes)===asset.sha256&&!meta.metadata?.firebaseStorageDownloadTokens,'Existing imported illustration is missing or changed');}
+    return {itemId:plan.itemId,writes:0,dryRun:!apply,alreadyImported:true};
+   }
+   if(!apply)return {itemId:plan.itemId,writes:0,dryRun:true,images:copies.length};
+   try{await fs.mkdir(backupDirectory,{mode:0o700});}catch(error){if(error.code!=='EEXIST')throw error;}
+   const directory=await fs.lstat(backupDirectory);check(directory.isDirectory()&&!directory.isSymbolicLink()&&(directory.mode&0o077)===0,'Private import directory must have permissions 0700');
+   const audit=path.join(backupDirectory,'library-import-'+plan.planSha256+'.json');await privateFile(audit,Buffer.from(JSON.stringify(plan,null,2)));
+   const handle=await fs.open(audit,'r');try{await handle.sync();}finally{await handle.close();}
+   for(const asset of copies){
+    const destination=bucket.file(asset.path),[present]=await destination.exists();
+    if(!present)await destination.save(asset.bytes,{resumable:false,validation:'crc32c',preconditionOpts:{ifGenerationMatch:0},metadata:{contentType:asset.contentType,cacheControl:'private, no-store',metadata:{librarySha256:asset.sha256}}});
+    const [bytes]=await destination.download({validation:'crc32c'}),[meta]=await destination.getMetadata();
+    check(digest(bytes)===asset.sha256&&!meta.metadata?.firebaseStorageDownloadTokens,'Campaign illustration verification failed');
+    const anonymous=await fetcher('https://storage.googleapis.com/'+bucketName+'/'+asset.path.split('/').map(encodeURIComponent).join('/'),{method:'HEAD',redirect:'error',signal:AbortSignal.timeout(30000)});
+    check([401,403,404].includes(anonymous.status),'Imported illustration is anonymously readable or privacy is inconclusive');
+   }
+   let writes=0;
+   await transact(async get=>{
+    const current=await get(sourceRelative),target=await get('campaigns/'+plan.campaignId),account=await get('users/'+plan.ownerId),previous=await get(destinationRelative);
+    check(account&&target?.fields.ownerId?.stringValue===plan.ownerId&&target.fields.name?.stringValue===plan.campaignName&&Number(target.fields.inventoryVersion?.integerValue)===2,'Destination identity or readiness changed');
+    check(current?.updateTime===plan.source.updateTime&&fieldsHash(current.fields)===plan.sourceSha256,'Library template changed during import');
+    if(previous){check(fieldsHash(previous.fields)===fieldsHash(fields),'Existing import was edited; never overwrite it');return [];}
+    writes=1;return [{update:{name:prefix+destinationRelative,fields},currentDocument:{exists:false}}];
+   });
+   const saved=await read(destinationRelative);check(saved&&fieldsHash(saved.fields)===fieldsHash(fields),'Imported campaign copy could not be verified');
+   return {itemId:plan.itemId,writes,dryRun:false,images:copies.length};
+  },
+  readLibraryTemplate:(ownerId,entryId)=>{check(typeof ownerId==='string'&&ownerId&&!ownerId.includes('/')&&typeof entryId==='string'&&/^[a-zA-Z0-9_-]{1,100}$/.test(entryId),'Exact library owner and template ID required');return read(`${libraryRoot(ownerId)}/templates/${entryId}`);},
   async inspectTarget(campaignId){
    check(typeof campaignId==='string'&&campaignId.length>0&&campaignId.length<200&&!campaignId.includes('/'),'Exact campaign ID required');
    const target=await read('campaigns/'+campaignId),fields=target?.fields||{};
@@ -96,6 +150,7 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    return {campaignId,campaignName:fields.name.stringValue,ownerId:fields.ownerId.stringValue,inventoryVersion:Number(fields.inventoryVersion?.integerValue)||0};
   },
   async verifyTarget(plan){
+   if(isLibraryPlan(plan)){check((await read('users/'+plan.ownerId))?.name===prefix+'users/'+plan.ownerId,'Private library owner account does not exist');return;}
    const target=await read('campaigns/'+plan.campaignId),fields=target?.fields||{};
    check(fields.ownerId?.stringValue===plan.ownerId&&fields.name?.stringValue===plan.campaignName,'Target campaign name/owner do not match the pinned plan');
    check(Number(fields.inventoryVersion?.integerValue)===2,'Upgrade the target campaign inventory before migration');
@@ -112,6 +167,7 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    const f=journal.fields||{};check(f.sourceSha256?.stringValue===item.sourceSha256&&f.manifestSha256?.stringValue===plan.manifestSha256,'Archive collision or a different manifest');
    if(f.completed?.booleanValue!==true)return false;
    const copy=await read(copyPath(plan,item));check(copy&&fieldsHash(copy.fields)===f.copySha256?.stringValue,'Completed private copy changed; manual review required');
+   if(isLibraryPlan(plan)&&item.action==='publish'){const template=await read(templatePath(plan,item));check(template&&fieldsHash(template.fields)===f.templateSha256?.stringValue,'Completed reusable template changed or is missing');}
    check(item.action==='retire'?!source:!!source&&fieldsHash(source.fields)===fieldsHash(item.replacement),'Completed root record changed; manual review required');
    return true;
   },
@@ -147,8 +203,7 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
   },
   async backup(plan,assets){
    check(!assets.unresolved?.length,'Some external/unknown artwork needs private backup before apply');
-   try{await fs.mkdir(backupDirectory,{mode:0o700});}catch(error){if(error.code!=='EEXIST')throw error;}
-   const stat=await fs.lstat(backupDirectory);check(stat.isDirectory()&&!stat.isSymbolicLink()&&(stat.mode&0o077)===0,'Backup directory must be private (0700) and not a symlink');
+   await createPrivateDirectory(backupDirectory,{allowExisting:true});
    await privateFile(path.join(backupDirectory,'plan.json'),Buffer.from(JSON.stringify(plan,null,2)));
    await privateFile(path.join(backupDirectory,'artwork-metadata.json'),Buffer.from(JSON.stringify(assets,null,2)));
    for(const asset of assets){const backup=path.join(backupDirectory,digest(asset.sourcePath)+'.bin');const data=await exists(backup)?await fs.readFile(backup):(await bucket.file(asset.sourcePath,{generation:asset.generation}).download({validation:'crc32c'}))[0];asset.sha256=digest(data);await privateFile(backup,data);}
@@ -160,7 +215,7 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    check(backupReady,'Private backup must complete first');
    for(const asset of assets){
     const data=await fs.readFile(path.join(backupDirectory,digest(asset.sourcePath)+'.bin'));check(digest(data)===asset.sha256,'Artwork backup checksum mismatch');
-    asset.privatePath=`campaign-catalogue-images/${plan.campaignId}/${digest(asset.sourcePath)}/${asset.sha256}`;
+    asset.privatePath=isLibraryPlan(plan)?`private-item-library-images/${plan.ownerId}/${digest(asset.sourcePath)}/${asset.sha256}`:`campaign-catalogue-images/${plan.campaignId}/${digest(asset.sourcePath)}/${asset.sha256}`;
     const destination=bucket.file(asset.privatePath),[present]=await destination.exists();
     if(!present)await destination.save(data,{resumable:false,validation:'crc32c',preconditionOpts:{ifGenerationMatch:0},metadata:{contentType:asset.metadata.contentType,cacheControl:'private, no-store',metadata:{catalogueSourceSha256:asset.sha256}}});
     const [stored]=await destination.download({validation:'crc32c'}),[meta]=await destination.getMetadata();
@@ -174,23 +229,27 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
   async copyPrivate(plan,item,documents){
    await transact(async get=>{
     const source=await get('items/'+item.id),old=await get(copyPath(plan,item)),journal=await get(archivePath(plan,item));
+    const template=documents.template?await get(templatePath(plan,item)):null;
     check(source?.updateTime===item.source.updateTime&&fieldsHash(source.fields)===item.sourceSha256,'Source changed during private copy');
-    if(old||journal){check(old&&journal&&fieldsHash(old.fields)===fieldsHash(documents.copy)&&journal.fields.sourceSha256?.stringValue===item.sourceSha256&&journal.fields.manifestSha256?.stringValue===plan.manifestSha256,'Existing archive differs; never overwrite an edited private item');return [];}
-    const archive={...documents.archive,...encodeFields({copySha256:fieldsHash(documents.copy),completed:false})};
+    if(old||journal){check(old&&journal&&fieldsHash(old.fields)===fieldsHash(documents.copy)&&journal.fields.sourceSha256?.stringValue===item.sourceSha256&&journal.fields.manifestSha256?.stringValue===plan.manifestSha256,'Existing archive differs; never overwrite an edited private item');if(documents.template)check(template&&fieldsHash(template.fields)===fieldsHash(documents.template),'Existing library template differs');return [];}
+    const archive={...documents.archive,...encodeFields({copySha256:fieldsHash(documents.copy),completed:false,...documents.template?{templateSha256:fieldsHash(documents.template)}:{}})};
     return [{update:{name:prefix+copyPath(plan,item),fields:documents.copy},currentDocument:{exists:false}},
-     {update:{name:prefix+archivePath(plan,item),fields:archive},currentDocument:{exists:false}}];
+     {update:{name:prefix+archivePath(plan,item),fields:archive},currentDocument:{exists:false}},
+     ...documents.template?[{update:{name:prefix+templatePath(plan,item),fields:documents.template},currentDocument:{exists:false}}]:[]];
    });
   },
   async verifyPrivate(plan,item,documents){
    const copy=await read(copyPath(plan,item)),journal=await read(archivePath(plan,item));
    check(copy&&fieldsHash(copy.fields)===fieldsHash(documents.copy)&&journal?.fields.original?.mapValue&&fieldsHash(journal.fields.original.mapValue.fields)===item.sourceSha256,'Original/private-copy verification failed');
    check(fieldsHash({assets:journal.fields.assets})===fieldsHash({assets:documents.archive.assets}),'Private image references were not preserved exactly');
+   if(documents.template){const template=await read(templatePath(plan,item));check(template&&fieldsHash(template.fields)===fieldsHash(documents.template),'Reusable library template was not verified');}
   },
   async verifyNoNewSources(plan){const ids=new Set(plan.items.map(item=>item.id));check((await list('items')).every(doc=>doc.name.split('/').at(-1)==='catalog_meta'||ids.has(doc.name.split('/').at(-1))),'New root items appeared; stop and rebuild review');},
   async publishOrRetire(plan,item){
    await transact(async get=>{
     const copy=await get(copyPath(plan,item)),journal=await get(archivePath(plan,item)),source=await get('items/'+item.id);
     check(copy&&journal&&fieldsHash(copy.fields)===journal.fields.copySha256?.stringValue,'Private copy is missing or changed');
+    if(isLibraryPlan(plan)&&item.action==='publish'){const template=await get(templatePath(plan,item));check(template&&fieldsHash(template.fields)===journal.fields.templateSha256?.stringValue,'Reusable library template is missing or changed');}
     check(source?.updateTime===item.source.updateTime&&fieldsHash(source.fields)===item.sourceSha256,'Source changed before retirement');
     const root=item.action==='publish'?{update:{name:item.source.name,fields:item.replacement},currentDocument:{updateTime:item.source.updateTime}}:{delete:item.source.name,currentDocument:{updateTime:item.source.updateTime}};
     const sharedArtwork=item.action==='publish'?artwork.filter(asset=>asset.shared&&itemAssetPaths(item).has(asset.sourcePath)).map(asset=>({update:{name:prefix+'catalogueArtwork/'+asset.sourcePath.slice('dnd-item-images/'.length),fields:encodeFields({status:'generated',path:asset.sourcePath,sha256:asset.sha256,origin:plan.artworkPolicy.origin,evidence:plan.artworkPolicy.evidence})}})):[];

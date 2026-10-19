@@ -1,0 +1,18 @@
+{
+  "format": 1,
+  "method": "owner-delegated-recommendations",
+  "recordedAt": "2026-10-19",
+  "source": "Owner instruction in this Codex conversation",
+  "instruction": "jeg vil ikke gennemgå beslutningerne, det er for meget, så jeg synes vi skal tage udgangspunkt i de anbefalinger du har, lav de ændringer som der skal laves og så \"rykker\" vi resten over til vores private item library. du skal lave migrations planen og jeg skal nok udføre eller køre den",
+  "proposalSha256": "c8420bf61bd0cf889c3ddee084ab068546b5cb6c9a34c01226452bd449e8e627",
+  "referenceRevision": "0acbf263c74caf8ad080af7a16d86d3700a1ac8f",
+  "counts": {
+    "total": 659,
+    "publish": 302,
+    "retire": 357
+  },
+  "reviewedBy": "Codex catalogue recommendations adopted under the owner's 2026-10-19 delegation",
+  "destination": "owner-private-library",
+  "artwork": "Preserve generated artwork; retain shared art for retained items and privately verify retired-only art before removing shared objects.",
+  "productionExecution": "Owner runs the generated plan; no production operation executed by Codex."
+}

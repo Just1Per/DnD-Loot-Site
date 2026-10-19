@@ -1,3 +1,4 @@
+import {assertPrivateDirectory} from './private-output.mjs';
 import {generatedArtworkPolicy} from './item-artwork-policy.mjs';
 /** Complete offline proposals from sanitized review metadata and verified licensed sources. */
 import fs from 'node:fs/promises';
@@ -127,7 +128,8 @@ export function privateWorksheet(proposals,snapshot,campaignId){
 
 export async function assertPrivateOutput(file){
  const output=path.resolve(file),parent=await fs.realpath(path.dirname(output)),root=await fs.realpath(new URL('..',import.meta.url));
- check(parent!==root&&!parent.startsWith(root+path.sep),'Private output must be outside the repository');
+ const canonical=value=>process.platform==='win32'?value.toLowerCase():value;
+ check(canonical(parent)!==canonical(root)&&!canonical(parent).startsWith(canonical(root)+path.sep),'Private output must be outside the repository');
  let directory=parent;
  while(directory!==path.dirname(directory)){
   const git=path.join(directory,'.git');
@@ -193,8 +195,8 @@ async function main(){
   check(!process.env.GITHUB_ACTIONS,'Private snapshots are never exported in public CI');
   const options={};for(let i=1;i<args.length;i+=2){check(['--campaign','--directory'].includes(args[i])&&args[i+1]&&!options[args[i]],'Use capture --campaign ID --directory EXISTING_PRIVATE_DIRECTORY');options[args[i]]=args[i+1];}
   check(options['--campaign']&&options['--directory'],'Campaign ID and private directory required');
-  const directory=await fs.realpath(options['--directory']),stat=await fs.stat(directory);
-  check(stat.isDirectory()&&(stat.mode&0o077)===0,'Private directory must exist with permissions 0700');
+  await assertPrivateDirectory(path.resolve(options['--directory']));
+  const directory=await fs.realpath(options['--directory']);
   for(const name of ['target.json','root-snapshot.json','item-decisions.json','shareable-review-status.json']){
    const file=await assertPrivateOutput(path.join(directory,name));
    try{await fs.lstat(file);throw Error('Capture output already exists; choose a new private directory');}catch(error){if(error.code!=='ENOENT')throw error;}
