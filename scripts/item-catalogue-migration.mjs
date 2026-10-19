@@ -122,6 +122,7 @@ export function privateDocuments(plan,item,assets=[]){
 export async function migrateCatalogue(plan,port,{apply=false,confirmPlanSha256=''}={}){
  assertPlan(plan);
  if(apply){check(plan.allApproved&&plan.items.every(item=>item.approved),'Every decision must be explicitly approved');check(confirmPlanSha256===plan.planSha256,'Explicit plan digest confirmation required');check(plan.retireLegacyArtwork,'Moving retired-only images to verified private Storage must be explicitly reviewed');}
+ if(apply)console.error('Preflight: verifying owner, campaigns, source records and artwork.');
  await port.verifyTarget(plan);
  await port.verifyExistingCampaigns(plan);
  const current=await port.listSources();
@@ -139,21 +140,26 @@ export async function migrateCatalogue(plan,port,{apply=false,confirmPlanSha256=
  // Backup includes every original document and legacy object before any database write.
  await port.backup(plan,assets);
  const copiedAssets=await port.copyAndVerifyArtwork(plan,assets);
+ console.error('Private item copy and verification: starting '+plan.items.length+' records.');let copiedItems=0;
  for(const item of plan.items){
   if(await port.isCompleted(plan,item,await port.readSource(item.id)))continue;
   const itemAssets=await port.assetsForItem(item,copiedAssets);
   const documents=privateDocuments(plan,item,itemAssets);
   await port.copyPrivate(plan,item,documents);
   await port.verifyPrivate(plan,item,documents);
+  if(++copiedItems%25===0)console.error('Private item copy and verification: '+copiedItems+' newly verified records.');
  }
  // Finish all copies first. A copy failure cannot retire any root record.
+ console.error('All private copies verified. Rechecking sources before shared catalogue changes.');
  await port.verifyNoNewSources(plan);
  for(const item of plan.items){
   if(await port.isCompleted(plan,item,await port.readSource(item.id)))continue;
   await port.publishOrRetire(plan,item);
-  summary.writes++;
+  summary.writes++;if(summary.writes%25===0)console.error('Shared catalogue changes: '+summary.writes+' completed this run.');
  }
+ console.error('Verifying private artwork and removing retired-only shared copies.');
  await port.retireArtwork(plan,copiedAssets);
+ console.error('Final catalogue verification.');
  await port.verifyFinal(plan);
  return {...summary,dryRun:false};
 }

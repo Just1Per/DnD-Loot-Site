@@ -85,6 +85,8 @@ async function main(){
  const backupDirectory=path.resolve(options['--backup-dir']||path.join(directory,'private-backup'));
  check(plan.storage,'Prepare a fresh plan that pins the separate archive bucket; old plans cannot be applied by this launcher');
  const port=await createMigrationPort({project,bucket,archiveBucket:plan.storage.archiveBucket,backupDirectory});
- console.log(JSON.stringify(await migrateCatalogue(plan,port,{apply:mode==='apply',confirmPlanSha256:options['--confirm-plan']}),null,2));
+ const result=await migrateCatalogue(plan,port,{apply:mode==='apply',confirmPlanSha256:options['--confirm-plan']});
+ if(mode==='check'){await port.probeReadTransaction(plan);result.transactionReadVerified=true;}
+ console.log(JSON.stringify(result,null,2));
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{console.error(error.message);process.exitCode=1;});

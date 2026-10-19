@@ -35,8 +35,10 @@ const separate=process.env.TEST_SEPARATE_ARCHIVE==='1';
    })
   };return bucket;};
   const bucket=makeBucket(objects,!separate),archiveObjects=separate?new Map():objects,archiveBucket=separate?makeBucket(archiveObjects,true):bucket;
-  const options={project:'demo-vault-test',bucket:'demo-vault-test.firebasestorage.app',...separate?{archiveBucket:'demo-private-archive'}:{},backupDirectory:path.join(directory,'private-backup'),services:{firestoreOrigin:origin,credential:{getAccessToken:async()=>({access_token:'owner'})},bucket,archiveBucket,fetcher:async(url,init)=>{if(String(url).startsWith('https://storage.googleapis.com/')){assert.equal(init.method,'HEAD');assert.ok(!init.headers?.Authorization);return new Response(null,{status:403});}assert.ok(String(url).startsWith(origin+'/v1/'));return fetch(url,init);}}};
+  const transientReads=new Set(separate?['beginTransaction','batchGet']:[]);
+  const options={project:'demo-vault-test',bucket:'demo-vault-test.firebasestorage.app',...separate?{archiveBucket:'demo-private-archive'}:{},backupDirectory:path.join(directory,'private-backup'),services:{firestoreOrigin:origin,credential:{getAccessToken:async()=>({access_token:'owner'})},bucket,archiveBucket,fetcher:async(url,init)=>{if(String(url).startsWith('https://storage.googleapis.com/')){assert.equal(init.method,'HEAD');assert.ok(!init.headers?.Authorization);return new Response(null,{status:403});}assert.ok(String(url).startsWith(origin+'/v1/'));const op=String(url).split(':').at(-1);if(init.method==='POST'&&transientReads.delete(op))return new Response('{}',{status:503});return fetch(url,init);}}};
   let port=await createMigrationPort(options);
+  await port.probeReadTransaction(plan);
   const dry=await M.migrateCatalogue(plan,port);assert.equal(dry.writes,0);assert.equal((await adminGet('items/b')).fields.name.stringValue,'Synthetic B');
   console.log('PASS Real REST dry-run leaves source documents unchanged');
   const temporarilyMissing=objects.get('dnd-item-images/a.png');objects.delete('dnd-item-images/a.png');

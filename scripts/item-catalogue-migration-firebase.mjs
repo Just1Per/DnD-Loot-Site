@@ -17,15 +17,22 @@ const baseImageId=value=>{
  for(const word of ['common','uncommon','rare','very-rare','veryrare','legendary','artifact','minor','major','grey','gray','red','blue','green','black','white','yellow','purple','orange','bronze','silver','gold','plus'])base=base.replace(new RegExp(`(?<=^|[-_\\s])${word}(?=[-_\\s]|$)`,'gi'),'');
  return base.replace(/[-_\s]+/g,'-').replace(/^[-_]+|[-_]+$/g,'')||value;
 };
-/** Retry only idempotent GET responses; transaction/commit POSTs are never replayed. */
+/** Firestore uses POST for batch reads and transaction allocation, too.
+ * Retry those safe operations, never commit/write operations with uncertain outcomes. */
+export function firestoreOperation(url,method='GET'){
+ if(method==='GET')return 'read';
+ const operation=new URL(url).pathname.split(':').at(-1);
+ return method==='POST'&&['batchGet','beginTransaction','commit','rollback'].includes(operation)?operation:'write';
+}
 export async function firestoreReadResponse(fetcher,url,options,{sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms)),onRetry=message=>console.error(message)}={}){
  const retryable=new Set([429,502,503,504]);
+ const operation=firestoreOperation(url,options.method||'GET'),safe=['read','batchGet','beginTransaction'].includes(operation);
  for(let attempt=0;;attempt++){
   const response=await fetcher(url,{...options,signal:AbortSignal.timeout(60000)});
-  if((options.method||'GET')!=='GET'||!retryable.has(response.status)||attempt>=3)return response;
+  if(!safe||!retryable.has(response.status)||attempt>=3)return response;
   try{await response.body?.cancel();}catch{} // Release a failed response without logging its body.
   const delay=1000*2**attempt;
-  onRetry('Firestore read temporarily unavailable ('+response.status+'); retry '+(attempt+1)+'/3 in '+delay/1000+' s.');
+  onRetry('Firestore '+operation+' temporarily unavailable ('+response.status+'); retry '+(attempt+1)+'/3 in '+delay/1000+' s.');
   await sleep(delay);
  }
 }
@@ -63,7 +70,10 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
   const token=await credential.getAccessToken();
   const response=await firestoreReadResponse(fetcher,api+suffix,{method,headers:{Authorization:'Bearer '+token.access_token,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});
   if(response.status===404&&missing)return null;
-  check(response.ok,'Firestore operation failed ('+response.status+'); no response body is logged');
+  if(!response.ok){
+   const operation=firestoreOperation(api+suffix,method);
+   throw Error('Firestore '+operation+' failed ('+response.status+'); '+(operation==='commit'?'commit outcome may be unknown; keep this plan and backup for verification.':'no response body is logged.'));
+  }
   return response.status===204?{}:response.json();
  }
  const read=(relative,transaction='')=>request(prefix+relative+(transaction?'?transaction='+encodeURIComponent(transaction):''),{missing:true});
@@ -111,6 +121,10 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
   return explicitOnly?names:new Set([...names,`dnd-item-images/${baseImageId(data.imageBaseId||item.id)}.png`,`dnd-item-images/${item.id}.png`]);
  }
  const port={
+  async probeReadTransaction(plan){
+   console.error('Checking Firestore transaction start and document read; no document writes.');
+   await transact(async get=>{await get('items/'+plan.items[0].id);return [];});
+  },
   async importLibraryTemplate(plan,{apply=false}={}){
    assertLibraryImportPlan(plan);check(plan.project===project,'Import project does not match the connected project');
    const sourceRelative=plan.source.name.slice(prefix.length),destinationRelative=`campaigns/${plan.campaignId}/items/${plan.itemId}`;
@@ -231,7 +245,8 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
    await createPrivateDirectory(backupDirectory,{allowExisting:true});
    await privateFile(path.join(backupDirectory,'plan.json'),Buffer.from(JSON.stringify(plan,null,2)));
    await privateFile(path.join(backupDirectory,'artwork-metadata.json'),Buffer.from(JSON.stringify(assets,null,2)));
-   for(const asset of assets){const backup=path.join(backupDirectory,digest(asset.sourcePath)+'.bin');const data=await exists(backup)?await fs.readFile(backup):(await bucket.file(asset.sourcePath,{generation:asset.generation}).download({validation:'crc32c'}))[0];asset.sha256=digest(data);await privateFile(backup,data);}
+   console.error('Local artwork backup: 0/'+assets.length);let backedUp=0;
+   for(const asset of assets){const backup=path.join(backupDirectory,digest(asset.sourcePath)+'.bin');const data=await exists(backup)?await fs.readFile(backup):(await bucket.file(asset.sourcePath,{generation:asset.generation}).download({validation:'crc32c'}))[0];asset.sha256=digest(data);await privateFile(backup,data);if(++backedUp%25===0||backedUp===assets.length)console.error('Local artwork backup: '+backedUp+'/'+assets.length);}
    // Flush the backup files before performing any destructive operation.
    for(const name of await fs.readdir(backupDirectory)){const handle=await fs.open(path.join(backupDirectory,name),'r+');try{await handle.sync();}finally{await handle.close();}}
    backupReady=true;
@@ -239,6 +254,7 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
   async copyAndVerifyArtwork(plan,assets){
    check(backupReady,'Private backup must complete first');
    await verifyArchiveBucket(bucket,archiveBucket,{separate});
+   console.error('Private artwork copy and verification: 0/'+assets.length);let copied=0;
    for(const asset of assets){
     const data=await fs.readFile(path.join(backupDirectory,digest(asset.sourcePath)+'.bin'));check(digest(data)===asset.sha256,'Artwork backup checksum mismatch');
     asset.privatePath=isLibraryPlan(plan)?`private-item-library-images/${plan.ownerId}/${digest(asset.sourcePath)}/${asset.sha256}`:`campaign-catalogue-images/${plan.campaignId}/${digest(asset.sourcePath)}/${asset.sha256}`;
@@ -249,6 +265,7 @@ export async function createMigrationPort({project,bucket:bucketName,archiveBuck
     check(digest(stored)===asset.sha256&&!meta.metadata?.firebaseStorageDownloadTokens,'Private artwork verification failed or download tokens exist');
     const anonymous=await fetcher('https://storage.googleapis.com/'+archiveBucketName+'/'+asset.privatePath.split('/').map(encodeURIComponent).join('/'),{method:'HEAD',redirect:'error',signal:AbortSignal.timeout(30000)});
     check((separate?[401,403]:[401,403,404]).includes(anonymous.status),'Private artwork is anonymously readable or privacy check is inconclusive');
+    if(++copied%25===0||copied===assets.length)console.error('Private artwork copy and verification: '+copied+'/'+assets.length);
    }
    return assets;
   },

@@ -100,3 +100,12 @@ test('active external/missing references and explicit missing imageBaseId still 
  delete item.source.fields.imageUrl;item.id='no-local-image';item.source.fields.imageBaseId=h.M.encode('no-local-image');assets=await h.port.inspectArtwork(h.plan);assert.ok(assets.unresolved.some(issue=>issue.field==='missing imageBaseId object'));
  }finally{await h.cleanup()}
 });
+test('Firestore transaction POST reads and allocation retry transient failures, but commit is never replayed',async()=>{
+ const [,F]=await ready;
+ for(const operation of ['batchGet','beginTransaction','commit','rollback']){
+  let calls=0;const url='https://firestore.googleapis.com/v1/projects/demo-test/databases/(default)/documents:'+operation;
+  const result=await F.firestoreReadResponse(async()=>({status:++calls===1?503:200}),url,{method:'POST'},{sleep:async()=>{},onRetry:()=>{}});
+  assert.equal(F.firestoreOperation(url,'POST'),operation);
+  assert.equal(calls,['batchGet','beginTransaction'].includes(operation)?2:1);assert.equal(result.status,calls===2?200:503);
+ }
+});
