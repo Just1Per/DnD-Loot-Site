@@ -118,29 +118,41 @@ export function privateDocuments(plan,item,assets=[]){
  return {copy,archive,...template?{template}:{}};
 }
 
+/** Report long-running stages without exposing document names, URLs or credentials. */
+export async function migrationStage(label,work,{intervalMs=15000,onProgress=message=>console.error(message)}={}){
+ onProgress(label);
+ const timer=setInterval(()=>onProgress(label+' — still running; do not start another migration.'),intervalMs);
+ try{return await work();}finally{clearInterval(timer);}
+}
+
 /** Port operations are injected, so dry-run and failure boundaries are testable. */
 export async function migrateCatalogue(plan,port,{apply=false,confirmPlanSha256=''}={}){
  assertPlan(plan);
  if(apply){check(plan.allApproved&&plan.items.every(item=>item.approved),'Every decision must be explicitly approved');check(confirmPlanSha256===plan.planSha256,'Explicit plan digest confirmation required');check(plan.retireLegacyArtwork,'Moving retired-only images to verified private Storage must be explicitly reviewed');}
  if(apply)console.error('Preflight: verifying owner, campaigns, source records and artwork.');
- await port.verifyTarget(plan);
- await port.verifyExistingCampaigns(plan);
- const current=await port.listSources();
+ await migrationStage('Preflight: verify owner',()=>port.verifyTarget(plan));
+ await migrationStage('Preflight: verify existing campaigns',()=>port.verifyExistingCampaigns(plan));
+ const current=await migrationStage('Preflight: read shared catalogue',()=>port.listSources());
  const expected=new Set(plan.items.map(item=>item.id));
  check(current.every(doc=>doc.name.split('/').at(-1)==='catalog_meta'||expected.has(doc.name.split('/').at(-1))),'New root items appeared after review; rebuild the plan');
+ await migrationStage('Preflight: verify source revisions and completion journals',async()=>{
+ let checked=0;
  for(const item of plan.items){
+  if(++checked%50===0)console.error('Preflight: checking source '+checked+'/'+plan.items.length);
   const source=current.find(doc=>doc.name.split('/').at(-1)===item.id);
   // A resumed publish/delete must be proven by private journal + source state.
   if(await port.isCompleted(plan,item,source))continue;
   check(source&&source.updateTime===item.source.updateTime&&fieldsHash(source.fields)===item.sourceSha256,'Source changed after review: '+item.id);
  }
- const assets=await port.inspectArtwork(plan);
+ });
+ const assets=await migrationStage('Preflight: inspect Storage artwork',()=>port.inspectArtwork(plan));
  const summary={items:plan.items.length,publish:plan.items.filter(item=>item.action==='publish').length,retire:plan.items.filter(item=>item.action==='retire').length,legacyArtwork:assets.length,unresolvedArtwork:assets.unresolved?.length||0,...assets.diagnostics?{artworkResolution:assets.diagnostics}:{},writes:0,dryRun:!apply,allApproved:plan.allApproved};
  if(!apply)return summary;
  // Backup includes every original document and legacy object before any database write.
- await port.backup(plan,assets);
- const copiedAssets=await port.copyAndVerifyArtwork(plan,assets);
+ await migrationStage('Local backup: preserving original documents and artwork',()=>port.backup(plan,assets));
+ const copiedAssets=await migrationStage('Private artwork: copy and verify',()=>port.copyAndVerifyArtwork(plan,assets));
  console.error('Private item copy and verification: starting '+plan.items.length+' records.');let copiedItems=0;
+ await migrationStage('Private database: copy and verify items',async()=>{
  for(const item of plan.items){
   if(await port.isCompleted(plan,item,await port.readSource(item.id)))continue;
   const itemAssets=await port.assetsForItem(item,copiedAssets);
@@ -149,18 +161,21 @@ export async function migrateCatalogue(plan,port,{apply=false,confirmPlanSha256=
   await port.verifyPrivate(plan,item,documents);
   if(++copiedItems%25===0)console.error('Private item copy and verification: '+copiedItems+' newly verified records.');
  }
+ });
  // Finish all copies first. A copy failure cannot retire any root record.
  console.error('All private copies verified. Rechecking sources before shared catalogue changes.');
- await port.verifyNoNewSources(plan);
+ await migrationStage('Pre-publication: recheck shared catalogue',()=>port.verifyNoNewSources(plan));
+ await migrationStage('Shared catalogue: publish or retire reviewed items',async()=>{
  for(const item of plan.items){
   if(await port.isCompleted(plan,item,await port.readSource(item.id)))continue;
   await port.publishOrRetire(plan,item);
   summary.writes++;if(summary.writes%25===0)console.error('Shared catalogue changes: '+summary.writes+' completed this run.');
  }
+ });
  console.error('Verifying private artwork and removing retired-only shared copies.');
- await port.retireArtwork(plan,copiedAssets);
+ await migrationStage('Retired artwork: verify private copies and remove retired-only sources',()=>port.retireArtwork(plan,copiedAssets));
  console.error('Final catalogue verification.');
- await port.verifyFinal(plan);
+ await migrationStage('Final verification',()=>port.verifyFinal(plan));
  return {...summary,dryRun:false};
 }
 async function main(){
