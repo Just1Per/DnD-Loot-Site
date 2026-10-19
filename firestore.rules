@@ -569,9 +569,6 @@ match /campaigns/{campaignId} {
       && (isCampaignDM(campaignId) || (isActiveMember(campaignId) && !request.resource.data.data.approved && request.resource.data.data.hostUid == '' && request.resource.data.data.participantUids.size() == 0));
     allow update: if validShot(request.resource.data) && canPrepShot(resource.data)
       && request.resource.data.revision == resource.data.revision + 1
-      && (workspace == 'encounters' || workspace == 'oneShots' || 'journalImage' in request.resource.data.data
-        || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspace == 'worldEntries' ? 'playerInformation' : workspace == 'creatures' ? 'playerNPCs' : 'playerChapters')/$(recordId))
-        || !('image' in getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspace == 'worldEntries' ? 'playerInformation' : workspace == 'creatures' ? 'playerNPCs' : 'playerChapters')/$(recordId)).data))
       && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt
       && (isCampaignDM(campaignId) || (request.resource.data.data.approved == resource.data.data.approved && request.resource.data.data.hostUid == resource.data.data.hostUid && request.resource.data.data.participantUids == resource.data.data.participantUids && (request.resource.data.data.targetLevel == resource.data.data.targetLevel && request.resource.data.data.rosterMode == resource.data.data.rosterMode || !resource.data.data.approved && resource.data.createdBy == request.auth.uid) && request.resource.data.data.get('links',[]) == resource.data.data.get('links',[])));
     match /encounters/{encounterId} {
