@@ -40,6 +40,10 @@ function createCampaignWorkspaceStore(sdk) {
       const target = recordRef(campaignId, kind, id), snapshot = await tx.get(target);
       const old = snapshot.data();
       if ((old?.revision || 0) !== revision) throw Error('Changed in another window. Your draft is preserved; reload after copying your edits.');
+      const publication={world:'playerInformation',creature:'playerNPCs',chapter:'playerChapters'}[kind];
+      const removedImage=publication&&old?.data?.journalImage&&!normalized.data.journalImage;
+      const publicationRef=removedImage?doc(db,'campaigns',campaignId,publication,id):null;
+      const shared=publicationRef?await tx.get(publicationRef):null;
       // References resolve inside this campaign. Validate them before any transaction writes.
       const links = normalized.data.links || [];
       if (!Array.isArray(links) || links.length > 40) throw Error('An entry can link up to 40 records.');
@@ -54,6 +58,10 @@ function createCampaignWorkspaceStore(sdk) {
       const next = {...fields, kind, schemaVersion:1, revision:revision+1, createdBy:old?.createdBy || uid, createdAt:old?.createdAt || now, updatedBy:uid, updatedAt:now};
       tx.set(target, next);
       tx.set(secretRef(campaignId, kind, id), {kind, recordId:id, notes:privateNotes, updatedBy:uid, updatedAt:now});
+      if(shared?.data()?.image){
+        const nextPublication={...shared.data(),revision:shared.data().revision+1,updatedBy:uid,updatedAt:now};
+        delete nextPublication.image;tx.set(publicationRef,nextPublication);
+      }
       if (kind === 'world' && normalized.archived) tx.delete(doc(db, 'campaigns', campaignId, 'playerInformation', id));
       if (kind === 'creature' && (normalized.archived || normalized.data.category !== 'Story NPC')) tx.delete(doc(db, 'campaigns', campaignId, 'playerNPCs', id));
       if (kind === 'chapter' && (normalized.archived || normalized.data.status !== 'Completed')) tx.delete(doc(db, 'campaigns', campaignId, 'playerChapters', id));

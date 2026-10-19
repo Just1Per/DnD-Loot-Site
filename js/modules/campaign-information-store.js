@@ -48,6 +48,8 @@ function createCampaignInformationStore(sdk, kind = 'world') {
       if (!source.exists()) throw Error('The source entry no longer exists.');
       if (source.data().revision !== sourceRevision || (previous.data()?.revision || 0) !== publishedRevision) throw Error('This entry changed in another window. Reload before sharing; your draft is preserved.');
       const next={...snapshot(source.data()),revision:publishedRevision+1,updatedBy:uid,updatedAt:Date.now()};
+      // Text updates retain the last explicitly shared image, never draft art.
+      if(previous.data()?.image)next.image=previous.data().image;
       tx.set(destination,next);return {...next,id};
     });
   }
@@ -60,6 +62,26 @@ function createCampaignInformationStore(sdk, kind = 'world') {
       tx.delete(destination);
     });
   }
-  return {snapshot,load,list,watch,publish,unpublish};
+  async function shareImage({campaignId,id,sourceRevision,publishedRevision,hide=false,isCurrent=()=>true}) {
+    const uid=actor();
+    return runTransaction(db,async tx=>{
+      const source=await tx.get(doc(db,'campaigns',validId(campaignId),sources[kind],validId(id)));
+      const destination=target(campaignId,id),previous=await tx.get(destination);
+      if(auth.currentUser?.uid!==uid||!isCurrent())throw Error('Campaign access changed. Reopen this entry.');
+      if(!previous.exists()||previous.data().revision!==publishedRevision)throw Error('Share the page first, or refresh its shared version.');
+      if(!source.exists()||source.data().revision!==sourceRevision)throw Error('The saved entry changed. Reload before sharing its image.');
+      snapshot(source.data()); // Check that the source is still eligible, without publishing its text.
+      const next={...previous.data(),revision:publishedRevision+1,updatedBy:uid,updatedAt:Date.now()};
+      delete next.image;
+      if(!hide){
+        const image=source.data().data?.journalImage;
+        const prefix=`campaign-journal-images/${campaignId}/${kind}/${id}/`;
+        if(!image||!image.path?.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))||typeof image.alt!=='string'||image.alt.length>200||typeof image.caption!=='string'||image.caption.length>500)throw Error('Save a valid illustration before sharing it.');
+        next.image={path:image.path,alt:image.alt,caption:image.caption};
+      }
+      tx.set(destination,next);return {...next,id};
+    });
+  }
+  return {snapshot,load,list,watch,publish,unpublish,shareImage};
 }
 if(typeof module!=='undefined')module.exports={createCampaignInformationStore};
