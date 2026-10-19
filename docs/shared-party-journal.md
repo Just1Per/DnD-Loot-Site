@@ -8,8 +8,8 @@ Active campaign members, including campaign DMs and the owner, can write session
 
 1. **Save private draft** stores the author's working text, visible only to that author. DMs and the owner cannot read another member's drafts.
 2. **Preview** opens an escaped-text reading preview without writing or publishing.
-3. **Share with the party** explicitly copies the saved draft to the campaign feed, after confirmation. Unsaved changes must be saved first.
-4. Later draft edits stay private until **Update shared recap** is chosen. **Make private** removes the shared copy while retaining the saved draft.
+3. Choose **Everyone in this campaign** and select **Share recap** to save and share in one action. Session details and extra notes are optional disclosures.
+4. Later draft edits stay private until the author chooses the shared audience and selects **Share recap** again. **Make private** removes the shared copy while retaining the saved draft.
 
 The feed mixes player accounts with already published DM world pages and chapter summaries. It never reads private workspace source records. DM labels distinguish those snapshots from player accounts. The notebook preserves paragraphs and optional note cards. Existing explicitly shared illustrations and captions load through the authenticated Storage SDK; opening a page never publishes an image. NPCs and private chapter notes remain in their existing reference sections.
 
@@ -44,3 +44,5 @@ This command is an operator instruction; it has not been run by the implementati
 - Existing navigation, campaign home, lore/NPC/chapter browser suites, the 91 UI/print checks and aggregate engine/363 DOM checks passed during implementation. Existing lore, chapter and NPC permission suites also passed against the updated rules.
 
 Browser tests use deterministic Firebase fixtures and Chromium. They do not send production requests, verify production credentials, or establish Safari/assistive-technology conformance. Existing shared-image Storage permissions are unchanged.
+
+See [Visual Journal and campaign map](visual-journal-and-map.md) for full-width cards and the DM-managed map added later.

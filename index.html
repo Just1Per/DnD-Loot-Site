@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="css/site-identity.css?v=20261010-ui-cleanup-v82">
   <link rel="stylesheet" href="css/campaign-workspace.css?v=20261017-world-custom-categories-v1">
   <link rel="stylesheet" href="css/campaign-home.css?v=20261016-subclass-warning-v1">
-  <link rel="stylesheet" href="css/campaign-information.css?v=20261012-campaign-information-v1">
+  <link rel="stylesheet" href="css/campaign-information.css?v=20261019-visual-journal-v1">
   <link rel="stylesheet" href="css/dm-tools.css?v=20261014-saved-items-five-grid-v1">
   <link rel="stylesheet" href="css/site-ui.css?v=20261010-ui-cleanup-v82">
   <link rel="stylesheet" href="css/app-shell.css?v=20261014-navigation-groups-v1">
@@ -34,7 +34,8 @@
   <link rel="stylesheet" href="css/campaign-controls.css?v=20261019-party-mobile-v1">
   <link rel="stylesheet" href="css/character-workspace.css?v=20261016-page-editors-v1">
   <link rel="stylesheet" href="css/page-editors.css?v=20261016-page-editors-v1">
-  <link rel="stylesheet" href="css/campaign-journal.css?v=20261019-shared-journal-v1">
+  <link rel="stylesheet" href="css/campaign-map.css?v=20261019-visual-journal-v1">
+  <link rel="stylesheet" href="css/campaign-journal.css?v=20261019-visual-journal-v1">
   <link rel="stylesheet" href="css/dialogs.css?v=20261019-dialog-centering-v1">
 </head>
 <body>
@@ -118,9 +119,10 @@
     </nav>
     <nav id="campaignSectionNavigation" class="campaign-section-navigation" aria-label="Campaign sections" hidden>
       <div data-section-group="journal" hidden>
-        <button class="tab" data-tab="campaign-journal" type="button">Party journal</button>
-        <button class="tab" data-tab="campaign-information" type="button">Campaign guide</button>
-        <button class="tab" data-tab="campaign-npcs" type="button">Known NPCs</button>
+        <button class="tab" data-tab="campaign-journal" type="button">Recaps</button>
+        <button class="tab" data-tab="campaign-map" type="button">Map</button>
+        <button class="tab" data-tab="campaign-information" type="button">World</button>
+        <button class="tab" data-tab="campaign-npcs" type="button">NPCs</button>
         <button class="tab" data-tab="campaign-chapters" type="button">Completed chapters</button>
       </div>
       <div data-section-group="character" hidden>
@@ -133,6 +135,7 @@
     <!-- ════════════════════════════════════════════════════════════════
          LIBRARY TAB
     ════════════════════════════════════════════════════════════════ -->
+    <section id="tab-campaign-map" class="tab-content" style="display:none" aria-label="Campaign map"></section>
     <section id="tab-campaign-journal" class="tab-content" style="display:none" aria-label="Party journal"></section>
     <section id="tab-campaign-home" class="tab-content" style="display:none" aria-label="Campaign home"></section>
     <section id="tab-campaign-information" class="tab-content" style="display:none" aria-label="Campaign information"></section>
@@ -468,6 +471,6 @@
     <p>© 2026 DKDM — CampaignAtlas’s original website code and interface. Third-party content retains its own licences and rights.</p>
   </footer>
   <script src="js/boot-status.js?v=20261010-ui-cleanup"></script>
-  <script type="module" id="siteAppScript" src="js/app.js?v=20261019-shared-journal-v1"></script>
+  <script type="module" id="siteAppScript" src="js/app.js?v=20261019-visual-journal-v1"></script>
 </body>
 </html>

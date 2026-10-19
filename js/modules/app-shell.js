@@ -1,10 +1,10 @@
 'use strict';
 // Navigation groups existing, independently authorized routes. No campaign data lives here.
 var AppShell=(()=>{
- const journal=['campaign-journal','campaign-information','campaign-npcs','campaign-chapters'];
+ const journal=['campaign-journal','campaign-map','campaign-information','campaign-npcs','campaign-chapters'];
  const dm=['dm','dm-world','dm-creatures','dm-chapters','dm-party','dm-one-shots'];
  let route='campaign-home';
- const titles={'campaign-journal':'Party journal','campaign-home':'Home','campaign-information':'Campaign guide','campaign-npcs':'Known NPCs','campaign-chapters':'Completed chapters',player:'My Character','character-sheet':'Character sheet','character-loot':'Gear & Loot','character-wishlist':'Wishlist',library:'Library',dm:'DM Workspace','dm-world':'World','dm-creatures':'Creatures & NPCs','dm-chapters':'Chapters','dm-party':'Party & Loot','dm-settings':'Campaign settings','dm-one-shots':'One Shots','player-adventures':'My One Shots'};
+ const titles={'campaign-map':'Campaign map','campaign-journal':'Party journal','campaign-home':'Home','campaign-information':'Campaign guide','campaign-npcs':'Known NPCs','campaign-chapters':'Completed chapters',player:'My Character','character-sheet':'Character sheet','character-loot':'Gear & Loot','character-wishlist':'Wishlist',library:'Library',dm:'DM Workspace','dm-world':'World','dm-creatures':'Creatures & NPCs','dm-chapters':'Chapters','dm-party':'Party & Loot','dm-settings':'Campaign settings','dm-one-shots':'One Shots','player-adventures':'My One Shots'};
  function primary(tab){return journal.includes(tab)?'journal':['player','character-sheet','character-loot','character-wishlist','player-adventures'].includes(tab)?'player':dm.includes(tab)?'dm':tab;}
  function resolve(tab){return tab==='journal'?'campaign-journal':tab;}
  function ensure(){

@@ -84,6 +84,16 @@ service firebase.storage {
       allow delete: if isCampaignDM(campaignId);
     }
 
+    // Journal map images are immutable. Players see only the currently saved map.
+    match /campaign-maps/{campaignId}/{imageId} {
+      allow read: if isCampaignDM(campaignId) || (
+        (isCampaignOwner(campaignId) || isActiveMember(campaignId))
+        && firestore.exists(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main)
+        && firestore.get(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main).data.imagePath == 'campaign-maps/' + campaignId + '/' + imageId
+      );
+      allow create: if resource == null && isCampaignDM(campaignId) && validImage() && request.resource.size > 0;
+    }
+
     // World Building maps. New images are private to the owner and active DMs.
     // Uploads use unique names, so replacing a map creates a new immutable object.
     match /campaign-world-images/{campaignId}/{entryId}/{imageId} {
