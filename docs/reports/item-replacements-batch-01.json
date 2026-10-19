@@ -1,0 +1,530 @@
+{
+  "format": 1,
+  "kind": "srd-replacement-review-batch",
+  "status": "awaiting-owner-review",
+  "referenceRevision": "0acbf263c74caf8ad080af7a16d86d3700a1ac8f",
+  "sourceReview": "item-catalogue-review-2026-10-16.json",
+  "sourceReviewSha256": "9fc8f2d7b2b8ffd4342730b33b13c7ef2479b2d8135fa73ebaab1705f997a105",
+  "scope": "12 proposed shared-template replacements only. No campaign, inventory, character or production data changes.",
+  "note": "Partial review batch, not an executable migration manifest. No approvals or target campaign are supplied. Resolve all 659 decisions in a private full worksheet before planning a production migration.",
+  "decisions": [
+    {
+      "id": "potion-of-healing",
+      "sourceSha256": "0c3120c81af23c469f4a7432b7860967737e215b344e9794fff1e1aacb8a6a9b",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Potion of Healing",
+        "description": "When you drink this potion, you regain 2d4 + 2 hit points.",
+        "category": "Potion",
+        "rarity": "Common",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": ""
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Shortened to the selected healing-table row; omitted appearance and other potency rows.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "9254b051b4a1018626294aabe192dab39a132dd3671a1ba103d58e3c32fe087c",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_potion-of-healing; complete source file and licence document checksums verified against the repository index. Shortened to the selected healing-table row; omitted appearance and other potency rows."
+      },
+      "review": {
+        "referenceId": "srd_potion-of-healing",
+        "referenceDescriptionSha256": "9254b051b4a1018626294aabe192dab39a132dd3671a1ba103d58e3c32fe087c",
+        "replacementDescriptionSha256": "c632ace0a2d7b8bf7c66c2073c6073d6099465d53e592a72072f8ec2dacc3d41",
+        "changes": "Shortened to the selected healing-table row; omitted appearance and other potency rows.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "potion-of-greater-healing",
+      "sourceSha256": "acfe2aaf32676a7b0f9e189462be35e04438458ebf6e89dcd7d0a8acdee2a58d",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Potion of Greater Healing",
+        "description": "When you drink this potion, you regain 4d4 + 4 hit points.",
+        "category": "Potion",
+        "rarity": "Uncommon",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": ""
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Shortened to the selected healing-table row; omitted appearance and other potency rows.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "9254b051b4a1018626294aabe192dab39a132dd3671a1ba103d58e3c32fe087c",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_potion-of-greater-healing; complete source file and licence document checksums verified against the repository index. Shortened to the selected healing-table row; omitted appearance and other potency rows."
+      },
+      "review": {
+        "referenceId": "srd_potion-of-greater-healing",
+        "referenceDescriptionSha256": "9254b051b4a1018626294aabe192dab39a132dd3671a1ba103d58e3c32fe087c",
+        "replacementDescriptionSha256": "515dc4594779dae4d75828b6f83e4a242dc09b46e48908e1b4c47889e61b0af7",
+        "changes": "Shortened to the selected healing-table row; omitted appearance and other potency rows.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "potion-of-superior-healing",
+      "sourceSha256": "5134d672a884a783b67f7513fbb7d2b27b42ab38a484143831d71d2a523a11fd",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Potion of Superior Healing",
+        "description": "When you drink this potion, you regain 8d4 + 8 hit points.",
+        "category": "Potion",
+        "rarity": "Rare",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": ""
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Shortened to the selected healing-table row; omitted appearance and other potency rows.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "9254b051b4a1018626294aabe192dab39a132dd3671a1ba103d58e3c32fe087c",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_potion-of-superior-healing; complete source file and licence document checksums verified against the repository index. Shortened to the selected healing-table row; omitted appearance and other potency rows."
+      },
+      "review": {
+        "referenceId": "srd_potion-of-superior-healing",
+        "referenceDescriptionSha256": "9254b051b4a1018626294aabe192dab39a132dd3671a1ba103d58e3c32fe087c",
+        "replacementDescriptionSha256": "a1321a87ffff1b69a9ca2624807cd102cd604c253d51ca9766ea1b3b0f576a3c",
+        "changes": "Shortened to the selected healing-table row; omitted appearance and other potency rows.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "potion-of-supreme-healing",
+      "sourceSha256": "12dd9f2ad813fcffbf590d5050c215d798790b804d26ad793903c76209799f41",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Potion of Supreme Healing",
+        "description": "When you drink this potion, you regain 10d4 + 20 hit points.",
+        "category": "Potion",
+        "rarity": "Very Rare",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": ""
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Shortened to the selected healing-table row; omitted appearance and other potency rows.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "9254b051b4a1018626294aabe192dab39a132dd3671a1ba103d58e3c32fe087c",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_potion-of-supreme-healing; complete source file and licence document checksums verified against the repository index. Shortened to the selected healing-table row; omitted appearance and other potency rows."
+      },
+      "review": {
+        "referenceId": "srd_potion-of-supreme-healing",
+        "referenceDescriptionSha256": "9254b051b4a1018626294aabe192dab39a132dd3671a1ba103d58e3c32fe087c",
+        "replacementDescriptionSha256": "1e9c37b1ea1bce152ca73a59bac1c34b9e2977e4f2bc2196af3954a1b7e4a6ce",
+        "changes": "Shortened to the selected healing-table row; omitted appearance and other potency rows.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "longsword-plus-1",
+      "sourceSha256": "43fac5764421902e00603ff15783fc54d115b7c40b664da4f9ee193d06d9beb8",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Longsword (+1)",
+        "description": "You gain a +1 bonus to attack and damage rolls made with this magic longsword.",
+        "category": "Weapon",
+        "rarity": "Uncommon",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": "",
+        "mechanics": {
+          "version": 1,
+          "kind": "weapon",
+          "base": "longsword",
+          "edition": "2014",
+          "attackBonus": 1,
+          "damageBonus": 1
+        }
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Made the selected longsword variant and its attack/damage bonus explicit; omitted generic rarity wording.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "250e70c1d4c333ba69353523db8642f1d270c088965198f6816a025dece666f1",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_longsword-1; complete source file and licence document checksums verified against the repository index. Made the selected longsword variant and its attack/damage bonus explicit; omitted generic rarity wording."
+      },
+      "review": {
+        "referenceId": "srd_longsword-1",
+        "referenceDescriptionSha256": "250e70c1d4c333ba69353523db8642f1d270c088965198f6816a025dece666f1",
+        "replacementDescriptionSha256": "642ef2769a860c4c80831b01ecc83bf611f934599bbe4015e7209d8a4ae6a0d6",
+        "changes": "Made the selected longsword variant and its attack/damage bonus explicit; omitted generic rarity wording.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "longsword-plus-2",
+      "sourceSha256": "86b582cd5cd1b48521e52d3dbaf268f5c220be6368d2604033d3aac5c5bdbe80",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Longsword (+2)",
+        "description": "You gain a +2 bonus to attack and damage rolls made with this magic longsword.",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": "",
+        "mechanics": {
+          "version": 1,
+          "kind": "weapon",
+          "base": "longsword",
+          "edition": "2014",
+          "attackBonus": 2,
+          "damageBonus": 2
+        }
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Made the selected longsword variant and its attack/damage bonus explicit; omitted generic rarity wording.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "250e70c1d4c333ba69353523db8642f1d270c088965198f6816a025dece666f1",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_longsword-2; complete source file and licence document checksums verified against the repository index. Made the selected longsword variant and its attack/damage bonus explicit; omitted generic rarity wording."
+      },
+      "review": {
+        "referenceId": "srd_longsword-2",
+        "referenceDescriptionSha256": "250e70c1d4c333ba69353523db8642f1d270c088965198f6816a025dece666f1",
+        "replacementDescriptionSha256": "bcb2fe64386d61d4af55136f10fe6406d8a11e9ae01776401d015db95bef48ea",
+        "changes": "Made the selected longsword variant and its attack/damage bonus explicit; omitted generic rarity wording.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "longsword-plus-3",
+      "sourceSha256": "99021db0e7f4e44dd3f16140933fff9b917246ef8a8cabe96ad9d3480722c87b",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Longsword (+3)",
+        "description": "You gain a +3 bonus to attack and damage rolls made with this magic longsword.",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": "",
+        "mechanics": {
+          "version": 1,
+          "kind": "weapon",
+          "base": "longsword",
+          "edition": "2014",
+          "attackBonus": 3,
+          "damageBonus": 3
+        }
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Made the selected longsword variant and its attack/damage bonus explicit; omitted generic rarity wording.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "250e70c1d4c333ba69353523db8642f1d270c088965198f6816a025dece666f1",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_longsword-3; complete source file and licence document checksums verified against the repository index. Made the selected longsword variant and its attack/damage bonus explicit; omitted generic rarity wording."
+      },
+      "review": {
+        "referenceId": "srd_longsword-3",
+        "referenceDescriptionSha256": "250e70c1d4c333ba69353523db8642f1d270c088965198f6816a025dece666f1",
+        "replacementDescriptionSha256": "0f24834e31d8e8a86fc09337f8b2ba9caf9d3bd6160f233fa29e8dbc4ac344fd",
+        "changes": "Made the selected longsword variant and its attack/damage bonus explicit; omitted generic rarity wording.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "shield-plus-1",
+      "sourceSha256": "da0c41a5f24796dcf295f3c3175d271227ab46514bc06872b2b71fbf249e1da8",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Shield (+1)",
+        "description": "While holding this shield, you gain a +1 bonus to Armor Class in addition to the shield’s normal AC bonus.",
+        "category": "Armor",
+        "rarity": "Uncommon",
+        "source": "SRD 5.2",
+        "edition": "2024",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": "",
+        "mechanics": {
+          "version": 1,
+          "kind": "shield",
+          "base": "",
+          "edition": "2024",
+          "acBonus": 1
+        }
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.2 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Made the selected +1 bonus explicit; retained that it is additional to the normal shield bonus.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2024/MagicItem.json",
+        "referenceSha256": "a854383030b13105b355b9cb633d91b034453d5626314b8c9b0d2e03cfed29f0",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd-2024_shield-plus-1; complete source file and licence document checksums verified against the repository index. Made the selected +1 bonus explicit; retained that it is additional to the normal shield bonus."
+      },
+      "review": {
+        "referenceId": "srd-2024_shield-plus-1",
+        "referenceDescriptionSha256": "a854383030b13105b355b9cb633d91b034453d5626314b8c9b0d2e03cfed29f0",
+        "replacementDescriptionSha256": "465c8eac9a47ca279f0e06d53e477145b801497a41c9ac74bd3bac2e7cb58301",
+        "changes": "Made the selected +1 bonus explicit; retained that it is additional to the normal shield bonus.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2024 proposal; do not silently relabel as 2014 or rewrite existing campaign copies.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "shield-plus-2",
+      "sourceSha256": "f4b77994bad19e1b54dafa66ca3442c117050cabec0f4fd86c5f4f4b41e6b7c4",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Shield (+2)",
+        "description": "While holding this shield, you gain a +2 bonus to Armor Class in addition to the shield’s normal AC bonus.",
+        "category": "Armor",
+        "rarity": "Rare",
+        "source": "SRD 5.2",
+        "edition": "2024",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": "",
+        "mechanics": {
+          "version": 1,
+          "kind": "shield",
+          "base": "",
+          "edition": "2024",
+          "acBonus": 2
+        }
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.2 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Made the selected +2 bonus explicit; retained that it is additional to the normal shield bonus.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2024/MagicItem.json",
+        "referenceSha256": "a854383030b13105b355b9cb633d91b034453d5626314b8c9b0d2e03cfed29f0",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd-2024_shield-plus-2; complete source file and licence document checksums verified against the repository index. Made the selected +2 bonus explicit; retained that it is additional to the normal shield bonus."
+      },
+      "review": {
+        "referenceId": "srd-2024_shield-plus-2",
+        "referenceDescriptionSha256": "a854383030b13105b355b9cb633d91b034453d5626314b8c9b0d2e03cfed29f0",
+        "replacementDescriptionSha256": "a801da2b9a7758275b05b6cee066ad8bb96a2da16b2baa55cff02b24ad847e75",
+        "changes": "Made the selected +2 bonus explicit; retained that it is additional to the normal shield bonus.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2024 proposal; do not silently relabel as 2014 or rewrite existing campaign copies.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "bag-of-holding",
+      "sourceSha256": "7f218668a1330e4a5bdb0b4caddbf3e179c894f689b15964d1fe28c4dfb7067a",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Bag of Holding",
+        "description": "This bag has an interior space considerably larger than its outside dimensions, roughly 2 feet in diameter at the mouth and 4 feet deep. The bag can hold up to 500 pounds, not exceeding a volume of 64 cubic feet. The bag weighs 15 pounds, regardless of its contents. Retrieving an item from the bag requires an action.\n\nIf the bag is overloaded, pierced, or torn, it ruptures and is destroyed, and its contents are scattered in the Astral Plane. If the bag is turned inside out, its contents spill forth, unharmed, but the bag must be put right before it can be used again. Breathing creatures inside the bag can survive up to a number of minutes equal to 10 divided by the number of creatures (minimum 1 minute), after which time they begin to suffocate.\n\nPlacing a _bag of holding_ inside an extradimensional space created by a _handy haversack_, _portable hole_, or similar item instantly destroys both items and opens a gate to the Astral Plane. The gate originates where the one item was placed inside the other. Any creature within 10 feet of the gate is sucked through it to a random location on the Astral Plane. The gate then closes. The gate is one-way only and can't be reopened.",
+        "category": "Wondrous Item",
+        "rarity": "Uncommon",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": ""
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Retained the licensed source description; normalized line endings only. Markdown emphasis remains plain text.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "ad0499b19648fcd6441d422d22573b8f9ec8081f2ad0443a98916a531833299c",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_bag-of-holding; complete source file and licence document checksums verified against the repository index. Retained the licensed source description; normalized line endings only. Markdown emphasis remains plain text."
+      },
+      "review": {
+        "referenceId": "srd_bag-of-holding",
+        "referenceDescriptionSha256": "ad0499b19648fcd6441d422d22573b8f9ec8081f2ad0443a98916a531833299c",
+        "replacementDescriptionSha256": "ad0499b19648fcd6441d422d22573b8f9ec8081f2ad0443a98916a531833299c",
+        "changes": "Retained the licensed source description; normalized line endings only. Markdown emphasis remains plain text.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "cloak-of-protection",
+      "sourceSha256": "fd9afc8e59ea025277e9c946d81fa8f3c0ff4a2fa9b2ad41ad3e1b019be6b0d8",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Cloak of Protection",
+        "description": "You gain a +1 bonus to AC and saving throws while you wear this cloak.",
+        "category": "Wondrous Item",
+        "rarity": "Uncommon",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": true,
+        "classes": [],
+        "properties": [],
+        "quote": ""
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Retained the licensed source description; normalized line endings only. Markdown emphasis remains plain text.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "f218d6c98b1b8cd6d42fcb92d365800b6485775c6a4cd3c0d807826a7ed1c4e9",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_cloak-of-protection; complete source file and licence document checksums verified against the repository index. Retained the licensed source description; normalized line endings only. Markdown emphasis remains plain text."
+      },
+      "review": {
+        "referenceId": "srd_cloak-of-protection",
+        "referenceDescriptionSha256": "f218d6c98b1b8cd6d42fcb92d365800b6485775c6a4cd3c0d807826a7ed1c4e9",
+        "replacementDescriptionSha256": "f218d6c98b1b8cd6d42fcb92d365800b6485775c6a4cd3c0d807826a7ed1c4e9",
+        "changes": "Retained the licensed source description; normalized line endings only. Markdown emphasis remains plain text.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    },
+    {
+      "id": "immovable-rod",
+      "sourceSha256": "fa0c291b4c7953793fe5d215caa6fb59e66a25539ba1e55bf6b8270cc5558dcd",
+      "action": "publish",
+      "approved": false,
+      "reviewedBy": "",
+      "reviewedAt": "",
+      "replacement": {
+        "name": "Immovable Rod",
+        "description": "This flat iron rod has a button on one end. You can use an action to press the button, which causes the rod to become magically fixed in place. Until you or another creature uses an action to push the button again, the rod doesn't move, even if it is defying gravity. The rod can hold up to 8,000 pounds of weight. More weight causes the rod to deactivate and fall. A creature can use an action to make a DC 30 Strength check, moving the fixed rod up to 10 feet on a success.",
+        "category": "Rod",
+        "rarity": "Uncommon",
+        "source": "SRD 5.1",
+        "edition": "2014",
+        "attunement": false,
+        "classes": [],
+        "properties": [],
+        "quote": ""
+      },
+      "rights": {
+        "license": "CC-BY-4.0",
+        "attribution": "This work includes material from the System Reference Document 5.1 by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document. Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: Retained the licensed source description; normalized line endings only. Markdown emphasis remains plain text.",
+        "sourceUrl": "https://github.com/open5e/open5e-api/blob/0acbf263c74caf8ad080af7a16d86d3700a1ac8f/data/v2/wizards-of-the-coast/srd-2014/MagicItem.json",
+        "referenceSha256": "a0eddf1d212c5a74b4a57bdd27d56f8e1629c165d66083f2b760a776df3a0e60",
+        "evidence": "Pinned Open5e revision 0acbf263c74caf8ad080af7a16d86d3700a1ac8f; record srd_immovable-rod; complete source file and licence document checksums verified against the repository index. Retained the licensed source description; normalized line endings only. Markdown emphasis remains plain text."
+      },
+      "review": {
+        "referenceId": "srd_immovable-rod",
+        "referenceDescriptionSha256": "a0eddf1d212c5a74b4a57bdd27d56f8e1629c165d66083f2b760a776df3a0e60",
+        "replacementDescriptionSha256": "a0eddf1d212c5a74b4a57bdd27d56f8e1629c165d66083f2b760a776df3a0e60",
+        "changes": "Retained the licensed source description; normalized line endings only. Markdown emphasis remains plain text.",
+        "artwork": "Preserve generated artwork from the verified original snapshot under the separate owner instruction; this text proposal carries no image URLs.",
+        "editionDecision": "Explicit 2014 proposal; do not silently upgrade to 2024.",
+        "remaining": [
+          "Owner content/edition approval",
+          "Fresh complete private snapshot and source revision check",
+          "Durable private backup and generated-art preservation review"
+        ]
+      }
+    }
+  ]
+}

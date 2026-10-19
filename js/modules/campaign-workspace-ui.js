@@ -206,6 +206,43 @@ var CampaignWorkspace = (() => {
     if(session.dirty&&!confirm('Discard unsaved changes before importing this creature?'))return false;
     session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize((()=>{const d=structuredClone(record.data||{});for(const k of ['journalImage','links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete d[k];return d;})()),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
   }
+  async function importCreatures(requests,{isCurrent=()=>true,onProgress=()=>{}}={}){
+    const s=session;
+    if(s?.kind!=='creature'||!current(s)||s.busy)throw Error('Open the campaign creature workspace before importing.');
+    if(!s.rowsLoaded)throw Error('Wait for campaign creatures to finish loading, then import your selection.');
+    if(!Array.isArray(requests)||!requests.length||requests.length>100||new Set(requests.map(row=>row.id)).size!==requests.length)throw Error('Choose between 1 and 100 different creatures.');
+    const active=()=>current(s)&&isCurrent();
+    const prepared=requests.map(request=>{
+      if(!CampaignRules.allowed(request.record)||!/^srd-(2014|2024)-/.test(request.record.id||''))throw Error('A selected creature is outside the allowed SRD editions.');
+      const data=structuredClone(request.record.data||{});
+      for(const key of ['journalImage','links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete data[key];
+      const input=store.normalize('creature',{title:request.record.title,summary:request.record.summary,content:request.record.content||'',privateNotes:'',archived:false,data:CampaignCreatures.normalize(data)});
+      return {...request,input};
+    });
+    const completed=[];let error=null;s.busy=true;
+    try{
+      for(const request of prepared){
+        if(!active())throw Error('Campaign access changed. Remaining creatures were not imported.');
+        let saved;
+        try{saved=await store.save({campaignId:s.campaignId,kind:'creature',id:request.id,revision:0,input:request.input,isCurrent:()=>active()&&CampaignRules.allowed(request.record)});}
+        catch(failure){
+          // Reuse the same destination ID on retry. An acknowledged matching
+          // record proves a prior transaction succeeded despite a lost response.
+          if(!active())throw failure;
+          const previous=await store.load(s.campaignId,'creature',request.id).catch(()=>null);
+          const fields=['title','summary','content','privateNotes','data','archived'];
+          if(!previous||previous.createdBy!==s.uid||previous.revision!==1||fields.some(key=>JSON.stringify(previous[key])!==JSON.stringify(request.input[key])))throw failure;
+          saved=previous;
+        }
+        completed.push(request.key);
+        if(!active())break;
+        const index=s.rows.findIndex(row=>row.id===saved.id);if(index<0)s.rows.push(saved);else s.rows[index]=saved;
+        onProgress(completed.length,prepared.length,request.key);
+      }
+    }catch(failure){error=failure;}
+    finally{s.busy=false;if(current(s)){renderList();status(`${completed.length} creature${completed.length===1?'':'s'} imported privately.${error?' '+error.message:' Your current draft is kept.'}`,!!error);}}
+    return {completed,error};
+  }
   async function navigateTo(kind,recordId){
     const old=session;
     if(!configs[kind]||!permitted(kind)||!recordId)return false;
@@ -222,5 +259,5 @@ var CampaignWorkspace = (() => {
   function switchKind(kind){if(session?.busy)return;if(!clear())return;showTab(configs[kind].tab,false);render(kind);}
   window.addEventListener('beforeunload',event=>{if(session?.dirty){event.preventDefault();event.returnValue='';}});
   window.addEventListener('afterprint',()=>{document.body.classList.remove('printing-workspace');document.getElementById('workspacePrintSurface')?.replaceChildren();});
-  return {render,importCreature,switchKind,navigateTo,clear,beforeNavigate,configs,store,get session(){return session;},draft,save,newRecord,openRecord,renderEditor,renderList,renderLinks,status,id};
+  return {render,importCreature,importCreatures,switchKind,navigateTo,clear,beforeNavigate,configs,store,get session(){return session;},draft,save,newRecord,openRecord,renderEditor,renderList,renderLinks,status,id};
 })();

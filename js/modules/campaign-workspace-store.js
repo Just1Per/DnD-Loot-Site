@@ -32,8 +32,9 @@ function createCampaignWorkspaceStore(sdk) {
     if (!record.exists()) throw Error('This record no longer exists.');
     return {...record.data(), id, privateNotes:secret.data()?.notes || ''};
   }
-  async function save({campaignId, kind, id, revision, input}) {
+  async function save({campaignId, kind, id, revision, input, isCurrent=()=>true}) {
     const uid = actor(), normalized = normalize(kind, input);
+    if(!isCurrent())throw Error('Campaign access changed. Reopen the import.');
     if (!Number.isInteger(revision) || revision < 0) throw Error('Invalid revision.');
     return runTransaction(db, async tx => {
       const target = recordRef(campaignId, kind, id), snapshot = await tx.get(target);
@@ -49,6 +50,7 @@ function createCampaignWorkspaceStore(sdk) {
         if (!linked.exists()) throw Error('A linked record no longer exists. Remove that link before saving.');
       }
       const now = Date.now(), {privateNotes, ...fields} = normalized;
+      if(auth.currentUser?.uid!==uid||!isCurrent())throw Error('Campaign access changed. Reopen the import.');
       const next = {...fields, kind, schemaVersion:1, revision:revision+1, createdBy:old?.createdBy || uid, createdAt:old?.createdAt || now, updatedBy:uid, updatedAt:now};
       tx.set(target, next);
       tx.set(secretRef(campaignId, kind, id), {kind, recordId:id, notes:privateNotes, updatedBy:uid, updatedAt:now});

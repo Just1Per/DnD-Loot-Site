@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>CampaignAtlas · Item catalogue review</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#342d26;background:#eee5d5;line-height:1.55;color-scheme:light}
+*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button,input,select,textarea,a{touch-action:manipulation}button,a,input,select,textarea{outline-offset:3px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #784510}
+button,.button{min-height:44px;border:1px solid #b6a488;border-radius:7px;padding:9px 14px;background:#fffdf9;color:#5c1d1d;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;font-weight:650}button:hover,.button:hover{background:#f2e7d3}button:disabled{opacity:.55;cursor:default}button.primary{background:#741f24;color:#fff7e7;border-color:#741f24}button[aria-pressed=true]{box-shadow:0 0 0 2px #741f24;background:#eee1c9;color:#481619}a{color:#74301b;overflow-wrap:anywhere}h1,h2,h3{font-family:Georgia,serif;color:#5c1d1d;line-height:1.25}h1{margin:8px 0;font-size:clamp(1.7rem,4vw,2.4rem)}h2{font-size:1.65rem;margin:0 0 12px}h3{font-size:1.2rem;margin:0 0 12px}p{margin:8px 0 14px}label{display:flex;flex-direction:column;gap:5px;font-weight:650;font-size:.9rem}input,select,textarea{width:100%;min-width:0;border:1px solid #a9967a;border-radius:6px;background:#fffdf9;color:#342d26;padding:10px;min-height:44px}textarea{resize:vertical;min-height:115px}small,.muted{color:#615543}.eyebrow{font-size:.76rem;letter-spacing:.11em;text-transform:uppercase;font-weight:750;color:#6d4d24}.skip{position:absolute;left:12px;top:-90px;background:white;padding:12px;z-index:5}.skip:focus{top:8px}
+header{padding:24px max(20px,calc((100vw - 1400px)/2));background:#fdfbf7;border-bottom:2px solid #b99850}.header-copy{max-width:900px}.notice{padding:12px 16px;border-left:4px solid #8b6523;background:#f4ebd8;border-radius:4px;font-size:.94rem}.top-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:18px}.top-actions label{max-width:300px;flex:1 1 220px}.stats{display:flex;flex-wrap:wrap;gap:8px 20px;margin:16px 0 8px;font-size:.92rem}progress{width:min(100%,500px);height:12px;accent-color:#741f24}.status{font-size:.9rem;color:#554a38;min-height:1.5em;margin:5px 0}.layout{display:grid;grid-template-columns:minmax(290px,370px) minmax(0,1fr);gap:24px;max-width:1440px;margin:auto;padding:24px 20px;align-items:start}aside,.panel{background:#fdfbf7;border:1px solid #c8b89a;border-radius:10px;padding:20px;min-width:0}.filters{display:grid;gap:12px}.filter-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.results{display:grid;gap:8px;margin:14px 0}.result{display:block;text-align:left;width:100%;font-weight:600;line-height:1.35;padding:12px}.result[aria-current=true]{border:2px solid #741f24;background:#f2e8d7}.result small{display:block;font-size:.78rem;font-weight:500;margin-top:5px}.pager{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.85rem}.pager button{padding:8px 12px}.tags{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 16px}.tag{font-size:.78rem;border-radius:99px;background:#eee4d2;padding:4px 10px;color:#493b25}.tag.replace{background:#e8efdf;color:#314c28}.tag.withhold{background:#f1dfd9;color:#713124}.detail-section{border-top:1px solid #dfd3bf;margin-top:22px;padding-top:20px}.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}.facts div{padding:10px 12px;background:#f3eee5;border-radius:6px;min-width:0}.facts dt{color:#675741;font-size:.78rem}.facts dd{margin:3px 0 0;font-weight:650;overflow-wrap:anywhere}.description{white-space:pre-wrap;overflow-wrap:anywhere;font-family:Georgia,serif;font-size:1.05rem;line-height:1.8}.artwork{padding:12px;background:#f1ebe0;border:1px dashed #b7a487;border-radius:6px;font-size:.9rem;color:#62553f;margin:16px 0}.review-controls{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.review-note{font-size:.88rem}.item-id{font-family:ui-monospace,monospace;font-size:.8rem;overflow-wrap:anywhere;color:#6d5e49}ul{padding-left:23px}li{margin:5px 0}.long-text{overflow-wrap:anywhere;white-space:pre-wrap}.empty{padding:20px 0;color:#615543}.footer{max-width:1400px;margin:0 auto;padding:4px 20px 25px;font-size:.85rem;color:#615543}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
+@media(max-width:800px){.layout{grid-template-columns:1fr;gap:16px;padding:16px 12px}header{padding:20px 16px}aside,.panel{padding:16px}.results{max-height:340px;overflow:auto;padding:3px}.facts{grid-template-columns:1fr 1fr}.top-actions{align-items:stretch}.top-actions label{max-width:none}.top-actions button,.top-actions .button{flex:1 1 150px}}
+@media print{header .top-actions,aside,.review-controls,.note-label,.review-note,.footer button{display:none!important}.layout{display:block;padding:0}.panel{border:0}header{padding:0 0 15px}.detail-section{break-inside:avoid}body{background:white}}
+</style>
+</head>
+<body>
+<a class="skip" href="#item-detail">Skip to item review</a>
+<header>
+ <div class="header-copy"><div class="eyebrow">CampaignAtlas · Catalogue cleanup</div><h1>See what will replace each item</h1><p>Read the proposed clean text, check its source and edition, and record what needs changing.</p>
+ <div class="notice"><strong>This page shows proposals, not the live catalogue.</strong> Original descriptions and artwork are excluded. Website administrators can inspect originals in <strong>Admin → Root Catalogue</strong>; a campaign DM role alone does not grant that access. Accepting a proposal here only records a review note—it never publishes, deletes or changes Firebase data.</div></div>
+ <div class="top-actions"><label>Reviewer name (optional)<input id="reviewer" maxlength="160" autocomplete="name" placeholder="Your name"></label><button class="primary" id="export-notes">Download review notes</button><button id="import-notes-button">Import saved review notes</button><input hidden id="import-notes" type="file" accept="application/json,.json"><button id="next-pending">Next unreviewed item</button></div>
+ <div class="stats" id="summary"></div><label class="sr-only" for="progress">Items with a recorded review decision</label><progress id="progress" value="0"></progress>
+ <p id="storage-status" class="status" role="status" aria-live="polite"></p><p id="action-status" class="status" role="status" aria-live="polite"></p>
+</header>
+<main class="layout">
+ <aside aria-label="Find an item"><div class="filters"><label>Search items<input type="search" id="search" placeholder="Name or item ID…"></label><div class="filter-row"><label>Proposal<select id="proposal-filter"><option value="">All proposals</option><option value="publish">Replace with SRD text</option><option value="retire">Withhold from sharing</option></select></label><label>Review status<select id="status-filter"><option value="">All items</option><option value="pending">Unreviewed</option><option value="accept">Accepted proposal</option><option value="revise">Changes requested</option><option value="unsure">Needs checking</option></select></label></div><div class="filter-row"><label>Proposed edition<select id="edition-filter"><option value="">All editions</option><option value="2014">2014 · SRD 5.1</option><option value="2024">2024 · SRD 5.2</option><option value="none">No replacement</option></select></label><label>Reason<select id="reason-filter"><option value="">All reasons</option></select></label></div></div>
+ <p id="result-count" class="status" role="status" aria-live="polite"></p><div class="results" id="results"></div><div class="pager"><button id="previous-page" aria-label="Previous page of items">Previous</button><span id="page-number"></span><button id="next-page" aria-label="Next page of items">Next</button></div></aside>
+ <article class="panel" id="item-detail" aria-labelledby="item-title"><h2 id="item-title">Choose an item</h2><noscript>This self-contained review needs JavaScript to display the embedded proposals. It makes no network requests.</noscript></article>
+</main>
+<footer class="footer">Review notes stay in this browser where supported. Download them to keep a portable copy or send them for follow-up. A review export is not a migration manifest. This file contains no Firebase credentials and does not connect to your database.</footer>
+<script id="review-data" type="application/json"><!-- REVIEW_PAYLOAD --></script>
+<script>
+'use strict';
+(()=>{
+ const data=JSON.parse(document.getElementById('review-data').textContent),items=data.items,byId=new Map(items.map(item=>[item.id,item]));
+ const $=id=>document.getElementById(id),storageKey='campaignatlas-item-review:'+data.proposalSetSha256,pageSize=25;
+ const labels={pending:'Unreviewed',accept:'Accepted proposal',revise:'Changes requested',unsure:'Needs checking'};
+ const reasons={'licensed-replacement-proposed':'Licensed SRD replacement','licensed-rename-proposed':'Rename to SRD version','no-documented-replacement':'No documented replacement','authorship-or-permission-needed':'Authorship / permission needed','normalized-armor-rarity-needs-verification':'Armor rarity needs checking','redundant-generic-template':'Redundant generic template'};
+ let state={reviewer:'',reviews:{}},selected=items[0]?.id,page=0,storageAvailable=true;
+ const element=(tag,text,className)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(className)node.className=className;return node;};
+ const decision=id=>state.reviews[id]?.decision||'pending';
+ function validateReviewFile(value){
+  if(value?.format!==1||value.kind!=='catalogue-review-notes'||value.proposalSetSha256!==data.proposalSetSha256||!Array.isArray(value.reviews)||value.reviews.length>items.length)throw Error('These notes do not belong to this proposal package.');
+  const reviews={};
+  for(const review of value.reviews){
+   const item=byId.get(review.id);
+   if(!item||Object.hasOwn(reviews,review.id)||review.sourceSha256!==item.sourceSha256||review.proposalSha256!==item.proposalSha256||!Object.hasOwn(labels,review.decision)||typeof review.note!=='string'||review.note.length>12000||typeof review.reviewedAt!=='string'||!Number.isFinite(Date.parse(review.reviewedAt)))throw Error('A review entry is invalid or belongs to a different item version.');
+   reviews[review.id]={decision:review.decision,note:review.note,reviewedAt:review.reviewedAt};
+  }
+  if(typeof value.reviewer!=='string'||value.reviewer.length>160)throw Error('Reviewer name is invalid.');
+  return {reviewer:value.reviewer,reviews};
+ }
+ function exportData(){return {format:1,kind:'catalogue-review-notes',proposalSetSha256:data.proposalSetSha256,referenceRevision:data.referenceRevision,reviewer:state.reviewer,exportedAt:new Date().toISOString(),scope:'Review opinions only; not a migration manifest or authorization to publish/delete.',productionWrites:0,reviews:Object.entries(state.reviews).filter(([,review])=>review.decision!=='pending'||review.note.trim()).map(([id,review])=>({id,sourceSha256:byId.get(id).sourceSha256,proposalSha256:byId.get(id).proposalSha256,...review}))};}
+ function saveLocal(){
+  try{localStorage.setItem(storageKey,JSON.stringify(exportData()));storageAvailable=true;}
+  catch{storageAvailable=false;}
+  $('storage-status').textContent=storageAvailable?'Notes are saved in this browser. Download review notes for a portable copy.':'This browser cannot save notes automatically. Download review notes before closing this page.';
+ }
+ try{const stored=localStorage.getItem(storageKey);if(stored)state=validateReviewFile(JSON.parse(stored));}catch{storageAvailable=false;}
+ $('reviewer').value=state.reviewer;
+ $('reviewer').addEventListener('input',()=>{state.reviewer=$('reviewer').value;saveLocal();});
+ function summary(){
+  const total=items.length,publish=items.filter(item=>item.action==='publish').length,reviewed=items.filter(item=>decision(item.id)!=='pending').length;
+  $('summary').replaceChildren(element('span',total+' items'),element('span',publish+' proposed replacements'),element('span',(total-publish)+' proposed withholdings'),element('strong',reviewed+' / '+total+' reviewed'));
+  $('progress').max=total;$('progress').value=reviewed;
+ }
+ function filtered(){
+  const search=$('search').value.trim().toLowerCase(),proposal=$('proposal-filter').value,status=$('status-filter').value,edition=$('edition-filter').value,reason=$('reason-filter').value;
+  return items.filter(item=>(!search||[item.id,item.legacy.name,item.replacement?.name,item.legacy.source,item.replacement?.category].join(' ').toLowerCase().includes(search))&&(!proposal||item.action===proposal)&&(!status||decision(item.id)===status)&&(!edition||(item.replacement?.edition||'none')===edition)&&(!reason||item.review.reasonCode===reason));
+ }
+ function renderList(){
+  const rows=filtered(),pages=Math.max(1,Math.ceil(rows.length/pageSize));page=Math.min(page,pages-1);
+  $('result-count').textContent=rows.length+' matching items';$('results').replaceChildren();
+  for(const item of rows.slice(page*pageSize,(page+1)*pageSize)){
+   const button=element('button',undefined,'result');button.type='button';button.dataset.itemId=item.id;button.setAttribute('aria-current',String(item.id===selected));
+   button.append(element('span',item.replacement?.name||item.legacy.name),element('small',(item.action==='publish'?'Replace · '+item.replacement.edition:'Withhold')+' · '+labels[decision(item.id)]));
+   button.addEventListener('click',()=>selectItem(item.id,true));$('results').append(button);
+  }
+  if(!rows.length)$('results').append(element('p','No items match these filters.','empty'));
+  $('page-number').textContent=(page+1)+' / '+pages;$('previous-page').disabled=page===0;$('next-page').disabled=page===pages-1;
+ }
+ function section(host,title){const node=element('section',undefined,'detail-section');node.append(element('h3',title));host.append(node);return node;}
+ function facts(host,entries){const list=element('dl',undefined,'facts');for(const [name,value]of entries){const row=element('div');row.append(element('dt',name),element('dd',String(value)));list.append(row);}host.append(list);}
+ function setReview(value,note){const previous=state.reviews[selected];state.reviews[selected]={decision:value,note:note??previous?.note??'',reviewedAt:new Date().toISOString()};saveLocal();summary();renderList();document.querySelectorAll('[data-verdict]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.verdict===value)));$('review-result').textContent=labels[value]+'. No Firebase data has changed.';}
+ function renderDetail(){
+  const item=byId.get(selected),host=$('item-detail');if(!item)return;
+  host.replaceChildren();const title=element('h2',item.replacement?.name||item.legacy.name);title.id='item-title';title.tabIndex=-1;host.append(title,element('p',item.id,'item-id'));
+  const tags=element('div',undefined,'tags');tags.append(element('span',item.action==='publish'?'Proposed clean replacement':'Withhold from shared catalogue','tag '+(item.action==='publish'?'replace':'withhold')),element('span',reasons[item.review.reasonCode]||item.review.reasonCode,'tag'));host.append(tags);
+  const old=section(host,'Existing item · metadata only');facts(old,[['Previous name',item.legacy.name],['Recorded book / source',item.legacy.source],['Recorded category',item.legacy.category||'Not recorded'],['Recorded rarity',item.legacy.rarity||'Not recorded']]);
+  old.append(element('p','The original description and artwork are not bundled here. This review cannot show a side-by-side comparison with the old book text.','muted'));
+  if(item.action==='publish'){
+   const replacement=section(host,'Proposed replacement');facts(replacement,[['Edition',item.replacement.edition+' · '+item.replacement.source],['Rarity',item.replacement.rarity],['Category',item.replacement.category],['Attunement',item.replacement.attunement?'Required':'Not required']]);
+   const body=element('div',item.replacement.description,'description');body.dataset.replacementText='';replacement.append(body,element('div','Generated illustrations will be preserved under the owner’s separate instruction. Retained items keep their images; withheld items and their images move into the existing private campaign. Images are not bundled in this offline text review.','artwork'));
+   const evidence=section(host,'Source, attribution & changes');
+   evidence.append(element('p','Reference: '+item.review.referenceId,'item-id'),element('p',item.rights.attribution,'long-text'));
+   const source=element('a','Open the pinned SRD source');source.href=item.rights.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';source.dataset.sourceLink='';evidence.append(source);
+   if(item.review.changes)evidence.append(element('p','Changes: '+item.review.changes));
+   if(item.review.automation)evidence.append(element('p',item.review.automation,'muted'));
+   if(item.replacement.mechanics){const details=element('details');details.append(element('summary','Structured equipment facts'),element('pre',JSON.stringify(item.replacement.mechanics,null,2),'long-text'));evidence.append(details);}
+  }else{
+   const withheld=section(host,'Why this version is withheld');withheld.append(element('p',item.review.reason));
+   if(item.review.candidateRarity)withheld.append(element('p','Normalized source rarity needing verification: '+item.review.candidateRarity));
+   withheld.append(element('p','This recommendation removes the version from shared discovery after private preservation. It does not delete existing character gear or establish that the item infringes copyright.','notice'));
+  }
+  if(item.review.warnings.length||item.review.alternatives.length){
+   const attention=section(host,'Check before accepting');
+   if(item.review.warnings.length){const list=element('ul');item.review.warnings.forEach(warning=>list.append(element('li',warning)));attention.append(list);}
+   if(item.review.alternatives.length){attention.append(element('p',item.review.selectionReason));const details=element('details');details.append(element('summary','Other source variants ('+item.review.alternatives.length+')'));const list=element('ul');item.review.alternatives.forEach(ref=>list.append(element('li',ref.name+' · '+ref.edition)));details.append(list);attention.append(details);}
+  }
+  const review=section(host,'Your review'),controls=element('div',undefined,'review-controls');
+  for(const [value,label]of [['accept','Accept proposal'],['revise','Request changes'],['unsure','Needs checking'],['pending','Leave unreviewed']]){
+   const button=element('button',label);button.type='button';button.dataset.verdict=value;button.setAttribute('aria-pressed',String(decision(selected)===value));button.addEventListener('click',()=>setReview(value));controls.append(button);
+  }
+  const label=element('label','Notes for this item','note-label'),textarea=element('textarea');textarea.id='item-note';textarea.maxLength=12000;textarea.placeholder='Wrong edition? Different variant? Permission evidence? Write what should change.';textarea.value=state.reviews[selected]?.note||'';label.append(textarea);
+  textarea.addEventListener('input',()=>setReview(decision(selected),textarea.value));
+  const result=element('p',labels[decision(selected)]+'. No Firebase data has changed.','status');result.id='review-result';result.setAttribute('role','status');
+  review.append(controls,label,result,element('p','Accepting records your opinion about this exact proposal. Download the notes when finished; they are separate from production approval and migration.','review-note'));
+ }
+ function selectItem(id,focus){selected=id;const index=filtered().findIndex(item=>item.id===id);if(index>=0)page=Math.floor(index/pageSize);renderList();renderDetail();if(focus)$('item-title').focus();}
+ for(const id of ['search','proposal-filter','status-filter','edition-filter','reason-filter'])$(id).addEventListener(id==='search'?'input':'change',()=>{page=0;renderList();});
+ for(const reason of [...new Set(items.map(item=>item.review.reasonCode))].sort()){const option=element('option',reasons[reason]||reason);option.value=reason;$('reason-filter').append(option);}
+ $('previous-page').addEventListener('click',()=>{page--;renderList();});$('next-page').addEventListener('click',()=>{page++;renderList();});
+ $('next-pending').addEventListener('click',()=>{const rows=filtered(),after=rows.findIndex(item=>item.id===selected),ordered=[...rows.slice(after+1),...rows.slice(0,after+1)],next=ordered.find(item=>decision(item.id)==='pending');if(next)selectItem(next.id,true);else $('action-status').textContent='No unreviewed items match the current filters.';});
+ $('export-notes').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(exportData(),null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),a=element('a');a.href=url;a.download='campaignatlas-item-review-notes.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);$('action-status').textContent='Review notes downloaded. Keep this file or send it for follow-up; nothing was published.';});
+ $('import-notes-button').addEventListener('click',()=>$('import-notes').click());
+ $('import-notes').addEventListener('change',async event=>{try{const file=event.target.files[0];if(!file)return;if(file.size>2*1024*1024)throw Error('Review notes file is too large.');const imported=validateReviewFile(JSON.parse(await file.text()));if(Object.keys(state.reviews).length&&!confirm('Replace this browser’s current notes with the imported review?'))return;state=imported;$('reviewer').value=state.reviewer;saveLocal();summary();renderList();renderDetail();$('action-status').textContent='Matching review notes imported. No Firebase data has changed.';}catch(error){$('action-status').textContent='Could not import: '+error.message;}finally{event.target.value='';}});
+ summary();renderList();renderDetail();saveLocal();
+})();
+</script>
+</body>
+</html>

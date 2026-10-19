@@ -4,6 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {digest} from './build-srd-item-hashes.mjs';
 import {stableJson,documentsToRows,writePrivateFile,decodeValue} from './audit-item-catalogue.mjs';
+import {assertArtworkPolicy} from './item-artwork-policy.mjs';
 
 export const POLICY='approved-v1';
 const check=(ok,message)=>{if(!ok)throw Error(message);};
@@ -26,7 +27,7 @@ export function encode(value){
 }
 export const encodeFields=value=>encode(value).mapValue.fields||{};
 const sha=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
-function reviewedPayload(decision){
+function reviewedPayload(decision,source,artworkPolicy){
  const item=decision.replacement,rights=decision.rights;
  check(item&&typeof item.name==='string'&&item.name.trim()&&typeof item.description==='string','Publish requires a complete reviewed replacement');
  const allowed=['name','description','category','rarity','source','attunement','classes','properties','quote','mechanics','edition'];
@@ -35,7 +36,11 @@ function reviewedPayload(decision){
  check(rights&&['CC-BY-4.0','ORIGINAL'].includes(rights.license)&&typeof rights.attribution==='string'&&rights.attribution.trim()&&typeof rights.evidence==='string'&&rights.evidence.trim(),'Publish requires licence, attribution and evidence');
  check(Object.keys(rights).every(key=>['license','attribution','evidence','sourceUrl','referenceSha256','reviewedBy','reviewedAt'].includes(key)),'Unreviewed rights metadata');
  if(rights.license==='CC-BY-4.0')check(typeof rights.sourceUrl==='string'&&rights.sourceUrl.startsWith('https://')&&sha(rights.referenceSha256),'SRD publishing requires source URL and reference digest');
- return {...item,quote:'',properties:[],imageUrl:'',imageBaseId:'',thumbnailUrl:'',thumbUrl:'',artwork:{status:'none'},catalogueStatus:POLICY,
+ assertArtworkPolicy(artworkPolicy);
+ // Image references come only from the pinned private source, never replacement prose.
+ const original=Object.fromEntries(Object.entries(source.fields).map(([key,value])=>[key,decodeValue(value)]));
+ const images=Object.fromEntries(['imageUrl','thumbnailUrl','thumbUrl'].map(key=>[key,typeof original[key]==='string'?original[key]:'']));
+ return {...item,quote:'',properties:[],...images,imageBaseId:typeof original.imageBaseId==='string'&&original.imageBaseId?original.imageBaseId:source.name.split('/').at(-1),artwork:{status:'generated',origin:artworkPolicy.origin,evidence:artworkPolicy.evidence},catalogueStatus:POLICY,
   rights:{...rights,reviewedBy:decision.reviewedBy,reviewedAt:decision.reviewedAt}};
 }
 export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaignName,ownerId}={}){
@@ -45,6 +50,7 @@ export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaig
  check(id(campaignId)&&id(ownerId)&&typeof campaignName==='string'&&campaignName.trim(),'Pin target campaign ID, name and owner');
  check(manifest?.format===1&&Array.isArray(manifest.decisions),'Expected a decision manifest');
  check(manifest.targetCampaignId===campaignId,'Manifest target campaign mismatch');
+ const artworkPolicy=assertArtworkPolicy(manifest.artworkPolicy);
  const rows=documentsToRows(snapshot.documents).filter(row=>row.id!=='catalog_meta'&&row.data._type!=='catalog-meta');
  const decisions=new Map();for(const decision of manifest.decisions){check(id(decision.id)&&!decisions.has(decision.id),'Invalid or duplicate manifest ID');decisions.set(decision.id,decision);}
  check(rows.length===decisions.size&&rows.length>0,'Manifest must cover every snapshot item exactly once');
@@ -55,13 +61,13 @@ export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaig
   check(document.name===`projects/${project}/databases/(default)/documents/items/${row.id}`,'Snapshot document belongs to a different project');
   check(['publish','retire'].includes(decision.action),'Unknown decision action');
   const approved=decision.approved===true&&typeof decision.reviewedBy==='string'&&decision.reviewedBy.trim()&&typeof decision.reviewedAt==='string'&&Number.isFinite(Date.parse(decision.reviewedAt));
-  const replacement=decision.action==='publish'?reviewedPayload(decision):null;
+  const replacement=decision.action==='publish'?reviewedPayload(decision,document,artworkPolicy):null;
   return {id:row.id,sourceSha256:decision.sourceSha256,source:document,action:decision.action,approved:!!approved,
    archiveId:'catalogue-'+digest(row.id).slice(0,32),replacement:replacement?encodeFields(replacement):null};
  });
  const plan={format:1,project,campaignId,campaignName,ownerId,manifestSha256:digest(stableJson(manifest)),
   originalCatalogueMetadata:snapshot.documents.filter(document=>document.name.split('/').at(-1)==='catalog_meta'),
-  retireLegacyArtwork:manifest.retireLegacyArtwork===true,allApproved:items.every(item=>item.approved),items};
+  artworkPolicy:{...artworkPolicy},retireLegacyArtwork:manifest.retireLegacyArtwork===true,allApproved:items.every(item=>item.approved),items};
  return {...plan,planSha256:digest(stableJson(plan))};
 }
 export function assertPlan(plan){
@@ -71,13 +77,14 @@ export function assertPlan(plan){
  check(Array.isArray(plan.items)&&plan.items.length>0&&new Set(plan.items.map(item=>item.id)).size===plan.items.length,'Invalid plan items');
  check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(plan.project||'')&&id(plan.campaignId)&&id(plan.ownerId)&&typeof plan.campaignName==='string'&&plan.campaignName.trim(),'Invalid plan target');
  check(plan.allApproved===plan.items.every(item=>item.approved===true),'Inconsistent plan approvals');
+ assertArtworkPolicy(plan.artworkPolicy);
  for(const item of plan.items){
   check(id(item.id)&&item.archiveId==='catalogue-'+digest(item.id).slice(0,32)&&fieldsHash(item.source.fields)===item.sourceSha256,'Invalid plan source');check(['publish','retire'].includes(item.action),'Invalid plan action');
   check(item.source.name===`projects/${plan.project}/databases/(default)/documents/items/${item.id}`&&typeof item.source.updateTime==='string','Invalid plan source path/version');
   if(item.action==='publish'){
    const payload=Object.fromEntries(Object.entries(item.replacement||{}).map(([key,value])=>[key,decodeValue(value)]));
    const replacement=Object.fromEntries(Object.entries(payload).filter(([key])=>!['rights','imageUrl','imageBaseId','thumbnailUrl','thumbUrl','artwork','catalogueStatus'].includes(key)));
-   const validated=reviewedPayload({replacement,rights:payload.rights,reviewedBy:payload.rights?.reviewedBy,reviewedAt:payload.rights?.reviewedAt});
+   const validated=reviewedPayload({replacement,rights:payload.rights,reviewedBy:payload.rights?.reviewedBy,reviewedAt:payload.rights?.reviewedAt},item.source,plan.artworkPolicy);
    check(fieldsHash(encodeFields(validated))===fieldsHash(item.replacement),'Replacement is not a clean reviewed publication payload');
   }else check(item.replacement===null,'Retired items cannot carry publication data');
  }
@@ -99,7 +106,7 @@ export function privateDocuments(plan,item,assets=[]){
 /** Port operations are injected, so dry-run and failure boundaries are testable. */
 export async function migrateCatalogue(plan,port,{apply=false,confirmPlanSha256=''}={}){
  assertPlan(plan);
- if(apply){check(plan.allApproved&&plan.items.every(item=>item.approved),'Every decision must be explicitly approved');check(confirmPlanSha256===plan.planSha256,'Explicit plan digest confirmation required');check(plan.retireLegacyArtwork,'Legacy artwork retirement must be explicitly reviewed');}
+ if(apply){check(plan.allApproved&&plan.items.every(item=>item.approved),'Every decision must be explicitly approved');check(confirmPlanSha256===plan.planSha256,'Explicit plan digest confirmation required');check(plan.retireLegacyArtwork,'Moving retired-only images to verified private Storage must be explicitly reviewed');}
  await port.verifyTarget(plan);
  await port.verifyExistingCampaigns(plan);
  const current=await port.listSources();

@@ -197,6 +197,12 @@ match /items/{itemId} {
   allow write: if isAdmin();
 }
 
+// The operator migration publishes generated image references atomically with
+// approved items. Clients, including site admins, cannot forge these markers.
+match /catalogueArtwork/{fileName} {
+  allow read, write: if false;
+}
+
 // -----------------------------------------------------------------------
 // PUBLIC PRODUCT CONFIG
 // Readable by signed-in users so the UI can show the same limits enforced

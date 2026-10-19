@@ -5,7 +5,7 @@ function fixture(approved=true){
  const project='demo-vault-test',prefix=`projects/${project}/databases/(default)/documents/`;
  const documents=['a','b'].map(id=>({name:prefix+'items/'+id,updateTime:'2026-10-16T10:00:00.000000Z',fields:M.encodeFields({name:'Synthetic '+id,description:'Private original '+id,imageUrl:'',mechanics:{kind:'weapon',attackBonus:1},unknownOriginalField:'Retain me'})}));
  const snapshot={project,collection:'items',documents};
- const manifest={format:1,targetCampaignId:'target',retireLegacyArtwork:true,decisions:documents.map((doc,i)=>({id:i?'b':'a',sourceSha256:M.fieldsHash(doc.fields),action:i?'retire':'publish',approved,reviewedBy:'Owner review',reviewedAt:'2026-10-16T12:00:00Z',...(i?{}:{replacement:{name:'Independently written item',description:'Our synthetic test text.',category:'Weapon'},rights:{license:'ORIGINAL',attribution:'Original test author',evidence:'Authored for this synthetic test'}})}))};
+ const manifest={format:1,artworkPolicy:{mode:'preserve-generated',origin:'ChatGPT-generated',evidence:'Synthetic owner instruction'},targetCampaignId:'target',retireLegacyArtwork:true,decisions:documents.map((doc,i)=>({id:i?'b':'a',sourceSha256:M.fieldsHash(doc.fields),action:i?'retire':'publish',approved,reviewedBy:'Owner review',reviewedAt:'2026-10-16T12:00:00Z',...(i?{}:{replacement:{name:'Independently written item',description:'Our synthetic test text.',category:'Weapon'},rights:{license:'ORIGINAL',attribution:'Original test author',evidence:'Authored for this synthetic test'}})}))};
  const plan=M.buildMigrationPlan(snapshot,manifest,{project,campaignId:'target',campaignName:'Synthetic campaign',ownerId:'owner'});
  return {snapshot,manifest,plan};
 }
@@ -44,7 +44,7 @@ test('all private copies verify before any root mutation, without supply or inve
  const result=await M.migrateCatalogue(plan,h.port,{apply:true,confirmPlanSha256:plan.planSha256});
  assert.equal(result.writes,2);assert.ok(h.events.indexOf('verified:b')<h.events.indexOf('root:a'));assert.ok(h.events.indexOf('backup')<h.events.indexOf('copy:a'));assert.ok(h.events.indexOf('retire-art')>h.events.indexOf('root:b'));
  assert.equal(A.decodeValue(h.copies.get('a').copy.visible),false);assert.equal(A.decodeValue(h.copies.get('a').copy.lootMode),'dm');assert.equal(A.decodeValue(h.copies.get('a').archive.original).unknownOriginalField,'Retain me');assert.deepEqual(gear,unchanged);
- assert.equal(h.sources.has('b'),false);assert.equal(A.decodeValue(h.sources.get('a').fields.catalogueStatus),'approved-v1');assert.equal(A.decodeValue(h.sources.get('a').fields.artwork).status,'none');
+ assert.equal(h.sources.has('b'),false);assert.equal(A.decodeValue(h.sources.get('a').fields.catalogueStatus),'approved-v1');assert.equal(A.decodeValue(h.sources.get('a').fields.artwork).status,'generated');
 });
 test('backup, private asset or copy verification failure cannot retire a root item',async()=>{
  await ready;
@@ -78,4 +78,18 @@ test('authenticated snapshots retain typed documents using only the read port',a
  const result=await M.captureCatalogue({listSources:async()=>{calls++;return snapshot.documents;}},snapshot.project);
  assert.equal(calls,1);assert.equal(result.completeRootCatalogue,true);assert.deepEqual(result.documents,snapshot.documents);
  await assert.rejects(M.captureCatalogue({listSources:async()=>snapshot.documents},'demo-other'),/different project/);
+});
+test('generated illustrations are retained from pinned sources, independently of text rights',async()=>{
+ await ready;const {snapshot,manifest}=fixture();
+ snapshot.documents[0].fields.imageUrl=M.encode('https://firebasestorage.googleapis.com/v0/b/demo-bucket/o/dnd-item-images%2Fa.png?alt=media&token=synthetic');
+ snapshot.documents[0].fields.imageBaseId=M.encode('a-original-art');
+ manifest.decisions[0].sourceSha256=M.fieldsHash(snapshot.documents[0].fields);
+ const options={project:snapshot.project,campaignId:'target',campaignName:'Synthetic campaign',ownerId:'owner'};
+ const plan=M.buildMigrationPlan(snapshot,manifest,options),replacement=plan.items[0].replacement;
+ assert.equal(A.decodeValue(replacement.imageUrl),A.decodeValue(snapshot.documents[0].fields.imageUrl));
+ assert.equal(A.decodeValue(replacement.imageBaseId),'a-original-art');assert.equal(A.decodeValue(replacement.artwork).status,'generated');
+ const noPolicy=structuredClone(manifest);delete noPolicy.artworkPolicy;assert.throws(()=>M.buildMigrationPlan(snapshot,noPolicy,options),/preservation policy/);
+ const docs=M.privateDocuments(plan,plan.items[1],[{sourcePath:'dnd-item-images/b.png',privatePath:'campaign-catalogue-images/target/hash/digest',sha256:'a'.repeat(64),generation:'1'}]);
+ assert.equal(A.decodeValue(docs.copy.archivedImage).path,'campaign-catalogue-images/target/hash/digest');
+ assert.equal(A.decodeValue(docs.copy.imageUrl),'');assert.equal(A.decodeValue(docs.archive.assets).length,1);
 });

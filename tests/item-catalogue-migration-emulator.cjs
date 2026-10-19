@@ -11,13 +11,13 @@ const sdk=require('firebase/firestore');
    for(const [p,data] of Object.entries({
     'campaigns/target':{ownerId:'owner',name:'Synthetic campaign',inventoryVersion:2},'campaigns/other':{ownerId:'other',inventoryVersion:2},
     'campaigns/other/inventory/gear':{quantity:3,userId:'other',item:{name:'Already owned',mechanics:{acBonus:1}}},
-    'items/a':{name:'Synthetic A',description:'Private original A',customField:{nested:123}},'items/b':{name:'Synthetic B',description:'Private original B'}
+    'items/a':{name:'Synthetic A',description:'Private original A',customField:{nested:123}},'items/b':{name:'Synthetic B',description:'Private original B',imageUrl:'https://firebasestorage.googleapis.com/v0/b/demo-vault-test.firebasestorage.app/o/dnd-item-images%2Fa.png?alt=media&token=synthetic-shared'}
    }))await sdk.setDoc(sdk.doc(ctx.firestore(),p),data);
   });
   const origin='http://127.0.0.1:8080',base=origin+'/v1/projects/demo-vault-test/databases/(default)/documents/';
   const adminGet=async p=>{const r=await fetch(base+p,{headers:{Authorization:'Bearer owner'}});assert.equal(r.status,200);return r.json();};
   const documents=await Promise.all(['items/a','items/b'].map(adminGet));
-  const manifest={format:1,targetCampaignId:'target',retireLegacyArtwork:true,decisions:documents.map((doc,i)=>({id:i?'b':'a',sourceSha256:M.fieldsHash(doc.fields),action:i?'retire':'publish',approved:true,reviewedBy:'Synthetic test owner',reviewedAt:'2026-10-16T13:00:00Z',...(i?{}:{replacement:{name:'Original shared item',description:'Our independently written text.'},rights:{license:'ORIGINAL',attribution:'Test author',evidence:'Synthetic test authorship'}})}))};
+  const manifest={format:1,artworkPolicy:{mode:'preserve-generated',origin:'ChatGPT-generated',evidence:'Synthetic owner instruction'},targetCampaignId:'target',retireLegacyArtwork:true,decisions:documents.map((doc,i)=>({id:i?'b':'a',sourceSha256:M.fieldsHash(doc.fields),action:i?'retire':'publish',approved:true,reviewedBy:'Synthetic test owner',reviewedAt:'2026-10-16T13:00:00Z',...(i?{}:{replacement:{name:'Original shared item',description:'Our independently written text.'},rights:{license:'ORIGINAL',attribution:'Test author',evidence:'Synthetic test authorship'}})}))};
   const plan=M.buildMigrationPlan({project:'demo-vault-test',collection:'items',documents},manifest,{project:'demo-vault-test',campaignId:'target',campaignName:'Synthetic campaign',ownerId:'owner'});
   // Exercise Storage orchestration with a deterministic GCS contract double.
   // Firestore reads, transactions and preconditions remain real emulator calls.
@@ -36,6 +36,9 @@ const sdk=require('firebase/firestore');
   let port=await createMigrationPort(options);
   const dry=await M.migrateCatalogue(plan,port);assert.equal(dry.writes,0);assert.equal((await adminGet('items/b')).fields.name.stringValue,'Synthetic B');
   console.log('PASS Real REST dry-run leaves source documents unchanged');
+  const temporarilyMissing=objects.get('dnd-item-images/a.png');objects.delete('dnd-item-images/a.png');
+  await assert.rejects(M.migrateCatalogue(plan,port,{apply:true,confirmPlanSha256:plan.planSha256}),/artwork needs private backup/);
+  assert.equal((await adminGet('items/b')).fields.name.stringValue,'Synthetic B');objects.set('dnd-item-images/a.png',temporarilyMissing);
   publicAccess=true;await assert.rejects(M.migrateCatalogue(plan,port),/public IAM/);publicAccess=false;
   const gear=await adminGet('campaigns/other/inventory/gear');
   const result=await M.migrateCatalogue(plan,port,{apply:true,confirmPlanSha256:plan.planSha256});assert.equal(result.writes,2);
@@ -48,11 +51,16 @@ const sdk=require('firebase/firestore');
    const stock=await fetch(base+'campaigns/target/supply/'+item.archiveId,{headers:{Authorization:'Bearer owner'}});assert.equal(stock.status,404);
   }
   assert.deepEqual((await adminGet('campaigns/other/inventory/gear')).fields,gear.fields);
-  assert.equal([...objects.keys()].filter(name=>name.startsWith('dnd-item-images/')).length,0);
+  assert.equal([...objects.keys()].filter(name=>name.startsWith('dnd-item-images/')).length,1);
+  assert.ok(objects.has('dnd-item-images/a.png'));assert.ok(!objects.has('dnd-item-images/b.png'));
+  const registry=await adminGet('catalogueArtwork/a.png');assert.equal(registry.fields.status.stringValue,'generated');
+  assert.equal(registry.fields.path.stringValue,'dnd-item-images/a.png');
+  assert.equal((await fetch(base+'catalogueArtwork/b.png',{headers:{Authorization:'Bearer owner'}})).status,404);
+  assert.equal(root.fields.imageBaseId.stringValue,'a');assert.equal(root.fields.artwork.mapValue.fields.status.stringValue,'generated');
   assert.equal([...objects.keys()].filter(name=>name.startsWith('campaign-catalogue-images/')).length,2);
   assert.equal((await fs.stat(options.backupDirectory)).mode&0o777,0o700);assert.equal((await fs.stat(path.join(options.backupDirectory,'plan.json'))).mode&0o777,0o600);
   console.log('PASS Real transactions preserve exact originals, retire/publish sources, invalidate metadata and leave gear/stock alone');
-  console.log('PASS Storage orchestration copies/verifies assets without tokens, rejects public IAM and deletes only backed-up generations');
+  console.log('PASS Storage orchestration copies/verifies assets without tokens, rejects public IAM, retains shared art and moves retired-only art privately');
   port=await createMigrationPort(options);const resumed=await M.migrateCatalogue(plan,port,{apply:true,confirmPlanSha256:plan.planSha256});assert.equal(resumed.writes,0);
   console.log('PASS Restarting the real adapter proves completion and performs no duplicate root writes');
  }finally{await env.cleanup();await fs.rm(directory,{recursive:true,force:true});}

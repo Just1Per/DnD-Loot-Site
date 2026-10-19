@@ -11,10 +11,12 @@ on:
       - 'storage.rules'
       - 'firebase.workspace-test.json'
       - 'data/rules/monsters.json'
+      - 'design/world-notebook.html'
       - 'tests/**'
       - 'scripts/campaign-image-cors.json'
       - 'scripts/prepare-campaign-image-cors.cjs'
       - 'scripts/item-catalogue-migration*.mjs'
+      - 'scripts/item-artwork-policy.mjs'
       - 'scripts/prepare-item-review-manifest.mjs'
       - '.github/workflows/campaign-workspace-tests.yml'
 permissions:
@@ -80,6 +82,10 @@ jobs:
         run: npm --prefix tests run test:dm-workspace
       - name: Creature and NPC preparation, optional combat and template preservation
         run: npm --prefix tests run test:creature-editor
+      - name: Bulk SRD selection, private imports and safe retries
+        run: npm --prefix tests run test:creature-bulk-import
+      - name: Notebook design, separate image sharing and private notes
+        run: npm --prefix tests run test:notebook-design
       - name: Campaign home save/reopen, access, accessibility and layout
         run: npm --prefix tests run test:campaign-home
       - name: Book layouts, live draft previews and standard compatibility
