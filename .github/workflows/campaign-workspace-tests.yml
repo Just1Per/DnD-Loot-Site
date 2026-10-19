@@ -106,6 +106,11 @@ jobs:
         run: npm --prefix tests run test:archive-dialog
       - name: Simple world entry creation and preserved optional preparation
         run: npm --prefix tests run test:simple-world
+      - name: Visual NPC/world cards and DM-managed campaign map
+        run: |
+          npm --prefix tests run test:journal-cards
+          npm --prefix tests run test:campaign-map
+          npm --prefix tests run test:campaign-map-rules
       - name: Shared party journal, notebook reader and private recap permissions
         run: |
           npm --prefix tests run test:campaign-journal

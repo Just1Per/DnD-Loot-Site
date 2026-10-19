@@ -1,5 +1,5 @@
 /* Shared journal overview and notebook reading, scoped away from character sheets. */
-.campaign-journal{max-width:1180px;margin:24px auto 48px;padding:30px;background:var(--ui-paper,#fffdf7);color:var(--ui-ink,#342d26);border:1px solid var(--ui-border-soft,#c9b99c);border-radius:10px;font:16px/1.65 Georgia,serif}
+.campaign-journal{max-width:none;width:100%;margin:24px auto 48px;padding:30px;background:var(--ui-paper,#fffdf7);color:var(--ui-ink,#342d26);border:1px solid var(--ui-border-soft,#c9b99c);border-radius:10px;font:16px/1.65 Georgia,serif}
 .campaign-journal :is(h2,h3,h4){color:var(--ui-heading,#5c1d1d);line-height:1.3;overflow-wrap:anywhere}
 .campaign-journal h2{font-size:clamp(2rem,5vw,3rem);margin:8px 0 12px}
 .campaign-journal h3{font-size:1.35rem;margin:10px 0}
@@ -18,7 +18,7 @@
 #mainApp #tab-campaign-journal .campaign-journal [data-journal-filter][aria-pressed=true]{background:var(--ui-heading,#5c1d1d)!important;color:var(--ui-cream,#f5e6c8)!important}
 .campaign-journal :is(button,input,textarea):focus-visible{outline:3px solid var(--ui-heading,#5c1d1d);outline-offset:3px}
 .journal-status{margin:16px 0;color:var(--ui-muted,#685a48);overflow-wrap:anywhere}
-.journal-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(240px,1fr);gap:26px;margin-top:24px}
+.journal-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;margin-top:24px}
 .journal-feed,.journal-sidebar{display:grid;align-content:start;gap:18px;min-width:0}
 .journal-card{padding:22px;border:1px solid var(--ui-border-soft,#c9b99c);border-radius:8px;min-width:0;overflow-wrap:anywhere}
 .journal-card p{margin:12px 0}
@@ -42,16 +42,25 @@
 .journal-prose{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9;margin:22px 0}
 .journal-note-grid,.journal-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 .journal-note{background:#f3ead4;border:1px solid #d8c9a4;padding:18px;min-width:0}
-.journal-editor{max-width:850px;margin:22px auto}
+.journal-editor{max-width:none;margin:22px auto}
 .journal-editor form>label,.journal-field-grid{margin:20px 0}
 .journal-editor .journal-actions{margin-top:22px}
 .journal-reader-heading{justify-content:space-between}
 .journal-preview h3{margin-top:22px}
 .journal-leave-dialog p{margin:16px 0}
-@media(max-width:760px){.campaign-journal{margin:16px 10px 28px;padding:20px}.journal-grid,.journal-notebook{grid-template-columns:minmax(0,1fr)}.journal-index{border-right:0;border-bottom:1px solid var(--ui-border-soft,#c9b99c)}.journal-leaf{padding:22px}.journal-note-grid,.journal-field-grid{grid-template-columns:minmax(0,1fr)}.journal-card{padding:18px}.journal-search{flex-wrap:wrap}.journal-search label{flex:1 1 200px}.journal-toolbar>[data-journal-compose]{width:100%}}
+@media(max-width:760px){.campaign-journal{margin:16px 0 28px;padding:20px}.journal-grid,.journal-notebook{grid-template-columns:minmax(0,1fr)}.journal-index{border-right:0;border-bottom:1px solid var(--ui-border-soft,#c9b99c)}.journal-leaf{padding:22px}.journal-note-grid,.journal-field-grid{grid-template-columns:minmax(0,1fr)}.journal-card{padding:18px}.journal-search{flex-wrap:wrap}.journal-search label{flex:1 1 200px}.journal-toolbar>[data-journal-compose]{width:100%}}
 @media print{.campaign-journal button,.journal-hero,.journal-index,.journal-status{display:none!important}.campaign-journal{border:0;padding:0;margin:0}.journal-notebook,.journal-grid{display:block}.journal-editor{display:none}}
 .campaign-journal figure{margin:24px 0;max-width:100%}
 .campaign-journal figure img{display:block;max-width:100%;height:auto;border-radius:6px}
 .campaign-journal figcaption{font-size:.9rem;color:var(--ui-muted,#685a48);margin-top:8px}
 
 .campaign-journal label>span{display:flex;align-items:center;gap:6px}
+
+.journal-feed{grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr))}
+.journal-sidebar{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.journal-editor form>details{margin:22px 0;border-block:1px solid var(--ui-border-soft,#c9b99c);padding:14px 0}
+.journal-editor summary{cursor:pointer;min-height:44px;color:var(--ui-heading,#5c1d1d)}
+.journal-editor select{padding:10px;min-height:44px;background:var(--ui-paper,#fdfbf7);border:1px solid var(--ui-border,#8a7355);border-radius:5px;font:inherit;color:var(--ui-ink,#342d26);max-width:100%}
+.journal-leaf>.journal-actions{margin-top:22px}
+
+#mainApp #campaignSectionNavigation [data-section-group=journal] .tab[aria-current=page]{background:var(--ui-heading,#5c1d1d)!important;color:var(--ui-cream,#f5e6c8)!important;border-color:var(--ui-heading,#5c1d1d)!important}

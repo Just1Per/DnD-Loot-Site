@@ -239,6 +239,7 @@ async function enterCampaign(campaign) {
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
   if(typeof CampaignInformation!=="undefined"&&!CampaignInformation.clear())return;
   if(typeof CampaignJournal!=="undefined")CampaignJournal.clear();
+  if(typeof CampaignMap!=="undefined")CampaignMap.clear();
      closeItemModal();
   closeCharacterSheet(true); CharacterWorkspace.clear(); PageEditors.clear(); closeVaultAction(); closeRootPicker();
   const generation = ++campaignLoadGeneration;
@@ -274,6 +275,7 @@ async function leaveCampaign() {
   if(typeof CampaignWorkspace!=="undefined"&&!CampaignWorkspace.clear())return;
   if(typeof CampaignInformation!=="undefined"&&!CampaignInformation.clear())return;
   if(typeof CampaignJournal!=="undefined")CampaignJournal.clear();
+  if(typeof CampaignMap!=="undefined")CampaignMap.clear();
   if (!closeCharacterSheet()) return;
   AppNavigation.dashboard();
   CampaignRules.stop();

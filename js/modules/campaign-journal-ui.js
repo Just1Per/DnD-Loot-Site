@@ -70,10 +70,10 @@ var CampaignJournal=(()=>{
   }
   function editorState(s){
     if(!allowed(s)||!s.editor)return;
-    s.root.querySelectorAll('[data-journal-form] input,[data-journal-form] textarea,[data-journal-form] button').forEach(node=>node.disabled=s.busy);
+    s.root.querySelectorAll('[data-journal-form] input,[data-journal-form] textarea,[data-journal-form] select,[data-journal-form] button').forEach(node=>node.disabled=s.busy);
     s.root.querySelector('[data-journal-status]').textContent=s.message;
-    const e=s.editor,shared=s.shared.find(row=>row.id===e.id),publish=s.root.querySelector('[data-journal-publish]');
-    publish.disabled=s.busy||e.dirty||!e.revision;publish.textContent=shared?'Update shared recap':'Share with the party';
+    const submit=s.root.querySelector('[data-journal-form] button[type=submit]');
+    submit.textContent=s.editor.audience==='party'?'Share recap':'Save draft';
     s.root.querySelector('[data-journal-compose]').disabled=s.busy;
     s.root.querySelector('[data-journal-refresh]').disabled=s.busy;
   }
@@ -81,16 +81,17 @@ var CampaignJournal=(()=>{
     if(!allowed(s)||!s.ready||!guard(()=>edit(s,id)))return;
     const row=id?s.drafts.find(row=>row.id===id):null;
     if(id&&!row){s.message='Your saved draft is unavailable. Refresh the journal before editing.';paint(s);return;}
-    s.editor={...(row||{id:crypto.randomUUID(),revision:0,title:'',body:'',authorName:String(currentUser?.name||auth.currentUser?.displayName||'Player').slice(0,100),characterName:'',sessionNumber:Math.min(9999,[...s.shared,...s.drafts].reduce((max,row)=>Math.max(max,row.sessionNumber||0),0)+1),sessionDate:today(),remember:'',nextTime:''}),dirty:false};
-    s.message=row?'Your saved draft is private. Sharing is a separate action.':'Start with what happened, what you learned, and what comes next.';
+    s.editor={...(row||{id:crypto.randomUUID(),revision:0,title:'',body:'',authorName:String(currentUser?.name||auth.currentUser?.displayName||'Player').slice(0,100),characterName:'',sessionNumber:Math.min(9999,[...s.shared,...s.drafts].reduce((max,row)=>Math.max(max,row.sessionNumber||0),0)+1),sessionDate:today(),remember:'',nextTime:''}),audience:'private',dirty:false};
+    s.message='Write your recap, choose who can read it, then save.';
     revokeImages(s);const e=s.editor,fields=[['sessionNumber','Session number','number',9999],['sessionDate','Session date','date',10],['authorName','Your name','text',100],['characterName','Character perspective (optional)','text',100]];
-    s.root.querySelector('[data-journal-content]').innerHTML=`<section class="journal-editor"><div class="journal-reader-heading"><button type="button" data-journal-editor-back>${s.selected?'← Back to reading':'← Back to the journal'}</button><span class="journal-tag">Private working draft</span></div><h3>Write your session recap</h3><p>Other players may tell the same evening differently. This is your account of the adventure.</p><form data-journal-form><div class="journal-field-grid">${fields.map(([key,label,type,max])=>`<label><span>${label}</span><input data-journal-field="${key}" type="${type}" value="${escape(e[key])}" ${type==='number'?'min="1" max="9999"':`maxlength="${max}"`} ${key==='characterName'?'':'required'}></label>`).join('')}</div><label><span>Title</span><input data-journal-field="title" maxlength="160" value="${escape(e.title)}" required placeholder="What will you remember this session for?"></label><label><span>Your recap</span><textarea data-journal-field="body" maxlength="12000" rows="12" required placeholder="What happened? What did we discover?">${escape(e.body)}</textarea></label><div class="journal-field-grid"><label><span>Remember this (optional)</span><textarea data-journal-field="remember" maxlength="2000" rows="4">${escape(e.remember)}</textarea></label><label><span>For next time (optional)</span><textarea data-journal-field="nextTime" maxlength="2000" rows="4">${escape(e.nextTime)}</textarea></label></div><p class="journal-muted">Save keeps this working draft visible only to you. Sharing copies the saved text to everyone in this campaign, including its DMs. Later draft edits stay private until you update the shared recap.</p><div class="journal-actions"><button type="submit" class="btn-primary">Save private draft</button><button type="button" data-journal-preview>Preview</button><button type="button" data-journal-publish>Share with the party</button></div></form></section>`;
+    s.root.querySelector('[data-journal-content]').innerHTML=`<section class="journal-editor"><div class="journal-reader-heading"><button type="button" data-journal-editor-back>${s.selected?'← Back to reading':'← Back to the journal'}</button><span class="journal-tag">Private working draft</span></div><h3>Write your session recap</h3><p>Other players may tell the same evening differently. This is your account of the adventure.</p><form data-journal-form><label><span>Title</span><input data-journal-field="title" maxlength="160" value="${escape(e.title)}" required placeholder="What happened this session?"></label><label><span>Your recap</span><textarea data-journal-field="body" maxlength="12000" rows="10" required placeholder="Tell the story in your own words…">${escape(e.body)}</textarea></label><label><span>Who can read this?</span><select data-journal-audience><option value="private">Only me · Draft</option><option value="party">Everyone in this campaign</option></select></label><details data-journal-extra><summary>Session details &amp; extra notes (optional)</summary><div class="journal-field-grid">${fields.map(([key,label,type,max])=>`<label><span>${label}</span><input data-journal-field="${key}" type="${type}" value="${escape(e[key])}" ${type==='number'?'min="1" max="9999"':`maxlength="${max}"`} ${key==='characterName'?'':'required'}></label>`).join('')}</div><div class="journal-field-grid"><label><span>Remember this</span><textarea data-journal-field="remember" maxlength="2000" rows="3">${escape(e.remember)}</textarea></label><label><span>For next time</span><textarea data-journal-field="nextTime" maxlength="2000" rows="3">${escape(e.nextTime)}</textarea></label></div></details><p class="journal-muted">Drafts are only visible to you. Shared recaps can be read by everyone in this campaign. Editing a draft keeps the existing shared copy unchanged until you choose to share again.</p><div class="journal-actions"><button type="submit" class="btn-primary">Save draft</button><button type="button" data-journal-preview>Preview</button></div></form></section>`;
     const form=s.root.querySelector('[data-journal-form]');
     form.oninput=event=>{const key=event.target.dataset.journalField;if(!key||!allowed(s)||s.busy)return;s.editor[key]=key==='sessionNumber'?Number(event.target.value):event.target.value;s.editor.dirty=true;s.message='Unsaved changes. Your party’s shared copy has not changed.';editorState(s);};
-    form.onsubmit=event=>{event.preventDefault();saveDraft(s);};
+    form.addEventListener('invalid',event=>{const details=event.target.closest('details');if(details)details.open=true;},true);
+    form.onsubmit=async event=>{event.preventDefault();const e=s.editor,share=e.audience==='party';if(await saveDraft(s)&&share&&allowed(s)&&s.editor===e)await publish(s);};
+    s.root.querySelector('[data-journal-audience]').onchange=event=>{s.editor.audience=event.target.value;editorState(s);};
     s.root.querySelector('[data-journal-editor-back]').onclick=()=>{if(!guard(()=>{s.editor=null;paint(s);}))return;s.editor=null;paint(s);};
     s.root.querySelector('[data-journal-preview]').onclick=()=>preview(s);
-    s.root.querySelector('[data-journal-publish]').onclick=()=>publish(s);
     editorState(s);s.root.querySelector('[data-journal-field="title"]').focus();
   }
   async function saveDraft(s){
@@ -105,8 +106,6 @@ var CampaignJournal=(()=>{
   async function publish(s){
     const e=s.editor;if(!allowed(s)||!e||e.dirty||!e.revision||s.busy)return;
     const expected=s.shared.find(row=>row.id===e.id)?.revision||0;
-    const yes=await SiteConfirmation.ask({title:'Share this recap with your party?',paragraphs:['Everyone in this campaign, including its DMs, can read this saved recap. Later draft edits remain private until you update the shared version.'],confirmLabel:'Share recap'});
-    if(!yes||!allowed(s)||s.editor!==e||e.dirty||s.busy)return;
     s.busy=true;s.message='Sharing your saved recap…';editorState(s);
     try{const shared=await store.publish({campaignId:s.campaignId,id:e.id,revision:e.revision,publishedRevision:expected,isCurrent:()=>allowed(s)});if(!allowed(s))return;s.shared=s.shared.filter(row=>row.id!==e.id).concat(shared);s.editor=null;s.selected='recap:'+shared.id;s.message='Your recap is shared with the campaign.';paint(s);s.root.querySelector('#journalEntryTitle')?.focus();}
     catch(error){if(allowed(s))s.message='Could not share: '+error.message;}

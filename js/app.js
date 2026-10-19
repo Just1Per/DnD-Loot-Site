@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261019-shared-journal-v1";
+const ASSET_VERSION = "20261019-visual-journal-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -71,6 +71,7 @@ const FEATURE_FILES = [
   "./modules/campaign-information-store.js",
   "./modules/chapter-notes-store.js",
   "./modules/campaign-journal-store.js",
+  "./modules/campaign-map-store.js",
   "./modules/campaign-one-shots-store.js",
   "./modules/campaign-creatures.js",
   "./modules/personal-creature-library.js",
@@ -153,6 +154,7 @@ const FEATURE_FILES = [
   "./modules/campaign-information.js",
   "./modules/chapter-notes-ui.js",
   "./modules/campaign-journal-ui.js",
+  "./modules/campaign-map-ui.js",
   "./modules/site-help-data.js",
   "./modules/site-help.js",
   "./modules/ai-lookup.js",

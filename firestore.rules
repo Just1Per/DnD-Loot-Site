@@ -498,6 +498,37 @@ match /campaigns/{campaignId} {
     }
   }
 
+  match /campaignMaps/{mapId} {
+    function mapMember() { return isCampaignOwner(campaignId) || isActiveMember(campaignId); }
+    function validMap(d) {
+      return mapId == 'main' && d.keys().hasAll(['title','imagePath','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['title','imagePath','revision','updatedBy','updatedAt'])
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 160
+        && d.imagePath is string && d.imagePath.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')
+        && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
+    }
+    allow read: if mapId == 'main' && mapMember();
+    allow create: if isCampaignDM(campaignId) && validMap(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validMap(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    match /pins/{pinId} {
+      function currentImage() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data.imagePath; }
+      function validPin(d) {
+        return mapId == 'main' && d.keys().hasAll(['name','description','x','y','imagePath','revision','updatedBy','updatedAt'])
+          && d.keys().hasOnly(['name','description','x','y','imagePath','revision','updatedBy','updatedAt'])
+          && d.name is string && d.name.size() > 0 && d.name.size() <= 100
+          && d.description is string && d.description.size() <= 2000
+          && d.x is number && d.x >= 0 && d.x <= 100 && d.y is number && d.y >= 0 && d.y <= 100
+          && d.imagePath == getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data.imagePath
+          && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
+      }
+      allow get: if mapId == 'main' && (isCampaignDM(campaignId) || (mapMember() && resource.data.imagePath == currentImage()));
+      allow list: if mapId == 'main' && mapMember() && resource.data.imagePath == currentImage();
+      allow create: if isCampaignDM(campaignId) && validPin(request.resource.data) && request.resource.data.revision == 1;
+      allow update: if isCampaignDM(campaignId) && validPin(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+      allow delete: if mapId == 'main' && isCampaignDM(campaignId);
+    }
+  }
+
   // Private session drafts belong to their author, even when the reader is a DM.
   function journalMember() { return isCampaignOwner(campaignId) || isActiveMember(campaignId); }
   function validRecap(d) {

@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
 
 const root = path.resolve(__dirname, '..');
-const journalTabs = ['campaign-journal','campaign-information', 'campaign-npcs', 'campaign-chapters'];
+const journalTabs = ['campaign-journal','campaign-map','campaign-information', 'campaign-npcs', 'campaign-chapters'];
 const workspaceTabs = ['dm-world', 'dm-creatures', 'dm-chapters'];
 
 (async () => {
