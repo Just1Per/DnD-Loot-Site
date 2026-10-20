@@ -53,3 +53,9 @@ No additional Firestore or Storage rule changes, data migrations or deployments 
 ## Collapsible Library DM tools
 
 Campaign managers get a single DM tools disclosure containing Create Campaign Item, Add from Root Catalogue, DM quick controls and Quick show by rarity. It starts collapsed. Its open/closed preference is stored locally per signed-in account, survives refresh, and is independent of other accounts. Storage failures fall back to a collapsed panel. Players and global admins without campaign management permission do not see it. Item search, filters and Refresh Items remain available outside the panel. No backend rules or production changes are required.
+
+## Library browsing feedback
+
+Item search accepts multiple words across names, descriptions, categories, rarity, source, classes and property text. Active filters are visible as removable buttons, with a single Clear search & filters action. Opposing status choices (looted/unlooted, attunement/no attunement and highlighted/not highlighted) deselect each other. Result totals count only items available under the current campaign’s permissions. Empty campaigns and filtered-out results offer different guidance.
+
+Reusable content offers a category filter, multi-word search, clear action and a preview with rules edition, creature type and combat values when enabled. In-app return retains the current account/campaign’s search, category and open previews. Create campaign draft still imports an independent unsaved copy and never changes the source template. No new rules, collections, migrations or deployment are required.

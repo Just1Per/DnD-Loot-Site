@@ -74,6 +74,7 @@ jobs:
         run: |
           npm --prefix tests run test:admin-catalogue
           npm --prefix tests run test:library-dm-panel
+          npm --prefix tests run test:library-browsing
       - name: Campaign UI consistency, mobile targets and responsive party actions
         run: npm --prefix tests run test:ui-consistency
       - name: Non-Overview accessibility, keyboard, layout and print

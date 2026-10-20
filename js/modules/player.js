@@ -117,10 +117,10 @@ function populateOwnerFilter() {
 
 // ─── STATS BAR ────────────────────────────────────────────────────────────────
 
-function updateStats(results, looted, highlighted, saved) {
+function updateStats(results, looted, highlighted, saved,total=results) {
   const el = document.getElementById("campaignStats");
   if (el) el.textContent =
-    `${results} items  ·  ${looted} looted  ·  ${highlighted} highlighted  ·  ${saved} saved`;
+    `${results} of ${total} items  ·  ${looted} looted  ·  ${highlighted} highlighted  ·  ${saved} saved`;
 }
 
 // ─── PLAYER TAB ──────────────────────────────────────────────────────────────

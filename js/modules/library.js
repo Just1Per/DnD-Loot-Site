@@ -198,25 +198,34 @@ async function saveItemModal() {
 
 // Browse existing personal templates without loading campaign-private preparation.
 var ReusableLibrary=(()=>{
- let session=null;
+ let session=null;const browsing=new Map();
+ const key=s=>s.uid+':'+s.campaignId;
+ function remember(s){if(!current(s)||!s.host)return;const search=s.host.querySelector('[data-template-search]'),category=s.host.querySelector('[data-template-category]');if(search&&category)browsing.set(key(s),{query:search.value,category:category.value,open:[...s.host.querySelectorAll('details[open]')].map(n=>n.dataset.templateId)});}
+
  const e=value=>escapeHtml(String(value??''));
  const current=s=>session===s&&auth.currentUser?.uid===s.uid&&activeCampaign?.id===s.campaignId&&canManageCampaign();
- function clear(){session=null;document.getElementById('tab-library-reusable')?.replaceChildren();}
+ function clear(){if(session)remember(session);session=null;document.getElementById('tab-library-reusable')?.replaceChildren();}
  async function render(){
   clear();const root=document.getElementById('tab-library-reusable');if(!root)return;
   root.innerHTML='<section class="campaign-information-shell"><header><p class="campaign-book-eyebrow">Library</p><h2>Reusable content</h2><p>Your saved creature and NPC templates. Create an independent campaign draft from a template; the original stays in your library.</p></header><div data-reusable-content></div></section>';
   const host=root.querySelector('[data-reusable-content]');
   if(!canManageCampaign()){host.innerHTML='<p>Personal creature templates are available to campaign DMs. Read the people your party knows in Journal → NPCs.</p>';return;}
-  const s={uid:auth.currentUser?.uid,campaignId:activeCampaign?.id};session=s;
-  host.innerHTML='<label class="workspace-field">Search reusable content<input type="search" data-template-search></label><p role="status" data-template-status>Loading your templates…</p><div data-template-list></div>';
+  const s={uid:auth.currentUser?.uid,campaignId:activeCampaign?.id,host};session=s;const saved=browsing.get(key(s));
+  host.innerHTML='<div class="campaign-information-filters"><label>Search reusable content<input type="search" data-template-search></label><label>Category<select data-template-category><option value="">All categories</option></select></label><button type="button" data-template-reset hidden>Clear search &amp; filters</button></div><p role="status" data-template-status>Loading your templates…</p><div data-template-list></div>';
   const status=host.querySelector('[data-template-status]'),list=host.querySelector('[data-template-list]');
   try{
    const rows=await PersonalCreatureLibrary.list();if(!current(s))return;
+   const search=host.querySelector('[data-template-search]'),category=host.querySelector('[data-template-category]'),reset=host.querySelector('[data-template-reset]');
+   category.innerHTML='<option value="">All categories</option>'+[...new Set(rows.map(r=>r.data?.category||'Creature'))].sort().map(value=>'<option>'+e(value)+'</option>').join('');
+   search.value=saved?.query||'';category.value=saved?.category||'';
+   let openIds=new Set(saved?.open||[]);
    const paint=()=>{
-    if(!current(s))return;const query=host.querySelector('[data-template-search]').value.trim().toLowerCase();
-    const matches=rows.filter(row=>[row.title,row.summary,row.content,row.data?.category].join(' ').toLowerCase().includes(query));
-    status.textContent=matches.length+' saved '+(matches.length===1?'template':'templates');
-    list.innerHTML=matches.map(row=>`<article class="campaign-information-card"><details><summary><strong>${e(row.title)}</strong><span>${e(row.data?.category||'Creature')}</span><p>${e(row.summary||row.content?.slice(0,180)||'Read this saved template.')}</p></summary><div class="campaign-book-prose">${e(row.content)}</div><button type="button" data-use-template="${e(row.id)}">Create campaign draft</button></details></article>`).join('')||'<p>No matching templates. In DM Workspace → Creatures &amp; NPCs, save a creature to My Library to reuse it in other campaigns.</p>';
+    if(!current(s))return;for(const detail of list.querySelectorAll('details')){if(detail.open)openIds.add(detail.dataset.templateId);else openIds.delete(detail.dataset.templateId);}
+    const terms=search.value.trim().toLowerCase().split(/\s+/).filter(Boolean),selected=category.value;
+    const matches=rows.filter(row=>(!selected||(row.data?.category||'Creature')===selected)&&terms.every(term=>[row.title,row.summary,row.content,row.data?.category,row.data?.creatureType].join(' ').toLowerCase().includes(term)));
+    reset.hidden=!terms.length&&!selected;
+    status.textContent=matches.length+' of '+rows.length+' saved '+(rows.length===1?'template':'templates');
+    list.innerHTML=matches.map(row=>`<article class="campaign-information-card"><details data-template-id="${e(row.id)}" ${openIds.has(row.id)?'open':''}><summary><strong>${e(row.title)}</strong><span>${e(row.data?.category||'Creature')}</span><p>${e(row.summary||row.content?.slice(0,180)||'Read this saved template.')}</p></summary><p class="template-preview-kind">${e(row.data?.creatureType||row.data?.category||'Creature')} · ${e(row.data?.edition||'Homebrew')}</p>${row.data?.combatEnabled?`<dl class="template-preview-stats"><div><dt>Armor class</dt><dd>${e(row.data.ac)}</dd></div><div><dt>Hit points</dt><dd>${e(row.data.hp)}</dd></div>${row.data.cr?`<div><dt>Challenge</dt><dd>${e(row.data.cr)}</dd></div>`:''}</dl>`:''}<div class="campaign-book-prose">${e(row.content)}</div><button type="button" data-use-template="${e(row.id)}">Create campaign draft</button></details></article>`).join('')||(rows.length?'<p>No templates match these filters. Clear the search and filters to browse your saved content.</p>':'<p>No saved templates yet. In DM Workspace → Creatures &amp; NPCs, save a creature to My Library to reuse it in other campaigns.</p>');
     list.querySelectorAll('[data-use-template]').forEach(button=>button.onclick=async()=>{
      if(!current(s))return;const record=rows.find(row=>row.id===button.dataset.useTemplate);if(!record)return;
      showTab('dm-creatures',false);if(AppShell.route!=='dm-creatures')return;
@@ -226,7 +235,7 @@ var ReusableLibrary=(()=>{
      CampaignWorkspace.importCreature(record);
     });
    };
-   host.querySelector('[data-template-search]').oninput=paint;paint();
+   search.oninput=paint;category.onchange=paint;reset.onclick=()=>{search.value='';category.value='';paint();search.focus();};paint();
   }catch(error){if(current(s)){status.textContent='Could not load your templates: '+error.message;const retry=document.createElement('button');retry.type='button';retry.textContent='Retry loading templates';retry.onclick=render;list.append(retry);}}
  }
  return{render,clear};

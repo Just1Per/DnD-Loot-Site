@@ -69,11 +69,26 @@ async function loadMagicItemLibrary() {
   }
 }
 
+const libraryFilters={search:'Search',categoryFilter:'Category',rarityFilter:'Rarity',sourceFilter:'Source',classFilter:'Class',ownerFilter:'Owner',showLootedOnly:'Looted',showUnlootedOnly:'Unlooted',showSavedOnly:'Saved',showAttunementOnly:'Requires attunement',showNoAttunementOnly:'No attunement',showHighlightedOnly:'Highlighted',showNotHighlightedOnly:'Not highlighted'};
+function clearLibraryFilters(){
+  for(const id of Object.keys(libraryFilters)){const input=document.getElementById(id);if(input){if(input.type==='checkbox')input.checked=false;else input.value='';}}
+  renderCards();document.getElementById('search')?.focus({preventScroll:true});
+}
+function syncLibraryFilters(){
+  const active=Object.entries(libraryFilters).flatMap(([id,label])=>{const input=document.getElementById(id);if(!input||(input.type==='checkbox'?!input.checked:!input.value.trim()))return [];return[{id,text:label+(input.type==='checkbox'?'':': '+(input.selectedOptions?.[0]?.textContent||input.value))}];});
+  const host=document.getElementById('libraryActiveFilters'),clear=document.getElementById('clearLibraryFilters'),summary=document.getElementById('libraryFilterSummary');
+  if(summary)summary.textContent='Filters'+(active.length?' · '+active.length+' active':'');
+  if(clear){clear.hidden=!active.length;clear.onclick=clearLibraryFilters;}
+  if(!host)return;host.hidden=!active.length;host.replaceChildren();
+  for(const filter of active){const button=document.createElement('button');button.type='button';button.dataset.removeLibraryFilter=filter.id;button.textContent=filter.text+' ×';button.setAttribute('aria-label','Remove '+filter.text);button.onclick=()=>{const input=document.getElementById(filter.id);if(input.type==='checkbox')input.checked=false;else input.value='';renderCards();document.getElementById('search')?.focus({preventScroll:true});};host.append(button);}
+}
+
 function renderCards() {
   if (!container) return;
+  syncLibraryFilters();
   if (!magicItemLibraryLoaded) { renderMagicItemLoadPrompt(); return; }
 
-  const filtered = applyFilters(visibleItems());
+  const permitted=visibleItems(),filtered = applyFilters(permitted);
   const fragment = document.createDocumentFragment();
 
   for (const item of filtered) {
@@ -81,7 +96,13 @@ function renderCards() {
   }
 
   container.replaceChildren(fragment);
-  updateStatsFromFiltered(filtered);
+  if(!filtered.length){
+    const hasItems=permitted.length>0;
+    container.innerHTML=`<section class="library-empty"><h3>${hasItems?'No matching items':'No items to browse yet'}</h3><p>${hasItems?'Try fewer filters or a different search.':canManageCampaign()?'Add catalogue items or create your own campaign items from DM tools.':'Your DM can share campaign items here. Your existing loot and saved items are available in My Character.'}</p>${hasItems?'<button type="button" data-clear-library-filters>Clear search &amp; filters</button>':canManageCampaign()?'<button type="button" data-open-library-dm>Open DM tools</button>':''}</section>`;
+    container.querySelector('[data-clear-library-filters]')?.addEventListener('click',clearLibraryFilters);
+    container.querySelector('[data-open-library-dm]')?.addEventListener('click',()=>{if(!canManageCampaign())return;const panel=document.getElementById('libraryDMTools');panel.open=true;document.getElementById('addFromRoot')?.focus();});
+  }
+  updateStatsFromFiltered(filtered,permitted.length);
   observePendingImages(container);
   if(typeof CharacterWorkspace!=='undefined')CharacterWorkspace.refresh(false);
 }
@@ -96,7 +117,7 @@ function visibleItems() {
   return catalogue.filter(item => getItemState(item.id).visible);
 }
 
-function updateStatsFromFiltered(filtered) {
+function updateStatsFromFiltered(filtered,total) {
   let looted = 0;
   let highlighted = 0;
 
@@ -106,7 +127,7 @@ function updateStatsFromFiltered(filtered) {
     if (state.highlighted) highlighted++;
   }
 
-  updateStats(filtered.length, looted, highlighted, saves.length);
+  updateStats(filtered.length, looted, highlighted, saves.length,total);
 }
 
 function applyFilters(list) {
@@ -127,7 +148,7 @@ function applyFilters(list) {
   return list.filter(item => {
     const state = getItemState(item.id);
 
-    if (!catalogueItemMatches(item,{search,rarity,source,category,class:cls})) return false;
+    if (!catalogueItemMatches(item,{search,rarity,source,category,class:cls,multiTerm:true})) return false;
     if (owner && !inventory.some(e=>e.itemId===item.id && e.characterId===owner && e.quantity>0)) return false;
 
     if (chk("showLootedOnly")         && !state.looted)      return false;
