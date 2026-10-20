@@ -105,6 +105,7 @@ var CampaignInformation = (() => {
       });
     }
     loadImages(s,list);
+    if(selected&&s.targetId===selected.id){s.targetId=null;s.root.querySelector(`[data-${hook}-title]`)?.focus();}
   }
   function update(s, rows) {
     if(!current(s)||s.denied)return;s.rows=rows;

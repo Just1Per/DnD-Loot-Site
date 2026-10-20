@@ -213,6 +213,8 @@ var ReusableLibrary=(()=>{
   const s={uid:auth.currentUser?.uid,campaignId:activeCampaign?.id,host};session=s;const saved=browsing.get(key(s));
   host.innerHTML='<div class="campaign-information-filters"><label>Search reusable content<input type="search" data-template-search></label><label>Category<select data-template-category><option value="">All categories</option></select></label><button type="button" data-template-reset hidden>Clear search &amp; filters</button></div><p role="status" data-template-status>Loading your templates…</p><div data-template-list></div>';
   const status=host.querySelector('[data-template-status]'),list=host.querySelector('[data-template-list]');
+  host.querySelector('[data-template-search]').value=saved?.query||'';
+  if(saved?.category)host.querySelector('[data-template-category]').add(new Option(saved.category,saved.category,true,true));
   try{
    const rows=await PersonalCreatureLibrary.list();if(!current(s))return;
    const search=host.querySelector('[data-template-search]'),category=host.querySelector('[data-template-category]'),reset=host.querySelector('[data-template-reset]');
