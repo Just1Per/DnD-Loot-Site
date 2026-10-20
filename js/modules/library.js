@@ -2,9 +2,13 @@
 function itemAttributionMarkup(item) {
   const rights=item.rights;
   if(!rights?.attribution)return '';
+  const migrationNotice='Replaced the old catalogue version with the selected licensed SRD description; normalized line endings/literal newline escapes and removed Markdown link/emphasis syntax for plain-text cards. No old quotes or property prose retained. Generated illustrations are preserved separately under the owner instruction.';
+  const credit=rights.license==='CC-BY-4.0'&&/^This work includes material from the System Reference Document 5\.[12] by Wizards of the Coast LLC,/.test(rights.attribution)&&rights.attribution.endsWith('Changes: '+migrationNotice)
+    ?rights.attribution.slice(0,-migrationNotice.length)+'Adapted for this catalogue.'
+    :rights.attribution;
   const source=/^https:\/\//.test(rights.sourceUrl||'')?` <a href="${escapeHtml(rights.sourceUrl)}" target="_blank" rel="noopener noreferrer">Source</a>`:'';
   const license=rights.license==='CC-BY-4.0'?' <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>':'';
-  return `<p class="item-attribution">${escapeHtml(rights.attribution)}${source}${license}</p>`;
+  return `<details class="item-attribution"><summary>Source &amp; licence</summary><p>${escapeHtml(credit)}${source}${license}</p></details>`;
 }
 async function toggleItemVisibility(itemId) {
   if(!canManageCampaign())return;
