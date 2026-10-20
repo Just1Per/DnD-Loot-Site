@@ -247,10 +247,6 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       if (loginControls) loginControls.style.display = "none";
       if (logoutBtn)     logoutBtn.style.display = "inline-block";
 
-      // One-document catalogue existence check. The expensive legacy items.js
-      // import happens only on a genuinely empty database.
-      await importItemsIfEmpty();
-
       // The large magical-item catalogue is intentionally lazy. It is loaded
       // only after the user chooses "Load magical items" in the Library.
       itemsLoadPromise = Promise.resolve();

@@ -173,7 +173,6 @@ async function loadSaves() {
   const snap = await getDocs(canManageCampaign() ? reference : query(reference, where("userId", "==", uid)));
   if (activeCampaign?.id === id && auth.currentUser?.uid===uid) saves = snap.docs.map(d => ({ ...d.data(), id: d.id }));
 }
-async function loadItemState() { return loadCampaignItems(); }
 
 /** User data is global admin data. Campaign DMs use member documents instead. */
 async function loadUsers() {

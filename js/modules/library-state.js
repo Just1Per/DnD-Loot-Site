@@ -18,7 +18,6 @@ function getItemState(itemId) {
   return {visible:!!item.visible,highlighted:!!item.highlighted,looted:entries.length>0,
     owner:entries.length===1?entries[0].characterId:null,receivedDate:entries[0]?.receivedAt||null};
 }
-function patchItemState(itemId,changes) { return patchItem(itemId,changes); }
 /** Only visibility/highlighting can be patched here; quantities use inventory transactions. */
 async function persistItemState(itemId,changes) {
   if(!canManageCampaign())throw Error('Campaign DM access is required.');
@@ -27,41 +26,6 @@ async function persistItemState(itemId,changes) {
   const id=activeCampaign.id;
   await updateDoc(doc(db,'campaigns',id,'items',itemId),safe);
   if(activeCampaign?.id===id)patchItem(itemId,safe);
-}
-
-// ─── SINGLE-CARD RE-RENDER ────────────────────────────────────────────────────
-
-/** Build lookup maps once per render instead of searching every list for every card. */
-function buildRenderContext() {
-  const charactersById = new Map(characters.map(c => [c.id, c]));
-  const usersById      = new Map(users.map(u => [u.id, u]));
-  const savesByItem    = new Map();
-
-  for (const save of saves) {
-    if (!savesByItem.has(save.itemId)) savesByItem.set(save.itemId, []);
-    savesByItem.get(save.itemId).push(save);
-  }
-
-  return {
-    charactersById,
-    usersById,
-    savesByItem,
-    playableChars: allPlayableCharacters()
-  };
-}
-
-function rerenderCard(itemId) {
-  const item = items.find(i => i.id === itemId);
-  const oldCard = [...container.querySelectorAll("[data-item-id]")].find(c => c.dataset.itemId === itemId);
-  if (item && oldCard) {
-    const card = createCard(item, buildRenderContext());
-    oldCard.replaceWith(card);
-    observePendingImages(card);
-  }
-  if(typeof CharacterWorkspace!=='undefined')CharacterWorkspace.refresh(false);
-  renderDMCharacters();
-  renderDMOverview();
-  refreshStatsBar();
 }
 
 // ─── RENDER CARDS ─────────────────────────────────────────────────────────────
@@ -110,11 +74,10 @@ function renderCards() {
   if (!magicItemLibraryLoaded) { renderMagicItemLoadPrompt(); return; }
 
   const filtered = applyFilters(visibleItems());
-  const context  = buildRenderContext();
   const fragment = document.createDocumentFragment();
 
   for (const item of filtered) {
-    fragment.appendChild(createCard(item, context));
+    fragment.appendChild(createCard(item));
   }
 
   container.replaceChildren(fragment);
@@ -144,10 +107,6 @@ function updateStatsFromFiltered(filtered) {
   }
 
   updateStats(filtered.length, looted, highlighted, saves.length);
-}
-
-function refreshStatsBar() {
-  updateStatsFromFiltered(applyFilters(visibleItems()));
 }
 
 function applyFilters(list) {

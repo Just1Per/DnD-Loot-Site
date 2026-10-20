@@ -10,7 +10,7 @@ rules (`firestore.rules`).
 The repository's [`storage.rules`](../storage.rules) combines the existing
 Firebase Storage rules supplied by the project owner with campaign image matches:
 
-- `dnd-item-images/{fileName}`: public read; admins create, update and delete
+- `dnd-item-images/{fileName}`: generated artwork registered by the backend is readable; admins manage uploads. Retired originals do not become public just because an object exists.
 - `campaign-item-images/{campaignId}/{fileName}`: owners and active members
   read; owners/active DMs create, update and delete
 - `campaign-world-images/{campaignId}/{entryId}/{imageId}`: owners/active DMs

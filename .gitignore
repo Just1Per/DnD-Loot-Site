@@ -70,3 +70,6 @@ node_modules/
 
 # Reproducible catalogue download cache
 scripts/.source-cache/
+
+# Generated app test output
+tests/dom-results.json

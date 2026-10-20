@@ -247,24 +247,6 @@ function renderMyWishes() {
   observePendingImages(el);
 }
 
-function createMiniCard(item, mode, extra="") {
-  const rc=(item.rarity||"").toLowerCase().replaceAll(" ","-");
-  return `
-    <div class="mini-card ${escapeHtml(rc)}">
-      ${itemImageMarkup(item, "mini-card-art")}
-      <div class="mini-card-body">
-        <div class="mini-card-name">${escapeHtml(item.name)}</div>
-        <div class="mini-card-meta">
-          ${item.rarity  ?`<span class="meta-tag ${escapeHtml(rc)}">${escapeHtml(item.rarity)}</span>`:""}
-          ${item.category?`<span class="meta-tag">${escapeHtml(item.category)}</span>`:""}
-          ${mode==="wish"&&extra?`<span class="meta-tag campaign-tag">★ ${escapeHtml(extra)}</span>`:""}
-          ${mode==="loot"&&extra?`<span class="meta-tag" style="border-color:#27ae60;color:#1e8449">⚔ ${escapeHtml(extra)}</span>`:""}
-        </div>
-        ${item.attunement?`<div class="mini-card-attune">Requires Attunement</div>`:""}
-      </div>
-    </div>`;
-}
-
 // ─── CHARACTER IDENTITY PAGE ─────────────────────────────────────────────────────
 
 async function openEditCharacterModal(charId) {

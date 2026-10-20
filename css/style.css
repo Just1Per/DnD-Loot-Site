@@ -853,107 +853,12 @@ body {
 .btn-select-char { background: linear-gradient(180deg,#9b1d1d,#651313); border: 2px solid #d4af37 !important; }
 .btn-rename-char { background: linear-gradient(180deg,#6c3483,#4a235a); }
 
-.player-create-form {
-  background: #fdfbf7;
-  border: 2px solid #c8b89a;
-  border-radius: 8px;
-  padding: 14px 16px;
-}
-
-.player-create-form h3 {
-  font-family: "Cinzel", serif;
-  font-size: 0.76rem;
-  color: #5c1d1d;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
-.player-create-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.player-create-row input,
-.player-create-row select {
-  background: #fdfbf7;
-  border: 2px solid #8a7355;
-  border-radius: 6px;
-  color: #5c1d1d;
-  font-family: Georgia, serif;
-  font-size: 0.82rem;
-  padding: 7px 10px;
-  flex: 1;
-  min-width: 130px;
-}
-
-.player-create-row input[type="number"] { max-width: 120px; flex: 0 0 auto; }
-
-.player-create-row button {
-  background: linear-gradient(180deg, #9b1d1d, #651313);
-  border: 2px solid #d4af37;
-  border-radius: 6px;
-  color: #f5e6c8;
-  cursor: pointer;
-  font-family: "Cinzel", serif;
-  font-size: 0.72rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  padding: 7px 16px;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: transform 0.15s;
-}
-
-.player-create-row button:hover { transform: translateY(-1px); }
-
 /* Mini cards */
 .mini-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   gap: 12px;
 }
-
-.mini-card {
-  background: #fdfbf7;
-  border: 2px solid #8a7355;
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-
-.mini-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.14); }
-.mini-card.uncommon  { border-color: #2ecc71; }
-.mini-card.rare      { border-color: #3498db; }
-.mini-card.very-rare { border-color: #9b59b6; }
-.mini-card.legendary { border-color: #e67e22; }
-.mini-card.artifact  { border-color: #c0392b; }
-
-.mini-card-art {
-  width: 100%; height: 100px;
-  object-fit: cover;
-  background: #f5f2eb;
-  border-bottom: 1px solid #8a7355;
-  display: block;
-}
-
-.mini-card-body { padding: 8px 10px; display: flex; flex-direction: column; gap: 4px; }
-
-.mini-card-name {
-  font-family: "Cinzel", serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #5c1d1d;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-
-.mini-card-meta { display: flex; flex-wrap: wrap; gap: 3px; }
-.mini-card-attune { font-size: 0.6rem; color: #8a7355; font-style: italic; }
 
 /* ─── ADMIN TAB ──────────────────────────────────────────────────────────── */
 .admin-section {
@@ -1253,59 +1158,6 @@ body {
 .role-checks label small { color: #8a7355; font-size: 0.7rem; }
 .role-checks input[type="checkbox"] { accent-color: #8b0000; height: 1rem; width: 1rem; flex-shrink: 0; }
 
-/* ─── WISH MODAL GRID ────────────────────────────────────────────────────── */
-.wish-modal-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 14px;
-}
-
-.wish-modal-card {
-  background: #fdfbf7;
-  border: 2px solid #8a7355;
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.15s;
-}
-
-.wish-modal-card:hover { transform: translateY(-2px); }
-.wish-modal-card.uncommon  { border-color: #2ecc71; }
-.wish-modal-card.rare      { border-color: #3498db; }
-.wish-modal-card.very-rare { border-color: #9b59b6; }
-.wish-modal-card.legendary { border-color: #e67e22; }
-.wish-modal-card.artifact  { border-color: #c0392b; }
-
-.wish-modal-art {
-  width: 100%; height: 110px;
-  object-fit: cover;
-  background: #f5f2eb;
-  border-bottom: 1px solid #c8b89a;
-  display: block;
-}
-
-.wish-modal-body { padding: 10px 12px; flex: 1; }
-
-.wish-modal-name {
-  font-family: "Cinzel", serif;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #5c1d1d;
-  text-transform: uppercase;
-  line-height: 1.3;
-  margin-bottom: 5px;
-}
-
-.wish-modal-prop {
-  font-size: 0.72rem;
-  color: #4a4a4a;
-  line-height: 1.4;
-  margin-top: 5px;
-  border-left: 2px solid #c8b89a;
-  padding-left: 6px;
-}
-
 /* ─── SITE FOOTER ────────────────────────────────────────────────────────── */
 .site-footer {
   text-align: center;
@@ -1404,23 +1256,16 @@ input::placeholder, textarea::placeholder { color: #8a7355; font-style: italic; 
   .modal-label.full { grid-column: 1; }
   .watermark { font-size: 3rem; }
   .loot-ref-grid { grid-template-columns: 1fr; }
-  .wish-modal-grid { grid-template-columns: 1fr 1fr; }
   .campaign-selector-box { padding: 24px 18px; }
-  .player-create-row input[type="number"] { max-width: 100%; }
 }
 
 @media (max-width: 480px) {
   .mini-card-grid   { grid-template-columns: 1fr 1fr; }
-  .wish-modal-grid  { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .item-card,
-.mini-card,
-.wish-modal-card { transition: none; }
-  .item-card:hover,
-.mini-card:hover,
-.wish-modal-card:hover { transform: none; }
+  .item-card { transition: none; }
+  .item-card:hover { transform: none; }
 }
 
 
@@ -1528,4 +1373,3 @@ button:disabled { opacity:.55; cursor:not-allowed; }
 @media(max-width:600px){.saved-item-card .card-buttons{align-items:flex-start}.saved-move-label{width:100%}}
 
 /* The character Saved dialog uses the same responsive columns as My Loot. */
-#wishModalGrid.wish-modal-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:22px;align-items:start}
