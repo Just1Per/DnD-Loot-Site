@@ -40,6 +40,19 @@ const root=path.resolve(__dirname,'..');
  await page.evaluate(()=>{imageCache.set('yes','https://example.invalid/old-token');document.querySelector('#art').innerHTML=itemImageMarkup(catalogue[0],'card-art');observePendingImages(document);});assert.equal(await page.locator('#art img').getAttribute('src'),await page.evaluate(()=>PLACEHOLDER_IMAGE));assert.equal(await page.evaluate(()=>window.legacyReads||0),0);
  const markup=await page.evaluate(()=>itemAttributionMarkup({rights:{attribution:'<img src=x onerror=alert(1)>',license:'CC-BY-4.0',sourceUrl:'javascript:alert(1)'}}));assert.ok(markup.includes('&lt;img'));assert.ok(!markup.includes('href="javascript:'));assert.ok(markup.includes('creativecommons.org/licenses/by/4.0/'));
  console.log('PASS Cleared artwork cannot reuse cached legacy URLs; attribution renders as safe text with a licence link');
+ await page.addStyleTag({path:root+'/css/campaign-controls.css'});
+ const credits=await page.evaluate(()=>{
+  const notice='Replaced the old catalogue version with the selected licensed SRD description; normalized line endings/literal newline escapes and removed Markdown link/emphasis syntax for plain-text cards. No old quotes or property prose retained. Generated illustrations are preserved separately under the owner instruction.';
+  const rights={license:'CC-BY-4.0',sourceUrl:'https://example.com/srd',attribution:'This work includes material from the System Reference Document 5.2 by Wizards of the Coast LLC, available at https://example.com/srd. Licensed under CC BY 4.0. Changes: '+notice};
+  const before=JSON.stringify(rights);document.querySelector('#art').className='item-card';document.querySelector('#art').innerHTML=itemAttributionMarkup({rights});return {unchanged:before===JSON.stringify(rights),custom:itemAttributionMarkup({rights:{license:'ORIGINAL',attribution:'Custom author. Changes: Custom explanation.'}}),empty:itemAttributionMarkup({})};
+ });
+ assert.equal(credits.unchanged,true);assert.equal(credits.empty,'');assert.match(credits.custom,/Changes: Custom explanation/);
+ const disclosure=page.locator('#art details'),creditText=disclosure.locator('p'),summary=disclosure.locator('summary');
+ assert.equal(await disclosure.evaluate(d=>d.open),false);assert.equal(await creditText.isVisible(),false);assert.equal(await summary.textContent(),'Source & licence');
+ await summary.focus();await page.keyboard.press('Enter');assert.equal(await creditText.isVisible(),true);assert.match(await creditText.textContent(),/System Reference Document 5.2/);assert.match(await creditText.textContent(),/Adapted for this catalogue/);assert.doesNotMatch(await creditText.textContent(),/normalized line endings|owner instruction/);assert.equal(await creditText.locator('a').count(),2);
+ await page.keyboard.press('Space');assert.equal(await creditText.isVisible(),false);assert.ok((await summary.boundingBox()).height>=44);
+ console.log('PASS Credits are collapsed, keyboard accessible and compact on mobile; SRD attribution/licence and original metadata are retained');
+
  await page.evaluate(()=>{document.querySelector('#art').innerHTML=itemImageMarkup({name:'Private image',archivedImage:{path:'campaign-catalogue-images/a/'+'a'.repeat(64)+'/'+'b'.repeat(64)}},'card-art');observePendingImages(document);});await page.waitForFunction(()=>document.querySelector('#art img').src.startsWith('blob:'));
  await page.evaluate(()=>{window.pauseBlob=true;document.querySelector('#art').innerHTML=itemImageMarkup({name:'Late image',archivedImage:{path:'campaign-catalogue-images/a/'+'c'.repeat(64)+'/'+'d'.repeat(64)}},'card-art');observePendingImages(document);});await page.waitForFunction(()=>!!window.releaseBlob);
  await page.evaluate(()=>{auth.currentUser={uid:'player'};currentRole='player';releaseBlob();});await page.waitForTimeout(100);assert.equal(await page.locator('#art img').getAttribute('src'),await page.evaluate(()=>PLACEHOLDER_IMAGE));
