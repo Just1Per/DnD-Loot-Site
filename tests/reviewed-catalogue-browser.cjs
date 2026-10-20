@@ -1,7 +1,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const root=path.resolve(__dirname,'..');
-(async()=>{const browser=await chromium.launch({headless:true});try{
+(async()=>{const browser=await chromium.launch({headless:true,...process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}});try{
  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];page.on('pageerror',error=>{errors.push(error.message);console.error('Browser fixture error:',error.message);});
  await page.route('https://fixture.example.test/**',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><html lang="en"><head><title>Reviewed catalogue fixture</title></head><body><main><h1>Campaign Library</h1><button id="opener">Add shared item</button><div id="rootCatalogueScreen" style="display:none"></div><div id="art"></div></main></body></html>'}));
  await page.goto('https://fixture.example.test/');
@@ -35,7 +35,7 @@ const root=path.resolve(__dirname,'..');
  console.log('PASS Administrator reads remain uncached and late results cannot enter a different account');
  await page.evaluate(()=>{rootItems=structuredClone(catalogue);openRootPicker();});await page.waitForSelector('#rootPicker[open]');assert.equal(await page.locator('[data-root-id]').count(),1);assert.equal(await page.locator('[data-root-id]').getAttribute('data-root-id'),'yes');
  await page.setViewportSize({width:320,height:760});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
- await page.locator('[data-root-id="yes"]').click();await page.waitForFunction(()=>copies.length===1);assert.equal(await page.evaluate(()=>copies[0].sourceId),'yes');
+ await page.locator('[data-root-id="yes"]').check();await page.locator('#addSelectedRoots').click();await page.waitForFunction(()=>copies.length===1&&document.querySelector('#rootPicker').getAttribute('aria-busy')==='false');assert.equal(await page.evaluate(()=>copies[0].sourceId),'yes');await page.locator('#closeRootPicker').click();
  console.log('PASS The DM picker imports only reviewed templates and fits a 320px viewport');
  await page.evaluate(()=>{imageCache.set('yes','https://example.invalid/old-token');document.querySelector('#art').innerHTML=itemImageMarkup(catalogue[0],'card-art');observePendingImages(document);});assert.equal(await page.locator('#art img').getAttribute('src'),await page.evaluate(()=>PLACEHOLDER_IMAGE));assert.equal(await page.evaluate(()=>window.legacyReads||0),0);
  const markup=await page.evaluate(()=>itemAttributionMarkup({rights:{attribution:'<img src=x onerror=alert(1)>',license:'CC-BY-4.0',sourceUrl:'javascript:alert(1)'}}));assert.ok(markup.includes('&lt;img'));assert.ok(!markup.includes('href="javascript:'));assert.ok(markup.includes('creativecommons.org/licenses/by/4.0/'));

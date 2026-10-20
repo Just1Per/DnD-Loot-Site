@@ -114,25 +114,56 @@ function renderRootCatalogue() {
 }
 async function openRootPicker() {
   if(!canManageCampaign()||activeCampaign.inventoryVersion!==2)return;
+  const openingCampaign=activeCampaign.id,openingUid=auth.currentUser?.uid;
   await itemsLoadPromise;
+  if(activeCampaign?.id!==openingCampaign||auth.currentUser?.uid!==openingUid||!canManageCampaign())return;
   let dialog=document.getElementById('rootPicker');
   if(!dialog){dialog=document.createElement('dialog');dialog.id='rootPicker';dialog.className='vault-dialog';dialog.setAttribute('aria-labelledby','rootPickerTitle');document.body.appendChild(dialog);}
-  const id=activeCampaign.id;
-  dialog.innerHTML='<div class="character-loot-heading"><h2 id="rootPickerTitle">Add a campaign copy</h2><button type="button" id="closeRootPicker" class="cancel-button">Close</button></div><p>Choose from shared templates reviewed for publication. Your existing campaign items stay in your campaign.</p><input id="rootPickerSearch" class="search-input" placeholder="Search shared templates" aria-label="Search shared templates"><div id="rootPickerResults" aria-live="polite"></div>';
-  dialog.querySelector('#closeRootPicker').addEventListener('click',closeRootPicker);
+  const id=activeCampaign.id,uid=auth.currentUser?.uid,selected=new Set();
+  let busy=false,added=0;
+  const current=()=>activeCampaign?.id===id&&auth.currentUser?.uid===uid&&canManageCampaign();
+  const eligible=()=>rootItems.filter(i=>SharedCataloguePolicy.approved(i)&&CampaignRules.allowed(i));
+  const matches=()=>{const q=dialog.querySelector('#rootPickerSearch').value.trim().toLowerCase();return eligible().filter(i=>i.name?.toLowerCase().includes(q));};
+  dialog.innerHTML='<div class="character-loot-heading"><h2 id="rootPickerTitle">Add from Root Catalogue</h2><button type="button" id="closeRootPicker" class="cancel-button">Close</button></div><p>Select items to add as private campaign copies.</p><input type="search" id="rootPickerSearch" class="search-input" placeholder="Search shared templates" aria-label="Search shared templates"><div class="root-picker-controls"><button type="button" id="selectRootMatches">Select all shown</button><button type="button" id="clearRootSelection">Clear selection</button><span id="rootPickerCount" role="status"></span></div><div id="rootPickerResults" role="group" aria-label="Shared catalogue items"></div><div class="root-picker-footer"><p id="rootPickerStatus" role="status" aria-live="polite"></p><button type="button" id="addSelectedRoots" class="btn-primary" disabled>Add selected (0)</button></div>';
+  const status=dialog.querySelector('#rootPickerStatus'),add=dialog.querySelector('#addSelectedRoots');
+  const update=()=>{
+    add.textContent=busy?`Adding… (${added} added)`:`Add selected (${selected.size})`;
+    add.disabled=busy||!selected.size||!current();
+    dialog.querySelector('#rootPickerCount').textContent=`${matches().length} of ${eligible().length} items shown · ${selected.size} selected`;
+    dialog.querySelectorAll('input, #selectRootMatches, #clearRootSelection, #closeRootPicker').forEach(control=>{control.disabled=busy;});
+    dialog.setAttribute('aria-busy',String(busy));
+  };
   const paint=()=>{
-    const q=dialog.querySelector('#rootPickerSearch').value.toLowerCase();const list=dialog.querySelector('#rootPickerResults');
-    const matches=rootItems.filter(i=>SharedCataloguePolicy.approved(i)&&CampaignRules.allowed(i)&&i.name?.toLowerCase().includes(q)).slice(0,100);
-    list.innerHTML=matches.map(i=>`<div class="root-picker-row"><div><strong>${escapeHtml(i.name)}</strong><p>${escapeHtml(i.rarity||'')} · ${escapeHtml(i.category||'')}</p></div><button class="toolbar-btn" type="button" data-root-id="${escapeHtml(i.id)}">Add to Campaign</button></div>`).join('')||'<p>No reviewed templates match your search. Your campaign items and owned equipment remain available in the Library.</p>';
-    list.querySelectorAll('[data-root-id]').forEach(b=>b.addEventListener('click',()=>runVaultButton(b,async()=>{
-      const source=rootItems.find(i=>i.id===b.dataset.rootId);
-      if(!SharedCataloguePolicy.approved(source))throw new Error('This template is no longer approved for sharing.');
-      if(!CampaignRules.allowed(source))throw new Error('This item edition is not available in this campaign.');
-      const result=await vaultCall('vaultCopyCampaignItem',{campaignId:id,source:'root',sourceId:b.dataset.rootId});
-      if(activeCampaign?.id!==id)return;
-      await refreshCampaignData();closeRootPicker();openItemModal(items.find(i=>i.id===result.itemId));
-    })));
-  };dialog.querySelector('#rootPickerSearch').addEventListener('input',paint);paint();dialog.showModal();
+    const list=dialog.querySelector('#rootPickerResults');
+    list.innerHTML=matches().map(i=>`<label class="root-picker-row"><input type="checkbox" data-root-id="${escapeHtml(i.id)}" ${selected.has(i.id)?'checked':''}><span><strong>${escapeHtml(i.name)}</strong><span class="root-picker-meta">${escapeHtml(i.rarity||'')} · ${escapeHtml(i.category||'')}</span></span></label>`).join('')||'<p>No reviewed templates match your search.</p>';
+    list.querySelectorAll('[data-root-id]').forEach(box=>box.addEventListener('change',()=>{if(box.checked)selected.add(box.dataset.rootId);else selected.delete(box.dataset.rootId);update();}));
+    update();
+  };
+  dialog.querySelector('#closeRootPicker').addEventListener('click',closeRootPicker);
+  dialog.oncancel=event=>{if(busy)event.preventDefault();};
+  dialog.querySelector('#rootPickerSearch').addEventListener('input',()=>{paint();dialog.querySelector('#rootPickerResults').scrollTop=0;});
+  dialog.querySelector('#selectRootMatches').addEventListener('click',()=>{matches().forEach(item=>selected.add(item.id));paint();});
+  dialog.querySelector('#clearRootSelection').addEventListener('click',()=>{selected.clear();paint();});
+  add.addEventListener('click',async()=>{
+    if(busy||!selected.size||!current())return;
+    busy=true;added=0;update();status.textContent='Adding selected items. Keep this window open.';
+    try{
+      for(const sourceId of [...selected]){
+        if(!current())throw Error('Campaign access changed. Import stopped.');
+        const source=rootItems.find(item=>item.id===sourceId);
+        if(!SharedCataloguePolicy.approved(source)||!CampaignRules.allowed(source))throw Error('A selected template is no longer available in this campaign.');
+        await vaultCall('vaultCopyCampaignItem',{campaignId:id,source:'root',sourceId});
+        selected.delete(sourceId);added++;update();status.textContent=`${added} added · ${selected.size} remaining`;
+      }
+      status.textContent=`Added ${added} item${added===1?'':'s'} to the campaign. Copies are private until you share them.`;
+    }catch(error){status.textContent=`Stopped after ${added} added. ${error.message} Remaining selections are kept. If your connection was interrupted, refresh campaign items before retrying.`;}
+    finally{
+      if(current()){try{await refreshCampaignData();}catch{status.textContent+=' Refresh campaign items to see the latest copies.';}}
+      busy=false;paint();
+    }
+  });
+  paint();dialog.showModal();
+
 }
 function closeRootPicker(){const d=document.getElementById('rootPicker');if(d?.open)d.close();}
 function closeVaultAction(){const d=document.getElementById('vaultActionDialog');if(d?.open)d.close();}

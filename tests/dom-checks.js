@@ -25,8 +25,8 @@
  check('Clone calls campaign-scoped operation',callLog.at(-1).name==='vaultCopyCampaignItem'&&callLog.at(-1).data.source==='campaign'&&callLog.at(-1).data.campaignId==='a');
  check('Cloned item editor keeps campaign name locked',document.getElementById('modal-campaign').readOnly&&document.getElementById('modal-campaign').value==='New Campaign Name');closeItemModal();
  openItemModal();check('New item defaults to hidden, one copy, DM assignment',!document.getElementById('modal-visible').checked&&document.getElementById('modal-remaining').value==='1'&&document.getElementById('modal-lootMode').value==='dm');closeItemModal();
- await openRootPicker();await click('[data-root-id="root-potion"]');
- check('Root picker creates a campaign copy',callLog.at(-1).data.source==='root'&&callLog.at(-1).data.campaignId==='a');closeItemModal();
+ await openRootPicker();const rootChoice=document.querySelector('[data-root-id="root-potion"]');rootChoice.checked=true;rootChoice.dispatchEvent(new Event('change',{bubbles:true}));await click('#addSelectedRoots');
+ check('Root picker creates selected campaign copies',callLog.at(-1).data.source==='root'&&callLog.at(-1).data.campaignId==='a');closeRootPicker();
  seed('player');
  check('Player sees visible campaign items only',document.querySelectorAll('#card-container .item-card').length===2&&!document.querySelector('#card-container [data-item-id="hidden"]'));
  check('Player sees only own loot quantity, no other character names',document.querySelector('#card-container [data-item-id="potion"] .inventory-quantity').textContent==='You own: 2'&&!document.getElementById('card-container').textContent.includes('Elara'));
