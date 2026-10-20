@@ -561,7 +561,7 @@ match /campaigns/{campaignId} {
       allow list: if mapId == 'main' && mapMember() && livePin();
       allow create: if isCampaignDM(campaignId) && ((validPin(request.resource.data) && !('schemaVersion' in getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data) && request.resource.data.revision == 1) || validPublishedPin(request.resource.data));
       allow update: if isCampaignDM(campaignId) && ((validPin(request.resource.data) && !('schemaVersion' in getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data) && request.resource.data.revision == resource.data.revision + 1) || validPublishedPin(request.resource.data));
-      allow delete: if mapId == 'main' && isCampaignDM(campaignId);
+      allow delete: if mapId == 'main' && isCampaignDM(campaignId) && !('schemaVersion' in get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data);
     }
   }
 

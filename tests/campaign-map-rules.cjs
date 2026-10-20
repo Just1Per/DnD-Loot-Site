@@ -35,6 +35,7 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
   await assertFails(sdk.getDoc(sdk.doc(contexts.player.firestore(),'campaigns/a/campaignMaps/main/pins/pin')));
   await assertFails(stores.player.listPins('a',second));
   await assertFails(stores.player.publish({campaignId:'a',draftRevision:2}));
+  await assertFails(stores.owner.removePin({campaignId:'a',id:'published-place',revision:map.revision}));
   await assert.rejects(stores.dm.publish({campaignId:'a',draftRevision:1}),/draft changed/);
   const ref=sdk.doc(contexts.dm.firestore(),'campaigns/a/campaignMaps/main/pins/published-place'),row=(await sdk.getDoc(ref)).data();
   await assertFails(sdk.setDoc(ref,{...row,description:'Cannot update without a new map publication'}));
