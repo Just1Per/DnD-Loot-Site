@@ -71,5 +71,22 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
   }
   assert.equal((await stores.owner.load('fresh')).revision,1);
  });
+ await check('All five marker styles and named region geometry publish atomically while hidden regions stay private',async()=>{
+  const triangle=[{x:10,y:10},{x:70,y:10},{x:40,y:80}],base={description:'Public description',x:40,y:40,type:'City',revealed:true};
+  const pins=stores.owner.markerStyles.map((markerStyle,i)=>({...base,id:'style-'+i,name:markerStyle,markerStyle}));
+  pins.push({...base,id:'region',name:'Storm Coast',type:'Region',boundary:triangle});
+  pins.push({...base,id:'secret-region',name:'Secret territory',type:'Region',boundary:triangle,revealed:false});
+  const previous=await stores.owner.loadDraft('fresh'),saved=await stores.owner.saveDraft({campaignId:'fresh',input:{title:'Atlas',imagePath:'campaign-maps/fresh/first',pins},revision:previous.revision,sourceRevision:previous.sourceRevision});
+  const result=await stores.owner.publish({campaignId:'fresh',draftRevision:saved.revision});
+  const published=await stores.owner.listPins('fresh',result.map);assert.equal(published.length,6);assert.deepEqual(published.find(p=>p.id==='region').boundary,triangle);
+  assert.equal(published.some(p=>p.name==='Secret territory'),false);
+  for(const style of stores.owner.markerStyles)assert.ok(published.some(p=>p.markerStyle===style));
+ });
+ await check('Rules reject malformed region vertices, invalid styles and boundary fields outside published geometry',async()=>{
+  const db=contexts.owner.firestore(),mapRef=sdk.doc(db,'campaigns/fresh/campaignMaps/main'),pinRef=sdk.doc(db,'campaigns/fresh/campaignMaps/main/pins/region');
+  for(const invalid of [{markerStyle:'Injected'},{boundary:'bad'},{boundary:[{x:1,y:1}]},{boundary:[{x:-1,y:0},{x:20,y:20},{x:30,y:0}]},{boundary:Array.from({length:13},(_,i)=>({x:i,y:i}))},{boundary:[{x:0,y:0,secret:'SECRET'},{x:20,y:20},{x:30,y:0}]},{type:'City'}]){
+   await assertFails(sdk.runTransaction(db,async tx=>{const map=(await tx.get(mapRef)).data(),pin=(await tx.get(pinRef)).data(),revision=map.revision+1;tx.set(mapRef,{...map,revision});tx.set(pinRef,{...pin,revision,publishedRevision:revision,...invalid});}));
+  }
+ });
  console.log('SUCCESS',count,'map Firestore/Storage permission checks');
 }finally{await env.cleanup();}})().catch(e=>{console.error(e);process.exitCode=1});

@@ -61,3 +61,18 @@
 @media(max-width:760px){.map-layout{grid-template-columns:minmax(0,1fr)}.campaign-map{padding:16px}.map-place-panel{position:static}.map-zoom{bottom:8px;left:8px}.map-legend{top:8px;left:8px}.map-hover{bottom:60px;right:8px;font-size:13px;max-width:210px}#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin{font-size:12px!important;max-width:140px;padding:6px 9px}.map-settings{padding:14px}}
 
 @media(max-width:1100px){#tab-dm-map .map-layout{grid-template-columns:minmax(0,1fr)}#tab-dm-map .map-place-panel{position:static}}
+
+.map-region-layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.map-region-layer polygon{fill:#b68d4540;stroke:#956d30;stroke-width:2;vector-effect:non-scaling-stroke;pointer-events:all;cursor:pointer;stroke-linejoin:round}
+.map-region-layer .map-region-selected{fill:#b68d4570;stroke:#704a13;stroke-width:3}
+.map-region-layer .map-region-private{stroke-dasharray:6 4;fill:#545e592b}
+.map-region-tools{border:1px solid #c6cfc2;border-radius:8px;padding:12px;margin:16px 0;background:#f5f3e9}
+.map-region-tools h4{margin:0}.map-region-tools p{font-size:.9rem;line-height:1.6}
+.map-marker-preview{padding:10px;border-left:3px solid #315b49;background:#eef0e7}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-style-0{border-radius:7px 7px 18px 18px}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-style-2{border-radius:5px;background:#5c4b75!important}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-style-3{border-radius:5px 18px;background:#75532f!important}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-style-4{border-radius:18px 5px;background:#315f77!important}
+.map-legend{max-width:calc(100% - 28px);font-size:11px;line-height:1.5}
+
+.map-drawing .map-region-layer polygon{pointer-events:none}
