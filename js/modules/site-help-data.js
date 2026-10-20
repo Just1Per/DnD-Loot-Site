@@ -132,6 +132,7 @@ var SiteHelpData=(()=>{
   'pending invitations':'Invitations addressed to your account. Accept to join with the invited role, or decline if you do not want to join.',
   'campaign settings':'Edit the current campaign’s name, description and default item visibility. Save Settings applies these choices to this campaign.',
   'members':'Members of the current campaign. Its owner and DMs manage invitations and campaign roles; these do not change global account roles.',
+  'map':'Set up the main campaign map in its own DM workspace. Save private drafts, place cities and regions, and publish only revealed places. Written descriptions stay in World Building and can be linked from map pins.',
   'world building':'Prepare worlds, regions, locations, factions and lore. Browse by category and player visibility, write a player description, and keep secrets, maps and connections in DM preparation. Save first, then share discoveries deliberately.',
   'description for players':'This description can be shared with campaign members after saving. Saving alone does not change what players see; use Share with players or Update shared version when ready.',
   'dm preparation':'Secrets and related places or people stay in the DM workspace. They are excluded from shared world descriptions and player-description printouts.',

@@ -7,8 +7,8 @@
 .map-canvas{position:relative;border:1px solid var(--ui-border-soft,#c8b89a);border-radius:8px;overflow:hidden;background:#e9dfcf;min-height:180px}
 .map-canvas img{width:100%;height:auto;display:block}
 .map-placing{cursor:crosshair;outline:3px dashed #732424;outline-offset:3px}
-#mainApp #tab-campaign-map .campaign-map button.map-pin{position:absolute;transform:translate(-50%,-50%);width:44px;min-width:44px;min-height:44px;border-radius:50%;background:#732424!important;color:#fff9ec!important;border:2px solid #fff9ec!important;box-shadow:0 2px 8px #21140566!important;font:bold 16px Georgia,serif!important;padding:0;z-index:1}
-#mainApp #tab-campaign-map .campaign-map button.map-pin[aria-pressed=true]{outline:3px solid #cba345;outline-offset:2px;background:#3e2023!important}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin{position:absolute;transform:translate(-50%,-50%);width:44px;min-width:44px;min-height:44px;border-radius:50%;background:#732424!important;color:#fff9ec!important;border:2px solid #fff9ec!important;box-shadow:0 2px 8px #21140566!important;font:bold 16px Georgia,serif!important;padding:0;z-index:1}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin[aria-pressed=true]{outline:3px solid #cba345;outline-offset:2px;background:#3e2023!important}
 .map-places{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .map-place-number{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:50%;background:#732424;color:#fff9ec;margin-right:5px;font-size:13px}
 .map-places button{text-align:left;white-space:normal;overflow-wrap:anywhere;max-width:100%}
@@ -23,7 +23,7 @@
 .campaign-map :is(input,textarea){width:100%;min-width:0;max-width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--ui-border,#8a7355);border-radius:5px;background:var(--ui-paper,#fdfbf7);color:var(--ui-ink,#342d26);font:16px/1.5 Georgia,serif}
 .campaign-map textarea{resize:vertical}
 .campaign-map :is(button,input,textarea,summary):focus-visible{outline:3px solid #732424;outline-offset:3px}
-#mainApp #tab-campaign-map .campaign-map button:not(.vault-help-badge){min-height:44px;white-space:normal;max-width:100%}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button:not(.vault-help-badge){min-height:44px;white-space:normal;max-width:100%}
 .campaign-map [data-map-status]{margin:16px 0;overflow-wrap:anywhere}
 .map-hint{color:var(--ui-muted,#655744);font-size:.9rem}
 .map-coordinates{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -42,11 +42,11 @@
 .map-canvas{background:#b9cecd;border-color:#a7b7ac;touch-action:pan-y;isolation:isolate}
 .map-canvas.map-zoomed{touch-action:none}
 .map-canvas [data-map-image]{width:100%;height:auto;min-height:180px;display:block;user-select:none;-webkit-user-drag:none}
-#mainApp #tab-campaign-map .campaign-map button.map-pin{width:auto;min-width:44px;max-width:190px;min-height:44px;border-radius:24px;background:#315b49!important;color:#fff!important;border:2px solid #fff!important;font:600 14px/1.2 system-ui,sans-serif!important;padding:8px 12px;overflow-wrap:anywhere}
-#mainApp #tab-campaign-map .campaign-map button.map-pin:hover{background:#24483e!important}
-#mainApp #tab-campaign-map .campaign-map button.map-pin-region{background:#8c5836!important}
-#mainApp #tab-campaign-map .campaign-map button.map-pin-private{background:#545e59!important;border-style:dashed!important}
-#mainApp #tab-campaign-map .campaign-map button.map-pin[aria-pressed=true]{outline:3px solid #d09b3c;outline-offset:2px}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin{width:auto;min-width:44px;max-width:190px;min-height:44px;border-radius:24px;background:#315b49!important;color:#fff!important;border:2px solid #fff!important;font:600 14px/1.2 system-ui,sans-serif!important;padding:8px 12px;overflow-wrap:anywhere}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin:hover{background:#24483e!important}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin-region{background:#8c5836!important}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin-private{background:#545e59!important;border-style:dashed!important}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin[aria-pressed=true]{outline:3px solid #d09b3c;outline-offset:2px}
 .map-legend{position:absolute;top:14px;left:14px;background:#fffffff0;padding:6px 12px;border-radius:8px;font-size:13px;pointer-events:none;z-index:2}
 .map-zoom{position:absolute;bottom:14px;left:14px;display:flex;gap:6px;z-index:3}
 .map-hover{position:absolute;bottom:72px;right:14px;max-width:min(290px,calc(100% - 28px));background:#fff;color:#263b38;padding:14px;border:1px solid #b8c4b9;border-radius:10px;box-shadow:0 4px 20px #193b3933;z-index:4;pointer-events:none;font-size:14px;line-height:1.4}
@@ -58,4 +58,6 @@
 .campaign-map :is(input,textarea){font-family:system-ui,sans-serif;background:#fff;color:#263b38}
 .campaign-map :is(button,input,textarea,select,summary):focus-visible{outline:3px solid #9a562c;outline-offset:3px}
 .campaign-map .map-hint{color:#526458}.map-prose{line-height:1.65}.map-settings{background:#eef0e7;border-color:#c6cfc2}
-@media(max-width:760px){.map-layout{grid-template-columns:minmax(0,1fr)}.campaign-map{padding:16px}.map-place-panel{position:static}.map-zoom{bottom:8px;left:8px}.map-legend{top:8px;left:8px}.map-hover{bottom:60px;right:8px;font-size:13px;max-width:210px}#mainApp #tab-campaign-map .campaign-map button.map-pin{font-size:12px!important;max-width:140px;padding:6px 9px}.map-settings{padding:14px}}
+@media(max-width:760px){.map-layout{grid-template-columns:minmax(0,1fr)}.campaign-map{padding:16px}.map-place-panel{position:static}.map-zoom{bottom:8px;left:8px}.map-legend{top:8px;left:8px}.map-hover{bottom:60px;right:8px;font-size:13px;max-width:210px}#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin{font-size:12px!important;max-width:140px;padding:6px 9px}.map-settings{padding:14px}}
+
+@media(max-width:1100px){#tab-dm-map .map-layout{grid-template-columns:minmax(0,1fr)}#tab-dm-map .map-place-panel{position:static}}
