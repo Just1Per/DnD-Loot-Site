@@ -54,3 +54,5 @@ Current reference guides:
 - [Rules catalogue and generators](docs/rules-catalog.md)
 
 Operator tools may intentionally have no app caller. They support private backups, diagnostics, audit evidence and owner-run recovery. Keep private exports and credentials local. Migration and import commands are never routine setup steps. Licensing evidence, hashes, package checksums and legal attribution remain part of the repository.
+
+The Admin Root Catalogue loads its own complete administrator snapshot when opened, independently of the lazy campaign Library load. Loading failures show a retry action; a successfully loaded empty catalogue has a distinct empty state. `npm --prefix tests run test:admin-catalogue` verifies fresh-login loading, approved/draft visibility for admins, search, retry, empty results and account changes during a pending read. This correction requires no Firestore or Storage rule changes.
