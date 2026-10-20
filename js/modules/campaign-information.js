@@ -48,6 +48,10 @@ var CampaignInformation = (() => {
       if(s.kind==='chapter')return `<article class="campaign-information-card"><details data-information-id="${escape(row.id)}" ${openIds.has(row.id)?'open':''}><summary><strong>${s.kind==='chapter'?`Chapter ${Number(row.order)} · `:''}${escape(row.title)}</strong><span>${escape(row.category)}</span></summary>${row.summary?`<p>${escape(row.summary)}</p>`:''}<div class="campaign-book-prose">${escape(row.content)}</div>${row.image?`<figure data-shared-image="${escape(row.id)}">Loading shared illustration…</figure>`:''}${s.kind==='chapter'?CampaignChapterNotes.controls(s,row.id):''}</details></article>`;
       return `<article class="campaign-information-card campaign-reference-card">${row.image?`<figure class="campaign-reference-art" data-shared-image="${escape(row.id)}">Loading illustration…</figure>`:`<div class="campaign-reference-art campaign-reference-placeholder" aria-hidden="true"><span>${escape(row.title.slice(0,1))}</span></div>`}<details data-information-id="${escape(row.id)}" ${openIds.has(row.id)?'open':''}><summary><strong>${escape(row.title)}</strong><span class="campaign-reference-category">${escape(row.category)}</span><span class="campaign-reference-summary">${escape(row.summary||'Open to read more.')}</span></summary><div class="campaign-book-prose">${escape(row.content)}</div></details></article>`;
     }).join('')||`<p class="campaign-information-empty">${s.rows.length?'No shared entries match your search.':escape(s.view.empty)}</p>`;
+    if(s.targetId){
+      const target=[...list.querySelectorAll('[data-information-id]')].find(node=>node.dataset.informationId===s.targetId);
+      if(target){target.open=true;target.querySelector('summary').focus();target.scrollIntoView({block:'start'});s.targetId=null;}
+    }
     loadImages(s,list);
     if(s.kind==='chapter'){list.insertAdjacentHTML('beforeend',CampaignChapterNotes.orphanDrafts(s));CampaignChapterNotes.bind(s);}
     if(focused){const host=[...list.querySelectorAll('[data-chapter-note-id]')].find(node=>node.dataset.chapterNoteId===focused.id),input=host?.querySelector('[data-note-text]');if(input&&!input.disabled){input.focus({preventScroll:true});input.setSelectionRange(focused.start,focused.end);}}
@@ -146,5 +150,6 @@ var CampaignInformation = (() => {
   function beforeNavigate(tab){return session?.view.tab===tab||clear();}
   function hasUnsavedNotes(){return !!session&&[...session.notes.values()].some(note=>note.dirty||note.saving);}
   function onAccountChanged(uid){if(session&&session.uid!==uid)clear(true);}
-  return {render,clear,beforeNavigate,hasUnsavedNotes,onAccountChanged,store,npcStore,chapterStore};
+  function openWorld(id){showTab('campaign-information');if(session?.kind==='world'){session.targetId=id;if(session.rows.length)paint(session);}}
+  return {openWorld,render,clear,beforeNavigate,hasUnsavedNotes,onAccountChanged,store,npcStore,chapterStore};
 })();

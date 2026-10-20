@@ -1,17 +1,17 @@
 'use strict';
-/** One shared campaign map. Only campaign DMs may write maps or places. */
+/** Published map snapshots and a separate DM-only working draft. */
 function createCampaignMapStore(sdk){
  const {db,auth,doc,collection,query,where,getDoc,getDocs,runTransaction}=sdk;
  const id=v=>{if(!/^[A-Za-z0-9_-]{1,128}$/.test(v||''))throw Error('Invalid map identifier.');return v;};
  const actor=()=>{if(!auth.currentUser?.uid)throw Error('Sign in first.');return auth.currentUser.uid;};
  const mapRef=cid=>doc(db,'campaigns',id(cid),'campaignMaps','main');
  const pinRef=(cid,pid)=>doc(db,'campaigns',id(cid),'campaignMaps','main','pins',id(pid));
- const pinsQuery=(cid,imagePath)=>query(collection(db,'campaigns',id(cid),'campaignMaps','main','pins'),where('imagePath','==',imagePath));
+ const pinsQuery=(cid,map)=>query(collection(db,'campaigns',id(cid),'campaignMaps','main','pins'),typeof map==='object'&&map.schemaVersion===2?where('publishedRevision','==',map.revision):where('imagePath','==',typeof map==='object'?map.imagePath:map));
  const rows=snapshot=>snapshot.docs.map(row=>({...row.data(),id:row.id}));
  function image(cid,path){if(typeof path!=='string'||!path.startsWith('campaign-maps/'+id(cid)+'/')||!/^[A-Za-z0-9_-]{1,100}$/.test(path.slice(('campaign-maps/'+cid+'/').length)))throw Error('Choose a map image from this campaign.');return path;}
  const check=(uid,isCurrent)=>{if(auth.currentUser?.uid!==uid||!isCurrent())throw Error('Campaign access changed. Reopen the map.');};
  async function load(cid){actor();const snapshot=await getDoc(mapRef(cid));return snapshot.exists()?snapshot.data():null;}
- async function listPins(cid,imagePath){actor();return rows(await getDocs(pinsQuery(cid,image(cid,imagePath))));}
+ async function listPins(cid,imagePath){actor();return rows(await getDocs(pinsQuery(cid,typeof imagePath==='object'?imagePath:image(cid,imagePath))));}
  function watchMap(cid,next,error){return typeof sdk.onSnapshot==='function'?sdk.onSnapshot(mapRef(cid),snapshot=>next(snapshot.exists()?snapshot.data():null),error):()=>{};}
  function watchPins(cid,imagePath,next,error){return typeof sdk.onSnapshot==='function'?sdk.onSnapshot(pinsQuery(cid,imagePath),snapshot=>next(rows(snapshot)),error):()=>{};}
  async function saveMap({campaignId,title,imagePath,revision,isCurrent=()=>true}){
@@ -27,6 +27,52 @@ function createCampaignMapStore(sdk){
    const next={name:input.name.trim(),description:input.description.trim(),x:input.x,y:input.y,imagePath:input.imagePath,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return {...next,id:pid};});
  }
  async function removePin({campaignId,id:pid,revision,isCurrent=()=>true}){const uid=actor();return runTransaction(db,async tx=>{const ref=pinRef(campaignId,pid),old=await tx.get(ref);check(uid,isCurrent);if(!old.exists()||old.data().revision!==revision)throw Error('This place changed. Reload before removing it.');tx.delete(ref);});}
- return {load,listPins,watchMap,watchPins,saveMap,savePin,removePin};
+ const draftRef=cid=>doc(db,'campaigns',id(cid),'campaignMapDrafts','main');
+ async function loadDraft(cid){actor();const row=await getDoc(draftRef(cid));return row.exists()?row.data():null;}
+ function normalizeDraft(cid,input){
+  if(typeof input.title!=='string'||!input.title.trim()||input.title.length>160)throw Error('Give the map a name (up to 160 characters).');
+  image(cid,input.imagePath);
+  if(!Array.isArray(input.pins)||input.pins.length>100)throw Error('A map supports up to 100 places.');
+  const seen=new Set();
+  const pins=input.pins.map(pin=>{
+   const pid=id(pin.id);if(seen.has(pid))throw Error('Place identifiers must be unique.');seen.add(pid);
+   if(typeof pin.name!=='string'||!pin.name.trim()||pin.name.length>100||typeof pin.description!=='string'||pin.description.length>2000)throw Error('Each place needs a name up to 100 characters and a description up to 2,000 characters.');
+   if(!['City','Region'].includes(pin.type)||typeof pin.revealed!=='boolean')throw Error('Choose a city or region and its visibility.');
+   for(const n of [pin.x,pin.y])if(!Number.isFinite(n)||n<0||n>100)throw Error('Place coordinates must be between 0 and 100.');
+   const picturePath=pin.picturePath||'',pictureAlt=pin.pictureAlt||'',worldEntryId=pin.worldEntryId||'';
+   const prefix='campaign-map-place-images/'+cid+'/'+pid+'/';
+   if(picturePath&&(!picturePath.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(picturePath.slice(prefix.length))))throw Error('Choose a place picture from this campaign.');
+   if(typeof pictureAlt!=='string'||pictureAlt.length>200||(picturePath&&!pictureAlt.trim()))throw Error('Give each place picture a description (up to 200 characters).');
+   if(worldEntryId)id(worldEntryId);
+   return {id:pid,name:pin.name.trim(),description:pin.description.trim(),x:pin.x,y:pin.y,type:pin.type,revealed:pin.revealed,picturePath,pictureAlt,worldEntryId};
+  });
+  return {title:input.title.trim(),imagePath:input.imagePath,pins};
+ }
+ async function saveDraft({campaignId,input,revision,sourceRevision,isCurrent=()=>true}){
+  const uid=actor(),normalized=normalizeDraft(campaignId,input);
+  return runTransaction(db,async tx=>{
+   const ref=draftRef(campaignId),previous=await tx.get(ref),map=await tx.get(mapRef(campaignId));check(uid,isCurrent);
+   if((previous.data()?.revision||0)!==revision)throw Error('The DM draft changed in another window. Copy your changes and refresh.');
+   if((map.data()?.revision||0)!==sourceRevision)throw Error('Another DM published a map. Copy your changes and refresh before saving.');
+   const next={...normalized,sourceRevision,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;
+  });
+ }
+ async function publish({campaignId,draftRevision,isCurrent=()=>true}){
+  const uid=actor();return runTransaction(db,async tx=>{
+   const ref=draftRef(campaignId),draft=await tx.get(ref),destination=mapRef(campaignId),previous=await tx.get(destination);
+   if(!draft.exists()||draft.data().revision!==draftRevision)throw Error('The saved DM draft changed. Refresh before publishing.');
+   const source=draft.data(),normalized=normalizeDraft(campaignId,source),oldRevision=previous.data()?.revision||0;
+   if(source.sourceRevision!==oldRevision)throw Error('The published map changed. Refresh before publishing.');
+   const pins=normalized.pins.filter(pin=>pin.revealed),shared=new Set();
+   for(const entryId of new Set(pins.map(pin=>pin.worldEntryId).filter(Boolean))){const entry=await tx.get(doc(db,'campaigns',id(campaignId),'playerInformation',id(entryId)));if(entry.exists())shared.add(entryId);}
+   check(uid,isCurrent);
+   const next={title:normalized.title,imagePath:normalized.imagePath,schemaVersion:2,revision:oldRevision+1,updatedBy:uid,updatedAt:Date.now()};
+   tx.set(destination,next);
+   for(const pin of pins){const {id:pid,revealed,...fields}=pin;tx.set(pinRef(campaignId,pid),{...fields,imagePath:next.imagePath,worldEntryId:shared.has(fields.worldEntryId)?fields.worldEntryId:'',schemaVersion:2,publishedRevision:next.revision,revision:next.revision,updatedBy:uid,updatedAt:next.updatedAt});}
+   const savedDraft={...source,sourceRevision:next.revision,revision:source.revision+1,updatedBy:uid,updatedAt:next.updatedAt};tx.set(ref,savedDraft);
+   return {map:next,draft:savedDraft,pins:pins.map(pin=>({...pin,worldEntryId:shared.has(pin.worldEntryId)?pin.worldEntryId:''}))};
+  });
+ }
+ return {load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish};
 }
 if(typeof module!=='undefined')module.exports={createCampaignMapStore};

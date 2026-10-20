@@ -15,5 +15,60 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
  await check('Revision conflicts and context changes cannot silently overwrite maps or places',async()=>{await assert.rejects(stores.dm.saveMap(params),/changed/);await assert.rejects(stores.dm.savePin({campaignId:'a',id:'pin',input,revision:0}),/changed/);await assert.rejects(stores.dm.saveMap({...params,revision:1,isCurrent:()=>false}),/changed/);await assert.rejects(stores.dm.removePin({campaignId:'a',id:'pin',revision:1,isCurrent:()=>false}),/changed/);await stores.owner.savePin({campaignId:'a',id:'pin',input:{...input,description:'An updated description.'},revision:1});});
  await check('Replacing a map hides previous image and its old pins from player access',async()=>{await stores.owner.saveMap({...params,imagePath:second,revision:1});await assertFails(read('player'));await assertSucceeds(read('player',second));assert.equal((await stores.player.listPins('a',second)).length,0);await assertFails(sdk.getDoc(sdk.doc(contexts.player.firestore(),'campaigns/a/campaignMaps/main/pins/pin')));await assertFails(stores.player.listPins('a',path));await assert.rejects(stores.dm.savePin({campaignId:'a',id:'stale-map',input,revision:0}),/image changed/);});
  await check('Saved pins can be removed only by a campaign DM; revocation ends image and pin access',async()=>{await stores.dm.savePin({campaignId:'a',id:'new-pin',input:{...input,imagePath:second},revision:0});await assertFails(stores.player.removePin({campaignId:'a',id:'new-pin',revision:1}));await stores.owner.removePin({campaignId:'a',id:'new-pin',revision:1});assert.equal((await stores.player.listPins('a',second)).length,0);await env.withSecurityRulesDisabled(c=>sdk.updateDoc(sdk.doc(c.firestore(),'campaigns/a/members/player'),{status:'inactive'}));await assertFails(read('player',second));await assertFails(stores.player.listPins('a',second));});
+
+ await check('Private drafts and place pictures cannot be read or written by players, revoked members or unrelated admins',async()=>{
+  await env.withSecurityRulesDisabled(c=>sdk.updateDoc(sdk.doc(c.firestore(),'campaigns/a/members/player'),{status:'active'}));
+  const pin={id:'published-place',name:'Saltmere',description:'Published harbour.',x:45,y:60,type:'City',revealed:true,picturePath:'campaign-map-place-images/a/published-place/first',pictureAlt:'The harbour at dusk',worldEntryId:'shared-world'};
+  await assertSucceeds(upload('dm',pin.picturePath));await assertFails(read('player',pin.picturePath));
+  await env.withSecurityRulesDisabled(c=>sdk.setDoc(sdk.doc(c.firestore(),'campaigns/a/playerInformation/shared-world'),{title:'Saltmere',content:'Party-facing world text'}));
+  const hidden={...pin,id:'hidden-place',name:'DM SECRET',revealed:false,picturePath:'',pictureAlt:'',worldEntryId:''};
+  const draft=await stores.dm.saveDraft({campaignId:'a',input:{title:'Atlas',imagePath:second,pins:[pin,hidden]},revision:0,sourceRevision:2});
+  assert.equal(draft.pins.length,2);assert.equal((await stores.player.load('a')).revision,2);
+  for(const uid of ['player','revoked','outsider','admin']){await assertFails(stores[uid].loadDraft('a'));await assertFails(stores[uid].saveDraft({campaignId:'a',input:draft,revision:1,sourceRevision:2}));}
+  await assert.rejects(stores.dm.saveDraft({campaignId:'a',input:draft,revision:0,sourceRevision:2}),/draft changed/);
+ });
+ await check('Publication is atomic, only revealed pins are sent, and exact published pictures become readable',async()=>{
+  const result=await stores.dm.publish({campaignId:'a',draftRevision:1});assert.equal(result.map.schemaVersion,2);
+  const map=await stores.player.load('a'),pins=await stores.player.listPins('a',map);assert.equal(pins.length,1);assert.equal(pins[0].name,'Saltmere');assert.equal(pins[0].worldEntryId,'shared-world');
+  await assertSucceeds(read('player','campaign-map-place-images/a/published-place/first'));
+  await assertFails(sdk.getDoc(sdk.doc(contexts.player.firestore(),'campaigns/a/campaignMaps/main/pins/hidden-place')));
+  await assertFails(sdk.getDoc(sdk.doc(contexts.player.firestore(),'campaigns/a/campaignMaps/main/pins/pin')));
+  await assertFails(stores.player.listPins('a',second));
+  await assertFails(stores.player.publish({campaignId:'a',draftRevision:2}));
+  await assert.rejects(stores.dm.publish({campaignId:'a',draftRevision:1}),/draft changed/);
+  const ref=sdk.doc(contexts.dm.firestore(),'campaigns/a/campaignMaps/main/pins/published-place'),row=(await sdk.getDoc(ref)).data();
+  await assertFails(sdk.setDoc(ref,{...row,description:'Cannot update without a new map publication'}));
+ });
+ await check('Draft edits and replacement images preserve published map until publish; unpublish removes pin and picture access',async()=>{
+  const oldMap=await stores.player.load('a'),draft=await stores.dm.loadDraft('a');
+  await upload('dm','campaign-maps/a/third');
+  draft.imagePath='campaign-maps/a/third';draft.pins[0].revealed=false;
+  const saved=await stores.dm.saveDraft({campaignId:'a',input:draft,revision:draft.revision,sourceRevision:draft.sourceRevision});
+  assert.equal((await stores.player.load('a')).imagePath,second);await assertFails(read('player','campaign-maps/a/third'));
+  assert.equal((await stores.player.listPins('a',oldMap)).length,1);
+  await stores.dm.publish({campaignId:'a',draftRevision:saved.revision});const map=await stores.player.load('a');assert.equal((await stores.player.listPins('a',map)).length,0);
+  await assertFails(read('player','campaign-map-place-images/a/published-place/first'));await assertFails(read('player',second));await assertSucceeds(read('player','campaign-maps/a/third'));
+ });
+ await check('Unavailable World links are omitted without sharing private content; direct publication rejects secret fields and cross-campaign pictures',async()=>{
+  const draft=await stores.dm.loadDraft('a');draft.pins[0].revealed=true;draft.pins[0].worldEntryId='private-world';
+  const saved=await stores.dm.saveDraft({campaignId:'a',input:draft,revision:draft.revision,sourceRevision:draft.sourceRevision});
+  const result=await stores.dm.publish({campaignId:'a',draftRevision:saved.revision});assert.equal(result.pins[0].worldEntryId,'');
+  const ref=sdk.doc(contexts.dm.firestore(),'campaigns/a/campaignMaps/main/pins/published-place'),row=(await sdk.getDoc(ref)).data();
+  for(const change of [{privateNotes:'SECRET'},{revealed:false},{picturePath:'campaign-map-place-images/b/published-place/first'},{x:101}])await assertFails(sdk.setDoc(ref,{...row,...change}));
+  await assert.rejects(stores.dm.publish({campaignId:'a',draftRevision:result.draft.revision,isCurrent:()=>false}),/access changed/);
+  await env.withSecurityRulesDisabled(c=>sdk.updateDoc(sdk.doc(c.firestore(),'campaigns/a/members/player'),{status:'inactive'}));
+  await assertFails(stores.player.load('a'));await assertFails(read('player','campaign-map-place-images/a/published-place/first'));
+ });
+ await check('A first publication supports 100 places atomically without a legacy map or permission-budget overflow',async()=>{
+  await env.withSecurityRulesDisabled(c=>sdk.setDoc(sdk.doc(c.firestore(),'campaigns/fresh'),{ownerId:'owner'}));
+  const pins=Array.from({length:100},(_,i)=>({id:'place-'+i,name:'Place '+i,description:'Public place',type:i%2?'Region':'City',x:i,y:50,revealed:true,picturePath:'',pictureAlt:'',worldEntryId:''}));
+  const draft=await stores.owner.saveDraft({campaignId:'fresh',input:{title:'New atlas',imagePath:'campaign-maps/fresh/first',pins},revision:0,sourceRevision:0});
+  const result=await stores.owner.publish({campaignId:'fresh',draftRevision:draft.revision});assert.equal(result.map.revision,1);assert.equal((await stores.owner.listPins('fresh',result.map)).length,100);
+  const mapRef=sdk.doc(contexts.owner.firestore(),'campaigns/fresh/campaignMaps/main'),pinRef=sdk.doc(contexts.owner.firestore(),'campaigns/fresh/campaignMaps/main/pins/place-0');
+  for(const invalid of [{privateNotes:'SECRET'},{picturePath:'campaign-map-place-images/a/place-0/pic'},{x:101},{type:'Secret'},{worldEntryId:'https://example.com'}]){
+   await assertFails(sdk.runTransaction(contexts.owner.firestore(),async tx=>{const map=(await tx.get(mapRef)).data(),pin=(await tx.get(pinRef)).data();tx.set(mapRef,{...map,revision:2});tx.set(pinRef,{...pin,publishedRevision:2,revision:2,...invalid});}));
+  }
+  assert.equal((await stores.owner.load('fresh')).revision,1);
+ });
  console.log('SUCCESS',count,'map Firestore/Storage permission checks');
 }finally{await env.cleanup();}})().catch(e=>{console.error(e);process.exitCode=1});
