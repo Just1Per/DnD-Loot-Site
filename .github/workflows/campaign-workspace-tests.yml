@@ -70,6 +70,8 @@ jobs:
         run: npm --prefix tests run test:dialogs
       - name: Root catalogue multi-select and viewport checks
         run: npm --prefix tests run test:root-picker
+      - name: Admin catalogue loading, retry and account isolation
+        run: npm --prefix tests run test:admin-catalogue
       - name: Campaign UI consistency, mobile targets and responsive party actions
         run: npm --prefix tests run test:ui-consistency
       - name: Non-Overview accessibility, keyboard, layout and print
@@ -78,6 +80,10 @@ jobs:
         run: npm --prefix tests run test:navigation
       - name: Grouped campaign navigation, settings, roles and refresh
         run: npm --prefix tests run test:app-navigation
+      - name: Campaign deletion UI and permission boundaries
+        run: |
+          npm --prefix tests run test:campaign-deletion
+          npm --prefix tests run test:campaign-deletion-rules
       - name: Shared character sheet, gear and bookmark context
         run: npm --prefix tests run test:character-workspace
       - name: Page editors, dirty drafts and retryable campaign setup
@@ -115,7 +121,9 @@ jobs:
       - name: Visual NPC/world cards and DM-managed campaign map
         run: |
           npm --prefix tests run test:journal-cards
+          npm --prefix tests run test:world-navigation
           npm --prefix tests run test:campaign-map
+          npm --prefix tests run test:map-styles-regions
           npm --prefix tests run test:campaign-map-rules
       - name: Shared party journal, notebook reader and private recap permissions
         run: |

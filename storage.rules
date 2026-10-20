@@ -25,11 +25,14 @@ service firebase.storage {
         )
         && firestore.get(
           /databases/(default)/documents/campaigns/$(campaignId)
-        ).data.ownerId == request.auth.uid;
+        ).data.ownerId == request.auth.uid
+        && !('deletedAt' in firestore.get(/databases/(default)/documents/campaigns/$(campaignId)).data);
     }
 
     function isActiveMember(campaignId) {
       return signedIn()
+        && firestore.exists(/databases/(default)/documents/campaigns/$(campaignId))
+        && !('deletedAt' in firestore.get(/databases/(default)/documents/campaigns/$(campaignId)).data)
         && firestore.exists(
           /databases/(default)/documents/campaigns/$(campaignId)/members/$(request.auth.uid)
         )

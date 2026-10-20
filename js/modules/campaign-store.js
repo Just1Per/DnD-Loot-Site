@@ -46,7 +46,7 @@ function createCampaignStore(sdk) {
     if (!uid())
       fail('Sign in first.');
     const c = await tx.get(doc(db, 'campaigns', id(cid)));
-    if (!c.exists())
+    if (!c.exists() || c.data().deletedAt)
       fail('Campaign not found.');
     const m = await tx.get(ref(cid, 'members', uid()));
     const owner = c.data().ownerId === uid(), active = m.exists() && m.data().status === 'active', dm = owner || active && m.data().role === 'dm';
