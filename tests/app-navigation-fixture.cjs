@@ -10,7 +10,7 @@ async function navigate(page,tab){
 }
 async function expandWorldTools(page){
  if(await page.locator('[data-world-basics]').count()){
-  for(const detail of await page.locator('[data-world-option]').all())if(!await detail.evaluate(node=>node.open))await detail.locator(':scope > summary').click();
+  for(const detail of await page.locator('[data-world-advanced], details[data-world-option], [data-entry-sharing] details').all())if(!await detail.evaluate(node=>node.open))await detail.locator(':scope > summary').click();
  }
 }
 async function archiveEntry(page){

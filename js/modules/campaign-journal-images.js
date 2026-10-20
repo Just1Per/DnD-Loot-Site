@@ -31,6 +31,12 @@ var CampaignJournalImages=(()=>{
    '<label class="workspace-field">Accessible description<input type="text" maxlength="200" data-journal-image-alt placeholder="Describe the image for accessibility"></label>'+
    '<label class="workspace-field">Caption (optional)<input type="text" maxlength="500" data-journal-image-caption placeholder="A short caption"></label></div>'+
    '<div class="workspace-actions"><button type="button" data-journal-image-remove>Remove illustration</button></div><p class="journal-image-note">Uploading does not save or publish the entry. Choose Save above to keep the reference. Replacing an image keeps the old file immutable.</p>';
+  if(kind==='world'){
+   host.querySelector('h3').textContent='Image (optional)';
+   host.querySelector('.journal-image-heading p').textContent='Included when you release this post to players.';
+   host.querySelector('.journal-image-private').remove();
+   host.querySelector('.journal-image-note').textContent='Save as draft keeps this image private. Release to players publishes it with the post.';
+  }
   const first=form.querySelector('.chapter-editor-main > section, .world-editor-section, .creature-editor-section, form > section, section');
   const mount=form.querySelector('[data-journal-image-mount]');
   if(mount)mount.append(host);else if(first)first.after(host);else form.append(host);
@@ -96,7 +102,7 @@ var CampaignJournalImages=(()=>{
     if(active())status(error?.code==='storage/unauthorized'?
      'Image upload denied. Publish the updated campaign-journal-images Storage rule in Firebase Console → Storage → Rules.':
      'Campaign illustration upload failed: '+error.message,true);
-   }finally{busy=false;session.busy=false;if(active()){pick.disabled=false;pick.value='';show();}}
+   }finally{busy=false;session.busy=false;if(active()){pick.disabled=false;pick.value='';show();session.host.querySelector('[data-entry-sharing]')?._sharingState?.();}}
   });
   remove.addEventListener('click',()=>{
    if(!active()||!meta()?.path||busy)return;

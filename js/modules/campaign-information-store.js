@@ -39,7 +39,7 @@ function createCampaignInformationStore(sdk, kind = 'world') {
     if (typeof sdk.onSnapshot !== 'function') return () => {};
     actor();return sdk.onSnapshot(collection(db,'campaigns',validId(campaignId),publications[kind]),result=>onRows(result.docs.map(row=>({...row.data(),id:row.id}))),onError);
   }
-  async function publish({campaignId,id,sourceRevision,publishedRevision=0,isCurrent=()=>true}) {
+  async function publish({campaignId,id,sourceRevision,publishedRevision=0,includeImage=false,isCurrent=()=>true}) {
     const uid=actor();
     return runTransaction(db,async tx=>{
       const sourceRef=doc(db,'campaigns',validId(campaignId),sources[kind],validId(id));
@@ -50,6 +50,15 @@ function createCampaignInformationStore(sdk, kind = 'world') {
       const next={...snapshot(source.data()),revision:publishedRevision+1,updatedBy:uid,updatedAt:Date.now()};
       // Text updates retain the last explicitly shared image, never draft art.
       if(previous.data()?.image)next.image=previous.data().image;
+      if(kind==='world'&&includeImage){
+        delete next.image;
+        const image=source.data().data?.journalImage;
+        if(image){
+          const prefix=`campaign-journal-images/${campaignId}/${kind}/${id}/`;
+          if(!image.path?.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))||typeof image.alt!=='string'||image.alt.length>200||typeof image.caption!=='string'||image.caption.length>500)throw Error('Save a valid illustration before releasing this post.');
+          next.image={path:image.path,alt:image.alt,caption:image.caption};
+        }
+      }
       tx.set(destination,next);return {...next,id};
     });
   }
