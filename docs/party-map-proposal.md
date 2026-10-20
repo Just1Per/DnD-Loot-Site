@@ -1,6 +1,6 @@
 # DM-published interactive campaign map — agreed direction
 
-This is a design proposal, not an implemented map-permission change. The owner clarified that only campaign DMs upload maps and edit pins. Players explore deliberately published maps. Player uploads and player pin suggestions are not part of this design.
+The approved design is now integrated in the map implementation; see [the implementation and rollout guide](published-campaign-map.md). The owner clarified that only campaign DMs upload maps and edit pins. Players explore deliberately published maps. Player uploads and player pin suggestions are not part of this design.
 
 ## Simple page
 
@@ -22,12 +22,12 @@ DM edits remain private working drafts. Publish creates/updates the party-facing
 
 ## Implementation boundaries
 
-The current implementation has one DM-managed map whose saved image and pin descriptions become visible immediately. It does not yet provide this draft/publish model, hover previews, pin pictures or linked World Builder pages. These are planned changes. Implementing safe draft/published map data and pin images will require Firestore and Storage rule changes plus emulator tests, with no player upload permissions. Keep the existing map and pins during the transition. This proposal does not deploy rules or migrate production data.
+The implementation now has a separate DM draft, explicit published snapshots, hover/focus previews, place pictures and links into shared World pages. Firestore and Storage rule changes are included and emulator-tested. The owner must deploy both rule files before merging the map feature, because the main workflow deploys Hosting automatically. Existing maps and pins are preserved without a production migration. See [the implementation and rollout guide](published-campaign-map.md) for limits, tests and the exact deployment command. Nothing was deployed or migrated by this work.
 
 ## Interactive design preview
 
 `design/party-map-preview.html` is a standalone demo with synthetic data. It demonstrates city/region pins, hover and keyboard previews, click/tap details, local map and place-picture selection, DM drafts, explicit publication, a published-player preview, and shared World Builder reading. Private linked entries have no player action. Changes reset on reload; files remain local to the browser. This is not an authorization boundary: the demo contains synthetic DM data in its source. Production must enforce the separation with rules and distinct documents.
 
-The PR Hosting workflow copies this file to `/map-design-preview.html` only in the preview build. `design/**` remains excluded from normal Hosting deployments. No production rules or campaign documents change. Zoom controls and arrow-key panning are demonstrated; touch/drag panning and durable saves remain integration work.
+The PR Hosting workflow copies this file to `/map-design-preview.html` only in the preview build. `design/**` remains excluded from normal Hosting deployments. No production rules or campaign documents change. The standalone prototype demonstrates zoom and arrow-key panning; the integrated app adds pointer panning and durable private drafts. The prototype uses only synthetic data and is separate from the live campaign editor.
 
 Validation: `node tests/party-map-design-browser.cjs` checks draft/publication separation, omission of private pins from player DOM, hover/focus dismissal, shared World Builder reading, and 320/390px layouts. Chromium can be selected with `CHROMIUM_PATH`.

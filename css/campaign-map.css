@@ -34,3 +34,28 @@
 
 .map-pin-caption{position:absolute;top:44px;left:50%;transform:translateX(-50%);background:#fff9ecf2;color:#5c1d1d;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:12px/1.5 Georgia,serif;padding:3px 7px;border:1px solid #8a7355;border-radius:3px;pointer-events:none}
 .map-pin--left .map-pin-caption{left:0;transform:none}.map-pin--right .map-pin-caption{left:auto;right:0;transform:none}.map-pin--bottom .map-pin-caption{top:auto;bottom:44px}
+
+/* A roomy atlas canvas with a compact, persistent place reader. */
+.campaign-map{background:#f5f2eb;color:#263b38;font:16px/1.6 system-ui,sans-serif;border-color:#c6cfc2;border-radius:14px}
+.campaign-map h2,.campaign-map h3{color:#263b38;font-family:Georgia,serif}
+.map-scene{position:relative;transform-origin:center;will-change:transform;min-height:180px}
+.map-canvas{background:#b9cecd;border-color:#a7b7ac;touch-action:pan-y;isolation:isolate}
+.map-canvas.map-zoomed{touch-action:none}
+.map-canvas [data-map-image]{width:100%;height:auto;min-height:180px;display:block;user-select:none;-webkit-user-drag:none}
+#mainApp #tab-campaign-map .campaign-map button.map-pin{width:auto;min-width:44px;max-width:190px;min-height:44px;border-radius:24px;background:#315b49!important;color:#fff!important;border:2px solid #fff!important;font:600 14px/1.2 system-ui,sans-serif!important;padding:8px 12px;overflow-wrap:anywhere}
+#mainApp #tab-campaign-map .campaign-map button.map-pin:hover{background:#24483e!important}
+#mainApp #tab-campaign-map .campaign-map button.map-pin-region{background:#8c5836!important}
+#mainApp #tab-campaign-map .campaign-map button.map-pin-private{background:#545e59!important;border-style:dashed!important}
+#mainApp #tab-campaign-map .campaign-map button.map-pin[aria-pressed=true]{outline:3px solid #d09b3c;outline-offset:2px}
+.map-legend{position:absolute;top:14px;left:14px;background:#fffffff0;padding:6px 12px;border-radius:8px;font-size:13px;pointer-events:none;z-index:2}
+.map-zoom{position:absolute;bottom:14px;left:14px;display:flex;gap:6px;z-index:3}
+.map-hover{position:absolute;bottom:72px;right:14px;max-width:min(290px,calc(100% - 28px));background:#fff;color:#263b38;padding:14px;border:1px solid #b8c4b9;border-radius:10px;box-shadow:0 4px 20px #193b3933;z-index:4;pointer-events:none;font-size:14px;line-height:1.4}
+.map-hover[hidden]{display:none!important}.map-hover p{margin:6px 0}.map-hover-picture{float:right;max-width:65px!important;height:48px!important;object-fit:cover;margin:0 0 6px 10px}
+.map-place-panel{background:#fff;border-color:#d3d9cd;border-radius:12px;font-family:system-ui,sans-serif}
+.map-place-picture{width:100%;max-height:240px;object-fit:cover;border-radius:8px;display:block;margin:12px 0}
+.campaign-map .map-reveal{display:flex;align-items:center;gap:10px}.campaign-map .map-reveal input{width:20px;height:20px;flex-shrink:0}
+.campaign-map select{width:100%;min-width:0;max-width:100%;min-height:44px;padding:10px;border:1px solid #8a9b8e;border-radius:5px;background:#fff;color:#263b38;font:16px/1.5 system-ui,sans-serif}
+.campaign-map :is(input,textarea){font-family:system-ui,sans-serif;background:#fff;color:#263b38}
+.campaign-map :is(button,input,textarea,select,summary):focus-visible{outline:3px solid #9a562c;outline-offset:3px}
+.campaign-map .map-hint{color:#526458}.map-prose{line-height:1.65}.map-settings{background:#eef0e7;border-color:#c6cfc2}
+@media(max-width:760px){.map-layout{grid-template-columns:minmax(0,1fr)}.campaign-map{padding:16px}.map-place-panel{position:static}.map-zoom{bottom:8px;left:8px}.map-legend{top:8px;left:8px}.map-hover{bottom:60px;right:8px;font-size:13px;max-width:210px}#mainApp #tab-campaign-map .campaign-map button.map-pin{font-size:12px!important;max-width:140px;padding:6px 9px}.map-settings{padding:14px}}

@@ -94,6 +94,19 @@ service firebase.storage {
       allow create: if resource == null && isCampaignDM(campaignId) && validImage() && request.resource.size > 0;
     }
 
+    // Place pictures are private until their exact pin is part of the current publication.
+    match /campaign-map-place-images/{campaignId}/{pinId}/{imageId} {
+      function publishedPicture() {
+        let mapPath = /databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main;
+        let pinPath = /databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main/pins/$(pinId);
+        return firestore.exists(mapPath) && firestore.exists(pinPath)
+          && firestore.get(pinPath).data.publishedRevision == firestore.get(mapPath).data.revision
+          && firestore.get(pinPath).data.picturePath == 'campaign-map-place-images/' + campaignId + '/' + pinId + '/' + imageId;
+      }
+      allow read: if isCampaignDM(campaignId) || (isActiveMember(campaignId) && publishedPicture());
+      allow create: if resource == null && isCampaignDM(campaignId) && validImage() && request.resource.size > 0;
+    }
+
     // World Building maps. New images are private to the owner and active DMs.
     // Uploads use unique names, so replacing a map creates a new immutable object.
     match /campaign-world-images/{campaignId}/{entryId}/{imageId} {
