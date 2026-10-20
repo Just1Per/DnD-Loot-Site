@@ -1,13 +1,25 @@
-# Party map proposal — discussion only
+# DM-published interactive campaign map — agreed direction
 
-The current map has one DM-managed image, named clickable pins, shared descriptions and authenticated campaign-member viewing. Players cannot upload or edit maps under the current Firestore/Storage rules. This proposal does not enable uploads or change permissions.
+This is a design proposal, not an implemented map-permission change. The owner clarified that only campaign DMs upload maps and edit pins. Players explore deliberately published maps. Player uploads and player pin suggestions are not part of this design.
 
-Keep Journal navigation to two choices: Recaps and Maps. Recaps retain their prominent New entry action. Maps shows thumbnail cards with a name, uploader and Private/Submitted/Shared badge, plus one Upload map action. A shared active-map card can be pinned first. Opening a map gives the image most of the screen, pan/zoom controls and a place-description panel (below the image on a phone).
+## Simple page
 
-Recommended player workflow: Upload image → preview and name it → save a private map draft → submit for DM approval → DM publishes it to the party. The author can replace their private upload before submission. Replacing a published image creates a new version rather than silently moving existing pins. Keep the current image limits initially: PNG, JPEG or WebP under 5 MB, with useful upload/size errors and an explicit Save/Submit result.
+Use Journal navigation with Recaps and Map. Give the map most of the page, with zoom/pan, a small region/city legend and a way to reset the view. DMs see Edit map, Preview as player and Publish changes. Players see the published map and its places. A phone uses tap instead of hover and shows detailed place information in a panel below the map.
 
-Players can suggest a labelled pin and short note; DMs can approve it, edit canonical places, choose the active map and keep DM-only places separate from revealed pins. Shared pins open a small description with an optional link to an existing NPC/world entry. Shared descriptions and private preparation stay separate; private pins must not be sent to players and merely hidden on screen.
+## Map and pins
 
-For the first version, use draft/submitted/shared states, author-owned drafts, campaign-only published maps and DM-controlled publication. Player direct-sharing remains an alternative for groups that prefer it. The sharing preference is awaiting the owner's response; do not implement these permissions from this proposal alone.
+The DM uploads a map image and adds Region or City pins. Each pin has a name, description, optional small picture and optional World Builder link. Pin positions remain attached to the same map location at different zoom levels. Editing or replacing the image must not silently publish changes or lose the existing published map/pins.
 
-Implementation of player uploads/multiple maps will require reviewed Firestore and Storage rules in addition to UI/store changes. Keep the existing DM map available while introducing the gallery; do not overwrite it or discard its pins. No production migration or rules deployment is authorized by this design document.
+Hover or keyboard focus opens a compact preview with the place name, a short excerpt and optional thumbnail. Clicking/tapping a pin opens a persistent details panel with the complete description, larger image and See more action. Pointer movement into the preview must not dismiss it prematurely; Escape dismisses previews, and clicking/tapping controls must work without hover. Meaningful image alt text is captured with the optional picture.
+
+## World Builder links
+
+DMs choose an existing World Builder entry rather than paste a URL. See more takes players to its published player-facing page, never the DM editor or private notes. If the entry has not been shared, explain that to the DM before publishing the link; do not expose its private contents. If a linked entry is later unpublished, the player action must become unavailable safely. Keep the map's intentionally published place description as a separate shared snapshot.
+
+## Draft and published views
+
+DM edits remain private working drafts. Publish creates/updates the party-facing map snapshot, including explicitly revealed pins and pictures. Unrevealed pins and DM-only information must not be sent to players and merely hidden on screen. Players continue seeing the previous published version while the DM edits. Preview as player must use only the published/previewable player fields. Publishing changes must not alter existing World Builder publication state without an explicit separate action.
+
+## Implementation boundaries
+
+The current implementation has one DM-managed map whose saved image and pin descriptions become visible immediately. It does not yet provide this draft/publish model, hover previews, pin pictures or linked World Builder pages. These are planned changes. Implementing safe draft/published map data and pin images will require Firestore and Storage rule changes plus emulator tests, with no player upload permissions. Keep the existing map and pins during the transition. This proposal does not deploy rules or migrate production data.
