@@ -104,3 +104,8 @@
 .template-preview-stats dt{font-size:.8rem;color:#66584a}.template-preview-stats dd{margin:4px 0;font-weight:600}
 .template-preview-kind{color:#66584a}.campaign-information-card .template-preview-stats+.campaign-book-prose{white-space:pre-wrap;line-height:1.8}
 #tab-library .filter-label{color:#66584a;font-size:.9rem;letter-spacing:normal}
+
+.library-load-message{color:#66584a;line-height:1.7;overflow-wrap:anywhere}
+.campaign-information-filters [hidden]{display:none}
+[data-information-empty-clear]{min-height:44px;justify-self:start}
+.campaign-information-shell>[data-information-status]:empty{display:none}

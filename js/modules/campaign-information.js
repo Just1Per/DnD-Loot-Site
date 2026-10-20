@@ -61,6 +61,7 @@ var CampaignInformation = (() => {
     const focused=document.activeElement?.matches?.('[data-note-text]')?{id:document.activeElement.closest('[data-chapter-note-id]').dataset.chapterNoteId,start:document.activeElement.selectionStart,end:document.activeElement.selectionEnd}:null;
     const query=s.root.querySelector('[data-information-search]').value.trim().toLowerCase(),category=s.root.querySelector('[data-information-category]').value;
     const list=s.root.querySelector('[data-information-list]');
+    s.root.querySelector('[data-information-clear]').hidden=!query&&!category;
     const openIds=new Set([...list.querySelectorAll('details[open]')].map(node=>node.dataset.informationId));
     if(s.kind==='world'||s.kind==='creature'){paintReference(s);return;}
     const rows=s.rows.filter(row=>(!category||row.category===category)&&(!query||[row.title,row.summary,row.content].join(' ').toLowerCase().includes(query))).sort((a,b)=>(s.kind==='chapter'?a.order-b.order:0)||a.title.localeCompare(b.title));
@@ -80,6 +81,9 @@ var CampaignInformation = (() => {
   function paintReference(s){
     const npc=s.kind==='creature',hook=npc?'npc':'world',destination=s.view.title;
     const list=s.root.querySelector('[data-information-list]'),filters=s.root.querySelector('.campaign-information-filters');
+    const query=s.root.querySelector('[data-information-search]').value.trim().toLowerCase(),category=s.root.querySelector('[data-information-category]').value;
+    const matches=s.rows.filter(row=>(!category||row.category===category)&&(!query||[row.title,row.summary,row.content].join(' ').toLowerCase().includes(query)));
+    s.root.querySelector('[data-information-status]').textContent=s.selected?'':`${matches.length} of ${s.rows.length} shared ${npc?'NPCs':'World posts'}.`;
     const selected=s.rows.find(row=>row.id===s.selected);
     if(s.selected&&!selected){s.selected=null;s.root.querySelector('[data-information-status]').textContent=`This entry is no longer shared. Choose another entry in ${destination}.`;}
     filters.hidden=!!selected;list.classList.toggle('campaign-information-grid',!selected);
@@ -92,9 +96,9 @@ var CampaignInformation = (() => {
         await CampaignWorkspace.navigateTo(s.kind,selected.id);
       });
     }else{
-      const query=s.root.querySelector('[data-information-search]').value.trim().toLowerCase(),category=s.root.querySelector('[data-information-category]').value;
-      const rows=s.rows.filter(row=>(!category||row.category===category)&&(!query||[row.title,row.summary,row.content].join(' ').toLowerCase().includes(query))).sort((a,b)=>a.title.localeCompare(b.title));
+      const rows=matches.sort((a,b)=>a.title.localeCompare(b.title));
       list.innerHTML=rows.map(row=>`<article data-information-id="${escape(row.id)}" class="campaign-information-card campaign-reference-card"><button type="button" class="world-post-card" data-read-${hook}="${escape(row.id)}">${row.image?`<span class="campaign-reference-art" data-shared-image="${escape(row.id)}">Loading illustration…</span>`:`<span class="campaign-reference-art campaign-reference-placeholder" aria-hidden="true"><span>${escape(row.title.slice(0,1))}</span></span>`}<span class="world-post-card-text"><strong>${escape(row.title)}</strong><span class="campaign-reference-category">${escape(row.category)}</span><span class="campaign-reference-summary">${escape(row.summary||row.content.slice(0,180)||(npc?'Read about this NPC.':'Read this World post.'))}</span><span class="world-post-card-action">${npc?'Read NPC':'Read post'} →</span></span></button></article>`).join('')||`<p class="campaign-information-empty">${s.rows.length?'No shared entries match your search.':escape(s.view.empty)}</p>`;
+      if(!rows.length&&s.rows.length){const reset=document.createElement('button');reset.type='button';reset.textContent='Clear search & filters';reset.dataset.informationEmptyClear='';reset.onclick=()=>s.root.querySelector('[data-information-clear]').click();list.append(reset);}
       list.querySelectorAll(`[data-read-${hook}]`).forEach(button=>button.onclick=()=>{
         s.listScroll=window.scrollY;s.focusId=button.getAttribute('data-read-'+hook);s.selected=button.getAttribute('data-read-'+hook);paint(s);remember(s);
         s.root.querySelector(`[data-${hook}-title]`)?.focus();
@@ -107,19 +111,20 @@ var CampaignInformation = (() => {
     const select=s.root.querySelector('[data-information-category]'),selected=select.value;
     select.innerHTML='<option value="">All categories</option>'+[...new Set(rows.map(row=>row.category))].sort().map(value=>`<option>${escape(value)}</option>`).join('');
     select.value=[...select.options].some(option=>option.value===selected)?selected:'';paint(s);
-    s.root.querySelector('[data-information-status]').textContent=`${rows.length} shared ${rows.length===1?'entry':'entries'}.`;
+    if(s.kind==='chapter')s.root.querySelector('[data-information-status]').textContent=`${rows.length} shared ${rows.length===1?'entry':'entries'}.`;
   }
   async function render(kind='world') {
     if(!clear()||!activeCampaign||!auth.currentUser)return;
     const saved=browsing.get(browseKey(kind));
     const view=views[kind];if(!view)return;
     const root=document.getElementById('tab-'+view.tab);
-    root.innerHTML=`<section class="campaign-information-shell" aria-labelledby="campaignInformationTitle"><header><p class="campaign-book-eyebrow">${escape(activeCampaign.name)}</p><h2 id="campaignInformationTitle">${view.title}</h2><p>${view.description}</p></header><div class="campaign-information-filters"><label><span>Search ${view.title.toLowerCase()}</span><input type="search" data-information-search></label><label><span>Category</span><select data-information-category><option value="">All categories</option></select></label><button class="vault-secondary-btn" type="button" data-information-refresh>Refresh</button></div><p role="status" aria-live="polite" data-information-status>Loading ${view.title.toLowerCase()}…</p><div data-information-list></div></section>`;
+    root.innerHTML=`<section class="campaign-information-shell" aria-labelledby="campaignInformationTitle"><header><p class="campaign-book-eyebrow">${escape(activeCampaign.name)}</p><h2 id="campaignInformationTitle">${view.title}</h2><p>${view.description}</p></header><div class="campaign-information-filters"><label><span>Search ${view.title.toLowerCase()}</span><input type="search" data-information-search></label><label><span>Category</span><select data-information-category><option value="">All categories</option></select></label><button type="button" data-information-clear hidden>Clear search &amp; filters</button><button class="vault-secondary-btn" type="button" data-information-refresh>Refresh</button></div><p role="status" aria-live="polite" data-information-status>Loading ${view.title.toLowerCase()}…</p><div data-information-list></div></section>`;
     const s={id:activeCampaign.id,uid:auth.currentUser.uid,root,view,kind,rows:[],notes:new Map(),unsubscribe:null,denied:false,imageUrls:[],selected:saved?.selected||null,listScroll:saved?.scroll||0,focusId:saved?.focusId};session=s;
     root.querySelector('[data-information-search]').value=saved?.query||'';
     if(saved?.category)root.querySelector('[data-information-category]').add(new Option(saved.category,saved.category,true,true));s.isCurrent=()=>current(s);
     root.querySelector('[data-information-search]').addEventListener('input',()=>paint(s));
     root.querySelector('[data-information-category]').addEventListener('change',()=>paint(s));
+    root.querySelector('[data-information-clear]').onclick=()=>{root.querySelector('[data-information-search]').value='';root.querySelector('[data-information-category]').value='';paint(s);root.querySelector('[data-information-search]').focus();};
     root.querySelector('[data-information-refresh]').addEventListener('click',()=>render(kind));
     try {
       update(s,await view.store.list(s.id));
