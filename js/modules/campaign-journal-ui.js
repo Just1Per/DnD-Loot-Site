@@ -50,7 +50,7 @@ var CampaignJournal=(()=>{
     const rows=entries(s),selected=rows.find(row=>row.key===s.selected);
     const body=s.root.querySelector('[data-journal-content]');
     s.root.querySelector('[data-journal-status]').textContent=s.message;
-    s.root.querySelector('[data-journal-compose]').disabled=!s.ready||s.busy;
+    const compose=s.root.querySelector('[data-journal-compose]');compose.disabled=!s.ready||s.busy;compose.title=s.ready?'Write your own session recap':'Loading your journal access…';
     s.root.querySelector('[data-journal-refresh]').disabled=s.busy;
     if(selected){
       body.innerHTML=`<div class="journal-reader-heading"><button type="button" data-journal-back>← All journal entries</button></div><div class="journal-notebook"><nav class="journal-index" aria-label="Journal entries"><p class="journal-eyebrow">Contents</p>${rows.map(row=>`<button type="button" data-journal-read="${escape(row.key)}" ${row.key===selected.key?'aria-current="page"':''}>${escape(row.title)}</button>`).join('')}</nav><article class="journal-leaf" aria-labelledby="journalEntryTitle"><span class="journal-tag ${selected.type==='recap'?'journal-player':''}">${selected.type==='recap'?'Player account · Shared with the campaign':selected.type==='chapter'?'Official shared chapter':'From your DM'}</span><h3 id="journalEntryTitle" tabindex="-1">${escape(selected.title)}</h3><p class="journal-meta">${escape(subtitle(selected))}</p><div class="journal-prose">${escape(selected.body)}</div>${selected.image?'<figure data-journal-image>Loading shared illustration…</figure>':''}${selected.type==='recap'&&(selected.remember||selected.nextTime)?`<div class="journal-note-grid">${selected.remember?`<section class="journal-note"><h4>Remember this</h4><div class="journal-prose">${escape(selected.remember)}</div></section>`:''}${selected.nextTime?`<section class="journal-note"><h4>For next time</h4><div class="journal-prose">${escape(selected.nextTime)}</div></section>`:''}</div>`:''}<div class="journal-actions">${selected.type==='recap'&&selected.authorId===s.uid?`<button type="button" data-journal-edit="${escape(selected.id)}">Edit your draft</button><button type="button" data-journal-unshare="${escape(selected.id)}">Make private</button>`:''}${selected.type==='chapter'?'<button type="button" data-journal-route="campaign-chapters">Open chapters &amp; private notes</button>':selected.type==='world'?'<button type="button" data-journal-route="campaign-information">Explore places &amp; lore</button>':''}</div></article></div>`;
@@ -125,11 +125,24 @@ var CampaignJournal=(()=>{
     dialog.innerHTML=`<p class="journal-eyebrow">Preview · Only you</p><h2 id="journalPreviewTitle">${escape(e.title||'Untitled recap')}</h2><p class="journal-meta">${escape(subtitle({...e,type:'recap'}))}</p><div class="journal-prose">${escape(e.body)}</div>${e.remember?`<h3>Remember this</h3><div class="journal-prose">${escape(e.remember)}</div>`:''}${e.nextTime?`<h3>For next time</h3><div class="journal-prose">${escape(e.nextTime)}</div>`:''}<button type="button">Back to writing</button>`;
     const opener=document.activeElement;dialog.querySelector('button').onclick=()=>dialog.close();dialog.addEventListener('close',()=>{dialog.remove();if(opener?.isConnected)opener.focus();});document.body.append(dialog);dialog.showModal();
   }
+  function referenceStatus(s){
+    if(!allowed(s))return;
+    const message=s.referenceProblems.size?'Some shared references are unavailable ('+[...s.referenceProblems].join(', ')+'). You can still write recaps. Refresh to retry.':'';
+    s.root.querySelector('[data-journal-reference-status]').textContent=message;
+  }
+  async function loadReferenceFeed(s,key,feed,label){
+    const failed=()=>{if(!allowed(s))return;s[key]=[];s.referenceProblems.add(label);referenceStatus(s);paint(s);};
+    try{
+      const rows=await feed.list(s.campaignId);if(!allowed(s))return;s[key]=rows;paint(s);
+      const stop=feed.watch(s.campaignId,rows=>{if(!allowed(s))return;s[key]=rows;s.referenceProblems.delete(label);referenceStatus(s);paint(s);},failed);
+      if(allowed(s))s.stops.push(stop);else stop();
+    }catch{failed();}
+  }
   async function render(){
     if(!guard(render))return;clear();if(!activeCampaign||!auth.currentUser)return;
     const root=document.getElementById('tab-campaign-journal');
-    const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,root,drafts:[],shared:[],chapters:[],world:[],imageUrls:[],stops:[],ready:false,denied:false,busy:false,editor:null,selected:null,filter:'all',search:'',message:'Loading your campaign journal…'};session=s;
-    root.innerHTML=`<section class="campaign-journal" aria-labelledby="campaignJournalTitle"><header class="journal-hero"><p class="journal-eyebrow">${escape(activeCampaign.name)} · Our shared story</p><h2 id="campaignJournalTitle">The party journal</h2><p>What we discovered. Who we trusted. The stories we will tell when the dice are put away.</p><div class="journal-toolbar"><div class="journal-filters" role="group" aria-label="Filter journal entries"><button type="button" data-journal-filter="all" aria-pressed="true">All entries</button><button type="button" data-journal-filter="recap" aria-pressed="false">Player recaps</button><button type="button" data-journal-filter="dm" aria-pressed="false">From the DM</button></div><button type="button" class="btn-primary" data-journal-compose disabled>+ Write a session recap</button></div><div class="journal-search"><label><span>Search the journal</span><input type="search" data-journal-search placeholder="Title, session or a familiar name…"></label><button type="button" data-journal-refresh>Refresh</button></div></header><p class="journal-status" role="status" aria-live="polite" data-journal-status></p><div data-journal-content></div></section>`;
+    const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,root,drafts:[],shared:[],chapters:[],world:[],imageUrls:[],stops:[],referenceProblems:new Set(),ready:false,denied:false,busy:false,editor:null,selected:null,filter:'all',search:'',message:'Loading your campaign journal…'};session=s;
+    root.innerHTML=`<section class="campaign-journal" aria-labelledby="campaignJournalTitle"><header class="journal-hero"><p class="journal-eyebrow">${escape(activeCampaign.name)} · Our shared story</p><h2 id="campaignJournalTitle">The party journal</h2><p>What we discovered. Who we trusted. The stories we will tell when the dice are put away.</p><div class="journal-toolbar"><div class="journal-filters" role="group" aria-label="Filter journal entries"><button type="button" data-journal-filter="all" aria-pressed="true">All entries</button><button type="button" data-journal-filter="recap" aria-pressed="false">Player recaps</button><button type="button" data-journal-filter="dm" aria-pressed="false">From the DM</button></div><button type="button" class="btn-primary" data-journal-compose disabled>+ Write a session recap</button></div><div class="journal-search"><label><span>Search the journal</span><input type="search" data-journal-search placeholder="Title, session or a familiar name…"></label><button type="button" data-journal-refresh>Refresh</button></div></header><p class="journal-status" role="status" aria-live="polite" data-journal-status></p><p class="journal-status" role="status" data-journal-reference-status></p><div data-journal-content></div></section>`;
     root.querySelector('[data-journal-compose]').onclick=()=>edit(s);
     root.querySelector('[data-journal-refresh]').onclick=()=>render();
     root.querySelector('[data-journal-search]').oninput=event=>{s.search=event.target.value;paint(s);};
@@ -137,13 +150,13 @@ var CampaignJournal=(()=>{
     paint(s);
     const failed=error=>{if(!current(s))return;const denied=error?.code==='permission-denied'||error?.code==='unauthenticated';if(!denied&&s.ready){s.message='Connection interrupted. Your draft is kept here; save or refresh when your connection returns.';if(s.editor)editorState(s);else paint(s);return;}s.message='Journal unavailable. '+(denied?'Campaign access could not be verified.':'Check your connection and refresh to try again.');
       // A failed subscription must not leave private or shared text on screen after access is revoked.
-      s.denied=true;s.ready=false;s.stops.forEach(stop=>stop());s.stops=[];s.drafts=[];s.shared=[];s.chapters=[];s.world=[];revokeImages(s);s.editor=null;s.selected=null;cancelLeave();document.querySelectorAll('.journal-preview').forEach(dialog=>{dialog.close();dialog.remove();});root.querySelector('[data-journal-content]').replaceChildren();root.querySelector('[data-journal-compose]').disabled=true;root.querySelector('[data-journal-status]').textContent=s.message;
+      s.denied=true;s.ready=false;s.stops.forEach(stop=>stop());s.stops=[];s.drafts=[];s.shared=[];s.chapters=[];s.world=[];revokeImages(s);s.editor=null;s.selected=null;cancelLeave();document.querySelectorAll('.journal-preview').forEach(dialog=>{dialog.close();dialog.remove();});root.querySelector('[data-journal-content]').replaceChildren();root.querySelector('[data-journal-compose]').disabled=true;root.querySelector('[data-journal-compose]').title='Journal access is unavailable. Check campaign membership and journal permissions.';root.querySelector('[data-journal-reference-status]').textContent='';root.querySelector('[data-journal-status]').textContent=s.message+(error?.code?' ('+error.code+')':'');
     };
-    try{const [data,chapterRows,worldRows]=await Promise.all([store.list(s.campaignId),chapters.list(s.campaignId),world.list(s.campaignId)]);if(!current(s))return;
-      Object.assign(s,data,{chapters:chapterRows,world:worldRows,ready:true,message:'Player accounts and deliberately shared DM pages. Your drafts stay private.'});paint(s);
+    try{const data=await store.list(s.campaignId);if(!current(s))return;
+      Object.assign(s,data,{ready:true,message:'Player accounts and deliberately shared DM pages. Your drafts stay private.'});paint(s);
       s.stops.push(store.watch(s.campaignId,rows=>{if(allowed(s)){s.drafts=rows;paint(s);}},rows=>{if(allowed(s)){s.shared=rows;paint(s);}},failed));
-      s.stops.push(world.watch(s.campaignId,rows=>{if(allowed(s)){s.world=rows;paint(s);}},failed));
-      s.stops.push(chapters.watch(s.campaignId,rows=>{if(allowed(s)){s.chapters=rows;paint(s);}},failed));
+      void loadReferenceFeed(s,'world',world,'places & lore');
+      void loadReferenceFeed(s,'chapters',chapters,'chapters');
     }catch(error){failed(error);}
   }
   window.addEventListener('beforeunload',event=>{if(session?.editor?.dirty||session?.busy){event.preventDefault();event.returnValue='';}});
