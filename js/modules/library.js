@@ -50,7 +50,7 @@ function createCard(item,context={}) {
         <select class="saved-character-target" aria-label="Move saved item to character">${savedCharacters.map(c=>`<option value="${escapeHtml(c.id)}" ${c.id===savedEntry.characterId?'selected':''}>${escapeHtml(c.name)}</option>`).join('')}</select>
         </label><button type="button" class="saved-move-button">Move saved</button>`:''}
     ` : `
-    ${canEdit?`<button type="button" class="edit-button">${root?'Edit Root Item':'Edit Campaign Item'}</button><button type="button" class="clone-button">Clone</button><button type="button" class="delete-item-button">Delete</button>`:''}
+    ${canEdit?`<button type="button" class="edit-button">${root?'Edit Root Item':'Edit Campaign Item'}</button><button type="button" class="clone-button">Clone</button>${!entry?`<button type="button" class="delete-item-button">${root?'Delete root item':'Remove from campaign'}</button>`:''}`:''}
     ${manager?`<button type="button" class="visibility-toggle-btn">${item.visible?'Visible':'Hidden'}</button><button type="button" class="highlight-button">${item.highlighted?'Highlighted':'Highlight'}</button>`:''}
     ${manager&&!entry?'<button type="button" class="assign-button">Assign</button>':''}
     ${canClaim?'<button type="button" class="loot-button">Loot</button>':''}
@@ -82,9 +82,13 @@ function createCard(item,context={}) {
     else {const id=activeCampaign.id;const result=await vaultCall('vaultCopyCampaignItem',{campaignId:id,source:'campaign',sourceId:item.id});if(activeCampaign?.id!==id)return;await refreshCampaignData();openItemModal(items.find(i=>i.id===result.itemId));}
   });
   on('.delete-item-button',async()=>{
-    if(!confirm(`Delete "${item.name}" ${root?'from the root catalogue':'from this campaign'}?`))return;
-    if(root){await deleteDoc(doc(db,'items',item.id));rootItems=rootItems.filter(i=>i.id!==item.id);await markCatalogChanged();renderRootCatalogue();}
-    else {await vaultCall('vaultDeleteCampaignItem',{campaignId:activeCampaign.id,itemId:item.id});await refreshCampaignData();}
+    const campaignId=activeCampaign?.id,uid=auth.currentUser?.uid;
+    const current=()=>auth.currentUser?.uid===uid&&(root?isAdmin():activeCampaign?.id===campaignId&&canManageCampaign());
+    if(!current())return;
+    const accepted=await SiteConfirmation.ask({title:root?'Delete root item “'+item.name+'”?':'Remove “'+item.name+'” from this campaign?',paragraphs:root?['This deletes the shared root template. Existing campaign copies remain unchanged.']:['This removes the campaign copy and its available supply. The shared catalogue template and other campaigns are unchanged.','Assigned copies must be returned first. Saved bookmarks may show this item as unavailable after removal.'],confirmLabel:root?'Delete root item':'Remove from campaign',isCurrent:current});
+    if(!accepted||!current())return;
+    if(root){await deleteDoc(doc(db,'items',item.id));if(!current())return;rootItems=rootItems.filter(i=>i.id!==item.id);await markCatalogChanged();if(current())renderRootCatalogue();}
+    else {await vaultCall('vaultDeleteCampaignItem',{campaignId,itemId:item.id});if(current())await refreshCampaignData();}
   });
   on('.visibility-toggle-btn',()=>toggleItemVisibility(item.id));
   on('.highlight-button',async()=>{await persistItemState(item.id,{highlighted:!item.highlighted});await refreshCampaignData();});
