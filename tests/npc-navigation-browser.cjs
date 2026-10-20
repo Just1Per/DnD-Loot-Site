@@ -57,7 +57,7 @@ const errors=[];
  await page.locator('[data-back-to-npcs]').click();await page.waitForSelector('[data-read-npc=elowen]');
  assert.equal(await page.locator('[data-information-search]').inputValue(),'harbor');assert.equal(await page.locator('[data-information-category]').inputValue(),'Story NPC');
  assert.equal(await page.evaluate(()=>document.activeElement?.dataset.readNpc),'elowen');
- await page.waitForFunction(expected=>Math.abs(scrollY-expected)<5,listScroll);
+ await page.waitForFunction(expected=>Math.abs(scrollY-expected)<5,listScroll).catch(async error=>{throw Error('NPC return scroll '+JSON.stringify({expected:listScroll,...await page.evaluate(()=>({actual:scrollY,height:innerHeight,pageHeight:document.documentElement.scrollHeight,focus:document.activeElement?.dataset.readNpc}))})+' '+error.message)});
  assert.ok(Math.abs(await page.evaluate(()=>scrollY)-listScroll)<5,'editor return restores the list position at the originating click');
  await page.locator('[data-read-npc=elowen]').focus();await page.keyboard.press('Enter');await page.waitForSelector('.npc-post-reader');await page.locator('[data-npc-back]').click();
  assert.equal(await page.evaluate(()=>document.activeElement?.dataset.readNpc),'elowen');
