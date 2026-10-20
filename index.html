@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="css/site-identity.css?v=20261010-ui-cleanup-v82">
   <link rel="stylesheet" href="css/campaign-workspace.css?v=20261017-world-custom-categories-v1">
   <link rel="stylesheet" href="css/campaign-home.css?v=20261016-subclass-warning-v1">
-  <link rel="stylesheet" href="css/campaign-information.css?v=20261019-visual-journal-v1">
+  <link rel="stylesheet" href="css/campaign-information.css?v=20261020-predictable-navigation-v1">
   <link rel="stylesheet" href="css/dm-tools.css?v=20261014-saved-items-five-grid-v1">
   <link rel="stylesheet" href="css/site-ui.css?v=20261010-ui-cleanup-v82">
   <link rel="stylesheet" href="css/app-shell.css?v=20261014-navigation-groups-v1">
@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="css/campaign-controls.css?v=20261020-compact-credits-v1">
   <link rel="stylesheet" href="css/character-workspace.css?v=20261020-repository-cleanup-v1">
   <link rel="stylesheet" href="css/page-editors.css?v=20261016-page-editors-v1">
-  <link rel="stylesheet" href="css/campaign-map.css?v=20261020-dm-map-v3">
+  <link rel="stylesheet" href="css/campaign-map.css?v=20261020-map-regions-v1">
   <link rel="stylesheet" href="css/campaign-journal.css?v=20261020-party-tools-v4">
   <link rel="stylesheet" href="css/dialogs.css?v=20261020-catalogue-filters-v2">
 </head>
@@ -125,6 +125,10 @@
         <button class="tab" data-tab="campaign-npcs" type="button">NPCs</button>
         <button class="tab" data-tab="campaign-chapters" type="button">Completed chapters</button>
       </div>
+      <div data-section-group="library" hidden>
+        <button class="tab" data-tab="library-items" type="button">Items</button>
+        <button class="tab" data-tab="library-reusable" type="button">Reusable content</button>
+      </div>
       <div data-section-group="character" hidden>
         <button type="button" data-character-list>My characters &amp; items</button>
         <button class="tab" data-tab="character-sheet" id="characterSheetTab" type="button">Character sheet</button>
@@ -141,7 +145,9 @@
     <section id="tab-campaign-information" class="tab-content" style="display:none" aria-label="Campaign information"></section>
     <section id="tab-campaign-npcs" class="tab-content" style="display:none" aria-label="NPC catalogue"></section>
     <section id="tab-campaign-chapters" class="tab-content" style="display:none" aria-label="Chapter overview"></section>
+    <section id="tab-library-reusable" class="tab-content" style="display:none" aria-label="Reusable content"></section>
     <div id="tab-library" class="tab-content active">
+      <header class="library-introduction"><h2>Items</h2><p>Browse campaign items, read their properties and save items for your character.</p></header>
       <div class="toolbar">
 
         <button id="addItemBtn" type="button" style="display:none">+ Add Item</button>
@@ -471,6 +477,6 @@
     <p>© 2026 DKDM — CampaignAtlas’s original website code and interface. Third-party content retains its own licences and rights.</p>
   </footer>
   <script src="js/boot-status.js?v=20261010-ui-cleanup"></script>
-  <script type="module" id="siteAppScript" src="js/app.js?v=20261020-simple-world-v2"></script>
+  <script type="module" id="siteAppScript" src="js/app.js?v=20261020-admin-catalogue-v2"></script>
 </body>
 </html>

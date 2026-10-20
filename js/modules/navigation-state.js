@@ -1,7 +1,7 @@
 'use strict';
 // Only locations, never editor data. One browser tab and authenticated UID at a time.
 var AppNavigation=(()=>{
- const tabs=new Set(['campaign-home','campaign-journal','campaign-map','campaign-information','campaign-npcs','campaign-chapters','library','player','character-sheet','character-loot','character-wishlist','dm','dm-world','dm-map','dm-creatures','dm-chapters','dm-party','dm-settings','dm-one-shots','player-adventures','admin']);
+ const tabs=new Set(['campaign-home','campaign-journal','campaign-map','campaign-information','campaign-npcs','campaign-chapters','library','library-reusable','player','character-sheet','character-loot','character-wishlist','dm','dm-world','dm-map','dm-creatures','dm-chapters','dm-party','dm-settings','dm-one-shots','player-adventures','admin']);
  const kinds=new Set(['world','creature','chapter','encounter','oneShot','playerAdventure']);
  const sections=new Set(['overview','skills','combat','spells','inventory','builder','feats','story','companion','rules']);
  const validId=value=>typeof value==='string'&&/^[A-Za-z0-9_-]{1,100}$/.test(value);
