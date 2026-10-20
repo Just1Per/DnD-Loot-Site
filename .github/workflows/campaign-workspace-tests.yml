@@ -66,6 +66,8 @@ jobs:
           NODE
       - name: Centered native dialogs, spell details and unsaved-draft prompts
         run: npm --prefix tests run test:dialogs
+      - name: Root catalogue multi-select and viewport checks
+        run: npm --prefix tests run test:root-picker
       - name: Campaign UI consistency, mobile targets and responsive party actions
         run: npm --prefix tests run test:ui-consistency
       - name: Non-Overview accessibility, keyboard, layout and print

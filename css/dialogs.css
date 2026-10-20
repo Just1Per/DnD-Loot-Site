@@ -15,3 +15,19 @@ body>dialog :where(.sheet-help){color:var(--ui-muted,#655744);line-height:1.5}
 body>dialog :where(.sheet-rule-text){white-space:pre-wrap;line-height:1.65;margin:14px 0}
 dialog :where(button,input,select,textarea,a):focus-visible{outline:3px solid var(--ui-heading,#5c1d1d);outline-offset:3px}
 @media(max-width:580px){:where(dialog:not(.modal)){padding:16px}body>dialog :where(header){gap:8px}}
+
+/* The catalogue is a bounded picker: only its list scrolls. */
+#rootPicker[open]{display:grid;grid-template-rows:auto auto auto auto minmax(0,1fr) auto;gap:12px;width:min(900px,calc(100vw - 24px));height:min(820px,calc(100dvh - 24px));max-height:calc(100dvh - 24px);overflow:hidden;padding:20px}
+#rootPicker .character-loot-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+#rootPicker h2,#rootPicker p{margin:0}
+#rootPickerSearch{width:100%;margin:0;min-height:44px}
+#rootPickerResults{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:3px 8px 3px 3px}
+#rootPicker .root-picker-controls,#rootPicker .root-picker-footer{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#rootPickerCount{margin-left:auto;color:var(--ui-muted,#655744)}
+#rootPicker .root-picker-row{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px;cursor:pointer;min-height:62px;padding:12px 4px;border-bottom:1px solid var(--ui-border,#c8b89a)}
+#rootPicker .root-picker-row input{width:20px;height:20px;flex:0 0 20px;accent-color:var(--ui-primary,#9b1d1d)}
+#rootPicker .root-picker-row>span{min-width:0;overflow-wrap:anywhere}
+#rootPicker .root-picker-meta{display:block;color:var(--ui-muted,#655744);font-size:.9em}
+#rootPicker .root-picker-footer{border-top:1px solid var(--ui-border,#c8b89a);padding-top:12px}
+#rootPickerStatus{flex:1;min-width:180px;font-size:.9em}
+@media(max-width:600px){#rootPicker[open]{padding:12px;gap:8px}#rootPicker h2{font-size:1.15rem}#rootPickerCount{width:100%;margin:0}#rootPicker .root-picker-footer button{width:100%}}

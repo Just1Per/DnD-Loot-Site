@@ -27,6 +27,7 @@
     "test:creature-editor": "node creature-editor-browser.cjs",
     "test:creature-bulk-import": "node creature-bulk-import-browser.cjs",
     "test:notebook-design": "node notebook-design-browser.cjs",
+    "test:root-picker": "node root-catalogue-picker-browser.cjs",
     "test:ui": "node ui-cleanup-browser.cjs",
     "test:navigation": "node navigation-browser.cjs",
     "test:campaign-home": "node campaign-home-browser.cjs",
