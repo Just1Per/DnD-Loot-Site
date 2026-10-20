@@ -71,7 +71,7 @@ The October 16 report covers 659 root items: 331 concept candidates for verified
 
 ### October 19 notebook and import refinement
 
-The chosen direction is the [notebook prototype](../design/world-notebook.html): title and description for World and Chapters, an always-private short DM notes box, and independent image sharing. Hiding a page hides its image too. New categories appear immediately in the top bar. The prototype is separate from the deployed application; it does not read or write Firebase. NPCs and Encounters retain detailed preparation and stat blocks; their player pages never include combat statistics or DM notes.
+The chosen direction is the notebook direction: title and description for World and Chapters, an always-private short DM notes box, and independent image sharing. Hiding a page hides its image too. New categories appear immediately in the top bar. The standalone demo has been retired; the application now implements independent image sharing, covered by `test:player-images`. NPCs and Encounters retain detailed preparation and stat blocks; their player pages never include combat statistics or DM notes.
 
 The actual SRD creature picker now supports checkboxes, selection across filters, select visible, clear selection and importing up to 100 independent private campaign copies at once. Single-entry drafts remain available. Partial failures keep remaining selections for retry; imported NPCs can be changed to Story NPC and their description revealed without their statistics. Current editor drafts are preserved.
 

@@ -1,11 +1,10 @@
 (async()=>{
  const results=JSON.parse(document.getElementById('test-results').textContent);
  const check=(name,ok)=>{results.push({name,pass:!!ok});if(!ok)throw Error(name)};
- const original={importItemsIfEmpty,loadCampaigns,loadMyPendingInvites,loadMyDMRequest,loadUsers,loadDMRequests,loadDashboardCharacters};
+ const original={loadCampaigns,loadMyPendingInvites,loadMyDMRequest,loadUsers,loadDMRequests,loadDashboardCharacters};
  const info=console.info,error=console.error,logs=[],logReady=[],errors=[],calls=[];
  try{
   console.info=(...args)=>{logs.push(args);logReady.push(calls.at(-1)==='dashboard'&&document.getElementById('dashboardHome').style.display==='block')};console.error=(...args)=>errors.push(args);
-  importItemsIfEmpty=async()=>calls.push('catalogue');
   loadCampaigns=async()=>{calls.push('campaigns');campaigns=[]};
   loadMyPendingInvites=async()=>calls.push('invites');loadMyDMRequest=async()=>calls.push('dm-request');
   loadUsers=async()=>calls.push('users');loadDMRequests=async()=>calls.push('dm-requests');
@@ -33,7 +32,7 @@
   check('Sign-out clears private session data and restores public landing',currentUser===null&&activeCampaign===null&&characters.length===0&&inventory.length===0&&document.getElementById('publicLanding').style.display==='block'&&logs.length===0);
  }catch(e){results.push({name:e.stack,pass:false})}
  finally{
-  ({importItemsIfEmpty,loadCampaigns,loadMyPendingInvites,loadMyDMRequest,loadUsers,loadDMRequests,loadDashboardCharacters}=original);
+  ({loadCampaigns,loadMyPendingInvites,loadMyDMRequest,loadUsers,loadDMRequests,loadDashboardCharacters}=original);
   console.info=info;console.error=error;document.getElementById('passwordInput').value='';
   SiteHelp.onLogout();seed('player');
  }

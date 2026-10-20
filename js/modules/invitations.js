@@ -267,6 +267,6 @@ async function loadCampaigns() {
 }
 
 async function importItemsIfEmpty() {
-  // Root catalogue creation is explicit in Admin. An empty catalogue must not
-  // break login or import an unavailable legacy items.js file automatically.
+  // Compatibility for cached auth scripts from before the cleanup release.
+  // New startup does not call this hook; catalogue creation is explicit in Admin.
 }

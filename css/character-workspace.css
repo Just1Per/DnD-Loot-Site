@@ -48,7 +48,7 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: 18px;
 }
-.character-workspace-panel .item-card, .character-workspace-panel .mini-card { min-width: 0; }
+.character-workspace-panel .item-card { min-width: 0; }
 .character-workspace-legacy-chooser { display: none !important; }
 .character-workspace-manage .player-section:has(#myLootGrid),
 .character-workspace-manage .player-section:has(#myWishGrid) { display: none; }
