@@ -28,6 +28,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DND_LOOT_SITE }}
+      - name: Include map design in PR previews only
+        if: github.event.action != 'closed'
+        run: cp design/party-map-preview.html map-design-preview.html
       - uses: FirebaseExtended/action-hosting-deploy@v0
         if: github.event.action != 'closed'
         with:
