@@ -97,7 +97,7 @@ const root=path.resolve(__dirname,'..');
   const sidebar=page.locator('#dmWorkspaceSidebar');
   assert.equal(await page.locator('#dmWorkspaceShell > #dmWorkspaceSidebar').count(),1);
   assert.equal(await page.locator('#dmWorkspaceShell > #dmWorkspaceBody').count(),1);
-  assert.deepEqual(await sidebar.locator('[data-dm-workspace-tab]').evaluateAll(nodes=>nodes.map(node=>node.dataset.dmWorkspaceTab)),['dm','dm-world','dm-creatures','dm-chapters','dm-party']);
+  assert.deepEqual(await sidebar.locator('[data-dm-workspace-tab]').evaluateAll(nodes=>nodes.map(node=>node.dataset.dmWorkspaceTab)),['dm','dm-world','dm-map','dm-creatures','dm-chapters','dm-party']);
   assert.equal(await page.locator('#dmToolsPanel [data-dm-party-card],#dmToolsPanel [data-dm-settings-card]').count(),0,'Overview must contain preparation, with management cards in their own sections');
   assert.equal(await page.locator('#dmPartyPanel [data-dm-party-card]').count(),3,'Item Controls, Characters & Items, and rarity guidance belong to Party & Loot');
   assert.equal(await page.locator('#dmPartyPanel #dmOpenLibrary,#dmPartyPanel #dmCharacterList,#dmPartyPanel .loot-ref-panel').count(),3);

@@ -12,7 +12,7 @@ function showTab(tabId, render = true) {
   if(['player','character-loot','character-wishlist','player-adventures'].includes(tabId)&&(!activeCampaign||!canUseCharacters()))return;
   if(tabId!=="character-sheet"&&!SheetNavigation.guard(()=>showTab(tabId,render)))return;
   if (tabId === "admin") { openAdminView(); return; }
-  if ((tabId === "dm" || ["dm-world","dm-creatures","dm-chapters","dm-party","dm-settings","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
+  if ((tabId === "dm" || ["dm-world","dm-map","dm-creatures","dm-chapters","dm-party","dm-settings","dm-one-shots"].includes(tabId)) && (!activeCampaign || !canManageCampaign())) return;
   if(!PageEditors.beforeNavigate(tabId,render))return;
   if (typeof CampaignWorkspace!=="undefined" && !CampaignWorkspace.beforeNavigate(tabId)) return;
   if (typeof CampaignHome!=="undefined" && !CampaignHome.beforeNavigate(tabId)) return;
@@ -30,6 +30,7 @@ function showTab(tabId, render = true) {
   if(render&&tabId==='player-adventures')CampaignWorkspace.render('playerAdventure');
   if(render&&tabId==='campaign-home')CampaignHome.render();
   if(render&&tabId==='campaign-map')CampaignMap.render();
+  if(render&&tabId==='dm-map')CampaignMap.render('dm');
   if(render&&tabId==='campaign-journal')CampaignJournal.render();
   if(render&&tabId==='campaign-information')CampaignInformation.render();
   if(render&&tabId==='campaign-npcs')CampaignInformation.render('creature');

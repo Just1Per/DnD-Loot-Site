@@ -14,6 +14,11 @@ const DM_PLANNING_TOOLS = Object.freeze([
     ['Connect people and places', 'Link regions, locations, NPCs and factions. Record what each faction wants and how its actions affect the world. Reuse these entries in chapters and one-shots.'],
     ['Keep discoveries separate from secrets', 'Prepare a player-facing description alongside private DM notes. Publish discoveries deliberately; hidden motives, future events and unrevealed locations stay private.']
   ] },
+  { id: 'map', title: 'Map', summary: 'Set up the campaign map, place cities and regions, and publish what the party can discover.', guide: 'How to set up the campaign map', steps: [
+    ['Upload your map', 'Choose a map image and give it a name. The main map has its own workspace, separate from written World entries.'],
+    ['Add places', 'Place City or Region pins, add descriptions and optional pictures, then link shared World entries for more detail.'],
+    ['Publish deliberately', 'Save a private draft, preview the published player view, then publish revealed places when ready. Hidden places remain private.']
+  ] },
   { id: 'creatures', title: 'Creatures & NPCs', summary: 'Keep the people and monsters of your campaign together. Create master cards, import SRD creatures or reuse your personal templates.', guide: 'How to prepare creatures and NPCs', steps: [
     ['Create a campaign master', 'Choose Story NPC, Monster, Boss or Companion. Describe the character, then add combat statistics when needed. Keep secrets and tactics in the private fields.'],
     ['Reuse your catalogue', 'Import an editable SRD copy or a creature from My Creature Library. Source attribution stays with the copy; changes do not overwrite the source or personal template.'],

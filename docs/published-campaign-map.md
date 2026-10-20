@@ -4,7 +4,7 @@ The Journal map now uses the approved interactive design in the real app. DMs ca
 
 ## Editing and publishing
 
-1. Open Journal → Map → Edit map.
+1. Open DM Workspace → Map. World Building remains the written setting editor. Journal → Map is a published-only reader; DMs get a Manage map shortcut to the separate workspace.
 2. Upload/replace an image and edit places. Replacing the image preserves coordinates and descriptions; review their positions on the replacement.
 3. Keep place in draft updates the local working copy. Save private draft persists that copy for campaign DMs. Unsaved navigation is guarded; failed saves preserve input.
 4. Publish changes first saves any completed local draft changes, then atomically publishes the map and revealed pins. Complete/cancel an open place form first.
@@ -45,3 +45,9 @@ A Hosting preview uses the same Firebase backend and therefore also requires the
 - `node tests/campaign-map-browser.cjs`: isolated app fixture, upload/save failure retention, saved draft reopen, hidden/revealed publication, player-only view, hover/focus/Escape, pictures, World reader linking/unpublishing, navigation guards, mobile layouts at 320/390px, WCAG A/AA checks, zoom/pan/reset, superseded listeners, revocation and late-account responses.
 - `npm --prefix tests run test:campaign-map-rules`: Firestore + Storage emulators, legacy compatibility, draft/picture denial, atomic publication, exact-current-image access, hidden and stale pin denial, removed picture access, cross-campaign and extra-field rejection, revision conflicts and first publication at the 100-place limit.
 - Adjacent World browser/permission and shared Storage regression checks.
+
+## Separate map setup and reader
+
+The `dm-map` route opens the private editor directly and is restored on refresh only after checking the current campaign DM role. `campaign-map` loads the published map only, including for DMs; it does not request private drafts. Existing map documents and Storage paths are unchanged. Private World-entry map attachments remain separate DM preparation and are not silently moved or deleted.
+
+If private draft loading fails, the DM workspace keeps the published map readable, disables editing/publication and offers Refresh with guidance. A draft denial does not prove the published map is inaccessible. Primary map permission failures still clear the entire view. The owner confirmed the reported production access failure cleared after deploying both map rule files on 20 October 2026. Separate error handling still prevents a private-draft failure from hiding an otherwise readable publication. This navigation/error-handling change requires no additional rules beyond the map rules already documented above.
