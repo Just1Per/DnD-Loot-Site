@@ -78,6 +78,10 @@ jobs:
         run: npm --prefix tests run test:navigation
       - name: Grouped campaign navigation, settings, roles and refresh
         run: npm --prefix tests run test:app-navigation
+      - name: Campaign deletion UI and permission boundaries
+        run: |
+          npm --prefix tests run test:campaign-deletion
+          npm --prefix tests run test:campaign-deletion-rules
       - name: Shared character sheet, gear and bookmark context
         run: npm --prefix tests run test:character-workspace
       - name: Page editors, dirty drafts and retryable campaign setup
