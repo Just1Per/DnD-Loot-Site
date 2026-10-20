@@ -97,9 +97,23 @@ async function openRootCatalogue() {
   if(!isAdmin())return;
   if(!PageEditors.guard(openRootCatalogue))return;
   if(!SheetNavigation.guard(openRootCatalogue))return;
+  if(typeof CampaignWorkspace!=='undefined'&&!CampaignWorkspace.beforeNavigate('admin'))return;
+  const uid=auth.currentUser?.uid,screen=document.getElementById('rootCatalogueScreen');
+  const current=()=>auth.currentUser?.uid===uid&&isAdmin()&&screen.style.display==='block';
   await runVaultButton(document.getElementById('openRootCatalogue'),async()=>{
-    await itemsLoadPromise;hideAllScreens();document.getElementById('siteScreenTitle').textContent='Root Catalogue · CampaignAtlas';
-    document.getElementById('rootCatalogueScreen').style.display='block';renderRootCatalogue();
+    hideAllScreens();document.getElementById('siteScreenTitle').textContent='Root Catalogue · CampaignAtlas';
+    screen.style.display='block';screen.innerHTML='<div class="admin-section"><h2>Root Catalogue</h2><p role="status">Loading catalogue items…</p></div>';
+    try{
+      // Login deliberately leaves the catalogue unloaded. The Admin destination
+      // must request its own complete administrator snapshot, not that resolved promise.
+      await loadItemsFromFirestore({forceRefresh:true});
+      if(current())renderRootCatalogue();
+    }catch(error){
+      if(!current())return;
+      screen.innerHTML='<div class="admin-section"><h2>Root Catalogue</h2><p role="status">'+escapeHtml('Could not load catalogue: '+error.message)+'</p><button type="button" data-retry-root>Retry loading catalogue</button><button type="button" data-back-admin>Back to Admin</button></div>';
+      screen.querySelector('[data-retry-root]').onclick=openRootCatalogue;
+      screen.querySelector('[data-back-admin]').onclick=openAdminView;
+    }
   });
 }
 // Shared template filters use the same item fields as the campaign Library.
@@ -126,7 +140,7 @@ function renderRootCatalogue() {
   screen.querySelector('#rootSearch').insertAdjacentHTML('afterend',catalogueFilterMarkup(rootItems)+'<p data-catalogue-count role="status"></p>');
   screen.querySelectorAll('[data-catalogue-filter]').forEach(control=>control.value=filters[control.dataset.catalogueFilter]||'');
   screen.querySelector('#rootSearch').value=search;
-  const paint=()=>{const q=screen.querySelector('#rootSearch').value.toLowerCase();const grid=screen.querySelector('#rootCards');grid.replaceChildren(...rootItems.filter(i=>catalogueItemMatches(i,{...catalogueFilterValues(screen),search:q})).map(i=>createCard(i,{root:true})));observePendingImages(grid);screen.querySelector('[data-catalogue-count]').textContent=grid.children.length+' of '+rootItems.length+' items shown';};
+  const paint=()=>{const q=screen.querySelector('#rootSearch').value.toLowerCase();const grid=screen.querySelector('#rootCards');grid.replaceChildren(...rootItems.filter(i=>catalogueItemMatches(i,{...catalogueFilterValues(screen),search:q})).map(i=>createCard(i,{root:true})));observePendingImages(grid);screen.querySelector('[data-catalogue-count]').textContent=rootItems.length?grid.children.length+' of '+rootItems.length+' items shown':'The catalogue is empty. Create a root item to get started.';};
   bindCatalogueFilters(screen,paint);
   screen.querySelector('#rootSearch').addEventListener('input',paint);
   screen.querySelector('#backFromRoot').addEventListener('click',openAdminView);
