@@ -4,9 +4,9 @@ var AppShell=(()=>{
  const journal=['campaign-journal','campaign-map','campaign-information','campaign-npcs','campaign-chapters'];
  const dm=['dm','dm-world','dm-map','dm-creatures','dm-chapters','dm-party','dm-one-shots'];
  let route='campaign-home';
- const titles={'campaign-map':'Campaign map','campaign-journal':'Party journal','campaign-home':'Home','campaign-information':'Campaign guide','campaign-npcs':'Known NPCs','campaign-chapters':'Completed chapters',player:'My Character','character-sheet':'Character sheet','character-loot':'Gear & Loot','character-wishlist':'Wishlist',library:'Library',dm:'DM Workspace','dm-world':'World','dm-map':'Map setup','dm-creatures':'Creatures & NPCs','dm-chapters':'Chapters','dm-party':'Party & Loot','dm-settings':'Campaign settings','dm-one-shots':'One Shots','player-adventures':'My One Shots'};
- function primary(tab){return journal.includes(tab)?'journal':['player','character-sheet','character-loot','character-wishlist','player-adventures'].includes(tab)?'player':dm.includes(tab)?'dm':tab;}
- function resolve(tab){return tab==='journal'?'campaign-journal':tab;}
+ const titles={'campaign-map':'Campaign map','campaign-journal':'Party journal','campaign-home':'Home','campaign-information':'Campaign guide','campaign-npcs':'Known NPCs','campaign-chapters':'Completed chapters',player:'My Character','character-sheet':'Character sheet','character-loot':'Gear & Loot','character-wishlist':'Wishlist',library:'Items','library-reusable':'Reusable content',dm:'DM Workspace','dm-world':'World','dm-map':'Map setup','dm-creatures':'Creatures & NPCs','dm-chapters':'Chapters','dm-party':'Party & Loot','dm-settings':'Campaign settings','dm-one-shots':'One Shots','player-adventures':'My One Shots'};
+ function primary(tab){return ['library','library-reusable'].includes(tab)?'library':journal.includes(tab)?'journal':['player','character-sheet','character-loot','character-wishlist','player-adventures'].includes(tab)?'player':dm.includes(tab)?'dm':tab;}
+ function resolve(tab){return tab==='library-items'?'library':tab==='journal'?'campaign-journal':tab;}
  function ensure(){
   const main=document.getElementById('mainApp'),navigation=document.getElementById('campaignSectionNavigation');if(!main||!navigation)return;
   const group=navigation.querySelector('[data-section-group="dm"]');
@@ -33,13 +33,13 @@ var AppShell=(()=>{
  }
  function update(tab){
   ensure();route=tab;
-  const selected=primary(tab),group=journal.includes(tab)?'journal':['player','character-sheet','character-loot','character-wishlist','player-adventures'].includes(tab)?'character':dm.includes(tab)?'dm':null;
+  const selected=primary(tab),group=['library','library-reusable'].includes(tab)?'library':journal.includes(tab)?'journal':['player','character-sheet','character-loot','character-wishlist','player-adventures'].includes(tab)?'character':dm.includes(tab)?'dm':null;
   const secondary=document.getElementById('campaignSectionNavigation');
-  if(secondary){secondary.hidden=!group;secondary.setAttribute('aria-label',group==='dm'?'DM workspace sections':group==='journal'?'Journal sections':'Character sections');
+  if(secondary){secondary.hidden=!group;secondary.setAttribute('aria-label',group==='dm'?'DM workspace sections':group==='journal'?'Journal sections':group==='library'?'Library sections':'Character sections');
    secondary.querySelectorAll('[data-section-group]').forEach(node=>node.hidden=node.dataset.sectionGroup!==group);
   }
   document.querySelectorAll('.tab').forEach(button=>{
-   const active=button.closest('#primaryNavigation')?button.dataset.tab===selected:button.dataset.tab===tab;
+   const active=button.closest('#primaryNavigation')?button.dataset.tab===selected:resolve(button.dataset.tab)===tab;
    button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');
   });
   const overview=document.querySelector('[data-dm-overview]');if(overview){overview.classList.toggle('active',tab==='dm');if(tab==='dm')overview.setAttribute('aria-current','page');else overview.removeAttribute('aria-current');}

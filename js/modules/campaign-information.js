@@ -8,11 +8,31 @@ var CampaignInformation = (() => {
     creature:{tab:'campaign-npcs',title:'NPCs',description:'The people your party has met and your DM has revealed.',empty:'Your DM has not revealed any NPCs yet. People you meet will appear here when your DM shares them.',store:npcStore},
     chapter:{tab:'campaign-chapters',title:'Chapter overview',description:'Completed chapters your DM has shared, with space for your own private notes.',empty:'Your DM has not shared any completed chapters yet. Your adventure’s recaps will appear here.',store:chapterStore}
   };
-  let session=null;
+  let session=null, returnToWorld=null;
+  const browsing=new Map();
+  const browseKey=kind=>[auth.currentUser?.uid,activeCampaign?.id,kind].join(':');
+  function remember(s){
+    if(!current(s))return;
+    browsing.set(browseKey(s.kind),{query:s.root.querySelector('[data-information-search]').value,category:s.root.querySelector('[data-information-category]').value,selected:s.selected,scroll:s.selected?s.listScroll:window.scrollY,focusId:s.focusId});
+  }
+  function backToList(s){
+    if(!current(s))return;
+    const id=s.selected;s.selected=null;s.focusId=id;paint(s);remember(s);
+    const button=[...s.root.querySelectorAll('[data-read-world]')].find(node=>node.dataset.readWorld===id);
+    button?.focus({preventScroll:true});window.scrollTo(0,s.listScroll||0);
+  }
+  function decorateWorldEditor(s){
+    if(s.kind!=='world'||!returnToWorld||returnToWorld.uid!==s.uid||returnToWorld.campaignId!==s.campaignId||returnToWorld.recordId!==s.record.id)return;
+    const button=document.createElement('button');button.type='button';button.dataset.backToWorld='';button.textContent='← Back to World';
+    button.onclick=()=>{if(s.busy)return;const state=browsing.get(browseKey('world'));if(state)state.selected=null;showTab('campaign-information');};
+    s.host.querySelector('[data-workspace-page]').prepend(button);
+  }
   const escape=value=>escapeHtml(String(value??''));
+  const prose=value=>String(value||'').split(/\n\s*\n/).filter(Boolean).map(text=>'<p>'+escape(text).replaceAll('\n','<br>')+'</p>').join('');
   const current=s=>session===s && activeCampaign?.id===s.id && auth.currentUser?.uid===s.uid;
   function clear(force=false) {
     if(typeof CampaignChapterNotes!=='undefined'&&!CampaignChapterNotes.beforeClear(session,force))return false;
+    if(session)remember(session);
     session?.unsubscribe?.();revokeImages(session);session=null;
     for(const view of Object.values(views))document.getElementById('tab-'+view.tab)?.replaceChildren();
     return true;
@@ -42,6 +62,7 @@ var CampaignInformation = (() => {
     const query=s.root.querySelector('[data-information-search]').value.trim().toLowerCase(),category=s.root.querySelector('[data-information-category]').value;
     const list=s.root.querySelector('[data-information-list]');
     const openIds=new Set([...list.querySelectorAll('details[open]')].map(node=>node.dataset.informationId));
+    if(s.kind==='world'){paintWorld(s);return;}
     const rows=s.rows.filter(row=>(!category||row.category===category)&&(!query||[row.title,row.summary,row.content].join(' ').toLowerCase().includes(query))).sort((a,b)=>(s.kind==='chapter'?a.order-b.order:0)||a.title.localeCompare(b.title));
     list.classList.toggle('campaign-information-grid',s.kind!=='chapter');
     list.innerHTML=rows.map(row=>{
@@ -56,27 +77,55 @@ var CampaignInformation = (() => {
     if(s.kind==='chapter'){list.insertAdjacentHTML('beforeend',CampaignChapterNotes.orphanDrafts(s));CampaignChapterNotes.bind(s);}
     if(focused){const host=[...list.querySelectorAll('[data-chapter-note-id]')].find(node=>node.dataset.chapterNoteId===focused.id),input=host?.querySelector('[data-note-text]');if(input&&!input.disabled){input.focus({preventScroll:true});input.setSelectionRange(focused.start,focused.end);}}
   }
+  function paintWorld(s){
+    const list=s.root.querySelector('[data-information-list]'),filters=s.root.querySelector('.campaign-information-filters');
+    const selected=s.rows.find(row=>row.id===s.selected);
+    if(s.selected&&!selected){s.selected=null;s.root.querySelector('[data-information-status]').textContent='This post is no longer shared. Choose another World post.';}
+    filters.hidden=!!selected;list.classList.toggle('campaign-information-grid',!selected);
+    if(selected){
+      list.innerHTML=`<article class="world-post-reader" data-information-id="${escape(selected.id)}"><div class="workspace-actions"><button type="button" data-world-back>← Back to World</button>${canManageCampaign()?'<button type="button" data-world-edit>Edit post</button>':''}</div><p class="campaign-book-eyebrow">Journal → World → ${escape(selected.title)}</p><h3 tabindex="-1" data-world-title>${escape(selected.title)}</h3><p class="campaign-reference-category">${escape(selected.category)}</p>${selected.image?`<figure class="world-reader-image" data-shared-image="${escape(selected.id)}">Loading illustration…</figure>`:''}${selected.summary?`<p class="world-reader-introduction">${escape(selected.summary)}</p>`:''}<div class="campaign-book-prose">${prose(selected.content)}</div></article>`;
+      list.querySelector('[data-world-back]').onclick=()=>backToList(s);
+      list.querySelector('[data-world-edit]')?.addEventListener('click',async()=>{
+        if(!current(s)||!canManageCampaign())return;
+        remember(s);returnToWorld={uid:s.uid,campaignId:s.id,recordId:selected.id};
+        await CampaignWorkspace.navigateTo('world',selected.id);
+      });
+    }else{
+      const query=s.root.querySelector('[data-information-search]').value.trim().toLowerCase(),category=s.root.querySelector('[data-information-category]').value;
+      const rows=s.rows.filter(row=>(!category||row.category===category)&&(!query||[row.title,row.summary,row.content].join(' ').toLowerCase().includes(query))).sort((a,b)=>a.title.localeCompare(b.title));
+      list.innerHTML=rows.map(row=>`<article data-information-id="${escape(row.id)}" class="campaign-information-card campaign-reference-card"><button type="button" class="world-post-card" data-read-world="${escape(row.id)}">${row.image?`<span class="campaign-reference-art" data-shared-image="${escape(row.id)}">Loading illustration…</span>`:`<span class="campaign-reference-art campaign-reference-placeholder" aria-hidden="true"><span>${escape(row.title.slice(0,1))}</span></span>`}<span class="world-post-card-text"><strong>${escape(row.title)}</strong><span class="campaign-reference-category">${escape(row.category)}</span><span class="campaign-reference-summary">${escape(row.summary||row.content.slice(0,180)||'Read this World post.')}</span><span class="world-post-card-action">Read post →</span></span></button></article>`).join('')||`<p class="campaign-information-empty">${s.rows.length?'No shared entries match your search.':escape(s.view.empty)}</p>`;
+      list.querySelectorAll('[data-read-world]').forEach(button=>button.onclick=()=>{
+        s.listScroll=window.scrollY;s.focusId=button.dataset.readWorld;s.selected=button.dataset.readWorld;paint(s);remember(s);
+        s.root.querySelector('[data-world-title]')?.focus();
+      });
+    }
+    loadImages(s,list);
+  }
   function update(s, rows) {
     if(!current(s)||s.denied)return;s.rows=rows;
     const select=s.root.querySelector('[data-information-category]'),selected=select.value;
     select.innerHTML='<option value="">All categories</option>'+[...new Set(rows.map(row=>row.category))].sort().map(value=>`<option>${escape(value)}</option>`).join('');
-    select.value=selected;paint(s);
+    select.value=[...select.options].some(option=>option.value===selected)?selected:'';paint(s);
     s.root.querySelector('[data-information-status]').textContent=`${rows.length} shared ${rows.length===1?'entry':'entries'}.`;
   }
   async function render(kind='world') {
     if(!clear()||!activeCampaign||!auth.currentUser)return;
+    const saved=browsing.get(browseKey(kind));
     const view=views[kind];if(!view)return;
     const root=document.getElementById('tab-'+view.tab);
     root.innerHTML=`<section class="campaign-information-shell" aria-labelledby="campaignInformationTitle"><header><p class="campaign-book-eyebrow">${escape(activeCampaign.name)}</p><h2 id="campaignInformationTitle">${view.title}</h2><p>${view.description}</p></header><div class="campaign-information-filters"><label><span>Search ${view.title.toLowerCase()}</span><input type="search" data-information-search></label><label><span>Category</span><select data-information-category><option value="">All categories</option></select></label><button class="vault-secondary-btn" type="button" data-information-refresh>Refresh</button></div><p role="status" aria-live="polite" data-information-status>Loading ${view.title.toLowerCase()}…</p><div data-information-list></div></section>`;
-    const s={id:activeCampaign.id,uid:auth.currentUser.uid,root,view,kind,rows:[],notes:new Map(),unsubscribe:null,denied:false,imageUrls:[]};session=s;s.isCurrent=()=>current(s);
+    const s={id:activeCampaign.id,uid:auth.currentUser.uid,root,view,kind,rows:[],notes:new Map(),unsubscribe:null,denied:false,imageUrls:[],selected:saved?.selected||null,listScroll:saved?.scroll||0,focusId:saved?.focusId};session=s;
+    root.querySelector('[data-information-search]').value=saved?.query||'';
+    if(saved?.category)root.querySelector('[data-information-category]').add(new Option(saved.category,saved.category,true,true));s.isCurrent=()=>current(s);
     root.querySelector('[data-information-search]').addEventListener('input',()=>paint(s));
     root.querySelector('[data-information-category]').addEventListener('change',()=>paint(s));
     root.querySelector('[data-information-refresh]').addEventListener('click',()=>render(kind));
     try {
       update(s,await view.store.list(s.id));
       if(!current(s))return;
+      if(saved&&!s.selected){const button=[...root.querySelectorAll('[data-read-world]')].find(node=>node.dataset.readWorld===s.focusId);button?.focus({preventScroll:true});window.scrollTo(0,s.listScroll);}
       s.unsubscribe=view.store.watch(s.id,rows=>update(s,rows),error=>{
-        if(!current(s))return;s.denied=true;s.unsubscribe?.();revokeImages(s);s.rows=[];s.notes.clear();root.querySelector('[data-information-list]').replaceChildren();
+        if(!current(s))return;s.denied=true;s.unsubscribe?.();revokeImages(s);root.querySelector('.campaign-information-filters').hidden=false;s.rows=[];s.notes.clear();root.querySelector('[data-information-list]').replaceChildren();
         root.querySelector('[data-information-category]').innerHTML='<option value="">All categories</option>';
         root.querySelector('[data-information-status]').textContent=`Shared information is unavailable: ${error.message}`;
       });
@@ -87,12 +136,12 @@ var CampaignInformation = (() => {
   function attachWorldSharing(host,s){
     host.querySelector('[data-entry-sharing]')?.remove();
     const section=document.createElement('section');section.dataset.entrySharing='';
-    section.innerHTML='<div class="workspace-actions"><button type="button" data-publish-entry data-publish-world disabled>Release to players</button></div><p data-sharing-status role="status">Loading publication status…</p><details><summary>Publication options</summary><button type="button" data-unpublish-world disabled>Remove from players</button><button type="button" data-refresh-sharing>Retry publication status</button></details>';
+    section.innerHTML='<h3>Release this post</h3><p data-release-includes></p><p>Players receive this version together. Later draft edits stay private until you release again.</p><div class="workspace-actions"><button type="button" data-publish-entry data-publish-world disabled>Release to players</button></div><p data-sharing-status role="status">Loading publication status…</p><details><summary>Publication options</summary><button type="button" data-unpublish-world disabled>Remove from players</button><button type="button" data-refresh-sharing>Retry publication status</button></details>';
     host.append(section);
     const store=views.world.store,button=section.querySelector('[data-publish-world]'),remove=section.querySelector('[data-unpublish-world]'),message=section.querySelector('[data-sharing-status]');
     let published=null,loaded=false,busy=false;
     const active=()=>section.isConnected&&CampaignWorkspace.session===s&&activeCampaign?.id===s.campaignId&&auth.currentUser?.uid===s.uid&&canManageCampaign();
-    const state=()=>{if(!active())return;button.disabled=!loaded||busy||s.busy||s.record.archived;remove.disabled=!loaded||busy||s.busy||!published;};
+    const state=()=>{if(!active())return;button.disabled=!loaded||busy||s.busy||s.record.archived;remove.disabled=!loaded||busy||s.busy||!published;section.querySelector('[data-release-includes]').textContent=s.record.data?.journalImage?.path?'Release includes the post, image and caption.':'Release includes the post text. Add an image above to include it.';};
     section._sharingState=state;
     const refresh=async()=>{loaded=false;state();try{const result=await store.load(s.campaignId,s.record.id);if(!active())return;published=result;loaded=true;CampaignWorkspace.configs.world.onPublicationChange?.(s,published);message.textContent=published?'Released to players. Save as draft keeps further edits private.':'Private draft. Only campaign DMs can see it.';}catch(error){if(active())message.textContent='Could not load publication status: '+error.message;}state();};
     section.querySelector('[data-refresh-sharing]').onclick=refresh;
@@ -183,7 +232,7 @@ var CampaignInformation = (() => {
   }
   function beforeNavigate(tab){return session?.view.tab===tab||clear();}
   function hasUnsavedNotes(){return !!session&&[...session.notes.values()].some(note=>note.dirty||note.saving);}
-  function onAccountChanged(uid){if(session&&session.uid!==uid)clear(true);}
-  function openWorld(id){showTab('campaign-information');if(session?.kind==='world'){session.targetId=id;if(session.rows.length)paint(session);}}
-  return {openWorld,render,clear,beforeNavigate,hasUnsavedNotes,onAccountChanged,store,npcStore,chapterStore};
+  function onAccountChanged(uid){if(session&&session.uid!==uid)clear(true);browsing.clear();returnToWorld=null;}
+  function openWorld(id){showTab('campaign-information');if(session?.kind==='world'){session.selected=id;session.targetId=id;if(session.rows.length)paint(session);}}
+  return {openWorld,decorateWorldEditor,render,clear,beforeNavigate,hasUnsavedNotes,onAccountChanged,store,npcStore,chapterStore};
 })();
