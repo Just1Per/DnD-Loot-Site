@@ -41,3 +41,11 @@ A campaign DM can choose Edit post to open that exact saved World entry. Back to
 Library uses the same section navigation as Journal: Items and Reusable content. Reusable content browses the existing personal creature/NPC templates for campaign DMs. Create campaign draft opens an independent unsaved copy in DM Workspace; it never alters the original template. Spells remain in character sheets. No new collections or permission changes are introduced by this navigation change.
 
 `npm --prefix tests run test:world-navigation` covers the full read/edit/draft/release/return flow, published illustrations, retained filters/focus, template search/import, player access, mobile layouts and WCAG checks. Existing Journal cards, campaign information, simple World and grouped app navigation suites remain in use.
+
+## NPC reading and return navigation
+
+Journal → NPCs follows the World reading pattern: cards show a name, category, portrait when shared, and an introduction before Read NPC opens a dedicated reader. Paragraphs and captions are preserved, and portrait images fit inside the reader without cropping. Back to NPCs restores the current account/campaign’s search, category, list scroll and card focus.
+
+Campaign DMs can choose Edit NPC to open the exact creature record in DM Workspace. Back to NPCs uses the existing unsaved-change guard. Saving a draft does not reveal its new text; Reveal NPC to players or Update shared version remains an explicit action. NPC illustrations still use the existing separate Share image with players control. The reader only consumes playerNPCs snapshots, so private statistics, goals and DM notes are never read for this page.
+
+No additional Firestore or Storage rule changes, data migrations or deployments are required for this navigation change. The earlier stacked map and campaign-deletion PRs retain their documented rule requirements. `npm --prefix tests run test:npc-navigation` covers reading, exact-record editing, draft isolation, explicit reveal, canceled navigation, keyboard opening, retained filters/scroll/focus, revoked entries, campaign isolation and desktop/mobile accessibility.

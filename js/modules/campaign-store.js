@@ -279,10 +279,11 @@ function createCampaignStore(sdk) {
     const before = await sdk.getDoc(sr);
     const owned = await getDocs(query(collection(db, 'campaigns', id(d.campaignId), 'inventory'), where('itemId', '==', id(d.itemId)), limit(1)));
     if (!owned.empty)
-      fail('Unloot all copies before deleting this item.');
+      fail('This item is assigned to a character. Return all copies using Unloot in Party & Loot before removing it from the campaign.');
     await runTransaction(db, async tx => {
       await access(tx, d.campaignId, true);
-      const s = await tx.get(sr);
+      const s = await tx.get(sr),item=await tx.get(ref(d.campaignId,'items',d.itemId));
+      if(!item.exists())fail('This item has already been removed. Refresh the campaign Library.');
       if (s.data()?.revision !== before.data()?.revision)
         fail('Inventory changed. Refresh and try again.');
       tx.delete(ref(d.campaignId, 'items', d.itemId));

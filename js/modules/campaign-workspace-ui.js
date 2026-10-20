@@ -140,7 +140,7 @@ var CampaignWorkspace = (() => {
     if(!canManageCampaign()||config.hideLinks)page.querySelector('[data-workspace-links]').remove();
     if(!canManageCampaign())s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>button.hidden=true);
     renderLinks();renderMarkers();mapImage();configs[s.kind].extra?.(page.querySelector('[data-extra-editor]'),s);
-    if(typeof CampaignInformation!=='undefined')CampaignInformation.decorateWorldEditor(s);
+    if(typeof CampaignInformation!=='undefined')CampaignInformation.decorateJournalEditor(s);
     const editable=config.canEdit?config.canEdit(r):true;
     for(const key of config.lockFields?.(r)||[])form.querySelector(`[data-record-field="${key}"]`).disabled=true;
     if(!editable){form.querySelectorAll('[name],[data-record-field],[data-save-record],[data-archive-record]').forEach(control=>control.disabled=true);}

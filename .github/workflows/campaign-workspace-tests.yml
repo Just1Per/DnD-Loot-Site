@@ -106,6 +106,10 @@ jobs:
         run: npm --prefix tests run test:campaign-home
       - name: Book layouts, live draft previews and standard compatibility
         run: npm --prefix tests run test:campaign-layouts
+      - name: Campaign item removal, race protection and catalogue isolation
+        run: |
+          npm --prefix tests run test:item-removal
+          npm --prefix tests run test:item-removal-rules
       - name: Campaign image CORS preparation preserves existing bucket configuration
         run: npm --prefix tests run test:campaign-image-cors
       - name: Campaign home permissions and revision conflicts
@@ -132,6 +136,7 @@ jobs:
       - name: Revealed NPC catalogue and permissions
         run: |
           npm --prefix tests run test:campaign-npcs
+          npm --prefix tests run test:npc-navigation
           npm --prefix tests run test:campaign-npcs-rules
       - name: Completed chapters and private player notes
         run: |
