@@ -48,7 +48,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.waitForFunction(()=>!document.querySelector('[data-share-entry-image]').disabled);await page.locator('[data-share-entry-image]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Illustration shared'));
  if(await page.evaluate(id=>testSheetDocs['campaigns/a/playerNPCs/'+id].content,id)!=='Shared introduction')throw Error('Updating image publishes private text');
  await page.evaluate(()=>{CampaignWorkspace.clear(true);seed('player');showTab('campaign-home')});await page.locator('[data-home-tab=campaign-npcs]').click();await page.waitForSelector('[data-information-id]');
- await page.locator('[data-information-id] summary').click();await page.waitForSelector('[data-shared-image] img');
+ await page.locator('[data-read-npc]').click();await page.waitForSelector('[data-shared-image] img');
  if(await page.locator('[data-shared-image] figcaption').textContent()!=='New saved caption')throw Error('Player caption incorrect');
  if((await page.locator('#tab-campaign-npcs').textContent()).includes('PRIVATE SECRET'))throw Error('Player sees private notes');
  await page.setViewportSize({width:390,height:844});if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Mobile overflow');
