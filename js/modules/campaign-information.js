@@ -84,8 +84,42 @@ var CampaignInformation = (() => {
       if(current(s)){s.rows=[];root.querySelector('[data-information-list]').replaceChildren();root.querySelector('[data-information-status]').textContent=`Could not load shared information: ${error.message}`;}
     }
   }
+  function attachWorldSharing(host,s){
+    host.querySelector('[data-entry-sharing]')?.remove();
+    const section=document.createElement('section');section.dataset.entrySharing='';
+    section.innerHTML='<div class="workspace-actions"><button type="button" data-publish-entry data-publish-world disabled>Release to players</button></div><p data-sharing-status role="status">Loading publication status…</p><details><summary>Publication options</summary><button type="button" data-unpublish-world disabled>Remove from players</button><button type="button" data-refresh-sharing>Retry publication status</button></details>';
+    host.append(section);
+    const store=views.world.store,button=section.querySelector('[data-publish-world]'),remove=section.querySelector('[data-unpublish-world]'),message=section.querySelector('[data-sharing-status]');
+    let published=null,loaded=false,busy=false;
+    const active=()=>section.isConnected&&CampaignWorkspace.session===s&&activeCampaign?.id===s.campaignId&&auth.currentUser?.uid===s.uid&&canManageCampaign();
+    const state=()=>{if(!active())return;button.disabled=!loaded||busy||s.busy||s.record.archived;remove.disabled=!loaded||busy||s.busy||!published;};
+    section._sharingState=state;
+    const refresh=async()=>{loaded=false;state();try{const result=await store.load(s.campaignId,s.record.id);if(!active())return;published=result;loaded=true;CampaignWorkspace.configs.world.onPublicationChange?.(s,published);message.textContent=published?'Released to players. Save as draft keeps further edits private.':'Private draft. Only campaign DMs can see it.';}catch(error){if(active())message.textContent='Could not load publication status: '+error.message;}state();};
+    section.querySelector('[data-refresh-sharing]').onclick=refresh;
+    button.onclick=async()=>{
+      if(!active()||busy||s.busy||!loaded||s.record.archived)return;
+      busy=true;s.worldReleaseBusy=true;state();
+      try{
+        if(s.dirty||!s.record.revision){if(!await CampaignWorkspace.save())return;}
+        if(!active()||s.dirty)return;
+        s.busy=true;state();message.textContent='Releasing post…';
+        published=await store.publish({campaignId:s.campaignId,id:s.record.id,sourceRevision:s.record.revision,publishedRevision:published?.revision||0,includeImage:true,isCurrent:active});
+        if(active()){CampaignWorkspace.configs.world.onPublicationChange?.(s,published);message.textContent='Released to players.';}
+      }catch(error){if(active())message.textContent='Could not release post: '+error.message;}
+      finally{busy=false;s.busy=false;s.worldReleaseBusy=false;state();}
+    };
+    remove.onclick=async()=>{
+      if(!active()||busy||s.busy||!published)return;
+      busy=true;s.busy=true;state();
+      try{await store.unpublish({campaignId:s.campaignId,id:s.record.id,publishedRevision:published.revision,isCurrent:active});if(active()){published=null;CampaignWorkspace.configs.world.onPublicationChange?.(s,null);message.textContent='Removed from players. Your draft is kept.';}}
+      catch(error){if(active())message.textContent='Could not remove post: '+error.message;}
+      finally{busy=false;s.busy=false;state();}
+    };
+    refresh();
+  }
   function attachSharing(host,s) {
     if(!views[s.kind]||!host||!canManageCampaign())return;
+    if(s.kind==='world')return attachWorldSharing(host,s);
     const npc=s.kind==='creature',chapter=s.kind==='chapter',sharingStore=views[s.kind].store;
     host.querySelector('[data-entry-sharing]')?.remove();
     const section=document.createElement('section');section.dataset.entrySharing='';section.className='campaign-world-sharing';
@@ -144,8 +178,8 @@ var CampaignInformation = (() => {
   for(const kind of Object.keys(views)){
     const config=CampaignWorkspace.configs[kind],oldExtra=config.extra,oldSaved=config.onSaved,oldEdit=config.onEdit;
     config.extra=(host,s)=>{oldExtra?.(host,s);attachSharing(host,s);};
-    config.onSaved=(host,s)=>{oldSaved?.(host,s);if(kind!=='world')oldExtra?.(host,s);attachSharing(host,s);};
-    if(oldEdit)config.onEdit=(host,s)=>{const sharing=host.querySelector('[data-entry-sharing]');oldEdit(host,s);if(sharing){host.append(sharing);sharing._sharingState?.();}else attachSharing(host,s);};
+    config.onSaved=(host,s)=>{oldSaved?.(host,s);if(kind!=='world')oldExtra?.(host,s);if(!s.worldReleaseBusy)attachSharing(host,s);};
+    if(oldEdit)config.onEdit=(host,s)=>{const sharing=host.querySelector('[data-entry-sharing]');oldEdit(host,s);if(sharing){if(sharing.parentNode!==host)host.append(sharing);sharing._sharingState?.();}else attachSharing(host,s);};
   }
   function beforeNavigate(tab){return session?.view.tab===tab||clear();}
   function hasUnsavedNotes(){return !!session&&[...session.notes.values()].some(note=>note.dirty||note.saving);}

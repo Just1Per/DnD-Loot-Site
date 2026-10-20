@@ -4,11 +4,13 @@ World Building is a campaign-owner/DM workspace for Worlds, Regions, Locations, 
 
 ## Browsing and preparation
 
-Creation starts with **Add place → Name → Description → Save**. New entries use Location unless another category filter was selected. Other entry types remain available in Entry type & summary. Name and Description appear first; sharing, notes, images/maps, connections, entry options and print start collapsed. Closing a section preserves its existing values. The illustration editor now sits inside Images & maps, after the description.
+Creation starts with **Title → Category → Description → optional Image**. Choose **Save as draft** to keep the post private, or **Release to players** to save and publish its current text and image together. Release also works for a new, unsaved post. Later draft saves do not update the released text or image. There is no separate image-sharing step for World posts.
+
+Category is always visible, including Custom… categories. Existing private DM notes, summaries, connections, private reference maps and print/archive actions remain under **More options**. The campaign map has its own workspace. These existing values survive saving and reopening; they are never copied into the player post.
 
 Category shortcuts show counts for active entries, or archived entries when **Show archived** is selected. They synchronize with the sidebar category filter. Search matches titles, summaries, descriptions and related-place/person text. Filtering keeps the selected editor and its unsaved text open.
 
-Choose **Custom…** under **Entry type & summary → Entry type**, enter a name such as **Religion**, and save the entry. The type is stored on that campaign's world entry and appears beside World, Region, Location, Faction and Lore as a reusable category shortcut and sidebar filter. No separate collection or manual move is needed. Unsaved type names are not created as empty categories.
+Choose **Custom…** under **Category**, enter a name such as **Religion**, and save the entry. The type is stored on that campaign's world entry and appears beside World, Region, Location, Faction and Lore as a reusable category shortcut and sidebar filter. No separate collection or manual move is needed. Unsaved type names are not created as empty categories.
 
 After creating an entry or changing its saved type, the list selects that type. A search or visibility filter is cleared only if it would hide that saved entry; the active/archived view follows the saved entry for this type change. Saving ordinary edits keeps the existing browsing filters. The save confirmation names the entry type. This fixes creating Religion while World was selected: the record previously saved correctly but remained hidden by the old World filter. Category choices are rebuilt from saved campaign entries after reopening and stay scoped to that campaign.
 
@@ -16,15 +18,7 @@ Player-visibility badges and filters distinguish **Private draft**, **Shared wit
 
 Sharing metadata is read from `playerInformation`, with live updates when Firebase subscriptions are available. If that metadata cannot be read, badges show **Sharing unknown** and visibility filtering is disabled. Refresh retries without replacing the editor. Workspace navigation and campaign/account changes invalidate pending reads and subscriptions, and queued callbacks after a permission failure cannot restore stale metadata.
 
-The editor separates:
-
-- **Entry details**: title, category and summary.
-- **Description for players**: description plus existing explicit sharing controls.
-- **DM preparation**: private notes and related places/people.
-- **Private map & markers**: existing image uploads and marker editing.
-- **Campaign connections**: existing links to world entries, creatures, chapters and encounters.
-
-Saving retains preparation privately. Sharing publishes only the saved title, summary, description and category through the existing sanitized snapshot transaction. Later saves remain private until explicitly shared again. Archive removes the publication atomically; restore does not republish it.
+Release publishes only the saved title, summary, description, category and selected illustration through a sanitized snapshot transaction. Save as draft retains preparation privately. Archive removes the publication atomically; restore does not republish it.
 
 Archive and Restore open a site dialog explaining archived-list access, preserved records and player visibility. Cancel is initially focused and Escape cancels. If the editor has unsaved changes, the dialog explains that confirmation saves them too. Account/campaign/record changes invalidate the pending confirmation; failed saves restore the previous archive flag. Character archive messages separately explain retained sheets, equipment and bookmarks.
 

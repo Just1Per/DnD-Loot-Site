@@ -28,7 +28,7 @@
   if(!current(s)||!s.record)return;
   const state=s.host.querySelector('[data-world-entry-state]');if(!state)return;
   const kind=visibility(s,s.record);
-  state.textContent=!s.record.revision?'New draft · Save before sharing.':s.dirty?'Unsaved changes · Players still see the previously shared version, if any.':labels[kind];
+  state.textContent=!s.record.revision?'Private draft · Save or release when ready.':s.dirty?'Unsaved changes · Players still see the previously shared version, if any.':labels[kind];
   state.dataset.visibility=s.dirty?'draft':kind;
  }
  function listed(s){
@@ -93,20 +93,24 @@
   refreshSharing(s);
  }
  const textarea=(name,label,value,max=20000,field=false)=>`<label class="workspace-field"><span>${e(label)}</span><textarea ${field?`data-record-field="${name}"`:`name="${name}"`} maxlength="${max}">${e(value)}</textarea></label>`;
- const categoryField=record=>`<label class="workspace-field"><span>Entry type</span><select data-record-field="category">${categories(W.session).map(value=>`<option value="${e(value)}" ${record.data?.category===value?'selected':''}>${e(value)}</option>`).join('')}<option value="" data-world-custom-option>Custom…</option></select></label><label class="workspace-field" data-world-custom-field hidden><span>Custom category name</span><input name="worldCustomCategory" maxlength="80" placeholder="For example, Religion or Trade route" aria-describedby="worldCustomCategoryHelp" disabled><small id="worldCustomCategoryHelp">Use 1–80 characters. Save the entry to add this type beside World, Region, Location, Faction and Lore. You can then reuse it for other entries.</small></label>`;
+ const categoryField=record=>`<label class="workspace-field"><span>Category</span><select data-record-field="category">${categories(W.session).map(value=>`<option value="${e(value)}" ${record.data?.category===value?'selected':''}>${e(value)}</option>`).join('')}<option value="" data-world-custom-option>Custom…</option></select></label><label class="workspace-field" data-world-custom-field hidden><span>Custom category name</span><input name="worldCustomCategory" maxlength="80" placeholder="For example, Religion or Trade route" aria-describedby="worldCustomCategoryHelp" disabled><small id="worldCustomCategoryHelp">Use 1–80 characters. Save the entry to add this type beside World, Region, Location, Faction and Lore. You can then reuse it for other entries.</small></label>`;
  config.editorBody=record=>`<p class="world-visibility-badge" data-world-entry-state role="status"></p>
-  <section class="world-editor-section world-entry-basics" data-world-basics><h3>${record.revision?'Describe this place or entry':'Add a place to your world'}</h3><p>Give it a name and describe the area. Saving keeps it private until you choose to share it.</p><label class="workspace-field"><span>Name</span><input name="title" required maxlength="160" placeholder="For example, Hollow Harbor" value="${e(record.title)}"></label>${textarea('content','Description',record.content)}</section>
-  <details class="world-editor-section" data-world-option="sharing"><summary>Share with players</summary><p>Share the saved description when the party discovers it. Private notes, maps and illustrations stay with the DM.</p><div data-extra-editor></div></details>
-  <details class="world-editor-section world-editor-private" data-world-option="notes"><summary>DM notes (optional)</summary>${textarea('privateNotes','Private DM notes',record.privateNotes)}</details>
-  <details class="world-editor-section" data-world-option="images"><summary>Images &amp; maps (optional)</summary><div data-journal-image-mount></div><details class="world-map-tools" data-world-option="map"><summary>Private map &amp; markers</summary><p>This is a private reference map for this World entry. Set up the main campaign map separately in DM Workspace → Map.</p><label class="workspace-field"><span>Map (PNG, JPEG, WebP · max 5 MB)</span><input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><div data-map class="workspace-map"></div><div data-marker-list></div></details></details>
-  <details class="world-editor-section world-editor-private" data-world-option="connections"><summary>Connections (optional)</summary><p>Connect saved locations, factions, NPCs, chapters and encounters. Connections stay in your DM workspace.</p>${textarea('connections','Related places and people',record.data?.connections,20000,true)}<section data-workspace-links></section></details>
-  <details class="world-editor-section" data-world-option="options"><summary>Entry type &amp; summary (optional)</summary>${categoryField(record)}${textarea('summary','Short summary',record.summary,1000)}</details>
-  <details class="world-editor-section" data-world-option="print"><summary>Print options</summary><label class="workspace-field" data-private-print><span><input type="checkbox" data-print-private> Include private preparation, illustrations and maps in print</span></label></details>`;
+  <section class="world-editor-section world-entry-basics" data-world-basics><h3>World post</h3><label class="workspace-field"><span>Title</span><input name="title" required maxlength="160" placeholder="For example, Hollow Harbor" value="${e(record.title)}"></label>${categoryField(record)}${textarea('content','Description',record.content)}<div data-journal-image-mount></div></section>
+  <div data-extra-editor></div>
+  <details class="world-editor-section" data-world-advanced><summary>More options</summary>
+  <section class="world-editor-private" data-world-option="notes">${textarea('privateNotes','Private DM notes',record.privateNotes)}</section>
+  <section data-world-option="options">${textarea('summary','Short summary',record.summary,1000)}</section>
+  <section class="world-editor-private" data-world-option="connections">${textarea('connections','Related places and people',record.data?.connections,20000,true)}<section data-workspace-links></section></section>
+  <section data-world-option="map"><p>Existing private reference image. The main campaign map is edited in DM Workspace → Map.</p><label class="workspace-field">Private reference image (optional)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><div data-map class="workspace-map"></div><div data-marker-list></div></section>
+  <label class="workspace-field" data-private-print><span><input type="checkbox" data-print-private> Include private preparation in print</span></label><div data-world-secondary-actions></div></details>`;
  config.initialData=s=>({category:s.host.querySelector('[data-workspace-category]')?.value||'Location'});
  config.toolbar=toolbar;config.onListed=listed;config.hideNavigation=true;
  config.searchText=row=>[row.content,row.data?.connections].join(' ');
- config.help='Build your world, regions, locations, factions and lore. Keep player descriptions separate from DM preparation, then share discoveries when your party is ready.';
+ config.help='Write a World post. Save it as a private draft or release it to your players.';
  config.extra=(_host,s)=>{
+  s.host.querySelector('[data-save-record]').textContent='Save as draft';
+  const secondary=s.host.querySelector('[data-world-secondary-actions]');
+  for(const selector of ['[data-archive-record]','[data-preview-record]','[data-print-record]'])secondary.append(s.host.querySelector(selector));
   s.worldSavedCategory=s.record.revision?s.record.data?.category:null;
   const select=s.host.querySelector('[data-record-field="category"]'),field=s.host.querySelector('[data-world-custom-field]'),input=field.querySelector('input'),option=select.querySelector('[data-world-custom-option]');
   input.value=config.categories.includes(s.record.data?.category)?'':s.record.data?.category||'';
@@ -119,7 +123,7 @@
   };
   select.addEventListener('change',()=>{syncCustom();if(!field.hidden)input.focus();});
   input.addEventListener('input',syncCustom);
-  input.addEventListener('invalid',()=>field.closest('details').open=true);
+  input.addEventListener('invalid',()=>{field.hidden=false;});
   if(s.record.revision){const index=s.rows.findIndex(row=>row.id===s.record.id);if(index>=0)s.rows[index]={...s.rows[index],...s.record};}
   W.renderList();entryState(null,s);
  };
@@ -140,7 +144,7 @@
   }
   entryState(null,s);
  };
- config.savedMessage=s=>'All changes saved. Entry type: '+(s.record.data?.category||'Location')+'.';
+ config.savedMessage=s=>'Draft saved. Category: '+(s.record.data?.category||'Location')+'.';
  config.onPublicationChange=(s,published)=>{
   if(!current(s))return;
   s.worldKnown.add(s.record.id);if(published)s.worldPublications.set(s.record.id,published);else s.worldPublications.delete(s.record.id);

@@ -74,6 +74,13 @@ const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-s
    await env.withSecurityRulesDisabled(context=>sdk.updateDoc(sdk.doc(context.firestore(),'campaigns/a/members/player'),{status:'inactive'}));
    await assertFails(stores.player.list('a'));
   });
+  await check('One-action World release publishes the saved image atomically and retains private notes',async()=>{
+   const input={title:'Harbour',summary:'',content:'A city by the sea',privateNotes:'Secret keeper',data:{category:'Location',journalImage:{path:'campaign-journal-images/a/world/harbour/first',alt:'Harbour lights',caption:'At dusk',uploadedBy:'dm',uploadedAt:1}}};
+   await workspace.save({campaignId:'a',kind:'world',id:'harbour',revision:0,input});
+   const result=await assertSucceeds(stores.dm.publish({campaignId:'a',id:'harbour',sourceRevision:1,includeImage:true}));
+   assert.equal(result.image.path,input.data.journalImage.path);assert.ok(!JSON.stringify(result).includes('Secret keeper'));
+   await assertFails(stores.outsider.publish({campaignId:'a',id:'harbour',sourceRevision:1,includeImage:true}));
+  });
   console.log('SUCCESS',count,'campaign information permission checks');
  }finally{await env.cleanup();}
 })().catch(error=>{console.error(error);process.exitCode=1});
