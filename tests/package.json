@@ -40,6 +40,8 @@
     "test:campaign-chapters": "node campaign-chapters-browser.cjs",
     "test:campaign-chapters-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-chapters-rules.cjs\"",
     "test:app-navigation": "node app-navigation-browser.cjs",
+    "test:campaign-deletion": "node campaign-deletion-browser.cjs",
+    "test:campaign-deletion-rules": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-deletion-rules.cjs\"",
     "test:dm-workspace": "node dm-workspace-browser.cjs",
     "test:simple-world": "node simple-world-browser.cjs",
     "test:world-navigation": "node world-navigation-browser.cjs",

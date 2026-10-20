@@ -12,6 +12,7 @@ const {doc, setDoc, getDoc, updateDoc} = require('firebase/firestore');
       for (const [path, data] of Object.entries({
         'campaigns/a':{name:'Storm Coast',ownerId:'owner',dmId:'owner'},
         'campaigns/b':{name:'Another campaign',ownerId:'other',dmId:'other'},
+        'campaigns/a/workspaceSecrets/world-private':{notes:'DM preparation'},
         'campaigns/a/members/dm':{role:'dm',status:'active'},
         'campaigns/a/members/player':{role:'player',status:'active'},
         'campaigns/a/members/revoked':{role:'dm',status:'inactive'},
@@ -32,7 +33,10 @@ const {doc, setDoc, getDoc, updateDoc} = require('firebase/firestore');
     });
     await check('Players, removed DMs, outsiders and global admins cannot edit', async()=>{
       for(const uid of ['player','revoked','outsider','admin'])await assertFails(write(uid,{...page,revision:3}));
-      for(const uid of ['revoked','outsider','admin'])await assertFails(getDoc(doc(db[uid],'campaigns/a')));
+      for(const uid of ['revoked','outsider'])await assertFails(getDoc(doc(db[uid],'campaigns/a')));
+      // Admin campaign management reads root metadata, never private preparation.
+      assert.equal((await assertSucceeds(getDoc(doc(db.admin,'campaigns/a')))).data().name,'Storm Coast');
+      await assertFails(getDoc(doc(db.admin,'campaigns/a/workspaceSecrets/world-private')));
     });
     await check('Cross-campaign edits and owner transfers remain denied', async()=>{
       await assertFails(write('dm',page,'b'));

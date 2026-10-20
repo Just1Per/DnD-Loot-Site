@@ -364,9 +364,53 @@ function openAdminView() {
   renderUserTable();
   renderAdminDMRequests();
   AppNavigation.remember('admin');
+  CampaignDeletion.renderAdmin();
 }
 function closeAdminView() {
   document.getElementById("adminTab").setAttribute("aria-pressed", "false");
   if (activeCampaign) { showMainApp(); showTab(adminReturnTab); }
   else showCampaignSelector();
 }
+
+var CampaignDeletion=(()=>{
+ const store=createCampaignDeletionStore(window.__DND_VAULT_DEPS__);
+ const permitted=campaign=>!!auth.currentUser?.uid&&(isAdmin()||campaign?.ownerId===auth.currentUser.uid)&&!campaign?.deletedAt;
+ async function request(campaign){
+  if(!permitted(campaign))return false;
+  if(!PageEditors.guard(()=>request(campaign))||!SheetNavigation.guard(()=>request(campaign)))return false;
+  if(!CampaignWorkspace.beforeNavigate('campaign-delete')||!CampaignMap.guard(()=>request(campaign)))return false;
+  const uid=auth.currentUser.uid,activeId=activeCampaign?.id;
+  const current=()=>auth.currentUser?.uid===uid&&activeCampaign?.id===activeId&&permitted(campaign);
+  const confirmed=await SiteConfirmation.ask({title:'Delete “'+campaign.name+'”?',paragraphs:['This removes the campaign from the app for everyone and ends access to its characters, items, journal and images.','Stored campaign records and files are retained for recovery. This does not permanently erase them. Only an administrator or the campaign owner can delete a campaign.'],confirmLabel:'Delete campaign',isCurrent:current});
+  if(!confirmed||!current())return false;
+  try{
+   await store.remove({campaignId:campaign.id,isCurrent:current});if(!current())return true;
+   campaigns=campaigns.filter(row=>row.id!==campaign.id);dashboardCharacters=dashboardCharacters.filter(row=>row.campaignId!==campaign.id);
+   if(activeCampaign?.id===campaign.id)await leaveCampaign();
+   else if(document.getElementById('tab-admin')?.style.display==='block')await renderAdmin();
+   else renderCampaignSelector();
+   return true;
+  }catch(error){if(current())alert('Could not delete campaign: '+error.message);return false;}
+ }
+ function button(campaign){const node=document.createElement('button');node.type='button';node.dataset.deleteCampaign=campaign.id;node.textContent='Delete campaign';node.setAttribute('aria-label','Delete campaign '+campaign.name);node.onclick=()=>runVaultButton(node,()=>request(campaign));return node;}
+ function mountDashboard(list){
+  for(const node of [...list.querySelectorAll('[data-campaign-id]')]){
+   const campaign=campaigns.find(row=>row.id===node.dataset.campaignId);if(!permitted(campaign))continue;
+   const row=document.createElement('div');row.style.cssText='display:flex;gap:10px;align-items:center;flex-wrap:wrap';node.before(row);row.append(node,button(campaign));
+  }
+ }
+ function mountSettings(){
+  document.getElementById('campaignDeletionSettings')?.remove();
+  const host=document.querySelector('#campaignSettingsPanel .dm-tools-grid');if(!host||!permitted(activeCampaign))return;
+  const section=document.createElement('section');section.id='campaignDeletionSettings';section.className='dm-tool-card';section.innerHTML='<h2>Delete campaign</h2><p>Remove this campaign for everyone. Stored records are retained for recovery.</p>';section.append(button(activeCampaign));host.append(section);
+ }
+ async function renderAdmin(){
+  const parent=document.getElementById('adminPanel');if(!parent||!isAdmin())return;
+  document.getElementById('adminCampaignManagement')?.remove();
+  const section=document.createElement('section');section.id='adminCampaignManagement';section.className='admin-section';section.innerHTML='<h2>Campaigns</h2><p>Delete a campaign to remove it from the app and end member access. Records are retained for recovery.</p><p data-campaign-management-status role="status">Loading campaigns…</p><div data-admin-campaigns></div>';parent.append(section);
+  const uid=auth.currentUser?.uid,current=()=>auth.currentUser?.uid===uid&&isAdmin()&&section.isConnected&&document.getElementById('tab-admin').style.display==='block';
+  try{const rows=await store.list();if(!current())return;section.querySelector('[data-campaign-management-status]').textContent=rows.length+' active campaigns';const list=section.querySelector('[data-admin-campaigns]');for(const campaign of rows){const row=document.createElement('div');row.className='dashboard-campaign-card';const title=document.createElement('strong');title.textContent=campaign.name||'Unnamed campaign';row.append(title,button(campaign));list.append(row);}}
+  catch(error){if(current()){section.querySelector('[data-campaign-management-status]').textContent='Could not load campaigns: '+error.message;const retry=document.createElement('button');retry.type='button';retry.textContent='Retry loading campaigns';retry.onclick=renderAdmin;section.append(retry);}}
+ }
+ return{request,mountDashboard,mountSettings,renderAdmin,store};
+})();
