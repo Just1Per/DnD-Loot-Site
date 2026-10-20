@@ -70,7 +70,7 @@ function invitePath(inviteId) {
 }
 
 function campaignExists(campaignId) {
-  return exists(campaignPath(campaignId));
+  return exists(campaignPath(campaignId)) && !('deletedAt' in get(campaignPath(campaignId)).data);
 }
 
 function isCampaignOwner(campaignId) {
@@ -80,7 +80,7 @@ function isCampaignOwner(campaignId) {
 }
 
 function isActiveMember(campaignId) {
-  return signedIn()
+  return signedIn() && campaignExists(campaignId)
     && exists(memberPath(campaignId, request.auth.uid))
     && get(memberPath(campaignId, request.auth.uid)).data.status == "active";
 }
@@ -109,7 +109,7 @@ function inviteBelongsToCurrentUser(inviteData) {
 // Used by the invitee while accepting an invitation. The invite must be
 // pending before the batch and accepted by this same user after the batch.
 function validInviteMembershipWrite(campaignId, uid) {
-  return isSelf(uid)
+  return campaignExists(campaignId) && isSelf(uid)
     && "inviteId" in request.resource.data
     && request.resource.data.inviteId is string
     && request.resource.data.uid == uid
@@ -127,7 +127,7 @@ function validInviteMembershipWrite(campaignId, uid) {
 }
 
 function validInviteUserIndexWrite(uid, campaignId) {
-  return isSelf(uid)
+  return campaignExists(campaignId) && isSelf(uid)
     && "inviteId" in request.resource.data
     && request.resource.data.inviteId is string
     && request.resource.data.role in ["player", "dm"]
@@ -365,8 +365,8 @@ match /campaignInvites/{inviteId} {
 match /campaigns/{campaignId} {
   // Players should discover campaign IDs through users/{uid}/campaigns,
   // then fetch only campaigns they belong to.
-  allow read: if isCampaignOwner(campaignId)
-    || isActiveMember(campaignId);
+  allow get: if isAdmin() || isCampaignOwner(campaignId) || isActiveMember(campaignId);
+  allow list: if isAdmin();
 
   function validFrontPage(page) {
     return page is map
@@ -385,7 +385,7 @@ match /campaigns/{campaignId} {
       && page.revision is int && page.revision > 0;
   }
 
-  allow create: if canCreateCampaigns()
+  allow create: if canCreateCampaigns() && !('deletedAt' in request.resource.data) && !('deletedBy' in request.resource.data)
     && request.resource.data.ownerId == request.auth.uid
     && request.resource.data.dmId == request.auth.uid
     && request.resource.data.name is string;
@@ -398,7 +398,12 @@ match /campaigns/{campaignId} {
         && request.resource.data.frontPage.revision == (('frontPage' in resource.data) ? resource.data.frontPage.revision + 1 : 1)))
     && request.resource.data.name is string
     && (!('allowedEditions' in request.resource.data) || (request.resource.data.allowedEditions is list && request.resource.data.allowedEditions.size() >= 1 && request.resource.data.allowedEditions.size() <= 2 && request.resource.data.allowedEditions.hasOnly(['2014', '2024']) && (request.resource.data.allowedEditions.size() == 1 || request.resource.data.allowedEditions.hasAll(['2014', '2024']))));
-  allow delete: if isCampaignOwner(campaignId);
+  // The tombstone reserves the ID and gates all membership-based access.
+  allow update: if campaignExists(campaignId) && (isCampaignOwner(campaignId) || isAdmin())
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deletedAt','deletedBy','updatedAt'])
+    && request.resource.data.deletedAt is int && request.resource.data.deletedAt > 0
+    && request.resource.data.deletedBy == request.auth.uid && request.resource.data.updatedAt is int;
+  allow delete: if false;
 
   // Connected campaign workspace. Public descriptions and private notes are separate.
   // Images are a deliberate snapshot separate from the published text.
@@ -541,11 +546,33 @@ match /campaigns/{campaignId} {
         let map = publishedMap();
         return 'schemaVersion' in map ? resource.data.publishedRevision == map.revision : resource.data.imagePath == map.imagePath;
       }
+      function validRegionPoint(point) {
+        return point is map && point.keys().hasAll(['x','y']) && point.keys().hasOnly(['x','y'])
+          && point.x is number && point.x >= 0 && point.x <= 100
+          && point.y is number && point.y >= 0 && point.y <= 100;
+      }
+      function validRegionBoundary(d) {
+        return !('boundary' in d) || (d.boundary is list && (d.boundary.size() == 0 || (
+          d.type == 'Region' && d.boundary.size() >= 3 && d.boundary.size() <= 12
+          && (d.boundary.size() <= 0 || validRegionPoint(d.boundary[0]))
+          && (d.boundary.size() <= 1 || validRegionPoint(d.boundary[1]))
+          && (d.boundary.size() <= 2 || validRegionPoint(d.boundary[2]))
+          && (d.boundary.size() <= 3 || validRegionPoint(d.boundary[3]))
+          && (d.boundary.size() <= 4 || validRegionPoint(d.boundary[4]))
+          && (d.boundary.size() <= 5 || validRegionPoint(d.boundary[5]))
+          && (d.boundary.size() <= 6 || validRegionPoint(d.boundary[6]))
+          && (d.boundary.size() <= 7 || validRegionPoint(d.boundary[7]))
+          && (d.boundary.size() <= 8 || validRegionPoint(d.boundary[8]))
+          && (d.boundary.size() <= 9 || validRegionPoint(d.boundary[9]))
+          && (d.boundary.size() <= 10 || validRegionPoint(d.boundary[10]))
+          && (d.boundary.size() <= 11 || validRegionPoint(d.boundary[11]))
+        )));
+      }
       function validPublishedPin(d) {
         let map = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data;
         let previous = publishedMap();
         return mapId == 'main' && d.keys().hasAll(['name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
-          && d.keys().hasOnly(['name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
+          && d.keys().hasOnly(['markerStyle','boundary','name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
           && d.schemaVersion == 2 && map.schemaVersion == 2 && d.publishedRevision == map.revision
           && (!exists(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main) || map.revision > previous.revision)
           && d.revision == map.revision && d.updatedBy == request.auth.uid && d.updatedAt is int
@@ -553,6 +580,8 @@ match /campaigns/{campaignId} {
           && d.description is string && d.description.size() <= 2000
           && d.x is number && d.x >= 0 && d.x <= 100 && d.y is number && d.y >= 0 && d.y <= 100
           && d.type in ['City','Region'] && d.imagePath == map.imagePath
+          && (!('markerStyle' in d) || d.markerStyle in ['Location','City','Castle','Landmark','Point of interest'])
+          && validRegionBoundary(d)
           && d.picturePath is string && (d.picturePath == '' || d.picturePath.matches('^campaign-map-place-images/' + campaignId + '/' + pinId + '/[A-Za-z0-9_-]{1,100}$'))
           && d.pictureAlt is string && d.pictureAlt.size() <= 200 && (d.picturePath == '' || d.pictureAlt.size() > 0)
           && d.worldEntryId is string && (d.worldEntryId == '' || d.worldEntryId.matches('^[A-Za-z0-9_-]{1,100}$'));
@@ -749,7 +778,7 @@ match /campaigns/{campaignId} {
     // read their own membership record.
     allow read: if isCampaignDM(campaignId)
       || isActiveMember(campaignId)
-      || isSelf(uid);
+      || (campaignExists(campaignId) && isSelf(uid));
 
     // Campaign DMs manage member roles and statuses.
     allow create: if validInviteMembershipWrite(campaignId, uid)

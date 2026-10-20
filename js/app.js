@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261020-world-navigation-v2";
+const ASSET_VERSION = "20261020-campaign-deletion-v2";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -67,6 +67,7 @@ if (!document.querySelector('link[data-character-adobe-integration]')) {
 const FEATURE_FILES = [
   "./modules/shared-catalogue-policy.js",
   "./modules/campaign-rules.js",
+  "./modules/campaign-deletion-store.js",
   "./modules/campaign-workspace-store.js",
   "./modules/campaign-information-store.js",
   "./modules/chapter-notes-store.js",

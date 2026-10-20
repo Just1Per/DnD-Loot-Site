@@ -1,4 +1,5 @@
 let fixtureItems=[],fixtureInventory=[],fixtureSupply={};
+loadItemsFromFirestore=async()=>{}; // Catalogue data is explicitly seeded below; loader behavior has its own browser coverage.
 markCatalogChanged=async()=>{};loadDashboardCharacters=async()=>{};observePendingImages=()=>{};
 itemImageMarkup=()=>'<div class="test-art"></div>';
 loadCampaignItems=async()=>{items=structuredClone(fixtureItems).filter(i=>canManageCampaign()||i.visible).map(i=>({...i,campaign:activeCampaign.name}));};

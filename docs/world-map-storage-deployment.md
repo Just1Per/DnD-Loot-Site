@@ -209,3 +209,13 @@ permissions, MIME/size restrictions, and immutable map uploads.
 
 The repository intentionally does **not** automatically deploy Storage rules
 when opening or merging a PR; that is a separate production security change.
+
+## Marker styles and named regions
+
+DM Workspace → Map supports five point-marker styles: Location, City, Castle, Landmark and Point of interest. These are presentation choices for a location/city. Region is a separate area type: use Add a region area, give it a name and description, and draw 3–12 boundary corners. Undo corner and Redraw boundary adjust the shape. Keyboard users can add corners using percentage coordinates. Finish boundary validates a nonzero area without repeated corners or crossing edges; Keep place in draft retains it in the working draft.
+
+Regions have the existing picture, shared-World link and Reveal to players controls. Their shaded boundaries and labels open the same description as the accessible places list. Hidden regions, including their geometry and names, are omitted from the published snapshot. Saving a draft does not change the player map. Publishing sends revealed points and regions atomically. Existing point and region markers without boundaries remain readable and normalize with their previous City style.
+
+**Deploy the updated Firestore rules with this feature.** Published pins now allow validated optional `markerStyle` and `boundary` fields. Rules limit boundaries to 3–12 numeric points in the map bounds, reject extra vertex fields, and permit nonempty geometry only on a Region. Revision, membership, private-draft and publication checks are retained. Storage rules are unchanged; no production migration is needed. No deployment or migration is performed by preparing this PR.
+
+Validation: `npm --prefix tests run test:map-styles-regions` exercises geometry, all five styles, pointer/keyboard drawing, undo/redraw, hidden areas, publication, reading, mobile layout and accessibility. The existing campaign-map browser suite and `test:campaign-map-rules` remain required, including malformed geometry and atomic publication checks.

@@ -244,7 +244,7 @@ async function loadCampaigns() {
   );
 
   indexedCampaignDocs.forEach((snap, idx) => {
-    if (!snap?.exists()) return;
+    if (!snap?.exists() || snap.data().deletedAt) return;
     const refData = refs[idx];
     campaignMap.set(snap.id, {
       id: snap.id,
