@@ -4,7 +4,7 @@ The owner wants the shared catalogue limited to material with documented redistr
 
 ## What can be verified now
 
-Repository rules make `/items` publicly readable. Legacy `/dnd-item-images` artwork is also public. Removing a catalogue record alone does not privatize its artwork, cached content, or copies already made in other campaigns. The current `js/items.js` export is empty; its commented list of books is not a database inventory. The Adobe magic-item reference is a separate names/mechanics reference, not the live shared item collection.
+Repository rules make `/items` publicly readable. Legacy `/dnd-item-images` artwork is also public. Removing a catalogue record alone does not privatize its artwork, cached content, or copies already made in other campaigns. The retired empty seed export and commented book list were not a database inventory. The Adobe magic-item reference is a separate names/mechanics reference, not the live shared item collection.
 
 `data/rules/srd-magic-item-text-hashes.json` contains 1,259 name/text fingerprints from pinned Open5e-normalized SRD 5.1 and SRD 5.2 records. Their source Document records explicitly list CC-BY-4.0. The index records original-source digests and attribution links and includes no item descriptions. Rebuild with:
 
