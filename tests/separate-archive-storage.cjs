@@ -1,0 +1,111 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),os=require('node:os');
+const ready=Promise.all([import('../scripts/item-catalogue-migration.mjs'),import('../scripts/item-catalogue-migration-firebase.mjs'),import('../scripts/archive-storage.mjs')]);
+function storage(name,{uniform,projectNumber='123',pap='enforced'}={}){
+ const objects=new Map(),events=[];let generation=1;
+ const metadata={projectNumber,iamConfiguration:{uniformBucketLevelAccess:{enabled:uniform},publicAccessPrevention:pap}},policy={bindings:[]};
+ const bucket={getMetadata:async()=>[metadata],iam:{getPolicy:async()=>[policy]},getFiles:async({prefix})=>[[...objects.keys()].filter(key=>key.startsWith(prefix)).map(key=>bucket.file(key))],file:(key,settings={})=>({name:key,exists:async()=>[objects.has(key)],getMetadata:async()=>{assert.ok(objects.has(key));return [structuredClone(objects.get(key).metadata)]},download:async()=>{const row=objects.get(key);assert.ok(row);if(settings.generation)assert.equal(settings.generation,row.metadata.generation);return [row.bytes]},save:async(bytes,options)=>{assert.equal(options.preconditionOpts.ifGenerationMatch,0);assert.equal(options.validation,'crc32c');assert.ok(!objects.has(key));events.push('save:'+key);objects.set(key,{bytes:Buffer.from(bytes),metadata:{...options.metadata,generation:String(generation++),metageneration:'1',size:String(bytes.length)}})},delete:async options=>{assert.equal(String(options.ifGenerationMatch),objects.get(key).metadata.generation);events.push('delete:'+key);objects.delete(key)}})};
+ return {bucket,metadata,policy,objects,events};
+}
+async function fixture(){
+ const [M,F]=await ready,source=storage('demo-source',{uniform:false}),archive=storage('demo-archive',{uniform:true}),directory=await fs.mkdtemp(path.join(os.tmpdir(),'separate-archive-'));
+ for(const id of ['a','b'])source.objects.set('dnd-item-images/'+id+'.png',{bytes:Buffer.from(id),metadata:{generation:'1',metageneration:'1',contentType:'image/png',size:'1',metadata:{firebaseStorageDownloadTokens:'old-token'}}});
+ const project='demo-vault-test',documents=['a','b'].map(id=>({name:`projects/${project}/databases/(default)/documents/items/${id}`,updateTime:'2026-10-16T10:00:00Z',fields:M.encodeFields({name:id,description:'Original',imageUrl:`https://storage.googleapis.com/demo-source/dnd-item-images/${id}.png`})}));
+ const manifest={format:1,targetLibraryOwnerId:'owner',retireLegacyArtwork:true,artworkPolicy:{mode:'preserve-generated',origin:'ChatGPT-generated',evidence:'Synthetic instruction'},decisions:documents.map((doc,i)=>({id:i?'b':'a',sourceSha256:M.fieldsHash(doc.fields),action:i?'retire':'publish',approved:true,reviewedBy:'Synthetic owner',reviewedAt:'2026-10-16T12:00:00Z',...i?{}:{replacement:{name:'Original',description:'New text'},rights:{license:'ORIGINAL',attribution:'Author',evidence:'Synthetic'}}}))};
+ const plan=M.buildMigrationPlan({project,collection:'items',documents},manifest,{project,libraryOwnerId:'owner',storage:{sourceBucket:'demo-source',archiveBucket:'demo-archive'}}),heads=[];
+ let status=403;
+ const port=await F.createMigrationPort({project,bucket:'demo-source',archiveBucket:'demo-archive',backupDirectory:path.join(directory,'backup'),services:{bucket:source.bucket,archiveBucket:archive.bucket,firestoreOrigin:'http://127.0.0.1:8080',credential:{},fetcher:async(url,options)=>{assert.equal(options.method,'HEAD');assert.equal(options.headers,undefined);heads.push(url);return {status}}}});
+ return {M,source,archive,plan,port,heads,setStatus:n=>status=n,cleanup:()=>fs.rm(directory,{recursive:true,force:true})};
+}
+test('fine-grained source remains unchanged while archive bytes, token removal and bucket references verify before retirement',async()=>{
+ const h=await fixture();try{
+ const assets=await h.port.inspectArtwork(h.plan);assert.equal(assets.length,2);assert.deepEqual(h.source.events,[]);assert.deepEqual(h.archive.events,[]);
+ await assert.rejects(h.port.copyAndVerifyArtwork(h.plan,assets),/backup/);
+ await h.port.backup(h.plan,assets);await h.port.copyAndVerifyArtwork(h.plan,assets);
+ assert.equal(h.archive.objects.size,2);assert.equal(h.source.objects.size,2);assert.ok(h.heads.every(url=>url.startsWith('https://storage.googleapis.com/demo-archive/')));
+ for(const item of h.plan.items){const subset=await h.port.assetsForItem(item,assets),docs=h.M.privateDocuments(h.plan,item,subset);assert.equal(docs.copy.archivedImage.mapValue.fields.bucket.stringValue,'demo-archive');assert.equal(docs.archive.assets.arrayValue.values[0].mapValue.fields.bucket.stringValue,'demo-archive');}
+ await h.port.retireArtwork(h.plan,assets);assert.ok(h.source.objects.has('dnd-item-images/a.png'));assert.ok(!h.source.objects.has('dnd-item-images/b.png'));assert.equal(h.source.metadata.iamConfiguration.uniformBucketLevelAccess.enabled,false);assert.equal(h.archive.objects.size,2);
+ }finally{await h.cleanup()}
+});
+test('mismatched destination, project, missing PAP or public IAM stops without writes',async()=>{
+ const h=await fixture();try{
+ await assert.rejects(h.port.inspectArtwork({...h.plan,storage:{sourceBucket:'demo-source',archiveBucket:'wrong-bucket'}}),/pinned/);
+ h.archive.metadata.projectNumber='999';await assert.rejects(h.port.inspectArtwork(h.plan),/source project/);h.archive.metadata.projectNumber='123';
+ h.archive.metadata.iamConfiguration.publicAccessPrevention='inherited';await assert.rejects(h.port.inspectArtwork(h.plan),/prevention/);h.archive.metadata.iamConfiguration.publicAccessPrevention='enforced';
+ h.archive.policy.bindings=[{members:['allUsers']}];await assert.rejects(h.port.inspectArtwork(h.plan),/public/);
+ assert.deepEqual(h.source.events,[]);assert.deepEqual(h.archive.events,[]);
+ const changed=structuredClone(h.plan);changed.storage.archiveBucket='other-private';assert.throws(()=>h.M.assertPlan(changed),/digest/);
+ }finally{await h.cleanup()}
+});
+test('changed private bytes, tokens, anonymous access and changed source generation prevent deletion',async()=>{
+ for(const failure of ['bytes','token','public','missing','generation']){
+ const h=await fixture();try{
+ const assets=await h.port.inspectArtwork(h.plan);await h.port.backup(h.plan,assets);await h.port.copyAndVerifyArtwork(h.plan,assets);
+ const row=h.archive.objects.get(assets[0].privatePath);
+ if(failure==='bytes')row.bytes=Buffer.from('changed');if(failure==='token')row.metadata.metadata.firebaseStorageDownloadTokens='must-stop';if(failure==='public')h.setStatus(200);if(failure==='missing')h.setStatus(404);if(failure==='generation')h.source.objects.get('dnd-item-images/b.png').metadata.generation='999';
+ await assert.rejects(h.port.retireArtwork(h.plan,assets));assert.equal(h.source.objects.size,2);
+ }finally{await h.cleanup()}
+ }
+});
+test('only the exact zero-byte root folder marker is skipped and left untouched during retirement',async()=>{
+ const h=await fixture();try{
+ h.source.objects.set('dnd-item-images/',{bytes:Buffer.alloc(0),metadata:{size:'0',generation:'9',contentType:'application/x-www-form-urlencoded;charset=UTF-8'}});
+ const assets=await h.port.inspectArtwork(h.plan);assert.equal(assets.length,2);assert.ok(assets.every(asset=>asset.sourcePath!=='dnd-item-images/'));
+ await h.port.backup(h.plan,assets);await h.port.copyAndVerifyArtwork(h.plan,assets);await h.port.retireArtwork(h.plan,assets);
+ assert.ok(h.source.objects.has('dnd-item-images/'));assert.ok(!h.source.events.includes('delete:dnd-item-images/'));assert.equal(h.archive.objects.size,2);
+ }finally{await h.cleanup()}
+});
+test('nonempty markers and other unexpected objects still block; a changed marker prevents retirement',async()=>{
+ for(const name of ['dnd-item-images/','dnd-item-images/other']){
+ const h=await fixture();try{
+ h.source.objects.set(name,{bytes:Buffer.from('x'),metadata:{size:name.endsWith('/')?'1':'0',contentType:'application/x-www-form-urlencoded;charset=UTF-8'}});
+ await assert.rejects(h.port.inspectArtwork(h.plan),/Unexpected legacy object type/);assert.deepEqual(h.source.events,[]);
+ }finally{await h.cleanup()}
+ }
+ const h=await fixture();try{
+ const assets=await h.port.inspectArtwork(h.plan);await h.port.backup(h.plan,assets);await h.port.copyAndVerifyArtwork(h.plan,assets);
+ h.source.objects.set('dnd-item-images/',{bytes:Buffer.from('x'),metadata:{size:'1'}});
+ await assert.rejects(h.port.retireArtwork(h.plan,assets),/folder marker changed/);assert.equal(h.source.objects.size,3);assert.deepEqual(h.source.events,[]);
+ }finally{await h.cleanup()}
+});
+test('transient Firestore GET responses retry with bounded backoff and no response-body or URL disclosure',async()=>{
+ const [,F]=await ready;const waits=[],logs=[],calls=[];let attempts=0,cancelled=0;
+ const result=await F.firestoreReadResponse(async(url,options)=>{calls.push(options.method);assert.ok(options.signal);return ++attempts<4?{status:503,body:{cancel:async()=>{cancelled++}}}:{status:200}},'https://example.invalid/PRIVATE_PATH',{method:'GET'},{sleep:async ms=>waits.push(ms),onRetry:message=>logs.push(message)});
+ assert.equal(result.status,200);assert.deepEqual(waits,[1000,2000,4000]);assert.equal(cancelled,3);assert.equal(calls.length,4);assert.doesNotMatch(logs.join('\n'),/PRIVATE_PATH|example.invalid/);
+});
+test('persistent read failures stop after four attempts; writes and authorization errors are never retried',async()=>{
+ const [,F]=await ready;
+ for(const [method,status,expected] of [['GET',503,4],['GET',403,1],['GET',401,1],['GET',404,1],['POST',503,1],['DELETE',503,1]]){
+ let calls=0;const response=await F.firestoreReadResponse(async()=>{calls++;return {status}},'https://example.invalid',{method},{sleep:async()=>{},onRetry:()=>{}});assert.equal(response.status,status);assert.equal(calls,expected);
+ }
+});
+test('offline image diagnostic reports only format counts, without private URLs, values or tokens',async()=>{
+ const {imageReferenceSummary}=await import('../scripts/diagnose-library-images.mjs');
+ const plan={storage:{sourceBucket:'private-bucket'},items:['https://firebasestorage.googleapis.com/v0/b/private-bucket/o/dnd-item-images%2FSECRET.png?token=SECRET_TOKEN','/SECRET.png','dnd-item-images/SECRET.png','https://SECRET.example/SECRET','gs://private-bucket/SECRET','placeholder.png'].map(value=>({source:{fields:{imageUrl:{stringValue:value},imageBaseId:{stringValue:'SECRET'}}}}))};
+ const result=imageReferenceSummary(plan);assert.equal(result.items,6);assert.equal(result.withImageBaseId,6);assert.deepEqual(result.referenceFormats.imageUrl,{'firebase-source-bucket':1,'root-relative':1,'storage-relative':1,'other-https':1,'gs-uri':1,placeholder:1});assert.doesNotMatch(JSON.stringify(result),/SECRET|private-bucket/);
+});
+test('obsolete image metadata never blocks website ID artwork and is preserved verbatim in original archives',async()=>{
+ const h=await fixture();try{
+ for(const item of h.plan.items){delete item.source.fields.imageUrl;item.source.fields.image=h.M.encode(item.id==='a'?'https://legacy.invalid/SECRET?token=SECRET':'old-label-not-a-url');item.sourceSha256=h.M.fieldsHash(item.source.fields);}
+ const assets=await h.port.inspectArtwork(h.plan);assert.equal(assets.unresolved.length,0);assert.equal(assets.diagnostics.legacyImageMetadataPreserved,2);assert.equal(assets.diagnostics.itemsWithStoredArtwork,2);assert.doesNotMatch(JSON.stringify(assets.diagnostics),/SECRET|old-label/);
+ await h.port.backup(h.plan,assets);await h.port.copyAndVerifyArtwork(h.plan,assets);
+ const docs=h.M.privateDocuments(h.plan,h.plan.items[0],await h.port.assetsForItem(h.plan.items[0],assets));assert.deepEqual(docs.archive.original.mapValue.fields.image,h.plan.items[0].source.fields.image);assert.ok(docs.copy.archivedImage);
+ assert.ok(assets.find(asset=>asset.sourcePath==='dnd-item-images/a.png').shared);await h.port.retireArtwork(h.plan,assets);assert.ok(h.source.objects.has('dnd-item-images/a.png'));
+ }finally{await h.cleanup()}
+});
+test('active external/missing references and explicit missing imageBaseId still block even with obsolete image metadata',async()=>{
+ const h=await fixture();try{
+ const item=h.plan.items[0];item.source.fields.image=h.M.encode('obsolete label');item.source.fields.imageUrl=h.M.encode('https://external.invalid/SECRET');
+ let assets=await h.port.inspectArtwork(h.plan);assert.ok(assets.unresolved.some(issue=>issue.field==='imageUrl'));await assert.rejects(h.port.backup(h.plan,assets),/unknown artwork/);
+ item.source.fields.imageUrl=h.M.encode('https://storage.googleapis.com/demo-source/dnd-item-images/missing.png');assets=await h.port.inspectArtwork(h.plan);assert.ok(assets.unresolved.some(issue=>issue.field==='missing referenced object'));
+ delete item.source.fields.imageUrl;item.id='no-local-image';item.source.fields.imageBaseId=h.M.encode('no-local-image');assets=await h.port.inspectArtwork(h.plan);assert.ok(assets.unresolved.some(issue=>issue.field==='missing imageBaseId object'));
+ }finally{await h.cleanup()}
+});
+test('Firestore transaction POST reads and allocation retry transient failures, but commit is never replayed',async()=>{
+ const [,F]=await ready;
+ for(const operation of ['batchGet','beginTransaction','commit','rollback']){
+  let calls=0;const url='https://firestore.googleapis.com/v1/projects/demo-test/databases/(default)/documents:'+operation;
+  const result=await F.firestoreReadResponse(async()=>({status:++calls===1?503:200}),url,{method:'POST'},{sleep:async()=>{},onRetry:()=>{}});
+  assert.equal(F.firestoreOperation(url,'POST'),operation);
+  assert.equal(calls,['batchGet','beginTransaction'].includes(operation)?2:1);assert.equal(result.status,calls===2?200:503);
+ }
+});

@@ -4,6 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {digest} from './build-srd-item-hashes.mjs';
 import {stableJson,documentsToRows,writePrivateFile,decodeValue} from './audit-item-catalogue.mjs';
+import {assertArchiveStorage} from './archive-storage.mjs';
 import {assertArtworkPolicy} from './item-artwork-policy.mjs';
 
 export const POLICY='approved-v1';
@@ -44,7 +45,7 @@ function reviewedPayload(decision,source,artworkPolicy){
   rights:{...rights,reviewedBy:decision.reviewedBy,reviewedAt:decision.reviewedAt}};
 }
 export const isLibraryPlan=plan=>plan.destination?.type==='private-library';
-export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaignName,ownerId,libraryOwnerId}={}){
+export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaignName,ownerId,libraryOwnerId,storage}={}){
  check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(project||''),'Invalid project');
  check(snapshot.project===project&&snapshot.collection==='items','Snapshot must identify the same project and root items collection');
  check(snapshot.completeRootCatalogue!==false,'A reviewed-only public subset cannot be used as a migration snapshot');
@@ -69,7 +70,8 @@ export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaig
   return {id:row.id,sourceSha256:decision.sourceSha256,source:document,action:decision.action,approved:!!approved,
    archiveId:'catalogue-'+digest(row.id).slice(0,32),replacement:replacement?encodeFields(replacement):null};
  });
- const plan={format:1,project,...(library?{ownerId,destination:{type:'private-library',ownerId}}:{campaignId,campaignName,ownerId}),manifestSha256:digest(stableJson(manifest)),
+ if(storage)assertArchiveStorage(storage);
+ const plan={format:1,project,...storage?{storage}:{},...(library?{ownerId,destination:{type:'private-library',ownerId}}:{campaignId,campaignName,ownerId}),manifestSha256:digest(stableJson(manifest)),
   originalCatalogueMetadata:snapshot.documents.filter(document=>document.name.split('/').at(-1)==='catalog_meta'),
   artworkPolicy:{...artworkPolicy},retireLegacyArtwork:manifest.retireLegacyArtwork===true,allApproved:items.every(item=>item.approved),items};
  return {...plan,planSha256:digest(stableJson(plan))};
@@ -77,6 +79,7 @@ export function buildMigrationPlan(snapshot,manifest,{project,campaignId,campaig
 export function assertPlan(plan){
  const {planSha256,...body}=plan;
  check(sha(planSha256)&&planSha256===digest(stableJson(body)),'Plan digest mismatch');
+ if(plan.storage)assertArchiveStorage(plan.storage);
  // Revalidate the stored sources, not just the plan checksum.
  check(Array.isArray(plan.items)&&plan.items.length>0&&new Set(plan.items.map(item=>item.id)).size===plan.items.length,'Invalid plan items');
  check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(plan.project||'')&&id(plan.ownerId),'Invalid plan target');
@@ -100,11 +103,11 @@ const cleanFields=['name','description','category','rarity','source','attunement
 export function privateDocuments(plan,item,assets=[]){
  const marker={sourceId:item.id,sourceSha256:item.sourceSha256,manifestSha256:plan.manifestSha256};
  const fields=Object.fromEntries(cleanFields.filter(key=>item.source.fields[key]!==undefined).map(key=>[key,item.source.fields[key]]));
- const archivedImage=assets[0]?{archivedImage:{path:assets[0].privatePath,sha256:assets[0].sha256}}:{};
+ const archivedImage=assets[0]?{archivedImage:{path:assets[0].privatePath,sha256:assets[0].sha256,...assets[0].bucket?{bucket:assets[0].bucket}:{}}}:{};
  const copy={...fields,...encodeFields({...isLibraryPlan(plan)?{ownerId:plan.ownerId,recordType:'archive',reuseStatus:'archive-only'}:{campaignId:plan.campaignId},rootItemId:item.id,visible:false,highlighted:false,lootMode:'dm',imageUrl:'',imageBaseId:'',catalogueArchive:marker,...archivedImage})};
  const archive=encodeFields({...marker,originalUpdateTime:item.source.updateTime});
  archive.original={mapValue:{fields:item.source.fields}};
- archive.assets=encode(assets.map(asset=>({sourcePath:asset.sourcePath,privatePath:asset.privatePath,sha256:asset.sha256,generation:asset.generation})));
+ archive.assets=encode(assets.map(asset=>({sourcePath:asset.sourcePath,privatePath:asset.privatePath,sha256:asset.sha256,generation:asset.generation,...asset.bucket?{bucket:asset.bucket}:{}})));
  for(const value of [copy,archive])check(Buffer.byteLength(JSON.stringify(value))<700000,'Private record is too large; use a separate durable export');
  let template;
  if(isLibraryPlan(plan)&&item.action==='publish'){
@@ -115,43 +118,64 @@ export function privateDocuments(plan,item,assets=[]){
  return {copy,archive,...template?{template}:{}};
 }
 
+/** Report long-running stages without exposing document names, URLs or credentials. */
+export async function migrationStage(label,work,{intervalMs=15000,onProgress=message=>console.error(message)}={}){
+ onProgress(label);
+ const timer=setInterval(()=>onProgress(label+' — still running; do not start another migration.'),intervalMs);
+ try{return await work();}finally{clearInterval(timer);}
+}
+
 /** Port operations are injected, so dry-run and failure boundaries are testable. */
 export async function migrateCatalogue(plan,port,{apply=false,confirmPlanSha256=''}={}){
  assertPlan(plan);
  if(apply){check(plan.allApproved&&plan.items.every(item=>item.approved),'Every decision must be explicitly approved');check(confirmPlanSha256===plan.planSha256,'Explicit plan digest confirmation required');check(plan.retireLegacyArtwork,'Moving retired-only images to verified private Storage must be explicitly reviewed');}
- await port.verifyTarget(plan);
- await port.verifyExistingCampaigns(plan);
- const current=await port.listSources();
+ if(apply)console.error('Preflight: verifying owner, campaigns, source records and artwork.');
+ await migrationStage('Preflight: verify owner',()=>port.verifyTarget(plan));
+ await migrationStage('Preflight: verify existing campaigns',()=>port.verifyExistingCampaigns(plan));
+ const current=await migrationStage('Preflight: read shared catalogue',()=>port.listSources());
  const expected=new Set(plan.items.map(item=>item.id));
  check(current.every(doc=>doc.name.split('/').at(-1)==='catalog_meta'||expected.has(doc.name.split('/').at(-1))),'New root items appeared after review; rebuild the plan');
+ await migrationStage('Preflight: verify source revisions and completion journals',async()=>{
+ let checked=0;
  for(const item of plan.items){
+  if(++checked%50===0)console.error('Preflight: checking source '+checked+'/'+plan.items.length);
   const source=current.find(doc=>doc.name.split('/').at(-1)===item.id);
   // A resumed publish/delete must be proven by private journal + source state.
   if(await port.isCompleted(plan,item,source))continue;
   check(source&&source.updateTime===item.source.updateTime&&fieldsHash(source.fields)===item.sourceSha256,'Source changed after review: '+item.id);
  }
- const assets=await port.inspectArtwork(plan);
- const summary={items:plan.items.length,publish:plan.items.filter(item=>item.action==='publish').length,retire:plan.items.filter(item=>item.action==='retire').length,legacyArtwork:assets.length,unresolvedArtwork:assets.unresolved?.length||0,writes:0,dryRun:!apply,allApproved:plan.allApproved};
+ });
+ const assets=await migrationStage('Preflight: inspect Storage artwork',()=>port.inspectArtwork(plan));
+ const summary={items:plan.items.length,publish:plan.items.filter(item=>item.action==='publish').length,retire:plan.items.filter(item=>item.action==='retire').length,legacyArtwork:assets.length,unresolvedArtwork:assets.unresolved?.length||0,...assets.diagnostics?{artworkResolution:assets.diagnostics}:{},writes:0,dryRun:!apply,allApproved:plan.allApproved};
  if(!apply)return summary;
  // Backup includes every original document and legacy object before any database write.
- await port.backup(plan,assets);
- const copiedAssets=await port.copyAndVerifyArtwork(plan,assets);
+ await migrationStage('Local backup: preserving original documents and artwork',()=>port.backup(plan,assets));
+ const copiedAssets=await migrationStage('Private artwork: copy and verify',()=>port.copyAndVerifyArtwork(plan,assets));
+ console.error('Private item copy and verification: starting '+plan.items.length+' records.');let copiedItems=0;
+ await migrationStage('Private database: copy and verify items',async()=>{
  for(const item of plan.items){
   if(await port.isCompleted(plan,item,await port.readSource(item.id)))continue;
   const itemAssets=await port.assetsForItem(item,copiedAssets);
   const documents=privateDocuments(plan,item,itemAssets);
   await port.copyPrivate(plan,item,documents);
   await port.verifyPrivate(plan,item,documents);
+  if(++copiedItems%25===0)console.error('Private item copy and verification: '+copiedItems+' newly verified records.');
  }
+ });
  // Finish all copies first. A copy failure cannot retire any root record.
- await port.verifyNoNewSources(plan);
+ console.error('All private copies verified. Rechecking sources before shared catalogue changes.');
+ await migrationStage('Pre-publication: recheck shared catalogue',()=>port.verifyNoNewSources(plan));
+ await migrationStage('Shared catalogue: publish or retire reviewed items',async()=>{
  for(const item of plan.items){
   if(await port.isCompleted(plan,item,await port.readSource(item.id)))continue;
   await port.publishOrRetire(plan,item);
-  summary.writes++;
+  summary.writes++;if(summary.writes%25===0)console.error('Shared catalogue changes: '+summary.writes+' completed this run.');
  }
- await port.retireArtwork(plan,copiedAssets);
- await port.verifyFinal(plan);
+ });
+ console.error('Verifying private artwork and removing retired-only shared copies.');
+ await migrationStage('Retired artwork: verify private copies and remove retired-only sources',()=>port.retireArtwork(plan,copiedAssets));
+ console.error('Final catalogue verification.');
+ await migrationStage('Final verification',()=>port.verifyFinal(plan));
  return {...summary,dryRun:false};
 }
 async function main(){
@@ -177,10 +201,10 @@ async function main(){
  }
  check(['check','apply'].includes(mode),'Use plan, check or apply');
  check(!process.env.GITHUB_ACTIONS,'Production migration is a local operator action, never a public CI job');
- const allowed=['--plan','--bucket','--backup-dir','--confirm-plan'];check(Object.keys(options).every(key=>allowed.includes(key)),'Unknown migration option');
+ const allowed=['--plan','--bucket','--archive-bucket','--backup-dir','--confirm-plan'];check(Object.keys(options).every(key=>allowed.includes(key)),'Unknown migration option');
  const plan=assertPlan(JSON.parse(await fs.readFile(options['--plan'],'utf8')));
  const {createMigrationPort}=await import('./item-catalogue-migration-firebase.mjs');
- const port=await createMigrationPort({project:plan.project,bucket:options['--bucket'],backupDirectory:options['--backup-dir']});
+ const port=await createMigrationPort({project:plan.project,bucket:options['--bucket'],archiveBucket:options['--archive-bucket']||plan.storage?.archiveBucket,backupDirectory:options['--backup-dir']});
  console.log(JSON.stringify(await migrateCatalogue(plan,port,{apply:mode==='apply',confirmPlanSha256:options['--confirm-plan']})));
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{console.error(error.message);process.exitCode=1});

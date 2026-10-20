@@ -24,7 +24,9 @@ test('changed recommendations, absent delegation and changed/added/missing/dupli
 test('read-only preparation resolves the owner, preserves the snapshot and emits a shareable preflight without prose',async()=>{
  await ready;const f=fixture(),saved=new Map(),calls=[];
  const port={inspectTarget:async id=>{calls.push('identify:'+id);return {ownerId:'owner'};},listSources:async()=>f.snapshot.documents,verifyTarget:async plan=>{assert.equal(plan.ownerId,'owner');calls.push('verify-owner');},verifyExistingCampaigns:async()=>{},isCompleted:async()=>false,inspectArtwork:async()=>[],backup:async()=>{throw Error('Preparation must not back up or mutate');}};
- const result=await A.prepareAuthorizedRun(f.proposals,f.authorization,port,{campaignId:'existing-campaign',save:async(name,data)=>saved.set(name,data),now:'2026-10-19T10:00:00Z'});
+ const storage={sourceBucket:'demo-source',archiveBucket:'demo-private-archive'};
+ const result=await A.prepareAuthorizedRun(f.proposals,f.authorization,port,{campaignId:'existing-campaign',storage,save:async(name,data)=>saved.set(name,data),now:'2026-10-19T10:00:00Z'});
+ assert.deepEqual(result.plan.storage,storage);assert.deepEqual(result.status.storage,storage);M.assertPlan(result.plan);
  assert.equal(result.status.ready,true);assert.equal(result.status.preflight.writes,0);assert.equal(result.status.productionWrites,0);assert.equal(saved.size,4);assert.deepEqual(calls,['identify:existing-campaign','verify-owner']);
  assert.equal(JSON.stringify(result.status).includes('PRIVATE ORIGINAL'),false);assert.equal(JSON.stringify(result.status).includes('Synthetic authored replacement'),false);
  assert.ok(saved.get('root-snapshot.json').completeRootCatalogue);assert.equal(saved.get('authorized-decisions.json').decisions[1].approved,true);

@@ -23,10 +23,10 @@ for relative in list(files):
     if ((relative.startswith('scripts/') and relative.endswith('.mjs')) or (relative.startswith('tests/') and relative.endswith('.cjs'))) and current.is_file():
         files[relative] = current.read_bytes()
 for relative in ['Start-ItemMigration.ps1', 'scripts/private-output.mjs', 'scripts/private-output-windows.ps1',
-                 'tests/private-output.cjs', 'scripts/audit-storage-access.mjs', 'tests/storage-access-audit.cjs', 'docs/windows-item-library-operator.md',
-                 'docs/authorized-library-migration.md']:
+                 'tests/private-output.cjs', 'scripts/archive-storage.mjs', 'scripts/diagnose-library-images.mjs', 'tests/separate-archive-storage.cjs', 'scripts/audit-storage-access.mjs', 'tests/storage-access-audit.cjs', 'docs/windows-item-library-operator.md',
+                 'docs/authorized-library-migration.md', 'docs/separate-private-archive.md']:
     files[relative] = (ROOT / relative).read_bytes()
-files['README.md'] = (ROOT / 'docs/windows-item-library-operator.md').read_bytes()
+files['README.md'] = (ROOT / 'docs/windows-item-library-operator.md').read_bytes().replace(b'(separate-private-archive.md)', b'(docs/separate-private-archive.md)')
 assert all('node_modules' not in Path(name).parts and '.git' not in Path(name).parts for name in files)
 assert all(Path(name).name not in {'root-snapshot.json', 'library-migration-plan.json', 'authorized-decisions.json'} for name in files)
 with zipfile.ZipFile(DESTINATION, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as output:

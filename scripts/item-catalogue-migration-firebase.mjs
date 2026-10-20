@@ -1,3 +1,4 @@
+import {assertArchiveStorage,verifyArchiveBucket,validBucket} from './archive-storage.mjs';
 import {createPrivateDirectory,assertPrivateFile,writePrivateBytes} from './private-output.mjs';
 /** Operator-only Firebase adapter. Never imported by the website or public CI. */
 import fs from 'node:fs/promises';
@@ -9,16 +10,38 @@ import {assertLibraryImportPlan} from './private-item-library.mjs';
 import {fieldsHash,encodeFields,POLICY,isLibraryPlan} from './item-catalogue-migration.mjs';
 
 const check=(ok,message)=>{if(!ok)throw Error(message);};
+const emptyLegacyMarker=(file,meta)=>file.name==='dnd-item-images/'&&String(meta.size)==='0';
 const exists=async file=>{try{await fs.access(file);return true;}catch{return false;}};
 const baseImageId=value=>{
  let base=String(value||'').toLowerCase().replace(/\+/g,'').replace(/[0-9]/g,'');
  for(const word of ['common','uncommon','rare','very-rare','veryrare','legendary','artifact','minor','major','grey','gray','red','blue','green','black','white','yellow','purple','orange','bronze','silver','gold','plus'])base=base.replace(new RegExp(`(?<=^|[-_\\s])${word}(?=[-_\\s]|$)`,'gi'),'');
  return base.replace(/[-_\s]+/g,'-').replace(/^[-_]+|[-_]+$/g,'')||value;
 };
-export async function createMigrationPort({project,bucket:bucketName,backupDirectory,services}){
+/** Firestore uses POST for batch reads and transaction allocation, too.
+ * Retry those safe operations, never commit/write operations with uncertain outcomes. */
+export function firestoreOperation(url,method='GET'){
+ if(method==='GET')return 'read';
+ const operation=new URL(url).pathname.split(':').at(-1);
+ return method==='POST'&&['batchGet','beginTransaction','commit','rollback'].includes(operation)?operation:'write';
+}
+export async function firestoreReadResponse(fetcher,url,options,{sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms)),onRetry=message=>console.error(message)}={}){
+ const retryable=new Set([429,502,503,504]);
+ const operation=firestoreOperation(url,options.method||'GET'),safe=['read','batchGet','beginTransaction'].includes(operation);
+ for(let attempt=0;;attempt++){
+  const response=await fetcher(url,{...options,signal:AbortSignal.timeout(60000)});
+  if(!safe||!retryable.has(response.status)||attempt>=3)return response;
+  try{await response.body?.cancel();}catch{} // Release a failed response without logging its body.
+  const delay=1000*2**attempt;
+  onRetry('Firestore '+operation+' temporarily unavailable ('+response.status+'); retry '+(attempt+1)+'/3 in '+delay/1000+' s.');
+  await sleep(delay);
+ }
+}
+export async function createMigrationPort({project,bucket:bucketName,archiveBucket:archiveBucketName=bucketName,backupDirectory,services}){
  check(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(project||''),'Invalid project');
  check(typeof bucketName==='string'&&/^[a-z0-9][a-z0-9._-]+$/.test(bucketName),'Specify the exact Storage bucket');
  check(backupDirectory&&path.isAbsolute(backupDirectory),'Specify an absolute private backup directory');
+ check(validBucket(archiveBucketName),'Specify the exact private archive bucket');
+ const separate=archiveBucketName!==bucketName;
  // Refuse repository-local exports. Original data and tokens must remain private.
  let parent=path.resolve(backupDirectory),tail=[];
  while(!await exists(parent)){tail.unshift(path.basename(parent));parent=path.dirname(parent);}
@@ -31,23 +54,26 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
   if(await exists(git)){const stat=await fs.lstat(git);check(!stat.isFile()&&!await exists(path.join(git,'HEAD')),'Backup must be outside every Git checkout');}
   parent=path.dirname(parent);
  }
- let credential,bucket;
+ let credential,bucket,archiveBucket;
  if(services){
   check(project.startsWith('demo-')&&/^http:\/\/127\.0\.0\.1:\d+$/.test(services.firestoreOrigin||''),'Injected services are for local demo-project tests only');
-  credential=services.credential;bucket=services.bucket;
+  credential=services.credential;bucket=services.bucket;archiveBucket=separate?services.archiveBucket:bucket;check(archiveBucket,'Missing private archive service');
  }else{
   const require=createRequire(new URL('../functions/package.json',import.meta.url));
   const {initializeApp,applicationDefault}=require('firebase-admin/app');
   const {getStorage}=require('firebase-admin/storage');
-  credential=applicationDefault();const app=initializeApp({credential,projectId:project,storageBucket:bucketName},'catalogue-migration-'+Date.now());bucket=getStorage(app).bucket();
+  credential=applicationDefault();const app=initializeApp({credential,projectId:project,storageBucket:bucketName},'catalogue-migration-'+Date.now());bucket=getStorage(app).bucket();archiveBucket=separate?getStorage(app).bucket(archiveBucketName):bucket;
  }
  const fetcher=services?.fetcher||fetch;
  const prefix=`projects/${project}/databases/(default)/documents/`,api=(services?services.firestoreOrigin:'https://firestore.googleapis.com')+'/v1/';
  async function request(suffix,{method='GET',body,missing=false}={}){
   const token=await credential.getAccessToken();
-  const response=await fetcher(api+suffix,{method,headers:{Authorization:'Bearer '+token.access_token,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(60000)});
+  const response=await firestoreReadResponse(fetcher,api+suffix,{method,headers:{Authorization:'Bearer '+token.access_token,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});
   if(response.status===404&&missing)return null;
-  check(response.ok,'Firestore operation failed ('+response.status+'); no response body is logged');
+  if(!response.ok){
+   const operation=firestoreOperation(api+suffix,method);
+   throw Error('Firestore '+operation+' failed ('+response.status+'); '+(operation==='commit'?'commit outcome may be unknown; keep this plan and backup for verification.':'no response body is logged.'));
+  }
   return response.status===204?{}:response.json();
  }
  const read=(relative,transaction='')=>request(prefix+relative+(transaction?'?transaction='+encodeURIComponent(transaction):''),{missing:true});
@@ -83,16 +109,22 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
  function itemAssetPaths(item,{explicitOnly=false}={}){
   const data=documentsToRows([item.source])[0].data;
   const names=new Set();
-  for(const key of ['imageUrl','thumbnailUrl','thumbUrl','image'])if(typeof data[key]==='string'&&data[key]){
+  for(const key of ['imageUrl','thumbnailUrl','thumbUrl'])if(typeof data[key]==='string'&&data[key]){
    const value=data[key];let found='';
    try{const url=new URL(value);if(url.protocol==='https:'&&url.hostname==='firebasestorage.googleapis.com'){
     const match=url.pathname.match(/^\/v0\/b\/([^/]+)\/o\/(.+)$/);if(match&&decodeURIComponent(match[1])===bucketName)found=decodeURIComponent(match[2]);
    }else if(url.protocol==='https:'&&url.hostname==='storage.googleapis.com'&&url.pathname.startsWith('/'+bucketName+'/'))found=decodeURIComponent(url.pathname.slice(bucketName.length+2));}catch{}
    if(/^dnd-item-images\/[^/]+$/.test(found))names.add(found);else if(!/^\.?\/?placeholder\.png$/.test(value))names.add('UNRESOLVED:'+key);
   }
+  // The website does not render the legacy `image` metadata field. Preserve it
+  // in archive.original, but do not fetch external metadata links or require them.
   return explicitOnly?names:new Set([...names,`dnd-item-images/${baseImageId(data.imageBaseId||item.id)}.png`,`dnd-item-images/${item.id}.png`]);
  }
  const port={
+  async probeReadTransaction(plan){
+   console.error('Checking Firestore transaction start and document read; no document writes.');
+   await transact(async get=>{await get('items/'+plan.items[0].id);return [];});
+  },
   async importLibraryTemplate(plan,{apply=false}={}){
    assertLibraryImportPlan(plan);check(plan.project===project,'Import project does not match the connected project');
    const sourceRelative=plan.source.name.slice(prefix.length),destinationRelative=`campaigns/${plan.campaignId}/items/${plan.itemId}`;
@@ -102,11 +134,11 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    check(source?.updateTime===plan.source.updateTime&&fieldsHash(source.fields)===plan.sourceSha256,'Reviewed library template changed; rebuild the import plan');
    const assets=decodeValue(source.fields.assets),copies=[];
    if(assets.length){
-    const [metadata]=await bucket.getMetadata(),[policy]=await bucket.iam.getPolicy({requestedPolicyVersion:3});
-    check(metadata.iamConfiguration?.uniformBucketLevelAccess?.enabled===true&&!(policy.bindings||[]).some(binding=>(binding.members||[]).some(member=>['allUsers','allAuthenticatedUsers'].includes(member))),'Library artwork requires a private bucket without public IAM');
+    await verifyArchiveBucket(bucket,archiveBucket,{separate});
    }
    for(const asset of assets){
-    const file=bucket.file(asset.privatePath),[meta]=await file.getMetadata(),[bytes]=await file.download({validation:'crc32c'});
+    check((asset.bucket||bucketName)===archiveBucketName,'Library illustration bucket differs from the connected private archive');
+    const file=archiveBucket.file(asset.privatePath),[meta]=await file.getMetadata(),[bytes]=await file.download({validation:'crc32c'});
     check(bytes.length<10*1024*1024&&/^image\/(png|jpeg|webp|gif)$/.test(meta.contentType||'')&&!meta.metadata?.firebaseStorageDownloadTokens&&digest(bytes)===asset.sha256,'Library illustration changed, has tokens or is not a verified bounded image');
     copies.push({...asset,path:`campaign-catalogue-images/${plan.campaignId}/${digest(asset.privatePath)}/${asset.sha256}`,bytes,contentType:meta.contentType});
    }
@@ -119,10 +151,9 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
     return {itemId:plan.itemId,writes:0,dryRun:!apply,alreadyImported:true};
    }
    if(!apply)return {itemId:plan.itemId,writes:0,dryRun:true,images:copies.length};
-   try{await fs.mkdir(backupDirectory,{mode:0o700});}catch(error){if(error.code!=='EEXIST')throw error;}
-   const directory=await fs.lstat(backupDirectory);check(directory.isDirectory()&&!directory.isSymbolicLink()&&(directory.mode&0o077)===0,'Private import directory must have permissions 0700');
+   await createPrivateDirectory(backupDirectory,{allowExisting:true});
    const audit=path.join(backupDirectory,'library-import-'+plan.planSha256+'.json');await privateFile(audit,Buffer.from(JSON.stringify(plan,null,2)));
-   const handle=await fs.open(audit,'r');try{await handle.sync();}finally{await handle.close();}
+   const handle=await fs.open(audit,'r+');try{await handle.sync();}finally{await handle.close();}
    for(const asset of copies){
     const destination=bucket.file(asset.path),[present]=await destination.exists();
     if(!present)await destination.save(asset.bytes,{resumable:false,validation:'crc32c',preconditionOpts:{ifGenerationMatch:0},metadata:{contentType:asset.contentType,cacheControl:'private, no-store',metadata:{librarySha256:asset.sha256}}});
@@ -172,14 +203,14 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    return true;
   },
   async inspectArtwork(plan){
-   const [metadata]=await bucket.getMetadata();check(metadata.iamConfiguration?.uniformBucketLevelAccess?.enabled===true,'Private archive requires uniform bucket-level access');
-   const [policy]=await bucket.iam.getPolicy({requestedPolicyVersion:3});
-   check(!(policy.bindings||[]).some(binding=>(binding.members||[]).some(member=>['allUsers','allAuthenticatedUsers'].includes(member))),'Bucket has a public IAM grant; archive privacy cannot be guaranteed');
+   if(plan.storage){assertArchiveStorage(plan.storage);check(plan.storage.sourceBucket===bucketName&&plan.storage.archiveBucket===archiveBucketName,'Connected buckets differ from the pinned migration plan');}
+   else check(!separate,'Separate archive must be bound into a fresh migration plan');
+   await verifyArchiveBucket(bucket,archiveBucket,{separate});
    const [files]=await bucket.getFiles({prefix:'dnd-item-images/'});
    const metadataBackup=path.join(backupDirectory,'artwork-metadata.json');
    artwork=await exists(metadataBackup)?JSON.parse(await fs.readFile(metadataBackup,'utf8')):[];
    if(artwork.length){const saved=JSON.parse(await fs.readFile(path.join(backupDirectory,'plan.json'),'utf8'));check(saved.planSha256===plan.planSha256,'Backup belongs to a different plan');}
-   for(const file of files){const [meta]=await file.getMetadata();check(Number(meta.size)<10*1024*1024,'Legacy object requires separate large-file backup');check(/^image\/(png|jpeg|webp|gif)$/.test(meta.contentType||''),'Unexpected legacy object type; review before migration');
+   for(const file of files){const [meta]=await file.getMetadata();if(emptyLegacyMarker(file,meta))continue;check(Number(meta.size)<10*1024*1024,'Legacy object requires separate large-file backup');check(/^image\/(png|jpeg|webp|gif)$/.test(meta.contentType||''),'Unexpected legacy object type; review before migration');
     const old=artwork.find(asset=>asset.sourcePath===file.name);
     if(old)check(old.generation===String(meta.generation),'Legacy artwork changed since backup');
     else{check(!await exists(metadataBackup),'New artwork appeared after backup');artwork.push({sourcePath:file.name,generation:String(meta.generation),metageneration:String(meta.metageneration),metadata:meta});}}
@@ -199,6 +230,14 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
     asset.shared=users.some(item=>item.action==='publish');
     asset.retired=users.some(item=>item.action==='retire');
    }
+   const unresolvedByReason={};for(const issue of artwork.unresolved)unresolvedByReason[issue.field]=(unresolvedByReason[issue.field]||0)+1;
+   let legacyImageMetadata=0,itemsWithStoredArtwork=0;
+   for(const item of plan.items){
+    const data=documentsToRows([item.source])[0].data;
+    if(typeof data.image==='string'&&data.image)legacyImageMetadata++;
+    if([...itemAssetPaths(item)].some(name=>artwork.some(asset=>asset.sourcePath===name)))itemsWithStoredArtwork++;
+   }
+   artwork.diagnostics={policy:'website-image-fields-and-id-fallback-v1',legacyImageMetadataPreserved:legacyImageMetadata,storedArtwork:artwork.length,itemsWithStoredArtwork,itemsWithoutStoredArtwork:plan.items.length-itemsWithStoredArtwork,unresolvedByReason};
    return artwork;
   },
   async backup(plan,assets){
@@ -206,22 +245,27 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    await createPrivateDirectory(backupDirectory,{allowExisting:true});
    await privateFile(path.join(backupDirectory,'plan.json'),Buffer.from(JSON.stringify(plan,null,2)));
    await privateFile(path.join(backupDirectory,'artwork-metadata.json'),Buffer.from(JSON.stringify(assets,null,2)));
-   for(const asset of assets){const backup=path.join(backupDirectory,digest(asset.sourcePath)+'.bin');const data=await exists(backup)?await fs.readFile(backup):(await bucket.file(asset.sourcePath,{generation:asset.generation}).download({validation:'crc32c'}))[0];asset.sha256=digest(data);await privateFile(backup,data);}
+   console.error('Local artwork backup: 0/'+assets.length);let backedUp=0;
+   for(const asset of assets){const backup=path.join(backupDirectory,digest(asset.sourcePath)+'.bin');const data=await exists(backup)?await fs.readFile(backup):(await bucket.file(asset.sourcePath,{generation:asset.generation}).download({validation:'crc32c'}))[0];asset.sha256=digest(data);await privateFile(backup,data);if(++backedUp%25===0||backedUp===assets.length)console.error('Local artwork backup: '+backedUp+'/'+assets.length);}
    // Flush the backup files before performing any destructive operation.
-   for(const name of await fs.readdir(backupDirectory)){const handle=await fs.open(path.join(backupDirectory,name),'r');try{await handle.sync();}finally{await handle.close();}}
+   for(const name of await fs.readdir(backupDirectory)){const handle=await fs.open(path.join(backupDirectory,name),'r+');try{await handle.sync();}finally{await handle.close();}}
    backupReady=true;
   },
   async copyAndVerifyArtwork(plan,assets){
    check(backupReady,'Private backup must complete first');
+   await verifyArchiveBucket(bucket,archiveBucket,{separate});
+   console.error('Private artwork copy and verification: 0/'+assets.length);let copied=0;
    for(const asset of assets){
     const data=await fs.readFile(path.join(backupDirectory,digest(asset.sourcePath)+'.bin'));check(digest(data)===asset.sha256,'Artwork backup checksum mismatch');
     asset.privatePath=isLibraryPlan(plan)?`private-item-library-images/${plan.ownerId}/${digest(asset.sourcePath)}/${asset.sha256}`:`campaign-catalogue-images/${plan.campaignId}/${digest(asset.sourcePath)}/${asset.sha256}`;
-    const destination=bucket.file(asset.privatePath),[present]=await destination.exists();
+    if(separate)asset.bucket=archiveBucketName;
+    const destination=archiveBucket.file(asset.privatePath),[present]=await destination.exists();
     if(!present)await destination.save(data,{resumable:false,validation:'crc32c',preconditionOpts:{ifGenerationMatch:0},metadata:{contentType:asset.metadata.contentType,cacheControl:'private, no-store',metadata:{catalogueSourceSha256:asset.sha256}}});
     const [stored]=await destination.download({validation:'crc32c'}),[meta]=await destination.getMetadata();
     check(digest(stored)===asset.sha256&&!meta.metadata?.firebaseStorageDownloadTokens,'Private artwork verification failed or download tokens exist');
-    const anonymous=await fetcher('https://storage.googleapis.com/'+bucketName+'/'+asset.privatePath.split('/').map(encodeURIComponent).join('/'),{method:'HEAD',redirect:'error',signal:AbortSignal.timeout(30000)});
-    check([401,403,404].includes(anonymous.status),'Private artwork is anonymously readable or privacy check is inconclusive');
+    const anonymous=await fetcher('https://storage.googleapis.com/'+archiveBucketName+'/'+asset.privatePath.split('/').map(encodeURIComponent).join('/'),{method:'HEAD',redirect:'error',signal:AbortSignal.timeout(30000)});
+    check((separate?[401,403]:[401,403,404]).includes(anonymous.status),'Private artwork is anonymously readable or privacy check is inconclusive');
+    if(++copied%25===0||copied===assets.length)console.error('Private artwork copy and verification: '+copied+'/'+assets.length);
    }
    return assets;
   },
@@ -244,7 +288,7 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    check(fieldsHash({assets:journal.fields.assets})===fieldsHash({assets:documents.archive.assets}),'Private image references were not preserved exactly');
    if(documents.template){const template=await read(templatePath(plan,item));check(template&&fieldsHash(template.fields)===fieldsHash(documents.template),'Reusable library template was not verified');}
   },
-  async verifyNoNewSources(plan){const ids=new Set(plan.items.map(item=>item.id));check((await list('items')).every(doc=>doc.name.split('/').at(-1)==='catalog_meta'||ids.has(doc.name.split('/').at(-1))),'New root items appeared; stop and rebuild review');},
+  async verifyNoNewSources(plan){await verifyArchiveBucket(bucket,archiveBucket,{separate});const ids=new Set(plan.items.map(item=>item.id));check((await list('items')).every(doc=>doc.name.split('/').at(-1)==='catalog_meta'||ids.has(doc.name.split('/').at(-1))),'New root items appeared; stop and rebuild review');},
   async publishOrRetire(plan,item){
    await transact(async get=>{
     const copy=await get(copyPath(plan,item)),journal=await get(archivePath(plan,item)),source=await get('items/'+item.id);
@@ -260,11 +304,17 @@ export async function createMigrationPort({project,bucket:bucketName,backupDirec
    });
   },
   async retireArtwork(plan,assets){
+   await verifyArchiveBucket(bucket,archiveBucket,{separate});
    // Move only exclusively retired artwork out of shared Storage. Retained and
    // unrelated generated illustrations stay in place, including their URLs.
    const expected=new Set(assets.map(asset=>asset.sourcePath));const [fresh]=await bucket.getFiles({prefix:'dnd-item-images/'});
-   check(fresh.every(file=>expected.has(file.name)),'New legacy artwork appeared; review before retirement');
-   for(const asset of assets){const [bytes]=await bucket.file(asset.privatePath).download({validation:'crc32c'});check(digest(bytes)===asset.sha256,'Private artwork changed; refusing shared-object removal');
+   for(const file of fresh){
+    if(file.name==='dnd-item-images/'){const [meta]=await file.getMetadata();check(emptyLegacyMarker(file,meta),'Legacy folder marker changed; review before retirement');continue;}
+    check(expected.has(file.name),'New legacy artwork appeared; review before retirement');
+   }
+   for(const asset of assets){const destination=archiveBucket.file(asset.privatePath),[bytes]=await destination.download({validation:'crc32c'}),[meta]=await destination.getMetadata();check(digest(bytes)===asset.sha256&&!meta.metadata?.firebaseStorageDownloadTokens,'Private artwork changed; refusing shared-object removal');
+    const anonymous=await fetcher('https://storage.googleapis.com/'+archiveBucketName+'/'+asset.privatePath.split('/').map(encodeURIComponent).join('/'),{method:'HEAD',redirect:'error',signal:AbortSignal.timeout(30000)});
+    check([401,403].includes(anonymous.status),'Private artwork privacy must be verified before shared-object removal');
     const source=bucket.file(asset.sourcePath),[present]=await source.exists();
     if(asset.shared){check(present,'Retained generated artwork is missing');const [sharedBytes]=await source.download({validation:'crc32c'});check(digest(sharedBytes)===asset.sha256,'Retained generated artwork changed');}
     else if(asset.retired&&present)await source.delete({ifGenerationMatch:asset.generation});}
