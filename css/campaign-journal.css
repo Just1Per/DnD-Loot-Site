@@ -64,3 +64,4 @@
 .journal-leaf>.journal-actions{margin-top:22px}
 
 #mainApp #campaignSectionNavigation [data-section-group=journal] .tab[aria-current=page]{background:var(--ui-heading,#5c1d1d)!important;color:var(--ui-cream,#f5e6c8)!important;border-color:var(--ui-heading,#5c1d1d)!important}
+.campaign-journal [data-journal-reference-status]:empty{display:none}
