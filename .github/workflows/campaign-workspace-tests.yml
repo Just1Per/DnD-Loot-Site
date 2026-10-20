@@ -130,6 +130,7 @@ jobs:
       - name: Shared party journal, notebook reader and private recap permissions
         run: |
           npm --prefix tests run test:campaign-journal
+          npm --prefix tests run test:recap-navigation
           npm --prefix tests run test:campaign-journal-rules
       - name: Player campaign information sharing and accessibility
         run: npm --prefix tests run test:campaign-information

@@ -46,3 +46,7 @@ This command is an operator instruction; it has not been run by the implementati
 Browser tests use deterministic Firebase fixtures and Chromium. They do not send production requests, verify production credentials, or establish Safari/assistive-technology conformance. Existing shared-image Storage permissions are unchanged.
 
 See [Visual Journal and campaign map](visual-journal-and-map.md) for full-width cards and the DM-managed map added later.
+
+## Reading and return navigation
+
+Read recap opens a clean paragraph reader. The list’s search/filter controls are hidden while reading, and Other journal entries is an optional collapsed disclosure below the story. Back to Recaps restores search, filter, scroll and the originating read button’s keyboard focus. Returning from your own draft focuses the reader title. Draft editing and explicit sharing remain separate. List preferences live only in memory per account/campaign, survive in-app navigation/Refresh, and clear on account changes. No new backend rules or data migration are needed.
