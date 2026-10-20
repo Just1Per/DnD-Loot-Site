@@ -168,15 +168,7 @@ function applyFilters(list) {
   return list.filter(item => {
     const state = getItemState(item.id);
 
-    if (search && !(
-      (item.name || "").toLowerCase().includes(search) ||
-      (item.description || "").toLowerCase().includes(search)
-    )) return false;
-
-    if (rarity   && item.rarity   !== rarity)   return false;
-    if (source   && item.source   !== source)   return false;
-    if (category && item.category !== category) return false;
-    if (cls      && !item.classes?.includes(cls)) return false;
+    if (!catalogueItemMatches(item,{search,rarity,source,category,class:cls})) return false;
     if (owner && !inventory.some(e=>e.itemId===item.id && e.characterId===owner && e.quantity>0)) return false;
 
     if (chk("showLootedOnly")         && !state.looted)      return false;

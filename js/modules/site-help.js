@@ -81,7 +81,7 @@ var SiteHelp=(()=>{
    if(!title)return;const span=label?.querySelector(':scope > span');badge(span||label||control,title,explain(control,title));
   });
   document.querySelectorAll('h2,h3,h4,legend,details>summary').forEach(heading=>{
-   if(heading.closest('.vault-help-dialog,.sheet-paper-page,#card-container,.sheet-progression-feature,.sheet-spell-information'))return;
+   if(heading.closest('[data-no-context-help],.vault-help-dialog,.sheet-paper-page,#card-container,.sheet-progression-feature,.sheet-spell-information'))return;
    const title=titleOf(heading),text=boxText(title);if(text)badge(heading,title,text);
   });
   document.querySelectorAll('.sheet-summary-metrics>div>span,.sheet-metrics>div>span,.sheet-derived-readout>span,.sheet-companion-stat>small').forEach(node=>{
