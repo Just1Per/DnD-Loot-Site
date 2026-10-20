@@ -50,4 +50,6 @@ The bundled `data/rules/monsters.json` contains 675 licensed SRD records, with e
 
 No Firebase Functions are introduced. `storage.rules` is now the complete authoritative rule file; the old `storage-workspace.rules` fragment is retired. Hosting workflows do not publish Firestore or Storage rules. Follow [the image deployment guide](world-map-storage-deployment.md) for rule publication and CORS preparation, and [saved player illustrations](player-illustration-sharing.md) for separate player image sharing. Immutable uploads remain stored when replaced; storage cleanup requires its own reviewed maintenance operation.
 
-See [connected-workspace-progress.md](connected-workspace-progress.md) for stage details and reproducible verification commands.
+## Verification
+
+Run `npm --prefix tests run test:workspace` for store, creature, import and encounter logic, `test:workspace-browser` for actual editors, and `test:workspace-rules` for Firestore/Storage permission tests. The campaign workspace workflow also covers account/navigation guards, player publications, illustrations and one-shot permission scenarios. All fixtures use synthetic data and demo emulators, never live imports or migrations. Current suite results belong in PR validation rather than a historical delivery log.

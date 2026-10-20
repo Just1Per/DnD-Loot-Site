@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'index.html'
+      - 'firebase.json'
       - 'css/**'
       - 'js/boot-status.js'
       - 'js/app.js'
@@ -36,6 +37,8 @@ jobs:
           java-version: 21
       - name: Install test dependencies
         run: npm ci --prefix tests
+      - name: Hosting runtime and operational file boundaries
+        run: npm --prefix tests run test:packaging
       - name: Install Chromium
         run: npx --prefix tests playwright install --with-deps chromium
       - name: Install PDF text verification

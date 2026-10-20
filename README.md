@@ -9,7 +9,7 @@ A campaign website for character sheets, a shared item catalogue, private campai
 - `firestore.rules`, `storage.rules`: access rules, verified with demo emulators.
 - `tests/`: engine tests, fixture-based app/browser tests and emulator permission tests.
 - `scripts/`: data generators, read-only audits, preview maintenance and owner-run migration/recovery tools. They are not app startup code.
-- `functions/`: the historical dependency location used by local operator tools for `firebase-admin`. The current scaffold exports no Cloud Functions; campaign operations use the browser Firestore store and rules.
+- `functions/`: the historical dependency location used by local operator tools for `firebase-admin`. There is no Cloud Functions deployment target; campaign operations use the browser Firestore store and rules.
 - `docs/`: feature behavior, operational instructions and the remaining product backlog.
 
 Start with [the code map](docs/code-map.md), [the campaign experience backlog](docs/campaign-experience-backlog.md) and [the cleanup inventory](docs/repository-cleanup.md).

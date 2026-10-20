@@ -16,7 +16,7 @@ The old standalone notebook and Journal concept demos are replaced by the workin
 - `docs/prototypes/journal-concepts.html`, its explanatory Markdown, three PNG screenshots and its demo-only browser test.
 - `docs/notebook-design.md`, the stale Storage-emulator handoff and the old notebook/import validation report. Their claims that image sharing is not implemented and Storage cannot be tested are superseded by the current app and permission tests.
 
-The notebook-only npm script and CI step are retired with the demo. A current root README replaces missing-file setup advice as the default GitHub entry point; generated DOM output is ignored. Actual `test:player-images`, `test:player-images-rules`, `test:campaign-journal`, `test:campaign-journal-rules`, SRD import and full application tests remain. The approved map demo stays while map integration PR #144 awaits rollout.
+The notebook-only npm script and CI step are retired with the demo. A current root README replaces missing-file setup advice as the default GitHub entry point; generated DOM output is ignored. Actual `test:player-images`, `test:player-images-rules`, `test:campaign-journal`, `test:campaign-journal-rules`, SRD import and full application tests remain. The approved map demo remains an isolated design reference; the working map was integrated by PR #144.
 
 ## Preserve
 
@@ -27,23 +27,24 @@ The notebook-only npm script and CI step are retired with the demo. A current ro
 - Firestore/Storage rules and backward-compatible saved-data readers: deleting old-looking schema paths could break existing campaigns.
 - Agent skills and environment setup: external developer workflows may use them; absence of an app caller is not proof that they are unused.
 
-## Larger changes requiring the separate review
+## Approved follow-up cleanup
 
-The initial combined deletion/configuration/dependency batch was rejected by automatic approval review as too broad and potentially affecting recovery material and Firebase behavior. The narrower code/demo cleanup proceeded after reference checks and replacement app tests. These larger changes are not part of the code cleanup yet:
+The owner approved the narrower follow-up on 20 October 2026, with the historical Foundation migration explicitly retained for recovery. No further confirmation is outstanding for this scope.
 
-| Candidate | Evidence and proposed action |
+| Item | Result |
 | --- | --- |
-| `README.txt`, `README-FIRST.txt` | Old patch-copy instructions refer to missing architecture/migration files and obsolete installation paths. Replace with root `README.md`, then remove both old files. |
-| `js/items.js` | Empty export plus a commented book list. No runtime import; automatic seeding hook is gone. Remove the unused file. |
-| `js/migration-v2.3.js` | Old manually imported Foundation migration, no current runtime/test/workflow caller. Remove only after confirming this historical recovery command is no longer needed; retain current catalogue/private-library migration tools. |
-| `functions/index.js` | `require('./functions')` reports zero exports; only Firebase's commented starter endpoint and unused imports remain. Remove the scaffold, not the `functions/` Admin SDK dependency location. |
-| `firebase.json` Functions block | Points only at the empty scaffold. Remove that block together with retiring the scaffold. Keep Hosting, Firestore and Storage configuration. No deployment command is proposed. |
-| `firebase-functions`, `firebase-functions-test` packages | No endpoint or test uses them. Remove from `functions/package.json` and regenerate its lockfile. Keep `firebase-admin`, the Node engine and operator SDK paths. Existing packaged operator ZIPs remain byte-for-byte unchanged. |
-| Hosting ignore list | Exclude `functions/**`, `firestore.rules`, root readmes, logs and audit-only source hashes from Hosting. Those files can remain in Git; the browser does not need them. Validate the resulting Hosting file set. |
-| `docs/connected-workspace-progress.md` | Old delivery log overlaps `phase-3-architecture.md` and references a removed rules fragment. Consolidate current operational guidance into the architecture document before removing the log. |
+| `README.txt`, `README-FIRST.txt` | Removed obsolete patch-copy instructions; `README.md` is the current setup entry point. |
+| `js/items.js` | Removed the empty seed export and commented book list; no runtime caller. |
+| `js/migration-v2.3.js` | Retained for historical recovery. Current catalogue/private-library migration and diagnostic tools are also preserved. |
+| `functions/index.js` and Firebase Functions target | Removed the empty starter endpoint scaffold and its unused deployment configuration. Hosting, Firestore and Storage configuration remain. |
+| Functions dependencies | Removed unused `firebase-functions` and `firebase-functions-test`. `functions/` remains the historical `firebase-admin` SDK install location used by local operators; its manifest/lockfile are kept. Published operator ZIPs and checksums are unchanged. |
+| Hosting file list | Excludes the operator dependency folder, rules, readmes, logs and audit-only reference hashes while retaining runtime assets and legal attribution. |
+| Workspace delivery log | Removed duplicate `connected-workspace-progress.md`; current architecture and verification guidance live in `phase-3-architecture.md`. |
 
 Nothing in this cleanup runs an import, migration, production rule deployment or production data operation. Removed Git-tracked artifacts remain recoverable from history.
 
 ## Verification for this PR
 
 The current engine suite passes (27 reported test entries), the aggregate UI suite passes 363 DOM checks, and focused auth passes 9 checks. Actual app browser coverage passes for character loot/saved cards, editor/navigation guards, player image sharing and party Journal behavior. The existing 33-state page audit also passes at desktop and mobile sizes with no axe violations. Demo retirement does not remove the real app or emulator suites. No additional production rule deployment is required by this cleanup.
+
+Follow-up verification: clean `npm ci --prefix functions --ignore-scripts --no-audit --no-fund` installs 178 dependencies instead of 538 lock entries; the operator's Admin SDK app/Firestore/Storage modules load without credentials. Operator regression tests pass 44 checks with two platform-specific skips. `test:packaging` verifies Firebase's actual Hosting file selection, including required runtime modules/styles/data and legal assets. Published operator ZIPs/checksums and the historical migration are unchanged. Linux/Windows CI also clean-installs and checks the retained SDK.

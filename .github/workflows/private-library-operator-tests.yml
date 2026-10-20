@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'Start-ItemMigration.ps1'
+      - 'functions/package.json'
+      - 'functions/package-lock.json'
       - 'scripts/**'
       - 'tests/private-output.cjs'
       - 'tests/storage-access-audit.cjs'
@@ -27,6 +29,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Verify retained local operator SDK dependencies
+        run: npm ci --prefix functions --ignore-scripts --no-audit --no-fund
+      - name: Load operator Admin SDK without credentials or network requests
+        shell: node {0}
+        run: |
+          const {createRequire}=require('node:module');
+          const sdk=createRequire(require('node:path').resolve('functions/package.json'));
+          for(const module of ['firebase-admin/app','firebase-admin/firestore','firebase-admin/storage'])sdk(module);
+          console.log('Local operator Admin SDK modules loaded.');
       - name: Private output ACL/mode checks and immutable migration safeguards
         shell: node {0}
         run: |
