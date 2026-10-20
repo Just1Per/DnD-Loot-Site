@@ -54,7 +54,19 @@ async function moveSavedItem(save,targetId) {
 
 // ─── VISIBILITY BULK CONTROLS ─────────────────────────────────────────────────
 
+function renderLibraryDMPanel() {
+  const panel=document.getElementById('libraryDMTools');if(!panel)return;
+  const permitted=!!auth.currentUser&&!!activeCampaign&&canManageCampaign();
+  panel.hidden=!permitted;panel.ontoggle=null;
+  if(!permitted){panel.open=false;document.getElementById('campaignDMControls')?.replaceChildren();document.getElementById('visibilityControls')?.replaceChildren();return;}
+  const uid=auth.currentUser.uid,key='campaignatlas.library.dm-tools.v1.'+uid;
+  let open=false;try{open=localStorage.getItem(key)==='open';}catch{}
+  panel.open=open;
+  panel.ontoggle=()=>{if(panel.hidden||auth.currentUser?.uid!==uid||!canManageCampaign())return;try{localStorage.setItem(key,panel.open?'open':'closed');}catch{}};
+}
+
 function renderVisibilityControls() {
+  renderLibraryDMPanel();
   const el = document.getElementById("visibilityControls");
   if (!el || !activeCampaign || !canManageCampaign()) { if(el) el.innerHTML=""; return; }
   el.innerHTML = `

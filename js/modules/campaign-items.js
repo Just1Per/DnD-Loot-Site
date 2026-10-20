@@ -62,6 +62,8 @@ function confirmCampaignInventoryUpgrade() {
 
 function renderCampaignToolbar() {
   const bar=document.getElementById('campaignInventoryToolbar');if(!bar)return;
+  renderLibraryDMPanel();
+  const dmControls=document.getElementById('campaignDMControls');dmControls?.replaceChildren();
   if(activeCampaign?.inventoryVersion!==2){
     bar.innerHTML=canManageCampaign()?'<div class="dm-tool-card"><h2>Upgrade this campaign’s inventory</h2><p>Copy the existing catalogue into this campaign and preserve saved items and loot ownership. Existing root items and legacy records will remain unchanged.</p><button type="button" id="migrateCampaignInventory" class="btn-primary">Upgrade campaign inventory</button><p id="migrationProgress" aria-live="polite"></p></div>':'<p class="player-empty">Your DM needs to upgrade this campaign’s inventory before items are available.</p>';
     bar.querySelector('#migrateCampaignInventory')?.addEventListener('click',event=>runVaultButton(event.currentTarget,async()=>{
@@ -76,10 +78,11 @@ function renderCampaignToolbar() {
       alert('Campaign inventory upgraded. Legacy looted items with missing owners remain out of stock for DM review.');
     }));return;
   }
-  bar.innerHTML=`<div class="campaign-item-toolbar">${canManageCampaign()?'<button type="button" id="addFromRoot" class="toolbar-btn">Add from Root Catalogue</button>':''}<button type="button" id="refreshCampaignItems" class="toolbar-btn">Refresh Items</button>${canManageCampaign()?'<div class="campaign-bulk-controls" aria-label="DM bulk item controls"><strong>DM quick controls</strong><button type="button" data-bulk-item-policy="player-loot" class="toolbar-btn">All items: player loot ON</button><button type="button" data-bulk-item-policy="dm-only" class="toolbar-btn">All items: player loot OFF</button><button type="button" data-bulk-item-policy="unlimited" class="toolbar-btn">All items: unlimited</button></div>':'<span>Your loot and saved items are private to you and the campaign DM.</span>'}</div>`;
-  bar.querySelector('#addFromRoot')?.addEventListener('click',event=>runVaultButton(event.currentTarget,openRootPicker));
+  bar.innerHTML=`<div class="campaign-item-toolbar"><button type="button" id="refreshCampaignItems" class="toolbar-btn">Refresh Items</button>${canManageCampaign()?'':'<span>Your loot and saved items are private to you and the campaign DM.</span>'}</div>`;
+  if(dmControls&&canManageCampaign())dmControls.innerHTML='<button type="button" id="addFromRoot" class="toolbar-btn">Add from Root Catalogue</button><div class="campaign-bulk-controls" aria-label="DM bulk item controls"><strong>DM quick controls</strong><button type="button" data-bulk-item-policy="player-loot" class="toolbar-btn">All items: player loot ON</button><button type="button" data-bulk-item-policy="dm-only" class="toolbar-btn">All items: player loot OFF</button><button type="button" data-bulk-item-policy="unlimited" class="toolbar-btn">All items: unlimited</button></div>';
+  dmControls?.querySelector('#addFromRoot')?.addEventListener('click',event=>runVaultButton(event.currentTarget,openRootPicker));
   bar.querySelector('#refreshCampaignItems')?.addEventListener('click',event=>runVaultButton(event.currentTarget,refreshCampaignData));
-  bar.querySelectorAll('[data-bulk-item-policy]').forEach(button=>button.addEventListener('click',event=>runVaultButton(event.currentTarget,async()=>{
+  dmControls?.querySelectorAll('[data-bulk-item-policy]').forEach(button=>button.addEventListener('click',event=>runVaultButton(event.currentTarget,async()=>{
     const mode=event.currentTarget.dataset.bulkItemPolicy;
     const copy={
       'player-loot':['Make every campaign item visible and lootable by players?','All campaign items are now visible and player-lootable.'],
