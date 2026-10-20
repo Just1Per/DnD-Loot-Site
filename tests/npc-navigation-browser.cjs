@@ -32,8 +32,11 @@ const errors=[];
  });
  await page.waitForSelector('[data-read-npc=elowen]');
  await page.locator('[data-information-search]').fill('harbor');await page.locator('[data-information-category]').selectOption('Story NPC');
- await page.evaluate(()=>scrollTo(0,350));const listScroll=await page.evaluate(()=>scrollY);
- await page.locator('[data-read-npc=elowen]').click();
+ await page.evaluate(()=>document.fonts.ready);await page.evaluate(()=>scrollTo(0,350));
+ // Playwright may scroll the whole card into view before dispatching the click.
+ // Capture the user's actual list position before the application click handler.
+ await page.locator('[data-read-npc=elowen]').evaluate(button=>button.addEventListener('click',()=>window.npcListScrollAtClick=scrollY,{capture:true,once:true}));
+ await page.locator('[data-read-npc=elowen]').click();const listScroll=await page.evaluate(()=>npcListScrollAtClick);
  await page.waitForSelector('.npc-post-reader img');
  assert.equal(await page.locator('.npc-post-reader .campaign-book-prose p').count(),2);
  assert.equal(await page.locator('.npc-post-reader figcaption').textContent(),'Captain of the harbor watch.');
@@ -54,7 +57,8 @@ const errors=[];
  await page.locator('[data-back-to-npcs]').click();await page.waitForSelector('[data-read-npc=elowen]');
  assert.equal(await page.locator('[data-information-search]').inputValue(),'harbor');assert.equal(await page.locator('[data-information-category]').inputValue(),'Story NPC');
  assert.equal(await page.evaluate(()=>document.activeElement?.dataset.readNpc),'elowen');
- assert.ok(Math.abs(await page.evaluate(()=>scrollY)-listScroll)<5,'editor return restores list scroll');
+ await page.waitForFunction(expected=>Math.abs(scrollY-expected)<5,listScroll);
+ assert.ok(Math.abs(await page.evaluate(()=>scrollY)-listScroll)<5,'editor return restores the list position at the originating click');
  await page.locator('[data-read-npc=elowen]').focus();await page.keyboard.press('Enter');await page.waitForSelector('.npc-post-reader');await page.locator('[data-npc-back]').click();
  assert.equal(await page.evaluate(()=>document.activeElement?.dataset.readNpc),'elowen');
  console.log('PASS NPC reader, exact editor, private draft isolation, explicit reveal, retained filters, scroll and focus');
