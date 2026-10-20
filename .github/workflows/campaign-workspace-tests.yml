@@ -111,6 +111,7 @@ jobs:
       - name: Visual NPC/world cards and DM-managed campaign map
         run: |
           npm --prefix tests run test:journal-cards
+          npm --prefix tests run test:world-navigation
           npm --prefix tests run test:campaign-map
           npm --prefix tests run test:campaign-map-rules
       - name: Shared party journal, notebook reader and private recap permissions

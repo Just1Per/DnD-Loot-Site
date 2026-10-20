@@ -57,7 +57,8 @@
     "test:journal-cards": "node journal-cards-browser.cjs",
     "test:campaign-map": "node campaign-map-browser.cjs",
     "test:campaign-map-rules": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-map-rules.cjs\"",
-    "test:packaging": "node repository-packaging.cjs"
+    "test:packaging": "node repository-packaging.cjs",
+    "test:world-navigation": "node world-navigation-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.51.1",
