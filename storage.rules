@@ -91,7 +91,10 @@ service firebase.storage {
         && firestore.exists(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main)
         && firestore.get(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main).data.imagePath == 'campaign-maps/' + campaignId + '/' + imageId
       );
-      allow create: if resource == null && isCampaignDM(campaignId) && validImage() && request.resource.size > 0;
+      allow create: if resource == null && isCampaignDM(campaignId)
+        && request.resource != null && request.resource.size > 0
+        && request.resource.size <= 50 * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp)');
     }
 
     // Place pictures are private until their exact pin is part of the current publication.
