@@ -28,6 +28,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
  await page.locator('.root-picker-search .vault-help-badge').click();await page.waitForFunction(()=>!document.querySelector('#vaultContextHelp').hidden);await page.keyboard.press('Escape');
  console.log('PASS Live help cannot change the grid or decorate item rows; 302 results and 44px unobscured controls fit desktop, mobile and short viewports');
  await page.locator('.catalogue-filters summary').click();
+ for(const size of [{width:844,height:390},{width:390,height:640}]){await page.setViewportSize(size);for(const selector of ['#selectRootMatches','#addSelectedRoots']){const box=await page.locator(selector).boundingBox();assert.ok(box.y>=0&&box.y+box.height<=size.height+1,'Expanded filters must leave '+selector+' visible');}}
  await page.locator('[data-catalogue-filter=rarity]').selectOption('Common');assert.equal(await page.locator('[data-root-id]').count(),10);
  await page.locator('#selectRootMatches').click();await page.locator('[data-catalogue-filter=category]').selectOption('Ring');assert.equal(await page.locator('[data-root-id]').count(),5);
  await page.locator('[data-catalogue-filter=attunement]').selectOption('required');assert.equal(await page.locator('[data-root-id]').count(),0);

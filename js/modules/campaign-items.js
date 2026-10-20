@@ -145,7 +145,7 @@ async function openRootPicker() {
   const eligible=()=>rootItems.filter(i=>SharedCataloguePolicy.approved(i)&&CampaignRules.allowed(i));
   const matches=()=>{const q=dialog.querySelector('#rootPickerSearch').value.trim().toLowerCase();return eligible().filter(i=>catalogueItemMatches(i,{...catalogueFilterValues(dialog),search:q}));};
   dialog.innerHTML='<div class="character-loot-heading"><h2 id="rootPickerTitle">Add from Root Catalogue</h2><button type="button" id="closeRootPicker" class="cancel-button">Close</button></div><p>Select items to add as private campaign copies.</p><div class="root-picker-search"><input type="search" id="rootPickerSearch" class="search-input" placeholder="Search shared templates" aria-label="Search shared templates"></div><div class="root-picker-controls"><button type="button" id="selectRootMatches">Select all shown</button><button type="button" id="clearRootSelection">Clear selection</button><span id="rootPickerCount" role="status"></span></div><div id="rootPickerResults" data-no-context-help role="group" aria-label="Shared catalogue items"></div><div class="root-picker-footer"><p id="rootPickerStatus" role="status" aria-live="polite"></p><button type="button" id="addSelectedRoots" class="btn-primary" disabled>Add selected (0)</button></div>';
-  dialog.querySelector('.root-picker-search').insertAdjacentHTML('beforeend',catalogueFilterMarkup(eligible()));
+  dialog.querySelector('#rootPickerResults').innerHTML=catalogueFilterMarkup(eligible())+'<div id="rootPickerItems"></div>';
   const status=dialog.querySelector('#rootPickerStatus'),add=dialog.querySelector('#addSelectedRoots');
   const update=()=>{
     add.textContent=busy?`Adding… (${added} added)`:`Add selected (${selected.size})`;
@@ -155,7 +155,7 @@ async function openRootPicker() {
     dialog.setAttribute('aria-busy',String(busy));
   };
   const paint=()=>{
-    const list=dialog.querySelector('#rootPickerResults');
+    const list=dialog.querySelector('#rootPickerItems');
     list.innerHTML=matches().map(i=>`<label class="root-picker-row"><input type="checkbox" data-root-id="${escapeHtml(i.id)}" ${selected.has(i.id)?'checked':''}><span><strong>${escapeHtml(i.name)}</strong><span class="root-picker-meta">${escapeHtml(i.rarity||'')} · ${escapeHtml(i.category||'')}</span></span></label>`).join('')||'<p>No reviewed templates match your search.</p>';
     list.querySelectorAll('[data-root-id]').forEach(box=>box.addEventListener('change',()=>{if(box.checked)selected.add(box.dataset.rootId);else selected.delete(box.dataset.rootId);update();}));
     update();
