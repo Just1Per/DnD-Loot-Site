@@ -70,7 +70,8 @@ jobs:
         run: npm --prefix tests run test:dialogs
       - name: Root catalogue multi-select and viewport checks
         run: npm --prefix tests run test:root-picker
-          npm --prefix tests run test:admin-catalogue
+      - name: Admin catalogue loading, retry and account isolation
+        run: npm --prefix tests run test:admin-catalogue
       - name: Campaign UI consistency, mobile targets and responsive party actions
         run: npm --prefix tests run test:ui-consistency
       - name: Non-Overview accessibility, keyboard, layout and print
