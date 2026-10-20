@@ -19,6 +19,10 @@
   overflow-wrap: anywhere;
 }
 .item-card .item-attribution a { color: #742a26; text-decoration: underline; }
+.item-card .item-attribution summary{box-sizing:border-box;min-height:44px;padding:10px 0;cursor:pointer;font-weight:600}
+.item-card .item-attribution summary:focus-visible{outline:2px solid var(--ui-heading,#5c1d1d);outline-offset:3px;border-radius:3px}
+.item-card .item-attribution p{margin:0 0 .5rem}
+
 
 /* Party actions live outside the old #dmToolsPanel after workspace navigation. */
 #dmCharacterList .admin-char-btns{max-width:100%;min-width:0;flex-shrink:1;gap:8px}

@@ -11,14 +11,22 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
  window.rootItems=Array.from({length:302},(_,n)=>({id:'root-'+n,name:'Item '+String(n).padStart(3,'0'),rarity:'Rare',category:'Weapon',catalogueStatus:'approved-v1'}));rootItems.push({id:'unapproved',name:'Hidden',catalogueStatus:'draft'},{id:'blocked',name:'Blocked',edition:'blocked',catalogueStatus:'approved-v1'});
  window.escapeHtml=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');window.calls=[];window.refreshes=0;window.refreshCampaignData=async()=>{refreshes++};window.vaultCall=async(name,data)=>{calls.push(data);if(window.failAt===calls.length)throw Error('Simulated failure');if(window.hold)await new Promise(resolve=>window.release=resolve);return {itemId:'copy-'+data.sourceId}};
  });
+ await page.evaluate(()=>{window.currentUser=auth.currentUser;});
+ for(const name of ['site-help-data','site-help'])await page.addScriptTag({path:path.join(root,'js/modules/'+name+'.js')});
+ await page.evaluate(()=>SiteHelp.init());
  await page.addScriptTag({path:path.join(root,'js/modules/campaign-items.js')});await page.evaluate(()=>{window.refreshCampaignData=async()=>{refreshes++};return openRootPicker()});
+ await page.evaluate(()=>SiteHelp.refresh());
  assert.equal(await page.locator('[data-root-id]').count(),302);await page.locator('[data-root-id="root-301"]').scrollIntoViewIfNeeded();
- for(const size of [{width:1280,height:800},{width:390,height:640}]){
+ assert.equal(await page.locator('#rootPicker>.vault-help-badge').count(),0);assert.equal(await page.locator('.root-picker-row .vault-help-badge').count(),0);assert.equal(await page.locator('.root-picker-search .vault-help-badge').count(),1);
+ for(const size of [{width:1280,height:800},{width:844,height:390},{width:390,height:640}]){
  await page.setViewportSize(size);await page.locator('[data-root-id="root-301"]').scrollIntoViewIfNeeded();
  for(const selector of ['#rootPicker','#addSelectedRoots','#closeRootPicker','[data-root-id="root-301"]']){const box=await page.locator(selector).boundingBox();assert.ok(box&&box.y>=0&&box.y+box.height<=size.height+1,selector+' must fit viewport');}
+ for(const selector of ['#closeRootPicker','#selectRootMatches','#clearRootSelection','#addSelectedRoots']){const button=page.locator(selector),box=await button.boundingBox();assert.ok(box.height>=44,selector+' needs a usable touch target');if(!await button.isDisabled())assert.equal(await button.evaluate(node=>{const r=node.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return hit===node||node.contains(hit)}),true,selector+' must not be covered by results');}
+ const bounds=await page.locator('#rootPickerResults').boundingBox(),footer=await page.locator('.root-picker-footer').boundingBox();assert.ok(bounds.y+bounds.height<=footer.y+1,'Results must not overlap footer');
  }
  if(process.env.ROOT_PICKER_SCREENSHOT)await page.screenshot({path:process.env.ROOT_PICKER_SCREENSHOT});
- console.log('PASS All 302 results, last item and fixed actions are reachable on desktop and mobile');
+ await page.locator('.root-picker-search .vault-help-badge').click();await page.waitForFunction(()=>!document.querySelector('#vaultContextHelp').hidden);await page.keyboard.press('Escape');
+ console.log('PASS Live help cannot change the grid or decorate item rows; 302 results and 44px unobscured controls fit desktop, mobile and short viewports');
  await page.locator('[data-root-id="root-301"]').check();await page.locator('#rootPickerSearch').fill('Item 00');await page.locator('#selectRootMatches').click();assert.match(await page.locator('#addSelectedRoots').textContent(),/11/);await page.locator('#rootPickerSearch').fill('');assert.equal(await page.locator('input[data-root-id]:checked').count(),11);
  await page.locator('#clearRootSelection').click();await page.locator('#selectRootMatches').click();assert.match(await page.locator('#addSelectedRoots').textContent(),/302/);
  await page.locator('#addSelectedRoots').click();await page.waitForFunction(()=>document.querySelector('#rootPickerStatus').textContent.startsWith('Added 302')&&document.querySelector('#rootPicker').getAttribute('aria-busy')==='false');

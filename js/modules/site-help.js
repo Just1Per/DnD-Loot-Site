@@ -75,7 +75,7 @@ var SiteHelp=(()=>{
  function refresh(){
   if(!tip)return;
   document.querySelectorAll('input:not([type=hidden]),select,textarea').forEach(control=>{
-   if(control.closest('.vault-help-dialog,.sheet-paper-page,#test-results'))return;
+   if(control.closest('.vault-help-dialog,.sheet-paper-page,#test-results,[data-no-context-help]'))return;
    const label=control.closest('label')||[...document.querySelectorAll('label[for]')].find(l=>l.htmlFor===control.id&&control.id);
    const title=label?titleOf(label):control.getAttribute('aria-label')||control.placeholder||control.name||control.id;
    if(!title)return;const span=label?.querySelector(':scope > span');badge(span||label||control,title,explain(control,title));
