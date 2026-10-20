@@ -80,7 +80,11 @@ function initFilterListeners() {
   ].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.addEventListener("change", renderCards);
+    el.addEventListener("change", () => {
+      const pair={showLootedOnly:'showUnlootedOnly',showUnlootedOnly:'showLootedOnly',showAttunementOnly:'showNoAttunementOnly',showNoAttunementOnly:'showAttunementOnly',showHighlightedOnly:'showNotHighlightedOnly',showNotHighlightedOnly:'showHighlightedOnly'}[id];
+      if(pair&&el.checked)document.getElementById(pair).checked=false;
+      renderCards();
+    });
   });
 }
 

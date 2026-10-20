@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="css/site-identity.css?v=20261010-ui-cleanup-v82">
   <link rel="stylesheet" href="css/campaign-workspace.css?v=20261017-world-custom-categories-v1">
   <link rel="stylesheet" href="css/campaign-home.css?v=20261016-subclass-warning-v1">
-  <link rel="stylesheet" href="css/campaign-information.css?v=20261020-recap-navigation-v1">
+  <link rel="stylesheet" href="css/campaign-information.css?v=20261020-library-browsing-v1">
   <link rel="stylesheet" href="css/dm-tools.css?v=20261014-saved-items-five-grid-v1">
   <link rel="stylesheet" href="css/site-ui.css?v=20261010-ui-cleanup-v82">
   <link rel="stylesheet" href="css/app-shell.css?v=20261014-navigation-groups-v1">
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="css/character-workspace.css?v=20261020-repository-cleanup-v1">
   <link rel="stylesheet" href="css/page-editors.css?v=20261016-page-editors-v1">
   <link rel="stylesheet" href="css/campaign-map.css?v=20261020-map-regions-v1">
-  <link rel="stylesheet" href="css/campaign-journal.css?v=20261020-recap-navigation-v1">
+  <link rel="stylesheet" href="css/campaign-journal.css?v=20261020-library-browsing-v1">
   <link rel="stylesheet" href="css/dialogs.css?v=20261020-catalogue-filters-v2">
 </head>
 <body>
@@ -161,10 +161,11 @@
 
         <input type="search" id="search" placeholder="Search items…"
           class="search-input" aria-label="Search items">
+        <button type="button" id="clearLibraryFilters" hidden>Clear search &amp; filters</button>
 
 
         <details class="filter-panel">
-          <summary>Filters</summary>
+          <summary id="libraryFilterSummary">Filters</summary>
           <div class="filter-grid">
 
             <label class="filter-label">Category
@@ -219,6 +220,7 @@
         </details>
       </div>
 
+      <div id="libraryActiveFilters" class="library-active-filters" role="group" aria-label="Active item filters" hidden></div>
       <div id="campaignInventoryToolbar"></div>
       <p id="campaignStats" class="campaign-stats" aria-live="polite"></p>
       <div id="card-container" class="card-container" aria-label="Magic items"></div>
@@ -482,6 +484,6 @@
     <p>© 2026 DKDM — CampaignAtlas’s original website code and interface. Third-party content retains its own licences and rights.</p>
   </footer>
   <script src="js/boot-status.js?v=20261010-ui-cleanup"></script>
-  <script type="module" id="siteAppScript" src="js/app.js?v=20261020-recap-navigation-v1"></script>
+  <script type="module" id="siteAppScript" src="js/app.js?v=20261020-library-browsing-v1"></script>
 </body>
 </html>

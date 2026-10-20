@@ -121,8 +121,10 @@ async function openRootCatalogue() {
 }
 // Shared template filters use the same item fields as the campaign Library.
 function catalogueItemMatches(item, filters) {
-  const q=(filters.search||'').trim().toLowerCase();
-  return (!q||[item.name,item.description].some(value=>(value||'').toLowerCase().includes(q)))
+  const terms=(filters.search||'').trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const text=[item.name,item.description,item.category,item.rarity,item.source,...(item.classes||[]),...(item.properties||[]).flatMap(p=>[p.title,p.text])].join(' ').toLowerCase();
+  const query=(filters.search||'').trim().toLowerCase();
+  return (filters.multiTerm?terms.every(term=>text.includes(term)):!query||[item.name,item.description].some(value=>(value||'').toLowerCase().includes(query)))
     && ['rarity','category','source'].every(key=>!filters[key]||item[key]===filters[key])
     && (!filters.class||item.classes?.includes(filters.class))
     && (!filters.attunement||(filters.attunement==='required'?!!item.attunement:!item.attunement));

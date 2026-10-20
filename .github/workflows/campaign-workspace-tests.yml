@@ -41,6 +41,10 @@ jobs:
         run: npm --prefix tests run test:packaging
       - name: Install Chromium
         run: npx --prefix tests playwright install --with-deps chromium
+      - name: NPC reading, exact-record reopening and return navigation
+        run: |
+          npm --prefix tests run test:campaign-npcs
+          npm --prefix tests run test:npc-navigation
       - name: Install PDF text verification
         run: sudo apt-get update && sudo apt-get install -y poppler-utils
       - name: Character engines and UI fixtures
@@ -74,6 +78,7 @@ jobs:
         run: |
           npm --prefix tests run test:admin-catalogue
           npm --prefix tests run test:library-dm-panel
+          npm --prefix tests run test:library-browsing
       - name: Campaign UI consistency, mobile targets and responsive party actions
         run: npm --prefix tests run test:ui-consistency
       - name: Non-Overview accessibility, keyboard, layout and print
@@ -136,11 +141,8 @@ jobs:
         run: npm --prefix tests run test:campaign-information
       - name: Player campaign information permissions
         run: npm --prefix tests run test:campaign-information-rules
-      - name: Revealed NPC catalogue and permissions
-        run: |
-          npm --prefix tests run test:campaign-npcs
-          npm --prefix tests run test:npc-navigation
-          npm --prefix tests run test:campaign-npcs-rules
+      - name: Revealed NPC catalogue permissions
+        run: npm --prefix tests run test:campaign-npcs-rules
       - name: Completed chapters and private player notes
         run: |
           npm --prefix tests run test:campaign-chapters
