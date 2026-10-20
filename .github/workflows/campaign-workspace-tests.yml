@@ -136,6 +136,7 @@ jobs:
       - name: Revealed NPC catalogue and permissions
         run: |
           npm --prefix tests run test:campaign-npcs
+          npm --prefix tests run test:npc-navigation
           npm --prefix tests run test:campaign-npcs-rules
       - name: Completed chapters and private player notes
         run: |

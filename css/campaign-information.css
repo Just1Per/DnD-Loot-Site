@@ -78,3 +78,7 @@
 .world-post-reader .campaign-book-prose p{margin:0 0 1.3em}
 .library-introduction{margin:24px 0}.library-introduction h2{margin-bottom:10px}.library-introduction p{line-height:1.7}
 @media(max-width:580px){.world-post-reader{padding:0 0 24px}.world-post-reader>.workspace-actions{margin-bottom:28px}.world-reader-image{margin:24px 0}.world-post-reader .campaign-book-prose{font-size:1.02rem;line-height:1.85}.world-post-card-text{padding:20px}}
+
+/* NPC portraits keep the whole illustration visible in the shared reader. */
+.npc-post-reader .world-reader-image{max-width:480px;margin:32px auto}
+.npc-post-reader .world-reader-image img{width:auto;max-width:100%;height:auto;max-height:520px;object-fit:contain}

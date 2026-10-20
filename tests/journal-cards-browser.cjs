@@ -29,7 +29,7 @@ const errors=[];
   await page.evaluate(()=>{document.activeElement?.blur();scrollTo(0,0)});await page.screenshot({path:out+'/'+tab+'-cards-'+width+'.png',fullPage:true});
   if(tab==='campaign-information'){
    await page.locator('[data-read-world]').first().click();assert.equal(await page.locator('.world-post-reader').count(),1);assert.equal(await page.locator('.world-post-reader .campaign-book-prose p').count(),2);assert.equal(await page.locator('[data-world-edit]').count(),0);await page.locator('[data-world-back]').click();
-  }else{await page.locator('[data-information-id] summary').first().click();assert.ok(await page.locator('.campaign-reference-card .campaign-book-prose').first().isVisible());assert.ok((await page.locator('.campaign-reference-card .campaign-book-prose').first().textContent()).includes('\n\n'));}
+  }else{await page.locator('[data-read-npc]').first().click();assert.equal(await page.locator('.npc-post-reader .campaign-book-prose p').count(),2);assert.equal(await page.locator('[data-npc-edit]').count(),0);await page.locator('[data-npc-back]').click();}
   await page.locator('[data-information-search]').fill('no such place');assert.equal(await page.locator('.campaign-reference-card').count(),0);await page.locator('[data-information-search]').fill('');assert.equal(await page.locator('.campaign-reference-card').count(),3);
  }}
  assert.deepEqual(errors,[]);console.log('SUCCESS NPC/world card grids, full-width desktop/mobile pages, readable paragraphs, search and accessibility');
