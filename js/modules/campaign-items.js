@@ -102,12 +102,32 @@ async function openRootCatalogue() {
     document.getElementById('rootCatalogueScreen').style.display='block';renderRootCatalogue();
   });
 }
+// Shared template filters use the same item fields as the campaign Library.
+function catalogueItemMatches(item, filters) {
+  const q=(filters.search||'').trim().toLowerCase();
+  return (!q||[item.name,item.description].some(value=>(value||'').toLowerCase().includes(q)))
+    && ['rarity','category','source'].every(key=>!filters[key]||item[key]===filters[key])
+    && (!filters.class||item.classes?.includes(filters.class))
+    && (!filters.attunement||(filters.attunement==='required'?!!item.attunement:!item.attunement));
+}
+function catalogueFilterMarkup(rows) {
+  const values=key=>[...new Set(rows.flatMap(item=>key==='class'?(item.classes||[]):[item[key]]).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  return '<details class="catalogue-filters" data-no-context-help><summary>Filters</summary><div class="catalogue-filter-grid">'+['rarity','category','source','class'].map(key=>`<label>${key[0].toUpperCase()+key.slice(1)}<select data-catalogue-filter="${key}" aria-label="Catalogue ${key}"><option value="">All ${key==='class'?'classes':key==='rarity'?'rarities':key==='category'?'categories':'sources'}</option>${values(key).map(value=>`<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join('')}</select></label>`).join('')+'<label>Attunement<select data-catalogue-filter="attunement" aria-label="Catalogue attunement"><option value="">Any attunement</option><option value="required">Requires attunement</option><option value="none">No attunement</option></select></label><button type="button" data-catalogue-clear>Reset filters</button></div></details>';
+}
+function catalogueFilterValues(host) {return Object.fromEntries([...host.querySelectorAll('[data-catalogue-filter]')].map(control=>[control.dataset.catalogueFilter,control.value]));}
+function bindCatalogueFilters(host, paint) {
+  host.querySelectorAll('[data-catalogue-filter]').forEach(control=>control.addEventListener('change',paint));
+  host.querySelector('[data-catalogue-clear]').addEventListener('click',()=>{host.querySelectorAll('[data-catalogue-filter]').forEach(control=>control.value='');paint();});
+}
 function renderRootCatalogue() {
   if(!isAdmin())return;
-  const screen=document.getElementById('rootCatalogueScreen');const search=screen.querySelector('#rootSearch')?.value||'';
+  const screen=document.getElementById('rootCatalogueScreen');const search=screen.querySelector('#rootSearch')?.value||'',filters=catalogueFilterValues(screen);
   screen.innerHTML='<div class="admin-section"><button id="backFromRoot" class="toolbar-btn" type="button">← Back to Admin</button><h2>Root Catalogue</h2><p>Shared templates. Edits do not change existing campaign copies. New and edited templates remain unpublished until their publication review.</p><button id="createRootItem" class="toolbar-btn" type="button">+ Create Root Item</button><input id="rootSearch" class="search-input" aria-label="Search root items" placeholder="Search root items…"><div id="rootCards" class="card-container"></div></div>';
+  screen.querySelector('#rootSearch').insertAdjacentHTML('afterend',catalogueFilterMarkup(rootItems)+'<p data-catalogue-count role="status"></p>');
+  screen.querySelectorAll('[data-catalogue-filter]').forEach(control=>control.value=filters[control.dataset.catalogueFilter]||'');
   screen.querySelector('#rootSearch').value=search;
-  const paint=()=>{const q=screen.querySelector('#rootSearch').value.toLowerCase();const grid=screen.querySelector('#rootCards');grid.replaceChildren(...rootItems.filter(i=>i.name?.toLowerCase().includes(q)).map(i=>createCard(i,{root:true})));observePendingImages(grid);};
+  const paint=()=>{const q=screen.querySelector('#rootSearch').value.toLowerCase();const grid=screen.querySelector('#rootCards');grid.replaceChildren(...rootItems.filter(i=>catalogueItemMatches(i,{...catalogueFilterValues(screen),search:q})).map(i=>createCard(i,{root:true})));observePendingImages(grid);screen.querySelector('[data-catalogue-count]').textContent=grid.children.length+' of '+rootItems.length+' items shown';};
+  bindCatalogueFilters(screen,paint);
   screen.querySelector('#rootSearch').addEventListener('input',paint);
   screen.querySelector('#backFromRoot').addEventListener('click',openAdminView);
   screen.querySelector('#createRootItem').addEventListener('click',()=>openItemModal(null,{scope:'root'}));paint();
@@ -123,14 +143,15 @@ async function openRootPicker() {
   let busy=false,added=0;
   const current=()=>activeCampaign?.id===id&&auth.currentUser?.uid===uid&&canManageCampaign();
   const eligible=()=>rootItems.filter(i=>SharedCataloguePolicy.approved(i)&&CampaignRules.allowed(i));
-  const matches=()=>{const q=dialog.querySelector('#rootPickerSearch').value.trim().toLowerCase();return eligible().filter(i=>i.name?.toLowerCase().includes(q));};
+  const matches=()=>{const q=dialog.querySelector('#rootPickerSearch').value.trim().toLowerCase();return eligible().filter(i=>catalogueItemMatches(i,{...catalogueFilterValues(dialog),search:q}));};
   dialog.innerHTML='<div class="character-loot-heading"><h2 id="rootPickerTitle">Add from Root Catalogue</h2><button type="button" id="closeRootPicker" class="cancel-button">Close</button></div><p>Select items to add as private campaign copies.</p><div class="root-picker-search"><input type="search" id="rootPickerSearch" class="search-input" placeholder="Search shared templates" aria-label="Search shared templates"></div><div class="root-picker-controls"><button type="button" id="selectRootMatches">Select all shown</button><button type="button" id="clearRootSelection">Clear selection</button><span id="rootPickerCount" role="status"></span></div><div id="rootPickerResults" data-no-context-help role="group" aria-label="Shared catalogue items"></div><div class="root-picker-footer"><p id="rootPickerStatus" role="status" aria-live="polite"></p><button type="button" id="addSelectedRoots" class="btn-primary" disabled>Add selected (0)</button></div>';
+  dialog.querySelector('.root-picker-search').insertAdjacentHTML('beforeend',catalogueFilterMarkup(eligible()));
   const status=dialog.querySelector('#rootPickerStatus'),add=dialog.querySelector('#addSelectedRoots');
   const update=()=>{
     add.textContent=busy?`Adding… (${added} added)`:`Add selected (${selected.size})`;
     add.disabled=busy||!selected.size||!current();
     dialog.querySelector('#rootPickerCount').textContent=`${matches().length} of ${eligible().length} items shown · ${selected.size} selected`;
-    dialog.querySelectorAll('input, #selectRootMatches, #clearRootSelection, #closeRootPicker').forEach(control=>{control.disabled=busy;});
+    dialog.querySelectorAll('input, select, [data-catalogue-clear], #selectRootMatches, #clearRootSelection, #closeRootPicker').forEach(control=>{control.disabled=busy;});
     dialog.setAttribute('aria-busy',String(busy));
   };
   const paint=()=>{
@@ -139,6 +160,7 @@ async function openRootPicker() {
     list.querySelectorAll('[data-root-id]').forEach(box=>box.addEventListener('change',()=>{if(box.checked)selected.add(box.dataset.rootId);else selected.delete(box.dataset.rootId);update();}));
     update();
   };
+  bindCatalogueFilters(dialog,()=>{paint();dialog.querySelector('#rootPickerResults').scrollTop=0;});
   dialog.querySelector('#closeRootPicker').addEventListener('click',closeRootPicker);
   dialog.oncancel=event=>{if(busy)event.preventDefault();};
   dialog.querySelector('#rootPickerSearch').addEventListener('input',()=>{paint();dialog.querySelector('#rootPickerResults').scrollTop=0;});
