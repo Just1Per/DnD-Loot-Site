@@ -71,7 +71,9 @@ jobs:
       - name: Root catalogue multi-select and viewport checks
         run: npm --prefix tests run test:root-picker
       - name: Admin catalogue loading, retry and account isolation
-        run: npm --prefix tests run test:admin-catalogue
+        run: |
+          npm --prefix tests run test:admin-catalogue
+          npm --prefix tests run test:library-dm-panel
       - name: Campaign UI consistency, mobile targets and responsive party actions
         run: npm --prefix tests run test:ui-consistency
       - name: Non-Overview accessibility, keyboard, layout and print
@@ -128,6 +130,7 @@ jobs:
       - name: Shared party journal, notebook reader and private recap permissions
         run: |
           npm --prefix tests run test:campaign-journal
+          npm --prefix tests run test:recap-navigation
           npm --prefix tests run test:campaign-journal-rules
       - name: Player campaign information sharing and accessibility
         run: npm --prefix tests run test:campaign-information

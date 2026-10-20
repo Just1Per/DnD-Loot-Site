@@ -5,12 +5,21 @@ var CampaignJournal=(()=>{
   const chapters=createCampaignInformationStore(window.__DND_VAULT_DEPS__,'chapter');
   const escape=value=>escapeHtml(String(value??''));
   let session=null,leavePrompt=null;
+  const browsing=new Map(),browseKey=()=>[auth.currentUser?.uid,activeCampaign?.id].join(':');
+  const prose=value=>String(value||'').split(/\n\s*\n/).filter(Boolean).map(text=>'<p>'+escape(text).replaceAll('\n','<br>')+'</p>').join('');
+  function remember(s){if(current(s))browsing.set(browseKey(),{search:s.search,filter:s.filter,focusId:s.focusId,scroll:s.selected||s.editor||s.root.querySelector('[data-journal-form]')?s.listScroll:window.scrollY});}
+  function restoreList(s){
+    const button=[...s.root.querySelectorAll('[data-journal-read],[data-journal-edit]')].find(n=>(n.dataset.journalRead||'draft:'+n.dataset.journalEdit)===s.focusId);
+    (button||s.root.querySelector('[data-journal-compose]'))?.focus({preventScroll:true});window.scrollTo(0,s.listScroll||0);
+  }
+  function finishEditing(s){s.editor=null;paint(s);if(s.selected)s.root.querySelector('#journalEntryTitle')?.focus();else restoreList(s);}
+
   const current=s=>session===s&&activeCampaign?.id===s.campaignId&&auth.currentUser?.uid===s.uid;
   const allowed=s=>current(s)&&!s.denied;
   const today=()=>{const date=new Date();return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;};
   function cancelLeave(){if(!leavePrompt)return;const p=leavePrompt;leavePrompt=null;if(p.dialog.open)p.dialog.close();p.dialog.remove();if(p.opener?.isConnected)p.opener.focus();}
   function revokeImages(s){for(const url of s?.imageUrls||[])URL.revokeObjectURL(url);if(s)s.imageUrls=[];}
-  function clear(){revokeImages(session);cancelLeave();document.querySelectorAll('.journal-preview').forEach(dialog=>{dialog.close();dialog.remove();});session?.stops.forEach(stop=>stop());session=null;document.getElementById('tab-campaign-journal')?.replaceChildren();}
+  function clear(){if(session)remember(session);revokeImages(session);cancelLeave();document.querySelectorAll('.journal-preview').forEach(dialog=>{dialog.close();dialog.remove();});session?.stops.forEach(stop=>stop());session=null;document.getElementById('tab-campaign-journal')?.replaceChildren();}
   function guard(action){
     const s=session;if(!s)return true;if(!current(s)){clear();return true;}if(s.busy)return false;
     if(!s.editor?.dirty)return true;if(leavePrompt)return false;
@@ -48,22 +57,24 @@ var CampaignJournal=(()=>{
     if(!allowed(s)||s.editor)return;
     revokeImages(s);
     const rows=entries(s),selected=rows.find(row=>row.key===s.selected);
+    const focused=document.activeElement?.dataset.journalRead;
+    s.root.querySelector('.journal-hero').hidden=!!selected;
     const body=s.root.querySelector('[data-journal-content]');
     s.root.querySelector('[data-journal-status]').textContent=s.message;
     const compose=s.root.querySelector('[data-journal-compose]');compose.disabled=!s.ready||s.busy;compose.title=s.ready?'Write your own session recap':'Loading your journal access…';
     s.root.querySelector('[data-journal-refresh]').disabled=s.busy;
     if(selected){
-      body.innerHTML=`<div class="journal-reader-heading"><button type="button" data-journal-back>← All journal entries</button></div><div class="journal-notebook"><nav class="journal-index" aria-label="Journal entries"><p class="journal-eyebrow">Contents</p>${rows.map(row=>`<button type="button" data-journal-read="${escape(row.key)}" ${row.key===selected.key?'aria-current="page"':''}>${escape(row.title)}</button>`).join('')}</nav><article class="journal-leaf" aria-labelledby="journalEntryTitle"><span class="journal-tag ${selected.type==='recap'?'journal-player':''}">${selected.type==='recap'?'Player account · Shared with the campaign':selected.type==='chapter'?'Official shared chapter':'From your DM'}</span><h3 id="journalEntryTitle" tabindex="-1">${escape(selected.title)}</h3><p class="journal-meta">${escape(subtitle(selected))}</p><div class="journal-prose">${escape(selected.body)}</div>${selected.image?'<figure data-journal-image>Loading shared illustration…</figure>':''}${selected.type==='recap'&&(selected.remember||selected.nextTime)?`<div class="journal-note-grid">${selected.remember?`<section class="journal-note"><h4>Remember this</h4><div class="journal-prose">${escape(selected.remember)}</div></section>`:''}${selected.nextTime?`<section class="journal-note"><h4>For next time</h4><div class="journal-prose">${escape(selected.nextTime)}</div></section>`:''}</div>`:''}<div class="journal-actions">${selected.type==='recap'&&selected.authorId===s.uid?`<button type="button" data-journal-edit="${escape(selected.id)}">Edit your draft</button><button type="button" data-journal-unshare="${escape(selected.id)}">Make private</button>`:''}${selected.type==='chapter'?'<button type="button" data-journal-route="campaign-chapters">Open chapters &amp; private notes</button>':selected.type==='world'?'<button type="button" data-journal-route="campaign-information">Explore places &amp; lore</button>':''}</div></article></div>`;
+      body.innerHTML=`<div class="journal-reader-heading"><button type="button" data-journal-back>← Back to Recaps</button></div><div class="journal-notebook"><details class="journal-index"><summary>Other journal entries</summary><nav aria-label="Journal entries">${rows.map(row=>`<button type="button" data-journal-read="${escape(row.key)}" ${row.key===selected.key?'aria-current="page"':''}>${escape(row.title)}</button>`).join('')}</nav></details><article class="journal-leaf" aria-labelledby="journalEntryTitle"><span class="journal-tag ${selected.type==='recap'?'journal-player':''}">${selected.type==='recap'?'Player account · Shared with the campaign':selected.type==='chapter'?'Official shared chapter':'From your DM'}</span><p class="journal-eyebrow">Journal → Recaps</p><h3 id="journalEntryTitle" tabindex="-1">${escape(selected.title)}</h3><p class="journal-meta">${escape(subtitle(selected))}</p><div class="journal-prose journal-reading-prose">${prose(selected.body)}</div>${selected.image?'<figure data-journal-image>Loading shared illustration…</figure>':''}${selected.type==='recap'&&(selected.remember||selected.nextTime)?`<div class="journal-note-grid">${selected.remember?`<section class="journal-note"><h4>Remember this</h4><div class="journal-prose">${escape(selected.remember)}</div></section>`:''}${selected.nextTime?`<section class="journal-note"><h4>For next time</h4><div class="journal-prose">${escape(selected.nextTime)}</div></section>`:''}</div>`:''}<div class="journal-actions">${selected.type==='recap'&&selected.authorId===s.uid?`<button type="button" data-journal-edit="${escape(selected.id)}">Edit your draft</button><button type="button" data-journal-unshare="${escape(selected.id)}">Make private</button>`:''}${selected.type==='chapter'?'<button type="button" data-journal-route="campaign-chapters">Open chapters &amp; private notes</button>':selected.type==='world'?'<button type="button" data-journal-route="campaign-information">Explore places &amp; lore</button>':''}</div></article></div>`;
     }else{
       s.selected=null;const visible=rows.filter(row=>(s.filter==='all'||(s.filter==='dm'?row.type!=='recap':row.type===s.filter))&&[row.title,row.body,row.authorName,row.characterName,row.sessionNumber].join(' ').toLowerCase().includes(s.search.toLowerCase()));
       body.innerHTML=`<div class="journal-grid"><section aria-label="Shared journal entries" class="journal-feed">${visible.length?visible.map(card).join(''):`<section class="journal-card journal-empty"><h3>${rows.length?'No entries match your search':'Your story starts here'}</h3><p>${rows.length?'Try another search or show all entries.':'Write your first session recap, or explore the campaign references. Completed chapters appear here when your DM shares them.'}</p></section>`}</section>${sidebar(s)}</div>`;
     }
-    bindContent(s);if(selected?.image)loadImage(s,selected);
+    bindContent(s);if(focused)[...body.querySelectorAll('[data-journal-read]')].find(n=>n.dataset.journalRead===focused)?.focus({preventScroll:true});if(selected?.image)loadImage(s,selected);
   }
   function bindContent(s){
     const host=s.root.querySelector('[data-journal-content]');
-    host.querySelectorAll('[data-journal-read]').forEach(button=>button.onclick=()=>{if(!allowed(s))return;s.selected=button.dataset.journalRead;paint(s);s.root.querySelector('#journalEntryTitle')?.focus();});
-    host.querySelector('[data-journal-back]')?.addEventListener('click',()=>{s.selected=null;paint(s);s.root.querySelector('[data-journal-compose]')?.focus();});
+    host.querySelectorAll('[data-journal-read]').forEach(button=>button.onclick=()=>{if(!allowed(s))return;if(!s.selected){s.listScroll=window.scrollY;s.focusId=button.dataset.journalRead;}s.selected=button.dataset.journalRead;paint(s);remember(s);s.root.querySelector('#journalEntryTitle')?.focus();});
+    host.querySelector('[data-journal-back]')?.addEventListener('click',()=>{s.selected=null;paint(s);restoreList(s);remember(s);});
     host.querySelectorAll('[data-journal-edit]').forEach(button=>button.onclick=()=>edit(s,button.dataset.journalEdit));
     host.querySelectorAll('[data-journal-route]').forEach(button=>button.onclick=()=>showTab(button.dataset.journalRoute));
     host.querySelectorAll('[data-journal-unshare]').forEach(button=>button.onclick=()=>unshare(s,button.dataset.journalUnshare));
@@ -81,6 +92,8 @@ var CampaignJournal=(()=>{
     if(!allowed(s)||!s.ready||!guard(()=>edit(s,id)))return;
     const row=id?s.drafts.find(row=>row.id===id):null;
     if(id&&!row){s.message='Your saved draft is unavailable. Refresh the journal before editing.';paint(s);return;}
+    if(!s.selected&&!s.editor){s.listScroll=window.scrollY;s.focusId=id?'draft:'+id:'compose';}
+    s.root.querySelector('.journal-hero').hidden=true;
     s.editor={...(row||{id:crypto.randomUUID(),revision:0,title:'',body:'',authorName:String(currentUser?.name||auth.currentUser?.displayName||'Player').slice(0,100),characterName:'',sessionNumber:Math.min(9999,[...s.shared,...s.drafts].reduce((max,row)=>Math.max(max,row.sessionNumber||0),0)+1),sessionDate:today(),remember:'',nextTime:''}),audience:'private',dirty:false};
     s.message='Write your recap, choose who can read it, then save.';
     revokeImages(s);const e=s.editor,fields=[['sessionNumber','Session number','number',9999],['sessionDate','Session date','date',10],['authorName','Your name','text',100],['characterName','Character perspective (optional)','text',100]];
@@ -90,7 +103,7 @@ var CampaignJournal=(()=>{
     form.addEventListener('invalid',event=>{const details=event.target.closest('details');if(details)details.open=true;},true);
     form.onsubmit=async event=>{event.preventDefault();const e=s.editor,share=e.audience==='party';if(await saveDraft(s)&&share&&allowed(s)&&s.editor===e)await publish(s);};
     s.root.querySelector('[data-journal-audience]').onchange=event=>{s.editor.audience=event.target.value;editorState(s);};
-    s.root.querySelector('[data-journal-editor-back]').onclick=()=>{if(!guard(()=>{s.editor=null;paint(s);}))return;s.editor=null;paint(s);};
+    s.root.querySelector('[data-journal-editor-back]').onclick=()=>{if(!guard(()=>finishEditing(s)))return;finishEditing(s);};
     s.root.querySelector('[data-journal-preview]').onclick=()=>preview(s);
     editorState(s);s.root.querySelector('[data-journal-field="title"]').focus();
   }
@@ -140,25 +153,26 @@ var CampaignJournal=(()=>{
   }
   async function render(){
     if(!guard(render))return;clear();if(!activeCampaign||!auth.currentUser)return;
-    const root=document.getElementById('tab-campaign-journal');
-    const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,root,drafts:[],shared:[],chapters:[],world:[],imageUrls:[],stops:[],referenceProblems:new Set(),ready:false,denied:false,busy:false,editor:null,selected:null,filter:'all',search:'',message:'Loading your campaign journal…'};session=s;
+    const root=document.getElementById('tab-campaign-journal'),saved=browsing.get(browseKey());
+    const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,root,drafts:[],shared:[],chapters:[],world:[],imageUrls:[],stops:[],referenceProblems:new Set(),ready:false,denied:false,busy:false,editor:null,selected:null,filter:saved?.filter||'all',search:saved?.search||'',focusId:saved?.focusId,listScroll:saved?.scroll||0,message:'Loading your campaign journal…'};session=s;
     root.innerHTML=`<section class="campaign-journal" aria-labelledby="campaignJournalTitle"><header class="journal-hero"><p class="journal-eyebrow">${escape(activeCampaign.name)} · Our shared story</p><h2 id="campaignJournalTitle">The party journal</h2><p>What we discovered. Who we trusted. The stories we will tell when the dice are put away.</p><div class="journal-toolbar"><div class="journal-filters" role="group" aria-label="Filter journal entries"><button type="button" data-journal-filter="all" aria-pressed="true">All entries</button><button type="button" data-journal-filter="recap" aria-pressed="false">Player recaps</button><button type="button" data-journal-filter="dm" aria-pressed="false">From the DM</button></div><button type="button" class="btn-primary" data-journal-compose disabled>+ Write a session recap</button></div><div class="journal-search"><label><span>Search the journal</span><input type="search" data-journal-search placeholder="Title, session or a familiar name…"></label><button type="button" data-journal-refresh>Refresh</button></div></header><p class="journal-status" role="status" aria-live="polite" data-journal-status></p><p class="journal-status" role="status" data-journal-reference-status></p><div data-journal-content></div></section>`;
     root.querySelector('[data-journal-compose]').onclick=()=>edit(s);
     root.querySelector('[data-journal-refresh]').onclick=()=>render();
     root.querySelector('[data-journal-search]').oninput=event=>{s.search=event.target.value;paint(s);};
     root.querySelectorAll('[data-journal-filter]').forEach(button=>button.onclick=()=>{s.filter=button.dataset.journalFilter;root.querySelectorAll('[data-journal-filter]').forEach(n=>n.setAttribute('aria-pressed',String(n===button)));paint(s);});
+    root.querySelector('[data-journal-search]').value=s.search;root.querySelectorAll('[data-journal-filter]').forEach(n=>n.setAttribute('aria-pressed',String(n.dataset.journalFilter===s.filter)));
     paint(s);
     const failed=error=>{if(!current(s))return;const denied=error?.code==='permission-denied'||error?.code==='unauthenticated';if(!denied&&s.ready){s.message='Connection interrupted. Your draft is kept here; save or refresh when your connection returns.';if(s.editor)editorState(s);else paint(s);return;}s.message='Journal unavailable. '+(denied?'Campaign access could not be verified.':'Check your connection and refresh to try again.');
       // A failed subscription must not leave private or shared text on screen after access is revoked.
       s.denied=true;s.ready=false;s.stops.forEach(stop=>stop());s.stops=[];s.drafts=[];s.shared=[];s.chapters=[];s.world=[];revokeImages(s);s.editor=null;s.selected=null;cancelLeave();document.querySelectorAll('.journal-preview').forEach(dialog=>{dialog.close();dialog.remove();});root.querySelector('[data-journal-content]').replaceChildren();root.querySelector('[data-journal-compose]').disabled=true;root.querySelector('[data-journal-compose]').title='Journal access is unavailable. Check campaign membership and journal permissions.';root.querySelector('[data-journal-reference-status]').textContent='';root.querySelector('[data-journal-status]').textContent=s.message+(error?.code?' ('+error.code+')':'');
     };
     try{const data=await store.list(s.campaignId);if(!current(s))return;
-      Object.assign(s,data,{ready:true,message:'Player accounts and deliberately shared DM pages. Your drafts stay private.'});paint(s);
+      Object.assign(s,data,{ready:true,message:'Player accounts and deliberately shared DM pages. Your drafts stay private.'});paint(s);if(saved)restoreList(s);
       s.stops.push(store.watch(s.campaignId,rows=>{if(allowed(s)){s.drafts=rows;paint(s);}},rows=>{if(allowed(s)){s.shared=rows;paint(s);}},failed));
       void loadReferenceFeed(s,'world',world,'places & lore');
       void loadReferenceFeed(s,'chapters',chapters,'chapters');
     }catch(error){failed(error);}
   }
   window.addEventListener('beforeunload',event=>{if(session?.editor?.dirty||session?.busy){event.preventDefault();event.returnValue='';}});
-  return {render,clear,guard,beforeNavigate,onAccountChanged(uid){if(session&&session.uid!==uid)clear();},get session(){return session;}};
+  return {render,clear,guard,beforeNavigate,onAccountChanged(uid){if(session&&session.uid!==uid)clear();browsing.clear();},get session(){return session;}};
 })();
