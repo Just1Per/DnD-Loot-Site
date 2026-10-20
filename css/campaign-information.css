@@ -38,3 +38,43 @@
 .campaign-information-filters label>span{display:flex;align-items:center;gap:6px}
 .campaign-reference-card summary::after{content:'Read more →';display:block;margin-top:16px;color:var(--ui-heading,#5c1d1d);font-size:.9rem;text-decoration:underline}
 .campaign-reference-card details[open] summary::after{content:'Close description ↑'}
+
+/* World cards open a dedicated reader; filters and position belong to the list. */
+.world-post-card{display:block;width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}
+.world-post-card-text{display:grid;gap:12px;padding:20px}
+.world-post-card-text strong{font-size:1.35rem;color:#5c1d1d}
+.world-post-card .campaign-reference-summary{line-height:1.65;white-space:normal}
+.world-post-card .campaign-reference-category{justify-self:start;background:#eee6d6;border-radius:4px;padding:3px 8px}
+.world-post-card-action{text-decoration:underline;color:#5c1d1d}
+.world-post-reader{max-width:76ch;margin:0 auto;overflow-wrap:anywhere}
+.world-post-reader h3{font-size:2rem;margin-bottom:12px}
+.world-post-reader .campaign-book-prose{white-space:pre-wrap;line-height:1.85}
+.world-reader-introduction{font-size:1.15rem;line-height:1.7}
+.world-reader-image{margin:24px 0}.world-reader-image img{display:block;max-height:480px;max-width:100%;object-fit:contain;margin:auto}
+.world-reader-image figcaption{margin-top:10px;line-height:1.6}
+.campaign-information-filters[hidden]{display:none}
+
+#mainApp .world-post-card{border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;color:#342d26!important;display:block;text-align:left;padding:0!important;white-space:normal;transition:background .15s ease}
+#mainApp .world-post-card:hover{background:#f4eee3!important}
+.world-post-card .campaign-reference-art{display:block}
+.world-post-card .campaign-reference-art img{height:100%;width:100%;object-fit:cover}
+.world-post-card-text{padding:24px;gap:14px}
+.world-post-card-text strong{font-family:Georgia,serif;font-weight:500;font-size:1.65rem;line-height:1.25}
+.world-post-card .campaign-reference-category{font:600 .72rem/1.4 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.09em}
+.world-post-card .campaign-reference-summary{font:1rem/1.75 Georgia,serif}
+.world-post-card-action{font:.8rem/1.5 system-ui,sans-serif;text-underline-offset:4px}
+.campaign-information-shell:has(.world-post-reader)>header{display:none}
+.campaign-information-shell:has(.world-post-reader)>[data-information-status]{font-size:.8rem;color:#66584a;text-align:center}
+.world-post-reader{max-width:850px;padding:12px 24px 48px}
+.world-post-reader>.workspace-actions{justify-content:space-between;margin-bottom:48px;border-bottom:1px solid #d9cfbd;padding-bottom:18px}
+.world-post-reader>.campaign-book-eyebrow{font:600 .7rem/1.6 system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.world-post-reader h3{font:normal clamp(2rem,5vw,3.4rem)/1.15 Georgia,serif;letter-spacing:-.025em;margin:18px 0}
+.world-post-reader>.campaign-reference-category{font:.8rem/1.6 system-ui,sans-serif;color:#66584a;margin:0 0 28px}
+.world-reader-image{margin:32px -24px}
+.world-reader-image img{width:100%;max-height:500px;object-fit:cover;border-radius:5px}
+.world-reader-image figcaption{font:italic .85rem/1.6 Georgia,serif;color:#66584a;text-align:center;padding:0 18px}
+.world-reader-introduction{max-width:60ch;margin:32px auto 24px;font:italic 1.2rem/1.8 Georgia,serif;color:#66503d}
+.world-post-reader .campaign-book-prose{max-width:65ch;margin:0 auto;white-space:normal;font:1.1rem/1.9 Georgia,serif;color:#3b342c}
+.world-post-reader .campaign-book-prose p{margin:0 0 1.3em}
+.library-introduction{margin:24px 0}.library-introduction h2{margin-bottom:10px}.library-introduction p{line-height:1.7}
+@media(max-width:580px){.world-post-reader{padding:0 0 24px}.world-post-reader>.workspace-actions{margin-bottom:28px}.world-reader-image{margin:24px 0}.world-post-reader .campaign-book-prose{font-size:1.02rem;line-height:1.85}.world-post-card-text{padding:20px}}

@@ -546,11 +546,33 @@ match /campaigns/{campaignId} {
         let map = publishedMap();
         return 'schemaVersion' in map ? resource.data.publishedRevision == map.revision : resource.data.imagePath == map.imagePath;
       }
+      function validRegionPoint(point) {
+        return point is map && point.keys().hasAll(['x','y']) && point.keys().hasOnly(['x','y'])
+          && point.x is number && point.x >= 0 && point.x <= 100
+          && point.y is number && point.y >= 0 && point.y <= 100;
+      }
+      function validRegionBoundary(d) {
+        return !('boundary' in d) || (d.boundary is list && (d.boundary.size() == 0 || (
+          d.type == 'Region' && d.boundary.size() >= 3 && d.boundary.size() <= 12
+          && (d.boundary.size() <= 0 || validRegionPoint(d.boundary[0]))
+          && (d.boundary.size() <= 1 || validRegionPoint(d.boundary[1]))
+          && (d.boundary.size() <= 2 || validRegionPoint(d.boundary[2]))
+          && (d.boundary.size() <= 3 || validRegionPoint(d.boundary[3]))
+          && (d.boundary.size() <= 4 || validRegionPoint(d.boundary[4]))
+          && (d.boundary.size() <= 5 || validRegionPoint(d.boundary[5]))
+          && (d.boundary.size() <= 6 || validRegionPoint(d.boundary[6]))
+          && (d.boundary.size() <= 7 || validRegionPoint(d.boundary[7]))
+          && (d.boundary.size() <= 8 || validRegionPoint(d.boundary[8]))
+          && (d.boundary.size() <= 9 || validRegionPoint(d.boundary[9]))
+          && (d.boundary.size() <= 10 || validRegionPoint(d.boundary[10]))
+          && (d.boundary.size() <= 11 || validRegionPoint(d.boundary[11]))
+        )));
+      }
       function validPublishedPin(d) {
         let map = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data;
         let previous = publishedMap();
         return mapId == 'main' && d.keys().hasAll(['name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
-          && d.keys().hasOnly(['name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
+          && d.keys().hasOnly(['markerStyle','boundary','name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
           && d.schemaVersion == 2 && map.schemaVersion == 2 && d.publishedRevision == map.revision
           && (!exists(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main) || map.revision > previous.revision)
           && d.revision == map.revision && d.updatedBy == request.auth.uid && d.updatedAt is int
@@ -558,6 +580,8 @@ match /campaigns/{campaignId} {
           && d.description is string && d.description.size() <= 2000
           && d.x is number && d.x >= 0 && d.x <= 100 && d.y is number && d.y >= 0 && d.y <= 100
           && d.type in ['City','Region'] && d.imagePath == map.imagePath
+          && (!('markerStyle' in d) || d.markerStyle in ['Location','City','Castle','Landmark','Point of interest'])
+          && validRegionBoundary(d)
           && d.picturePath is string && (d.picturePath == '' || d.picturePath.matches('^campaign-map-place-images/' + campaignId + '/' + pinId + '/[A-Za-z0-9_-]{1,100}$'))
           && d.pictureAlt is string && d.pictureAlt.size() <= 200 && (d.picturePath == '' || d.pictureAlt.size() > 0)
           && d.worldEntryId is string && (d.worldEntryId == '' || d.worldEntryId.matches('^[A-Za-z0-9_-]{1,100}$'));

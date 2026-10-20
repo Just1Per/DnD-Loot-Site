@@ -19,6 +19,7 @@ function showTab(tabId, render = true) {
   if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate(tabId))return;
   if(typeof CampaignJournal!=='undefined'&&!CampaignJournal.beforeNavigate(tabId))return;
   if(typeof CampaignMap!=='undefined'&&!CampaignMap.beforeNavigate(tabId))return;
+  if(typeof ReusableLibrary!=='undefined')ReusableLibrary.clear();
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c=>c.style.display="none");
   const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
@@ -43,6 +44,7 @@ function showTab(tabId, render = true) {
   if (tabId==="character-sheet" && render) { renderCharacterSheetTab(); }
   if (tabId==="player")  { renderPlayerTab(); }
   if (tabId==="library") { renderVisibilityControls(); }
+  if (render&&tabId==="library-reusable") ReusableLibrary.render();
   CharacterWorkspace.update(tabId);
   AppNavigation.remember(tabId);
 }
@@ -220,6 +222,7 @@ document.getElementById("logoutButton")?.addEventListener("click",logoutFromSite
 let authStartupGeneration=0;
 onAuthStateChanged(auth, async (firebaseUser) => {
   const generation=++authStartupGeneration;
+  ReusableLibrary.clear();
   CharacterWorkspace.clear();
   PageEditors.clear();
   if(sheetSession&&sheetSession.uid!==firebaseUser?.uid)closeCharacterSheet(true);

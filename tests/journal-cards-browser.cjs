@@ -27,7 +27,9 @@ const errors=[];
   if(width===1440){const cards=await page.locator('.campaign-reference-card').evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().top));assert.ok(cards.every(y=>Math.abs(y-cards[0])<2),'cards form a desktop grid');}
   const violations=await page.evaluate(async()=>(await axe.run('.campaign-information-shell',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})));assert.deepEqual(violations,[]);
   await page.evaluate(()=>{document.activeElement?.blur();scrollTo(0,0)});await page.screenshot({path:out+'/'+tab+'-cards-'+width+'.png',fullPage:true});
-  await page.locator('[data-information-id] summary').first().click();assert.ok(await page.locator('.campaign-reference-card .campaign-book-prose').first().isVisible());assert.ok((await page.locator('.campaign-reference-card .campaign-book-prose').first().textContent()).includes('\n\n'));
+  if(tab==='campaign-information'){
+   await page.locator('[data-read-world]').first().click();assert.equal(await page.locator('.world-post-reader').count(),1);assert.equal(await page.locator('.world-post-reader .campaign-book-prose p').count(),2);assert.equal(await page.locator('[data-world-edit]').count(),0);await page.locator('[data-world-back]').click();
+  }else{await page.locator('[data-information-id] summary').first().click();assert.ok(await page.locator('.campaign-reference-card .campaign-book-prose').first().isVisible());assert.ok((await page.locator('.campaign-reference-card .campaign-book-prose').first().textContent()).includes('\n\n'));}
   await page.locator('[data-information-search]').fill('no such place');assert.equal(await page.locator('.campaign-reference-card').count(),0);await page.locator('[data-information-search]').fill('');assert.equal(await page.locator('.campaign-reference-card').count(),3);
  }}
  assert.deepEqual(errors,[]);console.log('SUCCESS NPC/world card grids, full-width desktop/mobile pages, readable paragraphs, search and accessibility');
