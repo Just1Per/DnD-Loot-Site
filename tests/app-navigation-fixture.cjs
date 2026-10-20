@@ -14,6 +14,7 @@ async function expandWorldTools(page){
  }
 }
 async function archiveEntry(page){
+ await expandWorldTools(page);
  await page.locator('[data-archive-record]').click();
  await page.locator('#siteConfirmationDialog [data-site-confirm]').click();
 }

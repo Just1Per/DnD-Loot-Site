@@ -115,7 +115,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.evaluate(()=>window.pauseInformation=false);
  console.log('PASS Campaign navigation discards pending reads and subscriptions');
  await page.evaluate(()=>{seed('dm');showTab('dm-world')});await page.waitForSelector('[data-open-record]');await page.locator('[data-open-record]').filter({hasText:'Northern Kingdom'}).click();await page.waitForFunction(()=>!!CampaignWorkspace.session?.record?.revision);await page.waitForFunction(()=>!document.querySelector('[data-unpublish-world]').disabled);
- await expandWorldTools(page);await page.locator('[data-unpublish-world]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Removed from player information'));
+ await expandWorldTools(page);await page.locator('[data-unpublish-world]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Removed from players.'));
  if(await page.evaluate(id=>!!testSheetDocs['campaigns/a/worldEntries/'+id],recordId)!==true)throw Error('Unpublish removed source world data');
  await expandWorldTools(page);await page.locator('[data-publish-world]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Released to players'));
  await archiveEntry(page);await page.waitForFunction(()=>CampaignWorkspace.session?.record.archived);
