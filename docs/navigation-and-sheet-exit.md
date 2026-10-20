@@ -31,3 +31,13 @@ Remember concrete subsections rather than group names, so refresh and returning 
 The persistent sidebar groups Overview, World, Creatures & NPCs, Chapters and Party & Loot. Overview links to a saved Current chapter, falling back to Planned, and recent nonarchived preparation. Loading summaries creates no workspace draft or document writes. Party & Loot owns the existing character/inventory controls and rarity guidance. One Shots remains a collapsed paused utility.
 
 A chapter can show linked saved NPC/location references beside its editor. References preserve the current form, including unsaved changes, and cannot reveal/publish/update an entry. Opening the full reference editor still uses existing discard/busy guards. Late or unlinked private reads are ignored after account, campaign, chapter or permission changes. Player snapshots and normal chapter print remain separate from DM references.
+
+## World reading and Library sections
+
+Journal → World shows image cards with a category and description excerpt. Read post opens a dedicated reader with its published image, caption and paragraphs. Back to World retains the current account/campaign's search, category, scroll position and originating card focus. These browsing preferences live only in memory and are cleared on account changes. Publication removal and permission failures remove the displayed post; late reads cannot restore it.
+
+A campaign DM can choose Edit post to open that exact saved World entry. Back to World returns to the filtered list through the existing unsaved-change guard. Save as draft stays in the editor. Release to players saves and publishes the current text, illustration and caption together using the existing snapshot transaction. The release summary explicitly names what is included. Later draft saves remain private.
+
+Library uses the same section navigation as Journal: Items and Reusable content. Reusable content browses the existing personal creature/NPC templates for campaign DMs. Create campaign draft opens an independent unsaved copy in DM Workspace; it never alters the original template. Spells remain in character sheets. No new collections or permission changes are introduced by this navigation change.
+
+`npm --prefix tests run test:world-navigation` covers the full read/edit/draft/release/return flow, published illustrations, retained filters/focus, template search/import, player access, mobile layouts and WCAG checks. Existing Journal cards, campaign information, simple World and grouped app navigation suites remain in use.
