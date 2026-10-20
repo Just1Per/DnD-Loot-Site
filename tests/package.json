@@ -24,6 +24,8 @@
     "test:workspace": "node --test workspace-store.cjs campaign-creatures.cjs campaign-monster-import.cjs campaign-encounters.cjs",
     "test:workspace-rules": "cd .. && firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/workspace-rules.cjs && node tests/workspace-storage-rules.cjs && node tests/workspace-one-shots-rules.cjs\"",
     "test:workspace-browser": "node workspace-browser.cjs",
+    "test:item-removal": "node --test campaign-item-removal.cjs && node campaign-item-removal-browser.cjs",
+    "test:item-removal-rules": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-item-removal-rules.cjs\"",
     "test:creature-editor": "node creature-editor-browser.cjs",
     "test:creature-bulk-import": "node creature-bulk-import-browser.cjs",
     "test:root-picker": "node root-catalogue-picker-browser.cjs",
