@@ -32,40 +32,37 @@ async function persistItemState(itemId,changes) {
 
 const container = document.getElementById("card-container");
 
-function renderMagicItemLoadPrompt() {
+let magicItemLoadRequest=null;
+function renderMagicItemLoadPrompt(problem='') {
   if (!container || magicItemLibraryLoaded) return;
-  container.innerHTML = `<div class="library-load-gate" role="status">
+  document.getElementById('campaignStats').textContent='';
+  if(!problem&&magicItemLoadRequest?.uid===auth.currentUser?.uid&&magicItemLoadRequest?.campaignId===activeCampaign?.id)problem=magicItemLoadRequest.problem||'';
+  container.innerHTML = `<section class="library-load-gate" aria-labelledby="libraryLoadTitle">
     <div class="library-load-gate-icon" aria-hidden="true">✦</div>
-    <h2>Magical Item Library</h2>
-    <p>Items are loaded only when you want to browse them, keeping campaign startup faster.</p>
-    <button type="button" id="loadMagicItemLibrary" class="btn-primary" ${magicItemLibraryLoading ? "disabled" : ""}>${magicItemLibraryLoading ? "Loading magical items…" : "Load magical items"}</button>
-  </div>`;
+    <h3 id="libraryLoadTitle">Browse campaign items</h3>
+    <p>Load the items available in ${escapeHtml(activeCampaign?.name||'this campaign')}. Your DM decides which items are shared.</p>
+    <p role="status" class="library-load-message">${escapeHtml(problem|| (magicItemLibraryLoading?'Loading campaign items…':''))}</p>
+    <button type="button" id="loadMagicItemLibrary" class="btn-primary" ${magicItemLibraryLoading ? "disabled" : ""}>${magicItemLibraryLoading ? "Loading campaign items…" : problem?'Retry loading items':'Load campaign items'}</button>
+  </section>`;
   container.querySelector("#loadMagicItemLibrary")?.addEventListener("click", loadMagicItemLibrary);
 }
 
-/** Load on request and ignore a result if the player changes campaigns before it arrives. */
+/** A completion can update only the account/campaign/request that started it. */
 async function loadMagicItemLibrary() {
-  if (!activeCampaign || magicItemLibraryLoading) return;
-  const campaignId = activeCampaign.id;
-  magicItemLibraryLoading = true;
-  renderMagicItemLoadPrompt();
+  if (!activeCampaign || !auth.currentUser || magicItemLibraryLoading) return;
+  const request={campaignId:activeCampaign.id,uid:auth.currentUser.uid};magicItemLoadRequest=request;
+  const current=()=>magicItemLoadRequest===request&&activeCampaign?.id===request.campaignId&&auth.currentUser?.uid===request.uid;
+  magicItemLibraryLoading = true;renderMagicItemLoadPrompt();let problem='';
   try {
     await Promise.all([loadItemsFromFirestore(), loadCampaignItems()]);
-    if (activeCampaign?.id !== campaignId) return;
+    if (!current()) return;
     if (canManageCampaign()) await loadCampaignSupply();
-    magicItemLibraryLoaded = true;
-    populateSourceFilter();
-    renderCards();
+    if (!current()) return;
+    magicItemLibraryLoaded = true;populateSourceFilter();renderCards();
   } catch (error) {
-    console.error("Magical item library load failed:", error);
-    if (activeCampaign?.id === campaignId) {
-      magicItemLibraryLoaded = false;
-      renderMagicItemLoadPrompt();
-      alert(`Could not load magical items: ${error.message}`);
-    }
+    if(current()){magicItemLibraryLoaded=false;problem='Could not load campaign items: '+error.message;request.problem=problem;}
   } finally {
-    magicItemLibraryLoading = false;
-    if (!magicItemLibraryLoaded && activeCampaign?.id === campaignId) renderMagicItemLoadPrompt();
+    if(current()){magicItemLibraryLoading=false;if(!magicItemLibraryLoaded)renderMagicItemLoadPrompt(problem);}
   }
 }
 

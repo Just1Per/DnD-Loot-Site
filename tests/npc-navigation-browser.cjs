@@ -73,7 +73,7 @@ const errors=[];
  await page.evaluate(()=>{delete testSheetDocs['campaigns/a/playerNPCs/elowen'];const w=journalWatchers.findLast(w=>w.active&&w.path==='campaigns/a/playerNPCs');w.next({docs:[]})});
  assert.equal(await page.locator('.npc-post-reader').count(),0);assert.equal(await page.locator('.npc-post-reader img').count(),0);
  await page.evaluate(()=>{CampaignInformation.clear(true);activeCampaign={...activeCampaign,id:'b'};showTab('campaign-npcs')});
- await page.waitForFunction(()=>document.querySelector('[data-information-status]')?.textContent==='0 shared entries.');
+ await page.waitForFunction(()=>document.querySelector('[data-information-status]')?.textContent==='0 of 0 shared NPCs.');
  assert.equal(await page.locator('[data-information-search]').inputValue(),'');assert.equal(await page.locator('[data-read-npc]').count(),0);
  assert.deepEqual(errors,[]);console.log('PASS Player boundaries, revoked entries, campaign isolation, desktop/mobile layout and WCAG checks');
  }finally{await browser.close()}})().catch(error=>{console.error(error);process.exitCode=1});
