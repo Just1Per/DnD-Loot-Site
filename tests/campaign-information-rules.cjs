@@ -65,6 +65,24 @@ const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-s
    await workspace.save({...source,revision:3,input:source.input});
    assert.equal(await stores.player.load('a','north'),null);
   });
+  await check('Per-post World layouts publish only saved choices; drafts, forged styles and player writes stay protected',async()=>{
+   for(const layout of ['split','reverse','panorama','classic']){
+    const id='layout-'+layout,input={title:'A designed place',summary:'A place by the coast.',content:'The public story.',privateNotes:'Private layout preparation',data:{category:'Location',postLayout:layout}};
+    await assertSucceeds(workspace.save({campaignId:'a',kind:'world',id,revision:0,input}));
+    await assertSucceeds(stores.dm.publish({campaignId:'a',id,sourceRevision:1}));
+    const row=await assertSucceeds(stores.player.load('a',id));assert.equal(row.postLayout,layout);assert.equal(row.privateNotes,undefined);assert.equal(row.data,undefined);
+    await assertFails(sdk.getDoc(sdk.doc(db.player,'campaigns/a/worldEntries/'+id)));
+    const target=sdk.doc(db.dm,'campaigns/a/playerInformation/'+id),{id:ignored,...published}=row,other=layout==='classic'?'split':'classic';
+    for(const postLayout of ['javascript:unsafe()',other])await assertFails(sdk.setDoc(target,{...published,postLayout,revision:2}));
+    const missing={...published,revision:2};delete missing.postLayout;await assertFails(sdk.setDoc(target,missing));
+    await assertFails(sdk.updateDoc(sdk.doc(db.player,'campaigns/a/playerInformation/'+id),{postLayout:other,revision:2}));
+    await assertFails(sdk.updateDoc(sdk.doc(db.dm,'campaigns/a/worldEntries/'+id),{'data.postLayout':'unsupported',revision:2}));
+    await assertSucceeds(workspace.save({campaignId:'a',kind:'world',id,revision:1,input:{...input,data:{...input.data,postLayout:other}}}));
+    assert.equal((await stores.player.load('a',id)).postLayout,layout);
+    await assertSucceeds(stores.dm.publish({campaignId:'a',id,sourceRevision:2,publishedRevision:1}));
+    assert.equal((await stores.player.load('a',id)).postLayout,other);
+   }
+  });
   await check('Unpublishing keeps source records; membership revocation ends reads',async()=>{
    await stores.dm.publish({...publish,sourceRevision:4});
    await stores.dm.unpublish({...publish,publishedRevision:1});

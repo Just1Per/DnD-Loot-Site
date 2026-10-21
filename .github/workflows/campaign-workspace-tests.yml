@@ -103,7 +103,9 @@ jobs:
         npm --prefix tests run test:campaign-npcs
         npm --prefix tests run test:npc-navigation
     - name: Player publishing, image access and focused navigation
-      run: npm --prefix tests run test:publishing-feedback
+      run: |
+        npm --prefix tests run test:publishing-feedback
+        npm --prefix tests run test:world-post-layouts
     - name: Centered native dialogs, spell details and unsaved-draft prompts
       run: npm --prefix tests run test:dialogs
     - name: Root catalogue multi-select and viewport checks

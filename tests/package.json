@@ -50,6 +50,7 @@
     "test:campaign-deletion-rules": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-deletion-rules.cjs\"",
     "test:dm-workspace": "node dm-workspace-browser.cjs",
     "test:simple-world": "node simple-world-browser.cjs",
+    "test:world-post-layouts": "node world-post-layouts-browser.cjs",
     "test:world-navigation": "node world-navigation-browser.cjs",
     "test:archive-dialog": "node archive-dialog-browser.cjs",
     "test:character-workspace": "node character-workspace-browser.cjs",

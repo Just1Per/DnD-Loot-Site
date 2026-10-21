@@ -457,7 +457,10 @@ match /campaigns/{campaignId} {
     function validPublication(d) {
       let source = get(/databases/$(database)/documents/campaigns/$(campaignId)/worldEntries/$(recordId)).data;
       return d.keys().hasAll(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt'])
-        && d.keys().hasOnly(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt','image'])
+        && d.keys().hasOnly(['title','summary','content','category','sourceRevision','revision','updatedBy','updatedAt','image','postLayout'])
+        && (('postLayout' in d)
+          ? d.postLayout in ['split','reverse','panorama','classic'] && d.postLayout == (('postLayout' in source.data) ? source.data.postLayout : 'split')
+          : !('postLayout' in source.data))
         && d.title is string && d.title.size() > 0 && d.title.size() <= 160
         && d.summary is string && d.summary.size() <= 1000
         && d.content is string && d.content.size() <= 20000
@@ -682,6 +685,7 @@ match /campaigns/{campaignId} {
       && d.summary is string && d.summary.size() <= 1000
       && d.content is string && d.content.size() <= 20000
       && d.data is map && d.data.keys().size() <= 60 && d.archived is bool
+      && (kind != 'world' || !('postLayout' in d.data) || d.data.postLayout in ['split','reverse','panorama','classic'])
       && d.createdBy is string && d.createdAt is int && d.updatedAt is int
       && d.updatedBy == request.auth.uid;
   }
