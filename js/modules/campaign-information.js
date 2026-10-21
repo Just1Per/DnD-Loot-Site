@@ -30,6 +30,13 @@ var CampaignInformation = (() => {
   const escape=value=>escapeHtml(String(value??''));
   const prose=value=>String(value||'').split(/\n\s*\n/).filter(Boolean).map(text=>'<p>'+escape(text).replaceAll('\n','<br>')+'</p>').join('');
   const current=s=>session===s && activeCampaign?.id===s.id && auth.currentUser?.uid===s.uid;
+  function loadState(s,phase,message){
+    if(!current(s))return;s.phase=phase;
+    for(const control of s.root.querySelectorAll('[data-information-search],[data-information-category],[data-information-clear]'))control.disabled=phase!=='ready';
+    const refresh=s.root.querySelector('[data-information-refresh]');refresh.disabled=phase==='loading';refresh.textContent=phase==='loading'?'Loading…':phase==='failed'?'Try again':'Refresh';
+    s.root.querySelector('[data-information-list]').setAttribute('aria-busy',String(phase==='loading'));
+    if(message)s.root.querySelector('[data-information-status]').textContent=message;
+  }
   function clear(force=false) {
     if(typeof CampaignChapterNotes!=='undefined'&&!CampaignChapterNotes.beforeClear(session,force))return false;
     if(session)remember(session);
@@ -63,7 +70,7 @@ var CampaignInformation = (() => {
     await Promise.all(Array.from({length:Math.min(4,jobs.length)},()=>worker()));
   }
   function paint(s) {
-    if(!current(s))return;
+    if(!current(s)||s.phase!=='ready')return;
     revokeImages(s);
     const focused=document.activeElement?.matches?.('[data-note-text]')?{id:document.activeElement.closest('[data-chapter-note-id]').dataset.chapterNoteId,start:document.activeElement.selectionStart,end:document.activeElement.selectionEnd}:null;
     const query=s.root.querySelector('[data-information-search]').value.trim().toLowerCase(),category=s.root.querySelector('[data-information-category]').value;
@@ -115,7 +122,7 @@ var CampaignInformation = (() => {
     if(selected&&s.targetId===selected.id){s.targetId=null;s.root.querySelector(`[data-${hook}-title]`)?.focus();}
   }
   function update(s, rows) {
-    if(!current(s)||s.denied)return;s.rows=rows;
+    if(!current(s)||s.denied)return;s.rows=rows;loadState(s,'ready');
     const select=s.root.querySelector('[data-information-category]'),selected=select.value;
     select.innerHTML='<option value="">All categories</option>'+[...new Set(rows.map(row=>row.category))].sort().map(value=>`<option>${escape(value)}</option>`).join('');
     select.value=[...select.options].some(option=>option.value===selected)?selected:'';paint(s);
@@ -127,13 +134,14 @@ var CampaignInformation = (() => {
     const view=views[kind];if(!view)return;
     const root=document.getElementById('tab-'+view.tab);
     root.innerHTML=`<section class="campaign-information-shell" aria-labelledby="campaignInformationTitle"><header><p class="campaign-book-eyebrow">${escape(activeCampaign.name)}</p><h2 id="campaignInformationTitle">${view.title}</h2><p>${view.description}</p></header><div class="campaign-information-filters"><label><span>Search ${view.title.toLowerCase()}</span><input type="search" data-information-search></label><label><span>Category</span><select data-information-category><option value="">All categories</option></select></label><button type="button" data-information-clear hidden>Clear search &amp; filters</button><button class="vault-secondary-btn" type="button" data-information-refresh>Refresh</button></div><p role="status" aria-live="polite" data-information-status>Loading ${view.title.toLowerCase()}…</p><div data-information-list></div></section>`;
-    const s={id:activeCampaign.id,uid:auth.currentUser.uid,root,view,kind,rows:[],notes:new Map(),unsubscribe:null,denied:false,imageUrls:[],selected:saved?.selected||null,listScroll:saved?.scroll||0,focusId:saved?.focusId};session=s;
+    const s={id:activeCampaign.id,uid:auth.currentUser.uid,root,view,kind,phase:'loading',rows:[],notes:new Map(),unsubscribe:null,denied:false,imageUrls:[],selected:saved?.selected||null,listScroll:saved?.scroll||0,focusId:saved?.focusId};session=s;
+    loadState(s,'loading');
     root.querySelector('[data-information-search]').value=saved?.query||'';
     if(saved?.category)root.querySelector('[data-information-category]').add(new Option(saved.category,saved.category,true,true));s.isCurrent=()=>current(s);
     root.querySelector('[data-information-search]').addEventListener('input',()=>paint(s));
     root.querySelector('[data-information-category]').addEventListener('change',()=>paint(s));
     root.querySelector('[data-information-clear]').onclick=()=>{root.querySelector('[data-information-search]').value='';root.querySelector('[data-information-category]').value='';paint(s);root.querySelector('[data-information-search]').focus();};
-    root.querySelector('[data-information-refresh]').addEventListener('click',()=>render(kind));
+    root.querySelector('[data-information-refresh]').addEventListener('click',()=>{if(current(s)&&s.phase!=='loading')render(kind);});
     try {
       update(s,await view.store.list(s.id));
       if(!current(s))return;
@@ -141,10 +149,10 @@ var CampaignInformation = (() => {
       s.unsubscribe=view.store.watch(s.id,rows=>update(s,rows),error=>{
         if(!current(s))return;s.denied=true;s.unsubscribe?.();revokeImages(s);root.querySelector('.campaign-information-filters').hidden=false;s.rows=[];s.notes.clear();root.querySelector('[data-information-list]').replaceChildren();
         root.querySelector('[data-information-category]').innerHTML='<option value="">All categories</option>';
-        root.querySelector('[data-information-status]').textContent=`Shared information is unavailable: ${error.message}`;
+        loadState(s,'failed',`Shared information is unavailable: ${error.message}. Try again to reload this page.`);
       });
     } catch(error) {
-      if(current(s)){s.rows=[];root.querySelector('[data-information-list]').replaceChildren();root.querySelector('[data-information-status]').textContent=`Could not load shared information: ${error.message}`;}
+      if(current(s)){s.rows=[];root.querySelector('[data-information-list]').replaceChildren();loadState(s,'failed',`Could not load shared information: ${error.message}. Try again to reload this page.`);}
     }
   }
   function attachPostSharing(host,s){

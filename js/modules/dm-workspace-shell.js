@@ -4,6 +4,7 @@ var DMWorkspaceShell=(()=>{
  const sections=[['dm','Overview'],['dm-world','World'],['dm-map','Map'],['dm-creatures','Creatures & NPCs'],['dm-chapters','Chapters'],['dm-one-shots','One Shots'],['dm-party','Party & Loot']];
  const kinds={world:'World',creature:'Creature or NPC',chapter:'Chapter',encounter:'Encounter'};
  const e=value=>escapeHtml(String(value??''));
+ const overviewStates=new WeakMap();
  let route=null,generation=0;
  function ensure(){
   const main=document.getElementById('mainApp');if(!main)return null;
@@ -38,23 +39,32 @@ var DMWorkspaceShell=(()=>{
    const oneShot=document.querySelector('#tab-dm > [data-dm-legacy-adventures] .tab');if(oneShot)group.append(oneShot);
   }
  }
- async function loadOverview(host){
+ async function loadOverview(host,retry=false){
+  const previous=overviewStates.get(host);
+  if(retry&&previous?.busy)return;
   const campaignId=activeCampaign?.id,uid=auth.currentUser?.uid,token=++generation;
   const valid=()=>route==='dm'&&token===generation&&host.isConnected&&activeCampaign?.id===campaignId&&auth.currentUser?.uid===uid&&canManageCampaign();
+  const state=previous?.campaignId===campaignId&&previous.uid===uid?previous:{campaignId,uid,groups:new Map()};overviewStates.set(host,state);state.busy=true;
+  host.setAttribute('aria-busy','true');host.querySelectorAll('button').forEach(button=>button.disabled=true);
+  host.querySelectorAll('[data-dm-retry-overview]').forEach(button=>button.textContent='Retrying…');
   const next=host.querySelector('[data-dm-next-chapter]'),recent=host.querySelector('[data-dm-recent-work]');
-  const requested=Object.keys(kinds),results=await Promise.allSettled(requested.map(kind=>CampaignWorkspace.store.list(campaignId,kind)));
+  const requested=Object.keys(kinds).filter(kind=>!retry||!state.groups.has(kind)||state.groups.get(kind).failed),results=await Promise.allSettled(requested.map(kind=>CampaignWorkspace.store.list(campaignId,kind)));
   if(!valid())return;
-  const groups=results.map((result,index)=>({kind:requested[index],rows:result.status==='fulfilled'?result.value:[],failed:result.status==='rejected'}));
+  state.busy=false;host.setAttribute('aria-busy','false');
+  results.forEach((result,index)=>state.groups.set(requested[index],{kind:requested[index],rows:result.status==='fulfilled'?result.value:[],failed:result.status==='rejected'}));
+  const groups=Object.keys(kinds).map(kind=>state.groups.get(kind));
   const chapters=groups.find(group=>group.kind==='chapter');
   const ordered=chapters.rows.filter(row=>!row.archived).sort((a,b)=>(Number(a.data?.order)||0)-(Number(b.data?.order)||0)||a.title.localeCompare(b.title));
   const progress=row=>['Planned','Current','Completed'].includes(row.data?.status)?row.data.status:'Planned';
   const chapter=ordered.find(row=>progress(row)==='Current')||ordered.find(row=>progress(row)==='Planned');
-  next.innerHTML='<h2>Next chapter</h2>'+(chapters.failed?'<p role="status">Chapter preparation could not be loaded. Reopen Overview to try again.</p>':chapter?'<p class="dm-workspace-summary-label">'+(chapter.data?.status==='Current'?'Current chapter':'Next planned chapter')+'</p><h3>'+e(chapter.title)+'</h3><p>'+e(chapter.summary)+'</p><button type="button" data-dm-next-chapter-open>Open chapter</button>':'<p>No current or planned chapters yet.</p><button type="button" data-dm-browse-chapters>Browse chapters</button>');
+  next.innerHTML='<h2>Next chapter</h2>'+(chapters.failed?'<p role="status">Chapter preparation could not be loaded.</p><button type="button" data-dm-retry-overview>Retry chapter overview</button>':chapter?'<p class="dm-workspace-summary-label">'+(chapter.data?.status==='Current'?'Current chapter':'Next planned chapter')+'</p><h3>'+e(chapter.title)+'</h3><p>'+e(chapter.summary)+'</p><button type="button" data-dm-next-chapter-open>Open chapter</button>':'<p>No current or planned chapters yet.</p><button type="button" data-dm-browse-chapters>Browse chapters</button>');
   next.querySelector('[data-dm-next-chapter-open]')?.addEventListener('click',()=>{if(valid())CampaignWorkspace.navigateTo('chapter',chapter.id);});
   next.querySelector('[data-dm-browse-chapters]')?.addEventListener('click',()=>{if(valid())showTab('dm-chapters');});
   const rows=groups.flatMap(group=>group.rows.filter(row=>!row.archived).map(row=>({...row,kind:group.kind}))).sort((a,b)=>(Number(b.updatedAt)||Number(b.createdAt)||0)-(Number(a.updatedAt)||Number(a.createdAt)||0)||a.title.localeCompare(b.title)).slice(0,6);
-  recent.innerHTML='<h2>Recent work</h2>'+(rows.length?'<div class="dm-recent-work-list">'+rows.map(row=>'<button type="button" data-dm-recent-entry="'+e(row.kind+':'+row.id)+'"><strong>'+e(row.title)+'</strong><span>'+e(kinds[row.kind])+(row.summary?' · '+e(row.summary.slice(0,100)):'')+'</span></button>').join('')+'</div>':'<p>No saved preparation yet.</p>')+(groups.some(group=>group.failed)?'<p role="status">Some recent work could not be loaded. Reopen Overview to try again.</p>':'');
+  const incomplete=groups.some(group=>group.failed);
+  recent.innerHTML='<h2>Recent work</h2>'+(rows.length?'<div class="dm-recent-work-list">'+rows.map(row=>'<button type="button" data-dm-recent-entry="'+e(row.kind+':'+row.id)+'"><strong>'+e(row.title)+'</strong><span>'+e(kinds[row.kind])+(row.summary?' · '+e(row.summary.slice(0,100)):'')+'</span></button>').join('')+'</div>':incomplete?'':'<p>No saved preparation yet.</p>')+(incomplete?'<p role="status">Some recent work could not be loaded. Try again to load the missing entries.</p><button type="button" data-dm-retry-overview>Retry recent work</button>':'');
   recent.querySelectorAll('[data-dm-recent-entry]').forEach(button=>button.onclick=()=>{if(!valid())return;const [kind,id]=button.dataset.dmRecentEntry.split(':');CampaignWorkspace.navigateTo(kind,id);});
+  host.querySelectorAll('[data-dm-retry-overview]').forEach(button=>button.onclick=()=>{if(valid()&&!state.busy)loadOverview(host,true);});
  }
  function organizeDMTools(){
   const panel=document.getElementById('dmToolsPanel'),party=document.querySelector('#dmPartyPanel .dm-tools-grid');
