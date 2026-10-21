@@ -37,23 +37,30 @@ var CampaignInformation = (() => {
     for(const view of Object.values(views))document.getElementById('tab-'+view.tab)?.replaceChildren();
     return true;
   }
-  function revokeImages(s){for(const url of s?.imageUrls||[])URL.revokeObjectURL(url);if(s)s.imageUrls=[];}
+  function revokeImages(s){for(const url of s?.imageUrls||[])URL.revokeObjectURL(url);if(s){s.imageUrls=[];s.imageGeneration=(s.imageGeneration||0)+1;}}
   async function loadImages(s,list){
-    const sdk=window.__DND_VAULT_DEPS__;
-    for(const row of s.rows){
-      const host=[...list.querySelectorAll('[data-shared-image]')].find(node=>node.dataset.sharedImage===row.id);
-      if(!host||!row.image)continue;
-      const prefix=`campaign-journal-images/${s.id}/${s.kind}/${row.id}/`,image=row.image;
-      if(typeof image.path!=='string'||!image.path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))){host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';continue;}
-      try{
-        const blob=await CampaignJournalImages.publishedBlob({campaignId:s.id,kind:s.kind,id:row.id,image});
-        if(!current(s)||s.denied||!host.isConnected)continue;
-        const url=URL.createObjectURL(blob);s.imageUrls.push(url);
-        const img=document.createElement('img');img.src=url;img.alt=image.alt||'Shared campaign illustration';
-        img.style.maxWidth='100%';host.replaceChildren(img);
-        if(image.caption){const caption=document.createElement('figcaption');caption.textContent=image.caption;host.append(caption);}
-      }catch(error){if(current(s)&&host.isConnected)host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';}
+    const generation=s.imageGeneration;
+    const active=()=>current(s)&&!s.denied&&s.imageGeneration===generation&&list.isConnected;
+    // Capture this view's hosts once. Old list work must never find a newer reader's image host.
+    const hosts=new Map([...list.querySelectorAll('[data-shared-image]')].map(node=>[node.dataset.sharedImage,node]));
+    const jobs=s.rows.filter(row=>row.image&&hosts.has(row.id)).map(row=>({row,host:hosts.get(row.id)}));
+    let next=0;
+    async function worker(){
+      while(active()&&next<jobs.length){
+        const {row,host}=jobs[next++];if(!host.isConnected)continue;
+        const prefix=`campaign-journal-images/${s.id}/${s.kind}/${row.id}/`,image=row.image;
+        if(typeof image.path!=='string'||!image.path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))){host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';continue;}
+        try{
+          const blob=await CampaignJournalImages.publishedBlob({campaignId:s.id,kind:s.kind,id:row.id,image});
+          if(!active()||!host.isConnected)continue;
+          const url=URL.createObjectURL(blob);s.imageUrls.push(url);
+          const img=document.createElement('img');img.src=url;img.alt=image.alt||'Shared campaign illustration';
+          img.style.maxWidth='100%';host.replaceChildren(img);
+          if(image.caption){const caption=document.createElement('figcaption');caption.textContent=image.caption;host.append(caption);}
+        }catch(error){if(active()&&host.isConnected)host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';}
+      }
     }
+    await Promise.all(Array.from({length:Math.min(4,jobs.length)},()=>worker()));
   }
   function paint(s) {
     if(!current(s))return;

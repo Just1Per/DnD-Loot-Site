@@ -48,5 +48,29 @@ const errors=[];
  await page.evaluate(()=>showTab('campaign-npcs'));await page.waitForSelector('[data-read-npc=keeper]');await page.locator('[data-read-npc=keeper]').click();await page.waitForFunction(()=>document.querySelector('[data-shared-image] img')?.naturalWidth>0);assert.equal(await page.evaluate(()=>playerStorageReads),0);
  await page.evaluate(()=>showTab('campaign-journal'));await page.waitForFunction(()=>CampaignJournal.session?.ready);assert.equal(await page.locator('[data-journal-read="world:harbor"]').count(),0);assert.equal(await page.evaluate(()=>journalWatchers.filter(w=>w.active&&String(w.path).endsWith('/playerInformation')).length),0);
  await page.evaluate(()=>showTab('campaign-home'));assert.equal(await page.locator('[data-home-tab],.campaign-home-links').count(),0);assert.ok(await page.locator('#primaryNavigation').isVisible());
+ // A slow old card list must not continue fetching into a newer article reader.
+ await page.evaluate(()=>showTab('campaign-information'));await page.waitForSelector('[data-world-back]');await page.locator('[data-world-back]').click();await page.waitForFunction(()=>document.querySelector('.world-post-card img')?.naturalWidth>0);
+ await page.evaluate(()=>{
+  const publication=testSheetDocs['campaigns/a/playerInformation/harbor'],copy=testSheetDocs['campaigns/a/playerIllustrations/world/entries/harbor'];
+  for(let i=0;i<12;i++){const id='batch'+i,path=`campaign-journal-images/a/world/${id}/art`;testSheetDocs[`campaigns/a/playerInformation/${id}`]={...structuredClone(publication),title:'Coastal place '+i,image:{...publication.image,path}};testSheetDocs[`campaigns/a/playerIllustrations/world/entries/${id}`]={...copy,path};}
+  window.imageRequests=[];window.pauseImages=true;window.activeImages=0;window.peakImages=0;
+  const original=CampaignJournalImages.publishedBlob;CampaignJournalImages.publishedBlob=async args=>{activeImages++;peakImages=Math.max(peakImages,activeImages);const request={id:args.id};imageRequests.push(request);try{if(pauseImages)await new Promise(resolve=>request.release=resolve);return await original(args)}finally{activeImages--}};
+ });
+ await page.locator('[data-information-refresh]').click();await page.waitForFunction(()=>imageRequests.length>0);await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+ assert.equal(await page.evaluate(()=>imageRequests.length),4,'four images can start together without one slow card blocking the rest');
+ await page.evaluate(()=>{pauseImages=false;imageRequests.forEach(request=>request.release?.())});await page.waitForFunction(()=>[...document.querySelectorAll('.world-post-card img')].filter(img=>img.naturalWidth>0).length===13);
+ assert.equal(await page.evaluate(()=>peakImages),4,'image fetch concurrency stays bounded');
+ await page.evaluate(()=>{pauseImages=true;imageRequests=[]});await page.locator('[data-information-refresh]').click();await page.waitForFunction(()=>imageRequests.length===4);
+ await page.locator('[data-read-world=batch11]').click();await page.waitForFunction(()=>imageRequests.some(request=>request.id==='batch11'));
+ await page.evaluate(()=>imageRequests.find(request=>request.id==='batch11').release());await page.waitForFunction(()=>document.querySelector('.world-reader-image img')?.naturalWidth>0);
+ const readerImage=await page.locator('.world-reader-image img').getAttribute('src');
+ await page.evaluate(()=>{pauseImages=false;imageRequests.forEach(request=>request.release?.())});await page.waitForFunction(()=>activeImages===0);await page.evaluate(()=>new Promise(requestAnimationFrame));
+ assert.equal(await page.evaluate(()=>imageRequests.length),5,'the discarded list does not fetch or repaint the new reader');
+ assert.equal(await page.locator('.world-reader-image img').getAttribute('src'),readerImage);assert.equal(await page.locator('.world-reader-image figcaption').textContent(),'The coast in the evening');
+ await page.locator('[data-world-back]').click();await page.waitForFunction(()=>[...document.querySelectorAll('.world-post-card img')].filter(img=>img.naturalWidth>0).length===13);
+ await page.evaluate(()=>{pauseImages=true;imageRequests=[]});await page.locator('[data-information-refresh]').click();await page.waitForFunction(()=>imageRequests.length===4);
+ await page.evaluate(()=>{journalWatchers.findLast(w=>w.active&&String(w.path).endsWith('/playerInformation')).error({message:'Access revoked'});pauseImages=false;imageRequests.forEach(request=>request.release?.())});await page.waitForFunction(()=>activeImages===0);
+ assert.equal(await page.evaluate(()=>imageRequests.length),4,'revoked access stops queued image reads');assert.equal(await page.locator('[data-information-list] img').count(),0,'late image data cannot restore content after access revocation');
+ console.log('PASS Bounded parallel illustration loading and stale-list cancellation preserve the active reader image');
  assert.deepEqual(errors,[]);console.log('PASS All five feedback fixes: no World in Recaps, no Home shortcut row, visible sticky Save/Publish, combined World/NPC illustrations, private drafts, denied-original player access, desktop/mobile and WCAG');
  }finally{await browser.close()}})().catch(error=>{console.error(error);process.exitCode=1});
