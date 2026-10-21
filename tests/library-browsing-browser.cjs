@@ -45,6 +45,38 @@ const errors=[];
  await page.evaluate(id=>{items.find(item=>item.id===id).visible=false;renderCards()},firstItem);
  assert.equal(await page.locator('#card-container .item-card').count(),1,'updated player visibility applies on the next render');
  await page.evaluate(()=>{items=[];renderCards()});assert.equal(await page.locator('[data-open-library-dm]').count(),0);assert.match(await page.locator('.library-empty').textContent(),/Your DM can share/);
+
+ // Large catalogue pages bound DOM work while filtering/counting the full permitted list.
+ await page.evaluate(()=>{
+  auditSeed('dm');showTab('library');window.seedLibraryPages=()=>{const base={...items[0],category:'Wand',rarity:'Rare',source:'Harbor Collection',classes:[],properties:[],lootMode:'dm',description:'A charm from the harbor.'};items=Array.from({length:120},(_,i)=>({...base,id:'page-'+i,name:i<5?'SECRET page '+i:i===119?'Needle at the end':'Harbor item '+String(i).padStart(3,'0'),visible:i>=5}));inventory=[];saves=[];campaignSupply={};};seedLibraryPages();clearLibraryFilters();
+ });
+ const topPages=page.locator('[data-library-pagination]').first(),bottomPages=page.locator('[data-library-pagination]').last();
+ const firstName=()=>page.locator('#card-container .item-name').first().textContent();
+ const sourceBefore=await page.evaluate(()=>JSON.stringify(testSheetDocs));
+ assert.equal(await page.locator('#card-container .item-card').count(),48);assert.match(await topPages.textContent(),/Items 1–48 of 120/);assert.ok(await topPages.locator('[data-library-page="-1"]').isDisabled());
+ await topPages.locator('[data-library-page="1"]').click();assert.equal(await firstName(),'Harbor item 048');assert.match(await topPages.textContent(),/Items 49–96 of 120/);
+ assert.equal(await page.evaluate(()=>document.activeElement===document.querySelector('.library-page-summary')),true);
+ await page.evaluate(()=>renderCards());assert.equal(await firstName(),'Harbor item 048','data refresh preserves the page');
+ await bottomPages.locator('[data-library-page="1"]').click();assert.equal(await page.locator('#card-container .item-card').count(),24);assert.match(await topPages.textContent(),/Items 97–120 of 120/);assert.ok(await topPages.locator('[data-library-page="1"]').isDisabled());
+ await topPages.locator('[data-library-page="-1"]').click();assert.equal(await firstName(),'Harbor item 048');
+ await page.locator('#search').fill('needle');await page.waitForFunction(()=>document.querySelectorAll('#card-container .item-card').length===1);assert.equal(await firstName(),'Needle at the end');assert.ok(await topPages.isHidden());assert.match(await page.locator('#campaignStats').textContent(),/1 of 120 items/);
+ await page.locator('[data-remove-library-filter=search]').click();assert.match(await topPages.textContent(),/Items 1–48 of 120/);
+ await topPages.locator('[data-library-page="1"]').click();await topPages.locator('[data-library-page="1"]').click();
+ await page.evaluate(()=>{items=items.slice(0,60);renderCards()});assert.equal(await page.locator('#card-container .item-card').count(),12);assert.match(await topPages.textContent(),/Items 49–60 of 60/);
+ await page.evaluate(()=>{seedLibraryPages();clearLibraryFilters()});assert.match(await topPages.textContent(),/Items 1–48 of 120/,'clearing unchanged filters also returns to the first page');
+ for(const width of [1440,390,320]){
+  await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  const violations=await page.evaluate(async()=>(await axe.run('#tab-library',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})));assert.deepEqual(violations,[]);
+  await topPages.scrollIntoViewIfNeeded();await page.screenshot({path:out+'/library-pages-'+width+'.png',fullPage:false});
+ }
+ assert.equal(await page.evaluate(()=>JSON.stringify(testSheetDocs)),sourceBefore,'paging and filtering do not write campaign data');
+ await page.evaluate(()=>{auditSeed('player');showTab('library');seedLibraryPages();clearLibraryFilters()});assert.match(await topPages.textContent(),/Items 1–48 of 115/);assert.ok(!(await page.locator('#card-container').textContent()).includes('SECRET'));assert.match(await page.locator('#campaignStats').textContent(),/115 of 115 items/);
+ await topPages.locator('[data-library-page="1"]').click();assert.equal(await page.locator('#card-container .item-card').count(),48);assert.ok(!(await page.locator('#card-container').textContent()).includes('SECRET'));
+ // Account/campaign changes must not inherit an old result-page offset.
+ await page.evaluate(()=>{activeCampaign={...activeCampaign,id:'page-other-campaign'};renderCards()});assert.match(await topPages.textContent(),/Items 1–48 of 115/);
+ await topPages.locator('[data-library-page="1"]').click();await page.evaluate(()=>{auth.currentUser={...auth.currentUser,uid:'page-other-user'};renderCards()});assert.match(await topPages.textContent(),/Items 1–48 of 115/);
+ await page.evaluate(()=>{magicItemLibraryLoaded=false;renderCards()});assert.ok(await topPages.isHidden());assert.ok(await bottomPages.isHidden());
+ console.log('PASS Bounded item pages, full-list search/counts, refresh retention, shrinking results, account/campaign reset, source privacy, keyboard focus and desktop/mobile WCAG');
  await page.evaluate(async()=>{auditSeed('dm');const d=__DND_VAULT_DEPS__;d.doc=(parent,...parts)=>[...(typeof parent==='string'?[parent]:[]),...parts].join('/');d.setDoc=async(p,v)=>{testSheetDocs[p]=structuredClone(v)};await PersonalCreatureLibrary.add({title:'Harbor Keeper',summary:'A friendly watch captain.',content:'A reusable introduction.\n\nA second paragraph.',data:{category:'Story NPC'}});await PersonalCreatureLibrary.add({title:'Tide Beast',summary:'A creature from the deep harbor.',content:'A monster that guards the shoals.',data:{category:'Monster',creatureType:'Beast',combatEnabled:true,ac:15,hp:42,cr:'2',edition:'2024'}});showTab('library-reusable')});
  await page.waitForFunction(()=>document.querySelectorAll('[data-use-template]').length===2);
  await page.locator('[data-template-search]').fill('deep beast');await page.locator('[data-template-category]').selectOption('Monster');assert.equal(await page.locator('[data-use-template]').count(),1);

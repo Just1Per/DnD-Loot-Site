@@ -38,9 +38,37 @@ async function persistItemState(itemId,changes) {
 
 const container = document.getElementById("card-container");
 
+const LIBRARY_PAGE_SIZE=48;
+let libraryPage={signature:null,index:0};
+function hideLibraryPages(){
+  for(const host of document.querySelectorAll('[data-library-pagination]')){host.hidden=true;host.replaceChildren();}
+}
+/** Page after permission checks and filtering; statistics still use every match. */
+function libraryPageSlice(filtered){
+  const signature=JSON.stringify([auth.currentUser?.uid,activeCampaign?.id,campaignLoadGeneration,canManageCampaign(),selectedCharacter?.id,...Object.keys(libraryFilters).map(id=>{const input=document.getElementById(id);return input?.type==='checkbox'?input.checked:input?.value||'';})]);
+  if(signature!==libraryPage.signature)libraryPage={signature,index:0};
+  libraryPage.index=Math.max(0,Math.min(libraryPage.index,Math.ceil(filtered.length/LIBRARY_PAGE_SIZE)-1));
+  const start=libraryPage.index*LIBRARY_PAGE_SIZE,end=Math.min(start+LIBRARY_PAGE_SIZE,filtered.length);
+  const hosts=[...document.querySelectorAll('[data-library-pagination]')];
+  hosts.forEach((host,i)=>{
+    host.hidden=filtered.length<=LIBRARY_PAGE_SIZE;
+    if(host.hidden){host.replaceChildren();return;}
+    host.innerHTML=`<div class="library-page-summary" tabindex="-1" ${i===0?'role="status" aria-live="polite"':''}><strong>Items ${start+1}–${end} of ${filtered.length}</strong><span>Page ${libraryPage.index+1} of ${Math.ceil(filtered.length/LIBRARY_PAGE_SIZE)}</span></div><div class="library-page-actions"><button type="button" data-library-page="-1" ${start===0?'disabled':''}>← Previous page</button><button type="button" data-library-page="1" ${end===filtered.length?'disabled':''}>${end===filtered.length?'Next page':`Next ${Math.min(LIBRARY_PAGE_SIZE,filtered.length-end)} items`} →</button></div>`;
+    host.querySelectorAll('[data-library-page]').forEach(button=>button.onclick=()=>{
+      if(button.disabled)return;
+      libraryPage.index+=Number(button.dataset.libraryPage);renderCards();
+      const first=hosts[0],summary=first.querySelector('.library-page-summary');
+      summary?.focus({preventScroll:true});
+      window.scrollTo(0,Math.max(0,window.scrollY+first.getBoundingClientRect().top-(document.querySelector('.site-header')?.getBoundingClientRect().height||0)-16));
+    });
+  });
+  return filtered.slice(start,end);
+}
+
 let magicItemLoadRequest=null;
 function renderMagicItemLoadPrompt(problem='') {
   if (!container || magicItemLibraryLoaded) return;
+  libraryPage={signature:null,index:0};hideLibraryPages();
   document.getElementById('campaignStats').textContent='';
   if(!problem&&magicItemLoadRequest?.uid===auth.currentUser?.uid&&magicItemLoadRequest?.campaignId===activeCampaign?.id)problem=magicItemLoadRequest.problem||'';
   container.innerHTML = `<section class="library-load-gate" aria-labelledby="libraryLoadTitle">
@@ -74,6 +102,7 @@ async function loadMagicItemLibrary() {
 
 const libraryFilters={search:'Search',categoryFilter:'Category',rarityFilter:'Rarity',sourceFilter:'Source',classFilter:'Class',ownerFilter:'Owner',showLootedOnly:'Looted',showUnlootedOnly:'Unlooted',showSavedOnly:'Saved',showAttunementOnly:'Requires attunement',showNoAttunementOnly:'No attunement',showHighlightedOnly:'Highlighted',showNotHighlightedOnly:'Not highlighted'};
 function clearLibraryFilters(){
+  libraryPage.index=0;
   for(const id of Object.keys(libraryFilters)){const input=document.getElementById(id);if(input){if(input.type==='checkbox')input.checked=false;else input.value='';}}
   renderCards();document.getElementById('search')?.focus({preventScroll:true});
 }
@@ -94,7 +123,7 @@ function renderCards() {
   const renderState=libraryRenderState(),permitted=visibleItems(renderState),filtered = applyFilters(permitted,renderState);
   const fragment = document.createDocumentFragment();
 
-  for (const item of filtered) {
+  for (const item of libraryPageSlice(filtered)) {
     fragment.appendChild(createCard(item,{renderState}));
   }
 
