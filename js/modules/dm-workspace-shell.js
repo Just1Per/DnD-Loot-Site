@@ -44,12 +44,12 @@ var DMWorkspaceShell=(()=>{
   if(retry&&previous?.busy)return;
   const campaignId=activeCampaign?.id,uid=auth.currentUser?.uid,token=++generation;
   const valid=()=>route==='dm'&&token===generation&&host.isConnected&&activeCampaign?.id===campaignId&&auth.currentUser?.uid===uid&&canManageCampaign();
-  const state=previous?.campaignId===campaignId&&previous.uid===uid?previous:{campaignId,uid,groups:new Map()};overviewStates.set(host,state);state.busy=true;
+  const state=previous?.campaignId===campaignId&&previous.uid===uid?previous:{campaignId,uid,groups:new Map()};overviewStates.set(host,state);state.busy=true;state.token=token;
   host.setAttribute('aria-busy','true');host.querySelectorAll('button').forEach(button=>button.disabled=true);
   host.querySelectorAll('[data-dm-retry-overview]').forEach(button=>button.textContent='Retrying…');
   const next=host.querySelector('[data-dm-next-chapter]'),recent=host.querySelector('[data-dm-recent-work]');
   const requested=Object.keys(kinds).filter(kind=>!retry||!state.groups.has(kind)||state.groups.get(kind).failed),results=await Promise.allSettled(requested.map(kind=>CampaignWorkspace.store.list(campaignId,kind)));
-  if(!valid())return;
+  if(!valid()){if(overviewStates.get(host)===state&&state.token===token){state.busy=false;host.setAttribute('aria-busy','false');}return;}
   state.busy=false;host.setAttribute('aria-busy','false');
   results.forEach((result,index)=>state.groups.set(requested[index],{kind:requested[index],rows:result.status==='fulfilled'?result.value:[],failed:result.status==='rejected'}));
   const groups=Object.keys(kinds).map(kind=>state.groups.get(kind));
