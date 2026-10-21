@@ -38,12 +38,12 @@ jobs:
         cache-dependency-path: tests/package-lock.json
     - name: Install test dependencies
       run: npm ci --prefix tests
+    - name: Hosting runtime and operational file boundaries
+      run: npm --prefix tests run test:packaging
     - name: Install Chromium
       run: npx --prefix tests playwright install --with-deps chromium
     - name: Install PDF text verification
       run: sudo apt-get update && sudo apt-get install -y poppler-utils
-    - name: Hosting runtime and operational file boundaries
-      run: npm --prefix tests run test:packaging
     - name: Character engines and UI fixtures
       run: |
         mkdir -p /tmp/campaignatlas-ui-checks
@@ -96,6 +96,8 @@ jobs:
       run: npm ci --prefix tests
     - name: Install Chromium
       run: npx --prefix tests playwright install --with-deps chromium
+    - name: Install PDF text verification
+      run: sudo apt-get update && sudo apt-get install -y poppler-utils
     - name: NPC reading, exact-record reopening and return navigation
       run: |-
         npm --prefix tests run test:campaign-npcs
