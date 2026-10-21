@@ -80,3 +80,5 @@
 .journal-reader-heading{border-bottom:1px solid var(--ui-border-soft,#c9b99c);padding-bottom:18px}
 @media(max-width:580px){.journal-leaf{padding:0 0 24px}.journal-reading-prose{font-size:1.02rem;line-height:1.85}.journal-index nav{flex-direction:column}}
 @media print{.journal-index{display:none!important}.journal-reading-prose{max-width:none}.journal-reader-heading{display:none}}
+
+.campaign-journal [data-journal-retry]{margin-bottom:20px}
