@@ -2416,6 +2416,7 @@
 .sheet-overview-portrait{width:82px;height:82px;object-fit:cover;object-position:center;border-radius:50%;border:2px solid var(--vault-gold);padding:3px;background:var(--vault-paper);box-sizing:border-box}
 #sheetPageManager .sheet-page-manager-head [data-close-page-manager]{display:grid!important;place-items:center!important;flex:0 0 36px!important;width:36px!important;height:36px!important;min-width:36px!important;padding:0!important;overflow:visible!important;opacity:1!important;visibility:visible!important;color:#fff8e8!important;font:700 25px/1 Arial,sans-serif!important;background:#5c1d1d!important;border:1px solid #d4af37!important;border-radius:4px!important;position:static!important}
 .sheet-journal-toolbar{display:flex;align-items:end;justify-content:space-between;gap:12px}
+.sheet-journal-share-actions{flex-wrap:wrap;justify-content:flex-start}
 .sheet-journal-toolbar label{flex:1;max-width:400px}
 .sheet-journal-categories{display:flex;flex-wrap:wrap;gap:5px;padding:10px 0;border-bottom:1px solid var(--vault-border-soft)}
 .sheet-journal-categories button[aria-pressed=true]{background:var(--vault-burgundy)!important;color:#fff8ed!important}

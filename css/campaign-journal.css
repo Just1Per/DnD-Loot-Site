@@ -67,7 +67,7 @@
 .campaign-journal [data-journal-reference-status]:empty{display:none}
 
 /* Recap readers keep navigation available without crowding the story. */
-.campaign-journal .journal-hero[hidden]{display:none}
+.campaign-journal [hidden]{display:none!important}
 .journal-notebook{display:flex;flex-direction:column;border:0;border-radius:0;gap:24px;max-width:850px;margin:24px auto}
 .journal-index{order:2;display:block;padding:14px 0;background:transparent;border:0;border-top:1px solid var(--ui-border-soft,#c9b99c)}
 .journal-index>summary{cursor:pointer;min-height:44px;line-height:1.6;color:var(--ui-heading,#5c1d1d)}
@@ -82,3 +82,8 @@
 @media print{.journal-index{display:none!important}.journal-reading-prose{max-width:none}.journal-reader-heading{display:none}}
 
 .campaign-journal [data-journal-retry]{margin-bottom:20px}
+
+/* Recap edits keep save/preview within reach while reading long drafts. */
+.journal-editor-actions{position:sticky;top:var(--recap-editor-top,100px);z-index:5;padding:12px;background:var(--ui-paper,#fffdf7);border:1px solid var(--ui-border-soft,#c9b99c);border-radius:6px}
+
+.journal-moderation-actions{display:flex;gap:8px;flex-wrap:wrap}
