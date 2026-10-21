@@ -24,7 +24,7 @@ const errors=[];
  await page.evaluate(()=>{auditSeed('player');testSheetDocs['campaigns/a/playerInformation/letter']={title:'A letter at the inn',summary:'A message from the northern watch.',content:'Bring the compass.\n\nTrust no blue lantern.',category:'Lore',revision:1,sourceRevision:1,updatedBy:'dm',updatedAt:2000,image:{path:'campaign-journal-images/a/world/letter/shared-picture',alt:'The sealed letter',caption:'The northern watch seal'}};testSheetDocs['campaigns/a/playerChapters/harbor']={title:'Arrival at the harbor',summary:'The party freed the harbor.',content:'First paragraph.\n\nSecond paragraph.',category:'Completed',order:1,revision:1,sourceRevision:1,updatedBy:'dm',updatedAt:1000};showTab('journal')});
  await page.waitForFunction(()=>CampaignJournal.session?.ready);
  check('Journal navigation opens the new overview with existing shared DM chapter snapshots',await page.locator('#tab-campaign-journal').isVisible()&&(await page.locator('[data-journal-content]').textContent()).includes('Arrival at the harbor'));
- await page.locator('[data-journal-read="world:letter"]').click();await page.waitForSelector('[data-journal-image] figcaption');check('DM-published lore opens in the notebook with its explicitly shared illustration',(await page.locator('.journal-leaf').textContent()).includes('The northern watch seal'));await page.locator('[data-journal-back]').click();
+ check('World posts are not duplicated or loaded in Recaps',await page.locator('[data-journal-read="world:letter"]').count()===0&&!await page.evaluate(()=>journalWatchers.some(w=>w.active&&String(w.path).endsWith('/playerInformation'))));
  await page.locator('[data-journal-compose]').click();
  await page.locator('[data-journal-field=title]').fill('Our Blackwater session');
  await page.locator('[data-journal-field=body]').fill('We met the river spirit.\n\nThe compass points toward her.');
@@ -57,7 +57,7 @@ const errors=[];
  await page.locator('[data-journal-editor-back]').click();
  await page.locator('[data-journal-unshare]').click();await page.locator('[data-site-confirm]').click();await page.waitForSelector('[data-journal-edit]');
  check('Making private removes shared copy while keeping the author draft',await page.evaluate(()=>!Object.keys(testSheetDocs).some(p=>p.includes('/journalRecaps/'))&&Object.keys(testSheetDocs).some(p=>p.includes('/journalDrafts/player/entries/'))));
- await page.locator('[data-journal-filter=recap]').click();check('Player filter excludes DM publications',await page.locator('.journal-feed [data-journal-read]').count()===0);await page.locator('[data-journal-filter=dm]').click();check('DM filter shows only deliberately shared DM pages',await page.locator('.journal-feed [data-journal-read]').count()===2);await page.locator('[data-journal-search]').fill('harbor');check('Journal search filters titles and body text',await page.locator('.journal-feed [data-journal-read]').count()===1);await page.locator('[data-journal-search]').fill('');await page.locator('[data-journal-filter=all]').click();
+ await page.locator('[data-journal-filter=recap]').click();check('Player filter excludes DM publications',await page.locator('.journal-feed [data-journal-read]').count()===0);await page.locator('[data-journal-filter=dm]').click();check('DM filter shows only deliberately shared DM pages',await page.locator('.journal-feed [data-journal-read]').count()===1);await page.locator('[data-journal-search]').fill('harbor');check('Journal search filters titles and body text',await page.locator('.journal-feed [data-journal-read]').count()===1);await page.locator('[data-journal-search]').fill('');await page.locator('[data-journal-filter=all]').click();
  for(const width of [1440,390,320]){
   await page.setViewportSize({width,height:900});check('Overview fits '+width+'px',await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   const violations=await page.evaluate(async()=>(await axe.run('#tab-campaign-journal',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})));assert.deepEqual(violations,[]);
@@ -82,7 +82,7 @@ const errors=[];
   await page.locator('[data-journal-compose]').click();await page.waitForSelector('[data-journal-form]');
   check(role+' can open a new recap when optional shared references are denied',await page.locator('[data-journal-field=title]').isVisible());
   await page.evaluate(()=>{CampaignJournal.clear();window.referenceFailure=false;window.holdReferences=true;showTab('journal')});
-  await page.waitForFunction(()=>CampaignJournal.session?.ready&&window.referenceReleases?.length===2);await page.locator('[data-journal-compose]').click();await page.waitForSelector('[data-journal-form]');
+  await page.waitForFunction(()=>CampaignJournal.session?.ready&&window.referenceReleases?.length===1);await page.locator('[data-journal-compose]').click();await page.waitForSelector('[data-journal-form]');
   check(role+' can write while optional shared references are still loading',await page.locator('[data-journal-field=body]').isVisible());
   await page.evaluate(()=>{window.holdReferences=false;referenceReleases.splice(0).forEach(resolve=>resolve());CampaignJournal.clear();});
  }

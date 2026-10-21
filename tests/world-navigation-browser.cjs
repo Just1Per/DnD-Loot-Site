@@ -53,7 +53,7 @@ const errors=[];
  await page.waitForFunction(()=>!document.querySelector('[data-publish-world]').disabled);
  assert.match(await page.locator('[data-release-includes]').textContent(),/image and caption/);
  await page.screenshot({path:out+'/world-editor-desktop.png',fullPage:true});
- await page.locator('[data-publish-world]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent==='Released to players.');
+ await page.locator('[data-publish-world]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent==='Published to players.');
  assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/playerInformation/harbor'].content),'A new public discovery.\n\nThe harbor has a story to tell.');
  assert.ok(await page.evaluate(()=>testSheetDocs['campaigns/a/playerInformation/harbor'].image));
  await page.locator('[data-back-to-world]').click();await page.waitForSelector('[data-read-world=harbor]');

@@ -1,6 +1,6 @@
 # Shared party journal
 
-Journal now opens a shared overview, with notebook reading for individual entries. Existing Campaign guide, Known NPCs and Completed chapters remain available in the secondary navigation. Campaign Home also links directly to the party journal.
+Journal now opens a shared overview, with notebook reading for individual entries. Existing Campaign guide, Known NPCs and Completed chapters remain available in the secondary navigation. The persistent Journal navigation is the single route to these sections; Home does not duplicate it.
 
 ## Writing and reading
 
@@ -11,9 +11,9 @@ Active campaign members, including campaign DMs and the owner, can write session
 3. Choose **Everyone in this campaign** and select **Share recap** to save and share in one action. Session details and extra notes are optional disclosures.
 4. Later draft edits stay private until the author chooses the shared audience and selects **Share recap** again. **Make private** removes the shared copy while retaining the saved draft.
 
-The feed mixes player accounts with already published DM world pages and chapter summaries. It never reads private workspace source records. DM labels distinguish those snapshots from player accounts. The notebook preserves paragraphs and optional note cards. Existing explicitly shared illustrations and captions load through the authenticated Storage SDK; opening a page never publishes an image. NPCs and private chapter notes remain in their existing reference sections.
+The feed contains player recaps and completed chapter summaries. World posts belong only in Journal → World and are not queried by Recaps. It never reads private workspace source records. DM labels distinguish those snapshots from player accounts. The notebook preserves paragraphs and optional note cards. Existing explicitly shared chapter illustrations and captions load through protected publication copies with authenticated legacy Storage fallback; opening a page never publishes an image. NPCs and private chapter notes remain in their existing reference sections.
 
-Filters and text search narrow the feed. The sidebar links to campaign references and the author's drafts, and surfaces the next-session note from the latest applicable shared player recap. Empty campaigns get a useful empty state rather than fabricated sessions.
+Filters and text search narrow the feed. The sidebar shows the author's drafts, and surfaces the next-session note from the latest applicable shared player recap. Empty campaigns get a useful empty state rather than fabricated sessions.
 
 ## Saving and access boundaries
 

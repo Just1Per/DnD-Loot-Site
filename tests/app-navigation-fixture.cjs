@@ -9,13 +9,15 @@ async function navigate(page,tab){
  await button.click();
 }
 async function expandWorldTools(page){
+ await openEditorOptions(page);
  if(await page.locator('[data-world-basics]').count()){
   for(const detail of await page.locator('[data-world-advanced], details[data-world-option], [data-entry-sharing] details').all())if(!await detail.evaluate(node=>node.open))await detail.locator(':scope > summary').click();
  }
 }
+async function openEditorOptions(page){const options=page.locator('.workspace-editor-options');if(await options.count()&&!await options.evaluate(n=>n.open))await options.locator(':scope > summary').click();}
 async function archiveEntry(page){
- await expandWorldTools(page);
+ await expandWorldTools(page);await openEditorOptions(page);
  await page.locator('[data-archive-record]').click();
  await page.locator('#siteConfirmationDialog [data-site-confirm]').click();
 }
-module.exports={navigate,expandWorldTools,archiveEntry};
+module.exports={navigate,expandWorldTools,archiveEntry,openEditorOptions};

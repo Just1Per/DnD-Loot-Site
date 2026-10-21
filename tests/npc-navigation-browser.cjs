@@ -52,7 +52,7 @@ const errors=[];
  await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session.record.revision===2);
  assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/playerNPCs/elowen'].sourceRevision),1);
  await page.waitForFunction(()=>!document.querySelector('[data-publish-npc]').disabled);
- await page.locator('[data-publish-npc]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Shared with campaign members'));
+ await page.locator('[data-publish-npc]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Published to players'));
  assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/playerNPCs/elowen'].content),'A new shared discovery.\n\nThe missing ship has returned.');
  await page.locator('[data-back-to-npcs]').click();await page.waitForSelector('[data-read-npc=elowen]');
  assert.equal(await page.locator('[data-information-search]').inputValue(),'harbor');assert.equal(await page.locator('[data-information-category]').inputValue(),'Story NPC');

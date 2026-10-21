@@ -121,12 +121,13 @@ const workspaceTabs = ['dm-world', 'dm-creatures', 'dm-chapters'];
       assert.equal(await secondary(tab).evaluate(button => button.classList.contains('active')), true, 'reload must preserve the selected Journal subsection');
       assert.equal(await secondary(tab).getAttribute('aria-current'), 'page');
       await primary('campaign-home').click();
-      await page.locator('[data-home-tab="' + tab + '"]').click();
+      assert.equal(await page.locator('[data-home-tab]').count(),0,'Home must not repeat the main navigation');
+      await primary('journal').click();await secondary(tab).click();
       await assertPanel(tab);
       await assertPrimary('journal');
-      assert.equal(await secondary(tab).evaluate(button => button.classList.contains('active')), true, 'Home shortcuts must select their Journal subsection');
+      assert.equal(await secondary(tab).evaluate(button => button.classList.contains('active')), true, 'persistent navigation must select their Journal subsection');
     }
-    console.log('PASS Player primary navigation, Journal aliases, Home shortcuts and real subsection reloads');
+    console.log('PASS Player primary navigation, Journal aliases, persistent navigation and real subsection reloads');
 
     await secondary('campaign-information').click();
     await primary('player').click();

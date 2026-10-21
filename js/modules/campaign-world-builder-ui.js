@@ -108,9 +108,9 @@
  config.searchText=row=>[row.content,row.data?.connections].join(' ');
  config.help='Write a World post. Save it as a private draft or release it to your players.';
  config.extra=(_host,s)=>{
-  s.host.querySelector('[data-save-record]').textContent='Save as draft';
+  s.host.querySelector('[data-save-record]').textContent='Save draft';
   const secondary=s.host.querySelector('[data-world-secondary-actions]');
-  for(const selector of ['[data-archive-record]','[data-preview-record]','[data-print-record]'])secondary.append(s.host.querySelector(selector));
+  secondary.hidden=true;
   s.worldSavedCategory=s.record.revision?s.record.data?.category:null;
   const select=s.host.querySelector('[data-record-field="category"]'),field=s.host.querySelector('[data-world-custom-field]'),input=field.querySelector('input'),option=select.querySelector('[data-world-custom-option]');
   input.value=config.categories.includes(s.record.data?.category)?'':s.record.data?.category||'';

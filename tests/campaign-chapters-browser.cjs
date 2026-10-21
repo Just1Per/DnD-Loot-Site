@@ -1,3 +1,4 @@
+const {navigate:navigateJournal}=require('./app-navigation-fixture.cjs');
 // Real browser integration against a deterministic Firebase fixture; never touches production.
 const fs=require('node:fs'),path=require('node:path');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
@@ -90,13 +91,13 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  if(JSON.stringify(await page.evaluate(()=>characters.map(row=>row.level)))!==JSON.stringify(levels))throw Error('Sharing changes character levels');
  await page.evaluate(async()=>{await CampaignWorkspace.store.save({campaignId:'a',kind:'chapter',id:'first',revision:0,input:{title:'Zulu departure',content:'The first journey.',data:{status:'Completed',order:1}}});await CampaignInformation.chapterStore.publish({campaignId:'a',id:'first',sourceRevision:1})});
  console.log('PASS Explicit completed-chapter sharing uses player recap and preserves private preparation/levels');
- await page.evaluate(()=>{CampaignWorkspace.clear(true);seed('player');showTab('campaign-home')});await page.locator('[data-home-tab=campaign-chapters]').click();await page.waitForSelector('[data-information-id]');
+ await page.evaluate(()=>{CampaignWorkspace.clear(true);seed('player');showTab('campaign-home')});await navigateJournal(page,'campaign-chapters');await page.waitForSelector('[data-information-id]');
  const headings=await page.locator('#tab-campaign-chapters summary strong').allTextContents();if(!headings[0].includes('Zulu departure')||!headings[1].includes('Arrival'))throw Error('Chapters are not ordered numerically');
  const chapter=page.locator('[data-information-id]').filter({hasText:'Arrival at the Harbor'});await chapter.locator('summary').click();await page.waitForFunction(id=>{const node=[...document.querySelectorAll('[data-chapter-note-id]')].find(row=>row.dataset.chapterNoteId===id);return node&&!node.querySelector('textarea').disabled},recordId);
  if(await chapter.locator('.campaign-book-prose b').count())throw Error('Recap interpreted as markup');
  await chapter.locator('[data-note-text]').fill('My theory: follow the captain.');await chapter.locator('[data-note-save]').click();await page.waitForFunction(id=>testSheetDocs['campaigns/a/playerChapters/'+id+'/notes/player']?.revision===1,recordId);
  if(!(await chapter.locator('[data-note-status]').textContent()).includes('saved'))throw Error('Personal note save status missing');
- await page.locator('[data-tab=campaign-home]').click();await page.locator('[data-home-tab=campaign-chapters]').click();await page.waitForSelector('[data-information-id]');await chapter.locator('summary').click();await page.waitForFunction(id=>{const node=[...document.querySelectorAll('[data-chapter-note-id]')].find(row=>row.dataset.chapterNoteId===id);return node&&!node.querySelector('textarea').disabled},recordId);
+ await page.locator('[data-tab=campaign-home]').click();await navigateJournal(page,'campaign-chapters');await page.waitForSelector('[data-information-id]');await chapter.locator('summary').click();await page.waitForFunction(id=>{const node=[...document.querySelectorAll('[data-chapter-note-id]')].find(row=>row.dataset.chapterNoteId===id);return node&&!node.querySelector('textarea').disabled},recordId);
  if(await chapter.locator('[data-note-text]').inputValue()!=='My theory: follow the captain.')throw Error('Personal notes did not reopen');
  console.log('PASS Player chapter order, safe recap and personal note save/reopen');
  await chapter.locator('[data-note-text]').fill('An unsaved theory');
