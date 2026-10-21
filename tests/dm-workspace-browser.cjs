@@ -26,6 +26,7 @@ const root=path.resolve(__dirname,'..');
    sdk.where=(field,op,value)=>({field,op,value});sdk.query=(path,...filters)=>({path,filters});
    sdk.getDocs=async query=>{
     const collectionPath=typeof query==='string'?query:query.path,filters=query.filters||[];
+    window.overviewReads||=[];overviewReads.push(collectionPath);if(window.overviewFail?.includes(collectionPath)){overviewFail=overviewFail.filter(p=>p!==collectionPath);throw Error('Simulated overview failure')}
     const rows=Object.entries(testSheetDocs)
      .filter(([key,data])=>key.startsWith(collectionPath+'/')&&!key.slice(collectionPath.length+1).includes('/')&&filters.every(filter=>{
       const value=filter.field.split('.').reduce((data,key)=>data?.[key],data);
@@ -128,6 +129,21 @@ const root=path.resolve(__dirname,'..');
   await page.evaluate(()=>showTab('dm'));
   assert.deepEqual(await persisted(),baseline,'Viewing Overview or changing dashboard sections must never create or save records');
   console.log('PASS DM sidebar, card partition, current/planned chapter priority and recent saved work');
+  await page.evaluate(()=>{overviewFail=['campaigns/a/worldEntries','campaigns/a/chapters'];showTab('dm')});
+  await page.waitForSelector('[data-dm-retry-overview]');
+  assert.equal(await page.locator('[data-dm-recent-entry="creature:captain"]').count(),1,'partial success remains visible');
+  assert.equal((await page.locator('[data-dm-next-chapter]').textContent()).includes('No current or planned'),false,'failed chapter read is not an empty campaign');
+  await page.evaluate(()=>{overviewReads.length=0;workspaceDelayList='campaigns/a/worldEntries'});
+  await page.locator('[data-dm-retry-overview]').first().click();await page.waitForFunction(()=>!!window.finishWorkspaceList);
+  assert.equal(await page.locator('[data-dm-retry-overview]').first().isDisabled(),true);
+  assert.equal(await page.locator('[data-dm-recent-entry="creature:captain"]').count(),1);
+  await page.locator('[data-dm-retry-overview]').last().evaluate(n=>n.click());
+  assert.deepEqual((await page.evaluate(()=>overviewReads)).sort(),['campaigns/a/chapters','campaigns/a/worldEntries'],'retry fetches only failed groups once');
+  await page.evaluate(async()=>{finishWorkspaceList();await workspaceDelayedList});
+  await page.waitForSelector('[data-dm-next-chapter-open]');assert.equal(await page.locator('[data-dm-retry-overview]').count(),0);
+  assert.equal(await page.locator('[data-dm-recent-entry="world:harbor"]').count(),1);assert.deepEqual(await persisted(),baseline,'overview recovery writes no campaign records');
+  console.log('PASS DM Overview inline retry, retained partial results, failed-group-only requests and pending double-click protection');
+
 
   // An old campaign list resolves after the new campaign overview has loaded.
   await page.evaluate(()=>{showTab('dm-party');window.workspaceDelayList='campaigns/a/chapters';showTab('dm')});
