@@ -12,11 +12,17 @@ function patchItem(itemId, changes) {
 }
 
 /** Legacy card-state shape, derived from current ownership rather than a single stored owner. */
-function getItemState(itemId) {
-  const item=items.find(i=>i.id===itemId)||{};
-  const entries=inventory.filter(e=>e.itemId===itemId&&e.quantity>0);
+function getItemState(itemId,renderState=null) {
+  const item=(renderState?renderState.items.get(itemId):items.find(i=>i.id===itemId))||{};
+  const entries=renderState?(renderState.inventory.get(itemId)||[]):inventory.filter(e=>e.itemId===itemId&&e.quantity>0);
   return {visible:!!item.visible,highlighted:!!item.highlighted,looted:entries.length>0,
     owner:entries.length===1?entries[0].characterId:null,receivedDate:entries[0]?.receivedAt||null};
+}
+/** Short-lived indexes for one synchronous render; never reused after item/account changes. */
+function libraryRenderState() {
+  const entries=new Map();
+  for(const entry of inventory){if(!(entry.quantity>0))continue;let owned=entries.get(entry.itemId);if(!owned)entries.set(entry.itemId,owned=[]);owned.push(entry);}
+  return {items:new Map(items.map(item=>[item.id,item])),inventory:entries,savedForCharacter:new Set(saves.filter(save=>save.characterId===selectedCharacter?.id).map(save=>save.itemId))};
 }
 /** Only visibility/highlighting can be patched here; quantities use inventory transactions. */
 async function persistItemState(itemId,changes) {
@@ -85,11 +91,11 @@ function renderCards() {
   syncLibraryFilters();
   if (!magicItemLibraryLoaded) { renderMagicItemLoadPrompt(); return; }
 
-  const permitted=visibleItems(),filtered = applyFilters(permitted);
+  const renderState=libraryRenderState(),permitted=visibleItems(renderState),filtered = applyFilters(permitted,renderState);
   const fragment = document.createDocumentFragment();
 
   for (const item of filtered) {
-    fragment.appendChild(createCard(item));
+    fragment.appendChild(createCard(item,{renderState}));
   }
 
   container.replaceChildren(fragment);
@@ -99,7 +105,7 @@ function renderCards() {
     container.querySelector('[data-clear-library-filters]')?.addEventListener('click',clearLibraryFilters);
     container.querySelector('[data-open-library-dm]')?.addEventListener('click',()=>{if(!canManageCampaign())return;const panel=document.getElementById('libraryDMTools');panel.open=true;document.getElementById('addFromRoot')?.focus();});
   }
-  updateStatsFromFiltered(filtered,permitted.length);
+  updateStatsFromFiltered(filtered,permitted.length,renderState);
   observePendingImages(container);
   if(typeof CharacterWorkspace!=='undefined')CharacterWorkspace.refresh(false);
 }
@@ -108,18 +114,18 @@ function renderCards() {
  * Campaign managers see the full catalogue.
  * Players see only items visible under the active campaign's policy/state.
  */
-function visibleItems() {
+function visibleItems(renderState=null) {
   const catalogue=items.filter(item=>typeof CampaignRules==='undefined'||CampaignRules.allowed(item));
   if (!activeCampaign || canManageCampaign()) return catalogue;
-  return catalogue.filter(item => getItemState(item.id).visible);
+  return catalogue.filter(item => getItemState(item.id,renderState).visible);
 }
 
-function updateStatsFromFiltered(filtered,total) {
+function updateStatsFromFiltered(filtered,total,renderState=null) {
   let looted = 0;
   let highlighted = 0;
 
   for (const item of filtered) {
-    const state = getItemState(item.id);
+    const state = getItemState(item.id,renderState);
     if (state.looted) looted++;
     if (state.highlighted) highlighted++;
   }
@@ -127,7 +133,7 @@ function updateStatsFromFiltered(filtered,total) {
   updateStats(filtered.length, looted, highlighted, saves.length,total);
 }
 
-function applyFilters(list) {
+function applyFilters(list,renderState=null) {
   const val = id => document.getElementById(id)?.value || "";
   const chk = id => document.getElementById(id)?.checked ?? false;
 
@@ -143,10 +149,9 @@ function applyFilters(list) {
     : null;
 
   return list.filter(item => {
-    const state = getItemState(item.id);
-
     if (!catalogueItemMatches(item,{search,rarity,source,category,class:cls,multiTerm:true})) return false;
-    if (owner && !inventory.some(e=>e.itemId===item.id && e.characterId===owner && e.quantity>0)) return false;
+    const state = getItemState(item.id,renderState);
+    if (owner && !(renderState?(renderState.inventory.get(item.id)||[]):inventory).some(e=>e.itemId===item.id && e.characterId===owner && e.quantity>0)) return false;
 
     if (chk("showLootedOnly")         && !state.looted)      return false;
     if (chk("showUnlootedOnly")       &&  state.looted)      return false;
