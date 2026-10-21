@@ -10,7 +10,9 @@ Order agreed with the owner: stabilize merged behavior and complete UX/code/perf
 - [ ] Continue consistent navigation, back actions, save/publish feedback and empty states from concrete test findings.
 - [ ] Continue compact character-sheet help where repeated controls add clutter; retain section explanations, hover and keyboard access. First delivery merged in #168.
 - [ ] Keep header Guide and contextual help current in each feature PR.
-- [ ] Deliver #171/#172 to main: their PRs were merged into feature branches, so their changes are restored in the current main-targeted follow-up. Canceled World/NPC editor returns preserve the remembered reader; obsolete reference rendering is removed from the chapter path. Continue cleanup from concrete findings.
+- [x] #173 delivered #171/#172 to main at 838f237: canceled World/NPC editor returns preserve the remembered reader, and Library results use bounded pages. Continue cleanup from concrete findings.
 - [ ] Measure production startup and image-heavy-page bottlenecks. The offline ordered-loader baseline is recorded in docs/startup-performance-baseline.md; 102 modules are each requested once and execute in order, so no speculative loader rewrite is included. Library CPU/DOM measurements now show the remaining broad-result cost; the main-targeted follow-up bounds results to 48 cards per page, retaining full-list filtering/counts. See docs/library-result-pages.md. Library snapshots/shared-image concurrency are already merged.
 - [ ] Maintain CI clarity and reliability; parallel jobs, early checks, ready-for-review previews and the landscape map test fixture are implemented.
 - [ ] PARKED — Plan One Shots with the owner before further implementation: purpose, create/invite/join flow, participant/sheet overview, access boundaries, statuses and completion/archive. Do not expand the feature while parked.
+
+- [ ] Current chapter-publishing fix: sticky Save draft / Publish to players / Unpublish; save and publish both public text sections plus illustration/caption together. All private preparation stays excluded. Updated Firestore rules required; no Storage changes.

@@ -12,6 +12,7 @@ const {createCampaignInformationStore}=require('../js/modules/campaign-informati
   const id='illustrated-'+kind,path=`campaign-journal-images/a/${kind}/${id}/original`,store=createCampaignInformationStore({...sdk,db,auth},kind);
   const image={path,alt:'A shared illustration',caption:'Public caption',uploadedBy:'dm',uploadedAt:1},preparedImage={path,contentType:'image/png',data:png};
   let input={title:'Public title',summary:'Public introduction',content:'Public body',privateNotes:'SECRET',data:{category:kind==='creature'?'Story NPC':'Lore',status:'Completed',order:1,journalImage:image,goals:'PRIVATE GOAL'}};
+  if(kind==='chapter')input.data.playerRecap='Public chapter recap';
   await workspace.save({campaignId:'a',kind,id,revision:0,input});
   let published=await assertSucceeds(store.publish({campaignId:'a',id,sourceRevision:1,includeImage:true,preparedImage}));
   const ref=context=>sdk.doc(context.firestore(),'campaigns','a','playerIllustrations',kind,'entries',id),player=env.authenticatedContext('player');
@@ -26,7 +27,8 @@ const {createCampaignInformationStore}=require('../js/modules/campaign-informati
   await assertFails(sdk.setDoc(ref(env.authenticatedContext('dm')),{...preparedImage,secret:'not image data'}));
   input={...input,content:'Changed private draft',data:{...input.data,journalImage:{...image,path:path+'2',caption:'Changed caption'}}};
   await workspace.save({campaignId:'a',kind,id,revision:1,input});
-  assert.equal((await sdk.getDoc(sdk.doc(db,'campaigns','a',publication,id))).data().content,'Public body');
+  assert.equal((await sdk.getDoc(sdk.doc(db,'campaigns','a',publication,id))).data().content,kind==='chapter'?'Public chapter recap':'Public body');
+  if(kind==='chapter')assert.equal(published.introduction,'Public body');
   await assertSucceeds(sdk.getDoc(ref(player)));
   await assert.rejects(store.publish({campaignId:'a',id,sourceRevision:1,publishedRevision:published.revision,includeImage:true,preparedImage}),/changed/);
   published=await store.publish({campaignId:'a',id,sourceRevision:2,publishedRevision:published.revision,includeImage:true,preparedImage:{...preparedImage,path:path+'2'}});

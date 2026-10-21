@@ -19,9 +19,11 @@ function createCampaignInformationStore(sdk, kind = 'world') {
     const fields = {title:source.title,summary:source.summary,content:source.content,category:source.data?.category || 'World',sourceRevision:source.revision};
     if(kind==='world'&&Object.hasOwn(source.data||{},'postLayout')){if(!['split','reverse','panorama','classic'].includes(source.data.postLayout))throw Error('Choose a supported World post layout.');fields.postLayout=source.data.postLayout;}
     if(kind==='chapter'){
+      if(source.data.playerRecap&&source.content&&source.content!==source.data.playerRecap)fields.introduction=source.content;
       fields.content=source.data.playerRecap || source.content;fields.category='Completed';fields.order=source.data.order;
       if(!Number.isInteger(fields.order)||fields.order<0||fields.order>9999)throw Error('Set the chapter order before sharing.');
     }
+    if(Object.hasOwn(fields,'introduction')&&(typeof fields.introduction!=='string'||fields.introduction.length>20000))throw Error('This entry has invalid chapter introduction text.');
     for (const [key,max] of Object.entries({title:160,summary:1000,content:20000,category:80})) {
       if (typeof fields[key] !== 'string' || fields[key].length > max) throw Error('This entry has invalid player-facing text.');
     }

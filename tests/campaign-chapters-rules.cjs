@@ -21,7 +21,7 @@ const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-s
   await check('DM publishes only saved player text; active members can query snapshots',async()=>{
    await assertSucceeds(stores.dm.publish(publish));
    const [row]=await assertSucceeds(stores.player.list('a'));
-   assert.equal(row.content,source.input.data.playerRecap);assert.equal(row.category,'Completed');assert.equal(row.order,2);
+   assert.equal(row.content,source.input.data.playerRecap);assert.equal(row.introduction,source.input.content);assert.equal(row.category,'Completed');assert.equal(row.order,2);
    assert.equal(row.privateNotes,undefined);assert.equal(row.data,undefined);assert.ok(!JSON.stringify(row).includes('impostor'));assert.ok(!JSON.stringify(row).includes('private-map'));
    await assertFails(sdk.getDoc(sdk.doc(db.player,'campaigns/a/chapters/north')));
    await assertFails(sdk.getDoc(sdk.doc(db.player,'campaigns/a/workspaceSecrets/chapter-north')));
@@ -46,7 +46,7 @@ const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-s
   });
   await check('Rules reject injected secrets, mismatched source text and unsupported extra fields',async()=>{
    const row=await stores.dm.load('a','north');delete row.id;
-   for(const change of [{privateNotes:'Secret'},{imagePath:'private-map'},{content:source.input.privateNotes},{sourceRevision:1}])await assertFails(sdk.setDoc(sdk.doc(db.dm,'campaigns/a/playerChapters/north'),{...row,revision:3,...change}));
+   for(const change of [{introduction:source.input.privateNotes},{introduction:'x'.repeat(20001)},{privateNotes:'Secret'},{imagePath:'private-map'},{content:source.input.privateNotes},{sourceRevision:1}])await assertFails(sdk.setDoc(sdk.doc(db.dm,'campaigns/a/playerChapters/north'),{...row,revision:3,...change}));
   });
   await check('Archive atomically unpublishes; restoring never reveals the entry automatically',async()=>{
    await assertFails(sdk.updateDoc(sdk.doc(db.dm,'campaigns/a/chapters/north'),{archived:true,revision:3}));
