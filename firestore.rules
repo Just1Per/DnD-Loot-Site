@@ -636,12 +636,12 @@ match /campaigns/{campaignId} {
       && d.nextTime is string && d.nextTime.size() <= 2000
       && d.sessionDate is string && d.sessionDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
       && d.sessionNumber is int && d.sessionNumber >= 1 && d.sessionNumber <= 9999
-      && d.authorId == request.auth.uid && d.updatedAt is int
+      && d.authorId is string && d.updatedAt is int
       && d.revision is int && d.revision > 0;
   }
   match /journalDrafts/{uid}/entries/{entryId} {
     function ownDraft() { return journalMember() && request.auth.uid == uid; }
-    function validDraft(d) { return validRecap(d) && d.keys().hasOnly(['title','body','authorName','characterName','remember','nextTime','sessionDate','sessionNumber','authorId','revision','updatedAt']); }
+    function validDraft(d) { return validRecap(d) && d.authorId == request.auth.uid && d.keys().hasOnly(['title','body','authorName','characterName','remember','nextTime','sessionDate','sessionNumber','authorId','revision','updatedAt']); }
     allow read: if ownDraft();
     allow create: if ownDraft() && validDraft(request.resource.data) && request.resource.data.revision == 1;
     allow update: if ownDraft() && validDraft(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
@@ -649,16 +649,24 @@ match /campaigns/{campaignId} {
   match /journalRecaps/{entryId} {
     function validPublication(d) {
       let draft = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/journalDrafts/$(request.auth.uid)/entries/$(entryId)).data;
-      return validRecap(d) && d.keys().hasOnly(['title','body','authorName','characterName','remember','nextTime','sessionDate','sessionNumber','authorId','revision','updatedAt','sourceRevision'])
+      return validRecap(d) && d.authorId == request.auth.uid && d.keys().hasOnly(['title','body','authorName','characterName','remember','nextTime','sessionDate','sessionNumber','authorId','revision','updatedAt','sourceRevision'])
         && d.sourceRevision == draft.revision && d.authorId == draft.authorId
         && d.title == draft.title && d.body == draft.body && d.authorName == draft.authorName
         && d.characterName == draft.characterName && d.remember == draft.remember && d.nextTime == draft.nextTime
         && d.sessionDate == draft.sessionDate && d.sessionNumber == draft.sessionNumber;
     }
+    function validModeration(d) {
+      return validRecap(d)
+        && d.keys().hasOnly(['title','body','authorName','characterName','remember','nextTime','sessionDate','sessionNumber','authorId','revision','updatedAt','sourceRevision','moderatedBy','moderatedAt'])
+        && d.authorId == resource.data.authorId && d.authorName == resource.data.authorName
+        && d.characterName == resource.data.characterName && d.sourceRevision == resource.data.sourceRevision
+        && d.moderatedBy == request.auth.uid && d.moderatedAt is int && d.moderatedAt == d.updatedAt;
+    }
     allow read: if journalMember();
     allow create: if journalMember() && validPublication(request.resource.data) && request.resource.data.revision == 1;
-    allow update: if journalMember() && resource.data.authorId == request.auth.uid && validPublication(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
-    allow delete: if journalMember() && resource.data.authorId == request.auth.uid;
+    allow update: if journalMember() && request.resource.data.revision == resource.data.revision + 1
+      && ((resource.data.authorId == request.auth.uid && validPublication(request.resource.data)) || (isCampaignDM(campaignId) && validModeration(request.resource.data)));
+    allow delete: if journalMember() && (resource.data.authorId == request.auth.uid || isCampaignDM(campaignId));
   }
 
   function workspaceCollection(kind) {

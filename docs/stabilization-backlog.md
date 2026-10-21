@@ -5,8 +5,8 @@ Order agreed with the owner: stabilize merged behavior, complete UX/code/perform
 - [x] Confirm #168 reached main (3f4f8aa) with its six passing checks.
 - [x] Record owner confirmation that #167 Firestore rules are published.
 - [ ] Complete live DM/player testing of World/NPC illustrations, recaps, map/regions, Library, item removal and recoverable campaign removal. Synthetic browser/emulator checks do not establish production behavior.
-- [ ] Finish post-release loading/retry stabilization: shared World/NPC/chapter states and DM Overview partial-failure recovery (current PR).
-- [ ] Add deliberate character-note-to-recap drafting and DM moderation of shared player recaps (owner requested October 21). Preserve private character notes and author drafts; test real permission boundaries.
+- [ ] Finish post-release loading/retry stabilization: shared World/NPC/chapter states and DM Overview partial-failure recovery (#169; checks green, awaiting owner merge).
+- [ ] Complete character-note-to-recap drafting and DM moderation of shared player recaps (current feature; owner requested October 21). Preserve private character notes and author drafts; test real permission boundaries.
 - [ ] Continue consistent navigation, back actions, save/publish feedback and empty states from concrete test findings.
 - [ ] Continue compact character-sheet help where repeated controls add clutter; retain section explanations, hover and keyboard access. First delivery merged in #168.
 - [ ] Keep header Guide and contextual help current in each feature PR.
