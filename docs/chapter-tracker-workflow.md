@@ -11,7 +11,7 @@ New chapters wait for the saved list to load, then suggest the next order after 
 The editor separates:
 
 - **Chapter details & progress**: title, order, status and summary.
-- **Recap for players**: introduction, player recap and explicit sharing controls.
+- **Recap for players**: introduction and chapter recap. Save draft, Publish to players and Unpublish are in the sticky top action bar.
 - **Private chapter preparation**: objectives, scenes, rewards, session notes and secrets.
 - **Locations, people & encounters**: existing links and grouped preparation references.
 - **Milestone approvals**: starting/target levels, approvals and character-sheet actions.
@@ -20,9 +20,9 @@ The editor separates:
 
 ## Progress and publication
 
-Saving Completed progress does not publish a recap. Use **Share completed chapter** deliberately after saving. The snapshot contains only the saved title, summary, order and player recap, using the introduction if the recap is empty. Later saves remain private until **Update shared version** is selected.
+Saving Completed progress does not publish a recap. Choose **Publish to players** beside Save draft. It saves current edits and releases the title, summary, order, introduction, recap, illustration and caption together. Later Save draft actions remain private until Publish to players is selected again. Unpublish hides the player version without saving or discarding the current draft.
 
-Returning to Planned/Current or archiving atomically removes the shared snapshot. Completing/restoring again does not republish it. Personal player notes remain stored and private, with access only while their chapter is shared. Player preview and default print continue to use the recap/introduction choice and exclude private preparation.
+Returning to Planned/Current or archiving atomically removes the shared snapshot. Completing/restoring again does not republish it. Personal player notes remain stored and private, with access only while their chapter is shared. Player preview and default print include both introduction and recap and exclude private preparation.
 
 ## Milestone approvals
 

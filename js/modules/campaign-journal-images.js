@@ -72,7 +72,7 @@ var CampaignJournalImages=(()=>{
    '<label class="workspace-field">Accessible description<input type="text" maxlength="200" data-journal-image-alt placeholder="Describe the image for accessibility"></label>'+
    '<label class="workspace-field">Caption (optional)<input type="text" maxlength="500" data-journal-image-caption placeholder="A short caption"></label></div>'+
    '<div class="workspace-actions"><button type="button" data-journal-image-remove>Remove illustration</button></div><p class="journal-image-note">Uploading does not save or publish the entry. Choose Save above to keep the reference. Replacing an image keeps the old file immutable.</p>';
-  if(kind==='world'||kind==='creature'&&session.record.data?.category==='Story NPC'){
+  if(kind==='chapter'||kind==='world'||kind==='creature'&&session.record.data?.category==='Story NPC'){
    host.querySelector('h3').textContent='Image (optional)';
    host.querySelector('.journal-image-heading p').textContent='Included with the text and caption when you publish to players.';
    host.querySelector('.journal-image-private').remove();
