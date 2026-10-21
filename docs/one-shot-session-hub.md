@@ -32,3 +32,5 @@ The earlier World-layout PR #167 independently requires its included Firestore r
 `test:one-shot-hub` exercises creation, approval, invitation, assignment, failed-save recovery, unsaved navigation, host/participant views, private-read isolation, print, sheet entry, roster retry/stale loads, hover/focus/Escape help, working numeric/checkbox controls and WCAG at 1440, 390 and 320 pixels. CI runs it early. Screenshots are in the browser artifact as `one-shot-{host,player}-{1440,390}.png` and `sheet-compact-help-{1440,390}.png`.
 
 Existing workspace-browser covers full separate sheet save/inventory and approved-host combat. DM workspace, guide/DOM, shared publishing, World layouts, packaging and One Shot emulator tests cover affected behavior.
+
+The Hosting-preview workflow also handles `ready_for_review`, so opening the tested change as a draft and then marking it ready starts its preview automatically. Drafts remain excluded, and production Hosting behavior is unchanged.
