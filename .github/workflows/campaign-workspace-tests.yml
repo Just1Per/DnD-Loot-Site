@@ -1,169 +1,239 @@
 name: Campaign workspace checks
-on:
+'on':
   pull_request:
     paths:
-      - 'index.html'
-      - 'firebase.json'
-      - 'css/**'
-      - 'js/boot-status.js'
-      - 'js/app.js'
-      - 'js/modules/**'
-      - 'firestore.rules'
-      - 'storage.rules'
-      - 'firebase.workspace-test.json'
-      - 'data/rules/monsters.json'
-      - 'tests/**'
-      - 'scripts/campaign-image-cors.json'
-      - 'scripts/prepare-campaign-image-cors.cjs'
-      - 'scripts/item-catalogue-migration*.mjs'
-      - 'scripts/item-artwork-policy.mjs'
-      - 'scripts/prepare-item-review-manifest.mjs'
-      - '.github/workflows/campaign-workspace-tests.yml'
+    - index.html
+    - firebase.json
+    - css/**
+    - js/boot-status.js
+    - js/app.js
+    - js/modules/**
+    - firestore.rules
+    - storage.rules
+    - firebase.workspace-test.json
+    - data/rules/monsters.json
+    - tests/**
+    - scripts/campaign-image-cors.json
+    - scripts/prepare-campaign-image-cors.cjs
+    - scripts/item-catalogue-migration*.mjs
+    - scripts/item-artwork-policy.mjs
+    - scripts/prepare-item-review-manifest.mjs
+    - .github/workflows/campaign-workspace-tests.yml
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
+  engine:
+    name: Engines and DOM
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: tests/package-lock.json
+    - name: Install test dependencies
+      run: npm ci --prefix tests
+    - name: Hosting runtime and operational file boundaries
+      run: npm --prefix tests run test:packaging
+    - name: Install Chromium
+      run: npx --prefix tests playwright install --with-deps chromium
+    - name: Install PDF text verification
+      run: sudo apt-get update && sudo apt-get install -y poppler-utils
+    - name: Character engines and UI fixtures
+      run: |
+        mkdir -p /tmp/campaignatlas-ui-checks
+        set -o pipefail
+        npm --prefix tests test 2>&1 | tee /tmp/campaignatlas-ui-checks/engine-dom.log
+    - name: Catalogue migration and reviewed-catalogue logic
+      run: |
+        npm --prefix tests run test:catalogue-migration
+        npm --prefix tests run test:reviewed-catalogue
+    - name: Report failed engine output in check annotations
+      if: failure()
+      run: |
+        node <<'NODE'
+        const fs=require('node:fs');
+        const file='/tmp/campaignatlas-ui-checks/engine-dom.log';
+        if(fs.existsSync(file)) {
+          const lines=fs.readFileSync(file,'utf8').split('\n');
+          const failures=lines.flatMap((line,index)=>/^not ok |AssertionError|^Error:|^TypeError:/.test(line)?[index]:[]);
+          const excerpts=failures.length?failures.slice(0,8).map(index=>lines.slice(Math.max(0,index-2),index+32).join('\n')):[lines.slice(-28).join('\n')];
+          for(const excerpt of excerpts)console.error('::error title=Engine and DOM output::'+excerpt.slice(0,3500).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
+        }
+        NODE
+    - name: Workspace engines and catalogue
+      run: npm --prefix tests run test:workspace
+    - name: Campaign image CORS preparation preserves existing bucket configuration
+      run: npm --prefix tests run test:campaign-image-cors
+    - name: Planning navigation and manual-guide login
+      run: |
+        DND_DM_PLANNING_ONLY=1 node tests/dom.cjs
+        DND_AUTH_CLEANUP_ONLY=1 node tests/dom.cjs
+    - name: Upload UI screenshots and print checks
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: campaignatlas-ui-checks-engine
+        path: /tmp/campaignatlas-ui-checks
+        if-no-files-found: ignore
+  browser:
+    name: Browser and navigation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: tests/package-lock.json
+    - name: Install test dependencies
+      run: npm ci --prefix tests
+    - name: Install Chromium
+      run: npx --prefix tests playwright install --with-deps chromium
+    - name: Install PDF text verification
+      run: sudo apt-get update && sudo apt-get install -y poppler-utils
+    - name: NPC reading, exact-record reopening and return navigation
+      run: |-
+        npm --prefix tests run test:campaign-npcs
+        npm --prefix tests run test:npc-navigation
+    - name: Player publishing, image access and focused navigation
+      run: npm --prefix tests run test:publishing-feedback
+    - name: Centered native dialogs, spell details and unsaved-draft prompts
+      run: npm --prefix tests run test:dialogs
+    - name: Root catalogue multi-select and viewport checks
+      run: npm --prefix tests run test:root-picker
+    - name: Admin catalogue loading, retry and account isolation
+      run: |-
+        npm --prefix tests run test:admin-catalogue
+        npm --prefix tests run test:library-dm-panel
+        npm --prefix tests run test:library-browsing
+        npm --prefix tests run test:navigation-feedback
+    - name: Campaign UI consistency, mobile targets and responsive party actions
+      run: npm --prefix tests run test:ui-consistency
+    - name: Non-Overview accessibility, keyboard, layout and print
+      run: npm --prefix tests run test:ui
+    - name: Refresh restoration and save before leaving character sheets
+      run: npm --prefix tests run test:navigation
+    - name: Grouped campaign navigation, settings, roles and refresh
+      run: npm --prefix tests run test:app-navigation
+    - name: Campaign deletion UI and permission boundaries
+      run: npm --prefix tests run test:campaign-deletion
+    - name: Shared character sheet, gear and bookmark context
+      run: npm --prefix tests run test:character-workspace
+    - name: Page editors, dirty drafts and retryable campaign setup
+      run: npm --prefix tests run test:page-editors
+    - name: World, chapters, encounters and scoped player adventure flows
+      run: npm --prefix tests run test:workspace-browser
+    - name: Shared DM workspace and draft-preserving references
+      run: npm --prefix tests run test:dm-workspace
+    - name: Creature and NPC preparation, optional combat and template preservation
+      run: npm --prefix tests run test:creature-editor
+    - name: Bulk SRD selection, private imports and safe retries
+      run: npm --prefix tests run test:creature-bulk-import
+    - name: Saved player illustrations and exact image permissions
+      run: npm --prefix tests run test:player-images
+    - name: Campaign home save/reopen, access, accessibility and layout
+      run: npm --prefix tests run test:campaign-home
+    - name: Book layouts, live draft previews and standard compatibility
+      run: npm --prefix tests run test:campaign-layouts
+    - name: Campaign item removal, race protection and catalogue isolation
+      run: npm --prefix tests run test:item-removal
+    - name: Contextual archive warnings, cancellation and restoration
+      run: npm --prefix tests run test:archive-dialog
+    - name: Simple world entry creation and preserved optional preparation
+      run: npm --prefix tests run test:simple-world
+    - name: Visual NPC/world cards and DM-managed campaign map
+      run: |-
+        npm --prefix tests run test:journal-cards
+        npm --prefix tests run test:world-navigation
+        npm --prefix tests run test:campaign-map
+        npm --prefix tests run test:map-styles-regions
+    - name: Shared party journal, notebook reader and private recap permissions
+      run: |-
+        npm --prefix tests run test:campaign-journal
+        npm --prefix tests run test:recap-navigation
+    - name: Player campaign information sharing and accessibility
+      run: npm --prefix tests run test:campaign-information
+    - name: Completed chapters and private player notes
+      run: npm --prefix tests run test:campaign-chapters
+    - name: Upload UI screenshots and print checks
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: campaignatlas-ui-checks-browser
+        path: /tmp/campaignatlas-ui-checks
+        if-no-files-found: ignore
+  permissions:
+    name: Firestore and Storage permissions
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: tests/package-lock.json
+    - name: Install test dependencies
+      run: npm ci --prefix tests
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 21
+    - uses: actions/cache@v4
+      with:
+        path: ~/.cache/firebase/emulators
+        key: firebase-emulators-${{ runner.os }}-${{ hashFiles('tests/package-lock.json') }}
+        restore-keys: firebase-emulators-${{ runner.os }}-
+    - name: Player publishing, image access and focused navigation
+      run: npm --prefix tests run test:published-illustrations-rules
+    - name: Reviewed catalogue permissions
+      run: npm --prefix tests run test:catalogue-rules
+    - name: Campaign deletion UI and permission boundaries
+      run: npm --prefix tests run test:campaign-deletion-rules
+    - name: Saved player illustrations and exact image permissions
+      run: npm --prefix tests run test:player-images-rules
+    - name: Campaign item removal, race protection and catalogue isolation
+      run: npm --prefix tests run test:item-removal-rules
+    - name: Campaign home permissions and revision conflicts
+      run: npm --prefix tests run test:campaign-home-rules
+    - name: Visual NPC/world cards and DM-managed campaign map
+      run: npm --prefix tests run test:campaign-map-rules
+    - name: Shared party journal, notebook reader and private recap permissions
+      run: npm --prefix tests run test:campaign-journal-rules
+    - name: Player campaign information permissions
+      run: npm --prefix tests run test:campaign-information-rules
+    - name: Revealed NPC catalogue permissions
+      run: npm --prefix tests run test:campaign-npcs-rules
+    - name: Completed chapters and private player notes
+      run: npm --prefix tests run test:campaign-chapters-rules
+    - name: Character sheet permissions and persistence
+      run: npm --prefix tests run test:rules
+    - name: Firestore and private image permissions
+      run: npm --prefix tests run test:workspace-rules
   workspace:
     runs-on: ubuntu-latest
+    needs:
+    - engine
+    - browser
+    - permissions
+    if: always()
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: tests/package-lock.json
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-      - name: Install test dependencies
-        run: npm ci --prefix tests
-      - name: Hosting runtime and operational file boundaries
-        run: npm --prefix tests run test:packaging
-      - name: Install Chromium
-        run: npx --prefix tests playwright install --with-deps chromium
-      - name: NPC reading, exact-record reopening and return navigation
-        run: |
-          npm --prefix tests run test:campaign-npcs
-          npm --prefix tests run test:npc-navigation
-      - name: Player publishing, image access and focused navigation
-        run: |
-          npm --prefix tests run test:publishing-feedback
-          npm --prefix tests run test:published-illustrations-rules
-      - name: Install PDF text verification
-        run: sudo apt-get update && sudo apt-get install -y poppler-utils
-      - name: Character engines and UI fixtures
-        run: |
-          mkdir -p /tmp/campaignatlas-ui-checks
-          set -o pipefail
-          npm --prefix tests test 2>&1 | tee /tmp/campaignatlas-ui-checks/engine-dom.log
-      - name: Reviewed catalogue migration and read boundaries
-        run: |
-          npm --prefix tests run test:catalogue-migration
-          npm --prefix tests run test:reviewed-catalogue
-          npm --prefix tests run test:catalogue-rules
-      - name: Report failed engine output in check annotations
-        if: failure()
-        run: |
-          node <<'NODE'
-          const fs=require('node:fs');
-          const file='/tmp/campaignatlas-ui-checks/engine-dom.log';
-          if(fs.existsSync(file)) {
-            const lines=fs.readFileSync(file,'utf8').split('\n');
-            const failures=lines.flatMap((line,index)=>/^not ok |AssertionError|^Error:|^TypeError:/.test(line)?[index]:[]);
-            const excerpts=failures.length?failures.slice(0,8).map(index=>lines.slice(Math.max(0,index-2),index+32).join('\n')):[lines.slice(-28).join('\n')];
-            for(const excerpt of excerpts)console.error('::error title=Engine and DOM output::'+excerpt.slice(0,3500).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
-          }
-          NODE
-      - name: Centered native dialogs, spell details and unsaved-draft prompts
-        run: npm --prefix tests run test:dialogs
-      - name: Root catalogue multi-select and viewport checks
-        run: npm --prefix tests run test:root-picker
-      - name: Admin catalogue loading, retry and account isolation
-        run: |
-          npm --prefix tests run test:admin-catalogue
-          npm --prefix tests run test:library-dm-panel
-          npm --prefix tests run test:library-browsing
-          npm --prefix tests run test:navigation-feedback
-      - name: Campaign UI consistency, mobile targets and responsive party actions
-        run: npm --prefix tests run test:ui-consistency
-      - name: Non-Overview accessibility, keyboard, layout and print
-        run: npm --prefix tests run test:ui
-      - name: Refresh restoration and save before leaving character sheets
-        run: npm --prefix tests run test:navigation
-      - name: Grouped campaign navigation, settings, roles and refresh
-        run: npm --prefix tests run test:app-navigation
-      - name: Campaign deletion UI and permission boundaries
-        run: |
-          npm --prefix tests run test:campaign-deletion
-          npm --prefix tests run test:campaign-deletion-rules
-      - name: Shared character sheet, gear and bookmark context
-        run: npm --prefix tests run test:character-workspace
-      - name: Page editors, dirty drafts and retryable campaign setup
-        run: npm --prefix tests run test:page-editors
-      - name: Workspace engines and catalogue
-        run: npm --prefix tests run test:workspace
-      - name: World, chapters, encounters and scoped player adventure flows
-        run: npm --prefix tests run test:workspace-browser
-      - name: Shared DM workspace and draft-preserving references
-        run: npm --prefix tests run test:dm-workspace
-      - name: Creature and NPC preparation, optional combat and template preservation
-        run: npm --prefix tests run test:creature-editor
-      - name: Bulk SRD selection, private imports and safe retries
-        run: npm --prefix tests run test:creature-bulk-import
-      - name: Saved player illustrations and exact image permissions
-        run: |
-          npm --prefix tests run test:player-images
-          npm --prefix tests run test:player-images-rules
-      - name: Campaign home save/reopen, access, accessibility and layout
-        run: npm --prefix tests run test:campaign-home
-      - name: Book layouts, live draft previews and standard compatibility
-        run: npm --prefix tests run test:campaign-layouts
-      - name: Campaign item removal, race protection and catalogue isolation
-        run: |
-          npm --prefix tests run test:item-removal
-          npm --prefix tests run test:item-removal-rules
-      - name: Campaign image CORS preparation preserves existing bucket configuration
-        run: npm --prefix tests run test:campaign-image-cors
-      - name: Campaign home permissions and revision conflicts
-        run: npm --prefix tests run test:campaign-home-rules
-      - name: Contextual archive warnings, cancellation and restoration
-        run: npm --prefix tests run test:archive-dialog
-      - name: Simple world entry creation and preserved optional preparation
-        run: npm --prefix tests run test:simple-world
-      - name: Visual NPC/world cards and DM-managed campaign map
-        run: |
-          npm --prefix tests run test:journal-cards
-          npm --prefix tests run test:world-navigation
-          npm --prefix tests run test:campaign-map
-          npm --prefix tests run test:map-styles-regions
-          npm --prefix tests run test:campaign-map-rules
-      - name: Shared party journal, notebook reader and private recap permissions
-        run: |
-          npm --prefix tests run test:campaign-journal
-          npm --prefix tests run test:recap-navigation
-          npm --prefix tests run test:campaign-journal-rules
-      - name: Player campaign information sharing and accessibility
-        run: npm --prefix tests run test:campaign-information
-      - name: Player campaign information permissions
-        run: npm --prefix tests run test:campaign-information-rules
-      - name: Revealed NPC catalogue permissions
-        run: npm --prefix tests run test:campaign-npcs-rules
-      - name: Completed chapters and private player notes
-        run: |
-          npm --prefix tests run test:campaign-chapters
-          npm --prefix tests run test:campaign-chapters-rules
-      - name: Planning navigation and manual-guide login
-        run: |
-          DND_DM_PLANNING_ONLY=1 node tests/dom.cjs
-          DND_AUTH_CLEANUP_ONLY=1 node tests/dom.cjs
-      - name: Character sheet permissions and persistence
-        run: npm --prefix tests run test:rules
-      - name: Firestore and private image permissions
-        run: npm --prefix tests run test:workspace-rules
-      - name: Upload UI screenshots and print checks
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: campaignatlas-ui-checks
-          path: /tmp/campaignatlas-ui-checks
-          if-no-files-found: ignore
+    - name: Require every regression group to pass
+      env:
+        ENGINE_RESULT: ${{ needs.engine.result }}
+        BROWSER_RESULT: ${{ needs.browser.result }}
+        PERMISSION_RESULT: ${{ needs.permissions.result }}
+      run: |
+        if [[ "$ENGINE_RESULT" != success || "$BROWSER_RESULT" != success || "$PERMISSION_RESULT" != success ]]; then
+          echo "::error::Regression groups: engines=$ENGINE_RESULT, browser=$BROWSER_RESULT, permissions=$PERMISSION_RESULT"
+          exit 1
+        fi
+        echo "All engine, browser and permission checks passed."
