@@ -1,3 +1,4 @@
+const {openEditorOptions}=require('./app-navigation-fixture.cjs');
 // DM preparation flows against a deterministic Firebase fixture; never production.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
@@ -188,13 +189,13 @@ const root=path.resolve(__dirname,'..');
   // Printing snapshots the chapter draft, even while a linked private record is visible.
   await page.locator('[data-chapter-reference="creature:captain"]').click();
   await page.waitForFunction(()=>document.querySelector('[data-chapter-reference-panel]')?.textContent.includes('NPC_SECRET'));
-  await page.locator('[data-print-record]').click();
+  await openEditorOptions(page);await page.locator('[data-print-record]').click();
   const publicPrint=await page.locator('#workspacePrintSurface').textContent();
   assert.match(publicPrint,/Unsaved player recap/);
   assert.equal(/CHAPTER_SECRET|PRIVATE_OBJECTIVE|NPC_SECRET|LOCATION_SECRET/.test(publicPrint),false);
   await page.evaluate(()=>dispatchEvent(new Event('afterprint')));
   await page.locator('[data-print-private]').check();
-  await page.locator('[data-print-record]').click();
+  await openEditorOptions(page);await page.locator('[data-print-record]').click();
   const privatePrint=await page.locator('#workspacePrintSurface').textContent();
   assert.match(privatePrint,/Unsaved chapter title/);assert.match(privatePrint,/CHAPTER_SECRET unsaved preparation/);assert.match(privatePrint,/PRIVATE_OBJECTIVE unsaved objective/);
   assert.equal(/NPC_SECRET|LOCATION_SECRET/.test(privatePrint),false,'An inline reference must not replace the chapter print snapshot');

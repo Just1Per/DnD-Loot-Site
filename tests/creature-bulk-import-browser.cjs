@@ -64,7 +64,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.locator('[data-record-field=category]').selectOption('Story NPC');
  await page.locator('[name=content]').fill('A friendly guide who knows the forest.');await page.locator('[name=privateNotes]').fill('PRIVATE: secretly follows the party.');
  await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session.record.revision===2);
- await page.locator('[data-publish-npc]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Shared with campaign'));
+ await page.locator('[data-publish-npc]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Published to players.'));
  const publication=await page.evaluate(()=>Object.entries(testSheetDocs).find(([key])=>key.includes('/playerNPCs/'))?.[1]);
  assert.equal(publication.content,'A friendly guide who knows the forest.');
  for(const key of ['data','hp','ac','privateNotes','actions','source'])assert.equal(publication[key],undefined);

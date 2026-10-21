@@ -44,15 +44,15 @@ var CampaignInformation = (() => {
       const host=[...list.querySelectorAll('[data-shared-image]')].find(node=>node.dataset.sharedImage===row.id);
       if(!host||!row.image)continue;
       const prefix=`campaign-journal-images/${s.id}/${s.kind}/${row.id}/`,image=row.image;
-      if(typeof image.path!=='string'||!image.path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))){host.textContent='Illustration unavailable.';continue;}
+      if(typeof image.path!=='string'||!image.path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))){host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';continue;}
       try{
-        const blob=await sdk.getBlob(sdk.ref(sdk.storage,image.path),6*1024*1024);
+        const blob=await CampaignJournalImages.publishedBlob({campaignId:s.id,kind:s.kind,id:row.id,image});
         if(!current(s)||s.denied||!host.isConnected)continue;
         const url=URL.createObjectURL(blob);s.imageUrls.push(url);
         const img=document.createElement('img');img.src=url;img.alt=image.alt||'Shared campaign illustration';
         img.style.maxWidth='100%';host.replaceChildren(img);
         if(image.caption){const caption=document.createElement('figcaption');caption.textContent=image.caption;host.append(caption);}
-      }catch(error){if(current(s)&&host.isConnected)host.textContent='Illustration unavailable.';}
+      }catch(error){if(current(s)&&host.isConnected)host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';}
     }
   }
   function paint(s) {
@@ -140,42 +140,49 @@ var CampaignInformation = (() => {
       if(current(s)){s.rows=[];root.querySelector('[data-information-list]').replaceChildren();root.querySelector('[data-information-status]').textContent=`Could not load shared information: ${error.message}`;}
     }
   }
-  function attachWorldSharing(host,s){
-    host.querySelector('[data-entry-sharing]')?.remove();
-    const section=document.createElement('section');section.dataset.entrySharing='';
-    section.innerHTML='<h3>Release this post</h3><p data-release-includes></p><p>Players receive this version together. Later draft edits stay private until you release again.</p><div class="workspace-actions"><button type="button" data-publish-entry data-publish-world disabled>Release to players</button></div><p data-sharing-status role="status">Loading publication status…</p><details><summary>Publication options</summary><button type="button" data-unpublish-world disabled>Remove from players</button><button type="button" data-refresh-sharing>Retry publication status</button></details>';
-    host.append(section);
-    const store=views.world.store,button=section.querySelector('[data-publish-world]'),remove=section.querySelector('[data-unpublish-world]'),message=section.querySelector('[data-sharing-status]');
-    let published=null,loaded=false,busy=false;
+  function attachPostSharing(host,s){
+    const form=host.closest('form'),header=form.querySelector('[data-editor-header]'),actions=header.querySelector('[data-editor-actions]'),npc=s.kind==='creature';
+    form.querySelector('[data-entry-sharing]')?.remove();actions.querySelector('[data-publish-entry]')?.remove();actions.querySelector('[data-publication-options]')?.remove();
+    const section=document.createElement('section');section.dataset.entrySharing='';section.className='post-publication-status';
+    section.innerHTML='<p data-release-includes></p><p data-sharing-status role="status">Loading publication status…</p><div data-publication-options><button type="button" data-unpublish-entry '+(npc?'data-unpublish-npc':'data-unpublish-world')+' disabled>Remove from players</button><button type="button" data-refresh-sharing>Retry publication status</button></div>';
+    const publicationOptions=section.querySelector('[data-publication-options]');actions.querySelector('.workspace-editor-options > div').append(publicationOptions);header.append(section);
+    const button=document.createElement('button');button.type='button';button.dataset.publishEntry='';button.setAttribute(npc?'data-publish-npc':'data-publish-world','');button.disabled=true;button.textContent='Publish to players';
+    actions.querySelector('.workspace-editor-options').before(button);
+    const store=views[s.kind].store,remove=publicationOptions.querySelector('[data-unpublish-entry]'),message=section.querySelector('[data-sharing-status]');let published=null,loaded=false,busy=false,problem=false;
     const active=()=>section.isConnected&&CampaignWorkspace.session===s&&activeCampaign?.id===s.campaignId&&auth.currentUser?.uid===s.uid&&canManageCampaign();
-    const state=()=>{if(!active())return;button.disabled=!loaded||busy||s.busy||s.record.archived;remove.disabled=!loaded||busy||s.busy||!published;section.querySelector('[data-release-includes]').textContent=s.record.data?.journalImage?.path?'Release includes the post, image and caption.':'Release includes the post text. Add an image above to include it.';};
+    const eligible=()=>!npc||form.querySelector('[data-record-field=category]').value==='Story NPC';
+    const state=()=>{
+      if(!active())return;const art=form.querySelector('[data-journal-image-editor]');if(art&&npc){const badge=art.querySelector('.journal-image-private');if(eligible()){badge?.remove();art.querySelector('.journal-image-heading p').textContent='Included with the text and caption when you publish to players.';}else{art.querySelector('.journal-image-heading p').textContent='Private DM illustration. Only Story NPC entries can be published to players.';if(!badge){const label=document.createElement('span');label.className='journal-image-private';label.textContent='PRIVATE DRAFT';art.querySelector('.journal-image-heading').append(label);}}art.querySelector('.journal-image-note').textContent=eligible()?'Save draft keeps changes private. Publish to players includes the illustration and caption.':'Private preparation. Choose Story NPC to make an entry eligible for publishing.';}button.disabled=!loaded||busy||s.busy||s.record.archived||!eligible();button.textContent=published?'Publish changes':'Publish to players';
+      if(loaded&&!busy&&!s.busy&&!problem){if(s.dirty)message.textContent='Unsaved draft changes.';else if(published&&published.sourceRevision!==s.record.revision)message.textContent='Draft saved; the player version is unchanged.';}
+      form.querySelector('[data-save-record]').disabled=busy||s.busy;remove.disabled=!loaded||busy||s.busy||!published;
+      section.querySelector('[data-release-includes]').textContent=!eligible()?'Only Story NPC entries appear in Journal → NPCs.':s.record.data?.journalImage?.path?'Publishing includes the text, image and caption.':'Publishing includes the text. Add an illustration to publish it too.';
+    };
     section._sharingState=state;
-    const refresh=async()=>{loaded=false;state();try{const result=await store.load(s.campaignId,s.record.id);if(!active())return;published=result;loaded=true;CampaignWorkspace.configs.world.onPublicationChange?.(s,published);message.textContent=published?'Released to players. Save as draft keeps further edits private.':'Private draft. Only campaign DMs can see it.';}catch(error){if(active())message.textContent='Could not load publication status: '+error.message;}state();};
-    section.querySelector('[data-refresh-sharing]').onclick=refresh;
+    const refresh=async()=>{problem=false;loaded=false;state();try{published=await store.load(s.campaignId,s.record.id);if(!active())return;loaded=true;CampaignWorkspace.configs[s.kind].onPublicationChange?.(s,published);message.textContent=published?'Published. Later draft saves stay private.':'Not published yet.';}catch(error){problem=true;if(active())message.textContent='Could not load publication status: '+error.message;}state();};
+    publicationOptions.querySelector('[data-refresh-sharing]').onclick=refresh;
     button.onclick=async()=>{
-      if(!active()||busy||s.busy||!loaded||s.record.archived)return;
-      busy=true;s.worldReleaseBusy=true;state();
+      if(!active()||busy||s.busy||!loaded||s.record.archived||!eligible())return;problem=false;busy=true;s.postPublishBusy=true;state();
       try{
         if(s.dirty||!s.record.revision){if(!await CampaignWorkspace.save())return;}
-        if(!active()||s.dirty)return;
-        s.busy=true;state();message.textContent='Releasing post…';
-        published=await store.publish({campaignId:s.campaignId,id:s.record.id,sourceRevision:s.record.revision,publishedRevision:published?.revision||0,includeImage:true,isCurrent:active});
-        if(active()){CampaignWorkspace.configs.world.onPublicationChange?.(s,published);message.textContent='Released to players.';}
-      }catch(error){if(active())message.textContent='Could not release post: '+error.message;}
-      finally{busy=false;s.busy=false;s.worldReleaseBusy=false;state();}
+        if(!active()||s.dirty)return;s.busy=true;state();message.textContent='Publishing text and illustration…';
+        const preparedImage=await CampaignJournalImages.preparePublished({campaignId:s.campaignId,kind:s.kind,id:s.record.id,image:s.record.data?.journalImage,isCurrent:active});
+        if(!active())return;
+        published=await store.publish({campaignId:s.campaignId,id:s.record.id,sourceRevision:s.record.revision,publishedRevision:published?.revision||0,includeImage:true,preparedImage,isCurrent:active});
+        if(active()){CampaignWorkspace.configs[s.kind].onPublicationChange?.(s,published);message.textContent='Published to players.';}
+      }catch(error){problem=true;if(active())message.textContent='Could not publish: '+error.message;}
+      finally{busy=false;s.busy=false;s.postPublishBusy=false;state();}
     };
     remove.onclick=async()=>{
-      if(!active()||busy||s.busy||!published)return;
-      busy=true;s.busy=true;state();
-      try{await store.unpublish({campaignId:s.campaignId,id:s.record.id,publishedRevision:published.revision,isCurrent:active});if(active()){published=null;CampaignWorkspace.configs.world.onPublicationChange?.(s,null);message.textContent='Removed from players. Your draft is kept.';}}
-      catch(error){if(active())message.textContent='Could not remove post: '+error.message;}
+      if(!active()||busy||s.busy||!published)return;busy=true;s.busy=true;state();
+      try{await store.unpublish({campaignId:s.campaignId,id:s.record.id,publishedRevision:published.revision,isCurrent:active});if(active()){published=null;CampaignWorkspace.configs[s.kind].onPublicationChange?.(s,null);message.textContent='Removed from players. Your draft is kept.';}}
+      catch(error){problem=true;if(active())message.textContent='Could not remove publication: '+error.message;}
       finally{busy=false;s.busy=false;state();}
     };
     refresh();
   }
   function attachSharing(host,s) {
     if(!views[s.kind]||!host||!canManageCampaign())return;
-    if(s.kind==='world')return attachWorldSharing(host,s);
+    if(s.kind==='world'||s.kind==='creature')return attachPostSharing(host,s);
     const npc=s.kind==='creature',chapter=s.kind==='chapter',sharingStore=views[s.kind].store;
     host.querySelector('[data-entry-sharing]')?.remove();
     const section=document.createElement('section');section.dataset.entrySharing='';section.className='campaign-world-sharing';
@@ -207,7 +214,7 @@ var CampaignInformation = (() => {
         if(!active()||busy||s.busy||!loaded||!published||(!hide&&s.dirty))return;
         if(!confirm(hide?'Hide the shared illustration? The player text stays shared.':'Share this saved illustration and caption with campaign members?'))return;
         busy=true;s.busy=true;state();
-        try{published=await sharingStore.shareImage({campaignId:s.campaignId,id:s.record.id,sourceRevision:s.record.revision,publishedRevision:published.revision,hide,isCurrent:active});if(active())section.querySelector('[data-sharing-status]').textContent=hide?'Illustration hidden. Player text is unchanged.':'Illustration shared. Player text is unchanged.';}
+        try{const preparedImage=hide?null:await CampaignJournalImages.preparePublished({campaignId:s.campaignId,kind:s.kind,id:s.record.id,image:s.record.data?.journalImage,isCurrent:active});published=await sharingStore.shareImage({preparedImage,campaignId:s.campaignId,id:s.record.id,sourceRevision:s.record.revision,publishedRevision:published.revision,hide,isCurrent:active});if(active())section.querySelector('[data-sharing-status]').textContent=hide?'Illustration hidden. Player text is unchanged.':'Illustration shared. Player text is unchanged.';}
         catch(error){if(active())section.querySelector('[data-sharing-status]').textContent='Could not update shared illustration: '+error.message;}
         finally{busy=false;s.busy=false;state();}
       };
@@ -234,8 +241,8 @@ var CampaignInformation = (() => {
   for(const kind of Object.keys(views)){
     const config=CampaignWorkspace.configs[kind],oldExtra=config.extra,oldSaved=config.onSaved,oldEdit=config.onEdit;
     config.extra=(host,s)=>{oldExtra?.(host,s);attachSharing(host,s);};
-    config.onSaved=(host,s)=>{oldSaved?.(host,s);if(kind!=='world')oldExtra?.(host,s);if(!s.worldReleaseBusy)attachSharing(host,s);};
-    if(oldEdit)config.onEdit=(host,s)=>{const sharing=host.querySelector('[data-entry-sharing]');oldEdit(host,s);if(sharing){if(sharing.parentNode!==host)host.append(sharing);sharing._sharingState?.();}else attachSharing(host,s);};
+    config.onSaved=(host,s)=>{oldSaved?.(host,s);if(kind!=='world')oldExtra?.(host,s);if(!s.postPublishBusy)attachSharing(host,s);};
+    if(oldEdit)config.onEdit=(host,s)=>{const sharing=s.host.querySelector('[data-entry-sharing]');oldEdit(host,s);if(sharing?.isConnected)sharing._sharingState?.();else attachSharing(host,s);};
   }
   function beforeNavigate(tab){return session?.view.tab===tab||clear();}
   function hasUnsavedNotes(){return !!session&&[...session.notes.values()].some(note=>note.dirty||note.saving);}

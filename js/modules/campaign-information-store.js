@@ -39,7 +39,12 @@ function createCampaignInformationStore(sdk, kind = 'world') {
     if (typeof sdk.onSnapshot !== 'function') return () => {};
     actor();return sdk.onSnapshot(collection(db,'campaigns',validId(campaignId),publications[kind]),result=>onRows(result.docs.map(row=>({...row.data(),id:row.id}))),onError);
   }
-  async function publish({campaignId,id,sourceRevision,publishedRevision=0,includeImage=false,isCurrent=()=>true}) {
+  function writePrepared(tx,campaignId,id,image,prepared){
+    if(!prepared)return; // Existing metadata-only callers remain compatible.
+    if(!image||prepared.path!==image.path||!['image/png','image/jpeg','image/webp'].includes(prepared.contentType)||typeof prepared.data!=='string'||!prepared.data.length||prepared.data.length>700000||!/^[A-Za-z0-9+/]+={0,2}$/.test(prepared.data))throw Error('Prepare a valid saved illustration before publishing.');
+    tx.set(doc(db,'campaigns',campaignId,'playerIllustrations',kind,'entries',id),{path:prepared.path,contentType:prepared.contentType,data:prepared.data});
+  }
+  async function publish({campaignId,id,sourceRevision,publishedRevision=0,includeImage=false,preparedImage=null,isCurrent=()=>true}) {
     const uid=actor();
     return runTransaction(db,async tx=>{
       const sourceRef=doc(db,'campaigns',validId(campaignId),sources[kind],validId(id));
@@ -50,7 +55,7 @@ function createCampaignInformationStore(sdk, kind = 'world') {
       const next={...snapshot(source.data()),revision:publishedRevision+1,updatedBy:uid,updatedAt:Date.now()};
       // Text updates retain the last explicitly shared image, never draft art.
       if(previous.data()?.image)next.image=previous.data().image;
-      if(kind==='world'&&includeImage){
+      if(includeImage){
         delete next.image;
         const image=source.data().data?.journalImage;
         if(image){
@@ -59,6 +64,7 @@ function createCampaignInformationStore(sdk, kind = 'world') {
           next.image={path:image.path,alt:image.alt,caption:image.caption};
         }
       }
+      if(includeImage)writePrepared(tx,campaignId,id,next.image,preparedImage);
       tx.set(destination,next);return {...next,id};
     });
   }
@@ -71,7 +77,7 @@ function createCampaignInformationStore(sdk, kind = 'world') {
       tx.delete(destination);
     });
   }
-  async function shareImage({campaignId,id,sourceRevision,publishedRevision,hide=false,isCurrent=()=>true}) {
+  async function shareImage({campaignId,id,sourceRevision,publishedRevision,hide=false,preparedImage=null,isCurrent=()=>true}) {
     const uid=actor();
     return runTransaction(db,async tx=>{
       const source=await tx.get(doc(db,'campaigns',validId(campaignId),sources[kind],validId(id)));
@@ -88,6 +94,7 @@ function createCampaignInformationStore(sdk, kind = 'world') {
         if(!image||!image.path?.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))||typeof image.alt!=='string'||image.alt.length>200||typeof image.caption!=='string'||image.caption.length>500)throw Error('Save a valid illustration before sharing it.');
         next.image={path:image.path,alt:image.alt,caption:image.caption};
       }
+      if(!hide)writePrepared(tx,campaignId,id,next.image,preparedImage);
       tx.set(destination,next);return {...next,id};
     });
   }

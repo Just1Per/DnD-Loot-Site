@@ -418,6 +418,33 @@ match /campaigns/{campaignId} {
       && ((d.image.path == source.data.journalImage.path && d.image.alt == source.data.journalImage.alt && d.image.caption == source.data.journalImage.caption)
         || (resource != null && 'image' in resource.data && d.image == resource.data.image)));
   }
+  // Small published image copies are fetched separately from list snapshots.
+  // Firestore can check campaign deletion, membership and exact publication;
+  // Cloud Storage's cross-service reads are limited to two documents.
+  match /playerIllustrations/{kind}/entries/{recordId} {
+    function supported(){ return kind in ['world','creature','chapter']; }
+    function publication(){ return kind == 'world' ? 'playerInformation' : kind == 'creature' ? 'playerNPCs' : 'playerChapters'; }
+    function shared(){ return get(/databases/$(database)/documents/campaigns/$(campaignId)/$(publication())/$(recordId)).data; }
+    function validCopy(d){
+      let published = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(publication())/$(recordId)).data;
+      let source = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspaceCollection(kind))/$(recordId)).data;
+      return supported() && recordId.matches('[A-Za-z0-9_-]{1,100}')
+        && d.keys().hasAll(['path','contentType','data']) && d.keys().hasOnly(['path','contentType','data'])
+        && d.path is string && 'image' in published && d.path == published.image.path
+        && 'journalImage' in source.data && d.path == source.data.journalImage.path
+        && source.archived == false
+        && (kind != 'creature' || source.data.category == 'Story NPC')
+        && (kind != 'chapter' || source.data.status == 'Completed')
+        && d.contentType in ['image/png','image/jpeg','image/webp']
+        && d.data is string && d.data.size() > 0 && d.data.size() <= 700000
+        && d.data.matches('[A-Za-z0-9+/]+={0,2}');
+    }
+    allow get: if supported() && (isCampaignDM(campaignId) || (isActiveMember(campaignId)
+      && 'image' in shared() && (resource == null || resource.data.path == shared().image.path)));
+    allow list: if false;
+    allow create, update: if isCampaignDM(campaignId) && validCopy(request.resource.data);
+    allow delete: if isCampaignDM(campaignId);
+  }
   function imageOnlyUpdate(d, kind, recordId) {
     let source = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspaceCollection(kind))/$(recordId)).data;
     return d.diff(resource.data).affectedKeys().hasOnly(['image','revision','updatedBy','updatedAt'])

@@ -1,0 +1,43 @@
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const {initializeTestEnvironment,assertSucceeds,assertFails}=require('@firebase/rules-unit-testing');
+const sdk=require('firebase/firestore');
+const {createCampaignWorkspaceStore}=require('../js/modules/campaign-workspace-store');
+const {createCampaignInformationStore}=require('../js/modules/campaign-information-store');
+(async()=>{const env=await initializeTestEnvironment({projectId:'demo-vault-test',firestore:{host:'127.0.0.1',port:8080,rules:fs.readFileSync('firestore.rules','utf8')}});try{
+ await env.clearFirestore();const seed=async(values)=>env.withSecurityRulesDisabled(async c=>{for(const [path,data] of Object.entries(values))await sdk.setDoc(sdk.doc(c.firestore(),path),data)});
+ await seed({'campaigns/a':{ownerId:'owner'},'campaigns/b':{ownerId:'other'},'campaigns/a/members/dm':{status:'active',role:'dm'},'campaigns/a/members/player':{status:'active',role:'player'},'campaigns/a/members/revoked':{status:'inactive',role:'player'},'users/admin':{role:['admin']}});
+ const db=env.authenticatedContext('dm').firestore(),auth={currentUser:{uid:'dm'}},workspace=createCampaignWorkspaceStore({...sdk,db,auth});
+ const png='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWQAAAABJRU5ErkJggg==';
+ for(const [kind,publication] of [['world','playerInformation'],['creature','playerNPCs'],['chapter','playerChapters']]){
+  const id='illustrated-'+kind,path=`campaign-journal-images/a/${kind}/${id}/original`,store=createCampaignInformationStore({...sdk,db,auth},kind);
+  const image={path,alt:'A shared illustration',caption:'Public caption',uploadedBy:'dm',uploadedAt:1},preparedImage={path,contentType:'image/png',data:png};
+  let input={title:'Public title',summary:'Public introduction',content:'Public body',privateNotes:'SECRET',data:{category:kind==='creature'?'Story NPC':'Lore',status:'Completed',order:1,journalImage:image,goals:'PRIVATE GOAL'}};
+  await workspace.save({campaignId:'a',kind,id,revision:0,input});
+  let published=await assertSucceeds(store.publish({campaignId:'a',id,sourceRevision:1,includeImage:true,preparedImage}));
+  const ref=context=>sdk.doc(context.firestore(),'campaigns','a','playerIllustrations',kind,'entries',id),player=env.authenticatedContext('player');
+  assert.equal((await assertSucceeds(sdk.getDoc(ref(player)))).data().data,png);
+  assert.equal(JSON.stringify(published).includes('SECRET'),false);assert.equal(JSON.stringify(published).includes(png),false,'list snapshot must not carry image bytes');
+  for(const context of [env.unauthenticatedContext(),env.authenticatedContext('outsider'),env.authenticatedContext('admin'),env.authenticatedContext('revoked')])await assertFails(sdk.getDoc(ref(context)));
+  await assertFails(sdk.getDocs(sdk.collection(player.firestore(),'campaigns','a','playerIllustrations',kind,'entries')));
+  await assertFails(sdk.setDoc(ref(player),preparedImage));
+  await assert.rejects(store.publish({campaignId:'a',id,sourceRevision:1,publishedRevision:published.revision,includeImage:true,preparedImage:{...preparedImage,path:'campaign-journal-images/b/world/foreign/picture'}}),/valid saved illustration/);
+  await assertFails(sdk.setDoc(ref(env.authenticatedContext('dm')),{...preparedImage,contentType:'text/html'}));
+  await assertFails(sdk.setDoc(ref(env.authenticatedContext('dm')),{...preparedImage,data:'A'.repeat(700001)}));
+  await assertFails(sdk.setDoc(ref(env.authenticatedContext('dm')),{...preparedImage,secret:'not image data'}));
+  input={...input,content:'Changed private draft',data:{...input.data,journalImage:{...image,path:path+'2',caption:'Changed caption'}}};
+  await workspace.save({campaignId:'a',kind,id,revision:1,input});
+  assert.equal((await sdk.getDoc(sdk.doc(db,'campaigns','a',publication,id))).data().content,'Public body');
+  await assertSucceeds(sdk.getDoc(ref(player)));
+  await assert.rejects(store.publish({campaignId:'a',id,sourceRevision:1,publishedRevision:published.revision,includeImage:true,preparedImage}),/changed/);
+  published=await store.publish({campaignId:'a',id,sourceRevision:2,publishedRevision:published.revision,includeImage:true,preparedImage:{...preparedImage,path:path+'2'}});
+  assert.equal((await sdk.getDoc(ref(player))).data().path,path+'2');
+  await seed({'campaigns/a/members/player':{status:'inactive',role:'player'}});await assertFails(sdk.getDoc(ref(player)));
+  await seed({'campaigns/a/members/player':{status:'active',role:'player'}});
+  await store.unpublish({campaignId:'a',id,publishedRevision:published.revision});await assertFails(sdk.getDoc(ref(player)));
+  published=await store.publish({campaignId:'a',id,sourceRevision:2,includeImage:true,preparedImage:{...preparedImage,path:path+'2'}});
+  await seed({'campaigns/a':{ownerId:'owner',deletedAt:1,deletedBy:'owner'}});await assertFails(sdk.getDoc(ref(player)));await assertFails(sdk.getDoc(ref(env.authenticatedContext('dm'))));
+  await seed({'campaigns/a':{ownerId:'owner'}});
+  await workspace.save({campaignId:'a',kind,id,revision:2,input:{...input,archived:true}});await assertFails(sdk.getDoc(ref(player)));
+  console.log('PASS',kind,'atomic published copy, private draft isolation, MIME/size/schema, stale and cross-campaign writes, removed/anonymous/admin denial, unpublish/archive/deletion revocation');
+ }
+}finally{await env.cleanup()}})().catch(e=>{console.error(e);process.exitCode=1});

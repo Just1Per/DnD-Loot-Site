@@ -16,6 +16,47 @@ var CampaignJournalImages=(()=>{
   const prefix=scopedPath(campaignId,kind,recordId,'image').slice(0,-5);
   return path.startsWith(prefix)&&safe(path.slice(prefix.length));
  }
+ // Published copies use Firestore access checks, avoiding Storage's two-document
+ // cross-service limit (campaign tombstone + membership + publication = three).
+ async function preparePublished({campaignId,kind,id,image,isCurrent=()=>true}){
+  if(!image)return null;
+  if(!belongsTo(campaignId,kind,id,image.path))throw Error('The illustration does not belong to this entry.');
+  const blob=await sdk.getBlob(sdk.ref(sdk.storage,image.path),6*1024*1024);
+  if(!isCurrent())throw Error('Campaign access changed.');
+  const url=URL.createObjectURL(blob),img=new Image();
+  try{
+   img.src=url;await img.decode();if(!isCurrent())throw Error('Campaign access changed.');
+   if(!img.naturalWidth||!img.naturalHeight)throw Error('The illustration could not be decoded.');
+   const canvas=document.createElement('canvas');
+   for(const bound of [1600,1200,900,675]){
+    const ratio=Math.min(1,bound/Math.max(img.naturalWidth,img.naturalHeight));
+    canvas.width=Math.max(1,Math.round(img.naturalWidth*ratio));canvas.height=Math.max(1,Math.round(img.naturalHeight*ratio));
+    canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+    for(const quality of [.86,.72,.58]){
+     const output=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',quality));
+     if(!isCurrent())throw Error('Campaign access changed.');
+     if(output&&output.size<=512*1024){const bytes=new Uint8Array(await output.arrayBuffer());let text='';for(let i=0;i<bytes.length;i+=8192)text+=String.fromCharCode(...bytes.subarray(i,i+8192));return{path:image.path,contentType:output.type,data:btoa(text)};}
+    }
+   }
+   throw Error('This illustration is too large to publish. Choose a smaller image.');
+  }finally{URL.revokeObjectURL(url);}
+ }
+ async function publishedBlob({campaignId,kind,id,image}){
+  if(!image||!belongsTo(campaignId,kind,id,image.path))throw Error('Invalid published illustration.');
+  try{
+   const result=await sdk.getDoc(sdk.doc(sdk.db,'campaigns',campaignId,'playerIllustrations',kind,'entries',id));
+   if(result.exists()){
+    const copy=result.data();
+    if(copy.path!==image.path||!['image/png','image/jpeg','image/webp'].includes(copy.contentType)||typeof copy.data!=='string'||copy.data.length>700000||!copy.data.length)throw Error('The published illustration needs to be released again.');
+    const bytes=Uint8Array.from(atob(copy.data),c=>c.charCodeAt(0));return new Blob([bytes],{type:copy.contentType});
+   }
+  }catch(error){
+   // Older releases have only a Storage reference. Preserve authenticated legacy
+   // access where it works; neither path grants access outside its own rules.
+   try{return await sdk.getBlob(sdk.ref(sdk.storage,image.path),6*1024*1024);}catch{throw error;}
+  }
+  return sdk.getBlob(sdk.ref(sdk.storage,image.path),6*1024*1024);
+ }
  function mount(form,session,{isCurrent,changed,status}){
   if(!kinds.includes(session.kind)||!canManageCampaign())return null;
   const campaignId=session.campaignId,kind=session.kind,recordId=session.record.id,uid=session.uid;
@@ -31,11 +72,11 @@ var CampaignJournalImages=(()=>{
    '<label class="workspace-field">Accessible description<input type="text" maxlength="200" data-journal-image-alt placeholder="Describe the image for accessibility"></label>'+
    '<label class="workspace-field">Caption (optional)<input type="text" maxlength="500" data-journal-image-caption placeholder="A short caption"></label></div>'+
    '<div class="workspace-actions"><button type="button" data-journal-image-remove>Remove illustration</button></div><p class="journal-image-note">Uploading does not save or publish the entry. Choose Save above to keep the reference. Replacing an image keeps the old file immutable.</p>';
-  if(kind==='world'){
+  if(kind==='world'||kind==='creature'&&session.record.data?.category==='Story NPC'){
    host.querySelector('h3').textContent='Image (optional)';
-   host.querySelector('.journal-image-heading p').textContent='Included when you release this post to players.';
+   host.querySelector('.journal-image-heading p').textContent='Included with the text and caption when you publish to players.';
    host.querySelector('.journal-image-private').remove();
-   host.querySelector('.journal-image-note').textContent='Save as draft keeps this image private. Release to players publishes it with the post.';
+   host.querySelector('.journal-image-note').textContent='Save draft keeps changes private. Publish to players includes the illustration and caption.';
   }
   const first=form.querySelector('.chapter-editor-main > section, .world-editor-section, .creature-editor-section, form > section, section');
   const mount=form.querySelector('[data-journal-image-mount]');
@@ -88,7 +129,7 @@ var CampaignJournalImages=(()=>{
    if(!allowedTypes.includes(file.type)||file.size<=0||file.size>=5*1024*1024){
     status('Choose a PNG, JPEG or WebP image smaller than 5 MB.',true);pick.value='';return;
    }
-   busy=true;session.busy=true;pick.disabled=true;remove.disabled=true;status('Uploading private campaign illustration…');
+   busy=true;session.busy=true;pick.disabled=true;remove.disabled=true;status('Uploading private campaign illustration…');session.host.querySelector('[data-entry-sharing]')?._sharingState?.();
    try{
     const bitmap=await createImageBitmap(file);bitmap.close();
     if(!active())return;
@@ -113,5 +154,5 @@ var CampaignJournalImages=(()=>{
   show();display();
   return {dispose(){alive=false;++request;revoke();host.remove();},pathIsScoped:belongsTo};
  }
- return {mount,scopedPath,belongsTo};
+ return {mount,scopedPath,belongsTo,preparePublished,publishedBlob};
 })();
