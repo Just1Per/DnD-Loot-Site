@@ -19,6 +19,7 @@ function createCampaignWorkspaceStore(sdk) {
     const summary = String(input.summary || ''), content = String(input.content || ''), privateNotes = String(input.privateNotes || '');
     if (summary.length > 1000 || content.length > 20000 || privateNotes.length > 20000) throw Error('This text exceeds the field limit.');
     const data = structuredClone(input.data || {});
+    if(kind==='world'&&Object.hasOwn(data,'postLayout')&&!['split','reverse','panorama','classic'].includes(data.postLayout))throw Error('Choose a supported World post layout.');
     if (JSON.stringify(data).length > 180000) throw Error('This record is too large.');
     return { title, summary, content, data, archived:!!input.archived, privateNotes };
   }

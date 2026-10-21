@@ -17,6 +17,7 @@ function createCampaignInformationStore(sdk, kind = 'world') {
     if (kind === 'creature' && source.data?.category !== 'Story NPC') throw Error('Only Story NPCs can be revealed in the NPC catalogue.');
     if (kind === 'chapter' && source.data?.status !== 'Completed') throw Error('Only completed chapters can be shared.');
     const fields = {title:source.title,summary:source.summary,content:source.content,category:source.data?.category || 'World',sourceRevision:source.revision};
+    if(kind==='world'&&Object.hasOwn(source.data||{},'postLayout')){if(!['split','reverse','panorama','classic'].includes(source.data.postLayout))throw Error('Choose a supported World post layout.');fields.postLayout=source.data.postLayout;}
     if(kind==='chapter'){
       fields.content=source.data.playerRecap || source.content;fields.category='Completed';fields.order=source.data.order;
       if(!Number.isInteger(fields.order)||fields.order<0||fields.order>9999)throw Error('Set the chapter order before sharing.');
