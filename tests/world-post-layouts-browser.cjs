@@ -37,7 +37,7 @@ const errors=[];
  await page.locator('[data-read-world=harbor]').click();await page.waitForFunction(()=>document.querySelector('.world-reader-image img')?.naturalWidth>0);
  assert.equal(await page.locator('.world-post-reader').getAttribute('data-post-layout'),'split','legacy posts get the wider default');
  assert.ok((await page.locator('.world-post-reader').boundingBox()).width>1100,'the reader uses the available desktop width');
- await page.locator('[data-world-edit]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record?.id==='harbor');await page.waitForFunction(()=>document.querySelector('[data-journal-image-preview] img')?.naturalWidth>0);
+ await page.locator('[data-world-edit]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record?.id==='harbor');assert.equal(await page.locator('.world-layout-picker').evaluate(n=>n.open),false);await page.locator('.world-layout-picker>summary').click();await page.waitForFunction(()=>document.querySelector('[data-journal-image-preview] img')?.naturalWidth>0);
  for(const layout of ['split','reverse','panorama','classic']){
   await page.locator(`[data-world-layout=${layout}]`).click();assert.equal(await page.locator(`[data-world-layout=${layout}]`).getAttribute('aria-pressed'),'true');
   if(layout==='split')await page.locator('.world-layout-picker').screenshot({path:out+'/world-layout-picker.png'});
@@ -60,7 +60,7 @@ const errors=[];
    assert.deepEqual(await page.evaluate(async()=>(await axe.run('#tab-campaign-information',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>v.id)),[]);
    if(width!==320){await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:out+'/world-layout-'+layout+'-'+width+'.png',fullPage:true});}
   }
-  await page.setViewportSize({width:1440,height:1000});await page.locator('[data-world-edit]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record?.id==='harbor');
+  await page.setViewportSize({width:1440,height:1000});await page.locator('[data-world-edit]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record?.id==='harbor');assert.equal(await page.locator('.world-layout-picker').evaluate(n=>n.open),false);await page.locator('.world-layout-picker>summary').click();
  }
  await page.locator('[data-world-layout=reverse]').click();await page.evaluate(()=>failJournalWrite=true);await page.locator('[data-save-record]').click();await page.waitForFunction(()=>!CampaignWorkspace.session.busy);assert.match(await page.locator('[data-workspace-status]').textContent(),/Could not save/);assert.equal(await page.locator('[data-world-layout=reverse]').getAttribute('aria-pressed'),'true');assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/worldEntries/harbor'].data.postLayout),'classic');assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/playerInformation/harbor'].postLayout),'classic');
  await page.evaluate(()=>{failJournalWrite=false;CampaignWorkspace.clear(true);auditSeed('player');__DND_VAULT_DEPS__.getBlob=async()=>{throw Error('Private image denied')};showTab('campaign-information')});await page.waitForSelector('[data-read-world=harbor]');await page.locator('[data-read-world=harbor]').click();await page.waitForFunction(()=>document.querySelector('.world-reader-image img')?.naturalWidth>0);assert.equal(await page.locator('[data-world-edit],[data-world-layout]').count(),0);assert.equal(await page.locator('.world-post-reader').getAttribute('data-post-layout'),'classic');

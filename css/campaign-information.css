@@ -131,7 +131,7 @@
 .workspace-preview .world-post-opening figure{margin:0;max-width:none}
 .workspace-preview .world-post-opening figure img{max-height:500px;width:100%;height:auto}
 .world-layout-picker{border:1px solid #c8b89a;border-radius:8px;padding:18px;margin:20px 0;min-width:0;background:#f4efe6}
-.world-layout-picker legend{font:700 .95rem/1.5 Cinzel,Georgia,serif;padding:0 8px;color:#5c1d1d}
+.world-layout-picker>summary{font:700 .95rem/1.5 Cinzel,Georgia,serif;padding:4px 0;min-height:44px;box-sizing:border-box;cursor:pointer;color:#5c1d1d}.world-layout-picker>summary>span{font:normal .9rem/1.5 Georgia,serif}.world-layout-picker[open]>summary{margin-bottom:14px}
 .world-layout-picker>p{font:.85rem/1.6 Georgia,serif;color:#66584a;margin:0 0 16px}
 .world-layout-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
 .campaign-workspace .world-layout-choices button{display:flex;flex-direction:column;gap:8px;text-align:left;background:#fdfbf7;color:#5c1d1d;border:1px solid #c8b89a;text-transform:none;min-width:0;min-height:44px;padding:12px}

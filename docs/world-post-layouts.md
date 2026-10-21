@@ -9,7 +9,7 @@ A DM can choose a different design for each World post in **DM Workspace → Wor
 - **Panorama** (`panorama`): wide illustration above a broad article.
 - **Classic article** (`classic`): a centered reading page with its illustration above.
 
-The chooser includes miniature diagrams and a **Preview selected layout** action. The actual preview uses the current text, illustration and caption, excluding private DM notes. **Save draft** stores `data.postLayout` only on that post's private source. **Publish changes** copies the saved choice to the player's publication as `postLayout`, together with the usual text/image release. Layout changes never update another post or silently change the player's saved snapshot. Unsupported reader values safely fall back to the wider default.
+The chooser is collapsed after the description/image by default, with the selected design in its heading. It includes miniature diagrams and a **Preview selected layout** action. The actual preview uses the current text, illustration and caption, excluding private DM notes. **Save draft** stores `data.postLayout` only on that post's private source. **Publish changes** copies the saved choice to the player's publication as `postLayout`, together with the usual text/image release. Layout changes never update another post or silently change the player's saved snapshot. Unsupported reader values safely fall back to the wider default.
 
 ## Rules and rollout
 
