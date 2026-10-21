@@ -8,4 +8,4 @@ The shared renderer also removes an obsolete World/NPC rendering branch: those e
 
 Validation: the new World regression failed before the fix (the expected reader never appeared). Expanded World/NPC browser suites pass with cancel, retained draft, later ordinary navigation, explicit successful Back, images and responsive WCAG checks. Existing chapter/private-note, shared-page failure/retry, Guide DOM and repository packaging checks pass.
 
-No Firestore or Storage rule changes, migrations, backfills or production deployment are required. This navigation change adds no rules. Its parent #170 requires its own Firestore rules for DM recap moderation.
+No Firestore or Storage rule changes, migrations, backfills or production deployment are required. This navigation change adds no rules. Merged #170 requires its own Firestore rules for DM recap moderation. This main-targeted follow-up restores #171/#172 after their PRs were merged into feature branches.
