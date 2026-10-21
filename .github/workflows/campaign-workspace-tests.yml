@@ -106,6 +106,7 @@ jobs:
       run: |
         npm --prefix tests run test:publishing-feedback
         npm --prefix tests run test:world-post-layouts
+        npm --prefix tests run test:one-shot-hub
     - name: Centered native dialogs, spell details and unsaved-draft prompts
       run: npm --prefix tests run test:dialogs
     - name: Root catalogue multi-select and viewport checks

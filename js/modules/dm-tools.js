@@ -12,18 +12,20 @@ const DM_PLANNING_TOOLS = Object.freeze([
     ['Start with the world’s promise', 'Write a short introduction: what makes this setting different, what life is like, and what the characters can explore. Pick a tone, such as heroic, mysterious or dangerous.'],
     ['Describe what players experience', 'For each location, describe what characters see, hear and smell, then add a landmark, a local person and a problem they can interact with. Start with the party’s first location and expand as needed.'],
     ['Connect people and places', 'Link regions, locations, NPCs and factions. Record what each faction wants and how its actions affect the world. Reuse these entries in chapters and one-shots.'],
+    ['Choose a reading design', 'Post layout offers Illustration right, Illustration left, Panorama and Classic article for each entry. Preview selected layout shows the draft. Save draft, then Publish changes to release text, illustration and caption together.'],
     ['Keep discoveries separate from secrets', 'Prepare a player-facing description alongside private DM notes. Publish discoveries deliberately; hidden motives, future events and unrevealed locations stay private.']
   ] },
   { id: 'map', title: 'Map', summary: 'Set up the campaign map, place cities and regions, and publish what the party can discover.', guide: 'How to set up the campaign map', steps: [
     ['Upload your map', 'Choose a map image and give it a name. The main map has its own workspace, separate from written World entries.'],
-    ['Add places', 'Place City or Region pins, add descriptions and optional pictures, then link shared World entries for more detail.'],
+    ['Add point markers', 'Choose Location, City, Castle, Landmark or Point of interest for a point on the map. Add its description and optional picture, then link an already shared World article for more detail.'],
+    ['Name a region', 'Draw 3–12 boundary corners around an area. Finish boundary, then Keep place in draft. Undo corner and Redraw boundary help correct the shape.'],
     ['Publish deliberately', 'Save a private draft, preview the published player view, then publish revealed places when ready. Hidden places remain private.']
   ] },
   { id: 'creatures', title: 'Creatures & NPCs', summary: 'Keep the people and monsters of your campaign together. Create master cards, import SRD creatures or reuse your personal templates.', guide: 'How to prepare creatures and NPCs', steps: [
     ['Create a campaign master', 'Choose Story NPC, Monster, Boss or Companion. Describe the character, then add combat statistics when needed. Keep secrets and tactics in the private fields.'],
     ['Reuse your catalogue', 'Import an editable SRD copy or a creature from My Creature Library. Source attribution stays with the copy; changes do not overwrite the source or personal template.'],
     ['Connect the campaign', 'Link a master to world entries, chapters and encounters. Encounter combatants have independent HP and conditions, so running combat preserves the master card.'],
-    ['Reveal NPCs deliberately', 'Save a Story NPC, then choose Reveal NPC to share its story description with campaign members. Statistics, goals and hidden motives remain private.']
+    ['Reveal NPCs deliberately', 'Save draft, then Publish to players or Publish changes to release a Story NPC’s description, illustration and caption together. Statistics, goals and hidden motives remain private.']
   ] },
   { id: 'chapters', title: 'Chapter Tracker', summary: 'Organize your campaign like a book, with ordered chapters, clear objectives and recaps. Plan milestones for a campaign that levels up by chapter.', guide: 'How to plan campaign chapters', steps: [
     ['Give each chapter a purpose', 'Choose a title, a starting situation and the key question or objective. Divide it into scenes and link the locations, NPCs and encounters involved.'],
@@ -33,7 +35,7 @@ const DM_PLANNING_TOOLS = Object.freeze([
   ] },
   { id: 'one-shots', title: 'One Shots', summary: 'Plan a self-contained adventure or side mission in your campaign’s world. Use a separate roster with DM-made characters, or let invited players create their own.', guide: 'How to set up a one-shot', steps: [
     ['Keep the adventure focused', 'Write a hook, a clear goal and an ending. Choose a level, player count and session length, then plan a small number of scenes with room to shorten or extend the adventure.'],
-    ['Choose who prepares and runs it', 'The campaign DM can create the adventure or invite a player to prepare and host it. Hosting gives access only to that one-shot, including its preparation notes, not campaign-wide DM tools or secrets.'],
+    ['Choose who prepares and runs it', 'Save adventure first. The campaign DM opens Host approval & invitations, chooses a host and approves the adventure. Invite campaign members; they accept through My Character → My One Shots. Hosting gives access only to that one-shot, including its preparation notes, not campaign-wide DM tools or secrets.'],
     ['Choose the character setup', 'Plan a set of pre-generated sheets for the DM to assign, allow each invited player to build a sheet, or combine both. Keep multiple sheets in the one-shot roster and choose the campaign’s allowed editions and any agreed character restrictions.'],
     ['Return to the campaign deliberately', 'One-shot HP, resources, loot and leveling stay on its own sheets. At the end, record the outcome and let the campaign DM decide which story events or rewards carry into the main campaign.']
   ] }

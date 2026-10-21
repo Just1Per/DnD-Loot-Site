@@ -1,7 +1,7 @@
 'use strict';
 // Preparation navigation and saved-record summaries do not create workspace drafts.
 var DMWorkspaceShell=(()=>{
- const sections=[['dm','Overview'],['dm-world','World'],['dm-map','Map'],['dm-creatures','Creatures & NPCs'],['dm-chapters','Chapters'],['dm-party','Party & Loot']];
+ const sections=[['dm','Overview'],['dm-world','World'],['dm-map','Map'],['dm-creatures','Creatures & NPCs'],['dm-chapters','Chapters'],['dm-one-shots','One Shots'],['dm-party','Party & Loot']];
  const kinds={world:'World',creature:'Creature or NPC',chapter:'Chapter',encounter:'Encounter'};
  const e=value=>escapeHtml(String(value??''));
  let route=null,generation=0;
@@ -32,8 +32,6 @@ var DMWorkspaceShell=(()=>{
     const selected=key===tab;button.classList.toggle('active',selected);if(selected)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');
    }
    if(secondary)secondary.hidden=true;
-   const legacy=document.querySelector('#tab-dm > [data-dm-legacy-adventures]'),oneShot=document.querySelector('.tab[data-tab="dm-one-shots"]');
-   if(tab==='dm'&&legacy&&oneShot)legacy.append(oneShot);else if(group&&oneShot?.closest('[data-dm-legacy-adventures]'))group.append(oneShot);
   }else if(group){
    // AppShell normally restores these first; keep direct update calls safe as well.
    for(const button of sidebar.querySelectorAll('.tab[data-tab]'))group.append(button);
@@ -68,11 +66,7 @@ var DMWorkspaceShell=(()=>{
     let preparation=grid.querySelector('[data-dm-overview-preparation]');
     if(!preparation){preparation=document.createElement('div');preparation.className='dm-overview-preparation';preparation.dataset.dmOverviewPreparation='';preparation.innerHTML='<section class="dm-tool-card" data-dm-next-chapter><h2>Next chapter</h2><p role="status">Loading chapter preparation…</p></section><section class="dm-tool-card" data-dm-recent-work><h2>Recent work</h2><p role="status">Loading saved preparation…</p></section>';grid.querySelector('.dm-tool-card')?.after(preparation);}
     const oldShortcut=grid.querySelector('[data-open-dm-planning="one-shots"]')?.closest('.dm-planning-shortcut');
-    if(oldShortcut){
-     const overview=document.getElementById('tab-dm');let legacy=overview.querySelector(':scope > [data-dm-legacy-adventures]');
-     if(!legacy){legacy=document.createElement('details');legacy.className='dm-legacy-adventures';legacy.dataset.dmLegacyAdventures='';legacy.innerHTML='<summary>One Shots · paused</summary>';overview.append(legacy);}
-     legacy.querySelector('.dm-planning-shortcut')?.remove();legacy.append(oldShortcut);
-    }
+    oldShortcut?.remove();
     update(AppShell.route);
     if(route==='dm')loadOverview(preparation);
    }
