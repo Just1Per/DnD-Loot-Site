@@ -48,6 +48,7 @@ const errors=[];
  for(const width of [1440,390,320]){await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));const violations=await page.evaluate(async()=>(await axe.run('#tab-campaign-journal',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>v.id));assert.deepEqual(violations,[]);if(width===390)await page.screenshot({path:out+'/recap-reader-mobile.png',fullPage:true});}
  await page.evaluate(()=>journalWatchers.findLast(w=>w.active&&w.path.includes('/journalRecaps')).error({code:'unavailable'}));
  assert.ok(await page.locator('.journal-leaf').isVisible(),'temporary failure retains the current reading');
+ assert.match(await page.locator('[data-journal-status]').textContent(),/last loaded entries/);
  assert.ok(await page.locator('[data-journal-retry]').isVisible(),'recovery remains accessible with the list header hidden');
  await page.locator('[data-journal-retry]').click();await page.waitForFunction(()=>CampaignJournal.session?.ready);
  assert.equal(await page.locator('[data-journal-search]').inputValue(),'harbor');
