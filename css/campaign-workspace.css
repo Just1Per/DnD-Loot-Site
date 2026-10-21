@@ -134,3 +134,34 @@
 
 .publishing-editor-header [data-workspace-status]:empty{display:none}
 [data-publication-options]{display:grid;gap:8px;border-top:1px solid #c8b89a;padding-top:8px}
+/* One-shot setup and participant reading keep adventure controls together. */
+.one-shot-workspace .workspace-page{padding:clamp(14px,3vw,28px)}
+.one-shot-section{padding:22px 0;border-bottom:1px solid #c8b89a;min-width:0}
+.one-shot-section h3,.one-shot-reading h3{font:700 1.25rem/1.4 Cinzel,Georgia,serif;margin:6px 0 12px;overflow-wrap:anywhere}
+.one-shot-section p,.one-shot-reading p{font:.94rem/1.65 Georgia,serif;color:#66584a;max-width:65ch}
+.one-shot-eyebrow{font:700 .7rem/1.6 Cinzel,Georgia,serif;letter-spacing:.09em;color:#685132;text-transform:uppercase}
+.one-shot-section textarea[name=content]{min-height:180px}
+.one-shot-workspace [hidden]{display:none!important}
+.one-shot-actions{position:sticky;top:var(--one-shot-sticky-top,100px);z-index:3;background:#f4efe6;border-bottom:1px solid #c8b89a;padding:8px 0}
+.one-shot-actions>.workspace-actions{margin:0}
+.one-shot-actions .workspace-status{margin:6px 0 0}
+.one-shot-more{margin-left:auto;position:relative}
+.one-shot-more>summary,.one-shot-management>summary,.one-shot-private>summary{font:700 .82rem/1.5 Cinzel,Georgia,serif;cursor:pointer;padding:12px 4px;min-height:44px;box-sizing:border-box}
+.one-shot-more[open]>.workspace-actions{position:absolute;right:0;min-width:190px;max-width:calc(100vw - 70px);background:#f4efe6;border:1px solid #8a7355;box-shadow:0 6px 18px #33281c26;border-radius:6px;padding:12px;z-index:4}
+.one-shot-more[open]>.workspace-actions button{width:100%}
+.one-shot-private{background:#ebe3d5;border:1px solid #c8b89a;border-left:3px solid #a78946;padding:0 16px;margin:24px 0;border-radius:6px}
+.one-shot-facts{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 24px}
+.one-shot-facts span{border:1px solid #c8b89a;border-radius:20px;padding:6px 12px;font:.8rem/1.5 Georgia,serif;color:#5c1d1d;background:#fdfbf7}
+.one-shot-reading{max-width:65ch;margin:24px auto 36px}
+.one-shot-reading .workspace-prose{font:1.05rem/1.85 Georgia,serif}
+.one-shot-invitation{padding:18px 22px;border:1px solid #a78946;border-left:4px solid #742b35;border-radius:6px;background:#fdfbf7;margin:20px 0}
+.one-shot-invitation h4,.one-shot-character h4{font:700 1rem/1.5 Cinzel,Georgia,serif;margin:0;overflow-wrap:anywhere}
+.one-shot-management{margin:14px 0;border-top:1px solid #c8b89a}
+.one-shot-character-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:16px;margin-top:18px}
+.one-shot-character{background:#fdfbf7;border:1px solid #c8b89a;border-radius:8px;padding:18px;min-width:0}
+.one-shot-character p{margin:8px 0 18px}
+.one-shot-empty{padding:18px;border:1px dashed #8a7355;border-radius:6px}
+.one-shot-list-note{display:block;font:.82rem/1.6 Georgia,serif;margin-top:8px;color:#66584a}
+.one-shot-workspace button:not(.vault-help-badge),.one-shot-workspace input:not([type=checkbox]),.one-shot-workspace select{min-height:44px}
+.one-shot-more>summary:focus-visible,.one-shot-private>summary:focus-visible,.one-shot-management>summary:focus-visible{outline:2px solid #9b1d1d;outline-offset:2px}
+@media(max-width:760px){.one-shot-section{padding:18px 0}.one-shot-actions{top:var(--one-shot-sticky-top,100px)}.one-shot-private{padding:0 12px}.one-shot-invitation{padding:16px}.one-shot-workspace .workspace-page{padding:14px}}

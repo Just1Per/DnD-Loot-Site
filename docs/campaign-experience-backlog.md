@@ -26,7 +26,7 @@ This is the proposed delivery order for the campaign experience. Each delivery s
 | P2 | Chapter Tracker cleanup | Merged PR #98; CI passed | Clear chapter preparation, completion, recap and publish actions; separate DM planning from player-visible recap; retain milestone approval and character independence. |
 | P3 | Creature & NPC editor cleanup | Merged PR #101 | Story-first NPC preparation and optional combat-stat sections; preserve hidden statistics, boss phases, source attribution, personal templates and encounter snapshots when toggling sections. |
 | P3 | Campaign front-page layout preferences | Merged into main (#118) | Offer limited book-style layout/section options after reviewing the current page; preserve the existing default, accessible images and saved text. |
-| Paused | One Shots cleanup | Paused by owner | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
+| P1 | One Shots cleanup | Resumed under owner’s October 21 instruction to continue the agreed plan | Simplify adventure setup, invitations, host permissions and roster choices; retain the existing isolation of one-shot sheets, gear and combat from campaign records. |
 
 PRs #90–#94 were originally merged into their parent feature branches. Integration PR #95 has since been merged onto `main`. PRs #113–#116 were reviewed and merged into their feature-branch bases after #112 reached main. Their combined changes reached `main` through #117. Book layouts #118, read-only item audit #119, item review #120 and reviewed catalogue implementation #121 have also merged. New deliveries target `main` to avoid further parent-branch merges. Merge and production deployment continue to require the owner’s approval.
 
@@ -34,7 +34,7 @@ PRs #90–#94 were originally merged into their parent feature branches. Integra
 
 World Building, Creatures & NPCs, Chapter Tracker and One Shots are DM-only authoring tabs. Players use Campaign information, NPC catalogue and Chapter overview instead. Re-evaluate visibility whenever entering a campaign, including transitions from a campaign the user manages to one where they are only a player. Direct tab selection must enforce the same restriction.
 
-Pause all One Shots feature development. Existing records and behavior are retained; run regression checks when shared infrastructure changes, but do not redesign or expand One Shots while paused.
+The owner’s October 21 continuation resumes One Shots after the World reading and stabilization work. Simplify the existing adventure setup, invitations and independent sheets first; preserve server-enforced host scope and existing records. Earlier delivery notes describing the pause remain historical.
 
 ## Front-page follow-ups
 

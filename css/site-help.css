@@ -37,3 +37,6 @@ button.vault-help-badge[hidden]{display:none!important}
 .vault-help-dialog footer .btn-primary{background:#732424;color:#fff0c8}
 @media(max-width:500px){.vault-help-dialog>header,.vault-help-dialog footer{padding:16px}.vault-help-dialog nav{padding:12px 16px 0}.vault-help-dialog ol{padding-left:37px;padding-right:16px}.vault-help-dialog h2{font-size:21px}}
 @media print{.vault-help-badge,.vault-context-help,.vault-help-dialog,#siteGuideButton{display:none!important}}
+
+/* Dense sheet tables use label/focus explanations instead of a badge per cell. */
+.vault-help-inline{cursor:help}

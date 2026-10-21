@@ -3,10 +3,11 @@
  try{
   SiteHelp.onLogout();seed('player');testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');SiteHelp.refresh();
   check('Help badges explain fields without adding editable sheet values',document.querySelector('[name="build.edition"]').closest('label').querySelector('.vault-help-badge')&&document.querySelectorAll('#characterSheetForm .vault-help-badge[name]').length===0);
-  const ability=document.querySelector('[name="abilities.str"]'),help=ability.closest('label').querySelector('.vault-help-badge');
-  help.click();check('Ability help states base scores and origin/feat bonuses',document.getElementById('vaultContextHelp').textContent.includes('base Strength')&&help.getAttribute('aria-expanded')==='true');
+  const ability=document.querySelector('[name="abilities.str"]'),help=ability;
+  help.dispatchEvent(new Event('focus'));check('Ability help states base scores and origin/feat bonuses',document.getElementById('vaultContextHelp').textContent.includes('base Strength')&&help.hasAttribute('aria-describedby'));
   check('Reading help never changes the ability score',Number(ability.value)===sheetSession.data.abilities.str);
-  help.click();check('Clicking help again closes its tooltip',document.getElementById('vaultContextHelp').hidden&&help.getAttribute('aria-expanded')==='false');
+  help.dispatchEvent(new Event('blur'));check('Leaving a compact field closes its tooltip',document.getElementById('vaultContextHelp').hidden&&!help.hasAttribute('aria-describedby'));
+  check('Saving throw and ability fields share section help instead of repeated badges',document.querySelectorAll('#sheet-skills .sheet-save-row .vault-help-badge,#sheet-skills .sheet-ability label .vault-help-badge').length===0&&document.querySelector('#sheet-skills h4 .vault-help-badge'));
   const xp=document.querySelector('[name="adobe.useExperience"]'),beforeXP=xp.checked;xp.closest('label').querySelector('.vault-help-badge').click();check('Reading checkbox help does not change leveling mode',xp.checked===beforeXP);SiteHelp.hide();
   selectSheetTab('inventory');SiteHelp.refresh();check('Print and personal gear actions have their own explanations',document.getElementById('sheetPrint').nextElementSibling?.classList.contains('vault-help-badge')&&document.getElementById('sheetAddBaseGear').nextElementSibling?.classList.contains('vault-help-badge'));selectSheetTab('overview');SiteHelp.refresh();
   check('Overview AC and spell DC explain calculated statistics', [...document.querySelectorAll('.sheet-summary-metrics .vault-help-badge')].some(b=>b._vaultHelp.includes('defense target'))&&[...document.querySelectorAll('.sheet-summary-metrics .vault-help-badge')].some(b=>b._vaultHelp.includes('8 + proficiency')));
@@ -19,6 +20,7 @@
   check('Opening guide performs no writes or invitation acceptance',callLog.length===permissions);
   document.querySelector('[data-guide-close]').click();check('Close button dismisses the guide',!document.getElementById('siteGuideDialog'));
   seed('dm');SiteHelp.openGuide('dm');check('DM guide distinguishes global access from campaign roles',document.getElementById('siteGuideDialog').textContent.includes('membership there determines')&&document.getElementById('siteGuideDialog').textContent.includes('limited or unlimited stock'));
+  check('DM guide explains World layouts images map boundaries and One Shots', ['Post layout','Publish changes','3–12','One Shots','Private preparation','Reusable content'].every(text=>document.getElementById('siteGuideDialog').textContent.includes(text)));
   check('Manual Guide has no misleading auto-open preference',!document.getElementById('siteGuideRemember'));SiteHelp.closeGuide();SiteHelp.onLogin();check('Login retains manual Guide without opening it or writing application data',!document.getElementById('siteGuideDialog')&&callLog.length===permissions);
   SiteHelp.openGuide('dm');check('Guide can always be reopened manually',document.getElementById('siteGuideDialog').open);SiteHelp.closeGuide();
   seed('admin');SiteHelp.openGuide('admin');check('Admin guide respects global catalogue and campaign independence',document.getElementById('siteGuideDialog').textContent.includes('Campaign DMs work with campaign copies')&&document.getElementById('siteGuideDialog').textContent.includes('does not assign the user as DM in every campaign'));
