@@ -24,7 +24,16 @@ var CampaignInformation = (() => {
   function decorateJournalEditor(s){
     if(!['world','creature'].includes(s.kind)||!returnToJournal||returnToJournal.kind!==s.kind||returnToJournal.uid!==s.uid||returnToJournal.campaignId!==s.campaignId||returnToJournal.recordId!==s.record.id)return;
     const button=document.createElement('button');button.type='button';button.setAttribute(s.kind==='world'?'data-back-to-world':'data-back-to-npcs','');button.textContent='← Back to '+views[s.kind].title;
-    button.onclick=()=>{if(s.busy)return;const state=browsing.get(browseKey(s.kind));if(state)state.selected=null;showTab(views[s.kind].tab);};
+    button.onclick=()=>{
+      if(s.busy)return;
+      const state=browsing.get(browseKey(s.kind)),selected=state?.selected;
+      if(state)state.selected=null;
+      try{showTab(views[s.kind].tab);}
+      finally{
+        // A rejected leave keeps this editor alive. Keep its original reader too.
+        if(CampaignWorkspace.session===s&&state)state.selected=selected;
+      }
+    };
     s.host.querySelector('[data-workspace-page]').prepend(button);
   }
   const escape=value=>escapeHtml(String(value??''));
@@ -72,30 +81,28 @@ var CampaignInformation = (() => {
   function paint(s) {
     if(!current(s)||s.phase!=='ready')return;
     revokeImages(s);
+    if(s.kind==='world'||s.kind==='creature'){paintReference(s);return;}
     const focused=document.activeElement?.matches?.('[data-note-text]')?{id:document.activeElement.closest('[data-chapter-note-id]').dataset.chapterNoteId,start:document.activeElement.selectionStart,end:document.activeElement.selectionEnd}:null;
     const query=s.root.querySelector('[data-information-search]').value.trim().toLowerCase(),category=s.root.querySelector('[data-information-category]').value;
     const list=s.root.querySelector('[data-information-list]');
     s.root.querySelector('[data-information-clear]').hidden=!query&&!category;
     const openIds=new Set([...list.querySelectorAll('details[open]')].map(node=>node.dataset.informationId));
-    if(s.kind==='world'||s.kind==='creature'){paintReference(s);return;}
-    const rows=s.rows.filter(row=>(!category||row.category===category)&&(!query||[row.title,row.summary,row.content].join(' ').toLowerCase().includes(query))).sort((a,b)=>(s.kind==='chapter'?a.order-b.order:0)||a.title.localeCompare(b.title));
-    list.classList.toggle('campaign-information-grid',s.kind!=='chapter');
-    list.innerHTML=rows.map(row=>{
-      if(s.kind==='chapter')return `<article class="campaign-information-card"><details data-information-id="${escape(row.id)}" ${openIds.has(row.id)?'open':''}><summary><strong>${s.kind==='chapter'?`Chapter ${Number(row.order)} · `:''}${escape(row.title)}</strong><span>${escape(row.category)}</span></summary>${row.summary?`<p>${escape(row.summary)}</p>`:''}<div class="campaign-book-prose">${escape(row.content)}</div>${row.image?`<figure data-shared-image="${escape(row.id)}">Loading shared illustration…</figure>`:''}${s.kind==='chapter'?CampaignChapterNotes.controls(s,row.id):''}</details></article>`;
-      return `<article class="campaign-information-card campaign-reference-card">${row.image?`<figure class="campaign-reference-art" data-shared-image="${escape(row.id)}">Loading illustration…</figure>`:`<div class="campaign-reference-art campaign-reference-placeholder" aria-hidden="true"><span>${escape(row.title.slice(0,1))}</span></div>`}<details data-information-id="${escape(row.id)}" ${openIds.has(row.id)?'open':''}><summary><strong>${escape(row.title)}</strong><span class="campaign-reference-category">${escape(row.category)}</span><span class="campaign-reference-summary">${escape(row.summary||'Open to read more.')}</span></summary><div class="campaign-book-prose">${escape(row.content)}</div></details></article>`;
-    }).join('')||`<p class="campaign-information-empty">${s.rows.length?'No shared entries match your search.':escape(s.view.empty)}</p>`;
+    const rows=s.rows.filter(row=>(!category||row.category===category)&&(!query||[row.title,row.summary,row.content].join(' ').toLowerCase().includes(query))).sort((a,b)=>a.order-b.order||a.title.localeCompare(b.title));
+    list.classList.remove('campaign-information-grid');
+    list.innerHTML=rows.map(row=>`<article class="campaign-information-card"><details data-information-id="${escape(row.id)}" ${openIds.has(row.id)?'open':''}><summary><strong>Chapter ${Number(row.order)} · ${escape(row.title)}</strong><span>${escape(row.category)}</span></summary>${row.summary?`<p>${escape(row.summary)}</p>`:''}<div class="campaign-book-prose">${escape(row.content)}</div>${row.image?`<figure data-shared-image="${escape(row.id)}">Loading shared illustration…</figure>`:''}${CampaignChapterNotes.controls(s,row.id)}</details></article>`).join('')||`<p class="campaign-information-empty">${s.rows.length?'No shared entries match your search.':escape(s.view.empty)}</p>`;
     if(s.targetId){
       const target=[...list.querySelectorAll('[data-information-id]')].find(node=>node.dataset.informationId===s.targetId);
       if(target){target.open=true;target.querySelector('summary').focus();target.scrollIntoView({block:'start'});s.targetId=null;}
     }
     loadImages(s,list);
-    if(s.kind==='chapter'){list.insertAdjacentHTML('beforeend',CampaignChapterNotes.orphanDrafts(s));CampaignChapterNotes.bind(s);}
+    list.insertAdjacentHTML('beforeend',CampaignChapterNotes.orphanDrafts(s));CampaignChapterNotes.bind(s);
     if(focused){const host=[...list.querySelectorAll('[data-chapter-note-id]')].find(node=>node.dataset.chapterNoteId===focused.id),input=host?.querySelector('[data-note-text]');if(input&&!input.disabled){input.focus({preventScroll:true});input.setSelectionRange(focused.start,focused.end);}}
   }
   function paintReference(s){
     const npc=s.kind==='creature',hook=npc?'npc':'world',destination=s.view.title;
     const list=s.root.querySelector('[data-information-list]'),filters=s.root.querySelector('.campaign-information-filters');
     const query=s.root.querySelector('[data-information-search]').value.trim().toLowerCase(),category=s.root.querySelector('[data-information-category]').value;
+    s.root.querySelector('[data-information-clear]').hidden=!query&&!category;
     const matches=s.rows.filter(row=>(!category||row.category===category)&&(!query||[row.title,row.summary,row.content].join(' ').toLowerCase().includes(query)));
     s.root.querySelector('[data-information-status]').textContent=s.selected?'':`${matches.length} of ${s.rows.length} shared ${npc?'NPCs':'World posts'}.`;
     const selected=s.rows.find(row=>row.id===s.selected);

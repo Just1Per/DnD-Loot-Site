@@ -48,7 +48,14 @@ const errors=[];
  assert.equal(await page.locator('[name=title]').inputValue(),'Hollow Harbor');
  assert.equal(await page.locator('[data-back-to-world]').count(),1);
  await page.locator('[name=content]').fill('A new public discovery.\n\nThe harbor has a story to tell.');
+ await page.evaluate(()=>window.confirm=()=>false);await page.locator('[data-back-to-world]').click();
+ assert.equal(await page.locator('[name=content]').inputValue(),'A new public discovery.\n\nThe harbor has a story to tell.');
+ await page.evaluate(()=>window.confirm=()=>true);
  await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session.record.revision===2);
+ // Canceling Back must not change the remembered reader when returning through Journal navigation.
+ await page.evaluate(()=>showTab('campaign-information'));await page.waitForSelector('.world-post-reader');
+ assert.equal(await page.locator('.world-post-reader').getAttribute('data-information-id'),'harbor');
+ await page.locator('[data-world-edit]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record?.id==='harbor');
  assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/playerInformation/harbor'].sourceRevision),1);
  await page.waitForFunction(()=>!document.querySelector('[data-publish-world]').disabled);
  assert.match(await page.locator('[data-release-includes]').textContent(),/image and caption/);
