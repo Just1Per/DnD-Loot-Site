@@ -20,7 +20,7 @@ Same-executor measurements on October 21, 2026:
 | 2,000 | Needle | 20 / 10 ms | 20 / 9 ms |
 | 2,000 | No matches | 0 / 10 ms | 0 / 7 ms |
 
-The broad-result improvement comes from building fewer card DOM nodes and handlers, not reduced database reads. The complete permitted item list is still loaded before client-side filtering. This does not establish startup/network/image performance; those remain separate backlog work.
+The broad-result improvement comes from building fewer card DOM nodes and handlers, not reduced database reads. The complete permitted item list is still loaded before client-side filtering. This does not establish network/image performance. An additional offline bootstrap baseline is recorded in docs/startup-performance-baseline.md; real production startup remains separate backlog work.
 
 ## Validation and rollout
 

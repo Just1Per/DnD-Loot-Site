@@ -11,7 +11,7 @@ Order agreed with the owner: stabilize merged behavior, complete UX/code/perform
 - [ ] Continue compact character-sheet help where repeated controls add clutter; retain section explanations, hover and keyboard access. First delivery merged in #168.
 - [ ] Keep header Guide and contextual help current in each feature PR.
 - [ ] Review #171: canceled World/NPC editor returns preserve the remembered reader; obsolete reference rendering is removed from the chapter path. Continue cleanup from concrete findings.
-- [ ] Measure remaining startup and image-heavy-page bottlenecks. Library CPU/DOM measurements now show the remaining broad-result cost; current follow-up bounds results to 48 cards per page, retaining full-list filtering/counts. See docs/library-result-pages.md. Library snapshots/shared-image concurrency are already merged.
+- [ ] Measure production startup and image-heavy-page bottlenecks. The offline ordered-loader baseline is recorded in docs/startup-performance-baseline.md; 102 modules are each requested once and execute in order, so no speculative loader rewrite is included. Library CPU/DOM measurements now show the remaining broad-result cost; current follow-up bounds results to 48 cards per page, retaining full-list filtering/counts. See docs/library-result-pages.md. Library snapshots/shared-image concurrency are already merged.
 - [ ] Maintain CI clarity and reliability; parallel jobs, early checks, ready-for-review previews and the landscape map test fixture are implemented.
 - [ ] Validate One Shot groundwork live, then add participant/invitation/assigned-sheet overview.
 - [ ] Clarify One Shot status, completion and archive/reopen behavior.
