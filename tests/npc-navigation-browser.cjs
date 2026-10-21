@@ -50,6 +50,10 @@ const errors=[];
  assert.equal(await page.locator('[name=content]').inputValue(),'A new shared discovery.\n\nThe missing ship has returned.');assert.ok(await page.locator('[data-save-record]').isVisible());
  await page.evaluate(()=>window.confirm=()=>true);
  await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session.record.revision===2);
+ // Canceling Back must preserve the selected NPC for a later Journal navigation.
+ await page.evaluate(()=>showTab('campaign-npcs'));await page.waitForSelector('.npc-post-reader');
+ assert.equal(await page.locator('.npc-post-reader').getAttribute('data-information-id'),'elowen');
+ await page.locator('[data-npc-edit]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record?.id==='elowen');
  assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a/playerNPCs/elowen'].sourceRevision),1);
  await page.waitForFunction(()=>!document.querySelector('[data-publish-npc]').disabled);
  await page.locator('[data-publish-npc]').click();await page.waitForFunction(()=>document.querySelector('[data-sharing-status]').textContent.includes('Published to players'));
