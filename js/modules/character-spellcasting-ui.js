@@ -298,8 +298,8 @@
     });
   }
 
-  function decorateRows(){
-    const d=stats();if(!d||!sheetSession)return;
+  function decorateRows(d=stats()){
+    if(!d||!sheetSession)return;
     document.querySelectorAll('#sheetSpellRows .sheet-repeat').forEach((article,i)=>{
       const spell=sheetSession.data.spells[i],p=spell&&classProfile(spell.classId,d);
       if(!spell||!p)return;
@@ -318,5 +318,5 @@
   const baseSetup=window.setupCharacterPlayUI;
   window.setupCharacterPlayUI=function(...args){const result=baseSetup?.apply(this,args);setup();return result;};
   const baseUpdate=window.updateCharacterPlayUI;
-  window.updateCharacterPlayUI=function(d,...args){const result=baseUpdate?.call(this,d,...args);setup();adoptLegacySpells(d);renderSummary(d);renderGeneratedTable(d);decorateRows();return result;};
+  window.updateCharacterPlayUI=function(d,...args){const result=baseUpdate?.call(this,d,...args);setup();adoptLegacySpells(d);renderSummary(d);renderGeneratedTable(d);decorateRows(d);return result;};
 })();
