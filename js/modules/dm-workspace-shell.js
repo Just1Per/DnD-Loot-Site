@@ -1,7 +1,7 @@
 'use strict';
 // Preparation navigation and saved-record summaries do not create workspace drafts.
 var DMWorkspaceShell=(()=>{
- const sections=[['dm','Overview'],['dm-world','World'],['dm-map','Map'],['dm-creatures','Creatures & NPCs'],['dm-chapters','Chapters'],['dm-one-shots','One Shots'],['dm-party','Party & Loot']];
+ const sections=[['dm','Overview'],['dm-world','World'],['dm-map','Maps'],['dm-creatures','Creatures & NPCs'],['dm-chapters','Chapters'],['dm-one-shots','One Shots'],['dm-party','Party & Loot']];
  const kinds={world:'World',creature:'Creature or NPC',chapter:'Chapter',encounter:'Encounter'};
  const e=value=>escapeHtml(String(value??''));
  const overviewStates=new WeakMap();

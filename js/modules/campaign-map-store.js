@@ -1,14 +1,18 @@
 'use strict';
 /** Published map snapshots and a separate DM-only working draft. */
-function createCampaignMapStore(sdk){
+function createCampaignMapStore(sdk,{mapId="main"}={}){
+ if(!/^[A-Za-z0-9_-]{1,100}$/.test(mapId))throw Error("Invalid map identifier.");
  const {db,auth,doc,collection,query,where,getDoc,getDocs,runTransaction}=sdk;
  const id=v=>{if(!/^[A-Za-z0-9_-]{1,128}$/.test(v||''))throw Error('Invalid map identifier.');return v;};
  const actor=()=>{if(!auth.currentUser?.uid)throw Error('Sign in first.');return auth.currentUser.uid;};
- const mapRef=cid=>doc(db,'campaigns',id(cid),'campaignMaps','main');
- const pinRef=(cid,pid)=>doc(db,'campaigns',id(cid),'campaignMaps','main','pins',id(pid));
- const pinsQuery=(cid,map)=>query(collection(db,'campaigns',id(cid),'campaignMaps','main','pins'),typeof map==='object'&&map.schemaVersion===2?where('publishedRevision','==',map.revision):where('imagePath','==',typeof map==='object'?map.imagePath:map));
+ const mapRef=cid=>doc(db,'campaigns',id(cid),'campaignMaps',mapId);
+ const pinRef=(cid,pid)=>doc(db,'campaigns',id(cid),'campaignMaps',mapId,'pins',id(pid));
+ const pinsQuery=(cid,map)=>query(collection(db,'campaigns',id(cid),'campaignMaps',mapId,'pins'),typeof map==='object'&&map.schemaVersion===2?where('publishedRevision','==',map.revision):where('imagePath','==',typeof map==='object'?map.imagePath:map));
  const rows=snapshot=>snapshot.docs.map(row=>({...row.data(),id:row.id}));
- function image(cid,path){if(typeof path!=='string'||!path.startsWith('campaign-maps/'+id(cid)+'/')||!/^[A-Za-z0-9_-]{1,100}$/.test(path.slice(('campaign-maps/'+cid+'/').length)))throw Error('Choose a map image from this campaign.');return path;}
+ const imagePrefix=cid=>'campaign-maps/'+id(cid)+'/'+(mapId==='main'?'':mapId+'/');
+ const picturePrefix=(cid,pid)=>'campaign-map-place-images/'+id(cid)+'/'+(mapId==='main'?'':mapId+'/')+id(pid)+'/';
+ function image(cid,path){const prefix=imagePrefix(cid);if(typeof path!=='string'||!path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(path.slice(prefix.length)))throw Error('Choose an image belonging to this campaign map.');return path;}
+
  const check=(uid,isCurrent)=>{if(auth.currentUser?.uid!==uid||!isCurrent())throw Error('Campaign access changed. Reopen the map.');};
  async function load(cid){actor();const snapshot=await getDoc(mapRef(cid));return snapshot.exists()?snapshot.data():null;}
  async function listPins(cid,imagePath){actor();return rows(await getDocs(pinsQuery(cid,typeof imagePath==='object'?imagePath:image(cid,imagePath))));}
@@ -47,7 +51,7 @@ function createCampaignMapStore(sdk){
   if(area<0.01)throw Error('Draw an area with at least three distinct corners.');
   return normalized;
  }
- const draftRef=cid=>doc(db,'campaigns',id(cid),'campaignMapDrafts','main');
+ const draftRef=cid=>doc(db,'campaigns',id(cid),'campaignMapDrafts',mapId);
  async function loadDraft(cid){actor();const row=await getDoc(draftRef(cid));return row.exists()?row.data():null;}
  function normalizeDraft(cid,input){
   if(typeof input.title!=='string'||!input.title.trim()||input.title.length>160)throw Error('Give the map a name (up to 160 characters).');
@@ -63,7 +67,7 @@ function createCampaignMapStore(sdk){
    if(!markerStyles.includes(markerStyle))throw Error('Choose one of the five marker styles.');
    const regionBoundary=boundary(pin.boundary,pin.type);
    const picturePath=pin.picturePath||'',pictureAlt=pin.pictureAlt||'',worldEntryId=pin.worldEntryId||'';
-   const prefix='campaign-map-place-images/'+cid+'/'+pid+'/';
+   const prefix=picturePrefix(cid,pid);
    if(picturePath&&(!picturePath.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(picturePath.slice(prefix.length))))throw Error('Choose a place picture from this campaign.');
    if(typeof pictureAlt!=='string'||pictureAlt.length>200||(picturePath&&!pictureAlt.trim()))throw Error('Give each place picture a description (up to 200 characters).');
    if(worldEntryId)id(worldEntryId);
@@ -97,6 +101,14 @@ function createCampaignMapStore(sdk){
    return {map:next,draft:savedDraft,pins:pins.map(pin=>({...pin,worldEntryId:shared.has(pin.worldEntryId)?pin.worldEntryId:''}))};
   });
  }
- return {load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,markerStyles};
+ const preferencesRef=cid=>doc(db,'campaigns',id(cid),'mapPreferences','main');
+ async function listMaps(cid,{drafts=false}={}){actor();return rows(await getDocs(collection(db,'campaigns',id(cid),drafts?'campaignMapDrafts':'campaignMaps')));}
+ async function loadPreferences(cid){actor();const snapshot=await getDoc(preferencesRef(cid));return snapshot.exists()?snapshot.data():{order:[],mainMapId:'',revision:0};}
+ async function savePreferences({campaignId,order,mainMapId,revision,isCurrent=()=>true}){
+  const uid=actor();if(!Array.isArray(order)||order.length>50||new Set(order).size!==order.length||order.some(key=>typeof key!=='string'||!/^[A-Za-z0-9_-]{1,100}$/.test(key)))throw Error('Map order must contain up to 50 different map identifiers.');
+  if(typeof mainMapId!=='string'||mainMapId&&!/^[A-Za-z0-9_-]{1,100}$/.test(mainMapId))throw Error('Choose a published main map.');
+  return runTransaction(db,async tx=>{const ref=preferencesRef(campaignId),old=await tx.get(ref),main=mainMapId?await tx.get(doc(db,'campaigns',id(campaignId),'campaignMaps',mainMapId)):null;check(uid,isCurrent);if((old.data()?.revision||0)!==revision)throw Error('Map order changed in another window. Refresh before organising maps.');if(mainMapId&&!main?.exists())throw Error('Publish a map before making it the main map.');const next={order:[...order],mainMapId,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;});
+ }
+ return {mapId,imagePrefix,picturePrefix,listMaps,loadPreferences,savePreferences,load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,markerStyles};
 }
 if(typeof module!=='undefined')module.exports={createCampaignMapStore};

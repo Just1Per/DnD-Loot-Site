@@ -77,6 +77,7 @@
     "test:ui-consistency": "node ui-consistency-audit-browser.cjs",
     "test:journal-images": "node journal-image-loading-browser.cjs",
     "test:journal-cards": "node journal-cards-browser.cjs",
+    "test:multiple-maps": "node multiple-maps-browser.cjs",
     "test:map-preview-loading": "node map-preview-loading-browser.cjs",
     "test:campaign-map": "node campaign-map-browser.cjs",
     "test:map-styles-regions": "node --test map-region-geometry.cjs && node map-styles-regions-browser.cjs",

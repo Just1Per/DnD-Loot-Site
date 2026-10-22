@@ -102,6 +102,21 @@ service firebase.storage {
         && request.resource.contentType.matches('image/(png|jpeg|webp)');
     }
 
+    // Additional named maps bind each immutable image to its own publication.
+    match /campaign-maps/{campaignId}/{mapId}/{imageId} {
+      allow read: if mapId.matches('^[A-Za-z0-9_-]{1,100}$') && (isCampaignDM(campaignId) || (
+        (isCampaignOwner(campaignId) || isActiveMember(campaignId))
+        && firestore.exists(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId))
+        && (firestore.get(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data.imagePath == 'campaign-maps/' + campaignId + '/' + mapId + '/' + imageId
+          || ('previewPath' in firestore.get(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data
+            && firestore.get(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data.previewPath == 'campaign-maps/' + campaignId + '/' + mapId + '/' + imageId))
+      ));
+      allow create: if mapId.matches('^[A-Za-z0-9_-]{1,100}$') && resource == null && isCampaignDM(campaignId)
+        && request.resource != null && request.resource.size > 0
+        && request.resource.size <= 50 * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp)');
+    }
+
     // Place pictures are private until their exact pin is part of the current publication.
     match /campaign-map-place-images/{campaignId}/{pinId}/{imageId} {
       function publishedPicture() {
@@ -110,6 +125,19 @@ service firebase.storage {
         return firestore.exists(mapPath) && firestore.exists(pinPath)
           && firestore.get(pinPath).data.publishedRevision == firestore.get(mapPath).data.revision
           && firestore.get(pinPath).data.picturePath == 'campaign-map-place-images/' + campaignId + '/' + pinId + '/' + imageId;
+      }
+      allow read: if isCampaignDM(campaignId) || (isActiveMember(campaignId) && publishedPicture());
+      allow create: if resource == null && isCampaignDM(campaignId) && validImage() && request.resource.size > 0;
+    }
+
+    // Additional map place pictures remain private until that map publishes the exact pin.
+    match /campaign-map-place-images/{campaignId}/{mapId}/{pinId}/{imageId} {
+      function publishedPicture() {
+        let mapPath = /databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId);
+        let pinPath = /databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)/pins/$(pinId);
+        return firestore.exists(mapPath) && firestore.exists(pinPath)
+          && firestore.get(pinPath).data.publishedRevision == firestore.get(mapPath).data.revision
+          && firestore.get(pinPath).data.picturePath == 'campaign-map-place-images/' + campaignId + '/' + mapId + '/' + pinId + '/' + imageId;
       }
       allow read: if isCampaignDM(campaignId) || (isActiveMember(campaignId) && publishedPicture());
       allow create: if resource == null && isCampaignDM(campaignId) && validImage() && request.resource.size > 0;

@@ -534,18 +534,92 @@ match /campaigns/{campaignId} {
     }
   }
 
+  function validMapKey(key) { return key is string && key.matches('^[A-Za-z0-9_-]{1,100}$'); }
+  function mapImageFor(mapId,path) {
+    return path is string && (mapId == 'main'
+      ? path.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')
+      : path.matches('^campaign-maps/' + campaignId + '/' + mapId + '/[A-Za-z0-9_-]{1,100}$'));
+  }
+  function validMapOrder(order) {
+    let count = order.size();
+    return order is list && count <= 50 && order.toSet().size() == count
+      && (count <= 0 || order[0].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 1 || order[1].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 2 || order[2].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 3 || order[3].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 4 || order[4].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 5 || order[5].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 6 || order[6].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 7 || order[7].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 8 || order[8].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 9 || order[9].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 10 || order[10].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 11 || order[11].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 12 || order[12].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 13 || order[13].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 14 || order[14].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 15 || order[15].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 16 || order[16].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 17 || order[17].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 18 || order[18].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 19 || order[19].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 20 || order[20].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 21 || order[21].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 22 || order[22].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 23 || order[23].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 24 || order[24].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 25 || order[25].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 26 || order[26].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 27 || order[27].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 28 || order[28].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 29 || order[29].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 30 || order[30].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 31 || order[31].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 32 || order[32].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 33 || order[33].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 34 || order[34].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 35 || order[35].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 36 || order[36].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 37 || order[37].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 38 || order[38].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 39 || order[39].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 40 || order[40].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 41 || order[41].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 42 || order[42].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 43 || order[43].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 44 || order[44].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 45 || order[45].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 46 || order[46].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 47 || order[47].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 48 || order[48].matches('^[A-Za-z0-9_-]{1,100}$'))
+      && (count <= 49 || order[49].matches('^[A-Za-z0-9_-]{1,100}$'))
+      ;
+  }
+  match /mapPreferences/{preferencesId} {
+    function validPreferences(d) {
+      return preferencesId == 'main' && d.keys().hasAll(['order','mainMapId','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['order','mainMapId','revision','updatedBy','updatedAt'])
+        && validMapOrder(d.order) && d.mainMapId is string
+        && (d.mainMapId == '' || (validMapKey(d.mainMapId) && existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(d.mainMapId))))
+        && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
+    }
+    allow read: if preferencesId == 'main' && (isCampaignOwner(campaignId) || isActiveMember(campaignId));
+    allow create: if isCampaignDM(campaignId) && validPreferences(request.resource.data) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validPreferences(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+  }
+
   match /campaignMapDrafts/{mapId} {
     function validDraft(d) {
-      return mapId == 'main' && d.keys().hasAll(['title','imagePath','pins','sourceRevision','revision','updatedBy','updatedAt'])
+      return validMapKey(mapId) && d.keys().hasAll(['title','imagePath','pins','sourceRevision','revision','updatedBy','updatedAt'])
         && d.keys().hasOnly(['title','imagePath','previewPath','pins','sourceRevision','revision','updatedBy','updatedAt'])
         && d.title is string && d.title.size() > 0 && d.title.size() <= 160
-        && d.imagePath is string && d.imagePath.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')
-        && (!('previewPath' in d) || (d.previewPath is string && d.previewPath.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')))
+        && mapImageFor(mapId,d.imagePath)
+        && (!('previewPath' in d) || (mapImageFor(mapId,d.previewPath)))
         && d.pins is list && d.pins.size() <= 100
         && d.sourceRevision is int && d.sourceRevision >= 0
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
     }
-    allow read: if mapId == 'main' && isCampaignDM(campaignId);
+    allow read: if isCampaignDM(campaignId);
     allow create: if isCampaignDM(campaignId) && validDraft(request.resource.data) && request.resource.data.revision == 1;
     allow update: if isCampaignDM(campaignId) && validDraft(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
   }
@@ -553,28 +627,28 @@ match /campaigns/{campaignId} {
   match /campaignMaps/{mapId} {
     function mapMember() { return isCampaignOwner(campaignId) || isActiveMember(campaignId); }
     function validMap(d) {
-      return mapId == 'main' && d.keys().hasAll(['title','imagePath','revision','updatedBy','updatedAt'])
+      return validMapKey(mapId) && d.keys().hasAll(['title','imagePath','revision','updatedBy','updatedAt'])
         && (d.keys().hasOnly(['title','imagePath','revision','updatedBy','updatedAt']) || (d.keys().hasOnly(['title','imagePath','previewPath','revision','updatedBy','updatedAt','schemaVersion']) && d.schemaVersion == 2))
         && d.title is string && d.title.size() > 0 && d.title.size() <= 160
-        && d.imagePath is string && d.imagePath.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')
-        && (!('previewPath' in d) || (d.previewPath is string && d.previewPath.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')))
+        && mapImageFor(mapId,d.imagePath)
+        && (!('previewPath' in d) || (mapImageFor(mapId,d.previewPath)))
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
     }
-    allow read: if mapId == 'main' && mapMember();
+    allow read: if mapMember();
     allow create: if isCampaignDM(campaignId) && validMap(request.resource.data) && request.resource.data.revision == 1;
     allow update: if isCampaignDM(campaignId) && validMap(request.resource.data) && (!('schemaVersion' in resource.data) || request.resource.data.schemaVersion == 2) && request.resource.data.revision == resource.data.revision + 1;
     match /pins/{pinId} {
-      function currentImage() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data.imagePath; }
+      function currentImage() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data.imagePath; }
       function validPin(d) {
-        return mapId == 'main' && d.keys().hasAll(['name','description','x','y','imagePath','revision','updatedBy','updatedAt'])
+        return validMapKey(mapId) && d.keys().hasAll(['name','description','x','y','imagePath','revision','updatedBy','updatedAt'])
           && d.keys().hasOnly(['name','description','x','y','imagePath','revision','updatedBy','updatedAt'])
           && d.name is string && d.name.size() > 0 && d.name.size() <= 100
           && d.description is string && d.description.size() <= 2000
           && d.x is number && d.x >= 0 && d.x <= 100 && d.y is number && d.y >= 0 && d.y <= 100
-          && d.imagePath == getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data.imagePath
+          && d.imagePath == getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data.imagePath
           && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
       }
-      function publishedMap() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data; }
+      function publishedMap() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data; }
       function livePin() {
         let map = publishedMap();
         return 'schemaVersion' in map ? resource.data.publishedRevision == map.revision : resource.data.imagePath == map.imagePath;
@@ -602,12 +676,12 @@ match /campaigns/{campaignId} {
         )));
       }
       function validPublishedPin(d) {
-        let map = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data;
+        let map = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data;
         let previous = publishedMap();
-        return mapId == 'main' && d.keys().hasAll(['name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
+        return validMapKey(mapId) && d.keys().hasAll(['name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
           && d.keys().hasOnly(['markerStyle','boundary','name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
           && d.schemaVersion == 2 && map.schemaVersion == 2 && d.publishedRevision == map.revision
-          && (!exists(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main) || map.revision > previous.revision)
+          && (!exists(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)) || map.revision > previous.revision)
           && d.revision == map.revision && d.updatedBy == request.auth.uid && d.updatedAt is int
           && d.name is string && d.name.size() > 0 && d.name.size() <= 100
           && d.description is string && d.description.size() <= 2000
@@ -615,15 +689,15 @@ match /campaigns/{campaignId} {
           && d.type in ['City','Region'] && d.imagePath == map.imagePath
           && (!('markerStyle' in d) || d.markerStyle in ['Location','City','Castle','Landmark','Point of interest'])
           && validRegionBoundary(d)
-          && d.picturePath is string && (d.picturePath == '' || d.picturePath.matches('^campaign-map-place-images/' + campaignId + '/' + pinId + '/[A-Za-z0-9_-]{1,100}$'))
+          && d.picturePath is string && (d.picturePath == '' || d.picturePath.matches('^campaign-map-place-images/' + campaignId + '/' + (mapId == 'main' ? '' : mapId + '/') + pinId + '/[A-Za-z0-9_-]{1,100}$'))
           && d.pictureAlt is string && d.pictureAlt.size() <= 200 && (d.picturePath == '' || d.pictureAlt.size() > 0)
           && d.worldEntryId is string && (d.worldEntryId == '' || d.worldEntryId.matches('^[A-Za-z0-9_-]{1,100}$'));
       }
-      allow get: if mapId == 'main' && (isCampaignDM(campaignId) || (mapMember() && livePin()));
-      allow list: if mapId == 'main' && mapMember() && livePin();
-      allow create: if isCampaignDM(campaignId) && ((validPin(request.resource.data) && !('schemaVersion' in getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data) && request.resource.data.revision == 1) || validPublishedPin(request.resource.data));
-      allow update: if isCampaignDM(campaignId) && ((validPin(request.resource.data) && !('schemaVersion' in getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data) && request.resource.data.revision == resource.data.revision + 1) || validPublishedPin(request.resource.data));
-      allow delete: if mapId == 'main' && isCampaignDM(campaignId) && !('schemaVersion' in get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/main).data);
+      allow get: if validMapKey(mapId) && (isCampaignDM(campaignId) || (mapMember() && livePin()));
+      allow list: if validMapKey(mapId) && mapMember() && livePin();
+      allow create: if isCampaignDM(campaignId) && ((validPin(request.resource.data) && !('schemaVersion' in getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data) && request.resource.data.revision == 1) || validPublishedPin(request.resource.data));
+      allow update: if isCampaignDM(campaignId) && ((validPin(request.resource.data) && !('schemaVersion' in getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data) && request.resource.data.revision == resource.data.revision + 1) || validPublishedPin(request.resource.data));
+      allow delete: if validMapKey(mapId) && isCampaignDM(campaignId) && !('schemaVersion' in get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data);
     }
   }
 

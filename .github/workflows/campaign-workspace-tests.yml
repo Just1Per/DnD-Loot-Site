@@ -180,6 +180,7 @@ jobs:
         npm --prefix tests run test:journal-images
         npm --prefix tests run test:journal-cards
         npm --prefix tests run test:world-navigation
+        npm --prefix tests run test:multiple-maps
         npm --prefix tests run test:map-preview-loading
         npm --prefix tests run test:campaign-map
         npm --prefix tests run test:map-styles-regions
