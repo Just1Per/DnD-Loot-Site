@@ -22,7 +22,10 @@
   SiteHelp.onLogout();logs.length=0;calls.length=0;
   testSheetDocs['users/login-admin']={name:'Atlas admin',email:'admin@example.test',role:['admin']};
   auth.currentUser={uid:'login-admin',email:'admin@example.test'};await testAuthCallback(auth.currentUser);
-  check('Admin startup still loads global users and DM requests',calls.includes('users')&&calls.includes('dm-requests')&&logs[0][0]==='Successfully logged in as Atlas admin');
+  check('Admin dashboard startup does not load global users or DM requests',!calls.includes('users')&&!calls.includes('dm-requests')&&logs[0][0]==='Successfully logged in as Atlas admin');
+  openAdminView();await AdminAccounts.load();
+  check('Opening Admin loads global accounts and applications once',calls.filter(value=>value==='users').length===1&&calls.filter(value=>value==='dm-requests').length===1);
+  closeAdminView();
   SiteHelp.onLogout();logs.length=0;
   loadCampaigns=async()=>{throw Error('Simulated dashboard failure')};
   auth.currentUser=account;await testAuthCallback(account);

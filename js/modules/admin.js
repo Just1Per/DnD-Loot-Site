@@ -361,8 +361,7 @@ function openAdminView() {
   document.getElementById("tab-admin").style.display = "block";
   document.getElementById("adminPanel").style.display = "block";
   document.getElementById("adminTab").setAttribute("aria-pressed", "true");
-  renderUserTable();
-  renderAdminDMRequests();
+  AdminAccounts.load();
   AppNavigation.remember('admin');
   CampaignDeletion.renderAdmin();
 }
@@ -413,4 +412,42 @@ var CampaignDeletion=(()=>{
   catch(error){if(current()){section.querySelector('[data-campaign-management-status]').textContent='Could not load campaigns: '+error.message;const retry=document.createElement('button');retry.type='button';retry.textContent='Retry loading campaigns';retry.onclick=renderAdmin;section.append(retry);}}
  }
  return{request,mountDashboard,mountSettings,renderAdmin,store};
+})();
+
+
+// Global account administration is loaded only when its screen is opened.
+var AdminAccounts=(()=>{
+ let generation=0,flight=null;
+ function clear(){
+  ++generation;flight=null;users=[];dmRequests=[];
+  document.querySelector('[data-admin-accounts-status]')?.remove();
+  document.getElementById('userTableBody')?.replaceChildren();
+  document.getElementById('adminDMRequestsList')?.replaceChildren();
+ }
+ function load(){
+  const uid=auth.currentUser?.uid;
+  if(!uid||!isAdmin())return Promise.resolve(false);
+  if(flight?.uid===uid)return flight.promise;
+  const version=++generation;
+  const current=()=>version===generation&&auth.currentUser?.uid===uid&&isAdmin()&&document.getElementById('tab-admin')?.style.display==='block';
+  document.querySelector('[data-admin-accounts-status]')?.remove();
+  const status=document.createElement('p');status.dataset.adminAccountsStatus='';status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.textContent='Loading accounts and DM applications…';
+  document.getElementById('closeAdminView').after(status);
+  users=[];dmRequests=[];
+  document.getElementById('userTableBody').innerHTML='<tr><td colspan="4">Loading website users…</td></tr>';
+  ensureAdminDMRequestsPanel();document.getElementById('adminDMRequestsList').textContent='Loading DM applications…';
+  const request={uid,promise:null};flight=request;
+  request.promise=Promise.allSettled([loadUsers({isCurrent:current}),loadDMRequests({isCurrent:current})]).then(results=>{
+   if(!current())return false;
+   if(results.some(result=>result.status==='rejected')){
+    users=[];dmRequests=[];status.textContent='Could not load accounts and DM applications. Please try again. ';
+    document.getElementById('userTableBody').innerHTML='<tr><td colspan="4">Accounts could not be loaded.</td></tr>';
+    document.getElementById('adminDMRequestsList').textContent='Applications could not be loaded.';
+    const retry=document.createElement('button');retry.type='button';retry.className='toolbar-btn';retry.dataset.retryAdminAccounts='';retry.textContent='Retry loading accounts';retry.onclick=()=>load();status.append(retry);return false;
+   }
+   renderUserTable();renderAdminDMRequests();status.textContent='Accounts and DM applications loaded.';return true;
+  }).finally(()=>{if(flight===request)flight=null;});
+  return request.promise;
+ }
+ return{load,clear};
 })();
