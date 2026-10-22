@@ -17,3 +17,7 @@ Koden virker efter fjernelse af bootstrap-processens midlertidige SDK-binding. L
 Print-loaderens regression bruger nu samme obligatoriske featureliste som appen, så den også tester integrationen med de udsatte UI-moduler. Eksisterende workspace-, spellcasting-, formular-, print- og packagingchecks kontrolleres særskilt.
 
 Ingen Firestore-/Storage-regler, indekser, datamigrationer eller deployment kræves.
+
+## CI-installation
+
+GitHub-kørslen på `d812aa4` blev afbrudt i Chromium-installationen efter cirka 20 minutter. Loggen viser en fastlåst Ubuntu Azure-mirror; motortestene var endnu ikke startet. Begge browserafhængige jobs forbereder nu APT med den officielle HTTPS Ubuntu-archive i stedet for Azure-mirror, 20 sekunders netværkstimeout og to genforsøg. Chromium-installationen har sin egen grænse på seks minutter, så en installationsfejl rapporteres på det rigtige trin. PDF-værktøjet genbruger den allerede opdaterede pakkeliste. Signatur- og TLS-kontrol bevares. `tests/ci-apt-setup.cjs` kontrollerer mirrorlisten, begge kildeformater, uændrede tredjepartskilder og gentagen kørsel i en isoleret mappe.
