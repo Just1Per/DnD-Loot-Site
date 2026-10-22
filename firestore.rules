@@ -537,9 +537,10 @@ match /campaigns/{campaignId} {
   match /campaignMapDrafts/{mapId} {
     function validDraft(d) {
       return mapId == 'main' && d.keys().hasAll(['title','imagePath','pins','sourceRevision','revision','updatedBy','updatedAt'])
-        && d.keys().hasOnly(['title','imagePath','pins','sourceRevision','revision','updatedBy','updatedAt'])
+        && d.keys().hasOnly(['title','imagePath','previewPath','pins','sourceRevision','revision','updatedBy','updatedAt'])
         && d.title is string && d.title.size() > 0 && d.title.size() <= 160
         && d.imagePath is string && d.imagePath.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')
+        && (!('previewPath' in d) || (d.previewPath is string && d.previewPath.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')))
         && d.pins is list && d.pins.size() <= 100
         && d.sourceRevision is int && d.sourceRevision >= 0
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
@@ -553,9 +554,10 @@ match /campaigns/{campaignId} {
     function mapMember() { return isCampaignOwner(campaignId) || isActiveMember(campaignId); }
     function validMap(d) {
       return mapId == 'main' && d.keys().hasAll(['title','imagePath','revision','updatedBy','updatedAt'])
-        && (d.keys().hasOnly(['title','imagePath','revision','updatedBy','updatedAt']) || (d.keys().hasOnly(['title','imagePath','revision','updatedBy','updatedAt','schemaVersion']) && d.schemaVersion == 2))
+        && (d.keys().hasOnly(['title','imagePath','revision','updatedBy','updatedAt']) || (d.keys().hasOnly(['title','imagePath','previewPath','revision','updatedBy','updatedAt','schemaVersion']) && d.schemaVersion == 2))
         && d.title is string && d.title.size() > 0 && d.title.size() <= 160
         && d.imagePath is string && d.imagePath.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')
+        && (!('previewPath' in d) || (d.previewPath is string && d.previewPath.matches('^campaign-maps/' + campaignId + '/[A-Za-z0-9_-]{1,100}$')))
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
     }
     allow read: if mapId == 'main' && mapMember();

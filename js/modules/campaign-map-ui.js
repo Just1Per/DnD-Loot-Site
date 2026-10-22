@@ -3,6 +3,7 @@ var CampaignMap=(()=>{
  const sdk=window.__DND_VAULT_DEPS__,store=createCampaignMapStore(sdk),worldStore=createCampaignInformationStore(sdk);
  const escape=value=>escapeHtml(String(value??''));
  let session=null;
+ const mapImageRequests=new WeakMap();
  const current=s=>session===s&&activeCampaign?.id===s.campaignId&&auth.currentUser?.uid===s.uid;
  const allowed=s=>current(s)&&!s.denied;
  const editable=s=>allowed(s)&&s.mode==='dm'&&canManageCampaign()&&!s.draftUnavailable;
@@ -20,7 +21,7 @@ var CampaignMap=(()=>{
  function changed(s){s.mapDirty=true;status(s,'Private draft changed. Save your draft or publish when ready.');}
  const icons={'Location':'●','City':'▣','Castle':'♜','Landmark':'▲','Point of interest':'✦'};
  const pinDefaults=pin=>({...pin,markerStyle:pin.markerStyle||'City',boundary:structuredClone(pin.boundary||[]),type:pin.type||'City',revealed:pin.revealed!==false,picturePath:pin.picturePath||'',pictureAlt:pin.pictureAlt||'',worldEntryId:pin.worldEntryId||''});
- function initialDraft(s){return {title:s.map?.title||'Campaign map',imagePath:s.map?.imagePath||'',revision:0,sourceRevision:s.map?.revision||0,pins:s.pins.map(pinDefaults)};}
+ function initialDraft(s){return {title:s.map?.title||'Campaign map',imagePath:s.map?.imagePath||'',...(s.map?.previewPath?{previewPath:s.map.previewPath}:{}),revision:0,sourceRevision:s.map?.revision||0,pins:s.pins.map(pinDefaults)};}
  async function choosePin(s,id){if(!allowed(s)||s.busy)return;if(s.pinDirty){const yes=await SiteConfirmation.ask({title:'Discard changes to this place?',paragraphs:['Your saved draft and published map stay unchanged.'],confirmLabel:'Discard changes',cancelLabel:'Keep editing'});if(!yes||!allowed(s))return;}
   s.selected=id;s.pinEditor=null;s.pinDirty=false;s.placing=false;s.drawing=false;paint(s);s.root.querySelector('[data-place-heading]')?.focus();
  }
@@ -34,12 +35,12 @@ var CampaignMap=(()=>{
    <header class="map-heading"><div><p class="journal-eyebrow">${escape(activeCampaign.name)} / ${s.mode==='dm'?'DM WORKSPACE · MAP':'JOURNAL'}</p><h2 id="campaignMapTitle">${escape(map?.title||'Campaign map')}</h2><p>${s.preview?'Player preview · last published map':edit?'DM workspace · private draft':'Discover the places your party has uncovered.'}</p></div>
    <div class="journal-actions">${dm?`<button type="button" data-map-preview ${s.busy||!s.ready?'disabled':''}>${s.preview?'Back to DM draft':'Preview as player'}</button>${!s.preview?`<button type="button" class="btn-primary" data-map-publish ${s.busy||!s.ready||s.pinDirty?'disabled':''}>Publish changes</button>`:''}`:s.mode!=='dm'&&manager?'<button type="button" data-map-edit>Manage map</button>':''}<button type="button" data-map-refresh ${s.busy?'disabled':''}>Refresh</button></div></header>
    <p role="status" aria-live="polite" data-map-status>${escape(s.message)}</p>
-   ${edit?`<section class="map-settings" aria-label="Private map draft"><label><span>Map name</span><input data-map-title maxlength="160" value="${escape(s.draft.title)}" ${s.busy?'disabled':''}></label><label><span>${s.draft.imagePath?'Replace map image':'Upload a map'}</span><input data-map-file type="file" accept="image/png,image/jpeg,image/webp" ${s.busy?'disabled':''}></label><p class="map-hint">PNG, JPEG or WebP up to 50 MB. Original image quality is preserved. Replacing an image keeps your places; check their positions before publishing. Players keep seeing the last published map.</p><button type="button" data-map-save ${s.busy||s.pinDirty?'disabled':''}>Save private draft</button></section>`:''}
+   ${edit?`<section class="map-settings" aria-label="Private map draft"><label><span>Map name</span><input data-map-title maxlength="160" value="${escape(s.draft.title)}" ${s.busy?'disabled':''}></label><label><span>${s.draft.imagePath?'Replace map image':'Upload a map'}</span><input data-map-file type="file" accept="image/png,image/jpeg,image/webp" ${s.busy?'disabled':''}></label><p class="map-hint">PNG, JPEG or WebP up to 50 MB. Original image quality is preserved. A fast overview loads first when available; zoom in for original detail. Replacing an image keeps your places; check their positions before publishing. Players keep seeing the last published map.</p><button type="button" data-map-save ${s.busy||s.pinDirty?'disabled':''}>Save private draft</button></section>`:''}
    <div class="map-layout"><div><div class="map-canvas ${s.placing||s.drawing?'map-placing':''} ${s.drawing?'map-drawing':''}" data-map-canvas tabindex="0" aria-label="Campaign map. Drag to pan when zoomed, or use the arrow keys.">
    <div class="map-scene" data-map-scene>${map?.imagePath?`<img data-map-image alt="${escape(map.title)}">${regionLayer(s,pins)}${pins.map(pin=>`<button type="button" class="map-pin map-style-${store.markerStyles.indexOf(pin.markerStyle||'City')} ${pin.type==='Region'?'map-pin-region':''} ${edit&&!pin.revealed?'map-pin-private':''}" data-map-pin="${escape(pin.id)}" style="left:clamp(24px,${pin.x}%,calc(100% - 24px));top:clamp(24px,${pin.y}%,calc(100% - 24px))" aria-label="${escape(pin.name||'New place')}${edit&&!pin.revealed?' (DM only)':''}" aria-pressed="${pin.id===s.selected}"><span aria-hidden="true">${pin.type==='Region'?'◇':icons[pin.markerStyle||'City']||'●'}</span> ${escape(pin.name||'New place')}</button>`).join('')}`:`<div class="map-empty"><h3>${s.ready?'Your world starts here':'Loading map…'}</h3><p>${s.draftUnavailable?'Map setup is unavailable. Check the access message above, then select Refresh.':s.mode==='dm'?'Upload a map above to start preparing places.':'Your DM has not published a map yet.'}</p></div>`}</div>
    ${map?.imagePath?'<div class="map-legend" aria-hidden="true">● Location · ▣ City · ♜ Castle · ▲ Landmark · ✦ Interest · ◇ Region</div><div class="map-zoom"><button type="button" data-map-zoom="out" aria-label="Zoom out">−</button><button type="button" data-map-zoom="in" aria-label="Zoom in">+</button><button type="button" data-map-reset>Reset view</button></div>':''}<div class="map-hover" data-map-hover hidden></div></div>
    ${edit&&s.draft.imagePath?`<div class="journal-actions map-add"><button type="button" data-map-add ${s.busy?'disabled':''}>+ Add a place</button>${form&&form.type!=='Region'?'<button type="button" data-map-move>Move this pin</button>':''}<button type="button" data-map-add-region>Add a region area</button></div>`:''}
-   <p class="map-hint">Hover or focus a pin for a quick look. Click or tap to read more.</p><div class="map-places" aria-label="Places on this map">${pins.map(pin=>`<button type="button" data-map-place="${escape(pin.id)}" aria-pressed="${pin.id===s.selected}">${escape(pin.name||'New place')}${edit&&!pin.revealed?' · DM only':''}</button>`).join('')}</div></div>
+   ${map?.previewPath?'<p class="map-hint" data-map-quality role="status">Loading map…</p>':''}<p class="map-hint">Hover or focus a pin for a quick look. Click or tap to read more.</p><div class="map-places" role="group" aria-label="Places on this map">${pins.map(pin=>`<button type="button" data-map-place="${escape(pin.id)}" aria-pressed="${pin.id===s.selected}">${escape(pin.name||'New place')}${edit&&!pin.revealed?' · DM only':''}</button>`).join('')}</div></div>
    <aside class="map-place-panel" aria-label="Place details">${form?pinForm(s,form):selected?`<div class="map-hint">${escape(selected.type==='Region'?'Region':selected.markerStyle||'City')}</div><h3 data-place-heading tabindex="-1">${escape(selected.name)}</h3>${pictureMarkup(selected)}<div class="map-prose">${escape(selected.description||'No description added yet.')}</div>${world?'<button type="button" data-map-more>See more in World Builder →</button>':selected.worldEntryId?'<p class="map-hint">The linked World entry is not currently shared.</p>':''}${edit?'<div class="journal-actions"><button type="button" data-pin-edit>Edit place</button><button type="button" data-pin-delete>Remove place</button></div>':''}`:'<div class="map-hint">YOUR NEXT DISCOVERY</div><h3>Every place has a story</h3><p>Choose a city or region on the map to read what your party knows about it.</p>'}</aside></div></section>`;
   s.root.querySelector('[data-map-refresh]').onclick=()=>render(s.mode);
   s.root.querySelector('[data-map-edit]')?.addEventListener('click',()=>showTab('dm-map'));
@@ -96,12 +97,32 @@ var CampaignMap=(()=>{
   s.root.querySelector('[data-region-finish]')?.addEventListener('click',()=>{if(!editable(s)||s.busy)return;try{const points=store.boundary(s.pinEditor.boundary,'Region');if(points.length<3)throw Error('Add at least three corners.');s.pinEditor.x=Math.round(points.reduce((n,p)=>n+p.x,0)/points.length*10)/10;s.pinEditor.y=Math.round(points.reduce((n,p)=>n+p.y,0)/points.length*10)/10;s.drawing=false;paint(s);status(s,'Boundary ready. Keep the place in your draft, then publish when ready.');}catch(error){status(s,error.message);}});
  }
  function hover(s,pin){if(!allowed(s)||!pin)return;const host=s.root.querySelector('[data-map-hover]');host.innerHTML=`${pictureMarkup(pin,'map-hover-picture')}<strong>${escape(pin.name)}</strong><p>${escape(pin.description.slice(0,130))}${pin.description.length>130?'…':''}</p><small>Click or tap the pin to read more.</small>`;host.hidden=false;loadPictures(s);}
- async function cachedImage(s,path){if(s.urls.has(path))return s.urls.get(path);if(s.pendingImages.has(path))return s.pendingImages.get(path);const pending=(async()=>{try{const blob=await sdk.getBlob(sdk.ref(sdk.storage,path),50*1024*1024);if(!allowed(s))return null;const url=URL.createObjectURL(blob);s.urls.set(path,url);return url;}finally{s.pendingImages.delete(path);}})();s.pendingImages.set(path,pending);return pending;}
- function loadPictures(s){const map=displayed(s),img=s.root.querySelector('[data-map-image]');if(img&&map?.imagePath)attachImage(s,img,map.imagePath);s.root.querySelectorAll('[data-place-picture]').forEach(node=>attachImage(s,node,node.dataset.placePicture));}
+ async function cachedImage(s,path,limit=50*1024*1024){if(s.urls.has(path))return s.urls.get(path);if(s.pendingImages.has(path))return s.pendingImages.get(path);const pending=(async()=>{try{const blob=await sdk.getBlob(sdk.ref(sdk.storage,path),limit);if(!allowed(s))return null;const url=URL.createObjectURL(blob);s.urls.set(path,url);return url;}catch(error){if(limit===512*1024)s.failedPreviews.add(path);throw error;}finally{s.pendingImages.delete(path);}})();s.pendingImages.set(path,pending);return pending;}
+ function loadPictures(s){const map=displayed(s),img=s.root.querySelector('[data-map-image]');if(img&&map?.imagePath)attachMapImage(s,img,map);s.root.querySelectorAll('[data-place-picture]').forEach(node=>attachImage(s,node,node.dataset.placePicture));}
  async function attachImage(s,node,path){try{const url=await cachedImage(s,path);if(allowed(s)&&node.isConnected&&url)node.src=url;}catch{if(allowed(s)&&node.isConnected){node.replaceWith(Object.assign(document.createElement('p'),{textContent:'Image unavailable. Refresh to retry.'}));}}}
+ function quality(s,message){const node=s.root.querySelector('[data-map-quality]');if(allowed(s)&&node)node.textContent=message;}
+ async function attachMapImage(s,node,map){
+  const prefix='campaign-maps/'+s.campaignId+'/',candidate=map.previewPath;
+  const preview=typeof candidate==='string'&&candidate.startsWith(prefix)&&/^[A-Za-z0-9_-]{1,100}$/.test(candidate.slice(prefix.length))?candidate:null;
+  const overview=preview&&s.zoom===1&&!s.failedPreviews.has(preview),path=overview?preview:map.imagePath;
+  if(mapImageRequests.get(node)?.path===path)return;
+  const request={path};mapImageRequests.set(node,request);
+  const valid=()=>allowed(s)&&node.isConnected&&mapImageRequests.get(node)===request;
+  quality(s,overview?'Loading map overview…':'Loading original detail…');
+  function failed(){
+   if(!valid())return;node.onerror=null;node.onload=null;
+   if(overview){s.failedPreviews.add(preview);attachMapImage(s,node,map);}
+   else {const fallback=preview&&s.urls.get(preview);if(fallback)node.src=fallback;quality(s,'Original detail could not load. Refresh to try again.');if(!node.src)node.replaceWith(Object.assign(document.createElement('p'),{textContent:'Image unavailable. Refresh to retry.'}));}
+  }
+  try{
+   const url=await cachedImage(s,path,overview?512*1024:50*1024*1024);
+   if(!valid()||!url)return;
+   node.decoding='async';node.onerror=failed;node.onload=()=>{if(valid())quality(s,overview?'Map overview · zoom in for original detail.':'Original map detail.');};node.src=url;
+  }catch{failed();}
+ }
  function bindCanvas(s){const canvas=s.root.querySelector('[data-map-canvas]'),scene=s.root.querySelector('[data-map-scene]');const transform=()=>{const limitX=(s.zoom-1)*scene.offsetWidth/2,limitY=(s.zoom-1)*scene.offsetHeight/2;s.panX=Math.max(-limitX,Math.min(limitX,s.panX));s.panY=Math.max(-limitY,Math.min(limitY,s.panY));canvas.classList.toggle('map-zoomed',s.zoom>1);scene.style.transform=`translate(${s.panX}px,${s.panY}px) scale(${s.zoom})`;};transform();
-  s.root.querySelectorAll('[data-map-zoom]').forEach(button=>button.onclick=()=>{s.zoom=Math.max(1,Math.min(3,s.zoom+(button.dataset.mapZoom==='in'?.25:-.25)));if(s.zoom===1)s.panX=s.panY=0;transform();});
-  s.root.querySelector('[data-map-reset]')?.addEventListener('click',()=>{s.zoom=1;s.panX=s.panY=0;transform();});
+  s.root.querySelectorAll('[data-map-zoom]').forEach(button=>button.onclick=()=>{s.zoom=Math.max(1,Math.min(3,s.zoom+(button.dataset.mapZoom==='in'?.25:-.25)));if(s.zoom===1)s.panX=s.panY=0;transform();loadPictures(s);});
+  s.root.querySelector('[data-map-reset]')?.addEventListener('click',()=>{s.zoom=1;s.panX=s.panY=0;transform();loadPictures(s);});
   canvas.onkeydown=event=>{if(event.key==='Escape'){s.root.querySelector('[data-map-hover]').hidden=true;return;}if(event.target!==canvas||s.zoom===1||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key))return;event.preventDefault();s.panX+=event.key==='ArrowLeft'?30:event.key==='ArrowRight'?-30:0;s.panY+=event.key==='ArrowUp'?30:event.key==='ArrowDown'?-30:0;transform();};
   canvas.onpointerleave=()=>{s.root.querySelector('[data-map-hover]').hidden=true;};
   let drag=null,moved=false;
@@ -111,9 +132,44 @@ var CampaignMap=(()=>{
   canvas.onclick=event=>{if(moved||!editable(s)||!working(s)||s.busy||(!s.placing&&!s.drawing)||event.target.closest('button'))return;const rect=s.root.querySelector('[data-map-image]')?.getBoundingClientRect();if(rect?.width&&rect.height)(s.drawing?addCorner:placeAt)(s,Math.max(0,Math.min(100,(event.clientX-rect.left)/rect.width*100)),Math.max(0,Math.min(100,(event.clientY-rect.top)/rect.height*100)));};
  }
  function placeAt(s,x,y){if(!editable(s)||s.busy||!s.draft.imagePath)return;s.pinEditor={...(s.pinEditor||{id:crypto.randomUUID(),name:'',description:'',type:'City',markerStyle:'Location',boundary:[],revealed:false,picturePath:'',pictureAlt:'',worldEntryId:''}),x:Math.round(x*10)/10,y:Math.round(y*10)/10};s.selected=s.pinEditor.id;s.pinDirty=true;s.placing=false;paint(s);s.root.querySelector('[data-pin-name]').focus();}
- async function upload(s,file,picture=false){if(!file||!editable(s)||s.busy)return;if(!picture&&s.pinDirty){status(s,'Keep or cancel your place before replacing the map.');return;}if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size<=0||(picture?file.size>=5*1024*1024:file.size>50*1024*1024)){status(s,picture?'Choose a PNG, JPEG or WebP under 5 MB.':'Choose a PNG, JPEG or WebP up to 50 MB.');return;}
-  s.busy=true;paint(s);status(s,picture?'Uploading private place picture…':'Uploading private map…');try{const bitmap=await createImageBitmap(file);bitmap.close();if(!editable(s))return;const path=picture?'campaign-map-place-images/'+s.campaignId+'/'+s.pinEditor.id+'/'+crypto.randomUUID():'campaign-maps/'+s.campaignId+'/'+crypto.randomUUID();await sdk.uploadBytes(sdk.ref(sdk.storage,path),file,{contentType:file.type});if(!editable(s))return;if(picture){s.pinEditor.picturePath=path;s.pinEditor.pictureAlt=s.pinEditor.name||'Place illustration';s.pinDirty=true;}else{s.draft.imagePath=path;changed(s);}status(s,'Image uploaded privately. Players see it only after publishing.');}catch(error){if(current(s))status(s,'Could not upload: '+error.message);}finally{s.busy=false;if(allowed(s))paint(s);}
+ async function createMapPreview(bitmap,originalSize){
+  if(Math.max(bitmap.width,bitmap.height)<=1600&&originalSize<=256*1024)return null;
+  const canvas=document.createElement('canvas');
+  try{
+   for(const bound of [1600,1200,900]){
+    const ratio=Math.min(1,bound/Math.max(bitmap.width,bitmap.height));
+    canvas.width=Math.max(1,Math.round(bitmap.width*ratio));canvas.height=Math.max(1,Math.round(bitmap.height*ratio));
+    canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);
+    for(const quality of [.82,.65,.5]){
+     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',quality));
+     if(blob&&blob.size<=256*1024&&blob.size<originalSize)return blob;
+    }
+   }
+   return null;
+  }finally{canvas.width=0;canvas.height=0;}
  }
+ async function upload(s,file,picture=false){
+  if(!file||!editable(s)||s.busy)return;
+  if(!picture&&s.pinDirty){status(s,'Keep or cancel your place before replacing the map.');return;}
+  if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size<=0||(picture?file.size>=5*1024*1024:file.size>50*1024*1024)){status(s,picture?'Choose a PNG, JPEG or WebP under 5 MB.':'Choose a PNG, JPEG or WebP up to 50 MB.');return;}
+  s.busy=true;paint(s);status(s,picture?'Uploading private place picture…':'Preparing private map…');
+  try{
+   const bitmap=await createImageBitmap(file);let preview=null;
+   try{if(!picture)try{preview=await createMapPreview(bitmap,file.size);}catch{/* The original remains usable if a preview cannot be generated. */}}finally{bitmap.close();}
+   if(!editable(s))return;
+   const path=picture?'campaign-map-place-images/'+s.campaignId+'/'+s.pinEditor.id+'/'+crypto.randomUUID():'campaign-maps/'+s.campaignId+'/'+crypto.randomUUID();
+   status(s,picture?'Uploading private place picture…':'Uploading private map…');
+   await sdk.uploadBytes(sdk.ref(sdk.storage,path),file,{contentType:file.type});if(!editable(s))return;
+   let previewPath=null;
+   if(preview){const destination='campaign-maps/'+s.campaignId+'/'+crypto.randomUUID();try{await sdk.uploadBytes(sdk.ref(sdk.storage,destination),preview,{contentType:preview.type});previewPath=destination;}catch{/* Fall back to the unchanged original. */}}
+   if(!editable(s))return;
+   if(picture){s.pinEditor.picturePath=path;s.pinEditor.pictureAlt=s.pinEditor.name||'Place illustration';s.pinDirty=true;}
+   else{s.draft.imagePath=path;if(previewPath)s.draft.previewPath=previewPath;else delete s.draft.previewPath;changed(s);}
+   status(s,'Image uploaded privately. Players see it only after publishing.');
+  }catch(error){if(current(s))status(s,'Could not upload: '+error.message);}
+  finally{s.busy=false;if(allowed(s))paint(s);}
+ }
+
  async function persistDraft(s){const saved=await store.saveDraft({campaignId:s.campaignId,input:s.draft,revision:s.draft.revision,sourceRevision:s.draft.sourceRevision,isCurrent:()=>editable(s)});if(!editable(s))return false;s.draft=saved;s.mapDirty=false;return true;}
  async function saveDraft(s){if(!editable(s)||s.busy||s.pinDirty)return;s.busy=true;paint(s);try{if(await persistDraft(s))status(s,'Private draft saved. The published map is unchanged.');}catch(error){if(current(s))status(s,'Could not save draft: '+error.message);}finally{s.busy=false;if(allowed(s))paint(s);}}
  async function publish(s){if(!editable(s)||s.busy||s.pinDirty)return;s.busy=true;paint(s);status(s,'Saving and publishing the revealed places…');try{if(s.mapDirty||!s.draft.revision){if(!await persistDraft(s))return;}const result=await store.publish({campaignId:s.campaignId,draftRevision:s.draft.revision,isCurrent:()=>editable(s)});if(!editable(s))return;s.map=result.map;s.draft=result.draft;s.pins=result.pins;s.mapDirty=false;await subscribePins(s);status(s,'Map published. Players can see '+result.pins.length+' revealed places. Hidden places remain private.');}catch(error){if(current(s))status(s,'Could not publish: '+error.message);}finally{s.busy=false;if(allowed(s))paint(s);}}
@@ -128,7 +184,7 @@ var CampaignMap=(()=>{
    if(map?.revision!==revision){s.map=map;await subscribePins(s);if(allowed(s)&&!s.busy&&!s.pinDirty)paint(s);}else fail(s,error);
   }catch(nextError){fail(s,nextError);}
  }
- async function render(mode='player'){if(mode==='dm'&&!canManageCampaign())return;if(!guard(()=>render(mode)))return;clear();if(!activeCampaign||!auth.currentUser)return;const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,mode,route:mode==='dm'?'dm-map':'campaign-map',root:document.getElementById(mode==='dm'?'tab-dm-map':'tab-campaign-map'),map:null,pins:[],draft:null,pinEditor:null,mapDirty:false,pinDirty:false,busy:false,ready:false,editing:mode==='dm',preview:false,placing:false,denied:false,selected:null,worlds:[],stops:[],pinStop:null,urls:new Map(),pendingImages:new Map(),zoom:1,panX:0,panY:0,message:'Loading campaign map…'};session=s;paint(s);
+ async function render(mode='player'){if(mode==='dm'&&!canManageCampaign())return;if(!guard(()=>render(mode)))return;clear();if(!activeCampaign||!auth.currentUser)return;const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,mode,route:mode==='dm'?'dm-map':'campaign-map',root:document.getElementById(mode==='dm'?'tab-dm-map':'tab-campaign-map'),map:null,pins:[],draft:null,pinEditor:null,mapDirty:false,pinDirty:false,busy:false,ready:false,editing:mode==='dm',preview:false,placing:false,denied:false,selected:null,worlds:[],stops:[],pinStop:null,urls:new Map(),pendingImages:new Map(),failedPreviews:new Set(),zoom:1,panX:0,panY:0,message:'Loading campaign map…'};session=s;paint(s);
   try{s.loadStage='the published map';s.map=await store.load(s.campaignId);if(!allowed(s))return;s.loadStage='the published places';await subscribePins(s);if(!allowed(s))return;paint(s);
    if(editable(s)){
     try{s.draft=await store.loadDraft(s.campaignId);if(!editable(s))return;s.draft=s.draft||initialDraft(s);}
