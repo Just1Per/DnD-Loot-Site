@@ -16,7 +16,7 @@
   const entry=sheetSession.data.adobe.classLevels[0],row=CharacterClassProgression.unlocked('wizard',6,'','2024').find(row=>row.name==='Arcane Recovery');
   const key=CharacterClassProgression.overviewKey(entry,row,'2024');
   const control=part=>[...document.querySelectorAll('[data-feature-overview]')].find(button=>button.dataset.featureOverview===key&&button.dataset.featurePart===part);
-  document.querySelector('.sheet-class-features').setAttribute('open','');control('enabled').click();
+  document.querySelector('.sheet-class-features').setAttribute('open','');control('showName').click();
   check('Arcane Recovery can be pinned with its name only',document.querySelector('.sheet-overview-class-feature strong').textContent==='Arcane Recovery'&&!document.querySelector('.sheet-overview-class-feature p'));
   check('Class reference stays open when Overview choices change',document.querySelector('.sheet-class-features').hasAttribute('open'));
   control('showDescription').click();
@@ -30,7 +30,11 @@
   const hpMetric=[...document.querySelectorAll('#sheetOverviewCalculated .sheet-metrics>div')].find(metric=>metric.querySelector('span').textContent==='Effective maximum HP');
   check('Pinned calculated information refreshes after ability changes',hpMetric.querySelector('strong').textContent===String(changed.hpMax));
   document.querySelector('[data-remove-overview-feature]').click();document.querySelector('[data-overview-calculated]').click();
-  check('Overview removal buttons remove both feature and calculated information',!document.querySelector('.sheet-overview-class-feature')&&!document.getElementById('sheetOverviewCalculated'));
+  check('Overview Remove clears a description-only feature and calculated information',!document.querySelector('.sheet-overview-class-feature')&&!document.getElementById('sheetOverviewCalculated'));
+  for(const part of ['showName','enabled']){
+   toggleClassFeatureOverview(key,part);document.querySelector('[data-remove-overview-feature]').click();
+   check('Overview Remove clears '+(part==='showName'?'name-only':'name and description')+' features',!document.querySelector('.sheet-overview-class-feature')&&!sheetSession.data.adobe.overviewFeatures[key].enabled);
+  }
   toggleClassFeatureOverview(key,'showDescription');
   check('Description-only selection works directly from an unpinned feature',!!document.querySelector('.sheet-overview-class-feature p')&&!document.querySelector('.sheet-overview-class-feature strong'));
   sheetSession.data.adobe.classLevels=[{classId:'fighter',level:6,subclassId:''}];sheetSession.data.build.classId='fighter';fillSheetForm();updateSheetCalculations();
