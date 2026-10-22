@@ -92,7 +92,9 @@ service firebase.storage {
       allow read: if isCampaignDM(campaignId) || (
         (isCampaignOwner(campaignId) || isActiveMember(campaignId))
         && firestore.exists(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main)
-        && firestore.get(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main).data.imagePath == 'campaign-maps/' + campaignId + '/' + imageId
+        && (firestore.get(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main).data.imagePath == 'campaign-maps/' + campaignId + '/' + imageId
+          || ('previewPath' in firestore.get(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main).data
+            && firestore.get(/databases/(default)/documents/campaigns/$(campaignId)/campaignMaps/main).data.previewPath == 'campaign-maps/' + campaignId + '/' + imageId))
       );
       allow create: if resource == null && isCampaignDM(campaignId)
         && request.resource != null && request.resource.size > 0
