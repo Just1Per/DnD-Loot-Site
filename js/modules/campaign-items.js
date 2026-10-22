@@ -20,9 +20,10 @@ async function loadCampaignInventory() {
   const snap=await getDocs(canManageCampaign()?ref:query(ref,where('userId','==',uid)));
   if(activeCampaign?.id===id&&auth.currentUser?.uid===uid)inventory=snap.docs.map(d=>({...d.data(),id:d.id}));
 }
-async function refreshCampaignData() {
+async function refreshCampaignData({itemsOnly=false}={}) {
   const id=activeCampaign?.id,uid=auth.currentUser?.uid;if(!id)return;
-  await Promise.all([loadCampaignItems(),loadCampaignInventory(),loadSaves(),loadCampaignSupply()]);
+  // Presentation-only item changes cannot alter ownership, bookmarks or supply.
+  await Promise.all(itemsOnly?[loadCampaignItems()]:[loadCampaignItems(),loadCampaignInventory(),loadSaves(),loadCampaignSupply()]);
   if(activeCampaign?.id!==id||auth.currentUser?.uid!==uid)return;
   renderCards();renderPlayerTab();renderDMCharacters();renderDMOverview();renderCampaignToolbar();refreshCharacterSheetInventory();
 }

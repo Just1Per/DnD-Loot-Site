@@ -12,11 +12,11 @@ function itemAttributionMarkup(item) {
 }
 async function toggleItemVisibility(itemId) {
   if(!canManageCampaign())return;
-  await persistItemState(itemId,{visible:!getItemState(itemId).visible});await refreshCampaignData();
+  if(await persistItemState(itemId,{visible:!getItemState(itemId).visible}))await refreshCampaignData({itemsOnly:true});
 }
 async function setVisibilityByRarity(rarity,visible) {
   if(!canManageCampaign())return;
-  try {for(const item of items.filter(i=>i.rarity===rarity))await persistItemState(item.id,{visible});await refreshCampaignData();}
+  try {for(const item of items.filter(i=>i.rarity===rarity)){if(!await persistItemState(item.id,{visible}))return;}await refreshCampaignData({itemsOnly:true});}
   catch(error){alert(error.message);}
 }
 function createCard(item,context={}) {
@@ -91,7 +91,7 @@ function createCard(item,context={}) {
     else {await vaultCall('vaultDeleteCampaignItem',{campaignId,itemId:item.id});if(current())await refreshCampaignData();}
   });
   on('.visibility-toggle-btn',()=>toggleItemVisibility(item.id));
-  on('.highlight-button',async()=>{await persistItemState(item.id,{highlighted:!item.highlighted});await refreshCampaignData();});
+  on('.highlight-button',async()=>{if(await persistItemState(item.id,{highlighted:!item.highlighted}))await refreshCampaignData({itemsOnly:true});});
   on('.assign-button',()=>openInventoryAction(item,'assign'));
   on('.loot-button',()=>openInventoryAction(item,'claim'));
   on('.unloot-button',()=>openInventoryAction(item,'unloot',entry));
