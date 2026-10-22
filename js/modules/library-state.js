@@ -29,9 +29,10 @@ async function persistItemState(itemId,changes) {
   if(!canManageCampaign())throw Error('Campaign DM access is required.');
   const safe={};for(const k of ['visible','highlighted'])if(k in changes)safe[k]=!!changes[k];
   if(Object.keys(safe).length!==Object.keys(changes).length)throw Error('Inventory changes must use the inventory controls.');
-  const id=activeCampaign.id;
+  const id=activeCampaign.id,uid=auth.currentUser?.uid,generation=campaignLoadGeneration;
   await updateDoc(doc(db,'campaigns',id,'items',itemId),safe);
-  if(activeCampaign?.id===id)patchItem(itemId,safe);
+  if(activeCampaign?.id!==id||auth.currentUser?.uid!==uid||campaignLoadGeneration!==generation||!canManageCampaign())return false;
+  patchItem(itemId,safe);return true;
 }
 
 // ─── RENDER CARDS ─────────────────────────────────────────────────────────────

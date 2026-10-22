@@ -171,6 +171,8 @@ jobs:
       run: npm --prefix tests run test:campaign-layouts
     - name: Campaign item removal, race protection and catalogue isolation
       run: npm --prefix tests run test:item-removal
+    - name: Library item refresh requests and delayed-write scope
+      run: npm --prefix tests run test:library-item-refresh
     - name: Contextual archive warnings, cancellation and restoration
       run: npm --prefix tests run test:archive-dialog
     - name: Simple world entry creation and preserved optional preparation
