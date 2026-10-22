@@ -24,38 +24,51 @@ async function boot(browser){
  assert.equal(await page.evaluate(()=>typeof CharacterSheetPrint),'undefined');return page;
 }
 // Exercise the actual deferred wrapper chain, including a failure after one script installed.
-const deferred=['character-adobe-builder-ui','character-adobe-pages','character-creature-ui','character-spellcasting-ui'];
+const catalogue=['character-creature-data',...Array.from({length:4},(_,i)=>'character-creature-data-'+(i+1))];
+const deferred=[...catalogue,'character-adobe-builder-ui','character-adobe-pages','character-creature-ui','character-spellcasting-ui'];
 for(const name of deferred)assert.ok(!mandatory.includes('./modules/'+name+'.js'),'Sheet tools must not load/preload at startup');
 (async()=>{const browser=await chromium.launch();try{
  const page=await boot(browser),counts={};let fail=true;
  await page.route('**/js/modules/*.js*',route=>{const name=new URL(route.request().url()).pathname.split('/').at(-1);counts[name]=(counts[name]||0)+1;return fail&&name==='character-adobe-pages.js'?route.abort('failed'):route.fulfill({path:root+'/js/modules/'+name,contentType:'text/javascript'})});
- assert.deepEqual(counts,{});
+ assert.deepEqual(counts,{});assert.equal(await page.evaluate(()=>typeof CharacterCreatureData),'undefined','Companion catalogue must not execute at startup');
  const initialRead=await page.evaluate(()=>{window.initialRead=readSheetForm;return typeof renderCompanionCreaturePickers});assert.equal(initialRead,'undefined');
  await page.evaluate(()=>openCharacterSheet('c1'));assert.match(await page.locator('#sheetStatus').textContent(),/Character tools could not load/);assert.equal(await page.evaluate(()=>sheetSession),null);
+ assert.equal(await page.evaluate(()=>CharacterCreatureData.rows.length),127);
+ for(const name of catalogue)assert.equal(counts[name+'.js'],1);
  assert.equal(counts['character-adobe-builder-ui.js'],1);assert.equal(counts['character-adobe-pages.js'],1);assert.equal(counts['character-creature-ui.js'],undefined);
  await page.evaluate(()=>{window.installedRead=readSheetForm});assert.equal(await page.evaluate(()=>readSheetForm===initialRead),false);
  fail=false;await page.evaluate(()=>openCharacterSheet('c1'));await page.waitForSelector('#characterSheetForm');
  assert.equal(await page.evaluate(()=>readSheetForm===installedRead),true,'Retry must not install the successful builder wrapper twice');
  for(const name of deferred)assert.equal(counts[name+'.js'],name==='character-adobe-pages'?2:1);
+ assert.equal(await page.evaluate(()=>new Set(CharacterCreatureData.rows.map(row=>row.id)).size),127,'Retry preserves all creature identities without resetting or duplicating the catalogue');
  for(const selector of ['#sheetAdobeProgression','#sheetPageManager','#sheetSpellGeneration','#sheetSpellGenerator'])assert.equal(await page.locator(selector).count(),1);
  // Exercise builder progression, optional companion page and real spell generation after SDK cleanup.
  await page.evaluate(()=>{sheetSession.data.build.classId='wizard';sheetSession.data.build.edition='2024';sheetSession.data.adobe.classLevels=[{classId:'wizard',level:7,subclassId:''}];renderCharacterSheet();selectSheetTab('builder')});
  assert.match(await page.locator('#sheetAdobeClasses').textContent(),/Wizard/);
  await page.evaluate(()=>{sheetSession.data.adobe.pages.companion=true;selectSheetTab('companion');updateSheetCalculations()});assert.ok(await page.locator('[data-creature-select]').count()>0);
+ await page.locator('[data-creature-select]').first().selectOption('brown-bear');assert.equal(await page.evaluate(()=>sheetSession.data.adobe.companions[0].hpMax),34);assert.equal(await page.locator('[data-companion-field=hpMax]').first().inputValue(),'34');assert.deepEqual(await page.evaluate(()=>sheetSession.data.adobe.companions[0].abilities),{str:19,dex:10,con:16,int:2,wis:13,cha:7});
  await page.evaluate(()=>selectSheetTab('spells'));await page.locator('#sheetGenerateSpells').click();assert.equal(await page.locator('#sheetSpellGenerator').evaluate(d=>d.open),true);
  const pick=page.locator('[data-spell-pick]:not(:disabled)').first();await pick.check();await page.locator('#spellGeneratorApply').click();assert.ok(await page.evaluate(()=>sheetSession.data.spells.length>0));
  const selected=await page.evaluate(()=>sheetSession.data.spells.map(s=>s.catalogId));await page.evaluate(()=>prepareSheetPrint());assert.ok(await page.locator('.sheet-paper-page').count()>0);await page.evaluate(()=>clearSheetPrintSelection());
  await page.evaluate(()=>{readSheetForm();window.beforeSaveSpells=sheetSession.data.spells.map(s=>s.catalogId);return saveCharacterSheet({reportValidation:false})});assert.equal(await page.evaluate(()=>sheetSession.dirty),false,await page.locator('#sheetStatus').textContent());assert.deepEqual(await page.evaluate(()=>sheetSession.data.spells.map(s=>s.catalogId)),selected);
- const savedCounts={...counts};await page.evaluate(()=>{closeCharacterSheet(true);return openCharacterSheet('c1')});assert.deepEqual(counts,savedCounts);assert.deepEqual(await page.evaluate(()=>sheetSession.data.spells.map(s=>s.catalogId)),selected);
+ const savedCounts={...counts};await page.evaluate(()=>{closeCharacterSheet(true);return openCharacterSheet('c1')});assert.equal(await page.evaluate(()=>sheetSession.data.adobe.companions[0].creature),'Brown Bear');assert.equal(await page.evaluate(()=>sheetSession.data.adobe.companions[0].hpMax),34);assert.equal(await page.evaluate(()=>sheetSession.data.adobe.companions[0].abilities.str),19);assert.deepEqual(counts,savedCounts);assert.deepEqual(await page.evaluate(()=>sheetSession.data.spells.map(s=>s.catalogId)),selected);
  await page.close();
+ // A failed data batch retains the same catalogue and already loaded batches on retry.
+ const partial=await boot(browser),partialCounts={};let failBatch=true;
+ await partial.route('**/js/modules/*.js*',route=>{const name=new URL(route.request().url()).pathname.split('/').at(-1);partialCounts[name]=(partialCounts[name]||0)+1;return failBatch&&name==='character-creature-data-2.js'?route.abort('failed'):route.fulfill({path:root+'/js/modules/'+name,contentType:'text/javascript'})});
+ await partial.evaluate(()=>openCharacterSheet('c1'));assert.equal(await partial.evaluate(()=>sheetSession),null);
+ const partialRows=await partial.evaluate(()=>CharacterCreatureData.rows.length);assert.ok(partialRows>0&&partialRows<127);assert.equal(partialCounts['character-adobe-builder-ui.js'],undefined);
+ failBatch=false;await partial.evaluate(()=>openCharacterSheet('c1'));await partial.waitForSelector('#characterSheetForm');
+ for(const name of deferred)assert.equal(partialCounts[name+'.js'],name==='character-creature-data-2'?2:1);
+ assert.equal(await partial.evaluate(()=>CharacterCreatureData.rows.length),127);assert.equal(await partial.evaluate(()=>new Set(CharacterCreatureData.rows.map(row=>row.id)).size),127);await partial.close();
  // Concurrent opens share each script; the wrapper chain keeps its original order.
  const concurrent=await boot(browser),order=[];let release,started;const ready=new Promise(resolve=>started=resolve);
  await concurrent.route('**/js/modules/*.js*',async route=>{const name=new URL(route.request().url()).pathname.split('/').at(-1);if(deferred.some(n=>name===n+'.js')){order.push(name);if(name===deferred[0]+'.js')await new Promise(resolve=>{release=resolve;started()});}await route.fulfill({path:root+'/js/modules/'+name,contentType:'text/javascript'})});
  await concurrent.evaluate(()=>{window.firstOpen=openCharacterSheet('c1');window.secondOpen=openCharacterSheet('c1')});await ready;release();await concurrent.evaluate(()=>Promise.all([firstOpen,secondOpen]));assert.deepEqual(order,deferred.map(n=>n+'.js'));assert.equal(await concurrent.locator('#sheetAdobeProgression').count(),1);await concurrent.close();
  for(const change of ['account','campaign','close']){
   const delayed=await boot(browser);let resume,started;const ready=new Promise(resolve=>started=resolve);
-  await delayed.route('**/character-adobe-pages.js*',async route=>{await new Promise(resolve=>{resume=resolve;started()});await route.fulfill({path:root+'/js/modules/character-adobe-pages.js',contentType:'text/javascript'})});
+  await delayed.route('**/character-creature-data-2.js*',async route=>{await new Promise(resolve=>{resume=resolve;started()});await route.fulfill({path:root+'/js/modules/character-creature-data-2.js',contentType:'text/javascript'})});
   await delayed.evaluate(()=>{window.opening=openCharacterSheet('c1')});await ready;await delayed.evaluate(change=>{if(change==='account')auth.currentUser={uid:'other'};else if(change==='campaign')activeCampaign={id:'b'};else closeCharacterSheet(true)},change);resume();await delayed.evaluate(()=>opening);assert.equal(await delayed.evaluate(()=>sheetSession),null);assert.equal(await delayed.locator('#characterSheetForm').count(),0);await delayed.close();
  }
- assert.deepEqual(errors,[]);console.log('PASS Sheet tools excluded from startup; ordered real scripts after SDK cleanup, partial failure/retry without double wrappers, builder/companion/spell generation/save/reopen/print, cache reuse, concurrent openings and stale account/campaign/closed-sheet protection');
+ assert.deepEqual(errors,[]);console.log('PASS Sheet tools excluded from startup; ordered real scripts after SDK cleanup, partial failure/retry without double wrappers, builder/companion/spell generation/save/reopen/print, all 127 companion records, cache reuse, concurrent openings and stale account/campaign/closed-sheet protection');
  }finally{await browser.close()}})().catch(error=>{console.error(error);process.exitCode=1});

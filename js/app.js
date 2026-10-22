@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261022-character-panel-reads-v1";
+const ASSET_VERSION = "20261022-companion-catalogue-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -103,11 +103,6 @@ const FEATURE_FILES = [
   "./modules/character-class-feature-choices.js",
   "./modules/character-build-validation.js",
   "./modules/character-adobe-data.js",
-  "./modules/character-creature-data.js",
-  "./modules/character-creature-data-1.js",
-  "./modules/character-creature-data-2.js",
-  "./modules/character-creature-data-3.js",
-  "./modules/character-creature-data-4.js",
   "./modules/character-play-rules.js",
   "./modules/character-actions.js",
   "./modules/character-story.js",
@@ -202,6 +197,11 @@ function createOptionalFeatureLoader(features) {
 window.CampaignOptionalFeatures=createOptionalFeatureLoader({
   sheetPrint:"./modules/character-sheet-print.js",
   sheetTools:[
+    "./modules/character-creature-data.js",
+    "./modules/character-creature-data-1.js",
+    "./modules/character-creature-data-2.js",
+    "./modules/character-creature-data-3.js",
+    "./modules/character-creature-data-4.js",
     "./modules/character-adobe-builder-ui.js",
     "./modules/character-adobe-pages.js",
     "./modules/character-creature-ui.js",

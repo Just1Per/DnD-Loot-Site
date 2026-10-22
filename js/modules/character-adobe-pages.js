@@ -150,6 +150,9 @@
 
   function installSpellFilter(){if(typeof window.renderCatalogSpellResults!=='function'||window.renderCatalogSpellResults.__adobeFiltered)return;const replacement=function(){const host=document.getElementById('catalogSpellResults');if(!host)return;const rows=eligibleSpells(),browseAll=document.getElementById('catalogSpellBrowseAll')?.checked===true;host.innerHTML=`<p>${rows.length} ${browseAll?'catalogue':'character-eligible'} matches${rows.length>60?' · Showing first 60; narrow your search':''}</p><div class="sheet-catalog-results">${rows.slice(0,60).map(spell=>`<article><strong>${sheetEscape(spell.name)}</strong> <span>${spell.edition} · ${Number(spell.level)||'Cantrip'} · ${sheetEscape(spell.source)}</span><button type="button" class="sheet-info-button" data-spell-info="${sheetEscape(spell.id)}" aria-label="Information about ${sheetEscape(spell.name)}">i</button><button type="button" data-add-catalog-spell="${sheetEscape(spell.id)}">Add spell</button></article>`).join('')}</div>`;host.querySelectorAll('[data-spell-info]').forEach(button=>button.onclick=()=>openSpellInformation({catalogId:button.dataset.spellInfo}));host.querySelectorAll('[data-add-catalog-spell]').forEach(button=>button.onclick=()=>addCatalogSpells([button.dataset.addCatalogSpell]));};replacement.__adobeFiltered=true;window.renderCatalogSpellResults=replacement;}
 
+  // The creature picker refreshes card fields through this explicit UI boundary.
+  window.CharacterCompanionCards=Object.freeze({render:renderCompanionCards,update:updateCompanion});
+
   const baseSetupPlay=window.setupCharacterPlayUI;
   window.setupCharacterPlayUI=function(...args){const result=baseSetupPlay?.apply(this,args);setupPages();return result;};
   const baseUpdatePlay=window.updateCharacterPlayUI;
