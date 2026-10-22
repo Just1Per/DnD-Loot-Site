@@ -48,6 +48,9 @@ const errors=[];
  await page.evaluate(()=>showTab('campaign-npcs'));await page.waitForSelector('[data-read-npc=keeper]');await page.locator('[data-read-npc=keeper]').click();await page.waitForFunction(()=>document.querySelector('[data-shared-image] img')?.naturalWidth>0);assert.equal(await page.evaluate(()=>playerStorageReads),0);
  await page.evaluate(()=>showTab('campaign-journal'));await page.waitForFunction(()=>CampaignJournal.session?.ready);assert.equal(await page.locator('[data-journal-read="world:harbor"]').count(),0);assert.equal(await page.evaluate(()=>journalWatchers.filter(w=>w.active&&String(w.path).endsWith('/playerInformation')).length),0);
  await page.evaluate(()=>showTab('campaign-home'));assert.equal(await page.locator('[data-home-tab],.campaign-home-links').count(),0);assert.ok(await page.locator('#primaryNavigation').isVisible());
+ // The concurrency fixture needs all cards eligible for loading. Offscreen
+ // deferral is covered separately by journal-image-loading-browser.cjs.
+ await page.setViewportSize({width:1440,height:4000});
  // A slow old card list must not continue fetching into a newer article reader.
  await page.evaluate(()=>showTab('campaign-information'));await page.waitForSelector('[data-world-back]');await page.locator('[data-world-back]').click();await page.waitForFunction(()=>document.querySelector('.world-post-card img')?.naturalWidth>0);
  await page.evaluate(()=>{
