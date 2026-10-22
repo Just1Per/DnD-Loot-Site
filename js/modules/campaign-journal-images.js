@@ -23,28 +23,50 @@ var CampaignJournalImages=(()=>{
   if(!belongsTo(campaignId,kind,id,image.path))throw Error('The illustration does not belong to this entry.');
   const blob=await sdk.getBlob(sdk.ref(sdk.storage,image.path),6*1024*1024);
   if(!isCurrent())throw Error('Campaign access changed.');
-  const url=URL.createObjectURL(blob),img=new Image();
-  try{
-   img.src=url;await img.decode();if(!isCurrent())throw Error('Campaign access changed.');
-   if(!img.naturalWidth||!img.naturalHeight)throw Error('The illustration could not be decoded.');
-   const canvas=document.createElement('canvas');
-   for(const bound of [1600,1200,900,675]){
+  const url=URL.createObjectURL(blob),img=new Image(),canvas=document.createElement('canvas');
+  async function encode(bounds,qualities,limit){
+   for(const bound of bounds){
     const ratio=Math.min(1,bound/Math.max(img.naturalWidth,img.naturalHeight));
     canvas.width=Math.max(1,Math.round(img.naturalWidth*ratio));canvas.height=Math.max(1,Math.round(img.naturalHeight*ratio));
     canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
-    for(const quality of [.86,.72,.58]){
+    for(const quality of qualities){
      const output=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',quality));
      if(!isCurrent())throw Error('Campaign access changed.');
-     if(output&&output.size<=512*1024){const bytes=new Uint8Array(await output.arrayBuffer());let text='';for(let i=0;i<bytes.length;i+=8192)text+=String.fromCharCode(...bytes.subarray(i,i+8192));return{path:image.path,contentType:output.type,data:btoa(text)};}
+     if(output&&output.size<=limit){const bytes=new Uint8Array(await output.arrayBuffer());let text='';for(let i=0;i<bytes.length;i+=8192)text+=String.fromCharCode(...bytes.subarray(i,i+8192));return {path:image.path,contentType:output.type,data:btoa(text)};}
     }
    }
    throw Error('This illustration is too large to publish. Choose a smaller image.');
-  }finally{URL.revokeObjectURL(url);}
+  }
+  try{
+   img.src=url;await img.decode();if(!isCurrent())throw Error('Campaign access changed.');
+   if(!img.naturalWidth||!img.naturalHeight)throw Error('The illustration could not be decoded.');
+   const prepared=await encode([1600,1200,900,675],[.86,.72,.58],512*1024);
+   if(['world','creature'].includes(kind))prepared.thumbnail=await encode([640,480,360],[.82,.68,.54],64*1024);
+   if(!isCurrent())throw Error('Campaign access changed.');
+   return prepared;
+  }finally{canvas.width=0;canvas.height=0;URL.revokeObjectURL(url);}
  }
- async function publishedBlob({campaignId,kind,id,image}){
+ async function publishedBlob({campaignId,kind,id,image,thumbnail=false,isCurrent=()=>true}){
   if(!image||!belongsTo(campaignId,kind,id,image.path))throw Error('Invalid published illustration.');
+  if(thumbnail&&image.thumbnail===true&&['world','creature'].includes(kind)){
+   try{
+    const result=await sdk.getDoc(sdk.doc(sdk.db,'campaigns',campaignId,'playerIllustrationThumbnails',kind,'entries',id));
+    if(!isCurrent())throw Error('Campaign access changed.');
+    if(result.exists()){
+     const copy=result.data();
+     if(copy.path!==image.path||!allowedTypes.includes(copy.contentType)||typeof copy.data!=='string'||!copy.data.length||copy.data.length>88000)throw Error('Invalid published thumbnail.');
+     const bytes=Uint8Array.from(atob(copy.data),c=>c.charCodeAt(0)),blob=new Blob([bytes],{type:copy.contentType});
+     const bitmap=await createImageBitmap(blob);
+     try{if(!bitmap.width||!bitmap.height||Math.max(bitmap.width,bitmap.height)>640)throw Error('Invalid thumbnail dimensions.');}finally{bitmap.close();}
+     if(!isCurrent())throw Error('Campaign access changed.');
+     return blob;
+    }
+   }catch(error){if(!isCurrent())throw error;/* A missing or damaged thumbnail keeps the full illustration usable. */}
+  }
+  if(!isCurrent())throw Error('Campaign access changed.');
   try{
    const result=await sdk.getDoc(sdk.doc(sdk.db,'campaigns',campaignId,'playerIllustrations',kind,'entries',id));
+   if(!isCurrent())throw Error('Campaign access changed.');
    if(result.exists()){
     const copy=result.data();
     if(copy.path!==image.path||!['image/png','image/jpeg','image/webp'].includes(copy.contentType)||typeof copy.data!=='string'||copy.data.length>700000||!copy.data.length)throw Error('The published illustration needs to be released again.');
@@ -53,6 +75,7 @@ var CampaignJournalImages=(()=>{
   }catch(error){
    // Older releases have only a Storage reference. Preserve authenticated legacy
    // access where it works; neither path grants access outside its own rules.
+   if(!isCurrent())throw error;
    try{return await sdk.getBlob(sdk.ref(sdk.storage,image.path),6*1024*1024);}catch{throw error;}
   }
   return sdk.getBlob(sdk.ref(sdk.storage,image.path),6*1024*1024);

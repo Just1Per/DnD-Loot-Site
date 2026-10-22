@@ -410,7 +410,9 @@ match /campaigns/{campaignId} {
   function validSharedImage(d, kind, recordId) {
     let source = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspaceCollection(kind))/$(recordId)).data;
     return !('image' in d) || (d.image is map
-      && d.image.keys().hasAll(['path','alt','caption']) && d.image.keys().hasOnly(['path','alt','caption'])
+      && d.image.keys().hasAll(['path','alt','caption']) && d.image.keys().hasOnly(['path','alt','caption','thumbnail'])
+      && (!('thumbnail' in d.image) || (kind in ['world','creature'] && d.image.thumbnail == true
+        && getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/playerIllustrationThumbnails/$(kind)/entries/$(recordId)).data.path == d.image.path))
       && d.image.path is string && d.image.path.matches('campaign-journal-images/' + campaignId + '/' + kind + '/' + recordId + '/[a-zA-Z0-9_-]{1,100}')
       && d.image.alt is string && d.image.alt.size() <= 200
       && d.image.caption is string && d.image.caption.size() <= 500
@@ -441,6 +443,30 @@ match /campaigns/{campaignId} {
     }
     allow get: if supported() && (isCampaignDM(campaignId) || (isActiveMember(campaignId)
       && 'image' in shared() && (resource == null || resource.data.path == shared().image.path)));
+    allow list: if false;
+    allow create, update: if isCampaignDM(campaignId) && validCopy(request.resource.data);
+    allow delete: if isCampaignDM(campaignId);
+  }
+  // Card-sized copies have the same publication and membership boundary.
+  match /playerIllustrationThumbnails/{kind}/entries/{recordId} {
+    function supported(){ return kind in ['world','creature']; }
+    function publication(){ return kind == 'world' ? 'playerInformation' : 'playerNPCs'; }
+    function shared(){ return get(/databases/$(database)/documents/campaigns/$(campaignId)/$(publication())/$(recordId)).data; }
+    function validCopy(d){
+      let published = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(publication())/$(recordId)).data;
+      let source = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspaceCollection(kind))/$(recordId)).data;
+      return supported() && recordId.matches('[A-Za-z0-9_-]{1,100}')
+        && d.keys().hasAll(['path','contentType','data']) && d.keys().hasOnly(['path','contentType','data'])
+        && d.path is string && 'image' in published && 'thumbnail' in published.image && published.image.thumbnail == true && d.path == published.image.path
+        && 'journalImage' in source.data && d.path == source.data.journalImage.path
+        && source.archived == false
+        && (kind != 'creature' || source.data.category == 'Story NPC')
+        && d.contentType in ['image/png','image/jpeg','image/webp']
+        && d.data is string && d.data.size() > 0 && d.data.size() <= 88000
+        && d.data.matches('[A-Za-z0-9+/]+={0,2}');
+    }
+    allow get: if supported() && (isCampaignDM(campaignId) || (isActiveMember(campaignId)
+      && 'image' in shared() && 'thumbnail' in shared().image && shared().image.thumbnail == true && (resource == null || resource.data.path == shared().image.path)));
     allow list: if false;
     allow create, update: if isCampaignDM(campaignId) && validCopy(request.resource.data);
     allow delete: if isCampaignDM(campaignId);

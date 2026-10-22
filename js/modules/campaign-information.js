@@ -67,7 +67,7 @@ var CampaignInformation = (() => {
       const prefix=`campaign-journal-images/${s.id}/${s.kind}/${row.id}/`,image=row.image;
       if(typeof image.path!=='string'||!image.path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))){host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';return;}
       try{
-        const blob=await CampaignJournalImages.publishedBlob({campaignId:s.id,kind:s.kind,id:row.id,image});
+        const blob=await CampaignJournalImages.publishedBlob({campaignId:s.id,kind:s.kind,id:row.id,image,thumbnail:list.classList.contains('campaign-information-grid'),isCurrent:active});
         if(!active()||!host.isConnected)return;
         const url=URL.createObjectURL(blob);s.imageUrls.push(url);
         const img=document.createElement('img');img.decoding='async';img.src=url;img.alt=image.alt||'Shared campaign illustration';
