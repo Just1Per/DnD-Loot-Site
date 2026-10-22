@@ -115,7 +115,9 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  const publishedSourceRevision=await page.evaluate(()=>CampaignWorkspace.session.record.revision);
  for(const width of [1440,390,320]){
   await page.setViewportSize({width,height:1000});await page.evaluate(()=>scrollTo(0,document.querySelector('[name=privateNotes]').getBoundingClientRect().top+scrollY));
-  if(!await page.locator('[data-publish-chapter]').evaluate(button=>{const box=button.getBoundingClientRect();return box.top>=document.querySelector('.site-header').getBoundingClientRect().bottom&&box.bottom<=innerHeight}))throw Error('Publish action is outside the viewport while editing private notes');
+  // The header ResizeObserver updates the sticky offset after viewport layout.
+  // Keep the visibility requirement, but wait for that browser rendering cycle.
+  await page.waitForFunction(()=>{const box=document.querySelector('[data-publish-chapter]').getBoundingClientRect();return box.top>=document.querySelector('.site-header').getBoundingClientRect().bottom&&box.bottom<=innerHeight});
   if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Publication toolbar overflows the viewport');
   const violations=await page.evaluate(async()=>(await axe.run('[data-editor-header]',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations);if(violations.length)throw Error('Publication toolbar accessibility: '+violations.map(v=>v.id));
   await page.screenshot({path:'/tmp/dnd-chapter-publish-'+width+'.png',fullPage:false});
