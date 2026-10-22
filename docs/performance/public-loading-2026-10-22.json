@@ -1,0 +1,418 @@
+[
+  {
+    "profile": "desktop",
+    "cache": "cold",
+    "conditions": {
+      "latency": 40,
+      "downloadBytesPerSecond": 2000000,
+      "cpu": 1
+    },
+    "readyMs": 4368,
+    "failed": false,
+    "lcpMs": 4396,
+    "longTasks": [],
+    "errors": 0,
+    "loadMs": 4368,
+    "logoLoaded": true,
+    "domContentLoadedMs": 3672,
+    "paints": [
+      {
+        "name": "first-paint",
+        "ms": 2228
+      },
+      {
+        "name": "first-contentful-paint",
+        "ms": 2228
+      }
+    ],
+    "features": 102,
+    "landing": null,
+    "requestCount": 139,
+    "transferredBytes": 4086421,
+    "cacheHits": 0,
+    "failedRequests": [
+      {
+        "url": "https://www.google.com/recaptcha/enterprise.js",
+        "type": "Script",
+        "failed": "net::ERR_TUNNEL_CONNECTION_FAILED"
+      }
+    ],
+    "largest": [
+      {
+        "url": "https://dnd-loot-site.web.app/logo.png",
+        "type": "Image",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 2138400
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/favicon.png",
+        "type": "Other",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 1154547
+      },
+      {
+        "url": "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 180360
+      },
+      {
+        "url": "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 41837
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+        "type": "Font",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 26472
+      },
+      {
+        "url": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 23339
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/modules/character-srd-class-data.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 21910
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/css/character-vault-theme.css",
+        "type": "Stylesheet",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 15049
+      },
+      {
+        "url": "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 14149
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/modules/character-sheet.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 14145
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/modules/site-help.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 10940
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/modules/site-help-data.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 10270
+      }
+    ],
+    "headers": [
+      {
+        "url": "https://dnd-loot-site.web.app/",
+        "cacheControl": "max-age=3600"
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/logo.png",
+        "cacheControl": "max-age=3600"
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/app.js",
+        "cacheControl": "max-age=3600"
+      }
+    ]
+  },
+  {
+    "profile": "desktop",
+    "cache": "warm",
+    "conditions": {
+      "latency": 40,
+      "downloadBytesPerSecond": 2000000,
+      "cpu": 1
+    },
+    "readyMs": 100,
+    "failed": false,
+    "lcpMs": 120,
+    "longTasks": [],
+    "errors": 0,
+    "loadMs": 104,
+    "logoLoaded": true,
+    "domContentLoadedMs": 44,
+    "paints": [
+      {
+        "name": "first-paint",
+        "ms": 104
+      },
+      {
+        "name": "first-contentful-paint",
+        "ms": 104
+      }
+    ],
+    "features": 102,
+    "landing": null,
+    "requestCount": 139,
+    "transferredBytes": 0,
+    "cacheHits": 138,
+    "failedRequests": [
+      {
+        "url": "https://www.google.com/recaptcha/enterprise.js",
+        "type": "Script",
+        "failed": "net::ERR_TUNNEL_CONNECTION_FAILED"
+      }
+    ],
+    "largest": [],
+    "headers": [
+      {
+        "url": "https://dnd-loot-site.web.app/",
+        "cacheControl": "max-age=3600"
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/logo.png",
+        "cacheControl": "max-age=3600"
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/app.js",
+        "cacheControl": "max-age=3600"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "cache": "cold",
+    "conditions": {
+      "latency": 100,
+      "downloadBytesPerSecond": 187500,
+      "cpu": 4
+    },
+    "readyMs": 8600,
+    "failed": false,
+    "lcpMs": 8640,
+    "longTasks": [
+      93,
+      70
+    ],
+    "errors": 0,
+    "loadMs": 16760,
+    "logoLoaded": true,
+    "domContentLoadedMs": 5185,
+    "paints": [
+      {
+        "name": "first-paint",
+        "ms": 1668
+      },
+      {
+        "name": "first-contentful-paint",
+        "ms": 1668
+      }
+    ],
+    "features": 102,
+    "landing": null,
+    "requestCount": 139,
+    "transferredBytes": 4086872,
+    "cacheHits": 0,
+    "failedRequests": [
+      {
+        "url": "https://www.google.com/recaptcha/enterprise.js",
+        "type": "Script",
+        "failed": "net::ERR_TUNNEL_CONNECTION_FAILED"
+      }
+    ],
+    "largest": [
+      {
+        "url": "https://dnd-loot-site.web.app/logo.png",
+        "type": "Image",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 2138423
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/favicon.png",
+        "type": "Other",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 1154772
+      },
+      {
+        "url": "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 180360
+      },
+      {
+        "url": "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 41378
+      },
+      {
+        "url": "https://fonts.gstatic.com/s/cinzel/v26/8vIJ7ww63mVu7gt79mT7.woff2",
+        "type": "Font",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 26472
+      },
+      {
+        "url": "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 23338
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/modules/character-srd-class-data.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 21910
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/css/character-vault-theme.css",
+        "type": "Stylesheet",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 15054
+      },
+      {
+        "url": "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "public, max-age=31536000",
+        "transfer": 14608
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/modules/character-sheet.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 13925
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/modules/site-help.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 10944
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/modules/site-help-data.js",
+        "type": "Script",
+        "status": 200,
+        "cached": false,
+        "cacheControl": "max-age=3600",
+        "transfer": 10297
+      }
+    ],
+    "headers": [
+      {
+        "url": "https://dnd-loot-site.web.app/",
+        "cacheControl": "max-age=3600"
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/logo.png",
+        "cacheControl": "max-age=3600"
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/app.js",
+        "cacheControl": "max-age=3600"
+      }
+    ]
+  },
+  {
+    "profile": "mobile",
+    "cache": "warm",
+    "conditions": {
+      "latency": 100,
+      "downloadBytesPerSecond": 187500,
+      "cpu": 4
+    },
+    "readyMs": 317,
+    "failed": false,
+    "lcpMs": 340,
+    "longTasks": [
+      98,
+      79
+    ],
+    "errors": 0,
+    "loadMs": 332,
+    "logoLoaded": true,
+    "domContentLoadedMs": 164,
+    "paints": [
+      {
+        "name": "first-paint",
+        "ms": 92
+      },
+      {
+        "name": "first-contentful-paint",
+        "ms": 92
+      }
+    ],
+    "features": 102,
+    "landing": null,
+    "requestCount": 139,
+    "transferredBytes": 0,
+    "cacheHits": 138,
+    "failedRequests": [
+      {
+        "url": "https://www.google.com/recaptcha/enterprise.js",
+        "type": "Script",
+        "failed": "net::ERR_TUNNEL_CONNECTION_FAILED"
+      }
+    ],
+    "largest": [],
+    "headers": [
+      {
+        "url": "https://dnd-loot-site.web.app/",
+        "cacheControl": "max-age=3600"
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/logo.png",
+        "cacheControl": "max-age=3600"
+      },
+      {
+        "url": "https://dnd-loot-site.web.app/js/app.js",
+        "cacheControl": "max-age=3600"
+      }
+    ]
+  }
+]

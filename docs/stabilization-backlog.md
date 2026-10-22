@@ -16,3 +16,5 @@ Order agreed with the owner: stabilize merged behavior and complete UX/code/perf
 - [ ] PARKED — Plan One Shots with the owner before further implementation: purpose, create/invite/join flow, participant/sheet overview, access boundaries, statuses and completion/archive. Do not expand the feature while parked.
 
 - [ ] Current chapter-publishing fix: sticky Save draft / Publish to players / Unpublish; save and publish both public text sections plus illustration/caption together. All private preparation stays excluded. Updated Firestore rules required; no Storage changes.
+
+- [ ] Performance audit October 22: prioritize 3.3 MB logo/favicon transfers, login initialization, protected image thumbnails/lazy loading, targeted campaign queries and cache strategy. First prepared fix removes duplicate edition hydration reads (12 → 6 rules SDK reads). See site-performance-audit-2026-10-22.md; no rule/deployment change.

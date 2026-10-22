@@ -59,7 +59,7 @@ var CharacterRulesCatalogStore=(()=>{
     catch(e){console.warn('[rulesCatalog] read failed',edition,kind,e?.message||e);return{}}
   }
   async function loadEdition(edition){edition=release(edition);const meta=await readMeta(edition);if(!meta)return null;const [classes,subclasses]=await Promise.all([readKind(edition,'classes'),readKind(edition,'subclasses')]);return Object.keys(classes).length&&Object.keys(subclasses).length?{classes,subclasses,version:Number(meta.version||0),meta}:null}
-  async function hydrate(edition){const remote=await loadEdition(edition);if(!remote)return false;window.CharacterClassProgression?.installReference?.(edition,remote);return true}
+  async function hydrate(edition,loaded){const remote=loaded===undefined?await loadEdition(edition):loaded;if(!remote)return false;window.CharacterClassProgression?.installReference?.(edition,remote);return true}
   function coverage(snapshot){
     const kinds={};for(const kind of KINDS){const rows=Object.values(snapshot?.[kind]||{}),incomplete=rows.filter(row=>row.partial||row.incomplete||(Array.isArray(row.features)&&row.features.some(f=>f.incomplete))).length;kinds[kind]={records:rows.length,complete:rows.length-incomplete,incomplete}}
     const classFeatures=Object.values(snapshot?.classes||{}).flatMap(row=>row.features||[]);kinds.classFeatureRecords={records:classFeatures.length,complete:classFeatures.filter(row=>!row.incomplete&&row.summary).length};kinds.classFeatureRecords.incomplete=kinds.classFeatureRecords.records-kinds.classFeatureRecords.complete;return kinds;

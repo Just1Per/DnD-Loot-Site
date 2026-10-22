@@ -112,3 +112,54 @@ test('sheet saving retains its persistence envelope and rejects stale revisions'
   args.revision=3;args.previousIdentity={...identity,name:'Old name'};
   await assert.rejects(store.save(args),/details changed/);assert.equal(writes.length,0);
 });
+
+function rulesLoginRuntime({missing=false}={}) {
+  const reads=[],writes=[],installed=[];
+  const profile={name:'Mira',role:['player']};
+  const {context}=runtime('data.js',{
+    db:{},currentUser:null,normalizeEmail:v=>String(v||'').toLowerCase(),isAdmin:()=>false,
+    doc:(_, ...parts)=>parts.join('/'),collection:(_, ...parts)=>parts.join('/'),
+    getDoc:async key=>{reads.push(key);return {exists:()=>key.startsWith('users/')||!missing,data:()=>key.startsWith('users/')?profile:{version:2026100901}};},
+    getDocs:async key=>{reads.push(key);const id=key.endsWith('/classes')?'fighter':'champion';return {docs:[{id,data:()=>({id,catalogVersion:2026100901})}]};},
+    setDoc:async key=>writes.push(key),
+    CharacterClassProgression:{installReference:(edition,reference)=>installed.push({edition,reference})}
+  });
+  context.__DND_VAULT_DEPS__={db:context.db,doc:context.doc,collection:context.collection,getDoc:context.getDoc,getDocs:context.getDocs};
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/modules/character-rules-catalog-store.js'),'utf8'),context);
+  return {context,reads,writes,installed};
+}
+
+test('login installs the checked rules snapshots without fetching either edition twice',async()=>{
+  const {context,reads,writes,installed}=rulesLoginRuntime();
+  await context.loadCurrentUser({uid:'u1'});
+  assert.equal(reads.length,7,'one account read plus metadata/classes/subclasses once per edition');
+  for(const edition of ['2014','2024'])for(const suffix of ['', '/classes','/subclasses'])assert.equal(reads.filter(key=>key==='rulesCatalog/'+edition+suffix).length,1);
+  assert.deepEqual(installed.map(x=>x.edition),['2014','2024']);
+  assert.ok(installed.every(x=>x.reference.classes.fighter&&x.reference.subclasses.champion));
+  assert.deepEqual(writes,['userDirectory/u1']);
+});
+
+test('a known missing edition retains bundled fallback without a duplicate retry',async()=>{
+  const {context,reads,installed}=rulesLoginRuntime({missing:true});
+  await context.loadCurrentUser({uid:'u1'});
+  assert.deepEqual(reads,['users/u1','rulesCatalog/2014','rulesCatalog/2024']);
+  assert.deepEqual(installed,[]);assert.equal(context.currentUser.name,'Mira');
+});
+
+test('direct hydration callers still fetch the current reference',async()=>{
+  const {context,reads,installed}=rulesLoginRuntime();
+  assert.equal(await context.CharacterRulesCatalogStore.hydrate('2024'),true);
+  assert.equal(reads.length,3);assert.equal(installed[0].edition,'2024');
+});
+
+test('admin seeding hydrates its freshly published version rather than the stale snapshot',async()=>{
+  const installed=[],versions=new Map([['2014',0],['2024',0]]);
+  const {context}=runtime('data.js',{
+    isAdmin:()=>true,CharacterRulesCatalogStore:{CATALOG_VERSION:1,
+      loadEdition:async edition=>({version:versions.get(edition)}),
+      seedEdition:async edition=>versions.set(edition,1),
+      hydrate:async(edition,loaded)=>installed.push({edition,version:loaded===undefined?versions.get(edition):loaded.version})}
+  });
+  await context.ensureGlobalCharacterRulesReference();
+  assert.deepEqual(installed,[{edition:'2014',version:1},{edition:'2024',version:1}]);
+});
