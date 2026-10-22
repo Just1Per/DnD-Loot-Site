@@ -91,7 +91,8 @@ async function openCharacterSheet(characterId, context = {}) {
   try {
     const [stored] = await Promise.all([
       characterSheetStore.load(campaignId, characterId, context.adventureId || null),
-      window.CampaignOptionalFeatures?.ensure('sheetPrint') || Promise.resolve()
+      window.CampaignOptionalFeatures?.ensure('sheetPrint') || Promise.resolve(),
+      window.CampaignOptionalFeatures?.ensure('sheetTools') || Promise.resolve()
     ]);
     if (generation !== sheetGeneration || activeCampaign?.id !== campaignId || auth.currentUser?.uid!==uid)
       return;

@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261022-overview-remove-v2";
+const ASSET_VERSION = "20261022-sheet-tools-combined-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -125,10 +125,6 @@ const FEATURE_FILES = [
   "./modules/character-catalog-ui.js",
   "./modules/character-adobe-engine.js",
   "./modules/character-spellcasting.js",
-  "./modules/character-adobe-builder-ui.js",
-  "./modules/character-adobe-pages.js",
-  "./modules/character-creature-ui.js",
-  "./modules/character-spellcasting-ui.js",
   "./modules/images.js",
   "./modules/catalog-cache.js",
   "./modules/data.js",
@@ -184,21 +180,34 @@ function loadFeatureScript(relativePath) {
 }
 
 // Code assets are public and contain no account data. Reuse one in-flight load.
-function createOptionalFeatureLoader(files) {
-  const pending=new Map();
-  return Object.freeze({ensure(key){
-    if(!Object.hasOwn(files,key))return Promise.reject(new Error('Unknown character tool.'));
-    if(!pending.has(key)){
-      const request=loadFeatureScript(files[key]).catch(error=>{
-        pending.delete(key);console.warn('[CampaignAtlas] Character tool failed to load:',error);
+function createOptionalFeatureLoader(features) {
+  const requests=new Map();
+  function loadOnce(file) {
+    if(!requests.has(file)) {
+      const request=loadFeatureScript(file).catch(error=>{
+        requests.delete(file);console.warn('[CampaignAtlas] Character tool failed to load:',error);
         throw new Error('Character tools could not load. Try opening the sheet again.');
       });
-      pending.set(key,request);
+      requests.set(file,request);
     }
-    return pending.get(key);
+    return requests.get(file);
+  }
+  return Object.freeze({async ensure(key){
+    if(!Object.hasOwn(features,key))throw new Error('Unknown character tool.');
+    // Preserve wrapper order and retain completed scripts when a later file fails.
+    const files=Array.isArray(features[key])?features[key]:[features[key]];
+    for(const file of files)await loadOnce(file);
   }});
 }
-window.CampaignOptionalFeatures=createOptionalFeatureLoader({sheetPrint:"./modules/character-sheet-print.js"});
+window.CampaignOptionalFeatures=createOptionalFeatureLoader({
+  sheetPrint:"./modules/character-sheet-print.js",
+  sheetTools:[
+    "./modules/character-adobe-builder-ui.js",
+    "./modules/character-adobe-pages.js",
+    "./modules/character-creature-ui.js",
+    "./modules/character-spellcasting-ui.js"
+  ]
+});
 
 // Preload downloads in parallel; execution below stays ordered for shared-scope dependencies.
 for (const file of FEATURE_FILES) {
