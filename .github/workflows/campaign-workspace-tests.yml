@@ -133,6 +133,7 @@ jobs:
     - name: Shared character sheet, gear and bookmark context
       run: |-
         npm --prefix tests run test:sheet-print-loading
+        npm --prefix tests run test:sheet-calculation-reuse
         npm --prefix tests run test:character-workspace
     - name: Page editors, dirty drafts and retryable campaign setup
       run: npm --prefix tests run test:page-editors

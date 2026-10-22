@@ -57,6 +57,7 @@
     "test:world-post-layouts": "node world-post-layouts-browser.cjs",
     "test:world-navigation": "node world-navigation-browser.cjs",
     "test:archive-dialog": "node archive-dialog-browser.cjs",
+    "test:sheet-calculation-reuse": "node sheet-calculation-reuse-browser.cjs",
     "test:sheet-print-loading": "node sheet-print-loading-browser.cjs",
     "test:character-workspace": "node character-workspace-browser.cjs",
     "test:page-editors": "node page-editors-browser.cjs",
