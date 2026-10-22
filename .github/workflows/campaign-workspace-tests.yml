@@ -19,6 +19,7 @@ name: Campaign workspace checks
     - scripts/item-artwork-policy.mjs
     - scripts/prepare-item-review-manifest.mjs
     - .github/workflows/campaign-workspace-tests.yml
+    - .github/scripts/prepare-browser-apt.sh
 permissions:
   contents: read
 concurrency:
@@ -40,10 +41,17 @@ jobs:
       run: npm ci --prefix tests
     - name: Hosting runtime and operational file boundaries
       run: npm --prefix tests run test:packaging
+    - name: Verify Ubuntu package setup
+      run: node --test tests/ci-apt-setup.cjs
+    - name: Prepare bounded Ubuntu package downloads
+      timeout-minutes: 1
+      run: sudo bash .github/scripts/prepare-browser-apt.sh
     - name: Install Chromium
+      timeout-minutes: 6
       run: npx --prefix tests playwright install --with-deps chromium
     - name: Install PDF text verification
-      run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      timeout-minutes: 3
+      run: sudo apt-get install -y poppler-utils
     - name: Character engines and UI fixtures
       run: |
         mkdir -p /tmp/campaignatlas-ui-checks
@@ -96,10 +104,17 @@ jobs:
         cache-dependency-path: tests/package-lock.json
     - name: Install test dependencies
       run: npm ci --prefix tests
+    - name: Verify Ubuntu package setup
+      run: node --test tests/ci-apt-setup.cjs
+    - name: Prepare bounded Ubuntu package downloads
+      timeout-minutes: 1
+      run: sudo bash .github/scripts/prepare-browser-apt.sh
     - name: Install Chromium
+      timeout-minutes: 6
       run: npx --prefix tests playwright install --with-deps chromium
     - name: Install PDF text verification
-      run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      timeout-minutes: 3
+      run: sudo apt-get install -y poppler-utils
     - name: NPC reading, exact-record reopening and return navigation
       run: |-
         npm --prefix tests run test:campaign-npcs
@@ -134,7 +149,9 @@ jobs:
       run: npm --prefix tests run test:campaign-deletion
     - name: Shared character sheet, gear and bookmark context
       run: |-
+        npm --prefix tests run test:sheet-tools-loading
         npm --prefix tests run test:sheet-print-loading
+        npm --prefix tests run test:sheet-calculation-reuse
         npm --prefix tests run test:character-workspace
     - name: Page editors, dirty drafts and retryable campaign setup
       run: npm --prefix tests run test:page-editors
