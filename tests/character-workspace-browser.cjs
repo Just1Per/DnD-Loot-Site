@@ -45,8 +45,11 @@ const root = path.resolve(__dirname, '..');
           return {...await getDoc(key), id: key.split('/').at(-1), ref: key};
         };
         sdk.query = (path, ...filters) => ({path, filters}); sdk.where = (field, op, value) => ({field, op, value});
+        window.workspaceReads = [];
         sdk.getDocs = async query => {
           const p = typeof query === 'string' ? query : query.path, filters = (query.filters || []).filter(row => row?.field);
+          workspaceReads.push(p);
+          if (window.workspaceFailCollection === p) throw Error('Simulated panel read failure');
           if (p === 'campaigns/a/inventory' && window.pauseInventoryRead) {window.pauseInventoryRead = false; await new Promise(resolve => window.finishInventoryRead = resolve);}
           return {docs: Object.entries(testSheetDocs).filter(([key, data]) => key.startsWith(p + '/') && !key.slice(p.length + 1).includes('/') && filters.every(f => {const value = f.field.split('.').reduce((d, key) => d?.[key], data); return f.op === 'array-contains' ? value?.includes(f.value) : value === f.value;}))
             .map(([key, data]) => ({id: key.split('/').at(-1), ref: key, data: () => structuredClone(data)}))};
@@ -91,6 +94,24 @@ const root = path.resolve(__dirname, '..');
     assert.deepEqual(await picker().locator('option').evaluateAll(rows => rows.map(row => row.value).filter(Boolean)), ['c1', 'c2']);
     for (const tab of ['overview', 'skills', 'combat', 'spells', 'inventory', 'builder', 'feats', 'story']) assert.equal(await page.locator('[data-sheet-tab="' + tab + '"]').count(), 1, 'existing sheet engine sections remain available');
     await page.locator('#sheetPrint').click(); assert.equal(await page.locator('#sheetPrintDialog').isVisible(), true); await page.locator('[data-print-cancel]').click();
+    const requests = await page.evaluate(async () => {
+      items = []; savedItemLoadKey = ''; workspaceReads = [];
+      await CharacterWorkspace.open('c1', 'character-wishlist');
+      const wishlist = [...workspaceReads];
+      testSheetDocs['campaigns/a/saves/missing-performance'] = {userId:'player',characterId:'c1',itemId:'removed'};
+      workspaceReads = []; await CharacterWorkspace.refresh();
+      const missing = [...workspaceReads];
+      delete testSheetDocs['campaigns/a/saves/missing-performance'];
+      workspaceReads = []; await CharacterWorkspace.open('c1', 'character-loot');
+      const loot = [...workspaceReads];
+      return {wishlist, missing, loot};
+    });
+    assert.deepEqual(requests.wishlist.sort(), ['campaigns/a/items', 'campaigns/a/saves']);
+    assert.deepEqual(requests.missing.sort(), ['campaigns/a/items', 'campaigns/a/saves'], 'unavailable saved records do not trigger a duplicate item read');
+    assert.deepEqual(requests.loot.sort(), ['campaigns/a/inventory', 'campaigns/a/items'], 'player gear needs neither saves nor DM supply');
+    await page.evaluate(async () => {workspaceFailCollection='campaigns/a/items';try{await CharacterWorkspace.refresh();throw Error('Expected read failure');}catch(error){if(error.message!=='Simulated panel read failure')throw error;}finally{workspaceFailCollection=null;}workspaceReads=[];await CharacterWorkspace.refresh();});
+    assert.deepEqual(await page.evaluate(() => workspaceReads.sort()), ['campaigns/a/inventory', 'campaigns/a/items'], 'failed reads remain retryable');
+    console.log('PASS Wishlist reads only items/saves without duplicate missing-item queries; player loot reads only items/inventory; failed refresh retries');
     await section('character-loot').click();
     assert.deepEqual(await page.locator('#characterLootGrid .item-name').allTextContents(), ['Thorin tonic', 'Hidden keepsake']);
     assert.equal(await page.locator('#characterLootGrid .use-button').count(), 2);
@@ -171,12 +192,14 @@ const root = path.resolve(__dirname, '..');
     await page.locator('[data-dm-sheet="c3"]').click(); await page.waitForFunction(() => sheetSession?.characterId === 'c3'); await assertContext('c3');
     assert.equal(await page.evaluate(() => selectedCharacter.id), 'cdm');
     await section('character-loot').click();
+    assert.deepEqual(await page.evaluate(async () => {workspaceReads=[];await CharacterWorkspace.refresh();return workspaceReads.sort();}), ['campaigns/a/inventory','campaigns/a/items','campaigns/a/supply'], 'DM gear retains supply but does not reload saves');
     assert.deepEqual(await page.locator('#characterLootGrid .item-name').allTextContents(), ['Elara relic']);
     for (const selector of ['.edit-button', '.clone-button', '.visibility-toggle-btn', '.highlight-button', '.unloot-button', '.transfer-button', '.use-button']) assert.equal(await page.locator('#characterLootGrid ' + selector).count(), 1, 'DM loot cards must retain ' + selector);
     assert.equal(await page.locator('#characterLootGrid .delete-item-button').count(),0,'Assigned inventory uses return/transfer controls; source removal belongs in Library');
     await page.locator('#characterLootGrid .transfer-button').click(); await page.locator('#actionCharacter').selectOption('c2'); await page.locator('#confirmInventoryAction').click();
     await page.waitForFunction(() => testSheetDocs['campaigns/a/inventory/e3'].quantity === 1);
     assert.equal(await page.evaluate(() => callLog.at(-1).data.characterId), 'c3'); assert.equal(await page.evaluate(() => callLog.at(-1).data.targetCharacterId), 'c2');
+    assert.deepEqual(await page.evaluate(async () => {workspaceReads=[];await CharacterWorkspace.open('c3','character-wishlist');return workspaceReads.sort();}), ['campaigns/a/items','campaigns/a/saves'], 'DM wishlist does not read supply or inventory');
     await section('character-wishlist').click(); assert.match(await page.locator('#characterWishlistGrid').textContent(), /Elara relic/); assert.doesNotMatch(await page.locator('#characterWishlistGrid').textContent(), /Rook ring/);
     console.log('PASS Superseded sheet loads cannot change context; DM Party opens others and preserves full inventory transfer controls');
 
