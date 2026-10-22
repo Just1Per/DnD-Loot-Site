@@ -44,8 +44,15 @@ function createCampaignInformationStore(sdk, kind = 'world') {
   }
   function writePrepared(tx,campaignId,id,image,prepared){
     if(!prepared)return; // Existing metadata-only callers remain compatible.
-    if(!image||prepared.path!==image.path||!['image/png','image/jpeg','image/webp'].includes(prepared.contentType)||typeof prepared.data!=='string'||!prepared.data.length||prepared.data.length>700000||!/^[A-Za-z0-9+/]+={0,2}$/.test(prepared.data))throw Error('Prepare a valid saved illustration before publishing.');
+    const valid=(copy,limit)=>image&&copy?.path===image.path&&['image/png','image/jpeg','image/webp'].includes(copy.contentType)&&typeof copy.data==='string'&&copy.data.length>0&&copy.data.length<=limit&&/^[A-Za-z0-9+/]+={0,2}$/.test(copy.data);
+    if(!valid(prepared,700000))throw Error('Prepare a valid saved illustration before publishing.');
+    if(prepared.thumbnail&&(!['world','creature'].includes(kind)||!valid(prepared.thumbnail,88000)))throw Error('Prepare a valid thumbnail before publishing.');
     tx.set(doc(db,'campaigns',campaignId,'playerIllustrations',kind,'entries',id),{path:prepared.path,contentType:prepared.contentType,data:prepared.data});
+    if(prepared.thumbnail){
+      const copy=prepared.thumbnail;
+      tx.set(doc(db,'campaigns',campaignId,'playerIllustrationThumbnails',kind,'entries',id),{path:copy.path,contentType:copy.contentType,data:copy.data});
+      image.thumbnail=true;
+    }
   }
   async function publish({campaignId,id,sourceRevision,publishedRevision=0,includeImage=false,preparedImage=null,isCurrent=()=>true}) {
     const uid=actor();
