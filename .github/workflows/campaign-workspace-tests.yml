@@ -158,6 +158,7 @@ jobs:
       run: |-
         npm --prefix tests run test:journal-cards
         npm --prefix tests run test:world-navigation
+        npm --prefix tests run test:map-preview-loading
         npm --prefix tests run test:campaign-map
         npm --prefix tests run test:map-styles-regions
     - name: Shared party journal, notebook reader and private recap permissions
