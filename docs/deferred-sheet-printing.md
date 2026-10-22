@@ -6,7 +6,7 @@ Første åbning af et karakterark henter printkoden samtidig med arkets private 
 
 Den asynkrone åbning bevarer eksisterende generation-, konto- og kampagnetjek. Et forsinket resultat kan ikke åbne et gammelt ark, efter at man har skiftet konto/kampagne eller lukket arket. Kun offentlig kode caches; ingen karakterdata eller credentials indgår i loaderens cache. Modulet virker også efter, at bootstrap har fjernet sin midlertidige SDK-binding.
 
-Dette er et lille første trin, ikke en færdig omlægning af karakterbygger og spells. De øvrige 101 featurefiler følger fortsat den eksisterende opstartsindlæsning. En bredere omlægning kræver særlig kontrol af de UI-moduler, som udvider hinandens funktioner i en bestemt rækkefølge.
+Dette var første trin. Den efterfølgende omlægning i [deferred-sheet-tools.md](deferred-sheet-tools.md) flytter yderligere fire UI-moduler til første åbning af arket og reducerer opstartslisten til 97 scripts. Beregningsmotorer, fælles referencekataloger og de øvrige karaktermoduler er fortsat i den obligatoriske opstart.
 
 Validering: ny browsertest bruger den faktiske scriptloader og printfil, uden print i testens obligatoriske features. Den dækker ingen print-request før behov, fejl/genforsøg, ægte printlayout uden writes, kodegenbrug, samtidige åbninger og sene svar efter konto-/kampagneskift eller lukning. Eksisterende karakter-workspace, 23 print-DOM-checks og Hosting-packaging består.
 

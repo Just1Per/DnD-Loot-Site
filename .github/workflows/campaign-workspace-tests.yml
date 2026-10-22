@@ -132,6 +132,7 @@ jobs:
       run: npm --prefix tests run test:campaign-deletion
     - name: Shared character sheet, gear and bookmark context
       run: |-
+        npm --prefix tests run test:sheet-tools-loading
         npm --prefix tests run test:sheet-print-loading
         npm --prefix tests run test:character-workspace
     - name: Page editors, dirty drafts and retryable campaign setup
