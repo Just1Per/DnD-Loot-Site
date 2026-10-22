@@ -190,7 +190,6 @@ function renderDashboard() {
   if (list) {
     list.innerHTML = campaigns.length ? campaigns.map(c => `
       <button class="dashboard-campaign-card" data-campaign-id="${c.id}" type="button"><span class="dashboard-card-copy"><span class="dashboard-card-name">${escapeHtml(c.name || "Campaign")}</span><span class="dashboard-card-meta">${escapeHtml(c.description || "Open campaign")}</span></span><span class="dashboard-card-actions"><span class="role-badge">${escapeHtml(c.membershipRole || "player")}</span><span aria-hidden="true">→</span></span></button>`).join("") : `<div class="dashboard-empty">${isDM() ? "You have no active campaigns yet. Create one below." : "No campaigns yet. Pending invitations will appear above when your email is invited."}</div>`;
-    CampaignDeletion.mountDashboard(list);
     list.querySelectorAll("[data-campaign-id]").forEach(btn => btn.addEventListener("click", () => { const camp = campaigns.find(c => c.id === btn.dataset.campaignId); if (camp) enterCampaign(camp); }));
   }
 

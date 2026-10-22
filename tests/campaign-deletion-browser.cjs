@@ -22,9 +22,20 @@ const errors=[];
 
 
 
- await page.evaluate(()=>{auditSeed('dm');testSheetDocs['campaigns/a']={name:'Storm Coast',ownerId:'dm',dmId:'dm',inventoryVersion:2};showTab('dm-settings')});
+ await page.evaluate(()=>{auditSeed('dm');testSheetDocs['campaigns/a']={name:'Storm Coast',ownerId:'dm',dmId:'dm',inventoryVersion:2};renderCampaignSelector();showTab('campaign-home')});
+ assert.equal(await page.locator('#campaignSelectorList [data-delete-campaign], #tab-campaign-home [data-delete-campaign]').count(),0);
+ await page.evaluate(()=>showTab('dm-settings'));
+ assert.equal(await page.evaluate(()=>document.getElementById('campaignSettingsPanel').lastElementChild.id),'campaignDeletionSettings');
  assert.equal(await page.locator('#campaignDeletionSettings [data-delete-campaign=a]').count(),1);
- await page.locator('#campaignDeletionSettings [data-delete-campaign=a]').click();assert.equal(await page.evaluate(()=>document.activeElement?.hasAttribute('data-site-cancel')),true);await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a'].deletedAt),undefined);
+ for(const width of [1440,390]){
+  await page.setViewportSize({width,height:1000});
+  await page.locator('#campaignDeletionSettings').scrollIntoViewIfNeeded();
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  const violations=await page.evaluate(async()=>(await axe.run('#campaignDeletionSettings',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations.map(v=>v.id));assert.deepEqual(violations,[]);
+  await page.screenshot({path:out+'/campaign-delete-settings-'+width+'.png'});
+ }
+
+ await page.locator('#campaignDeletionSettings [data-delete-campaign=a]').click();assert.equal(await page.evaluate(()=>document.activeElement?.hasAttribute('data-site-cancel')),true);assert.ok((await page.locator('#siteConfirmationDialog').innerText()).includes('Stored campaign records and files are retained for recovery'));assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a'].deletedAt),undefined);await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a'].deletedAt),undefined);
  await page.locator('#campaignDeletionSettings [data-delete-campaign=a]').click();await page.locator('[data-site-confirm]').click();await page.waitForFunction(()=>activeCampaign===null);
  await page.evaluate(()=>enterCampaign({id:'a',name:'Stale campaign shortcut'}));assert.equal(await page.evaluate(()=>activeCampaign),null);
  assert.equal(await page.evaluate(()=>testSheetDocs['campaigns/a'].deletedBy),'dm');assert.equal(await page.locator('[data-campaign-id=a]').count(),0);
