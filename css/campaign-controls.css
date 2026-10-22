@@ -34,3 +34,9 @@
  .site-header button:not(.vault-help-badge){min-height:44px}
  .campaign-workspace :is(input:not([type=checkbox]):not([type=radio]),select,textarea){font-size:16px}
 }
+
+#campaignSettingsPanel .campaign-deletion-settings{margin-top:32px;border:1px solid #9b5148;border-top:3px solid #742a26;background:#fcf4ee;padding:20px;border-radius:8px}
+#campaignSettingsPanel .campaign-deletion-settings h2{color:#742a26;margin-top:0}
+#campaignSettingsPanel .campaign-deletion-settings p{max-width:72ch;line-height:1.6}
+#mainApp #campaignSettingsPanel .campaign-deletion-settings [data-delete-campaign]{width:auto;min-height:44px;padding:10px 16px;border:1px solid #742a26;border-radius:5px;background:#742a26;color:#fff;font:inherit;cursor:pointer}
+#mainApp #campaignSettingsPanel .campaign-deletion-settings [data-delete-campaign]:focus-visible{outline:3px solid #742a26;outline-offset:3px}
