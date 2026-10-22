@@ -392,16 +392,10 @@ var CampaignDeletion=(()=>{
   }catch(error){if(current())alert('Could not delete campaign: '+error.message);return false;}
  }
  function button(campaign){const node=document.createElement('button');node.type='button';node.dataset.deleteCampaign=campaign.id;node.textContent='Delete campaign';node.setAttribute('aria-label','Delete campaign '+campaign.name);node.onclick=()=>runVaultButton(node,()=>request(campaign));return node;}
- function mountDashboard(list){
-  for(const node of [...list.querySelectorAll('[data-campaign-id]')]){
-   const campaign=campaigns.find(row=>row.id===node.dataset.campaignId);if(!permitted(campaign))continue;
-   const row=document.createElement('div');row.style.cssText='display:flex;gap:10px;align-items:center;flex-wrap:wrap';node.before(row);row.append(node,button(campaign));
-  }
- }
  function mountSettings(){
   document.getElementById('campaignDeletionSettings')?.remove();
-  const host=document.querySelector('#campaignSettingsPanel .dm-tools-grid');if(!host||!permitted(activeCampaign))return;
-  const section=document.createElement('section');section.id='campaignDeletionSettings';section.className='dm-tool-card';section.innerHTML='<h2>Delete campaign</h2><p>Remove this campaign for everyone. Stored records are retained for recovery.</p>';section.append(button(activeCampaign));host.append(section);
+  const host=document.getElementById('campaignSettingsPanel');if(!host||!permitted(activeCampaign))return;
+  const section=document.createElement('section');section.id='campaignDeletionSettings';section.className='dm-tool-card campaign-deletion-settings';section.setAttribute('aria-labelledby','campaignDeletionHeading');section.innerHTML='<h2 id="campaignDeletionHeading">Delete campaign</h2><p>This ends access for every member, including access to characters, items, journal and images. Stored records are retained for recovery.</p><p>You will be asked to confirm before access is removed.</p>';section.append(button(activeCampaign));host.append(section);
  }
  async function renderAdmin(){
   const parent=document.getElementById('adminPanel');if(!parent||!isAdmin())return;
@@ -411,7 +405,7 @@ var CampaignDeletion=(()=>{
   try{const rows=await store.list();if(!current())return;section.querySelector('[data-campaign-management-status]').textContent=rows.length+' active campaigns';const list=section.querySelector('[data-admin-campaigns]');for(const campaign of rows){const row=document.createElement('div');row.className='dashboard-campaign-card';const title=document.createElement('strong');title.textContent=campaign.name||'Unnamed campaign';row.append(title,button(campaign));list.append(row);}}
   catch(error){if(current()){section.querySelector('[data-campaign-management-status]').textContent='Could not load campaigns: '+error.message;const retry=document.createElement('button');retry.type='button';retry.textContent='Retry loading campaigns';retry.onclick=renderAdmin;section.append(retry);}}
  }
- return{request,mountDashboard,mountSettings,renderAdmin,store};
+ return{request,mountSettings,renderAdmin,store};
 })();
 
 
