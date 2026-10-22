@@ -112,5 +112,47 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
   await env.withSecurityRulesDisabled(c=>sdk.updateDoc(sdk.doc(c.firestore(),'campaigns/preview'),{status:'deleted',deletedAt:sdk.Timestamp.now(),deletedBy:'owner'}));
   for(const uid of ['owner','dm','player'])for(const path of [nextOriginal,nextOverview])await assertFails(read(uid,path));
  });
+ await check('Named maps have separate private drafts, images, places and atomic publications',async()=>{
+  await env.withSecurityRulesDisabled(async c=>{for(const [path,data] of Object.entries({'campaigns/multi':{ownerId:'owner'},'campaigns/multi/members/dm':{role:'dm',status:'active'},'campaigns/multi/members/player':{role:'player',status:'active'}}))await sdk.setDoc(sdk.doc(c.firestore(),path),data);});
+  const north=createCampaignMapStore({...sdk,db:contexts.dm.firestore(),auth:{currentUser:{uid:'dm'}}},{mapId:'north'}),south=createCampaignMapStore({...sdk,db:contexts.dm.firestore(),auth:{currentUser:{uid:'dm'}}},{mapId:'south'});
+  const picture='campaign-map-place-images/multi/north/town/first',pin={id:'town',name:'North town',description:'Public northern town',x:30,y:40,type:'City',revealed:true,picturePath:picture,pictureAlt:'Northern town',worldEntryId:''};
+  for(const path of ['campaign-maps/multi/north/original','campaign-maps/multi/north/overview','campaign-maps/multi/south/original',picture]){await upload('dm',path);await assertFails(read('player',path));}
+  const draft=await north.saveDraft({campaignId:'multi',input:{title:'Northlands',imagePath:'campaign-maps/multi/north/original',previewPath:'campaign-maps/multi/north/overview',pins:[pin,{...pin,id:'secret',name:'PRIVATE NORTH',revealed:false,picturePath:'',pictureAlt:''}]},revision:0,sourceRevision:0});
+  await south.saveDraft({campaignId:'multi',input:{title:'PRIVATE SOUTH',imagePath:'campaign-maps/multi/south/original',pins:[]},revision:0,sourceRevision:0});
+  await north.publish({campaignId:'multi',draftRevision:draft.revision});
+  assert.deepEqual((await stores.player.listMaps('multi')).map(row=>row.title),['Northlands']);assert.equal((await stores.dm.listMaps('multi',{drafts:true})).length,2);
+  for(const uid of ['player','outsider','revoked','admin'])await assertFails(stores[uid].listMaps('multi',{drafts:true}));
+  for(const path of ['campaign-maps/multi/north/original','campaign-maps/multi/north/overview',picture])await assertSucceeds(read('player',path));await assertFails(read('player','campaign-maps/multi/south/original'));
+  const playerNorth=createCampaignMapStore({...sdk,db:contexts.player.firestore(),auth:{currentUser:{uid:'player'}}},{mapId:'north'});assert.equal((await playerNorth.listPins('multi',await playerNorth.load('multi'))).length,1);
+  await assertFails(sdk.getDoc(sdk.doc(contexts.player.firestore(),'campaigns/multi/campaignMaps/north/pins/secret')));
+  await assert.rejects(south.saveDraft({campaignId:'multi',input:{title:'Wrong map',imagePath:'campaign-maps/multi/north/original',pins:[]},revision:1,sourceRevision:0}),/belonging/);
+  const ref=sdk.doc(contexts.dm.firestore(),'campaigns/multi/campaignMapDrafts/south'),old=(await sdk.getDoc(ref)).data();
+  for(const imagePath of ['campaign-maps/multi/north/original','campaign-maps/a/first','https://example.com/map.png'])await assertFails(sdk.setDoc(ref,{...old,revision:2,imagePath}));
+ });
+ await check('Only campaign DMs organise maps; main selection requires a publication and rejects malformed or stale preferences',async()=>{
+  let prefs=await stores.dm.savePreferences({campaignId:'multi',order:['south','north'],mainMapId:'north',revision:0});assert.equal((await stores.player.loadPreferences('multi')).mainMapId,'north');
+  assert.equal((await sdk.getDoc(sdk.doc(contexts.dm.firestore(),'campaigns/multi/campaignMaps/north'))).data().revision,1,'Reordering never changes map/pin publication revisions');
+  await assert.rejects(stores.dm.savePreferences({campaignId:'multi',order:['south','north'],mainMapId:'south',revision:1}),/Publish/);
+  await assert.rejects(stores.dm.savePreferences({campaignId:'multi',order:['north'],mainMapId:'north',revision:0}),/changed/);
+  await assert.rejects(stores.dm.savePreferences({campaignId:'multi',order:['north'],mainMapId:'north',revision:1,isCurrent:()=>false}),/access changed/);
+  for(const uid of ['player','outsider','revoked','admin'])await assertFails(stores[uid].savePreferences({campaignId:'multi',order:['north'],mainMapId:'north',revision:1}));
+  const ref=sdk.doc(contexts.dm.firestore(),'campaigns/multi/mapPreferences/main');
+  for(const change of [{order:['north','north']},{order:[42]},{order:['bad/path']},{order:Array.from({length:51},(_,i)=>'map-'+i)},{mainMapId:'south'},{mainMapId:'bad/path'},{updatedBy:'player'},{privateNotes:'SECRET'}])await assertFails(sdk.setDoc(ref,{...prefs,revision:2,...change}));
+  prefs=await stores.dm.savePreferences({campaignId:'multi',order:Array.from({length:50},(_,i)=>'map-'+i),mainMapId:'north',revision:1});assert.equal(prefs.order.length,50);
+ });
+ await check('Identical pin identifiers stay isolated across maps; replacement, revocation and campaign deletion protect all maps',async()=>{
+  const make=(uid,mapId)=>createCampaignMapStore({...sdk,db:contexts[uid].firestore(),auth:{currentUser:{uid}}},{mapId}),north=make('dm','north'),south=make('dm','south');
+  const picture='campaign-map-place-images/multi/south/town/first';await upload('dm',picture);
+  const previous=await south.loadDraft('multi'),saved=await south.saveDraft({campaignId:'multi',input:{...previous,title:'Southlands',pins:[{id:'town',name:'South town',description:'Southern town',x:60,y:50,type:'City',revealed:true,picturePath:picture,pictureAlt:'South town',worldEntryId:''}]},revision:previous.revision,sourceRevision:previous.sourceRevision});await south.publish({campaignId:'multi',draftRevision:saved.revision});
+  for(const key of ['north','south']){const store=make('player',key);assert.equal((await store.listPins('multi',await store.load('multi')))[0].name,key==='north'?'North town':'South town');}
+  await assertSucceeds(read('player',picture));
+  const draft=await north.loadDraft('multi');await upload('dm','campaign-maps/multi/north/replacement');delete draft.previewPath;draft.imagePath='campaign-maps/multi/north/replacement';draft.pins=[];
+  const next=await north.saveDraft({campaignId:'multi',input:draft,revision:draft.revision,sourceRevision:draft.sourceRevision});await north.publish({campaignId:'multi',draftRevision:next.revision});
+  await assertFails(read('player','campaign-maps/multi/north/original'));await assertFails(read('player','campaign-maps/multi/north/overview'));await assertFails(read('player','campaign-map-place-images/multi/north/town/first'));await assertSucceeds(read('player',picture));await assertSucceeds(read('player','campaign-maps/multi/south/original'));
+  await env.withSecurityRulesDisabled(c=>sdk.updateDoc(sdk.doc(c.firestore(),'campaigns/multi/members/player'),{status:'inactive'}));
+  await assertFails(stores.player.listMaps('multi'));await assertFails(stores.player.loadPreferences('multi'));await assertFails(read('player',picture));
+  await env.withSecurityRulesDisabled(c=>sdk.updateDoc(sdk.doc(c.firestore(),'campaigns/multi'),{deletedAt:sdk.Timestamp.now(),deletedBy:'owner'}));
+  for(const uid of ['owner','dm','player']){await assertFails(stores[uid].listMaps('multi'));await assertFails(read(uid,'campaign-maps/multi/south/original'));}
+ });
  console.log('SUCCESS',count,'map Firestore/Storage permission checks');
 }finally{await env.cleanup();}})().catch(e=>{console.error(e);process.exitCode=1});

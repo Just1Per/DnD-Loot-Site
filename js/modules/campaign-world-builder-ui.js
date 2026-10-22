@@ -112,7 +112,7 @@ var WorldPostLayouts=(()=>{
   <section class="world-editor-private" data-world-option="notes">${textarea('privateNotes','Private DM notes',record.privateNotes)}</section>
   <section data-world-option="options">${textarea('summary','Short summary',record.summary,1000)}</section>
   <section class="world-editor-private" data-world-option="connections">${textarea('connections','Related places and people',record.data?.connections,20000,true)}<section data-workspace-links></section></section>
-  <section data-world-option="map"><p>Existing private reference image. The main campaign map is edited in DM Workspace → Map.</p><label class="workspace-field">Private reference image (optional)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><div data-map class="workspace-map"></div><div data-marker-list></div></section>
+  <section data-world-option="map"><p>Existing private reference image. Campaign maps are edited in DM Workspace → Maps.</p><label class="workspace-field">Private reference image (optional)<input type="file" accept="image/png,image/jpeg,image/webp" data-map-upload></label><div data-map class="workspace-map"></div><div data-marker-list></div></section>
   <label class="workspace-field" data-private-print><span><input type="checkbox" data-print-private> Include private preparation in print</span></label><div data-world-secondary-actions></div></details>`;
  config.previewHTML=WorldPostLayouts.preview;
  config.initialData=s=>({category:s.host.querySelector('[data-workspace-category]')?.value||'Location'});
