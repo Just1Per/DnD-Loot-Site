@@ -53,12 +53,15 @@ async function ensureGlobalCharacterRulesReference() {
   if (!store) return;
   for (const edition of ["2014", "2024"]) {
     try {
-      const remote = await store.loadEdition(edition);
+      let remote = await store.loadEdition(edition);
       const stale = !remote || Number(remote.version || 0) < Number(store.CATALOG_VERSION || 0);
       if (stale && isAdmin()) {
         await store.seedEdition(edition);
+        // Admin publication changes the source; hydrate must fetch that fresh version.
+        remote = undefined;
       }
-      await store.hydrate(edition);
+      // Reuse the version-checked snapshot instead of fetching both collections twice.
+      await store.hydrate(edition,remote);
     } catch (e) {
       console.warn("[rulesCatalog] using bundled fallback", edition, e?.message || e);
     }
