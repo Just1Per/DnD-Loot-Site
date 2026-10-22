@@ -226,6 +226,7 @@ document.getElementById("logoutButton")?.addEventListener("click",logoutFromSite
 let authStartupGeneration=0;
 onAuthStateChanged(auth, async (firebaseUser) => {
   const generation=++authStartupGeneration;
+  AdminAccounts.clear();
   ReusableLibrary.clear();
   CharacterWorkspace.clear();
   PageEditors.clear();
@@ -264,8 +265,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
       await Promise.all([
         loadCampaigns(),
         loadMyPendingInvites(),
-        loadMyDMRequest(),
-        isAdmin() ? Promise.all([loadUsers(), loadDMRequests()]) : Promise.resolve()
+        loadMyDMRequest()
       ]);
 
       if(!current())return;

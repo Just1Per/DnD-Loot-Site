@@ -38,13 +38,17 @@ async function loadMyDMRequest() {
   myDMRequest = snap.exists() ? { id: snap.id, ...snap.data() } : null;
 }
 
-async function loadDMRequests() {
+async function loadDMRequests({isCurrent=()=>true}={}) {
+  const uid=auth.currentUser?.uid;
+  const current=()=>!!uid&&auth.currentUser?.uid===uid&&isAdmin()&&isCurrent();
   if (!isAdmin()) {
     dmRequests = [];
     return;
   }
 
+  if(!current())return;
   const snap = await getDocs(collection(db, "dmRequests"));
+  if(!current())return;
   dmRequests = snap.docs
     .map(d => ({ id: d.id, ...d.data() }))
     .sort((a, b) => {
@@ -489,17 +493,17 @@ function ensureDMApprovalStyles() {
     .dm-application-heading strong{font-family:"Cinzel",serif;color:#5c1d1d;font-size:.82rem;letter-spacing:.5px}
     .dm-application-heading span:not(.role-badge){color:#776957;font-size:.7rem;line-height:1.45}
     .dm-application-label{display:flex;flex-direction:column;gap:5px;margin-top:9px;color:#5c1d1d;font-family:"Cinzel",serif;font-size:.68rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
-    .dm-application-label span{font-family:inherit;font-weight:400;text-transform:none;color:#8a7355}
+    .dm-application-label span{font-family:inherit;font-weight:400;text-transform:none;color:#69543d}
     .dm-application-label textarea{background:#fdfbf7;border:2px solid #8a7355;border-radius:7px;color:#333;font:inherit;letter-spacing:normal;padding:8px 10px;resize:vertical;text-transform:none}
     .dm-application-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     .dm-application-note{background:#fdfbf7;border-left:3px solid #c79c32;border-radius:4px;color:#6f6253;font-size:.72rem;line-height:1.45;margin:8px 0;padding:8px 10px}
-    .dm-request-summary{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 14px;color:#8a7355;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
+    .dm-request-summary{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0 14px;color:#69543d;font-size:.72rem;text-transform:uppercase;letter-spacing:.5px}
     .dm-request-group h3{font-family:"Cinzel",serif;color:#5c1d1d;font-size:.76rem;letter-spacing:.6px;margin:14px 0 8px;text-transform:uppercase}
     .dm-request-admin-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;background:#fdfbf7;border:1px solid #c8b89a;border-radius:8px;margin:8px 0;padding:12px}
     .dm-request-admin-main{min-width:0;flex:1}
     .dm-request-admin-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     .dm-request-admin-title strong{font-family:"Cinzel",serif;color:#5c1d1d;font-size:.78rem}
-    .dm-request-admin-meta{color:#8a7355;font-size:.68rem;margin:3px 0 8px;word-break:break-all}
+    .dm-request-admin-meta{color:#69543d;font-size:.68rem;margin:3px 0 8px;word-break:break-all}
     .dm-request-admin-main p{color:#5f5549;font-size:.72rem;line-height:1.45;margin:5px 0}
     .dm-request-review-note{font-style:italic}
     .dm-request-admin-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}

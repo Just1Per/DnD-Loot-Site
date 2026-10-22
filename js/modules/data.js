@@ -178,19 +178,17 @@ async function loadSaves() {
 }
 
 /** User data is global admin data. Campaign DMs use member documents instead. */
-async function loadUsers() {
-  if (isAdmin()) {
-    users = (await getDocs(collection(db, "users")))
-      .docs.map(d => ({ id: d.id, ...d.data() }));
-
-    // One-time/ongoing directory backfill. Directory sync is deliberately
-    // non-fatal so an unavailable directory can never break admin login.
-    await Promise.allSettled(users.map(user => syncUserDirectoryEntry(user.id, user)));
-  } else {
-    // Strict rules intentionally do not let a campaign DM read every user's
-    // global profile. DM/member UI is rendered from campaign membership data.
-    users = [];
-  }
+async function loadUsers({isCurrent=()=>true}={}) {
+  const uid=auth.currentUser?.uid;
+  const current=()=>!!uid&&auth.currentUser?.uid===uid&&isAdmin()&&isCurrent();
+  if(!isAdmin()){users=[];return;}
+  if(!current())return;
+  const snap=await getDocs(collection(db,"users"));
+  if(!current())return;
+  const rows=snap.docs.map(d=>({id:d.id,...d.data()}));
+  users=rows;
+  // Preserve directory compatibility, but only on the explicit Admin path.
+  await Promise.allSettled(rows.map(user=>current()?syncUserDirectoryEntry(user.id,user):Promise.resolve()));
 }
 
 /** Load the active roster for campaign management, rather than the global user directory. */

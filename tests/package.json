@@ -29,6 +29,7 @@
     "test:creature-editor": "node creature-editor-browser.cjs",
     "test:creature-bulk-import": "node creature-bulk-import-browser.cjs",
     "test:root-picker": "node root-catalogue-picker-browser.cjs",
+    "test:admin-accounts": "node admin-accounts-browser.cjs",
     "test:admin-catalogue": "node admin-catalogue-loading-browser.cjs",
     "test:ui": "node ui-cleanup-browser.cjs",
     "test:navigation": "node navigation-browser.cjs",

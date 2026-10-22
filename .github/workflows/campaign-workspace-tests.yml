@@ -115,6 +115,7 @@ jobs:
       run: npm --prefix tests run test:root-picker
     - name: Admin catalogue loading, retry and account isolation
       run: |-
+        npm --prefix tests run test:admin-accounts
         npm --prefix tests run test:admin-catalogue
         npm --prefix tests run test:library-dm-panel
         npm --prefix tests run test:library-browsing
