@@ -246,8 +246,10 @@ async function enterCampaign(campaign) {
   const generation = ++campaignLoadGeneration;
   hideAllScreens();
   try {
-    const fresh = await getDoc(doc(db, "campaigns", campaign.id));
-    const membership = await getDoc(doc(db, "campaigns", campaign.id, "members", uid));
+    const [fresh, membership] = await Promise.all([
+      getDoc(doc(db, "campaigns", campaign.id)),
+      getDoc(doc(db, "campaigns", campaign.id, "members", uid))
+    ]);
     if (generation !== campaignLoadGeneration || auth.currentUser?.uid!==uid) return false;
     if (!fresh.exists() || fresh.data().deletedAt) throw new Error("Campaign no longer exists.");
     const owner = fresh.data().ownerId === uid;
