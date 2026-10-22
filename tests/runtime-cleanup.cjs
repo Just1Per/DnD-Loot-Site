@@ -220,3 +220,20 @@ test('campaign owner still opens without a membership record and failed reads fa
   failed.pending.get('campaigns/a').resolve(failed.campaign());failed.pending.get('campaigns/a/members/player').reject(Error('Unavailable'));
   assert.equal(await denied,false);assert.equal(failed.loads.length,0);assert.equal(failed.context.activeCampaign,null);
 });
+
+
+test('concurrent public image variants share one lookup, cache success and retry misses',async()=>{
+  const calls=[];let release;
+  const {context}=runtime('images.js',{imageCache:new Map(),storage:{},ref:(_,p)=>p,
+    PLACEHOLDER_IMAGE:'placeholder',getDownloadURL:p=>{calls.push(p);return new Promise(resolve=>{release=resolve})}});
+  const first=context.resolveImageUrl('Sword-plus-1-red');
+  const second=context.resolveImageUrl('Sword-plus-2-blue');
+  assert.deepEqual(calls,['dnd-item-images/sword.png']);
+  release('https://public.example/sword.png');
+  assert.deepEqual(await Promise.all([first,second]),['https://public.example/sword.png','https://public.example/sword.png']);
+  assert.equal(await context.resolveImageUrl('Sword-green'),'https://public.example/sword.png');
+  assert.equal(calls.length,1);
+  const missing=context.resolveImageUrl('wand');release('');assert.equal(await missing,'placeholder');
+  const retry=context.resolveImageUrl('wand');assert.equal(calls.length,3);release('https://public.example/wand.png');
+  assert.equal(await retry,'https://public.example/wand.png');
+});

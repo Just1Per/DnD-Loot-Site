@@ -65,7 +65,7 @@ let catalogVersion   = 0;     // master catalogue version used by IndexedDB cach
 const editingItems = new Set();
 const imageCache   = new Map();
 
-const PLACEHOLDER_IMAGE = "./placeholder.png";
+const PLACEHOLDER_IMAGE = "./assets/ui/placeholder-384-v1.webp";
 
 // Step 7 performance pass. The tiny metadata document lives inside /items so
 // the existing public-read/admin-write item rules already protect it. It is

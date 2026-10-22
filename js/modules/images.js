@@ -49,11 +49,22 @@ async function loadStorageImage(path) {
   catch { return ""; }
 }
 
+// Only shared, public catalogue art uses this cache. Private campaign art stays separate.
+const pendingPublicImages = new Map();
 async function resolveImageUrl(itemId) {
-  const cached = getCachedImageUrl(itemId);
+  const baseId = getBaseImageId(itemId);
+  const cached = getCachedImageUrl(itemId) || getCachedImageUrl(baseId);
   if (cached) return cached;
 
-  const url = await loadStorageImage(`dnd-item-images/${getBaseImageId(itemId)}.png`);
+  let pending = pendingPublicImages.get(baseId);
+  if (!pending) {
+    pending = loadStorageImage(`dnd-item-images/${baseId}.png`).then(url => {
+      if (url) cacheImageUrl(baseId, url);
+      return url;
+    }).finally(() => pendingPublicImages.delete(baseId));
+    pendingPublicImages.set(baseId, pending);
+  }
+  const url = await pending;
   if (url) cacheImageUrl(itemId, url);
   return url || PLACEHOLDER_IMAGE;
 }
