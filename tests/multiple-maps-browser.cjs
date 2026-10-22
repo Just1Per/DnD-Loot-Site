@@ -42,10 +42,12 @@ const errors=[];
  check('An additional draft remains unpublished',await page.evaluate(id=>!!testSheetDocs['campaigns/a/campaignMapDrafts/'+id]&&!testSheetDocs['campaigns/a/campaignMaps/'+id],secret));
  await select(city);await page.locator('[data-map-preview]').click();assert.equal(await page.locator('[data-map-new]').count(),0);assert.equal(await page.locator('.campaign-map').textContent().then(t=>t.includes('PRIVATE Winter Road')),false);await select('main');assert.equal(await page.evaluate(()=>CampaignMap.session.preview),true);await page.locator('[data-map-preview]').click();await select(city);await organise();await page.locator('[data-map-main]').click();await page.waitForFunction(id=>!CampaignMap.session.busy&&CampaignMap.session.preferences.mainMapId===id,city);
  await organise();await page.locator('[data-map-earlier]').click();await page.waitForFunction(id=>!CampaignMap.session.busy&&CampaignMap.session.preferences.order[0]===id,city);
+ assert.equal(await page.locator('.map-organise').evaluate(d=>d.open),true);
  check('Keyboard controls persist map order and one main-map choice',await page.evaluate(id=>testSheetDocs['campaigns/a/mapPreferences/main'].mainMapId===id&&testSheetDocs['campaigns/a/mapPreferences/main'].order[0]===id,city));
  // Drag the selected map to the last tab; keyboard ordering remains an alternative.
  await page.locator('[data-select-map="'+city+'"]').dragTo(page.locator('[data-select-map="'+secret+'"]'));await page.waitForFunction(id=>!CampaignMap.session.busy&&CampaignMap.session.preferences.order.at(-1)===id,city);
  check('Dragging persists the selected map position without changing the main map',await page.evaluate(id=>CampaignMap.session.preferences.mainMapId===id,city));
+ await page.locator('[data-select-map=main]').dragTo(page.locator('[data-select-map="'+city+'"]'));await page.waitForFunction(()=>!CampaignMap.session.busy&&CampaignMap.session.preferences.order.at(-1)==='main');assert.equal(await page.evaluate(()=>CampaignMap.session.mapId),city);
  // Organisation failures keep the same selection, content and previous order.
  await page.evaluate(()=>window.failMapWrite=true);await organise();const oldOrder=await page.evaluate(()=>[...CampaignMap.session.preferences.order]);await page.locator('[data-map-earlier]').click();await page.waitForFunction(()=>!CampaignMap.session.busy);assert.deepEqual(await page.evaluate(()=>CampaignMap.session.preferences.order),oldOrder);await page.evaluate(()=>window.failMapWrite=false);
  // Switching maps honours the existing unsaved-draft warning.
