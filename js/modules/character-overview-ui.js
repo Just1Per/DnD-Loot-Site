@@ -27,7 +27,10 @@ function toggleClassFeatureOverview(key,part){
   const s=sheetSession,CP=CharacterClassProgression,d=CharacterSheetModel.derive(s.data,s.identity.level);
   if(!d.progression.classLevels.some(entry=>CP.unlocked(entry.classId,entry.level,entry.subclassId,s.data.build.edition).some(row=>CP.overviewKey(entry,row,s.data.build.edition)===key)))return;
   const current=CP.normalizeOverview(s.data.adobe.overviewFeatures)[key]||{enabled:false,showName:true,showDescription:false};
-  if(part==='enabled'){
+  if(part==='remove'){
+    current.enabled=false;current.showName=false;current.showDescription=false;
+  }
+  else if(part==='enabled'){
     // Add/remove both pieces together; the individual controls remain independent.
     const addBoth=!(current.enabled&&current.showName&&current.showDescription);
     current.enabled=addBoth;current.showName=addBoth;current.showDescription=addBoth;
@@ -112,7 +115,7 @@ function renderCharacterOverview(d) {
  host.querySelectorAll('[data-remove-feat-description]').forEach(button=>button.onclick=()=>toggleFeatOverviewDescription(button.dataset.removeFeatDescription));
  bindOverviewAttacks();
  host.querySelector('[data-overview-calculated]')?.addEventListener('click',toggleCalculatedOverview);
- host.querySelectorAll('[data-remove-overview-feature]').forEach(button=>button.onclick=()=>toggleClassFeatureOverview(button.dataset.removeOverviewFeature,'enabled'));
+ host.querySelectorAll('[data-remove-overview-feature]').forEach(button=>button.onclick=()=>toggleClassFeatureOverview(button.dataset.removeOverviewFeature,'remove'));
 }
 function closeSpellInformation(){const d=document.getElementById('sheetSpellInformation');if(d){if(d.open)d.close();d.remove();}}
 function openSpellInformation({catalogId='',index=null}={}) {

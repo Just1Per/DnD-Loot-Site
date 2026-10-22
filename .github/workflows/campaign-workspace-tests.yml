@@ -49,6 +49,8 @@ jobs:
         mkdir -p /tmp/campaignatlas-ui-checks
         set -o pipefail
         npm --prefix tests test 2>&1 | tee /tmp/campaignatlas-ui-checks/engine-dom.log
+    - name: Character Overview display controls
+      run: npm --prefix tests run test:builder
     - name: Catalogue migration and reviewed-catalogue logic
       run: |
         npm --prefix tests run test:catalogue-migration
