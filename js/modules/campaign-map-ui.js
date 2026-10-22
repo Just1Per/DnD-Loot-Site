@@ -71,7 +71,7 @@ var CampaignMap=(()=>{
    <aside class="map-place-panel" aria-label="Place details">${form?pinForm(s,form):selected?`<div class="map-hint">${escape(selected.type==='Region'?'Region':selected.markerStyle||'City')}</div><h3 data-place-heading tabindex="-1">${escape(selected.name)}</h3>${pictureMarkup(selected)}<div class="map-prose">${escape(selected.description||'No description added yet.')}</div>${world?'<button type="button" data-map-more>See more in World Builder →</button>':selected.worldEntryId?'<p class="map-hint">The linked World entry is not currently shared.</p>':''}${edit?'<div class="journal-actions"><button type="button" data-pin-edit>Edit place</button><button type="button" data-pin-delete>Remove place</button></div>':''}`:'<div class="map-hint">YOUR NEXT DISCOVERY</div><h3>Every place has a story</h3><p>Choose a city or region on the map to read what your party knows about it.</p>'}</aside></div></section>`;
   s.root.querySelector('[data-map-refresh]').onclick=()=>render(s.mode,s.mapId,s.preview);
   bindMapNavigation(s);
-  s.root.querySelector('[data-map-edit]')?.addEventListener('click',()=>{nextMapId=s.mapId;showTab('dm-map');});
+  s.root.querySelector('[data-map-edit]')?.addEventListener('click',()=>{nextMapId={mapId:s.mapId,campaignId:s.campaignId,uid:s.uid};showTab('dm-map');});
   s.root.querySelector('[data-map-preview]')?.addEventListener('click',()=>{if(!editable(s)||s.busy)return;if(s.pinDirty){status(s,'Save or cancel your place before switching views.');return;}s.preview=!s.preview;if(!s.preview)s.editing=true;s.selected=null;paint(s);});
   s.root.querySelector('[data-map-title]')?.addEventListener('input',event=>{s.draft.title=event.target.value;changed(s);});
   s.root.querySelector('[data-map-file]')?.addEventListener('change',event=>upload(s,event.target.files?.[0]));
@@ -213,7 +213,7 @@ var CampaignMap=(()=>{
   }catch(nextError){fail(s,nextError);}
  }
  async function render(mode='player',requestedMapId=null,preview=false){
-  requestedMapId=requestedMapId||nextMapId;nextMapId=null;
+  requestedMapId=requestedMapId||(nextMapId?.campaignId===activeCampaign?.id&&nextMapId?.uid===auth.currentUser?.uid?nextMapId.mapId:null);nextMapId=null;
   if(mode==='dm'&&!canManageCampaign())return;if(!guard(()=>render(mode,requestedMapId,preview)))return;clear();if(!activeCampaign||!auth.currentUser)return;
   const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,mode,route:mode==='dm'?'dm-map':'campaign-map',root:document.getElementById(mode==='dm'?'tab-dm-map':'tab-campaign-map'),mapId:'main',store:createCampaignMapStore(sdk),maps:[],preferences:{order:[],mainMapId:'',revision:0},map:null,pins:[],draft:null,pinEditor:null,mapDirty:false,pinDirty:false,busy:false,ready:false,editing:mode==='dm',preview:preview&&mode==='dm',placing:false,denied:false,selected:null,worlds:[],stops:[],pinStop:null,urls:new Map(),pendingImages:new Map(),failedPreviews:new Set(),zoom:1,panX:0,panY:0,message:'Loading campaign maps…'};session=s;paint(s);
   try{
