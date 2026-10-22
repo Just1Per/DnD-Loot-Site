@@ -88,5 +88,29 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
    await assertFails(sdk.runTransaction(db,async tx=>{const map=(await tx.get(mapRef)).data(),pin=(await tx.get(pinRef)).data(),revision=map.revision+1;tx.set(mapRef,{...map,revision});tx.set(pinRef,{...pin,revision,publishedRevision:revision,...invalid});}));
   }
  });
+ await check('Overview paths stay private in drafts, publish atomically, and follow replacement and revoked access',async()=>{
+  await env.withSecurityRulesDisabled(async c=>{for(const [path,data] of Object.entries({'campaigns/preview':{ownerId:'owner'},'campaigns/preview/members/dm':{role:'dm',status:'active'},'campaigns/preview/members/player':{role:'player',status:'active'}}))await sdk.setDoc(sdk.doc(c.firestore(),path),data);});
+  const original='campaign-maps/preview/original',overview='campaign-maps/preview/overview',unused='campaign-maps/preview/unreleased';
+  for(const path of [original,overview,unused]){await assertSucceeds(upload('dm',path));await assertFails(read('player',path));}
+  const draft=await stores.dm.saveDraft({campaignId:'preview',input:{title:'Overview atlas',imagePath:original,previewPath:overview,pins:[]},revision:0,sourceRevision:0});assert.equal(draft.previewPath,overview);
+  const ref=sdk.doc(contexts.dm.firestore(),'campaigns/preview/campaignMapDrafts/main'),row=(await sdk.getDoc(ref)).data();
+  for(const previewPath of ['campaign-maps/a/cross','https://example.com/map.png','',null,42,'campaign-maps/preview/'+ 'x'.repeat(101)])await assertFails(sdk.setDoc(ref,{...row,revision:2,previewPath}));
+  for(const uid of ['player','revoked','outsider','admin']){await assertFails(stores[uid].loadDraft('preview'));await assertFails(stores[uid].saveDraft({campaignId:'preview',input:draft,revision:1,sourceRevision:0}));await assertFails(read(uid,overview));}
+  const first=await stores.dm.publish({campaignId:'preview',draftRevision:draft.revision});assert.equal(first.map.previewPath,overview);
+  for(const path of [original,overview])await assertSucceeds(read('player',path));await assertFails(read('player',unused));
+  for(const uid of ['revoked','outsider','admin'])await assertFails(read(uid,overview));
+  const mapRef=sdk.doc(contexts.dm.firestore(),'campaigns/preview/campaignMaps/main'),map=(await sdk.getDoc(mapRef)).data();
+  for(const previewPath of ['campaign-maps/a/cross','https://example.com/map.png','',null,42])await assertFails(sdk.setDoc(mapRef,{...map,revision:2,previewPath}));
+  const nextOriginal='campaign-maps/preview/next-original',nextOverview='campaign-maps/preview/next-overview';for(const path of [nextOriginal,nextOverview])await upload('dm',path);
+  const next=await stores.dm.saveDraft({campaignId:'preview',input:{...first.draft,imagePath:nextOriginal,previewPath:nextOverview},revision:first.draft.revision,sourceRevision:first.draft.sourceRevision});
+  await assertSucceeds(read('player',overview));await assertFails(read('player',nextOverview));
+  await stores.dm.publish({campaignId:'preview',draftRevision:next.revision});
+  for(const path of [nextOriginal,nextOverview])await assertSucceeds(read('player',path));
+  for(const path of [original,overview]){await assertFails(read('player',path));await assertSucceeds(read('dm',path));}
+  await env.withSecurityRulesDisabled(c=>sdk.updateDoc(sdk.doc(c.firestore(),'campaigns/preview/members/player'),{status:'inactive'}));
+  for(const path of [nextOriginal,nextOverview])await assertFails(read('player',path));
+  await env.withSecurityRulesDisabled(c=>sdk.updateDoc(sdk.doc(c.firestore(),'campaigns/preview'),{status:'deleted',deletedAt:sdk.Timestamp.now(),deletedBy:'owner'}));
+  for(const uid of ['owner','dm','player'])for(const path of [nextOriginal,nextOverview])await assertFails(read(uid,path));
+ });
  console.log('SUCCESS',count,'map Firestore/Storage permission checks');
 }finally{await env.cleanup();}})().catch(e=>{console.error(e);process.exitCode=1});

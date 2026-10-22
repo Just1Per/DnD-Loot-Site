@@ -69,7 +69,8 @@ function createCampaignMapStore(sdk){
    if(worldEntryId)id(worldEntryId);
    return {id:pid,name:pin.name.trim(),description:pin.description.trim(),x:pin.x,y:pin.y,type:pin.type,markerStyle,boundary:regionBoundary,revealed:pin.revealed,picturePath,pictureAlt,worldEntryId};
   });
-  return {title:input.title.trim(),imagePath:input.imagePath,pins};
+  const preview=input.previewPath===undefined||input.previewPath===''?{}:{previewPath:image(cid,input.previewPath)};
+  return {title:input.title.trim(),imagePath:input.imagePath,pins,...preview};
  }
  async function saveDraft({campaignId,input,revision,sourceRevision,isCurrent=()=>true}){
   const uid=actor(),normalized=normalizeDraft(campaignId,input);
@@ -89,7 +90,7 @@ function createCampaignMapStore(sdk){
    const pins=normalized.pins.filter(pin=>pin.revealed),shared=new Set();
    for(const entryId of new Set(pins.map(pin=>pin.worldEntryId).filter(Boolean))){const entry=await tx.get(doc(db,'campaigns',id(campaignId),'playerInformation',id(entryId)));if(entry.exists())shared.add(entryId);}
    check(uid,isCurrent);
-   const next={title:normalized.title,imagePath:normalized.imagePath,schemaVersion:2,revision:oldRevision+1,updatedBy:uid,updatedAt:Date.now()};
+   const next={title:normalized.title,imagePath:normalized.imagePath,...(normalized.previewPath?{previewPath:normalized.previewPath}:{}),schemaVersion:2,revision:oldRevision+1,updatedBy:uid,updatedAt:Date.now()};
    tx.set(destination,next);
    for(const pin of pins){const {id:pid,revealed,...fields}=pin;tx.set(pinRef(campaignId,pid),{...fields,imagePath:next.imagePath,worldEntryId:shared.has(fields.worldEntryId)?fields.worldEntryId:'',schemaVersion:2,publishedRevision:next.revision,revision:next.revision,updatedBy:uid,updatedAt:next.updatedAt});}
    const savedDraft={...source,sourceRevision:next.revision,revision:source.revision+1,updatedBy:uid,updatedAt:next.updatedAt};tx.set(ref,savedDraft);
