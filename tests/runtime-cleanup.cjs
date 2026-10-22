@@ -163,3 +163,60 @@ test('admin seeding hydrates its freshly published version rather than the stale
   await context.ensureGlobalCharacterRulesReference();
   assert.deepEqual(installed,[{edition:'2014',version:1},{edition:'2024',version:1}]);
 });
+
+
+function campaignEntryRuntime(){
+  const reads=[],pending=new Map(),loads=[],alerts=[];
+  const noop=()=>{};
+  const {context}=runtime('dashboard.js',{
+    auth:{currentUser:{uid:'player'}},db:{},campaignLoadGeneration:0,activeCampaign:null,activeMembershipRole:null,
+    PageEditors:{guard:()=>true,clear:noop},SheetNavigation:{guard:()=>true},CharacterWorkspace:{clear:noop},
+    closeItemModal:noop,closeCharacterSheet:noop,closeVaultAction:noop,closeRootPicker:noop,
+    CampaignRules:{load:async()=>loads.push('rules'),watch:noop},canManageCampaign:()=>false,
+    loadCharacters:async()=>loads.push('characters'),loadSaves:async()=>loads.push('saves'),loadCampaignInventory:async()=>loads.push('inventory'),
+    document:{getElementById:()=>({})},showMainApp:noop,populateOwnerFilter:noop,renderMagicItemLoadPrompt:noop,
+    hideAllScreens:noop,showCampaignSelector:noop,AppNavigation:{clear:noop},alert:message=>alerts.push(message),
+    doc:(_, ...parts)=>parts.join('/'),getDoc:path=>{reads.push(path);return new Promise((resolve,reject)=>pending.set(path,{resolve,reject}))},
+    items:[],inventory:[],campaignSupply:{},itemState:{},characters:[],saves:[],campaignMembers:[],campaignInvites:[],selectedCharacter:null,
+    magicItemLibraryLoaded:false,magicItemLibraryLoading:false
+  });
+  // Replace UI-only function declarations loaded with the module.
+  context.hideAllScreens=noop;context.showCampaignSelector=noop;context.showMainApp=noop;
+  const campaign=(data={ownerId:'owner',name:'Campaign'})=>({id:'a',exists:()=>!!data,data:()=>data});
+  const member=(data={status:'active',role:'player'})=>({exists:()=>!!data,data:()=>data});
+  return{context,reads,pending,loads,alerts,campaign,member};
+}
+
+test('campaign opening starts independent reads together and waits for both authorization results',async()=>{
+  const f=campaignEntryRuntime();const opening=f.context.enterCampaign({id:'a'});
+  assert.deepEqual(f.reads,['campaigns/a','campaigns/a/members/player']);assert.equal(f.loads.length,0);
+  f.pending.get('campaigns/a').resolve(f.campaign());await Promise.resolve();assert.equal(f.loads.length,0);
+  f.pending.get('campaigns/a/members/player').resolve(f.member());assert.equal(await opening,true);
+  assert.equal(f.context.activeCampaign.id,'a');assert.equal(f.context.activeMembershipRole,'player');
+  assert.deepEqual(f.loads.sort(),['characters','inventory','rules','saves']);
+});
+
+test('parallel campaign reads retain revoked membership, deletion and missing campaign denial',async()=>{
+  for(const [data,membership] of [[{ownerId:'owner'},null],[{ownerId:'owner'},{status:'revoked'}],[{ownerId:'owner',deletedAt:123},{status:'active'}],[null,{status:'active'}]]){
+    const f=campaignEntryRuntime(),opening=f.context.enterCampaign({id:'a'});
+    f.pending.get('campaigns/a').resolve(f.campaign(data));f.pending.get('campaigns/a/members/player').resolve(f.member(membership));
+    assert.equal(await opening,false);assert.equal(f.loads.length,0);assert.equal(f.context.activeCampaign,null);assert.equal(f.alerts.length,1);
+  }
+});
+
+test('parallel campaign results are ignored after account or navigation changes',async()=>{
+  for(const change of [c=>{c.auth.currentUser={uid:'other'}},c=>{c.campaignLoadGeneration++}]){
+    const f=campaignEntryRuntime(),opening=f.context.enterCampaign({id:'a'});change(f.context);
+    f.pending.get('campaigns/a').resolve(f.campaign());f.pending.get('campaigns/a/members/player').resolve(f.member());
+    assert.equal(await opening,false);assert.equal(f.loads.length,0);assert.equal(f.context.activeCampaign,null);assert.equal(f.alerts.length,0);
+  }
+});
+
+test('campaign owner still opens without a membership record and failed reads fail closed',async()=>{
+  const f=campaignEntryRuntime(),opening=f.context.enterCampaign({id:'a'});
+  f.pending.get('campaigns/a').resolve(f.campaign({ownerId:'player'}));f.pending.get('campaigns/a/members/player').resolve(f.member(null));
+  assert.equal(await opening,true);assert.equal(f.context.activeMembershipRole,'owner');
+  const failed=campaignEntryRuntime(),denied=failed.context.enterCampaign({id:'a'});
+  failed.pending.get('campaigns/a').resolve(failed.campaign());failed.pending.get('campaigns/a/members/player').reject(Error('Unavailable'));
+  assert.equal(await denied,false);assert.equal(failed.loads.length,0);assert.equal(failed.context.activeCampaign,null);
+});
