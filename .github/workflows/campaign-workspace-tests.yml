@@ -131,7 +131,9 @@ jobs:
     - name: Campaign deletion UI and permission boundaries
       run: npm --prefix tests run test:campaign-deletion
     - name: Shared character sheet, gear and bookmark context
-      run: npm --prefix tests run test:character-workspace
+      run: |-
+        npm --prefix tests run test:sheet-print-loading
+        npm --prefix tests run test:character-workspace
     - name: Page editors, dirty drafts and retryable campaign setup
       run: npm --prefix tests run test:page-editors
     - name: World, chapters, encounters and scoped player adventure flows
