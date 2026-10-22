@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261022-admin-on-demand-v1";
+const ASSET_VERSION = "20261022-defer-print-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -129,7 +129,6 @@ const FEATURE_FILES = [
   "./modules/character-adobe-pages.js",
   "./modules/character-creature-ui.js",
   "./modules/character-spellcasting-ui.js",
-  "./modules/character-sheet-print.js",
   "./modules/images.js",
   "./modules/catalog-cache.js",
   "./modules/data.js",
@@ -179,10 +178,27 @@ function loadFeatureScript(relativePath) {
     script.async = false;
     script.dataset.dndVaultModule = relativePath;
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error(`Failed to load ${relativePath}`));
+    script.onerror = () => {script.remove();reject(new Error(`Failed to load ${relativePath}`));};
     document.head.appendChild(script);
   });
 }
+
+// Code assets are public and contain no account data. Reuse one in-flight load.
+function createOptionalFeatureLoader(files) {
+  const pending=new Map();
+  return Object.freeze({ensure(key){
+    if(!Object.hasOwn(files,key))return Promise.reject(new Error('Unknown character tool.'));
+    if(!pending.has(key)){
+      const request=loadFeatureScript(files[key]).catch(error=>{
+        pending.delete(key);console.warn('[CampaignAtlas] Character tool failed to load:',error);
+        throw new Error('Character tools could not load. Try opening the sheet again.');
+      });
+      pending.set(key,request);
+    }
+    return pending.get(key);
+  }});
+}
+window.CampaignOptionalFeatures=createOptionalFeatureLoader({sheetPrint:"./modules/character-sheet-print.js"});
 
 // Preload downloads in parallel; execution below stays ordered for shared-scope dependencies.
 for (const file of FEATURE_FILES) {

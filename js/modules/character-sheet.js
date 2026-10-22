@@ -89,7 +89,10 @@ async function openCharacterSheet(characterId, context = {}) {
   showTab('character-sheet',false);
   dialog.querySelector('[data-sheet-close]').onclick = leaveCharacterSheet;
   try {
-    const stored = await characterSheetStore.load(campaignId, characterId, context.adventureId || null);
+    const [stored] = await Promise.all([
+      characterSheetStore.load(campaignId, characterId, context.adventureId || null),
+      window.CampaignOptionalFeatures?.ensure('sheetPrint') || Promise.resolve()
+    ]);
     if (generation !== sheetGeneration || activeCampaign?.id !== campaignId || auth.currentUser?.uid!==uid)
       return;
     if (![
