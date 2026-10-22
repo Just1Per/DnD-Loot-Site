@@ -156,6 +156,7 @@ jobs:
       run: npm --prefix tests run test:simple-world
     - name: Visual NPC/world cards and DM-managed campaign map
       run: |-
+        npm --prefix tests run test:journal-images
         npm --prefix tests run test:journal-cards
         npm --prefix tests run test:world-navigation
         npm --prefix tests run test:campaign-map

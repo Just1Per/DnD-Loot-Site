@@ -53,31 +53,52 @@ var CampaignInformation = (() => {
     for(const view of Object.values(views))document.getElementById('tab-'+view.tab)?.replaceChildren();
     return true;
   }
-  function revokeImages(s){for(const url of s?.imageUrls||[])URL.revokeObjectURL(url);if(s){s.imageUrls=[];s.imageGeneration=(s.imageGeneration||0)+1;}}
-  async function loadImages(s,list){
+  function revokeImages(s){s?.imageObserver?.disconnect();if(s)s.imageObserver=null;for(const url of s?.imageUrls||[])URL.revokeObjectURL(url);if(s){s.imageUrls=[];s.imageGeneration=(s.imageGeneration||0)+1;}}
+  function loadImages(s,list){
     const generation=s.imageGeneration;
     const active=()=>current(s)&&!s.denied&&s.imageGeneration===generation&&list.isConnected;
-    // Capture this view's hosts once. Old list work must never find a newer reader's image host.
+    // Capture these hosts: late work must never target a replacement list/reader.
     const hosts=new Map([...list.querySelectorAll('[data-shared-image]')].map(node=>[node.dataset.sharedImage,node]));
     const jobs=s.rows.filter(row=>row.image&&hosts.has(row.id)).map(row=>({row,host:hosts.get(row.id)}));
-    let next=0;
-    async function worker(){
-      while(active()&&next<jobs.length){
-        const {row,host}=jobs[next++];if(!host.isConnected)continue;
-        const prefix=`campaign-journal-images/${s.id}/${s.kind}/${row.id}/`,image=row.image;
-        if(typeof image.path!=='string'||!image.path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))){host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';continue;}
-        try{
-          const blob=await CampaignJournalImages.publishedBlob({campaignId:s.id,kind:s.kind,id:row.id,image});
-          if(!active()||!host.isConnected)continue;
-          const url=URL.createObjectURL(blob);s.imageUrls.push(url);
-          const img=document.createElement('img');img.src=url;img.alt=image.alt||'Shared campaign illustration';
-          img.style.maxWidth='100%';host.replaceChildren(img);
-          if(image.caption){const caption=document.createElement('figcaption');caption.textContent=image.caption;host.append(caption);}
-        }catch(error){if(active()&&host.isConnected)host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';}
+    if(!jobs.length)return;
+    const queue=[];let running=0;
+    async function load({row,host}){
+      if(!active()||!host.isConnected)return;
+      const prefix=`campaign-journal-images/${s.id}/${s.kind}/${row.id}/`,image=row.image;
+      if(typeof image.path!=='string'||!image.path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(image.path.slice(prefix.length))){host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';return;}
+      try{
+        const blob=await CampaignJournalImages.publishedBlob({campaignId:s.id,kind:s.kind,id:row.id,image});
+        if(!active()||!host.isConnected)return;
+        const url=URL.createObjectURL(blob);s.imageUrls.push(url);
+        const img=document.createElement('img');img.decoding='async';img.src=url;img.alt=image.alt||'Shared campaign illustration';
+        img.style.maxWidth='100%';host.replaceChildren(img);
+        if(image.caption){const caption=document.createElement('figcaption');caption.textContent=image.caption;host.append(caption);}
+      }catch(error){if(active()&&host.isConnected)host.textContent='Illustration unavailable. Ask your DM to publish this entry again.';}
+    }
+    function pump(){
+      while(active()&&running<4&&queue.length){
+        const job=queue.shift();running++;
+        load(job).finally(()=>{running--;pump();});
       }
     }
-    await Promise.all(Array.from({length:Math.min(4,jobs.length)},()=>worker()));
+    // Readers keep eager illustrations. Only World/NPC overview cards defer reads.
+    if(list.classList.contains('campaign-information-grid')&&typeof IntersectionObserver!=='undefined'){
+      const pending=new Map(jobs.map(job=>[job.host,job]));
+      const observer=new IntersectionObserver(entries=>{
+        if(!active())return;
+        for(const entry of entries){
+          if(!entry.isIntersecting)continue;
+          observer.unobserve(entry.target);
+          const job=pending.get(entry.target);pending.delete(entry.target);
+          if(job)queue.push(job);
+        }
+        pump();
+      },{rootMargin:'400px 0px'});
+      s.imageObserver=observer;
+      for(const job of jobs)observer.observe(job.host);
+    }else{queue.push(...jobs);pump();}
   }
+
   function paint(s) {
     if(!current(s)||s.phase!=='ready')return;
     revokeImages(s);
