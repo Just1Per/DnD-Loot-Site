@@ -71,6 +71,7 @@
     "test:campaign-journal": "node campaign-journal-browser.cjs",
     "test:campaign-journal-rules": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-journal-rules.cjs\"",
     "test:ui-consistency": "node ui-consistency-audit-browser.cjs",
+    "test:journal-images": "node journal-image-loading-browser.cjs",
     "test:journal-cards": "node journal-cards-browser.cjs",
     "test:campaign-map": "node campaign-map-browser.cjs",
     "test:map-styles-regions": "node --test map-region-geometry.cjs && node map-styles-regions-browser.cjs",
