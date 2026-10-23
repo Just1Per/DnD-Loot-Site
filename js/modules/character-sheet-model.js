@@ -1,5 +1,6 @@
 /* Framework-independent character sheet data and calculations. */
 var CharacterSheetModel = (() => {
+  const ClassChoices=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
   const Actions=typeof CharacterActions!=='undefined'?CharacterActions:require('./character-actions');
   const Play=typeof CharacterPlayRules!=='undefined'?CharacterPlayRules:require('./character-play-rules');
   const Rules = typeof CharacterRules !== 'undefined' ? CharacterRules : require('./character-rules');
@@ -228,7 +229,7 @@ var CharacterSheetModel = (() => {
     const d = normalize(data), pb = proficiency(level), mods = {}, saves = {}, checks = {};
     // Keep class assignments available to core rules before feats/equipment are calculated.
     const assigned=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels;
-    if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:typeof CharacterClassFeatureChoices==='undefined'?{}:CharacterClassFeatureChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
+    if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:ClassChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
     const scores = {};
     for (const key of Object.keys(abilities)) {
@@ -236,6 +237,7 @@ var CharacterSheetModel = (() => {
     }
     const originCon = scores.con;
     const feats=Feats.apply(d,level,effects,scores,Object.keys(skills),Rules.tools);
+    const classExpertise=ClassChoices.expertise(d,{level,effects,feats});
     const magicItems=Magic?Magic.apply(d,scores,effects,loot):{active:[],reports:[],warnings:[]};
     if(d.build.scoreMode==='base')effects.hpBonus+=Math.max(1,Math.min(20,Number(level)||1))*(mod(scores.con)-mod(originCon));
     for (const key of Object.keys(abilities)) {
@@ -243,9 +245,10 @@ var CharacterSheetModel = (() => {
       saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + d.saves[key].bonus;
     }
     for (const [key, [, ability]] of Object.entries(skills))
-      checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0)) + d.skills[key].bonus;
+      checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0, classExpertise.skills.includes(key) ? 2 : 0)) + d.skills[key].bonus;
     const result = {
       effects,
+      classExpertise,
       feats,
       ac: d.ac + feats.acBonus,
       scores,

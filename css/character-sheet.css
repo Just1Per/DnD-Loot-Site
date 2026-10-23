@@ -908,3 +908,9 @@
 
 /* Story suggestions must not create a nested grid that collapses trait inputs. */
 #characterSheetDialog .sheet-story-combobox { display:block !important; min-width:0; width:100%; }
+
+.sheet-class-expertise{padding:16px;border:1px solid #baa77d;border-radius:8px;background:#f7efdd;margin-bottom:18px}
+.sheet-class-expertise>h4{margin-top:0}.sheet-class-expertise>p{line-height:1.6}
+.sheet-expertise-source{border-top:1px solid #cfbf9b;padding-top:12px;margin-top:12px}
+.sheet-expertise-source select{width:100%;min-width:0;min-height:44px}
+.sheet-expertise-tool,.sheet-expertise-reminder{border-left:3px solid #8a6032;padding-left:12px}

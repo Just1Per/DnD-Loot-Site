@@ -120,7 +120,7 @@ var CharacterClassProgression=(()=>{
     feature('Spellcasting',1,'Use Intelligence to prepare and cast Wizard spells from your spellbook; add two Wizard spells whenever you gain a Wizard level.'),
     feature('Ritual Adept',1,'Cast eligible Wizard spells from your spellbook as rituals without preparing them.'),
     feature('Arcane Recovery',1,'After a Short Rest, recover expended spell-slot levels based on your Wizard level.',{recharge:'long rest'}),
-    feature('Scholar',2,'Gain Expertise in one eligible Intelligence-based scholarly skill in which you are proficient.'),
+    feature('Scholar',2,'Gain Expertise in one eligible scholarly skill (Arcana, History, Investigation, Medicine, Nature or Religion) in which you are proficient.'),
     feature('Wizard Subclass',3,'Choose a Wizard subclass; later subclass features arrive at levels 6, 10, and 14.'),
     feature('Ability Score Improvement',4,'Gain Ability Score Improvement or another feat you qualify for.'),
     feature('Memorize Spell',5,'After a Short Rest, replace one prepared level 1+ Wizard spell with another eligible spell from your spellbook.'),

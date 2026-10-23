@@ -48,6 +48,10 @@ var CharacterBuildValidation=(()=>{
         else if(!group.complete)add(rows,'Class feature',`${className}: review ${group.name}; one or more selections no longer qualify.`,'builder','warning',`[data-class-feature-choice="${index}"][data-choice-group="${group.id}"]`);
       }
     }
+    for(const group of derived?.classExpertise?.reports||[]){
+      if(group.missing)add(rows,'Expertise',`${group.className}: choose ${group.missing} more ${group.name} option${group.missing===1?'':'s'}.`,'skills','warning',`[data-class-expertise="${group.key}"]`);
+      else if(group.overflow)add(rows,'Expertise',`${group.className}: review saved Expertise choices after changing class levels.`,'skills','warning',`[data-class-expertise="${group.key}"]`);
+    }
     const assigned=Number(progression.assignedLevel||0),target=Number(progression.targetLevel||identity.level||1);
     if(assigned<target)add(rows,'Class levels',`Assign ${target-assigned} remaining class level${target-assigned===1?'':'s'}.`,'builder','warning',assigned?'[data-up]':'[name="build.classId"]');
     for(const [index,entry] of (progression.classLevels||[]).entries()){

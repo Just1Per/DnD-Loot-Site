@@ -32,6 +32,7 @@ var SiteHelp=(()=>{
   if(/^coins\./.test(key))return 'Records how many '+key.split('.')[1].toUpperCase()+' coins this character owns. These totals are inventory records and do not claim campaign items.';
   if(/^adobe.hpRolls\./.test(key))return 'Enter the actual hit-die roll for this level, before Constitution. The engine adds Constitution and supported bonuses; missing rolls use the fixed value.';
   if(/^slots\./.test(key))return key.endsWith('.used')?'Records spent slots at this spell level. The available amount is total minus used.':'Shows the slot total for this spell level. Generated Spellcasting totals follow class progression; Pact Magic has separate tracking.';
+  if(control.hasAttribute('data-class-expertise'))return D.boxes['class expertise'];
   if(control.hasAttribute('data-class-feature-choice'))return 'Selects a class feature choice for this class and level, such as a Fighting Style or invocation. The builder checks its allowance and supported effects; save the sheet to retain it.';
   if(control.hasAttribute('data-subclass'))return 'Selects this class’s subclass when its class level allows it. It supplies unlocked subclass features and supported always-prepared spells.';
   if(control.hasAttribute('data-dm-member-role'))return D.labels['campaign role'];
@@ -92,7 +93,7 @@ var SiteHelp=(()=>{
    const label=control.closest('label')||[...document.querySelectorAll('label[for]')].find(l=>l.htmlFor===control.id&&control.id);
    const title=label?titleOf(label):control.getAttribute('aria-label')||control.placeholder||control.name||control.id;
    if(!title)return;
-   if(control.closest('#sheet-skills .sheet-save-row,#sheet-skills .sheet-ability,#sheet-skills .sheet-skill-adjustments,.sheet-slot-grid')||control.closest('#sheet-skills')&&control.name==='passiveBonus'){
+   if(control.closest('#sheet-skills .sheet-save-row,#sheet-skills .sheet-ability,#sheet-skills .sheet-skill-adjustments,#sheetClassExpertise,.sheet-slot-grid')||control.closest('#sheet-skills')&&control.name==='passiveBonus'){
     inlineHelp(control,label,explain(control,title));return;
    }
    const span=label?.querySelector(':scope > span');badge(span||label||control,title,explain(control,title));
@@ -115,6 +116,7 @@ var SiteHelp=(()=>{
    ['Join a campaign','Ask your DM to invite the email you use to log in. On the dashboard, accept the invitation, then open the campaign. Each campaign has its own membership role.','invitations','View invitations'],
    ['Create and select your character','Open My Character and choose + Create new character. Fill in the name, class and level inside its sheet. Set the active character before saving wish-list items or claiming loot.','player','My Character'],
    ['Complete your build','Open Character sheet → Character Builder. Choose edition, species, background and class levels. Overview notices have Fix buttons that take you to unfinished choices. Use Level up for an existing class.','sheet','Character sheet'],
+   ['Check class training','Open Abilities & Skills to choose class Expertise when unlocked. Overview flags missing choices. Rogue levels add Thieves’ Cant and Druid levels add Druidic to Overview languages automatically. Save the sheet to keep choices; optional feature reminders explain manual Expertise circles.','sheet','Open character sheet'],
    ['Abilities, feats and spells','Enter base rolled scores or choose Point buy. Complete feat choices, then generate spells for each casting class. Each class has its own preparation allowance and casting ability; Warlock Pact Magic is tracked separately.','sheet','Build your sheet'],
    ['Loot and use equipment','Library shows items made visible by your DM. Large results use pages of 48 items; Previous/Next shows the next range, while search and filters cover all permitted items. Claiming depends on the item’s claim mode and shared stock. My Character → Gear & Loot shows the viewed character’s owned items; Wishlist shows their saved items without claiming them. Opening either section checks its latest records. Use the character picker to change who you are viewing; this does not change your active Library save/loot target. Edit gear in character sheet opens equipment controls, where you can wear, take off or attune items.','library','Library'],
    ['Companions, familiars and Wild Shape','In the character sheet, choose + Page, then enable Companion / Familiar / Wild Shape in Choose extra pages. Choose the card type, then search the creature database by name, type, CR or size. Choosing a base creature fills its card; review the details and save the sheet to keep your changes. Companion hit points are separate from your character’s.','sheet','Open character sheet'],
@@ -149,7 +151,7 @@ var SiteHelp=(()=>{
    ['Maintain global items','Open the global catalogue from Admin to maintain root items. Campaign DMs work with campaign copies; changing a global record does not replace their campaign management.','admin','Global catalogue'],
    ['AI Lookup · open-book icon','The small open-book icon beside an item, spell, feat or subclass opens AI Lookup. Review the exact name, edition and sourcebook, then choose Search with Gemini for a brief web-grounded explanation and links. Results are AI-generated, may be wrong and are not official book text; check your sourcebook. Searches are sent to Google, cost API usage and are not saved to campaign records.','library','Browse items'],
    ['Create or join a campaign','Admin accounts can create campaigns. In another person’s campaign, your membership determines campaign management rights; use the campaign’s own DM Tools when permitted.','create','New Campaign'],
-   ['Understand the player experience','Players accept invitations, create a character, complete its Builder choices, manage gear and save sheets. Open the Player guide below for the complete path.','player-guide','Player guide']
+   ['Understand the player experience','Players accept invitations, create a character, complete its Builder and class Expertise choices, manage gear and save sheets. Open the Player guide below for the complete path.','player-guide','Player guide']
   ]}
  };
  function accountRole(){return isAdmin()?'admin':isDM()?'dm':'player';}

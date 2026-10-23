@@ -193,6 +193,43 @@ var CharacterClassFeatureChoices=(()=>{
     data.adobe.classFeatureChoices[group.key]=next;
     return true;
   }
-  return{styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  // Expertise choices use the existing classFeatureChoices save envelope. No manual ranks are rewritten.
+  const expertiseSkills=['acrobatics','animalHandling','arcana','athletics','deception','history','insight','intimidation','investigation','medicine','nature','perception','performance','persuasion','religion','sleightOfHand','stealth','survival'];
+  const expertiseNames={rogue:'Rogue',bard:'Bard',ranger:'Ranger',wizard:'Wizard'};
+  function expertise(data,{level=1,effects={},feats={}}={}){
+    level=Math.max(1,Math.min(20,Number(level)||1));const edition=data.build?.edition==='2024'?'2024':'2014';
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},raw=Array.isArray(stored.classLevels)?stored.classLevels:[],entries=raw.length?raw:[{classId:data.build?.classId,level}],choices=normalize(stored.classFeatureChoices);
+    const used=new Set(feats.expertise||[]),skills=[],tools=[],reports=[],reminders=[],seenClasses=new Set();let remaining=level;
+    const proficient=key=>Number(data.skills?.[key]?.rank||0)>=1||(effects.skills||[]).includes(key);
+    for(const entry of entries){
+      const classId=entry.classId,l=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=l;
+      if(!l||seenClasses.has(classId))continue;seenClasses.add(classId);
+      if(edition==='2014'&&classId==='artificer'&&l>=6)reminders.push('Artificer Tool Expertise: proficient tool checks use double proficiency ('+(2*(Math.ceil(level/4)+1))+') plus the appropriate ability modifier. Tool rolls are resolved manually.');
+      if(edition==='2014'&&classId==='ranger')reminders.push('If your campaign uses the optional Deft Explorer / Canny feature, mark its chosen skill with the Expertise circle below. The optional feature is not assumed.');
+      if(edition==='2014'&&classId==='cleric'&&entry.subclassId?.includes('knowledge'))reminders.push('Knowledge Domain: Blessings of Knowledge grants expertise in two of Arcana, History, Nature and Religion. Mark those skills with the Expertise circles below.');
+      if(classId==='rogue'&&entry.subclassId==='scout'&&l>=3)reminders.push('Scout Survivalist: mark Nature and Survival with the Expertise circles below, in addition to your separate Rogue Expertise choices.');
+      const allowed=classId==='rogue'?(l>=6?4:2):classId==='bard'?(l>=(edition==='2024'?9:10)?4:l>=(edition==='2024'?2:3)?2:0):edition==='2024'&&classId==='ranger'?(l>=9?3:l>=2?1:0):edition==='2024'&&classId==='wizard'&&l>=2?1:0;
+      if(!allowed)continue;
+      const key=groupKey(edition,classId,'expertise'),name=classId==='wizard'?'Scholar':classId==='ranger'?'Deft Explorer / Expertise':'Expertise';
+      const pool=classId==='wizard'?['arcana','history','investigation','medicine','nature','religion']:expertiseSkills;
+      const options=pool.map(skill=>({id:safe(skill),skill,eligible:proficient(skill),reason:proficient(skill)?'':'Requires proficiency'}));
+      if(edition==='2014'&&classId==='rogue')options.push({id:'thieves-tools',tool:'Thieves’ tools',eligible:(effects.proficiencies||[]).some(value=>safe(value)==='thieves-tools')});
+      const picked=(choices[key]||[]).slice(0,allowed),slots=Array.from({length:allowed},(_,index)=>{const value=picked[index]||'',option=options.find(o=>o.id===value),identity=option?.skill||option?.id,valid=!!option&&option.eligible&&!used.has(identity);if(valid){used.add(identity);if(option.skill)skills.push(option.skill);else tools.push({name:option.tool,bonus:2*(Math.ceil(level/4)+1),source:'Rogue Expertise'});}return{value,valid};});
+      reports.push({key,classId,className:expertiseNames[classId],level:l,name,allowed,options,slots,missing:slots.filter(slot=>!slot.valid).length,overflow:(choices[key]||[]).slice(allowed).filter(Boolean).length});
+    }
+    // Disable choices already granted by feats or another class. The same manual rank never stacks.
+    for(const report of reports)for(const option of report.options){const identity=option.skill||option.id;const feat=(feats.expertise||[]).includes(identity),other=reports.some(other=>other!==report&&other.slots.some(slot=>slot.valid&&slot.value===option.id));option.reason=feat?'Expertise already granted by a feat':other?'Chosen by another class':option.reason||(!option.eligible?'Requires proficiency':'');option.eligible=option.eligible&&!feat&&!other;}
+    return{skills,tools,reports,reminders};
+  }
+  function setExpertise(data,key,index,value,context){
+    const before=expertise(data,context),report=before.reports.find(r=>r.key===key);if(!report||!Number.isInteger(index)||index<0||index>=report.allowed)return false;
+    value=safe(value);const option=report.options.find(o=>o.id===value);if(value&&(!option?.eligible||report.slots.some((s,i)=>i!==index&&s.valid&&s.value===value)))return false;
+    const choices=normalize((data.adobe||{}).classFeatureChoices),next=(choices[key]||[]).slice(0,report.allowed);while(next.length<=index)next.push('');next[index]=value;
+    const candidate={...data,adobe:{...data.adobe,classFeatureChoices:{...choices,[key]:next}}},after=expertise(candidate,context);if(value&&!after.reports.find(r=>r.key===key)?.slots[index]?.valid)return false;
+    // A new choice may not invalidate another already valid slot.
+    if(before.reports.some(r=>r.slots.some((slot,i)=>slot.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
+    data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
+  }
+  return{expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;
