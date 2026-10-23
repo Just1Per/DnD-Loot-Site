@@ -155,6 +155,7 @@ jobs:
         npm --prefix tests run test:class-expertise
         npm --prefix tests run test:weapon-mastery
         npm --prefix tests run test:bard-half-proficiency
+        npm --prefix tests run test:multiclass-asi
         npm --prefix tests run test:character-workspace
     - name: Page editors, dirty drafts and retryable campaign setup
       run: npm --prefix tests run test:page-editors
@@ -192,6 +193,7 @@ jobs:
         npm --prefix tests run test:map-preview-loading
         npm --prefix tests run test:campaign-map
         npm --prefix tests run test:map-styles-regions
+        npm --prefix tests run test:map-roads-routes
     - name: Shared party journal, notebook reader and private recap permissions
       run: |-
         npm --prefix tests run test:campaign-journal
