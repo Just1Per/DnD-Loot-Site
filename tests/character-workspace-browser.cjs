@@ -156,6 +156,17 @@ const root = path.resolve(__dirname, '..');
     await page.locator('[data-character-equipment]').click(); await page.waitForFunction(() => sheetSession?.characterId === 'c2');
     assert.equal(await page.locator('[data-sheet-tab="inventory"]').getAttribute('aria-selected'), 'true');
     assert.equal(await page.locator('#sheetAddCustomGear').isVisible(), true, 'manual gear editing must open the real sheet inventory');
+    await page.waitForFunction(()=>document.querySelector('#sheetGearPicker .vault-help-badge'));
+    for(const width of [1440,768,390,320]){
+      await page.setViewportSize({width,height:1000});
+      const bounds=await page.evaluate(()=>{
+        const rect=id=>document.getElementById(id).getBoundingClientRect(),gear=rect('sheetBaseGear'),pack=rect('sheetGearPack'),addGear=rect('sheetAddBaseGear'),addPack=rect('sheetAddGearPack');
+        return {gearAligned:Math.abs(gear.left-addGear.left)<2,packAligned:Math.abs(pack.left-addPack.left)<2,gearBelow:addGear.top>=gear.bottom,packBelow:addPack.top>=pack.bottom,fit:document.documentElement.scrollWidth<=innerWidth};
+      });
+      assert.ok(Object.values(bounds).every(Boolean),'gear and pack actions stay beneath their own selectors at '+width+': '+JSON.stringify(bounds));
+      if(width===390||width===1440)await page.locator('#sheetGearPicker').screenshot({path:require('node:os').tmpdir()+'/inventory-gear-picker-'+width+'.png'});
+    }
+    await page.setViewportSize({width:1440,height:1000});
     await page.locator('#sheetAddBaseGear').click(); assert.equal(await page.evaluate(() => sheetSession.dirty), true);
     await section('character-wishlist').click(); await page.locator('[data-sheet-leave-discard]').click(); await page.waitForSelector('#sheetLeaveDialog', {state: 'detached'});
     assert.equal(await page.evaluate(() => testSheetDocs['campaigns/a/characterSheets/c2'].data.personalGear.length), 0, 'discard must not save manual gear');
