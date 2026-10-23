@@ -684,8 +684,16 @@ match /campaigns/{campaignId} {
           && point.x is number && point.x >= 0 && point.x <= 100
           && point.y is number && point.y >= 0 && point.y <= 100;
       }
+      // Packed points validate large regions without one rule expression per vertex.
+      function validPackedBoundary(d) {
+        let coordinate = '(100(\\.0+)?|[0-9]?[0-9](\\.[0-9]+)?)';
+        let point = coordinate + ',' + coordinate;
+        return d.type == 'Region' && d.boundary is list && d.boundary.size() == 0
+          && d.boundaryPoints is string && d.boundaryPoints.size() <= 16384
+          && d.boundaryPoints.matches('^' + point + '(;' + point + '){2,255}$');
+      }
       function validRegionBoundary(d) {
-        return !('boundary' in d) || (d.boundary is list && (d.boundary.size() == 0 || (
+        return ('boundaryPoints' in d) ? validPackedBoundary(d) : (!('boundary' in d) || (d.boundary is list && (d.boundary.size() == 0 || (
           d.type == 'Region' && d.boundary.size() >= 3 && d.boundary.size() <= 12
           && (d.boundary.size() <= 0 || validRegionPoint(d.boundary[0]))
           && (d.boundary.size() <= 1 || validRegionPoint(d.boundary[1]))
@@ -699,13 +707,13 @@ match /campaigns/{campaignId} {
           && (d.boundary.size() <= 9 || validRegionPoint(d.boundary[9]))
           && (d.boundary.size() <= 10 || validRegionPoint(d.boundary[10]))
           && (d.boundary.size() <= 11 || validRegionPoint(d.boundary[11]))
-        )));
+        ))));
       }
       function validPublishedPin(d) {
         let map = getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data;
         let previous = publishedMap();
         return validMapKey(mapId) && d.keys().hasAll(['name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
-          && d.keys().hasOnly(['markerStyle','boundary','name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
+          && d.keys().hasOnly(['markerStyle','boundary','boundaryPoints','name','description','x','y','type','picturePath','pictureAlt','worldEntryId','imagePath','schemaVersion','publishedRevision','revision','updatedBy','updatedAt'])
           && d.schemaVersion == 2 && map.schemaVersion == 2 && d.publishedRevision == map.revision
           && (!exists(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)) || map.revision > previous.revision)
           && d.revision == map.revision && d.updatedBy == request.auth.uid && d.updatedAt is int

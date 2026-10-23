@@ -8,7 +8,7 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
  const mapRef=cid=>doc(db,'campaigns',id(cid),'campaignMaps',mapId);
  const pinRef=(cid,pid)=>doc(db,'campaigns',id(cid),'campaignMaps',mapId,'pins',id(pid));
  const pinsQuery=(cid,map)=>query(collection(db,'campaigns',id(cid),'campaignMaps',mapId,'pins'),typeof map==='object'&&map.schemaVersion===2?where('publishedRevision','==',map.revision):where('imagePath','==',typeof map==='object'?map.imagePath:map));
- const rows=snapshot=>snapshot.docs.map(row=>({...row.data(),id:row.id}));
+ const rows=snapshot=>snapshot.docs.map(row=>{const value={...row.data(),id:row.id};if('boundaryPoints' in value){value.boundary=decodeBoundary(value.boundaryPoints);delete value.boundaryPoints;}return value;});
  const imagePrefix=cid=>'campaign-maps/'+id(cid)+'/'+(mapId==='main'?'':mapId+'/');
  const picturePrefix=(cid,pid)=>'campaign-map-place-images/'+id(cid)+'/'+(mapId==='main'?'':mapId+'/')+id(pid)+'/';
  function image(cid,path){const prefix=imagePrefix(cid);if(typeof path!=='string'||!path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(path.slice(prefix.length)))throw Error('Choose an image belonging to this campaign map.');return path;}
@@ -31,10 +31,24 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
    const next={name:input.name.trim(),description:input.description.trim(),x:input.x,y:input.y,imagePath:input.imagePath,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return {...next,id:pid};});
  }
  async function removePin({campaignId,id:pid,revision,isCurrent=()=>true}){const uid=actor();return runTransaction(db,async tx=>{const ref=pinRef(campaignId,pid),old=await tx.get(ref);check(uid,isCurrent);if(!old.exists()||old.data().revision!==revision)throw Error('This place changed. Reload before removing it.');tx.delete(ref);});}
+ const maxRegionCorners=256;
  const markerStyles=['Location','City','Castle','Landmark','Point of interest'];
+ const packedCoordinate='(100(\\.0+)?|[0-9]?[0-9](\\.[0-9]+)?)';
+ const packedPattern=new RegExp('^'+packedCoordinate+','+packedCoordinate+'(;'+packedCoordinate+','+packedCoordinate+'){2,'+(maxRegionCorners-1)+'}$');
+ function decodeBoundary(value){
+  if(typeof value!=='string'||value.length>16384||value.trim()!==value||!packedPattern.test(value))throw Error('The published region boundary is invalid. Ask the DM to publish it again.');
+  return value.split(';').map(point=>{const [x,y]=point.split(',').map(Number);return {x,y};});
+ }
+ function encodeBoundary(points){
+  // Expand very small positive doubles without rounding or accepting exponents in rules.
+  const decimal=n=>{const [mantissa,exponent]=String(n).split('e-');return exponent?'0.'+'0'.repeat(Number(exponent)-1)+mantissa.replace('.',''):mantissa;};
+  const value=points.map(point=>decimal(point.x)+','+decimal(point.y)).join(';');
+  if(value.length>16384||!packedPattern.test(value))throw Error('The region boundary cannot be published. Use fewer corners.');
+  return value;
+ }
  function boundary(points,type){
   if(points===undefined||Array.isArray(points)&&points.length===0)return [];
-  if(type!=='Region'||!Array.isArray(points)||points.length<3||points.length>12)throw Error('A region boundary needs 3–12 corners.');
+  if(type!=='Region'||!Array.isArray(points)||points.length<3||points.length>maxRegionCorners)throw Error('A region boundary needs 3–'+maxRegionCorners+' corners.');
   const normalized=points.map(point=>{
    if(!point||typeof point!=='object'||Array.isArray(point)||Object.keys(point).some(key=>!['x','y'].includes(key))||![point.x,point.y].every(n=>Number.isFinite(n)&&n>=0&&n<=100))throw Error('Region corners must be positions between 0 and 100.');
    return {x:point.x,y:point.y};
@@ -96,7 +110,7 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
    check(uid,isCurrent);
    const next={title:normalized.title,imagePath:normalized.imagePath,...(normalized.previewPath?{previewPath:normalized.previewPath}:{}),schemaVersion:2,revision:oldRevision+1,updatedBy:uid,updatedAt:Date.now()};
    tx.set(destination,next);
-   for(const pin of pins){const {id:pid,revealed,...fields}=pin;tx.set(pinRef(campaignId,pid),{...fields,imagePath:next.imagePath,worldEntryId:shared.has(fields.worldEntryId)?fields.worldEntryId:'',schemaVersion:2,publishedRevision:next.revision,revision:next.revision,updatedBy:uid,updatedAt:next.updatedAt});}
+   for(const pin of pins){const {id:pid,revealed,...fields}=pin;if(fields.boundary.length>12){fields.boundaryPoints=encodeBoundary(fields.boundary);fields.boundary=[];}tx.set(pinRef(campaignId,pid),{...fields,imagePath:next.imagePath,worldEntryId:shared.has(fields.worldEntryId)?fields.worldEntryId:'',schemaVersion:2,publishedRevision:next.revision,revision:next.revision,updatedBy:uid,updatedAt:next.updatedAt});}
    const savedDraft={...source,sourceRevision:next.revision,revision:source.revision+1,updatedBy:uid,updatedAt:next.updatedAt};tx.set(ref,savedDraft);
    return {map:next,draft:savedDraft,pins:pins.map(pin=>({...pin,worldEntryId:shared.has(pin.worldEntryId)?pin.worldEntryId:''}))};
   });
@@ -109,6 +123,6 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
   if(typeof mainMapId!=='string'||mainMapId&&!/^[A-Za-z0-9_-]{1,100}$/.test(mainMapId))throw Error('Choose a published main map.');
   return runTransaction(db,async tx=>{const ref=preferencesRef(campaignId),old=await tx.get(ref),main=mainMapId?await tx.get(doc(db,'campaigns',id(campaignId),'campaignMaps',mainMapId)):null;check(uid,isCurrent);if((old.data()?.revision||0)!==revision)throw Error('Map order changed in another window. Refresh before organising maps.');if(mainMapId&&!main?.exists())throw Error('Publish a map before making it the main map.');const next={order:[...order],mainMapId,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;});
  }
- return {mapId,imagePrefix,picturePrefix,listMaps,loadPreferences,savePreferences,load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,markerStyles};
+ return {mapId,imagePrefix,picturePrefix,listMaps,loadPreferences,savePreferences,load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,markerStyles,maxRegionCorners,encodeBoundary,decodeBoundary};
 }
 if(typeof module!=='undefined')module.exports={createCampaignMapStore};

@@ -37,7 +37,25 @@ const errors=[];
  for(const [x,y] of corners){await page.locator('[data-corner-x]').fill(String(x));await page.locator('[data-corner-y]').fill(String(y));await page.locator('[data-corner-add]').click();}
  await page.locator('[data-region-undo]').click();assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary.length),3);
  await page.locator('[data-corner-x]').fill('25');await page.locator('[data-corner-y]').fill('80');await page.locator('[data-corner-add]').click();
- await page.locator('[data-region-finish]').click();await page.locator('[data-map-pin-form] button[type=submit]').click();
+ // Every save entry point guides the DM to the unfinished boundary without writing data.
+ const beforeFinish=await page.evaluate(()=>JSON.stringify(testSheetDocs));
+ for(const selector of ['[data-map-pin-form] button[type=submit]','[data-map-save]','[data-map-publish]']){
+  await page.locator(selector).click();
+  assert.equal(await page.locator('.map-region-needs-finish').count(),1);
+  assert.equal(await page.locator('[data-region-finish]').getAttribute('aria-describedby'),'mapRegionFinishHelp');
+  assert.match(await page.locator('#mapRegionFinishHelp').textContent(),/Next step: Finish boundary/);
+  assert.equal(await page.evaluate(()=>document.activeElement.matches('[data-region-finish]')),true);
+  assert.equal(await page.evaluate(()=>JSON.stringify(testSheetDocs)),beforeFinish);
+ }
+ for(const width of [390,320]){
+  await page.setViewportSize({width,height:1000});await page.locator('[data-map-save]').click();
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  assert.deepEqual(await page.evaluate(async()=>(await axe.run('.campaign-map',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>v.id)),[]);
+ }
+ await page.screenshot({path:out+'/map-unfinished-boundary-320.png',fullPage:true});
+ await page.setViewportSize({width:1440,height:1000});
+ await page.locator('[data-region-finish]').press('Enter');assert.equal(await page.locator('.map-region-needs-finish').count(),0);assert.equal(await page.locator('#mapRegionFinishHelp').count(),0);
+ await page.locator('[data-map-pin-form] button[type=submit]').click();
  assert.equal(await page.locator('[data-map-region]').count(),1);
  await page.locator('[data-map-save]').click();await page.waitForFunction(()=>!CampaignMap.session.busy);
  await page.locator('[data-map-publish]').click();await page.waitForFunction(()=>!CampaignMap.session.busy&&CampaignMap.session.map.revision===2);
@@ -53,5 +71,20 @@ const errors=[];
  assert.equal(await page.locator('[data-map-region]').count(),1);assert.equal(await page.locator('[data-map-pin]').count(),6);
  await page.locator('[data-map-place]').filter({hasText:'The Storm Coast'}).click();assert.equal(await page.locator('[data-place-heading]').textContent(),'The Storm Coast');assert.match(await page.locator('.map-prose').textContent(),/own story/);
  for(const width of [1440,390,320]){await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));const violations=await page.evaluate(async()=>(await axe.run('.campaign-map',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})));assert.deepEqual(violations,[]);if(width!==320)await page.screenshot({path:out+'/map-styles-regions-'+width+'.png',fullPage:true});}
+ // Draw the expanded limit through the actual coordinate controls, then publish and reload as player.
+ await page.setViewportSize({width:1440,height:1000});await page.evaluate(()=>{CampaignMap.clear();auditSeed('dm');showTab('dm-map')});await page.waitForFunction(()=>CampaignMap.session?.ready);
+ await page.locator('[data-map-add-region]').click();await page.locator('[data-pin-name]').fill('Detailed coastline');await page.locator('[data-pin-revealed]').check();
+ const detailed=Array.from({length:256},(_,i)=>({x:Number((50+30*Math.cos(i*2*Math.PI/256)).toFixed(1)),y:Number((50+30*Math.sin(i*2*Math.PI/256)).toFixed(1))}));
+ await page.evaluate(points=>{for(const point of points){document.querySelector('[data-corner-x]').value=point.x;document.querySelector('[data-corner-y]').value=point.y;document.querySelector('[data-corner-add]').click();}},detailed);
+ assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary.length),256);assert.match(await page.locator('.map-region-tools').textContent(),/256 of 256 corners/);
+ await page.locator('[data-corner-add]').click();assert.match(await page.locator('[data-map-status]').textContent(),/Maximum 256/);assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary.length),256);
+ await page.locator('[data-region-undo]').click();assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary.length),255);
+ await page.locator('[data-corner-x]').fill(String(detailed.at(-1).x));await page.locator('[data-corner-y]').fill(String(detailed.at(-1).y));await page.locator('[data-corner-add]').click();
+ await page.locator('[data-region-finish]').click();await page.locator('[data-map-pin-form] button[type=submit]').click();await page.locator('[data-map-publish]').click();await page.waitForFunction(()=>!CampaignMap.session.busy&&CampaignMap.session.map.revision===4);
+ await page.evaluate(()=>{CampaignMap.clear();auditSeed('player');showTab('campaign-map')});await page.waitForFunction(()=>CampaignMap.session?.ready);
+ const shape=await page.evaluate(()=>{const pin=CampaignMap.session.pins.find(pin=>pin.name==='Detailed coastline'),polygon=document.querySelector('[data-map-region="'+pin.id+'"]');return {points:pin.boundary,vertices:polygon.getAttribute('points').trim().split(/\s+/).length};});
+ assert.deepEqual(shape.points,detailed);assert.equal(shape.vertices,256);assert.equal(await page.locator('[data-map-region]').count(),2);
+ for(const width of [390,320]){await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(await page.evaluate(async()=>(await axe.run('.campaign-map',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>v.id)),[]);}
+ console.log('PASS 256 real corner controls, overflow, undo/re-add, finish, publication and exact player SVG round-trip');
  assert.deepEqual(errors,[]);console.log('PASS Five styles, keyboard and pointer area drawing, minimum corners, undo, redraw, reload, hidden-region isolation, atomic publication, player descriptions, mobile and WCAG');
  }finally{await browser.close()}})().catch(error=>{console.error(error);process.exitCode=1});

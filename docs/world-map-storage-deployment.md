@@ -212,10 +212,25 @@ when opening or merging a PR; that is a separate production security change.
 
 ## Marker styles and named regions
 
-DM Workspace → Map supports five point-marker styles: Location, City, Castle, Landmark and Point of interest. These are presentation choices for a location/city. Region is a separate area type: use Add a region area, give it a name and description, and draw 3–12 boundary corners. Undo corner and Redraw boundary adjust the shape. Keyboard users can add corners using percentage coordinates. Finish boundary validates a nonzero area without repeated corners or crossing edges; Keep place in draft retains it in the working draft.
+DM Workspace → Map supports five point-marker styles: Location, City, Castle, Landmark and Point of interest. These are presentation choices for a location/city. Region is a separate area type: use Add a region area, give it a name and description, and draw 3–256 boundary corners. Undo corner and Redraw boundary adjust the shape. Keyboard users can add corners using percentage coordinates. Finish boundary validates a nonzero area without repeated corners or crossing edges; Keep place in draft retains it in the working draft.
 
 Regions have the existing picture, shared-World link and Reveal to players controls. Their shaded boundaries and labels open the same description as the accessible places list. Hidden regions, including their geometry and names, are omitted from the published snapshot. Saving a draft does not change the player map. Publishing sends revealed points and regions atomically. Existing point and region markers without boundaries remain readable and normalize with their previous City style.
 
-**Deploy the updated Firestore rules with this feature.** Published pins now allow validated optional `markerStyle` and `boundary` fields. Rules limit boundaries to 3–12 numeric points in the map bounds, reject extra vertex fields, and permit nonempty geometry only on a Region. Revision, membership, private-draft and publication checks are retained. Storage rules are unchanged; no production migration is needed. No deployment or migration is performed by preparing this PR.
+**Deploy the updated Firestore rules with this feature.** Published pins now allow validated optional `markerStyle` and `boundary` fields. Rules validate up to 256 numeric points in the map bounds. Published boundaries above 12 corners use a strictly validated compact coordinate field; legacy point arrays remain supported. Nonempty geometry is permitted only on a Region. Revision, membership, private-draft and publication checks are retained. Storage rules are unchanged; no production migration is needed. No deployment or migration is performed by preparing this PR.
 
 Validation: `npm --prefix tests run test:map-styles-regions` exercises geometry, all five styles, pointer/keyboard drawing, undo/redraw, hidden areas, publication, reading, mobile layout and accessibility. The existing campaign-map browser suite and `test:campaign-map-rules` remain required, including malformed geometry and atomic publication checks.
+
+
+## Detailed region boundaries (256 corners)
+
+The limit is now 256 corners per region, increased from 12. The store, drawing controls, Guide and contextual help share the new behaviour. Geometry validation still rejects duplicate corners, zero-area outlines and crossed edges. Coordinates are preserved without simplifying the outline.
+
+**Publish the updated Firestore rules before publishing regions with more than 12 corners.** Storage rules are unchanged. Existing drafts and published regions need no migration. Refresh the site after the app update to display new detailed boundaries.
+
+Firestore rules have no general loop and impose an expression-evaluation budget. Extending the old per-vertex checks to hundreds of corners exceeds that budget. For more than 12 corners, publication therefore writes `boundaryPoints` as a bounded numeric coordinate string and leaves the legacy `boundary` array empty. The pattern checks every x/y value, map bounds and the 3–256 point count in one operation. Unexpected text, exponent notation, extra coordinates, wrong types and payloads over 16 KiB are denied. This does not change membership, private drafts, map revisions or publishing permissions.
+
+Updated clients decode this field back into the same point array for reading, rendering and editing. Small regions retain their original array format. The empty legacy field also avoids passing a string to an older client's array renderer; clients should refresh to see a newly published large area.
+
+Regression coverage: 256 actual drawing controls plus overflow/undo/re-add, finish/publish/player SVG round-trip; geometry and exact coordinate encoding tests; Firebase emulator round-trips for main and named maps, hidden-region isolation and malformed final vertices. No production rules deployment, data migration or automatic republishing is performed by this change.
+
+If a DM tries to keep a place, save or publish while drawing a region, the editor highlights and focuses **Finish boundary**, with a nearby explanation. No draft or publication is written. Finish the boundary, then keep the place in the draft before saving or publishing.
