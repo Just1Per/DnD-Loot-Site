@@ -100,20 +100,21 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
   });
  }
  async function publish({campaignId,draftRevision,isCurrent=()=>true}){
-  const uid=actor();return runTransaction(db,async tx=>{
-   const ref=draftRef(campaignId),draft=await tx.get(ref),destination=mapRef(campaignId),previous=await tx.get(destination);
+  const uid=actor();let stage='reading-private-draft';try{return await runTransaction(db,async tx=>{
+   stage='reading-private-draft';const ref=draftRef(campaignId),draft=await tx.get(ref),destination=mapRef(campaignId);
+   stage='reading-published-map';const previous=await tx.get(destination);
    if(!draft.exists()||draft.data().revision!==draftRevision)throw Error('The saved DM draft changed. Refresh before publishing.');
    const source=draft.data(),normalized=normalizeDraft(campaignId,source),oldRevision=previous.data()?.revision||0;
    if(source.sourceRevision!==oldRevision)throw Error('The published map changed. Refresh before publishing.');
    const pins=normalized.pins.filter(pin=>pin.revealed),shared=new Set();
-   for(const entryId of new Set(pins.map(pin=>pin.worldEntryId).filter(Boolean))){const entry=await tx.get(doc(db,'campaigns',id(campaignId),'playerInformation',id(entryId)));if(entry.exists())shared.add(entryId);}
+   for(const entryId of new Set(pins.map(pin=>pin.worldEntryId).filter(Boolean))){stage='checking-world-links';const entry=await tx.get(doc(db,'campaigns',id(campaignId),'playerInformation',id(entryId)));if(entry.exists())shared.add(entryId);}
    check(uid,isCurrent);
    const next={title:normalized.title,imagePath:normalized.imagePath,...(normalized.previewPath?{previewPath:normalized.previewPath}:{}),schemaVersion:2,revision:oldRevision+1,updatedBy:uid,updatedAt:Date.now()};
-   tx.set(destination,next);
-   for(const pin of pins){const {id:pid,revealed,...fields}=pin;if(fields.boundary.length>12){fields.boundaryPoints=encodeBoundary(fields.boundary);fields.boundary=[];}tx.set(pinRef(campaignId,pid),{...fields,imagePath:next.imagePath,worldEntryId:shared.has(fields.worldEntryId)?fields.worldEntryId:'',schemaVersion:2,publishedRevision:next.revision,revision:next.revision,updatedBy:uid,updatedAt:next.updatedAt});}
+   stage='writing-publication';tx.set(destination,next);
+   for(const pin of pins){const {id:pid,revealed,...fields}=pin;if(fields.boundary.length){fields.boundaryPoints=encodeBoundary(fields.boundary);fields.boundary=[];}tx.set(pinRef(campaignId,pid),{...fields,imagePath:next.imagePath,worldEntryId:shared.has(fields.worldEntryId)?fields.worldEntryId:'',schemaVersion:2,publishedRevision:next.revision,revision:next.revision,updatedBy:uid,updatedAt:next.updatedAt});}
    const savedDraft={...source,sourceRevision:next.revision,revision:source.revision+1,updatedBy:uid,updatedAt:next.updatedAt};tx.set(ref,savedDraft);
    return {map:next,draft:savedDraft,pins:pins.map(pin=>({...pin,worldEntryId:shared.has(pin.worldEntryId)?pin.worldEntryId:''}))};
-  });
+  });}catch(error){error.mapPublishStage=stage;throw error;}
  }
  const preferencesRef=cid=>doc(db,'campaigns',id(cid),'mapPreferences','main');
  async function listMaps(cid,{drafts=false}={}){actor();return rows(await getDocs(collection(db,'campaigns',id(cid),drafts?'campaignMapDrafts':'campaignMaps')));}

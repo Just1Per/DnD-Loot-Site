@@ -82,6 +82,17 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
   assert.equal(published.some(p=>p.name==='Secret territory'),false);
   for(const style of stores.owner.markerStyles)assert.ok(published.some(p=>p.markerStyle===style));
  });
+ await check('A member DM publishes a secondary map with two places and two revealed regions',async()=>{
+  await env.withSecurityRulesDisabled(async c=>{for(const [path,data] of Object.entries({'campaigns/mixed':{ownerId:'owner'},'campaigns/mixed/members/dm':{role:'dm',status:'active'},'campaigns/mixed/members/player':{role:'player',status:'active'}}))await sdk.setDoc(sdk.doc(c.firestore(),path),data);});
+  const primary=await stores.dm.saveDraft({campaignId:'mixed',input:{title:'Primary',imagePath:'campaign-maps/mixed/original',pins:[]},revision:0,sourceRevision:0});await stores.dm.publish({campaignId:'mixed',draftRevision:primary.revision});
+  const mapId='7caf0fcb-2aa8-4ed9-80c6-5935c9a66b10',make=uid=>createCampaignMapStore({...sdk,db:contexts[uid].firestore(),auth:{currentUser:{uid}}},{mapId}),dm=make('dm'),player=make('player');
+  const base={description:'Shared place',x:50,y:50,revealed:true,picturePath:'',pictureAlt:'',worldEntryId:''},circle=n=>Array.from({length:n},(_,i)=>({x:50+30*Math.cos(i*2*Math.PI/n),y:50+30*Math.sin(i*2*Math.PI/n)}));
+  const pins=[{...base,id:'city',name:'City',type:'City',markerStyle:'City'},{...base,id:'landmark',name:'Landmark',type:'City',markerStyle:'Landmark'},{...base,id:'region12',name:'Small region',type:'Region',boundary:circle(12)},{...base,id:'region256',name:'Detailed region',type:'Region',boundary:circle(256)}];
+  const saved=await dm.saveDraft({campaignId:'mixed',input:{title:'Secondary',imagePath:'campaign-maps/mixed/'+mapId+'/original',previewPath:'campaign-maps/mixed/'+mapId+'/overview',pins},revision:0,sourceRevision:0});
+  const result=await dm.publish({campaignId:'mixed',draftRevision:saved.revision}),shared=await player.listPins('mixed',result.map);assert.equal(shared.length,4);for(const pin of pins)if(pin.type==='Region')assert.deepEqual(shared.find(row=>row.id===pin.id).boundary,pin.boundary);
+  assert.equal((await stores.player.load('mixed')).title,'Primary');assert.equal((await dm.loadDraft('mixed')).sourceRevision,1);
+  const again=await dm.publish({campaignId:'mixed',draftRevision:result.draft.revision});assert.equal(again.map.revision,2);assert.equal((await player.listPins('mixed',again.map)).length,4);
+ });
  await check('256-corner regions publish exactly on primary and named maps without exposing hidden regions',async()=>{
   await env.withSecurityRulesDisabled(async c=>{await sdk.setDoc(sdk.doc(c.firestore(),'campaigns/large'),{ownerId:'owner'});await sdk.setDoc(sdk.doc(c.firestore(),'campaigns/large/members/player'),{role:'player',status:'active'});});
   const boundary=Array.from({length:256},(_,i)=>({x:50+35*Math.cos(i*2*Math.PI/256),y:50+35*Math.sin(i*2*Math.PI/256)}));
