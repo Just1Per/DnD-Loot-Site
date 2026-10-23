@@ -6,13 +6,12 @@ function sheetEquipmentLoot() {
 }
 function renderEquipmentCalculations(stats) {
   let host=document.getElementById('sheetEquipmentSummary');
-  if(!host)return;
   const e=stats.gear;
   const manualAC=document.querySelector('#characterSheetForm [name="ac"]');
   if(manualAC){manualAC.readOnly=sheetSession.data.equipmentState.acMode==='equipment';manualAC.title=manualAC.readOnly?'Automatic AC is selected in Equipment & treasure. Your manual base is preserved.':'';}
   const magic=stats.magicItems?.reports||[];
-  host.innerHTML=`<p><strong>AC ${stats.ac}</strong> = ${sheetEscape(e.baseLabel)} ${e.base} + shield ${e.shield} + item bonuses ${e.bonus} + Defense ${e.defense} + adjustment ${e.adjustment}.</p>${e.sources.length?'<p>'+e.sources.map(v=>sheetEscape(v.name)+' '+CharacterSheetModel.signed(v.value)).join(' · ')+'</p>':''}<p>Attuned: ${e.attuned}/3. Bonuses apply once per item, regardless of quantity.</p>${magic.length?'<p><strong>Active magic items:</strong> '+magic.map(v=>sheetEscape(v.name)+' — '+v.effects.map(sheetEscape).join(', ')).join(' · ')+'</p>':''}${e.warnings.map(w=>`<p class="sheet-build-warning">${sheetEscape(w)}</p>`).join('')}`;
-  host=document.getElementById('sheetLootAttacks');
+  if(host)host.innerHTML=`<p><strong>AC ${stats.ac}</strong> = ${sheetEscape(e.baseLabel)} ${e.base} + shield ${e.shield} + item bonuses ${e.bonus} + Defense ${e.defense} + adjustment ${e.adjustment}.</p>${e.sources.length?'<p>'+e.sources.map(v=>sheetEscape(v.name)+' '+CharacterSheetModel.signed(v.value)).join(' · ')+'</p>':''}<p>Attuned: ${e.attuned}/3. Bonuses apply once per item, regardless of quantity.</p>${magic.length?'<p><strong>Active magic items:</strong> '+magic.map(v=>sheetEscape(v.name)+' — '+v.effects.map(sheetEscape).join(', ')).join(' · ')+'</p>':''}${e.warnings.map(w=>`<p class="sheet-build-warning">${sheetEscape(w)}</p>`).join('')}`;
+  host=document.getElementById('sheetLootAttacks');if(!host)return;
   host.innerHTML=e.attacks.map(a=>`<article class="sheet-repeat"><h4>${sheetEscape(a.name)} · ${a.equipped?'Equipped':'In backpack'} · ${sheetEscape(a.edition)}</h4><div class="sheet-metrics"><div><span>To hit (${a.ability.toUpperCase()}${a.proficient?' + proficiency':''})</span><strong>${a.attack===null?'—':CharacterSheetModel.signed(a.attack)}</strong></div><div><span>Damage</span><strong>${sheetEscape(a.damage)}</strong></div><div><span>Range / reach</span><strong>${sheetEscape(a.range)}</strong></div></div><p>${sheetEscape(a.properties)}</p>${a.notes.map(n=>`<p class="sheet-help">${sheetEscape(n)}</p>`).join('')}</article>`).join('')||'<p class="sheet-help">Loot a weapon to show its attack here. For homebrew, the DM sets its base weapon and bonuses in the item editor.</p>';
 }
 function equipmentControls(entry) {
