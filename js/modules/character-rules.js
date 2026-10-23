@@ -1088,6 +1088,7 @@ var CharacterRules = (() => {
       immunities: [...r?.immunities || []],
       naturalArmor: r?.naturalArmor || null,
       initiativeBonus: r?.initiativePB ? Math.ceil(lvl / 4) + 1 : 0,
+      initiativeProficiency:!!r?.initiativePB,
       darkvision: r?.darkvision || 0,
       hpBonus: b.race === 'hill-dwarf' ? lvl : (r?.hpPerLevel || 0) * lvl,
       hpSources: (b.race === 'hill-dwarf' || r?.hpPerLevel) ? [{kind:'species',name:r?.name||'Species',value:(b.race === 'hill-dwarf' ? 1 : r.hpPerLevel)*lvl}] : [],
@@ -1306,6 +1307,7 @@ var CharacterRules = (() => {
       if(!classLevel)continue;
       if(entry.classId==='rogue')result.languages.push('Thieves’ Cant');
       if(entry.classId==='druid')result.languages.push('Druidic');
+      if(entry.classId==='bard'&&classLevel>=2){result.halfSkillProficiency=true;result.halfInitiativeProficiency=b.edition==='2014';}
     }
     result.languages=[...new Set(result.languages)];
     result.proficiencies=[...new Set(result.proficiencies)];

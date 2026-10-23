@@ -69,7 +69,7 @@ function renderCharacterOverview(d) {
   const bg=CharacterBackgrounds.get(b.background);
   const metric=(label,value)=>`<div><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`;
   const skills=Object.entries(M.skills).map(([key,[name,ability]])=>{
-    const rank=Math.max(s.data.skills[key].rank,e.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0,d.classExpertise?.skills.includes(key)?2:0);
+    const rank=Math.max(s.data.skills[key].rank,e.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0,d.classExpertise?.skills.includes(key)?2:0,d.effects.halfSkillProficiency?.5:0);
     return `<div class="sheet-summary-skill"><span title="${rank===2?'Expertise':rank===1?'Proficient':rank===.5?'Half proficiency':'Not proficient'}">${rank===2?'◆':rank===1?'●':rank===.5?'◐':'○'}</span><span>${esc(name)} <small>${ability.toUpperCase()}</small></span><strong>${sign(d.skills[key])}</strong></div>`;
   }).join('');
   const attackRow=(name,hit,damage,range)=>`<tr><td>${esc(name)}</td><td>${esc(hit)}</td><td>${esc(damage)}</td><td>${esc(range)}</td></tr>`;
@@ -189,7 +189,7 @@ function refineCharacterBuilder() {
  const summary=document.getElementById('sheetBuildSummary');summary.classList.add('sheet-build-information');
  document.getElementById('sheetBuildOverviewToggle').onclick=toggleCalculatedOverview;
 }
-function skillAutomaticRank(d,key){return Math.max(d.effects.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0,d.classExpertise?.skills.includes(key)?2:0);}
+function skillAutomaticRank(d,key){return Math.max(d.effects.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0,d.classExpertise?.skills.includes(key)?2:0,d.effects.halfSkillProficiency?.5:0);}
 function bindSkillOrbs() {
  document.querySelectorAll('[data-skill][data-rank]').forEach(button=>button.onclick=()=>{
   readSheetForm();const s=sheetSession,key=button.dataset.skill,rank=Number(button.dataset.rank);
@@ -243,10 +243,11 @@ function updateAbilityAndSkillControls(d) {
  notice.innerHTML=base?'Automatic scores: enter your scores before bonuses below. The large numbers include valid race/background and feat increases, with their limits applied.':'Final totals mode: your entered scores already include bonuses. To calculate them automatically, select Base scores / HP below and enter scores before bonuses.';
  renderPointBuySummary(d);
  renderClassExpertise(d);
+ const halfNotice=document.getElementById('sheetClassTrainingNotice');if(halfNotice){halfNotice.hidden=!d.effects.halfSkillProficiency;halfNotice.textContent=d.effects.halfSkillProficiency?'Jack of All Trades: untrained skill checks include half proficiency ('+Math.floor(d.pb/2)+'), rounded down. Proficient and Expertise skills keep their higher bonus. '+(s.data.build.edition==='2014'?'Initiative also includes this benefit unless proficiency is already included. Apply it manually to other eligible untrained ability/tool checks.':'Under 2024 rules this applies to skill checks, not initiative or other ability checks.'):'';}
  renderWeaponTraining(d);
  for(const key of Object.keys(M.skills)){
   const automatic=skillAutomaticRank(d,key),manual=s.data.skills[key].rank,effective=Math.max(automatic,manual);
-  const source=document.querySelector(`[data-skill-source="${key}"]`);if(source){source.textContent=d.classExpertise?.skills.includes(key)?' · Class Expertise':automatic?' · Auto':'';source.title=automatic?'Training granted by Class Expertise, Character builder or Feats.':'';}
+  const source=document.querySelector(`[data-skill-source="${key}"]`);if(source){source.textContent=d.classExpertise?.skills.includes(key)?' · Class Expertise':effective===.5&&d.effects.halfSkillProficiency?' · Jack of All Trades':automatic>=1?' · Auto':'';source.title=automatic?'Automatic class, builder or feat training. Half proficiency from Jack of All Trades is rounded down and never stacks with trained skills.':'';}
   document.querySelectorAll(`[data-skill="${key}"]`).forEach(button=>{
    const rank=Number(button.dataset.rank);button.setAttribute('aria-pressed',String(rank===effective));
    button.disabled=rank<automatic||rank===automatic&&manual<=automatic;
