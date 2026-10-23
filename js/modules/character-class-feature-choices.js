@@ -16,7 +16,7 @@ var CharacterClassFeatureChoices=(()=>{
     'Archery','Defense','Dueling','Great Weapon Fighting','Protection','Two-Weapon Fighting'
   ].map(name=>option(name,{source:'PHB 2014',referenceComplete:true,automationComplete:['Archery','Defense','Dueling','Two-Weapon Fighting'].includes(name)}));
   function fighter2024(){
-    const defs=globalThis.CharacterFeatData||{},refs=globalThis.CharacterFeatReference?.records||{};
+    const defs=globalThis.CharacterFeatData||(typeof require==='function'?require('./character-feat-data'):{}),refs=(globalThis.CharacterFeatReference||(typeof require==='function'?require('./character-feat-reference'):{})).records||{};
     const rows=Object.entries(defs).filter(([id,def])=>{
       const ref=refs[(def.source||'')+'|'+(def.name||'')];
       return def?.edition==='2024'&&ref?.category==='FS';
@@ -127,9 +127,46 @@ var CharacterClassFeatureChoices=(()=>{
     const names=classId==='paladin'?['Defense','Dueling','Great Weapon Fighting','Protection']:['Archery','Defense','Dueling','Two-Weapon Fighting'];
     definitions[edition][classId]=[{id:'fighting-style',name:'Fighting Style',minLevel:2,count:()=>1,options:()=>edition==='2024'?fighter2024():fighter2014.filter(o=>names.includes(o.name)),referenceComplete:true}];
   }
-  function styles(data){
-    const entries=data?.adobe?.classLevels||data?.rulesChoices?.grants?.__adobe?.data?.classLevels||[];
-    return entries.flatMap(entry=>status(data,entry,data?.build?.edition||'2014').filter(g=>g.id==='fighting-style').flatMap(g=>g.valid.map(id=>g.options.find(o=>o.id===id))));
+  // Class controls and the legacy Feats picker spend one shared allowance.
+  // Reading this state never migrates or deletes saved selections.
+  function fightingStyleState(data,{level,catalog}={}){
+    const edition=data?.build?.edition||'2014',stored=data?.adobe||data?.rulesChoices?.grants?.__adobe?.data||{};
+    const raw=stored.classLevels?.length?stored.classLevels:[{classId:data?.build?.classId,level:level||1}];
+    let remaining=level===undefined?20:Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
+    const seenClasses=new Set(),seenStyles=new Set(),rows=[],slots=[];let total=0;
+    const choices=normalize(stored.classFeatureChoices);
+    for(const entry of raw){
+      const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;
+      if(!actual||seenClasses.has(entry.classId))continue;seenClasses.add(entry.classId);
+      for(const group of groups({...entry,level:actual},edition).filter(g=>g.id==='fighting-style')){
+        total+=group.allowed;slots.push(group);
+        for(const id of (choices[group.key]||[]).slice(0,group.allowed)){
+          const option=group.options.find(o=>o.id===id);
+          if(option&&!seenStyles.has(option.id)){seenStyles.add(option.id);rows.push({key:group.key,option});}
+        }
+      }
+    }
+    catalog||=globalThis.CharacterCatalog?.rawData?.feats||(typeof require==='function'?require('../../data/rules/catalog.json').feats:[]);
+    const legacy=[],aliases=[];
+    for(const id of data?.rulesChoices?.feats||[]){
+      const feat=catalog.find(f=>f.id===id);if(feat?.category!=='FS')continue;
+      const identity=safe(feat.name);
+      if(seenStyles.has(identity)){aliases.push(id);continue;}
+      seenStyles.add(identity);legacy.push(id);
+    }
+    const used=rows.length+legacy.length,legacyGroups={};
+    for(const id of legacy){const slot=slots.find(group=>!legacyGroups[group.key]&&!(choices[group.key]||[]).some(Boolean)&&group.options.some(option=>option.featId===id));if(slot)legacyGroups[slot.key]=id;}
+    return{total,rows,legacy,aliases,legacyGroups,remaining:Math.max(0,total-used),excess:Math.max(0,used-total)};
+  }
+  function styles(data,level){return fightingStyleState(data,{level}).rows.map(row=>row.option);}
+  function fightingStyleReason(data,entry,id){
+    if(!id)return '';
+    const group=groups(entry,data?.build?.edition||'2014').find(g=>g.id==='fighting-style');if(!group)return 'Fighting Style is not unlocked';
+    const before=fightingStyleState(data),choices=normalize(data?.adobe?.classFeatureChoices);
+    if((choices[group.key]||[]).includes(id)&&before.rows.some(row=>row.key===group.key&&row.option.id===id))return '';
+    if(before.rows.some(row=>row.key!==group.key&&row.option.id===id)||before.legacy.some(featId=>group.options.some(o=>o.id===id&&o.featId===featId)))return 'Already selected in another class or on Feats';
+    const candidate={...data,adobe:{...data.adobe,classFeatureChoices:{...choices,[group.key]:[id]}}};
+    return fightingStyleState(candidate).excess>before.excess?'No unused Fighting Style choice; remove the saved style on Feats first':'';
   }
   function normalize(raw={}){
     const out={};
@@ -169,8 +206,10 @@ var CharacterClassFeatureChoices=(()=>{
     return groups(entry,edition).map(group=>{
       const picked=selections(data,group).slice(0,group.allowed);
       const seen=new Set(),valid=picked.filter(id=>{const opt=group.options.find(o=>o.id===id);if(!opt||seen.has(id)&&!opt.repeatable||!prerequisite(opt,group,data,entry).eligible)return false;seen.add(id);return true;});
+      if(group.id==='fighting-style'){const active=fightingStyleState(data).rows.filter(row=>row.key===group.key).map(row=>row.option.id);for(let i=valid.length-1;i>=0;i--)if(!active.includes(valid[i]))valid.splice(i,1);}
       const overflow=(normalize(data?.adobe?.classFeatureChoices)[group.key]||[]).slice(group.allowed).filter(Boolean);
-      return{...group,picked,valid,overflow,missing:Math.max(0,group.allowed-valid.length),complete:valid.length===group.allowed&&!overflow.length};
+      const legacyFeat=group.id==='fighting-style'?fightingStyleState(data).legacyGroups[group.key]:null,filled=valid.length+(legacyFeat?1:0);
+      return{...group,picked,valid,overflow,legacyFeat,missing:Math.max(0,group.allowed-filled),complete:filled===group.allowed&&!overflow.length};
     });
   }
   function set(data,entry,groupId,index,value){
@@ -188,6 +227,7 @@ var CharacterClassFeatureChoices=(()=>{
     if(id&&(!option||!prerequisite(option,group,data,entry).eligible||!option.repeatable&&current.some((v,i)=>i!==index&&v===id)))return false;
     const next=[...current];while(next.length<=index)next.push('');next[index]=id;
     const candidate={...data,adobe:{...data.adobe,classFeatureChoices:{...data.adobe.classFeatureChoices,[group.key]:next}}};
+    if(group.id==='fighting-style'&&fightingStyleReason(data,entry,id))return false;
     if(current.some((v,i)=>i!==index&&v&&prerequisite(group.options.find(o=>o.id===v)||{},group,data,entry).eligible&&!prerequisite(group.options.find(o=>o.id===v)||{},group,candidate,entry).eligible))return false;
     while(next.length&&!next[next.length-1])next.pop();
     data.adobe.classFeatureChoices[group.key]=next;
@@ -287,6 +327,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

@@ -33,13 +33,13 @@ var CharacterPlayRules = (()=>{
   }
   const known=classBudgets.length>0,levels=classBudgets.flatMap(row=>row.levels).sort((a,b)=>a-b),total=classBudgets.reduce((sum,row)=>sum+row.total,0),spent=advancement(data.advancement).asiSpent;
   const dm=data.rulesChoices?.grants?.__dm||{},bonusFeats=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusFeats)||0))),bonusAsis=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusAsis)||0))),bonusAsiUsed=Math.max(0,Math.min(10,Math.trunc(Number(dm.usedAsis)||0)));
-  const style=modern&&((classId==='fighter'&&level>=1)||(['paladin','ranger'].includes(classId)&&level>=2))?1:0;
   const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
+  const styles=CFC.fightingStyleState(data,{level,catalog}),style=modern?styles.total:0;
   const warlock=(data.adobe?.classLevels||[]).find(entry=>entry.classId==='warlock');
   const invocations=modern&&warlock?CFC.status(data,{...warlock,level:Math.min(warlock.level,level)},'2024').find(group=>group.id==='eldritch-invocations'):null;
   const lessons=invocations?.valid.filter(id=>id==='lessons-of-the-first-ones').length||0;
-  let featUsed=0,styleUsed=0,lessonUsed=0;
-  for(const id of data.rulesChoices.feats){const f=catalog.find(v=>v.id===id);if(f?.category==='FS'&&styleUsed<style)styleUsed++;else if(f?.category==='O'&&lessonUsed<lessons)lessonUsed++;else featUsed++;}
+  let featUsed=0,styleUsed=modern?styles.rows.length:0,lessonUsed=0;
+  for(const id of data.rulesChoices.feats){const f=catalog.find(v=>v.id===id);if(modern&&styles.aliases.includes(id))continue;if(f?.category==='FS'&&styleUsed<style)styleUsed++;else if(f?.category==='O'&&lessonUsed<lessons)lessonUsed++;else featUsed++;}
   const bonusFeatCovered=Math.min(featUsed,bonusFeats),normalFeatUsed=Math.max(0,featUsed-bonusFeatCovered);
   const normalUsed=normalFeatUsed+spent,normalRemaining=Math.max(0,total-normalUsed),bonusFeatRemaining=Math.max(0,bonusFeats-bonusFeatCovered),bonusAsiRemaining=Math.max(0,bonusAsis-bonusAsiUsed);
   const remaining=normalRemaining+bonusFeatRemaining,asiRemaining=normalRemaining+bonusAsiRemaining;
@@ -57,7 +57,11 @@ var CharacterPlayRules = (()=>{
   if(scores&&req.length&&!req.some(r=>level>=r.level&&(!r.ability.length||r.ability.some(a=>Object.entries(a).every(([k,v])=>scores[k]>=v)))))return 'Level / ability prerequisite is not met';
   if(data.build.edition==='2014'&&data.build.race==='variant-human'&&!data.build.raceFeat&&feat.edition==='2014')return '';
   const b=budget(data,level,catalog);
-  if(feat.category==='FS')return b.style?'':'No available Fighting Style choice';
+  if(feat.category==='FS'){
+   const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
+   if(CFC.fightingStyleState(data,{level,catalog}).rows.some(row=>row.option.name===feat.name))return 'This Fighting Style is already selected in class choices';
+   return b.style?'':'No available Fighting Style choice; class choices and Feats share the same allowance';
+  }
   if(feat.category==='O'&&b.lessons)return '';
   return b.remaining?'':'No available feat / ASI choice at this class level';
  }

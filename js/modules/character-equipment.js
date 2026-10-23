@@ -86,7 +86,7 @@ var CharacterEquipment = (() => {
     const entries=profs.map(p=>p.toLowerCase());
     return entries.some(p=>p===w.name.toLowerCase()||p===w.name.toLowerCase()+'s'||p===w.group+' weapons'||w.group==='martial'&&((p==='martial weapons with the light property'&&w.props.includes('light'))||(p==='martial weapons with the finesse or light property'&&(w.props.includes('light')||w.props.includes('finesse')))));
   }
-  function derive(data,stats,loot=[]) {
+  function derive(data,stats,loot=[],level) {
     const c=choices(data.equipmentState),warnings=[],sources=[],attacks=[],seen=new Set(),names=new Set();
     const owned=loot.filter(e=>e&&Number(e.quantity)>0&&typeof e.id==='string'&&!seen.has(e.id)&&seen.add(e.id));
     const entries=owned.map(e=>({entry:e,item:e.item||{},choice:c.loadout.find(v=>v.id===e.id)||{id:e.id,equipped:false,attuned:false,ability:'auto',proficiency:'auto',mode:'normal'},mechanics:CharacterEquipment.infer(e.item)}));
@@ -180,7 +180,7 @@ var CharacterEquipment = (() => {
       if(w.mastery){const mastery=stats.weaponTraining?.masteries.find(v=>v.base===m.base);notes.push(mastery?'Mastery: '+w.mastery+' · unlocked ('+mastery.source+'); resolve the effect at the table.':'Mastery: '+w.mastery+' · not selected. Choose eligible Weapon Mastery on Abilities & Skills.');}
       attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
     }
-    const styles=typeof CharacterClassFeatureChoices==='undefined'?[]:CharacterClassFeatureChoices.styles(data);
+    const styles=typeof CharacterClassFeatureChoices==='undefined'?[]:CharacterClassFeatureChoices.styles(data,level);
     for(const attack of attacks){
       const entry=entries.find(e=>e.entry.id===attack.id),profile=entry?.profile;
       if(!profile)continue;
