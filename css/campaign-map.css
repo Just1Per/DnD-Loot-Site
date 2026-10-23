@@ -102,3 +102,11 @@
 .campaign-map .map-region-style-controls input[type=color]{width:100%;height:44px;min-width:44px;padding:4px;cursor:pointer}
 .campaign-map .map-region-style-controls input[type=range]{width:100%;min-height:44px;padding:0;accent-color:#7b3437;cursor:pointer}
 .map-region-style-controls output{display:block;font-size:.85rem;color:#435548;font-variant-numeric:tabular-nums}
+
+.map-region-crossing-underlay,.map-region-crossing-line{vector-effect:non-scaling-stroke;pointer-events:none}
+.map-region-crossing-underlay{stroke:#fff;stroke-width:7}
+.map-region-crossing-line{stroke:#a12528;stroke-width:4;stroke-dasharray:8 4}
+.map-corner-label{position:absolute;transform:translate(-50%,-50%);z-index:6;min-width:24px;height:24px;display:grid;place-items:center;padding:0 3px;border-radius:50%;background:#315b49;color:white;border:2px solid white;box-shadow:0 0 0 1px #315b49;font:700 12px/1 system-ui,sans-serif;pointer-events:none}
+.map-corner-conflict{background:#a12528;box-shadow:0 0 0 1px #a12528}
+.map-region-repair{border:2px solid #9e382b;background:#fff3df;border-radius:8px;padding:12px;margin-top:14px}
+.map-region-crossing-message{color:#6f271f;font-weight:600}

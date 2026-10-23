@@ -31,6 +31,22 @@ const errors=[];
   await page.locator('[data-map-pin-form] button[type=submit]').click();
  }
  assert.equal(await page.locator('[data-map-pin]').count(),5);
+ await page.locator('[data-map-add-region]').click();await page.locator('[data-pin-name]').fill('Crossing outline');
+ const beforeCrossing=await page.evaluate(()=>JSON.stringify(testSheetDocs));
+ for(const [x,y] of [[10,10],[90,10],[10,90],[90,90]]){await page.locator('[data-corner-x]').fill(String(x));await page.locator('[data-corner-y]').fill(String(y));await page.locator('[data-corner-add]').click();}
+ await page.locator('[data-region-finish]').click();assert.match(await page.locator('.map-region-crossing-message').textContent(),/Lines 2–3 and 4–1/);
+ assert.equal(await page.locator('.map-region-crossing-line').count(),2);assert.equal(await page.locator('[data-region-corner]').count(),4);assert.equal(await page.locator('[data-region-edit-corner]').evaluate(input=>document.activeElement===input),true);
+ assert.equal(await page.evaluate(()=>JSON.stringify(testSheetDocs)),beforeCrossing);assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary.length),4);
+ for(const width of [390,320]){await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(await page.evaluate(async()=>(await axe.run('.campaign-map',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>v.id)),[]);}
+ await page.locator('.map-region-tools').screenshot({path:out+'/map-region-crossing-mobile.png'});await page.setViewportSize({width:1440,height:1000});
+ // Repair an earlier corner while retaining all other vertices. Empty input must not write NaN.
+ await page.locator('[data-region-edit-corner]').selectOption('1');await page.locator('[data-region-edit-x]').fill('');await page.locator('[data-region-update-corner]').click();assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary[1].x),90);
+ await page.locator('[data-region-edit-x]').fill('90');await page.locator('[data-region-edit-y]').fill('90');await page.locator('[data-region-update-corner]').click();
+ await page.locator('[data-region-edit-corner]').selectOption('3');await page.locator('[data-region-edit-x]').fill('10');await page.locator('[data-region-edit-y]').fill('10');await page.locator('[data-region-update-corner]').click();
+ // Removing this repeated corner leaves a valid triangle, without restarting the region.
+ await page.locator('[data-region-remove-corner]').click();assert.equal(await page.locator('.map-region-crossing-line').count(),0);assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary.length),3);
+ await page.locator('[data-region-finish]').click();assert.equal(await page.locator('.map-region-repair').count(),0);assert.equal(await page.locator('[data-region-corner]').count(),0);assert.equal(await page.evaluate(()=>CampaignMap.session.drawing),false);
+ await page.locator('[data-pin-cancel]').click();await page.getByRole('button',{name:'Discard changes',exact:true}).click();assert.equal(await page.locator('.map-region-crossing-line').count(),0);
  await page.locator('[data-map-add-region]').click();await page.locator('[data-pin-name]').fill('The Storm Coast');await page.locator('[data-pin-description]').fill('A named region with its own story.');
  await page.locator('[data-region-finish]').click();assert.match(await page.locator('[data-map-status]').textContent(),/three corners/);
  const corners=[[20,40],[65,42],[70,75],[25,80]];

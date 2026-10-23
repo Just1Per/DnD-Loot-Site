@@ -52,6 +52,17 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
   if(value.length>16384||!packedPattern.test(value))throw Error('The region boundary cannot be published. Use fewer corners.');
   return value;
  }
+ function boundaryCrossing(points){
+  if(!Array.isArray(points)||points.length<4)return null;
+  const cross=(a,b,c)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
+  const on=(a,b,c)=>Math.abs(cross(a,b,c))<1e-8&&c.x>=Math.min(a.x,b.x)&&c.x<=Math.max(a.x,b.x)&&c.y>=Math.min(a.y,b.y)&&c.y<=Math.max(a.y,b.y);
+  for(let i=0;i<points.length;i++)for(let j=i+1;j<points.length;j++){
+   if(j===i+1||i===0&&j===points.length-1)continue;
+   const a=points[i],b=points[(i+1)%points.length],c=points[j],d=points[(j+1)%points.length];
+   if(cross(a,b,c)*cross(a,b,d)<0&&cross(c,d,a)*cross(c,d,b)<0||on(a,b,c)||on(a,b,d)||on(c,d,a)||on(c,d,b))return {first:i,second:j,message:'Lines '+(i+1)+'–'+((i+1)%points.length+1)+' and '+(j+1)+'–'+((j+1)%points.length+1)+' intersect.'};
+  }
+  return null;
+ }
  function boundary(points,type){
   if(points===undefined||Array.isArray(points)&&points.length===0)return [];
   if(type!=='Region'||!Array.isArray(points)||points.length<3||points.length>maxRegionCorners)throw Error('A region boundary needs 3–'+maxRegionCorners+' corners.');
@@ -60,13 +71,7 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
    return {x:point.x,y:point.y};
   });
   if(new Set(normalized.map(p=>p.x+':'+p.y)).size!==normalized.length)throw Error('Use a different position for each region corner.');
-  const cross=(a,b,c)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
-  const on=(a,b,c)=>Math.abs(cross(a,b,c))<1e-8&&c.x>=Math.min(a.x,b.x)&&c.x<=Math.max(a.x,b.x)&&c.y>=Math.min(a.y,b.y)&&c.y<=Math.max(a.y,b.y);
-  for(let i=0;i<normalized.length;i++)for(let j=i+1;j<normalized.length;j++){
-   if(j===i+1||i===0&&j===normalized.length-1)continue;
-   const a=normalized[i],b=normalized[(i+1)%normalized.length],c=normalized[j],d=normalized[(j+1)%normalized.length];
-   if(cross(a,b,c)*cross(a,b,d)<0&&cross(c,d,a)*cross(c,d,b)<0||on(a,b,c)||on(a,b,d)||on(c,d,a)||on(c,d,b))throw Error('Region edges must not cross. Undo a corner or redraw the boundary.');
-  }
+  const crossing=boundaryCrossing(normalized);if(crossing){const error=Error('Region edges must not cross. '+crossing.message+' Adjust a corner or undo the last corner.');error.regionCrossing=crossing;throw error;}
   const area=Math.abs(normalized.reduce((sum,p,i)=>{const next=normalized[(i+1)%normalized.length];return sum+p.x*next.y-next.x*p.y;},0))/2;
   if(area<0.01)throw Error('Draw an area with at least three distinct corners.');
   return normalized;
@@ -132,6 +137,6 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
   if(typeof mainMapId!=='string'||mainMapId&&!/^[A-Za-z0-9_-]{1,100}$/.test(mainMapId))throw Error('Choose a published main map.');
   return runTransaction(db,async tx=>{const ref=preferencesRef(campaignId),old=await tx.get(ref),main=mainMapId?await tx.get(doc(db,'campaigns',id(campaignId),'campaignMaps',mainMapId)):null;check(uid,isCurrent);if((old.data()?.revision||0)!==revision)throw Error('Map order changed in another window. Refresh before organising maps.');if(mainMapId&&!main?.exists())throw Error('Publish a map before making it the main map.');const next={order:[...order],mainMapId,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;});
  }
- return {mapId,imagePrefix,picturePrefix,listMaps,loadPreferences,savePreferences,load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,markerStyles,maxRegionCorners,encodeBoundary,decodeBoundary,regionStyle};
+ return {mapId,imagePrefix,picturePrefix,listMaps,loadPreferences,savePreferences,load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,markerStyles,maxRegionCorners,encodeBoundary,decodeBoundary,regionStyle,boundaryCrossing};
 }
 if(typeof module!=='undefined')module.exports={createCampaignMapStore};
