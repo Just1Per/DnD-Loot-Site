@@ -15,7 +15,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.evaluate(()=>{
   window.informationListeners=new Map();
   const deps=window.__DND_VAULT_DEPS__, original=deps.getDocs;
-  window.emitInformationSnapshot=()=>{for(const [path,listener]of informationListeners)listener.next({docs:Object.entries(testSheetDocs).filter(([key])=>key.startsWith(path+'/')&&key.slice(path.length+1).indexOf('/')<0).map(([key,data])=>({id:key.split('/').at(-1),data:()=>structuredClone(data)}))})};
+  window.emitInformationSnapshot=()=>{for(const [path,listener]of informationListeners){if(path.split('/').length%2===0)listener.next({exists:()=>!!testSheetDocs[path],data:()=>structuredClone(testSheetDocs[path])});else listener.next({docs:Object.entries(testSheetDocs).filter(([key])=>key.startsWith(path+'/')&&key.slice(path.length+1).indexOf('/')<0).map(([key,data])=>({id:key.split('/').at(-1),data:()=>structuredClone(data)}))})}};
   deps.onSnapshot=(path,next,error)=>{informationListeners.set(path,{next,error});queueMicrotask(emitInformationSnapshot);return()=>informationListeners.delete(path)};
   deps.getDocs=async query=>{const path=typeof query==='string'?query:query.path;if(path.endsWith('/playerInformation')&&window.pauseInformation)await new Promise(resolve=>window.finishInformation=resolve);return original(query)};
  });
