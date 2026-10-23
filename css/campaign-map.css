@@ -110,3 +110,18 @@
 .map-corner-conflict{background:#a12528;box-shadow:0 0 0 1px #a12528}
 .map-region-repair{border:2px solid #9e382b;background:#fff3df;border-radius:8px;padding:12px;margin-top:14px}
 .map-region-crossing-message{color:#6f271f;font-weight:600}
+
+/* Open map lines: roads and the party's travelled route remain distinct without relying on colour. */
+.map-path-layer{pointer-events:none}
+.map-path,.map-path-underlay{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.map-path-underlay{stroke:#fff6df;stroke-width:8;pointer-events:none}
+.map-path{stroke-width:4;pointer-events:stroke;cursor:pointer}
+.map-path-road{stroke:#6c4329}
+.map-path-travelled{stroke:#283f89;stroke-dasharray:9 7}
+.map-path-selected{stroke-width:6}
+.map-path-private{opacity:.55}
+.map-path-point{fill:#fff;stroke:#283f89;stroke-width:1;vector-effect:non-scaling-stroke;pointer-events:none}
+.map-pin-path-travelled{border-color:#283f89}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .map-region-needs-finish button[data-route-finish]{background:#7a431b!important;color:#fff!important;border:2px solid #60300e!important;box-shadow:0 0 0 3px #e7be75}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin-path-road:not([aria-pressed=true]){background:#6c4329!important}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .campaign-map button.map-pin-path-travelled:not([aria-pressed=true]){background:#283f89!important}

@@ -199,5 +199,33 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
   await env.withSecurityRulesDisabled(c=>sdk.updateDoc(sdk.doc(c.firestore(),'campaigns/multi'),{deletedAt:sdk.Timestamp.now(),deletedBy:'owner'}));
   for(const uid of ['owner','dm','player']){await assertFails(stores[uid].listMaps('multi'));await assertFails(read(uid,'campaign-maps/multi/south/original'));}
  });
+
+ await check('Member DM publishes roads and 256-point party routes on a secondary map without leaking private lines or other maps',async()=>{
+  await env.withSecurityRulesDisabled(async c=>{for(const [p,d]of Object.entries({'campaigns/routes':{ownerId:'owner'},'campaigns/routes/members/dm':{role:'dm',status:'active'},'campaigns/routes/members/player':{role:'player',status:'active'},'campaigns/routes/members/revoked':{role:'dm',status:'inactive'}}))await sdk.setDoc(sdk.doc(c.firestore(),p),d)});
+  const make=(uid,mapId)=>createCampaignMapStore({...sdk,db:contexts[uid].firestore(),auth:{currentUser:{uid}}},{mapId});
+  const pin={id:'road',name:'Northern road',description:'A road across the hills.',type:'Road',x:30,y:40,boundary:[{x:10,y:10},{x:80,y:40}],revealed:true};
+  for(const mapId of ['main','journey']){
+   const store=make('dm',mapId),imagePath=store.imagePrefix('routes')+'image';await assertSucceeds(upload('dm',imagePath));
+   const travelled={...pin,id:'travelled',name:'Party journey',type:'Travelled',boundary:Array.from({length:256},(_,i)=>({x:i%100,y:Math.floor(i/100)}))};
+   const pins=mapId==='main'?[pin]:[pin,travelled,{...pin,id:'city',name:'Harbor',type:'City',boundary:[]},{...pin,id:'region',name:'Hills',type:'Region',boundary:[{x:10,y:10},{x:80,y:10},{x:50,y:80}]},{...pin,id:'secret',name:'DM SECRET ROUTE',revealed:false}];
+   const draft=await store.saveDraft({campaignId:'routes',input:{title:mapId,imagePath,pins},revision:0,sourceRevision:0});
+   await assertFails(make('player',mapId).loadDraft('routes'));await assertSucceeds(store.publish({campaignId:'routes',draftRevision:draft.revision}));
+   const reader=make('player',mapId),map=await reader.load('routes'),publicPins=await reader.listPins('routes',map);assert.equal(publicPins.length,mapId==='main'?1:4);assert.ok(!publicPins.some(p=>p.name==='DM SECRET ROUTE'));
+   assert.deepEqual(publicPins.find(p=>p.type==='Road').boundary,pin.boundary);if(mapId==='journey')assert.deepEqual(publicPins.find(p=>p.type==='Travelled').boundary,travelled.boundary);
+  }
+  const store=make('dm','journey'),draft=await store.loadDraft('routes');
+  for(const uid of ['player','revoked','outsider','admin'])await assertFails(make(uid,'journey').publish({campaignId:'routes',draftRevision:draft.revision}));
+  const hidden=await store.saveDraft({campaignId:'routes',input:{...draft,pins:draft.pins.map(p=>p.type==='Travelled'?{...p,revealed:false}:p)},revision:draft.revision,sourceRevision:draft.sourceRevision});await store.publish({campaignId:'routes',draftRevision:hidden.revision});
+  const player=make('player','journey');assert.equal((await player.listPins('routes',await player.load('routes'))).length,3);await assertFails(sdk.getDoc(sdk.doc(contexts.player.firestore(),'campaigns/routes/campaignMaps/journey/pins/travelled')));
+  assert.equal((await make('player','main').listPins('routes',await make('player','main').load('routes'))).length,1);
+ });
+ await check('Published route rules reject malformed, unbounded, missing or region-only geometry and extra private fields',async()=>{
+  const db=contexts.dm.firestore(),mapRef=sdk.doc(db,'campaigns/routes/campaignMaps/journey'),pinRef=sdk.doc(db,'campaigns/routes/campaignMaps/journey/pins/road'),map=(await sdk.getDoc(mapRef)).data(),pin=(await sdk.getDoc(pinRef)).data();
+  for(const change of [{boundaryPoints:'1,2'},{boundaryPoints:'1,2;101,4'},{boundaryPoints:Array(257).fill('1,2').join(';')},{boundaryPoints:'1,2;3,4;PRIVATE'},{boundaryPoints:undefined},{type:'Region'},{type:'City'},{type:'Travelled',regionStyle:{color:'#ffffff',opacity:.5}},{privateNotes:'DM SECRET'}]){
+   const next={...pin,...change,publishedRevision:map.revision+1,revision:map.revision+1};if(change.boundaryPoints===undefined&&Object.hasOwn(change,'boundaryPoints'))delete next.boundaryPoints;
+   const batch=sdk.writeBatch(db);batch.set(mapRef,{...map,revision:map.revision+1});batch.set(pinRef,next);await assertFails(batch.commit());
+  }
+  const control=sdk.writeBatch(db);control.set(mapRef,{...map,revision:map.revision+1});control.set(pinRef,{...pin,publishedRevision:map.revision+1,revision:map.revision+1});await assertSucceeds(control.commit());
+ });
  console.log('SUCCESS',count,'map Firestore/Storage permission checks');
 }finally{await env.cleanup();}})().catch(e=>{console.error(e);process.exitCode=1});

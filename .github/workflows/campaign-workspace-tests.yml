@@ -192,6 +192,7 @@ jobs:
         npm --prefix tests run test:map-preview-loading
         npm --prefix tests run test:campaign-map
         npm --prefix tests run test:map-styles-regions
+        npm --prefix tests run test:map-roads-routes
     - name: Shared party journal, notebook reader and private recap permissions
       run: |-
         npm --prefix tests run test:campaign-journal

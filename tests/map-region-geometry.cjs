@@ -41,3 +41,20 @@ test('crossing diagnostics identify open edges and the closing edge without reje
  const concave=[{x:10,y:10},{x:90,y:10},{x:90,y:90},{x:50,y:50},{x:10,y:90}];assert.equal(store.boundaryCrossing(concave),null);assert.deepEqual(store.boundary(concave,'Region'),concave);
  assert.equal(store.boundaryCrossing([]),null);assert.equal(store.boundaryCrossing(triangle),null);
 });
+
+
+test('roads and travelled routes are open lines with 2–256 points, including crossing and revisited places',()=>{
+ const route=[{x:10,y:10},{x:90,y:90},{x:10,y:90},{x:90,y:10},{x:10,y:10}];
+ for(const type of ['Road','Travelled']){
+  assert.deepEqual(store.boundary(route,type),route);assert.deepEqual(store.boundary(route.slice(0,2),type),route.slice(0,2));
+  assert.deepEqual(store.decodeBoundary(store.encodeBoundary(route.slice(0,2),type),type),route.slice(0,2));
+  const long=Array.from({length:256},(_,i)=>({x:i%100,y:Math.floor(i/100)}));assert.equal(store.path(long).length,256);assert.deepEqual(store.decodeBoundary(store.encodeBoundary(long,type),type),long);
+  for(const invalid of [null,[],[route[0]],[route[0],route[0]],Array(257).fill(route[0]),[{x:1,y:1},{x:101,y:1}],route.map(p=>({...p,secret:'HIDDEN'}))])assert.throws(()=>store.boundary(invalid,type));
+  for(const invalid of ['1,2','1,2;101,4','1,2;3,4;PRIVATE',Array(257).fill('1,2').join(';')])assert.throws(()=>store.decodeBoundary(invalid,type));
+ }
+ assert.throws(()=>store.decodeBoundary('1,2;3,4'),'Region remains at least three corners');
+});
+test('route draft normalization preserves line types and points without allowing region fill styles',()=>{
+ const pin={id:'road',name:'Northern road',description:'Road across the hills',type:'Road',x:50,y:50,boundary:[{x:10,y:10},{x:70,y:30}],revealed:true};
+ const normalized=store.normalizeDraft('a',{title:'Atlas',imagePath:'campaign-maps/a/image',pins:[pin]}).pins[0];assert.equal(normalized.type,'Road');assert.deepEqual(normalized.boundary,pin.boundary);assert.throws(()=>store.normalizeDraft('a',{title:'Atlas',imagePath:'campaign-maps/a/image',pins:[{...pin,regionStyle:{color:'#ffffff',opacity:.5}}]}));
+});

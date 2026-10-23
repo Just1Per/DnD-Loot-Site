@@ -83,6 +83,7 @@
     "test:journal-thumbnails": "node journal-card-thumbnails-browser.cjs",
     "test:journal-images": "node journal-image-loading-browser.cjs",
     "test:journal-cards": "node journal-cards-browser.cjs",
+    "test:map-roads-routes": "node map-roads-routes-browser.cjs",
     "test:multiple-maps": "node multiple-maps-browser.cjs",
     "test:map-preview-loading": "node map-preview-loading-browser.cjs",
     "test:campaign-map": "node campaign-map-browser.cjs",

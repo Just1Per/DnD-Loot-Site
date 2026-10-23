@@ -688,9 +688,9 @@ match /campaigns/{campaignId} {
       function validPackedBoundary(d) {
         let coordinate = '(100(\\.0+)?|[0-9]?[0-9](\\.[0-9]+)?)';
         let point = coordinate + ',' + coordinate;
-        return d.type == 'Region' && d.boundary is list && d.boundary.size() == 0
+        return d.type in ['Region','Road','Travelled'] && d.boundary is list && d.boundary.size() == 0
           && d.boundaryPoints is string && d.boundaryPoints.size() <= 16384
-          && d.boundaryPoints.matches('^' + point + '(;' + point + '){2,255}$');
+          && d.boundaryPoints.matches('^' + point + '(;' + point + (d.type == 'Region' ? '){2,255}$' : '){1,255}$'));
       }
       function validRegionBoundary(d) {
         return ('boundaryPoints' in d) ? validPackedBoundary(d) : (!('boundary' in d) || (d.boundary is list && (d.boundary.size() == 0 || (
@@ -726,7 +726,8 @@ match /campaigns/{campaignId} {
           && d.name is string && d.name.size() > 0 && d.name.size() <= 100
           && d.description is string && d.description.size() <= 2000
           && d.x is number && d.x >= 0 && d.x <= 100 && d.y is number && d.y >= 0 && d.y <= 100
-          && d.type in ['City','Region'] && d.imagePath == map.imagePath
+          && d.type in ['City','Region','Road','Travelled'] && d.imagePath == map.imagePath
+          && (!(d.type in ['Road','Travelled']) || ('boundaryPoints' in d))
           && (!('markerStyle' in d) || d.markerStyle in ['Location','City','Castle','Landmark','Point of interest'])
           && validRegionBoundary(d) && validRegionStyle(d)
           && d.picturePath is string && (d.picturePath == '' || d.picturePath.matches('^campaign-map-place-images/' + campaignId + '/' + (mapId == 'main' ? '' : mapId + '/') + pinId + '/[A-Za-z0-9_-]{1,100}$'))
