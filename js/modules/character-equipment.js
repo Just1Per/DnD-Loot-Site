@@ -177,7 +177,7 @@ var CharacterEquipment = (() => {
       if(m.base==='lance')notes.push(w.edition==='2014'?'Disadvantage against targets within 5 ft; two hands unless mounted.':'Two hands unless mounted.');
       if(offhand)notes.push('Extra Light-weapon attack: confirm eligibility; positive ability damage omitted.');
       if(m.base==='net')notes.push(w.edition==='2024'?'2024 Net uses an action/attack replacement and a save; no weapon attack roll.':'2014 Net special attack restrictions apply.');
-      if(w.mastery)notes.push('Mastery: '+w.mastery+' (only if unlocked; effect manual).');
+      if(w.mastery){const mastery=stats.weaponTraining?.masteries.find(v=>v.base===m.base);notes.push(mastery?'Mastery: '+w.mastery+' · unlocked ('+mastery.source+'); resolve the effect at the table.':'Mastery: '+w.mastery+' · not selected. Choose eligible Weapon Mastery on Abilities & Skills.');}
       attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
     }
     const styles=typeof CharacterClassFeatureChoices==='undefined'?[]:CharacterClassFeatureChoices.styles(data);
@@ -192,6 +192,6 @@ var CharacterEquipment = (() => {
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
     return {entries,attacks,warnings,attuned,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
-  return {weapons,armor,normalize,infer,profile,choices,derive};
+  return {weapons,armor,normalize,infer,profile,choices,trained,derive};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterEquipment;

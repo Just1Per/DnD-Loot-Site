@@ -67,6 +67,8 @@ var CharacterFeatRules = (() => {
         report.prerequisiteInfo.push('Spellcasting: '+(spellcaster?'detected from your class, species or selected spells.':'not detected; review your spellcasting features.'));
       }
       if(warnings.length)continue;
+      report.eligible=true;
+      if(def.name==='Weapon Master')automated.push('Weapon choices on Abilities & Skills');
       if(def.campaignEffects){const hp=def.campaignEffects.hpPerLevel*Math.max(1,Math.min(20,level));effects.hpBonus+=hp;if(hp)(effects.hpSources||=[]).push({kind:'feat',name:def.name,value:hp});speedBonus+=def.campaignEffects.speedBonus;if(hp)automated.push('Campaign feat HP +'+hp);if(def.campaignEffects.speedBonus)automated.push('Speed +'+def.campaignEffects.speedBonus+' ft');}
       if(def.name==='Resilient'&&def.source==='XPHB'&&(effects.saves.includes(c.abilities[0])||data.saves[c.abilities[0]]?.proficient)){warnings.push('Choose an ability without saving throw proficiency.');continue;}
       const option=def.ability[c.option]||def.ability[0];
