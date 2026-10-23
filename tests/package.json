@@ -27,6 +27,7 @@
     "test:item-removal": "node --test campaign-item-removal.cjs && node campaign-item-removal-browser.cjs",
     "test:item-removal-rules": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-item-removal-rules.cjs\"",
     "test:creature-editor": "node creature-editor-browser.cjs",
+    "test:creature-import-loading": "node creature-import-loading-browser.cjs",
     "test:creature-bulk-import": "node creature-bulk-import-browser.cjs",
     "test:root-picker": "node root-catalogue-picker-browser.cjs",
     "test:admin-accounts": "node admin-accounts-browser.cjs",

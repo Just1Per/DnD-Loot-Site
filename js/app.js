@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261022-companion-catalogue-v1";
+const ASSET_VERSION = "20261023-creature-import-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -76,7 +76,6 @@ const FEATURE_FILES = [
   "./modules/campaign-one-shots-store.js",
   "./modules/campaign-creatures.js",
   "./modules/personal-creature-library.js",
-  "./modules/campaign-monster-import.js",
   "./modules/campaign-encounters.js",
   "./modules/character-equipment.js",
   "./modules/character-magic-armor.js",
@@ -138,7 +137,6 @@ const FEATURE_FILES = [
   "./modules/campaign-world-builder-ui.js",
   "./modules/campaign-creatures-ui.js",
   "./modules/campaign-chapters-ui.js",
-  "./modules/campaign-monster-catalog-ui.js",
   "./modules/campaign-encounters-ui.js",
   "./modules/campaign-one-shots-ui.js",
   "./modules/campaign-rules-ui.js",
@@ -180,7 +178,7 @@ function createOptionalFeatureLoader(features) {
   function loadOnce(file) {
     if(!requests.has(file)) {
       const request=loadFeatureScript(file).catch(error=>{
-        requests.delete(file);console.warn('[CampaignAtlas] Character tool failed to load:',error);
+        requests.delete(file);console.warn('[CampaignAtlas] Optional tool failed to load:',error);
         throw new Error('Character tools could not load. Try opening the sheet again.');
       });
       requests.set(file,request);
@@ -195,6 +193,7 @@ function createOptionalFeatureLoader(features) {
   }});
 }
 window.CampaignOptionalFeatures=createOptionalFeatureLoader({
+  creatureCatalogue:"./modules/campaign-monster-catalog-ui.js",
   sheetPrint:"./modules/character-sheet-print.js",
   sheetTools:[
     "./modules/character-creature-data.js",
