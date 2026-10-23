@@ -32,3 +32,12 @@ test('region appearance validates exact colour and opacity without changing lega
  for(const regionStyle of [null,[],{}, {color:'#fff',opacity:.5},{color:'red',opacity:.5},{color:'#ff0000;display:none',opacity:.5},{color:'#ffffff',opacity:'0.5'},{color:'#ffffff',opacity:-.1},{color:'#ffffff',opacity:1.1},{color:'#ffffff',opacity:NaN},{color:'#ffffff',opacity:Infinity},{color:'#ffffff',opacity:.5,privateNotes:'SECRET'}])assert.throws(()=>normalize({...pin,regionStyle}));
  assert.throws(()=>normalize({...pin,type:'City',boundary:[],regionStyle:{color:'#ffffff',opacity:.5}}));
 });
+
+test('crossing diagnostics identify open edges and the closing edge without rejecting concave outlines',()=>{
+ const bow=[{x:10,y:10},{x:90,y:90},{x:10,y:90},{x:90,y:10}],closing=[{x:10,y:10},{x:90,y:10},{x:10,y:90},{x:90,y:90}];
+ assert.deepEqual(store.boundaryCrossing(bow),{first:0,second:2,message:'Lines 1–2 and 3–4 intersect.'});
+ assert.deepEqual(store.boundaryCrossing(closing),{first:1,second:3,message:'Lines 2–3 and 4–1 intersect.'});
+ assert.throws(()=>store.boundary(closing,'Region'),error=>error.regionCrossing.second===3&&error.message.includes('4–1'));
+ const concave=[{x:10,y:10},{x:90,y:10},{x:90,y:90},{x:50,y:50},{x:10,y:90}];assert.equal(store.boundaryCrossing(concave),null);assert.deepEqual(store.boundary(concave,'Region'),concave);
+ assert.equal(store.boundaryCrossing([]),null);assert.equal(store.boundaryCrossing(triangle),null);
+});
