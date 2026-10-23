@@ -87,9 +87,9 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
   const primary=await stores.dm.saveDraft({campaignId:'mixed',input:{title:'Primary',imagePath:'campaign-maps/mixed/original',pins:[]},revision:0,sourceRevision:0});await stores.dm.publish({campaignId:'mixed',draftRevision:primary.revision});
   const mapId='7caf0fcb-2aa8-4ed9-80c6-5935c9a66b10',make=uid=>createCampaignMapStore({...sdk,db:contexts[uid].firestore(),auth:{currentUser:{uid}}},{mapId}),dm=make('dm'),player=make('player');
   const base={description:'Shared place',x:50,y:50,revealed:true,picturePath:'',pictureAlt:'',worldEntryId:''},circle=n=>Array.from({length:n},(_,i)=>({x:50+30*Math.cos(i*2*Math.PI/n),y:50+30*Math.sin(i*2*Math.PI/n)}));
-  const pins=[{...base,id:'city',name:'City',type:'City',markerStyle:'City'},{...base,id:'landmark',name:'Landmark',type:'City',markerStyle:'Landmark'},{...base,id:'region12',name:'Small region',type:'Region',boundary:circle(12)},{...base,id:'region256',name:'Detailed region',type:'Region',boundary:circle(256)}];
+  const pins=[{...base,id:'city',name:'City',type:'City',markerStyle:'City'},{...base,id:'landmark',name:'Landmark',type:'City',markerStyle:'Landmark'},{...base,id:'region12',name:'Small region',type:'Region',boundary:circle(12),regionStyle:{color:'#195c87',opacity:.4}},{...base,id:'region256',name:'Detailed region',type:'Region',boundary:circle(256),regionStyle:{color:'#c13b32',opacity:0}}];
   const saved=await dm.saveDraft({campaignId:'mixed',input:{title:'Secondary',imagePath:'campaign-maps/mixed/'+mapId+'/original',previewPath:'campaign-maps/mixed/'+mapId+'/overview',pins},revision:0,sourceRevision:0});
-  const result=await dm.publish({campaignId:'mixed',draftRevision:saved.revision}),shared=await player.listPins('mixed',result.map);assert.equal(shared.length,4);for(const pin of pins)if(pin.type==='Region')assert.deepEqual(shared.find(row=>row.id===pin.id).boundary,pin.boundary);
+  const result=await dm.publish({campaignId:'mixed',draftRevision:saved.revision}),shared=await player.listPins('mixed',result.map);assert.equal(shared.length,4);for(const pin of pins)if(pin.type==='Region'){assert.deepEqual(shared.find(row=>row.id===pin.id).boundary,pin.boundary);assert.deepEqual(shared.find(row=>row.id===pin.id).regionStyle,pin.regionStyle);}
   assert.equal((await stores.player.load('mixed')).title,'Primary');assert.equal((await dm.loadDraft('mixed')).sourceRevision,1);
   const again=await dm.publish({campaignId:'mixed',draftRevision:result.draft.revision});assert.equal(again.map.revision,2);assert.equal((await player.listPins('mixed',again.map)).length,4);
  });
@@ -106,6 +106,18 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
    const raw=(await sdk.getDoc(sdk.doc(contexts.owner.firestore(),'campaigns','large','campaignMaps',mapId,'pins','coast'))).data();assert.equal(typeof raw.boundaryPoints,'string');assert.deepEqual(raw.boundary,[]);
    for(const uid of ['player','revoked','outsider','admin'])await assertFails(sdk.setDoc(sdk.doc(contexts[uid].firestore(),'campaigns','large','campaignMaps',mapId,'pins','coast'),raw));
   }
+ });
+ await check('Region appearance rules reject malformed values, extra data and styling point markers',async()=>{
+  const db=contexts.dm.firestore(),mapRef=sdk.doc(db,'campaigns/mixed/campaignMaps/7caf0fcb-2aa8-4ed9-80c6-5935c9a66b10'),regionRef=sdk.doc(db,'campaigns/mixed/campaignMaps/7caf0fcb-2aa8-4ed9-80c6-5935c9a66b10/pins/region12');
+  for(const regionStyle of [null,{},[],{color:'#fff',opacity:.5},{color:'red',opacity:.5},{color:'#ffffff',opacity:-1},{color:'#ffffff',opacity:1.01},{color:'#ffffff',opacity:'0.5'},{color:'#ffffff',opacity:NaN},{color:'#ffffff',opacity:Infinity},{color:'#ffffff',opacity:.5,privateNotes:'SECRET'}]){
+   await assertFails(sdk.runTransaction(db,async tx=>{const map=(await tx.get(mapRef)).data(),pin=(await tx.get(regionRef)).data(),revision=map.revision+1;tx.set(mapRef,{...map,revision});tx.set(regionRef,{...pin,revision,publishedRevision:revision,regionStyle});}));
+  }
+  const cityRef=sdk.doc(db,'campaigns/mixed/campaignMaps/7caf0fcb-2aa8-4ed9-80c6-5935c9a66b10/pins/city');await assertFails(sdk.runTransaction(db,async tx=>{const map=(await tx.get(mapRef)).data(),pin=(await tx.get(cityRef)).data(),revision=map.revision+1;tx.set(mapRef,{...map,revision});tx.set(cityRef,{...pin,revision,publishedRevision:revision,regionStyle:{color:'#195c87',opacity:.5}});}));
+  const make=uid=>createCampaignMapStore({...sdk,db:contexts[uid].firestore(),auth:{currentUser:{uid}}},{mapId:'7caf0fcb-2aa8-4ed9-80c6-5935c9a66b10'}),dm=make('dm'),player=make('player'),draft=await dm.loadDraft('mixed');
+  draft.pins.find(p=>p.id==='region12').regionStyle={color:'#e18525',opacity:1};draft.pins.find(p=>p.id==='region256').revealed=false;
+  const saved=await dm.saveDraft({campaignId:'mixed',input:draft,revision:draft.revision,sourceRevision:draft.sourceRevision});
+  assert.deepEqual((await player.listPins('mixed',await player.load('mixed'))).find(p=>p.id==='region12').regionStyle,{color:'#195c87',opacity:.4});
+  const result=await dm.publish({campaignId:'mixed',draftRevision:saved.revision}),pins=await player.listPins('mixed',result.map);assert.equal(pins.length,3);assert.deepEqual(pins.find(p=>p.id==='region12').regionStyle,{color:'#e18525',opacity:1});assert.equal(pins.some(p=>p.id==='region256'),false);
  });
  await check('Packed geometry rejects bad or extra final corners, invalid types, secret text and mixed formats',async()=>{
   const db=contexts.owner.firestore(),mapRef=sdk.doc(db,'campaigns/large/campaignMaps/main'),pinRef=sdk.doc(db,'campaigns/large/campaignMaps/main/pins/coast');

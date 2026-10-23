@@ -64,9 +64,9 @@
 @media(max-width:1100px){#tab-dm-map .map-layout{grid-template-columns:minmax(0,1fr)}#tab-dm-map .map-place-panel{position:static}}
 
 .map-region-layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.map-region-layer polygon{fill:#b68d4540;stroke:#956d30;stroke-width:2;vector-effect:non-scaling-stroke;pointer-events:all;cursor:pointer;stroke-linejoin:round}
-.map-region-layer .map-region-selected{fill:#b68d4570;stroke:#704a13;stroke-width:3}
-.map-region-layer .map-region-private{stroke-dasharray:6 4;fill:#545e592b}
+.map-region-layer polygon{fill:var(--map-region-color,#b68d45);fill-opacity:var(--map-region-opacity,.25);stroke:var(--map-region-color,#956d30);stroke-width:2;vector-effect:non-scaling-stroke;pointer-events:all;cursor:pointer;stroke-linejoin:round}
+.map-region-layer .map-region-selected{stroke-width:3}
+.map-region-layer .map-region-private{stroke-dasharray:6 4}
 .map-region-tools{border:1px solid #c6cfc2;border-radius:8px;padding:12px;margin:16px 0;background:#f5f3e9}
 .map-region-tools h4{margin:0}.map-region-tools p{font-size:.9rem;line-height:1.6}
 .map-marker-preview{padding:10px;border-left:3px solid #315b49;background:#eef0e7}
@@ -96,3 +96,9 @@
 .map-region-tools.map-region-needs-finish{border:2px solid #92531e;background:#fff3d6}
 .map-region-next-step{color:#60370f;margin-bottom:0}
 #mainApp :is(#tab-campaign-map,#tab-dm-map) .map-region-needs-finish button[data-region-finish]{background:#7a431b!important;color:#fff!important;border:2px solid #60300e!important;box-shadow:0 0 0 3px #e7be75}
+
+.map-region-appearance{border-top:1px solid #c6cfc2;margin-top:16px;padding-top:14px}
+.map-region-style-controls{display:grid;grid-template-columns:minmax(70px,.4fr) minmax(0,1fr);gap:16px;margin-top:10px;align-items:start}
+.campaign-map .map-region-style-controls input[type=color]{width:100%;height:44px;min-width:44px;padding:4px;cursor:pointer}
+.campaign-map .map-region-style-controls input[type=range]{width:100%;min-height:44px;padding:0;accent-color:#7b3437;cursor:pointer}
+.map-region-style-controls output{display:block;font-size:.85rem;color:#435548;font-variant-numeric:tabular-nums}

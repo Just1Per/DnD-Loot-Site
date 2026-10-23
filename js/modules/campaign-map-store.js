@@ -33,6 +33,12 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
  async function removePin({campaignId,id:pid,revision,isCurrent=()=>true}){const uid=actor();return runTransaction(db,async tx=>{const ref=pinRef(campaignId,pid),old=await tx.get(ref);check(uid,isCurrent);if(!old.exists()||old.data().revision!==revision)throw Error('This place changed. Reload before removing it.');tx.delete(ref);});}
  const maxRegionCorners=256;
  const markerStyles=['Location','City','Castle','Landmark','Point of interest'];
+ function regionStyle(value){
+  if(value===undefined)return {color:'#b68d45',opacity:.25};
+  if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==2||!Object.hasOwn(value,'color')||!Object.hasOwn(value,'opacity')||typeof value.color!=='string'||!/^#[0-9a-fA-F]{6}$/.test(value.color)||!Number.isFinite(value.opacity)||value.opacity<0||value.opacity>1)throw Error('Choose a region colour and transparency between 0 and 100%.');
+  return {color:value.color.toLowerCase(),opacity:value.opacity};
+ }
+
  const packedCoordinate='(100(\\.0+)?|[0-9]?[0-9](\\.[0-9]+)?)';
  const packedPattern=new RegExp('^'+packedCoordinate+','+packedCoordinate+'(;'+packedCoordinate+','+packedCoordinate+'){2,'+(maxRegionCorners-1)+'}$');
  function decodeBoundary(value){
@@ -80,12 +86,14 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
    const markerStyle=pin.markerStyle===undefined?'City':pin.markerStyle;
    if(!markerStyles.includes(markerStyle))throw Error('Choose one of the five marker styles.');
    const regionBoundary=boundary(pin.boundary,pin.type);
+   if(pin.regionStyle!==undefined&&pin.type!=='Region')throw Error('Only regions can have an area colour.');
+   const appearance=pin.regionStyle===undefined?{}:{regionStyle:regionStyle(pin.regionStyle)};
    const picturePath=pin.picturePath||'',pictureAlt=pin.pictureAlt||'',worldEntryId=pin.worldEntryId||'';
    const prefix=picturePrefix(cid,pid);
    if(picturePath&&(!picturePath.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(picturePath.slice(prefix.length))))throw Error('Choose a place picture from this campaign.');
    if(typeof pictureAlt!=='string'||pictureAlt.length>200||(picturePath&&!pictureAlt.trim()))throw Error('Give each place picture a description (up to 200 characters).');
    if(worldEntryId)id(worldEntryId);
-   return {id:pid,name:pin.name.trim(),description:pin.description.trim(),x:pin.x,y:pin.y,type:pin.type,markerStyle,boundary:regionBoundary,revealed:pin.revealed,picturePath,pictureAlt,worldEntryId};
+   return {id:pid,name:pin.name.trim(),description:pin.description.trim(),x:pin.x,y:pin.y,type:pin.type,markerStyle,boundary:regionBoundary,...appearance,revealed:pin.revealed,picturePath,pictureAlt,worldEntryId};
   });
   const preview=input.previewPath===undefined||input.previewPath===''?{}:{previewPath:image(cid,input.previewPath)};
   return {title:input.title.trim(),imagePath:input.imagePath,pins,...preview};
@@ -124,6 +132,6 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
   if(typeof mainMapId!=='string'||mainMapId&&!/^[A-Za-z0-9_-]{1,100}$/.test(mainMapId))throw Error('Choose a published main map.');
   return runTransaction(db,async tx=>{const ref=preferencesRef(campaignId),old=await tx.get(ref),main=mainMapId?await tx.get(doc(db,'campaigns',id(campaignId),'campaignMaps',mainMapId)):null;check(uid,isCurrent);if((old.data()?.revision||0)!==revision)throw Error('Map order changed in another window. Refresh before organising maps.');if(mainMapId&&!main?.exists())throw Error('Publish a map before making it the main map.');const next={order:[...order],mainMapId,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;});
  }
- return {mapId,imagePrefix,picturePrefix,listMaps,loadPreferences,savePreferences,load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,markerStyles,maxRegionCorners,encodeBoundary,decodeBoundary};
+ return {mapId,imagePrefix,picturePrefix,listMaps,loadPreferences,savePreferences,load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,markerStyles,maxRegionCorners,encodeBoundary,decodeBoundary,regionStyle};
 }
 if(typeof module!=='undefined')module.exports={createCampaignMapStore};

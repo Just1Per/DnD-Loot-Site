@@ -24,3 +24,11 @@ test('large detailed regions preserve every point and enforce 256 corners',()=>{
  for(const invalid of ['1,2;3,4','1,2;3,4;101,5','1,2;3,4;5,6;PRIVATE','1,2;3,4;5,6\n',Array(257).fill('1,2').join(';')])assert.throws(()=>store.decodeBoundary(invalid));
  const tiny=[{x:1e-8,y:0},{x:20,y:0},{x:20,y:20},{x:1e-8,y:20}];assert.deepEqual(store.decodeBoundary(store.encodeBoundary(tiny)),tiny,'small coordinates are expanded without rounding');
 });
+
+test('region appearance validates exact colour and opacity without changing legacy pins',()=>{
+ const pin={id:'region',name:'Region',description:'',x:50,y:50,type:'Region',boundary:triangle,revealed:true},normalize=pin=>store.normalizeDraft('a',{title:'Atlas',imagePath:'campaign-maps/a/image',pins:[pin]}).pins[0];
+ assert.equal('regionStyle' in normalize(pin),false);assert.deepEqual(store.regionStyle(),{color:'#b68d45',opacity:.25});
+ for(const opacity of [0,.25,.8,1])assert.deepEqual(normalize({...pin,regionStyle:{color:'#AbC012',opacity}}).regionStyle,{color:'#abc012',opacity});
+ for(const regionStyle of [null,[],{}, {color:'#fff',opacity:.5},{color:'red',opacity:.5},{color:'#ff0000;display:none',opacity:.5},{color:'#ffffff',opacity:'0.5'},{color:'#ffffff',opacity:-.1},{color:'#ffffff',opacity:1.1},{color:'#ffffff',opacity:NaN},{color:'#ffffff',opacity:Infinity},{color:'#ffffff',opacity:.5,privateNotes:'SECRET'}])assert.throws(()=>normalize({...pin,regionStyle}));
+ assert.throws(()=>normalize({...pin,type:'City',boundary:[],regionStyle:{color:'#ffffff',opacity:.5}}));
+});

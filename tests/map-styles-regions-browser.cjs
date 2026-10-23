@@ -37,6 +37,18 @@ const errors=[];
  for(const [x,y] of corners){await page.locator('[data-corner-x]').fill(String(x));await page.locator('[data-corner-y]').fill(String(y));await page.locator('[data-corner-add]').click();}
  await page.locator('[data-region-undo]').click();assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary.length),3);
  await page.locator('[data-corner-x]').fill('25');await page.locator('[data-corner-y]').fill('80');await page.locator('[data-corner-add]').click();
+ // Appearance previews immediately; changing it does not publish or replace the editor.
+ const beforeStyle=await page.evaluate(()=>JSON.stringify(testSheetDocs));
+ await page.locator('[data-region-color]').focus();await page.locator('[data-region-color]').evaluate(input=>{input.value='#2b7390';input.dispatchEvent(new Event('input',{bubbles:true}));});
+ assert.equal(await page.locator('[data-region-color]').evaluate(input=>document.activeElement===input),true);
+ await page.locator('[data-region-transparency]').focus();await page.keyboard.press('End');assert.equal(await page.locator('[data-region-transparency]').inputValue(),'100');
+ assert.equal(await page.locator('[data-map-region]').evaluate(node=>getComputedStyle(node).fillOpacity),'0');assert.notEqual(await page.locator('[data-map-region]').evaluate(node=>getComputedStyle(node).stroke),'none');
+ await page.keyboard.press('Home');assert.equal(await page.locator('[data-map-region]').evaluate(node=>getComputedStyle(node).fillOpacity),'1');
+ await page.locator('[data-region-transparency]').evaluate(input=>{input.value='60';input.dispatchEvent(new Event('input',{bubbles:true}));});
+ assert.equal(await page.locator('[data-region-transparency]').evaluate(input=>document.activeElement===input),true);assert.match(await page.locator('[data-region-transparency-value]').textContent(),/60% transparent/);
+ assert.deepEqual(await page.locator('[data-map-region]').evaluate(node=>({fill:getComputedStyle(node).fill,opacity:getComputedStyle(node).fillOpacity})),{fill:'rgb(43, 115, 144)',opacity:'0.4'});
+ assert.equal(await page.evaluate(()=>JSON.stringify(testSheetDocs)),beforeStyle);
+ await page.screenshot({path:out+'/map-region-appearance-desktop.png',fullPage:true});
  // Every save entry point guides the DM to the unfinished boundary without writing data.
  const beforeFinish=await page.evaluate(()=>JSON.stringify(testSheetDocs));
  for(const selector of ['[data-map-pin-form] button[type=submit]','[data-map-save]','[data-map-publish]']){
@@ -62,6 +74,7 @@ const errors=[];
  await page.locator('[data-map-preview]').click();assert.equal(await page.locator('[data-map-region]').count(),0);assert.equal(await page.locator('[data-map-pin]').count(),5);
  await page.locator('[data-map-preview]').click();await page.locator('[data-map-place]').filter({hasText:'The Storm Coast'}).click();await page.locator('[data-pin-edit]').click();
  assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary.length),4);
+ assert.equal(await page.locator('[data-region-color]').inputValue(),'#2b7390');assert.equal(await page.locator('[data-region-transparency]').inputValue(),'60');
  await page.locator('[data-region-draw]').click();assert.equal(await page.evaluate(()=>CampaignMap.session.pinEditor.boundary.length),0);
  // Exercise pointer drawing as well as the equivalent keyboard coordinate controls.
  for(const [x,y] of corners){await page.locator('[data-map-image]').scrollIntoViewIfNeeded();const b=await page.locator('[data-map-image]').boundingBox();await page.mouse.click(b.x+b.width*x/100,b.y+b.height*y/100);}
@@ -69,6 +82,7 @@ const errors=[];
  await page.locator('[data-map-publish]').click();await page.waitForFunction(()=>!CampaignMap.session.busy&&CampaignMap.session.map.revision===3);
  await page.evaluate(()=>{CampaignMap.clear();auditSeed('player');showTab('campaign-map')});await page.waitForFunction(()=>CampaignMap.session?.ready);
  assert.equal(await page.locator('[data-map-region]').count(),1);assert.equal(await page.locator('[data-map-pin]').count(),6);
+ assert.deepEqual(await page.evaluate(()=>CampaignMap.session.pins.find(p=>p.name==='The Storm Coast').regionStyle),{color:'#2b7390',opacity:.4});assert.deepEqual(await page.locator('[data-map-region]').evaluate(node=>({fill:getComputedStyle(node).fill,opacity:getComputedStyle(node).fillOpacity})),{fill:'rgb(43, 115, 144)',opacity:'0.4'});
  await page.locator('[data-map-place]').filter({hasText:'The Storm Coast'}).click();assert.equal(await page.locator('[data-place-heading]').textContent(),'The Storm Coast');assert.match(await page.locator('.map-prose').textContent(),/own story/);
  for(const width of [1440,390,320]){await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));const violations=await page.evaluate(async()=>(await axe.run('.campaign-map',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})));assert.deepEqual(violations,[]);if(width!==320)await page.screenshot({path:out+'/map-styles-regions-'+width+'.png',fullPage:true});}
  // Draw the expanded limit through the actual coordinate controls, then publish and reload as player.
