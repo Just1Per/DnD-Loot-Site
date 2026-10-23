@@ -15,7 +15,7 @@ Status, duration and intended party size are planning metadata. They do not sche
 
 ## Guide and contextual help
 
-The header **Guide** now uses current navigation and explains Journal reading, deliberate World/NPC text-and-image publishing, four World layouts, five point-marker styles and 3–12-corner regions, chapter recaps/milestones, One Shot approval/invitations/sheets, reusable Library content and recoverable campaign removal. Guide destinations recheck campaign permissions and use existing unsaved-change guards.
+The header **Guide** now uses current navigation and explains Journal reading, deliberate World/NPC text-and-image publishing, four World layouts, five point-marker styles and 3–256-corner regions, chapter recaps/milestones, One Shot approval/invitations/sheets, reusable Library content and recoverable campaign removal. Guide destinations recheck campaign permissions and use existing unsaved-change guards.
 
 One Shot sections, host/invitation controls, level/duration/player settings, roster assignments, World layouts/publication and map marker/region fields have specific explanations. Section help describes who can see each kind of content and which save/publish action applies.
 

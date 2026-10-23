@@ -92,3 +92,7 @@
 .map-organise summary{cursor:pointer;font-weight:700;}
 .map-organise p{max-width:72ch;}
 @media(max-width:600px){.map-organise .journal-actions button{flex:1 1 8rem;}}
+
+.map-region-tools.map-region-needs-finish{border:2px solid #92531e;background:#fff3d6}
+.map-region-next-step{color:#60370f;margin-bottom:0}
+#mainApp :is(#tab-campaign-map,#tab-dm-map) .map-region-needs-finish button[data-region-finish]{background:#7a431b!important;color:#fff!important;border:2px solid #60300e!important;box-shadow:0 0 0 3px #e7be75}

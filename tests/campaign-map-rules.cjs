@@ -82,9 +82,31 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
   assert.equal(published.some(p=>p.name==='Secret territory'),false);
   for(const style of stores.owner.markerStyles)assert.ok(published.some(p=>p.markerStyle===style));
  });
+ await check('256-corner regions publish exactly on primary and named maps without exposing hidden regions',async()=>{
+  await env.withSecurityRulesDisabled(async c=>{await sdk.setDoc(sdk.doc(c.firestore(),'campaigns/large'),{ownerId:'owner'});await sdk.setDoc(sdk.doc(c.firestore(),'campaigns/large/members/player'),{role:'player',status:'active'});});
+  const boundary=Array.from({length:256},(_,i)=>({x:50+35*Math.cos(i*2*Math.PI/256),y:50+35*Math.sin(i*2*Math.PI/256)}));
+  for(const mapId of ['main','continent']){
+   const owner=createCampaignMapStore({...sdk,db:contexts.owner.firestore(),auth:{currentUser:{uid:'owner'}}},{mapId}),player=createCampaignMapStore({...sdk,db:contexts.player.firestore(),auth:{currentUser:{uid:'player'}}},{mapId});
+   const imagePath='campaign-maps/large/'+(mapId==='main'?'':mapId+'/')+'first';
+   const base={name:'Coast',description:'Detailed region',x:50,y:50,type:'Region',boundary,revealed:true};
+   const draft=await owner.saveDraft({campaignId:'large',input:{title:'Coastline',imagePath,pins:[{...base,id:'coast'},{...base,id:'hidden',name:'PRIVATE',revealed:false}]},revision:0,sourceRevision:0});
+   const published=await owner.publish({campaignId:'large',draftRevision:draft.revision}),pins=await player.listPins('large',published.map);
+   assert.equal(pins.length,1);assert.deepEqual(pins[0].boundary,boundary);assert.deepEqual((await owner.loadDraft('large')).pins[0].boundary,boundary);
+   const raw=(await sdk.getDoc(sdk.doc(contexts.owner.firestore(),'campaigns','large','campaignMaps',mapId,'pins','coast'))).data();assert.equal(typeof raw.boundaryPoints,'string');assert.deepEqual(raw.boundary,[]);
+   for(const uid of ['player','revoked','outsider','admin'])await assertFails(sdk.setDoc(sdk.doc(contexts[uid].firestore(),'campaigns','large','campaignMaps',mapId,'pins','coast'),raw));
+  }
+ });
+ await check('Packed geometry rejects bad or extra final corners, invalid types, secret text and mixed formats',async()=>{
+  const db=contexts.owner.firestore(),mapRef=sdk.doc(db,'campaigns/large/campaignMaps/main'),pinRef=sdk.doc(db,'campaigns/large/campaignMaps/main/pins/coast');
+  const source=(await sdk.getDoc(pinRef)).data(),points=source.boundaryPoints.split(';');
+  const invalid=[{boundaryPoints:''},{boundaryPoints:null},{boundaryPoints:[]},{boundaryPoints:'1,2;3,4'},{boundaryPoints:Array(257).fill('1,2').join(';')},{boundaryPoints:'1,2;3,4;5,6\n'},{boundaryPoints:'1,2;3,4;5,6',type:'City'},{boundaryPoints:'1,2;3,4;5,6',boundary:[{x:1,y:2}]}];
+  for(const last of ['101,50','100.1,50','-1,50','50,NaN','50,Infinity','50,true','50','50,50,PRIVATE','0.'+'0'.repeat(17000)+',50'])invalid.push({boundaryPoints:[...points.slice(0,-1),last].join(';')});
+  for(const change of invalid)await assertFails(sdk.runTransaction(db,async tx=>{const map=(await tx.get(mapRef)).data(),revision=map.revision+1;tx.set(mapRef,{...map,revision});tx.set(pinRef,{...source,revision,publishedRevision:revision,...change});}));
+  for(const boundaryPoints of ['0,0;100,0;100,100','0.00000001,0;100,0;100,100'])await assertSucceeds(sdk.runTransaction(db,async tx=>{const map=(await tx.get(mapRef)).data(),revision=map.revision+1;tx.set(mapRef,{...map,revision});tx.set(pinRef,{...source,revision,publishedRevision:revision,boundaryPoints});}));
+ });
  await check('Rules reject malformed region vertices, invalid styles and boundary fields outside published geometry',async()=>{
   const db=contexts.owner.firestore(),mapRef=sdk.doc(db,'campaigns/fresh/campaignMaps/main'),pinRef=sdk.doc(db,'campaigns/fresh/campaignMaps/main/pins/region');
-  for(const invalid of [{markerStyle:'Injected'},{boundary:'bad'},{boundary:[{x:1,y:1}]},{boundary:[{x:-1,y:0},{x:20,y:20},{x:30,y:0}]},{boundary:Array.from({length:13},(_,i)=>({x:i,y:i}))},{boundary:[{x:0,y:0,secret:'SECRET'},{x:20,y:20},{x:30,y:0}]},{type:'City'}]){
+  for(const invalid of [{markerStyle:'Injected'},{boundary:'bad'},{boundary:[{x:1,y:1}]},{boundary:[{x:-1,y:0},{x:20,y:20},{x:30,y:0}]},{boundary:Array.from({length:129},(_,i)=>({x:i,y:i}))},{boundary:[{x:0,y:0,secret:'SECRET'},{x:20,y:20},{x:30,y:0}]},{type:'City'}]){
    await assertFails(sdk.runTransaction(db,async tx=>{const map=(await tx.get(mapRef)).data(),pin=(await tx.get(pinRef)).data(),revision=map.revision+1;tx.set(mapRef,{...map,revision});tx.set(pinRef,{...pin,revision,publishedRevision:revision,...invalid});}));
   }
  });

@@ -29,7 +29,7 @@ const errors=[];
  await page.addScriptTag({path:require.resolve(process.env.AXE_PATH||'axe-core/axe.min.js')});
 
  await page.evaluate(()=>{auditSeed('dm');showTab('dm-one-shots')});
- await page.evaluate(()=>SiteHelp.openGuide('dm'));assert.match(await page.locator('#siteGuideDialog').textContent(),/3–12 boundary corners/);await page.locator('[data-guide-action=dm-one-shots]').click();await page.waitForSelector('[data-new-record]');
+ await page.evaluate(()=>SiteHelp.openGuide('dm'));assert.match(await page.locator('#siteGuideDialog').textContent(),/3–256 boundary corners/);await page.locator('[data-guide-action=dm-one-shots]').click();await page.waitForSelector('[data-new-record]');
  const waitSaved=()=>page.waitForFunction(()=>!CampaignWorkspace.session.busy&&!CampaignWorkspace.session.dirty);
  const privateBox=page.locator('.one-shot-private');
  await page.locator('[data-new-record]').click();
