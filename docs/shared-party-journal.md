@@ -11,9 +11,13 @@ Active campaign members, including campaign DMs and the owner, can write session
 3. Choose **Everyone in this campaign** and select **Share recap** to save and share in one action. Session details and extra notes are optional disclosures.
 4. Later draft edits stay private until the author chooses the shared audience and selects **Share recap** again. **Make private** removes the shared copy while retaining the saved draft.
 
-The feed contains player recaps and completed chapter summaries. World posts belong only in Journal → World and are not queried by Recaps. It never reads private workspace source records. DM labels distinguish those snapshots from player accounts. The notebook preserves paragraphs and optional note cards. Existing explicitly shared chapter illustrations and captions load through protected publication copies with authenticated legacy Storage fallback; opening a page never publishes an image. NPCs and private chapter notes remain in their existing reference sections.
+The Recaps feed contains only explicitly shared session recaps. Chapters are read in Journal → Chapters, World posts in Journal → World, and NPCs in their own section. Recaps never queries or subscribes to chapter/World publications or private workspace records. The notebook preserves recap paragraphs and optional note cards.
 
-Filters and text search narrow the feed. The sidebar shows the author's drafts, and surfaces the next-session note from the latest applicable shared player recap. Empty campaigns get a useful empty state rather than fabricated sessions.
+From the DM includes recaps authored by the campaign owner and campaign DMs. Player recaps includes authors whose campaign membership is Player, including users with a global DM role who play in this campaign. The labels come from the author UID and existing public campaign ownership/membership, not editable display names or the viewer’s role. Older recaps are grouped without rewriting records or requiring their authors to republish. Moderating a player’s shared copy preserves the player group.
+
+The groups follow the current campaign roster, including role updates; they are display categories and grant no access. If an author no longer has a known role, their recap remains in All entries with a neutral Recap label. If roster loading fails, All entries and writing remain available and the UI offers a retry rather than mislabelling DM entries as players.
+
+Filters and text search narrow the feed and its next-session sidebar note. Private drafts remain visible only to their author. Empty campaigns get a useful empty state rather than fabricated sessions. This feed/grouping correction requires no new Firestore or Storage rules and performs no data migration. Existing public campaign/member reads are used.
 
 ## Saving and access boundaries
 
@@ -22,24 +26,24 @@ Filters and text search narrow the feed. The sidebar shows the author's drafts, 
 - Private and shared subscriptions are campaign/UID scoped. Account changes and permission failures clear loaded text and previews; late callbacks cannot refill a new session. Temporary connection failures retain the current working draft for retry.
 - Existing access and publication rules for DM preparation, NPC statistics and chapter notes are unchanged.
 
-## Firestore rules update required
+## Existing Firestore prerequisites
 
-The new records use:
+The existing Journal records use:
 
 - `campaigns/{campaignId}/journalDrafts/{uid}/entries/{entryId}` — read/write only for that author while the author remains an active campaign member or owner. No draft collection listing is granted to other users, including DMs.
 - `campaigns/{campaignId}/journalRecaps/{entryId}` — read by active campaign members/owner. Only the author can publish, update or remove their own snapshot. Published text must exactly match their saved draft and source revision. Allowed fields and lengths are checked server-side.
 
-**Publish the Firestore rules from this change before making the new UI available in production.** The repository's Hosting deployment workflows do not publish Firestore rules. An operator with the appropriate Firebase access can run, from the reviewed checkout:
+**The original Journal publication and moderation rules must already be published. No additional rules are needed for the recap-only feed and author grouping.** The repository's Hosting deployment workflows do not publish Firestore rules. An operator with the appropriate Firebase access can run, from the reviewed checkout:
 
 ```sh
 firebase deploy --only firestore:rules --project dnd-loot-site
 ```
 
-This command is an operator instruction; it has not been run by the implementation agent. If the UI is published before the rules, the new Journal shows an unavailable/retry state; existing reference sections remain separate. No index changes or Storage rules changes are required. No data migration or backfill is needed: existing shared DM pages appear through their current collections, and recaps are created only by user action.
+This command is an operator instruction; it has not been run by the implementation agent. If the UI is published before the rules, the new Journal shows an unavailable/retry state; existing reference sections remain separate. No index changes or Storage rules changes are required. No data migration or backfill is needed: shared chapter/World pages remain in their dedicated sections, and recaps are created only by user action.
 
 ## Validation
 
-- `npm --prefix tests run test:campaign-journal`: real application markup/modules in Chromium fixtures, desktop plus 390/320px, WCAG checks through 2.2 AA, private save/reopen, explicit sharing, independent draft edits, unsharing, preview, filters/search, shared DM text/illustrations, dirty-navigation save failure/retry, account isolation and permission/connection errors.
+- `npm --prefix tests run test:campaign-journal`: real application markup/modules in Chromium fixtures, desktop plus 390/320px, WCAG checks through 2.2 AA, private save/reopen, explicit sharing, independent draft edits, unsharing, preview, DM/player filters and search, chapter exclusion, legacy DM recaps, author-group loading/retry, dirty-navigation save failure/retry, account isolation and permission/connection errors.
 - `npm --prefix tests run test:campaign-journal-rules`: actual Firestore emulator checks for private draft isolation, author ownership, exact publication snapshots, revision conflicts, revoked/unrelated/anonymous accounts, size/field validation and context changes.
 - Existing navigation, campaign home, lore/NPC/chapter browser suites, the 91 UI/print checks and aggregate engine/363 DOM checks passed during implementation. Existing lore, chapter and NPC permission suites also passed against the updated rules.
 

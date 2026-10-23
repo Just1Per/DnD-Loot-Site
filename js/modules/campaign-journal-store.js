@@ -1,7 +1,7 @@
 'use strict';
 /** Author-owned drafts and explicitly shared snapshots. Never reads DM source records. */
 function createCampaignJournalStore(sdk) {
-  const {db,auth,doc,collection,getDocs,runTransaction}=sdk;
+  const {db,auth,doc,collection,getDoc,getDocs,runTransaction}=sdk;
   const validId=value=>{if(typeof value!=='string'||!/^[A-Za-z0-9_-]{1,128}$/.test(value))throw Error('Invalid journal ID.');return value;};
   const actor=()=>{if(!auth.currentUser?.uid)throw Error('Sign in first.');return auth.currentUser.uid;};
   const drafts=(campaignId,uid)=>collection(db,'campaigns',validId(campaignId),'journalDrafts',validId(uid),'entries');
@@ -25,6 +25,22 @@ function createCampaignJournalStore(sdk) {
     const uid=actor();if(typeof sdk.onSnapshot!=='function')return()=>{};
     const subscriptions=[sdk.onSnapshot(drafts(campaignId,uid),snapshot=>onDrafts(rows(snapshot)),onError),sdk.onSnapshot(collection(db,'campaigns',validId(campaignId),'journalRecaps'),snapshot=>onShared(rows(snapshot)),onError)];
     return()=>subscriptions.forEach(stop=>stop());
+  }
+  function authorGroups(campaign,members){
+    const groups=Object.create(null);for(const row of members)if(['dm','player'].includes(row.role))groups[row.id]=row.role;
+    if(typeof campaign?.ownerId==='string')groups[campaign.ownerId]='dm';return groups;
+  }
+  async function listAuthorGroups(campaignId){
+    const uid=actor(),cid=validId(campaignId),[campaign,members]=await Promise.all([getDoc(doc(db,'campaigns',cid)),getDocs(collection(db,'campaigns',cid,'members'))]);check(uid,()=>true);
+    return authorGroups(campaign.data(),rows(members));
+  }
+  function watchAuthorGroups(campaignId,next,onError){
+    actor();const cid=validId(campaignId);if(typeof sdk.onSnapshot!=='function')return()=>{};
+    let campaign=null,members=null,active=true;const stops=[],emit=()=>{if(active&&campaign!==null&&members!==null)next(authorGroups(campaign,members));};
+    const fail=error=>{if(!active)return;active=false;stops.forEach(stop=>stop());onError(error);};
+    stops.push(sdk.onSnapshot(doc(db,'campaigns',cid),snapshot=>{if(active){campaign=snapshot.data()||{};emit();}},fail));
+    stops.push(sdk.onSnapshot(collection(db,'campaigns',cid,'members'),snapshot=>{if(active){members=rows(snapshot);emit();}},fail));
+    if(!active)stops.forEach(stop=>stop());return()=>{active=false;stops.forEach(stop=>stop());};
   }
   async function save({campaignId,id,input,revision,isCurrent=()=>true}){
     const uid=actor(),fields=normalize(input);if(!Number.isInteger(revision)||revision<0)throw Error('Invalid draft revision.');
@@ -62,6 +78,6 @@ function createCampaignJournalStore(sdk) {
       if(!previous.exists()||previous.data().revision!==publishedRevision)throw Error('The shared recap changed. Refresh before removing it.');tx.delete(ref);
     });
   }
-  return {list,watch,normalize,save,publish,unpublish,moderate,removeShared};
+  return {list,watch,listAuthorGroups,watchAuthorGroups,normalize,save,publish,unpublish,moderate,removeShared};
 }
 if(typeof module!=='undefined')module.exports={createCampaignJournalStore};

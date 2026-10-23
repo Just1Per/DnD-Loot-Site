@@ -98,6 +98,7 @@ var SiteHelpData=(()=>{
   'story':'Records appearance, personal history and background-inspired roleplay prompts. Story changes do not automatically grant new mechanics.',
   'write your session recap':'Write a private working draft, review it with Preview, then explicitly choose who can read it. Saving privately does not change an existing shared copy. Sharing exposes the saved recap to campaign members, whose DMs can moderate the shared version.',
   'adventure journal':'Your character’s private notes, organized by category. Save the sheet to retain them. Share in Journal copies only the selected own note into a private recap editor. Review it, then explicitly choose Everyone in this campaign to share. Other notes remain private.',
+  'recaps':'Read session recaps only. From the DM shows recaps by the campaign owner and DMs; Player recaps shows campaign players. Read completed chapters in Journal → Chapters. Editing a player’s recap as DM keeps its original author and player group.',
   'edit shared recap':'Campaign DMs can correct a player’s shared recap. Saving updates only the campaign copy and records a DM edit; the author’s identity, private recap draft and character notes are preserved. The author can later publish a new version.',
   'notes':'A journal with NPC, location, session and custom categories. You can keep many named entries; printing includes them all.',
   'companion':'Tracks separate companion, familiar and Wild Shape cards. Wild Shape mental abilities and trained skills can use character values.',

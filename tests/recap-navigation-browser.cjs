@@ -22,7 +22,7 @@ const errors=[];
 
 
  await page.evaluate(async()=>{
-  auditSeed('player');const store=createCampaignJournalStore(__DND_VAULT_DEPS__);
+  auditSeed('player');testSheetDocs['campaigns/a']={ownerId:'dm'};testSheetDocs['campaigns/a/members/player']={role:'player',status:'active'};const store=createCampaignJournalStore(__DND_VAULT_DEPS__);
   for(let i=0;i<14;i++){const id='recap'+i;await store.save({campaignId:'a',id,revision:0,input:{title:'Harbor evening '+i,body:'We reached the harbor.\n\nA sailor brought news. <img src=x onerror=unsafe()>',sessionNumber:i+1,sessionDate:'2026-10-20',authorName:'Sophie',characterName:'Elara',remember:'Bring the compass.',nextTime:'Visit the watch.'}});await store.publish({campaignId:'a',id,revision:1,publishedRevision:0});}
   window.pauseJournalRead=true;showTab('campaign-journal');
  });
@@ -30,7 +30,7 @@ const errors=[];
  assert.match(await page.locator('.journal-feed').textContent(),/Opening your journal/);
  assert.equal(await page.locator('.journal-feed').filter({hasText:'Your story starts here'}).count(),0);
  await page.evaluate(()=>{pauseJournalRead=false;releaseJournalRead()});
- await page.waitForFunction(()=>CampaignJournal.session?.ready);
+ await page.waitForFunction(()=>CampaignJournal.session?.ready&&CampaignJournal.session.authorGroups);
  await page.locator('[data-journal-filter=recap]').click();await page.locator('[data-journal-search]').fill('harbor');
  const read=page.locator('.journal-feed [data-journal-read]').first(),key=await read.getAttribute('data-journal-read');
  await read.click();const listScroll=await page.evaluate(()=>CampaignJournal.session.listScroll);
