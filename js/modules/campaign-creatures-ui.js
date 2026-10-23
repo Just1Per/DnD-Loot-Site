@@ -117,9 +117,27 @@
       dialog.querySelector('[data-personal-search]').oninput=draw;draw();
     }catch(error){if(dialog.isConnected)dialog.querySelector('[data-personal-status]').textContent=error.message;}
  }
+ let catalogueOpening=0;
+ async function openCreatureCatalogue(button,feedback){
+  const session=W.session,campaignId=activeCampaign?.id,uid=auth.currentUser?.uid;
+  if(!session||session.kind!=='creature'||session.campaignId!==campaignId||!uid||!canManageCampaign())return;
+  const record=session.record,request=++catalogueOpening;
+  const active=()=>request===catalogueOpening&&W.session===session&&session.record===record&&activeCampaign?.id===campaignId&&auth.currentUser?.uid===uid&&canManageCampaign()&&button.isConnected;
+  const report=text=>{feedback.hidden=!text;feedback.textContent=text;};
+  button.disabled=true;report('Loading creature catalogue…');
+  try{
+   if(typeof CampaignMonsterCatalog==='undefined'){
+    if(!window.CampaignOptionalFeatures)throw Error('Catalogue loader unavailable.');
+    await window.CampaignOptionalFeatures.ensure('creatureCatalogue');
+   }
+   if(!active())return;
+   report('');await CampaignMonsterCatalog.open();
+  }catch(error){if(active())report('Could not load the creature catalogue. Choose Import SRD creature to try again.');}
+  finally{if(button.isConnected)button.disabled=false;if(!active()&&feedback.isConnected)report('');}
+ }
  function toolbar(host){
-  host.innerHTML='<div class="workspace-actions"><button type="button" data-workspace-catalog>Import SRD creature</button><button type="button" data-workspace-personal>My Creature Library</button></div>';
-  host.querySelector('[data-workspace-catalog]').onclick=()=>CampaignMonsterCatalog.open();
+  host.innerHTML='<div class="workspace-actions"><button type="button" data-workspace-catalog>Import SRD creature</button><button type="button" data-workspace-personal>My Creature Library</button></div><p data-creature-catalog-feedback hidden role="status" aria-live="polite"></p>';
+  host.querySelector('[data-workspace-catalog]').onclick=event=>openCreatureCatalogue(event.currentTarget,host.querySelector('[data-creature-catalog-feedback]'));
   host.querySelector('[data-workspace-personal]').onclick=openPersonalLibrary;
  }
  function card(host,s){
@@ -128,11 +146,11 @@
   let d;try{d=C.normalize(draft.data)}catch(error){host.textContent=error.message;return;}
   const e=escapeHtml;
   const rules=[d.movement,d.saves,d.skills,d.resistances&&'Resistances: '+d.resistances,d.immunities&&'Immunities: '+d.immunities,d.vulnerabilities&&'Vulnerabilities: '+d.vulnerabilities,d.conditionImmunities&&'Condition immunities: '+d.conditionImmunities,d.senses,d.languages,d.bonusActions&&'Bonus actions: '+d.bonusActions,d.reactions&&'Reactions: '+d.reactions,d.legendaryActions,d.phases].filter(Boolean).join('\n\n');
-  host.innerHTML=`<div class="workspace-actions"><button type="button" data-creature-catalog>Import SRD creature</button><button type="button" data-personal-creatures>My Creature Library</button><button type="button" data-save-personal-creature>Save to My Library</button></div><section class="workspace-card"><h3>${e(draft.title||'Unnamed creature')}</h3><p>${e(d.category)} · ${e(d.edition)}${d.combatEnabled&&d.cr?' · CR '+e(d.cr):''}</p>
+  host.innerHTML=`<div class="workspace-actions"><button type="button" data-creature-catalog>Import SRD creature</button><button type="button" data-personal-creatures>My Creature Library</button><button type="button" data-save-personal-creature>Save to My Library</button></div><p data-creature-catalog-feedback hidden role="status" aria-live="polite"></p><section class="workspace-card"><h3>${e(draft.title||'Unnamed creature')}</h3><p>${e(d.category)} · ${e(d.edition)}${d.combatEnabled&&d.cr?' · CR '+e(d.cr):''}</p>
    <div class="workspace-prose">${e([draft.content,d.appearance,d.personality].filter(Boolean).join('\n\n'))}</div>
    ${d.combatEnabled?`<div class="workspace-stats"><div><strong>${d.ac}</strong><span>AC</span></div><div><strong>${d.hp}</strong><span>Maximum HP</span></div><div><strong>${d.speed}</strong><span>ft.</span></div></div><div class="workspace-abilities">${C.abilities.map(key=>`<div>${key.toUpperCase()}<strong> ${d[key]}</strong> (${Math.floor((d[key]-10)/2)>=0?'+':''}${Math.floor((d[key]-10)/2)})</div>`).join('')}</div><h4>Actions</h4><div class="workspace-prose">${e(d.actions)}</div><h4>Traits</h4><div class="workspace-prose">${e(d.traits)}</div>${rules?`<h4>Additional rules</h4><div class="workspace-prose">${e(rules)}</div>`:''}`:''}
    ${d.source?`<p class="workspace-prose">${e(d.source.attribution)}<br>Source: ${e(d.source.provider)} · SRD ${e(d.source.srdVersion)}<br>Changes: ${e(d.source.changes)}</p>`:''}</section>`;
-  host.querySelector('[data-creature-catalog]').onclick=()=>CampaignMonsterCatalog.open();
+  host.querySelector('[data-creature-catalog]').onclick=event=>openCreatureCatalogue(event.currentTarget,host.querySelector('[data-creature-catalog-feedback]'));
   host.querySelector('[data-save-personal-creature]').onclick=async event=>{
     const button=event.currentTarget,record=W.draft();
     if(!record?.title?.trim()){W.status('Enter a creature name first.',true);return;}

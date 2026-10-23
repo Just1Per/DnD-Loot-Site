@@ -161,6 +161,8 @@ jobs:
       run: npm --prefix tests run test:dm-workspace
     - name: Creature and NPC preparation, optional combat and template preservation
       run: npm --prefix tests run test:creature-editor
+    - name: Deferred creature catalogue, retry and context changes
+      run: npm --prefix tests run test:creature-import-loading
     - name: Bulk SRD selection, private imports and safe retries
       run: npm --prefix tests run test:creature-bulk-import
     - name: Saved player illustrations and exact image permissions
