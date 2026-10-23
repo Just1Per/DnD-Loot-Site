@@ -247,7 +247,7 @@ var CharacterSheetModel = (() => {
       saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + d.saves[key].bonus;
     }
     for (const [key, [, ability]] of Object.entries(skills))
-      checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0, classExpertise.skills.includes(key) ? 2 : 0)) + d.skills[key].bonus;
+      checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0, classExpertise.skills.includes(key) ? 2 : 0,effects.halfSkillProficiency?.5:0)) + d.skills[key].bonus;
     const result = {
       effects,
       classExpertise,
@@ -260,7 +260,7 @@ var CharacterSheetModel = (() => {
       mods,
       saves,
       skills: checks,
-      initiative: mods.dex + d.initiativeBonus + (effects.initiativeBonus || 0),
+      initiative: mods.dex + d.initiativeBonus + (effects.initiativeBonus || 0) + (effects.halfInitiativeProficiency&&!effects.initiativeProficiency?Math.floor(pb/2):0),
       passive: 10 + checks.perception + d.passiveBonus + feats.passiveBonus,
       spellAttack: mods[d.spellAbility] + pb + d.spellAttackBonus,
       spellDC: 8 + mods[d.spellAbility] + pb + d.spellDCBonus,

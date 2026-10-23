@@ -92,7 +92,7 @@ var CharacterFeatRules = (() => {
       }
       const core=def.source==='PHB'||def.source==='XPHB'||def.source==='TCE';
       if(!core)continue;
-      if(def.name==='Alert') {effects.initiativeBonus=def.edition==='2014'?(effects.initiativeBonus||0)+5:Math.max(effects.initiativeBonus||0,pb);automated.push('Initiative');}
+      if(def.name==='Alert') {if(def.edition==='2024')effects.initiativeProficiency=true;effects.initiativeBonus=def.edition==='2014'?(effects.initiativeBonus||0)+5:Math.max(effects.initiativeBonus||0,pb);automated.push('Initiative');}
       if(def.name==='Tough'&&!entry.managedOrigin){effects.hpBonus+=2*level;(effects.hpSources||=[]).push({kind:'feat',name:'Tough ('+def.edition+')',value:2*level});automated.push('Maximum HP (+2 per level in Base mode)');}
       if(def.name==='Observant'&&def.edition==='2014'){passiveBonus+=5;automated.push('Passive Perception +5 (passive Investigation remains manual)');}
       if(def.name==='Resilient'&&!warnings.length){
