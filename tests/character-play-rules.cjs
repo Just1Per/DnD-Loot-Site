@@ -37,3 +37,19 @@ test('DM bonus feat and ASI approvals extend progression without changing normal
  b=P.budget(data,4,[]);
  assert.equal(b.bonusFeatRemaining,0);
 });
+
+
+test('multiclass feat and ASI milestones use each actual class level, not total character level',()=>{
+ for(const edition of ['2014','2024'])for(const [rows,totalLevel,expected]of [
+  [[['fighter',1],['wizard',3]],4,0],[[['fighter',1],['wizard',4]],5,1],[[['wizard',4],['fighter',4]],8,2],
+  [[['rogue',1],['fighter',9]],10,3],[[['fighter',1],['rogue',9]],10,2],[[['fighter',1],['rogue',10]],11,3],
+  [[['fighter',1]],7,0],[[['fighter',4],['wizard',4]],4,1]
+ ]){const d=build(rows[0][0],edition);d.adobe={classLevels:rows.map(([classId,level])=>({classId,level}))};assert.equal(P.budget(d,totalLevel,catalog.feats).total,expected,edition+JSON.stringify(rows));}
+});
+test('multiclass advancement preserves saved choices and DM approvals when a milestone is unavailable',()=>{
+ const d=build();d.adobe={classLevels:[{classId:'fighter',level:1},{classId:'wizard',level:3}]};
+ d.advancement.asiSpent=1;let b=P.budget(d,4,catalog.feats);assert.equal(b.over,1);assert.equal(b.remaining,0);assert.equal(d.advancement.asiSpent,1);
+ d.advancement.asiSpent=0;d.rulesChoices.grants.__dm={bonusFeats:1,bonusAsis:1,usedAsis:0};b=P.budget(d,4,catalog.feats);assert.equal(b.remaining,1);assert.equal(b.asiRemaining,1);
+ const feat=catalog.feats.find(f=>f.edition==='2024'&&f.category==='G'&&f.minimumLevel<=4);assert.equal(P.eligible(d,4,feat,catalog.feats),'');
+ delete d.rulesChoices.grants.__dm;assert.match(P.eligible(d,4,feat,catalog.feats),/No available feat/);
+});
