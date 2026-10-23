@@ -63,6 +63,7 @@
     "test:sheet-calculation-reuse": "node sheet-calculation-reuse-browser.cjs",
     "test:sheet-print-loading": "node sheet-print-loading-browser.cjs",
     "test:weapon-mastery": "node weapon-mastery-browser.cjs",
+    "test:multiclass-asi": "node multiclass-asi-browser.cjs",
     "test:class-expertise": "node class-expertise-browser.cjs",
     "test:character-workspace": "node character-workspace-browser.cjs",
     "test:page-editors": "node page-editors-browser.cjs",

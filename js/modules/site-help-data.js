@@ -96,7 +96,7 @@ var SiteHelpData=(()=>{
   'spells':'Keeps separate class spell lists, preparation allowances and casting statistics. Ordinary multiclass Spellcasting shares slots; Warlock Pact Magic has its own pool.',
   'spellbook':'Generate and manage class spell lists here. Each class uses its own casting ability and preparation or known-spell allowance.',
   'character builder':'Choose rules, species, background, class levels and class features. Supported choices feed the other sheet pages.',
-  'feats':'Choose allowed feats, complete their ability/training choices and review supported effects. You can add their descriptions to Overview.',
+  'feats':'Feat/ASI milestones follow each class’s actual level, including multiclass characters. Unassigned levels do not unlock choices. Choose allowed feats, complete their ability/training choices and review supported effects. You can add their descriptions to Overview.',
   'story':'Records appearance, personal history and background-inspired roleplay prompts. Story changes do not automatically grant new mechanics.',
   'write your session recap':'Write a private working draft, review it with Preview, then explicitly choose who can read it. Saving privately does not change an existing shared copy. Sharing exposes the saved recap to campaign members, whose DMs can moderate the shared version.',
   'adventure journal':'Your character’s private notes, organized by category. Save the sheet to retain them. Share in Journal copies only the selected own note into a private recap editor. Review it, then explicitly choose Everyone in this campaign to share. Other notes remain private.',
