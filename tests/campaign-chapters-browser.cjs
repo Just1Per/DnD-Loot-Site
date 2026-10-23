@@ -55,6 +55,19 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  await page.locator('[data-workspace-search]').fill('');
  await page.locator('[data-record-field=playerRecap]').fill('The party freed the harbor. <b>Plain text</b>');
  console.log('PASS Loaded chapter numbering, progress/archive browsing and filtering preserve the active draft');
+ // Long chapter summaries in a constrained scrolling list must never overlap the next entry.
+ await page.evaluate(async()=>{for(let i=1;i<=8;i++)await CampaignWorkspace.store.save({campaignId:'a',kind:'chapter',id:'layout-'+i,revision:0,input:{title:'Chapter '+i+' · A long chapter title that wraps naturally',summary:'Completed · The town was rescued by the heroes. '.repeat(8),data:{order:i,status:'Planned'}}});CampaignWorkspace.session.rows=await CampaignWorkspace.store.list('a','chapter');CampaignWorkspace.renderList()});
+ for(const width of [1440,1024,390,320]){
+  await page.setViewportSize({width,height:1000});
+  const geometry=await page.locator('[data-workspace-list]').evaluate(list=>{const buttons=[...list.querySelectorAll('button:not([hidden])')];return {scrolls:list.scrollHeight>list.clientHeight,overlap:buttons.some((b,i)=>i&&buttons[i-1].getBoundingClientRect().bottom>b.getBoundingClientRect().top),overflow:buttons.some(b=>b.scrollHeight>b.clientHeight+1),targets:buttons.every(b=>b.getBoundingClientRect().height>=44)}});
+  if(!geometry.scrolls||geometry.overlap||geometry.overflow||!geometry.targets)throw Error('Chapter list layout fails at '+width+': '+JSON.stringify(geometry));
+  if(!await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth))throw Error('Chapter list causes horizontal page scrolling');
+  if(width===390){await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:require('node:os').tmpdir()+'/campaignatlas-chapter-list-mobile.png',fullPage:true})}
+ }
+ await page.setViewportSize({width:1440,height:1000});
+ await page.evaluate(()=>{CampaignWorkspace.session.rows=CampaignWorkspace.session.rows.filter(r=>!r.id.startsWith('layout-'));for(const key of Object.keys(testSheetDocs))if(key.includes('/chapters/layout-'))delete testSheetDocs[key];CampaignWorkspace.renderList()});
+ console.log('PASS Eight long chapter cards retain readable height, clamped summaries and separate touch targets in desktop/mobile scrolling lists');
+
  await page.locator('[data-record-field=status]').selectOption('Completed');await page.locator('[data-save-record]').click();await page.waitForFunction(()=>CampaignWorkspace.session?.record.revision===2);await page.waitForFunction(()=>!document.querySelector('[data-publish-chapter]').disabled);
  const recordId=await page.evaluate(()=>CampaignWorkspace.session.record.id);
  if(await page.evaluate(()=>Object.keys(testSheetDocs).some(key=>key.includes('/playerChapters/'))))throw Error('Completing a chapter silently reveals it');
