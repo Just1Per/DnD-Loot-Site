@@ -205,7 +205,26 @@ var CampaignMap=(()=>{
 
  async function persistDraft(s){const saved=await s.store.saveDraft({campaignId:s.campaignId,input:s.draft,revision:s.draft.revision,sourceRevision:s.draft.sourceRevision,isCurrent:()=>editable(s)});if(!editable(s))return false;s.draft=saved;s.mapDirty=false;const row=s.maps.find(row=>row.id===s.mapId);if(row&&!row.published)row.title=saved.title;return true;}
  async function saveDraft(s){if(!editable(s)||s.busy)return;if(requireFinishedBoundary(s)||s.pinDirty)return;s.busy=true;paint(s);try{if(await persistDraft(s))status(s,'Private draft saved. The published map is unchanged.');}catch(error){if(current(s))status(s,'Could not save draft: '+error.message);}finally{s.busy=false;if(allowed(s))paint(s);}}
- async function publish(s){if(!editable(s)||s.busy)return;if(requireFinishedBoundary(s)||s.pinDirty)return;s.busy=true;paint(s);status(s,'Saving and publishing the revealed places…');try{if(s.mapDirty||!s.draft.revision){if(!await persistDraft(s))return;}const result=await s.store.publish({campaignId:s.campaignId,draftRevision:s.draft.revision,isCurrent:()=>editable(s)});if(!editable(s))return;s.map=result.map;s.draft=result.draft;s.pins=result.pins;s.mapDirty=false;const row=s.maps.find(row=>row.id===s.mapId);if(row){row.published=true;row.title=result.map.title;}await subscribePins(s);status(s,'Map published. Players can see '+result.pins.length+' revealed places. Hidden places remain private.');}catch(error){if(current(s))status(s,'Could not publish: '+error.message);}finally{s.busy=false;if(allowed(s))paint(s);}}
+ async function publish(s){
+  if(!editable(s)||s.busy)return;if(requireFinishedBoundary(s)||s.pinDirty)return;
+  let stage='saving-private-draft',published=false;
+  s.busy=true;paint(s);status(s,'Saving and publishing the revealed places…');
+  try{
+   if(s.mapDirty||!s.draft.revision){if(!await persistDraft(s))return;}
+   stage='writing-publication';
+   const result=await s.store.publish({campaignId:s.campaignId,draftRevision:s.draft.revision,isCurrent:()=>editable(s)});
+   if(!editable(s))return;published=true;s.map=result.map;s.draft=result.draft;s.pins=result.pins;s.mapDirty=false;
+   const row=s.maps.find(row=>row.id===s.mapId);if(row){row.published=true;row.title=result.map.title;}
+   stage='loading-published-places';await subscribePins(s);
+   if(allowed(s))status(s,'Map published. Players can see '+result.pins.length+' revealed places. Hidden places remain private.');
+  }catch(error){if(allowed(s)){
+   const phase=error.mapPublishStage||stage,denied=error?.code==='permission-denied',expired=error?.code==='unauthenticated';
+   const steps={'saving-private-draft':'saving the private draft','reading-private-draft':'reading the saved private draft','reading-published-map':'reading the existing publication','checking-world-links':'checking linked World posts','writing-publication':'writing the map publication','loading-published-places':'loading the published places'};
+   const context=' [step: '+phase+'; code: '+(error.code||'unknown')+'; map: '+s.mapId+']';
+   status(s,(published?'Map published, but its places could not be reloaded. Use Refresh to reload; you do not need to publish again. ': 'Map was not published. Your private draft is kept. ')+(expired?'Your sign-in expired. Sign in again, then reopen this map.':denied?'Firebase denied '+steps[phase]+'. Ask the campaign owner to check campaign DM access and the current Firestore map rules.':'Failed while '+steps[phase]+': '+error.message)+context);
+  }}finally{s.busy=false;if(allowed(s))paint(s);}
+ }
+
  async function remove(s,pin){if(!editable(s)||s.busy)return;if(!await SiteConfirmation.ask({title:'Remove '+pin.name+' from the draft?',paragraphs:['The published pin stays visible until you publish this change.'],confirmLabel:'Remove from draft'}))return;if(!editable(s))return;s.draft.pins=s.draft.pins.filter(row=>row.id!==pin.id);s.selected=null;changed(s);paint(s);}
  async function openWorld(s,id){if(!allowed(s)||s.busy)return;try{const entry=await worldStore.load(s.campaignId,id);if(!allowed(s))return;if(!entry){status(s,'This World entry is no longer shared.');return;}CampaignInformation.openWorld(id);}catch{if(allowed(s))status(s,'Could not open the shared World entry. Refresh and try again.');}}
  function fail(s,error,stage='map access'){if(!current(s))return;if(error?.code==='permission-denied'||error?.code==='unauthenticated'){s.denied=true;s.stops.forEach(stop=>stop());s.pinStop?.();revoke(s);s.root.innerHTML=`<section class="campaign-map"><h2>Campaign map</h2><p role="status">Map access is unavailable.</p><p>${error?.code==='unauthenticated'?'Sign in again, then reopen the campaign map.':`Firebase denied ${escape(stage)}. Ask the campaign owner to check your membership and the published Firestore map rules, then try again.`}</p><button type="button" data-map-retry>Try again</button></section>`;s.root.querySelector('[data-map-retry]').onclick=()=>render(s.mode,s.mapId,s.preview);s.mapDirty=s.pinDirty=false;s.pinEditor=s.draft=null;return;}status(s,'Map unavailable. Your unsaved changes are kept here. Check your connection and refresh.');}
