@@ -129,7 +129,6 @@ var CharacterWorkspace = (() => {
       button.onclick = () => showTab('library');
       const records=saves.filter(save=>save.characterId===character.id&&(canManageCampaign()||!save.userId||save.userId===auth.currentUser.uid));
       if(records.length)grid.replaceChildren(...records.map(savedItemCard));else grid.innerHTML='<p class="player-empty">No saved items for this character yet.</p>';
-      if(records.some(save=>!items.some(item=>item.id===save.itemId)))ensureSavedItemDetails();
     }
     actions.append(button);
     observePendingImages(grid);
@@ -185,7 +184,14 @@ var CharacterWorkspace = (() => {
     ensure();
     const uid = auth.currentUser?.uid, campaignId = activeCampaign?.id, token = scopeGeneration;
     if (!uid || !campaignId || !canUseCharacters()) return;
-    if (reload) await Promise.all([loadCampaignItems(), loadCampaignInventory(), loadSaves(), loadCampaignSupply()]);
+    if (reload) {
+      const section = typeof AppShell === 'undefined' ? current?.section : AppShell.route;
+      // Rendering never starts a second item fetch: open/refresh owns these reads.
+      const loaders = section === 'character-wishlist' ? [loadCampaignItems, loadSaves]
+        : section === 'character-loot' ? [loadCampaignItems, loadCampaignInventory, loadCampaignSupply]
+        : [loadCampaignItems, loadCampaignInventory, loadSaves, loadCampaignSupply];
+      await Promise.all(loaders.map(load => load()));
+    }
     if (token !== scopeGeneration || uid !== auth.currentUser?.uid || campaignId !== activeCampaign?.id) return;
     checkScope();
     const tab = typeof AppShell === 'undefined' ? current?.section : AppShell.route;
