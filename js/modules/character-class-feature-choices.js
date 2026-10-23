@@ -230,6 +230,63 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((slot,i)=>slot.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  const masteryHelp={
+    Cleave:'After a melee hit, you can attack a nearby second creature. Check the range, damage and once-per-turn limits.',
+    Graze:'A missed attack can still deal ability-modifier damage. Apply the property’s limits.',
+    Nick:'The extra Light-weapon attack can be part of your Attack action, once per turn.',
+    Push:'On a hit, push a Large or smaller target up to 10 feet straight away.',
+    Sap:'A hit gives the target disadvantage on its next attack roll before your next turn.',
+    Slow:'A hit reduces Speed by 10 feet until your next turn. Multiple Slow hits do not stack.',
+    Topple:'A hit can force a Constitution save or knock the target Prone. DC: 8 + proficiency + the attack’s ability modifier.',
+    Vex:'A damaging hit gives advantage on your next attack against that creature before the end of your next turn.'
+  };
+  function weaponTraining(data,{level=1,effects={},feats={}}={}){
+    const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),reports=[],proficiencies=[],masteries=[],used=new Set();
+    const weaponRows=Object.entries(E.weapons).filter(([,w])=>['simple','martial'].includes(w.group));
+    const manual=String(data.proficiencies||'').split(/[,;\n]+/).map(s=>s.trim()).filter(Boolean);
+    const profs=()=>[...(effects.proficiencies||[]),...manual,...proficiencies];
+    const add=(key,name,allowed,pool,kind)=>{
+      const options=pool.map(([id,w])=>({id,name:w.name,property:kind==='mastery'?w.mastery:'',eligible:kind==='proficiency'||E.trained(w,profs()),reason:''}));
+      const values=choices[key]||[],local=new Set(),slots=Array.from({length:allowed},(_,index)=>{
+        const value=values[index]||'',option=options.find(o=>o.id===value),valid=!!option&&option.eligible&&!local.has(value)&&(kind!=='mastery'||!used.has(value));
+        if(valid){local.add(value);if(kind==='proficiency')proficiencies.push(option.name);else{used.add(value);masteries.push({base:value,name:option.name,property:option.property,source:name});}}
+        return{value,valid};
+      });
+      reports.push({key,name,allowed,kind,options,slots,missing:slots.filter(s=>!s.valid).length,overflow:values.slice(allowed).filter(Boolean).length});
+    };
+    const weaponFeats=(feats.reports||[]).filter(r=>r.def?.name==='Weapon Master'&&r.eligible);
+    // The 2014 feat grants weapon proficiency, not mastery, even on a 2024 character.
+    for(const feat of weaponFeats.filter(r=>r.def.edition==='2014'))add(groupKey('2014','feat-weapon-master','weapon-training'),'Weapon Master feat · 2014',4,weaponRows,'proficiency');
+    if(data.build?.edition==='2024'){
+      const assigned=Array.isArray(stored.classLevels)?stored.classLevels:[],entries=assigned.length?assigned:[{classId:data.build?.classId,level}],seen=new Set();let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
+      for(const entry of entries){
+        const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry?.level)||0)));remaining-=actual;
+        const id=entry?.classId;if(!actual||seen.has(id))continue;seen.add(id);
+        const allowed=id==='fighter'?(actual>=16?6:actual>=10?5:actual>=4?4:3):id==='barbarian'?(actual>=10?4:actual>=4?3:2):['paladin','ranger','rogue'].includes(id)?2:0;
+        if(!allowed)continue;
+        const pool=weaponRows.filter(([,w])=>w.mastery&&(id!=='barbarian'||w.rangeType==='melee'));
+        add(groupKey('2024',id,'weapon-mastery'),id.charAt(0).toUpperCase()+id.slice(1)+' · Weapon Mastery',allowed,pool,'mastery');
+      }
+      for(const feat of weaponFeats.filter(r=>r.def.edition==='2024'))add(groupKey('2024','feat-weapon-master','weapon-mastery'),'Weapon Master feat · 2024',1,weaponRows.filter(([,w])=>w.mastery),'mastery');
+    }
+    for(const report of reports)for(const option of report.options){
+      const other=report.kind==='mastery'&&reports.some(r=>r!==report&&r.kind==='mastery'&&r.slots.some(s=>s.valid&&s.value===option.id));
+      option.reason=other?'Chosen by another source':!option.eligible?'Requires weapon proficiency':'';option.eligible=option.eligible&&!other;
+    }
+    return{reports,baseProficiencies:[...(effects.proficiencies||[])],proficiencies:[...new Set(proficiencies)],masteries};
+  }
+  function setWeaponTraining(data,key,index,value,context){
+    const before=weaponTraining(data,context),group=before.reports.find(r=>r.key===key);
+    if(!group||!Number.isInteger(index)||index<0||index>=group.allowed)return false;
+    value=safe(value);const option=group.options.find(o=>o.id===value);
+    if(value&&(!option?.eligible||group.slots.some((s,i)=>i!==index&&s.valid&&s.value===value)))return false;
+    const choices=normalize((data.adobe||{}).classFeatureChoices),next=(choices[key]||[]).slice(0,group.allowed);while(next.length<=index)next.push('');next[index]=value;
+    const candidate={...data,adobe:{...data.adobe,classFeatureChoices:{...choices,[key]:next}}},after=weaponTraining(candidate,context);
+    if(value&&!after.reports.find(r=>r.key===key)?.slots[index]?.valid)return false;
+    if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
+    data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
+  }
+  return{weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

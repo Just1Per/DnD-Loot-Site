@@ -22,9 +22,16 @@ var CharacterPlayRules = (()=>{
   };
  };
  function budget(data,level,catalog){
-  const b=data.build||{},classId=b.classId,known=['artificer','barbarian','bard','cleric','druid','fighter','monk','paladin','ranger','rogue','sorcerer','warlock','wizard'].includes(classId),modern=b.edition==='2024';
-  const levels=[4,8,12,16,19,...(classId==='fighter'?[6,14]:classId==='rogue'?[10]:[])].sort((a,b)=>a-b);
-  const total=known?levels.filter(n=>n<=level).length:0,spent=advancement(data.advancement).asiSpent;
+  const b=data.build||{},classId=b.classId,modern=b.edition==='2024',classIds=['artificer','barbarian','bard','cleric','druid','fighter','monk','paladin','ranger','rogue','sorcerer','warlock','wizard'];
+  const adobe=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},assigned=Array.isArray(adobe.classLevels)?adobe.classLevels:[];
+  const entries=assigned.length?assigned:[{classId,level}],seen=new Set(),classBudgets=[];let levelsRemaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
+  for(const entry of entries){
+   const actual=Math.min(levelsRemaining,Math.max(0,Math.trunc(Number(entry?.level)||0)));levelsRemaining-=actual;
+   if(!actual||!classIds.includes(entry?.classId)||seen.has(entry.classId))continue;seen.add(entry.classId);
+   const milestones=[4,8,12,16,19,...(entry.classId==='fighter'?[6,14]:entry.classId==='rogue'?[10]:[])].sort((a,b)=>a-b);
+   classBudgets.push({classId:entry.classId,level:actual,levels:milestones,total:milestones.filter(n=>n<=actual).length});
+  }
+  const known=classBudgets.length>0,levels=classBudgets.flatMap(row=>row.levels).sort((a,b)=>a-b),total=classBudgets.reduce((sum,row)=>sum+row.total,0),spent=advancement(data.advancement).asiSpent;
   const dm=data.rulesChoices?.grants?.__dm||{},bonusFeats=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusFeats)||0))),bonusAsis=Math.max(0,Math.min(10,Math.trunc(Number(dm.bonusAsis)||0))),bonusAsiUsed=Math.max(0,Math.min(10,Math.trunc(Number(dm.usedAsis)||0)));
   const style=modern&&((classId==='fighter'&&level>=1)||(['paladin','ranger'].includes(classId)&&level>=2))?1:0;
   const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
@@ -37,7 +44,7 @@ var CharacterPlayRules = (()=>{
   const normalUsed=normalFeatUsed+spent,normalRemaining=Math.max(0,total-normalUsed),bonusFeatRemaining=Math.max(0,bonusFeats-bonusFeatCovered),bonusAsiRemaining=Math.max(0,bonusAsis-bonusAsiUsed);
   const remaining=normalRemaining+bonusFeatRemaining,asiRemaining=normalRemaining+bonusAsiRemaining;
   const over=Math.max(0,normalUsed-total,bonusAsiUsed-bonusAsis);
-  return {total,remaining,asiRemaining,normalRemaining,bonusFeatRemaining,bonusAsiRemaining,style:Math.max(0,style-styleUsed),lessons:Math.max(0,lessons-lessonUsed),over,levels,known,bonusFeats,bonusAsis,featUsed,asiUsed:spent,bonusAsiUsed};
+  return {total,remaining,asiRemaining,normalRemaining,bonusFeatRemaining,bonusAsiRemaining,style:Math.max(0,style-styleUsed),lessons:Math.max(0,lessons-lessonUsed),over,levels,classBudgets,known,bonusFeats,bonusAsis,featUsed,asiUsed:spent,bonusAsiUsed};
  }
  function eligible(data,level,feat,catalog,scores){
   if(!feat)return 'Feat unavailable';

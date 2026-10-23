@@ -52,6 +52,9 @@ var CharacterBuildValidation=(()=>{
       if(group.missing)add(rows,'Expertise',`${group.className}: choose ${group.missing} more ${group.name} option${group.missing===1?'':'s'}.`,'skills','warning',`[data-class-expertise="${group.key}"]`);
       else if(group.overflow)add(rows,'Expertise',`${group.className}: review saved Expertise choices after changing class levels.`,'skills','warning',`[data-class-expertise="${group.key}"]`);
     }
+    for(const group of derived?.weaponTraining?.reports||[]){
+      if(group.missing||group.overflow){const index=Math.max(0,group.slots.findIndex(slot=>!slot.valid));add(rows,'Weapon training',group.missing?`${group.name}: choose ${group.missing} more weapon${group.missing===1?'':'s'}.`:`${group.name}: review saved choices after changing class levels.`,'skills','warning',`[data-weapon-training="${group.key}"][data-weapon-slot="${index}"]`);}
+    }
     const assigned=Number(progression.assignedLevel||0),target=Number(progression.targetLevel||identity.level||1);
     if(assigned<target)add(rows,'Class levels',`Assign ${target-assigned} remaining class level${target-assigned===1?'':'s'}.`,'builder','warning',assigned?'[data-up]':'[name="build.classId"]');
     for(const [index,entry] of (progression.classLevels||[]).entries()){

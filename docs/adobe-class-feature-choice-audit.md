@@ -1,6 +1,6 @@
 # Adobe / MPMB class-feature choice audit
 
-This is the first checked-in baseline for the reusable class/subclass choice engine.
+This is the first checked-in baseline for the reusable class/subclass choice engine. Its scan counts are historical, not current coverage totals. See the [2026-10-23 runtime review](character-class-automation-review-2026-10-23.md) for checked behavior and the current repair queue.
 
 The audit was run against the user's supplied MorePurpleMoreBetter/Adobe character sheet plus the extracted WotC/UA rule bundle. The scanner reads structured JavaScript metadata only and does not execute Acrobat JavaScript or copy long rules descriptions.
 
@@ -18,13 +18,13 @@ The full count intentionally includes optional WotC/UA/add-on material. It is a 
 
 | Class | Feature | Status | Next action |
 |---|---|---|---|
-| Bard | Expertise | Missing | Add reusable skill Expertise picker |
+| Bard | Expertise | Covered since #198 | Edition/class-level choices on Abilities & Skills |
 | Fighter | Fighting Style | Covered | Wire straightforward effects into calculations |
 | Ranger | Favored Enemy | Partial | Add explicit Ranger choice group |
 | Ranger | Natural Explorer | Missing | Add terrain choice group for 2014 |
-| Ranger | Fighting Style | Reference options found | Register Ranger-specific unlock/allowed list |
-| Paladin | Fighting Style | Reference options found | Register Paladin-specific unlock/allowed list |
-| Rogue | Expertise | Missing | Reuse the same Expertise picker as Bard |
+| Ranger | Fighting Style | Registered | Review conditional effects and feat/class choice accounting |
+| Paladin | Fighting Style | Registered | Review conditional effects and feat/class choice accounting |
+| Rogue | Expertise | Covered since #198 | Includes legacy proficient thieves’ tools option |
 | Sorcerer | Metamagic | Missing | Add level-scaled Metamagic choices |
 | Warlock | Eldritch Invocations | Covered | Expand source coverage and automate safe effects |
 | Warlock | Pact Boon | Covered for 2014 | 2024 pact choices remain invocations |
