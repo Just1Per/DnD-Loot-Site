@@ -64,5 +64,3 @@
   .character-workspace-panel-heading [data-character-panel-actions] { width: 100%; }
   .character-workspace-panel-heading button { max-width: 100%; white-space: normal; }
 }
-
-#mainApp #characterWorkspaceHeader button{min-height:44px}

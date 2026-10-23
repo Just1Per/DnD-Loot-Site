@@ -1297,6 +1297,17 @@ var CharacterRules = (() => {
     // 2024 class multiclass traits: https://www.dndbeyond.com/sources/dnd/br-2024/character-classes
     if(b.edition==='2024')Object.assign(multiclassTraining,{barbarian:['Shields','Martial weapons'],druid:['Light armor','Shields'],fighter:['Light armor','Medium armor','Shields','Martial weapons'],monk:[],paladin:['Light armor','Medium armor','Shields','Martial weapons'],ranger:['Light armor','Medium armor','Shields','Martial weapons']});
     for(const entry of classLevels.slice(1))if(Number(entry.level)>0)result.proficiencies.push(...(multiclassTraining[entry.classId]||[]));
+    // Fixed class languages are derived, including multiclass levels; manual notes stay untouched.
+    const languageClasses=classLevels.length?classLevels:[{classId:b.classId,level:lvl}];
+    let languageLevelsRemaining=Math.max(0,Math.trunc(Number(lvl)||0));
+    for(const entry of languageClasses){
+      const classLevel=Math.min(languageLevelsRemaining,Math.max(0,Math.trunc(Number(entry.level)||0)));
+      languageLevelsRemaining-=classLevel;
+      if(!classLevel)continue;
+      if(entry.classId==='rogue')result.languages.push('Thieves’ Cant');
+      if(entry.classId==='druid')result.languages.push('Druidic');
+    }
+    result.languages=[...new Set(result.languages)];
     result.proficiencies=[...new Set(result.proficiencies)];
     return result;
   }

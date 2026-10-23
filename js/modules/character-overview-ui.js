@@ -69,7 +69,7 @@ function renderCharacterOverview(d) {
   const bg=CharacterBackgrounds.get(b.background);
   const metric=(label,value)=>`<div><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`;
   const skills=Object.entries(M.skills).map(([key,[name,ability]])=>{
-    const rank=Math.max(s.data.skills[key].rank,e.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0);
+    const rank=Math.max(s.data.skills[key].rank,e.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0,d.classExpertise?.skills.includes(key)?2:0);
     return `<div class="sheet-summary-skill"><span title="${rank===2?'Expertise':rank===1?'Proficient':rank===.5?'Half proficiency':'Not proficient'}">${rank===2?'◆':rank===1?'●':rank===.5?'◐':'○'}</span><span>${esc(name)} <small>${ability.toUpperCase()}</small></span><strong>${sign(d.skills[key])}</strong></div>`;
   }).join('');
   const attackRow=(name,hit,damage,range)=>`<tr><td>${esc(name)}</td><td>${esc(hit)}</td><td>${esc(damage)}</td><td>${esc(range)}</td></tr>`;
@@ -188,7 +188,7 @@ function refineCharacterBuilder() {
  const summary=document.getElementById('sheetBuildSummary');summary.classList.add('sheet-build-information');
  document.getElementById('sheetBuildOverviewToggle').onclick=toggleCalculatedOverview;
 }
-function skillAutomaticRank(d,key){return Math.max(d.effects.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0);}
+function skillAutomaticRank(d,key){return Math.max(d.effects.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0,d.classExpertise?.skills.includes(key)?2:0);}
 function bindSkillOrbs() {
  document.querySelectorAll('[data-skill][data-rank]').forEach(button=>button.onclick=()=>{
   readSheetForm();const s=sheetSession,key=button.dataset.skill,rank=Number(button.dataset.rank);
@@ -198,6 +198,19 @@ function bindSkillOrbs() {
   document.querySelector(`[name="skills.${key}.rank"]`).value=s.data.skills[key].rank;
   s.dirty=true;updateSheetCalculations();sheetStatus('Unsaved skill training change');
  });
+}
+function renderClassExpertise(d){
+ const host=document.getElementById('sheetClassExpertise'),s=sheetSession;if(!host||!s)return;
+ const result=d.classExpertise||{reports:[],tools:[],reminders:[]},focus=document.activeElement?.closest('[data-class-expertise]'),focusKey=focus?.dataset.classExpertise,focusSlot=focus?.dataset.expertiseSlot;
+ const label=option=>option.skill?CharacterSheetModel.skills[option.skill]?.[0]||option.skill:option.tool;
+ host.innerHTML=result.reports.length||result.reminders.length?`<section class="sheet-class-expertise" aria-label="Class Expertise choices"><h4>Class Expertise</h4><p>Choose from your proficient skills. Totals and Expertise circles update automatically. Existing manual markings are kept; Expertise never stacks.</p>${result.reports.map(group=>`<section class="sheet-expertise-source"><strong>${sheetEscape(group.className)} · ${sheetEscape(group.name)} · Level ${group.level}</strong><p class="sheet-help" data-expertise-progress="${group.key}">${group.allowed-group.missing} of ${group.allowed} chosen${group.missing?' · '+group.missing+' remaining':''}${group.overflow?' · Review saved choices from a higher level':''}</p><div class="sheet-grid">${group.slots.map((slot,index)=>`<label><span>${sheetEscape(group.className)} ${sheetEscape(group.name)} choice ${index+1}</span><select data-class-expertise="${group.key}" data-expertise-slot="${index}" ${s.saving?'disabled':''}><option value="">Choose proficiency</option>${slot.value&&!group.options.some(o=>o.id===slot.value)?`<option value="${sheetEscape(slot.value)}" selected>Saved choice · unavailable</option>`:''}${group.options.map(option=>{const duplicate=group.slots.some((other,i)=>i!==index&&other.valid&&other.value===option.id),reason=duplicate?'Already selected':option.reason;return `<option value="${option.id}" ${slot.value===option.id?'selected':''} ${!option.eligible||duplicate?'disabled':''}>${sheetEscape(label(option))}${reason?' · '+sheetEscape(reason):''}</option>`;}).join('')}</select></label>`).join('')}</div></section>`).join('')}${result.tools.map(tool=>`<p class="sheet-expertise-tool"><strong>${sheetEscape(tool.name)}:</strong> proficiency contribution ${CharacterSheetModel.signed(tool.bonus)}. Add the ability modifier for the tool check.</p>`).join('')}${result.reminders.map(text=>`<p class="sheet-help sheet-expertise-reminder">${sheetEscape(text)}</p>`).join('')}</section>`:'';
+ host.querySelectorAll('[data-class-expertise]').forEach(select=>select.onchange=()=>{
+  readSheetForm();const active=sheetSession;if(active!==s||s.saving)return;
+  const context={level:d.progression?.targetLevel||s.identity.level,effects:d.effects,feats:d.feats};
+  if(!CharacterClassFeatureChoices.setExpertise(s.data,select.dataset.classExpertise,Number(select.dataset.expertiseSlot),select.value,context)){sheetStatus('Choose a different proficiency that qualifies for this Expertise feature.',true);renderClassExpertise(d);return;}
+  s.dirty=true;updateSheetCalculations();sheetStatus('Expertise updated. Save your character to keep it.');
+ });
+ if(focusKey)[...host.querySelectorAll('[data-class-expertise]')].find(node=>node.dataset.classExpertise===focusKey&&node.dataset.expertiseSlot===focusSlot)?.focus({preventScroll:true});
 }
 function updateAbilityAndSkillControls(d) {
  const s=sheetSession,base=s.data.build.scoreMode==='base',M=CharacterSheetModel;
@@ -216,14 +229,15 @@ function updateAbilityAndSkillControls(d) {
  const notice=document.getElementById('sheetScoreModeNotice');
  notice.innerHTML=base?'Automatic scores: enter your scores before bonuses below. The large numbers include valid race/background and feat increases, with their limits applied.':'Final totals mode: your entered scores already include bonuses. To calculate them automatically, select Base scores / HP below and enter scores before bonuses.';
  renderPointBuySummary(d);
+ renderClassExpertise(d);
  for(const key of Object.keys(M.skills)){
   const automatic=skillAutomaticRank(d,key),manual=s.data.skills[key].rank,effective=Math.max(automatic,manual);
-  const source=document.querySelector(`[data-skill-source="${key}"]`);if(source){source.textContent=automatic?' · Auto':'';source.title=automatic?'Training granted by Character builder or Feats.':'';}
+  const source=document.querySelector(`[data-skill-source="${key}"]`);if(source){source.textContent=d.classExpertise?.skills.includes(key)?' · Class Expertise':automatic?' · Auto':'';source.title=automatic?'Training granted by Class Expertise, Character builder or Feats.':'';}
   document.querySelectorAll(`[data-skill="${key}"]`).forEach(button=>{
    const rank=Number(button.dataset.rank);button.setAttribute('aria-pressed',String(rank===effective));
    button.disabled=rank<automatic||rank===automatic&&manual<=automatic;
    button.classList.toggle('sheet-orb-automatic',rank===automatic&&automatic>0);
-   button.title=button.disabled?'Granted training cannot be reduced here. Edit its source in Character builder or Feats.':rank===manual?'Click to remove your manual training choice.':'Set '+({0.5:'half proficiency',1:'proficiency',2:'expertise'}[rank]);
+   button.title=button.disabled?'Granted training cannot be reduced here. Edit its source in Class Expertise, Character builder or Feats.':rank===manual?'Click to remove your manual training choice.':'Set '+({0.5:'half proficiency',1:'proficiency',2:'expertise'}[rank]);
   });
  }
  const group=document.getElementById('sheetSpeciesEditorGroup');
