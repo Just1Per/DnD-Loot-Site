@@ -292,7 +292,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Unarmored Defense **[unreviewed]** |
-| 2 | Ki **[unreviewed]** |
+| 2 | Ki **[partial]** |
 | 3 | Deflect Missiles **[unreviewed]**<br>Monastic Tradition **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
 | 5 | Extra Attack **[unreviewed]**<br>Stunning Strike **[unreviewed]** |
@@ -304,7 +304,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | Tongue of the Sun and Moon **[unreviewed]** |
-| 14 | Diamond Soul **[partial]** |
+| 14 | Diamond Soul **[implemented]** |
 | 15 | Timeless Body **[unreviewed]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -315,7 +315,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
-| Ki · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Ki · 2 | Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review. | [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
 | Deflect Missiles · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Monastic Tradition · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -329,7 +329,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Purity of Body · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Tongue of the Sun and Moon · 13 | Source-rule comparison and structured fields still need review. | Pending |
-| Diamond Soul · 14 | Automatic proficiency in all saving throws from actual Monk 14, including a separate death-save proficiency contribution. Reroll cost is explained, but shared Ki/Focus spending and reroll controls remain pending. | [tests/class-saving-throw-training.cjs](../tests/class-saving-throw-training.cjs), [tests/class-saving-throw-training-browser.cjs](../tests/class-saving-throw-training-browser.cjs) |
+| Diamond Soul · 14 | Automatic proficiency in all saves at actual Monk 14, separate death-save contribution, and a failed-save reroll button spending one point from the shared Ki/Focus pool. The player rolls the die at the table and keeps the new result. | [tests/class-saving-throw-training.cjs](../tests/class-saving-throw-training.cjs), [tests/class-saving-throw-training-browser.cjs](../tests/class-saving-throw-training-browser.cjs), [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
 | Timeless Body · 15 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Empty Body · 18 | Source-rule comparison and structured fields still need review. | Pending |
@@ -880,7 +880,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Martial Arts **[unreviewed]**<br>Unarmored Defense **[unreviewed]** |
-| 2 | Monk's Focus **[unreviewed]**<br>Unarmoed Movement **[unreviewed]**<br>Uncanny Metabolism **[unreviewed]** |
+| 2 | Monk's Focus **[partial]**<br>Unarmoed Movement **[unreviewed]**<br>Uncanny Metabolism **[unreviewed]** |
 | 3 | Monk Subclass **[unreviewed]**<br>Stunning Strike **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
 | 5 | Extra Attack **[unreviewed]**<br>Stunning Strike **[unreviewed]** |
@@ -892,7 +892,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | Deflect Energy **[unreviewed]** |
-| 14 | Disciplined Survivor **[partial]** |
+| 14 | Disciplined Survivor **[implemented]** |
 | 15 | Perfect Focus **[unreviewed]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -904,7 +904,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | --- | --- | --- |
 | Martial Arts · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
-| Monk's Focus · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Monk's Focus · 2 | Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review. | [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
 | Unarmoed Movement · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Uncanny Metabolism · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Monk Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
@@ -921,7 +921,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Self-Restoration · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Deflect Energy · 13 | Source-rule comparison and structured fields still need review. | Pending |
-| Disciplined Survivor · 14 | Automatic proficiency in all saving throws from actual Monk 14, including a separate death-save proficiency contribution. Reroll cost is explained, but shared Ki/Focus spending and reroll controls remain pending. | [tests/class-saving-throw-training.cjs](../tests/class-saving-throw-training.cjs), [tests/class-saving-throw-training-browser.cjs](../tests/class-saving-throw-training-browser.cjs) |
+| Disciplined Survivor · 14 | Automatic proficiency in all saves at actual Monk 14, separate death-save contribution, and a failed-save reroll button spending one point from the shared Ki/Focus pool. The player rolls the die at the table and keeps the new result. | [tests/class-saving-throw-training.cjs](../tests/class-saving-throw-training.cjs), [tests/class-saving-throw-training-browser.cjs](../tests/class-saving-throw-training-browser.cjs), [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
 | Perfect Focus · 15 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Superior Defense · 18 | Source-rule comparison and structured fields still need review. | Pending |
