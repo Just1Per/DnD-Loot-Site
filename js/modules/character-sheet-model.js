@@ -245,7 +245,7 @@ var CharacterSheetModel = (() => {
     const classExpertise=ClassChoices.expertise(d,{level,effects,feats});
     const weaponTraining=ClassChoices.weaponTraining(d,{level,effects,feats});
     effects.proficiencies=[...new Set([...effects.proficiencies,...weaponTraining.proficiencies])];
-    const magicItems=Magic?Magic.apply(d,scores,effects,loot):{active:[],reports:[],warnings:[]};
+    const magicItems=Magic?Magic.apply(d,scores,effects,loot,level):{active:[],reports:[],warnings:[]};
     if(d.build.scoreMode==='base')effects.hpBonus+=Math.max(1,Math.min(20,Number(level)||1))*(mod(scores.con)-mod(originCon));
     for (const key of Object.keys(abilities)) {
       mods[key] = mod(scores[key]);

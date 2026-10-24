@@ -131,7 +131,7 @@ function updateInventoryTotals(stats){
  const coins=Object.values(s.data.coins).reduce((a,b)=>a+b,0)/50;
  host.innerHTML=`<strong>${(weight+coins).toFixed(2)} lb</strong><small>Gear ${weight.toFixed(2)} lb · coins ${coins.toFixed(2)} lb</small>${unknown?`<p>${unknown} campaign item(s) have unknown weight; total is incomplete.</p>`:''}<small>Uncarried personal gear is excluded. Bags do not automatically reduce their contents’ weight.</small>`;
  const attuned=s.data.equipmentState.loadout.filter(g=>g.attuned).map(g=>sheetEquipmentLoot().find(e=>e.id===g.id)).filter(e=>e&&(((typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(e.item))||!!e.item.attunement)));
- document.getElementById('sheetInventoryAttuned').innerHTML=Array.from({length:Math.max(3,attuned.length)},(_,i)=>`<div class="sheet-attunement-line">${i+1}. ${sheetEscape(attuned[i]?.item.name||'—')}</div>`).join('');
+ document.getElementById('sheetInventoryAttuned').innerHTML='<p id="sheetAttunementSummary" class="sheet-help">Attunement: '+attuned.length+' / '+stats.gear.attunementLimit+' slots. '+(stats.gear.attunementLimit>3?'Artificer class levels increase your limit. ':'')+'Attuned backpack items still use slots.</p>'+Array.from({length:Math.max(stats.gear.attunementLimit,attuned.length)},(_,i)=>`<div class="sheet-attunement-line">${i+1}. ${sheetEscape(attuned[i]?.item.name||'—')}</div>`).join('');
 }
 
 function renderInventoryDefense(stats) {

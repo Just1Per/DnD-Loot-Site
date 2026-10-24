@@ -86,17 +86,28 @@ var CharacterEquipment = (() => {
     const entries=profs.map(p=>p.toLowerCase());
     return entries.some(p=>p===w.name.toLowerCase()||p===w.name.toLowerCase()+'s'||p===w.group+' weapons'||w.group==='martial'&&((p==='martial weapons with the light property'&&w.props.includes('light'))||(p==='martial weapons with the finesse or light property'&&(w.props.includes('light')||w.props.includes('finesse')))));
   }
+  function attunementLimit(data,level){
+    const stored=data?.adobe||data?.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data?.build?.classId,level:level||1}];
+    let remaining=level===undefined?20:Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),artificer=0;
+    const seen=new Set();for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(!seen.has(entry.classId)&&entry.classId==='artificer')artificer=actual;seen.add(entry.classId);}
+    return artificer>=18?6:artificer>=14?5:artificer>=10?4:3;
+  }
+  function attunementState(data,loot=[],level){
+    const limit=attunementLimit(data,level),owned=new Map(loot.filter(row=>row&&Number(row.quantity)>0).map(row=>[row.id,row])),ids=[];
+    for(const choice of choices(data?.equipmentState).loadout){const item=owned.get(choice.id)?.item;if(!item||!choice.attuned)continue;const needs=(typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(item))||!!item.attunement;if(needs)ids.push(choice.id);}
+    return{limit,count:ids.length,active:new Set(ids.slice(0,limit))};
+  }
   function derive(data,stats,loot=[],level) {
     const c=choices(data.equipmentState),warnings=[],sources=[],attacks=[],seen=new Set(),names=new Set();
     const owned=loot.filter(e=>e&&Number(e.quantity)>0&&typeof e.id==='string'&&!seen.has(e.id)&&seen.add(e.id));
     const entries=owned.map(e=>({entry:e,item:e.item||{},choice:c.loadout.find(v=>v.id===e.id)||{id:e.id,equipped:false,attuned:false,ability:'auto',proficiency:'auto',mode:'normal'},mechanics:CharacterEquipment.infer(e.item)}));
-    let armorEntry=null,shieldEntry=null,attuned=0,bonus=0;
+    const attunement=attunementState(data,owned,level);let armorEntry=null,shieldEntry=null,attuned=attunement.count,bonus=0;
     // Only owned items can consume an attunement slot. Quantity never multiplies bonuses.
     for(const r of entries){
       r.profile=profile(r.mechanics,data.build.edition);
       r.requiresAttunement=(typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(r.item))||!!r.item.attunement;
       r.magicActive=!r.requiresAttunement;
-      if(r.requiresAttunement&&r.choice.attuned){attuned++;r.magicActive=attuned<=3;if(!r.magicActive)warnings.push(r.item.name+': exceeds three attunement slots; magic inactive.');}
+      if(r.requiresAttunement&&r.choice.attuned){r.magicActive=attunement.active.has(r.entry.id);if(!r.magicActive)warnings.push(r.item.name+': exceeds '+(attunement.limit===3?'three':attunement.limit)+' attunement slots; magic inactive.');}
       r.active=r.choice.equipped;
       if(!r.active)continue;
       const kind=r.mechanics.kind;
@@ -190,8 +201,8 @@ var CharacterEquipment = (() => {
     }
     // Defense follows the owned armor actually worn, independent of the manual feat reminder.
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
-    return {entries,attacks,warnings,attuned,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
+    return {entries,attacks,warnings,attuned,attunementLimit:attunement.limit,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
-  return {weapons,armor,normalize,infer,profile,choices,trained,derive};
+  return {attunementLimit,attunementState,weapons,armor,normalize,infer,profile,choices,trained,derive};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterEquipment;
