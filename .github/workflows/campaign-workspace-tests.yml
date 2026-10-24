@@ -154,6 +154,7 @@ jobs:
         npm --prefix tests run test:sheet-calculation-reuse
         npm --prefix tests run test:class-expertise
         npm --prefix tests run test:weapon-mastery
+        npm --prefix tests run test:class-saves
         npm --prefix tests run test:warlock-cantrips
         npm --prefix tests run test:warlock-invocations
         npm --prefix tests run test:artificer-reference

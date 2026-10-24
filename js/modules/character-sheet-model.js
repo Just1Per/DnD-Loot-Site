@@ -236,6 +236,8 @@ var CharacterSheetModel = (() => {
     const assigned=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels;
     if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:ClassChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
+    const saveTraining=ClassChoices.saveTraining(d,{level});
+    effects.saves=[...new Set([...effects.saves,...saveTraining.abilities])];
     const invocationEffects=ClassChoices.invocationEffects(d,{level});
     effects.skills=[...new Set([...effects.skills,...invocationEffects.skills])];
     effects.specialSenses=[...(effects.specialSenses||[]),...invocationEffects.senses];
@@ -265,6 +267,8 @@ var CharacterSheetModel = (() => {
     const result = {
       effects,
       toolTraining,
+      saveTraining,
+      deathSaveBonus:saveTraining.deathSaveProficiency?pb:0,
       invocationEffects,
       cantripInvocations:ClassChoices.cantripInvocations(d,{level,mods}),
       classResources:ClassChoices.classResources(d,{level,mods}),

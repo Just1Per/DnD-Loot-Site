@@ -1,0 +1,17 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),M=require('../js/modules/character-sheet-model'),C=require('../js/modules/character-class-feature-choices');
+function make(classId,level,edition='2024'){const d=M.normalize({build:{classId,edition},abilities:{str:12,dex:14,con:16,int:10,wis:8,cha:18}});d.adobe={classLevels:[{classId,level}],classFeatureChoices:{'audit:preserved':['kept']}};return d;}
+test('Slippery Mind uses the correct saving throws at Rogue 15 in each edition through level 20',()=>{
+ for(const edition of ['2014','2024'])for(let level=1;level<=20;level++){const d=make('rogue',level,edition),r=M.derive(d,level),active=level>=15;assert.deepEqual(r.saveTraining.abilities,active?(edition==='2024'?['wis','cha']:['wis']):[]);assert.equal(r.saves.wis,-1+(active?r.pb:0));assert.equal(r.saves.cha,4+(active&&edition==='2024'?r.pb:0));assert.equal(r.saveTraining.deathSaveProficiency,false);assert.equal(r.deathSaveBonus,0);}
+});
+test('Monk 14 gains proficiency in every save including death saves in both editions',()=>{
+ for(const edition of ['2014','2024'])for(let level=1;level<=20;level++){const d=make('monk',level,edition),r=M.derive(d,level),active=level>=14;assert.equal(r.saveTraining.reports[0]?.name,active?(edition==='2024'?'Disciplined Survivor':'Diamond Soul'):undefined);for(const key of ['con','int','wis','cha'])assert.equal(r.saves[key],r.mods[key]+(active?r.pb:0));assert.equal(r.deathSaveBonus,active?r.pb:0);assert.equal(r.saveTraining.deathSaveProficiency,active);}
+});
+test('multiclass benefits use actual capped class levels and total-level proficiency without starting save grants',()=>{
+ for(const edition of ['2014','2024'])for(const [classId,threshold] of [['rogue',15],['monk',14]]){const d=make('wizard',20-threshold,edition);d.adobe.classLevels.push({classId,level:threshold});let r=M.derive(d,20);assert.equal(r.saveTraining.reports.length,1);assert.equal(r.pb,6);assert.equal(r.saves.cha,4+(classId==='monk'||edition==='2024'?6:0));d.adobe.classLevels[0].level++;r=M.derive(d,20);assert.equal(r.saveTraining.reports.length,0,'overflow class levels do not activate feature');assert.equal(r.saves.dex,2,'multiclassing never grants Rogue/Monk starting saves');}
+});
+test('automatic, manual and duplicated training add proficiency once and retain manual adjustments',()=>{
+ const d=make('monk',14);d.saves.wis={proficient:true,bonus:3};let r=M.derive(d,14);assert.equal(r.saves.wis,-1+5+3);assert.equal(r.saves.dex,2+5,'starting and later feature proficiency cannot stack');d.adobe.classLevels=[{classId:'monk',level:7},{classId:'monk',level:7}];assert.equal(C.saveTraining(d,{level:14}).reports.length,0,'duplicate assignments do not manufacture feature levels');
+});
+test('source reports and saving bonuses survive the save envelope without mutating or deleting stored choices',()=>{
+ for(const classId of ['rogue','monk']){const d=make(classId,16),before=JSON.stringify(d),r=M.derive(d,16),saved=structuredClone(d);saved.rulesChoices.grants.__adobe={data:saved.adobe};delete saved.adobe;const reopened=M.derive(saved,16);assert.deepEqual(reopened.saveTraining,r.saveTraining);assert.deepEqual(reopened.saves,r.saves);assert.equal(JSON.stringify(d),before);d.adobe.classLevels=[{classId:'fighter',level:16}];assert.equal(M.derive(d,16).saveTraining.reports.length,0);assert.deepEqual(d.adobe.classFeatureChoices,{'audit:preserved':['kept']});}
+});

@@ -196,6 +196,24 @@ var CharacterClassFeatureChoices=(()=>{
     if(event!=='long')return;const choices=normalize(data.adobe?.classFeatureChoices);if(!choices[flashKey])return;
     data.adobe.classFeatureChoices={...choices,[flashKey]:['0']};
   }
+  function saveTraining(data,{level=1}={}){
+    level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];
+    const result={abilities:[],deathSaveProficiency:false,reports:[]},seen=new Set();let remaining=level;
+    for(const entry of entries){
+      const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;
+      if(!actual||seen.has(entry.classId))continue;seen.add(entry.classId);
+      if(entry.classId==='rogue'&&actual>=15){
+        const abilities=edition==='2024'?['wis','cha']:['wis'];result.abilities.push(...abilities);
+        result.reports.push({id:'slippery-mind',name:'Slippery Mind',classId:'rogue',level:actual,abilities,detail:(edition==='2024'?'Wisdom and Charisma':'Wisdom')+' saving throw proficiency is included automatically.'});
+      }
+      if(entry.classId==='monk'&&actual>=14){
+        const abilities=['str','dex','con','int','wis','cha'],name=edition==='2024'?'Disciplined Survivor':'Diamond Soul';result.abilities.push(...abilities);result.deathSaveProficiency=true;
+        result.reports.push({id:edition==='2024'?'disciplined-survivor':'diamond-soul',name,classId:'monk',level:actual,abilities,detail:'Proficiency in all saving throws, including death saves. A failed save can be rerolled by spending 1 '+(edition==='2024'?'Focus':'Ki')+' point; use the new roll.'});
+      }
+    }
+    result.abilities=[...new Set(result.abilities)];return result;
+  }
   function invocationEffects(data,{level=1}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],local={...data,adobe:{...stored,classFeatureChoices:normalize(stored.classFeatureChoices)}};
     const result={skills:[],senses:[],reports:[],truesight:0,concentrationAdvantage:false};let remaining=level;const seen=new Set();
@@ -422,6 +440,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

@@ -304,7 +304,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | Tongue of the Sun and Moon **[unreviewed]** |
-| 14 | Diamond Soul **[unreviewed]** |
+| 14 | Diamond Soul **[partial]** |
 | 15 | Timeless Body **[unreviewed]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -329,7 +329,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Purity of Body · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Tongue of the Sun and Moon · 13 | Source-rule comparison and structured fields still need review. | Pending |
-| Diamond Soul · 14 | Source-rule comparison and structured fields still need review. | Pending |
+| Diamond Soul · 14 | Automatic proficiency in all saving throws from actual Monk 14, including a separate death-save proficiency contribution. Reroll cost is explained, but shared Ki/Focus spending and reroll controls remain pending. | [tests/class-saving-throw-training.cjs](../tests/class-saving-throw-training.cjs), [tests/class-saving-throw-training-browser.cjs](../tests/class-saving-throw-training-browser.cjs) |
 | Timeless Body · 15 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Empty Body · 18 | Source-rule comparison and structured fields still need review. | Pending |
@@ -450,7 +450,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 14 | Blindsense **[unreviewed]** |
-| 15 | Slippery Mind **[unreviewed]** |
+| 15 | Slippery Mind **[implemented]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 18 | Elusive **[unreviewed]** |
@@ -472,7 +472,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Reliable Talent · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Blindsense · 14 | Source-rule comparison and structured fields still need review. | Pending |
-| Slippery Mind · 15 | Source-rule comparison and structured fields still need review. | Pending |
+| Slippery Mind · 15 | Saving throw proficiency from actual Rogue level 15: Wisdom in 2014, Wisdom and Charisma in 2024. Automatic, nonstacking, preserved manual adjustments; source reminders and print. | [tests/class-saving-throw-training.cjs](../tests/class-saving-throw-training.cjs), [tests/class-saving-throw-training-browser.cjs](../tests/class-saving-throw-training-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Elusive · 18 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -892,7 +892,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | Deflect Energy **[unreviewed]** |
-| 14 | Disciplined Survivor **[unreviewed]** |
+| 14 | Disciplined Survivor **[partial]** |
 | 15 | Perfect Focus **[unreviewed]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -921,7 +921,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Self-Restoration · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Deflect Energy · 13 | Source-rule comparison and structured fields still need review. | Pending |
-| Disciplined Survivor · 14 | Source-rule comparison and structured fields still need review. | Pending |
+| Disciplined Survivor · 14 | Automatic proficiency in all saving throws from actual Monk 14, including a separate death-save proficiency contribution. Reroll cost is explained, but shared Ki/Focus spending and reroll controls remain pending. | [tests/class-saving-throw-training.cjs](../tests/class-saving-throw-training.cjs), [tests/class-saving-throw-training-browser.cjs](../tests/class-saving-throw-training-browser.cjs) |
 | Perfect Focus · 15 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Superior Defense · 18 | Source-rule comparison and structured fields still need review. | Pending |
@@ -1042,7 +1042,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 14 | Devious Strikes **[unreviewed]** |
-| 15 | Slippery Mind **[unreviewed]** |
+| 15 | Slippery Mind **[implemented]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 18 | Elusive **[unreviewed]** |
@@ -1068,7 +1068,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Improved Cunning Strike · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Devious Strikes · 14 | Source-rule comparison and structured fields still need review. | Pending |
-| Slippery Mind · 15 | Source-rule comparison and structured fields still need review. | Pending |
+| Slippery Mind · 15 | Saving throw proficiency from actual Rogue level 15: Wisdom in 2014, Wisdom and Charisma in 2024. Automatic, nonstacking, preserved manual adjustments; source reminders and print. | [tests/class-saving-throw-training.cjs](../tests/class-saving-throw-training.cjs), [tests/class-saving-throw-training-browser.cjs](../tests/class-saving-throw-training-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Elusive · 18 | Source-rule comparison and structured fields still need review. | Pending |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
