@@ -267,7 +267,7 @@ var CharacterSheetModel = (() => {
       attacks: d.attacks.map(a => mods[a.ability] + (a.proficient ? pb : 0) + a.bonus + (a.rangedWeapon ? feats.rangedBonus : 0))
     };
     result.magicItems=magicItems;
-    result.gear=Equipment.derive(d,result,loot);
+    result.gear=Equipment.derive(d,result,loot,level);
     if(Magic)result.gear=Magic.augmentGear(d,result.gear,magicItems);
     result.ac=result.gear.ac;
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);

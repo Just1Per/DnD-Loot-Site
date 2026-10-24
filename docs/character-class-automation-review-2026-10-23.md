@@ -46,3 +46,13 @@ Every behavior change needs edition, actual class level, multiclass, change/remo
 ## Sources
 
 [2014 Basic Rules class features](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/classes), [2024 Basic Rules class features](https://www.dndbeyond.com/sources/dnd/br-2024/character-classes), and the repository's normalized SRD feature metadata (`character-srd-class-data.js`, with revision and CC-BY attribution). Non-SRD optional features require their sourcebooks; no long source prose is copied here.
+
+## Follow-up: shared Fighting Style allowance
+
+Class choices and the legacy Feats selector now share actual Fighter/Paladin/Ranger class-level allowances. Duplicate class selections grant one supported effect. Saved aliases are counted once and retained; rendering no longer copies Feats into class choices. An older style on Feats can be removed there before replacing it in class choices. Champion additional styles and Fighting Initiate remain separate coverage work, not completed by this fix.
+
+## Expanded acceptance scope
+
+Audit every supported class, including Artificer, at every level 1–20 against the selected edition/source. Record each feature's structured choices, derived values, resources, sheet/print presentation and implementation gaps. Then verify multiclass unlocks, nonstacking effects, persistence and class-level changes. A feature listed in progression text is not evidence of automation. Optional and edition-specific variants must remain explicit.
+
+Next concrete task: verify standard 27-point buy and add selectable 15/15/15/8/8/8, 15/14/13/12/10/8 and 14/14/14/10/10/10 presets before bonuses. Each costs 27. Continue the feature matrix and class implementations afterward.

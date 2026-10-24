@@ -6,7 +6,7 @@ var CharacterFeatRules = (() => {
     const safe=v=>typeof v==='string'?v.slice(0,100):'';
     return {option:Number.isInteger(raw.option)&&raw.option>=0&&raw.option<2?raw.option:0,abilities:[0,1].map(i=>abilityKeys.includes(raw.abilities?.[i])?raw.abilities[i]:''),training:[0,1,2].map(i=>safe(raw.training?.[i])),expertise:safe(raw.expertise),confirmed:raw.confirmed===true,armored:raw.armored===true,used:Math.max(0,Math.min(99,Math.trunc(Number(raw.used)||0)))};
   }
-  function entries(data) {
+  function entries(data,level) {
     const seen={};const result=(data.rulesChoices?.feats||[]).map(id=>{seen[id]=(seen[id]||0)+1;return {id,key:id+(seen[id]>1?'--'+seen[id]:'')};});
     if(data.build.edition==='2014' && data.build.raceFeat) {
       const R=typeof CharacterRules!=='undefined'?CharacterRules:require('./character-rules');
@@ -28,7 +28,7 @@ var CharacterFeatRules = (() => {
       }
     }
     const CFC=typeof CharacterClassFeatureChoices==='undefined'?null:CharacterClassFeatureChoices;
-    for(const style of CFC?.styles(data)||[])if(style.featId&&!result.some(r=>r.id===style.featId))result.push({id:style.featId,key:'class-style-'+style.id,origin:true,classFeature:true,originLabel:'Class Fighting Style'});
+    for(const style of CFC?.styles(data,level)||[])if(style.featId&&!result.some(r=>r.id===style.featId))result.push({id:style.featId,key:'class-style-'+style.id,origin:true,classFeature:true,originLabel:'Class Fighting Style'});
     return result;
   }
   function trainingOptions(def,rules) {
@@ -49,7 +49,7 @@ var CharacterFeatRules = (() => {
     const R=typeof CharacterRules!=='undefined'?CharacterRules:require('./character-rules');
     const origins={};for(const n of effects.originFeats||[])origins[n]=(origins[n]||0)+1;
     let acBonus=0,rangedBonus=0,passiveBonus=0,speedBonus=0,athleteClimb=false;
-    for(const entry of entries(data)) {
+    for(const entry of entries(data,level)) {
       const bundled=Object.hasOwn(definitions,entry.id)?definitions[entry.id]:null;
       const def=typeof CampaignRules==='undefined'?bundled:CampaignRules.definition(entry.id,bundled);
       if(!def){reports.push({...entry,def:{name:entry.id,edition:'Unknown',source:'Reference',ability:[],requirements:[]},choice:choice(),warnings:['No bundled automation definition; selection preserved.'],automated:[]});continue;}
