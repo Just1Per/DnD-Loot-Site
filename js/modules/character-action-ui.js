@@ -27,7 +27,7 @@ function openAttackPicker(index=null){
   if(props.includes('light'))values.push(['offhand','Extra Light-weapon attack']);
   mode.innerHTML=values.map(([v,n])=>`<option value="${v}">${n}</option>`).join('');if(values.some(([v])=>v===old))mode.value=old;
   get('attackModeLabel').hidden=['spell','cantrip','racial','manual'].includes(kind.value);
-  const spell=CharacterCatalog.find(ref.value);get('attackSlotLabel').hidden=kind.value!=='spell';
+  const spell=CharacterCatalog.find(CharacterActions.spellReference(ref.value).spellId);get('attackSlotLabel').hidden=kind.value!=='spell';
   slot.innerHTML=kind.value==='spell'&&spell?Array.from({length:10-spell.level},(_,i)=>`<option value="${spell.level+i}">${spell.level+i}</option>`).join(''):'';
   preview();
  }
@@ -35,7 +35,7 @@ function openAttackPicker(index=null){
   let rows=[];const d=stats();
   if(kind.value==='loot')rows=sheetEquipmentLoot().map(e=>[e.id,e.item.name+' · '+e.quantity+' owned']);
   if(kind.value==='weapon')rows=Object.entries(CharacterEquipment.weapons).map(([k,v])=>[k,v.name]);
-  if(['spell','cantrip'].includes(kind.value))rows=session.data.spells.map(r=>CharacterCatalog.find(r.catalogId)).filter(s=>s&&(kind.value==='cantrip'?s.level===0:s.level>0)).map(s=>[s.id,s.name+' · '+s.edition]);
+  if(['spell','cantrip'].includes(kind.value)){const seen=new Set();rows=session.data.spells.flatMap(row=>{const spell=CharacterCatalog.find(row.catalogId),id=spell?(spell.id+(row.classId?'::'+row.classId:'')):'';if(!spell||(kind.value==='cantrip'?spell.level!==0:spell.level===0)||seen.has(id))return[];seen.add(id);return[[id,spell.name+' · '+spell.edition+' · '+(CharacterRules.classes[row.classId]?.name||row.classId||'Unassigned')]];});}
   if(kind.value==='racial'&&d.effects.breath)rows=[['breath','Dragonborn breath weapon']];
   ref.innerHTML=rows.length?rows.map(([v,n])=>`<option value="${esc(v)}">${esc(n)}</option>`).join(''):'<option value="">No available choices — select spells / loot / species first</option>';
   get('attackRefLabel').hidden=['improvised','unarmed','manual'].includes(kind.value);get('attackManual').hidden=kind.value!=='manual';get('attackAbilityLabel').hidden=kind.value==='racial';
@@ -56,7 +56,7 @@ function openAttackPicker(index=null){
   }
   closeAttackPicker();session.dirty=true;updateSheetCalculations();sheetStatus('Attack updated. Save sheet to keep it.');
  };
- if(initial){kind.value=initial.kind==='spell'&&CharacterCatalog.find(initial.ref)?.level===0?'cantrip':initial.kind;choices();if(![...ref.querySelectorAll('option')].some(o=>o.value===initial.ref)){const o=document.createElement('option');o.value=initial.ref;o.textContent='Unavailable saved source';ref.appendChild(o);}ref.value=initial.ref;modes();mode.value=initial.mode;ability.value=initial.ability;slot.value=String(initial.slot||CharacterCatalog.find(initial.ref)?.level||0);get('attackName').value=initial.name;preview();}else choices();
+ if(initial){const parsed=CharacterActions.spellReference(initial.ref);kind.value=initial.kind==='spell'&&CharacterCatalog.find(parsed.spellId)?.level===0?'cantrip':initial.kind;choices();const options=[...ref.querySelectorAll('option')];let selected=options.find(option=>option.value===initial.ref);if(!selected&&initial.kind==='spell')selected=options.find(option=>{const candidate=CharacterActions.spellReference(option.value);return candidate.spellId===parsed.spellId&&(!parsed.classId||candidate.classId===parsed.classId)});if(!selected){selected=document.createElement('option');selected.value=initial.ref;selected.textContent='Unavailable saved source';ref.appendChild(selected);}ref.value=selected.value;modes();mode.value=initial.mode;ability.value=initial.ability;slot.value=String(initial.slot||CharacterCatalog.find(parsed.spellId)?.level||0);get('attackName').value=initial.name;preview();}else choices();
  dialog.showModal();kind.focus();
 }
 function bindOverviewAttacks(){

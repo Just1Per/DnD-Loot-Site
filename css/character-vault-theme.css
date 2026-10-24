@@ -2526,3 +2526,25 @@
 
 /* Keep source/effect notes readable on the class choice cards. */
 #mainApp .sheet-class-choice-card footer span { color: #5f503e; font-size: 11px; }
+
+/* Keep class choices wide enough to read on a phone. */
+@media (max-width: 600px) {
+  #characterSheetDialog .sheet-class-block,
+  #characterSheetPage #characterSheetDialog .sheet-class-block { padding: 0; }
+  #characterSheetDialog .sheet-class-block-content,
+  #characterSheetPage #characterSheetDialog .sheet-class-block-content { padding: 10px 6px; gap: 10px; }
+  #characterSheetDialog .sheet-class-choice-panel,
+  #characterSheetPage #characterSheetDialog .sheet-class-choice-panel { padding: 8px 6px; gap: 8px; }
+  #characterSheetDialog .sheet-class-choice-card,
+  #characterSheetPage #characterSheetDialog .sheet-class-choice-card { padding: 8px; border-left-width: 3px; }
+}
+@media (max-width: 600px) {
+  #characterSheetDialog [data-invocation-cantrip],
+  #characterSheetDialog [data-open-invocation-spells],
+  #characterSheetDialog [data-open-invocation-feats],
+  #characterSheetDialog [data-load-invocation-cantrips],
+  #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-invocation-cantrip],
+  #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-open-invocation-spells],
+  #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-open-invocation-feats],
+  #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-load-invocation-cantrips] { min-height: 44px !important; }
+}
