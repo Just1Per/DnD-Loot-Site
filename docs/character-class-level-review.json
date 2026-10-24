@@ -678,9 +678,12 @@
           "name": "Bardic Inspiration",
           "level": 1,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table.",
+          "evidence": [
+            "tests/bard-inspiration-resources.cjs",
+            "tests/bard-inspiration-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:bard:1:spellcasting",
@@ -753,18 +756,24 @@
           "name": "Bardic Inspiration",
           "level": 5,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table.",
+          "evidence": [
+            "tests/bard-inspiration-resources.cjs",
+            "tests/bard-inspiration-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:bard:5:font-of-inspiration",
           "name": "Font of Inspiration",
           "level": 5,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Short Rest recovery from actual Bard 5. Long Rest also restores uses.",
+          "evidence": [
+            "tests/bard-inspiration-resources.cjs",
+            "tests/bard-inspiration-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:bard:6:countercharm",
@@ -801,9 +810,12 @@
           "name": "Bardic Inspiration",
           "level": 10,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table.",
+          "evidence": [
+            "tests/bard-inspiration-resources.cjs",
+            "tests/bard-inspiration-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:bard:10:expertise",
@@ -861,9 +873,12 @@
           "name": "Bardic Inspiration",
           "level": 15,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table.",
+          "evidence": [
+            "tests/bard-inspiration-resources.cjs",
+            "tests/bard-inspiration-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:bard:16:ability-score-improvement",
@@ -912,9 +927,12 @@
           "name": "Superior Inspiration",
           "level": 20,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Initiative recovery from actual Bard 20, one use only when empty with current derived Charisma, without resetting other class pools.",
+          "evidence": [
+            "tests/bard-inspiration-resources.cjs",
+            "tests/bard-inspiration-resources-browser.cjs"
+          ]
         }
       ],
       "levels": [
@@ -4614,9 +4632,12 @@
           "name": "Bardic Inspiration",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table.",
+          "evidence": [
+            "tests/bard-inspiration-resources.cjs",
+            "tests/bard-inspiration-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:bard:1:spellcasting",
@@ -4671,9 +4692,12 @@
           "name": "Font of Inspiration",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Short Rest recovery from actual Bard 5. Available ordinary or Pact spell slot converts into one use, with shared spell-slot spending and save/reopen.",
+          "evidence": [
+            "tests/bard-inspiration-resources.cjs",
+            "tests/bard-inspiration-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:bard:7:countercharm",
@@ -4734,9 +4758,12 @@
           "name": "Superior Inspiration",
           "level": 18,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Initiative recovery from actual Bard 18 to two uses with current derived Charisma, without resetting other class pools.",
+          "evidence": [
+            "tests/bard-inspiration-resources.cjs",
+            "tests/bard-inspiration-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:bard:19:epic-boon",

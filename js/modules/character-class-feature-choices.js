@@ -220,6 +220,10 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
     for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='fighter'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
   }
+  function bardLevels(data,level=1){
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
+    for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='bard'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
+  }
   function classResources(data,{level=1,mods={}}={}){
     const choices=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices),spent=key=>{const raw=choices[key]?.[0];return /^\d{1,3}$/.test(raw||'')?Number(raw):0;},rows=[];
     const actual=artificerLevels(data,level);
@@ -233,19 +237,43 @@ var CharacterClassFeatureChoices=(()=>{
       if(fighter>=2)fighterRow('action-surge','Action Surge',fighter>=17?2:1,['short','long'],'On your turn, take one additional action'+(edition==='2024'?' except the Magic action':'')+'. Use at most once per turn.');
       if(fighter>=9)fighterRow('indomitable','Indomitable',fighter>=17?3:fighter>=13?2:1,['long'],'Reroll a failed saving throw'+(edition==='2024'?' and add '+fighter+' to the new roll':'')+'; use the new result.',{useLabel:'Reroll failed save',...(edition==='2024'?{bonus:fighter}:{})});
     }
+    const bard=bardLevels(data,level);
+    if(bard){const key=groupKey(edition,'bard','bardic-inspiration-uses'),used=spent(key),max=Math.max(1,Math.min(10,Math.trunc(Number(mods.cha)||0))),die='1d'+(bard>=15?12:bard>=10?10:bard>=5?8:6),superior=bard>=(edition==='2024'?18:20),resets=['long',...(bard>=5?['short']:[]),...(superior?['initiative']:[])];rows.push({id:'bard-inspiration',key,name:'Bardic Inspiration',source:edition+' Bard',className:'Bard',level:bard,max,used,remaining:Math.max(0,max-used),die,slotRecovery:edition==='2024'&&bard>=5,resets,recovery:(bard>=5?'Short or Long Rest recovery':'Long Rest recovery')+(superior?(edition==='2024'?' · Initiative: regain to 2 uses':' · Initiative: regain 1 if empty'):''),unit:'uses',useLabel:'Give inspiration',undoLabel:'Undo use',description:'Bonus Action · Give one creature other than yourself within 60 ft an inspiration die ('+die+'). '+(edition==='2024'?'Within 1 hour, the recipient can add the die after failing a d20 Test. It must be able to see or hear you.':'Within 10 minutes, the recipient can add the die to one ability check, attack roll or saving throw, after the d20 but before the outcome. It must be able to hear you.')+' A creature can hold only one Bardic Inspiration die at a time.'});}
     return rows;
+  }
+  function bardSlotRecovery(data,context={}){
+    const resource=classResources(data,context).find(row=>row.id==='bard-inspiration');if(!resource?.slotRecovery)return[];
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},maxima=context.slotMax||data.slots?.map(row=>row.max)||[],rows=[];
+    for(let i=0;i<9;i++){const max=Math.max(0,Math.min(99,Math.trunc(Number(maxima[i])||0))),used=Math.max(0,Math.trunc(Number(data.slots?.[i]?.used)||0));if(max)rows.push({value:String(i+1),label:'Level '+(i+1)+' · '+Math.max(0,max-used)+' available',max,used,available:Math.max(0,max-used)});}
+    if(context.pact?.count){const max=Math.max(0,Math.min(4,Math.trunc(Number(context.pact.count)||0))),used=Math.max(0,Math.trunc(Number(stored.pactSlotsUsed)||0));rows.push({value:'pact',label:'Pact level '+context.pact.slotLevel+' · '+Math.max(0,max-used)+' available',max,used,available:Math.max(0,max-used)});}
+    return rows;
+  }
+  function restoreBardFromSlot(data,value,context={}){
+    const resource=classResources(data,context).find(row=>row.id==='bard-inspiration'),slot=bardSlotRecovery(data,context).find(row=>row.value===value);if(!resource?.slotRecovery||!resource.used||!slot?.available)return false;
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},next={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.max(0,Math.min(resource.used,resource.max)-1))]}};
+    if(value==='pact')next.pactSlotsUsed=slot.used+1;else{const index=Number(value)-1;data.slots||=Array.from({length:9},()=>({max:0,used:0}));data.slots[index]={...data.slots[index],max:slot.max,used:slot.used+1};}
+    data.adobe=next;return true;
   }
   function changeClassResource(data,id,delta,context){
     if(![1,-1].includes(delta))return false;const resource=classResources(data,context).find(row=>row.id===id);if(!resource||delta===1&&!resource.remaining||delta===-1&&!resource.used)return false;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.max(0,resource.used+delta))]}};return true;
   }
-  function resetClassResources(data,event){
-    if(!['short','long'].includes(event))return;const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),edition=data.build?.edition==='2024'?'2024':'2014',monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),entries=stored.classLevels||[],hasMonk=entries.length?monkLevels(data,Math.min(20,entries.reduce((total,entry)=>total+Math.max(0,Number(entry.level)||0),0)))>=2:data.build?.classId==='monk',keys=[];
-    if(event==='long'&&choices[flashKey])keys.push(flashKey);if(hasMonk&&choices[monkKey])keys.push(monkKey);
-    const total=entries.length?Math.min(20,entries.reduce((sum,entry)=>sum+Math.max(0,Number(entry.level)||0),0)):1,fighter=fighterLevels(data,total),fighterUpdates={};
-    for(const [id,min] of [['second-wind',1],['action-surge',2],['indomitable',9]]){if(fighter<min||event==='short'&&id==='indomitable')continue;const key=groupKey(edition,'fighter',id+'-uses'),raw=choices[key]?.[0];if(!/^\d{1,3}$/.test(raw||''))continue;fighterUpdates[key]=[String(event==='short'&&edition==='2024'&&id==='second-wind'?Math.max(0,Math.min(Number(raw),fighter>=10?4:fighter>=4?3:2)-1):0)];}
-    if(!keys.length&&!Object.keys(fighterUpdates).length)return;
-    const next={...choices,...Object.fromEntries(keys.map(key=>[key,['0']])),...fighterUpdates};data.adobe={...stored,classFeatureChoices:next};
+  function resetClassResources(data,event,context={}){
+    if(!['short','long','initiative'].includes(event))return;
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),edition=data.build?.edition==='2024'?'2024':'2014',entries=stored.classLevels||[],total=Number(context.level)||(entries.length?Math.min(20,entries.reduce((sum,entry)=>sum+Math.max(0,Number(entry.level)||0),0)):1),rest=event==='short'||event==='long',updates={};
+    const monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),hasMonk=entries.length?monkLevels(data,total)>=2:data.build?.classId==='monk';
+    if(event==='long'&&choices[flashKey])updates[flashKey]=['0'];if(rest&&hasMonk&&choices[monkKey])updates[monkKey]=['0'];
+    const fighter=fighterLevels(data,total);
+    for(const [id,min] of [['second-wind',1],['action-surge',2],['indomitable',9]]){if(!rest||fighter<min||event==='short'&&id==='indomitable')continue;const key=groupKey(edition,'fighter',id+'-uses'),raw=choices[key]?.[0];if(!/^\d{1,3}$/.test(raw||''))continue;updates[key]=[String(event==='short'&&edition==='2024'&&id==='second-wind'?Math.max(0,Math.min(Number(raw),fighter>=10?4:fighter>=4?3:2)-1):0)];}
+    const bard=bardLevels(data,total),bardKey=groupKey(edition,'bard','bardic-inspiration-uses'),raw=choices[bardKey]?.[0];
+    if(bard&&/^\d{1,3}$/.test(raw||'')){
+      if(event==='long'||event==='short'&&bard>=5)updates[bardKey]=['0'];
+      if(event==='initiative'&&bard>=(edition==='2024'?18:20)){
+        const model=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null),mods=context.mods||model?.derive(data,total).mods||{},max=Math.max(1,Math.min(10,Math.trunc(Number(mods.cha)||0))),target=edition==='2024'?Math.min(2,max):1,used=Number(raw),available=Math.max(0,max-used);
+        if(available<target)updates[bardKey]=[String(Math.max(0,max-target))];
+      }
+    }
+    if(!Object.keys(updates).length)return;data.adobe={...stored,classFeatureChoices:{...choices,...updates}};
   }
   function saveTraining(data,{level=1}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
@@ -491,6 +519,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

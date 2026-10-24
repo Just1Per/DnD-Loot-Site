@@ -170,8 +170,8 @@ var CharacterFeatRules = (() => {
       if(oldGrants[before[i].key])data.rulesChoices.grants[e.key]=oldGrants[before[i].key];
     });
   }
-  function reset(data,event) {
-    const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');CFC.resetClassResources(data,event);
+  function reset(data,event,context) {
+    const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');CFC.resetClassResources(data,event,context);
     if(event==='long')for(const [key,grant] of Object.entries(data.rulesChoices.grants||{}))if(!key.startsWith('__'))grant.used=0;
     for(const e of entries(data))if(resource(definitions[e.id])?.resets.includes(event)&&data.rulesChoices.effects[e.key])data.rulesChoices.effects[e.key].used=0;
   }
