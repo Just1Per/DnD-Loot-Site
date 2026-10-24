@@ -1,6 +1,6 @@
 # Adobe / MPMB class-feature choice audit
 
-This is the first checked-in baseline for the reusable class/subclass choice engine. Its scan counts are historical, not current coverage totals. See the [2026-10-23 runtime review](character-class-automation-review-2026-10-23.md) for checked behavior and the current repair queue.
+This is the first checked-in baseline for the reusable class/subclass choice engine. Its scan counts are historical, not current coverage totals. See the [current class test status and Adobe follow-up](class-test-status-and-adobe-gaps-2026-10-24.md) for the latest manual test queue and remaining functional gaps. See the [2026-10-23 runtime review](character-class-automation-review-2026-10-23.md) for checked behavior and the current repair queue.
 
 The audit was run against the user's supplied MorePurpleMoreBetter/Adobe character sheet plus the extracted WotC/UA rule bundle. The scanner reads structured JavaScript metadata only and does not execute Acrobat JavaScript or copy long rules descriptions.
 
