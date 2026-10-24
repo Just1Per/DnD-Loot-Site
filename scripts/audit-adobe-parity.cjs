@@ -66,11 +66,14 @@ const magicItemCount=Array.isArray(magicItemReference?.names)?magicItemReference
 const magicAutomationCount=magicItemReference?.automation&&typeof magicItemReference.automation==='object'?Object.keys(magicItemReference.automation).length:0;
 add('magic items',magicItemCount>=baseline.categories.magicItems?'covered':'partial',magicItemCount?`${magicItemCount}/${baseline.categories.magicItems} Adobe base magic items indexed; ${magicAutomationCount} high-confidence automatic effect profiles plus generic armor/weapon variants.`:`${baseline.categories.magicItems} Adobe base magic items are not yet represented by one complete structured mechanics reference; root-library item data and equipment effects are currently split.`);
 
-const rulesText=read('firestore.rules');
-const ruleRevision=Number(rulesText.match(/Firestore Rules Revision:\s*(\d+)/)?.[1]||0);
-add('firestore schema',ruleRevision>=22&&rulesText.includes('schemaVersion in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]')?'covered':'partial',`Firestore rules revision ${ruleRevision}; character-sheet schema 14 expected for this parity iteration.`);
+// Adobe inventory presence cannot verify access control or a deployed rules version.
+// The former revision-comment/schema-allowlist heuristic became stale when rules
+// moved to a stable, versioned document envelope; it produced a false rules gap.
+add('Firestore permissions','not-assessed','Outside this metadata inventory. Use the existing permission/emulator checks; this scan cannot identify deployed production rules.');
 
-for(const row of report) console.log(`${row.status.toUpperCase().padEnd(8)} ${row.category}: ${row.detail}`);
-const incomplete=report.filter(r=>r.status!=='covered');
-console.log(`\nAdobe parity: ${report.length-incomplete.length}/${report.length} categories covered; ${incomplete.length} need more work.`);
+console.log('Adobe/MPMB metadata inventory only. PRESENT means records/names are available, not that every mechanic is implemented.');
+for(const row of report)console.log(`${(row.status==='covered'?'present':row.status).toUpperCase().padEnd(12)} ${row.category}: ${row.detail}`);
+const assessed=report.filter(row=>row.status!=='not-assessed'),incomplete=assessed.filter(row=>row.status!=='covered');
+console.log(`\nAdobe inventory: ${assessed.length-incomplete.length}/${assessed.length} metadata categories present; ${incomplete.length} inventory gaps.`);
+console.log('Class-feature mechanics, source-specific rules and authorization require their separate audits/tests.');
 if(process.argv.includes('--strict')&&incomplete.length)process.exitCode=1;
