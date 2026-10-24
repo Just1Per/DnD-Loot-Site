@@ -245,23 +245,23 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Fighting Style **[partial]**<br>Second Wind **[unreviewed]** |
-| 2 | Action Surge **[unreviewed]** |
+| 1 | Fighting Style **[partial]**<br>Second Wind **[implemented]** |
+| 2 | Action Surge **[implemented]** |
 | 3 | Martial Archetype **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Extra Attack **[unreviewed]** |
 | 6 | Ability Score Improvement **[partial]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
-| 9 | Indomitable **[unreviewed]** |
+| 9 | Indomitable **[implemented]** |
 | 10 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 11 | Extra Attack **[unreviewed]** |
 | 12 | Ability Score Improvement **[partial]** |
-| 13 | Indomitable **[unreviewed]** |
+| 13 | Indomitable **[implemented]** |
 | 14 | Ability Score Improvement **[partial]** |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
-| 17 | Action Surge **[unreviewed]**<br>Indomitable **[unreviewed]** |
+| 17 | Action Surge **[implemented]**<br>Indomitable **[implemented]** |
 | 18 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 19 | Ability Score Improvement **[partial]** |
 | 20 | Extra Attack **[unreviewed]** |
@@ -269,21 +269,21 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Fighting Style · 1 | Base class and Feats choices share the correct allowance, with duplicate/alias guards. Additional subclass/feat style sources and situational effects remain in the wider review. | [tests/fighting-style-entitlements.cjs](../tests/fighting-style-entitlements.cjs), [tests/fighting-style-entitlements-browser.cjs](../tests/fighting-style-entitlements-browser.cjs) |
-| Second Wind · 1 | Source-rule comparison and structured fields still need review. | Pending |
-| Action Surge · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Second Wind · 1 | Actual class-level use limit, healing formula, finite Use/Undo, source-specific Short/Long Rest recovery, save/reopen and print. Healing is resolved at the table; this counter does not change HP. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
+| Action Surge · 2 | Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Martial Archetype · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 6 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Indomitable · 9 | Source-rule comparison and structured fields still need review. | Pending |
+| Indomitable · 9 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Extra Attack · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Indomitable · 13 | Source-rule comparison and structured fields still need review. | Pending |
+| Indomitable · 13 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Ability Score Improvement · 14 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Action Surge · 17 | Source-rule comparison and structured fields still need review. | Pending |
-| Indomitable · 17 | Source-rule comparison and structured fields still need review. | Pending |
+| Action Surge · 17 | Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
+| Indomitable · 17 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 20 | Source-rule comparison and structured fields still need review. | Pending |
 
@@ -828,23 +828,23 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Fighting Style **[partial]**<br>Second Wind **[unreviewed]**<br>Weapon Mastery **[partial]** |
-| 2 | Action Surge **[unreviewed]**<br>Tactical Mind **[unreviewed]** |
+| 1 | Fighting Style **[partial]**<br>Second Wind **[implemented]**<br>Weapon Mastery **[partial]** |
+| 2 | Action Surge **[implemented]**<br>Tactical Mind **[implemented]** |
 | 3 | Fighter Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[unreviewed]**<br>Tactical Shift **[unreviewed]** |
+| 5 | Extra Attack **[unreviewed]**<br>Tactical Shift **[implemented]** |
 | 6 | Ability Score Improvement **[partial]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
-| 9 | Indomitable **[unreviewed]**<br>Tactical Master **[unreviewed]** |
+| 9 | Indomitable **[implemented]**<br>Tactical Master **[unreviewed]** |
 | 10 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 11 | Two Extra Attacks **[unreviewed]** |
 | 12 | Ability Score Improvement **[partial]** |
-| 13 | Indomitable **[unreviewed]**<br>Studdied Attacks **[unreviewed]** |
+| 13 | Indomitable **[implemented]**<br>Studdied Attacks **[unreviewed]** |
 | 14 | Ability Score Improvement **[partial]** |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
-| 17 | Action Surge **[unreviewed]**<br>Indomitable **[unreviewed]** |
+| 17 | Action Surge **[implemented]**<br>Indomitable **[implemented]** |
 | 18 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 19 | Epic Boon **[unreviewed]** |
 | 20 | Three Extra Attacks **[unreviewed]** |
@@ -852,26 +852,26 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Fighting Style · 1 | Base class and Feats choices share the correct allowance, with duplicate/alias guards. Additional subclass/feat style sources and situational effects remain in the wider review. | [tests/fighting-style-entitlements.cjs](../tests/fighting-style-entitlements.cjs), [tests/fighting-style-entitlements-browser.cjs](../tests/fighting-style-entitlements-browser.cjs) |
-| Second Wind · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Second Wind · 1 | Actual class-level use limit, healing formula, finite Use/Undo, source-specific Short/Long Rest recovery, save/reopen and print. Healing is resolved at the table; this counter does not change HP. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Weapon Mastery · 1 | Weapon choices, class-level allowance, proficiency gating and property reminders exist. Audit remaining property-specific statistics/conditions against the source. | [tests/weapon-mastery.cjs](../tests/weapon-mastery.cjs), [tests/weapon-mastery-browser.cjs](../tests/weapon-mastery-browser.cjs) |
-| Action Surge · 2 | Source-rule comparison and structured fields still need review. | Pending |
-| Tactical Mind · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Action Surge · 2 | Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
+| Tactical Mind · 2 | Uses the shared Second Wind pool with a dedicated success-spend button and Undo; the failed-check 1d10 and no-spend-on-failure conditions are explained. Roll the die at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Fighter Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
-| Tactical Shift · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Tactical Shift · 5 | The Second Wind control gains its Bonus Action movement reminder at Fighter 5. Actual movement resolves at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Ability Score Improvement · 6 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Indomitable · 9 | Source-rule comparison and structured fields still need review. | Pending |
+| Indomitable · 9 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Tactical Master · 9 | Source-rule comparison and structured fields still need review. | Pending |
 | Two Extra Attacks · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Indomitable · 13 | Source-rule comparison and structured fields still need review. | Pending |
+| Indomitable · 13 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Studdied Attacks · 13 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 14 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Action Surge · 17 | Source-rule comparison and structured fields still need review. | Pending |
-| Indomitable · 17 | Source-rule comparison and structured fields still need review. | Pending |
+| Action Surge · 17 | Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
+| Indomitable · 17 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
 | Three Extra Attacks · 20 | Source-rule comparison and structured fields still need review. | Pending |
 

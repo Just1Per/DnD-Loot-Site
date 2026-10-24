@@ -216,12 +216,23 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
     for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='monk'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
   }
+  function fighterLevels(data,level=1){
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
+    for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='fighter'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
+  }
   function classResources(data,{level=1,mods={}}={}){
     const choices=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices),spent=key=>{const raw=choices[key]?.[0];return /^\d{1,3}$/.test(raw||'')?Number(raw):0;},rows=[];
     const actual=artificerLevels(data,level);
     if(actual.level>=7){const used=spent(flashKey),bonus=Math.max(-5,Math.min(10,Math.trunc(Number(mods.int)||0))),max=Math.max(1,bonus);rows.push({id:'artificer-flash-of-genius',key:flashKey,name:'Flash of Genius',source:'Legacy Artificer · Tasha’s',className:'Artificer',level:actual.level,bonus,max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',useLabel:'Use reaction',undoLabel:'Undo use',description:'Reaction · 30 ft · Add your Intelligence modifier to one ability check or saving throw made by you or a creature you can see. Resolve the chosen roll at the table.'});}
     const monk=monkLevels(data,level),edition=data.build?.edition==='2024'?'2024':'2014';
     if(monk>=2){const name=edition==='2024'?'Focus Points':'Ki Points',key=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),used=spent(key),dc=8+(Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1)+Number(mods.wis||0);rows.push({id:'monk-points',key,name,source:edition+' Monk',className:'Monk',level:monk,max:monk,used,remaining:Math.max(0,monk-used),resets:['short','long'],recovery:'Short or Long Rest recovery',unit:'points',useLabel:'Spend 1 point',undoLabel:'Undo 1 point',dc,reroll:monk>=14,description:'Shared pool for Monk features; spend each feature’s point cost from this one pool. '+(edition==='2014'?'Rest recovery requires at least 30 minutes of meditation during the rest. ':'')+'Monk feature save DC '+dc+'.'+(monk>=14?' Failed save: spend 1 point to reroll; use the new roll.':'')});}
+    const fighter=fighterLevels(data,level),fighterRow=(id,name,max,resets,description,extra={})=>{const key=groupKey(edition,'fighter',id+'-uses'),used=spent(key);rows.push({id:'fighter-'+id,key,name,source:edition+' Fighter',className:'Fighter',level:fighter,max,used,remaining:Math.max(0,max-used),resets,recovery:resets.includes('short')?'Short or Long Rest recovery':'Long Rest recovery',unit:'uses',useLabel:'Use '+name,undoLabel:'Undo use',description,...extra});};
+    if(fighter){
+      const max=edition==='2014'?1:fighter>=10?4:fighter>=4?3:2;
+      fighterRow('second-wind','Second Wind',max,['short','long'],'Bonus Action · Regain 1d10 + '+fighter+' HP. Resolve healing at the table.'+(edition==='2024'&&fighter>=2?' Tactical Mind: after a failed ability check, add 1d10; spend this same pool only if the check succeeds.':'')+(edition==='2024'&&fighter>=5?' Tactical Shift: when using Second Wind as a Bonus Action, move up to half your Speed without provoking Opportunity Attacks.':''),{...(edition==='2024'?{shortRecovery:1,recovery:'Short Rest: regain 1 use · Long Rest: all uses'}:{}),...(edition==='2024'&&fighter>=2?{extraAction:{id:'tactical-mind',label:'Tactical Mind success · 1 use',message:'Spent 1 Second Wind use for Tactical Mind. If the check still fails, undo this spend. Save to keep the change.'}}:{})});
+      if(fighter>=2)fighterRow('action-surge','Action Surge',fighter>=17?2:1,['short','long'],'On your turn, take one additional action'+(edition==='2024'?' except the Magic action':'')+'. Use at most once per turn.');
+      if(fighter>=9)fighterRow('indomitable','Indomitable',fighter>=17?3:fighter>=13?2:1,['long'],'Reroll a failed saving throw'+(edition==='2024'?' and add '+fighter+' to the new roll':'')+'; use the new result.',{useLabel:'Reroll failed save',...(edition==='2024'?{bonus:fighter}:{})});
+    }
     return rows;
   }
   function changeClassResource(data,id,delta,context){
@@ -230,8 +241,11 @@ var CharacterClassFeatureChoices=(()=>{
   }
   function resetClassResources(data,event){
     if(!['short','long'].includes(event))return;const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),edition=data.build?.edition==='2024'?'2024':'2014',monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),entries=stored.classLevels||[],hasMonk=entries.length?monkLevels(data,Math.min(20,entries.reduce((total,entry)=>total+Math.max(0,Number(entry.level)||0),0)))>=2:data.build?.classId==='monk',keys=[];
-    if(event==='long'&&choices[flashKey])keys.push(flashKey);if(hasMonk&&choices[monkKey])keys.push(monkKey);if(!keys.length)return;
-    data.adobe={...stored,classFeatureChoices:{...choices,...Object.fromEntries(keys.map(key=>[key,['0']]))}};
+    if(event==='long'&&choices[flashKey])keys.push(flashKey);if(hasMonk&&choices[monkKey])keys.push(monkKey);
+    const total=entries.length?Math.min(20,entries.reduce((sum,entry)=>sum+Math.max(0,Number(entry.level)||0),0)):1,fighter=fighterLevels(data,total),fighterUpdates={};
+    for(const [id,min] of [['second-wind',1],['action-surge',2],['indomitable',9]]){if(fighter<min||event==='short'&&id==='indomitable')continue;const key=groupKey(edition,'fighter',id+'-uses'),raw=choices[key]?.[0];if(!/^\d{1,3}$/.test(raw||''))continue;fighterUpdates[key]=[String(event==='short'&&edition==='2024'&&id==='second-wind'?Math.max(0,Math.min(Number(raw),fighter>=10?4:fighter>=4?3:2)-1):0)];}
+    if(!keys.length&&!Object.keys(fighterUpdates).length)return;
+    const next={...choices,...Object.fromEntries(keys.map(key=>[key,['0']])),...fighterUpdates};data.adobe={...stored,classFeatureChoices:next};
   }
   function saveTraining(data,{level=1}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
