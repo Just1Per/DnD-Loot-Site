@@ -2517,7 +2517,7 @@
 
 /* Point Buy spreads keep choices and actions together on narrow sheets. */
 #mainApp .sheet-point-buy-presets { margin: 1rem 0; padding: 1rem; border: 1px solid var(--border-color, #cbb590); border-radius: 8px; background: rgba(255,255,255,.4); }
-#mainApp .sheet-point-buy-presets h5 { margin: 0 0 .5rem; }
+#mainApp .sheet-point-buy-presets h4 { margin: 0 0 .5rem; }
 #mainApp .sheet-point-buy-actions { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; }
 #mainApp .sheet-point-buy-actions label { flex: 1 1 12rem; min-width: 0; display: grid; gap: .25rem; }
 #mainApp .sheet-point-buy-actions select { width: 100%; min-width: 0; }
