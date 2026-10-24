@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const P = require('../js/modules/character-class-progression');
 
-assert.equal(Object.keys(P.classes).length, 12, 'Adobe baseline should include 12 base classes');
+assert.equal(Object.keys(P.classes).length, 13, 'Class catalogue includes the 12 SRD classes plus legacy Artificer');
 assert.equal(Object.keys(P.subclasses).length, 12, 'Adobe baseline should include 12 base subclasses');
 
 const fighter3 = P.unlocked('fighter',3,'champion').map(x=>x.name);
@@ -15,7 +15,7 @@ for (const name of ['Spellcasting','Sorcerous Origin','Dragon Ancestor','Draconi
 assert.equal(P.subclassLevel('life-domain'),1);
 assert.equal(P.subclassLevel('champion'),3);
 
-console.log('SUCCESS character class progression: 12 classes, 12 subclasses and unlock levels');
+console.log('SUCCESS character class progression: 13 classes, 12 base subclasses and unlock levels');
 
 const entry={classId:'fighter',level:6,subclassId:'champion'};
 const action=P.unlocked('fighter',6,'champion','2014').find(row=>row.name==='Action Surge');
@@ -36,3 +36,6 @@ assert.equal(P.overviewFeatures(data,[entry])[0].showDescription,true);
 assert.deepEqual(P.normalizeOverview(P.normalizeOverview(data.adobe.overviewFeatures)),P.normalizeOverview(data.adobe.overviewFeatures));
 assert.deepEqual(P.normalizeOverview({'<script>':{enabled:true},'2014:test':null}),{});
 console.log('SUCCESS Overview feature preferences: level, class, subclass, edition and normalization');
+
+for(let level=1;level<=20;level++){const rows=P.unlocked('artificer',level,'','2014');assert.ok(rows.every(row=>row.level<=level));assert.equal(rows.some(row=>row.name==='Tool Expertise'),level>=6);assert.equal(rows.some(row=>row.name==='Flash of Genius'),level>=7);assert.equal(rows.some(row=>row.name==='Soul of Artifice'),level>=20);}
+assert.deepEqual(P.classFeatures('artificer','2024'),P.classFeatures('artificer','2014'),'compatible core edition uses the explicitly labelled legacy source');

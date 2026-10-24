@@ -134,7 +134,32 @@ var CharacterClassProgression=(()=>{
     feature('Epic Boon',19,'Gain an Epic Boon feat or another feat you qualify for.'),
     feature('Signature Spells',20,'Choose two level 3 Wizard spells as signature spells with special preparation and free-cast benefits.')
   ];
+  // Legacy Artificer facts in original wording; this is not a revised Artificer source.
+  const artificerLegacy=[
+    feature('Magical Tinkering',1,'Create small ongoing effects on nonmagical objects. Your Intelligence modifier sets the number you can maintain, with a minimum of one.'),
+    feature('Spellcasting',1,'Prepare Artificer spells using Intelligence. Tools act as your focus; your Artificer level determines the class spell progression.'),
+    feature('Infuse Item',2,'Learn infusions and assign them to eligible nonmagical objects. Known and active infusion limits increase with Artificer level.'),
+    feature('Artificer Specialist',3,'Choose a specialist; it grants further features at Artificer levels 5, 9 and 15.'),
+    feature('The Right Tool for the Job',3,"Use tinker’s tools and an hour of work to create a temporary set of artisan’s tools."),
+    feature('Ability Score Improvement',4,'Choose an ability score improvement or an eligible feat.'),
+    feature('Artificer Specialist feature',5,"Gain your specialist’s level 5 feature."),
+    feature('Tool Expertise',6,'Double your proficiency contribution to checks using tools you are proficient with. Choose the check ability in Abilities & Skills.'),
+    feature('Flash of Genius',7,'Use a reaction to add your Intelligence modifier to one eligible check or save. Uses depend on Intelligence and recover on a Long Rest.'),
+    feature('Ability Score Improvement',8,'Choose an ability score improvement or an eligible feat.'),
+    feature('Artificer Specialist feature',9,"Gain your specialist’s level 9 feature."),
+    feature('Magic Item Adept',10,'Attune to up to four items. Common and uncommon magic-item crafting uses less time and gold under the class rules.'),
+    feature('Spell-Storing Item',11,'Store an eligible level 1 or 2 Artificer spell in an object. Intelligence determines its number of activations.'),
+    feature('Ability Score Improvement',12,'Choose an ability score improvement or an eligible feat.'),
+    feature('Magic Item Savant',14,'Attune to up to five items. The feature also relaxes specified item-use and attunement prerequisites.'),
+    feature('Artificer Specialist feature',15,"Gain your specialist’s level 15 feature."),
+    feature('Ability Score Improvement',16,'Choose an ability score improvement or an eligible feat.'),
+    feature('Magic Item Master',18,'Attune to up to six magic items.'),
+    feature('Ability Score Improvement',19,'Choose an ability score improvement or an eligible feat.'),
+    feature('Soul of Artifice',20,"Attuned magic items improve your saving throws. You can end an infusion to avoid being reduced to 0 HP under the feature’s conditions.")
+  ].map(row=>({...row,sourceBook:'TCE',sourceEdition:'2014'}));
+  legacyClasses.artificer={name:'Artificer',subclassTitle:'Artificer Specialist',features:artificerLegacy.map(row=>[row.name,row.level])};
   const detailedClasses={
+    artificer:{'2014':artificerLegacy,'2024':artificerLegacy},
     fighter:{'2014':fighter2014,'2024':fighter2024},
     warlock:{'2014':warlock2014,'2024':warlock2024},
     wizard:{'2014':wizard2014,'2024':wizard2024}
