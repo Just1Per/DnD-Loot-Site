@@ -58,7 +58,7 @@ var CharacterClassFeatureChoices=(()=>{
     option('Voice of the Chain Master',{requiresGroup:'pact-boon',requiresChoice:'pact-of-the-chain'}),
     option('Whispers of the Grave',{minLevel:9}),
     option('Witch Sight',{minLevel:15})
-  ].map(row=>({...row,source:'PHB 2014',referenceComplete:true,automationComplete:false}));
+  ].map(row=>({...row,source:'PHB 2014',referenceComplete:true,automationComplete:['devil-s-sight','witch-sight','eyes-of-the-rune-keeper','beguiling-influence'].includes(row.id)}));
 
   const inv2024=[
     option('Agonizing Blast',{minLevel:2,manualPrereq:'eligible damaging Warlock cantrip',repeatable:true}),
@@ -89,7 +89,7 @@ var CharacterClassFeatureChoices=(()=>{
     option('Visions of Distant Realms',{minLevel:9}),
     option('Whispers of the Grave',{minLevel:7}),
     option('Witch Sight',{minLevel:15})
-  ].map(row=>({...row,source:'SRD 5.2.1',referenceComplete:true,automationComplete:false}));
+  ].map(row=>({...row,source:'SRD 5.2.1',referenceComplete:true,automationComplete:['devil-s-sight','witch-sight','eldritch-mind'].includes(row.id)}));
 
   const subclassDefinitions={
     '2014':{
@@ -195,6 +195,23 @@ var CharacterClassFeatureChoices=(()=>{
   function resetClassResources(data,event){
     if(event!=='long')return;const choices=normalize(data.adobe?.classFeatureChoices);if(!choices[flashKey])return;
     data.adobe.classFeatureChoices={...choices,[flashKey]:['0']};
+  }
+  function invocationEffects(data,{level=1}={}){
+    level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],local={...data,adobe:{...stored,classFeatureChoices:normalize(stored.classFeatureChoices)}};
+    const result={skills:[],senses:[],reports:[],truesight:0,concentrationAdvantage:false};let remaining=level;const seen=new Set();
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId!=='warlock'||!actual||seen.has(entry.classId))continue;seen.add(entry.classId);
+      const invocation=status(local,{...entry,level:actual},edition).find(group=>group.id==='eldritch-invocations');
+      for(const id of invocation?.valid||[]){
+        const name=invocation.options.find(option=>option.id===id).name;let detail='';
+        if(id==='devil-s-sight'){detail='Normal sight through '+(edition==='2024'?'dim light and ':'')+'darkness, including magical darkness · 120 ft';result.senses.push({id,name,range:120,magicalDarkness:true,dimLight:edition==='2024',detail});}
+        if(id==='witch-sight'){if(edition==='2024'){result.truesight=30;detail='Truesight · 30 ft';}else detail='See true forms of creatures affected by shapechanging, illusion or transmutation · 30 ft · requires line of sight';result.senses.push({id,name,range:30,truesight:edition==='2024',detail});}
+        if(id==='beguiling-influence'&&edition==='2014'){result.skills.push('deception','persuasion');detail='Proficiency in Deception and Persuasion; adds proficiency once.';}
+        if(id==='eyes-of-the-rune-keeper'&&edition==='2014')detail='Read all writing. Spoken language proficiencies are separate.';
+        if(id==='eldritch-mind'&&edition==='2024'){result.concentrationAdvantage=true;detail='Advantage on Constitution saving throws to maintain Concentration.';}
+        if(detail)result.reports.push({id,name,detail,edition,warlockLevel:actual});
+      }
+    }
+    return result;
   }
   function styles(data,level){return fightingStyleState(data,{level}).rows.map(row=>row.option);}
   function fightingStyleReason(data,entry,id){
@@ -365,6 +382,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

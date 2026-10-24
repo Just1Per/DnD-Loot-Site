@@ -3438,9 +3438,13 @@
           "name": "Eldritch Invocations",
           "level": 2,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Valid passive base invocations update senses, skill proficiency, reading and concentration advantage. Casting, weapon/cantrip selections and expanded source options still need structured review.",
+          "evidence": [
+            "tests/warlock-invocation-effects.cjs",
+            "tests/warlock-invocation-effects-browser.cjs",
+            "tests/character-class-feature-choices.cjs"
+          ]
         },
         {
           "id": "2014:warlock:3:pact-boon",
@@ -7364,9 +7368,13 @@
           "name": "Eldritch Invocations",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Valid passive base invocations update senses, skill proficiency, reading and concentration advantage. Casting, weapon/cantrip selections and expanded source options still need structured review.",
+          "evidence": [
+            "tests/warlock-invocation-effects.cjs",
+            "tests/warlock-invocation-effects-browser.cjs",
+            "tests/character-class-feature-choices.cjs"
+          ]
         },
         {
           "id": "2024:warlock:1:pact-magic",
