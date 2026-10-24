@@ -108,53 +108,53 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Bardic Inspiration **[unreviewed]**<br>Spellcasting **[partial]** |
+| 1 | Bardic Inspiration **[implemented]**<br>Spellcasting **[partial]** |
 | 2 | Jack of All Trades **[partial]**<br>Song of Rest **[unreviewed]** |
 | 3 | Bard College **[unreviewed]**<br>Expertise **[implemented]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Bardic Inspiration **[unreviewed]**<br>Font of Inspiration **[unreviewed]** |
+| 5 | Bardic Inspiration **[implemented]**<br>Font of Inspiration **[implemented]** |
 | 6 | Countercharm **[unreviewed]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | Song of Rest **[unreviewed]** |
-| 10 | Bardic Inspiration **[unreviewed]**<br>Expertise **[implemented]**<br>Magical Secrets **[unreviewed]** |
+| 10 | Bardic Inspiration **[implemented]**<br>Expertise **[implemented]**<br>Magical Secrets **[unreviewed]** |
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | Song of Rest **[unreviewed]** |
 | 14 | Magical Secrets **[unreviewed]** |
-| 15 | Bardic Inspiration **[unreviewed]** |
+| 15 | Bardic Inspiration **[implemented]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | Song of Rest **[unreviewed]** |
 | 18 | Magical Secrets **[unreviewed]** |
 | 19 | Ability Score Improvement **[partial]** |
-| 20 | Superior Inspiration **[unreviewed]** |
+| 20 | Superior Inspiration **[implemented]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Bardic Inspiration · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Bardic Inspiration · 1 | Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table. | [tests/bard-inspiration-resources.cjs](../tests/bard-inspiration-resources.cjs), [tests/bard-inspiration-resources-browser.cjs](../tests/bard-inspiration-resources-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Jack of All Trades · 2 | Automatic half proficiency for untrained skills and initiative, with rounded nonstacking totals. Other untrained ability/tool checks still need general check controls. | [tests/bard-jack-of-all-trades.cjs](../tests/bard-jack-of-all-trades.cjs), [tests/bard-jack-of-all-trades-browser.cjs](../tests/bard-jack-of-all-trades-browser.cjs) |
 | Song of Rest · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Bard College · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Expertise · 3 | Proficient skill choices at the source's class levels, nonstacking contribution and persistence. | [tests/character-class-expertise.cjs](../tests/character-class-expertise.cjs), [tests/class-expertise-browser.cjs](../tests/class-expertise-browser.cjs) |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Bardic Inspiration · 5 | Source-rule comparison and structured fields still need review. | Pending |
-| Font of Inspiration · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Bardic Inspiration · 5 | Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table. | [tests/bard-inspiration-resources.cjs](../tests/bard-inspiration-resources.cjs), [tests/bard-inspiration-resources-browser.cjs](../tests/bard-inspiration-resources-browser.cjs) |
+| Font of Inspiration · 5 | Short Rest recovery from actual Bard 5. Long Rest also restores uses. | [tests/bard-inspiration-resources.cjs](../tests/bard-inspiration-resources.cjs), [tests/bard-inspiration-resources-browser.cjs](../tests/bard-inspiration-resources-browser.cjs) |
 | Countercharm · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Song of Rest · 9 | Source-rule comparison and structured fields still need review. | Pending |
-| Bardic Inspiration · 10 | Source-rule comparison and structured fields still need review. | Pending |
+| Bardic Inspiration · 10 | Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table. | [tests/bard-inspiration-resources.cjs](../tests/bard-inspiration-resources.cjs), [tests/bard-inspiration-resources-browser.cjs](../tests/bard-inspiration-resources-browser.cjs) |
 | Expertise · 10 | Proficient skill choices at the source's class levels, nonstacking contribution and persistence. | [tests/character-class-expertise.cjs](../tests/character-class-expertise.cjs), [tests/class-expertise-browser.cjs](../tests/class-expertise-browser.cjs) |
 | Magical Secrets · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Song of Rest · 13 | Source-rule comparison and structured fields still need review. | Pending |
 | Magical Secrets · 14 | Source-rule comparison and structured fields still need review. | Pending |
-| Bardic Inspiration · 15 | Source-rule comparison and structured fields still need review. | Pending |
+| Bardic Inspiration · 15 | Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table. | [tests/bard-inspiration-resources.cjs](../tests/bard-inspiration-resources.cjs), [tests/bard-inspiration-resources-browser.cjs](../tests/bard-inspiration-resources-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Song of Rest · 17 | Source-rule comparison and structured fields still need review. | Pending |
 | Magical Secrets · 18 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Superior Inspiration · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Superior Inspiration · 20 | Initiative recovery from actual Bard 20, one use only when empty with current derived Charisma, without resetting other class pools. | [tests/bard-inspiration-resources.cjs](../tests/bard-inspiration-resources.cjs), [tests/bard-inspiration-resources-browser.cjs](../tests/bard-inspiration-resources-browser.cjs) |
 
 ## Cleric · 2014
 
@@ -700,11 +700,11 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Bardic Inspiration **[unreviewed]**<br>Spellcasting **[partial]** |
+| 1 | Bardic Inspiration **[implemented]**<br>Spellcasting **[partial]** |
 | 2 | Expertise **[implemented]**<br>Jack of All Trades **[implemented]** |
 | 3 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Font of Inspiration **[unreviewed]** |
+| 5 | Font of Inspiration **[implemented]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | Countercharm **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
@@ -717,24 +717,24 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 18 | Superior Inspiration **[unreviewed]** |
+| 18 | Superior Inspiration **[implemented]** |
 | 19 | Epic Boon **[unreviewed]** |
 | 20 | Words of Creation **[unreviewed]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Bardic Inspiration · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Bardic Inspiration · 1 | Actual Bard-level die, current Charisma minimum-one use limit, finite Give/Undo, source-specific duration/trigger reminders, save/reopen and print. The recipient rolls the die at the table. | [tests/bard-inspiration-resources.cjs](../tests/bard-inspiration-resources.cjs), [tests/bard-inspiration-resources-browser.cjs](../tests/bard-inspiration-resources-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Expertise · 2 | Proficient skill choices at the revised class levels, nonstacking contribution and persistence. | [tests/character-class-expertise.cjs](../tests/character-class-expertise.cjs), [tests/class-expertise-browser.cjs](../tests/class-expertise-browser.cjs) |
 | Jack of All Trades · 2 | Automatic half proficiency on untrained skills, without initiative/saving throw bonuses; includes print and Wild Shape checks. | [tests/bard-jack-of-all-trades.cjs](../tests/bard-jack-of-all-trades.cjs), [tests/bard-jack-of-all-trades-browser.cjs](../tests/bard-jack-of-all-trades-browser.cjs) |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Font of Inspiration · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Font of Inspiration · 5 | Short Rest recovery from actual Bard 5. Available ordinary or Pact spell slot converts into one use, with shared spell-slot spending and save/reopen. | [tests/bard-inspiration-resources.cjs](../tests/bard-inspiration-resources.cjs), [tests/bard-inspiration-resources-browser.cjs](../tests/bard-inspiration-resources-browser.cjs) |
 | Countercharm · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Magical Secrets · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Superior Inspiration · 18 | Source-rule comparison and structured fields still need review. | Pending |
+| Superior Inspiration · 18 | Initiative recovery from actual Bard 18 to two uses with current derived Charisma, without resetting other class pools. | [tests/bard-inspiration-resources.cjs](../tests/bard-inspiration-resources.cjs), [tests/bard-inspiration-resources-browser.cjs](../tests/bard-inspiration-resources-browser.cjs) |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
 | Words of Creation · 20 | Source-rule comparison and structured fields still need review. | Pending |
 

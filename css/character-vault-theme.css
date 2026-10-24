@@ -2565,3 +2565,10 @@
   #characterSheetDialog .sheet-class-resource-actions button { flex: 1 1 90px; }
   #characterSheetDialog .sheet-class-resource-actions [data-save-reroll] { flex-basis: 100%; }
 }
+
+#characterSheetDialog .sheet-bard-slot-recovery .sheet-field { flex: 1 1 200px; min-width: 0; }
+#characterSheetDialog .sheet-bard-slot-recovery select { width: 100%; min-width: 0; }
+@media (max-width: 600px) {
+  #characterSheetDialog #sheetFeatResources :is([data-bard-slot],[data-bard-slot-recover]),
+  #characterSheetPage #characterSheetDialog #sheetFeatResources :is([data-bard-slot],[data-bard-slot-recover]) { min-height: 44px !important; }
+}
