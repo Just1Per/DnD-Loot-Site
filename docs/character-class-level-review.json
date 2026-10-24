@@ -2030,9 +2030,12 @@
           "name": "Diamond Soul",
           "level": 14,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Automatic proficiency in all saving throws from actual Monk 14, including a separate death-save proficiency contribution. Reroll cost is explained, but shared Ki/Focus spending and reroll controls remain pending.",
+          "evidence": [
+            "tests/class-saving-throw-training.cjs",
+            "tests/class-saving-throw-training-browser.cjs"
+          ]
         },
         {
           "id": "2014:monk:15:timeless-body",
@@ -3005,9 +3008,12 @@
           "name": "Slippery Mind",
           "level": 15,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Saving throw proficiency from actual Rogue level 15: Wisdom in 2014, Wisdom and Charisma in 2024. Automatic, nonstacking, preserved manual adjustments; source reminders and print.",
+          "evidence": [
+            "tests/class-saving-throw-training.cjs",
+            "tests/class-saving-throw-training-browser.cjs"
+          ]
         },
         {
           "id": "2014:rogue:16:ability-score-improvement",
@@ -5916,9 +5922,12 @@
           "name": "Disciplined Survivor",
           "level": 14,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Automatic proficiency in all saving throws from actual Monk 14, including a separate death-save proficiency contribution. Reroll cost is explained, but shared Ki/Focus spending and reroll controls remain pending.",
+          "evidence": [
+            "tests/class-saving-throw-training.cjs",
+            "tests/class-saving-throw-training-browser.cjs"
+          ]
         },
         {
           "id": "2024:monk:15:perfect-focus",
@@ -6935,9 +6944,12 @@
           "name": "Slippery Mind",
           "level": 15,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Saving throw proficiency from actual Rogue level 15: Wisdom in 2014, Wisdom and Charisma in 2024. Automatic, nonstacking, preserved manual adjustments; source reminders and print.",
+          "evidence": [
+            "tests/class-saving-throw-training.cjs",
+            "tests/class-saving-throw-training-browser.cjs"
+          ]
         },
         {
           "id": "2024:rogue:16:ability-score-improvement",

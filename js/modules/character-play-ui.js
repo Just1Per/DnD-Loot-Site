@@ -36,6 +36,7 @@ function setupCharacterPlayUI(){
  const gear=document.createElement('section');gear.id='sheetGearPicker';gear.className='sheet-editor-box';document.getElementById('sheetInventory').before(gear);renderSheetGearPicker();
 }
 function updateCharacterPlayUI(d){
+ const saveTraining=document.getElementById('sheetClassSaveTraining');if(saveTraining)saveTraining.innerHTML=(d.saveTraining?.reports||[]).map(row=>'<p data-class-save-training="'+row.id+'"><strong>'+sheetEscape(row.name)+':</strong> '+sheetEscape(row.detail)+'</p>').join('')+(d.saveTraining?.deathSaveProficiency?'<p>Death saving throws: proficiency contribution <strong>+'+d.deathSaveBonus+'</strong>.</p>':'');
  updateStorySuggestions();
  const s=sheetSession,help=document.getElementById('sheetAlignmentHelp');if(help)help.textContent=CharacterPlayRules.alignments[s.data.alignment]||'';
  const host=document.getElementById('sheetSpellReadout');if(!host)return;
