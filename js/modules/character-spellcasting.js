@@ -100,7 +100,8 @@ var CharacterSpellcasting=(()=>{
 
   function profiles(data,targetLevel,scores={}){
     const edition=data?.build?.edition==='2024'?'2024':'2014';
-    return classEntries(data,targetLevel).map(entry=>({...profile(entry.classId,entry.level,edition,scores),subclassId:entry.subclassId||''})).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
+    const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null),extra=choices?.orders(data,{level:targetLevel}).cantrips||{};
+    return classEntries(data,targetLevel).map(entry=>{const p=profile(entry.classId,entry.level,edition,scores);return p?{...p,cantrips:p.cantrips+(extra[entry.classId]||0),subclassId:entry.subclassId||''}:null;}).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
   }
 
   // Always-prepared grants are separate from the player's preparation allowance.

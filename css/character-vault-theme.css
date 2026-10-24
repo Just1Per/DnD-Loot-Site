@@ -2548,3 +2548,8 @@
   #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-open-invocation-feats],
   #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-load-invocation-cantrips] { min-height: 44px !important; }
 }
+
+@media (max-width: 600px) {
+  #characterSheetDialog #sheetAdobeClasses [data-class-feature-choice][data-choice-group$="-order"],
+  #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-class-feature-choice][data-choice-group$="-order"] { min-height: 44px !important; }
+}

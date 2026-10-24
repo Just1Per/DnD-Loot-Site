@@ -236,6 +236,8 @@ var CharacterSheetModel = (() => {
     const assigned=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels;
     if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:ClassChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
+    const classOrders=ClassChoices.orders(d,{level});
+    effects.proficiencies=[...new Set([...effects.proficiencies,...classOrders.proficiencies])];
     const saveTraining=ClassChoices.saveTraining(d,{level});
     effects.saves=[...new Set([...effects.saves,...saveTraining.abilities])];
     const invocationEffects=ClassChoices.invocationEffects(d,{level});
@@ -261,12 +263,14 @@ var CharacterSheetModel = (() => {
       mods[key] = mod(scores[key]);
       saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + d.saves[key].bonus;
     }
+    classOrders.skillBonuses={};for(const report of classOrders.reports){report.bonus=report.skills.length?Math.max(1,mods.wis):0;for(const key of report.skills)classOrders.skillBonuses[key]=(classOrders.skillBonuses[key]||0)+report.bonus;}
     for (const [key, [, ability]] of Object.entries(skills))
-      checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0, classExpertise.skills.includes(key) ? 2 : 0,effects.halfSkillProficiency?.5:0)) + d.skills[key].bonus;
+      checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0, classExpertise.skills.includes(key) ? 2 : 0,effects.halfSkillProficiency?.5:0)) + d.skills[key].bonus + (classOrders.skillBonuses[key]||0);
     const toolTraining=ClassChoices.toolTraining(d,{level,effects,mods,classExpertise});
     const result = {
       effects,
       toolTraining,
+      classOrders,
       saveTraining,
       deathSaveBonus:saveTraining.deathSaveProficiency?pb:0,
       invocationEffects,

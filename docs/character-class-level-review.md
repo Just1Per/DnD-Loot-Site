@@ -742,7 +742,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Divine Order **[unreviewed]**<br>Spellcasting **[partial]** |
+| 1 | Divine Order **[implemented]**<br>Spellcasting **[partial]** |
 | 2 | Channel Divinity **[unreviewed]** |
 | 3 | Cleric Subclasses **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -765,7 +765,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Divine Order · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Divine Order · 1 | Structured Order choice grants its weapon/armor training or extra class cantrip allowance and current Wisdom (minimum +1) to the specified Intelligence skill checks; source-aware readouts, multiclassing, persistence and print. Select cantrips in the existing Spells builder. | [tests/divine-and-primal-orders.cjs](../tests/divine-and-primal-orders.cjs), [tests/divine-and-primal-orders-browser.cjs](../tests/divine-and-primal-orders-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Channel Divinity · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Cleric Subclasses · 3 | Source-rule comparison and structured fields still need review. | Pending |
@@ -784,7 +784,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Druidic **[unreviewed]**<br>Primal Order **[unreviewed]**<br>Spellcasting **[partial]** |
+| 1 | Druidic **[unreviewed]**<br>Primal Order **[implemented]**<br>Spellcasting **[partial]** |
 | 2 | Wild Companion **[unreviewed]**<br>Wild Shape **[unreviewed]** |
 | 3 | Druid Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -808,7 +808,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Druidic · 1 | Source-rule comparison and structured fields still need review. | Pending |
-| Primal Order · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Primal Order · 1 | Structured Order choice grants its weapon/armor training or extra class cantrip allowance and current Wisdom (minimum +1) to the specified Intelligence skill checks; source-aware readouts, multiclassing, persistence and print. Select cantrips in the existing Spells builder. | [tests/divine-and-primal-orders.cjs](../tests/divine-and-primal-orders.cjs), [tests/divine-and-primal-orders-browser.cjs](../tests/divine-and-primal-orders-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Wild Companion · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Wild Shape · 2 | Source-rule comparison and structured fields still need review. | Pending |
