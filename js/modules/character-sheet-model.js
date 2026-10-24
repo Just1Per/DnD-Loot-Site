@@ -236,6 +236,11 @@ var CharacterSheetModel = (() => {
     const assigned=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels;
     if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:ClassChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
+    const invocationEffects=ClassChoices.invocationEffects(d,{level});
+    effects.skills=[...new Set([...effects.skills,...invocationEffects.skills])];
+    effects.specialSenses=[...(effects.specialSenses||[]),...invocationEffects.senses];
+    if(invocationEffects.truesight)effects.truesight=Math.max(effects.truesight||0,invocationEffects.truesight);
+    effects.concentrationAdvantage=!!effects.concentrationAdvantage||invocationEffects.concentrationAdvantage;
     const artisanTool=ClassChoices.artisanTool(d,level);
     if(ClassChoices.artificerLevels(d,level).starting)effects.proficiencies=effects.proficiencies.filter(name=>name!=='Choose one artisan tool');
     if(artisanTool&&!effects.proficiencies.includes(artisanTool))effects.proficiencies.push(artisanTool);
@@ -260,6 +265,7 @@ var CharacterSheetModel = (() => {
     const result = {
       effects,
       toolTraining,
+      invocationEffects,
       classResources:ClassChoices.classResources(d,{level,mods}),
       classExpertise,
       weaponTraining,

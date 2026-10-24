@@ -523,7 +523,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Otherworldly Patron **[unreviewed]**<br>Pact Magic **[unreviewed]** |
-| 2 | Eldritch Invocations **[unreviewed]** |
+| 2 | Eldritch Invocations **[partial]** |
 | 3 | Pact Boon **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -547,7 +547,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | --- | --- | --- |
 | Otherworldly Patron · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Pact Magic · 1 | Source-rule comparison and structured fields still need review. | Pending |
-| Eldritch Invocations · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Eldritch Invocations · 2 | Valid passive base invocations update senses, skill proficiency, reading and concentration advantage. Casting, weapon/cantrip selections and expanded source options still need structured review. | [tests/warlock-invocation-effects.cjs](../tests/warlock-invocation-effects.cjs), [tests/warlock-invocation-effects-browser.cjs](../tests/warlock-invocation-effects-browser.cjs), [tests/character-class-feature-choices.cjs](../tests/character-class-feature-choices.cjs) |
 | Pact Boon · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -1120,7 +1120,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Eldritch Invocations **[unreviewed]**<br>Pact Magic **[unreviewed]** |
+| 1 | Eldritch Invocations **[partial]**<br>Pact Magic **[unreviewed]** |
 | 2 | Magic Cunning **[unreviewed]** |
 | 3 | Warlock Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -1143,7 +1143,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Eldritch Invocations · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Eldritch Invocations · 1 | Valid passive base invocations update senses, skill proficiency, reading and concentration advantage. Casting, weapon/cantrip selections and expanded source options still need structured review. | [tests/warlock-invocation-effects.cjs](../tests/warlock-invocation-effects.cjs), [tests/warlock-invocation-effects-browser.cjs](../tests/warlock-invocation-effects-browser.cjs), [tests/character-class-feature-choices.cjs](../tests/character-class-feature-choices.cjs) |
 | Pact Magic · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Magic Cunning · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Warlock Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
