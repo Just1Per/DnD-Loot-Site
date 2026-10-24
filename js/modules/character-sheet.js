@@ -427,6 +427,7 @@ function updateSheetCalculations() {
   updateCharacterPlayUI(d);
   updateInventoryTotals(d);
   renderInventoryDefense(d);
+  if (typeof renderFeatCombatResources === 'function') renderFeatCombatResources(d);
   if (typeof updateSheetCatalogGrants === 'function') updateSheetCatalogGrants();
   document.querySelectorAll('#characterSheetDialog [data-derived]').forEach(el => {
     const path = el.dataset.derived, value = path.split('.').reduce((v, key) => v?.[key], d);

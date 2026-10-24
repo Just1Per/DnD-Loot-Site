@@ -260,6 +260,7 @@ var CharacterSheetModel = (() => {
     const result = {
       effects,
       toolTraining,
+      classResources:ClassChoices.classResources(d,{level,mods}),
       classExpertise,
       weaponTraining,
       feats,

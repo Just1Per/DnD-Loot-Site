@@ -12,7 +12,7 @@ This tracks the existing Artificer class from the 2014-era rules (Eberron / Tash
 | 3 | The Right Tool for the Job | Needs created-tool choice/state |
 | 4, 8, 12, 16, 19 | ASI / feat choices | Existing shared class-level milestone budget; no automatic feat or ability assignment |
 | 6 | Tool Expertise | Structured tool-check ability fields and automatic double proficiency from Artificer level 6; uses total-character PB and does not stack with Rogue tool Expertise |
-| 7 | Flash of Genius | Needs use tracking and Intelligence-based bonus/limits |
+| 7 | Flash of Genius | Automatic Intelligence-based bonus and finite uses in Combat; Undo, Long Rest recovery, Overview and print, unlocked by actual Artificer level 7 |
 | 10 | Magic Item Adept | **Attunement capacity implemented: 4**; crafting benefits need their own workflow |
 | 11 | Spell-Storing Item | Needs eligible spell and item selection, uses and effect statistics |
 | 14 | Magic Item Savant | **Attunement capacity implemented: 5**; item prerequisite handling still needs review |
@@ -36,3 +36,9 @@ No Firestore or Storage rule changes, production deployment or data migration ar
 Choose the additional artisan tool in Character builder. This is a starting-class proficiency, so adding Artificer as a multiclass grants its fixed Thieves’/Tinker’s tools without an extra artisan choice. Abilities & Skills lists tools you are proficient with. Choose the ability called for by the DM to calculate the check bonus. Artificer class level 6 doubles the proficiency contribution; other class levels only affect the character’s normal PB. Rogue tool Expertise never multiplies the contribution again.
 
 The tool ability choices are saved in the existing class feature choice envelope. Tool replacement, loss of proficiency or class removal makes irrelevant choices inactive while retaining them for recovery. Tool totals appear in the printable Skills section too. Temporary bonuses and the die roll are resolved during play.
+
+## Flash of Genius
+
+Combat shows Flash of Genius automatically at Artificer level 7 without first opening Feats. Its displayed conditional bonus is the current Intelligence modifier; maximum uses are that modifier with a minimum of one. Use reaction spends one use, Undo corrects a click, and only Long Rest recovery refills the pool. The panel's rest buttons recover feature uses without healing HP or changing spell slots. The spell/slot Long Rest workflow also resets this class resource.
+
+The bonus applies to one chosen check/save under the feature's conditions. It is not permanently added to every skill, attack or saving throw. The sheet shows the range/reaction reminder and tracks the resource; roll targets are resolved during play. Uses survive save/reopen, compatible edition changes, Intelligence reductions and class-level changes. Overview and printed Combat show the same count/bonus. Numeric used counts share the existing classFeatureChoices save envelope; no new Firebase schema is needed.
