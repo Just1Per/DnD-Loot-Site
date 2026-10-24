@@ -79,7 +79,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 17 | Brutal Critical **[unreviewed]** |
 | 18 | Indomitable Might **[unreviewed]** |
 | 19 | Ability Score Improvement **[partial]** |
-| 20 | Primal Champion **[unreviewed]** |
+| 20 | Primal Champion **[implemented]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -102,7 +102,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Brutal Critical · 17 | Source-rule comparison and structured fields still need review. | Pending |
 | Indomitable Might · 18 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Primal Champion · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Primal Champion · 20 | Automatic level-20 ability increases in Base mode with source-specific maximum; recalculated modifiers, saves, checks, defenses and applicable HP/DC. Final totals stay unchanged and show a source reference. Actual class-level gating, persistence and print verified. | [tests/class-ability-capstones.cjs](../tests/class-ability-capstones.cjs), [tests/class-ability-capstones-browser.cjs](../tests/class-ability-capstones-browser.cjs) |
 
 ## Bard · 2014
 
@@ -668,7 +668,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 17 | Improved Brutal Strike (Enhanced) **[unreviewed]** |
 | 18 | Indomitable Might **[unreviewed]** |
 | 19 | Epic Boon **[unreviewed]** |
-| 20 | Primal Champion **[unreviewed]** |
+| 20 | Primal Champion **[implemented]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -694,7 +694,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Improved Brutal Strike (Enhanced) · 17 | Source-rule comparison and structured fields still need review. | Pending |
 | Indomitable Might · 18 | Source-rule comparison and structured fields still need review. | Pending |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
-| Primal Champion · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Primal Champion · 20 | Automatic level-20 ability increases in Base mode with source-specific maximum; recalculated modifiers, saves, checks, defenses and applicable HP/DC. Final totals stay unchanged and show a source reference. Actual class-level gating, persistence and print verified. | [tests/class-ability-capstones.cjs](../tests/class-ability-capstones.cjs), [tests/class-ability-capstones-browser.cjs](../tests/class-ability-capstones-browser.cjs) |
 
 ## Bard · 2024
 
@@ -898,7 +898,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 18 | Superior Defense **[unreviewed]** |
 | 19 | Epic Boon **[unreviewed]** |
-| 20 | Body and Mind **[unreviewed]** |
+| 20 | Body and Mind **[implemented]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -926,7 +926,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Superior Defense · 18 | Source-rule comparison and structured fields still need review. | Pending |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
-| Body and Mind · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Body and Mind · 20 | Automatic level-20 ability increases in Base mode with source-specific maximum; recalculated modifiers, saves, checks, defenses and applicable HP/DC. Final totals stay unchanged and show a source reference. Actual class-level gating, persistence and print verified. | [tests/class-ability-capstones.cjs](../tests/class-ability-capstones.cjs), [tests/class-ability-capstones-browser.cjs](../tests/class-ability-capstones-browser.cjs) |
 
 ## Paladin · 2024
 

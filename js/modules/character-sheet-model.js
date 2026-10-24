@@ -254,6 +254,10 @@ var CharacterSheetModel = (() => {
     }
     const originCon = scores.con;
     const feats=Feats.apply(d,level,effects,scores,Object.keys(skills),Rules.tools);
+    const classAbilityFeatures=ClassChoices.abilityFeatures(d,{level}).map(feature=>{
+      const appliedAbilityIncreases={};for(const key of feature.abilities){const increase=d.build.scoreMode==='base'?Math.max(0,Math.min(feature.increase,feature.max-scores[key])):0;appliedAbilityIncreases[key]=increase;scores[key]+=increase;}
+      return{...feature,appliedAbilityIncreases,automatic:d.build.scoreMode==='base'};
+    });
     const classExpertise=ClassChoices.expertise(d,{level,effects,feats});
     const weaponTraining=ClassChoices.weaponTraining(d,{level,effects,feats});
     effects.proficiencies=[...new Set([...effects.proficiencies,...weaponTraining.proficiencies])];
@@ -270,6 +274,7 @@ var CharacterSheetModel = (() => {
     const result = {
       effects,
       toolTraining,
+      classAbilityFeatures,
       classOrders,
       saveTraining,
       deathSaveBonus:saveTraining.deathSaveProficiency?pb:0,

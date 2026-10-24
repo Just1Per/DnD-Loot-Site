@@ -39,6 +39,7 @@ var CharacterAdobeEngine=(()=>{
    });
    // Constitution changes are already counted by calculateHP, not added again.
    hp.constitutionSources=[
+    ...(r.classAbilityFeatures||[]).filter(feature=>feature.appliedAbilityIncreases?.con).map(feature=>({kind:'class',name:feature.name,before:null,after:null})),
     ...(r.feats?.reports||[]).filter(f=>f.appliedAbilityIncreases?.con)
      .map(f=>({kind:'feat',name:f.def.name,before:null,after:null})),
     ...(r.magicItems?.reports||[]).flatMap(item=>(item.abilityChanges||[])
