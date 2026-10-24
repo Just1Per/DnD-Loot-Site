@@ -270,6 +270,7 @@ var CharacterSheetModel = (() => {
       saveTraining,
       deathSaveBonus:saveTraining.deathSaveProficiency?pb:0,
       invocationEffects,
+      cantripInvocations:ClassChoices.cantripInvocations(d,{level,mods}),
       classResources:ClassChoices.classResources(d,{level,mods}),
       classExpertise,
       weaponTraining,
