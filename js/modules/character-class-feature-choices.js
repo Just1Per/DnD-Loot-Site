@@ -204,6 +204,14 @@ var CharacterClassFeatureChoices=(()=>{
     data.adobe||={};data.adobe.classFeatureChoices={...normalize(data.adobe.classFeatureChoices),[tool.key]:[ability]};return true;
   }
   const flashKey=groupKey('2014','artificer','flash-of-genius-uses');
+  function abilityFeatures(data,{level=1}={}){
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],reports=[],seen=new Set();let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(!actual||seen.has(entry.classId))continue;seen.add(entry.classId);
+      if(actual===20&&entry.classId==='barbarian')reports.push({id:'primal-champion',name:'Primal Champion',classId:'barbarian',edition,abilities:['str','con'],increase:4,max:edition==='2024'?25:24});
+      if(actual===20&&entry.classId==='monk'&&edition==='2024')reports.push({id:'body-and-mind',name:'Body and Mind',classId:'monk',edition,abilities:['dex','wis'],increase:4,max:25});
+    }
+    return reports;
+  }
   function monkLevels(data,level=1){
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
     for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='monk'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
@@ -469,6 +477,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

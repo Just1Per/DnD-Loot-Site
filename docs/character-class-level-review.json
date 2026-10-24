@@ -539,9 +539,12 @@
           "name": "Primal Champion",
           "level": 20,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Automatic level-20 ability increases in Base mode with source-specific maximum; recalculated modifiers, saves, checks, defenses and applicable HP/DC. Final totals stay unchanged and show a source reference. Actual class-level gating, persistence and print verified.",
+          "evidence": [
+            "tests/class-ability-capstones.cjs",
+            "tests/class-ability-capstones-browser.cjs"
+          ]
         }
       ],
       "levels": [
@@ -4451,9 +4454,12 @@
           "name": "Primal Champion",
           "level": 20,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Automatic level-20 ability increases in Base mode with source-specific maximum; recalculated modifiers, saves, checks, defenses and applicable HP/DC. Final totals stay unchanged and show a source reference. Actual class-level gating, persistence and print verified.",
+          "evidence": [
+            "tests/class-ability-capstones.cjs",
+            "tests/class-ability-capstones-browser.cjs"
+          ]
         }
       ],
       "levels": [
@@ -5991,9 +5997,12 @@
           "name": "Body and Mind",
           "level": 20,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Automatic level-20 ability increases in Base mode with source-specific maximum; recalculated modifiers, saves, checks, defenses and applicable HP/DC. Final totals stay unchanged and show a source reference. Actual class-level gating, persistence and print verified.",
+          "evidence": [
+            "tests/class-ability-capstones.cjs",
+            "tests/class-ability-capstones-browser.cjs"
+          ]
         }
       ],
       "levels": [
