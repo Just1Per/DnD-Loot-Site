@@ -200,7 +200,16 @@ function bindSkillOrbs() {
   s.dirty=true;updateSheetCalculations();sheetStatus('Unsaved skill training change');
  });
 }
+function renderToolTraining(d){
+ let host=document.getElementById('sheetToolTraining'),anchor=document.getElementById('sheetClassExpertise')?.parentElement;
+ if(!host&&anchor){host=document.createElement('section');host.id='sheetToolTraining';host.className='sheet-editor-box';anchor.after(host);}if(!host)return;
+ const focusId=document.activeElement?.dataset.toolAbility,training=d.toolTraining||{tools:[]};host.hidden=!training.tools.length;if(host.hidden){host.innerHTML='';return;}
+ host.innerHTML='<h4>Artificer tool checks</h4><p class="sheet-help">Choose the ability the DM calls for. Your proficiency contribution is automatic; Tool Expertise doubles it once from Artificer level 6. This does not roll a die or add bonuses from temporary effects.</p><div class="sheet-grid">'+training.tools.map(tool=>'<label class="sheet-field"><span>'+sheetEscape(tool.name)+(tool.expertise?' · Expertise':'')+'</span><select data-tool-ability="'+tool.id+'"><option value="">Choose check ability</option>'+Object.entries(CharacterSheetModel.abilities).map(([id,name])=>'<option value="'+id+'" '+(id===tool.ability?'selected':'')+'>'+name+'</option>').join('')+'</select><small>Proficiency '+CharacterSheetModel.signed(tool.bonus)+'</small><output data-tool-total="'+tool.id+'">'+(tool.total===null?'Choose ability':'Check bonus '+CharacterSheetModel.signed(tool.total))+'</output></label>').join('')+'</div>';
+ host.querySelectorAll('[data-tool-ability]').forEach(select=>select.onchange=()=>{readSheetForm();const context={level:sheetSession.identity.level,effects:d.effects,mods:d.mods,classExpertise:d.classExpertise};if(!CharacterClassFeatureChoices.setToolAbility(sheetSession.data,select.dataset.toolAbility,select.value,context))return sheetStatus('This tool is no longer proficient for this character.',true);sheetSession.dirty=true;updateSheetCalculations();sheetStatus('Tool check updated. Save the sheet to keep it.');});
+ if(focusId)[...host.querySelectorAll('[data-tool-ability]')].find(control=>control.dataset.toolAbility===focusId)?.focus({preventScroll:true});
+}
 function renderClassExpertise(d){
+ renderToolTraining(d);
  const host=document.getElementById('sheetClassExpertise'),s=sheetSession;if(!host||!s)return;
  const result=d.classExpertise||{reports:[],tools:[],reminders:[]},focus=document.activeElement?.closest('[data-class-expertise]'),focusKey=focus?.dataset.classExpertise,focusSlot=focus?.dataset.expertiseSlot;
  const label=option=>option.skill?CharacterSheetModel.skills[option.skill]?.[0]||option.skill:option.tool;

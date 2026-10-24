@@ -4,14 +4,14 @@ This tracks the existing Artificer class from the 2014-era rules (Eberron / Tash
 
 | Artificer level | Main-class feature or milestone | State / next structured work |
 | --- | --- | --- |
-| 1 | Starting proficiencies | Fixed training exists; one artisan-tool choice still needs a structured selector |
+| 1 | Starting proficiencies | Fixed training plus a structured starting artisan-tool selector; multiclass Artificer receives only its fixed tool proficiencies |
 | 1 | Magical Tinkering | Needs object/effect choices and Intelligence-based capacity |
 | 1 | Spellcasting | Spell access/preparation exists; verify every level and multiclass spell progression in the wider audit |
 | 2 | Infuse Item | Needs known infusion choices, prerequisites and active assignments to owned items |
 | 3 | Artificer Specialist | Subclass source/progression and features need individual review |
 | 3 | The Right Tool for the Job | Needs created-tool choice/state |
 | 4, 8, 12, 16, 19 | ASI / feat choices | Existing shared class-level milestone budget; no automatic feat or ability assignment |
-| 6 | Tool Expertise | Existing reminder only; needs tool check fields and automatic double proficiency |
+| 6 | Tool Expertise | Structured tool-check ability fields and automatic double proficiency from Artificer level 6; uses total-character PB and does not stack with Rogue tool Expertise |
 | 7 | Flash of Genius | Needs use tracking and Intelligence-based bonus/limits |
 | 10 | Magic Item Adept | **Attunement capacity implemented: 4**; crafting benefits need their own workflow |
 | 11 | Spell-Storing Item | Needs eligible spell and item selection, uses and effect statistics |
@@ -30,3 +30,9 @@ The regression visits every supported class at levels 1–20 for this specific r
 A lower limit keeps the saved selection and deactivates excess effects; the player can end an old attunement and choose another item. No production records are rewritten.
 
 No Firestore or Storage rule changes, production deployment or data migration are required.
+
+## Tool choices and checks
+
+Choose the additional artisan tool in Character builder. This is a starting-class proficiency, so adding Artificer as a multiclass grants its fixed Thieves’/Tinker’s tools without an extra artisan choice. Abilities & Skills lists tools you are proficient with. Choose the ability called for by the DM to calculate the check bonus. Artificer class level 6 doubles the proficiency contribution; other class levels only affect the character’s normal PB. Rogue tool Expertise never multiplies the contribution again.
+
+The tool ability choices are saved in the existing class feature choice envelope. Tool replacement, loss of proficiency or class removal makes irrelevant choices inactive while retaining them for recovery. Tool totals appear in the printable Skills section too. Temporary bonuses and the die roll are resolved during play.

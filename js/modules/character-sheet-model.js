@@ -236,6 +236,9 @@ var CharacterSheetModel = (() => {
     const assigned=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels;
     if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:ClassChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
+    const artisanTool=ClassChoices.artisanTool(d,level);
+    if(ClassChoices.artificerLevels(d,level).starting)effects.proficiencies=effects.proficiencies.filter(name=>name!=='Choose one artisan tool');
+    if(artisanTool&&!effects.proficiencies.includes(artisanTool))effects.proficiencies.push(artisanTool);
     const scores = {};
     for (const key of Object.keys(abilities)) {
       scores[key] = Math.min(30, d.abilities[key] + (d.build.scoreMode === 'base' ? Math.min(effects.asi[key] || 0, Math.max(0, 20 - d.abilities[key])) : 0));
@@ -253,8 +256,10 @@ var CharacterSheetModel = (() => {
     }
     for (const [key, [, ability]] of Object.entries(skills))
       checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0, classExpertise.skills.includes(key) ? 2 : 0,effects.halfSkillProficiency?.5:0)) + d.skills[key].bonus;
+    const toolTraining=ClassChoices.toolTraining(d,{level,effects,mods,classExpertise});
     const result = {
       effects,
+      toolTraining,
       classExpertise,
       weaponTraining,
       feats,
