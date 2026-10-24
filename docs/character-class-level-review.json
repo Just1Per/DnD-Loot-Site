@@ -4848,9 +4848,12 @@
           "name": "Divine Order",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Structured Order choice grants its weapon/armor training or extra class cantrip allowance and current Wisdom (minimum +1) to the specified Intelligence skill checks; source-aware readouts, multiclassing, persistence and print. Select cantrips in the existing Spells builder.",
+          "evidence": [
+            "tests/divine-and-primal-orders.cjs",
+            "tests/divine-and-primal-orders-browser.cjs"
+          ]
         },
         {
           "id": "2024:cleric:1:spellcasting",
@@ -5115,9 +5118,12 @@
           "name": "Primal Order",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Structured Order choice grants its weapon/armor training or extra class cantrip allowance and current Wisdom (minimum +1) to the specified Intelligence skill checks; source-aware readouts, multiclassing, persistence and print. Select cantrips in the existing Spells builder.",
+          "evidence": [
+            "tests/divine-and-primal-orders.cjs",
+            "tests/divine-and-primal-orders-browser.cjs"
+          ]
         },
         {
           "id": "2024:druid:1:spellcasting",

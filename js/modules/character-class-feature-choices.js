@@ -123,6 +123,27 @@ var CharacterClassFeatureChoices=(()=>{
     }
   };
 
+  definitions['2024'].cleric=[{id:'divine-order',name:'Divine Order',minLevel:1,count:()=>1,referenceComplete:true,options:()=>[
+    option('Protector',{source:'SRD 5.2.1',referenceComplete:true,automationComplete:true,detail:'Martial weapon proficiency and Heavy armor training.'}),
+    option('Thaumaturge',{source:'SRD 5.2.1',referenceComplete:true,automationComplete:true,detail:'One extra Cleric cantrip. Add Wisdom (minimum +1) to Intelligence (Arcana and Religion) checks.'})
+  ]}];
+  definitions['2024'].druid=[{id:'primal-order',name:'Primal Order',minLevel:1,count:()=>1,referenceComplete:true,options:()=>[
+    option('Magician',{source:'SRD 5.2.1',referenceComplete:true,automationComplete:true,detail:'One extra Druid cantrip. Add Wisdom (minimum +1) to Intelligence (Arcana and Nature) checks.'}),
+    option('Warden',{source:'SRD 5.2.1',referenceComplete:true,automationComplete:true,detail:'Martial weapon proficiency and Medium armor training.'})
+  ]}];
+  function orders(data,{level=1}={}){
+    const result={reports:[],proficiencies:[],cantrips:{}};if(data.build?.edition!=='2024')return result;
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],choices=normalize(stored.classFeatureChoices),seen=new Set();let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(!actual||seen.has(entry.classId))continue;seen.add(entry.classId);
+      const classId=entry.classId,id=classId==='cleric'?'divine-order':classId==='druid'?'primal-order':'';if(!id)continue;
+      const key=groupKey('2024',classId,id),def=definitions['2024'][classId][0],selected=choices[key]?.[0],choice=def.options().find(row=>row.id===selected);if(!choice)continue;
+      const magical=selected==='thaumaturge'||selected==='magician',skills=magical?['arcana',classId==='cleric'?'religion':'nature']:[];
+      if(magical)result.cantrips[classId]=1;else result.proficiencies.push('Martial weapons',classId==='cleric'?'Heavy armor':'Medium armor');
+      result.reports.push({id,key,classId,name:def.name,choice:choice.name,detail:choice.detail,skills});
+    }
+    result.proficiencies=[...new Set(result.proficiencies)];return result;
+  }
+
   for(const edition of ['2014','2024'])for(const classId of ['paladin','ranger']){
     const names=classId==='paladin'?['Defense','Dueling','Great Weapon Fighting','Protection']:['Archery','Defense','Dueling','Two-Weapon Fighting'];
     definitions[edition][classId]=[{id:'fighting-style',name:'Fighting Style',minLevel:2,count:()=>1,options:()=>edition==='2024'?fighter2024():fighter2014.filter(o=>names.includes(o.name)),referenceComplete:true}];
@@ -440,6 +461,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;
