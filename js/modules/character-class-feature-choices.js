@@ -158,6 +158,30 @@ var CharacterClassFeatureChoices=(()=>{
     for(const id of legacy){const slot=slots.find(group=>!legacyGroups[group.key]&&!(choices[group.key]||[]).some(Boolean)&&group.options.some(option=>option.featId===id));if(slot)legacyGroups[slot.key]=id;}
     return{total,rows,legacy,aliases,legacyGroups,remaining:Math.max(0,total-used),excess:Math.max(0,used-total)};
   }
+  const artisanTools=['Alchemist’s supplies','Brewer’s supplies','Calligrapher’s supplies','Carpenter’s tools','Cartographer’s tools','Cobbler’s tools','Cook’s utensils','Glassblower’s tools','Jeweler’s tools','Leatherworker’s tools','Mason’s tools','Painter’s supplies','Potter’s tools','Smith’s tools','Weaver’s tools','Woodcarver’s tools'];
+  for(const edition of ['2014','2024'])definitions[edition].artificer=[{id:'artisan-tool',name:'Artificer artisan tool',sourceLabel:'Legacy Artificer · Tasha’s',minLevel:1,count:()=>1,startingOnly:true,options:()=>artisanTools.map(name=>option(name,{proficiency:name,source:'TCE',edition:'2014',referenceComplete:true,automationComplete:true})),referenceComplete:true}];
+  function artificerLevels(data,level=1){
+    const stored=data?.adobe||data?.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data?.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Number(level)||1)),actual=0;const seen=new Set();
+    for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='artificer'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}
+    return{level:actual,starting:entries[0]?.classId==='artificer'};
+  }
+  function artisanTool(data,level){
+    const actual=artificerLevels(data,level);if(!actual.starting||!actual.level)return '';
+    const edition=data.build?.edition||'2014',key=groupKey(edition,'artificer','artisan-tool'),id=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)[key]?.[0];
+    return artisanTools.find(name=>safe(name)===id)||'';
+  }
+  function toolTraining(data,{level=1,effects={},mods={},classExpertise={}}={}){
+    level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
+    const actual=artificerLevels(data,level);if(!actual.level)return{level:0,tools:[]};
+    const rules=typeof CharacterRules!=='undefined'?CharacterRules:require('./character-rules'),choices=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices),proficiencies=[...(effects.proficiencies||[]),...String(data.proficiencies||'').split(/[,;\n]+/)];
+    const pb=Math.ceil(level/4)+1,expertise=actual.level>=6;
+    const tools=rules.tools.filter(name=>proficiencies.some(value=>safe(value)===safe(name))).map(name=>{const id=safe(name),key=groupKey(data.build?.edition||'2014','artificer','tool-check-'+id),raw=choices[key]?.[0],ability=['str','dex','con','int','wis','cha'].includes(raw)?raw:'',trainedExpertise=expertise||(classExpertise.tools||[]).some(tool=>safe(tool.name)===id),bonus=pb*(trainedExpertise?2:1);return{id,key,name,ability,bonus,expertise:trainedExpertise,total:ability?Number(mods[ability]||0)+bonus:null};});
+    return{level:actual.level,tools};
+  }
+  function setToolAbility(data,id,ability,context){
+    const tool=toolTraining(data,context).tools.find(tool=>tool.id===id);if(!tool||ability&&!['str','dex','con','int','wis','cha'].includes(ability))return false;
+    data.adobe||={};data.adobe.classFeatureChoices={...normalize(data.adobe.classFeatureChoices),[tool.key]:[ability]};return true;
+  }
   function styles(data,level){return fightingStyleState(data,{level}).rows.map(row=>row.option);}
   function fightingStyleReason(data,entry,id){
     if(!id)return '';
@@ -177,11 +201,11 @@ var CharacterClassFeatureChoices=(()=>{
     }
     return out;
   }
-  function groups(entry,edition='2014'){
+  function groups(entry,edition='2014',data){
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));
     const rows=[...base,...sub];
-    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel).map(g=>({...g,key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0))||0)),options:g.options(entry,edition)}));
+    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel&&(!g.startingOnly||!data||artificerLevels(data,20).starting)).map(g=>({...g,key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0))||0)),options:g.options(entry,edition)}));
   }
   function registerSubclass(edition,classId,subclassId,definition){
     edition=edition==='2024'?'2024':'2014';const key=safe(classId)+':'+safe(subclassId);
@@ -203,7 +227,7 @@ var CharacterClassFeatureChoices=(()=>{
     return{eligible:!reasons.some(r=>!r.endsWith('(verify)')),reasons,manual:reasons.some(r=>r.endsWith('(verify)'))};
   }
   function status(data,entry,edition='2014'){
-    return groups(entry,edition).map(group=>{
+    return groups(entry,edition,data).map(group=>{
       const picked=selections(data,group).slice(0,group.allowed);
       const seen=new Set(),valid=picked.filter(id=>{const opt=group.options.find(o=>o.id===id);if(!opt||seen.has(id)&&!opt.repeatable||!prerequisite(opt,group,data,entry).eligible)return false;seen.add(id);return true;});
       if(group.id==='fighting-style'){const active=fightingStyleState(data).rows.filter(row=>row.key===group.key).map(row=>row.option.id);for(let i=valid.length-1;i>=0;i--)if(!active.includes(valid[i]))valid.splice(i,1);}
@@ -218,7 +242,7 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=(data?.adobe?.classLevels||[]).find(e=>e.classId===entry?.classId);
     if(!stored)return false;
     entry=stored;
-    const group=groups(entry,data?.build?.edition||'2014').find(g=>g.id===groupId);
+    const group=groups(entry,data?.build?.edition||'2014',data).find(g=>g.id===groupId);
     if(!group||!Number.isInteger(index)||index<0||index>=group.allowed)return false;
     data.adobe||={};data.adobe.classFeatureChoices=normalize(data.adobe.classFeatureChoices);
     const current=[...selections(data,group)],id=safe(value),option=group.options.find(o=>o.id===id);
@@ -244,7 +268,7 @@ var CharacterClassFeatureChoices=(()=>{
     for(const entry of entries){
       const classId=entry.classId,l=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=l;
       if(!l||seenClasses.has(classId))continue;seenClasses.add(classId);
-      if(edition==='2014'&&classId==='artificer'&&l>=6)reminders.push('Artificer Tool Expertise: proficient tool checks use double proficiency ('+(2*(Math.ceil(level/4)+1))+') plus the appropriate ability modifier. Tool rolls are resolved manually.');
+      if(edition==='2014'&&classId==='artificer'&&l>=6)reminders.push('Artificer Tool Expertise: proficient tool checks use double proficiency ('+(2*(Math.ceil(level/4)+1))+') plus the appropriate ability modifier. Choose the check ability in Artificer tool checks to calculate the complete bonus.');
       if(edition==='2014'&&classId==='ranger')reminders.push('If your campaign uses the optional Deft Explorer / Canny feature, mark its chosen skill with the Expertise circle below. The optional feature is not assumed.');
       if(edition==='2014'&&classId==='cleric'&&entry.subclassId?.includes('knowledge'))reminders.push('Knowledge Domain: Blessings of Knowledge grants expertise in two of Arcana, History, Nature and Religion. Mark those skills with the Expertise circles below.');
       if(classId==='rogue'&&entry.subclassId==='scout'&&l>=3)reminders.push('Scout Survivalist: mark Nature and Survival with the Expertise circles below, in addition to your separate Rogue Expertise choices.');
@@ -327,6 +351,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;
