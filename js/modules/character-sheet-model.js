@@ -219,6 +219,11 @@ var CharacterSheetModel = (() => {
     }));
     return result;
   }
+  const pointBuyPresets=Object.freeze([
+    {id:'focused',name:'Three strong scores',scores:[15,15,15,8,8,8],description:'Three strong abilities and three weaknesses.'},
+    {id:'standard',name:'Standard array',scores:[15,14,13,12,10,8],description:'The classic spread, also legal with Point Buy.'},
+    {id:'balanced',name:'Balanced spread',scores:[14,14,14,10,10,10],description:'Three strong abilities with no negative base modifiers.'}
+  ].map(row=>Object.freeze({...row,scores:Object.freeze(row.scores)})));
   function pointBuy(abilities={}) {
     const costs={8:0,9:1,10:2,11:3,12:4,13:5,14:7,15:9};
     const rows=Object.keys(CharacterSheetModel.abilities).map(key=>({key,score:Number(abilities[key]),cost:costs[abilities[key]]??null}));
@@ -295,6 +300,7 @@ var CharacterSheetModel = (() => {
     mod,
     proficiency,
     pointBuy,
+    pointBuyPresets,
     signed,
     damage,
     heal

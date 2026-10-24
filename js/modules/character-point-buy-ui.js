@@ -67,6 +67,26 @@
     sheetStatus('Point buy reset to six base scores of 8 — 27 points available.');
   }
 
+  function setScores(scores,message) {
+    if(!pointBuyEnabled())return;
+    for(const [index,key] of abilityKeys.entries()){const input=inputFor(key);if(input)input.value=String(scores[index]);}
+    readSheetForm();sheetSession.dirty=true;updateSheetCalculations();sheetStatus(message+' Save the sheet to keep changes.');
+  }
+
+  function presetControls(host) {
+    const old=host.querySelector('[data-point-buy-presets]'),selected=old?.querySelector('[data-point-buy-preset]')?.value||'standard';
+    const from=old?.querySelector('[data-point-buy-swap-from]')?.value||'str',to=old?.querySelector('[data-point-buy-swap-to]')?.value||'int';old?.remove();
+    const panel=document.createElement('section');panel.className='sheet-point-buy-presets';panel.dataset.pointBuyPresets='true';
+    const abilityOptions=abilityKeys.map(key=>'<option value="'+key+'">'+CharacterSheetModel.abilities[key]+'</option>').join('');
+    panel.innerHTML='<h4>Start with a 27-point spread</h4><p class="sheet-help">Choose a spread, then apply it to replace the six base scores. Values start in STR, DEX, CON, INT, WIS, CHA order; swap them to suit your character. Bonuses stay separate.</p><div class="sheet-point-buy-actions"><label><span>Starting spread</span><select data-point-buy-preset aria-label="Point Buy starting spread">'+CharacterSheetModel.pointBuyPresets.map(row=>'<option value="'+row.id+'">'+row.name+' — '+row.scores.join(', ')+'</option>').join('')+'</select></label><button type="button" data-point-buy-apply>Apply spread</button></div><p class="sheet-help" data-point-buy-preview></p><div class="sheet-point-buy-actions"><label><span>Swap score from</span><select data-point-buy-swap-from>'+abilityOptions+'</select></label><label><span>With</span><select data-point-buy-swap-to>'+abilityOptions+'</select></label><button type="button" data-point-buy-swap>Swap scores</button></div>';
+    const picker=panel.querySelector('[data-point-buy-preset]');picker.value=selected;
+    const preview=()=>{const row=CharacterSheetModel.pointBuyPresets.find(row=>row.id===picker.value);panel.querySelector('[data-point-buy-preview]').textContent=row.description+' Costs 27 of 27 points before bonuses.';};picker.onchange=event=>{event.stopPropagation();preview();};preview();
+    panel.querySelector('[data-point-buy-apply]').onclick=()=>{const row=CharacterSheetModel.pointBuyPresets.find(row=>row.id===picker.value);if(row)setScores(row.scores,row.name+' applied — 27 of 27 points used.');};
+    const swapFrom=panel.querySelector('[data-point-buy-swap-from]'),swapTo=panel.querySelector('[data-point-buy-swap-to]');swapFrom.value=from;swapTo.value=to;swapFrom.onchange=swapTo.onchange=event=>event.stopPropagation();
+    panel.querySelector('[data-point-buy-swap]').onclick=()=>{if(swapFrom.value===swapTo.value)return sheetStatus('Choose two different abilities to swap.',true);const scores=abilityKeys.map(key=>Number(inputFor(key)?.value)),a=abilityKeys.indexOf(swapFrom.value),b=abilityKeys.indexOf(swapTo.value);[scores[a],scores[b]]=[scores[b],scores[a]];setScores(scores,'Base scores swapped; Point Buy cost is unchanged.');};
+    host.appendChild(panel);
+  }
+
   function enhanceSummary() {
     const root = form();
     const host = document.getElementById('sheetPointBuySummary');
@@ -77,7 +97,8 @@
 
     host.querySelector('[data-point-buy-core-rules]')?.remove();
     host.querySelector('[data-point-buy-reset]')?.remove();
-    if (!enabled) return;
+    if (!enabled) {host.querySelector('[data-point-buy-presets]')?.remove();return;}
+    presetControls(host);
 
     const rules = document.createElement('p');
     rules.className = 'sheet-help';
