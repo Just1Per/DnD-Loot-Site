@@ -2553,3 +2553,15 @@
   #characterSheetDialog #sheetAdobeClasses [data-class-feature-choice][data-choice-group$="-order"],
   #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-class-feature-choice][data-choice-group$="-order"] { min-height: 44px !important; }
 }
+
+@media (max-width: 600px) {
+  #characterSheetDialog #sheetFeatResources [data-class-resource],
+  #characterSheetPage #characterSheetDialog #sheetFeatResources [data-class-resource] { min-height: 44px !important; }
+}
+
+#characterSheetDialog .sheet-class-resource small { font-size: 12px; line-height: 1.45; }
+#characterSheetDialog .sheet-class-resource-actions { display: flex; flex-wrap: wrap; gap: 8px; flex: 0 0 100%; }
+@media (max-width: 600px) {
+  #characterSheetDialog .sheet-class-resource-actions button { flex: 1 1 90px; }
+  #characterSheetDialog .sheet-class-resource-actions [data-save-reroll] { flex-basis: 100%; }
+}

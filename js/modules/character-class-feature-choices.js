@@ -204,18 +204,26 @@ var CharacterClassFeatureChoices=(()=>{
     data.adobe||={};data.adobe.classFeatureChoices={...normalize(data.adobe.classFeatureChoices),[tool.key]:[ability]};return true;
   }
   const flashKey=groupKey('2014','artificer','flash-of-genius-uses');
+  function monkLevels(data,level=1){
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
+    for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='monk'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
+  }
   function classResources(data,{level=1,mods={}}={}){
-    const actual=artificerLevels(data,level);if(actual.level<7)return[];
-    const raw=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)[flashKey]?.[0],used=/^\d{1,3}$/.test(raw||'')?Number(raw):0,bonus=Math.max(-5,Math.min(10,Math.trunc(Number(mods.int)||0))),max=Math.max(1,bonus);
-    return[{id:'artificer-flash-of-genius',key:flashKey,name:'Flash of Genius',source:'Legacy Artificer · Tasha’s',level:actual.level,bonus,max,used,remaining:Math.max(0,max-used),resets:['long'],description:'Reaction · 30 ft · Add your Intelligence modifier to one ability check or saving throw made by you or a creature you can see. Resolve the chosen roll at the table.'}];
+    const choices=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices),spent=key=>{const raw=choices[key]?.[0];return /^\d{1,3}$/.test(raw||'')?Number(raw):0;},rows=[];
+    const actual=artificerLevels(data,level);
+    if(actual.level>=7){const used=spent(flashKey),bonus=Math.max(-5,Math.min(10,Math.trunc(Number(mods.int)||0))),max=Math.max(1,bonus);rows.push({id:'artificer-flash-of-genius',key:flashKey,name:'Flash of Genius',source:'Legacy Artificer · Tasha’s',className:'Artificer',level:actual.level,bonus,max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',useLabel:'Use reaction',undoLabel:'Undo use',description:'Reaction · 30 ft · Add your Intelligence modifier to one ability check or saving throw made by you or a creature you can see. Resolve the chosen roll at the table.'});}
+    const monk=monkLevels(data,level),edition=data.build?.edition==='2024'?'2024':'2014';
+    if(monk>=2){const name=edition==='2024'?'Focus Points':'Ki Points',key=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),used=spent(key),dc=8+(Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1)+Number(mods.wis||0);rows.push({id:'monk-points',key,name,source:edition+' Monk',className:'Monk',level:monk,max:monk,used,remaining:Math.max(0,monk-used),resets:['short','long'],recovery:'Short or Long Rest recovery',unit:'points',useLabel:'Spend 1 point',undoLabel:'Undo 1 point',dc,reroll:monk>=14,description:'Shared pool for Monk features; spend each feature’s point cost from this one pool. '+(edition==='2014'?'Rest recovery requires at least 30 minutes of meditation during the rest. ':'')+'Monk feature save DC '+dc+'.'+(monk>=14?' Failed save: spend 1 point to reroll; use the new roll.':'')});}
+    return rows;
   }
   function changeClassResource(data,id,delta,context){
     if(![1,-1].includes(delta))return false;const resource=classResources(data,context).find(row=>row.id===id);if(!resource||delta===1&&!resource.remaining||delta===-1&&!resource.used)return false;
-    data.adobe||={};data.adobe.classFeatureChoices={...normalize(data.adobe.classFeatureChoices),[resource.key]:[String(Math.max(0,resource.used+delta))]};return true;
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.max(0,resource.used+delta))]}};return true;
   }
   function resetClassResources(data,event){
-    if(event!=='long')return;const choices=normalize(data.adobe?.classFeatureChoices);if(!choices[flashKey])return;
-    data.adobe.classFeatureChoices={...choices,[flashKey]:['0']};
+    if(!['short','long'].includes(event))return;const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),edition=data.build?.edition==='2024'?'2024':'2014',monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),entries=stored.classLevels||[],hasMonk=entries.length?monkLevels(data,Math.min(20,entries.reduce((total,entry)=>total+Math.max(0,Number(entry.level)||0),0)))>=2:data.build?.classId==='monk',keys=[];
+    if(event==='long'&&choices[flashKey])keys.push(flashKey);if(hasMonk&&choices[monkKey])keys.push(monkKey);if(!keys.length)return;
+    data.adobe={...stored,classFeatureChoices:{...choices,...Object.fromEntries(keys.map(key=>[key,['0']]))}};
   }
   function saveTraining(data,{level=1}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
@@ -461,6 +469,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

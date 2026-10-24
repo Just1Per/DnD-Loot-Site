@@ -1895,9 +1895,12 @@
           "name": "Ki",
           "level": 2,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review.",
+          "evidence": [
+            "tests/monk-ki-and-focus.cjs",
+            "tests/monk-ki-and-focus-browser.cjs"
+          ]
         },
         {
           "id": "2014:monk:3:deflect-missiles",
@@ -2030,11 +2033,13 @@
           "name": "Diamond Soul",
           "level": 14,
           "source": "SRD 5.1",
-          "state": "partial",
-          "scope": "Automatic proficiency in all saving throws from actual Monk 14, including a separate death-save proficiency contribution. Reroll cost is explained, but shared Ki/Focus spending and reroll controls remain pending.",
+          "state": "implemented",
+          "scope": "Automatic proficiency in all saves at actual Monk 14, separate death-save contribution, and a failed-save reroll button spending one point from the shared Ki/Focus pool. The player rolls the die at the table and keeps the new result.",
           "evidence": [
             "tests/class-saving-throw-training.cjs",
-            "tests/class-saving-throw-training-browser.cjs"
+            "tests/class-saving-throw-training-browser.cjs",
+            "tests/monk-ki-and-focus.cjs",
+            "tests/monk-ki-and-focus-browser.cjs"
           ]
         },
         {
@@ -5768,9 +5773,12 @@
           "name": "Monk's Focus",
           "level": 2,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review.",
+          "evidence": [
+            "tests/monk-ki-and-focus.cjs",
+            "tests/monk-ki-and-focus-browser.cjs"
+          ]
         },
         {
           "id": "2024:monk:2:unarmoed-movement",
@@ -5930,11 +5938,13 @@
           "name": "Disciplined Survivor",
           "level": 14,
           "source": "SRD 5.2.1",
-          "state": "partial",
-          "scope": "Automatic proficiency in all saving throws from actual Monk 14, including a separate death-save proficiency contribution. Reroll cost is explained, but shared Ki/Focus spending and reroll controls remain pending.",
+          "state": "implemented",
+          "scope": "Automatic proficiency in all saves at actual Monk 14, separate death-save contribution, and a failed-save reroll button spending one point from the shared Ki/Focus pool. The player rolls the die at the table and keeps the new result.",
           "evidence": [
             "tests/class-saving-throw-training.cjs",
-            "tests/class-saving-throw-training-browser.cjs"
+            "tests/class-saving-throw-training-browser.cjs",
+            "tests/monk-ki-and-focus.cjs",
+            "tests/monk-ki-and-focus-browser.cjs"
           ]
         },
         {

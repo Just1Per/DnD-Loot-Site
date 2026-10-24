@@ -6,7 +6,7 @@ The engine adds proficiency once alongside existing class, feat and manual train
 
 Monk proficiency also applies to death saves. The sheet shows this separate proficiency contribution in Overview, Abilities & Skills and printed Skills/Combat sections; it does not add an ability modifier to death saves or change their success/failure counters. It is a contribution rather than a claim to calculate every possible death-save bonus.
 
-The class source appears beside the relevant saving throw section. The Monk reminder explains the failed-save reroll and 1 Ki/Focus cost. Shared Ki/Focus spending and a reroll action are still pending, so the audit deliberately marks this whole Monk feature partial. Slippery Mind is complete for both core editions.
+The class source appears beside the relevant saving throw section. The Monk reminder explains the failed-save reroll and 1 Ki/Focus cost. The shared Ki/Focus pool now includes a failed-save reroll button, which spends one point and reminds the player to use the new roll. See [Monk points](monk-ki-and-focus.md). The separate Monk technique and special-recovery audit remains in progress.
 
 Verification covers both classes at every level 1–20 in both editions, multiclass caps and total proficiency, duplicate/manual sources, save-envelope parity, source removal, actual browser totals, save/reopen, print, mobile and accessibility. The general all-class/pair audit includes the new derived values.
 
