@@ -2523,3 +2523,6 @@
 #mainApp .sheet-point-buy-actions select { width: 100%; min-width: 0; }
 #mainApp .sheet-point-buy-actions button { min-height: 44px; flex: 0 1 auto; }
 @media (max-width: 480px) { #mainApp .sheet-point-buy-actions button { width: 100%; } }
+
+/* Keep source/effect notes readable on the class choice cards. */
+#mainApp .sheet-class-choice-card footer span { color: #5f503e; font-size: 11px; }

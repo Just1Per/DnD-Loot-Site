@@ -109,7 +109,7 @@ var SiteHelpData=(()=>{
   'notes & manual adjustments':'Opens extra companion statistics and notes. It stays open while you edit and until you close it; adjustments belong to this creature.',
   'additional skill bonuses':'Adds manual skill adjustments for effects not already included by the engine.',
   'calculated from your choices':'Explains supported traits, training, movement and bonuses from your Builder choices. Add the summary to Overview if you want it handy during play.',
-  'class reference':'Lists the class features unlocked at your selected class levels. Add feature names or descriptions to Overview for quick reference.',
+  'class reference':'Lists the class features unlocked at your selected class levels, including legacy Artificer features. Add feature names or descriptions to Overview for quick reference; use the related sheet sections for choices, checks and tracked resources.',
   'armor class':'Your defense target against attacks. The sheet calculates a valid armor base, Dexterity, shield and supported bonuses from current choices and worn gear.',
   'ac':'Armor Class is the target an attack roll must meet to hit. The character uses supported worn armor, shields and bonuses; a companion uses its own card’s statistics.',
   'initiative':'The modifier for your roll to determine combat order. It includes Dexterity and supported feature or manual bonuses.',
