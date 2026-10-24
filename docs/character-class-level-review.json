@@ -1591,18 +1591,24 @@
           "name": "Second Wind",
           "level": 1,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, healing formula, finite Use/Undo, source-specific Short/Long Rest recovery, save/reopen and print. Healing is resolved at the table; this counter does not change HP.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:fighter:2:action-surge",
           "name": "Action Surge",
           "level": 2,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:fighter:3:martial-archetype",
@@ -1663,9 +1669,12 @@
           "name": "Indomitable",
           "level": 9,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:fighter:11:extra-attack",
@@ -1693,9 +1702,12 @@
           "name": "Indomitable",
           "level": 13,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:fighter:14:ability-score-improvement",
@@ -1726,18 +1738,24 @@
           "name": "Action Surge",
           "level": 17,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:fighter:17:indomitable",
           "name": "Indomitable",
           "level": 17,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:fighter:19:ability-score-improvement",
@@ -5413,9 +5431,12 @@
           "name": "Second Wind",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, healing formula, finite Use/Undo, source-specific Short/Long Rest recovery, save/reopen and print. Healing is resolved at the table; this counter does not change HP.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:1:weapon-mastery",
@@ -5434,18 +5455,24 @@
           "name": "Action Surge",
           "level": 2,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:2:tactical-mind",
           "name": "Tactical Mind",
           "level": 2,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Uses the shared Second Wind pool with a dedicated success-spend button and Undo; the failed-check 1d10 and no-spend-on-failure conditions are explained. Roll the die at the table.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:3:fighter-subclass",
@@ -5482,9 +5509,12 @@
           "name": "Tactical Shift",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "The Second Wind control gains its Bonus Action movement reminder at Fighter 5. Actual movement resolves at the table.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:6:ability-score-improvement",
@@ -5515,9 +5545,12 @@
           "name": "Indomitable",
           "level": 9,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:9:tactical-master",
@@ -5554,9 +5587,12 @@
           "name": "Indomitable",
           "level": 13,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:13:studdied-attacks",
@@ -5596,18 +5632,24 @@
           "name": "Action Surge",
           "level": 17,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:17:indomitable",
           "name": "Indomitable",
           "level": 17,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table.",
+          "evidence": [
+            "tests/fighter-class-resources.cjs",
+            "tests/fighter-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:19:epic-boon",
