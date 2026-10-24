@@ -182,6 +182,20 @@ var CharacterClassFeatureChoices=(()=>{
     const tool=toolTraining(data,context).tools.find(tool=>tool.id===id);if(!tool||ability&&!['str','dex','con','int','wis','cha'].includes(ability))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...normalize(data.adobe.classFeatureChoices),[tool.key]:[ability]};return true;
   }
+  const flashKey=groupKey('2014','artificer','flash-of-genius-uses');
+  function classResources(data,{level=1,mods={}}={}){
+    const actual=artificerLevels(data,level);if(actual.level<7)return[];
+    const raw=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)[flashKey]?.[0],used=/^\d{1,3}$/.test(raw||'')?Number(raw):0,bonus=Math.max(-5,Math.min(10,Math.trunc(Number(mods.int)||0))),max=Math.max(1,bonus);
+    return[{id:'artificer-flash-of-genius',key:flashKey,name:'Flash of Genius',source:'Legacy Artificer · Tasha’s',level:actual.level,bonus,max,used,remaining:Math.max(0,max-used),resets:['long'],description:'Reaction · 30 ft · Add your Intelligence modifier to one ability check or saving throw made by you or a creature you can see. Resolve the chosen roll at the table.'}];
+  }
+  function changeClassResource(data,id,delta,context){
+    if(![1,-1].includes(delta))return false;const resource=classResources(data,context).find(row=>row.id===id);if(!resource||delta===1&&!resource.remaining||delta===-1&&!resource.used)return false;
+    data.adobe||={};data.adobe.classFeatureChoices={...normalize(data.adobe.classFeatureChoices),[resource.key]:[String(Math.max(0,resource.used+delta))]};return true;
+  }
+  function resetClassResources(data,event){
+    if(event!=='long')return;const choices=normalize(data.adobe?.classFeatureChoices);if(!choices[flashKey])return;
+    data.adobe.classFeatureChoices={...choices,[flashKey]:['0']};
+  }
   function styles(data,level){return fightingStyleState(data,{level}).rows.map(row=>row.option);}
   function fightingStyleReason(data,entry,id){
     if(!id)return '';
@@ -351,6 +365,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;
