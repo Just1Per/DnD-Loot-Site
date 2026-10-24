@@ -46,21 +46,21 @@ var CharacterMagicItems=(()=>{
     return priorInfer(item);
   }
 
-  function activeEntries(data,loot=[]){
+  function activeEntries(data,loot=[],level){
     const choices=Array.isArray(data?.equipmentState?.loadout)?data.equipmentState.loadout:[];
     const owned=new Map();
     for(const entry of loot||[]){
       if(!entry||Number(entry.quantity)<=0||!entry.id||owned.has(entry.id))continue;
       owned.set(entry.id,entry);
     }
-    let attuned=0;
+    const attunement=E.attunementState(data,loot,level);
     const result=[];
     for(const choice of choices){
       if(!choice?.id||!choice.equipped)continue;
       const entry=owned.get(choice.id);if(!entry)continue;
       const item=entry.item||{},meta=info(item),needs=requiresAttunement(item);
       let magicActive=!needs;
-      if(needs&&choice.attuned===true){attuned++;magicActive=attuned<=3;}
+      if(needs&&choice.attuned===true){magicActive=attunement.active.has(choice.id);}
       result.push({entry,item,choice,meta,magicActive,needsAttunement:needs});
     }
     return result;
@@ -70,8 +70,8 @@ var CharacterMagicItems=(()=>{
     if(!key||list.some(v=>clean(v)===key))return;
     list.push(value);
   }
-  function apply(data,scores,effects,loot=[]){
-    const active=activeEntries(data,loot),reports=[],warnings=[],seen=new Set();
+  function apply(data,scores,effects,loot=[],level){
+    const active=activeEntries(data,loot,level),reports=[],warnings=[],seen=new Set();
     for(const row of active){
       const rule=row.meta.rule;
       if(!rule||!row.magicActive)continue;
@@ -110,7 +110,7 @@ var CharacterMagicItems=(()=>{
       if(changed.length)reports.push({name:row.item.name,effects:changed,abilityChanges});
     }
     const overAttuned=active.filter(row=>row.needsAttunement&&row.choice.attuned&&!row.magicActive);
-    for(const row of overAttuned)warnings.push(row.item.name+': exceeds three attunement slots; Adobe magic-item effects are inactive.');
+    for(const row of overAttuned)warnings.push(row.item.name+': exceeds '+(E.attunementLimit(data,level)===3?'three':E.attunementLimit(data,level))+' attunement slots; Adobe magic-item effects are inactive.');
     return {active,reports,warnings};
   }
   function augmentGear(data,gear,magic){
