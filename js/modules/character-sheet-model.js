@@ -266,6 +266,7 @@ var CharacterSheetModel = (() => {
       effects,
       toolTraining,
       invocationEffects,
+      cantripInvocations:ClassChoices.cantripInvocations(d,{level,mods}),
       classResources:ClassChoices.classResources(d,{level,mods}),
       classExpertise,
       weaponTraining,

@@ -48,6 +48,7 @@ var CharacterBuildValidation=(()=>{
         else if(!group.complete)add(rows,'Class feature',`${className}: review ${group.name}; one or more selections no longer qualify.`,'builder','warning',`[data-class-feature-choice="${index}"][data-choice-group="${group.id}"]`);
       }
     }
+    if(derived?.cantripInvocations?.catalogReady)for(const report of derived.cantripInvocations.reports||[]){if(report.required&&!report.valid)add(rows,'Invocation cantrips',report.name+': choose an eligible known Warlock cantrip.','builder','warning','[data-invocation-cantrip="'+report.key+'"][data-invocation-slot="'+report.slot+'"]');}
     for(const group of derived?.classExpertise?.reports||[]){
       if(group.missing)add(rows,'Expertise',`${group.className}: choose ${group.missing} more ${group.name} option${group.missing===1?'':'s'}.`,'skills','warning',`[data-class-expertise="${group.key}"]`);
       else if(group.overflow)add(rows,'Expertise',`${group.className}: review saved Expertise choices after changing class levels.`,'skills','warning',`[data-class-expertise="${group.key}"]`);

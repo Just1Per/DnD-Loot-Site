@@ -58,17 +58,17 @@ var CharacterClassFeatureChoices=(()=>{
     option('Voice of the Chain Master',{requiresGroup:'pact-boon',requiresChoice:'pact-of-the-chain'}),
     option('Whispers of the Grave',{minLevel:9}),
     option('Witch Sight',{minLevel:15})
-  ].map(row=>({...row,source:'PHB 2014',referenceComplete:true,automationComplete:['devil-s-sight','witch-sight','eyes-of-the-rune-keeper','beguiling-influence'].includes(row.id)}));
+  ].map(row=>({...row,source:'PHB 2014',referenceComplete:true,automationComplete:['agonizing-blast','eldritch-spear','devil-s-sight','witch-sight','eyes-of-the-rune-keeper','beguiling-influence'].includes(row.id)}));
 
   const inv2024=[
-    option('Agonizing Blast',{minLevel:2,manualPrereq:'eligible damaging Warlock cantrip',repeatable:true}),
+    option('Agonizing Blast',{minLevel:2,repeatable:true}),
     option('Armor of Shadows'),
     option('Ascendant Step',{minLevel:5}),
     option("Devil's Sight",{minLevel:2}),
     option('Devouring Blade',{minLevel:12,requiresInvocation:'thirsting-blade'}),
     option('Eldritch Mind'),
     option('Eldritch Smite',{minLevel:5,requiresInvocation:'pact-of-the-blade'}),
-    option('Eldritch Spear',{minLevel:2,manualPrereq:'eligible damaging Warlock cantrip',repeatable:true}),
+    option('Eldritch Spear',{minLevel:2,repeatable:true}),
     option('Fiendish Vigor',{minLevel:2}),
     option('Gaze of Two Minds',{minLevel:5}),
     option('Gift of the Depths',{minLevel:5}),
@@ -84,12 +84,12 @@ var CharacterClassFeatureChoices=(()=>{
     option('Pact of the Blade'),
     option('Pact of the Chain'),
     option('Pact of the Tome'),
-    option('Repelling Blast',{minLevel:2,manualPrereq:'eligible attack-roll Warlock cantrip',repeatable:true}),
+    option('Repelling Blast',{minLevel:2,repeatable:true}),
     option('Thirsting Blade',{minLevel:5,requiresInvocation:'pact-of-the-blade'}),
     option('Visions of Distant Realms',{minLevel:9}),
     option('Whispers of the Grave',{minLevel:7}),
     option('Witch Sight',{minLevel:15})
-  ].map(row=>({...row,source:'SRD 5.2.1',referenceComplete:true,automationComplete:['devil-s-sight','witch-sight','eldritch-mind'].includes(row.id)}));
+  ].map(row=>({...row,source:'SRD 5.2.1',referenceComplete:true,automationComplete:['agonizing-blast','eldritch-spear','devil-s-sight','witch-sight','eldritch-mind'].includes(row.id)}));
 
   const subclassDefinitions={
     '2014':{
@@ -213,6 +213,46 @@ var CharacterClassFeatureChoices=(()=>{
     }
     return result;
   }
+  const spellIndexCache=new WeakMap(),emptySpellCatalogue=Object.freeze([]);
+  function spellIndex(catalog){
+    if(spellIndexCache.has(catalog))return spellIndexCache.get(catalog);
+    const index={byId:new Map(),byNameEdition:new Map()};for(const spell of catalog){index.byId.set(spell.id,spell);const key=spell.edition+'|'+String(spell.name||'').toLowerCase();if(!index.byNameEdition.has(key))index.byNameEdition.set(key,spell);}spellIndexCache.set(catalog,index);return index;
+  }
+  function spellCatalogue(){return globalThis.CharacterCatalog?.rawData?.spells||(typeof require==='function'?require('../../data/rules/catalog.json').spells:emptySpellCatalogue);}
+  function cantripInvocations(data,{level=1,mods={},catalog}={}){
+    level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));const catalogReady=Array.isArray(catalog)||!!globalThis.CharacterCatalog?.rawData||typeof require==='function';catalog||=spellCatalogue();if(!Array.isArray(catalog))catalog=[];const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],local={...data,adobe:{...stored,classFeatureChoices:normalize(stored.classFeatureChoices)}},choices=local.adobe.classFeatureChoices;
+    let remaining=level,warlock=null;for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='warlock'&&actual){warlock={...entry,level:actual};break;}}
+    const result={reports:[],modifiers:Object.create(null),catalogReady};if(!warlock)return result;
+    const group=status(local,warlock,edition).find(row=>row.id==='eldritch-invocations');if(!group)return result;
+    const casterIds=new Set(entries.filter(entry=>['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard'].includes(entry.classId)||entry.level>=3&&/^(eldritch-knight|arcane-trickster)/.test(entry.subclassId||'')).map(entry=>entry.classId));
+    const index=spellIndex(catalog),known=[],seenSpells=new Map();for(const selected of data.spells||[]){const spell=index.byId.get(selected.catalogId)||index.byNameEdition.get(edition+'|'+String(selected.name||'').toLowerCase().replace(/\s*\[[^\]]+\]\s*$/,''));if(!spell||spell.level!==0)continue;const native=spell.classes||[],warlockSpell=selected.classId==='warlock'||!selected.classId&&native.includes('warlock')&&(native.length===1||casterIds.size===1&&casterIds.has('warlock'));if(seenSpells.has(spell.id)){seenSpells.get(spell.id).warlockSpell||=warlockSpell;continue;}const option={id:safe(spell.id),spellId:spell.id,name:String(spell.name||''),edition:spell.edition,spell,warlockSpell};seenSpells.set(spell.id,option);known.push(option);}
+    const validCounts=new Map();for(const id of group.valid)validCounts.set(id,(validCounts.get(id)||0)+1);const used={};
+    for(const [slot,id] of group.picked.entries()){
+      if(!(validCounts.get(id)>0))continue;validCounts.set(id,validCounts.get(id)-1);if(!['agonizing-blast','eldritch-spear'].includes(id))continue;
+      const name=group.options.find(option=>option.id===id).name,key=groupKey(edition,'warlock',id+'-cantrips'),pool=known.filter(option=>edition==='2014'?option.name==='Eldritch Blast':option.warlockSpell).filter(option=>{const combat=option.spell.combat||{},damaging=!!combat.damage||Object.keys(combat.scaling||{}).length>0||combat.types?.length>0;return damaging&&(id!=='eldritch-spear'||edition==='2014'||/^([0-9]+)\s*(feet|ft)\b/i.test(option.spell.range)&&Number.parseInt(option.spell.range)>=10);});
+      const value=edition==='2014'?(pool[0]?.id||''):(choices[key]?.[slot]||''),selected=pool.find(option=>option.id===value),identity=selected?.name.toLowerCase(),valid=!!selected&&!(used[id]||=[]).includes(identity);if(valid)used[id].push(identity);
+      const bonus=id==='agonizing-blast'?Math.max(-5,Math.min(10,Math.trunc(Number(mods.cha)||0))):0,baseRange=selected?Number.parseInt(selected.spell.range):0,range=id==='eldritch-spear'&&valid?(edition==='2014'?300:baseRange+30*warlock.level):null;
+      const detail=valid?(id==='agonizing-blast'?'Damage bonus '+(bonus>=0?'+':'')+bonus+' on '+selected.name:range+' ft range for '+selected.name):'Choose an eligible known Warlock cantrip';
+      result.reports.push({id,name,key,slot,value,valid,required:edition==='2024',spellId:selected?.spellId||'',spellName:selected?.name||'',bonus,range,detail,options:pool.map(option=>({id:option.id,spellId:option.spellId,name:option.name,edition:option.edition,source:option.spell.source}))});
+      if(valid){const modifier=result.modifiers[selected.spellId]||={sourceClass:edition==='2024'?'warlock':''};if(id==='agonizing-blast'){modifier.damageBonus=bonus;modifier.damageSource=name;}else{modifier.range=range+' feet';modifier.rangeSource=name;}}
+    }
+    // Prevent repeated copies of the same invocation choosing the same named cantrip twice.
+    for(const report of result.reports)for(const option of report.options){const duplicate=result.reports.some(other=>other!==report&&other.id===report.id&&other.valid&&other.spellName.toLowerCase()===option.name.toLowerCase());const permitted=typeof CampaignRules==='undefined'||CampaignRules.allowed(option);option.eligible=!duplicate&&permitted;option.reason=duplicate?'Already chosen for another '+report.name:!permitted?'Outside campaign rules':'';}
+    return result;
+  }
+  function cantripModifier(data,training,spellId,classId=''){
+    const modifier=training?.modifiers?.[spellId];if(!modifier)return null;if(!modifier.sourceClass)return modifier;
+    if(classId)return classId===modifier.sourceClass?modifier:null;
+    if((data.spells||[]).some(row=>row.catalogId===spellId&&row.classId&&row.classId!==modifier.sourceClass))return null;
+    return modifier;
+  }
+  function cantripModifierText(modifier={}){return[modifier.damageSource?modifier.damageSource+' '+(modifier.damageBonus>=0?'+':'')+modifier.damageBonus+' damage':'',modifier.rangeSource?modifier.rangeSource+' '+modifier.range:''].filter(Boolean).join(' · ');}
+  function setCantripInvocation(data,key,slot,value,context){
+    const before=cantripInvocations(data,context),report=before.reports.find(row=>row.key===key&&row.slot===slot&&row.required);if(!report)return false;value=safe(value);if(value&&!report.options.some(option=>option.id===value&&option.eligible))return false;
+    const choices=normalize(data.adobe?.classFeatureChoices),next=[...(choices[key]||[])];while(next.length<=slot)next.push('');next[slot]=value;const candidate={...data,adobe:{...data.adobe,classFeatureChoices:{...choices,[key]:next}}},after=cantripInvocations(candidate,context);if(value&&!after.reports.find(row=>row.key===key&&row.slot===slot)?.valid)return false;
+    if(before.reports.some(row=>row.valid&&!(row.key===key&&row.slot===slot)&&!after.reports.find(other=>other.key===row.key&&other.slot===row.slot)?.valid))return false;
+    data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
+  }
   function styles(data,level){return fightingStyleState(data,{level}).rows.map(row=>row.option);}
   function fightingStyleReason(data,entry,id){
     if(!id)return '';
@@ -243,7 +283,7 @@ var CharacterClassFeatureChoices=(()=>{
     (subclassDefinitions[edition][key]||=[]).push(definition);
   }
   const selections=(data,group)=>(normalize(data?.adobe?.classFeatureChoices)[group.key]||[]).slice(0,group.allowed);
-  function hasSpell(data,name){return (data?.spells||[]).some(s=>String(s.name||'').toLowerCase().replace(/\s*\[[^\]]+\]\s*$/,'')===String(name).toLowerCase());}
+  function hasSpell(data,name){return (data?.spells||[]).some(s=>String(spellIndex(spellCatalogue()).byId.get(s.catalogId)?.name||s.name||'').toLowerCase().replace(/\s*\[[^\]]+\]\s*$/,'')===String(name).toLowerCase());}
   function prerequisite(option,group,data,entry){
     const reasons=[];
     if((option.minLevel||0)>entry.level)reasons.push('Warlock level '+option.minLevel+'+');
@@ -382,6 +422,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

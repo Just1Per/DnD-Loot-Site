@@ -3439,11 +3439,13 @@
           "level": 2,
           "source": "SRD 5.1",
           "state": "partial",
-          "scope": "Valid passive base invocations update senses, skill proficiency, reading and concentration advantage. Casting, weapon/cantrip selections and expanded source options still need structured review.",
+          "scope": "Passive effects and Agonizing Blast/Eldritch Spear have structured fields and source-specific modifiers. Casting invocations, pact weapons/boons and expanded source options still need review.",
           "evidence": [
             "tests/warlock-invocation-effects.cjs",
             "tests/warlock-invocation-effects-browser.cjs",
-            "tests/character-class-feature-choices.cjs"
+            "tests/character-class-feature-choices.cjs",
+            "tests/warlock-cantrip-invocations.cjs",
+            "tests/warlock-cantrip-invocations-browser.cjs"
           ]
         },
         {
@@ -7369,11 +7371,13 @@
           "level": 1,
           "source": "SRD 5.2.1",
           "state": "partial",
-          "scope": "Valid passive base invocations update senses, skill proficiency, reading and concentration advantage. Casting, weapon/cantrip selections and expanded source options still need structured review.",
+          "scope": "Passive effects and Agonizing Blast/Eldritch Spear have structured fields and source-specific modifiers. Casting invocations, pact weapons/boons and expanded source options still need review.",
           "evidence": [
             "tests/warlock-invocation-effects.cjs",
             "tests/warlock-invocation-effects-browser.cjs",
-            "tests/character-class-feature-choices.cjs"
+            "tests/character-class-feature-choices.cjs",
+            "tests/warlock-cantrip-invocations.cjs",
+            "tests/warlock-cantrip-invocations-browser.cjs"
           ]
         },
         {

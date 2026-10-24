@@ -6,6 +6,7 @@ var CharacterActions = (()=>{
  const add=(dice,n)=>dice+(n?' '+(n<0?'−':'+')+' '+Math.abs(n):'');
  function diceAt(scales,level,fallback){const keys=Object.keys(scales||{}).map(Number).filter(k=>k<=level).sort((a,b)=>b-a);return keys.length?scales[keys[0]]:fallback;}
  function increase(base,extra,times){const a=/^(\d+)d(\d+)$/.exec(base),b=/^(\d+)d(\d+)$/.exec(extra||'');return a&&b&&a[2]===b[2]?`${Number(a[1])+Number(b[1])*times}d${a[2]}`:base;}
+ function spellReference(ref){const value=text(ref),match=/^(.*)::([a-z0-9-]{1,60})$/.exec(value);return{spellId:match?match[1]:value,classId:match?match[2]:''};}
  function resolve(raw,data,level,stats,loot=[],spells=[]){
   const a=normalize([raw])[0],row={name:a.name||a.ref||a.kind,hit:'—',damage:'—',range:'—',notes:[],available:true,ability:''};
   const unavailable=reason=>({...row,available:false,notes:[reason]});
@@ -32,9 +33,12 @@ var CharacterActions = (()=>{
    return {...row,name:'Breath weapon',hit:breath.save.toUpperCase()+' DC '+(8+stats.pb+stats.mods.con),damage:`${breath.dice}d${breath.die||6} ${breath.type}`,range:breath.area,ability:'con',notes:[breath.usage||'Action; once per short or long rest.','Successful save: half damage. Track uses separately.']};
   }
   if(a.kind==='spell'){
-   const spell=spells.find(s=>s.id===a.ref);if(!spell)return unavailable('Spell catalogue unavailable.');
-   if(!data.spells.some(s=>s.catalogId===a.ref))return unavailable('This spell is no longer selected in your spellbook.');
-   const ability=a.ability==='auto'?data.spellAbility:a.ability,mod=stats.mods[ability],c=spell.combat||{},slot=spell.level?Math.max(spell.level,a.slot):0;
+   const source=spellReference(a.ref),spell=spells.find(s=>s.id===source.spellId);if(!spell)return unavailable('Spell catalogue unavailable.');
+   const known=data.spells.filter(row=>row.catalogId===source.spellId),selected=source.classId?known.find(row=>row.classId===source.classId):known[0];
+   if(!selected)return unavailable('This spellcasting source is no longer selected in your spellbook.');
+   const classes=[...new Set(known.map(row=>row.classId).filter(Boolean))],ambiguous=!source.classId&&classes.length>1;
+   const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices'),invocation=CFC.cantripModifier(data,stats.cantripInvocations,spell.id,source.classId||(!ambiguous?selected.classId:''));
+   const classAbilities={artificer:'int',bard:'cha',cleric:'wis',druid:'wis',fighter:'int',paladin:'cha',ranger:'wis',rogue:'int',sorcerer:'cha',warlock:'cha',wizard:'int'},owner=source.classId||(!ambiguous?(selected.classId||classes[0]||''):'')||(invocation?.sourceClass||''),ability=a.ability==='auto'?(classAbilities[owner]||data.spellAbility):a.ability,mod=stats.mods[ability],c=spell.combat||{},slot=spell.level?Math.max(spell.level,a.slot):0;
    let damage=spell.level===0?diceAt(c.scaling,level,c.damage||''):c.damage||'';
    if(slot>spell.level&&c.upcast)damage=increase(damage,c.upcast,Math.floor((slot-spell.level)/(c.step||1)));
    let count=1,unit='';
@@ -42,11 +46,14 @@ var CharacterActions = (()=>{
    if(spell.name==='Scorching Ray'){count=3+Math.max(0,slot-2);unit='ray';}
    if(spell.name==='Magic Missile'){count=3+Math.max(0,slot-1);unit='dart';}
    const notes=['Base effect shown. Resolve conditions, riders and resource use from the spell.'];
+   if(ambiguous)notes.push('Known from multiple classes: edit this action and choose its casting class.');
    if(slot>spell.level&&!c.upcast&&!['Scorching Ray','Magic Missile'].includes(spell.name))notes.push('Upcast effects are not automated for this spell.');
    if(!damage)notes.push('Damage or weapon-dependent effect needs manual resolution; see spell information.');
    if(damage&&c.addAbility)damage=add(damage,mod);
+   if(invocation?.damageBonus!==undefined){if(damage)damage=add(damage,invocation.damageBonus);notes.push(invocation.damageSource+': '+sign(invocation.damageBonus)+' to this cantrip’s damage rolls.');}
+   if(invocation?.range)notes.push(invocation.rangeSource+': range '+invocation.range+'.');
    const types=(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');
-   return {...row,name:spell.name+' · '+spell.edition+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(mod+stats.pb+data.spellAttackBonus):spell.save?spell.save+' DC '+(8+stats.pb+mod+data.spellDCBonus):'Effect',damage:damage||'See spell effect',range:spell.range,notes};
+   return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(mod+stats.pb+data.spellAttackBonus):spell.save?spell.save+' DC '+(8+stats.pb+mod+data.spellDCBonus):'Effect',damage:damage||'See spell effect',range:invocation?.range||spell.range,notes};
   }
   const unarmed=a.kind==='unarmed',ability=a.ability==='auto'?(a.mode==='thrown'?'dex':'str'):a.ability;
   const tavern=(stats.effects.originFeats||[]).includes('Tavern Brawler')||stats.feats.reports.some(r=>r.def.name==='Tavern Brawler'&&!r.warnings.length);
@@ -54,6 +61,6 @@ var CharacterActions = (()=>{
   return {...row,name:a.name||(unarmed?'Unarmed strike':'Improvised weapon'),ability,hit:sign(mod+(proficient?stats.pb:0)),damage:unarmed&&!tavern?Math.max(0,1+mod)+' bludgeoning':add('1d4',mod)+(unarmed?' bludgeoning':' (DM chooses type)'),range:a.mode==='thrown'?'20/60 ft':'5 ft',notes:[unarmed?'Basic unarmed strike; class-specific Martial Arts and other overrides remain manual.':'Improvised weapon: no proficiency unless granted. The DM can instead treat it as a standard weapon.']};
  }
  function derive(data,level,stats,loot,spells){return normalize(data.actions).map(a=>resolve(a,data,level,stats,loot,spells));}
- return {normalize,resolve,derive};
+ return {spellReference,normalize,resolve,derive};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterActions;
