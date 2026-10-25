@@ -211,7 +211,7 @@ var CampaignWorkspace = (() => {
     config.toolbar?.(s.host.querySelector('[data-workspace-tools]'),s);
     s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>{button.hidden=!canManageCampaign()||!!config.hideNavigation;button.onclick=()=>switchKind(button.dataset.workspaceKind)});
     s.host.querySelector('[data-new-record]').onclick=newRecord;s.host.querySelector('[data-workspace-search]').oninput=renderList;s.host.querySelector('[data-workspace-archived]').onchange=renderList;s.host.querySelector('[data-workspace-category]').onchange=renderList;
-    try{s.rows=await (config.list?config.list(s.campaignId):store.list(s.campaignId,kind));if(!current(s))return;s.rowsLoaded=true;s.host.querySelector('[data-new-record]').disabled=false;if(token!==generation)return;renderList();if(!s.record)s.host.querySelector('[data-workspace-page]').innerHTML='<p>Select an entry, or create a new one.</p>';}
+    try{s.rows=await (config.list?config.list(s.campaignId):store.list(s.campaignId,kind));if(!current(s))return;s.rowsLoaded=true;s.host.querySelector('[data-new-record]').disabled=false;renderList();if(token===generation&&!s.record)s.host.querySelector('[data-workspace-page]').innerHTML='<p>Select an entry, or create a new one.</p>';}
     catch(error){if(current(s))status(`Could not load: ${error.message}. Publish the updated Firestore rules if permission is denied.`,true);}
   }
   function importCreature(record){
