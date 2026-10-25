@@ -30,6 +30,7 @@ for edition in ('2014','2024'):
         f=x['fields']
         if f.get('feature_type') or f.get('parent') not in owners:continue
         owner=owners[f['parent']];ls=sorted(levels.get(x['pk'],()))
+        if edition=='2024' and owner['id']=='sorcerer' and f['name']=='Metamagic' and ls:ls=sorted(set(ls)|{17})
         if not ls:continue
         group='subclasses' if owner['parent'] else 'classes'
         row=groups[group].setdefault(owner['id'],{'id':owner['id'],'name':owner['name'],'parentId':owners.get(owner['parent'],{}).get('id') if owner['parent'] else None,'hitDie':owner['hitDie'],'savingThrows':owner['savingThrows'],'casterType':owner['casterType'],'features':[]})

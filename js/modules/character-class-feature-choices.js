@@ -123,6 +123,47 @@ var CharacterClassFeatureChoices=(()=>{
     }
   };
 
+  const metamagicOptions=Object.freeze({
+    'careful-spell':['Careful Spell',1,'Choose creatures up to Charisma (minimum one) to succeed on the spell’s save.'],
+    'distant-spell':['Distant Spell',1,'Double a range of at least 5 feet; a Touch spell reaches 30 feet.'],
+    'empowered-spell':['Empowered Spell',1,'Reroll damage dice up to Charisma (minimum one); keep the new rolls. Can combine with another Metamagic.'],
+    'extended-spell':['Extended Spell',1,'Double a duration of at least 1 minute, to a maximum of 24 hours.'],
+    'heightened-spell':['Heightened Spell',3,'One target has disadvantage on its first save against this spell.'],
+    'quickened-spell':['Quickened Spell',2,'Change an Action casting time to a Bonus Action. Other spells this turn must be cantrips with an Action casting time.'],
+    'subtle-spell':['Subtle Spell',1,'Cast without Verbal or Somatic components. Material components still apply.'],
+    'twinned-spell':['Twinned Spell',null,'One eligible single-target spell targets a second creature. Cost equals spell level, minimum one.'],
+    'seeking-spell':['Seeking Spell',2,'Reroll a missed spell attack; keep the new roll. Can combine with another Metamagic.'],
+    'transmuted-spell':['Transmuted Spell',1,'Change Acid, Cold, Fire, Lightning, Poison or Thunder spell damage to another of those types.']
+  });
+  function metamagicChoices(edition){return Object.entries(metamagicOptions).map(([id,[name,cost,detail]])=>{
+    if(edition==='2024'){
+      if(id==='careful-spell')detail+=' Protected creatures take no damage if the successful save would normally halve it.';
+      if(id==='extended-spell')detail+=' Gain advantage on saves to maintain this spell’s Concentration.';
+      if(id==='heightened-spell'){cost=2;detail='One target has disadvantage on saves against this spell.';}
+      if(id==='seeking-spell')cost=1;
+      if(id==='quickened-spell')detail='Change an Action casting time to a Bonus Action. Cannot use this after casting a level 1+ spell this turn, and cannot cast one after using it until the turn ends.';
+      if(id==='subtle-spell')detail='Ignore Verbal, Somatic and Material components, except consumed components or those with a listed cost.';
+      if(id==='twinned-spell'){cost=1;detail='An eligible spell that can target additional creatures at higher slot levels gains one effective spell level. The slot itself is unchanged.';}
+    }
+    return option(name,{id,cost,detail,source:edition==='2024'?'XPHB':['seeking-spell','transmuted-spell'].includes(id)?'TCE':'PHB',edition,referenceComplete:true,automationComplete:false});
+  });}
+  for(const edition of ['2014','2024'])definitions[edition].sorcerer=[{id:'metamagic',name:'Metamagic',minLevel:edition==='2024'?2:3,count:l=>l>=17?(edition==='2024'?6:4):l>=10?(edition==='2024'?4:3):2,options:()=>metamagicChoices(edition),referenceComplete:true}];
+  const restorationSpent=(choices,key)=>!!choices[key]?.[0]&&choices[key][0]!=='0';
+  function sorcererLevels(data,level=1){
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
+    for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='sorcerer'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
+  }
+  function metamagic(data,{level=1,mods={}}={}){
+    const actual=sorcererLevels(data,level),edition=data.build?.edition==='2024'?'2024':'2014',entry={classId:'sorcerer',level:actual},stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},group=status({...data,adobe:stored},entry,edition).find(row=>row.id==='metamagic');
+    return(group?.valid||[]).map(id=>{const row=group.options.find(row=>row.id===id),limit=Number.isFinite(mods.cha)&&['careful-spell','empowered-spell'].includes(id)?Math.max(1,Math.trunc(mods.cha)):null;return{...row,...(limit!==null?{limit,detail:row.detail+' Current limit: '+limit+(id==='careful-spell'?' creatures.':' damage dice.')}: {})};});
+  }
+  function spendMetamagic(data,id,spellLevel,context={}){
+    const choice=metamagic(data,context).find(row=>row.id===id),resource=classResources(data,context).find(row=>row.id==='sorcery-points');if(!choice||!resource)return false;
+    if(choice.cost===null&&(!Number.isInteger(spellLevel)||spellLevel<0||spellLevel>9))return false;
+    const cost=choice.cost===null?Math.max(1,spellLevel):choice.cost;if(resource.remaining<cost)return false;
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.min(resource.used,resource.max)+cost)]}};return true;
+  }
+
   definitions['2024'].cleric=[{id:'divine-order',name:'Divine Order',minLevel:1,count:()=>1,referenceComplete:true,options:()=>[
     option('Protector',{source:'SRD 5.2.1',referenceComplete:true,automationComplete:true,detail:'Martial weapon proficiency and Heavy armor training.'}),
     option('Thaumaturge',{source:'SRD 5.2.1',referenceComplete:true,automationComplete:true,detail:'One extra Cleric cantrip. Add Wisdom (minimum +1) to Intelligence (Arcana and Religion) checks.'})
@@ -229,6 +270,8 @@ var CharacterClassFeatureChoices=(()=>{
     const actual=artificerLevels(data,level);
     if(actual.level>=7){const used=spent(flashKey),bonus=Math.max(-5,Math.min(10,Math.trunc(Number(mods.int)||0))),max=Math.max(1,bonus);rows.push({id:'artificer-flash-of-genius',key:flashKey,name:'Flash of Genius',source:'Legacy Artificer · Tasha’s',className:'Artificer',level:actual.level,bonus,max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',useLabel:'Use reaction',undoLabel:'Undo use',description:'Reaction · 30 ft · Add your Intelligence modifier to one ability check or saving throw made by you or a creature you can see. Resolve the chosen roll at the table.'});}
     const monk=monkLevels(data,level),edition=data.build?.edition==='2024'?'2024':'2014';
+    const sorcerer=sorcererLevels(data,level);if(sorcerer>=2){const key=groupKey(edition,'sorcerer','sorcery-points-spent'),used=spent(key),short=edition==='2024'?sorcerer>=5:sorcerer>=20,restKey=groupKey(edition,'sorcerer','restoration-used'),restUsed=restorationSpent(choices,restKey),chosen=metamagic(data,{level,mods});rows.push({id:'sorcery-points',key,name:'Sorcery Points',source:edition+' Sorcerer',className:'Sorcerer',level:sorcerer,max:sorcerer,used,remaining:Math.max(0,sorcerer-used),resets:short?['short','long']:['long'],recovery:short?(edition==='2024'?'Long Rest: all points · Short Rest: up to '+Math.floor(sorcerer/2)+' once per Long Rest'+(restUsed?' (already used)':''):'Long Rest: all points · Short Rest: regain 4'):'Long Rest recovery',unit:'points',useLabel:'Spend 1 point',undoLabel:'Undo 1 point',metamagic:chosen,description:chosen.length?'Chosen Metamagic: '+chosen.map(row=>row.name+' ('+(row.cost===null?'spell level, minimum 1':row.cost)+' point'+(row.cost===1?'':'s')+')').join('; ')+'. Spell changes apply to this cast.':'Choose Metamagic in Character Builder. Spend this class pool when a Sorcerer feature calls for points.'});}
+
     if(monk>=2){const name=edition==='2024'?'Focus Points':'Ki Points',key=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),used=spent(key),dc=8+(Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1)+Number(mods.wis||0);rows.push({id:'monk-points',key,name,source:edition+' Monk',className:'Monk',level:monk,max:monk,used,remaining:Math.max(0,monk-used),resets:['short','long'],recovery:'Short or Long Rest recovery',unit:'points',useLabel:'Spend 1 point',undoLabel:'Undo 1 point',dc,reroll:monk>=14,description:'Shared pool for Monk features; spend each feature’s point cost from this one pool. '+(edition==='2014'?'Rest recovery requires at least 30 minutes of meditation during the rest. ':'')+'Monk feature save DC '+dc+'.'+(monk>=14?' Failed save: spend 1 point to reroll; use the new roll.':'')});}
     const fighter=fighterLevels(data,level),fighterRow=(id,name,max,resets,description,extra={})=>{const key=groupKey(edition,'fighter',id+'-uses'),used=spent(key);rows.push({id:'fighter-'+id,key,name,source:edition+' Fighter',className:'Fighter',level:fighter,max,used,remaining:Math.max(0,max-used),resets,recovery:resets.includes('short')?'Short or Long Rest recovery':'Long Rest recovery',unit:'uses',useLabel:'Use '+name,undoLabel:'Undo use',description,...extra});};
     if(fighter){
@@ -263,6 +306,9 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),edition=data.build?.edition==='2024'?'2024':'2014',entries=stored.classLevels||[],total=Number(context.level)||(entries.length?Math.min(20,entries.reduce((sum,entry)=>sum+Math.max(0,Number(entry.level)||0),0)):1),rest=event==='short'||event==='long',updates={};
     const monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),hasMonk=entries.length?monkLevels(data,total)>=2:data.build?.classId==='monk';
     if(event==='long'&&choices[flashKey])updates[flashKey]=['0'];if(rest&&hasMonk&&choices[monkKey])updates[monkKey]=['0'];
+    const sorcerer=sorcererLevels(data,total),sorceryKey=groupKey(edition,'sorcerer','sorcery-points-spent'),restorationKey=groupKey(edition,'sorcerer','restoration-used'),sorceryRaw=choices[sorceryKey]?.[0];
+    if(event==='long'&&sorcerer>=2){if(choices[sorceryKey])updates[sorceryKey]=['0'];if(choices[restorationKey])updates[restorationKey]=['0'];}
+    if(event==='short'&&/^\d{1,3}$/.test(sorceryRaw||'')&&Number(sorceryRaw)>0){const amount=Math.min(Number(sorceryRaw),sorcerer);if(edition==='2014'&&sorcerer>=20)updates[sorceryKey]=[String(Math.max(0,amount-4))];if(edition==='2024'&&sorcerer>=5&&!restorationSpent(choices,restorationKey)){updates[sorceryKey]=[String(Math.max(0,amount-Math.floor(sorcerer/2)))];updates[restorationKey]=['1'];}}
     const fighter=fighterLevels(data,total);
     for(const [id,min] of [['second-wind',1],['action-surge',2],['indomitable',9]]){if(!rest||fighter<min||event==='short'&&id==='indomitable')continue;const key=groupKey(edition,'fighter',id+'-uses'),raw=choices[key]?.[0];if(!/^\d{1,3}$/.test(raw||''))continue;updates[key]=[String(event==='short'&&edition==='2024'&&id==='second-wind'?Math.max(0,Math.min(Number(raw),fighter>=10?4:fighter>=4?3:2)-1):0)];}
     const bard=bardLevels(data,total),bardKey=groupKey(edition,'bard','bardic-inspiration-uses'),raw=choices[bardKey]?.[0];
@@ -363,7 +409,7 @@ var CharacterClassFeatureChoices=(()=>{
   function normalize(raw={}){
     const out={};
     if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
-    for(const [key,value] of Object.entries(raw).slice(0,60)){
+    for(const [key,value] of Object.entries(raw).slice(0,100)){
       if(!/^[a-z0-9:-]{1,120}$/i.test(key)||!Array.isArray(value))continue;
       out[key]=value.slice(0,20).map(v=>safe(v));
     }
@@ -519,6 +565,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{sorcererLevels,metamagic,spendMetamagic,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;
