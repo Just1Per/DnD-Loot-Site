@@ -157,6 +157,28 @@ var CharacterClassProgression=(()=>{
     feature('Ability Score Improvement',19,'Choose an ability score improvement or an eligible feat.'),
     feature('Soul of Artifice',20,"Attuned magic items improve your saving throws. You can end an infusion to avoid being reduced to 0 HP under the feature’s conditions.")
   ].map(row=>({...row,sourceBook:'TCE',sourceEdition:'2014'}));
+  // Revised Eberron class facts, kept separate from the legacy Tasha’s chassis.
+  const artificerEfa=[
+    feature('Spellcasting',1,'Use Intelligence and the prepared-spell counts in the revised Artificer table; tools serve as your focus.'),
+    feature("Tinker's Magic",1,'Know Mending in addition to your chosen cantrips. Create temporary mundane gear with a Magic action; uses follow Intelligence, minimum one, and recover on a Long Rest.'),
+    feature('Replicate Magic Item',2,'Choose plans and replicate magic items after a Long Rest. Known-plan and active-item limits follow Artificer levels.'),
+    feature('Artificer Subclass',3,'Choose a subclass for the revised Artificer source.'),
+    feature('Ability Score Improvement',4,'Choose an ability score improvement or an eligible feat.'),
+    feature('Subclass feature',5,'Gain your subclass’s level 5 feature.'),
+    feature('Magic Item Tinker',6,'Use the feature’s charge, drain and transmute options with replicated items; follow their spell-slot and recovery conditions.'),
+    feature('Flash of Genius',7,'After a failed ability check or saving throw within 30 feet, use a Reaction to add Intelligence, minimum +1. Uses follow Intelligence, minimum one.'),
+    feature('Ability Score Improvement',8,'Choose an ability score improvement or an eligible feat.'),
+    feature('Subclass feature',9,'Gain your subclass’s level 9 feature.'),
+    feature('Magic Item Adept',10,'Attune to up to four magic items.'),
+    feature('Spell-Storing Item',11,'Store a qualifying Artificer spell of level 1–3 in an object for others to use under the feature’s conditions.'),
+    feature('Ability Score Improvement',12,'Choose an ability score improvement or an eligible feat.'),
+    feature('Advanced Artifice',14,'Attune to up to five magic items. A Short Rest restores one expended Flash of Genius use.'),
+    feature('Subclass feature',15,'Gain your subclass’s level 15 feature.'),
+    feature('Ability Score Improvement',16,'Choose an ability score improvement or an eligible feat.'),
+    feature('Magic Item Master',18,'Attune to up to six magic items.'),
+    feature('Epic Boon',19,'Choose an Epic Boon or another eligible feat.'),
+    feature('Soul of Artifice',20,'End qualifying replicated items to avoid 0 HP. While attuned to a magic item, a Short Rest restores all Flash of Genius uses.')
+  ].map(row=>({...row,sourceBook:'EFOTA',sourceEdition:'2024'}));
   legacyClasses.artificer={name:'Artificer',subclassTitle:'Artificer Specialist',features:artificerLegacy.map(row=>[row.name,row.level])};
   const detailedClasses={
     artificer:{'2014':artificerLegacy,'2024':artificerLegacy},
@@ -192,13 +214,15 @@ var CharacterClassProgression=(()=>{
     const alias=srdSubclassAliases[subclassId]||subclassId;
     return rows[alias]?.features||null;
   }
-  function classFeatures(classId,edition='2014'){
+  function classFeatures(classId,edition='2014',classSource='tce'){
+    if(classId==='artificer')return classSource==='efa'?(editionOf(edition)==='2024'?artificerEfa:[]):classSource==='tce'?artificerLegacy:[];
     const srd=srdClassFeatures(classId,edition);
     if(Array.isArray(srd)&&srd.length)return srd;
     const detailed=detailedClasses[classId]?.[editionOf(edition)];
     return detailed||((classes[classId]?.features||[]).map(([name,level])=>feature(name,level,'Detailed rules text has not been added to the web catalogue yet.',{incomplete:true})));
   }
-  function subclassFeatures(classId,subclassId,edition='2014'){
+  function subclassFeatures(classId,subclassId,edition='2014',classSource='tce'){
+    if(classId==='artificer'){const row=globalThis.CharacterSubclassData?.find?.(subclassId),owner=row?.edition==='2024'||/-efota$|-rthw$/.test(subclassId)?'efa':'tce';if(owner!==classSource||classSource==='efa'&&editionOf(edition)!=='2024')return[];}
     const detailed=detailedSubclasses[subclassId];
     if(detailed&&detailed.classId===classId&&(!detailed.edition||detailed.edition===editionOf(edition)))return detailed.features;
     const srd=srdSubclassFeatures(subclassId,edition);
@@ -212,27 +236,29 @@ var CharacterClassProgression=(()=>{
     const rows=detailed||subclasses[id]?.features||[];
     return rows.length?Math.min(...rows.map(row=>Array.isArray(row)?row[1]:row.level)):99;
   };
-  function unlocked(classId,level,subclassId='',edition='2014'){
-    const base=classFeatures(classId,edition).filter(row=>row.level<=level).map(row=>({...row,source:'class'}));
-    const sub=subclassFeatures(classId,subclassId,edition).filter(row=>row.level<=level).map(row=>({...row,source:'subclass'}));
+  function unlocked(classId,level,subclassId='',edition='2014',classSource='tce'){
+    const base=classFeatures(classId,edition,classSource).filter(row=>row.level<=level).map(row=>({...row,source:'class'}));
+    const sub=subclassFeatures(classId,subclassId,edition,classSource).filter(row=>row.level<=level).map(row=>({...row,source:'subclass'}));
     return [...base,...sub].sort((a,b)=>a.level-b.level||a.source.localeCompare(b.source)||a.name.localeCompare(b.name));
   }
-  function gainedAt(classId,level,subclassId='',edition='2014'){return unlocked(classId,level,subclassId,edition).filter(row=>row.level===Number(level));}
-  function byLevel(classId,level,subclassId='',edition='2014'){
-    const out={};for(const row of unlocked(classId,level,subclassId,edition))(out[row.level]||=[]).push(row);return out;
+  function gainedAt(classId,level,subclassId='',edition='2014',classSource='tce'){return unlocked(classId,level,subclassId,edition,classSource).filter(row=>row.level===Number(level));}
+  function byLevel(classId,level,subclassId='',edition='2014',classSource='tce'){
+    const out={};for(const row of unlocked(classId,level,subclassId,edition,classSource))(out[row.level]||=[]).push(row);return out;
   }
-  function coverage(classId,subclassId='',edition='2014'){
-    const rows=unlocked(classId,20,subclassId,edition),complete=rows.filter(x=>!x.incomplete).length;
+  function coverage(classId,subclassId='',edition='2014',classSource='tce'){
+    const rows=unlocked(classId,20,subclassId,edition,classSource),complete=rows.filter(x=>!x.incomplete).length;
     return{records:rows.length,complete,incomplete:rows.length-complete,percent:rows.length?Math.round(complete/rows.length*100):0};
   }
   const remote={2014:null,2024:null};
   function installReference(edition,data){remote[editionOf(edition)]=data||null;}
   const localClassFeatures=classFeatures,localSubclassFeatures=subclassFeatures;
-  classFeatures=function(classId,edition='2014'){
+  classFeatures=function(classId,edition='2014',classSource='tce'){
+    if(classId==='artificer')return localClassFeatures(classId,edition,classSource);
     const e=editionOf(edition),rows=remote[e]?.classes?.[classId]?.features;
     return Array.isArray(rows)&&rows.length?rows:localClassFeatures(classId,e);
   };
-  subclassFeatures=function(classId,subclassId,edition='2014'){
+  subclassFeatures=function(classId,subclassId,edition='2014',classSource='tce'){
+    if(classId==='artificer')return localSubclassFeatures(classId,subclassId,edition,classSource);
     const e=editionOf(edition),row=remote[e]?.subclasses?.[subclassId],rows=row?.features;
     return row?.classId===classId&&Array.isArray(rows)&&rows.length?rows:localSubclassFeatures(classId,subclassId,e);
   };
@@ -246,8 +272,9 @@ var CharacterClassProgression=(()=>{
     return out;
   }
   function overviewFeatures(data,entries){
+    const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null),artificerSource=choices?.artificerSource(data).id||'tce';
     const edition=data.build?.edition||'2014',preferences=normalizeOverview(data.adobe?.overviewFeatures),seen=new Set();
-    return (entries||[]).flatMap(entry=>unlocked(entry.classId,entry.level,entry.subclassId,edition).map(row=>({
+    return (entries||[]).flatMap(entry=>unlocked(entry.classId,entry.level,entry.subclassId,edition,entry.classId==='artificer'?artificerSource:undefined).map(row=>({
       ...row,classId:entry.classId,key:overviewKey(entry,row,edition)
     }))).filter(row=>{const pref=preferences[row.key];if(!pref?.enabled||!pref.showName&&!pref.showDescription||seen.has(row.key))return false;seen.add(row.key);return true;}).map(row=>({...row,...preferences[row.key]}));
   }

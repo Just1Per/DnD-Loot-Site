@@ -238,7 +238,10 @@ var CharacterSheetModel = (() => {
     const effects = Rules.evaluate(d, level, Object.keys(skills));
     const classOrders=ClassChoices.orders(d,{level});
     effects.proficiencies=[...new Set([...effects.proficiencies,...classOrders.proficiencies])];
+    const artificerFeatures=ClassChoices.artificerFeatures(d,{level,attunedCount:Equipment.attunementState(d,loot,level).active.size});
+    effects.skills=[...new Set([...effects.skills,...artificerFeatures.skills])];
     const saveTraining=ClassChoices.saveTraining(d,{level});
+    if(artificerFeatures.soulOfArtifice)saveTraining.reports.push({id:'soul-of-artifice',name:'Soul of Artifice',classId:'artificer',abilities:[],detail:'All saving throws, including death saves, gain +'+artificerFeatures.saveBonus+' from '+artificerFeatures.attuned+' attuned magic items.'});
     effects.saves=[...new Set([...effects.saves,...saveTraining.abilities])];
     const invocationEffects=ClassChoices.invocationEffects(d,{level});
     effects.skills=[...new Set([...effects.skills,...invocationEffects.skills])];
@@ -265,7 +268,7 @@ var CharacterSheetModel = (() => {
     if(d.build.scoreMode==='base')effects.hpBonus+=Math.max(1,Math.min(20,Number(level)||1))*(mod(scores.con)-mod(originCon));
     for (const key of Object.keys(abilities)) {
       mods[key] = mod(scores[key]);
-      saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + d.saves[key].bonus;
+      saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + d.saves[key].bonus + artificerFeatures.saveBonus;
     }
     classOrders.skillBonuses={};for(const report of classOrders.reports){report.bonus=report.skills.length?Math.max(1,mods.wis):0;for(const key of report.skills)classOrders.skillBonuses[key]=(classOrders.skillBonuses[key]||0)+report.bonus;}
     for (const [key, [, ability]] of Object.entries(skills))
@@ -274,13 +277,14 @@ var CharacterSheetModel = (() => {
     const result = {
       effects,
       toolTraining,
+      artificerFeatures,
       classAbilityFeatures,
       classOrders,
       saveTraining,
-      deathSaveBonus:saveTraining.deathSaveProficiency?pb:0,
+      deathSaveBonus:(saveTraining.deathSaveProficiency?pb:0)+artificerFeatures.saveBonus,
       invocationEffects,
       cantripInvocations:ClassChoices.cantripInvocations(d,{level,mods}),
-      classResources:ClassChoices.classResources(d,{level,mods}),
+      classResources:ClassChoices.classResources(d,{level,mods,attunedCount:artificerFeatures.attuned}),
       classExpertise,
       weaponTraining,
       feats,

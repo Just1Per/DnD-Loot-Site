@@ -179,6 +179,29 @@ var CharacterClassFeatureChoices=(()=>{
     for(const id of legacy){const slot=slots.find(group=>!legacyGroups[group.key]&&!(choices[group.key]||[]).some(Boolean)&&group.options.some(option=>option.featId===id));if(slot)legacyGroups[slot.key]=id;}
     return{total,rows,legacy,aliases,legacyGroups,remaining:Math.max(0,total-used),excess:Math.max(0,used-total)};
   }
+  const artificerSourceKey=groupKey('2014','artificer','class-source');
+  const artificerVersions=Object.freeze({
+    tce:Object.freeze({id:'tce',name:'Artificer · Tasha’s Cauldron of Everything',label:'Legacy Artificer · Tasha’s',source:'TCE',sourceEdition:'2014'}),
+    efa:Object.freeze({id:'efa',name:'Artificer · Eberron: Forge of the Artificer',label:'Artificer · Eberron: Forge of the Artificer',source:'EFOTA',sourceEdition:'2024'})
+  });
+  const artificerEfaSpellNames=new Set(["acid splash","aid","air bubble","alarm","alter self","animate objects","arcane eye","arcane lock","arcane vigor","bigby's hand","blink","blur","booming blade","catnap","circle of power","continual flame","create food and water","create spelljamming helm","creation","cure wounds","dancing lights","darkvision","detect magic","disguise self","dispel magic","distorted distance","dragon's breath","dueling ground","elemental weapon","elementalism","enhance ability","enlarge/reduce","expeditious retreat","fabricate","faerie fire","false life","feather fall","fire bolt","fly","freedom of movement","glyph of warding","grease","greater restoration","green-flame blade","guidance","haste","heat metal","homunculus servant","identify","intellect fortress","invisibility","jump","kinetic jaunt","leomund's secret chest","lesser restoration","levitate","light","lightning lure","linked glyphs","longstrider","mage hand","magic mouth","magic weapon","message","mordenkainen's faithful hound","mordenkainen's private sanctum","otiluke's resilient sphere","poison spray","prestidigitation","protection from energy","protection from poison","purify food and drink","ray of frost","resistance","revivify","rope trick","sanctuary","see invisibility","shocking grasp","spare the dying","spider climb","spirit lantern","stone shape","stoneskin","summon construct","sword burst","tasha's caustic brew","thorn whip","thunderclap","true strike","uncertain footing","vortex warp","wall of stone","water breathing","water walk","web"].map(safe)),artificerSpellCache=new WeakMap();
+  function artificerSource(data){
+    const stored=data?.adobe||data?.rulesChoices?.grants?.__adobe?.data||{},raw=normalize(stored.classFeatureChoices)[artificerSourceKey]?.[0],id=raw||'tce',source=Object.hasOwn(artificerVersions,id)?artificerVersions[id]:null;
+    return source?{...source,eligible:id==='tce'||data.build?.edition==='2024',implicit:!raw}:{id,name:'Unavailable Artificer version',label:'Unavailable Artificer version',source:'',sourceEdition:'',eligible:false,implicit:false};
+  }
+  function setArtificerSource(data,id){
+    const source=Object.hasOwn(artificerVersions,id)?artificerVersions[id]:null;if(!source||id==='efa'&&data.build?.edition!=='2024'||typeof CampaignRules!=='undefined'&&!CampaignRules.allowed({edition:source.sourceEdition,source:source.source}))return false;
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},old=artificerSource(data),choices=normalize(stored.classFeatureChoices),entries=(stored.classLevels||[]).map(entry=>({...entry})),entry=entries.find(entry=>entry.classId==='artificer');
+    if(entry?.subclassId){const row=globalThis.CharacterSubclassData?.find?.(entry.subclassId),owner=row?.edition==='2024'||/-efota$|-rthw$/.test(entry.subclassId)?'efa':row?.edition==='2014'||/-legacy$/.test(entry.subclassId)?'tce':old.id;choices[groupKey(owner==='efa'?'2024':'2014','artificer',owner+'-subclass')]=[entry.subclassId];}
+    if(entry)entry.subclassId=choices[groupKey(id==='efa'?'2024':'2014','artificer',id+'-subclass')]?.[0]||'';
+    const next={...choices,[artificerSourceKey]:[id]};if(Object.keys(next).length>100)return false;
+    data.adobe={...stored,classLevels:entries,classFeatureChoices:next};return true;
+  }
+  function artificerSpellAllowed(spell,source,catalogue=[],edition=spell?.edition){
+    if(!spell||!Object.hasOwn(artificerVersions,source))return false;const name=safe(spell.name);
+    let cache=artificerSpellCache.get(catalogue);if(!cache){cache={legacy:new Set(),modern:new Set()};for(const row of catalogue){if(row.edition==='2014'&&(row.classesByEdition?.['2014']||row.classes||[]).includes('artificer'))cache.legacy.add(safe(row.name));if(row.edition==='2024')cache.modern.add(safe(row.name));}artificerSpellCache.set(catalogue,cache);}
+    return (source==='tce'?cache.legacy:artificerEfaSpellNames).has(name)&&!(edition==='2024'&&spell.edition==='2014'&&cache.modern.has(name));
+  }
   const artisanTools=['Alchemist’s supplies','Brewer’s supplies','Calligrapher’s supplies','Carpenter’s tools','Cartographer’s tools','Cobbler’s tools','Cook’s utensils','Glassblower’s tools','Jeweler’s tools','Leatherworker’s tools','Mason’s tools','Painter’s supplies','Potter’s tools','Smith’s tools','Weaver’s tools','Woodcarver’s tools'];
   for(const edition of ['2014','2024'])definitions[edition].artificer=[{id:'artisan-tool',name:'Artificer artisan tool',sourceLabel:'Legacy Artificer · Tasha’s',minLevel:1,count:()=>1,startingOnly:true,options:()=>artisanTools.map(name=>option(name,{proficiency:name,source:'TCE',edition:'2014',referenceComplete:true,automationComplete:true})),referenceComplete:true}];
   function artificerLevels(data,level=1){
@@ -186,16 +209,22 @@ var CharacterClassFeatureChoices=(()=>{
     for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='artificer'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}
     return{level:actual,starting:entries[0]?.classId==='artificer'};
   }
+  const artificerSkills={arcana:'Arcana',history:'History',investigation:'Investigation',medicine:'Medicine',nature:'Nature',perception:'Perception',sleightOfHand:'Sleight of Hand'};
+  definitions['2024'].artificer.push({id:'multiclass-skill',name:'Artificer multiclass skill',minLevel:1,count:()=>1,multiclassOnly:true,artificerVersion:'efa',referenceComplete:true,options:()=>Object.entries(artificerSkills).map(([skill,name])=>option(name,{skill,source:'EFOTA',edition:'2024',referenceComplete:true,automationComplete:true}))});
+  function artificerFeatures(data,{level=1,attunedCount=0}={}){
+    const source=artificerSource(data),actual=artificerLevels(data,level),active=source.eligible&&actual.level>0,attuned=Math.max(0,Math.min(6,Math.trunc(Number(attunedCount)||0))),key=groupKey('2024','artificer','multiclass-skill'),value=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)[key]?.[0],skill=Object.keys(artificerSkills).find(skill=>safe(artificerSkills[skill])===value);
+    return{source,level:actual.level,active,starting:actual.starting,attuned,skills:active&&source.id==='efa'&&!actual.starting&&skill?[skill]:[],saveBonus:active&&source.id==='tce'&&actual.level>=20?attuned:0,soulOfArtifice:active&&source.id==='tce'&&actual.level>=20,flashShortRecovery:active&&source.id==='efa'?(actual.level>=20&&attuned>0?'all':actual.level>=14?1:0):0};
+  }
   function artisanTool(data,level){
-    const actual=artificerLevels(data,level);if(!actual.starting||!actual.level)return '';
+    const actual=artificerLevels(data,level);if(!actual.starting||!actual.level||!artificerSource(data).eligible)return '';
     const edition=data.build?.edition||'2014',key=groupKey(edition,'artificer','artisan-tool'),id=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)[key]?.[0];
     return artisanTools.find(name=>safe(name)===id)||'';
   }
   function toolTraining(data,{level=1,effects={},mods={},classExpertise={}}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
-    const actual=artificerLevels(data,level);if(!actual.level)return{level:0,tools:[]};
+    const actual=artificerLevels(data,level),source=artificerSource(data);if(!actual.level||!source.eligible)return{level:0,tools:[]};
     const rules=typeof CharacterRules!=='undefined'?CharacterRules:require('./character-rules'),choices=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices),proficiencies=[...(effects.proficiencies||[]),...String(data.proficiencies||'').split(/[,;\n]+/)];
-    const pb=Math.ceil(level/4)+1,expertise=actual.level>=6;
+    const pb=Math.ceil(level/4)+1,expertise=source.id==='tce'&&actual.level>=6;
     const tools=rules.tools.filter(name=>proficiencies.some(value=>safe(value)===safe(name))).map(name=>{const id=safe(name),key=groupKey(data.build?.edition||'2014','artificer','tool-check-'+id),raw=choices[key]?.[0],ability=['str','dex','con','int','wis','cha'].includes(raw)?raw:'',trainedExpertise=expertise||(classExpertise.tools||[]).some(tool=>safe(tool.name)===id),bonus=pb*(trainedExpertise?2:1);return{id,key,name,ability,bonus,expertise:trainedExpertise,total:ability?Number(mods[ability]||0)+bonus:null};});
     return{level:actual.level,tools};
   }
@@ -224,10 +253,10 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
     for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='bard'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
   }
-  function classResources(data,{level=1,mods={}}={}){
+  function classResources(data,{level=1,mods={},attunedCount=0}={}){
     const choices=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices),spent=key=>{const raw=choices[key]?.[0];return /^\d{1,3}$/.test(raw||'')?Number(raw):0;},rows=[];
-    const actual=artificerLevels(data,level);
-    if(actual.level>=7){const used=spent(flashKey),bonus=Math.max(-5,Math.min(10,Math.trunc(Number(mods.int)||0))),max=Math.max(1,bonus);rows.push({id:'artificer-flash-of-genius',key:flashKey,name:'Flash of Genius',source:'Legacy Artificer · Tasha’s',className:'Artificer',level:actual.level,bonus,max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',useLabel:'Use reaction',undoLabel:'Undo use',description:'Reaction · 30 ft · Add your Intelligence modifier to one ability check or saving throw made by you or a creature you can see. Resolve the chosen roll at the table.'});}
+    const artificer=artificerFeatures(data,{level,attunedCount}),actual=artificer.level,source=artificer.source;
+    if(artificer.active&&actual>=7){const key=source.id==='efa'?groupKey('2024','artificer','flash-of-genius-uses'):flashKey,used=spent(key),modifier=Math.max(-5,Math.min(10,Math.trunc(Number(mods.int)||0))),bonus=source.id==='efa'?Math.max(1,modifier):modifier,max=Math.max(1,modifier),short=artificer.flashShortRecovery;rows.push({id:'artificer-flash-of-genius',key,name:'Flash of Genius',source:source.label,className:'Artificer',level:actual,bonus,max,used,remaining:Math.max(0,max-used),resets:short?['short','long']:['long'],recovery:short==='all'?'Short or Long Rest recovery':short?'Short Rest: regain 1 use · Long Rest: all uses':'Long Rest recovery',shortRecovery:short,unit:'uses',useLabel:'Use reaction',undoLabel:'Undo use',description:'Reaction · 30 ft · '+(source.id==='efa'?'After you or a creature you can see fails an ability check or saving throw, add your Intelligence modifier (minimum +1).':'Add your Intelligence modifier to one ability check or saving throw made by you or a creature you can see.')+' Resolve the chosen roll at the table.'});}
     const monk=monkLevels(data,level),edition=data.build?.edition==='2024'?'2024':'2014';
     if(monk>=2){const name=edition==='2024'?'Focus Points':'Ki Points',key=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),used=spent(key),dc=8+(Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1)+Number(mods.wis||0);rows.push({id:'monk-points',key,name,source:edition+' Monk',className:'Monk',level:monk,max:monk,used,remaining:Math.max(0,monk-used),resets:['short','long'],recovery:'Short or Long Rest recovery',unit:'points',useLabel:'Spend 1 point',undoLabel:'Undo 1 point',dc,reroll:monk>=14,description:'Shared pool for Monk features; spend each feature’s point cost from this one pool. '+(edition==='2014'?'Rest recovery requires at least 30 minutes of meditation during the rest. ':'')+'Monk feature save DC '+dc+'.'+(monk>=14?' Failed save: spend 1 point to reroll; use the new roll.':'')});}
     const fighter=fighterLevels(data,level),fighterRow=(id,name,max,resets,description,extra={})=>{const key=groupKey(edition,'fighter',id+'-uses'),used=spent(key);rows.push({id:'fighter-'+id,key,name,source:edition+' Fighter',className:'Fighter',level:fighter,max,used,remaining:Math.max(0,max-used),resets,recovery:resets.includes('short')?'Short or Long Rest recovery':'Long Rest recovery',unit:'uses',useLabel:'Use '+name,undoLabel:'Undo use',description,...extra});};
@@ -262,7 +291,8 @@ var CharacterClassFeatureChoices=(()=>{
     if(!['short','long','initiative'].includes(event))return;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),edition=data.build?.edition==='2024'?'2024':'2014',entries=stored.classLevels||[],total=Number(context.level)||(entries.length?Math.min(20,entries.reduce((sum,entry)=>sum+Math.max(0,Number(entry.level)||0),0)):1),rest=event==='short'||event==='long',updates={};
     const monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),hasMonk=entries.length?monkLevels(data,total)>=2:data.build?.classId==='monk';
-    if(event==='long'&&choices[flashKey])updates[flashKey]=['0'];if(rest&&hasMonk&&choices[monkKey])updates[monkKey]=['0'];
+    const source=artificerSource(data),artificer=artificerLevels(data,total),currentFlashKey=source.id==='efa'?groupKey('2024','artificer','flash-of-genius-uses'):flashKey;
+    if(source.eligible&&artificer.level>=7&&choices[currentFlashKey]){const raw=choices[currentFlashKey][0];if(event==='long')updates[currentFlashKey]=['0'];else if(event==='short'&&source.id==='efa'&&artificer.level>=14&&/^\d{1,3}$/.test(raw||'')){const model=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null),row=context.classResources?.find(row=>row.id==='artificer-flash-of-genius')||model?.derive(data,total,context.loot||[]).classResources?.find(row=>row.id==='artificer-flash-of-genius'),max=row?.max||Math.max(1,Math.trunc(Number(context.mods?.int)||1));updates[currentFlashKey]=[String(row?.shortRecovery==='all'?0:Math.max(0,Math.min(Number(raw),max)-1))];}}if(rest&&hasMonk&&choices[monkKey])updates[monkKey]=['0'];
     const fighter=fighterLevels(data,total);
     for(const [id,min] of [['second-wind',1],['action-surge',2],['indomitable',9]]){if(!rest||fighter<min||event==='short'&&id==='indomitable')continue;const key=groupKey(edition,'fighter',id+'-uses'),raw=choices[key]?.[0];if(!/^\d{1,3}$/.test(raw||''))continue;updates[key]=[String(event==='short'&&edition==='2024'&&id==='second-wind'?Math.max(0,Math.min(Number(raw),fighter>=10?4:fighter>=4?3:2)-1):0)];}
     const bard=bardLevels(data,total),bardKey=groupKey(edition,'bard','bardic-inspiration-uses'),raw=choices[bardKey]?.[0];
@@ -363,7 +393,7 @@ var CharacterClassFeatureChoices=(()=>{
   function normalize(raw={}){
     const out={};
     if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
-    for(const [key,value] of Object.entries(raw).slice(0,60)){
+    for(const [key,value] of Object.entries(raw).slice(0,100)){
       if(!/^[a-z0-9:-]{1,120}$/i.test(key)||!Array.isArray(value))continue;
       out[key]=value.slice(0,20).map(v=>safe(v));
     }
@@ -372,8 +402,8 @@ var CharacterClassFeatureChoices=(()=>{
   function groups(entry,edition='2014',data){
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));
-    const rows=[...base,...sub];
-    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel&&(!g.startingOnly||!data||artificerLevels(data,20).starting)).map(g=>({...g,key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0))||0)),options:g.options(entry,edition)}));
+    const rows=[...base,...sub];if(entry?.classId==='artificer'&&data&&!artificerSource(data).eligible)return[];
+    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel&&(!g.startingOnly||!data||artificerLevels(data,20).starting)&&(!g.multiclassOnly||data&&!artificerLevels(data,20).starting)&&(!g.artificerVersion||data&&artificerSource(data).eligible&&artificerSource(data).id===g.artificerVersion)).map(g=>{const source=entry.classId==='artificer'&&data?artificerSource(data):null;return{...g,...(source?{sourceLabel:source.label}:{}),key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0))||0)),options:g.options(entry,edition).map(option=>source&&g.id==='artisan-tool'?{...option,source:source.source,edition:source.sourceEdition}:option)};});
   }
   function registerSubclass(edition,classId,subclassId,definition){
     edition=edition==='2024'?'2024':'2014';const key=safe(classId)+':'+safe(subclassId);
@@ -436,7 +466,7 @@ var CharacterClassFeatureChoices=(()=>{
     for(const entry of entries){
       const classId=entry.classId,l=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=l;
       if(!l||seenClasses.has(classId))continue;seenClasses.add(classId);
-      if(edition==='2014'&&classId==='artificer'&&l>=6)reminders.push('Artificer Tool Expertise: proficient tool checks use double proficiency ('+(2*(Math.ceil(level/4)+1))+') plus the appropriate ability modifier. Choose the check ability in Artificer tool checks to calculate the complete bonus.');
+      if(classId==='artificer'&&artificerSource(data).id==='tce'&&artificerSource(data).eligible&&l>=6)reminders.push('Artificer Tool Expertise: proficient tool checks use double proficiency ('+(2*(Math.ceil(level/4)+1))+') plus the appropriate ability modifier. Choose the check ability in Artificer tool checks to calculate the complete bonus.');
       if(edition==='2014'&&classId==='ranger')reminders.push('If your campaign uses the optional Deft Explorer / Canny feature, mark its chosen skill with the Expertise circle below. The optional feature is not assumed.');
       if(edition==='2014'&&classId==='cleric'&&entry.subclassId?.includes('knowledge'))reminders.push('Knowledge Domain: Blessings of Knowledge grants expertise in two of Arcana, History, Nature and Religion. Mark those skills with the Expertise circles below.');
       if(classId==='rogue'&&entry.subclassId==='scout'&&l>=3)reminders.push('Scout Survivalist: mark Nature and Survival with the Expertise circles below, in addition to your separate Rogue Expertise choices.');
@@ -519,6 +549,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

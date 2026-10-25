@@ -7,9 +7,10 @@
       "name": "Artificer",
       "edition": "2014",
       "sourceEdition": "2014",
+      "classSource": "tce",
       "features": [
         {
-          "id": "2014:artificer:1:magical-tinkering",
+          "id": "2014:artificer:tce:1:magical-tinkering",
           "name": "Magical Tinkering",
           "level": 1,
           "source": "TCE / legacy Artificer",
@@ -18,7 +19,7 @@
           "evidence": []
         },
         {
-          "id": "2014:artificer:1:spellcasting",
+          "id": "2014:artificer:tce:1:spellcasting",
           "name": "Spellcasting",
           "level": 1,
           "source": "TCE / legacy Artificer",
@@ -30,7 +31,7 @@
           ]
         },
         {
-          "id": "2014:artificer:2:infuse-item",
+          "id": "2014:artificer:tce:2:infuse-item",
           "name": "Infuse Item",
           "level": 2,
           "source": "TCE / legacy Artificer",
@@ -39,7 +40,7 @@
           "evidence": []
         },
         {
-          "id": "2014:artificer:3:artificer-specialist",
+          "id": "2014:artificer:tce:3:artificer-specialist",
           "name": "Artificer Specialist",
           "level": 3,
           "source": "TCE / legacy Artificer",
@@ -48,7 +49,7 @@
           "evidence": []
         },
         {
-          "id": "2014:artificer:3:the-right-tool-for-the-job",
+          "id": "2014:artificer:tce:3:the-right-tool-for-the-job",
           "name": "The Right Tool for the Job",
           "level": 3,
           "source": "TCE / legacy Artificer",
@@ -57,7 +58,7 @@
           "evidence": []
         },
         {
-          "id": "2014:artificer:4:ability-score-improvement",
+          "id": "2014:artificer:tce:4:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 4,
           "source": "TCE / legacy Artificer",
@@ -69,7 +70,7 @@
           ]
         },
         {
-          "id": "2014:artificer:5:artificer-specialist-feature",
+          "id": "2014:artificer:tce:5:artificer-specialist-feature",
           "name": "Artificer Specialist feature",
           "level": 5,
           "source": "TCE / legacy Artificer",
@@ -78,7 +79,7 @@
           "evidence": []
         },
         {
-          "id": "2014:artificer:6:tool-expertise",
+          "id": "2014:artificer:tce:6:tool-expertise",
           "name": "Tool Expertise",
           "level": 6,
           "source": "TCE / legacy Artificer",
@@ -90,7 +91,7 @@
           ]
         },
         {
-          "id": "2014:artificer:7:flash-of-genius",
+          "id": "2014:artificer:tce:7:flash-of-genius",
           "name": "Flash of Genius",
           "level": 7,
           "source": "TCE / legacy Artificer",
@@ -102,7 +103,7 @@
           ]
         },
         {
-          "id": "2014:artificer:8:ability-score-improvement",
+          "id": "2014:artificer:tce:8:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 8,
           "source": "TCE / legacy Artificer",
@@ -114,7 +115,7 @@
           ]
         },
         {
-          "id": "2014:artificer:9:artificer-specialist-feature",
+          "id": "2014:artificer:tce:9:artificer-specialist-feature",
           "name": "Artificer Specialist feature",
           "level": 9,
           "source": "TCE / legacy Artificer",
@@ -123,7 +124,7 @@
           "evidence": []
         },
         {
-          "id": "2014:artificer:10:magic-item-adept",
+          "id": "2014:artificer:tce:10:magic-item-adept",
           "name": "Magic Item Adept",
           "level": 10,
           "source": "TCE / legacy Artificer",
@@ -135,7 +136,7 @@
           ]
         },
         {
-          "id": "2014:artificer:11:spell-storing-item",
+          "id": "2014:artificer:tce:11:spell-storing-item",
           "name": "Spell-Storing Item",
           "level": 11,
           "source": "TCE / legacy Artificer",
@@ -144,7 +145,7 @@
           "evidence": []
         },
         {
-          "id": "2014:artificer:12:ability-score-improvement",
+          "id": "2014:artificer:tce:12:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 12,
           "source": "TCE / legacy Artificer",
@@ -156,7 +157,7 @@
           ]
         },
         {
-          "id": "2014:artificer:14:magic-item-savant",
+          "id": "2014:artificer:tce:14:magic-item-savant",
           "name": "Magic Item Savant",
           "level": 14,
           "source": "TCE / legacy Artificer",
@@ -167,7 +168,7 @@
           ]
         },
         {
-          "id": "2014:artificer:15:artificer-specialist-feature",
+          "id": "2014:artificer:tce:15:artificer-specialist-feature",
           "name": "Artificer Specialist feature",
           "level": 15,
           "source": "TCE / legacy Artificer",
@@ -176,7 +177,7 @@
           "evidence": []
         },
         {
-          "id": "2014:artificer:16:ability-score-improvement",
+          "id": "2014:artificer:tce:16:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 16,
           "source": "TCE / legacy Artificer",
@@ -188,7 +189,7 @@
           ]
         },
         {
-          "id": "2014:artificer:18:magic-item-master",
+          "id": "2014:artificer:tce:18:magic-item-master",
           "name": "Magic Item Master",
           "level": 18,
           "source": "TCE / legacy Artificer",
@@ -200,7 +201,7 @@
           ]
         },
         {
-          "id": "2014:artificer:19:ability-score-improvement",
+          "id": "2014:artificer:tce:19:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 19,
           "source": "TCE / legacy Artificer",
@@ -212,88 +213,91 @@
           ]
         },
         {
-          "id": "2014:artificer:20:soul-of-artifice",
+          "id": "2014:artificer:tce:20:soul-of-artifice",
           "name": "Soul of Artifice",
           "level": 20,
           "source": "TCE / legacy Artificer",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Owned attuned magic items add to all six saves and death saves at actual Artificer 20, including unworn items; Cheat Death still needs controls.",
+          "evidence": [
+            "tests/artificer-source-versions.cjs",
+            "tests/artificer-source-versions-browser.cjs"
+          ]
         }
       ],
       "levels": [
         {
           "level": 1,
           "newFeatures": [
-            "2014:artificer:1:magical-tinkering",
-            "2014:artificer:1:spellcasting"
+            "2014:artificer:tce:1:magical-tinkering",
+            "2014:artificer:tce:1:spellcasting"
           ]
         },
         {
           "level": 2,
           "newFeatures": [
-            "2014:artificer:2:infuse-item"
+            "2014:artificer:tce:2:infuse-item"
           ]
         },
         {
           "level": 3,
           "newFeatures": [
-            "2014:artificer:3:artificer-specialist",
-            "2014:artificer:3:the-right-tool-for-the-job"
+            "2014:artificer:tce:3:artificer-specialist",
+            "2014:artificer:tce:3:the-right-tool-for-the-job"
           ]
         },
         {
           "level": 4,
           "newFeatures": [
-            "2014:artificer:4:ability-score-improvement"
+            "2014:artificer:tce:4:ability-score-improvement"
           ]
         },
         {
           "level": 5,
           "newFeatures": [
-            "2014:artificer:5:artificer-specialist-feature"
+            "2014:artificer:tce:5:artificer-specialist-feature"
           ]
         },
         {
           "level": 6,
           "newFeatures": [
-            "2014:artificer:6:tool-expertise"
+            "2014:artificer:tce:6:tool-expertise"
           ]
         },
         {
           "level": 7,
           "newFeatures": [
-            "2014:artificer:7:flash-of-genius"
+            "2014:artificer:tce:7:flash-of-genius"
           ]
         },
         {
           "level": 8,
           "newFeatures": [
-            "2014:artificer:8:ability-score-improvement"
+            "2014:artificer:tce:8:ability-score-improvement"
           ]
         },
         {
           "level": 9,
           "newFeatures": [
-            "2014:artificer:9:artificer-specialist-feature"
+            "2014:artificer:tce:9:artificer-specialist-feature"
           ]
         },
         {
           "level": 10,
           "newFeatures": [
-            "2014:artificer:10:magic-item-adept"
+            "2014:artificer:tce:10:magic-item-adept"
           ]
         },
         {
           "level": 11,
           "newFeatures": [
-            "2014:artificer:11:spell-storing-item"
+            "2014:artificer:tce:11:spell-storing-item"
           ]
         },
         {
           "level": 12,
           "newFeatures": [
-            "2014:artificer:12:ability-score-improvement"
+            "2014:artificer:tce:12:ability-score-improvement"
           ]
         },
         {
@@ -303,19 +307,19 @@
         {
           "level": 14,
           "newFeatures": [
-            "2014:artificer:14:magic-item-savant"
+            "2014:artificer:tce:14:magic-item-savant"
           ]
         },
         {
           "level": 15,
           "newFeatures": [
-            "2014:artificer:15:artificer-specialist-feature"
+            "2014:artificer:tce:15:artificer-specialist-feature"
           ]
         },
         {
           "level": 16,
           "newFeatures": [
-            "2014:artificer:16:ability-score-improvement"
+            "2014:artificer:tce:16:ability-score-improvement"
           ]
         },
         {
@@ -325,19 +329,19 @@
         {
           "level": 18,
           "newFeatures": [
-            "2014:artificer:18:magic-item-master"
+            "2014:artificer:tce:18:magic-item-master"
           ]
         },
         {
           "level": 19,
           "newFeatures": [
-            "2014:artificer:19:ability-score-improvement"
+            "2014:artificer:tce:19:ability-score-improvement"
           ]
         },
         {
           "level": 20,
           "newFeatures": [
-            "2014:artificer:20:soul-of-artifice"
+            "2014:artificer:tce:20:soul-of-artifice"
           ]
         }
       ]
@@ -3931,9 +3935,10 @@
       "name": "Artificer",
       "edition": "2024",
       "sourceEdition": "2014",
+      "classSource": "tce",
       "features": [
         {
-          "id": "2024:artificer:1:magical-tinkering",
+          "id": "2024:artificer:tce:1:magical-tinkering",
           "name": "Magical Tinkering",
           "level": 1,
           "source": "TCE / legacy Artificer",
@@ -3942,7 +3947,7 @@
           "evidence": []
         },
         {
-          "id": "2024:artificer:1:spellcasting",
+          "id": "2024:artificer:tce:1:spellcasting",
           "name": "Spellcasting",
           "level": 1,
           "source": "TCE / legacy Artificer",
@@ -3954,7 +3959,7 @@
           ]
         },
         {
-          "id": "2024:artificer:2:infuse-item",
+          "id": "2024:artificer:tce:2:infuse-item",
           "name": "Infuse Item",
           "level": 2,
           "source": "TCE / legacy Artificer",
@@ -3963,7 +3968,7 @@
           "evidence": []
         },
         {
-          "id": "2024:artificer:3:artificer-specialist",
+          "id": "2024:artificer:tce:3:artificer-specialist",
           "name": "Artificer Specialist",
           "level": 3,
           "source": "TCE / legacy Artificer",
@@ -3972,7 +3977,7 @@
           "evidence": []
         },
         {
-          "id": "2024:artificer:3:the-right-tool-for-the-job",
+          "id": "2024:artificer:tce:3:the-right-tool-for-the-job",
           "name": "The Right Tool for the Job",
           "level": 3,
           "source": "TCE / legacy Artificer",
@@ -3981,7 +3986,7 @@
           "evidence": []
         },
         {
-          "id": "2024:artificer:4:ability-score-improvement",
+          "id": "2024:artificer:tce:4:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 4,
           "source": "TCE / legacy Artificer",
@@ -3993,7 +3998,7 @@
           ]
         },
         {
-          "id": "2024:artificer:5:artificer-specialist-feature",
+          "id": "2024:artificer:tce:5:artificer-specialist-feature",
           "name": "Artificer Specialist feature",
           "level": 5,
           "source": "TCE / legacy Artificer",
@@ -4002,7 +4007,7 @@
           "evidence": []
         },
         {
-          "id": "2024:artificer:6:tool-expertise",
+          "id": "2024:artificer:tce:6:tool-expertise",
           "name": "Tool Expertise",
           "level": 6,
           "source": "TCE / legacy Artificer",
@@ -4014,7 +4019,7 @@
           ]
         },
         {
-          "id": "2024:artificer:7:flash-of-genius",
+          "id": "2024:artificer:tce:7:flash-of-genius",
           "name": "Flash of Genius",
           "level": 7,
           "source": "TCE / legacy Artificer",
@@ -4026,7 +4031,7 @@
           ]
         },
         {
-          "id": "2024:artificer:8:ability-score-improvement",
+          "id": "2024:artificer:tce:8:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 8,
           "source": "TCE / legacy Artificer",
@@ -4038,7 +4043,7 @@
           ]
         },
         {
-          "id": "2024:artificer:9:artificer-specialist-feature",
+          "id": "2024:artificer:tce:9:artificer-specialist-feature",
           "name": "Artificer Specialist feature",
           "level": 9,
           "source": "TCE / legacy Artificer",
@@ -4047,7 +4052,7 @@
           "evidence": []
         },
         {
-          "id": "2024:artificer:10:magic-item-adept",
+          "id": "2024:artificer:tce:10:magic-item-adept",
           "name": "Magic Item Adept",
           "level": 10,
           "source": "TCE / legacy Artificer",
@@ -4059,7 +4064,7 @@
           ]
         },
         {
-          "id": "2024:artificer:11:spell-storing-item",
+          "id": "2024:artificer:tce:11:spell-storing-item",
           "name": "Spell-Storing Item",
           "level": 11,
           "source": "TCE / legacy Artificer",
@@ -4068,7 +4073,7 @@
           "evidence": []
         },
         {
-          "id": "2024:artificer:12:ability-score-improvement",
+          "id": "2024:artificer:tce:12:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 12,
           "source": "TCE / legacy Artificer",
@@ -4080,7 +4085,7 @@
           ]
         },
         {
-          "id": "2024:artificer:14:magic-item-savant",
+          "id": "2024:artificer:tce:14:magic-item-savant",
           "name": "Magic Item Savant",
           "level": 14,
           "source": "TCE / legacy Artificer",
@@ -4091,7 +4096,7 @@
           ]
         },
         {
-          "id": "2024:artificer:15:artificer-specialist-feature",
+          "id": "2024:artificer:tce:15:artificer-specialist-feature",
           "name": "Artificer Specialist feature",
           "level": 15,
           "source": "TCE / legacy Artificer",
@@ -4100,7 +4105,7 @@
           "evidence": []
         },
         {
-          "id": "2024:artificer:16:ability-score-improvement",
+          "id": "2024:artificer:tce:16:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 16,
           "source": "TCE / legacy Artificer",
@@ -4112,7 +4117,7 @@
           ]
         },
         {
-          "id": "2024:artificer:18:magic-item-master",
+          "id": "2024:artificer:tce:18:magic-item-master",
           "name": "Magic Item Master",
           "level": 18,
           "source": "TCE / legacy Artificer",
@@ -4124,7 +4129,7 @@
           ]
         },
         {
-          "id": "2024:artificer:19:ability-score-improvement",
+          "id": "2024:artificer:tce:19:ability-score-improvement",
           "name": "Ability Score Improvement",
           "level": 19,
           "source": "TCE / legacy Artificer",
@@ -4136,88 +4141,91 @@
           ]
         },
         {
-          "id": "2024:artificer:20:soul-of-artifice",
+          "id": "2024:artificer:tce:20:soul-of-artifice",
           "name": "Soul of Artifice",
           "level": 20,
           "source": "TCE / legacy Artificer",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Owned attuned magic items add to all six saves and death saves at actual Artificer 20, including unworn items; Cheat Death still needs controls.",
+          "evidence": [
+            "tests/artificer-source-versions.cjs",
+            "tests/artificer-source-versions-browser.cjs"
+          ]
         }
       ],
       "levels": [
         {
           "level": 1,
           "newFeatures": [
-            "2024:artificer:1:magical-tinkering",
-            "2024:artificer:1:spellcasting"
+            "2024:artificer:tce:1:magical-tinkering",
+            "2024:artificer:tce:1:spellcasting"
           ]
         },
         {
           "level": 2,
           "newFeatures": [
-            "2024:artificer:2:infuse-item"
+            "2024:artificer:tce:2:infuse-item"
           ]
         },
         {
           "level": 3,
           "newFeatures": [
-            "2024:artificer:3:artificer-specialist",
-            "2024:artificer:3:the-right-tool-for-the-job"
+            "2024:artificer:tce:3:artificer-specialist",
+            "2024:artificer:tce:3:the-right-tool-for-the-job"
           ]
         },
         {
           "level": 4,
           "newFeatures": [
-            "2024:artificer:4:ability-score-improvement"
+            "2024:artificer:tce:4:ability-score-improvement"
           ]
         },
         {
           "level": 5,
           "newFeatures": [
-            "2024:artificer:5:artificer-specialist-feature"
+            "2024:artificer:tce:5:artificer-specialist-feature"
           ]
         },
         {
           "level": 6,
           "newFeatures": [
-            "2024:artificer:6:tool-expertise"
+            "2024:artificer:tce:6:tool-expertise"
           ]
         },
         {
           "level": 7,
           "newFeatures": [
-            "2024:artificer:7:flash-of-genius"
+            "2024:artificer:tce:7:flash-of-genius"
           ]
         },
         {
           "level": 8,
           "newFeatures": [
-            "2024:artificer:8:ability-score-improvement"
+            "2024:artificer:tce:8:ability-score-improvement"
           ]
         },
         {
           "level": 9,
           "newFeatures": [
-            "2024:artificer:9:artificer-specialist-feature"
+            "2024:artificer:tce:9:artificer-specialist-feature"
           ]
         },
         {
           "level": 10,
           "newFeatures": [
-            "2024:artificer:10:magic-item-adept"
+            "2024:artificer:tce:10:magic-item-adept"
           ]
         },
         {
           "level": 11,
           "newFeatures": [
-            "2024:artificer:11:spell-storing-item"
+            "2024:artificer:tce:11:spell-storing-item"
           ]
         },
         {
           "level": 12,
           "newFeatures": [
-            "2024:artificer:12:ability-score-improvement"
+            "2024:artificer:tce:12:ability-score-improvement"
           ]
         },
         {
@@ -4227,19 +4235,19 @@
         {
           "level": 14,
           "newFeatures": [
-            "2024:artificer:14:magic-item-savant"
+            "2024:artificer:tce:14:magic-item-savant"
           ]
         },
         {
           "level": 15,
           "newFeatures": [
-            "2024:artificer:15:artificer-specialist-feature"
+            "2024:artificer:tce:15:artificer-specialist-feature"
           ]
         },
         {
           "level": 16,
           "newFeatures": [
-            "2024:artificer:16:ability-score-improvement"
+            "2024:artificer:tce:16:ability-score-improvement"
           ]
         },
         {
@@ -4249,19 +4257,19 @@
         {
           "level": 18,
           "newFeatures": [
-            "2024:artificer:18:magic-item-master"
+            "2024:artificer:tce:18:magic-item-master"
           ]
         },
         {
           "level": 19,
           "newFeatures": [
-            "2024:artificer:19:ability-score-improvement"
+            "2024:artificer:tce:19:ability-score-improvement"
           ]
         },
         {
           "level": 20,
           "newFeatures": [
-            "2024:artificer:20:soul-of-artifice"
+            "2024:artificer:tce:20:soul-of-artifice"
           ]
         }
       ]
@@ -7981,6 +7989,338 @@
           "level": 20,
           "newFeatures": [
             "2024:wizard:20:signature-spells"
+          ]
+        }
+      ]
+    },
+    {
+      "classId": "artificer",
+      "name": "Artificer",
+      "edition": "2024",
+      "sourceEdition": "2024",
+      "classSource": "efa",
+      "features": [
+        {
+          "id": "2024:artificer:efa:1:spellcasting",
+          "name": "Spellcasting",
+          "level": 1,
+          "source": "EFA / revised Artificer",
+          "state": "partial",
+          "scope": "Fixed prepared counts and cantrip allowances at levels 1–20, extra Mending through the spell generator, source-aware spell membership and multiclass slot contribution. Subclass grants still need review.",
+          "evidence": [
+            "tests/artificer-source-versions.cjs",
+            "tests/artificer-source-versions-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:1:tinker-s-magic",
+          "name": "Tinker's Magic",
+          "level": 1,
+          "source": "EFA / revised Artificer",
+          "state": "partial",
+          "scope": "Mending is an additional automatic spell-generator grant. Temporary gear creation and its use counter remain table tracked.",
+          "evidence": [
+            "tests/artificer-source-versions.cjs",
+            "tests/artificer-source-versions-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:2:replicate-magic-item",
+          "name": "Replicate Magic Item",
+          "level": 2,
+          "source": "EFA / revised Artificer",
+          "state": "unreviewed",
+          "scope": "Source-rule comparison and structured fields still need review.",
+          "evidence": []
+        },
+        {
+          "id": "2024:artificer:efa:3:artificer-subclass",
+          "name": "Artificer Subclass",
+          "level": 3,
+          "source": "EFA / revised Artificer",
+          "state": "unreviewed",
+          "scope": "Source-rule comparison and structured fields still need review.",
+          "evidence": []
+        },
+        {
+          "id": "2024:artificer:efa:4:ability-score-improvement",
+          "name": "Ability Score Improvement",
+          "level": 4,
+          "source": "EFA / revised Artificer",
+          "state": "partial",
+          "scope": "Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source.",
+          "evidence": [
+            "tests/character-play-rules.cjs",
+            "tests/multiclass-asi-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:5:subclass-feature",
+          "name": "Subclass feature",
+          "level": 5,
+          "source": "EFA / revised Artificer",
+          "state": "unreviewed",
+          "scope": "Source-rule comparison and structured fields still need review.",
+          "evidence": []
+        },
+        {
+          "id": "2024:artificer:efa:6:magic-item-tinker",
+          "name": "Magic Item Tinker",
+          "level": 6,
+          "source": "EFA / revised Artificer",
+          "state": "unreviewed",
+          "scope": "Source-rule comparison and structured fields still need review.",
+          "evidence": []
+        },
+        {
+          "id": "2024:artificer:efa:7:flash-of-genius",
+          "name": "Flash of Genius",
+          "level": 7,
+          "source": "EFA / revised Artificer",
+          "state": "implemented",
+          "scope": "Reaction reminder for a failed check/save, Intelligence bonus and uses with minimum 1, source-specific saved count, Use/Undo and rest recovery. Roll resolution remains at the table.",
+          "evidence": [
+            "tests/artificer-source-versions.cjs",
+            "tests/artificer-source-versions-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:8:ability-score-improvement",
+          "name": "Ability Score Improvement",
+          "level": 8,
+          "source": "EFA / revised Artificer",
+          "state": "partial",
+          "scope": "Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source.",
+          "evidence": [
+            "tests/character-play-rules.cjs",
+            "tests/multiclass-asi-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:9:subclass-feature",
+          "name": "Subclass feature",
+          "level": 9,
+          "source": "EFA / revised Artificer",
+          "state": "unreviewed",
+          "scope": "Source-rule comparison and structured fields still need review.",
+          "evidence": []
+        },
+        {
+          "id": "2024:artificer:efa:10:magic-item-adept",
+          "name": "Magic Item Adept",
+          "level": 10,
+          "source": "EFA / revised Artificer",
+          "state": "partial",
+          "scope": "Four attunement slots at actual Artificer 10; crafting controls still pending.",
+          "evidence": [
+            "tests/artificer-source-versions.cjs",
+            "tests/artificer-source-versions-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:11:spell-storing-item",
+          "name": "Spell-Storing Item",
+          "level": 11,
+          "source": "EFA / revised Artificer",
+          "state": "unreviewed",
+          "scope": "Source-rule comparison and structured fields still need review.",
+          "evidence": []
+        },
+        {
+          "id": "2024:artificer:efa:12:ability-score-improvement",
+          "name": "Ability Score Improvement",
+          "level": 12,
+          "source": "EFA / revised Artificer",
+          "state": "partial",
+          "scope": "Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source.",
+          "evidence": [
+            "tests/character-play-rules.cjs",
+            "tests/multiclass-asi-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:14:advanced-artifice",
+          "name": "Advanced Artifice",
+          "level": 14,
+          "source": "EFA / revised Artificer",
+          "state": "implemented",
+          "scope": "Five attunement slots and one Flash of Genius use recovered on a Short Rest from actual Artificer 14.",
+          "evidence": [
+            "tests/artificer-source-versions.cjs",
+            "tests/artificer-source-versions-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:15:subclass-feature",
+          "name": "Subclass feature",
+          "level": 15,
+          "source": "EFA / revised Artificer",
+          "state": "unreviewed",
+          "scope": "Source-rule comparison and structured fields still need review.",
+          "evidence": []
+        },
+        {
+          "id": "2024:artificer:efa:16:ability-score-improvement",
+          "name": "Ability Score Improvement",
+          "level": 16,
+          "source": "EFA / revised Artificer",
+          "state": "partial",
+          "scope": "Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source.",
+          "evidence": [
+            "tests/character-play-rules.cjs",
+            "tests/multiclass-asi-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:18:magic-item-master",
+          "name": "Magic Item Master",
+          "level": 18,
+          "source": "EFA / revised Artificer",
+          "state": "implemented",
+          "scope": "Six attunement slots at actual Artificer 18 without counting levels in other classes.",
+          "evidence": [
+            "tests/artificer-source-versions.cjs",
+            "tests/artificer-source-versions-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:artificer:efa:19:epic-boon",
+          "name": "Epic Boon",
+          "level": 19,
+          "source": "EFA / revised Artificer",
+          "state": "unreviewed",
+          "scope": "Source-rule comparison and structured fields still need review.",
+          "evidence": []
+        },
+        {
+          "id": "2024:artificer:efa:20:soul-of-artifice",
+          "name": "Soul of Artifice",
+          "level": 20,
+          "source": "EFA / revised Artificer",
+          "state": "partial",
+          "scope": "Short Rest restores all Flash of Genius uses while attuned to an owned magic item at actual Artificer 20. Cheat Death and replicated-item ending still need controls.",
+          "evidence": [
+            "tests/artificer-source-versions.cjs",
+            "tests/artificer-source-versions-browser.cjs"
+          ]
+        }
+      ],
+      "levels": [
+        {
+          "level": 1,
+          "newFeatures": [
+            "2024:artificer:efa:1:spellcasting",
+            "2024:artificer:efa:1:tinker-s-magic"
+          ]
+        },
+        {
+          "level": 2,
+          "newFeatures": [
+            "2024:artificer:efa:2:replicate-magic-item"
+          ]
+        },
+        {
+          "level": 3,
+          "newFeatures": [
+            "2024:artificer:efa:3:artificer-subclass"
+          ]
+        },
+        {
+          "level": 4,
+          "newFeatures": [
+            "2024:artificer:efa:4:ability-score-improvement"
+          ]
+        },
+        {
+          "level": 5,
+          "newFeatures": [
+            "2024:artificer:efa:5:subclass-feature"
+          ]
+        },
+        {
+          "level": 6,
+          "newFeatures": [
+            "2024:artificer:efa:6:magic-item-tinker"
+          ]
+        },
+        {
+          "level": 7,
+          "newFeatures": [
+            "2024:artificer:efa:7:flash-of-genius"
+          ]
+        },
+        {
+          "level": 8,
+          "newFeatures": [
+            "2024:artificer:efa:8:ability-score-improvement"
+          ]
+        },
+        {
+          "level": 9,
+          "newFeatures": [
+            "2024:artificer:efa:9:subclass-feature"
+          ]
+        },
+        {
+          "level": 10,
+          "newFeatures": [
+            "2024:artificer:efa:10:magic-item-adept"
+          ]
+        },
+        {
+          "level": 11,
+          "newFeatures": [
+            "2024:artificer:efa:11:spell-storing-item"
+          ]
+        },
+        {
+          "level": 12,
+          "newFeatures": [
+            "2024:artificer:efa:12:ability-score-improvement"
+          ]
+        },
+        {
+          "level": 13,
+          "newFeatures": []
+        },
+        {
+          "level": 14,
+          "newFeatures": [
+            "2024:artificer:efa:14:advanced-artifice"
+          ]
+        },
+        {
+          "level": 15,
+          "newFeatures": [
+            "2024:artificer:efa:15:subclass-feature"
+          ]
+        },
+        {
+          "level": 16,
+          "newFeatures": [
+            "2024:artificer:efa:16:ability-score-improvement"
+          ]
+        },
+        {
+          "level": 17,
+          "newFeatures": []
+        },
+        {
+          "level": 18,
+          "newFeatures": [
+            "2024:artificer:efa:18:magic-item-master"
+          ]
+        },
+        {
+          "level": 19,
+          "newFeatures": [
+            "2024:artificer:efa:19:epic-boon"
+          ]
+        },
+        {
+          "level": 20,
+          "newFeatures": [
+            "2024:artificer:efa:20:soul-of-artifice"
           ]
         }
       ]

@@ -2572,3 +2572,9 @@
   #characterSheetDialog #sheetFeatResources :is([data-bard-slot],[data-bard-slot-recover]),
   #characterSheetPage #characterSheetDialog #sheetFeatResources :is([data-bard-slot],[data-bard-slot-recover]) { min-height: 44px !important; }
 }
+
+/* Keep the Artificer book selector comfortable inside the existing class card. */
+#characterSheetDialog .sheet-artificer-source .sheet-field,
+#characterSheetPage #characterSheetDialog .sheet-artificer-source .sheet-field { min-width: 0; }
+#characterSheetDialog .sheet-artificer-source [data-artificer-source],
+#characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-artificer-source] { min-height: 44px !important; width: 100%; min-width: 0; max-width: 100%; }

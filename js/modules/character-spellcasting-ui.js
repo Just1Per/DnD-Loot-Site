@@ -102,13 +102,13 @@
     if(p.cantrips)detail.push(p.cantrips+' cantrip'+(p.cantrips===1?'':'s'));
     if(p.mode==='spellbook')detail.push('at least '+p.bookMinimum+' spellbook spells from leveling','prepare '+p.spellCount);
     else detail.push(p.spellCount+' '+S.modeLabel(p).toLowerCase());
-    document.getElementById('spellGeneratorRequirement').innerHTML='<strong>'+esc(p.name)+' '+p.level+' · '+esc(p.edition)+'</strong><span>'+detail.join(' · ')+'</span><small>Reachable spell level: '+(p.maxSpellLevel||'cantrips only')+' · Spellcasting ability: '+esc(abilityName(p.ability))+' '+signed(casting.modifier)+' · Spell attack '+signed(casting.attack)+' · Save DC '+casting.dc+' · '+(p.changeTiming==='long-rest'?'List can be changed after a long rest.':'List normally changes when you gain a class level.')+'</small><small>Selected in this builder: '+cantrips+' cantrips · '+leveled+' level 1+ spells'+(p.mode==='spellbook'?' · '+prepared+' prepared':'')+'.</small>';
+    document.getElementById('spellGeneratorRequirement').innerHTML='<strong>'+esc(p.name)+' '+p.level+' · '+esc(p.edition)+(p.sourceLabel?' · '+esc(p.sourceLabel):'')+'</strong><span>'+detail.join(' · ')+'</span><small>Reachable spell level: '+(p.maxSpellLevel||'cantrips only')+' · Spellcasting ability: '+esc(abilityName(p.ability))+' '+signed(casting.modifier)+' · Spell attack '+signed(casting.attack)+' · Save DC '+casting.dc+' · '+(p.changeTiming==='long-rest'?'List can be changed after a long rest.':'List normally changes when you gain a class level.')+'</small><small>Selected in this builder: '+cantrips+' cantrips · '+leveled+' level 1+ spells'+(p.mode==='spellbook'?' · '+prepared+' prepared':'')+'.</small>';
     renderList();
   }
 
   function eligible(p){
     if(!CharacterCatalog.data)return[];
-    return CharacterCatalog.spells({edition:sheetSession.data.build.edition,classId:p.classId}).filter(spell=>Number(spell.level)<=p.maxSpellLevel);
+    return CharacterCatalog.spells({edition:sheetSession.data.build.edition,classId:p.classId,classSource:p.sourceId}).filter(spell=>Number(spell.level)<=p.maxSpellLevel);
   }
   function renderList(){
     const p=currentProfile(),host=document.getElementById('spellGeneratorResults');
@@ -120,6 +120,7 @@
     let rows=CharacterCatalog.spells({
       edition:sheetSession.data.build.edition,
       classId:p.classId,
+      classSource:p.sourceId,
       level:lvl,
       school,
       search:q
@@ -268,7 +269,7 @@
       const amount=p?.mode==='known'?counts.leveled:counts?.prepared;
       const count=p?counts.cantrips+'/'+p.cantrips+' cantrips · '+amount+'/'+p.spellCount+' '+(p.mode==='spellbook'?'prepared spells':S.modeLabel(p).toLowerCase())+(p.mode==='spellbook'?' · '+counts.leveled+' in spellbook':'')+(counts.automatic?' · '+counts.automatic+' always prepared (extra)':''):'';
       const pool=p?(p.classId==='warlock'?'Pact Magic: '+(d.progression?.pact?.count||0)+' slots at level '+(d.progression?.pact?.slotLevel||1)+' · Separate pool above':(classProfiles.filter(profile=>profile.classId!=='warlock').length>1?'Shared Spellcasting slots above':'Spellcasting slots above')):'';
-      const header=p?'<header class="sheet-class-spell-header"><div><span class="sheet-eyebrow">'+esc(p.name)+' · Level '+p.level+' · '+esc(p.edition)+'</span><h4>'+esc(p.name)+' spell sheet</h4><p>'+esc(count)+'</p></div><button type="button" class="btn-primary" data-generate-class="'+esc(p.classId)+'">Generate / update '+esc(p.name)+'</button></header><dl class="sheet-class-spell-metrics"><div><dt>Spellcasting ability</dt><dd>'+esc(abilityName(casting.ability))+' '+signed(casting.modifier)+'</dd></div><div><dt>Spell attack</dt><dd>'+signed(casting.attack)+'</dd></div><div><dt>Save DC</dt><dd>'+casting.dc+'</dd></div><div><dt>Maximum spell level</dt><dd>'+p.maxSpellLevel+'</dd></div></dl><p class="sheet-help">'+esc(pool)+'</p>':'<header class="sheet-class-spell-header"><div><h4>Other / unassigned spells</h4><p>Choose a class for each spell to use its preparation allowance and casting ability.</p></div></header>';
+      const header=p?'<header class="sheet-class-spell-header"><div><span class="sheet-eyebrow">'+esc(p.name)+' · Level '+p.level+' · '+esc(p.edition)+(p.sourceLabel?' · '+esc(p.sourceLabel):'')+'</span><h4>'+esc(p.name)+' spell sheet</h4><p>'+esc(count)+'</p></div><button type="button" class="btn-primary" data-generate-class="'+esc(p.classId)+'">Generate / update '+esc(p.name)+'</button></header><dl class="sheet-class-spell-metrics"><div><dt>Spellcasting ability</dt><dd>'+esc(abilityName(casting.ability))+' '+signed(casting.modifier)+'</dd></div><div><dt>Spell attack</dt><dd>'+signed(casting.attack)+'</dd></div><div><dt>Save DC</dt><dd>'+casting.dc+'</dd></div><div><dt>Maximum spell level</dt><dd>'+p.maxSpellLevel+'</dd></div></dl><p class="sheet-help">'+esc(pool)+'</p>':'<header class="sheet-class-spell-header"><div><h4>Other / unassigned spells</h4><p>Choose a class for each spell to use its preparation allowance and casting ability.</p></div></header>';
       const table=rows.map(({spell,i})=>{
         const catalog=CharacterCatalog.find(spell.catalogId),description=catalog?.shortDescription||catalog?.description||spell.notes||'Source reference only';
         const invocation=CharacterClassFeatureChoices.cantripModifier(sheetSession.data,d.cantripInvocations,spell.catalogId,spell.classId),invocationNote=invocation?'<small class="sheet-help" data-cantrip-modifier="'+esc(spell.catalogId)+'">'+esc(CharacterClassFeatureChoices.cantripModifierText(invocation))+'</small>':'';
