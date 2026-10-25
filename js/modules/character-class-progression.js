@@ -265,7 +265,9 @@ var CharacterClassProgression=(()=>{
   classFeatures=function(classId,edition='2014',classSource='tce'){
     if(classId==='artificer')return localClassFeatures(classId,edition,classSource);
     const e=editionOf(edition),rows=remote[e]?.classes?.[classId]?.features;
-    return correctedReference(classId,e,Array.isArray(rows)&&rows.length?rows:localClassFeatures(classId,e));
+    const result=correctedReference(classId,e,Array.isArray(rows)&&rows.length?rows:localClassFeatures(classId,e)),metamagic=result.find(row=>row.name==='Metamagic');
+    if(classId==='sorcerer'&&e==='2024'&&metamagic&&!result.some(row=>row.name==='Metamagic'&&row.level===17))return[...result,{...metamagic,level:17,summary:'Gain two additional Metamagic options, for six known options in total.'}].sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name));
+    return result;
   };
   subclassFeatures=function(classId,subclassId,edition='2014',classSource='tce'){
     if(classId==='artificer')return localSubclassFeatures(classId,subclassId,edition,classSource);

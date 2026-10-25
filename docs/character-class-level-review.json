@@ -3256,18 +3256,24 @@
           "name": "Font of Magic",
           "level": 2,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Class Sorcery Point maximum, finite spend/undo, Metamagic cost spending and rest recovery are tracked. Spell-slot-to-point conversion and temporary slot creation remain pending.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
+          ]
         },
         {
           "id": "2014:sorcerer:3:metamagic",
           "name": "Metamagic",
           "level": 3,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
+          ]
         },
         {
           "id": "2014:sorcerer:4:ability-score-improvement",
@@ -3298,9 +3304,12 @@
           "name": "Metamagic",
           "level": 10,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
+          ]
         },
         {
           "id": "2014:sorcerer:12:ability-score-improvement",
@@ -3331,9 +3340,12 @@
           "name": "Metamagic",
           "level": 17,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
+          ]
         },
         {
           "id": "2014:sorcerer:19:ability-score-improvement",
@@ -3352,9 +3364,12 @@
           "name": "Sorcerous Restoration",
           "level": 20,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Legacy Sorcerer 20 restores four points on each Short Rest; revised Sorcerer 5 restores half class level rounded down once per Long Rest. Recovery uses capped actual class levels and persists the once-per-Long-Rest limit.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
+          ]
         }
       ],
       "levels": [
@@ -7248,18 +7263,24 @@
           "name": "Font of Magic",
           "level": 2,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Class Sorcery Point maximum, finite spend/undo, Metamagic cost spending and rest recovery are tracked. Spell-slot-to-point conversion and temporary slot creation remain pending.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
+          ]
         },
         {
           "id": "2024:sorcerer:2:metamagic",
           "name": "Metamagic",
           "level": 2,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
+          ]
         },
         {
           "id": "2024:sorcerer:3:sorcerer-subclass",
@@ -7287,9 +7308,12 @@
           "name": "Sorcerous Restoration",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Legacy Sorcerer 20 restores four points on each Short Rest; revised Sorcerer 5 restores half class level rounded down once per Long Rest. Recovery uses capped actual class levels and persists the once-per-Long-Rest limit.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
+          ]
         },
         {
           "id": "2024:sorcerer:7:sorcery-incarnate",
@@ -7317,9 +7341,12 @@
           "name": "Metamagic",
           "level": 10,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
+          ]
         },
         {
           "id": "2024:sorcerer:12:ability-score-improvement",
@@ -7343,6 +7370,18 @@
           "evidence": [
             "tests/character-play-rules.cjs",
             "tests/multiclass-asi-browser.cjs"
+          ]
+        },
+        {
+          "id": "2024:sorcerer:17:metamagic",
+          "name": "Metamagic",
+          "level": 17,
+          "source": "SRD 5.2.1",
+          "state": "partial",
+          "scope": "Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending.",
+          "evidence": [
+            "tests/sorcerer-points-and-metamagic.cjs",
+            "tests/sorcerer-points-and-metamagic-browser.cjs"
           ]
         },
         {
@@ -7453,7 +7492,9 @@
         },
         {
           "level": 17,
-          "newFeatures": []
+          "newFeatures": [
+            "2024:sorcerer:17:metamagic"
+          ]
         },
         {
           "level": 18,
