@@ -39,6 +39,8 @@ var CharacterActions = (()=>{
    const classes=[...new Set(known.map(row=>row.classId).filter(Boolean))],ambiguous=!source.classId&&classes.length>1;
    const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices'),invocation=CFC.cantripModifier(data,stats.cantripInvocations,spell.id,source.classId||(!ambiguous?selected.classId:''));
    const classAbilities={artificer:'int',bard:'cha',cleric:'wis',druid:'wis',fighter:'int',paladin:'cha',ranger:'wis',rogue:'int',sorcerer:'cha',warlock:'cha',wizard:'int'},owner=source.classId||(!ambiguous?(selected.classId||classes[0]||''):'')||(invocation?.sourceClass||''),ability=a.ability==='auto'?(classAbilities[owner]||data.spellAbility):a.ability,mod=stats.mods[ability],c=spell.combat||{},slot=spell.level?Math.max(spell.level,a.slot):0;
+   const mark=CFC.huntersMarkEffect(data,spell,{level,classId:owner,features:stats.rangerFeatures,slot});
+   if(mark)return {...row,name:spell.name+' · '+spell.edition+(owner?' · '+(classAbilities[owner]?owner[0].toUpperCase()+owner.slice(1):owner):'')+(slot?' (level '+slot+')':''),ability,hit:'No attack roll',damage:mark.damage,range:spell.range,notes:[mark.detail,'Bonus Action · '+mark.duration+'. Resolve marked target and eligible hits at the table.',...mark.notes]};
    let damage=spell.level===0?diceAt(c.scaling,level,c.damage||''):c.damage||'';
    if(slot>spell.level&&c.upcast)damage=increase(damage,c.upcast,Math.floor((slot-spell.level)/(c.step||1)));
    let count=1,unit='';

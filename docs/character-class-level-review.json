@@ -2785,9 +2785,12 @@
           "name": "Feral Senses",
           "level": 18,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Legacy conditional unseen-attack/30-ft invisible-creature awareness is shown, explicitly without granting Blindsight. Conditions and targets remain table resolved.",
+          "evidence": [
+            "tests/ranger-class-resources.cjs",
+            "tests/ranger-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:ranger:19:ability-score-improvement",
@@ -2806,9 +2809,12 @@
           "name": "Foe Slayer",
           "level": 20,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Once-per-own-turn finite use/undo/reset and current Wisdom bonus are shown. The eligible favored-enemy attack/damage roll still resolves at the table.",
+          "evidence": [
+            "tests/ranger-class-resources.cjs",
+            "tests/ranger-class-resources-browser.cjs"
+          ]
         }
       ],
       "levels": [
@@ -6599,9 +6605,12 @@
           "name": "Favored Enemy",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Always-prepared Hunter’s Mark already exists; free-casting counts now follow actual Ranger levels, with finite use/undo, Long Rest and separate ordinary spell slots.",
+          "evidence": [
+            "tests/ranger-class-resources.cjs",
+            "tests/ranger-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:ranger:1:spellcasting",
@@ -6718,9 +6727,12 @@
           "name": "Tireless",
           "level": 10,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Wisdom-based finite uses and signed 1d8-plus-Wisdom/minimum-one-total formula are shown. Temporary HP and the Short Rest Exhaustion decrease remain explicit table/manual updates.",
+          "evidence": [
+            "tests/ranger-class-resources.cjs",
+            "tests/ranger-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:ranger:12:ability-score-improvement",
@@ -6739,18 +6751,24 @@
           "name": "Relentless Hunter",
           "level": 13,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Hunter’s Mark-specific Concentration protection is shown without granting global immunity or changing other spells. Checks still resolve at the table.",
+          "evidence": [
+            "tests/ranger-class-resources.cjs",
+            "tests/ranger-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:ranger:14:nature-s-veil",
           "name": "Nature's Veil",
           "level": 14,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Wisdom-based finite uses, Bonus Action/end-of-next-turn reminder, use/undo and Long Rest recovery are tracked. Invisibility/duration are not changed automatically.",
+          "evidence": [
+            "tests/ranger-class-resources.cjs",
+            "tests/ranger-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:ranger:16:ability-score-improvement",
@@ -6769,18 +6787,24 @@
           "name": "Precise Hunter",
           "level": 17,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Marked-target-only Advantage reminder appears with Hunter’s Mark; unrelated attack bonuses are unchanged. No target binding/roll automation is added.",
+          "evidence": [
+            "tests/ranger-class-resources.cjs",
+            "tests/ranger-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:ranger:18:feral-senses",
           "name": "Feral Senses",
           "level": 18,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Blindsight 30 ft is derived at actual Ranger 18 and shown in Senses without replacing other senses or stacking ranges.",
+          "evidence": [
+            "tests/ranger-class-resources.cjs",
+            "tests/ranger-class-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:ranger:19:epic-boon",
@@ -6796,9 +6820,12 @@
           "name": "Foe Slayer",
           "level": 20,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual revised Ranger 20 changes the character’s Hunter’s Mark rider die to d10 in action, spell-sheet, information and print views, including a feat-granted copy. Characters without that Ranger feature and generic catalogue records stay unchanged.",
+          "evidence": [
+            "tests/ranger-class-resources.cjs",
+            "tests/ranger-class-resources-browser.cjs"
+          ]
         }
       ],
       "levels": [

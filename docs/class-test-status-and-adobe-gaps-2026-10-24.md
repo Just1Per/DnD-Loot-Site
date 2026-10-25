@@ -1,25 +1,25 @@
 # Klassetest og Adobe-opfølgning — 24. oktober 2026
 
-Status er kontrolleret mod `main` ved `23ad5fb`, efter merge af #217. Ingen klasse er endnu færdigkontrolleret for alle features, levels, subclasses og kildebøger. Tabellen viser konkrete funktioner, som nu kan testes, ikke et løfte om fuld klasseautomatik.
+Opdateret 25. oktober: `main` ved `013593a` indeholder #219–221. Extra Attack og Ranger-ressourcer er lokalt testet i henholdsvis #222 og #223 og kræver stadig merge; følg rækkefølgen #222 → #223. Ingen klasse er endnu færdigkontrolleret for alle features, levels, subclasses og kildebøger. Tabellen viser konkrete funktioner, som nu kan testes, ikke et løfte om fuld klasseautomatik.
 
 ## Hvad kan testes nu?
 
 | Klasse / version | Funktioner klar til test | Den større gennemgang mangler stadig |
 | --- | --- | --- |
-| Fighter | Fighting Style, 2024 Weapon Mastery, feat/ASI-antal, Second Wind, Action Surge, Indomitable samt 2024 Tactical Mind/Shift | Extra Attack, resterende betingede features og subclass-valg |
+| Fighter | Fighting Style, 2024 Weapon Mastery, feat/ASI-antal, Second Wind, Action Surge, Indomitable samt 2024 Tactical Mind/Shift | Resterende betingede features og subclass-valg; Extra Attack kommer i #222 |
 | Bard | Expertise, Jack of All Trades, inspirationens antal/terning, Font og Superior Inspiration; 2024 spell-slot-veksling | Magical Secrets, Countercharm, Words of Creation og subclass-specifikke features |
 | Rogue | Expertise, Thieves’ Cant, 2024 Weapon Mastery og Slippery Mind | Ekstra skill/sprog ved de relevante valg, Sneak Attack, Cunning Strike, Reliable Talent og øvrige betingede features/subclasses |
 | Warlock | Invocation-valg/prerequisites, Devil’s Sight, Witch Sight, Eldritch Mind, Beguiling Influence, Eyes of the Rune Keeper, Agonizing Blast og Eldritch Spear | Flere casting-invocations, Pact Blade/Chain/Tome-effekter, Mystic Arcanum og øvrige class/subclass-features |
 | Monk | Fælles Ki/Focus-pulje, feature-DC, rest, level-14 saves/reroll og 2024 Body and Mind | Martial Arts, movement, individuelle teknikker, special recovery og subclasses |
-| Artificer — Tasha’s / 2014 | Artisan-tool-valg, Tool Expertise, Flash of Genius og attunement-grænser | Infusions, Spell-Storing Item, crafting, Soul of Artifice og subclasses. De to Artificer-versioner er ved at blive adskilt; test først denne 2014-kilde |
-| Artificer — Eberron: Forge of the Artificer | Under aktivt arbejde; endnu ingen testklar PR for denne særskilte version | Selvstændigt kildevalg, kildekorrekte spell/feature-regler og de efterfølgende klassevalg |
+| Artificer — Tasha’s / 2014 | Artisan-tool-valg, Tool Expertise, Flash of Genius og attunement-grænser | Infusions, Spell-Storing Item, crafting, Soul of Artifice og subclasses. Kildevalget er nu adskilt fra core-edition; kontrollér både primærklasse og multiclass |
+| Artificer — Eberron: Forge of the Artificer | Særskilt kildevalg på 2024 core, kildekorrekt feature-reference, preparation/multiclass-spellprofil, attunement og Flash | Replicate Magic Item, planer/crafting, Spell-Storing Item, øvrige effekter og subclasses |
 | Cleric — 2024 | Divine Order: Protector/Thaumaturge, udstyrstræning, skill-bonus og ekstra cantrip | Channel Divinity, Blessed Strikes, Divine Intervention og domains |
 | Druid — 2024 | Primal Order: Warden/Magician, skill-bonus, ekstra cantrip og Druidic | Wild Shape-classfunktioner, ressourcer, Elemental Fury og øvrige features/circles |
 | Barbarian | 2024 Weapon Mastery og Primal Champion på level 20 i begge editions | Rage, movement, betingede angreb/defenses og subclasses |
-| Ranger | Fighting Style, 2024 Weapon Mastery samt Deft Explorer/Expertise | 2014 Favored Enemy/Natural Explorer, ekstra sprog, Hunter’s Mark-brug, exploration og resten af klassen |
+| Ranger | Fighting Style, 2024 Weapon Mastery samt Deft Explorer/Expertise | 2014 Favored Enemy/Natural Explorer, ekstra sprog, Roving, optional Tasha’s og subclasses. #223 tilføjer Hunter’s Mark-brug, Tireless, Nature’s Veil, Feral Senses og Foe Slayer |
 | Wizard | 2024 Scholar samt eksisterende class-baseret spellbook/preparation | Arcane Recovery, Spell Mastery, Signature Spells og school-features |
 | Paladin | Fighting Style og 2024 Weapon Mastery; eksisterende spell-grundlag | Lay on Hands, Channel Divinity, auras, class-ressourcer og oaths |
-| Sorcerer | Det fælles spell/feat/ASI-grundlag | Den fokuserede feature-gennemgang mangler: Metamagic, Sorcery Points, Font of Magic og øvrige features/subclasses |
+| Sorcerer | Sorcery Points, kildekorrekte Metamagic-valg/prerequisites og pointforbrug; 2024 Sorcerous Restoration | Font of Magic slot-veksling/skabte slots, Innate Sorcery, Metamagic Adept og øvrige features/subclasses |
 
 Point Buy, class-level-baserede feat/ASI-antal, gem/genåbn og de fælles multiclass-beregninger er testet på tværs af alle 13 klasse-ID’er. Det er ikke det samme som, at alle klassernes features er gennemført.
 
@@ -30,9 +30,11 @@ Point Buy, class-level-baserede feat/ASI-antal, gem/genåbn og de fælles multic
 3. **Rogue:** Vælg Expertise ved 1 og 6. Ved Rogue 15 får 2014 Wisdom-save proficiency, mens 2024 får Wisdom og Charisma. Kontrollér, at manuel træning ikke lægger PB til igen.
 4. **Warlock:** Lær Eldritch Blast i Spells. I 2024 vælges cantrip også under Agonizing Blast/Eldritch Spear. Final Charisma 16 giver +3 skade pr. beam. Warlock 2 giver Eldritch Blast 180 ft med revised Spear; legacy Spear giver 300 ft. Devil’s Sight skal stå særskilt i Senses.
 5. **Monk:** Test points fra 2, alle saves/reroll fra 14 og revised Body and Mind ved 20. DC er 8 + character PB + final Wisdom modifier. Et reroll bruger ét point fra samme pulje.
-6. **Tasha’s Artificer:** Test Tool Expertise ved 6, Flash ved 7 og attunement på 10/14/18. Prøv også en Headband of Intellect: alle viste Flash-brug skal kunne bruges. Eberron-versionen får sin egen testvejledning, når den er klar.
+6. **Tasha’s Artificer:** Test Tool Expertise ved 6, Flash ved 7 og attunement på 10/14/18. Prøv også en Headband of Intellect: alle viste Flash-brug skal kunne bruges. Vælg også Eberron-versionen separat med 2024 core; den må ikke få Tasha’s Tool Expertise. Kontrollér, at kilde og forbrug bevares efter gem/genåbn.
 7. **Cleric/Druid 2024:** Skift mellem martial og magic Order. Med final Wisdom 16 giver magic-valget +3 til de relevante Intelligence-skills samt ét ekstra class-cantrip. Bonus til et check er ikke det samme som skill proficiency.
 8. **Barbarian 20:** Primal Champion giver STR/CON +4; maksimum er 24 i 2014 og 25 i 2024. Brug Base scores, så arket beregner ændringen. Scores, saves, AC og Constitution-baseret HP skal følge med.
+
+Når #222 og #223 er merged, test også **Extra Attack** på class-level-grænserne og **Ranger** i begge editions. Fighter 11 giver tre angreb; Fighter 5/Ranger 5 giver stadig to. Ranger 2024 har gratis Hunter’s Mark-castings uden slotforbrug; Tireless/Nature’s Veil følger Wisdom. Ved 18 er kun 2024 Feral Senses Blindsight. Ved 20 giver revised Hunter’s Mark d10, mens legacy Foe Slayer er en betinget Wisdom-bonus én gang på egen tur.
 
 Genindlæs siden før testen. Brug gerne én testkarakter pr. edition. Efter et forløb: gem, luk arket og genåbn; prøv derefter et multiclass-level og kontrollér, at klassevalgene og forbruget er bevaret. Notér klasse, edition, class-levels, feature og forventet/faktisk resultat ved fejl.
 

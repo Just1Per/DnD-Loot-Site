@@ -404,9 +404,9 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 18 | Feral Senses **[unreviewed]** |
+| 18 | Feral Senses **[partial]** |
 | 19 | Ability Score Improvement **[partial]** |
-| 20 | Foe Slayer **[unreviewed]** |
+| 20 | Foe Slayer **[partial]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -428,9 +428,9 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Favored Enemy · 14 | Source-rule comparison and structured fields still need review. | Pending |
 | Vanish · 14 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Feral Senses · 18 | Source-rule comparison and structured fields still need review. | Pending |
+| Feral Senses · 18 | Legacy conditional unseen-attack/30-ft invisible-creature awareness is shown, explicitly without granting Blindsight. Conditions and targets remain table resolved. | [tests/ranger-class-resources.cjs](../tests/ranger-class-resources.cjs), [tests/ranger-class-resources-browser.cjs](../tests/ranger-class-resources-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Foe Slayer · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Foe Slayer · 20 | Once-per-own-turn finite use/undo/reset and current Wisdom bonus are shown. The eligible favored-enemy attack/damage roll still resolves at the table. | [tests/ranger-class-resources.cjs](../tests/ranger-class-resources.cjs), [tests/ranger-class-resources-browser.cjs](../tests/ranger-class-resources-browser.cjs) |
 
 ## Rogue · 2014
 
@@ -980,7 +980,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Favored Enemy **[unreviewed]**<br>Spellcasting **[partial]**<br>Weapon Mastery **[partial]** |
+| 1 | Favored Enemy **[implemented]**<br>Spellcasting **[partial]**<br>Weapon Mastery **[partial]** |
 | 2 | Deft Explorer **[partial]**<br>Fighting Style **[partial]** |
 | 3 | Ranger Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -989,21 +989,21 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | Expertise **[unreviewed]** |
-| 10 | Tireless **[unreviewed]** |
+| 10 | Tireless **[partial]** |
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
-| 13 | Relentless Hunter **[unreviewed]** |
-| 14 | Nature's Veil **[unreviewed]** |
+| 13 | Relentless Hunter **[partial]** |
+| 14 | Nature's Veil **[partial]** |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
-| 17 | Precise Hunter **[unreviewed]** |
-| 18 | Feral Senses **[unreviewed]** |
+| 17 | Precise Hunter **[partial]** |
+| 18 | Feral Senses **[implemented]** |
 | 19 | Epic Boon **[unreviewed]** |
-| 20 | Foe Slayer **[unreviewed]** |
+| 20 | Foe Slayer **[implemented]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Favored Enemy · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Favored Enemy · 1 | Always-prepared Hunter’s Mark already exists; free-casting counts now follow actual Ranger levels, with finite use/undo, Long Rest and separate ordinary spell slots. | [tests/ranger-class-resources.cjs](../tests/ranger-class-resources.cjs), [tests/ranger-class-resources-browser.cjs](../tests/ranger-class-resources-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Weapon Mastery · 1 | Weapon choices, class-level allowance, proficiency gating and property reminders exist. Audit remaining property-specific statistics/conditions against the source. | [tests/weapon-mastery.cjs](../tests/weapon-mastery.cjs), [tests/weapon-mastery-browser.cjs](../tests/weapon-mastery-browser.cjs) |
 | Deft Explorer · 2 | Expertise choice works. Bonus languages and replacement/source rules still need structured review. | [tests/character-class-expertise.cjs](../tests/character-class-expertise.cjs) |
@@ -1014,15 +1014,15 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Roving · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Expertise · 9 | Source-rule comparison and structured fields still need review. | Pending |
-| Tireless · 10 | Source-rule comparison and structured fields still need review. | Pending |
+| Tireless · 10 | Wisdom-based finite uses and signed 1d8-plus-Wisdom/minimum-one-total formula are shown. Temporary HP and the Short Rest Exhaustion decrease remain explicit table/manual updates. | [tests/ranger-class-resources.cjs](../tests/ranger-class-resources.cjs), [tests/ranger-class-resources-browser.cjs](../tests/ranger-class-resources-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Relentless Hunter · 13 | Source-rule comparison and structured fields still need review. | Pending |
-| Nature's Veil · 14 | Source-rule comparison and structured fields still need review. | Pending |
+| Relentless Hunter · 13 | Hunter’s Mark-specific Concentration protection is shown without granting global immunity or changing other spells. Checks still resolve at the table. | [tests/ranger-class-resources.cjs](../tests/ranger-class-resources.cjs), [tests/ranger-class-resources-browser.cjs](../tests/ranger-class-resources-browser.cjs) |
+| Nature's Veil · 14 | Wisdom-based finite uses, Bonus Action/end-of-next-turn reminder, use/undo and Long Rest recovery are tracked. Invisibility/duration are not changed automatically. | [tests/ranger-class-resources.cjs](../tests/ranger-class-resources.cjs), [tests/ranger-class-resources-browser.cjs](../tests/ranger-class-resources-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Precise Hunter · 17 | Source-rule comparison and structured fields still need review. | Pending |
-| Feral Senses · 18 | Source-rule comparison and structured fields still need review. | Pending |
+| Precise Hunter · 17 | Marked-target-only Advantage reminder appears with Hunter’s Mark; unrelated attack bonuses are unchanged. No target binding/roll automation is added. | [tests/ranger-class-resources.cjs](../tests/ranger-class-resources.cjs), [tests/ranger-class-resources-browser.cjs](../tests/ranger-class-resources-browser.cjs) |
+| Feral Senses · 18 | Blindsight 30 ft is derived at actual Ranger 18 and shown in Senses without replacing other senses or stacking ranges. | [tests/ranger-class-resources.cjs](../tests/ranger-class-resources.cjs), [tests/ranger-class-resources-browser.cjs](../tests/ranger-class-resources-browser.cjs) |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
-| Foe Slayer · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Foe Slayer · 20 | Actual revised Ranger 20 changes the character’s Hunter’s Mark rider die to d10 in action, spell-sheet, information and print views, including a feat-granted copy. Characters without that Ranger feature and generic catalogue records stay unchanged. | [tests/ranger-class-resources.cjs](../tests/ranger-class-resources.cjs), [tests/ranger-class-resources-browser.cjs](../tests/ranger-class-resources-browser.cjs) |
 
 ## Rogue · 2024
 
