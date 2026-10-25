@@ -2561,6 +2561,8 @@
 
 #characterSheetDialog .sheet-class-resource small { font-size: 12px; line-height: 1.45; }
 #characterSheetDialog .sheet-class-resource-actions { display: flex; flex-wrap: wrap; gap: 8px; flex: 0 0 100%; }
+/* Press feedback must not shrink resource buttons below their touch target. */
+#characterSheetPage #characterSheetDialog .sheet-class-resource-actions button { transform: none !important; }
 @media (max-width: 600px) {
   #characterSheetDialog .sheet-class-resource-actions button { flex: 1 1 90px; }
   #characterSheetDialog .sheet-class-resource-actions [data-save-reroll] { flex-basis: 100%; }
