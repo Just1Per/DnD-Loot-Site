@@ -1,6 +1,6 @@
 # Klassetest og Adobe-opfølgning — 24. oktober 2026
 
-Opdateret 25. oktober: `main` ved `24f6214` indeholder #219–224. Denne gren tilføjer Wizard Arcane Recovery, de manglende ASI-referencepunkter samt Channel Divinity-ressourcer for Cleric/Paladin. Ingen klasse er endnu færdigkontrolleret for alle features, levels, subclasses og kildebøger. Tabellen viser konkrete funktioner, som nu kan testes, ikke et løfte om fuld klasseautomatik.
+Opdateret 25. oktober: `main` ved `9f042af` indeholder #219–226. Denne gren tilføjer Channel Divinity-ressourcer og egne Paladin-auras. Ingen klasse er endnu færdigkontrolleret for alle features, levels, subclasses og kildebøger. Tabellen viser konkrete funktioner, som nu kan testes, ikke et løfte om fuld klasseautomatik.
 
 ## Hvad kan testes nu?
 
@@ -17,8 +17,8 @@ Opdateret 25. oktober: `main` ved `24f6214` indeholder #219–224. Denne gren ti
 | Druid — 2024 | Primal Order: Warden/Magician, skill-bonus, ekstra cantrip og Druidic | Wild Shape-classfunktioner, ressourcer, Elemental Fury og øvrige features/circles |
 | Barbarian | 2024 Weapon Mastery og Primal Champion på level 20 i begge editions | Rage, movement, betingede angreb/defenses og subclasses |
 | Ranger | Fighting Style, 2024 Weapon Mastery samt Deft Explorer/Expertise | 2014 Favored Enemy/Natural Explorer, ekstra sprog, Roving, optional Tasha’s og subclasses. #223 tilføjer Hunter’s Mark-brug, Tireless, Nature’s Veil, Feral Senses og Foe Slayer |
-| Wizard | 2024 Scholar, class-baseret spellbook/preparation; denne gren tilføjer Arcane Recovery med samlet slotvalg, class-level-budget og edition-specifik nulstilling | Spell Mastery, Signature Spells og school-features |
-| Paladin | Fighting Style og 2024 Weapon Mastery; eksisterende spell-grundlag. Denne gren tilføjer Lay on Hands-pulje med pointvalg og edition-specifikke cure/Restoring Touch-muligheder | Channel Divinity er nu med i denne gren; auras, smite og oath-effekter mangler stadig. Målpersonens HP/conditions ændres separat |
+| Wizard | 2024 Scholar, class-baseret spellbook/preparation og Arcane Recovery med samlet slotvalg, class-level-budget og edition-specifik nulstilling | Spell Mastery, Signature Spells og school-features |
+| Paladin | Fighting Style og 2024 Weapon Mastery; eksisterende spell-grundlag. Denne gren tilføjer Lay on Hands-pulje med pointvalg og edition-specifikke cure/Restoring Touch-muligheder | Channel Divinity og egen Aura of Protection er med i denne gren; smite og oath-effekter mangler stadig. Målpersonens HP/conditions ændres separat |
 | Sorcerer | Sorcery Points, kildekorrekte Metamagic-valg/prerequisites og pointforbrug; 2024 Sorcerous Restoration | Font of Magic slot-veksling/skabte slots, Innate Sorcery, Metamagic Adept og øvrige features/subclasses |
 
 Point Buy, class-level-baserede feat/ASI-antal, gem/genåbn og de fælles multiclass-beregninger er testet på tværs af alle 13 klasse-ID’er. Det er ikke det samme som, at alle klassernes features er gennemført.

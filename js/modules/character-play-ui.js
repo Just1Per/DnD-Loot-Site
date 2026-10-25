@@ -35,8 +35,14 @@ function setupCharacterPlayUI(){
  const rows=document.getElementById('sheetSpellRows'),edit=document.createElement('details');edit.id='sheetSpellEditor';edit.className='sheet-spell-editor';edit.innerHTML='<summary>Edit spell details / custom spells</summary>';rows.before(edit);edit.append(rows,document.getElementById('sheetAddSpell'));
  const gear=document.createElement('section');gear.id='sheetGearPicker';gear.className='sheet-editor-box';document.getElementById('sheetInventory').before(gear);renderSheetGearPicker();
 }
+function renderPaladinAuraControls(d){
+ const anchor=document.getElementById('sheetClassSaveTraining');if(!anchor)return;let host=document.getElementById('sheetPaladinAuras');if(!host){host=document.createElement('div');host.id='sheetPaladinAuras';host.className='sheet-paladin-auras';anchor.after(host);}host.hidden=!d.paladinAuras?.available;if(host.hidden){host.innerHTML='';return;}
+ const aura=d.paladinAuras,detail=aura.reason+(aura.courageAvailable?' Aura of Courage: '+(aura.courageActive?'you and eligible allies in range cannot be Frightened.':'inactive with the aura.'):'')+' Other Paladins’ Aura of Protection bonuses do not stack.';host.innerHTML='<p><strong>Aura of Protection · '+aura.range+' ft · '+(aura.active?'+'+aura.bonus+' to saves':'inactive')+'</strong></p><label class="sheet-aura-toggle"><input type="checkbox" data-paladin-aura '+(aura.enabled?'checked':'')+'> Apply my aura when available</label><p class="sheet-help">'+sheetEscape(detail)+'</p>';
+ host.querySelector('[data-paladin-aura]').onchange=event=>{const enabled=event.target.checked;readSheetForm();if(CharacterPaladinAuras.setEnabled(sheetSession.data,enabled,{level:sheetSession.identity.level})){catalogChanged('Own Paladin aura '+(enabled?'enabled when available':'not applied')+'. Save to keep this choice.');document.querySelector('[data-paladin-aura]')?.focus({preventScroll:true});}};
+}
 function updateCharacterPlayUI(d){
- const saveTraining=document.getElementById('sheetClassSaveTraining');if(saveTraining)saveTraining.innerHTML=(d.saveTraining?.reports||[]).map(row=>'<p data-class-save-training="'+row.id+'"><strong>'+sheetEscape(row.name)+':</strong> '+sheetEscape(row.detail)+'</p>').join('')+(d.saveTraining?.deathSaveProficiency?'<p>Death saving throws: proficiency contribution <strong>+'+d.deathSaveBonus+'</strong>.</p>':'');
+ const saveTraining=document.getElementById('sheetClassSaveTraining');if(saveTraining)saveTraining.innerHTML=(d.saveTraining?.reports||[]).map(row=>'<p data-class-save-training="'+row.id+'"><strong>'+sheetEscape(row.name)+':</strong> '+sheetEscape(row.detail)+'</p>').join('')+(d.deathSaveBonus?'<p>Death saving throw bonus <strong>'+CharacterSheetModel.signed(d.deathSaveBonus)+'</strong>.</p>':'');
+ renderPaladinAuraControls(d);
  updateStorySuggestions();
  const s=sheetSession,help=document.getElementById('sheetAlignmentHelp');if(help)help.textContent=CharacterPlayRules.alignments[s.data.alignment]||'';
  const host=document.getElementById('sheetSpellReadout');if(!host)return;

@@ -2424,9 +2424,12 @@
           "name": "Aura of Protection",
           "level": 6,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual Paladin 6/18 unlock/range, current final Charisma minimum-one contribution once to own saves, concentration-relevant Constitution/death-save totals, source-specific canonical condition suppression, manual override, save/reopen and print. Allied/competing auras are table-resolved.",
+          "evidence": [
+            "tests/paladin-protective-auras.cjs",
+            "tests/paladin-protective-auras-browser.cjs"
+          ]
         },
         {
           "id": "2014:paladin:8:ability-score-improvement",
@@ -2445,9 +2448,12 @@
           "name": "Aura of Courage",
           "level": 10,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Paladin 10, shared 10/30-ft range and source-specific availability are derived and displayed/printed. Existing conditions and allied sheets are not deleted or automatically rewritten.",
+          "evidence": [
+            "tests/paladin-protective-auras.cjs",
+            "tests/paladin-protective-auras-browser.cjs"
+          ]
         },
         {
           "id": "2014:paladin:11:improved-divine-smite",
@@ -2496,18 +2502,24 @@
           "name": "Aura of Courage",
           "level": 18,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Paladin 10, shared 10/30-ft range and source-specific availability are derived and displayed/printed. Existing conditions and allied sheets are not deleted or automatically rewritten.",
+          "evidence": [
+            "tests/paladin-protective-auras.cjs",
+            "tests/paladin-protective-auras-browser.cjs"
+          ]
         },
         {
           "id": "2014:paladin:18:aura-of-protection",
           "name": "Aura of Protection",
           "level": 18,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual Paladin 6/18 unlock/range, current final Charisma minimum-one contribution once to own saves, concentration-relevant Constitution/death-save totals, source-specific canonical condition suppression, manual override, save/reopen and print. Allied/competing auras are table-resolved.",
+          "evidence": [
+            "tests/paladin-protective-auras.cjs",
+            "tests/paladin-protective-auras-browser.cjs"
+          ]
         },
         {
           "id": "2014:paladin:19:ability-score-improvement",
@@ -6457,9 +6469,12 @@
           "name": "Aura of Protection",
           "level": 6,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual Paladin 6/18 unlock/range, current final Charisma minimum-one contribution once to own saves, concentration-relevant Constitution/death-save totals, source-specific canonical condition suppression, manual override, save/reopen and print. Allied/competing auras are table-resolved.",
+          "evidence": [
+            "tests/paladin-protective-auras.cjs",
+            "tests/paladin-protective-auras-browser.cjs"
+          ]
         },
         {
           "id": "2024:paladin:8:ability-score-improvement",
@@ -6490,9 +6505,12 @@
           "name": "Aura of Courage",
           "level": 10,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Paladin 10, shared 10/30-ft range and source-specific availability are derived and displayed/printed. Existing conditions and allied sheets are not deleted or automatically rewritten.",
+          "evidence": [
+            "tests/paladin-protective-auras.cjs",
+            "tests/paladin-protective-auras-browser.cjs"
+          ]
         },
         {
           "id": "2024:paladin:11:radiant-strikes",
@@ -6544,9 +6562,12 @@
           "name": "Aura Expansion",
           "level": 18,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Protection/Courage range expands to 30 ft from actual Paladin 18; total multiclass levels do not unlock it.",
+          "evidence": [
+            "tests/paladin-protective-auras.cjs",
+            "tests/paladin-protective-auras-browser.cjs"
+          ]
         },
         {
           "id": "2024:paladin:19:epic-boon",

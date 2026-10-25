@@ -346,11 +346,11 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 3 | Divine Health **[unreviewed]**<br>Sacred Oath **[partial]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Extra Attack **[implemented]** |
-| 6 | Aura of Protection **[unreviewed]** |
+| 6 | Aura of Protection **[implemented]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 10 | Aura of Courage **[unreviewed]** |
+| 10 | Aura of Courage **[partial]** |
 | 11 | Improved Divine Smite **[unreviewed]** |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -358,7 +358,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 18 | Aura of Courage **[unreviewed]**<br>Aura of Protection **[unreviewed]** |
+| 18 | Aura of Courage **[partial]**<br>Aura of Protection **[implemented]** |
 | 19 | Ability Score Improvement **[partial]** |
 | 20 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 
@@ -373,15 +373,15 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Sacred Oath · 3 | Existing oath choice and an eligible oath-effect entry use the shared legacy Channel Divinity pool with Cleric. Specific oath effect automation still requires its own review. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
-| Aura of Protection · 6 | Source-rule comparison and structured fields still need review. | Pending |
+| Aura of Protection · 6 | Actual Paladin 6/18 unlock/range, current final Charisma minimum-one contribution once to own saves, concentration-relevant Constitution/death-save totals, source-specific canonical condition suppression, manual override, save/reopen and print. Allied/competing auras are table-resolved. | [tests/paladin-protective-auras.cjs](../tests/paladin-protective-auras.cjs), [tests/paladin-protective-auras-browser.cjs](../tests/paladin-protective-auras-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Aura of Courage · 10 | Source-rule comparison and structured fields still need review. | Pending |
+| Aura of Courage · 10 | Actual Paladin 10, shared 10/30-ft range and source-specific availability are derived and displayed/printed. Existing conditions and allied sheets are not deleted or automatically rewritten. | [tests/paladin-protective-auras.cjs](../tests/paladin-protective-auras.cjs), [tests/paladin-protective-auras-browser.cjs](../tests/paladin-protective-auras-browser.cjs) |
 | Improved Divine Smite · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Cleansing Touch · 14 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Aura of Courage · 18 | Source-rule comparison and structured fields still need review. | Pending |
-| Aura of Protection · 18 | Source-rule comparison and structured fields still need review. | Pending |
+| Aura of Courage · 18 | Actual Paladin 10, shared 10/30-ft range and source-specific availability are derived and displayed/printed. Existing conditions and allied sheets are not deleted or automatically rewritten. | [tests/paladin-protective-auras.cjs](../tests/paladin-protective-auras.cjs), [tests/paladin-protective-auras-browser.cjs](../tests/paladin-protective-auras-browser.cjs) |
+| Aura of Protection · 18 | Actual Paladin 6/18 unlock/range, current final Charisma minimum-one contribution once to own saves, concentration-relevant Constitution/death-save totals, source-specific canonical condition suppression, manual override, save/reopen and print. Allied/competing auras are table-resolved. | [tests/paladin-protective-auras.cjs](../tests/paladin-protective-auras.cjs), [tests/paladin-protective-auras-browser.cjs](../tests/paladin-protective-auras-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 
 ## Ranger · 2014
@@ -939,11 +939,11 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 3 | Channel Divinity **[implemented]**<br>Paladin Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Extra Attack **[implemented]**<br>Faithful Steed **[unreviewed]** |
-| 6 | Aura of Protection **[unreviewed]** |
+| 6 | Aura of Protection **[implemented]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | Abjure Foes **[partial]** |
-| 10 | Aura of Courage **[unreviewed]** |
+| 10 | Aura of Courage **[partial]** |
 | 11 | Radiant Strikes **[unreviewed]** |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -951,7 +951,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 18 | Aura Expansion **[unreviewed]** |
+| 18 | Aura Expansion **[implemented]** |
 | 19 | Epic Boon **[unreviewed]** |
 | 20 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 
@@ -967,15 +967,15 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Faithful Steed · 5 | Source-rule comparison and structured fields still need review. | Pending |
-| Aura of Protection · 6 | Source-rule comparison and structured fields still need review. | Pending |
+| Aura of Protection · 6 | Actual Paladin 6/18 unlock/range, current final Charisma minimum-one contribution once to own saves, concentration-relevant Constitution/death-save totals, source-specific canonical condition suppression, manual override, save/reopen and print. Allied/competing auras are table-resolved. | [tests/paladin-protective-auras.cjs](../tests/paladin-protective-auras.cjs), [tests/paladin-protective-auras-browser.cjs](../tests/paladin-protective-auras-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Abjure Foes · 9 | Effect choice unlocks at actual Paladin 9, shares the class pool and shows current Charisma target count/DC, range/duration and condition restrictions. Targets/conditions remain table resolved. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
-| Aura of Courage · 10 | Source-rule comparison and structured fields still need review. | Pending |
+| Aura of Courage · 10 | Actual Paladin 10, shared 10/30-ft range and source-specific availability are derived and displayed/printed. Existing conditions and allied sheets are not deleted or automatically rewritten. | [tests/paladin-protective-auras.cjs](../tests/paladin-protective-auras.cjs), [tests/paladin-protective-auras-browser.cjs](../tests/paladin-protective-auras-browser.cjs) |
 | Radiant Strikes · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Restoring Touch · 14 | Correct level-14 condition list and five-point-per-condition cost appear with the same Lay on Hands pool and in print. Target conditions are updated explicitly by the player. | [tests/paladin-lay-on-hands.cjs](../tests/paladin-lay-on-hands.cjs), [tests/paladin-lay-on-hands-browser.cjs](../tests/paladin-lay-on-hands-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Aura Expansion · 18 | Source-rule comparison and structured fields still need review. | Pending |
+| Aura Expansion · 18 | Protection/Courage range expands to 30 ft from actual Paladin 18; total multiclass levels do not unlock it. | [tests/paladin-protective-auras.cjs](../tests/paladin-protective-auras.cjs), [tests/paladin-protective-auras-browser.cjs](../tests/paladin-protective-auras-browser.cjs) |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
 
 ## Ranger · 2024

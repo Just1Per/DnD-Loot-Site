@@ -2608,3 +2608,7 @@
 #characterSheetDialog .sheet-channel-controls [data-channel-detail] { flex: 1 1 100%; min-width: 0; }
 #characterSheetDialog #sheetFeatResources :is([data-channel-effect],[data-channel-use]),
 #characterSheetPage #characterSheetDialog #sheetFeatResources :is([data-channel-effect],[data-channel-use]) { box-sizing: border-box; min-height: 44px !important; max-width: 100%; }
+
+#characterSheetDialog .sheet-paladin-auras { border-top: 1px solid var(--vault-line,#cdbb9b); margin: 8px 0; padding-top: 8px; }
+#characterSheetDialog .sheet-aura-toggle { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+#characterSheetDialog #sheetPaladinAuras input[type=checkbox] { width: 20px; height: 20px; min-width: 20px; }

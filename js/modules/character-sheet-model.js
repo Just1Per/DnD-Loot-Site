@@ -271,6 +271,7 @@ var CharacterSheetModel = (() => {
       mods[key] = mod(scores[key]);
       saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + d.saves[key].bonus + artificerFeatures.saveBonus;
     }
+    const Aura=globalThis.CharacterPaladinAuras||(typeof require==='function'?require('./character-paladin-auras'):null),paladinAuras=Aura.derive(d,{level,mods});for(const key of Object.keys(saves))saves[key]+=paladinAuras.bonus;
     classOrders.skillBonuses={};for(const report of classOrders.reports){report.bonus=report.skills.length?Math.max(1,mods.wis):0;for(const key of report.skills)classOrders.skillBonuses[key]=(classOrders.skillBonuses[key]||0)+report.bonus;}
     for (const [key, [, ability]] of Object.entries(skills))
       checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0, classExpertise.skills.includes(key) ? 2 : 0,effects.halfSkillProficiency?.5:0)) + d.skills[key].bonus + (classOrders.skillBonuses[key]||0);
@@ -282,13 +283,14 @@ var CharacterSheetModel = (() => {
     const result = {
       effects,
       rangerFeatures,
+      paladinAuras,
       attackAction:AttackProgression.derive(d,level),
       toolTraining,
       artificerFeatures,
       classAbilityFeatures,
       classOrders,
       saveTraining,
-      deathSaveBonus:(saveTraining.deathSaveProficiency?pb:0)+artificerFeatures.saveBonus,
+      deathSaveBonus:(saveTraining.deathSaveProficiency?pb:0)+artificerFeatures.saveBonus+paladinAuras.bonus,
       invocationEffects,
       cantripInvocations:ClassChoices.cantripInvocations(d,{level,mods}),
       classResources:ClassChoices.classResources(d,{level,mods,attunedCount:artificerFeatures.attuned}),
