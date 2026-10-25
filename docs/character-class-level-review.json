@@ -1099,9 +1099,12 @@
           "name": "Channel Divinity",
           "level": 2,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:cleric:4:ability-score-improvement",
@@ -1120,18 +1123,24 @@
           "name": "Destroy Undead",
           "level": 5,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:cleric:6:channel-divinity",
           "name": "Channel Divinity",
           "level": 6,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:cleric:8:ability-score-improvement",
@@ -1150,9 +1159,12 @@
           "name": "Destroy Undead",
           "level": 8,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:cleric:10:divine-intervention",
@@ -1168,9 +1180,12 @@
           "name": "Destroy Undead",
           "level": 11,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:cleric:12:ability-score-improvement",
@@ -1189,9 +1204,12 @@
           "name": "Destroy Undead",
           "level": 14,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:cleric:16:ability-score-improvement",
@@ -1210,18 +1228,24 @@
           "name": "Destroy Undead",
           "level": 17,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:cleric:18:channel-divinity",
           "name": "Channel Divinity",
           "level": 18,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:cleric:19:ability-score-improvement",
@@ -2298,9 +2322,12 @@
           "name": "Divine Sense",
           "level": 1,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Separate 1-plus-current-Charisma pool, including zero uses, with finite use/undo and Long Rest. Source-specific detection/range/duration reminder; no permanent sight change.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:paladin:1:lay-on-hands",
@@ -2361,9 +2388,12 @@
           "name": "Sacred Oath",
           "level": 3,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Existing oath choice and an eligible oath-effect entry use the shared legacy Channel Divinity pool with Cleric. Specific oath effect automation still requires its own review.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:paladin:4:ability-score-improvement",
@@ -5015,9 +5045,12 @@
           "name": "Channel Divinity",
           "level": 2,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:cleric:3:cleric-subclasses",
@@ -5045,9 +5078,12 @@
           "name": "Sear Undead",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "From actual Cleric 5, Turn Undead shows the current Wisdom/minimum-one d8 damage reminder and notes that this damage does not end turning. Targets and rolls remain table resolved.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:cleric:7:blessed-strikes",
@@ -6367,9 +6403,12 @@
           "name": "Channel Divinity",
           "level": 3,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual Paladin-level pool, Divine Sense and Abjure Foes choices/reminders, Charisma DC, finite uses, one-use Short Rest/full Long Rest recovery and persistence. Revised Cleric use counts stay separate.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:paladin:3:paladin-subclass",
@@ -6439,9 +6478,12 @@
           "name": "Abjure Foes",
           "level": 9,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Effect choice unlocks at actual Paladin 9, shares the class pool and shows current Charisma target count/DC, range/duration and condition restrictions. Targets/conditions remain table resolved.",
+          "evidence": [
+            "tests/divine-channel-resources.cjs",
+            "tests/divine-channel-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:paladin:10:aura-of-courage",

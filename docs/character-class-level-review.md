@@ -161,23 +161,23 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Divine Domain **[unreviewed]**<br>Spellcasting **[partial]** |
-| 2 | Channel Divinity **[unreviewed]** |
+| 2 | Channel Divinity **[implemented]** |
 | 3 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Destroy Undead **[unreviewed]** |
-| 6 | Channel Divinity **[unreviewed]** |
+| 5 | Destroy Undead **[partial]** |
+| 6 | Channel Divinity **[implemented]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 8 | Ability Score Improvement **[partial]**<br>Destroy Undead **[unreviewed]** |
+| 8 | Ability Score Improvement **[partial]**<br>Destroy Undead **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 10 | Divine Intervention **[unreviewed]** |
-| 11 | Destroy Undead **[unreviewed]** |
+| 11 | Destroy Undead **[partial]** |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 14 | Destroy Undead **[unreviewed]** |
+| 14 | Destroy Undead **[partial]** |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
-| 17 | Destroy Undead **[unreviewed]** |
-| 18 | Channel Divinity **[unreviewed]** |
+| 17 | Destroy Undead **[partial]** |
+| 18 | Channel Divinity **[implemented]** |
 | 19 | Ability Score Improvement **[partial]** |
 | 20 | Divine Intervention **[unreviewed]** |
 
@@ -185,19 +185,19 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | --- | --- | --- |
 | Divine Domain · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
-| Channel Divinity · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Channel Divinity · 2 | Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Destroy Undead · 5 | Source-rule comparison and structured fields still need review. | Pending |
-| Channel Divinity · 6 | Source-rule comparison and structured fields still need review. | Pending |
+| Destroy Undead · 5 | Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
+| Channel Divinity · 6 | Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Destroy Undead · 8 | Source-rule comparison and structured fields still need review. | Pending |
+| Destroy Undead · 8 | Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Divine Intervention · 10 | Source-rule comparison and structured fields still need review. | Pending |
-| Destroy Undead · 11 | Source-rule comparison and structured fields still need review. | Pending |
+| Destroy Undead · 11 | Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Destroy Undead · 14 | Source-rule comparison and structured fields still need review. | Pending |
+| Destroy Undead · 14 | Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Destroy Undead · 17 | Source-rule comparison and structured fields still need review. | Pending |
-| Channel Divinity · 18 | Source-rule comparison and structured fields still need review. | Pending |
+| Destroy Undead · 17 | Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
+| Channel Divinity · 18 | Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Divine Intervention · 20 | Source-rule comparison and structured fields still need review. | Pending |
 
@@ -341,9 +341,9 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Divine Sense **[unreviewed]**<br>Lay on Hands **[partial]** |
+| 1 | Divine Sense **[implemented]**<br>Lay on Hands **[partial]** |
 | 2 | Divine Smite **[unreviewed]**<br>Fighting Style **[partial]**<br>Spellcasting **[partial]** |
-| 3 | Divine Health **[unreviewed]**<br>Sacred Oath **[unreviewed]** |
+| 3 | Divine Health **[unreviewed]**<br>Sacred Oath **[partial]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Extra Attack **[implemented]** |
 | 6 | Aura of Protection **[unreviewed]** |
@@ -364,13 +364,13 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Divine Sense · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Divine Sense · 1 | Separate 1-plus-current-Charisma pool, including zero uses, with finite use/undo and Long Rest. Source-specific detection/range/duration reminder; no permanent sight change. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Lay on Hands · 1 | Actual Paladin-level healing pool, variable point spending/undo, Long Rest, source-specific cure options, persistence and print. Apply healing and condition removal to the chosen recipient separately; no cross-character mutation. | [tests/paladin-lay-on-hands.cjs](../tests/paladin-lay-on-hands.cjs), [tests/paladin-lay-on-hands-browser.cjs](../tests/paladin-lay-on-hands-browser.cjs) |
 | Divine Smite · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Fighting Style · 2 | Base class and Feats choices share the correct allowance, with duplicate/alias guards. Additional subclass/feat style sources and situational effects remain in the wider review. | [tests/fighting-style-entitlements.cjs](../tests/fighting-style-entitlements.cjs), [tests/fighting-style-entitlements-browser.cjs](../tests/fighting-style-entitlements-browser.cjs) |
 | Spellcasting · 2 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Divine Health · 3 | Source-rule comparison and structured fields still need review. | Pending |
-| Sacred Oath · 3 | Source-rule comparison and structured fields still need review. | Pending |
+| Sacred Oath · 3 | Existing oath choice and an eligible oath-effect entry use the shared legacy Channel Divinity pool with Cleric. Specific oath effect automation still requires its own review. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Aura of Protection · 6 | Source-rule comparison and structured fields still need review. | Pending |
@@ -745,10 +745,10 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Divine Order **[implemented]**<br>Spellcasting **[partial]** |
-| 2 | Channel Divinity **[unreviewed]** |
+| 2 | Channel Divinity **[implemented]** |
 | 3 | Cleric Subclasses **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Sear Undead **[unreviewed]** |
+| 5 | Sear Undead **[partial]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | Blessed Strikes **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
@@ -769,10 +769,10 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | --- | --- | --- |
 | Divine Order · 1 | Structured Order choice grants its weapon/armor training or extra class cantrip allowance and current Wisdom (minimum +1) to the specified Intelligence skill checks; source-aware readouts, multiclassing, persistence and print. Select cantrips in the existing Spells builder. | [tests/divine-and-primal-orders.cjs](../tests/divine-and-primal-orders.cjs), [tests/divine-and-primal-orders-browser.cjs](../tests/divine-and-primal-orders-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
-| Channel Divinity · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Channel Divinity · 2 | Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Cleric Subclasses · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Sear Undead · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Sear Undead · 5 | From actual Cleric 5, Turn Undead shows the current Wisdom/minimum-one d8 damage reminder and notes that this damage does not end turning. Targets and rolls remain table resolved. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Blessed Strikes · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Divine Intervention · 10 | Source-rule comparison and structured fields still need review. | Pending |
@@ -936,13 +936,13 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | --- | --- |
 | 1 | Lay On Hands **[partial]**<br>Spellcasting **[partial]**<br>Weapon Mastery **[partial]** |
 | 2 | Fighting Style **[partial]**<br>Paladin's Smite **[unreviewed]** |
-| 3 | Channel Divinity **[unreviewed]**<br>Paladin Subclass **[unreviewed]** |
+| 3 | Channel Divinity **[implemented]**<br>Paladin Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Extra Attack **[implemented]**<br>Faithful Steed **[unreviewed]** |
 | 6 | Aura of Protection **[unreviewed]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
-| 9 | Abjure Foes **[unreviewed]** |
+| 9 | Abjure Foes **[partial]** |
 | 10 | Aura of Courage **[unreviewed]** |
 | 11 | Radiant Strikes **[unreviewed]** |
 | 12 | Ability Score Improvement **[partial]** |
@@ -962,14 +962,14 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Weapon Mastery · 1 | Weapon choices, class-level allowance, proficiency gating and property reminders exist. Audit remaining property-specific statistics/conditions against the source. | [tests/weapon-mastery.cjs](../tests/weapon-mastery.cjs), [tests/weapon-mastery-browser.cjs](../tests/weapon-mastery-browser.cjs) |
 | Fighting Style · 2 | Base class and Feats choices share the correct allowance, with duplicate/alias guards. Additional subclass/feat style sources and situational effects remain in the wider review. | [tests/fighting-style-entitlements.cjs](../tests/fighting-style-entitlements.cjs), [tests/fighting-style-entitlements-browser.cjs](../tests/fighting-style-entitlements-browser.cjs) |
 | Paladin's Smite · 2 | Source-rule comparison and structured fields still need review. | Pending |
-| Channel Divinity · 3 | Source-rule comparison and structured fields still need review. | Pending |
+| Channel Divinity · 3 | Actual Paladin-level pool, Divine Sense and Abjure Foes choices/reminders, Charisma DC, finite uses, one-use Short Rest/full Long Rest recovery and persistence. Revised Cleric use counts stay separate. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Paladin Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Faithful Steed · 5 | Source-rule comparison and structured fields still need review. | Pending |
 | Aura of Protection · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Abjure Foes · 9 | Source-rule comparison and structured fields still need review. | Pending |
+| Abjure Foes · 9 | Effect choice unlocks at actual Paladin 9, shares the class pool and shows current Charisma target count/DC, range/duration and condition restrictions. Targets/conditions remain table resolved. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Aura of Courage · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Radiant Strikes · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
