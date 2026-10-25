@@ -2603,3 +2603,8 @@
 #characterSheetDialog #sheetFeatResources :is([data-arcane-slot],[data-arcane-recover],[data-arcane-new-day],.sheet-arcane-options > summary),
 #characterSheetPage #characterSheetDialog #sheetFeatResources :is([data-arcane-slot],[data-arcane-recover],[data-arcane-new-day],.sheet-arcane-options > summary) { box-sizing: border-box; min-height: 44px !important; }
 #characterSheetDialog .sheet-arcane-options > summary { padding: 10px 0; cursor: pointer; }
+
+#characterSheetDialog .sheet-channel-controls .sheet-field,
+#characterSheetDialog .sheet-channel-controls [data-channel-detail] { flex: 1 1 100%; min-width: 0; }
+#characterSheetDialog #sheetFeatResources :is([data-channel-effect],[data-channel-use]),
+#characterSheetPage #characterSheetDialog #sheetFeatResources :is([data-channel-effect],[data-channel-use]) { box-sizing: border-box; min-height: 44px !important; max-width: 100%; }
