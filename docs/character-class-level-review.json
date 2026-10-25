@@ -1173,6 +1173,18 @@
           "evidence": []
         },
         {
+          "id": "2014:cleric:12:ability-score-improvement",
+          "name": "Ability Score Improvement",
+          "level": 12,
+          "source": "SRD 5.1",
+          "state": "partial",
+          "scope": "Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source.",
+          "evidence": [
+            "tests/character-play-rules.cjs",
+            "tests/multiclass-asi-browser.cjs"
+          ]
+        },
+        {
           "id": "2014:cleric:14:destroy-undead",
           "name": "Destroy Undead",
           "level": 14,
@@ -1298,7 +1310,9 @@
         },
         {
           "level": 12,
-          "newFeatures": []
+          "newFeatures": [
+            "2014:cleric:12:ability-score-improvement"
+          ]
         },
         {
           "level": 13,
@@ -3620,6 +3634,18 @@
           "evidence": []
         },
         {
+          "id": "2014:warlock:16:ability-score-improvement",
+          "name": "Ability Score Improvement",
+          "level": 16,
+          "source": "SRD 5.1",
+          "state": "partial",
+          "scope": "Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source.",
+          "evidence": [
+            "tests/character-play-rules.cjs",
+            "tests/multiclass-asi-browser.cjs"
+          ]
+        },
+        {
           "id": "2014:warlock:17:mystic-arcanum",
           "name": "Mystic Arcanum",
           "level": 17,
@@ -3732,7 +3758,9 @@
         },
         {
           "level": 16,
-          "newFeatures": []
+          "newFeatures": [
+            "2014:warlock:16:ability-score-improvement"
+          ]
         },
         {
           "level": 17,
@@ -7110,6 +7138,18 @@
           ]
         },
         {
+          "id": "2024:rogue:10:ability-score-improvement",
+          "name": "Ability Score Improvement",
+          "level": 10,
+          "source": "SRD 5.2.1",
+          "state": "partial",
+          "scope": "Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source.",
+          "evidence": [
+            "tests/character-play-rules.cjs",
+            "tests/multiclass-asi-browser.cjs"
+          ]
+        },
+        {
           "id": "2024:rogue:11:improved-cunning-strike",
           "name": "Improved Cunning Strike",
           "level": 11,
@@ -7252,7 +7292,9 @@
         },
         {
           "level": 10,
-          "newFeatures": []
+          "newFeatures": [
+            "2024:rogue:10:ability-score-improvement"
+          ]
         },
         {
           "level": 11,

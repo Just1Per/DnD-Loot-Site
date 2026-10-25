@@ -171,7 +171,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 10 | Divine Intervention **[unreviewed]** |
 | 11 | Destroy Undead **[unreviewed]** |
-| 12 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
+| 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 14 | Destroy Undead **[unreviewed]** |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -193,6 +193,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Destroy Undead · 8 | Source-rule comparison and structured fields still need review. | Pending |
 | Divine Intervention · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Destroy Undead · 11 | Source-rule comparison and structured fields still need review. | Pending |
+| Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Destroy Undead · 14 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Destroy Undead · 17 | Source-rule comparison and structured fields still need review. | Pending |
@@ -537,7 +538,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 13 | Mystic Arcanum **[unreviewed]** |
 | 14 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 15 | Mystic Arcanum **[unreviewed]** |
-| 16 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
+| 16 | Ability Score Improvement **[partial]** |
 | 17 | Mystic Arcanum **[unreviewed]** |
 | 18 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 19 | Ability Score Improvement **[partial]** |
@@ -555,6 +556,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Mystic Arcanum · 13 | Source-rule comparison and structured fields still need review. | Pending |
 | Mystic Arcanum · 15 | Source-rule comparison and structured fields still need review. | Pending |
+| Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Mystic Arcanum · 17 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Eldritch Master · 20 | Source-rule comparison and structured fields still need review. | Pending |
@@ -1037,7 +1039,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 7 | Evasion **[unreviewed]**<br>Reliable Talent **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 10 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
+| 10 | Ability Score Improvement **[partial]** |
 | 11 | Improved Cunning Strike **[unreviewed]** |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -1065,6 +1067,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Evasion · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Reliable Talent · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
+| Ability Score Improvement · 10 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Improved Cunning Strike · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Devious Strikes · 14 | Source-rule comparison and structured fields still need review. | Pending |

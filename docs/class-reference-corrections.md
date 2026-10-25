@@ -13,3 +13,11 @@ The build script applies these corrections when regenerating the pinned data. Th
 These changes fix the class reference and its Overview reminders. They do not yet automate Deflect Attacks rolls, Studied Attacks advantage or Arcanum spell choices/counters. Those remain on the class-feature backlog.
 
 No Firestore or Storage rule change, data migration or production deployment is required.
+
+## Missing ASI milestones
+
+The pinned normalized import omitted three named milestones: legacy Cleric 12, legacy Warlock 16 and revised Rogue 10. The local reference, reproducible importer and stale-remote fallback now retain those rows. Existing correct rows and unrelated source records remain unchanged.
+
+The numeric feat/ASI budget already included these levels. This correction makes the builder/class reference and level-by-level inventory agree with that existing budget; it does not award additional feats or change saved choices. Regression coverage compares all supported classes at levels 1–20 in both core editions and checks missing/correct remote rows without mutation or duplication.
+
+Official source tables: [2014 Cleric and Warlock](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/classes) and [2024 Rogue](https://www.dndbeyond.com/sources/dnd/br-2024/character-classes). The builder’s existing ASI guidance and controls remain applicable. No Firestore/Storage rule changes, catalogue publication, deployment or migration required.
