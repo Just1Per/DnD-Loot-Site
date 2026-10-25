@@ -2578,3 +2578,10 @@
 #characterSheetPage #characterSheetDialog .sheet-artificer-source .sheet-field { min-width: 0; }
 #characterSheetDialog .sheet-artificer-source [data-artificer-source],
 #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-artificer-source] { min-height: 44px !important; width: 100%; min-width: 0; max-width: 100%; }
+#characterSheetDialog .sheet-metamagic-controls .sheet-field { flex: 1 1 180px; min-width: 0; }
+#characterSheetDialog .sheet-metamagic-controls [data-metamagic-detail] { flex-basis: 100%; margin: 0; }
+#characterSheetDialog .sheet-metamagic-controls select { width: 100%; min-width: 0; max-width: 100%; }
+#characterSheetDialog #sheetFeatResources :is([data-metamagic],[data-metamagic-level],[data-spend-metamagic]),
+#characterSheetPage #characterSheetDialog #sheetFeatResources :is([data-metamagic],[data-metamagic-level],[data-spend-metamagic]),
+#characterSheetDialog #sheetAdobeClasses [data-choice-group=metamagic],
+#characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-choice-group=metamagic] { min-height: 44px !important; }

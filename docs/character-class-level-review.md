@@ -483,40 +483,40 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Sorcerous Origin **[unreviewed]**<br>Spellcasting **[partial]** |
-| 2 | Font of Magic **[unreviewed]** |
-| 3 | Metamagic **[unreviewed]** |
+| 2 | Font of Magic **[partial]** |
+| 3 | Metamagic **[partial]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 10 | Metamagic **[unreviewed]** |
+| 10 | Metamagic **[partial]** |
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 14 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
-| 17 | Metamagic **[unreviewed]** |
+| 17 | Metamagic **[partial]** |
 | 18 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 19 | Ability Score Improvement **[partial]** |
-| 20 | Sorcerous Restoration **[unreviewed]** |
+| 20 | Sorcerous Restoration **[implemented]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Sorcerous Origin · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
-| Font of Magic · 2 | Source-rule comparison and structured fields still need review. | Pending |
-| Metamagic · 3 | Source-rule comparison and structured fields still need review. | Pending |
+| Font of Magic · 2 | Class Sorcery Point maximum, finite spend/undo, Metamagic cost spending and rest recovery are tracked. Spell-slot-to-point conversion and temporary slot creation remain pending. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
+| Metamagic · 3 | Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Metamagic · 10 | Source-rule comparison and structured fields still need review. | Pending |
+| Metamagic · 10 | Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Metamagic · 17 | Source-rule comparison and structured fields still need review. | Pending |
+| Metamagic · 17 | Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Sorcerous Restoration · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Sorcerous Restoration · 20 | Legacy Sorcerer 20 restores four points on each Short Rest; revised Sorcerer 5 restores half class level rounded down once per Long Rest. Recovery uses capped actual class levels and persists the once-per-Long-Rest limit. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
 
 ## Warlock · 2014
 
@@ -1079,22 +1079,22 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Innate Sorcery **[unreviewed]**<br>Spellcasting **[partial]** |
-| 2 | Font of Magic **[unreviewed]**<br>Metamagic **[unreviewed]** |
+| 2 | Font of Magic **[partial]**<br>Metamagic **[partial]** |
 | 3 | Sorcerer Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Sorcerous Restoration **[unreviewed]** |
+| 5 | Sorcerous Restoration **[implemented]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | Sorcery Incarnate **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 10 | Metamagic **[unreviewed]** |
+| 10 | Metamagic **[partial]** |
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 14 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
-| 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
+| 17 | Metamagic **[partial]** |
 | 18 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 19 | Epic Boon **[unreviewed]** |
 | 20 | Arcane Apotheosis **[unreviewed]** |
@@ -1103,16 +1103,17 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | --- | --- | --- |
 | Innate Sorcery · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
-| Font of Magic · 2 | Source-rule comparison and structured fields still need review. | Pending |
-| Metamagic · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Font of Magic · 2 | Class Sorcery Point maximum, finite spend/undo, Metamagic cost spending and rest recovery are tracked. Spell-slot-to-point conversion and temporary slot creation remain pending. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
+| Metamagic · 2 | Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
 | Sorcerer Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Sorcerous Restoration · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Sorcerous Restoration · 5 | Legacy Sorcerer 20 restores four points on each Short Rest; revised Sorcerer 5 restores half class level rounded down once per Long Rest. Recovery uses capped actual class levels and persists the once-per-Long-Rest limit. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
 | Sorcery Incarnate · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Metamagic · 10 | Source-rule comparison and structured fields still need review. | Pending |
+| Metamagic · 10 | Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
+| Metamagic · 17 | Edition-specific choices, costs, conditional reminders and spending from the class Sorcery Point pool are structured. Temporary per-cast spell modifications still resolve at the table. Metamagic Adept choices and its restricted extra points remain separate and pending. | [tests/sorcerer-points-and-metamagic.cjs](../tests/sorcerer-points-and-metamagic.cjs), [tests/sorcerer-points-and-metamagic-browser.cjs](../tests/sorcerer-points-and-metamagic-browser.cjs) |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
 | Arcane Apotheosis · 20 | Source-rule comparison and structured fields still need review. | Pending |
 
