@@ -274,8 +274,13 @@ var CharacterSheetModel = (() => {
     for (const [key, [, ability]] of Object.entries(skills))
       checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0, classExpertise.skills.includes(key) ? 2 : 0,effects.halfSkillProficiency?.5:0)) + d.skills[key].bonus + (classOrders.skillBonuses[key]||0);
     const toolTraining=ClassChoices.toolTraining(d,{level,effects,mods,classExpertise});
+    const rangerFeatures=ClassChoices.rangerFeatures(d,{level,mods});
+    effects.specialSenses=[...(effects.specialSenses||[]),...rangerFeatures.senses];
+    if(rangerFeatures.blindsight)effects.blindsight=Math.max(effects.blindsight||0,rangerFeatures.blindsight);
+    effects.ignoreUnseenAttackDisadvantage=!!effects.ignoreUnseenAttackDisadvantage||rangerFeatures.ignoreUnseenAttackDisadvantage;
     const result = {
       effects,
+      rangerFeatures,
       toolTraining,
       artificerFeatures,
       classAbilityFeatures,
