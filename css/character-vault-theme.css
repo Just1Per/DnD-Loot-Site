@@ -2589,3 +2589,7 @@
 #characterSheetPage #characterSheetDialog #sheetFeatResources :is([data-metamagic],[data-metamagic-level],[data-spend-metamagic]),
 #characterSheetDialog #sheetAdobeClasses [data-choice-group=metamagic],
 #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-choice-group=metamagic] { min-height: 44px !important; }
+
+#characterSheetDialog .sheet-class-resource-rules { flex: 0 0 100%; min-width: 0; }
+#characterSheetDialog #sheetFeatResources .sheet-class-resource-rules > summary,
+#characterSheetPage #characterSheetDialog #sheetFeatResources .sheet-class-resource-rules > summary { box-sizing: border-box; min-height: 44px !important; padding: 10px 0 !important; cursor: pointer; }

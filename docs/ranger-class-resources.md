@@ -6,7 +6,7 @@ The existing Combat resource panel now tracks revised Ranger class features:
 - **Tireless, Ranger 10:** uses equal current Wisdom modifier, minimum one. Temporary HP is 1d8 plus the actual signed modifier, minimum **one total**, not a minimum +1 modifier.
 - **Nature’s Veil, Ranger 14:** Wisdom-based uses, minimum one; Bonus Action and Invisible-until-end-of-next-turn reminder.
 
-The three pools have finite Use/Undo and recover on a Long Rest. The buttons leave spell slots, HP, temporary HP and conditions unchanged. Roll Tireless and apply temporary HP in its existing field; temporary HP do not stack. Reduce Exhaustion after the eligible Short Rest and track Invisibility separately. Optional legacy Tasha’s features are not activated by default.
+Later Hunter’s Mark rules sit in a compact disclosure that keeps its open state while using the counter. Print includes the rules in full. The three pools have finite Use/Undo and recover on a Long Rest. The buttons leave spell slots, HP, temporary HP and conditions unchanged. Roll Tireless and apply temporary HP in its existing field; temporary HP do not stack. Reduce Exhaustion after the eligible Short Rest and track Invisibility separately. Optional legacy Tasha’s features are not activated by default.
 
 Legacy Ranger 20 instead gains a **Foe Slayer** once-per-own-turn pool, with the current Wisdom modifier and favored-enemy restriction. **Start my turn** restores that use. It never becomes a flat attack or damage bonus.
 
