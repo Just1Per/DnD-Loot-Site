@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261025-sorcerer-metamagic-v1";
+const ASSET_VERSION = "20261025-extra-attack-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -104,6 +104,7 @@ const FEATURE_FILES = [
   "./modules/character-adobe-data.js",
   "./modules/character-play-rules.js",
   "./modules/character-actions.js",
+  "./modules/character-attack-progression.js",
   "./modules/character-story.js",
   "./modules/character-journal-ui.js",
   "./modules/character-progression.js",

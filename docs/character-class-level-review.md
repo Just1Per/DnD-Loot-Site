@@ -64,7 +64,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Danger Sense **[unreviewed]**<br>Reckless Attack **[unreviewed]** |
 | 3 | Primal Path **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[unreviewed]**<br>Fast Movement **[unreviewed]** |
+| 5 | Extra Attack **[implemented]**<br>Fast Movement **[unreviewed]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | Feral Instinct **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
@@ -89,7 +89,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Reckless Attack · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Primal Path · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Fast Movement · 5 | Source-rule comparison and structured fields still need review. | Pending |
 | Feral Instinct · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -249,13 +249,13 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Action Surge **[implemented]** |
 | 3 | Martial Archetype **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[unreviewed]** |
+| 5 | Extra Attack **[implemented]** |
 | 6 | Ability Score Improvement **[partial]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | Indomitable **[implemented]** |
 | 10 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 11 | Extra Attack **[unreviewed]** |
+| 11 | Extra Attack **[implemented]** |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | Indomitable **[implemented]** |
 | 14 | Ability Score Improvement **[partial]** |
@@ -264,7 +264,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 17 | Action Surge **[implemented]**<br>Indomitable **[implemented]** |
 | 18 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 19 | Ability Score Improvement **[partial]** |
-| 20 | Extra Attack **[unreviewed]** |
+| 20 | Extra Attack **[implemented]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -273,11 +273,11 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Action Surge · 2 | Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Martial Archetype · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Ability Score Improvement · 6 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Indomitable · 9 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
-| Extra Attack · 11 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 11 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Indomitable · 13 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Ability Score Improvement · 14 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -285,7 +285,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Action Surge · 17 | Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Indomitable · 17 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Extra Attack · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 20 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 
 ## Monk · 2014
 
@@ -295,7 +295,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Ki **[partial]** |
 | 3 | Deflect Missiles **[unreviewed]**<br>Monastic Tradition **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
-| 5 | Extra Attack **[unreviewed]**<br>Stunning Strike **[unreviewed]** |
+| 5 | Extra Attack **[implemented]**<br>Stunning Strike **[unreviewed]** |
 | 6 | Ki-Empowered Strikes **[unreviewed]** |
 | 7 | Evasion **[unreviewed]**<br>Stillness of Mind **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
@@ -320,7 +320,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Monastic Tradition · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Slow Fall · 4 | Source-rule comparison and structured fields still need review. | Pending |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Stunning Strike · 5 | Source-rule comparison and structured fields still need review. | Pending |
 | Ki-Empowered Strikes · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Evasion · 7 | Source-rule comparison and structured fields still need review. | Pending |
@@ -344,7 +344,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Divine Smite **[unreviewed]**<br>Fighting Style **[partial]**<br>Spellcasting **[partial]** |
 | 3 | Divine Health **[unreviewed]**<br>Sacred Oath **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[unreviewed]** |
+| 5 | Extra Attack **[implemented]** |
 | 6 | Aura of Protection **[unreviewed]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
@@ -371,7 +371,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Divine Health · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Sacred Oath · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Aura of Protection · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Aura of Courage · 10 | Source-rule comparison and structured fields still need review. | Pending |
@@ -391,7 +391,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Fighting Style **[partial]**<br>Spellcasting **[partial]** |
 | 3 | Primeval Awareness **[unreviewed]**<br>Ranger Archetype **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[unreviewed]** |
+| 5 | Extra Attack **[implemented]** |
 | 6 | Favored Enemy **[unreviewed]**<br>Natural Explorer **[unreviewed]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]**<br>Land's Stride **[unreviewed]** |
@@ -417,7 +417,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Primeval Awareness · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ranger Archetype · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Favored Enemy · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Natural Explorer · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -653,7 +653,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Danger Sense **[unreviewed]**<br>Reckless Attack **[unreviewed]** |
 | 3 | Barbarian Subclass **[unreviewed]**<br>Primal Knowledge **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[unreviewed]**<br>Fast Movement **[unreviewed]** |
+| 5 | Extra Attack **[implemented]**<br>Fast Movement **[unreviewed]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | Feral Instinct **[unreviewed]**<br>Instinctive Pounce **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
@@ -680,7 +680,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Barbarian Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Primal Knowledge · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Fast Movement · 5 | Source-rule comparison and structured fields still need review. | Pending |
 | Feral Instinct · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Instinctive Pounce · 7 | Source-rule comparison and structured fields still need review. | Pending |
@@ -832,13 +832,13 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Action Surge **[implemented]**<br>Tactical Mind **[implemented]** |
 | 3 | Fighter Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[unreviewed]**<br>Tactical Shift **[implemented]** |
+| 5 | Extra Attack **[implemented]**<br>Tactical Shift **[implemented]** |
 | 6 | Ability Score Improvement **[partial]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | Indomitable **[implemented]**<br>Tactical Master **[unreviewed]** |
 | 10 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 11 | Two Extra Attacks **[unreviewed]** |
+| 11 | Two Extra Attacks **[implemented]** |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | Indomitable **[implemented]**<br>Studied Attacks **[unreviewed]** |
 | 14 | Ability Score Improvement **[partial]** |
@@ -847,7 +847,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 17 | Action Surge **[implemented]**<br>Indomitable **[implemented]** |
 | 18 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 19 | Epic Boon **[unreviewed]** |
-| 20 | Three Extra Attacks **[unreviewed]** |
+| 20 | Three Extra Attacks **[implemented]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -858,13 +858,13 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Tactical Mind · 2 | Uses the shared Second Wind pool with a dedicated success-spend button and Undo; the failed-check 1d10 and no-spend-on-failure conditions are explained. Roll the die at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Fighter Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Tactical Shift · 5 | The Second Wind control gains its Bonus Action movement reminder at Fighter 5. Actual movement resolves at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Ability Score Improvement · 6 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Indomitable · 9 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Tactical Master · 9 | Source-rule comparison and structured fields still need review. | Pending |
-| Two Extra Attacks · 11 | Source-rule comparison and structured fields still need review. | Pending |
+| Two Extra Attacks · 11 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Indomitable · 13 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Studied Attacks · 13 | Source-rule comparison and structured fields still need review. | Pending |
@@ -873,7 +873,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Action Surge · 17 | Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Indomitable · 17 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
-| Three Extra Attacks · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Three Extra Attacks · 20 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 
 ## Monk · 2024
 
@@ -883,7 +883,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Monk's Focus **[partial]**<br>Unarmored Movement **[unreviewed]**<br>Uncanny Metabolism **[unreviewed]** |
 | 3 | Deflect Attacks **[unreviewed]**<br>Monk Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
-| 5 | Extra Attack **[unreviewed]**<br>Stunning Strike **[unreviewed]** |
+| 5 | Extra Attack **[implemented]**<br>Stunning Strike **[unreviewed]** |
 | 6 | Empowered Strikes **[unreviewed]** |
 | 7 | Evasion **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
@@ -911,7 +911,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Monk Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Slow Fall · 4 | Source-rule comparison and structured fields still need review. | Pending |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Stunning Strike · 5 | Source-rule comparison and structured fields still need review. | Pending |
 | Empowered Strikes · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Evasion · 7 | Source-rule comparison and structured fields still need review. | Pending |
@@ -936,7 +936,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Fighting Style **[partial]**<br>Paladin's Smite **[unreviewed]** |
 | 3 | Channel Divinity **[unreviewed]**<br>Paladin Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[unreviewed]**<br>Faithful Steed **[unreviewed]** |
+| 5 | Extra Attack **[implemented]**<br>Faithful Steed **[unreviewed]** |
 | 6 | Aura of Protection **[unreviewed]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
@@ -963,7 +963,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Channel Divinity · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Paladin Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Faithful Steed · 5 | Source-rule comparison and structured fields still need review. | Pending |
 | Aura of Protection · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -984,7 +984,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Deft Explorer **[partial]**<br>Fighting Style **[partial]** |
 | 3 | Ranger Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[unreviewed]** |
+| 5 | Extra Attack **[implemented]** |
 | 6 | Roving **[unreviewed]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]** |
@@ -1010,7 +1010,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Fighting Style · 2 | Base class and Feats choices share the correct allowance, with duplicate/alias guards. Additional subclass/feat style sources and situational effects remain in the wider review. | [tests/fighting-style-entitlements.cjs](../tests/fighting-style-entitlements.cjs), [tests/fighting-style-entitlements-browser.cjs](../tests/fighting-style-entitlements-browser.cjs) |
 | Ranger Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Roving · 6 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Expertise · 9 | Source-rule comparison and structured fields still need review. | Pending |

@@ -211,12 +211,13 @@ var CampaignWorkspace = (() => {
     config.toolbar?.(s.host.querySelector('[data-workspace-tools]'),s);
     s.host.querySelectorAll('[data-workspace-kind]').forEach(button=>{button.hidden=!canManageCampaign()||!!config.hideNavigation;button.onclick=()=>switchKind(button.dataset.workspaceKind)});
     s.host.querySelector('[data-new-record]').onclick=newRecord;s.host.querySelector('[data-workspace-search]').oninput=renderList;s.host.querySelector('[data-workspace-archived]').onchange=renderList;s.host.querySelector('[data-workspace-category]').onchange=renderList;
-    try{s.rows=await (config.list?config.list(s.campaignId):store.list(s.campaignId,kind));if(!current(s))return;s.rowsLoaded=true;s.host.querySelector('[data-new-record]').disabled=false;if(token!==generation)return;renderList();if(!s.record)s.host.querySelector('[data-workspace-page]').innerHTML='<p>Select an entry, or create a new one.</p>';}
+    try{s.rows=await (config.list?config.list(s.campaignId):store.list(s.campaignId,kind));if(!current(s))return;s.rowsLoaded=true;s.host.querySelector('[data-new-record]').disabled=false;renderList();if(token===generation&&!s.record)s.host.querySelector('[data-workspace-page]').innerHTML='<p>Select an entry, or create a new one.</p>';}
     catch(error){if(current(s))status(`Could not load: ${error.message}. Publish the updated Firestore rules if permission is denied.`,true);}
   }
   function importCreature(record){
     if(session?.kind!=='creature'||!current(session)||session.busy)return false;
     if(session.dirty&&!confirm('Discard unsaved changes before importing this creature?'))return false;
+    ++generation; // A new draft supersedes older entry reads, just as New does.
     session.record={id:id(),revision:0,title:record.title,summary:record.summary,content:record.content||'',privateNotes:'',data:CampaignCreatures.normalize((()=>{const d=structuredClone(record.data||{});for(const k of ['journalImage','links','markers','imagePath','imageUrl','campaignId','chapterId','chapterIds','encounterId','encounterIds','locationId','locationIds','factionIds'])delete d[k];return d;})()),archived:false};session.dirty=true;renderEditor();status('Campaign copy created. Save to keep it.');return true;
   }
   async function importCreatures(requests,{isCurrent=()=>true,onProgress=()=>{}}={}){
