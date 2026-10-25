@@ -267,7 +267,8 @@ var CharacterClassProgression=(()=>{
     const e=editionOf(edition),rows=remote[e]?.classes?.[classId]?.features;
     const result=correctedReference(classId,e,Array.isArray(rows)&&rows.length?rows:localClassFeatures(classId,e)),metamagic=result.find(row=>row.name==='Metamagic');
     if(classId==='sorcerer'&&e==='2024'&&metamagic&&!result.some(row=>row.name==='Metamagic'&&row.level===17))return[...result,{...metamagic,level:17,summary:'Gain two additional Metamagic options, for six known options in total.'}].sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name));
-    return result;
+    const missingMilestones={'2014:cleric':[12],'2014:warlock':[16],'2024:rogue':[10]}[e+':'+classId]||[],added=missingMilestones.filter(level=>!result.some(row=>row.level===level&&row.name==='Ability Score Improvement')).map(level=>feature('Ability Score Improvement',level,e==='2024'?'Gain Ability Score Improvement or another feat you qualify for.':'Increase ability scores or choose a feat, following the 2014 rules.',{source:e==='2024'?'SRD 5.2.1':'SRD 5.1',license:'CC-BY-4.0'}));
+    return added.length?[...result,...added].sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name)):result;
   };
   subclassFeatures=function(classId,subclassId,edition='2014',classSource='tce'){
     if(classId==='artificer')return localSubclassFeatures(classId,subclassId,edition,classSource);
