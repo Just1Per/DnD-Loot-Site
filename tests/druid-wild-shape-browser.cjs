@@ -434,6 +434,59 @@ const errors = [];
       })),
     );
     assert.deepEqual(accessibility, []);
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.evaluate(() => {
+      sheetSession.identity.level = 20;
+      sheetSession.data.build.edition = "2014";
+      sheetSession.data.adobe.classLevels = [{ classId: "druid", level: 20 }];
+      sheetSession.data.adobe.classFeatureChoices = {};
+      renderCharacterSheet();
+      selectSheetTab("overview");
+    });
+    assert.match(
+      await page.locator("#sheetOverviewReadout").textContent(),
+      /Wild Shape: Unlimited uses/,
+    );
+    assert.doesNotMatch(
+      await page.locator("#sheetOverviewReadout").textContent(),
+      /Infinity/,
+    );
+    await page.evaluate(() => selectSheetTab("combat"));
+    assert.equal(
+      await page
+        .locator('#sheetFeatResources [aria-label="Wild Shape uses remaining"]')
+        .textContent(),
+      "Unlimited",
+    );
+    await page.locator("[data-open-wild-shape]").click();
+    await page.locator("[data-wild-form]").selectOption("srd-2014-brown-bear");
+    await page.locator("[data-wild-seen]").check();
+    await page.locator("[data-wild-assume]").click();
+    await page.evaluate(() =>
+      CharacterSheetPrint.prepare(new Set(["companion", "combat"])),
+    );
+    assert.match(
+      await page.locator("[data-paper-section=combat]").textContent(),
+      /Unlimited/,
+    );
+    assert.doesNotMatch(
+      await page.locator("[data-paper-section=combat]").textContent(),
+      /Infinity/,
+    );
+    await page.emulateMedia({ media: "print" });
+    assert.equal(
+      await page
+        .locator(".sheet-paper-wild-shape .sheet-paper-text")
+        .first()
+        .evaluate((n) => getComputedStyle(n).whiteSpace),
+      "pre-wrap",
+    );
+    assert.match(
+      await page.locator(".sheet-paper-wild-shape").textContent(),
+      /Brown Bear/,
+    );
+    await page.evaluate(() => CharacterSheetPrint.clear());
+    await page.emulateMedia({ media: "screen" });
     assert.deepEqual(errors, []);
     console.log(
       "PASS Wild Shape lazy loading/retry, legacy HP/overflow, save/reopen, revised known forms and nonstacking temporary HP, normal data preservation, Moon/multiclass, condition reversion, source rest recovery, print, mobile and accessibility",
