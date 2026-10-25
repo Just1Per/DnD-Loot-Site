@@ -249,13 +249,23 @@ var CharacterClassProgression=(()=>{
     const rows=unlocked(classId,20,subclassId,edition,classSource),complete=rows.filter(x=>!x.incomplete).length;
     return{records:rows.length,complete,incomplete:rows.length-complete,percent:rows.length?Math.round(complete/rows.length*100):0};
   }
+  // Keep older remote catalogues from restoring known defects in the pinned SRD import.
+  function correctedReference(classId,edition,rows){return rows.map(row=>{
+    if(editionOf(edition)==='2024'&&classId==='monk'){
+      if(row.name==='Unarmoed Movement')return{...row,name:'Unarmored Movement'};
+      if(row.name==='Stunning Strike'&&row.level===3)return{...row,name:'Deflect Attacks',summary:'Use a Reaction to reduce Bludgeoning, Piercing or Slashing damage from an attack by 1d10 plus your Dexterity modifier and Monk level. If reduced to 0, you can spend 1 Focus Point to redirect energy under the feature’s conditions.'};
+    }
+    if(editionOf(edition)==='2024'&&classId==='fighter'&&row.name==='Studdied Attacks')return{...row,name:'Studied Attacks'};
+    if(classId==='warlock'&&row.name==='Mystic Arcanum'&&[11,13,15,17].includes(row.level))return{...row,summary:'Choose one level '+((row.level+1)/2)+' Warlock spell as this arcanum. Cast it once without a spell slot, then regain that use after a Long Rest. Each arcanum has its own use.'};
+    return row;
+  });}
   const remote={2014:null,2024:null};
   function installReference(edition,data){remote[editionOf(edition)]=data||null;}
   const localClassFeatures=classFeatures,localSubclassFeatures=subclassFeatures;
   classFeatures=function(classId,edition='2014',classSource='tce'){
     if(classId==='artificer')return localClassFeatures(classId,edition,classSource);
     const e=editionOf(edition),rows=remote[e]?.classes?.[classId]?.features;
-    return Array.isArray(rows)&&rows.length?rows:localClassFeatures(classId,e);
+    return correctedReference(classId,e,Array.isArray(rows)&&rows.length?rows:localClassFeatures(classId,e));
   };
   subclassFeatures=function(classId,subclassId,edition='2014',classSource='tce'){
     if(classId==='artificer')return localSubclassFeatures(classId,subclassId,edition,classSource);
