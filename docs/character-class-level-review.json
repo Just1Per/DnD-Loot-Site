@@ -2293,9 +2293,12 @@
           "name": "Lay on Hands",
           "level": 1,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Paladin-level healing pool, variable point spending/undo, Long Rest, source-specific cure options, persistence and print. Apply healing and condition removal to the chosen recipient separately; no cross-character mutation.",
+          "evidence": [
+            "tests/paladin-lay-on-hands.cjs",
+            "tests/paladin-lay-on-hands-browser.cjs"
+          ]
         },
         {
           "id": "2014:paladin:2:divine-smite",
@@ -6276,9 +6279,12 @@
           "name": "Lay On Hands",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Paladin-level healing pool, variable point spending/undo, Long Rest, source-specific cure options, persistence and print. Apply healing and condition removal to the chosen recipient separately; no cross-character mutation.",
+          "evidence": [
+            "tests/paladin-lay-on-hands.cjs",
+            "tests/paladin-lay-on-hands-browser.cjs"
+          ]
         },
         {
           "id": "2024:paladin:1:spellcasting",
@@ -6441,9 +6447,12 @@
           "name": "Restoring Touch",
           "level": 14,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Correct level-14 condition list and five-point-per-condition cost appear with the same Lay on Hands pool and in print. Target conditions are updated explicitly by the player.",
+          "evidence": [
+            "tests/paladin-lay-on-hands.cjs",
+            "tests/paladin-lay-on-hands-browser.cjs"
+          ]
         },
         {
           "id": "2024:paladin:16:ability-score-improvement",
