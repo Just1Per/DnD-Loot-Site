@@ -17,6 +17,19 @@ def clean(s):
     s=re.split(r'\n\s*\n',s,maxsplit=1)[0]
     s=re.sub(r'[*|]+',' ',s)
     return re.sub(r'\s+',' ',s).strip()[:900]
+# Correct known normalization defects in the pinned upstream import. See
+# docs/class-reference-corrections.md for the official class-table source.
+def correct_feature(class_id, edition, row):
+    row = dict(row)
+    if edition == '2024' and class_id == 'monk':
+        if row['name'] == 'Unarmoed Movement': row['name'] = 'Unarmored Movement'
+        if row['name'] == 'Stunning Strike' and row['level'] == 3:
+            row.update(name='Deflect Attacks', summary='Use a Reaction to reduce Bludgeoning, Piercing or Slashing damage from an attack by 1d10 plus your Dexterity modifier and Monk level. If reduced to 0, you can spend 1 Focus Point to redirect energy under the feature’s conditions.')
+    if edition == '2024' and class_id == 'fighter' and row['name'] == 'Studdied Attacks': row['name'] = 'Studied Attacks'
+    if class_id == 'warlock' and row['name'] == 'Mystic Arcanum' and row['level'] in (11, 13, 15, 17):
+        spell_level = (row['level'] + 1) // 2
+        row['summary'] = f'Choose one level {spell_level} Warlock spell as this arcanum. Cast it once without a spell slot, then regain that use after a Long Rest. Each arcanum has its own use.'
+    return row
 out={'source':'Open5e normalized Wizards SRD data','revision':REV,'license':'CC-BY-4.0','editions':{}}
 for edition in ('2014','2024'):
     classes=fetch(edition,'CharacterClass.json');features=fetch(edition,'ClassFeature.json');items=fetch(edition,'ClassFeatureItem.json')
@@ -33,7 +46,7 @@ for edition in ('2014','2024'):
         if not ls:continue
         group='subclasses' if owner['parent'] else 'classes'
         row=groups[group].setdefault(owner['id'],{'id':owner['id'],'name':owner['name'],'parentId':owners.get(owner['parent'],{}).get('id') if owner['parent'] else None,'hitDie':owner['hitDie'],'savingThrows':owner['savingThrows'],'casterType':owner['casterType'],'features':[]})
-        for level in ls:row['features'].append({'name':f['name'],'level':level,'summary':clean(f.get('desc')),'source':'SRD '+('5.2.1' if edition=='2024' else '5.1'),'license':'CC-BY-4.0'})
+        for level in ls:row['features'].append(correct_feature(owner['id'],edition,{'name':f['name'],'level':level,'summary':clean(f.get('desc')),'source':'SRD '+('5.2.1' if edition=='2024' else '5.1'),'license':'CC-BY-4.0'}))
     for rows in groups.values():
         for row in rows.values():row['features'].sort(key=lambda x:(x['level'],x['name']))
     out['editions'][edition]=groups

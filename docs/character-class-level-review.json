@@ -5622,8 +5622,8 @@
           ]
         },
         {
-          "id": "2024:fighter:13:studdied-attacks",
-          "name": "Studdied Attacks",
+          "id": "2024:fighter:13:studied-attacks",
+          "name": "Studied Attacks",
           "level": 13,
           "source": "SRD 5.2.1",
           "state": "unreviewed",
@@ -5775,7 +5775,7 @@
           "level": 13,
           "newFeatures": [
             "2024:fighter:13:indomitable",
-            "2024:fighter:13:studdied-attacks"
+            "2024:fighter:13:studied-attacks"
           ]
         },
         {
@@ -5856,8 +5856,8 @@
           ]
         },
         {
-          "id": "2024:monk:2:unarmoed-movement",
-          "name": "Unarmoed Movement",
+          "id": "2024:monk:2:unarmored-movement",
+          "name": "Unarmored Movement",
           "level": 2,
           "source": "SRD 5.2.1",
           "state": "unreviewed",
@@ -5874,8 +5874,8 @@
           "evidence": []
         },
         {
-          "id": "2024:monk:3:monk-subclass",
-          "name": "Monk Subclass",
+          "id": "2024:monk:3:deflect-attacks",
+          "name": "Deflect Attacks",
           "level": 3,
           "source": "SRD 5.2.1",
           "state": "unreviewed",
@@ -5883,8 +5883,8 @@
           "evidence": []
         },
         {
-          "id": "2024:monk:3:stunning-strike",
-          "name": "Stunning Strike",
+          "id": "2024:monk:3:monk-subclass",
+          "name": "Monk Subclass",
           "level": 3,
           "source": "SRD 5.2.1",
           "state": "unreviewed",
@@ -6086,15 +6086,15 @@
           "level": 2,
           "newFeatures": [
             "2024:monk:2:monk-s-focus",
-            "2024:monk:2:unarmoed-movement",
+            "2024:monk:2:unarmored-movement",
             "2024:monk:2:uncanny-metabolism"
           ]
         },
         {
           "level": 3,
           "newFeatures": [
-            "2024:monk:3:monk-subclass",
-            "2024:monk:3:stunning-strike"
+            "2024:monk:3:deflect-attacks",
+            "2024:monk:3:monk-subclass"
           ]
         },
         {

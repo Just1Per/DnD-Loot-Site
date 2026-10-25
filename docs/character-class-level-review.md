@@ -840,7 +840,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 10 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 11 | Two Extra Attacks **[unreviewed]** |
 | 12 | Ability Score Improvement **[partial]** |
-| 13 | Indomitable **[implemented]**<br>Studdied Attacks **[unreviewed]** |
+| 13 | Indomitable **[implemented]**<br>Studied Attacks **[unreviewed]** |
 | 14 | Ability Score Improvement **[partial]** |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
@@ -867,7 +867,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Two Extra Attacks · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Indomitable · 13 | Actual class-level use limit, finite reroll/Undo, Long Rest recovery and the revised Fighter-level bonus shown only for its reroll; saved and printed. Dice are rolled at the table. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
-| Studdied Attacks · 13 | Source-rule comparison and structured fields still need review. | Pending |
+| Studied Attacks · 13 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 14 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Action Surge · 17 | Actual class-level use limit, finite Use/Undo, Short/Long Rest recovery and edition-specific action restriction reminders. Actions resolve during play. | [tests/fighter-class-resources.cjs](../tests/fighter-class-resources.cjs), [tests/fighter-class-resources-browser.cjs](../tests/fighter-class-resources-browser.cjs) |
@@ -880,8 +880,8 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Martial Arts **[unreviewed]**<br>Unarmored Defense **[unreviewed]** |
-| 2 | Monk's Focus **[partial]**<br>Unarmoed Movement **[unreviewed]**<br>Uncanny Metabolism **[unreviewed]** |
-| 3 | Monk Subclass **[unreviewed]**<br>Stunning Strike **[unreviewed]** |
+| 2 | Monk's Focus **[partial]**<br>Unarmored Movement **[unreviewed]**<br>Uncanny Metabolism **[unreviewed]** |
+| 3 | Deflect Attacks **[unreviewed]**<br>Monk Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
 | 5 | Extra Attack **[unreviewed]**<br>Stunning Strike **[unreviewed]** |
 | 6 | Empowered Strikes **[unreviewed]** |
@@ -905,10 +905,10 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Martial Arts · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Monk's Focus · 2 | Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review. | [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
-| Unarmoed Movement · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Unarmored Movement · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Uncanny Metabolism · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Deflect Attacks · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Monk Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
-| Stunning Strike · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Slow Fall · 4 | Source-rule comparison and structured fields still need review. | Pending |
 | Extra Attack · 5 | Source-rule comparison and structured fields still need review. | Pending |
