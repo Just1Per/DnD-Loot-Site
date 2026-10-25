@@ -61,11 +61,16 @@ var CharacterSpellcasting=(()=>{
     return 0;
   }
 
-  function profile(classId,level,edition='2014',scores={}){
+  function profile(classId,level,edition='2014',scores={},classSource='tce'){
     classId=String(classId||'').toLowerCase();level=clampLevel(level);edition=edition==='2024'?'2024':'2014';
     if(!ability[classId])return null;
     const mod=abilityMod(scores,ability[classId]);
     const base={classId,name:labels[classId],level,edition,ability:ability[classId],cantrips:0,spellCount:0,mode:'none',maxSpellLevel:maxSpellLevel(classId,level,edition),bookMinimum:0,changeTiming:'level'};
+    if(classId==='artificer'){
+      if(!['tce','efa'].includes(classSource)||classSource==='efa'&&edition!=='2024')return null;
+      base.sourceId=classSource;base.sourceLabel=classSource==='efa'?'Eberron: Forge of the Artificer':'Legacy Artificer · Tasha’s';
+      base.cantrips=at(C2014.artificer||[],level);base.mode='prepared';base.changeTiming='long-rest';base.spellCount=classSource==='efa'?at(HALF2024,level):Math.max(1,Math.floor(level/2)+mod);return base;
+    }
     if(edition==='2014'){
       base.cantrips=at(C2014[classId]||[],level);
       if(Object.hasOwn(KNOWN2014,classId)){
@@ -101,7 +106,7 @@ var CharacterSpellcasting=(()=>{
   function profiles(data,targetLevel,scores={}){
     const edition=data?.build?.edition==='2024'?'2024':'2014';
     const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null),extra=choices?.orders(data,{level:targetLevel}).cantrips||{};
-    return classEntries(data,targetLevel).map(entry=>{const p=profile(entry.classId,entry.level,edition,scores);return p?{...p,cantrips:p.cantrips+(extra[entry.classId]||0),subclassId:entry.subclassId||''}:null;}).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
+    return classEntries(data,targetLevel).map(entry=>{const source=entry.classId==='artificer'?choices?.artificerSource(data).id:undefined,p=profile(entry.classId,entry.level,edition,scores,source);return p?{...p,cantrips:p.cantrips+(extra[entry.classId]||0),subclassId:entry.subclassId||''}:null;}).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
   }
 
   // Always-prepared grants are separate from the player's preparation allowance.
@@ -149,6 +154,7 @@ var CharacterSpellcasting=(()=>{
   function automaticGrants(p,catalogue=[]){
     if(!p)return[];
     const names=[];
+    if(p.classId==='artificer'&&p.sourceId==='efa')names.push('Mending');
     if(p.edition==='2024'&&p.classId==='paladin'){if(p.level>=2)names.push('Divine Smite');if(p.level>=5)names.push('Find Steed');}
     if(p.edition==='2024'&&p.classId==='ranger')names.push('Hunter’s Mark');
     if(p.edition==='2024'&&p.classId==='warlock'&&p.level>=9)names.push('Contact Other Plane');
@@ -164,7 +170,7 @@ var CharacterSpellcasting=(()=>{
   }
   function selectionCounts(p,rows,catalogue=[]){
     const ordinary=countedSelections(p,rows,catalogue);
-    return {cantrips:ordinary.filter(s=>s.level===0).length,leveled:ordinary.filter(s=>s.level>0).length,prepared:ordinary.filter(s=>s.level>0&&s.prepared).length,automatic:rows.filter(s=>s.level>0&&!ordinary.includes(s)).length};
+    return {cantrips:ordinary.filter(s=>s.level===0).length,leveled:ordinary.filter(s=>s.level>0).length,prepared:ordinary.filter(s=>s.level>0&&s.prepared).length,automatic:rows.filter(s=>!ordinary.includes(s)).length};
   }
   function countedSelections(p,rows,catalogue=[]){const ids=new Set(automaticGrants(p,catalogue).map(s=>s.id));return rows.filter(s=>!ids.has(s.catalogId));}
 

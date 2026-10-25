@@ -146,7 +146,7 @@ async function openCharacterSheet(characterId, context = {}) {
 }
 function sheetField(label, path, type = 'text', options = {}) {
   if(type==='select'&&typeof CampaignRules!=='undefined'){
-    const record=v=>path==='build.edition'?{edition:v}:path==='build.race'?{edition:CharacterRules.races[v]?.edition||'2014'}:path==='build.background'?{edition:CharacterRules.modern.backgrounds[v]?'2024':'2014'}:path==='build.classId'&&v==='artificer'?{edition:'2014'}:null;
+    const record=v=>path==='build.edition'?{edition:v}:path==='build.race'?{edition:CharacterRules.races[v]?.edition||'2014'}:path==='build.background'?{edition:CharacterRules.modern.backgrounds[v]?'2024':'2014'}:null;
     options={...options,values:options.values.filter(([v])=>!v||CampaignRules.allowed(record(v)))};
   }
   const name = sheetEscape(path), attrs = `name="${ name }" ${ options.min !== undefined ? `min="${ options.min }"` : '' } ${ options.max !== undefined ? `max="${ options.max }"` : '' }`;

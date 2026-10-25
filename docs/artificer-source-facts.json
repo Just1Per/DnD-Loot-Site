@@ -1,0 +1,531 @@
+{
+  "source": "Eberron: Forge of the Artificer",
+  "sourceCode": "EFA",
+  "appSourceCode": "EFOTA",
+  "primaryOverview": "https://www.dndbeyond.com/posts/2106-whats-new-with-the-artificer-in-eberron-forge-of",
+  "mechanicalReference": "https://raw.githubusercontent.com/5etools-mirror-3/5etools-src/main/data/class/class-artificer.json",
+  "preparedSpells": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    6,
+    7,
+    7,
+    9,
+    9,
+    10,
+    10,
+    11,
+    11,
+    12,
+    12,
+    14,
+    14,
+    15,
+    15
+  ],
+  "cantrips": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+  ],
+  "features": [
+    {
+      "name": "Spellcasting",
+      "level": 1
+    },
+    {
+      "name": "Tinker's Magic",
+      "level": 1
+    },
+    {
+      "name": "Replicate Magic Item",
+      "level": 2
+    },
+    {
+      "name": "Artificer Subclass",
+      "level": 3
+    },
+    {
+      "name": "Ability Score Improvement",
+      "level": 4
+    },
+    {
+      "name": "Subclass feature",
+      "level": 5
+    },
+    {
+      "name": "Magic Item Tinker",
+      "level": 6
+    },
+    {
+      "name": "Flash of Genius",
+      "level": 7
+    },
+    {
+      "name": "Ability Score Improvement",
+      "level": 8
+    },
+    {
+      "name": "Subclass feature",
+      "level": 9
+    },
+    {
+      "name": "Magic Item Adept",
+      "level": 10
+    },
+    {
+      "name": "Spell-Storing Item",
+      "level": 11
+    },
+    {
+      "name": "Ability Score Improvement",
+      "level": 12
+    },
+    {
+      "name": "Advanced Artifice",
+      "level": 14
+    },
+    {
+      "name": "Subclass Feature",
+      "level": 15
+    },
+    {
+      "name": "Ability Score Improvement",
+      "level": 16
+    },
+    {
+      "name": "Magic Item Master",
+      "level": 18
+    },
+    {
+      "name": "Epic Boon",
+      "level": 19
+    },
+    {
+      "name": "Soul of Artifice",
+      "level": 20
+    }
+  ],
+  "spells": [
+    {
+      "name": "air bubble",
+      "source": "aag"
+    },
+    {
+      "name": "create spelljamming helm",
+      "source": "aag"
+    },
+    {
+      "name": "linked glyphs",
+      "source": "aitfr-avt"
+    },
+    {
+      "name": "kinetic jaunt",
+      "source": "scc"
+    },
+    {
+      "name": "vortex warp",
+      "source": "scc"
+    },
+    {
+      "name": "booming blade",
+      "source": "tce"
+    },
+    {
+      "name": "green-flame blade",
+      "source": "tce"
+    },
+    {
+      "name": "intellect fortress",
+      "source": "tce"
+    },
+    {
+      "name": "lightning lure",
+      "source": "tce"
+    },
+    {
+      "name": "summon construct",
+      "source": "tce"
+    },
+    {
+      "name": "sword burst",
+      "source": "tce"
+    },
+    {
+      "name": "tasha's caustic brew",
+      "source": "tce"
+    },
+    {
+      "name": "acid splash",
+      "source": "xphb"
+    },
+    {
+      "name": "aid",
+      "source": "xphb"
+    },
+    {
+      "name": "alarm",
+      "source": "xphb"
+    },
+    {
+      "name": "alter self",
+      "source": "xphb"
+    },
+    {
+      "name": "animate objects",
+      "source": "xphb"
+    },
+    {
+      "name": "arcane eye",
+      "source": "xphb"
+    },
+    {
+      "name": "arcane lock",
+      "source": "xphb"
+    },
+    {
+      "name": "arcane vigor",
+      "source": "xphb"
+    },
+    {
+      "name": "bigby's hand",
+      "source": "xphb"
+    },
+    {
+      "name": "blink",
+      "source": "xphb"
+    },
+    {
+      "name": "blur",
+      "source": "xphb"
+    },
+    {
+      "name": "circle of power",
+      "source": "xphb"
+    },
+    {
+      "name": "continual flame",
+      "source": "xphb"
+    },
+    {
+      "name": "create food and water",
+      "source": "xphb"
+    },
+    {
+      "name": "creation",
+      "source": "xphb"
+    },
+    {
+      "name": "cure wounds",
+      "source": "xphb"
+    },
+    {
+      "name": "dancing lights",
+      "source": "xphb"
+    },
+    {
+      "name": "darkvision",
+      "source": "xphb"
+    },
+    {
+      "name": "detect magic",
+      "source": "xphb"
+    },
+    {
+      "name": "disguise self",
+      "source": "xphb"
+    },
+    {
+      "name": "dispel magic",
+      "source": "xphb"
+    },
+    {
+      "name": "dragon's breath",
+      "source": "xphb"
+    },
+    {
+      "name": "elemental weapon",
+      "source": "xphb"
+    },
+    {
+      "name": "elementalism",
+      "source": "xphb"
+    },
+    {
+      "name": "enhance ability",
+      "source": "xphb"
+    },
+    {
+      "name": "enlarge/reduce",
+      "source": "xphb"
+    },
+    {
+      "name": "expeditious retreat",
+      "source": "xphb"
+    },
+    {
+      "name": "fabricate",
+      "source": "xphb"
+    },
+    {
+      "name": "faerie fire",
+      "source": "xphb"
+    },
+    {
+      "name": "false life",
+      "source": "xphb"
+    },
+    {
+      "name": "feather fall",
+      "source": "xphb"
+    },
+    {
+      "name": "fire bolt",
+      "source": "xphb"
+    },
+    {
+      "name": "fly",
+      "source": "xphb"
+    },
+    {
+      "name": "freedom of movement",
+      "source": "xphb"
+    },
+    {
+      "name": "glyph of warding",
+      "source": "xphb"
+    },
+    {
+      "name": "grease",
+      "source": "xphb"
+    },
+    {
+      "name": "greater restoration",
+      "source": "xphb"
+    },
+    {
+      "name": "guidance",
+      "source": "xphb"
+    },
+    {
+      "name": "haste",
+      "source": "xphb"
+    },
+    {
+      "name": "heat metal",
+      "source": "xphb"
+    },
+    {
+      "name": "identify",
+      "source": "xphb"
+    },
+    {
+      "name": "invisibility",
+      "source": "xphb"
+    },
+    {
+      "name": "jump",
+      "source": "xphb"
+    },
+    {
+      "name": "leomund's secret chest",
+      "source": "xphb"
+    },
+    {
+      "name": "lesser restoration",
+      "source": "xphb"
+    },
+    {
+      "name": "levitate",
+      "source": "xphb"
+    },
+    {
+      "name": "light",
+      "source": "xphb"
+    },
+    {
+      "name": "longstrider",
+      "source": "xphb"
+    },
+    {
+      "name": "mage hand",
+      "source": "xphb"
+    },
+    {
+      "name": "magic mouth",
+      "source": "xphb"
+    },
+    {
+      "name": "magic weapon",
+      "source": "xphb"
+    },
+    {
+      "name": "message",
+      "source": "xphb"
+    },
+    {
+      "name": "mordenkainen's faithful hound",
+      "source": "xphb"
+    },
+    {
+      "name": "mordenkainen's private sanctum",
+      "source": "xphb"
+    },
+    {
+      "name": "otiluke's resilient sphere",
+      "source": "xphb"
+    },
+    {
+      "name": "poison spray",
+      "source": "xphb"
+    },
+    {
+      "name": "prestidigitation",
+      "source": "xphb"
+    },
+    {
+      "name": "protection from energy",
+      "source": "xphb"
+    },
+    {
+      "name": "protection from poison",
+      "source": "xphb"
+    },
+    {
+      "name": "purify food and drink",
+      "source": "xphb"
+    },
+    {
+      "name": "ray of frost",
+      "source": "xphb"
+    },
+    {
+      "name": "resistance",
+      "source": "xphb"
+    },
+    {
+      "name": "revivify",
+      "source": "xphb"
+    },
+    {
+      "name": "rope trick",
+      "source": "xphb"
+    },
+    {
+      "name": "sanctuary",
+      "source": "xphb"
+    },
+    {
+      "name": "see invisibility",
+      "source": "xphb"
+    },
+    {
+      "name": "shocking grasp",
+      "source": "xphb"
+    },
+    {
+      "name": "spare the dying",
+      "source": "xphb"
+    },
+    {
+      "name": "spider climb",
+      "source": "xphb"
+    },
+    {
+      "name": "stone shape",
+      "source": "xphb"
+    },
+    {
+      "name": "stoneskin",
+      "source": "xphb"
+    },
+    {
+      "name": "summon construct",
+      "source": "xphb"
+    },
+    {
+      "name": "thorn whip",
+      "source": "xphb"
+    },
+    {
+      "name": "thunderclap",
+      "source": "xphb"
+    },
+    {
+      "name": "true strike",
+      "source": "xphb"
+    },
+    {
+      "name": "wall of stone",
+      "source": "xphb"
+    },
+    {
+      "name": "water breathing",
+      "source": "xphb"
+    },
+    {
+      "name": "water walk",
+      "source": "xphb"
+    },
+    {
+      "name": "web",
+      "source": "xphb"
+    },
+    {
+      "name": "homunculus servant",
+      "source": "efa"
+    },
+    {
+      "name": "catnap",
+      "source": "au"
+    },
+    {
+      "name": "distorted distance",
+      "source": "au"
+    },
+    {
+      "name": "dueling ground",
+      "source": "au"
+    },
+    {
+      "name": "spirit lantern",
+      "source": "au"
+    },
+    {
+      "name": "uncertain footing",
+      "source": "au"
+    }
+  ],
+  "multiclassSkillOptions": [
+    "arcana",
+    "history",
+    "investigation",
+    "medicine",
+    "nature",
+    "perception",
+    "sleightOfHand"
+  ],
+  "multiclassTools": [
+    "Tinker’s tools"
+  ]
+}

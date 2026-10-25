@@ -59,10 +59,11 @@ var CharacterBuildValidation=(()=>{
     const assigned=Number(progression.assignedLevel||0),target=Number(progression.targetLevel||identity.level||1);
     if(assigned<target)add(rows,'Class levels',`Assign ${target-assigned} remaining class level${target-assigned===1?'':'s'}.`,'builder','warning',assigned?'[data-up]':'[name="build.classId"]');
     for(const [index,entry] of (progression.classLevels||[]).entries()){
-      if(entry.subclassId)continue;
-      const subclasses=globalThis.CharacterSubclassData,edition=data?.build?.edition||'2014';
+      const subclasses=globalThis.CharacterSubclassData,edition=data?.build?.edition||'2014',choices=globalThis.CharacterClassFeatureChoices,source=entry.classId==='artificer'?choices?.artificerSource(data):null;
+      if(source&&!source.eligible){add(rows,'Artificer version','Choose a compatible Artificer version and core edition.','builder','warning','[data-artificer-source]');continue;}
+      if(entry.subclassId){const row=subclasses?.find?.(entry.subclassId);if(source&&row&&subclasses.compatible&&!subclasses.compatible(row,edition,source.id))add(rows,'Subclass','Choose a subclass matching the selected Artificer version.','builder','warning',`[data-subclass="${index}"]`);continue;}
       const candidates=subclasses?.forClass?.(entry.classId)||[];
-      const compatible=candidates.filter(row=>!subclasses.compatible||subclasses.compatible(row,edition));
+      const compatible=candidates.filter(row=>!subclasses.compatible||subclasses.compatible(row,edition,source?.id));
       const min=compatible.length?Math.min(...compatible.map(row=>Number(subclasses.effectiveMinimum?subclasses.effectiveMinimum(row,edition):row.minimumLevel)||99)):99;
       if(Number(entry.level)>=min)add(rows,'Subclass',`Choose a subclass for ${globalThis.CharacterAdobeEngine?.className?.(entry.classId)||entry.classId}.`,'builder','warning',`[data-subclass="${index}"]`);
     }

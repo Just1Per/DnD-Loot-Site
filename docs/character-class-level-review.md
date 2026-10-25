@@ -1,6 +1,6 @@
 # Class features: level-by-level review
 
-This inventory covers every supported base class at levels 1–20 using the references shipped with the app. It does **not** certify that every source-book feature is imported or automated. Subclass features require their own pass. The legacy Artificer source remains labelled when used on a compatible 2024 sheet.
+This inventory covers every supported base class at levels 1–20 using the references shipped with the app. It does **not** certify that every source-book feature is imported or automated. Subclass features require their own pass. Both Artificer sources are inventoried separately: Tasha’s legacy class on either compatible core edition and revised Eberron on 2024 core rules.
 
 - **Implemented**: the stated scope has structured controls/calculations and named test evidence.
 - **Partial**: some support exists; the remaining scope is explicit.
@@ -8,7 +8,7 @@ This inventory covers every supported base class at levels 1–20 using the refe
 
 The runtime matrix separately checks that core derivation succeeds for every class/level and preserves values across multiclass/save-envelope cases. Passing that matrix does not make unreviewed features implemented.
 
-## Artificer · 2014
+## Artificer · Tasha’s legacy · 2014
 
 | Class level | Features arriving at this level |
 | --- | --- |
@@ -31,7 +31,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 18 | Magic Item Master **[implemented]** |
 | 19 | Ability Score Improvement **[partial]** |
-| 20 | Soul of Artifice **[unreviewed]** |
+| 20 | Soul of Artifice **[partial]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -54,7 +54,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Magic Item Master · 18 | Six attunement slots from actual Artificer 18, including shared equipment/magic item limits and preserving excess saved choices after level reduction. | [tests/artificer-attunement.cjs](../tests/artificer-attunement.cjs), [tests/artificer-attunement-browser.cjs](../tests/artificer-attunement-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Soul of Artifice · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Soul of Artifice · 20 | Owned attuned magic items add to all six saves and death saves at actual Artificer 20, including unworn items; Cheat Death still needs controls. | [tests/artificer-source-versions.cjs](../tests/artificer-source-versions.cjs), [tests/artificer-source-versions-browser.cjs](../tests/artificer-source-versions-browser.cjs) |
 
 ## Barbarian · 2014
 
@@ -597,7 +597,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Signature Spells · 20 | Source-rule comparison and structured fields still need review. | Pending |
 
-## Artificer · 2024 core / legacy 2014 source
+## Artificer · Tasha’s legacy · 2024 core / legacy 2014 source
 
 | Class level | Features arriving at this level |
 | --- | --- |
@@ -620,7 +620,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 18 | Magic Item Master **[implemented]** |
 | 19 | Ability Score Improvement **[partial]** |
-| 20 | Soul of Artifice **[unreviewed]** |
+| 20 | Soul of Artifice **[partial]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -643,7 +643,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Magic Item Master · 18 | Six attunement slots from actual Artificer 18, including shared equipment/magic item limits and preserving excess saved choices after level reduction. | [tests/artificer-attunement.cjs](../tests/artificer-attunement.cjs), [tests/artificer-attunement-browser.cjs](../tests/artificer-attunement-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Soul of Artifice · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Soul of Artifice · 20 | Owned attuned magic items add to all six saves and death saves at actual Artificer 20, including unworn items; Cheat Death still needs controls. | [tests/artificer-source-versions.cjs](../tests/artificer-source-versions.cjs), [tests/artificer-source-versions-browser.cjs](../tests/artificer-source-versions-browser.cjs) |
 
 ## Barbarian · 2024
 
@@ -1199,4 +1199,51 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Spell Mastery · 18 | Source-rule comparison and structured fields still need review. | Pending |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
 | Signature Spells · 20 | Source-rule comparison and structured fields still need review. | Pending |
+
+## Artificer · Eberron revised · 2024
+
+| Class level | Features arriving at this level |
+| --- | --- |
+| 1 | Spellcasting **[partial]**<br>Tinker's Magic **[partial]** |
+| 2 | Replicate Magic Item **[unreviewed]** |
+| 3 | Artificer Subclass **[unreviewed]** |
+| 4 | Ability Score Improvement **[partial]** |
+| 5 | Subclass feature **[unreviewed]** |
+| 6 | Magic Item Tinker **[unreviewed]** |
+| 7 | Flash of Genius **[implemented]** |
+| 8 | Ability Score Improvement **[partial]** |
+| 9 | Subclass feature **[unreviewed]** |
+| 10 | Magic Item Adept **[partial]** |
+| 11 | Spell-Storing Item **[unreviewed]** |
+| 12 | Ability Score Improvement **[partial]** |
+| 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
+| 14 | Advanced Artifice **[implemented]** |
+| 15 | Subclass feature **[unreviewed]** |
+| 16 | Ability Score Improvement **[partial]** |
+| 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
+| 18 | Magic Item Master **[implemented]** |
+| 19 | Epic Boon **[unreviewed]** |
+| 20 | Soul of Artifice **[partial]** |
+
+| Feature / level | Review scope | Test evidence |
+| --- | --- | --- |
+| Spellcasting · 1 | Fixed prepared counts and cantrip allowances at levels 1–20, extra Mending through the spell generator, source-aware spell membership and multiclass slot contribution. Subclass grants still need review. | [tests/artificer-source-versions.cjs](../tests/artificer-source-versions.cjs), [tests/artificer-source-versions-browser.cjs](../tests/artificer-source-versions-browser.cjs) |
+| Tinker's Magic · 1 | Mending is an additional automatic spell-generator grant. Temporary gear creation and its use counter remain table tracked. | [tests/artificer-source-versions.cjs](../tests/artificer-source-versions.cjs), [tests/artificer-source-versions-browser.cjs](../tests/artificer-source-versions-browser.cjs) |
+| Replicate Magic Item · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Artificer Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
+| Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
+| Subclass feature · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Magic Item Tinker · 6 | Source-rule comparison and structured fields still need review. | Pending |
+| Flash of Genius · 7 | Reaction reminder for a failed check/save, Intelligence bonus and uses with minimum 1, source-specific saved count, Use/Undo and rest recovery. Roll resolution remains at the table. | [tests/artificer-source-versions.cjs](../tests/artificer-source-versions.cjs), [tests/artificer-source-versions-browser.cjs](../tests/artificer-source-versions-browser.cjs) |
+| Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
+| Subclass feature · 9 | Source-rule comparison and structured fields still need review. | Pending |
+| Magic Item Adept · 10 | Four attunement slots at actual Artificer 10; crafting controls still pending. | [tests/artificer-source-versions.cjs](../tests/artificer-source-versions.cjs), [tests/artificer-source-versions-browser.cjs](../tests/artificer-source-versions-browser.cjs) |
+| Spell-Storing Item · 11 | Source-rule comparison and structured fields still need review. | Pending |
+| Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
+| Advanced Artifice · 14 | Five attunement slots and one Flash of Genius use recovered on a Short Rest from actual Artificer 14. | [tests/artificer-source-versions.cjs](../tests/artificer-source-versions.cjs), [tests/artificer-source-versions-browser.cjs](../tests/artificer-source-versions-browser.cjs) |
+| Subclass feature · 15 | Source-rule comparison and structured fields still need review. | Pending |
+| Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
+| Magic Item Master · 18 | Six attunement slots at actual Artificer 18 without counting levels in other classes. | [tests/artificer-source-versions.cjs](../tests/artificer-source-versions.cjs), [tests/artificer-source-versions-browser.cjs](../tests/artificer-source-versions-browser.cjs) |
+| Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
+| Soul of Artifice · 20 | Short Rest restores all Flash of Genius uses while attuned to an owned magic item at actual Artificer 20. Cheat Death and replicated-item ending still need controls. | [tests/artificer-source-versions.cjs](../tests/artificer-source-versions.cjs), [tests/artificer-source-versions-browser.cjs](../tests/artificer-source-versions-browser.cjs) |
 

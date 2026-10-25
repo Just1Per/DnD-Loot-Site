@@ -90,6 +90,7 @@ var CharacterEquipment = (() => {
     const stored=data?.adobe||data?.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data?.build?.classId,level:level||1}];
     let remaining=level===undefined?20:Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),artificer=0;
     const seen=new Set();for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(!seen.has(entry.classId)&&entry.classId==='artificer')artificer=actual;seen.add(entry.classId);}
+    const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);if(artificer&&!choices?.artificerSource(data).eligible)return 3;
     return artificer>=18?6:artificer>=14?5:artificer>=10?4:3;
   }
   function attunementState(data,loot=[],level){

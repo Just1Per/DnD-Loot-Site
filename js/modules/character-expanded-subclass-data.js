@@ -151,12 +151,13 @@
   // Older subclasses remain selectable as explicitly labelled legacy options on a 2024 class.
   // The 2024 class chassis standardizes subclass selection at class level 3.
   const effectiveMinimum=(row,edition)=>edition==='2024'&&row.edition==='2014'?Math.max(3,row.minimumLevel):row.minimumLevel;
-  const compatible=(row,edition)=>{
+  const compatible=(row,edition,classSource='tce')=>{
     if(!row)return false;
+    if(row.classId==='artificer')return classSource==='efa'?edition==='2024'&&row.edition==='2024':classSource==='tce'&&row.edition==='2014';
     return edition==='2014' ? row.edition==='2014' : (row.edition==='2014'||row.edition==='2024');
   };
-  const optionsFor=(classId,level,edition)=>Object.values(all)
-    .filter(row=>row.classId===classId&&compatible(row,edition)&&Number(level||0)>=effectiveMinimum(row,edition))
+  const optionsFor=(classId,level,edition,classSource)=>Object.values(all)
+    .filter(row=>row.classId===classId&&compatible(row,edition,classSource)&&Number(level||0)>=effectiveMinimum(row,edition))
     .sort((a,b)=>{
       const core=edition==='2024'?'PHB24':'PHB';
       const priority=row=>row.source===core?0:row.edition===edition?1:2;

@@ -8,20 +8,22 @@ const slug=value=>String(value).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace
 const status=require('../docs/character-class-feature-status.json');
 function review(){
  const classes=[];
- for(const edition of ['2014','2024'])for(const [classId,info]of Object.entries(Rules.classes)){
-  const sourceEdition=classId==='artificer'?'2014':edition;
-  const features=Progression.classFeatures(classId,edition).map(row=>{
+ const cases=['2014','2024'].flatMap(edition=>Object.entries(Rules.classes).map(([classId,info])=>({edition,classId,info,classSource:classId==='artificer'?'tce':undefined})));
+ cases.push({edition:'2024',classId:'artificer',info:Rules.classes.artificer,classSource:'efa'});
+ for(const {edition,classId,info,classSource}of cases){
+  const sourceEdition=classId==='artificer'?(classSource==='efa'?'2024':'2014'):edition;
+  const features=Progression.classFeatures(classId,edition,classSource).map(row=>{
    const key=[sourceEdition,classId,slug(row.name)].join(':'),verified=status[key]||status['*:'+slug(row.name)]||{state:'unreviewed',scope:'Source-rule comparison and structured fields still need review.',evidence:[]};
-   return{id:[edition,classId,row.level,slug(row.name)].join(':'),name:row.name,level:row.level,source:classId==='artificer'?'TCE / legacy Artificer':row.source||'Shipped SRD reference',...verified};
+   return{id:[edition,classId,...(classSource?[classSource]:[]),row.level,slug(row.name)].join(':'),name:row.name,level:row.level,source:classId==='artificer'?(classSource==='efa'?'EFA / revised Artificer':'TCE / legacy Artificer'):row.source||'Shipped SRD reference',...verified};
   });
-  classes.push({classId,name:info.name,edition,sourceEdition,features,levels:Array.from({length:20},(_,index)=>({level:index+1,newFeatures:features.filter(row=>row.level===index+1).map(row=>row.id)}))});
+  classes.push({classId,name:info.name,edition,sourceEdition,...(classSource?{classSource}:{}),features,levels:Array.from({length:20},(_,index)=>({level:index+1,newFeatures:features.filter(row=>row.level===index+1).map(row=>row.id)}))});
  }
  return{format:1,scope:'Shipped base-class reference inventory; subclass features and external source completeness require separate review.',classes};
 }
 function markdown(data){
- const lines=['# Class features: level-by-level review','','This inventory covers every supported base class at levels 1–20 using the references shipped with the app. It does **not** certify that every source-book feature is imported or automated. Subclass features require their own pass. The legacy Artificer source remains labelled when used on a compatible 2024 sheet.','','- **Implemented**: the stated scope has structured controls/calculations and named test evidence.','- **Partial**: some support exists; the remaining scope is explicit.','- **Unreviewed**: source comparison and complete field coverage are still outstanding.','','The runtime matrix separately checks that core derivation succeeds for every class/level and preserves values across multiclass/save-envelope cases. Passing that matrix does not make unreviewed features implemented.',''];
+ const lines=['# Class features: level-by-level review','','This inventory covers every supported base class at levels 1–20 using the references shipped with the app. It does **not** certify that every source-book feature is imported or automated. Subclass features require their own pass. Both Artificer sources are inventoried separately: Tasha’s legacy class on either compatible core edition and revised Eberron on 2024 core rules.','','- **Implemented**: the stated scope has structured controls/calculations and named test evidence.','- **Partial**: some support exists; the remaining scope is explicit.','- **Unreviewed**: source comparison and complete field coverage are still outstanding.','','The runtime matrix separately checks that core derivation succeeds for every class/level and preserves values across multiclass/save-envelope cases. Passing that matrix does not make unreviewed features implemented.',''];
  for(const row of data.classes){
-  lines.push('## '+row.name+' · '+row.edition+(row.sourceEdition!==row.edition?' core / legacy '+row.sourceEdition+' source':''),'','| Class level | Features arriving at this level |','| --- | --- |');
+  lines.push('## '+row.name+(row.classSource?' · '+(row.classSource==='efa'?'Eberron revised':'Tasha’s legacy'):'')+' · '+row.edition+(row.sourceEdition!==row.edition?' core / legacy '+row.sourceEdition+' source':''),'','| Class level | Features arriving at this level |','| --- | --- |');
   for(const level of row.levels){const arriving=row.features.filter(feature=>level.newFeatures.includes(feature.id));lines.push('| '+level.level+' | '+(arriving.map(feature=>feature.name+' **['+feature.state+']**').join('<br>')||'No new named base-class feature in the shipped reference; check scaling and subclass progression separately.')+' |');}
   lines.push('','| Feature / level | Review scope | Test evidence |','| --- | --- | --- |');
   for(const feature of row.features)lines.push('| '+feature.name+' · '+feature.level+' | '+feature.scope.replaceAll('|','/')+' | '+(feature.evidence.map(file=>'['+file+'](../'+file+')').join(', ')||'Pending')+' |');

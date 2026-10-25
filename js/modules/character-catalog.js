@@ -65,12 +65,12 @@ var CharacterCatalog = (() => {
   }
   const find=(id,kind='spells')=>kind==='feats'&&typeof CampaignRules!=='undefined'?CampaignRules.feat(id,catalogue?.feats?.find(s=>s.id===id)):catalogue?.[kind]?.find(s=>s.id===id);
   const schools=Object.freeze(['Abjuration','Conjuration','Divination','Enchantment','Evocation','Illusion','Necromancy','Transmutation']);
-  function spells({edition,legacy=false,classId='',level='',school='',search=''}={}) {
-    const needle=String(search||'').trim().toLowerCase();
+  function spells({edition,legacy=false,classId='',classSource='',level='',school='',search=''}={}) {
+    const needle=String(search||'').trim().toLowerCase(),artificer=classId==='artificer'&&['tce','efa'].includes(classSource),choices=artificer?(globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null)):null;
     return (catalogue?.spells||[]).filter(s=>{
-      const versionOk=!edition || s.edition===edition || legacy && edition==='2024' && s.edition==='2014';
+      const versionOk=!edition || s.edition===edition || (legacy||artificer) && edition==='2024' && s.edition==='2014';
       const levelOk=level==='' || s.level===Number(level);
-      const classOk=!classId || (s.classesByEdition?.[edition]||s.classes||[]).includes(classId);
+      const classOk=artificer?!!choices?.artificerSpellAllowed(s,classSource,catalogue.spells,edition):!classId || (s.classesByEdition?.[edition]||s.classes||[]).includes(classId);
       const schoolOk=!school || String(s.school||'').toLowerCase()===String(school).toLowerCase();
       const searchable=[
         s.name,s.school,s.source,s.book,s.save,s.casting,s.range,
