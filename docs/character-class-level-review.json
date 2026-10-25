@@ -3797,9 +3797,12 @@
           "name": "Arcane Recovery",
           "level": 1,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Atomic selection/recovery of expended slots, combined rounded-up actual Wizard-level budget, no level-6+ slots, one activation, ordinary/Pact pool separation, source-specific daily/Long Rest reset, save/reopen and print. The player confirms the eligible Short Rest; calendar advancement is explicit in legacy rules.",
+          "evidence": [
+            "tests/wizard-arcane-recovery.cjs",
+            "tests/wizard-arcane-recovery-browser.cjs"
+          ]
         },
         {
           "id": "2014:wizard:1:spellcasting",
@@ -7917,9 +7920,12 @@
           "name": "Arcane Recovery",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Atomic selection/recovery of expended slots, combined rounded-up actual Wizard-level budget, no level-6+ slots, one activation, ordinary/Pact pool separation, source-specific daily/Long Rest reset, save/reopen and print. The player confirms the eligible Short Rest; calendar advancement is explicit in legacy rules.",
+          "evidence": [
+            "tests/wizard-arcane-recovery.cjs",
+            "tests/wizard-arcane-recovery-browser.cjs"
+          ]
         },
         {
           "id": "2024:wizard:1:ritual-adept",

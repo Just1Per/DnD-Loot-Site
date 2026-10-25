@@ -155,6 +155,7 @@ jobs:
         npm --prefix tests run test:extra-attack
         npm --prefix tests run test:class-expertise
         npm --prefix tests run test:weapon-mastery
+        npm --prefix tests run test:wizard-recovery
         npm --prefix tests run test:paladin-healing
         npm --prefix tests run test:ranger-resources
         npm --prefix tests run test:sorcerer-metamagic

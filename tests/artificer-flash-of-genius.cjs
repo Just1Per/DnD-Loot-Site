@@ -5,7 +5,7 @@ const change=(d,delta,level=7)=>C.changeClassResource(d,'artificer-flash-of-geni
 test('Flash of Genius unlocks at actual Artificer 7 and scales only with Intelligence',()=>{
  for(let level=1;level<=20;level++){const rows=M.derive(make(level),level).classResources;assert.equal(rows.length,level>=7?1:0);if(rows.length){assert.equal(rows[0].max,3);assert.equal(rows[0].bonus,3);}}
  for(const [int,bonus,max]of [[8,-1,1],[10,0,1],[12,1,1],[20,5,5],[30,10,10]]){const row=M.derive(make(7,int),7).classResources[0];assert.equal(row.bonus,bonus);assert.equal(row.max,max);}
- const d=make(6);d.adobe.classLevels.push({classId:'wizard',level:14});assert.equal(M.derive(d,20).classResources.length,0);assert.equal(change(d,1,20),false);
+ const d=make(6);d.adobe.classLevels.push({classId:'wizard',level:14});assert.equal(M.derive(d,20).classResources.some(row=>row.id==='artificer-flash-of-genius'),false);assert.equal(M.derive(d,20).classResources.some(row=>row.id==='wizard-arcane-recovery'),true);assert.equal(change(d,1,20),false);
 });
 test('finite uses can be spent and undone without adding a permanent skill or save bonus',()=>{
  const d=make(),before=M.derive(d,7);for(let i=0;i<3;i++)assert.equal(change(d,1),true);assert.equal(change(d,1),false);let after=M.derive(d,7);assert.equal(after.classResources[0].remaining,0);assert.deepEqual(after.skills,before.skills);assert.deepEqual(after.saves,before.saves);assert.equal(change(d,-1),true);assert.equal(M.derive(d,7).classResources[0].remaining,1);assert.equal(change(d,2),false);assert.equal(C.changeClassResource(d,'forged',1,context(d,7)),false);
