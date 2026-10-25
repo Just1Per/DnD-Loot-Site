@@ -1,6 +1,6 @@
 # Klassetest og Adobe-opfølgning — 24. oktober 2026
 
-Opdateret 25. oktober: `main` ved `9f042af` indeholder #219–226. Denne gren tilføjer Channel Divinity-ressourcer og egne Paladin-auras. Ingen klasse er endnu færdigkontrolleret for alle features, levels, subclasses og kildebøger. Tabellen viser konkrete funktioner, som nu kan testes, ikke et løfte om fuld klasseautomatik.
+Opdateret 25. oktober: `main` ved `af4b7c9` indeholder #219–228. Denne gren tilføjer et aktivt Druid Wild Shape-kort under Companions. Ingen klasse er endnu færdigkontrolleret for alle features, levels, subclasses og kildebøger. Tabellen viser konkrete funktioner, som nu kan testes, ikke et løfte om fuld klasseautomatik.
 
 ## Hvad kan testes nu?
 
@@ -14,7 +14,7 @@ Opdateret 25. oktober: `main` ved `9f042af` indeholder #219–226. Denne gren ti
 | Artificer — Tasha’s / 2014 | Artisan-tool-valg, Tool Expertise, Flash of Genius og attunement-grænser | Infusions, Spell-Storing Item, crafting, Soul of Artifice og subclasses. Kildevalget er nu adskilt fra core-edition; kontrollér både primærklasse og multiclass |
 | Artificer — Eberron: Forge of the Artificer | Særskilt kildevalg på 2024 core, kildekorrekt feature-reference, preparation/multiclass-spellprofil, attunement og Flash | Replicate Magic Item, planer/crafting, Spell-Storing Item, øvrige effekter og subclasses |
 | Cleric — begge editions | Divine Order i 2024; Channel Divinity-puljer, baseeffektvalg og klassekorrekt DC/formel i denne gren | Blessed Strikes, Divine Intervention, domain-effekter og automatisk mål-/conditionhåndtering |
-| Druid — 2024 | Primal Order: Warden/Magician, skill-bonus, ekstra cantrip og Druidic | Wild Shape-classfunktioner, ressourcer, Elemental Fury og øvrige features/circles |
+| Druid — begge editions | Druidic; 2024 Primal Order. Denne gren tilføjer Wild Shape-kort/pulje, kendte/sete former, kildekorrekt HP/tempHP, CR/bevægelse og scoped Moon-tilpasninger | Wild Companion-oprettelse, slot-veksling, Elemental Fury og øvrige circles |
 | Barbarian | 2024 Weapon Mastery og Primal Champion på level 20 i begge editions | Rage, movement, betingede angreb/defenses og subclasses |
 | Ranger | Fighting Style, 2024 Weapon Mastery samt Deft Explorer/Expertise | 2014 Favored Enemy/Natural Explorer, ekstra sprog, Roving, optional Tasha’s og subclasses. #223 tilføjer Hunter’s Mark-brug, Tireless, Nature’s Veil, Feral Senses og Foe Slayer |
 | Wizard | 2024 Scholar, class-baseret spellbook/preparation og Arcane Recovery med samlet slotvalg, class-level-budget og edition-specifik nulstilling | Spell Mastery, Signature Spells og school-features |
@@ -66,3 +66,11 @@ Prioritér funktionalitet i de eksisterende områder:
 Bevar sidernes nuværende udseende, tabs og navigation. Tilføj små felter dér, hvor spilleren allerede leder efter dem. Brug kompakte/udfoldelige avancerede valg, én hjælp pr. sektion og hover/focus-hjælp til små felter. Opdatér Guide og de relevante infobokse med hver ny funktion. Kopiér ikke Acrobats særlige UI eller dokument-JavaScript ind i websitet.
 
 Denne status ændrer ingen produktvisning, deployer ikke og ændrer eller migrerer ingen produktionsdata.
+
+## Wild Shape — denne gren
+
+- Åbn Combat → Choose form in Companions. Dit aktive kort ligger øverst; Change form or known forms folder valgene ud.
+- **2014 Druid 4:** Vælg Wolf, bekræft at figuren har set den, og skift form. Ulvens 11 HP er adskilt fra figurens HP. Med 7 form-HP tilbage skal 10 skade afslutte formen og kun koste 3 normale HP, hvis der ikke er temporary HP.
+- **2024 Druid 4:** Vælg kendte former eller de fire anbefalede. Wolf bruger figurens HP og giver 4 temporary HP. Eksisterende 9 temporary HP beholdes ved valget Keep whichever is higher.
+- Kontrollér actual Druid-level i multiclassing, Moon-AC/tempHP, gem/genåbn og Short Rest i Combat: alle brug tilbage i 2014, ét brug i 2024. Normalark og tidligere companionkort skal bevares.
+- Dette færdiggør ikke hele Druid-klassen eller alle circles. Se [afgrænsning og kilder](druid-wild-shape.md).

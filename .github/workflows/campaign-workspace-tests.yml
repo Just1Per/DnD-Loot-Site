@@ -156,6 +156,7 @@ jobs:
         npm --prefix tests run test:class-expertise
         npm --prefix tests run test:weapon-mastery
         npm --prefix tests run test:paladin-auras
+        npm --prefix tests run test:druid-wild-shape
         npm --prefix tests run test:divine-channels
         npm --prefix tests run test:wizard-recovery
         npm --prefix tests run test:paladin-healing

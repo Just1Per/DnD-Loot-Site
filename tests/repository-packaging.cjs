@@ -7,7 +7,7 @@ const {listFiles}=require('firebase-tools/lib/listFiles');
 const root=path.resolve(__dirname,'..');
 const config=JSON.parse(fs.readFileSync(path.join(root,'firebase.json'),'utf8'));
 const files=new Set(listFiles(root,config.hosting.ignore));
-for(const file of ['index.html','404.html','rules-attribution.html','js/app.js','js/firebase.js','js/boot-status.js','logo.png','favicon.png','placeholder.png','assets/ui/logo-144-v1.webp','assets/ui/favicon-48-v1.png','assets/ui/placeholder-384-v1.webp','data/rules/catalog.json','data/rules/monsters.json','data/rules/adobe-reference.json'])assert.ok(files.has(file),'Required public asset excluded: '+file);
+for(const file of ['index.html','404.html','rules-attribution.html','js/app.js','js/firebase.js','js/boot-status.js','logo.png','favicon.png','placeholder.png','assets/ui/logo-144-v1.webp','assets/ui/favicon-48-v1.png','assets/ui/placeholder-384-v1.webp','data/rules/catalog.json','data/rules/monsters.json','data/rules/wild-shapes-v1.json','data/rules/adobe-reference.json'])assert.ok(files.has(file),'Required public asset excluded: '+file);
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 for(const [,file]of html.matchAll(/href="(css\/[^"?]+)(?:\?[^\"]*)?"/g))assert.ok(files.has(file),'Required stylesheet excluded: '+file);
 const app=fs.readFileSync(path.join(root,'js/app.js'),'utf8');
