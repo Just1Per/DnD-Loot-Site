@@ -2597,3 +2597,9 @@
 #characterSheetDialog .sheet-resource-amount { flex: 1 1 100%; min-width: 0; }
 #characterSheetDialog #sheetFeatResources .sheet-resource-amount input,
 #characterSheetPage #characterSheetDialog #sheetFeatResources .sheet-resource-amount input { box-sizing: border-box; min-height: 44px !important; width: 100%; }
+
+#characterSheetDialog .sheet-arcane-options { flex: 0 0 100%; min-width: 0; }
+#characterSheetDialog .sheet-arcane-slots { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(150px,100%),1fr)); gap: 8px; margin-top: 8px; }
+#characterSheetDialog #sheetFeatResources :is([data-arcane-slot],[data-arcane-recover],[data-arcane-new-day],.sheet-arcane-options > summary),
+#characterSheetPage #characterSheetDialog #sheetFeatResources :is([data-arcane-slot],[data-arcane-recover],[data-arcane-new-day],.sheet-arcane-options > summary) { box-sizing: border-box; min-height: 44px !important; }
+#characterSheetDialog .sheet-arcane-options > summary { padding: 10px 0; cursor: pointer; }

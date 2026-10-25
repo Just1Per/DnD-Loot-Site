@@ -563,7 +563,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Arcane Recovery **[unreviewed]**<br>Spellcasting **[partial]** |
+| 1 | Arcane Recovery **[implemented]**<br>Spellcasting **[partial]** |
 | 2 | Arcane Tradition **[unreviewed]** |
 | 3 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 4 | Ability Score Improvement **[partial]** |
@@ -586,7 +586,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Arcane Recovery · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Arcane Recovery · 1 | Atomic selection/recovery of expended slots, combined rounded-up actual Wizard-level budget, no level-6+ slots, one activation, ordinary/Pact pool separation, source-specific daily/Long Rest reset, save/reopen and print. The player confirms the eligible Short Rest; calendar advancement is explicit in legacy rules. | [tests/wizard-arcane-recovery.cjs](../tests/wizard-arcane-recovery.cjs), [tests/wizard-arcane-recovery-browser.cjs](../tests/wizard-arcane-recovery-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Arcane Tradition · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -1164,7 +1164,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Arcane Recovery **[unreviewed]**<br>Ritual Adept **[unreviewed]**<br>Spellcasting **[partial]** |
+| 1 | Arcane Recovery **[implemented]**<br>Ritual Adept **[unreviewed]**<br>Spellcasting **[partial]** |
 | 2 | Scholar **[implemented]** |
 | 3 | Wizard Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -1187,7 +1187,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Arcane Recovery · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Arcane Recovery · 1 | Atomic selection/recovery of expended slots, combined rounded-up actual Wizard-level budget, no level-6+ slots, one activation, ordinary/Pact pool separation, source-specific daily/Long Rest reset, save/reopen and print. The player confirms the eligible Short Rest; calendar advancement is explicit in legacy rules. | [tests/wizard-arcane-recovery.cjs](../tests/wizard-arcane-recovery.cjs), [tests/wizard-arcane-recovery-browser.cjs](../tests/wizard-arcane-recovery-browser.cjs) |
 | Ritual Adept · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Scholar · 2 | Choose an eligible proficient Scholar skill at Wizard 2; expertise contribution is calculated once. | [tests/character-class-expertise.cjs](../tests/character-class-expertise.cjs) |

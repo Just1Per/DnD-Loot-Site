@@ -1,6 +1,6 @@
 # Klassetest og Adobe-opfølgning — 24. oktober 2026
 
-Opdateret 25. oktober: `main` ved `013593a` indeholder #219–221. Extra Attack og Ranger-ressourcer er lokalt testet i henholdsvis #222 og #223 og kræver stadig merge; følg rækkefølgen #222 → #223. Ingen klasse er endnu færdigkontrolleret for alle features, levels, subclasses og kildebøger. Tabellen viser konkrete funktioner, som nu kan testes, ikke et løfte om fuld klasseautomatik.
+Opdateret 25. oktober: `main` ved `24f6214` indeholder #219–224. Denne gren tilføjer Wizard Arcane Recovery. Ingen klasse er endnu færdigkontrolleret for alle features, levels, subclasses og kildebøger. Tabellen viser konkrete funktioner, som nu kan testes, ikke et løfte om fuld klasseautomatik.
 
 ## Hvad kan testes nu?
 
@@ -17,7 +17,7 @@ Opdateret 25. oktober: `main` ved `013593a` indeholder #219–221. Extra Attack 
 | Druid — 2024 | Primal Order: Warden/Magician, skill-bonus, ekstra cantrip og Druidic | Wild Shape-classfunktioner, ressourcer, Elemental Fury og øvrige features/circles |
 | Barbarian | 2024 Weapon Mastery og Primal Champion på level 20 i begge editions | Rage, movement, betingede angreb/defenses og subclasses |
 | Ranger | Fighting Style, 2024 Weapon Mastery samt Deft Explorer/Expertise | 2014 Favored Enemy/Natural Explorer, ekstra sprog, Roving, optional Tasha’s og subclasses. #223 tilføjer Hunter’s Mark-brug, Tireless, Nature’s Veil, Feral Senses og Foe Slayer |
-| Wizard | 2024 Scholar samt eksisterende class-baseret spellbook/preparation | Arcane Recovery, Spell Mastery, Signature Spells og school-features |
+| Wizard | 2024 Scholar, class-baseret spellbook/preparation; denne gren tilføjer Arcane Recovery med samlet slotvalg, class-level-budget og edition-specifik nulstilling | Spell Mastery, Signature Spells og school-features |
 | Paladin | Fighting Style og 2024 Weapon Mastery; eksisterende spell-grundlag. Denne gren tilføjer Lay on Hands-pulje med pointvalg og edition-specifikke cure/Restoring Touch-muligheder | Channel Divinity, auras, smite og oaths; målpersonens HP/conditions ændres stadig separat |
 | Sorcerer | Sorcery Points, kildekorrekte Metamagic-valg/prerequisites og pointforbrug; 2024 Sorcerous Restoration | Font of Magic slot-veksling/skabte slots, Innate Sorcery, Metamagic Adept og øvrige features/subclasses |
 
@@ -34,7 +34,7 @@ Point Buy, class-level-baserede feat/ASI-antal, gem/genåbn og de fælles multic
 7. **Cleric/Druid 2024:** Skift mellem martial og magic Order. Med final Wisdom 16 giver magic-valget +3 til de relevante Intelligence-skills samt ét ekstra class-cantrip. Bonus til et check er ikke det samme som skill proficiency.
 8. **Barbarian 20:** Primal Champion giver STR/CON +4; maksimum er 24 i 2014 og 25 i 2024. Brug Base scores, så arket beregner ændringen. Scores, saves, AC og Constitution-baseret HP skal følge med.
 
-Når #222 og #223 er merged, test også **Extra Attack** på class-level-grænserne og **Ranger** i begge editions. Fighter 11 giver tre angreb; Fighter 5/Ranger 5 giver stadig to. Ranger 2024 har gratis Hunter’s Mark-castings uden slotforbrug; Tireless/Nature’s Veil følger Wisdom. Ved 18 er kun 2024 Feral Senses Blindsight. Ved 20 giver revised Hunter’s Mark d10, mens legacy Foe Slayer er en betinget Wisdom-bonus én gang på egen tur.
+Test også **Extra Attack** på class-level-grænserne og **Ranger** i begge editions. Fighter 11 giver tre angreb; Fighter 5/Ranger 5 giver stadig to. Ranger 2024 har gratis Hunter’s Mark-castings uden slotforbrug; Tireless/Nature’s Veil følger Wisdom. Ved 18 er kun 2024 Feral Senses Blindsight. Ved 20 giver revised Hunter’s Mark d10, mens legacy Foe Slayer er en betinget Wisdom-bonus én gang på egen tur.
 
 Genindlæs siden før testen. Brug gerne én testkarakter pr. edition. Efter et forløb: gem, luk arket og genåbn; prøv derefter et multiclass-level og kontrollér, at klassevalgene og forbruget er bevaret. Notér klasse, edition, class-levels, feature og forventet/faktisk resultat ved fejl.
 
