@@ -421,6 +421,7 @@ function updateSheetCalculations() {
     return;
   const d = CharacterSheetModel.derive(s.data, s.identity?.level || s.character.level || 1, sheetEquipmentLoot());
   renderEquipmentCalculations(d);
+  renderAttackActionSummary(d);
   updateSheetBuildSummary(d);
   renderCharacterOverview(d);
   updateCharacterPortrait();

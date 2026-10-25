@@ -2578,3 +2578,7 @@
 #characterSheetPage #characterSheetDialog .sheet-artificer-source .sheet-field { min-width: 0; }
 #characterSheetDialog .sheet-artificer-source [data-artificer-source],
 #characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-artificer-source] { min-height: 44px !important; width: 100%; min-width: 0; max-width: 100%; }
+
+/* Compact attack-action allowance within the existing Combat and Overview sections. */
+#characterSheetDialog .sheet-attack-action-summary { margin: 8px 0; padding: 8px 10px; border-left: 2px solid var(--vault-border-soft,#d8c9ae); overflow-wrap: anywhere; }
+#characterSheetDialog .sheet-attack-action-summary .sheet-help { margin: 4px 0 0; }
