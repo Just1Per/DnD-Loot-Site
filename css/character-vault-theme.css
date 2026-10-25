@@ -2582,3 +2582,10 @@
 /* Compact attack-action allowance within the existing Combat and Overview sections. */
 #characterSheetDialog .sheet-attack-action-summary { margin: 8px 0; padding: 8px 10px; border-left: 2px solid var(--vault-border-soft,#d8c9ae); overflow-wrap: anywhere; }
 #characterSheetDialog .sheet-attack-action-summary .sheet-help { margin: 4px 0 0; }
+#characterSheetDialog .sheet-metamagic-controls .sheet-field { flex: 1 1 180px; min-width: 0; }
+#characterSheetDialog .sheet-metamagic-controls [data-metamagic-detail] { flex-basis: 100%; margin: 0; }
+#characterSheetDialog .sheet-metamagic-controls select { width: 100%; min-width: 0; max-width: 100%; }
+#characterSheetDialog #sheetFeatResources :is([data-metamagic],[data-metamagic-level],[data-spend-metamagic]),
+#characterSheetPage #characterSheetDialog #sheetFeatResources :is([data-metamagic],[data-metamagic-level],[data-spend-metamagic]),
+#characterSheetDialog #sheetAdobeClasses [data-choice-group=metamagic],
+#characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-choice-group=metamagic] { min-height: 44px !important; }
