@@ -2593,3 +2593,7 @@
 #characterSheetDialog .sheet-class-resource-rules { flex: 0 0 100%; min-width: 0; }
 #characterSheetDialog #sheetFeatResources .sheet-class-resource-rules > summary,
 #characterSheetPage #characterSheetDialog #sheetFeatResources .sheet-class-resource-rules > summary { box-sizing: border-box; min-height: 44px !important; padding: 10px 0 !important; cursor: pointer; }
+
+#characterSheetDialog .sheet-resource-amount { flex: 1 1 100%; min-width: 0; }
+#characterSheetDialog #sheetFeatResources .sheet-resource-amount input,
+#characterSheetPage #characterSheetDialog #sheetFeatResources .sheet-resource-amount input { box-sizing: border-box; min-height: 44px !important; width: 100%; }

@@ -18,7 +18,7 @@ Opdateret 25. oktober: `main` ved `013593a` indeholder #219–221. Extra Attack 
 | Barbarian | 2024 Weapon Mastery og Primal Champion på level 20 i begge editions | Rage, movement, betingede angreb/defenses og subclasses |
 | Ranger | Fighting Style, 2024 Weapon Mastery samt Deft Explorer/Expertise | 2014 Favored Enemy/Natural Explorer, ekstra sprog, Roving, optional Tasha’s og subclasses. #223 tilføjer Hunter’s Mark-brug, Tireless, Nature’s Veil, Feral Senses og Foe Slayer |
 | Wizard | 2024 Scholar samt eksisterende class-baseret spellbook/preparation | Arcane Recovery, Spell Mastery, Signature Spells og school-features |
-| Paladin | Fighting Style og 2024 Weapon Mastery; eksisterende spell-grundlag | Lay on Hands, Channel Divinity, auras, class-ressourcer og oaths |
+| Paladin | Fighting Style og 2024 Weapon Mastery; eksisterende spell-grundlag. Denne gren tilføjer Lay on Hands-pulje med pointvalg og edition-specifikke cure/Restoring Touch-muligheder | Channel Divinity, auras, smite og oaths; målpersonens HP/conditions ændres stadig separat |
 | Sorcerer | Sorcery Points, kildekorrekte Metamagic-valg/prerequisites og pointforbrug; 2024 Sorcerous Restoration | Font of Magic slot-veksling/skabte slots, Innate Sorcery, Metamagic Adept og øvrige features/subclasses |
 
 Point Buy, class-level-baserede feat/ASI-antal, gem/genåbn og de fælles multiclass-beregninger er testet på tværs af alle 13 klasse-ID’er. Det er ikke det samme som, at alle klassernes features er gennemført.

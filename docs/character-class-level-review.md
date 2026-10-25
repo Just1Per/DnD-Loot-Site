@@ -340,7 +340,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Divine Sense **[unreviewed]**<br>Lay on Hands **[unreviewed]** |
+| 1 | Divine Sense **[unreviewed]**<br>Lay on Hands **[partial]** |
 | 2 | Divine Smite **[unreviewed]**<br>Fighting Style **[partial]**<br>Spellcasting **[partial]** |
 | 3 | Divine Health **[unreviewed]**<br>Sacred Oath **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -364,7 +364,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Divine Sense · 1 | Source-rule comparison and structured fields still need review. | Pending |
-| Lay on Hands · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Lay on Hands · 1 | Actual Paladin-level healing pool, variable point spending/undo, Long Rest, source-specific cure options, persistence and print. Apply healing and condition removal to the chosen recipient separately; no cross-character mutation. | [tests/paladin-lay-on-hands.cjs](../tests/paladin-lay-on-hands.cjs), [tests/paladin-lay-on-hands-browser.cjs](../tests/paladin-lay-on-hands-browser.cjs) |
 | Divine Smite · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Fighting Style · 2 | Base class and Feats choices share the correct allowance, with duplicate/alias guards. Additional subclass/feat style sources and situational effects remain in the wider review. | [tests/fighting-style-entitlements.cjs](../tests/fighting-style-entitlements.cjs), [tests/fighting-style-entitlements-browser.cjs](../tests/fighting-style-entitlements-browser.cjs) |
 | Spellcasting · 2 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
@@ -932,7 +932,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Lay On Hands **[unreviewed]**<br>Spellcasting **[partial]**<br>Weapon Mastery **[partial]** |
+| 1 | Lay On Hands **[partial]**<br>Spellcasting **[partial]**<br>Weapon Mastery **[partial]** |
 | 2 | Fighting Style **[partial]**<br>Paladin's Smite **[unreviewed]** |
 | 3 | Channel Divinity **[unreviewed]**<br>Paladin Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -945,7 +945,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 11 | Radiant Strikes **[unreviewed]** |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 14 | Restoring Touch **[unreviewed]** |
+| 14 | Restoring Touch **[partial]** |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -955,7 +955,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Lay On Hands · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Lay On Hands · 1 | Actual Paladin-level healing pool, variable point spending/undo, Long Rest, source-specific cure options, persistence and print. Apply healing and condition removal to the chosen recipient separately; no cross-character mutation. | [tests/paladin-lay-on-hands.cjs](../tests/paladin-lay-on-hands.cjs), [tests/paladin-lay-on-hands-browser.cjs](../tests/paladin-lay-on-hands-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Weapon Mastery · 1 | Weapon choices, class-level allowance, proficiency gating and property reminders exist. Audit remaining property-specific statistics/conditions against the source. | [tests/weapon-mastery.cjs](../tests/weapon-mastery.cjs), [tests/weapon-mastery-browser.cjs](../tests/weapon-mastery-browser.cjs) |
 | Fighting Style · 2 | Base class and Feats choices share the correct allowance, with duplicate/alias guards. Additional subclass/feat style sources and situational effects remain in the wider review. | [tests/fighting-style-entitlements.cjs](../tests/fighting-style-entitlements.cjs), [tests/fighting-style-entitlements-browser.cjs](../tests/fighting-style-entitlements-browser.cjs) |
@@ -971,7 +971,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Aura of Courage · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Radiant Strikes · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Restoring Touch · 14 | Source-rule comparison and structured fields still need review. | Pending |
+| Restoring Touch · 14 | Correct level-14 condition list and five-point-per-condition cost appear with the same Lay on Hands pool and in print. Target conditions are updated explicitly by the player. | [tests/paladin-lay-on-hands.cjs](../tests/paladin-lay-on-hands.cjs), [tests/paladin-lay-on-hands-browser.cjs](../tests/paladin-lay-on-hands-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Aura Expansion · 18 | Source-rule comparison and structured fields still need review. | Pending |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
