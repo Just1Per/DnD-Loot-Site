@@ -38,7 +38,7 @@ var CharacterAttackProgression=(()=>{
   }
   function describe(result){
     if(!result?.visible)return[];
-    const sources=result.reports.filter(row=>row.scope==='normal'&&row.count===result.count).map(row=>row.className+' '+row.level+(row.source?' · '+row.source:''));
+    const sources=result.reports.filter(row=>row.scope==='normal'&&row.count===result.count).map(row=>row.className+' '+row.level+(row.name.startsWith('Extra Attack · ')?' · '+row.name.slice('Extra Attack · '.length):''));
     const lines=['Attack action: '+result.count+' attack'+(result.count===1?'':'s')+' on your turn.'];
     if(sources.length)lines.push(sources.join(' / ')+' · Extra Attack.');
     if(result.pactWeaponCount>result.count){const sources=result.reports.filter(row=>row.scope==='pact'&&row.count===result.pactWeaponCount).map(row=>row.name+' · Warlock '+row.level);lines.push('With your pact weapon: '+result.pactWeaponCount+' attacks ('+sources.join(' / ')+').');}
