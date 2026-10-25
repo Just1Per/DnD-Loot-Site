@@ -103,7 +103,7 @@ var CharacterClassProgression=(()=>{
   ];
   const wizard2014=[
     feature('Spellcasting',1,'Use Intelligence to prepare and cast Wizard spells recorded in your spellbook.'),
-    feature('Arcane Recovery',1,'Once per day after a short rest, recover expended spell-slot levels based on your Wizard level.',{recharge:'long rest'}),
+    feature('Arcane Recovery',1,'Once per day after a short rest, recover expended spell-slot levels based on your Wizard level.',{recharge:'daily'}),
     feature('Arcane Tradition',2,'Choose a Wizard tradition; it grants additional features as your Wizard level rises.'),
     feature('Ability Score Improvement',4,'Increase ability scores or choose a feat, following the 2014 rules.'),
     feature('Arcane Tradition feature',6,'Gain the level 6 feature from your chosen Wizard tradition.'),
@@ -256,6 +256,7 @@ var CharacterClassProgression=(()=>{
       if(row.name==='Stunning Strike'&&row.level===3)return{...row,name:'Deflect Attacks',summary:'Use a Reaction to reduce Bludgeoning, Piercing or Slashing damage from an attack by 1d10 plus your Dexterity modifier and Monk level. If reduced to 0, you can spend 1 Focus Point to redirect energy under the feature’s conditions.'};
     }
     if(editionOf(edition)==='2024'&&classId==='fighter'&&row.name==='Studdied Attacks')return{...row,name:'Studied Attacks'};
+    if(classId==='wizard'&&row.name==='Arcane Recovery')return{...row,recharge:editionOf(edition)==='2024'?'long rest':'daily',summary:'After a Short Rest, choose expended slots of level 1–5 whose combined levels fit half your Wizard level, rounded up. '+(editionOf(edition)==='2024'?'Regain this feature after a Long Rest.':'Use once per day; reset when the next in-game day begins.')};
     if(classId==='warlock'&&row.name==='Mystic Arcanum'&&[11,13,15,17].includes(row.level))return{...row,summary:'Choose one level '+((row.level+1)/2)+' Warlock spell as this arcanum. Cast it once without a spell slot, then regain that use after a Long Rest. Each arcanum has its own use.'};
     return row;
   });}
