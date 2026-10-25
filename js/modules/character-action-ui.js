@@ -64,3 +64,13 @@ function bindOverviewAttacks(){
  document.querySelectorAll('[data-edit-action]').forEach(b=>b.onclick=()=>openAttackPicker(Number(b.dataset.editAction)));
  document.querySelectorAll('[data-remove-action]').forEach(b=>b.onclick=()=>{readSheetForm();sheetSession.data.actions.splice(Number(b.dataset.removeAction),1);sheetSession.dirty=true;updateSheetCalculations();sheetStatus('Attack removed. Save to keep changes.');});
 }
+
+function attackActionSummaryMarkup(d,help=false){
+ const lines=CharacterAttackProgression.describe(d.attackAction);if(!lines.length)return'';
+ return '<div class="sheet-attack-action-summary" data-attack-action-summary><strong'+(help?' data-context-help="attack action" data-help-label="Attack action"':'')+'>'+sheetEscape(lines[0])+'</strong>'+lines.slice(1).map(line=>'<p class="sheet-help">'+(line.startsWith('With your pact weapon:')?'<strong>'+sheetEscape(line)+'</strong>':sheetEscape(line))+'</p>').join('')+'</div>';
+}
+function renderAttackActionSummary(d){
+ const panel=document.getElementById('sheet-combat');if(!panel)return;let host=document.getElementById('sheetAttackActionSummary');
+ if(!host){host=document.createElement('div');host.id='sheetAttackActionSummary';panel.querySelector('h3')?.after(host);}
+ host.innerHTML=attackActionSummaryMarkup(d,true);host.hidden=!host.innerHTML;
+}

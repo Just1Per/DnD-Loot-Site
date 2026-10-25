@@ -1,6 +1,7 @@
 /* Framework-independent character sheet data and calculations. */
 var CharacterSheetModel = (() => {
   const ClassChoices=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
+  const AttackProgression=typeof CharacterAttackProgression!=='undefined'?CharacterAttackProgression:require('./character-attack-progression');
   const Actions=typeof CharacterActions!=='undefined'?CharacterActions:require('./character-actions');
   const Play=typeof CharacterPlayRules!=='undefined'?CharacterPlayRules:require('./character-play-rules');
   const Rules = typeof CharacterRules !== 'undefined' ? CharacterRules : require('./character-rules');
@@ -281,6 +282,7 @@ var CharacterSheetModel = (() => {
     const result = {
       effects,
       rangerFeatures,
+      attackAction:AttackProgression.derive(d,level),
       toolTraining,
       artificerFeatures,
       classAbilityFeatures,

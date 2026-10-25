@@ -104,6 +104,7 @@ const FEATURE_FILES = [
   "./modules/character-adobe-data.js",
   "./modules/character-play-rules.js",
   "./modules/character-actions.js",
+  "./modules/character-attack-progression.js",
   "./modules/character-story.js",
   "./modules/character-journal-ui.js",
   "./modules/character-progression.js",

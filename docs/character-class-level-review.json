@@ -414,9 +414,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2014:barbarian:5:fast-movement",
@@ -1658,9 +1661,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2014:fighter:6:ability-score-improvement",
@@ -1703,9 +1709,12 @@
           "name": "Extra Attack",
           "level": 11,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2014:fighter:12:ability-score-improvement",
@@ -1796,9 +1805,12 @@
           "name": "Extra Attack",
           "level": 20,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         }
       ],
       "levels": [
@@ -1989,9 +2001,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2014:monk:5:stunning-strike",
@@ -2350,9 +2365,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2014:paladin:6:aura-of-protection",
@@ -2656,9 +2674,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2014:ranger:6:favored-enemy",
@@ -4384,9 +4405,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2024:barbarian:5:fast-movement",
@@ -5556,9 +5580,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:5:tactical-shift",
@@ -5622,9 +5649,12 @@
           "name": "Two Extra Attacks",
           "level": 11,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2024:fighter:12:ability-score-improvement",
@@ -5721,9 +5751,12 @@
           "name": "Three Extra Attacks",
           "level": 20,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         }
       ],
       "levels": [
@@ -5946,9 +5979,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2024:monk:5:stunning-strike",
@@ -6324,9 +6360,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2024:paladin:5:faithful-steed",
@@ -6646,9 +6685,12 @@
           "name": "Extra Attack",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules.",
+          "evidence": [
+            "tests/class-extra-attack.cjs",
+            "tests/class-extra-attack-browser.cjs"
+          ]
         },
         {
           "id": "2024:ranger:6:roving",
