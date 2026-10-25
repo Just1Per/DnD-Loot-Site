@@ -46,3 +46,22 @@ assert.equal(S.castingStats(profiles[0],{mods:{wis:3},pb:3},{spellAttackBonus:1,
 const paladin=S.profile('paladin',2,'2024'),catalogue=[{id:'smite',name:'Divine Smite',edition:'2024',level:1}];
 assert.deepEqual(S.selectionCounts(paladin,[{catalogId:'smite',level:1,prepared:true},{catalogId:'cure',level:1,prepared:true},{level:0}],catalogue),{cantrips:1,leveled:1,prepared:1,automatic:1});
 console.log('SUCCESS separate multiclass allowances, casting statistics and automatic spell counts');
+
+// Druidic's revised spell grant is additional, source-specific and class-scoped.
+const druidCatalogue=require('../data/rules/catalog.json').spells;
+for(let level=1;level<=20;level++){
+ const modern=S.profile('druid',level,'2024',{wis:16}),legacy=S.profile('druid',level,'2014',{wis:16}),grants=S.automaticGrants(modern,druidCatalogue);
+ const speech=grants.find(s=>s.name==='Speak with Animals');assert.ok(speech);assert.equal(speech.edition,'2024');assert.equal(speech.level,1);assert.equal(S.automaticGrants(legacy,druidCatalogue).some(s=>s.name==='Speak with Animals'),false);
+ const rows=[{catalogId:speech.id,classId:'druid',level:1,prepared:true},{catalogId:'ordinary',classId:'druid',level:1,prepared:true}];assert.deepEqual(S.selectionCounts(modern,rows,druidCatalogue),{cantrips:0,leveled:1,prepared:1,automatic:1});
+}
+const dip={build:{classId:'wizard',edition:'2024'},adobe:{classLevels:[{classId:'wizard',level:19},{classId:'druid',level:1}]}};
+const dipProfile=S.profiles(dip,20,{wis:16}).find(p=>p.classId==='druid');assert.equal(S.automaticGrants(dipProfile,druidCatalogue).filter(s=>s.name==='Speak with Animals').length,1);dip.adobe.classLevels[0].level=20;assert.equal(S.profiles(dip,20,{wis:16}).some(p=>p.classId==='druid'),false);
+assert.equal(S.automaticGrants(S.profile('wizard',20,'2024',{int:20}),druidCatalogue).some(s=>s.name==='Speak with Animals'),false);
+console.log('SUCCESS Druidic extra spell: levels 1–20, edition, preparation allowance and capped multiclass source');
+
+const capped={build:{classId:'druid',edition:'2024'},adobe:{classLevels:[{classId:'fighter',level:19},{classId:'druid',level:5}]}},saved=JSON.stringify(capped);
+assert.equal(S.profiles(capped,20,{wis:16}).find(p=>p.classId==='druid').level,1);assert.equal(JSON.stringify(capped),saved);
+capped.adobe.classLevels[0].level=20;assert.deepEqual(S.profiles(capped,20,{wis:16}),[]);
+capped.adobe.classLevels=[{classId:'druid',level:1},{classId:'druid',level:19}];assert.deepEqual(S.classEntries(capped,20).map(p=>p.level),[1]);
+capped.adobe.classLevels=[{classId:'druid',level:0}];assert.deepEqual(S.classEntries(capped,20),[]);
+console.log('SUCCESS spell profiles cap all assigned levels, count martial levels, reject duplicates and preserve saved class choices');

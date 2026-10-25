@@ -17,7 +17,9 @@
    const input=[...dialog.querySelectorAll('[data-spell-pick]')].find(el=>el.dataset.spellId===spellId);check(id+' can choose the shared spell',!!input);input.checked=true;input.onchange();dialog.querySelector('#spellGeneratorApply').onclick();
   };
   await generate('druid',shared.id);await generate('cleric',shared.id);
-  check('A shared spell remains two independent class entries',sheetSession.data.spells.filter(s=>s.catalogId===shared.id).length===2&&['druid','cleric'].every(id=>panel(id).querySelectorAll('tbody tr[data-class-spell-index]').length===1));
+  check('A shared spell remains two independent class entries',sheetSession.data.spells.filter(s=>s.catalogId===shared.id).length===2&&panel('druid').querySelectorAll('tbody tr[data-class-spell-index]').length===2&&panel('cleric').querySelectorAll('tbody tr[data-class-spell-index]').length===1);
+  const speech=CharacterCatalog.rawData.spells.find(s=>s.name==='Speak with Animals'&&s.edition==='2024');
+  check('Druidic adds only its own always-prepared extra spell',sheetSession.data.spells.filter(s=>s.catalogId===speech.id).length===1&&sheetSession.data.spells.some(s=>s.catalogId===speech.id&&s.classId==='druid'&&s.prepared)&&!panel('cleric').textContent.includes('Speak with Animals'));
   check('Prepared allowances use individual class levels',panel('druid').textContent.includes('1/5 prepared spells')&&panel('cleric').textContent.includes('1/4 prepared spells'));
   check('Each class sheet shows its own Wisdom modifier attack and save DC', ['druid','cleric'].every(id=>panel(id).querySelector('.sheet-class-spell-metrics').textContent.includes('Wisdom +2')&&panel(id).querySelector('.sheet-class-spell-metrics').textContent.includes('Save DC12')));
   await panel('druid').querySelector('[data-generate-class]').onclick();
