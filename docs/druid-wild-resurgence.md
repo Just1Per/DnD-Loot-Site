@@ -16,7 +16,7 @@ Uses the existing normalized class-choice string-array map, ordinary slot fields
 
 **No Firestore or Storage changes, migration or production deployment are required.** The 2014 base class is unchanged. Guide, inline hover/focus help and Combat print explain the supported conversion without extra question-mark badges on repeated fields.
 
-This implements the spell-slot-to-Wild-Shape direction. **Wild Resurgence slot creation and level-20 Nature Magician are not implemented in this increment.** The agreed table rule is that created slots expire at Long Rest; their ledger and controls will follow separately. This increment creates no extra slots.
+This implements the spell-slot-to-Wild-Shape direction. The separate [created-slot controls](druid-created-slots.md) now implement Wild Resurgence slot creation and level-20 Nature Magician. This recovery control remains distinct: creating a slot has its own Long Rest limit and does not clear the once-per-own-turn recovery limit.
 
 Tests cover levels 1–20, source gates, ordinary/higher/Pact payment, exhaustion, atomicity/capacity, own-turn repetition, resets, capped multiclass assignments, active form/familiar conservation, actual save/reopen, print, loading boundaries, mobile layout and accessibility.
 

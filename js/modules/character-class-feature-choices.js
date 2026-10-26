@@ -475,12 +475,14 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
     for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='wizard'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
   }
+  function druidCreatedSlots(data){const helper=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);return helper?.createdSlots(data)||[];}
   function arcaneRecovery(data,context={}){
     const level=context.level||1,actual=wizardLevels(data,level);if(!actual)return null;
     const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},key=groupKey(edition,'wizard','arcane-recovery-used'),used=normalize(stored.classFeatureChoices)[key]?.[0];
     const model=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null),derived=context.slotMax?null:model?.derive(data,level,context.loot||[]),maxima=context.slotMax||derived?.effects.slotMax||[],pact=context.pact||derived?.progression?.pact,slots=[];
     for(let i=0;i<5;i++){const max=Math.max(0,Math.min(99,Math.trunc(Number(maxima[i])||0))),spent=Math.min(max,Math.max(0,Math.trunc(Number(data.slots?.[i]?.used)||0)));if(spent)slots.push({id:String(i+1),level:i+1,max,used:spent,label:'Level '+(i+1)+' · '+spent+' spent'});}
     if(pact?.count&&Number.isInteger(pact.slotLevel)&&pact.slotLevel>=1&&pact.slotLevel<=5){const max=Math.max(0,Math.min(4,Math.trunc(Number(pact.count)||0))),spent=Math.min(max,Math.max(0,Math.trunc(Number(stored.pactSlotsUsed)||0)));if(spent)slots.push({id:'pact',level:pact.slotLevel,max,used:spent,label:'Pact level '+pact.slotLevel+' · '+spent+' spent'});}
+    for(const row of druidCreatedSlots(data))if(row.valid&&row.level<6&&row.used)slots.push({...row,created:true,label:'Created level '+row.level+' · 1 spent · expires at Long Rest'});
     return{level:actual,budget:Math.ceil(actual/2),edition,key,used:/^\d{1,3}$/.test(used||'')&&Number(used)>0,slots};
   }
   function restoreArcaneSlots(data,plan,context={}){
@@ -489,8 +491,10 @@ var CharacterClassFeatureChoices=(()=>{
     for(const [id,count]of Object.entries(plan)){const row=recovery.slots.find(row=>row.id===id);if(!Number.isInteger(count)||count<0||count>99||!row)return false;if(count){if(count>row.used)return false;cost+=count*row.level;selected.push({...row,count});}}
     if(!cost||cost>recovery.budget)return false;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},next={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[recovery.key]:['1']}};
-    for(const row of selected){if(row.id==='pact')next.pactSlotsUsed=row.used-row.count;else{const index=Number(row.id)-1;data.slots[index]={...data.slots[index],max:row.max,used:row.used-row.count};}}
-    data.adobe=next;return true;
+    const slots=(data.slots||[]).map(row=>({...row}));
+    for(const row of selected){if(row.created)next.classFeatureChoices[row.key]=['ready'];else if(row.id==='pact')next.pactSlotsUsed=row.used-row.count;else{const index=Number(row.id)-1;slots[index]={...slots[index],max:row.max,used:row.used-row.count};}}
+    if(Object.keys(next.classFeatureChoices).length>100)return false;
+    data.slots=slots;data.adobe=next;return true;
   }
   function resetArcaneDay(data,context={}){
     if(data.build?.edition==='2024'||!wizardLevels(data,context.level||1))return false;const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),key=groupKey('2014','wizard','arcane-recovery-used');if(!/^\d{1,3}$/.test(choices[key]?.[0]||'')||!Number(choices[key][0]))return false;data.adobe={...stored,classFeatureChoices:{...choices,[key]:['0']}};return true;
@@ -550,12 +554,15 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},maxima=context.slotMax||data.slots?.map(row=>row.max)||[],rows=[];
     for(let i=0;i<9;i++){const max=Math.max(0,Math.min(99,Math.trunc(Number(maxima[i])||0))),used=Math.max(0,Math.trunc(Number(data.slots?.[i]?.used)||0));if(max)rows.push({value:String(i+1),label:'Level '+(i+1)+' · '+Math.max(0,max-used)+' available',max,used,available:Math.max(0,max-used)});}
     if(context.pact?.count){const max=Math.max(0,Math.min(4,Math.trunc(Number(context.pact.count)||0))),used=Math.max(0,Math.trunc(Number(stored.pactSlotsUsed)||0));rows.push({value:'pact',label:'Pact level '+context.pact.slotLevel+' · '+Math.max(0,max-used)+' available',max,used,available:Math.max(0,max-used)});}
+    for(const row of druidCreatedSlots(data))if(row.valid)rows.push({...row,value:row.id,created:true,label:'Created level '+row.level+' · '+row.available+' available · expires at Long Rest'});
     return rows;
   }
   function restoreBardFromSlot(data,value,context={}){
     const resource=classResources(data,context).find(row=>row.id==='bard-inspiration'),slot=bardSlotRecovery(data,context).find(row=>row.value===value);if(!resource?.slotRecovery||!resource.used||!slot?.available)return false;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},next={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.max(0,Math.min(resource.used,resource.max)-1))]}};
-    if(value==='pact')next.pactSlotsUsed=slot.used+1;else{const index=Number(value)-1;data.slots||=Array.from({length:9},()=>({max:0,used:0}));data.slots[index]={...data.slots[index],max:slot.max,used:slot.used+1};}
+    if(slot.created)next.classFeatureChoices[slot.key]=['spent'];
+    if(Object.keys(next.classFeatureChoices).length>100)return false;
+    if(value==='pact')next.pactSlotsUsed=slot.used+1;else if(!slot.created){const index=Number(value)-1;data.slots||=Array.from({length:9},()=>({max:0,used:0}));data.slots[index]={...data.slots[index],max:slot.max,used:slot.used+1};}
     data.adobe=next;return true;
   }
   function changeClassResource(data,id,delta,context){

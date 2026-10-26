@@ -203,6 +203,50 @@ const {
     console.log(
       "PASS Wild Resurgence ordinary/Pact payments and once-per-own-turn limit persist through the actual store under unchanged rules",
     );
+    assert.equal(
+      D.create(recoveryData, "resurgence", 1, { level: 8 }).ok,
+      true,
+    );
+    recoveryRevision = await player.save({
+      campaignId: "a",
+      characterId: "c2",
+      revision: recoveryRevision,
+      data: recoveryData,
+      identity: recoveryIdentity,
+      previousIdentity: recoveryIdentity,
+    });
+    recoveryData = (await player.load("a", "c2")).data;
+    assert.equal(D.createdSlots(recoveryData)[0].available, 1);
+    assert.equal(recoveryData.slots[0].used, 1);
+    assert.equal(
+      recoveryData.rulesChoices.grants.__adobe.data.pactSlotsUsed,
+      1,
+    );
+    D.changeCreatedUse(recoveryData, 1, true);
+    recoveryRevision = await player.save({
+      campaignId: "a",
+      characterId: "c2",
+      revision: recoveryRevision,
+      data: recoveryData,
+      identity: recoveryIdentity,
+      previousIdentity: recoveryIdentity,
+    });
+    recoveryData = (await player.load("a", "c2")).data;
+    assert.equal(D.createdSlots(recoveryData)[0].used, 1);
+    D.onRest(recoveryData, "long");
+    recoveryRevision = await player.save({
+      campaignId: "a",
+      characterId: "c2",
+      revision: recoveryRevision,
+      data: recoveryData,
+      identity: recoveryIdentity,
+      previousIdentity: recoveryIdentity,
+    });
+    recoveryData = (await player.load("a", "c2")).data;
+    assert.equal(D.createdSlots(recoveryData).length, 0);
+    console.log(
+      "PASS separate created-slot ledger, spending and agreed Long Rest expiry persist without changing ordinary/Pact records",
+    );
     const outsider = createCharacterSheetStore({
       ...sdk,
       db: env.authenticatedContext("other").firestore(),
