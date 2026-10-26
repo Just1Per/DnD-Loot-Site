@@ -3,8 +3,8 @@
 var CharacterBuildValidation=(()=>{
   const add=(rows,category,message,tab='builder',severity='warning',target='')=>{
     message=String(message||'').trim();
-    const existing=rows.find(r=>r.message===message);if(existing){if(target)existing.target=target;return;}
-    if(message)rows.push({category,message,tab,severity,target});
+    const existing=rows.find(r=>r.message===message);if(existing){if(target)existing.target=[...new Set([existing.target,target].filter(Boolean))].join(',');return existing;}
+    if(message){const row={category,message,tab,severity,target};rows.push(row);return row;}
   };
   const looksIncomplete=message=>{
     const m=String(message||'');
@@ -35,7 +35,12 @@ var CharacterBuildValidation=(()=>{
       if(/background/.test(m))return destination('Builder','builder','[name="build.background"]');
       return destination('Builder','builder','#sheetBuildControls');
     };
+    const located=(effects.choiceIssues||[]).filter(issue=>issue.target&&looksIncomplete(issue.message));
+    for(const issue of located){const row=add(rows,issue.category,issue.message,issue.tab||'builder','warning',issue.target);if(row)row.exactTargets=true;}
+    const coveredFeatReports=(derived?.feats?.reports||[]).filter(r=>r.managedOrigin&&r.def?.name==='Skilled'&&located.some(issue=>issue.source===r.key));
+    const coveredFeatWarnings=new Set(coveredFeatReports.flatMap(r=>(r.warnings||[]).map(w=>r.def.name+': '+w)));
     for(const warning of warnings){
+      if(located.some(issue=>issue.message===warning)||coveredFeatWarnings.has(warning))continue;
       if(!looksIncomplete(warning))continue;
       const route=routeWarning(warning);
       add(rows,route.category,warning,route.tab,'warning',route.target);
@@ -67,7 +72,7 @@ var CharacterBuildValidation=(()=>{
       const min=compatible.length?Math.min(...compatible.map(row=>Number(subclasses.effectiveMinimum?subclasses.effectiveMinimum(row,edition):row.minimumLevel)||99)):99;
       if(Number(entry.level)>=min)add(rows,'Subclass',`Choose a subclass for ${globalThis.CharacterAdobeEngine?.className?.(entry.classId)||entry.classId}.`,'builder','warning',`[data-subclass="${index}"]`);
     }
-    const featWarnings=(derived?.feats?.reports||[]).flatMap(r=>(r.warnings||[]).map(w=>({name:r.def?.displayName||r.def?.name||r.id,warning:w,key:r.key})));
+    const featWarnings=(derived?.feats?.reports||[]).filter(r=>!(r.managedOrigin&&r.def?.name==='Skilled'&&located.some(issue=>issue.source===r.key))).flatMap(r=>(r.warnings||[]).map(w=>({name:r.def?.displayName||r.def?.name||r.id,warning:w,key:r.key})));
     for(const {name,warning,key} of featWarnings)if(looksIncomplete(warning))add(rows,'Feat',`${name}: ${warning}`,'feats','warning',`[data-feat-key="${key}"]`);
     for(const issue of rows)if(!issue.target){
       const m=issue.message.toLowerCase();

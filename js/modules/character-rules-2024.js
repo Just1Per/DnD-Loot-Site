@@ -352,6 +352,12 @@ var CharacterRules2024 = (() => {
       c.skills = c.skills.filter(k => k !== 'performance');
     return c;
   }
+  // Derived warning locations are kept beside the rule that detects the problem.
+  // They are presentation metadata, not saved character choices.
+  function choiceWarning(e,message,category,target,source='',tab='builder'){
+    e.warnings.push(message);
+    (e.choiceIssues||=[]).push({message,category,target,source,tab});
+  }
   function apply(e, b, data, level, skillNames, tools) {
     if (b.edition !== '2024')
       return;
@@ -376,15 +382,15 @@ var CharacterRules2024 = (() => {
     ]).forEach((n, i) => {
       const key = b.backgroundAbilities[i];
       if (!allowed.includes(key) || used.has(key)) {
-        e.warnings.push('Choose distinct background abilities from the permitted list.');
+        choiceWarning(e,'Choose distinct background abilities from the permitted list.','Ability','[name="build.backgroundAbilities.'+i+'"]');
         return;
       }
       used.add(key);
       e.asi[key] = n;
     });
-    for (const lang of b.standardLanguages) {
+    for (const [index,lang] of b.standardLanguages.entries()) {
       if (!standardLanguages.includes(lang) || e.languages.includes(lang))
-        e.warnings.push('Choose two different additional standard languages.');
+        choiceWarning(e,'Choose two different additional standard languages.','Language','[name="build.standardLanguages.'+index+'"]');
       else
         e.languages.push(lang);
     }
@@ -395,24 +401,24 @@ var CharacterRules2024 = (() => {
     if (bgFeat)
       feats.push({
         name: bgFeat,
-        choices: b.backgroundFeatChoices
+        choices: b.backgroundFeatChoices, key: 'origin-background'
       });
     else if (bg?.featChoices?.length)
-      e.warnings.push('Choose the background feat on the Feats page: '+(bg.featLabel || bg.featChoices.join(' or '))+'.');
+      choiceWarning(e,'Choose the background feat on the Feats page: '+(bg.featLabel || bg.featChoices.join(' or '))+'.','Feat','[data-build-feat-field="backgroundFeat"]','origin-background','feats');
     else
-      e.warnings.push('Choose an Origin feat for your custom / legacy background.');
+      choiceWarning(e,'Choose an Origin feat for your custom / legacy background.','Feat','[data-build-feat-field="backgroundFeat"]','origin-background','feats');
     if (e.race?.originFeat) {
       if (b.humanOriginFeat && isOriginFeat(b.humanOriginFeat))
         feats.push({
           name: b.humanOriginFeat,
-          choices: b.humanFeatChoices
+          choices: b.humanFeatChoices, key: 'origin-human'
         });
       else
-        e.warnings.push(b.humanOriginFeat?'The selected Human feat is unavailable or is not an Origin feat. Choose an available Origin feat on the Feats page.':'Choose the additional Human Origin feat.');
+        choiceWarning(e,b.humanOriginFeat?'The selected Human feat is unavailable or is not an Origin feat. Choose an available Origin feat on the Feats page.':'Choose the additional Human Origin feat.','Feat','[data-build-feat-field="humanOriginFeat"]','origin-human','feats');
     }
     const taken = new Set();
     e.originFeats = [];
-    for (const {name, choices} of feats) {
+    for (const {name, choices, key} of feats) {
       if (!originFeats.includes(name)) {
         if (name) {
           e.originFeats.push(name);
@@ -422,7 +428,7 @@ var CharacterRules2024 = (() => {
         continue;
       }
       if (taken.has(name) && name !== 'Skilled') {
-        e.warnings.push('This Origin feat cannot be taken twice; choose a different feat.');
+        choiceWarning(e,'This Origin feat cannot be taken twice; choose a different feat.','Feat','[data-build-feat-field="'+(key==='origin-human'?'humanOriginFeat':'backgroundFeat')+'"]',key,'feats');
         continue;
       }
       taken.add(name);
@@ -436,9 +442,9 @@ var CharacterRules2024 = (() => {
       }
       if (name === 'Skilled') {
         const selected = new Set();
-        for (const value of choices) {
+        for (const [index,value] of choices.entries()) {
           if (selected.has(value)) {
-            e.warnings.push('Choose three distinct untrained skills/tools for Skilled.');
+            choiceWarning(e,'Choose three distinct untrained skills/tools for Skilled.','Feat','[data-build-feat-array="'+(key==='origin-human'?'humanFeatChoices':'backgroundFeatChoices')+'"][data-build-feat-index="'+index+'"]',key,'feats');
             continue;
           }
           selected.add(value);
@@ -447,7 +453,7 @@ var CharacterRules2024 = (() => {
           else if (value.startsWith('tool:') && tools.includes(value.slice(5)) && !e.proficiencies.includes(value.slice(5)))
             e.proficiencies.push(value.slice(5));
           else
-            e.warnings.push('Choose three distinct untrained skills/tools for Skilled.');
+            choiceWarning(e,'Choose three distinct untrained skills/tools for Skilled.','Feat','[data-build-feat-array="'+(key==='origin-human'?'humanFeatChoices':'backgroundFeatChoices')+'"][data-build-feat-index="'+index+'"]',key,'feats');
         }
       }
     }
@@ -457,6 +463,7 @@ var CharacterRules2024 = (() => {
     backgrounds,
     originFeats,
     isOriginFeat,
+    choiceWarning,
     featSummary: name => featText[name] || '',
     standardLanguages,
     classProfile,

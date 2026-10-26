@@ -1081,7 +1081,7 @@ var CharacterRules = (() => {
       saves: [...c?.saves || []],
       resistances: [...r?.resistances || []],
       speed: r?.speed ?? data.speed,
-      size: r?.sizeChoice ? b.raceSize || 'Choose size' : lvl >= 5 && r?.sizeAt5 ? r.sizeAt5 : r?.size || '\u2014',
+      size: r?.sizeChoice ? b.raceSize || (['Small','Medium'].includes(r.size)?r.size:'Medium') : lvl >= 5 && r?.sizeAt5 ? r.sizeAt5 : r?.size || '\u2014',
       fly: r?.fly || 0,
       swim: r?.swim || 0,
       climb: r?.climb || 0,
@@ -1110,7 +1110,7 @@ var CharacterRules = (() => {
       bonuses.forEach((n, i) => {
         const key = b.flexibleChoices[i];
         if (!abilityKeys.includes(key) || used.has(key) || r.excludeAbilities?.includes(key)) {
-          result.warnings.push('Choose distinct permitted abilities for each racial bonus.');
+          Modern.choiceWarning(result,'Choose distinct permitted abilities for each racial bonus.','Ability','[name="build.flexibleChoices.'+i+'"]');
           return;
         }
         used.add(key);
@@ -1118,9 +1118,9 @@ var CharacterRules = (() => {
       });
       const allowedSkills = r.skillPool === 'any' ? skillNames : r.skillPool || [];
       const selectedSkills = new Set();
-      for (const key of b.raceSkills.slice(0, r.skillCount || 0)) {
+      for (const [index,key] of b.raceSkills.slice(0, r.skillCount || 0).entries()) {
         if (!allowedSkills.includes(key) || selectedSkills.has(key) || result.skills.includes(key))
-          result.warnings.push('Choose different racial skills from the available list.');
+          Modern.choiceWarning(result,'Choose different racial skills from the available list.','Skill','[name="build.raceSkills.'+index+'"]');
         else {
           selectedSkills.add(key);
           result.skills.push(key);
@@ -1131,16 +1131,14 @@ var CharacterRules = (() => {
         ...weapons
       ] : tools;
       const selectedTools = new Set();
-      for (const key of b.raceTools.slice(0, r.toolCount || 0)) {
+      for (const [index,key] of b.raceTools.slice(0, r.toolCount || 0).entries()) {
         if (!allowedTools.includes(key) || selectedTools.has(key))
-          result.warnings.push('Choose distinct permitted racial tools or weapons.');
+          Modern.choiceWarning(result,'Choose distinct permitted racial tools or weapons.','Proficiency','[name="build.raceTools.'+index+'"]');
         else {
           selectedTools.add(key);
           result.proficiencies.push(key);
         }
       }
-      if (r.sizeChoice && !b.raceSize)
-        result.warnings.push('Choose Small or Medium for this race.');
       const base = races[b.race];
       if (base.optionChoices && lvl >= (base.optionLevel || 1) && !own(base.optionChoices, b.raceFeature))
         result.warnings.push('Choose your racial feature.');
@@ -1193,9 +1191,9 @@ var CharacterRules = (() => {
         result.asi[key] = (result.asi[key] || 0) + 1;
       }
       const choices = new Set();
-      for (const key of b.skillChoices) {
+      for (const [index,key] of b.skillChoices.entries()) {
         if (!skillNames.includes(key) || choices.has(key)) {
-          result.warnings.push('Choose two different Half-Elf skills.');
+          Modern.choiceWarning(result,'Choose two different Half-Elf skills.','Skill','[name="build.skillChoices.'+index+'"]');
           continue;
         }
         choices.add(key);
@@ -1257,9 +1255,9 @@ var CharacterRules = (() => {
     }
     if (c) {
       const available = c.skills === 'any' ? skillNames : c.skills, chosen = new Set();
-      for (const key of b.classSkills.slice(0, c.count)) {
+      for (const [index,key] of b.classSkills.slice(0, c.count).entries()) {
         if (!available.includes(key) || chosen.has(key)) {
-          result.warnings.push(`Choose ${ c.count } different ${ c.name } class skills.`);
+          Modern.choiceWarning(result,`Choose ${ c.count } different ${ c.name } class skills.`,'Skill','[name="build.classSkills.'+index+'"]');
           continue;
         }
         chosen.add(key);
