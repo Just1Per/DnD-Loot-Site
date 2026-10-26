@@ -12,8 +12,8 @@ function focusSheetBuildIssue(issue){
  try{if(issue.target)targets=[...page.querySelectorAll(issue.target)];}catch(error){console.warn('Invalid character warning target',issue.target,error);}
  let field=targets.find(el=>sheetIssueFieldAvailable(el)&&('value' in el)&&!el.value)||targets.find(sheetIssueFieldAvailable);
  if(!field){sheetStatus('Could not locate the setting for this notice. Please report it.');console.warn('Unresolved character warning',issue);return;}
+ if(!['INPUT','SELECT','TEXTAREA','BUTTON'].includes(field.tagName))field=[...field.querySelectorAll('select,input,textarea')].find(sheetIssueFieldAvailable)||[...field.querySelectorAll('button')].find(sheetIssueFieldAvailable)||field;
  for(let node=field;node&&node!==root;node=node.parentElement){if(node.tagName==='DETAILS')node.open=true;if(node.hidden)node.hidden=false;}
- if(!['INPUT','SELECT','TEXTAREA','BUTTON'].includes(field.tagName))field=[...field.querySelectorAll('select,input,button')].find(sheetIssueFieldAvailable)||field;
  sheetStatus(issue.message,true);
  field.scrollIntoView?.({block:'center',behavior:'smooth'});field.focus?.();field.classList.add('sheet-fix-target');
  setTimeout(()=>field.classList.remove('sheet-fix-target'),2500);

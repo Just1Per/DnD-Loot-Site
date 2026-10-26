@@ -327,6 +327,16 @@ const errors = [];
       await page.locator("#sheetClassSkills .sheet-required-marker").count(),
       0,
     );
+    // Ordinary catalogue feats have an owning card too; their wording must not
+    // route an unrelated warning back to completed class skill fields.
+    const skilledId=await page.evaluate(()=>Object.keys(CharacterFeatRules.definitions).find(id=>CharacterFeatRules.definitions[id].name==='Skilled'&&CharacterFeatRules.definitions[id].edition==='2024'));
+    await page.evaluate(id=>{sheetSession.data.rulesChoices.feats=[id];sheetCatalogSignature='';updateSheetCalculations();selectSheetTab('builder');},skilledId);
+    assert.equal(await page.locator('#sheetClassSkills .sheet-required-marker').count(),0);
+    await page.evaluate(id=>{document.querySelector('[data-feat-key="'+id+'"] details').open=false;selectSheetTab('overview');},skilledId);
+    const ordinaryFix=page.locator('.sheet-overview-important-row').filter({hasText:'Skilled: Choose valid, distinct training.'}).locator('[data-build-warning-tab]');
+    await ordinaryFix.click();assert.equal(await page.locator('[data-sheet-tab="feats"]').getAttribute('aria-selected'),'true');
+    assert.equal(await page.locator('[data-feat-key="'+skilledId+'"] [data-feat-choice="training0"]').evaluate(el=>el===document.activeElement),true);
+    await page.locator('[data-feat-key="'+skilledId+'"] [data-remove-feat]').click();
     // A duplicate language is a real invalid filled field: only the second receives a marker.
     await page.evaluate(() => selectSheetTab("builder"));
     await page

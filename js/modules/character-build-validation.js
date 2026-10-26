@@ -37,10 +37,11 @@ var CharacterBuildValidation=(()=>{
     };
     const located=(effects.choiceIssues||[]).filter(issue=>issue.target&&looksIncomplete(issue.message));
     for(const issue of located){const row=add(rows,issue.category,issue.message,issue.tab||'builder','warning',issue.target);if(row)row.exactTargets=true;}
-    const coveredFeatReports=(derived?.feats?.reports||[]).filter(r=>r.managedOrigin&&r.def?.name==='Skilled'&&located.some(issue=>issue.source===r.key));
-    const coveredFeatWarnings=new Set(coveredFeatReports.flatMap(r=>(r.warnings||[]).map(w=>r.def.name+': '+w)));
+    // Feat reports below already carry their owning card; do not guess another
+    // destination from words such as skill, tool or ability in the same warning.
+    const reportedFeatWarnings=new Set((derived?.feats?.reports||[]).flatMap(r=>(r.warnings||[]).map(w=>(r.def?.name||r.id)+': '+w)));
     for(const warning of warnings){
-      if(located.some(issue=>issue.message===warning)||coveredFeatWarnings.has(warning))continue;
+      if(located.some(issue=>issue.message===warning)||reportedFeatWarnings.has(warning))continue;
       if(!looksIncomplete(warning))continue;
       const route=routeWarning(warning);
       add(rows,route.category,warning,route.tab,'warning',route.target);

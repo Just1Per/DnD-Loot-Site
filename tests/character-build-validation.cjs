@@ -305,3 +305,15 @@ test("removed race-size picker has a legal source default and preserves existing
     "Small",
   );
 });
+
+test('other Origin feat training warnings stay on Feats instead of a legacy race-tool field',()=>{
+  const data=build({humanOriginFeat:'Crafter'}),rows=matching(data,'Crafter:');
+  assert.ok(rows.length);assert.ok(rows.every(row=>row.tab==='feats'&&row.target.includes('[data-feat-key="origin-human"]')));
+  assert.ok(!notices(data).some(row=>row.target.includes('build.tool')));
+});
+test('ordinary selected Skilled warnings never blame completed class skill fields',()=>{
+  const Feats=require('../js/modules/character-feat-rules'),data=build({humanOriginFeat:'Alert'}),id=Object.keys(Feats.definitions).find(id=>Feats.definitions[id].name==='Skilled'&&Feats.definitions[id].edition==='2024');
+  data.rulesChoices.feats=[id];const rows=matching(data,'Skilled:');
+  assert.ok(rows.length);assert.ok(rows.every(row=>row.tab==='feats'&&row.target.includes(id)));
+  assert.ok(!notices(data).some(row=>row.target.includes('build.classSkills')));
+});
