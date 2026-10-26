@@ -1024,3 +1024,12 @@
 .sheet-beast-spell-status:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 .sheet-wild-spellcasting { margin-block: 1rem; padding: .75rem; border: 1px solid #c8b393; border-radius: .5rem; }
 .sheet-wild-spellcasting h5 { margin-top: 0; }
+
+.sheet-language-add { display: flex; gap: .65rem; align-items: end; flex-wrap: wrap; }
+.sheet-language-add .sheet-field { flex: 1 1 14rem; min-width: 0; }
+.sheet-language-add button { margin-bottom: .2rem; }
+.sheet-language-chips { display: flex; gap: .5rem; flex-wrap: wrap; padding: 0; list-style: none; }
+.sheet-language-chips li { display: flex; align-items: center; gap: .6rem; padding: .35rem .6rem; border: 1px solid #c8b393; border-radius: .5rem; }
+.sheet-language-chips button { font-size: .8rem; min-height: 1.8rem; }
+.sheet-language-class { padding-block: .5rem; border-block-end: 1px solid #c8b393; }
+#sheetLearnedLanguages details { margin-top: .75rem; }

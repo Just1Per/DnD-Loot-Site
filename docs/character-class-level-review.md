@@ -1055,7 +1055,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | --- | --- | --- |
 | Expertise · 1 | Proficient skill choices, level allowance, nonstacking contribution and persistence. | [tests/character-class-expertise.cjs](../tests/character-class-expertise.cjs), [tests/class-expertise-browser.cjs](../tests/class-expertise-browser.cjs) |
 | Sneak Attack · 1 | Source-rule comparison and structured fields still need review. | Pending |
-| Thieves' Cant · 1 | Fixed language appears. The additional language choice still needs structured support. | [tests/character-class-expertise.cjs](../tests/character-class-expertise.cjs) |
+| Thieves' Cant · 1 | Actual revised Rogue 1, including multiclass: fixed Thieves’ Cant language plus one structured additional Standard/Rare-table language. Exact missing/duplicate choice warning, saved source-specific choice, Overview/print/Guide and source-removal preservation. Secret communication and in-game language use remain table resolved. | [tests/character-languages.cjs](../tests/character-languages.cjs), [tests/character-languages-browser.cjs](../tests/character-languages-browser.cjs), [tests/character-languages-rules.cjs](../tests/character-languages-rules.cjs) |
 | Weapon Mastery · 1 | Weapon choices, class-level allowance, proficiency gating and property reminders exist. Audit remaining property-specific statistics/conditions against the source. | [tests/weapon-mastery.cjs](../tests/weapon-mastery.cjs), [tests/weapon-mastery-browser.cjs](../tests/weapon-mastery-browser.cjs) |
 | Cunning Action · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Rogue Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |

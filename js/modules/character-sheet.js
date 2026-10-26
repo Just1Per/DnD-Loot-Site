@@ -423,6 +423,7 @@ function updateSheetCalculations() {
   renderEquipmentCalculations(d);
   renderAttackActionSummary(d);
   updateSheetBuildSummary(d);
+  globalThis.CharacterLanguagesUI?.render(d);
   const validation = renderCharacterOverview(d);
   updateCharacterPortrait();
   updateCharacterPlayUI(d);
