@@ -172,6 +172,175 @@ var CharacterClassFeatureChoices=(()=>{
     option('Magician',{source:'SRD 5.2.1',referenceComplete:true,automationComplete:true,detail:'One extra Druid cantrip. Add Wisdom (minimum +1) to Intelligence (Arcana and Nature) checks.'}),
     option('Warden',{source:'SRD 5.2.1',referenceComplete:true,automationComplete:true,detail:'Martial weapon proficiency and Medium armor training.'})
   ]}];
+  definitions["2024"].druid.push({
+    id: "elemental-fury",
+    name: "Elemental Fury",
+    minLevel: 7,
+    count: () => 1,
+    referenceComplete: true,
+    options: () => [
+      option("Potent Spellcasting", {
+        source: "SRD 5.2.1",
+        referenceComplete: true,
+        automationComplete: true,
+        detail:
+          "Add current Wisdom to damaging Druid cantrips. At Druid 15, qualifying cantrip ranges increase by 300 ft.",
+      }),
+      option("Primal Strike", {
+        source: "SRD 5.2.1",
+        referenceComplete: true,
+        automationComplete: false,
+        effectLabel: "conditional hit reminder",
+        detail:
+          "Once on your own turn, an eligible weapon or Beast-form hit can add elemental damage. Choose Cold, Fire, Lightning or Thunder when it hits.",
+      }),
+    ],
+  });
+  function elementalFury(data, { level = 1, mods = {} } = {}) {
+    const edition = data.build?.edition === "2024" ? "2024" : "2014",
+      stored = data.adobe || data.rulesChoices?.grants?.__adobe?.data || {},
+      entries = stored.classLevels?.length
+        ? stored.classLevels
+        : [{ classId: data.build?.classId, level }];
+    let remaining = Math.max(1, Math.min(20, Math.trunc(Number(level) || 1))),
+      actual = 0;
+    const seen = new Set();
+    for (const entry of entries) {
+      const count = Math.min(
+        remaining,
+        Math.max(0, Math.trunc(Number(entry?.level) || 0)),
+      );
+      remaining -= count;
+      if (entry?.classId === "druid" && !seen.has(entry.classId)) actual = count;
+      seen.add(entry?.classId);
+    }
+    const available = edition === "2024" && actual >= 7,
+      picked = normalize(stored.classFeatureChoices)[
+        "2024:druid:elemental-fury"
+      ]?.[0],
+      choice =
+        available && ["potent-spellcasting", "primal-strike"].includes(picked)
+          ? picked
+          : "",
+      wis = Number.isFinite(Number(mods.wis))
+        ? Math.max(-5, Math.min(10, Math.trunc(Number(mods.wis))))
+        : 0,
+      dice = actual >= 15 ? "2d8" : "1d8";
+    const detail = !choice
+      ? "Choose Potent Spellcasting or Primal Strike in Character Builder."
+      : choice === "potent-spellcasting"
+        ? "Potent Spellcasting: " +
+          (wis >= 0 ? "+" : "") +
+          wis +
+          " damage on Druid cantrips" +
+          (actual >= 15 ? "; ranges of at least 10 ft increase by 300 ft." : ".")
+        : "Primal Strike: once on your own turn, an eligible weapon or Beast-form Wild Shape hit may deal an extra " +
+          dice +
+          " Cold, Fire, Lightning or Thunder damage. Choose the type when it hits; do not add it to every attack.";
+    return {
+      available,
+      level: actual,
+      choice,
+      wis,
+      dice,
+      rangeIncrease: choice === "potent-spellcasting" && actual >= 15 ? 300 : 0,
+      detail,
+    };
+  }
+  function cantripRange(spell, level = 1, manualRange) {
+    if (!spell) return manualRange || "";
+    if (manualRange !== undefined && manualRange !== spell.range)
+      return manualRange;
+    const match = /^(\d+)\s*(?:feet|ft)\b/i.exec(String(spell.range || ""));
+    if (
+      spell.level === 0 &&
+      spell.edition === "2024" &&
+      String(spell.name).toLowerCase() === "spare the dying" &&
+      match
+    ) {
+      const n = Math.max(1, Math.min(20, Math.trunc(Number(level) || 1)));
+      return (
+        Number(match[1]) * 2 ** [5, 11, 17].filter((at) => n >= at).length +
+        " feet"
+      );
+    }
+    return spell.range || "";
+  }
+  function druidCantripModifiers(data, { level, mods, catalog, entries }) {
+    const fury = elementalFury(data, { level, mods }),
+      out = Object.create(null);
+    if (fury.choice !== "potent-spellcasting") return out;
+    const casters = new Set(),
+      seen = new Set();
+    let left = level;
+    for (const entry of entries) {
+      const n = Math.min(
+        left,
+        Math.max(0, Math.trunc(Number(entry?.level) || 0)),
+      );
+      left -= n;
+      if (
+        n &&
+        !seen.has(entry?.classId) &&
+        [
+          "artificer",
+          "bard",
+          "cleric",
+          "druid",
+          "paladin",
+          "ranger",
+          "sorcerer",
+          "warlock",
+          "wizard",
+        ].includes(entry.classId)
+      )
+        casters.add(entry.classId);
+      seen.add(entry?.classId);
+    }
+    const index = spellIndex(catalog);
+    for (const selected of data.spells || []) {
+      const spell =
+        index.byId.get(selected.catalogId) ||
+        index.byNameEdition.get(
+          data.build.edition +
+            "|" +
+            String(selected.name || "")
+              .toLowerCase()
+              .replace(/\s*\[[^\]]+\]\s*$/, ""),
+        );
+      if (!spell || spell.level !== 0) continue;
+      const native = spell.classes || [],
+        owned =
+          selected.classId === "druid" ||
+          (!selected.classId &&
+            native.includes("druid") &&
+            (native.length === 1 ||
+              (casters.size === 1 && casters.has("druid"))));
+      if (!owned) continue;
+      const combat = spell.combat || {},
+        damaging =
+          !!combat.types?.length &&
+          (!!combat.damage || Object.keys(combat.scaling || {}).length > 0),
+        match = /^(\d+)\s*(?:feet|ft)\b/i.exec(
+          String(cantripRange(spell, level)),
+        ),
+        range =
+          fury.rangeIncrease && match && Number(match[1]) >= 10
+            ? Number(match[1]) + fury.rangeIncrease
+            : 0;
+      if (damaging || range)
+        out[spell.id] = {
+          sourceClass: "druid",
+          ...(damaging
+            ? { damageBonus: fury.wis, damageSource: "Potent Spellcasting" }
+            : {}),
+          ...(range
+            ? { range: range + " feet", rangeSource: "Improved Elemental Fury" }
+            : {}),
+        };
+    }
+    return out;
+  }
   function orders(data,{level=1}={}){
     const result={reports:[],proficiencies:[],cantrips:{}};if(data.build?.edition!=='2024')return result;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],choices=normalize(stored.classFeatureChoices),seen=new Set();let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
@@ -465,7 +634,7 @@ var CharacterClassFeatureChoices=(()=>{
   function cantripInvocations(data,{level=1,mods={},catalog}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));const catalogReady=Array.isArray(catalog)||!!globalThis.CharacterCatalog?.rawData||typeof require==='function';catalog||=spellCatalogue();if(!Array.isArray(catalog))catalog=[];const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],local={...data,adobe:{...stored,classFeatureChoices:normalize(stored.classFeatureChoices)}},choices=local.adobe.classFeatureChoices;
     let remaining=level,warlock=null;for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='warlock'&&actual){warlock={...entry,level:actual};break;}}
-    const result={reports:[],modifiers:Object.create(null),catalogReady};if(!warlock)return result;
+    const result={reports:[],modifiers:Object.create(null),classModifiers:{druid:druidCantripModifiers(data,{level,mods,catalog,entries})},catalogReady};if(!warlock)return result;
     const group=status(local,warlock,edition).find(row=>row.id==='eldritch-invocations');if(!group)return result;
     const casterIds=new Set(entries.filter(entry=>['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard'].includes(entry.classId)||entry.level>=3&&/^(eldritch-knight|arcane-trickster)/.test(entry.subclassId||'')).map(entry=>entry.classId));
     const index=spellIndex(catalog),known=[],seenSpells=new Map();for(const selected of data.spells||[]){const spell=index.byId.get(selected.catalogId)||index.byNameEdition.get(edition+'|'+String(selected.name||'').toLowerCase().replace(/\s*\[[^\]]+\]\s*$/,''));if(!spell||spell.level!==0)continue;const native=spell.classes||[],warlockSpell=selected.classId==='warlock'||!selected.classId&&native.includes('warlock')&&(native.length===1||casterIds.size===1&&casterIds.has('warlock'));if(seenSpells.has(spell.id)){seenSpells.get(spell.id).warlockSpell||=warlockSpell;continue;}const option={id:safe(spell.id),spellId:spell.id,name:String(spell.name||''),edition:spell.edition,spell,warlockSpell};seenSpells.set(spell.id,option);known.push(option);}
@@ -474,7 +643,7 @@ var CharacterClassFeatureChoices=(()=>{
       if(!(validCounts.get(id)>0))continue;validCounts.set(id,validCounts.get(id)-1);if(!['agonizing-blast','eldritch-spear'].includes(id))continue;
       const name=group.options.find(option=>option.id===id).name,key=groupKey(edition,'warlock',id+'-cantrips'),pool=known.filter(option=>edition==='2014'?option.name==='Eldritch Blast':option.warlockSpell).filter(option=>{const combat=option.spell.combat||{},damaging=!!combat.damage||Object.keys(combat.scaling||{}).length>0||combat.types?.length>0;return damaging&&(id!=='eldritch-spear'||edition==='2014'||/^([0-9]+)\s*(feet|ft)\b/i.test(option.spell.range)&&Number.parseInt(option.spell.range)>=10);});
       const value=edition==='2014'?(pool[0]?.id||''):(choices[key]?.[slot]||''),selected=pool.find(option=>option.id===value),identity=selected?.name.toLowerCase(),valid=!!selected&&!(used[id]||=[]).includes(identity);if(valid)used[id].push(identity);
-      const bonus=id==='agonizing-blast'?Math.max(-5,Math.min(10,Math.trunc(Number(mods.cha)||0))):0,baseRange=selected?Number.parseInt(selected.spell.range):0,range=id==='eldritch-spear'&&valid?(edition==='2014'?300:baseRange+30*warlock.level):null;
+      const bonus=id==='agonizing-blast'?Math.max(-5,Math.min(10,Math.trunc(Number(mods.cha)||0))):0,baseRange=selected?Number.parseInt(cantripRange(selected.spell,level)):0,range=id==='eldritch-spear'&&valid?(edition==='2014'?300:baseRange+30*warlock.level):null;
       const detail=valid?(id==='agonizing-blast'?'Damage bonus '+(bonus>=0?'+':'')+bonus+' on '+selected.name:range+' ft range for '+selected.name):'Choose an eligible known Warlock cantrip';
       result.reports.push({id,name,key,slot,value,valid,required:edition==='2024',spellId:selected?.spellId||'',spellName:selected?.name||'',bonus,range,detail,options:pool.map(option=>({id:option.id,spellId:option.spellId,name:option.name,edition:option.edition,source:option.spell.source}))});
       if(valid){const modifier=result.modifiers[selected.spellId]||={sourceClass:edition==='2024'?'warlock':''};if(id==='agonizing-blast'){modifier.damageBonus=bonus;modifier.damageSource=name;}else{modifier.range=range+' feet';modifier.rangeSource=name;}}
@@ -484,7 +653,10 @@ var CharacterClassFeatureChoices=(()=>{
     return result;
   }
   function cantripModifier(data,training,spellId,classId=''){
-    const modifier=training?.modifiers?.[spellId];if(!modifier)return null;if(!modifier.sourceClass)return modifier;
+    const scoped=training?.classModifiers?.druid?.[spellId],invocationModifier=training?.modifiers?.[spellId];
+    if(classId==='druid'&&scoped)return scoped;
+    if(!classId&&scoped){const classes=new Set((data.spells||[]).filter(row=>row.catalogId===spellId&&row.classId).map(row=>row.classId));if(classes.size>1||classes.size===1&&!classes.has('druid'))return null;return scoped;}
+    const modifier=invocationModifier;if(!modifier)return null;if(!modifier.sourceClass)return modifier;
     if(classId)return classId===modifier.sourceClass?modifier:null;
     if((data.spells||[]).some(row=>row.catalogId===spellId&&row.classId&&row.classId!==modifier.sourceClass))return null;
     return modifier;
@@ -665,6 +837,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{useChannelDivinity,wizardLevels,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{cantripRange,elementalFury,useChannelDivinity,wizardLevels,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

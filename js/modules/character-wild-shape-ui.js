@@ -158,7 +158,13 @@ var CharacterWildShapeUI = (() => {
       esc(p.movement) +
       "</p><p><strong>Senses:</strong> " +
       esc(p.senses || "Use the form’s normal senses.") +
-      '</p><section><h5>Attacks & actions</h5><div class="sheet-rule-text">' +
+      "</p><section><h5>Attacks & actions</h5>" +
+      (p.primalStrike
+        ? '<p class="sheet-help" data-druid-primal-strike>' +
+          esc(p.primalStrike) +
+          "</p>"
+        : "") +
+      '<div class="sheet-rule-text">' +
       esc(p.actions || "Use the source stat block.") +
       '</div><h5>Traits</h5><div class="sheet-rule-text">' +
       esc(p.traits || "—") +
@@ -682,7 +688,9 @@ var CharacterWildShapeUI = (() => {
             CharacterSheetModel.signed(n),
         )
         .join(" · ") +
-      '</p><h4>Attacks & actions</h4><p class="sheet-paper-text">' +
+      "</p><h4>Attacks & actions</h4>" +
+      (p.primalStrike ? "<p>" + esc(p.primalStrike) + "</p>" : "") +
+      '<p class="sheet-paper-text">' +
       esc(p.actions) +
       '</p><h4>Traits</h4><p class="sheet-paper-text">' +
       esc(p.traits) +

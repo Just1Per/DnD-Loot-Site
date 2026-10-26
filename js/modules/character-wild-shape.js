@@ -594,6 +594,13 @@ var CharacterWildShape = (() => {
       notes.push(
         "Lunar Form: once on your turn, an eligible form hit deals an additional 2d10 Radiant damage.",
       );
+    const fury = C.elementalFury(d, { level, mods });
+    if (fury.choice === "potent-spellcasting") notes.push(fury.detail);
+    const primalStrike =
+      fury.choice === "primal-strike" &&
+      String(b.creatureType).toLowerCase() === "beast"
+        ? fury.detail
+        : "";
     const oldPB = Math.floor((Math.max(0, cr(b.cr)) - 1) / 4) + 2,
       actions = String(b.actions || "")
         .split(/\n\n/)
@@ -646,6 +653,7 @@ var CharacterWildShape = (() => {
         .join("\n\n");
     return {
       valid: true,
+      primalStrike,
       state: s,
       id: row.id,
       name: row.title,
