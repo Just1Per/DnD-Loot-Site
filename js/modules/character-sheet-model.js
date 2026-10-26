@@ -284,6 +284,7 @@ var CharacterSheetModel = (() => {
       effects,
       rangerFeatures,
       druidElementalFury:ClassChoices.elementalFury(d,{level,mods}),
+      clericBlessedStrikes:ClassChoices.blessedStrikes(d,{level,mods}),
       paladinAuras,
       attackAction:AttackProgression.derive(d,level),
       toolTraining,

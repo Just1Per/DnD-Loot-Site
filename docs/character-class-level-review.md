@@ -750,14 +750,14 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Sear Undead **[partial]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 7 | Blessed Strikes **[unreviewed]** |
+| 7 | Blessed Strikes **[partial]** |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 10 | Divine Intervention **[unreviewed]** |
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 14 | Improved Blessed Strikes **[unreviewed]** |
+| 14 | Improved Blessed Strikes **[partial]** |
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -773,11 +773,11 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Cleric Subclasses · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Sear Undead · 5 | From actual Cleric 5, Turn Undead shows the current Wisdom/minimum-one d8 damage reminder and notes that this damage does not end turning. Targets and rolls remain table resolved. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
-| Blessed Strikes · 7 | Source-rule comparison and structured fields still need review. | Pending |
+| Blessed Strikes · 7 | Structured actual Cleric 7 choice; Potent adds current Wisdom only to owned Cleric cantrips. Cleric 14 has explicit post-damage temporary HP recording for self with nonstacking keep/replace, or private-sheet-safe recipient instructions. Divine Strike is a conditional weapon-hit reminder (1d8, 2d8 at 14), resolved at the table; older subclass benefits do not stack. Automated attack hit/own-turn enforcement and other creatures’ HP remain outside scope. | [tests/cleric-blessed-strikes.cjs](../tests/cleric-blessed-strikes.cjs), [tests/cleric-blessed-strikes-browser.cjs](../tests/cleric-blessed-strikes-browser.cjs), [tests/cleric-blessed-strikes-rules.cjs](../tests/cleric-blessed-strikes-rules.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Divine Intervention · 10 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Improved Blessed Strikes · 14 | Source-rule comparison and structured fields still need review. | Pending |
+| Improved Blessed Strikes · 14 | Structured actual Cleric 7 choice; Potent adds current Wisdom only to owned Cleric cantrips. Cleric 14 has explicit post-damage temporary HP recording for self with nonstacking keep/replace, or private-sheet-safe recipient instructions. Divine Strike is a conditional weapon-hit reminder (1d8, 2d8 at 14), resolved at the table; older subclass benefits do not stack. Automated attack hit/own-turn enforcement and other creatures’ HP remain outside scope. | [tests/cleric-blessed-strikes.cjs](../tests/cleric-blessed-strikes.cjs), [tests/cleric-blessed-strikes-browser.cjs](../tests/cleric-blessed-strikes-browser.cjs), [tests/cleric-blessed-strikes-rules.cjs](../tests/cleric-blessed-strikes-rules.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
 | Greater Divine Intervention · 20 | Source-rule comparison and structured fields still need review. | Pending |

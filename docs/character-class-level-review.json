@@ -5114,9 +5114,13 @@
           "name": "Blessed Strikes",
           "level": 7,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Structured actual Cleric 7 choice; Potent adds current Wisdom only to owned Cleric cantrips. Cleric 14 has explicit post-damage temporary HP recording for self with nonstacking keep/replace, or private-sheet-safe recipient instructions. Divine Strike is a conditional weapon-hit reminder (1d8, 2d8 at 14), resolved at the table; older subclass benefits do not stack. Automated attack hit/own-turn enforcement and other creatures’ HP remain outside scope.",
+          "evidence": [
+            "tests/cleric-blessed-strikes.cjs",
+            "tests/cleric-blessed-strikes-browser.cjs",
+            "tests/cleric-blessed-strikes-rules.cjs"
+          ]
         },
         {
           "id": "2024:cleric:8:ability-score-improvement",
@@ -5156,9 +5160,13 @@
           "name": "Improved Blessed Strikes",
           "level": 14,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Structured actual Cleric 7 choice; Potent adds current Wisdom only to owned Cleric cantrips. Cleric 14 has explicit post-damage temporary HP recording for self with nonstacking keep/replace, or private-sheet-safe recipient instructions. Divine Strike is a conditional weapon-hit reminder (1d8, 2d8 at 14), resolved at the table; older subclass benefits do not stack. Automated attack hit/own-turn enforcement and other creatures’ HP remain outside scope.",
+          "evidence": [
+            "tests/cleric-blessed-strikes.cjs",
+            "tests/cleric-blessed-strikes-browser.cjs",
+            "tests/cleric-blessed-strikes-rules.cjs"
+          ]
         },
         {
           "id": "2024:cleric:16:ability-score-improvement",
