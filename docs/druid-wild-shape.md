@@ -29,6 +29,8 @@ Legacy Moon supports its CR/action thresholds, magical-attack reminder and four 
 
 **Other features using this pool** spends a use for an independently resolved unlocked feature. It does not conjure a familiar, restore/create slots, heal or execute that feature. Undo applies only to the latest other-feature spend; transformations and intervening rests cannot be refunded through it. Generic resource Use/Undo controls are deliberately unavailable for this managed pool.
 
+The explicit [Wild Resurgence recovery](druid-wild-resurgence.md) control in Combat can now spend a spell slot to regain one use when empty, once on an acknowledged own turn. This is distinct from the generic other-feature spend/correction controls.
+
 ## Loading, persistence and permissions
 
 A reproducibly generated, attributed subset of the pinned local SRD monster catalogue contains 170 Beasts and 4 legacy elementals. It loads on opening Companions or resuming a saved active form, not during ordinary login/sheet startup. Search is restricted to eligible source records. Failed requests expose Retry, and a saved form can always be ended even if the catalogue is unavailable. Catalogue loading never writes to a saved character.
