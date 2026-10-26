@@ -130,3 +130,14 @@ test('legacy Origin Skilled choices are readable without mutating saved input or
   raw.build[field]=['skill:nature','',''];assert.deepEqual(M.normalize(raw).build[field],['skill:nature','','']);
  }
 });
+
+test('every shipped 2024 catalogue Origin feat survives Human selection and persistence; General and legacy feats cannot gain Origin effects',()=>{
+ const catalogue=require('../data/rules/catalog.json'),R=require('../js/modules/character-rules');
+ const origins=catalogue.feats.filter(f=>f.edition==='2024'&&f.category==='O');assert.ok(origins.length>30);
+ for(const feat of origins){const name=F.definitions[feat.id]?.name||feat.name;const d=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:name,backgroundFeat:'Tough'}});assert.equal(d.build.humanOriginFeat,name);assert.ok(R.modern.isOriginFeat(name));assert.ok(M.derive(d,4).effects.originFeats.includes(name));assert.ok(M.derive(d,4).feats.reports.some(r=>r.key==='origin-human'&&r.def.name===name));assert.equal(M.normalize(JSON.parse(JSON.stringify(d))).build.humanOriginFeat,name);}
+ for(const name of ['Athlete','War Caster','Actor','unknown preserved feat']){
+  const d=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:name,scoreMode:'base'},abilities:{str:13,cha:13},rulesChoices:{effects:{'origin-human':{abilities:['str']}}}}),s=M.derive(d,4);
+  assert.equal(d.build.humanOriginFeat,name);assert.ok(!s.effects.originFeats.includes(name));assert.equal(s.scores.str,13);assert.match(s.effects.warnings.join(' '),/not an Origin feat/);
+ }
+ assert.equal(R.modern.isOriginFeat('Actor'),false);
+});

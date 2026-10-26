@@ -220,6 +220,12 @@ const errors = [];
       ),
       4,
     );
+    await page.locator('[data-build-feat-field="humanOriginFeat"]').selectOption('Arcane Artist');
+    assert.match(await page.locator('[data-feat-key="origin-human"] h4').innerText(),/Arcane Artist/);
+    await page.locator('#sheetSave').click();await page.waitForFunction(()=>!sheetSession.dirty);
+    await page.evaluate(async()=>{closeCharacterSheet(true);await openCharacterSheet('c1');selectSheetTab('feats');});
+    assert.equal(await page.locator('[data-build-feat-field="humanOriginFeat"]').inputValue(),'Arcane Artist');
+    assert.match(await page.locator('[data-feat-key="origin-human"] h4').innerText(),/Arcane Artist/);
     await page
       .locator('[data-build-feat-field="humanOriginFeat"]')
       .selectOption("Tough");

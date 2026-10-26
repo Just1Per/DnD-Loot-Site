@@ -32,6 +32,18 @@ var CharacterRules2024 = (() => {
     'Tavern Brawler',
     'Tough'
   ];
+  let referencedOriginNames=null;
+  function isOriginFeat(name){
+    if(originFeats.includes(name))return true;
+    const definitions=globalThis.CharacterFeatData||(typeof require==='function'?require('./character-feat-data'):null);
+    const live=globalThis.CharacterCatalog?.data?.feats||[];
+    if(live.some(feat=>feat.edition==='2024'&&(feat.category==='O'||String(feat.category).toLowerCase()==='origin')&&(definitions?.[feat.id]?.name||feat.name)===name))return true;
+    if(!referencedOriginNames){
+      const reference=globalThis.CharacterFeatReference||(typeof require==='function'?require('./character-feat-reference'):null);
+      if(definitions&&reference)referencedOriginNames=new Set(Object.values(definitions).filter(def=>def.edition==='2024'&&reference.records?.[def.source+'|'+def.name]?.category==='O').map(def=>def.name));
+    }
+    return referencedOriginNames?.has(name)||false;
+  }
   const featText = {
     Alert: 'Initiative includes PB; after rolling, you may swap with a willing ally unless either of you is incapacitated.',
     Skilled: 'Choose any three skill/tool proficiencies below. This feat is repeatable.',
@@ -390,13 +402,13 @@ var CharacterRules2024 = (() => {
     else
       e.warnings.push('Choose an Origin feat for your custom / legacy background.');
     if (e.race?.originFeat) {
-      if (b.humanOriginFeat)
+      if (b.humanOriginFeat && isOriginFeat(b.humanOriginFeat))
         feats.push({
           name: b.humanOriginFeat,
           choices: b.humanFeatChoices
         });
       else
-        e.warnings.push('Choose the additional Human Origin feat.');
+        e.warnings.push(b.humanOriginFeat?'The selected Human feat is unavailable or is not an Origin feat. Choose an available Origin feat on the Feats page.':'Choose the additional Human Origin feat.');
     }
     const taken = new Set();
     e.originFeats = [];
@@ -444,6 +456,7 @@ var CharacterRules2024 = (() => {
     extend,
     backgrounds,
     originFeats,
+    isOriginFeat,
     featSummary: name => featText[name] || '',
     standardLanguages,
     classProfile,
