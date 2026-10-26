@@ -161,6 +161,7 @@ jobs:
         npm --prefix tests run test:druid-wild-companion
         npm --prefix tests run test:druid-wild-resurgence
         npm --prefix tests run test:druid-created-slots
+        npm --prefix tests run test:cleric-blessed-strikes
         npm --prefix tests run test:divine-channels
         npm --prefix tests run test:wizard-recovery
         npm --prefix tests run test:paladin-healing

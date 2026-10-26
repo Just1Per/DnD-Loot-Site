@@ -995,3 +995,12 @@
 #characterSheetDialog .sheet-created-slot-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: .7rem; }
 #characterSheetDialog .sheet-created-slot-list > article { display: flex; flex-direction: column; gap: .5rem; }
 #characterSheetDialog .sheet-created-slot-list small, #characterSheetDialog .sheet-created-slot-list output { color: #654d31; }
+
+/* Cleric conditional benefits stay with existing combat feature controls. */
+.sheet-blessed-strikes { border-top: 1px solid var(--border-color, #c9b28e); margin-top: 1rem; padding-top: .75rem; }
+.sheet-blessed-strikes details > summary { padding: .65rem 0; cursor: pointer; }
+.sheet-vitality-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: .75rem; }
+.sheet-vitality-grid > label { min-width: 0; }
+.sheet-vitality-grid select { width: 100%; min-height: 44px; }
+.sheet-vitality-check { display: flex; gap: .6rem; align-items: center; min-height: 44px; margin-top: .75rem; }
+.sheet-blessed-strikes button:not(.vault-help-badge) { min-height: 44px; white-space: normal; }

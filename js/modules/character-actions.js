@@ -26,6 +26,7 @@ var CharacterActions = (()=>{
    if(m.base==='net'&&result.edition==='2024'){out.hit='DEX DC '+(8+stats.pb+stats.mods.dex);out.ability='dex';out.damage='Restrained; no damage';out.notes.push('Large or smaller target; an attack replacement.');}
    if(item&&!existing?.equipped)out.notes.push('In backpack: ready this item before using it.');
    if(!item)out.notes.push('Reference weapon; this does not add equipment to inventory.');
+   if(stats.clericBlessedStrikes?.choice==='divine-strike'&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.clericBlessedStrikes.detail);
    if(stats.druidElementalFury?.choice==='primal-strike'&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.druidElementalFury.detail);
    return out;
   }
@@ -54,6 +55,7 @@ var CharacterActions = (()=>{
    if(!damage)notes.push('Damage or weapon-dependent effect needs manual resolution; see spell information.');
    if(damage&&c.addAbility)damage=add(damage,mod);
    if(invocation?.damageBonus!==undefined){if(damage)damage=add(damage,invocation.damageBonus);notes.push(invocation.damageSource+': '+sign(invocation.damageBonus)+' to this cantrip’s damage rolls.');}
+   if(spell.level===0&&source.classId==='cleric'&&invocation?.sourceClass==='cleric'&&stats.clericBlessedStrikes?.vitalityAvailable)notes.push('Improved Blessed Strikes: after dealing damage to a creature, grant '+stats.clericBlessedStrikes.amount+' temporary HP to yourself or another creature within 60 ft. Resolve the trigger in Combat.');
    if(invocation?.range)notes.push(invocation.rangeSource+': range '+invocation.range+'.');
    const types=(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');
    return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(mod+stats.pb+data.spellAttackBonus):spell.save?spell.save+' DC '+(8+stats.pb+mod+data.spellDCBonus):'Effect',damage:damage||'See spell effect',range:invocation?.range||CFC.cantripRange(spell,level),notes};

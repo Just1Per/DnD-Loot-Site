@@ -247,6 +247,172 @@ var CharacterClassFeatureChoices=(()=>{
       detail,
     };
   }
+  definitions["2024"].cleric.push({
+    id: "blessed-strikes",
+    name: "Blessed Strikes",
+    minLevel: 7,
+    count: () => 1,
+    referenceComplete: true,
+    options: () => [
+      option("Potent Spellcasting", {
+        source: "SRD 5.2.1",
+        referenceComplete: true,
+        automationComplete: false,
+        effectLabel: "cantrip damage and conditional vitality",
+        detail:
+          "Current Wisdom modifies damaging Cleric cantrips. From Cleric 14, resolve cantrip damage to grant temporary HP to yourself or an eligible creature.",
+      }),
+      option("Divine Strike", {
+        source: "SRD 5.2.1",
+        referenceComplete: true,
+        automationComplete: false,
+        effectLabel: "conditional weapon-hit reminder",
+        detail:
+          "Once on your own turn, a weapon hit may add 1d8 Necrotic or Radiant damage; 2d8 from Cleric 14. Choose the damage type when it hits.",
+      }),
+    ],
+  });
+  function blessedStrikes(data, { level = 1, mods = {} } = {}) {
+    const stored = data.adobe || data.rulesChoices?.grants?.__adobe?.data || {};
+    const entries = stored.classLevels?.length
+      ? stored.classLevels
+      : [{ classId: data.build?.classId, level }];
+    let remaining = Math.max(1, Math.min(20, Math.trunc(Number(level) || 1))),
+      actual = 0;
+    const seen = new Set();
+    for (const entry of entries) {
+      const n = Math.min(
+        remaining,
+        Math.max(0, Math.trunc(Number(entry?.level) || 0)),
+      );
+      remaining -= n;
+      if (entry?.classId === "cleric" && !seen.has(entry.classId)) actual = n;
+      seen.add(entry?.classId);
+    }
+    const available = data.build?.edition === "2024" && actual >= 7,
+      key = "2024:cleric:blessed-strikes";
+    const selected = normalize(stored.classFeatureChoices)[key]?.[0];
+    const choice =
+      available && ["potent-spellcasting", "divine-strike"].includes(selected)
+        ? selected
+        : "";
+    const wis = Number.isFinite(Number(mods.wis))
+      ? Math.max(-5, Math.min(10, Math.trunc(Number(mods.wis))))
+      : 0;
+    const dice = actual >= 14 ? "2d8" : "1d8",
+      vitalityAvailable = choice === "potent-spellcasting" && actual >= 14;
+    const amount = Math.max(0, 2 * wis);
+    const detail = !choice
+      ? "Choose Potent Spellcasting or Divine Strike in Character Builder."
+      : choice === "divine-strike"
+        ? "Divine Strike: once on your own turn, a weapon hit may deal an extra " +
+          dice +
+          " Necrotic or Radiant damage. Choose the type when it hits; do not add it to every attack."
+        : "Potent Spellcasting: " +
+          (wis >= 0 ? "+" : "") +
+          wis +
+          " damage on Cleric cantrips." +
+          (vitalityAvailable
+            ? " After a Cleric cantrip deals damage to a creature, you may grant " +
+              amount +
+              " temporary HP to yourself or another creature within 60 ft; temporary HP never stacks."
+            : "");
+    return {
+      available,
+      key,
+      level: actual,
+      choice,
+      wis,
+      dice,
+      vitalityAvailable,
+      amount,
+      rawTempHP: 2 * wis,
+      detail,
+    };
+  }
+  function clericVitality(data, context = {}) {
+    const level = Math.max(
+        1,
+        Math.min(20, Math.trunc(Number(context.level) || 1)),
+      ),
+      mods = context.mods || {},
+      feature = blessedStrikes(data, { level, mods });
+    const stored = data.adobe || data.rulesChoices?.grants?.__adobe?.data || {};
+    const entries = stored.classLevels?.length
+      ? stored.classLevels
+      : [{ classId: data.build?.classId, level }];
+    const catalog = context.catalog || spellCatalogue(),
+      list = Array.isArray(catalog) ? catalog : emptySpellCatalogue;
+    const modifiers = classCantripModifiers(data, {
+      level,
+      mods,
+      catalog: list,
+      entries,
+      classId: "cleric",
+    });
+    const index = spellIndex(list);
+    const cantrips = Object.keys(modifiers)
+      .map((id) => ({ id, name: index.byId.get(id)?.name || id }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return {
+      ...feature,
+      cantrips,
+      reason: !feature.vitalityAvailable
+        ? "Requires Potent Spellcasting and actual 2024 Cleric level 14."
+        : feature.amount < 1
+          ? "Current Wisdom grants no positive temporary HP."
+          : !cantrips.length
+            ? "Add a damaging Cleric cantrip on Spells before recording its vitality."
+            : "",
+    };
+  }
+  function applyClericVitality(
+    data,
+    { spellId, confirmed = false, target = "self", mode = "higher" } = {},
+    context = {},
+  ) {
+    const state = clericVitality(data, context);
+    if (state.reason) return { ok: false, reason: state.reason };
+    if (confirmed !== true || !state.cantrips.some((row) => row.id === spellId))
+      return {
+        ok: false,
+        reason:
+          "Choose an eligible Cleric cantrip and confirm it dealt damage to a creature.",
+      };
+    if (!["self", "other"].includes(target))
+      return {
+        ok: false,
+        reason: "Choose yourself or another creature within 60 ft.",
+      };
+    if (target === "other")
+      return { ok: true, target, amount: state.amount, changed: false };
+    if (!["higher", "keep", "replace"].includes(mode))
+      return {
+        ok: false,
+        reason: "Choose how to handle existing temporary HP.",
+      };
+    const current = Number(data.hpTemp);
+    if (!Number.isInteger(current) || current < 0)
+      return {
+        ok: false,
+        reason: "Record valid current temporary HP before applying vitality.",
+      };
+    const next =
+      mode === "replace"
+        ? state.amount
+        : mode === "keep"
+          ? current
+          : Math.max(current, state.amount);
+    data.hpTemp = next;
+    return {
+      ok: true,
+      target,
+      amount: state.amount,
+      previous: current,
+      tempHP: next,
+      changed: next !== current,
+    };
+  }
   function cantripRange(spell, level = 1, manualRange) {
     if (!spell) return manualRange || "";
     if (manualRange !== undefined && manualRange !== spell.range)
@@ -266,10 +432,16 @@ var CharacterClassFeatureChoices=(()=>{
     }
     return spell.range || "";
   }
-  function druidCantripModifiers(data, { level, mods, catalog, entries }) {
-    const fury = elementalFury(data, { level, mods }),
+  function classCantripModifiers(
+    data,
+    { level, mods, catalog, entries, classId = "druid" },
+  ) {
+    const boost =
+        classId === "cleric"
+          ? blessedStrikes(data, { level, mods })
+          : elementalFury(data, { level, mods }),
       out = Object.create(null);
-    if (fury.choice !== "potent-spellcasting") return out;
+    if (boost.choice !== "potent-spellcasting") return out;
     const casters = new Set(),
       seen = new Set();
     let left = level;
@@ -282,7 +454,7 @@ var CharacterClassFeatureChoices=(()=>{
       if (
         n &&
         !seen.has(entry?.classId) &&
-        [
+        ([
           "artificer",
           "bard",
           "cleric",
@@ -292,7 +464,9 @@ var CharacterClassFeatureChoices=(()=>{
           "sorcerer",
           "warlock",
           "wizard",
-        ].includes(entry.classId)
+        ].includes(entry.classId) ||
+          (n >= 3 &&
+            /^(eldritch-knight|arcane-trickster)/.test(entry.subclassId || "")))
       )
         casters.add(entry.classId);
       seen.add(entry?.classId);
@@ -311,28 +485,28 @@ var CharacterClassFeatureChoices=(()=>{
       if (!spell || spell.level !== 0) continue;
       const native = spell.classes || [],
         owned =
-          selected.classId === "druid" ||
+          selected.classId === classId ||
           (!selected.classId &&
-            native.includes("druid") &&
+            native.includes(classId) &&
             (native.length === 1 ||
-              (casters.size === 1 && casters.has("druid"))));
+              (casters.size === 1 && casters.has(classId))));
       if (!owned) continue;
       const combat = spell.combat || {},
         damaging =
           !!combat.types?.length &&
-          (!!combat.damage || Object.keys(combat.scaling || {}).length > 0),
+          String(spell.name).toLowerCase() !== "shillelagh",
         match = /^(\d+)\s*(?:feet|ft)\b/i.exec(
           String(cantripRange(spell, level)),
         ),
         range =
-          fury.rangeIncrease && match && Number(match[1]) >= 10
-            ? Number(match[1]) + fury.rangeIncrease
+          boost.rangeIncrease && match && Number(match[1]) >= 10
+            ? Number(match[1]) + boost.rangeIncrease
             : 0;
       if (damaging || range)
         out[spell.id] = {
-          sourceClass: "druid",
+          sourceClass: classId,
           ...(damaging
-            ? { damageBonus: fury.wis, damageSource: "Potent Spellcasting" }
+            ? { damageBonus: boost.wis, damageSource: "Potent Spellcasting" }
             : {}),
           ...(range
             ? { range: range + " feet", rangeSource: "Improved Elemental Fury" }
@@ -643,7 +817,7 @@ var CharacterClassFeatureChoices=(()=>{
   function cantripInvocations(data,{level=1,mods={},catalog}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));const catalogReady=Array.isArray(catalog)||!!globalThis.CharacterCatalog?.rawData||typeof require==='function';catalog||=spellCatalogue();if(!Array.isArray(catalog))catalog=[];const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],local={...data,adobe:{...stored,classFeatureChoices:normalize(stored.classFeatureChoices)}},choices=local.adobe.classFeatureChoices;
     let remaining=level,warlock=null;for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='warlock'&&actual){warlock={...entry,level:actual};break;}}
-    const result={reports:[],modifiers:Object.create(null),classModifiers:{druid:druidCantripModifiers(data,{level,mods,catalog,entries})},catalogReady};if(!warlock)return result;
+    const result={reports:[],modifiers:Object.create(null),classModifiers:{druid:classCantripModifiers(data,{level,mods,catalog,entries,classId:'druid'}),cleric:classCantripModifiers(data,{level,mods,catalog,entries,classId:'cleric'})},catalogReady};if(!warlock)return result;
     const group=status(local,warlock,edition).find(row=>row.id==='eldritch-invocations');if(!group)return result;
     const casterIds=new Set(entries.filter(entry=>['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard'].includes(entry.classId)||entry.level>=3&&/^(eldritch-knight|arcane-trickster)/.test(entry.subclassId||'')).map(entry=>entry.classId));
     const index=spellIndex(catalog),known=[],seenSpells=new Map();for(const selected of data.spells||[]){const spell=index.byId.get(selected.catalogId)||index.byNameEdition.get(edition+'|'+String(selected.name||'').toLowerCase().replace(/\s*\[[^\]]+\]\s*$/,''));if(!spell||spell.level!==0)continue;const native=spell.classes||[],warlockSpell=selected.classId==='warlock'||!selected.classId&&native.includes('warlock')&&(native.length===1||casterIds.size===1&&casterIds.has('warlock'));if(seenSpells.has(spell.id)){seenSpells.get(spell.id).warlockSpell||=warlockSpell;continue;}const option={id:safe(spell.id),spellId:spell.id,name:String(spell.name||''),edition:spell.edition,spell,warlockSpell};seenSpells.set(spell.id,option);known.push(option);}
@@ -661,14 +835,30 @@ var CharacterClassFeatureChoices=(()=>{
     for(const report of result.reports)for(const option of report.options){const duplicate=result.reports.some(other=>other!==report&&other.id===report.id&&other.valid&&other.spellName.toLowerCase()===option.name.toLowerCase());const permitted=typeof CampaignRules==='undefined'||CampaignRules.allowed(option);option.eligible=!duplicate&&permitted;option.reason=duplicate?'Already chosen for another '+report.name:!permitted?'Outside campaign rules':'';}
     return result;
   }
-  function cantripModifier(data,training,spellId,classId=''){
-    const scoped=training?.classModifiers?.druid?.[spellId],invocationModifier=training?.modifiers?.[spellId];
-    if(classId==='druid'&&scoped)return scoped;
-    if(!classId&&scoped){const classes=new Set((data.spells||[]).filter(row=>row.catalogId===spellId&&row.classId).map(row=>row.classId));if(classes.size>1||classes.size===1&&!classes.has('druid'))return null;return scoped;}
-    const modifier=invocationModifier;if(!modifier)return null;if(!modifier.sourceClass)return modifier;
-    if(classId)return classId===modifier.sourceClass?modifier:null;
-    if((data.spells||[]).some(row=>row.catalogId===spellId&&row.classId&&row.classId!==modifier.sourceClass))return null;
-    return modifier;
+  function cantripModifier(data, training, spellId, classId = "") {
+    const byClass = training?.classModifiers || {},
+      invocation = training?.modifiers?.[spellId];
+    if (classId) {
+      const scoped = byClass[classId]?.[spellId];
+      if (scoped) return scoped;
+      return invocation &&
+        (!invocation.sourceClass || invocation.sourceClass === classId)
+        ? invocation
+        : null;
+    }
+    const explicit = new Set(
+      (data.spells || [])
+        .filter((row) => row.catalogId === spellId && row.classId)
+        .map((row) => row.classId),
+    );
+    if (explicit.size > 1) return null;
+    if (explicit.size === 1)
+      return cantripModifier(data, training, spellId, [...explicit][0]);
+    const possible = Object.values(byClass)
+      .map((map) => map?.[spellId])
+      .filter(Boolean);
+    if (invocation) possible.push(invocation);
+    return possible.length === 1 ? possible[0] : null;
   }
   function cantripModifierText(modifier={}){return[modifier.damageSource?modifier.damageSource+' '+(modifier.damageBonus>=0?'+':'')+modifier.damageBonus+' damage':'',modifier.rangeSource?modifier.rangeSource+' '+modifier.range:''].filter(Boolean).join(' · ');}
   function setCantripInvocation(data,key,slot,value,context){
@@ -846,6 +1036,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{cantripRange,elementalFury,useChannelDivinity,wizardLevels,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{blessedStrikes,clericVitality,applyClericVitality,cantripRange,elementalFury,useChannelDivinity,wizardLevels,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;
