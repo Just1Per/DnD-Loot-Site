@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261026-cleric-intervention-v1";
+const ASSET_VERSION = "20261026-druid-beast-spells-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -111,6 +111,7 @@ const FEATURE_FILES = [
   "./modules/character-journal-ui.js",
   "./modules/character-progression.js",
   "./modules/character-wild-shape.js",
+  "./modules/character-druid-spellcasting.js",
   "./modules/character-wild-companion.js",
   "./modules/character-druid-conversions.js",
   "./modules/character-cleric-intervention.js",
@@ -211,6 +212,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-adobe-builder-ui.js",
     "./modules/character-adobe-pages.js",
     "./modules/character-creature-ui.js",
+    "./modules/character-spell-component-data.js",
     "./modules/character-wild-shape-ui.js",
     "./modules/character-wild-companion-ui.js",
     "./modules/character-druid-conversions-ui.js",

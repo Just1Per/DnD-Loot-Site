@@ -222,9 +222,9 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 15 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 18 | Beast Spells **[unreviewed]** |
+| 18 | Beast Spells **[partial]** |
 | 19 | Ability Score Improvement **[partial]** |
-| 20 | Archdruid **[unreviewed]** |
+| 20 | Archdruid **[partial]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -238,9 +238,9 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Wild Shape · 8 | Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending. | [tests/druid-wild-shape.cjs](../tests/druid-wild-shape.cjs), [tests/druid-wild-shape-browser.cjs](../tests/druid-wild-shape-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Beast Spells · 18 | Source-rule comparison and structured fields still need review. | Pending |
+| Beast Spells · 18 | Actual Druid 18/19 permits Druid-spell Verbal/Somatic components in Wild Shape but no Material component. Per-spell status, information, action reminders, Companions-to-Spells link, print and Guide. Source/unknown components and specific subclass exceptions require review; this does not cast spells or waive preparation/slots. | [tests/druid-beast-spells.cjs](../tests/druid-beast-spells.cjs), [tests/druid-beast-spells-browser.cjs](../tests/druid-beast-spells-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Archdruid · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Archdruid · 20 | Actual legacy Druid 20 retains unlimited Wild Shape uses and labels component waivers for Druid spells in normal or Wild Shape form. Verbal/Somatic and unpriced, unconsumed Material components are waived; costly/consumed materials still apply and are unavailable in Wild Shape. Other class sources, unknown metadata and conditional consumption require separate review; no spell or recipient effects are automated. | [tests/druid-wild-shape.cjs](../tests/druid-wild-shape.cjs), [tests/druid-beast-spells.cjs](../tests/druid-beast-spells.cjs), [tests/druid-beast-spells-browser.cjs](../tests/druid-beast-spells-browser.cjs) |
 
 ## Fighter · 2014
 
@@ -803,7 +803,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 15 | Improved Elemental Fury **[partial]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 18 | Beast Spells **[unreviewed]** |
+| 18 | Beast Spells **[partial]** |
 | 19 | Epic Boon **[unreviewed]** |
 | 20 | Archdruid **[partial]** |
 
@@ -822,7 +822,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Improved Elemental Fury · 15 | Structured 2024 level-7 choice. Potent adds current Wisdom to supported damaging Druid cantrips; level15 adds300ft to qualifying ranges with per-class ownership preserved. Primal displays a source-correct conditional weapon/Beast hit reminder, not automatic target damage or a turn counter. Guide, persistence and print covered. | [tests/druid-elemental-fury.cjs](../tests/druid-elemental-fury.cjs), [tests/druid-elemental-fury-browser.cjs](../tests/druid-elemental-fury-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Beast Spells · 18 | Source-rule comparison and structured fields still need review. | Pending |
+| Beast Spells · 18 | Actual Druid 18 permits spellcasting in Beast form except costly/consumed materials. Pinned mechanical flags cover all 969 catalogue spells, independently of remote catalogue age. Per-spell component status, information, action reminders, Companions navigation, print and Guide. Conditional consumption/custom metadata/subclass exceptions remain review cases. | [tests/druid-beast-spells.cjs](../tests/druid-beast-spells.cjs), [tests/druid-beast-spells-browser.cjs](../tests/druid-beast-spells-browser.cjs) |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
 | Archdruid · 20 | Actual Druid 20 Evergreen initiative recovery plus atomic Nature Magician choice of 1–4 Wild Shape uses for one level 2/4/6/8 extra slot. Separate Long Rest limit, saved slot ledger, ordinary/Pact separation and agreed Long Rest expiry. Longevity remains a source reminder rather than an age calculator. | [tests/druid-wild-shape.cjs](../tests/druid-wild-shape.cjs), [tests/druid-created-slots.cjs](../tests/druid-created-slots.cjs), [tests/druid-created-slots-browser.cjs](../tests/druid-created-slots-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 

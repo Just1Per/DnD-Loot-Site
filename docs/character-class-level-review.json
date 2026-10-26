@@ -1520,9 +1520,12 @@
           "name": "Beast Spells",
           "level": 18,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Druid 18/19 permits Druid-spell Verbal/Somatic components in Wild Shape but no Material component. Per-spell status, information, action reminders, Companions-to-Spells link, print and Guide. Source/unknown components and specific subclass exceptions require review; this does not cast spells or waive preparation/slots.",
+          "evidence": [
+            "tests/druid-beast-spells.cjs",
+            "tests/druid-beast-spells-browser.cjs"
+          ]
         },
         {
           "id": "2014:druid:19:ability-score-improvement",
@@ -1541,9 +1544,13 @@
           "name": "Archdruid",
           "level": 20,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual legacy Druid 20 retains unlimited Wild Shape uses and labels component waivers for Druid spells in normal or Wild Shape form. Verbal/Somatic and unpriced, unconsumed Material components are waived; costly/consumed materials still apply and are unavailable in Wild Shape. Other class sources, unknown metadata and conditional consumption require separate review; no spell or recipient effects are automated.",
+          "evidence": [
+            "tests/druid-wild-shape.cjs",
+            "tests/druid-beast-spells.cjs",
+            "tests/druid-beast-spells-browser.cjs"
+          ]
         }
       ],
       "levels": [
@@ -5494,9 +5501,12 @@
           "name": "Beast Spells",
           "level": 18,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Druid 18 permits spellcasting in Beast form except costly/consumed materials. Pinned mechanical flags cover all 969 catalogue spells, independently of remote catalogue age. Per-spell component status, information, action reminders, Companions navigation, print and Guide. Conditional consumption/custom metadata/subclass exceptions remain review cases.",
+          "evidence": [
+            "tests/druid-beast-spells.cjs",
+            "tests/druid-beast-spells-browser.cjs"
+          ]
         },
         {
           "id": "2024:druid:19:epic-boon",
