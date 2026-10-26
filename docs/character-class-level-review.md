@@ -169,7 +169,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]**<br>Destroy Undead **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 10 | Divine Intervention **[unreviewed]** |
+| 10 | Divine Intervention **[partial]** |
 | 11 | Destroy Undead **[partial]** |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -179,7 +179,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 17 | Destroy Undead **[partial]** |
 | 18 | Channel Divinity **[implemented]** |
 | 19 | Ability Score Improvement **[partial]** |
-| 20 | Divine Intervention **[unreviewed]** |
+| 20 | Divine Intervention **[partial]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -191,7 +191,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Channel Divinity · 6 | Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Destroy Undead · 8 | Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
-| Divine Intervention · 10 | Source-rule comparison and structured fields still need review. | Pending |
+| Divine Intervention · 10 | Actual Cleric 10 percentile request, automatic success at Cleric 20. Atomic saved attempts, failure Long Rest recovery, successful 7-campaign-day wait advanced explicitly, source/multiclass preservation, Guide, Combat, Overview and print. Divine effects are chosen by the DM at the table. | [tests/cleric-divine-intervention.cjs](../tests/cleric-divine-intervention.cjs), [tests/cleric-divine-intervention-browser.cjs](../tests/cleric-divine-intervention-browser.cjs), [tests/cleric-divine-intervention-rules.cjs](../tests/cleric-divine-intervention-rules.cjs) |
 | Destroy Undead · 11 | Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Destroy Undead · 14 | Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
@@ -199,7 +199,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Destroy Undead · 17 | Source-level CR threshold is derived in the Turn Undead effect details. The chosen target and destruction are resolved at the table. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Channel Divinity · 18 | Source-specific finite pool, base effect choices, Wisdom DC/Divine Spark formula, use/undo, rest limits and save/print. Legacy multiclass Cleric/Paladin share the higher use limit; revised pools are separate. Resolve rolls, targets and conditions at the table; subclass effects retain their own source rules. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Ability Score Improvement · 19 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Divine Intervention · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Divine Intervention · 20 | Actual Cleric 10 percentile request, automatic success at Cleric 20. Atomic saved attempts, failure Long Rest recovery, successful 7-campaign-day wait advanced explicitly, source/multiclass preservation, Guide, Combat, Overview and print. Divine effects are chosen by the DM at the table. | [tests/cleric-divine-intervention.cjs](../tests/cleric-divine-intervention.cjs), [tests/cleric-divine-intervention-browser.cjs](../tests/cleric-divine-intervention-browser.cjs), [tests/cleric-divine-intervention-rules.cjs](../tests/cleric-divine-intervention-rules.cjs) |
 
 ## Druid · 2014
 
@@ -753,7 +753,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 7 | Blessed Strikes **[partial]** |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 10 | Divine Intervention **[unreviewed]** |
+| 10 | Divine Intervention **[partial]** |
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -763,7 +763,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 18 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 19 | Epic Boon **[unreviewed]** |
-| 20 | Greater Divine Intervention **[unreviewed]** |
+| 20 | Greater Divine Intervention **[partial]** |
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
@@ -775,12 +775,12 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Sear Undead · 5 | From actual Cleric 5, Turn Undead shows the current Wisdom/minimum-one d8 damage reminder and notes that this damage does not end turning. Targets and rolls remain table resolved. | [tests/divine-channel-resources.cjs](../tests/divine-channel-resources.cjs), [tests/divine-channel-resources-browser.cjs](../tests/divine-channel-resources-browser.cjs) |
 | Blessed Strikes · 7 | Structured actual Cleric 7 choice; Potent adds current Wisdom only to owned Cleric cantrips. Cleric 14 has explicit post-damage temporary HP recording for self with nonstacking keep/replace, or private-sheet-safe recipient instructions. Divine Strike is a conditional weapon-hit reminder (1d8, 2d8 at 14), resolved at the table; older subclass benefits do not stack. Automated attack hit/own-turn enforcement and other creatures’ HP remain outside scope. | [tests/cleric-blessed-strikes.cjs](../tests/cleric-blessed-strikes.cjs), [tests/cleric-blessed-strikes-browser.cjs](../tests/cleric-blessed-strikes-browser.cjs), [tests/cleric-blessed-strikes-rules.cjs](../tests/cleric-blessed-strikes-rules.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Divine Intervention · 10 | Source-rule comparison and structured fields still need review. | Pending |
+| Divine Intervention · 10 | Actual Cleric 10 eligible approved-catalogue cantrip-to-level-5 Cleric spell picker excluding Reaction spells, spell information, explicit Magic-action acknowledgement and separate saved Long Rest cooldown. No preparation or slot/material payment; other requirements, effects and targets remain table resolved. | [tests/cleric-divine-intervention.cjs](../tests/cleric-divine-intervention.cjs), [tests/cleric-divine-intervention-browser.cjs](../tests/cleric-divine-intervention-browser.cjs), [tests/cleric-divine-intervention-rules.cjs](../tests/cleric-divine-intervention-rules.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Improved Blessed Strikes · 14 | Structured actual Cleric 7 choice; Potent adds current Wisdom only to owned Cleric cantrips. Cleric 14 has explicit post-damage temporary HP recording for self with nonstacking keep/replace, or private-sheet-safe recipient instructions. Divine Strike is a conditional weapon-hit reminder (1d8, 2d8 at 14), resolved at the table; older subclass benefits do not stack. Automated attack hit/own-turn enforcement and other creatures’ HP remain outside scope. | [tests/cleric-blessed-strikes.cjs](../tests/cleric-blessed-strikes.cjs), [tests/cleric-blessed-strikes-browser.cjs](../tests/cleric-blessed-strikes-browser.cjs), [tests/cleric-blessed-strikes-rules.cjs](../tests/cleric-blessed-strikes-rules.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |
-| Greater Divine Intervention · 20 | Source-rule comparison and structured fields still need review. | Pending |
+| Greater Divine Intervention · 20 | Actual Cleric 20 Wish option, validated entered 2d4 total (2–8) and saved countdown for the whole Divine Intervention feature; each recorded Long Rest advances once, independently of legacy campaign-day recovery. Wish effects and stress remain table resolved. | [tests/cleric-divine-intervention.cjs](../tests/cleric-divine-intervention.cjs), [tests/cleric-divine-intervention-browser.cjs](../tests/cleric-divine-intervention-browser.cjs), [tests/cleric-divine-intervention-rules.cjs](../tests/cleric-divine-intervention-rules.cjs) |
 
 ## Druid · 2024
 

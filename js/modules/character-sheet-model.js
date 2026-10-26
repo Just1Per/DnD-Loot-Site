@@ -293,6 +293,7 @@ var CharacterSheetModel = (() => {
       rangerFeatures,
       druidElementalFury:ClassChoices.elementalFury(d,{level,mods}),
       clericBlessedStrikes:ClassChoices.blessedStrikes(d,{level,mods}),
+      clericIntervention:(globalThis.CharacterClericIntervention||(typeof require==='function'?require('./character-cleric-intervention'):null))?.summary(d,{level})||'',
       paladinAuras,
       attackAction:AttackProgression.derive(d,level),
       toolTraining,

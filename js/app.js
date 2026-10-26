@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261026-sheet-warning-targets-v1";
+const ASSET_VERSION = "20261026-cleric-intervention-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -113,6 +113,7 @@ const FEATURE_FILES = [
   "./modules/character-wild-shape.js",
   "./modules/character-wild-companion.js",
   "./modules/character-druid-conversions.js",
+  "./modules/character-cleric-intervention.js",
   "./modules/character-sheet-model.js",
   "./modules/character-sheet-store.js",
   "./modules/character-overview-ui.js",
@@ -214,7 +215,8 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-wild-companion-ui.js",
     "./modules/character-druid-conversions-ui.js",
     "./modules/character-spellcasting-ui.js",
-    "./modules/character-cleric-blessed-strikes-ui.js"
+    "./modules/character-cleric-blessed-strikes-ui.js",
+    "./modules/character-cleric-intervention-ui.js"
   ]
 });
 
