@@ -41,8 +41,9 @@ var CharacterActions = (()=>{
    const classes=[...new Set(known.map(row=>row.classId).filter(Boolean))],ambiguous=!source.classId&&classes.length>1;
    const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices'),invocation=CFC.cantripModifier(data,stats.cantripInvocations,spell.id,source.classId||(!ambiguous?selected.classId:''));
    const classAbilities={artificer:'int',bard:'cha',cleric:'wis',druid:'wis',fighter:'int',paladin:'cha',ranger:'wis',rogue:'int',sorcerer:'cha',warlock:'cha',wizard:'int'},owner=source.classId||(!ambiguous?(selected.classId||classes[0]||''):'')||(invocation?.sourceClass||''),ability=a.ability==='auto'?(classAbilities[owner]||data.spellAbility):a.ability,mod=stats.mods[ability],c=spell.combat||{},slot=spell.level?Math.max(spell.level,a.slot):0;
+   const beast=(globalThis.CharacterDruidSpellcasting||(typeof require==='function'?require('./character-druid-spellcasting'):null))?.assess(data,spell,{level,classId:owner});
    const mark=CFC.huntersMarkEffect(data,spell,{level,classId:owner,features:stats.rangerFeatures,slot});
-   if(mark)return {...row,name:spell.name+' · '+spell.edition+(owner?' · '+(classAbilities[owner]?owner[0].toUpperCase()+owner.slice(1):owner):'')+(slot?' (level '+slot+')':''),ability,hit:'No attack roll',damage:mark.damage,range:spell.range,notes:[mark.detail,'Bonus Action · '+mark.duration+'. Resolve marked target and eligible hits at the table.',...mark.notes]};
+   if(mark)return {...row,name:spell.name+' · '+spell.edition+(owner?' · '+(classAbilities[owner]?owner[0].toUpperCase()+owner.slice(1):owner):'')+(slot?' (level '+slot+')':''),ability,hit:'No attack roll',damage:mark.damage,range:spell.range,notes:[mark.detail,'Bonus Action · '+mark.duration+'. Resolve marked target and eligible hits at the table.',...mark.notes,...(beast?.relevant?[beast.label+': '+beast.detail]:[])]};
    let damage=spell.level===0?diceAt(c.scaling,level,c.damage||''):c.damage||'';
    if(slot>spell.level&&c.upcast)damage=increase(damage,c.upcast,Math.floor((slot-spell.level)/(c.step||1)));
    let count=1,unit='';
@@ -50,6 +51,7 @@ var CharacterActions = (()=>{
    if(spell.name==='Scorching Ray'){count=3+Math.max(0,slot-2);unit='ray';}
    if(spell.name==='Magic Missile'){count=3+Math.max(0,slot-1);unit='dart';}
    const notes=['Base effect shown. Resolve conditions, riders and resource use from the spell.'];
+   if(beast?.relevant)notes.push(beast.label+': '+beast.detail);
    if(ambiguous)notes.push('Known from multiple classes: edit this action and choose its casting class.');
    if(slot>spell.level&&!c.upcast&&!['Scorching Ray','Magic Missile'].includes(spell.name))notes.push('Upcast effects are not automated for this spell.');
    if(!damage)notes.push('Damage or weapon-dependent effect needs manual resolution; see spell information.');
