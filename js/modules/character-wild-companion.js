@@ -174,6 +174,19 @@ var CharacterWildCompanion = (() => {
         ),
       });
     }
+    const conversions =
+      globalThis.CharacterDruidConversions ||
+      (typeof require === "function"
+        ? require("./character-druid-conversions")
+        : null);
+    for (const row of conversions?.createdSlots(d) || [])
+      if (row.valid)
+        rows.push({
+          ...row,
+          created: true,
+          label:
+            "1 created level " + row.level + " slot · expires at Long Rest",
+        });
     return rows;
   }
   function summon(d, { formId, payment, confirmed = false } = {}, ctx = {}) {
@@ -218,6 +231,8 @@ var CharacterWildCompanion = (() => {
       const pool = W.state(d, ctx.level || 1);
       updates[pool.keys.spent] = [String(pool.used + 1)];
       updates[pool.keys.last] = ["companion"];
+    } else if (pay.created) {
+      updates[pay.key] = ["spent"];
     } else if (payment === "pact") {
       extra.pactSlotsUsed = Math.max(0, int(stored(d).pactSlotsUsed)) + 1;
       extra.pactSlotsSeparated = true;

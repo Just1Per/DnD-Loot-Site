@@ -988,3 +988,10 @@
 #characterSheetDialog .sheet-druid-conversions .sheet-help { line-height: 1.6; }
 #characterSheetDialog .sheet-resurgence-check { display: flex; align-items: center; gap: .6rem; min-height: 44px; line-height: 1.5; margin: .5rem 0; }
 #characterSheetDialog .sheet-resurgence-check input { flex: 0 0 20px; width: 20px; height: 20px; }
+
+#characterSheetDialog .sheet-slot-creation-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 1rem; margin: .8rem 0; }
+#characterSheetDialog .sheet-slot-creation-grid > article, #characterSheetDialog .sheet-created-slot-list > article { padding: .8rem; border: 1px solid #d5c0a1; border-radius: 8px; background: #fffdf7; min-width: 0; }
+#characterSheetDialog .sheet-created-slots { padding: 1rem; margin-top: 1rem; border: 1px solid #c4aa7d; border-radius: 8px; background: #fbf7ed; scroll-margin-top: 160px; }
+#characterSheetDialog .sheet-created-slot-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: .7rem; }
+#characterSheetDialog .sheet-created-slot-list > article { display: flex; flex-direction: column; gap: .5rem; }
+#characterSheetDialog .sheet-created-slot-list small, #characterSheetDialog .sheet-created-slot-list output { color: #654d31; }

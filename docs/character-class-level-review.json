@@ -5396,10 +5396,12 @@
           "level": 5,
           "source": "SRD 5.2.1",
           "state": "partial",
-          "scope": "Actual 2024 Druid 5: atomic ordinary/higher/Pact slot payment restores one Wild Shape only when empty; own-turn acknowledgement/limit, next-turn control, persistence, class/source caps, print and Guide. Slot creation and Nature Magician follow in a separate increment, using the agreed Long Rest expiry house rule.",
+          "scope": "Actual 2024 Druid 5: atomic ordinary/higher/Pact slot payment restores one Wild Shape only when empty; own-turn acknowledgement/limit, next-turn control, persistence, class/source caps, print and Guide. Both conversion directions are present; created level-1 slots have a separate saved pool and once-per-Long-Rest limit. Own-turn acknowledgement is recorded manually; created-slot expiry follows the agreed Long Rest house rule.",
           "evidence": [
             "tests/druid-wild-resurgence.cjs",
             "tests/druid-wild-resurgence-browser.cjs",
+            "tests/druid-created-slots.cjs",
+            "tests/druid-created-slots-browser.cjs",
             "tests/druid-wild-shape-rules.cjs"
           ]
         },
@@ -5486,9 +5488,14 @@
           "name": "Archdruid",
           "level": 20,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Druid 20 Evergreen initiative recovery plus atomic Nature Magician choice of 1–4 Wild Shape uses for one level 2/4/6/8 extra slot. Separate Long Rest limit, saved slot ledger, ordinary/Pact separation and agreed Long Rest expiry. Longevity remains a source reminder rather than an age calculator.",
+          "evidence": [
+            "tests/druid-wild-shape.cjs",
+            "tests/druid-created-slots.cjs",
+            "tests/druid-created-slots-browser.cjs",
+            "tests/druid-wild-shape-rules.cjs"
+          ]
         }
       ],
       "levels": [

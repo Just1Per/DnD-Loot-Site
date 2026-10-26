@@ -1,6 +1,6 @@
 # Druid: Wild Companion
 
-From actual **2024 Druid level 2**, Combat → **Summon familiar in Companions** opens a dedicated Wild Companion card. Choose an eligible CR 0 Beast and exactly one payment: a Wild Shape use, an ordinary spell slot or an available Pact Magic slot. Casting takes a Magic action and waives Material components; coins and spell-preparation choices are unchanged. Ordinary and Pact slots remain separate. Failed validation or a full choice map spends nothing.
+From actual **2024 Druid level 2**, Combat → **Summon familiar in Companions** opens a dedicated Wild Companion card. Choose an eligible CR 0 Beast and exactly one payment: a Wild Shape use, an ordinary spell slot, an available Pact Magic slot or an available created Druid slot. Casting takes a Magic action and waives Material components; coins and spell-preparation choices are unchanged. Ordinary, Pact and created slots remain separate. Created slots expire at Long Rest under the agreed table rule. Failed validation or a full choice map spends nothing.
 
 The selected form uses the pinned 2024 SRD creature statistics, including its own mental abilities and Initiative. It is a **Fey familiar**. Find Familiar allows CR 0 Beasts of different sizes, not just Tiny creatures; swimming/flying forms are not gated by the Druid’s Wild Shape movement limits. Pact-specific alternative forms and circle-specific stat modifications remain separate work.
 
