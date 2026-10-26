@@ -405,6 +405,8 @@ const errors = [];
       await page.evaluate(() => sheetSession.data.build.humanFeatChoices),
       ["skill:medicine", "skill:nature", "tool:Flute"],
     );
+    await page.evaluate(()=>markUnfinishedCharacterFields([{tab:'builder',target:'[name="build.classSkills.0"],[name="build.classSkills.1"]',message:'Review this choice group'}]));
+    assert.equal(await page.locator('#sheetClassSkills .sheet-required-marker').count(),0,'a broad group notice must not arbitrarily blame a valid filled choice');
     // Two independent reasons on the same field share one marker with both explanations.
     await page.evaluate(() =>
       markUnfinishedCharacterFields([

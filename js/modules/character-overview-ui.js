@@ -55,7 +55,8 @@ function markUnfinishedCharacterFields(issues){
    const page=root.querySelector('#sheet-'+issue.tab);if(!page)continue;
    let candidates=[];
    try{candidates=[...page.querySelectorAll(issue.target)].filter(sheetIssueFieldAvailable);}catch(error){continue;}
-   const first=candidates.find(el=>'value' in el&&!el.value)||candidates[0];
+   // A group-level notice is not proof that its first filled choice is wrong.
+   const first=candidates.find(el=>'value' in el&&!el.value)||candidates.find(el=>[...el.selectedOptions||[]].some(option=>option.disabled))||(candidates.length===1?candidates[0]:null);
    for(const field of issue.exactTargets?candidates:first?[first]:[]){
      // A general warning may link to a section, but must not blame one of its fields.
      if(!['INPUT','SELECT','TEXTAREA'].includes(field.tagName))continue;
