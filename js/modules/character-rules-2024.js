@@ -444,6 +444,7 @@ var CharacterRules2024 = (() => {
     extend,
     backgrounds,
     originFeats,
+    featSummary: name => featText[name] || '',
     standardLanguages,
     classProfile,
     apply

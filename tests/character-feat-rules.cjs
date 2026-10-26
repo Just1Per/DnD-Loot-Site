@@ -108,3 +108,25 @@ test('shield-granting feats activate worn shields and explain their actual train
   assert.equal(training.includes('Shields'),shields);
  }
 });
+
+test('build-granted Skilled uses the existing race/background training once without phantom catalogue choices; Tough reports its existing HP effect',()=>{
+ for(const origin of ['human','background']){
+  const build={edition:'2024',race:'human-2024',classId:'fighter',scoreMode:'base',background:'custom',humanOriginFeat:origin==='human'?'Skilled':'Tough',backgroundFeat:origin==='background'?'Skilled':'Alert',humanFeatChoices:origin==='human'?['skill:arcana','skill:history','tool:Flute']:['','',''],backgroundFeatChoices:origin==='background'?['skill:arcana','skill:history','tool:Flute']:['','','']};
+  const d=M.normalize({build});const s=M.derive(d,4),r=s.feats.reports.find(r=>r.key==='origin-'+origin);
+  assert.deepEqual(r.warnings,[]);assert.equal(s.effects.skills.filter(k=>k==='arcana').length,1);assert.equal(s.effects.proficiencies.filter(k=>k==='Flute').length,1);
+  assert.equal(s.skills.arcana,s.mods.int+s.pb);
+  if(origin==='background'){const tough=s.feats.reports.find(r=>r.def.name==='Tough');assert.match(tough.automated.join(' '),/Maximum HP/);const noTough=structuredClone(d);noTough.build.humanOriginFeat='';assert.equal(s.hpMax-M.derive(noTough,4).hpMax,8);}
+  d.build[origin==='human'?'humanFeatChoices':'backgroundFeatChoices']=['skill:arcana','skill:arcana',''];assert.ok(M.derive(d,4).feats.reports.find(r=>r.key==='origin-'+origin).warnings.length);
+ }
+});
+
+test('legacy Origin Skilled choices are readable without mutating saved input or overriding newer partial choices',()=>{
+ for(const origin of ['human','background']){
+  const field=origin==='human'?'humanFeatChoices':'backgroundFeatChoices',key='origin-'+origin;
+  const raw={build:{edition:'2024',race:'human-2024',classId:'fighter',scoreMode:'base',background:'custom',humanOriginFeat:origin==='human'?'Skilled':'Alert',backgroundFeat:origin==='background'?'Skilled':'Tough'},rulesChoices:{effects:{[key]:{training:['skill:arcana','skill:history','tool:Flute']}}}};
+  const before=JSON.stringify(raw),d=M.normalize(raw);
+  assert.deepEqual(d.build[field],['skill:arcana','skill:history','tool:Flute']);assert.equal(JSON.stringify(raw),before);
+  assert.equal(M.derive(d,4).effects.skills.filter(k=>k==='arcana').length,1);assert.deepEqual(M.derive(d,4).feats.reports.find(r=>r.key===key).warnings,[]);
+  raw.build[field]=['skill:nature','',''];assert.deepEqual(M.normalize(raw).build[field],['skill:nature','','']);
+ }
+});

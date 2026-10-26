@@ -27,4 +27,4 @@ function seed(role='dm',membership=role){
 
 // Build-granted feats are edited through their visible catalogue control.
 function chooseBuildFeat(key,value){const control=document.querySelector('[data-build-feat-field="'+key+'"]');if(!control)throw Error('Missing feat choice '+key);control.value=value;control.onchange();}
-function chooseOriginTraining(index,value){const control=document.querySelector('[data-feat-key="origin-human"] [data-feat-choice="training'+index+'"]');if(!control)throw Error('Missing Human feat training '+index);control.value=value;control.onchange();}
+function chooseOriginTraining(index,value){const control=document.querySelector('[data-build-feat-array="humanFeatChoices"][data-build-feat-index="'+index+'"]');if(!control)throw Error('Missing Human feat training '+index);control.value=value;control.onchange();}

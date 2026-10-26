@@ -69,7 +69,7 @@ var AiLookup=(()=>{
   return {host:node,after:true};
  }
  function decorate(node){
-  if(!node.isConnected||node.closest('#aiLookupDialog')||node.dataset.aiLookupDecorated)return;
+  if(!node.isConnected||node.closest('#aiLookupDialog,.sheet-selected-feat,.sheet-build-feat-selection')||node.matches('[data-build-feat-field]')||node.dataset.aiLookupDecorated)return;
   const target=buttonFor(node);if(!target?.host)return;
   const context=itemFor(node);if(!context)return;
   const dynamic=node.matches('#tab-library .toolbar,#sheet-feats>h3,#sheet-spells>h3,[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]');

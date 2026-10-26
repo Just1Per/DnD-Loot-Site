@@ -93,7 +93,7 @@ var CharacterFeatRules = (() => {
       const core=def.source==='PHB'||def.source==='XPHB'||def.source==='TCE';
       if(!core)continue;
       if(def.name==='Alert') {if(def.edition==='2024')effects.initiativeProficiency=true;effects.initiativeBonus=def.edition==='2014'?(effects.initiativeBonus||0)+5:Math.max(effects.initiativeBonus||0,pb);automated.push('Initiative');}
-      if(def.name==='Tough'&&!entry.managedOrigin){effects.hpBonus+=2*level;(effects.hpSources||=[]).push({kind:'feat',name:'Tough ('+def.edition+')',value:2*level});automated.push('Maximum HP (+2 per level in Base mode)');}
+      if(def.name==='Tough'){if(!entry.managedOrigin){effects.hpBonus+=2*level;(effects.hpSources||=[]).push({kind:'feat',name:'Tough ('+def.edition+')',value:2*level});}automated.push('Maximum HP (+2 per level in Base mode)');}
       if(def.name==='Observant'&&def.edition==='2014'){passiveBonus+=5;automated.push('Passive Perception +5 (passive Investigation remains manual)');}
       if(def.name==='Resilient'&&!warnings.length){
         const a=c.abilities[0];
@@ -109,7 +109,7 @@ var CharacterFeatRules = (() => {
         if(!upgrade&&value.startsWith('tool:')&&tools.includes(value.slice(5))&&!effects.proficiencies.includes(value.slice(5))){effects.proficiencies.push(value.slice(5));return;}
         warnings.push('Choose valid, distinct training.');
       };
-      if(def.name==='Skilled'){for(const value of c.training)train(value);automated.push('Three skill/tool proficiencies');}
+      if(def.name==='Skilled'){if(entry.managedOrigin){const values=(entry.key==='origin-human'?data.build.humanFeatChoices:data.build.backgroundFeatChoices)||[];if(values.length!==3||new Set(values).size!==3||values.some(value=>!(value.startsWith('skill:')&&skillNames.includes(value.slice(6))||value.startsWith('tool:')&&tools.includes(value.slice(5)))))warnings.push('Choose three valid, distinct skills/tools in your granted feat choices.');}else for(const value of c.training)train(value);automated.push('Three skill/tool proficiencies');}
       if(def.name==='Skill Expert'){
         train(c.training[0]);const key=c.expertise;
         if(skillNames.includes(key)&&(effects.skills.includes(key)||(data.skills[key]?.rank||0)>=1)&&!expertise.includes(key)&&(data.skills[key]?.rank||0)<2)expertise.push(key);
