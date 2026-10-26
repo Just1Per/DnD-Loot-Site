@@ -1425,9 +1425,13 @@
           "name": "Wild Shape",
           "level": 2,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending.",
+          "evidence": [
+            "tests/druid-wild-shape.cjs",
+            "tests/druid-wild-shape-browser.cjs",
+            "tests/druid-wild-shape-rules.cjs"
+          ]
         },
         {
           "id": "2014:druid:4:ability-score-improvement",
@@ -1446,9 +1450,13 @@
           "name": "Wild Shape",
           "level": 4,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending.",
+          "evidence": [
+            "tests/druid-wild-shape.cjs",
+            "tests/druid-wild-shape-browser.cjs",
+            "tests/druid-wild-shape-rules.cjs"
+          ]
         },
         {
           "id": "2014:druid:8:ability-score-improvement",
@@ -1467,9 +1475,13 @@
           "name": "Wild Shape",
           "level": 8,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending.",
+          "evidence": [
+            "tests/druid-wild-shape.cjs",
+            "tests/druid-wild-shape-browser.cjs",
+            "tests/druid-wild-shape-rules.cjs"
+          ]
         },
         {
           "id": "2014:druid:12:ability-score-improvement",
@@ -5342,9 +5354,13 @@
           "name": "Wild Shape",
           "level": 2,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending.",
+          "evidence": [
+            "tests/druid-wild-shape.cjs",
+            "tests/druid-wild-shape-browser.cjs",
+            "tests/druid-wild-shape-rules.cjs"
+          ]
         },
         {
           "id": "2024:druid:3:druid-subclass",

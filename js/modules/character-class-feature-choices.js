@@ -370,6 +370,7 @@ var CharacterClassFeatureChoices=(()=>{
     const bard=bardLevels(data,level);
     if(bard){const key=groupKey(edition,'bard','bardic-inspiration-uses'),used=spent(key),max=Math.max(1,Math.min(10,Math.trunc(Number(mods.cha)||0))),die='1d'+(bard>=15?12:bard>=10?10:bard>=5?8:6),superior=bard>=(edition==='2024'?18:20),resets=['long',...(bard>=5?['short']:[]),...(superior?['initiative']:[])];rows.push({id:'bard-inspiration',key,name:'Bardic Inspiration',source:edition+' Bard',className:'Bard',level:bard,max,used,remaining:Math.max(0,max-used),die,slotRecovery:edition==='2024'&&bard>=5,resets,recovery:(bard>=5?'Short or Long Rest recovery':'Long Rest recovery')+(superior?(edition==='2024'?' · Initiative: regain to 2 uses':' · Initiative: regain 1 if empty'):''),unit:'uses',useLabel:'Give inspiration',undoLabel:'Undo use',description:'Bonus Action · Give one creature other than yourself within 60 ft an inspiration die ('+die+'). '+(edition==='2024'?'Within 1 hour, the recipient can add the die after failing a d20 Test. It must be able to see or hear you.':'Within 10 minutes, the recipient can add the die to one ability check, attack roll or saving throw, after the d20 but before the outcome. It must be able to hear you.')+' A creature can hold only one Bardic Inspiration die at a time.'});}
     const divine=globalThis.CharacterDivineChannel||(typeof require==='function'?require('./character-divine-channel'):null);rows.push(...(divine?.resources(data,{level,mods})||[]));
+    const wild=globalThis.CharacterWildShape||(typeof require==='function'?require('./character-wild-shape'):null);rows.push(...(wild?.resources(data,{level})||[]));
     return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
@@ -389,7 +390,7 @@ var CharacterClassFeatureChoices=(()=>{
     data.adobe=next;return true;
   }
   function changeClassResource(data,id,delta,context){
-    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.managedSlots||resource.channelEffects&&delta>0||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&delta>resource.remaining||delta<0&&-delta>resource.used)return false;
+    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.managedSlots||resource.managedWildShape||resource.channelEffects&&delta>0||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&delta>resource.remaining||delta<0&&-delta>resource.used)return false;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.max(0,resource.used+delta))]}};return true;
   }
   function resetClassResources(data,event,context={}){
@@ -402,6 +403,7 @@ var CharacterClassFeatureChoices=(()=>{
     if(event==='long'&&sorcerer>=2){if(choices[sorceryKey])updates[sorceryKey]=['0'];if(choices[restorationKey])updates[restorationKey]=['0'];}
     if(event==='short'&&/^\d{1,3}$/.test(sorceryRaw||'')&&Number(sorceryRaw)>0){const amount=Math.min(Number(sorceryRaw),sorcerer);if(edition==='2014'&&sorcerer>=20)updates[sorceryKey]=[String(Math.max(0,amount-4))];if(edition==='2024'&&sorcerer>=5&&!restorationSpent(choices,restorationKey)){updates[sorceryKey]=[String(Math.max(0,amount-Math.floor(sorcerer/2)))];updates[restorationKey]=['1'];}}
     const divine=globalThis.CharacterDivineChannel||(typeof require==='function'?require('./character-divine-channel'):null);for(const row of divine?.resources(data,{level:total,mods:context.mods||{}})||[]){const raw=choices[row.key]?.[0];if(!row.resets.includes(event)||!/^\d{1,3}$/.test(raw||''))continue;updates[row.key]=[String(event==='short'&&row.shortRecovery?Math.max(0,Math.min(Number(raw),row.max)-row.shortRecovery):0)];}
+    const wild=globalThis.CharacterWildShape||(typeof require==='function'?require('./character-wild-shape'):null);for(const row of wild?.resources(data,{level:total})||[]){const raw=choices[row.key]?.[0];if(!row.resets.includes(event)||!/^\d{1,3}$/.test(raw||''))continue;if(event==='initiative'){if(Number(raw)>=row.max)updates[row.key]=[String(row.max-1)];}else updates[row.key]=[String(event==='short'&&row.shortRecovery?Math.max(0,Math.min(Number(raw),row.max)-1):0)];if(updates[row.key])updates[edition+':druid:wild-shape-last']=[];}
     const wizard=wizardLevels(data,total),arcaneKey=groupKey(edition,'wizard','arcane-recovery-used');if(event==='long'&&edition==='2024'&&wizard&&choices[arcaneKey])updates[arcaneKey]=['0'];
     const paladin=paladinLevels(data,total),layKey=groupKey(edition,'paladin','lay-on-hands-spent');if(event==='long'&&paladin&&choices[layKey])updates[layKey]=['0'];
     const ranger=rangerLevels(data,total);

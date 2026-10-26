@@ -2561,6 +2561,8 @@
 
 #characterSheetDialog .sheet-class-resource small { font-size: 12px; line-height: 1.45; }
 #characterSheetDialog .sheet-class-resource-actions { display: flex; flex-wrap: wrap; gap: 8px; flex: 0 0 100%; }
+/* Press feedback must not shrink resource buttons below their touch target. */
+#characterSheetPage #characterSheetDialog .sheet-class-resource-actions button { transform: none !important; }
 @media (max-width: 600px) {
   #characterSheetDialog .sheet-class-resource-actions button { flex: 1 1 90px; }
   #characterSheetDialog .sheet-class-resource-actions [data-save-reroll] { flex-basis: 100%; }
@@ -2612,3 +2614,7 @@
 #characterSheetDialog .sheet-paladin-auras { border-top: 1px solid var(--vault-line,#cdbb9b); margin: 8px 0; padding-top: 8px; }
 #characterSheetDialog .sheet-aura-toggle { display: flex; align-items: center; gap: 8px; min-height: 44px; }
 #characterSheetDialog #sheetPaladinAuras input[type=checkbox] { width: 20px; height: 20px; min-width: 20px; }
+
+/* Form controls stay usable inside the compact character-sheet theme. */
+#characterSheetPage #characterSheetDialog #sheetDruidWildShape :is(select,input:not([type=checkbox]),button:not(.vault-help-badge),summary) { min-height: 44px !important; max-width: 100%; box-sizing: border-box; }
+#characterSheetPage #characterSheetDialog #sheetDruidWildShape input[type=checkbox] { width: 20px; height: 20px; min-width: 20px; min-height: 20px !important; }

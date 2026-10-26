@@ -206,13 +206,13 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Druidic **[unreviewed]**<br>Spellcasting **[partial]** |
-| 2 | Druid Circle **[unreviewed]**<br>Wild Shape **[unreviewed]** |
+| 2 | Druid Circle **[unreviewed]**<br>Wild Shape **[partial]** |
 | 3 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 4 | Ability Score Improvement **[partial]**<br>Wild Shape **[unreviewed]** |
+| 4 | Ability Score Improvement **[partial]**<br>Wild Shape **[partial]** |
 | 5 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 8 | Ability Score Improvement **[partial]**<br>Wild Shape **[unreviewed]** |
+| 8 | Ability Score Improvement **[partial]**<br>Wild Shape **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 10 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -231,11 +231,11 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Druidic · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Druid Circle · 2 | Source-rule comparison and structured fields still need review. | Pending |
-| Wild Shape · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Wild Shape · 2 | Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending. | [tests/druid-wild-shape.cjs](../tests/druid-wild-shape.cjs), [tests/druid-wild-shape-browser.cjs](../tests/druid-wild-shape-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Wild Shape · 4 | Source-rule comparison and structured fields still need review. | Pending |
+| Wild Shape · 4 | Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending. | [tests/druid-wild-shape.cjs](../tests/druid-wild-shape.cjs), [tests/druid-wild-shape-browser.cjs](../tests/druid-wild-shape-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Wild Shape · 8 | Source-rule comparison and structured fields still need review. | Pending |
+| Wild Shape · 8 | Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending. | [tests/druid-wild-shape.cjs](../tests/druid-wild-shape.cjs), [tests/druid-wild-shape-browser.cjs](../tests/druid-wild-shape-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Beast Spells · 18 | Source-rule comparison and structured fields still need review. | Pending |
@@ -787,7 +787,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Druidic **[unreviewed]**<br>Primal Order **[implemented]**<br>Spellcasting **[partial]** |
-| 2 | Wild Companion **[unreviewed]**<br>Wild Shape **[unreviewed]** |
+| 2 | Wild Companion **[unreviewed]**<br>Wild Shape **[partial]** |
 | 3 | Druid Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Wild Resurgence **[unreviewed]** |
@@ -813,7 +813,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Primal Order · 1 | Structured Order choice grants its weapon/armor training or extra class cantrip allowance and current Wisdom (minimum +1) to the specified Intelligence skill checks; source-aware readouts, multiclassing, persistence and print. Select cantrips in the existing Spells builder. | [tests/divine-and-primal-orders.cjs](../tests/divine-and-primal-orders.cjs), [tests/divine-and-primal-orders-browser.cjs](../tests/divine-and-primal-orders-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Wild Companion · 2 | Source-rule comparison and structured fields still need review. | Pending |
-| Wild Shape · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Wild Shape · 2 | Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending. | [tests/druid-wild-shape.cjs](../tests/druid-wild-shape.cjs), [tests/druid-wild-shape-browser.cjs](../tests/druid-wild-shape-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 | Druid Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Wild Resurgence · 5 | Source-rule comparison and structured fields still need review. | Pending |

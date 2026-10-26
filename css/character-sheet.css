@@ -914,3 +914,40 @@
 .sheet-expertise-source{border-top:1px solid #cfbf9b;padding-top:12px;margin-top:12px}
 .sheet-expertise-source select{width:100%;min-width:0;min-height:44px}
 .sheet-expertise-tool,.sheet-expertise-reminder{border-left:3px solid #8a6032;padding-left:12px}
+
+/* Own Wild Shape: a separate form card under Companions. */
+#sheetDruidWildShape { margin-bottom: 1.5rem; padding: clamp(1rem, 2.5vw, 1.75rem); border-top: 3px solid #80643d; }
+#sheetDruidWildShape[hidden] { display: none; }
+#sheetDruidWildShape h4 { margin: .15rem 0 .5rem; font-size: 1.35rem; }
+#sheetDruidWildShape h5 { margin: 1rem 0 .5rem; font-size: 1rem; }
+#sheetDruidWildShape .sheet-wild-setup { display: grid; gap: .75rem; max-width: 46rem; margin: 1rem 0; }
+#sheetDruidWildShape select, #sheetDruidWildShape input { width: 100%; min-width: 0; min-height: 44px; box-sizing: border-box; }
+#sheetDruidWildShape button:not(.vault-help-badge), #sheetDruidWildShape summary { min-height: 44px; }
+#sheetDruidWildShape summary { display: flex; align-items: center; cursor: pointer; font-weight: bold; }
+#sheetDruidWildShape summary::before { content: '▸'; padding-right: .5rem; }
+#sheetDruidWildShape details[open] > summary::before { content: '▾'; }
+#sheetDruidWildShape details { margin-top: .75rem; border-top: 1px solid #d5c0a1; padding-top: .35rem; }
+#sheetDruidWildShape .sheet-wild-check { display: flex; align-items: center; gap: .65rem; min-height: 44px; }
+#sheetDruidWildShape .sheet-wild-check input { width: 20px; min-height: 20px; flex: 0 0 20px; }
+#sheetDruidWildShape .sheet-wild-card { border: 1px solid #bfa67e; border-radius: 10px; padding: clamp(.8rem, 2vw, 1.5rem); margin: 1.25rem 0; background: #fffdf7; box-shadow: 0 3px 12px #4e30110c; }
+#sheetDruidWildShape .sheet-wild-card header { display: flex; justify-content: space-between; align-items: start; gap: 1rem; flex-wrap: wrap; }
+#sheetDruidWildShape .sheet-wild-card header small { color: #705436; letter-spacing: .08em; font-size: .7rem; }
+#sheetDruidWildShape .sheet-wild-vitals, #sheetDruidWildShape .sheet-wild-abilities { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin: 1rem 0; }
+#sheetDruidWildShape .sheet-wild-vitals > div, #sheetDruidWildShape .sheet-wild-abilities > div { display: flex; flex-direction: column; text-align: center; padding: .8rem .4rem; background: #f4edde; border-radius: 6px; gap: .25rem; }
+#sheetDruidWildShape .sheet-wild-vitals strong { font-size: 1.5rem; color: #702719; }
+#sheetDruidWildShape .sheet-wild-vitals span { font-size: .8rem; }
+#sheetDruidWildShape .sheet-wild-abilities { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+#sheetDruidWildShape .sheet-wild-rolls { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; }
+#sheetDruidWildShape .sheet-wild-rolls p { display: flex; justify-content: space-between; margin: .2rem 0; gap: 1rem; }
+#sheetDruidWildShape .sheet-rule-text { white-space: pre-wrap; line-height: 1.65; overflow-wrap: anywhere; }
+#sheetDruidWildShape .sheet-help { line-height: 1.55; }
+#sheetDruidWildShape .sheet-field { margin-bottom: .6rem; }
+@media (max-width: 540px) {
+ #sheetDruidWildShape .sheet-wild-abilities { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ #sheetDruidWildShape .sheet-wild-rolls { grid-template-columns: 1fr; }
+ #sheetDruidWildShape .sheet-wild-card header button { width: 100%; }
+ #sheetDruidWildShape .sheet-wild-vitals { gap: .3rem; }
+ #sheetDruidWildShape .sheet-wild-vitals strong { font-size: 1.2rem; }
+}
+
+#sheetDruidWildShape, #sheetDruidWildShape .sheet-wild-card { scroll-margin-top: 160px; }

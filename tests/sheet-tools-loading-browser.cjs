@@ -25,7 +25,7 @@ async function boot(browser){
 }
 // Exercise the actual deferred wrapper chain, including a failure after one script installed.
 const catalogue=['character-creature-data',...Array.from({length:4},(_,i)=>'character-creature-data-'+(i+1))];
-const deferred=[...catalogue,'character-adobe-builder-ui','character-adobe-pages','character-creature-ui','character-spellcasting-ui'];
+const deferred=[...catalogue,'character-adobe-builder-ui','character-adobe-pages','character-creature-ui','character-wild-shape-ui','character-spellcasting-ui'];
 for(const name of deferred)assert.ok(!mandatory.includes('./modules/'+name+'.js'),'Sheet tools must not load/preload at startup');
 (async()=>{const browser=await chromium.launch();try{
  const page=await boot(browser),counts={};let fail=true;
@@ -52,6 +52,7 @@ for(const name of deferred)assert.ok(!mandatory.includes('./modules/'+name+'.js'
  const selected=await page.evaluate(()=>sheetSession.data.spells.map(s=>s.catalogId));await page.evaluate(()=>prepareSheetPrint());assert.ok(await page.locator('.sheet-paper-page').count()>0);await page.evaluate(()=>clearSheetPrintSelection());
  await page.evaluate(()=>{readSheetForm();window.beforeSaveSpells=sheetSession.data.spells.map(s=>s.catalogId);return saveCharacterSheet({reportValidation:false})});assert.equal(await page.evaluate(()=>sheetSession.dirty),false,await page.locator('#sheetStatus').textContent());assert.deepEqual(await page.evaluate(()=>sheetSession.data.spells.map(s=>s.catalogId)),selected);
  const savedCounts={...counts};await page.evaluate(()=>{closeCharacterSheet(true);return openCharacterSheet('c1')});assert.equal(await page.evaluate(()=>sheetSession.data.adobe.companions[0].creature),'Brown Bear');assert.equal(await page.evaluate(()=>sheetSession.data.adobe.companions[0].hpMax),34);assert.equal(await page.evaluate(()=>sheetSession.data.adobe.companions[0].abilities.str),19);assert.deepEqual(counts,savedCounts);assert.deepEqual(await page.evaluate(()=>sheetSession.data.spells.map(s=>s.catalogId)),selected);
+ await page.evaluate(()=>{sheetSession.data.build.classId='druid';sheetSession.data.adobe.classLevels=[{classId:'druid',level:4}];sheetSession.data.adobe.useExperience=true;sheetSession.data.experience=2700;renderCharacterSheet();selectSheetTab('combat')});assert.equal(await page.locator('[data-open-wild-shape]').count(),1);assert.equal(await page.evaluate(()=>CharacterWildShape.limits(sheetSession.data,1).level),4);
  await page.close();
  // A failed data batch retains the same catalogue and already loaded batches on retry.
  const partial=await boot(browser),partialCounts={};let failBatch=true;
