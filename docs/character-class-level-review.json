@@ -1171,9 +1171,13 @@
           "name": "Divine Intervention",
           "level": 10,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Cleric 10 percentile request, automatic success at Cleric 20. Atomic saved attempts, failure Long Rest recovery, successful 7-campaign-day wait advanced explicitly, source/multiclass preservation, Guide, Combat, Overview and print. Divine effects are chosen by the DM at the table.",
+          "evidence": [
+            "tests/cleric-divine-intervention.cjs",
+            "tests/cleric-divine-intervention-browser.cjs",
+            "tests/cleric-divine-intervention-rules.cjs"
+          ]
         },
         {
           "id": "2014:cleric:11:destroy-undead",
@@ -1264,9 +1268,13 @@
           "name": "Divine Intervention",
           "level": 20,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Cleric 10 percentile request, automatic success at Cleric 20. Atomic saved attempts, failure Long Rest recovery, successful 7-campaign-day wait advanced explicitly, source/multiclass preservation, Guide, Combat, Overview and print. Divine effects are chosen by the DM at the table.",
+          "evidence": [
+            "tests/cleric-divine-intervention.cjs",
+            "tests/cleric-divine-intervention-browser.cjs",
+            "tests/cleric-divine-intervention-rules.cjs"
+          ]
         }
       ],
       "levels": [
@@ -5139,9 +5147,13 @@
           "name": "Divine Intervention",
           "level": 10,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Cleric 10 eligible approved-catalogue cantrip-to-level-5 Cleric spell picker excluding Reaction spells, spell information, explicit Magic-action acknowledgement and separate saved Long Rest cooldown. No preparation or slot/material payment; other requirements, effects and targets remain table resolved.",
+          "evidence": [
+            "tests/cleric-divine-intervention.cjs",
+            "tests/cleric-divine-intervention-browser.cjs",
+            "tests/cleric-divine-intervention-rules.cjs"
+          ]
         },
         {
           "id": "2024:cleric:12:ability-score-improvement",
@@ -5194,9 +5206,13 @@
           "name": "Greater Divine Intervention",
           "level": 20,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Cleric 20 Wish option, validated entered 2d4 total (2–8) and saved countdown for the whole Divine Intervention feature; each recorded Long Rest advances once, independently of legacy campaign-day recovery. Wish effects and stress remain table resolved.",
+          "evidence": [
+            "tests/cleric-divine-intervention.cjs",
+            "tests/cleric-divine-intervention-browser.cjs",
+            "tests/cleric-divine-intervention-rules.cjs"
+          ]
         }
       ],
       "levels": [

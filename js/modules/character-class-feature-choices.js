@@ -772,6 +772,7 @@ var CharacterClassFeatureChoices=(()=>{
     if(Object.keys(updates).length)data.adobe={...stored,classFeatureChoices:{...choices,...updates}};
     const companion=globalThis.CharacterWildCompanion||(typeof require==='function'?require('./character-wild-companion'):null);companion?.onRest(data,event);
     const conversions=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);conversions?.onRest(data,event);
+    const intervention=globalThis.CharacterClericIntervention||(typeof require==='function'?require('./character-cleric-intervention'):null);intervention?.onRest(data,event);
   }
   function saveTraining(data,{level=1}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
