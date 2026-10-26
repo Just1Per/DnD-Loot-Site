@@ -5395,9 +5395,13 @@
           "name": "Wild Resurgence",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual 2024 Druid 5: atomic ordinary/higher/Pact slot payment restores one Wild Shape only when empty; own-turn acknowledgement/limit, next-turn control, persistence, class/source caps, print and Guide. Slot creation and Nature Magician follow in a separate increment, using the agreed Long Rest expiry house rule.",
+          "evidence": [
+            "tests/druid-wild-resurgence.cjs",
+            "tests/druid-wild-resurgence-browser.cjs",
+            "tests/druid-wild-shape-rules.cjs"
+          ]
         },
         {
           "id": "2024:druid:7:elemental-fury",

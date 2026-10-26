@@ -2629,3 +2629,7 @@
 #characterSheetPage #characterSheetDialog [data-open-wild-companion] { min-height: 44px !important; }
 #characterSheetDialog .sheet-wc-resource-link { border-bottom: 1px solid #d5c0a1; padding: .7rem 0 1rem; margin-bottom: .6rem; }
 #characterSheetPage #characterSheetDialog #sheetDruidWildCompanion button:not(.vault-help-badge), #characterSheetPage #characterSheetDialog [data-open-wild-companion] { transform: none !important; }
+
+#characterSheetPage #characterSheetDialog .sheet-druid-conversions :is(select,button:not(.vault-help-badge),summary) { min-height: 44px !important; box-sizing: border-box; max-width: 100%; transform: none !important; }
+#characterSheetPage #characterSheetDialog .sheet-druid-conversions select { min-width: 0; width: 100%; }
+#characterSheetPage #characterSheetDialog .sheet-resurgence-check input { min-height: 20px !important; min-width: 20px; width: 20px; height: 20px; }

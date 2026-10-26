@@ -9,6 +9,7 @@ const {
   M = require("../js/modules/character-sheet-model"),
   W = require("../js/modules/character-wild-shape"),
   F = require("../js/modules/character-wild-companion"),
+  D = require("../js/modules/character-druid-conversions"),
   {
     createCharacterSheetStore,
   } = require("../js/modules/character-sheet-store");
@@ -27,6 +28,7 @@ const {
   try {
     await env.clearFirestore();
     const identity = { name: "Grove", class: "Druid", level: 4 };
+    const recoveryIdentity = { name: "Recovery", class: "Druid", level: 8 };
     W.setCatalogue(require("../data/rules/wild-shapes-v1.json"));
     await env.withSecurityRulesDisabled(async (ctx) => {
       const db = ctx.firestore();
@@ -39,6 +41,7 @@ const {
         },
         "campaigns/a/members/dm": { uid: "dm", status: "active", role: "dm" },
         "campaigns/a/characters/c1": { ...identity, userId: "player" },
+        "campaigns/a/characters/c2": { ...recoveryIdentity, userId: "player" },
       }))
         await sdk.setDoc(sdk.doc(db, p), d);
     });
@@ -125,12 +128,13 @@ const {
       assert.equal(W.state(data, 4).remaining, 1);
       assert.equal(data.slots[0].used, payment === "wild-shape" ? 0 : 1);
       const stored = data.rulesChoices.grants.__adobe.data;
-      assert.equal(Number(stored.pactSlotsUsed || 0), payment === "pact" ? 1 : 0);
+      assert.equal(
+        Number(stored.pactSlotsUsed || 0),
+        payment === "pact" ? 1 : 0,
+      );
       assert.equal(data.hpCurrent, 28);
       assert.equal(stored.companions[0].name, "Keep manual card");
-      assert.deepEqual(stored.classFeatureChoices["keep:choice"], [
-        "saved",
-      ]);
+      assert.deepEqual(stored.classFeatureChoices["keep:choice"], ["saved"]);
     }
     assert.equal(F.onRest(data, "long"), true);
     revision = await player.save({
@@ -148,12 +152,74 @@ const {
     console.log(
       "PASS Wild Companion Wild Shape/ordinary/Pact payments, pocket HP, independent/manual records and Long Rest expiry persist under unchanged rules",
     );
+    let recoveryData = M.normalize({
+      build: { classId: "druid", edition: "2024" },
+      hpCurrent: 28,
+      hpMax: 35,
+    });
+    recoveryData.adobe = {
+      classLevels: [
+        { classId: "druid", level: 5 },
+        { classId: "warlock", level: 3 },
+      ],
+      classFeatureChoices: { "keep:choice": ["saved"] },
+    };
+    W.otherUse(recoveryData, 8);
+    W.otherUse(recoveryData, 8);
+    let recoveryRevision = 0;
+    for (const payment of ["slot-1", "pact"]) {
+      assert.equal(
+        D.regain(recoveryData, payment, { level: 8, ownTurn: true }).ok,
+        true,
+      );
+      recoveryRevision = await player.save({
+        campaignId: "a",
+        characterId: "c2",
+        revision: recoveryRevision,
+        data: recoveryData,
+        identity: recoveryIdentity,
+        previousIdentity: recoveryIdentity,
+      });
+      recoveryData = (await player.load("a", "c2")).data;
+      assert.equal(D.status(recoveryData, { level: 8 }).usedThisTurn, true);
+      assert.equal(W.state(recoveryData, 8).remaining, 1);
+      assert.equal(recoveryData.slots[0].used, 1);
+      assert.equal(
+        Number(
+          recoveryData.rulesChoices.grants.__adobe.data.pactSlotsUsed || 0,
+        ),
+        payment === "pact" ? 1 : 0,
+      );
+      assert.equal(recoveryData.hpCurrent, 28);
+      assert.equal(
+        D.regain(recoveryData, payment, { level: 8, ownTurn: true }).ok,
+        false,
+      );
+      if (payment === "slot-1") {
+        W.otherUse(recoveryData, 8);
+        D.onRest(recoveryData, "turn");
+      }
+    }
+    console.log(
+      "PASS Wild Resurgence ordinary/Pact payments and once-per-own-turn limit persist through the actual store under unchanged rules",
+    );
     const outsider = createCharacterSheetStore({
       ...sdk,
       db: env.authenticatedContext("other").firestore(),
       auth: { currentUser: { uid: "other" } },
     });
     await assertFails(outsider.load("a", "c1"));
+    await assertFails(outsider.load("a", "c2"));
+    await assertFails(
+      outsider.save({
+        campaignId: "a",
+        characterId: "c2",
+        revision: recoveryRevision,
+        data: recoveryData,
+        identity: recoveryIdentity,
+        previousIdentity: recoveryIdentity,
+      }),
+    );
     await assertFails(
       outsider.save({
         campaignId: "a",

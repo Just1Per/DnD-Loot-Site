@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261026-wild-companion-v2";
+const ASSET_VERSION = "20261026-druid-resurgence-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -112,6 +112,7 @@ const FEATURE_FILES = [
   "./modules/character-progression.js",
   "./modules/character-wild-shape.js",
   "./modules/character-wild-companion.js",
+  "./modules/character-druid-conversions.js",
   "./modules/character-sheet-model.js",
   "./modules/character-sheet-store.js",
   "./modules/character-overview-ui.js",
@@ -211,6 +212,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-creature-ui.js",
     "./modules/character-wild-shape-ui.js",
     "./modules/character-wild-companion-ui.js",
+    "./modules/character-druid-conversions-ui.js",
     "./modules/character-spellcasting-ui.js"
   ]
 });

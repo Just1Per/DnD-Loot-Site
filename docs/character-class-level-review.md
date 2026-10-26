@@ -790,7 +790,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Wild Companion **[partial]**<br>Wild Shape **[partial]** |
 | 3 | Druid Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Wild Resurgence **[unreviewed]** |
+| 5 | Wild Resurgence **[partial]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | Elemental Fury **[partial]** |
 | 8 | Ability Score Improvement **[partial]** |
@@ -816,7 +816,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Wild Shape · 2 | Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending. | [tests/druid-wild-shape.cjs](../tests/druid-wild-shape.cjs), [tests/druid-wild-shape-browser.cjs](../tests/druid-wild-shape-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 | Druid Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Wild Resurgence · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Wild Resurgence · 5 | Actual 2024 Druid 5: atomic ordinary/higher/Pact slot payment restores one Wild Shape only when empty; own-turn acknowledgement/limit, next-turn control, persistence, class/source caps, print and Guide. Slot creation and Nature Magician follow in a separate increment, using the agreed Long Rest expiry house rule. | [tests/druid-wild-resurgence.cjs](../tests/druid-wild-resurgence.cjs), [tests/druid-wild-resurgence-browser.cjs](../tests/druid-wild-resurgence-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 | Elemental Fury · 7 | Structured 2024 level-7 choice. Potent adds current Wisdom to supported damaging Druid cantrips; level15 adds300ft to qualifying ranges with per-class ownership preserved. Primal displays a source-correct conditional weapon/Beast hit reminder, not automatic target damage or a turn counter. Guide, persistence and print covered. | [tests/druid-elemental-fury.cjs](../tests/druid-elemental-fury.cjs), [tests/druid-elemental-fury-browser.cjs](../tests/druid-elemental-fury-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
