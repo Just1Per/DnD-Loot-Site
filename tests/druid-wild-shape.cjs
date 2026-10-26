@@ -34,10 +34,7 @@ test("actual Druid levels 1–20 distinguish edition limits, timing, known forms
         l = W.limits(d, level);
       assert.equal(l.available, level >= 2);
       assert.equal(l.maxCR, level >= 8 ? 1 : level >= 4 ? 0.5 : 0.25);
-      assert.equal(
-        l.durationHours,
-        edition === "2024" ? level / 2 : Math.floor(level / 2),
-      );
+      assert.equal(l.durationHours, Math.floor(level / 2));
       assert.equal(l.fly, level >= 8);
       assert.equal(l.swim, edition === "2024" || level >= 4);
       assert.equal(

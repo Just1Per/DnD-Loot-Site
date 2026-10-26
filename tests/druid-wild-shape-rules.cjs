@@ -8,6 +8,7 @@ const {
   } = require("@firebase/rules-unit-testing"),
   M = require("../js/modules/character-sheet-model"),
   W = require("../js/modules/character-wild-shape"),
+  F = require("../js/modules/character-wild-companion"),
   {
     createCharacterSheetStore,
   } = require("../js/modules/character-sheet-store");
@@ -79,6 +80,74 @@ const {
       );
       if (edition === "2024") assert.equal(W.validKnown(saved.data, 4)[0], id);
     }
+    data = M.normalize({
+      build: { classId: "druid", edition: "2024" },
+      hpCurrent: 28,
+      hpMax: 35,
+    });
+    data.adobe = {
+      classLevels: [
+        { classId: "druid", level: 2 },
+        { classId: "warlock", level: 2 },
+      ],
+      companions: [
+        { type: "familiar", name: "Keep manual card", notes: "Private notes" },
+      ],
+      classFeatureChoices: { "keep:choice": ["saved"] },
+    };
+    for (const payment of ["wild-shape", "slot-1", "pact"]) {
+      assert.equal(
+        F.summon(
+          data,
+          { formId: "srd-2024-owl", payment, confirmed: true },
+          { level: 4 },
+        ).ok,
+        true,
+      );
+      F.setMaximum(data, 12);
+      F.setHP(data, 8);
+      F.setTemp(data, 4);
+      F.changePresence(data, "pocket");
+      revision = await player.save({
+        campaignId: "a",
+        characterId: "c1",
+        revision,
+        data,
+        identity,
+        previousIdentity: identity,
+      });
+      data = (await player.load("a", "c1")).data;
+      assert.equal(F.state(data).payment, payment);
+      assert.equal(F.state(data).status, "pocket");
+      assert.equal(F.profile(data).hpMax, 12);
+      assert.equal(F.profile(data).hp, 8);
+      assert.equal(F.profile(data).temp, 4);
+      assert.equal(W.state(data, 4).remaining, 1);
+      assert.equal(data.slots[0].used, payment === "wild-shape" ? 0 : 1);
+      const stored = data.rulesChoices.grants.__adobe.data;
+      assert.equal(Number(stored.pactSlotsUsed || 0), payment === "pact" ? 1 : 0);
+      assert.equal(data.hpCurrent, 28);
+      assert.equal(stored.companions[0].name, "Keep manual card");
+      assert.deepEqual(stored.classFeatureChoices["keep:choice"], [
+        "saved",
+      ]);
+    }
+    assert.equal(F.onRest(data, "long"), true);
+    revision = await player.save({
+      campaignId: "a",
+      characterId: "c1",
+      revision,
+      data,
+      identity,
+      previousIdentity: identity,
+    });
+    assert.equal(
+      F.state((await player.load("a", "c1")).data).reason,
+      "long-rest",
+    );
+    console.log(
+      "PASS Wild Companion Wild Shape/ordinary/Pact payments, pocket HP, independent/manual records and Long Rest expiry persist under unchanged rules",
+    );
     const outsider = createCharacterSheetStore({
       ...sdk,
       db: env.authenticatedContext("other").firestore(),

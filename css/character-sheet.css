@@ -951,3 +951,31 @@
 }
 
 #sheetDruidWildShape, #sheetDruidWildShape .sheet-wild-card { scroll-margin-top: 160px; }
+
+/* A Druid's summoned familiar stays separate from their own Wild Shape. */
+#sheetDruidWildCompanion { padding: clamp(1rem, 2.5vw, 1.75rem); margin: 1.25rem 0; border-top: 3px solid #80643d; scroll-margin-top: 160px; }
+#sheetDruidWildCompanion[hidden] { display: none; }
+#sheetDruidWildCompanion h4 { margin: .2rem 0 .5rem; font-size: 1.3rem; }
+#sheetDruidWildCompanion .sheet-help { line-height: 1.6; }
+#sheetDruidWildCompanion .sheet-wc-summon-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }
+#sheetDruidWildCompanion .sheet-wc-card { margin: 1rem 0; padding: clamp(.8rem, 2vw, 1.4rem); border: 1px solid #bfa67e; border-radius: 10px; background: #fffdf7; box-shadow: 0 3px 12px #4e30110c; scroll-margin-top: 160px; }
+#sheetDruidWildCompanion .sheet-wc-card header { display: flex; justify-content: space-between; align-items: start; gap: .8rem; flex-wrap: wrap; }
+#sheetDruidWildCompanion .sheet-wc-card header small { color: #705436; letter-spacing: .08em; font-size: .7rem; }
+#sheetDruidWildCompanion .sheet-wc-badge { padding: .35rem .65rem; background: #f4edde; border-radius: 20px; font-size: .85rem; }
+#sheetDruidWildCompanion .sheet-wc-vitals, #sheetDruidWildCompanion .sheet-wc-abilities { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin: 1rem 0; }
+#sheetDruidWildCompanion .sheet-wc-vitals > div, #sheetDruidWildCompanion .sheet-wc-abilities > div { display: flex; flex-direction: column; align-items: center; gap: .25rem; padding: .7rem .35rem; background: #f4edde; border-radius: 6px; text-align: center; }
+#sheetDruidWildCompanion .sheet-wc-vitals strong { color: #702719; font-size: 1.4rem; }
+#sheetDruidWildCompanion .sheet-wc-vitals span { font-size: .85rem; }
+#sheetDruidWildCompanion .sheet-wc-abilities { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+#sheetDruidWildCompanion details { border-top: 1px solid #d5c0a1; margin-top: .75rem; padding-top: .35rem; }
+#sheetDruidWildCompanion summary { display: flex; align-items: center; min-height: 44px; cursor: pointer; font-weight: bold; }
+#sheetDruidWildCompanion summary::before { content: '▸'; padding-right: .5rem; }
+#sheetDruidWildCompanion details[open] > summary::before { content: '▾'; }
+#sheetDruidWildCompanion .sheet-wc-check { display: flex; align-items: start; gap: .7rem; line-height: 1.5; padding: .6rem 0; }
+#sheetDruidWildCompanion .sheet-wc-check input { flex: 0 0 20px; }
+#sheetDruidWildCompanion .sheet-rule-text { white-space: pre-wrap; line-height: 1.6; overflow-wrap: anywhere; }
+@media(max-width: 540px) {
+ #sheetDruidWildCompanion .sheet-wc-summon-grid { grid-template-columns: 1fr; }
+ #sheetDruidWildCompanion .sheet-wc-abilities { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ #sheetDruidWildCompanion .sheet-wc-presence button { width: 100%; }
+}
