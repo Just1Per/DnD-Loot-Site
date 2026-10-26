@@ -5312,9 +5312,12 @@
           "name": "Druidic",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Druidic language is automatic; the spell generator adds source-correct Speak with Animals as always prepared, additional to the normal preparation allowance. Secret-message detection and table interactions remain source reminders.",
+          "evidence": [
+            "tests/character-spellcasting.cjs",
+            "tests/divine-and-primal-orders-browser.cjs"
+          ]
         },
         {
           "id": "2024:druid:1:primal-order",

@@ -97,10 +97,17 @@ var CharacterSpellcasting=(()=>{
 
   function classEntries(data,targetLevel){
     const raw=data?.adobe?.classLevels||data?.rulesChoices?.grants?.__adobe?.data?.classLevels||[];
-    const normalized=(Array.isArray(raw)?raw:[]).filter(e=>e&&ability[e.classId]).map(e=>({classId:e.classId,level:clampLevel(e.level),subclassId:e.subclassId||''}));
-    if(normalized.length)return normalized;
+    if(Array.isArray(raw)&&raw.length){
+      let remaining=targetLevel===undefined?20:clampLevel(targetLevel);const seen=new Set(),entries=[];
+      for(const row of raw){
+        const level=Math.min(remaining,Math.max(0,Math.trunc(Number(row?.level)||0)));remaining-=level;
+        if(!level||seen.has(row?.classId))continue;seen.add(row.classId);
+        if(Object.hasOwn(ability,row.classId))entries.push({classId:row.classId,level,subclassId:row.subclassId||''});
+      }
+      return entries;
+    }
     const id=data?.build?.classId;
-    return ability[id]?[{classId:id,level:clampLevel(targetLevel),subclassId:''}]:[];
+    return Object.hasOwn(ability,id)?[{classId:id,level:clampLevel(targetLevel),subclassId:''}]:[];
   }
 
   function profiles(data,targetLevel,scores={}){
@@ -156,6 +163,7 @@ var CharacterSpellcasting=(()=>{
     const names=[];
     if(p.classId==='artificer'&&p.sourceId==='efa')names.push('Mending');
     if(p.edition==='2024'&&p.classId==='paladin'){if(p.level>=2)names.push('Divine Smite');if(p.level>=5)names.push('Find Steed');}
+    if(p.edition==='2024'&&p.classId==='druid'&&p.level>=1)names.push('Speak with Animals');
     if(p.edition==='2024'&&p.classId==='ranger')names.push('Hunter’s Mark');
     if(p.edition==='2024'&&p.classId==='warlock'&&p.level>=9)names.push('Contact Other Plane');
     const subclass=String(p.subclassId||'').replace(/-2024$/,'').replace(/-patron$/,'').replace('draconic-sorcery','draconic-bloodline');

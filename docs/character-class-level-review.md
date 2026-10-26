@@ -786,7 +786,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Druidic **[unreviewed]**<br>Primal Order **[implemented]**<br>Spellcasting **[partial]** |
+| 1 | Druidic **[partial]**<br>Primal Order **[implemented]**<br>Spellcasting **[partial]** |
 | 2 | Wild Companion **[unreviewed]**<br>Wild Shape **[partial]** |
 | 3 | Druid Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -809,7 +809,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Druidic · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Druidic · 1 | Druidic language is automatic; the spell generator adds source-correct Speak with Animals as always prepared, additional to the normal preparation allowance. Secret-message detection and table interactions remain source reminders. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/divine-and-primal-orders-browser.cjs](../tests/divine-and-primal-orders-browser.cjs) |
 | Primal Order · 1 | Structured Order choice grants its weapon/armor training or extra class cantrip allowance and current Wisdom (minimum +1) to the specified Intelligence skill checks; source-aware readouts, multiclassing, persistence and print. Select cantrips in the existing Spells builder. | [tests/divine-and-primal-orders.cjs](../tests/divine-and-primal-orders.cjs), [tests/divine-and-primal-orders-browser.cjs](../tests/divine-and-primal-orders-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Wild Companion · 2 | Source-rule comparison and structured fields still need review. | Pending |

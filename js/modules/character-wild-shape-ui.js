@@ -682,9 +682,9 @@ var CharacterWildShapeUI = (() => {
             CharacterSheetModel.signed(n),
         )
         .join(" · ") +
-      '</p><h4>Attacks & actions</h4><p class="sheet-rule-text">' +
+      '</p><h4>Attacks & actions</h4><p class="sheet-paper-text">' +
       esc(p.actions) +
-      '</p><h4>Traits</h4><p class="sheet-rule-text">' +
+      '</p><h4>Traits</h4><p class="sheet-paper-text">' +
       esc(p.traits) +
       "</p><p>" +
       esc(p.spellNote) +
