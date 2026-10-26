@@ -158,6 +158,14 @@ var CharacterSheetModel = (() => {
       inspiration: !!raw.inspiration,
       spellAbility: abilities[raw.spellAbility] ? raw.spellAbility : 'int'
     };
+    // Older Feats controls stored Origin Skilled training on the feat effect.
+    // Read it into the existing build fields only when no new choices are present.
+    if(result.build.edition==='2024')for(const [field,key] of [['humanFeatChoices','origin-human'],['backgroundFeatChoices','origin-background']]){
+      if(!result.build[field].some(Boolean)){
+        const legacy=Feats.choice(result.rulesChoices.effects?.[key]).training;
+        if(legacy.some(Boolean))result.build[field]=legacy;
+      }
+    }
     for (const key of textFields)
       result[key] = text(raw[key]);
     for (const [key, defaultValue] of Object.entries(numberFields))

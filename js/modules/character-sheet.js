@@ -778,22 +778,7 @@ function renderSheetBuildControls() {
       ...Object.entries(M.abilities)
     ]
   })).join('') }
-  ${ f('Race size', 'build.raceSize', 'select', {
-    values: [
-      [
-        '',
-        'Choose size'
-      ],
-      [
-        'Small',
-        'Small'
-      ],
-      [
-        'Medium',
-        'Medium'
-      ]
-    ]
-  }) }
+  <input type="hidden" name="build.raceSize">
   ${ f('Racial feature', 'build.raceFeature', 'select', {
     values: [[
         '',
@@ -990,7 +975,6 @@ function updateSheetBuildSummary(derived) {
     for (const option of el.querySelectorAll('option'))
       option.disabled = race?.excludeAbilities?.includes(option.value) || false;
   }
-  show('build.raceSize', race?.sizeChoice);
   show('build.raceFeature', baseRace?.optionChoices && level >= (baseRace.optionLevel || 1));
   setOptions('build.raceFeature', Object.entries(baseRace?.optionChoices || {}).map(([key, o]) => [
     key,
@@ -1055,6 +1039,7 @@ function updateSheetBuildSummary(derived) {
   show('species', !b.race);
   show('background', !b.background);
   document.getElementById('sheetModernOrigin').hidden = b.edition !== '2024';
+  document.getElementById('sheetStandardLanguageChoices').hidden = b.edition !== '2024';
 
   for (let i = 0; i < 3; i++) {
     const el = show(`build.backgroundAbilities.${ i }`, b.backgroundPattern === '111' || i < 2);

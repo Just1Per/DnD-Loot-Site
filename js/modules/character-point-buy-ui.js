@@ -3,6 +3,7 @@
  * this layer enforces the 8–15 pre-bonus range and 27-point budget in the form. */
 (() => {
   const abilityKeys = ['str','dex','con','int','wis','cha'];
+  let presetScope=null,presetOpen=true;
 
   function form() {
     return document.getElementById('characterSheetForm');
@@ -76,9 +77,9 @@
   function presetControls(host) {
     const old=host.querySelector('[data-point-buy-presets]'),selected=old?.querySelector('[data-point-buy-preset]')?.value||'standard';
     const from=old?.querySelector('[data-point-buy-swap-from]')?.value||'str',to=old?.querySelector('[data-point-buy-swap-to]')?.value||'int';old?.remove();
-    const panel=document.createElement('section');panel.className='sheet-point-buy-presets';panel.dataset.pointBuyPresets='true';
+    const panel=document.createElement('details');panel.open=presetScope===sheetSession?presetOpen:true;presetScope=sheetSession;panel.addEventListener('toggle',()=>{if(panel.isConnected&&presetScope===sheetSession)presetOpen=panel.open;});panel.className='sheet-point-buy-presets';panel.dataset.pointBuyPresets='true';
     const abilityOptions=abilityKeys.map(key=>'<option value="'+key+'">'+CharacterSheetModel.abilities[key]+'</option>').join('');
-    panel.innerHTML='<h4>Start with a 27-point spread</h4><p class="sheet-help">Choose a spread, then apply it to replace the six base scores. Values start in STR, DEX, CON, INT, WIS, CHA order; swap them to suit your character. Bonuses stay separate.</p><div class="sheet-point-buy-actions"><label><span>Starting spread</span><select data-point-buy-preset aria-label="Point Buy starting spread">'+CharacterSheetModel.pointBuyPresets.map(row=>'<option value="'+row.id+'">'+row.name+' — '+row.scores.join(', ')+'</option>').join('')+'</select></label><button type="button" data-point-buy-apply>Apply spread</button></div><p class="sheet-help" data-point-buy-preview></p><div class="sheet-point-buy-actions"><label><span>Swap score from</span><select data-point-buy-swap-from>'+abilityOptions+'</select></label><label><span>With</span><select data-point-buy-swap-to>'+abilityOptions+'</select></label><button type="button" data-point-buy-swap>Swap scores</button></div>';
+    panel.innerHTML='<summary data-no-context-help title="Show or hide starting spreads and score swapping">Start with a 27-point spread</summary><p class="sheet-help">Choose a spread, then apply it to replace the six base scores. Values start in STR, DEX, CON, INT, WIS, CHA order; swap them to suit your character. Bonuses stay separate.</p><div class="sheet-point-buy-actions"><label><span>Starting spread</span><select data-point-buy-preset aria-label="Point Buy starting spread">'+CharacterSheetModel.pointBuyPresets.map(row=>'<option value="'+row.id+'">'+row.name+' — '+row.scores.join(', ')+'</option>').join('')+'</select></label><button type="button" data-point-buy-apply>Apply spread</button></div><p class="sheet-help" data-point-buy-preview></p><div class="sheet-point-buy-actions"><label><span>Swap score from</span><select data-point-buy-swap-from>'+abilityOptions+'</select></label><label><span>With</span><select data-point-buy-swap-to>'+abilityOptions+'</select></label><button type="button" data-point-buy-swap>Swap scores</button></div>';
     const picker=panel.querySelector('[data-point-buy-preset]');picker.value=selected;
     const preview=()=>{const row=CharacterSheetModel.pointBuyPresets.find(row=>row.id===picker.value);panel.querySelector('[data-point-buy-preview]').textContent=row.description+' Costs 27 of 27 points before bonuses.';};picker.onchange=event=>{event.stopPropagation();preview();};preview();
     panel.querySelector('[data-point-buy-apply]').onclick=()=>{const row=CharacterSheetModel.pointBuyPresets.find(row=>row.id===picker.value);if(row)setScores(row.scores,row.name+' applied — 27 of 27 points used.');};
@@ -134,6 +135,8 @@
   }
 
   function updatePointBuyUI() {
+    const previous=form()?.querySelector('[data-point-buy-presets]');
+    if(previous&&presetScope===sheetSession)presetOpen=previous.open;
     forceBaseModeFromControl();
     applyLimitsAndValidity();
     // renderPointBuySummary runs later in the same calculation cycle.

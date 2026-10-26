@@ -2635,3 +2635,34 @@
 #characterSheetPage #characterSheetDialog .sheet-resurgence-check input { min-height: 20px !important; min-width: 20px; width: 20px; height: 20px; }
 
 #characterSheetPage #characterSheetDialog .sheet-created-slots button:not(.vault-help-badge) { min-height: 44px !important; max-width: 100%; transform: none !important; }
+
+/* Selected feats form a reading shelf; all selection controls follow it. */
+#characterSheetDialog .sheet-selected-feats-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+#characterSheetDialog .sheet-selected-feats-heading h3 { display:flex; align-items:center; gap:.6rem; margin:.2rem 0; }
+#characterSheetDialog .sheet-feat-count { display:inline-grid; place-items:center; min-width:1.6rem; height:1.6rem; border:1px solid var(--vault-border-soft); border-radius:50%; font-size:.8rem; }
+#characterSheetDialog .sheet-selected-feat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,23rem),1fr)); gap:1rem; align-items:start; }
+#characterSheetDialog .sheet-selected-feat { margin:0; min-width:0; padding:1rem; border-top:3px solid var(--vault-gold-deep); background:#fffdf9; }
+#characterSheetDialog .sheet-selected-feat > header { display:flex; align-items:flex-start; justify-content:space-between; gap:.75rem; }
+#characterSheetDialog .sheet-selected-feat > header h4 { margin:.25rem 0; padding:0; border:0; font-size:1rem; letter-spacing:.02em; text-transform:none; }
+#characterSheetDialog .sheet-selected-feat small { color:var(--sheet-muted); }
+#characterSheetDialog .sheet-feat-summary { font-size:.9rem; line-height:1.6; white-space:pre-line; overflow-wrap:anywhere; }
+#characterSheetDialog .sheet-selected-feat details > summary { cursor:pointer; padding:.6rem 0; font-weight:600; }
+#characterSheetDialog .sheet-selected-feat-actions { display:flex; gap:.5rem; flex-wrap:wrap; padding-top:.6rem; border-top:1px solid var(--vault-border-soft); margin-top:.65rem; }
+#characterSheetDialog .sheet-feat-choose { border-top:1px solid var(--vault-border-soft); margin-top:1.75rem; padding-top:1.25rem; }
+#characterSheetDialog .sheet-feat-browser > summary { font-weight:700; padding:.75rem 0; cursor:pointer; }
+#characterSheetDialog .sheet-build-feat-selection { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; grid-column:1/-1; margin:0; }
+#characterSheetDialog .sheet-build-feat-selection small { width:100%; }
+#characterSheetDialog .sheet-feat-empty { padding:1rem; border:1px dashed var(--vault-border-soft); border-radius:6px; }
+#characterSheetDialog :is(.sheet-selected-feat,.sheet-build-feat-selection) .sheet-info-button { width:36px; height:36px; min-width:36px; flex-shrink:0; }
+#characterSheetDialog :is(#sheetSpeciesEditorGroup,#sheetClassSkillEditorGroup) { padding:.8rem 1rem; margin:.65rem 0; }
+#characterSheetDialog :is(#sheetSpeciesEditorGroup,#sheetClassSkillEditorGroup) .sheet-grid { gap:.65rem; margin:.5rem 0; grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr)); }
+#characterSheetDialog :is(#sheetSpeciesEditorGroup,#sheetClassSkillEditorGroup) :is(select,input) { min-height:40px; }
+#characterSheetDialog :is(#sheetSpeciesEditorGroup,#sheetClassSkillEditorGroup) > h4 { margin:0 0 .6rem; padding-bottom:.4rem; }
+@media(max-width:600px) {
+ #characterSheetDialog .sheet-selected-feats-heading { display:block; }
+ #characterSheetDialog .sheet-selected-feats-heading > button { margin-bottom:.5rem; }
+ #characterSheetDialog :is(.sheet-selected-feat,.sheet-build-feat-selection) .sheet-info-button { width:44px; min-width:44px; height:44px; }
+ #characterSheetDialog :is(#sheetSpeciesEditorGroup,#sheetClassSkillEditorGroup) :is(select,input) { min-height:44px; }
+}
+#characterSheetDialog :is(#catalogSelectedFeats,#sheetChooseFeatsTitle,#sheetCharacterLanguageChoices) { scroll-margin-top:6rem; }
+#characterSheetDialog .sheet-point-buy-presets > summary { cursor:pointer; font-weight:700; padding:.2rem 0; }

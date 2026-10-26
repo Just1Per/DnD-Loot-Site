@@ -194,6 +194,10 @@ var SiteHelpData=(()=>{
   'spell slots':'Tracks available and used spell slots. Warlock Pact Magic is a separate pool and also recovers on a short rest.',
   'proficiencies & languages':'Combines supported class, species, background and feat training with your additional manual entries.',
   'bonus advancement':'A campaign-DM tool for granting extra feat or ASI choices to a specific character. Players cannot edit this allowance.',
+  'your feats':'Selected feats appear first with background, race, class or chosen origins. Use i to read a feat, or look up its full rules when bundled text is unavailable. Configure supported choices with the card; choose new feats below. The Feats print view includes selected feats and source information.',
+  'class skill proficiencies':'Choose the skills granted by your starting class. Actual proficiency bonuses appear in Abilities & skills; class and multiclass rules determine the available choices.',
+  'race skill proficiencies':'Choose the available race skill proficiencies and other race traits. Additional languages are in Rules & character. Existing size data is preserved; race size is not editable here.',
+  'start with a 27-point spread':'Expand to preview a legal starting spread, apply it and swap ability values. Collapse this panel to keep the ability scores in view; hiding it does not change scores or point-buy costs.',
   'point buy':'Shows how your base ability scores use the 27-point budget. Base scores run from 8 to 15, before origin and feat bonuses.',
  };
  const actions={

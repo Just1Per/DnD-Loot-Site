@@ -108,3 +108,36 @@ test('shield-granting feats activate worn shields and explain their actual train
   assert.equal(training.includes('Shields'),shields);
  }
 });
+
+test('build-granted Skilled uses the existing race/background training once without phantom catalogue choices; Tough reports its existing HP effect',()=>{
+ for(const origin of ['human','background']){
+  const build={edition:'2024',race:'human-2024',classId:'fighter',scoreMode:'base',background:'custom',humanOriginFeat:origin==='human'?'Skilled':'Tough',backgroundFeat:origin==='background'?'Skilled':'Alert',humanFeatChoices:origin==='human'?['skill:arcana','skill:history','tool:Flute']:['','',''],backgroundFeatChoices:origin==='background'?['skill:arcana','skill:history','tool:Flute']:['','','']};
+  const d=M.normalize({build});const s=M.derive(d,4),r=s.feats.reports.find(r=>r.key==='origin-'+origin);
+  assert.deepEqual(r.warnings,[]);assert.equal(s.effects.skills.filter(k=>k==='arcana').length,1);assert.equal(s.effects.proficiencies.filter(k=>k==='Flute').length,1);
+  assert.equal(s.skills.arcana,s.mods.int+s.pb);
+  if(origin==='background'){const tough=s.feats.reports.find(r=>r.def.name==='Tough');assert.match(tough.automated.join(' '),/Maximum HP/);const noTough=structuredClone(d);noTough.build.humanOriginFeat='';assert.equal(s.hpMax-M.derive(noTough,4).hpMax,8);}
+  d.build[origin==='human'?'humanFeatChoices':'backgroundFeatChoices']=['skill:arcana','skill:arcana',''];assert.ok(M.derive(d,4).feats.reports.find(r=>r.key==='origin-'+origin).warnings.length);
+ }
+});
+
+test('legacy Origin Skilled choices are readable without mutating saved input or overriding newer partial choices',()=>{
+ for(const origin of ['human','background']){
+  const field=origin==='human'?'humanFeatChoices':'backgroundFeatChoices',key='origin-'+origin;
+  const raw={build:{edition:'2024',race:'human-2024',classId:'fighter',scoreMode:'base',background:'custom',humanOriginFeat:origin==='human'?'Skilled':'Alert',backgroundFeat:origin==='background'?'Skilled':'Tough'},rulesChoices:{effects:{[key]:{training:['skill:arcana','skill:history','tool:Flute']}}}};
+  const before=JSON.stringify(raw),d=M.normalize(raw);
+  assert.deepEqual(d.build[field],['skill:arcana','skill:history','tool:Flute']);assert.equal(JSON.stringify(raw),before);
+  assert.equal(M.derive(d,4).effects.skills.filter(k=>k==='arcana').length,1);assert.deepEqual(M.derive(d,4).feats.reports.find(r=>r.key===key).warnings,[]);
+  raw.build[field]=['skill:nature','',''];assert.deepEqual(M.normalize(raw).build[field],['skill:nature','','']);
+ }
+});
+
+test('every shipped 2024 catalogue Origin feat survives Human selection and persistence; General and legacy feats cannot gain Origin effects',()=>{
+ const catalogue=require('../data/rules/catalog.json'),R=require('../js/modules/character-rules');
+ const origins=catalogue.feats.filter(f=>f.edition==='2024'&&f.category==='O');assert.ok(origins.length>30);
+ for(const feat of origins){const name=F.definitions[feat.id]?.name||feat.name;const d=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:name,backgroundFeat:'Tough'}});assert.equal(d.build.humanOriginFeat,name);assert.ok(R.modern.isOriginFeat(name));assert.ok(M.derive(d,4).effects.originFeats.includes(name));assert.ok(M.derive(d,4).feats.reports.some(r=>r.key==='origin-human'&&r.def.name===name));assert.equal(M.normalize(JSON.parse(JSON.stringify(d))).build.humanOriginFeat,name);}
+ for(const name of ['Athlete','War Caster','Actor','unknown preserved feat']){
+  const d=M.normalize({build:{edition:'2024',race:'human-2024',humanOriginFeat:name,scoreMode:'base'},abilities:{str:13,cha:13},rulesChoices:{effects:{'origin-human':{abilities:['str']}}}}),s=M.derive(d,4);
+  assert.equal(d.build.humanOriginFeat,name);assert.ok(!s.effects.originFeats.includes(name));assert.equal(s.scores.str,13);assert.match(s.effects.warnings.join(' '),/not an Origin feat/);
+ }
+ assert.equal(R.modern.isOriginFeat('Actor'),false);
+});

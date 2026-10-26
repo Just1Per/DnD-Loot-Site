@@ -185,10 +185,13 @@ function refineCharacterBuilder() {
  const root=document.getElementById('sheetBuildControls');
  const group=(title,nodes)=>{const section=document.createElement('section');section.className='sheet-builder-group sheet-editor-box';const heading=document.createElement('h4');heading.textContent=title;section.appendChild(heading);for(const node of nodes)if(node)section.appendChild(node);root.appendChild(section);return section;};
  const grids=[...root.children];
- group('Rules & character',[grids.find(n=>n.classList.contains('sheet-grid')),document.getElementById('sheetManualIdentity')]);
- const race=group('Species & ancestry choices',[...root.querySelectorAll(':scope > [data-build-for]'),document.getElementById('sheetRaceChoices')]);race.id='sheetSpeciesEditorGroup';
- group('Class training',[document.getElementById('sheetClassSkills')]);
- group('Background & ability increases',[document.getElementById('sheetModernOrigin'),document.getElementById('sheetBackgroundSummary'),document.getElementById('sheetBackgroundTraining'),document.getElementById('sheetBackgroundChoices')]);
+ const identity=group('Rules & character',[grids.find(n=>n.classList.contains('sheet-grid')),document.getElementById('sheetManualIdentity')]);identity.id='sheetRulesCharacterGroup';
+ const languages=document.createElement('div');languages.id='sheetCharacterLanguageChoices';languages.innerHTML='<h5>Languages</h5><p class="sheet-help">Fixed languages are included automatically. Choose the additional languages granted by your rules, race or background here.</p>';
+ const standard=document.createElement('div');standard.id='sheetStandardLanguageChoices';standard.className='sheet-grid two';for(const field of root.querySelectorAll('[name^="build.standardLanguages."]'))standard.append(field.closest('label'));
+ languages.append(standard);const extra=root.querySelector('[name="build.extraLanguage"]')?.closest('[data-build-for]');if(extra)languages.append(extra);languages.append(document.getElementById('sheetBackgroundChoices'));identity.append(languages);
+ const race=group('Race Skill Proficiencies',[...root.querySelectorAll(':scope > [data-build-for]'),document.getElementById('sheetRaceChoices')]);race.id='sheetSpeciesEditorGroup';
+ const training=group('Class Skill Proficiencies',[document.getElementById('sheetClassSkills')]);training.id='sheetClassSkillEditorGroup';
+ group('Background & ability increases',[document.getElementById('sheetModernOrigin'),document.getElementById('sheetBackgroundSummary'),document.getElementById('sheetBackgroundTraining')]);
  const summary=document.getElementById('sheetBuildSummary');summary.classList.add('sheet-build-information');
  document.getElementById('sheetBuildOverviewToggle').onclick=toggleCalculatedOverview;
 }
