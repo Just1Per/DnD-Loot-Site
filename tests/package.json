@@ -124,7 +124,8 @@
     "test:extra-attack": "node class-extra-attack-browser.cjs",
     "test:cleric-intervention": "node cleric-divine-intervention-browser.cjs",
     "test:beast-spells": "node druid-beast-spells-browser.cjs",
-    "test:languages": "node character-languages-browser.cjs"
+    "test:languages": "node character-languages-browser.cjs",
+    "test:dm-navigation": "node dm-workspace-navigation-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.51.1",

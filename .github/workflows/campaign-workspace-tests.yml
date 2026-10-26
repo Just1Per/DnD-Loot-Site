@@ -196,6 +196,7 @@ jobs:
       run: npm --prefix tests run test:workspace-browser
     - name: Shared DM workspace and draft-preserving references
       run: npm --prefix tests run test:dm-workspace
+        npm --prefix tests run test:dm-navigation
     - name: Creature and NPC preparation, optional combat and template preservation
       run: npm --prefix tests run test:creature-editor
     - name: Deferred creature catalogue, retry and context changes

@@ -170,6 +170,8 @@ var SiteHelp=(()=>{
    ['Start your own campaign','A player account can apply for global DM access from the dashboard. An admin reviews the application. After approval, New Campaign becomes available; joining another campaign does not automatically make you its DM.','application','DM access application']
   ]},
   dm:{title:'Dungeon Master guide',intro:'Create a campaign, invite your table and control its rules, items and characters.',steps:[
+   ['Find your DM section','DM Workspace keeps preparation separate from player reading in Journal. On a phone or narrow window, use the DM Workspace section dropdown to switch between World, Maps, NPCs, Chapters and Party & Loot. On desktop, use the side menu. World has one Category dropdown with entry counts; combine it with search, player visibility and Show archived. Switching sections still protects unsaved edits.','dm','Open DM Workspace'],
+
    ['Create or join','With global DM access you can use New Campaign on the dashboard. Creating a campaign makes you its owner. To join another DM’s campaign, accept an invitation; your membership there determines whether you manage it.','create','New Campaign'],
    ['Invite your players','Open a campaign, then Campaign settings → Members. Invite account emails as players or campaign DMs. Global account roles and campaign roles are separate.','dm-settings','Campaign settings'],
    ['Choose the available rules','In Campaign settings, choose 2014, 2024 or both. Disallowed catalogue choices are hidden. Edit or remove campaign feats, create custom feats, or reset standard availability. Existing character choices are preserved.','dm-settings','Campaign rules'],
