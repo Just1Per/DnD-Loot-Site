@@ -24,7 +24,7 @@ Short Rest, initiative and turn resets do not expire it. A paid casting is not e
 
 ## Persistence, loading and tests
 
-The managed record uses the existing normalized class-choice string-array map, with ordinary slot usage and the established independent Pact counter. All record/payment changes are committed together. There are no new top-level sheet fields, rule changes or migrations. Catalogue data is shared with the deferred Wild Shape catalogue and retains source attribution; loading failures provide Retry without spending resources. A stale account/campaign confirmation cannot dismiss another context’s familiar.
+The managed record uses the existing normalized class-choice string-array map, with ordinary slot usage and the established independent Pact counter. All record/payment changes are committed together. There are no new top-level sheet fields, rule changes or migrations. Catalogue data is shared with the deferred Wild Shape catalogue and retains source attribution; loading failures provide Retry without spending resources. A stale account/campaign confirmation cannot dismiss another context’s familiar. A shared public catalogue request refreshes the currently valid sheet after a context switch without modifying the previous sheet.
 
 Guide and inline/section help explain the feature. Stats and HP remain in a separate card from the normal character, their own Wild Shape and the existing manual companion cards. Print includes the familiar’s status and source. The related odd-level Wild Shape duration display now follows the general round-down rule in both editions.
 

@@ -41,7 +41,6 @@ var CharacterWildCompanionUI = (() => {
     if (loading || W.loaded()) return;
     loading = true;
     error = "";
-    const actor = sheetSession;
     try {
       if (!(await CharacterWildShapeUI.load()))
         error =
@@ -51,7 +50,8 @@ var CharacterWildCompanionUI = (() => {
     } finally {
       loading = false;
       signature = "";
-      if (actor && current(actor)) update(derive());
+      const active = sheetSession;
+      if (active && current(active)) update(derive());
     }
   }
   function changed(text, focus) {

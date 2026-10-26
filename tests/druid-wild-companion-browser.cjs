@@ -1,4 +1,4 @@
-// Divine class effect choices, legacy shared pool and modern independent counters.
+// Wild Companion lifecycle, independent resources and asynchronous sheet context.
 const fs = require("node:fs"),
   path = require("node:path");
 const { chromium } = require(process.env.PLAYWRIGHT_PATH || "playwright");
@@ -182,6 +182,10 @@ const errors = [];
           if (String(u).includes("wild-shapes")) {
             wildFetches++;
             if (failWildFetch) return { ok: false };
+            if (window.holdWildFetch)
+              await new Promise(
+                (resolve) => (window.releaseWildFetch = resolve),
+              );
             return { ok: true, json: async () => __testWildShapes };
           }
           return {
@@ -233,9 +237,31 @@ const errors = [];
       ),
       2,
     );
-    await page.evaluate(() => (failWildFetch = false));
+    await page.evaluate(() => {
+      failWildFetch = false;
+      window.holdWildFetch = true;
+    });
     await page.locator("[data-wc-load]").click();
+    await page.waitForFunction(
+      () => typeof window.releaseWildFetch === "function",
+    );
+    await page.evaluate(() => {
+      window.pendingActor = sheetSession;
+      window.pendingActorSnapshot = JSON.stringify(sheetSession.data);
+      sheetSession = {
+        ...sheetSession,
+        data: structuredClone(sheetSession.data),
+      };
+      renderCharacterSheet();
+      selectSheetTab("companion");
+      window.holdWildFetch = false;
+      window.releaseWildFetch();
+    });
     await page.waitForSelector("[data-wc-form]");
+    assert.equal(
+      await page.evaluate(() => JSON.stringify(pendingActor.data)),
+      await page.evaluate(() => pendingActorSnapshot),
+    );
     assert.equal(await page.evaluate(() => wildFetches), 2);
     await page.locator("[data-wc-form]").selectOption("srd-2024-owl");
     assert.equal(await page.locator("[data-wc-summon]").isDisabled(), true);
