@@ -87,7 +87,7 @@ var CharacterWildShape = (() => {
                 ? 3
                 : 2
             : 2,
-      durationHours: modern ? n / 2 : Math.floor(n / 2),
+      durationHours: Math.floor(n / 2),
       action: modern || moonOld ? "Bonus Action" : "Action",
       temporaryHP: modern ? n * (moonNew ? 3 : 1) : 0,
       elementals: moonOld && n >= 10,
@@ -713,6 +713,19 @@ var CharacterWildShape = (() => {
     blocked,
     setCatalogue,
     loaded: () => !!catalogue,
+    catalogueRows: () =>
+      [...(catalogue?.values() || [])].map((row) => ({
+        id: row.id,
+        name: row.title,
+        edition: row.edition,
+        type: row.data.creatureType,
+        cr: row.data.cr,
+        size: row.data.size,
+      })),
+    creature: (id) => {
+      const row = catalogue?.get(id);
+      return row ? structuredClone(row) : null;
+    },
     forms,
     eligible,
     validKnown,

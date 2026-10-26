@@ -787,7 +787,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Druidic **[partial]**<br>Primal Order **[implemented]**<br>Spellcasting **[partial]** |
-| 2 | Wild Companion **[unreviewed]**<br>Wild Shape **[partial]** |
+| 2 | Wild Companion **[partial]**<br>Wild Shape **[partial]** |
 | 3 | Druid Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Wild Resurgence **[unreviewed]** |
@@ -812,7 +812,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Druidic · 1 | Druidic language is automatic; the spell generator adds source-correct Speak with Animals as always prepared, additional to the normal preparation allowance. Secret-message detection and table interactions remain source reminders. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/divine-and-primal-orders-browser.cjs](../tests/divine-and-primal-orders-browser.cjs) |
 | Primal Order · 1 | Structured Order choice grants its weapon/armor training or extra class cantrip allowance and current Wisdom (minimum +1) to the specified Intelligence skill checks; source-aware readouts, multiclassing, persistence and print. Select cantrips in the existing Spells builder. | [tests/divine-and-primal-orders.cjs](../tests/divine-and-primal-orders.cjs), [tests/divine-and-primal-orders-browser.cjs](../tests/divine-and-primal-orders-browser.cjs) |
 | Spellcasting · 1 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
-| Wild Companion · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Wild Companion · 2 | Base 2024 summoning from actual Druid 2: CR0 Beast/Fey familiar, atomic Wild Shape/ordinary/Pact payment, independent HP/max/temp, pocket return and permanent/0HP/Long Rest expiry, one-familiar acknowledgement, persistence and print. Pact/circle-specific creature alternatives and automatic buff effects remain separate. | [tests/druid-wild-companion.cjs](../tests/druid-wild-companion.cjs), [tests/druid-wild-companion-browser.cjs](../tests/druid-wild-companion-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 | Wild Shape · 2 | Own form card under Companions: actual Druid CR/movement/known-or-seen gates, source HP/tempHP/overflow, uses/recovery, retained mental scores/training, scoped Moon adjustments, persistence and print. Normal sheet remains a reference; full circle/slot-conversion automation remains pending. | [tests/druid-wild-shape.cjs](../tests/druid-wild-shape.cjs), [tests/druid-wild-shape-browser.cjs](../tests/druid-wild-shape-browser.cjs), [tests/druid-wild-shape-rules.cjs](../tests/druid-wild-shape-rules.cjs) |
 | Druid Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |

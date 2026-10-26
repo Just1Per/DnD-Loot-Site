@@ -5348,9 +5348,13 @@
           "name": "Wild Companion",
           "level": 2,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Base 2024 summoning from actual Druid 2: CR0 Beast/Fey familiar, atomic Wild Shape/ordinary/Pact payment, independent HP/max/temp, pocket return and permanent/0HP/Long Rest expiry, one-familiar acknowledgement, persistence and print. Pact/circle-specific creature alternatives and automatic buff effects remain separate.",
+          "evidence": [
+            "tests/druid-wild-companion.cjs",
+            "tests/druid-wild-companion-browser.cjs",
+            "tests/druid-wild-shape-rules.cjs"
+          ]
         },
         {
           "id": "2024:druid:2:wild-shape",

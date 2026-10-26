@@ -588,7 +588,8 @@ var CharacterClassFeatureChoices=(()=>{
         if(available<target)updates[bardKey]=[String(Math.max(0,max-target))];
       }
     }
-    if(!Object.keys(updates).length)return;data.adobe={...stored,classFeatureChoices:{...choices,...updates}};
+    if(Object.keys(updates).length)data.adobe={...stored,classFeatureChoices:{...choices,...updates}};
+    const companion=globalThis.CharacterWildCompanion||(typeof require==='function'?require('./character-wild-companion'):null);companion?.onRest(data,event);
   }
   function saveTraining(data,{level=1}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));

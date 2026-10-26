@@ -25,7 +25,7 @@ async function boot(browser){
 }
 // Exercise the actual deferred wrapper chain, including a failure after one script installed.
 const catalogue=['character-creature-data',...Array.from({length:4},(_,i)=>'character-creature-data-'+(i+1))];
-const deferred=[...catalogue,'character-adobe-builder-ui','character-adobe-pages','character-creature-ui','character-wild-shape-ui','character-spellcasting-ui'];
+const deferred=[...catalogue,'character-adobe-builder-ui','character-adobe-pages','character-creature-ui','character-wild-shape-ui','character-wild-companion-ui','character-spellcasting-ui'];
 for(const name of deferred)assert.ok(!mandatory.includes('./modules/'+name+'.js'),'Sheet tools must not load/preload at startup');
 (async()=>{const browser=await chromium.launch();try{
  const page=await boot(browser),counts={};let fail=true;

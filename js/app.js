@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261026-elemental-fury-v1";
+const ASSET_VERSION = "20261026-wild-companion-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -111,6 +111,7 @@ const FEATURE_FILES = [
   "./modules/character-journal-ui.js",
   "./modules/character-progression.js",
   "./modules/character-wild-shape.js",
+  "./modules/character-wild-companion.js",
   "./modules/character-sheet-model.js",
   "./modules/character-sheet-store.js",
   "./modules/character-overview-ui.js",
@@ -209,6 +210,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-adobe-pages.js",
     "./modules/character-creature-ui.js",
     "./modules/character-wild-shape-ui.js",
+    "./modules/character-wild-companion-ui.js",
     "./modules/character-spellcasting-ui.js"
   ]
 });
