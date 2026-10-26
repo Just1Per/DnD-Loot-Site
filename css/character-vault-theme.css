@@ -2618,3 +2618,7 @@
 /* Form controls stay usable inside the compact character-sheet theme. */
 #characterSheetPage #characterSheetDialog #sheetDruidWildShape :is(select,input:not([type=checkbox]),button:not(.vault-help-badge),summary) { min-height: 44px !important; max-width: 100%; box-sizing: border-box; }
 #characterSheetPage #characterSheetDialog #sheetDruidWildShape input[type=checkbox] { width: 20px; height: 20px; min-width: 20px; min-height: 20px !important; }
+
+/* Keep the new class choice readable in the compact sheet. */
+#characterSheetPage #characterSheetDialog #sheetAdobeClasses [data-choice-group=elemental-fury] { min-height: 44px !important; width: 100%; max-width: 100%; }
+#characterSheetDialog [data-druid-elemental-fury], #characterSheetDialog [data-druid-primal-strike] { line-height: 1.6; overflow-wrap: anywhere; }

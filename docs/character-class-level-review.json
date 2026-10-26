@@ -5400,9 +5400,12 @@
           "name": "Elemental Fury",
           "level": 7,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Structured 2024 level-7 choice. Potent adds current Wisdom to supported damaging Druid cantrips; level15 adds300ft to qualifying ranges with per-class ownership preserved. Primal displays a source-correct conditional weapon/Beast hit reminder, not automatic target damage or a turn counter. Guide, persistence and print covered.",
+          "evidence": [
+            "tests/druid-elemental-fury.cjs",
+            "tests/druid-elemental-fury-browser.cjs"
+          ]
         },
         {
           "id": "2024:druid:8:ability-score-improvement",
@@ -5433,9 +5436,12 @@
           "name": "Improved Elemental Fury",
           "level": 15,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Structured 2024 level-7 choice. Potent adds current Wisdom to supported damaging Druid cantrips; level15 adds300ft to qualifying ranges with per-class ownership preserved. Primal displays a source-correct conditional weapon/Beast hit reminder, not automatic target damage or a turn counter. Guide, persistence and print covered.",
+          "evidence": [
+            "tests/druid-elemental-fury.cjs",
+            "tests/druid-elemental-fury-browser.cjs"
+          ]
         },
         {
           "id": "2024:druid:16:ability-score-improvement",

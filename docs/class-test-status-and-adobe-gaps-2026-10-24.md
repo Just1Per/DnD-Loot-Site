@@ -74,3 +74,7 @@ Denne status ændrer ingen produktvisning, deployer ikke og ændrer eller migrer
 - **2024 Druid 4:** Vælg kendte former eller de fire anbefalede. Wolf bruger figurens HP og giver 4 temporary HP. Eksisterende 9 temporary HP beholdes ved valget Keep whichever is higher.
 - Kontrollér actual Druid-level i multiclassing, Moon-AC/tempHP, gem/genåbn og Short Rest i Combat: alle brug tilbage i 2014, ét brug i 2024. Normalark og tidligere companionkort skal bevares.
 - Dette færdiggør ikke hele Druid-klassen eller alle circles. Se [afgrænsning og kilder](druid-wild-shape.md).
+
+## Elemental Fury — næste forbedring
+
+2024 Druid 7 får et struktureret valg i Character Builder. Potent Spellcasting beregner Wisdom på understøttede skadelige Druid-cantrips, og level 15 lægger 300 fod til kvalificerende ranges. Separate Druid-/Warlock-kopier bevarer egne bonusser. Primal Strike giver i stedet en synlig, betinget hit-påmindelse med den korrekte terning og de fire damage types; den udfører ikke automatisk ekstra skade eller turn-tracking. Valg, gem/genåbn, print og Guide er opdateret. Se [afgrænsning](druid-elemental-fury.md). Hele Druid-klassen er fortsat ikke færdigkontrolleret.

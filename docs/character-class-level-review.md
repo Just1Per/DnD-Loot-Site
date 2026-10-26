@@ -792,7 +792,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Wild Resurgence **[unreviewed]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 7 | Elemental Fury **[unreviewed]** |
+| 7 | Elemental Fury **[partial]** |
 | 8 | Ability Score Improvement **[partial]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 10 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -800,7 +800,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 14 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 15 | Improved Elemental Fury **[unreviewed]** |
+| 15 | Improved Elemental Fury **[partial]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 18 | Beast Spells **[unreviewed]** |
@@ -817,10 +817,10 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Druid Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Wild Resurgence · 5 | Source-rule comparison and structured fields still need review. | Pending |
-| Elemental Fury · 7 | Source-rule comparison and structured fields still need review. | Pending |
+| Elemental Fury · 7 | Structured 2024 level-7 choice. Potent adds current Wisdom to supported damaging Druid cantrips; level15 adds300ft to qualifying ranges with per-class ownership preserved. Primal displays a source-correct conditional weapon/Beast hit reminder, not automatic target damage or a turn counter. Guide, persistence and print covered. | [tests/druid-elemental-fury.cjs](../tests/druid-elemental-fury.cjs), [tests/druid-elemental-fury-browser.cjs](../tests/druid-elemental-fury-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
-| Improved Elemental Fury · 15 | Source-rule comparison and structured fields still need review. | Pending |
+| Improved Elemental Fury · 15 | Structured 2024 level-7 choice. Potent adds current Wisdom to supported damaging Druid cantrips; level15 adds300ft to qualifying ranges with per-class ownership preserved. Primal displays a source-correct conditional weapon/Beast hit reminder, not automatic target damage or a turn counter. Guide, persistence and print covered. | [tests/druid-elemental-fury.cjs](../tests/druid-elemental-fury.cjs), [tests/druid-elemental-fury-browser.cjs](../tests/druid-elemental-fury-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Beast Spells · 18 | Source-rule comparison and structured fields still need review. | Pending |
 | Epic Boon · 19 | Source-rule comparison and structured fields still need review. | Pending |

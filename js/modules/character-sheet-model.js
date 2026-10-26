@@ -283,6 +283,7 @@ var CharacterSheetModel = (() => {
     const result = {
       effects,
       rangerFeatures,
+      druidElementalFury:ClassChoices.elementalFury(d,{level,mods}),
       paladinAuras,
       attackAction:AttackProgression.derive(d,level),
       toolTraining,

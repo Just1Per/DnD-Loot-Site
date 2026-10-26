@@ -26,6 +26,7 @@ var CharacterActions = (()=>{
    if(m.base==='net'&&result.edition==='2024'){out.hit='DEX DC '+(8+stats.pb+stats.mods.dex);out.ability='dex';out.damage='Restrained; no damage';out.notes.push('Large or smaller target; an attack replacement.');}
    if(item&&!existing?.equipped)out.notes.push('In backpack: ready this item before using it.');
    if(!item)out.notes.push('Reference weapon; this does not add equipment to inventory.');
+   if(stats.druidElementalFury?.choice==='primal-strike'&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.druidElementalFury.detail);
    return out;
   }
   if(a.kind==='racial'){
@@ -55,7 +56,7 @@ var CharacterActions = (()=>{
    if(invocation?.damageBonus!==undefined){if(damage)damage=add(damage,invocation.damageBonus);notes.push(invocation.damageSource+': '+sign(invocation.damageBonus)+' to this cantrip’s damage rolls.');}
    if(invocation?.range)notes.push(invocation.rangeSource+': range '+invocation.range+'.');
    const types=(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');
-   return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(mod+stats.pb+data.spellAttackBonus):spell.save?spell.save+' DC '+(8+stats.pb+mod+data.spellDCBonus):'Effect',damage:damage||'See spell effect',range:invocation?.range||spell.range,notes};
+   return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(mod+stats.pb+data.spellAttackBonus):spell.save?spell.save+' DC '+(8+stats.pb+mod+data.spellDCBonus):'Effect',damage:damage||'See spell effect',range:invocation?.range||CFC.cantripRange(spell,level),notes};
   }
   const unarmed=a.kind==='unarmed',ability=a.ability==='auto'?(a.mode==='thrown'?'dex':'str'):a.ability;
   const tavern=(stats.effects.originFeats||[]).includes('Tavern Brawler')||stats.feats.reports.some(r=>r.def.name==='Tavern Brawler'&&!r.warnings.length);
