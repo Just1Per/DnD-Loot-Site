@@ -98,6 +98,7 @@
     "test:campaign-map-rules": "cd .. && tests/node_modules/.bin/firebase emulators:exec --only firestore,storage --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-map-rules.cjs\"",
     "test:packaging": "node repository-packaging.cjs",
     "test:fighting-styles": "node fighting-style-entitlements-browser.cjs",
+    "test:sheet-warning-targets": "node sheet-warning-targets-browser.cjs",
     "test:feats-selected-overview": "node feats-selected-overview-browser.cjs",
     "test:point-buy-presets": "node point-buy-presets-browser.cjs",
     "test:artificer-attunement": "node artificer-attunement-browser.cjs",

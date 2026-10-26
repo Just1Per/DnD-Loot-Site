@@ -423,7 +423,7 @@ function updateSheetCalculations() {
   renderEquipmentCalculations(d);
   renderAttackActionSummary(d);
   updateSheetBuildSummary(d);
-  renderCharacterOverview(d);
+  const validation = renderCharacterOverview(d);
   updateCharacterPortrait();
   updateCharacterPlayUI(d);
   updateInventoryTotals(d);
@@ -439,6 +439,8 @@ function updateSheetCalculations() {
       'passive'
     ].includes(path) ? value : CharacterSheetModel.signed(value);
   });
+  // Repeating editors rebuild their controls above; decorate their final fields.
+  markUnfinishedCharacterFields(validation?.issues || []);
 }
 function addSheetRow(key) {
   readSheetForm();

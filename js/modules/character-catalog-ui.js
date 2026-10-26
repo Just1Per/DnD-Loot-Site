@@ -248,7 +248,6 @@ function renderBuildFeatChoices() {
     fillSheetForm();
     sheetCatalogSignature='';
     catalogChanged((select.value?'Selected '+select.value+'. Shown in Your feats above.':'Feat choice cleared.')+' Save the character sheet to keep it.');
-    renderBuildFeatChoices();
     renderCatalogFeatResults();
     host.querySelector('[data-build-feat-field="'+field+'"]')?.focus({preventScroll:true});
   });
@@ -263,7 +262,6 @@ function renderBuildFeatChoices() {
     fillSheetForm();
     sheetCatalogSignature='';
     catalogChanged('Feat proficiency choices changed. Save the character sheet to keep them.');
-    renderBuildFeatChoices();
     host.querySelector('[data-build-feat-array="'+field+'"][data-build-feat-index="'+index+'"]')?.focus({preventScroll:true});
   });
 }

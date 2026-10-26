@@ -1,3 +1,4 @@
+function sheetIssueFieldAvailable(el){return !el.disabled&&!el.hidden&&el.type!=='hidden'&&!el.closest('label[hidden],.sheet-field[hidden]');}
 function focusSheetBuildIssue(issue){
  if(!issue)return;
  const root=document.getElementById('characterSheetDialog');
@@ -9,10 +10,11 @@ function focusSheetBuildIssue(issue){
  // Target only the active character sheet, never an unrelated or hidden form.
  let targets=[];
  try{if(issue.target)targets=[...page.querySelectorAll(issue.target)];}catch(error){console.warn('Invalid character warning target',issue.target,error);}
- let field=targets.find(el=>!el.disabled&&!el.hidden&&('value' in el)&&!el.value)||targets.find(el=>!el.disabled&&!el.hidden);
+ let field=targets.find(el=>sheetIssueFieldAvailable(el)&&('value' in el)&&!el.value)||targets.find(sheetIssueFieldAvailable);
  if(!field){sheetStatus('Could not locate the setting for this notice. Please report it.');console.warn('Unresolved character warning',issue);return;}
+ if(!['INPUT','SELECT','TEXTAREA','BUTTON'].includes(field.tagName))field=[...field.querySelectorAll('select,input,textarea')].find(sheetIssueFieldAvailable)||[...field.querySelectorAll('button')].find(sheetIssueFieldAvailable)||field;
  for(let node=field;node&&node!==root;node=node.parentElement){if(node.tagName==='DETAILS')node.open=true;if(node.hidden)node.hidden=false;}
- if(!['INPUT','SELECT','TEXTAREA','BUTTON'].includes(field.tagName))field=field.querySelector('select:not([disabled]),input:not([disabled]),button:not([disabled])')||field;
+ sheetStatus(issue.message,true);
  field.scrollIntoView?.({block:'center',behavior:'smooth'});field.focus?.();field.classList.add('sheet-fix-target');
  setTimeout(()=>field.classList.remove('sheet-fix-target'),2500);
 }
@@ -52,17 +54,25 @@ function markUnfinishedCharacterFields(issues){
    if(!issue.target||!issue.tab)continue;
    const page=root.querySelector('#sheet-'+issue.tab);if(!page)continue;
    let candidates=[];
-   try{candidates=[...page.querySelectorAll(issue.target)];}catch(error){continue;}
-   const field=candidates.find(el=>!el.disabled&&!el.hidden&&'value' in el&&!el.value)||candidates.find(el=>!el.disabled&&!el.hidden);
-   if(!field)continue;
-   const wrapper=field.closest('label')||field.closest('.sheet-field')||field.parentElement;
-   if(!wrapper||wrapper.querySelector('.sheet-required-marker'))continue;
-   wrapper.classList.add('sheet-field-needs-attention');
-   const marker=document.createElement('span');marker.className='sheet-required-marker';marker.textContent='!';
-   marker.title=issue.message;marker.setAttribute('aria-label','Needs attention: '+issue.message);
-   wrapper.appendChild(marker);
+   try{candidates=[...page.querySelectorAll(issue.target)].filter(sheetIssueFieldAvailable);}catch(error){continue;}
+   // A group-level notice is not proof that its first filled choice is wrong.
+   const first=candidates.find(el=>'value' in el&&!el.value)||candidates.find(el=>[...el.selectedOptions||[]].some(option=>option.disabled))||(candidates.length===1?candidates[0]:null);
+   for(const field of issue.exactTargets?candidates:first?[first]:[]){
+     // A general warning may link to a section, but must not blame one of its fields.
+     if(!['INPUT','SELECT','TEXTAREA'].includes(field.tagName))continue;
+     const wrapper=field.closest('label')||field.closest('.sheet-field');if(!wrapper)continue;
+     const existing=wrapper.querySelector('.sheet-required-marker');
+     if(existing){if(!existing.title.split('\n').includes(issue.message))existing.title+='\n'+issue.message;existing.setAttribute('aria-label','Needs attention: '+existing.title);continue;}
+     wrapper.classList.add('sheet-field-needs-attention');
+     const marker=document.createElement('span');marker.className='sheet-required-marker';marker.textContent='!';marker.tabIndex=0;
+     marker.title=issue.message;marker.setAttribute('aria-label','Needs attention: '+issue.message);
+     let title=wrapper.querySelector(':scope > span:not(.vault-help-badge)');
+     if(!title){const words=[...wrapper.childNodes].filter(node=>node.nodeType===3&&node.textContent.trim());if(words.length){title=document.createElement('span');words[0].before(title);for(const word of words)title.append(word);}}
+     (title||wrapper).appendChild(marker);
+   }
  }
 }
+
 function renderCharacterOverview(d) {
   const s=sheetSession,host=document.getElementById('sheetOverviewReadout');if(!s||!host)return;
   const M=CharacterSheetModel,b=s.data.build,e=d.effects,esc=sheetEscape,sign=M.signed;
@@ -87,7 +97,6 @@ function renderCharacterOverview(d) {
   const calculatedOpen=host.querySelector('#sheetOverviewCalculated')?.open===true;
   const calculatedMarkup=s.data.adobe?.showCalculatedOnOverview?`<section class="sheet-summary-box sheet-overview-calculated"><div class="sheet-overview-pin-heading"><details id="sheetOverviewCalculated" ${calculatedOpen?'open':''}><summary>Calculated from your choices · ${esc(b.edition)}</summary><div>${document.getElementById('sheetBuildSummaryContent')?.innerHTML||''}</div></details><button type="button" data-overview-calculated aria-pressed="true">Remove from Overview</button></div></section>`:'';
   const validation=globalThis.CharacterBuildValidation?.check?.(s.data,d,s.identity)||{complete:true,count:0,issues:[]};
-  markUnfinishedCharacterFields(validation.issues);
   const warningKey=issue=>JSON.stringify([issue.category,issue.message,issue.tab]);
   const readWarnings=s.data.adobe.readBuildWarnings;
   const unread=validation.issues.filter(issue=>!readWarnings.includes(warningKey(issue))).length;
@@ -119,6 +128,7 @@ function renderCharacterOverview(d) {
  bindOverviewAttacks();
  host.querySelector('[data-overview-calculated]')?.addEventListener('click',toggleCalculatedOverview);
  host.querySelectorAll('[data-remove-overview-feature]').forEach(button=>button.onclick=()=>toggleClassFeatureOverview(button.dataset.removeOverviewFeature,'remove'));
+ return validation;
 }
 function closeSpellInformation(){const d=document.getElementById('sheetSpellInformation');if(d){if(d.open)d.close();d.remove();}}
 function openSpellInformation({catalogId='',index=null}={}) {
