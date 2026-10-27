@@ -92,10 +92,10 @@ var CharacterAdobeView=(()=>{
   }catch(e){if(c===current&&token===c.generation){notice(e.message,true);c.shadow.getElementById('adobeRetry').hidden=false;}}
  }
  function closeEditor(clear=true){
-  const c=current;if(!c?.editor)return;const {header,panels}=c.editor;c.editor=null;
+  const c=current;if(!c?.editor)return;const {header,panels,body,wasReadOnly}=c.editor;c.editor=null;
   if(clear)c.state.editor=null;
   for(const [node,hidden] of panels)if(node.isConnected)node.hidden=hidden;
-  header.remove();if(c.form.isConnected){c.form.querySelector('.sheet-body').hidden=c.state.style==='adobe';c.host.hidden=c.state.style!=='adobe';}
+  header.remove();if(c.form.isConnected){body.classList.toggle('sheet-readonly-page',wasReadOnly);body.hidden=c.state.style==='adobe';c.host.hidden=c.state.style!=='adobe';}
  }
  function openEditor(command){
   const c=current;if(!active()||!valid(c))return;const entry=editorTargets[command];if(!entry){notice('This workflow is still being connected.',true);return;}
@@ -103,9 +103,9 @@ var CharacterAdobeView=(()=>{
   const panel=node.closest('[data-sheet-section]');if(!panel)return;
   const header=document.createElement('header');header.className='adobe-shared-editor-heading';header.id='adobeSharedEditor';
   const h=document.createElement('h3'),close=document.createElement('button');h.textContent=entry[0];close.type='button';close.textContent='Back to Adobe sheet';close.onclick=()=>closeEditor();header.append(h,close);
-  const body=c.form.querySelector('.sheet-body'),panels=[...body.querySelectorAll('[data-sheet-section]')].map(n=>[n,n.hidden]);
+  const body=c.form.querySelector('.sheet-body'),wasReadOnly=body.classList.contains('sheet-readonly-page'),panels=[...body.querySelectorAll('[data-sheet-section]')].map(n=>[n,n.hidden]);
   for(const [n] of panels)n.hidden=n!==panel;
-  body.classList.remove('sheet-readonly-page');body.hidden=false;c.host.hidden=true;body.before(header);c.editor={header,panels};c.state.editor=command;
+  body.classList.remove('sheet-readonly-page');body.hidden=false;c.host.hidden=true;body.before(header);c.editor={header,panels,body,wasReadOnly};c.state.editor=command;
  }
  function applyStyle(c){
   const form=document.getElementById('characterSheetForm');if(!form)return;const adobe=c.state.style==='adobe';c.select.value=adobe?'adobe':'standard';form.dataset.sheetStyle=c.select.value;
