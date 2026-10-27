@@ -25,7 +25,16 @@ var DMWorkspaceShell=(()=>{
   const active=sections.some(([key])=>key===tab)&&!!activeCampaign&&canManageCampaign();shell.hidden=!active;
   const secondary=document.getElementById('campaignSectionNavigation'),group=secondary?.querySelector('[data-section-group="dm"]');
   const sidebar=shell.querySelector('#dmWorkspaceSidebar');
-  if(active){
+  let compact=sidebar.querySelector('[data-dm-workspace-select]');
+  if(!compact){
+   const label=document.createElement('label');label.className='dm-workspace-mobile-nav';label.dataset.noContextHelp='';
+   const title=document.createElement('span');title.textContent='DM Workspace';
+   compact=document.createElement('select');compact.dataset.dmWorkspaceSelect='';compact.setAttribute('aria-label','DM Workspace section');
+   for(const [value,text] of sections){const option=document.createElement('option');option.value=value;option.textContent=text;compact.append(option);}
+   compact.onchange=()=>{const destination=compact.value;compact.value=route;if(activeCampaign&&canManageCampaign()&&sections.some(([key])=>key===destination))showTab(destination);};
+   label.append(title,compact);sidebar.append(label);
+  }
+  if(active){compact.value=tab;
    for(const [key,label]of sections){
     const button=key==='dm'?sidebar.querySelector('[data-dm-workspace-tab="dm"]'):document.querySelector('.tab[data-tab="'+key+'"]');
     if(!button)continue;

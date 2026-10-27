@@ -26,7 +26,6 @@ var WorldPostLayouts=(()=>{
   const select=s.host.querySelector('[data-workspace-category]'),selected=select.value;
   select.innerHTML='<option value="">All categories</option>'+values.map(value=>`<option value="${e(value)}">${e(value)}</option>`).join('');
   select.value=values.includes(selected)?selected:'';
-  s.host.querySelector('.world-category-shortcuts').innerHTML=['',...values].map(value=>`<button type="button" data-world-category="${e(value)}" aria-pressed="${value===select.value}">${e(value||'All entries')} <span>0</span></button>`).join('');
   return selected!==select.value;
  }
  function visibility(s,row){
@@ -47,10 +46,10 @@ var WorldPostLayouts=(()=>{
   if(categoryFilters(s))return W.renderList();
   const archived=s.host.querySelector('[data-workspace-archived]').checked;
   const rows=s.rows.filter(row=>!!row.archived===archived),category=s.host.querySelector('[data-workspace-category]').value;
-  s.host.querySelectorAll('[data-world-category]').forEach(button=>{
-   const value=button.dataset.worldCategory,count=rows.filter(row=>!value||row.data?.category===value).length;
-   button.setAttribute('aria-pressed',String(value===category));button.querySelector('span').textContent=count;
-  });
+  for(const option of s.host.querySelector('[data-workspace-category]').options){
+   const count=rows.filter(row=>!option.value||row.data?.category===option.value).length;
+   option.textContent=(option.value||'All categories')+' ('+count+')';
+  }
   const visibilitySelect=s.host.querySelector('[data-world-visibility]');
   visibilitySelect.disabled=archived||!s.worldSharingLoaded;if(archived)visibilitySelect.value='';
   const filter=s.worldSharingLoaded&&!archived?visibilitySelect.value:'',list=s.host.querySelector('[data-workspace-list]');
@@ -93,9 +92,8 @@ var WorldPostLayouts=(()=>{
  }
  function toolbar(host,s){
   s.worldPublications=new Map();s.worldKnown=new Set();s.worldSharingLoaded=false;s.worldSharingRequest=0;
-  host.innerHTML=`<nav class="world-category-shortcuts" aria-label="World entry categories"></nav><div class="world-browse-controls"><label class="workspace-field"><span>Player visibility</span><select data-world-visibility disabled><option value="">All entries</option><option value="private">Private drafts</option><option value="shared">Shared with players</option><option value="changed">Versions differ</option></select></label><button type="button" data-world-refresh>Refresh sharing status</button></div><p data-world-sharing-overview role="status"></p><p data-world-results role="status"></p>`;
+  host.innerHTML=`<div class="world-browse-controls"><label class="workspace-field"><span>Player visibility</span><select data-world-visibility disabled><option value="">All entries</option><option value="private">Private drafts</option><option value="shared">Shared with players</option><option value="changed">Versions differ</option></select></label><button type="button" data-world-refresh>Refresh sharing status</button></div><p data-world-sharing-overview role="status"></p><p data-world-results role="status"></p>`;
   categoryFilters(s);
-  host.querySelector('.world-category-shortcuts').onclick=event=>{const button=event.target.closest('[data-world-category]');if(!button)return;s.host.querySelector('[data-workspace-category]').value=button.dataset.worldCategory;W.renderList();};
   host.querySelector('[data-world-visibility]').onchange=()=>W.renderList();host.querySelector('[data-world-refresh]').onclick=()=>refreshSharing(s);
   for(const label of s.host.querySelectorAll('.workspace-sidebar label')){
    const span=document.createElement('span');for(const node of [...label.childNodes])if(node.nodeType===3)span.append(node);
@@ -118,7 +116,7 @@ var WorldPostLayouts=(()=>{
  config.initialData=s=>({category:s.host.querySelector('[data-workspace-category]')?.value||'Location'});
  config.toolbar=toolbar;config.onListed=listed;config.hideNavigation=true;
  config.searchText=row=>[row.content,row.data?.connections].join(' ');
- config.help='Write a World post. Save it as a private draft or release it to your players.';
+ config.help='Prepare World posts. Save privately or publish to Journal → World.';
  config.extra=(_host,s)=>{
   s.host.querySelector('[data-save-record]').textContent='Save draft';
   const secondary=s.host.querySelector('[data-world-secondary-actions]');
