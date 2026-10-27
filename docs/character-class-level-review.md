@@ -60,7 +60,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Rage **[partial]**<br>Unarmored Defense **[unreviewed]** |
+| 1 | Rage **[partial]**<br>Unarmored Defense **[implemented]** |
 | 2 | Danger Sense **[unreviewed]**<br>Reckless Attack **[unreviewed]** |
 | 3 | Primal Path **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -84,7 +84,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Rage · 1 | Actual-level use pool, finite Spend/Undo, source-specific rest recovery, duration/armor/Strength-attack/resistance/spell restrictions, persistence and print. Spending records resource use; Rage activation, conditional damage, damage resistance and turn/duration resolution remain table decisions. | [tests/barbarian-rage-resources.cjs](../tests/barbarian-rage-resources.cjs), [tests/barbarian-rage-resources-browser.cjs](../tests/barbarian-rage-resources-browser.cjs) |
-| Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Unarmored Defense · 1 | Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice. | [tests/character-equipment.cjs](../tests/character-equipment.cjs), [tests/monk-martial-arts-browser.cjs](../tests/monk-martial-arts-browser.cjs) |
 | Danger Sense · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Reckless Attack · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Primal Path · 3 | Source-rule comparison and structured fields still need review. | Pending |
@@ -292,7 +292,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Unarmored Defense **[unreviewed]** |
+| 1 | Unarmored Defense **[implemented]** |
 | 2 | Ki **[partial]** |
 | 3 | Deflect Missiles **[unreviewed]**<br>Monastic Tradition **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
@@ -315,7 +315,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Unarmored Defense · 1 | Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice. | [tests/character-equipment.cjs](../tests/character-equipment.cjs), [tests/monk-martial-arts-browser.cjs](../tests/monk-martial-arts-browser.cjs) |
 | Ki · 2 | Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review. | [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
 | Deflect Missiles · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Monastic Tradition · 3 | Source-rule comparison and structured fields still need review. | Pending |
@@ -651,7 +651,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Rage **[partial]**<br>Unarmored Defense **[unreviewed]**<br>Weapon Mastery **[partial]** |
+| 1 | Rage **[partial]**<br>Unarmored Defense **[implemented]**<br>Weapon Mastery **[partial]** |
 | 2 | Danger Sense **[unreviewed]**<br>Reckless Attack **[unreviewed]** |
 | 3 | Barbarian Subclass **[unreviewed]**<br>Primal Knowledge **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -675,7 +675,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Rage · 1 | Actual-level use pool, finite Spend/Undo, source-specific rest recovery, duration/armor/Strength-attack/resistance/spell restrictions, persistence and print. Spending records resource use; Rage activation, conditional damage, damage resistance and turn/duration resolution remain table decisions. | [tests/barbarian-rage-resources.cjs](../tests/barbarian-rage-resources.cjs), [tests/barbarian-rage-resources-browser.cjs](../tests/barbarian-rage-resources-browser.cjs) |
-| Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Unarmored Defense · 1 | Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice. | [tests/character-equipment.cjs](../tests/character-equipment.cjs), [tests/monk-martial-arts-browser.cjs](../tests/monk-martial-arts-browser.cjs) |
 | Weapon Mastery · 1 | Weapon choices, class-level allowance, proficiency gating and property reminders exist. Audit remaining property-specific statistics/conditions against the source. | [tests/weapon-mastery.cjs](../tests/weapon-mastery.cjs), [tests/weapon-mastery-browser.cjs](../tests/weapon-mastery-browser.cjs) |
 | Danger Sense · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Reckless Attack · 2 | Source-rule comparison and structured fields still need review. | Pending |
@@ -881,7 +881,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Martial Arts **[partial]**<br>Unarmored Defense **[unreviewed]** |
+| 1 | Martial Arts **[partial]**<br>Unarmored Defense **[implemented]** |
 | 2 | Monk's Focus **[partial]**<br>Unarmored Movement **[unreviewed]**<br>Uncanny Metabolism **[unreviewed]** |
 | 3 | Deflect Attacks **[unreviewed]**<br>Monk Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
@@ -905,7 +905,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Martial Arts · 1 | Actual Monk1–20 revised die, Simple Melee and Light Martial Melee eligibility (including Greatclub), automatic better Strength/Dexterity without overwriting explicit choices, separate Grapple/Shove DC reminders and independent Bonus Action Unarmed Strike. Physical conditions, magic/style/offhand values, source/multiclass, save/print/Guide covered; subclass/optional/racial exceptions and action/target enforcement remain separate. | [tests/monk-martial-arts.cjs](../tests/monk-martial-arts.cjs), [tests/monk-martial-arts-browser.cjs](../tests/monk-martial-arts-browser.cjs) |
-| Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Unarmored Defense · 1 | Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice. | [tests/character-equipment.cjs](../tests/character-equipment.cjs), [tests/monk-martial-arts-browser.cjs](../tests/monk-martial-arts-browser.cjs) |
 | Monk's Focus · 2 | Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review. | [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
 | Unarmored Movement · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Uncanny Metabolism · 2 | Source-rule comparison and structured fields still need review. | Pending |

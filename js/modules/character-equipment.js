@@ -127,15 +127,20 @@ var CharacterEquipment = (() => {
       }
       if(r.requiresAttunement&&!r.magicActive)warnings.push(r.item.name+': magical bonuses require attunement.');
     }
-    let base=10+stats.mods.dex,baseLabel='Unarmored: 10 + DEX';
+    let base=10+stats.mods.dex,baseLabel='Unarmored: 10 + DEX',unarmoredDefenseNote='';
     if(armorEntry){
       const p=armorEntry.profile;
       base=p.baseAC+(p.group==='heavy'?0:p.group==='medium'?Math.min(2,stats.mods.dex):stats.mods.dex);
       baseLabel=p.name;
     } else {
-      const adobe=data.rulesChoices?.grants?.__adobe?.data||data.adobe||{};
-      const classLevels=(Array.isArray(adobe.classLevels)&&adobe.classLevels.length?adobe.classLevels:[{classId:data.build?.classId,level:1,subclassId:''}]).filter(Boolean);
-      const hasClass=id=>classLevels.some(entry=>entry.classId===id&&Number(entry.level||0)>=1);
+      const adobe=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};
+      const rawClasses=Array.isArray(adobe.classLevels)&&adobe.classLevels.length?adobe.classLevels:[{classId:data.build?.classId,level:level||1,subclassId:''}];
+      let remaining=level===undefined?20:Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));const seenClasses=new Set(),classLevels=[];
+      for(const entry of rawClasses){if(!entry)continue;const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(actual&&!seenClasses.has(entry.classId))classLevels.push({...entry,level:actual});seenClasses.add(entry.classId);}
+      // Legacy multiclassing cannot grant Unarmored Defense a second time. The
+      // revised rules instead permit choosing one of multiple AC formulas.
+      const defenses=classLevels.filter(entry=>['barbarian','monk'].includes(entry.classId)),firstDefense=defenses[0]?.classId,modern=data.build?.edition==='2024',defenseAvailable=id=>modern?defenses.some(entry=>entry.classId===id):firstDefense===id;
+      if(defenses.length>1)unarmoredDefenseNote=modern?'2024 multiclass armor calculation: use one eligible formula at a time, never combine them. The highest eligible formula is shown.':'2014 multiclass Unarmored Defense: '+(firstDefense==='barbarian'?'Barbarian':'Monk')+' is the first granting class. The later class does not grant a second Unarmored Defense formula.';
       const subclass=(id,sub,min=1)=>classLevels.some(entry=>entry.classId===id&&entry.subclassId===sub&&Number(entry.level||0)>=min);
       const alternatives=[{value:10+stats.mods.dex,label:'Unarmored: 10 + DEX',shield:true}];
       const race=stats.effects?.race||(typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null);
@@ -143,8 +148,8 @@ var CharacterEquipment = (() => {
         const ability=race.naturalArmor.ability,mod=ability?Number(stats.mods?.[ability]||0):0;
         alternatives.push({value:Number(race.naturalArmor.base||10)+mod,label:(race.name||'Racial')+' natural armor',shield:true});
       }
-      if(hasClass('barbarian'))alternatives.push({value:10+stats.mods.dex+stats.mods.con,label:'Barbarian Unarmored Defense',shield:true});
-      if(hasClass('monk')&&!shieldEntry)alternatives.push({value:10+stats.mods.dex+stats.mods.wis,label:'Monk Unarmored Defense',shield:false});
+      if(defenseAvailable('barbarian'))alternatives.push({value:10+stats.mods.dex+stats.mods.con,label:'Barbarian Unarmored Defense',shield:true});
+      if(defenseAvailable('monk')&&!shieldEntry)alternatives.push({value:10+stats.mods.dex+stats.mods.wis,label:'Monk Unarmored Defense',shield:false});
       if(data.build?.edition==='2014'&&subclass('sorcerer','draconic-bloodline',1))alternatives.push({value:13+stats.mods.dex,label:'Draconic Resilience',shield:true});
       if(data.build?.edition==='2024'&&subclass('sorcerer','draconic-bloodline',3))alternatives.push({value:10+stats.mods.dex+stats.mods.cha,label:'Draconic Resilience',shield:true});
       const best=alternatives.sort((a,b)=>b.value-a.value)[0];
@@ -205,7 +210,7 @@ var CharacterEquipment = (() => {
     }
     // Defense follows the owned armor actually worn, independent of the manual feat reminder.
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
-    return {entries,attacks,martialArts,warnings,attuned,attunementLimit:attunement.limit,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
+    return {entries,attacks,martialArts,unarmoredDefenseNote,warnings,attuned,attunementLimit:attunement.limit,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
   return {attunementLimit,attunementState,weapons,armor,normalize,infer,profile,choices,trained,derive};
 })();
