@@ -140,7 +140,7 @@ var SiteHelpData=(()=>{
   'effective maximum hp':'The final maximum HP after supported choices and bonuses. The Combat breakdown explains each source.',
   'con':'Constitution determines your Constitution modifier. That modifier contributes to HP for every character level and to Constitution checks and saves.',
   'hit dice':'The dice provided by your class levels for recovering HP during a short rest. Multiclass characters retain each class’s die type.',
-  'speed':'Your movement allowance in feet. The character’s value includes supported species, feat and equipment effects; a companion uses its own movement statistics.',
+  'speed':'Your walking movement allowance in feet, including supported species, feats, equipment and eligible Monk/Barbarian class bonuses. Open Movement breakdown below the Overview metrics for actual class levels and worn armor/shield restrictions. Item speed minima apply to the class-adjusted total; companions use their own movement statistics.',
   'walking speed':'Walking movement in feet, including supported species and character-choice bonuses. Other movement modes are described in their features.',
   'spell save dc':'The target for saving throws against your spells: 8 + proficiency bonus + casting ability modifier, plus supported bonuses. Multiclass spell lists show the correct statistic for each casting class.',
   'spell attack':'The bonus to spell attack rolls: proficiency bonus + casting ability modifier, plus supported bonuses. Each multiclass spell list shows its own class’s statistic.',

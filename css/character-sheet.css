@@ -1033,3 +1033,10 @@
 .sheet-language-chips button { font-size: .8rem; min-height: 1.8rem; }
 .sheet-language-class { padding-block: .5rem; border-block-end: 1px solid #c8b393; }
 #sheetLearnedLanguages details { margin-top: .75rem; }
+
+/* One compact, optional explanation beside the existing Speed metric. */
+#characterSheetDialog .sheet-class-movement{margin:8px 0 12px;min-width:0;overflow-wrap:anywhere}
+#characterSheetDialog .sheet-class-movement>summary{min-height:44px;box-sizing:border-box;padding:12px 0;cursor:pointer}
+#characterSheetDialog .sheet-class-movement>p{margin:0 0 12px;line-height:1.6}
+#characterSheetDialog .sheet-class-movement ul{margin:0 0 12px;padding-left:20px;line-height:1.6}
+#characterSheetDialog .sheet-class-movement li+li{margin-top:8px}
