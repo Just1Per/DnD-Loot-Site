@@ -3,6 +3,8 @@ name: Campaign workspace checks
   pull_request:
     paths:
     - index.html
+    - prototypes/character-control/**
+    - scripts/build-adobe-control-prototype.py
     - firebase.json
     - css/**
     - js/boot-status.js
@@ -119,6 +121,8 @@ jobs:
       run: |
         npm --prefix tests run test:sorcerer-metamagic
         npm --prefix tests run test:ranger-resources
+    - name: Adobe first-page manual Control prototype
+      run: npm --prefix tests run test:control-prototype
     - name: NPC reading, exact-record reopening and return navigation
       run: |-
         npm --prefix tests run test:campaign-npcs

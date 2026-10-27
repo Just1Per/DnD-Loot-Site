@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Control prototype · CampaignAtlas</title>
+<link rel="stylesheet" href="prototype.css?v=20261027-control-prototype-v1">
+<script src="prototype.js?v=20261027-control-prototype-v1" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#paper">Jump to character sheet</a>
+<header class="prototype-header">
+ <div><span class="eyebrow">CAMPAIGNATLAS · VISUAL PROTOTYPE</span><h1>Control</h1><p>The Adobe sheet’s first page, with manual fields. Calculations come later.</p></div>
+ <a href="../../">Back to CampaignAtlas</a>
+</header>
+<main>
+ <section class="prototype-toolbar" aria-label="Prototype tools">
+  <label>Zoom <select id="zoom"><option value="fit">Fit width</option><option value="1">100%</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option></select></label>
+  <button type="button" id="openDraft" disabled>Open draft</button>
+  <input type="file" id="draftFile" accept="application/json,.json" hidden>
+  <button type="button" id="download" disabled>Download draft</button>
+  <button type="button" id="reset" disabled>Clear fields</button>
+  <button type="button" id="print" disabled>Print</button>
+  <span id="status" role="status">Loading the sheet…</span>
+ </section>
+ <p class="prototype-note">This is a separate test sheet. Entries stay on this page; download a draft to keep a copy. It does not change your saved character. The small PDF action buttons are visual placeholders. On a small screen, zoom in and scroll to fill the fields.</p>
+ <div id="loadError" class="load-error" hidden><p>The sheet fields could not be loaded.</p><button type="button" id="retry">Try again</button></div>
+ <div id="viewport" class="paper-viewport" role="region" tabindex="0" aria-label="Character sheet — scroll to explore when zoomed">
+  <form id="paper" class="paper" aria-label="Manual first-page character sheet" autocomplete="off" hidden>
+   <img class="sheet-artwork" src="sheet-background.webp?v=20261027-control-prototype-v1" alt="" aria-hidden="true" draggable="false">
+   <div id="fields"></div>
+  </form>
+ </div>
+ <datalist id="classOptions"><option>Artificer</option><option>Barbarian</option><option>Bard</option><option>Cleric</option><option>Druid</option><option>Fighter</option><option>Monk</option><option>Paladin</option><option>Ranger</option><option>Rogue</option><option>Sorcerer</option><option>Warlock</option><option>Wizard</option></datalist>
+</main>
+</body>
+</html>

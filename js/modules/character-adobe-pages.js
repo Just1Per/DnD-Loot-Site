@@ -12,6 +12,7 @@
       <div class="sheet-page-manager-options">
         ${Object.entries(OPTIONAL).map(([key,label])=>`<label><input type="checkbox" data-toggle-page="${key}"><span><strong>${label}</strong><small data-page-note="${key}"></small></span></label>`).join('')}
       </div>
+      <section class="sheet-control-prototype-link" aria-label="Control visual prototype"><h4>Control · prototype</h4><p>A separate copy of the Adobe first page with manual fields. Opens in a new tab; your saved character is unchanged.</p><a class="btn-primary" id="sheetControlPrototypeLink" href="prototypes/character-control/" target="_blank" rel="noopener">Open Control prototype ↗</a></section>
       <div class="sheet-page-manager-actions"><button type="button" class="btn-primary" data-close-page-manager>Done</button></div>
     </dialog>`;
   }
