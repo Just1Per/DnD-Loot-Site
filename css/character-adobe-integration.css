@@ -756,3 +756,8 @@
 .sheet-class-choice-card [data-natural-explorer-rules]{margin-top:6px}
 .sheet-class-choice-card [data-natural-explorer-rules]>summary{box-sizing:border-box;min-height:44px;padding:12px 0;cursor:pointer;font:700 .75rem/1.5 Georgia,serif;color:#5c1d1d}
 .sheet-class-choice-card [data-natural-explorer-rules]>summary:focus-visible{outline:2px solid #9b1d1d;outline-offset:2px}
+
+#sheetPageManager .sheet-control-prototype-link{margin:16px 18px;padding-top:14px;border-top:1px solid var(--sheet-line,#c7b697)}
+#sheetPageManager .sheet-control-prototype-link h4{margin:0 0 6px}
+#sheetPageManager .sheet-control-prototype-link p{font-size:13px;line-height:1.55}
+#sheetPageManager .sheet-control-prototype-link a{display:inline-flex;align-items:center;min-height:44px;padding:10px 14px;box-sizing:border-box;text-decoration:none}

@@ -80,6 +80,7 @@ var SiteHelpData=(()=>{
   'ac bonus':'Sets an additional AC bonus for the item’s supported mechanics. Choose its base armor or shield separately so the engine can calculate the full defense.', 'attack bonus':'Sets the item’s additional attack bonus beyond ability and proficiency.', 'damage bonus':'Sets the item’s extra flat damage bonus.', 'base item':'Chooses the ordinary armor, shield or weapon behind this item so its basic rules can be calculated.',
  };
  const boxes={
+  'control · prototype':'Opens a separate visual test of the Adobe first page. Fill the fields manually, use Zoom for a closer view and Download draft to keep your entries or Open draft to restore them. Calculations are not connected, and this does not edit the saved character.',
   'natural explorer':'2014 Ranger chooses one favored terrain at level 1, a second at 6 and a third at 10. Choose distinct terrains. Related Intelligence/Wisdom skill checks double proficiency when proficient; Expertise does not double again. Travel benefits require at least an hour in favored terrain. Open Terrain benefits for the reminder; the top Guide explains the travel rules.',
   'overview':'Your ready-to-play summary. Most numbers come from other tabs; use their editors for changes. You can toggle Inspiration, add attacks and pin useful reminders here.',
   'strength':'Physical power, used by Athletics, Strength saves and supported Strength-based attacks. Overview shows the final score and its modifier; edit base scores on Abilities & Skills.',

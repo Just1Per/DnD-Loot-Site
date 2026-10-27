@@ -130,7 +130,8 @@
     "test:world-editor-navigation": "node world-editor-navigation-browser.cjs",
     "test:monk-martial-arts": "node monk-martial-arts-browser.cjs",
     "test:barbarian-rage": "node barbarian-rage-resources-browser.cjs",
-    "test:class-movement": "node class-movement-speeds-browser.cjs"
+    "test:class-movement": "node class-movement-speeds-browser.cjs",
+    "test:control-prototype": "node control-prototype-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.51.1",
