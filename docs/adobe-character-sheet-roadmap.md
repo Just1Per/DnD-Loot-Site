@@ -24,8 +24,8 @@ The source is MPMB v13.0.4 Printer Friendly with added content. Preserve both ex
 
 ## Rolling milestones
 
-- [ ] Check in reproducible complete control/action/template inventory, with dynamic sites explicitly unreviewed.
-- [ ] Generate blank active and optional/template layouts, retaining original attribution and clearing supplied character values/portraits.
+- [x] Check in reproducible static control/action/template inventory, with dynamic sites explicitly unreviewed.
+- [x] Generate blank active and optional/template layouts, retaining original attribution and clearing supplied character values/portraits.
 - [ ] Standard/Adobe selector using shared character identity, data, derived totals, revisions and permissions.
 - [ ] Field adapter: raw inputs, computed outputs and validated commands; hidden Standard inputs cannot overwrite Adobe edits.
 - [ ] First-page core mechanics and save/reopen/style-switch equivalence.
@@ -43,8 +43,20 @@ The presentation reads common derived outputs and edits through the existing con
 
 Keep the dense paper styling isolated from global app CSS. Load layouts only when the Adobe view/page is opened. Preserve unsaved edits and current page when switching style, and reject invalid edits clearly instead of silently saving an older value.
 
-## Initial publication status
+## Current implementation checkpoint
 
-The approved standalone first-page prototype is merged in main. The comprehensive scanner, blank-page exporter and initial field adapter have been started locally. Their code/artifacts will be added as the managed environment recovers; this initial checkpoint records the scope and measured inventory only. A layout match or a registered option is not evidence that all its functions work.
+The committed source inventory is in [adobe-inventory](adobe-inventory/README.md). The reproducible exporter creates six active and eleven user-facing optional layouts under `data/adobe-pages/`; the internal remember template is intentionally excluded. Layouts and artwork load only when requested.
 
-No assistant merge, production deployment, rule deployment or data migration is authorized.
+The connected preview adds a Standard/Adobe selector for the same saved character. Initial bindings cover identity, current/temporary HP, inspiration, common ability/save/skill totals and manual training, race/background catalogue choices, death saves, languages/resistances, coins, appearance/personality/organization fields and existing journal entries. Shared editors retain their original DOM, handlers and save path. Calculated fields remain read-only; unsupported fields are explicitly unfinished. Raw profile additions are preserved and editable in Standard too.
+
+This is an intermediate foundation, not complete source parity. Automatic training, item effects and computed values come from the existing engine; PDF-specific menus are not a substitute for missing shared rules. Spells, companions, Wild Shape, adventure logs, conditional layouts, full source-button semantics and many per-page bindings remain pending. Opening a related editor does not mean that every PDF menu action has been implemented.
+
+### Verification
+
+- `node --test tests/adobe-field-adapter.cjs tests/character-play-rules.cjs`: 20 passing checks for derived outputs, whitelist validation, limits, protected training, death counters, journal bindings and profile round trips.
+- `npm --prefix tests run test:adobe-connected`: functional browser flow for lazy loading, shared editing, style round trips, actual save/reopen, validation and mobile zoom. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
+- Development browser: Chromium 154. The locally downloaded Chromium 134 also hangs in a baseline Standard-skills test; compatibility with the GitHub runner must be verified rather than reported as passing. The connected check is registered in CI.
+
+No Firestore or Storage rule changes are included. Existing session access controls and save envelope apply. No assistant merge, production deployment, rule deployment or data migration is authorized.
+
+The first-page print check verifies one page at the source dimensions (approximately 595 × 792 pt) and the character name in extracted PDF text. The final Adobe view passes the selected WCAG A/AA axe rules in Chromium 154. These checks do not establish full keyboard, screen-reader or all-page parity.

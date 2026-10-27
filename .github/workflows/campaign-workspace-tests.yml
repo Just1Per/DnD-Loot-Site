@@ -3,6 +3,9 @@ name: Campaign workspace checks
   pull_request:
     paths:
     - index.html
+    - data/adobe-pages/**
+    - scripts/build-adobe-pages.py
+    - scripts/scan-adobe-sheet.py
     - prototypes/character-control/**
     - scripts/build-adobe-control-prototype.py
     - firebase.json
@@ -59,6 +62,8 @@ jobs:
         mkdir -p /tmp/campaignatlas-ui-checks
         set -o pipefail
         npm --prefix tests test 2>&1 | tee /tmp/campaignatlas-ui-checks/engine-dom.log
+    - name: Connected Adobe sheet save, print and accessibility
+      run: npm --prefix tests run test:adobe-connected
     - name: Character Overview display controls
       run: npm --prefix tests run test:builder
     - name: Catalogue migration and reviewed-catalogue logic

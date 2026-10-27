@@ -52,6 +52,7 @@ function sheetStatus(message, error = false) {
 function closeCharacterSheet(force = false) {
   if(!force&&!SheetNavigation.guard(()=>closeCharacterSheet(true)))return false;
   if(typeof SheetNavigation!=='undefined')SheetNavigation.cancel();
+  globalThis.CharacterAdobeView?.destroy();
   ++sheetGeneration;
   closeSpellInformation();
   if(typeof closeFeatInformation==='function')closeFeatInformation();
@@ -333,13 +334,16 @@ function renderCharacterSheet() {
   });
   dialog.querySelector('#sheetAddAttack').onclick = () => openAttackPicker();
   dialog.querySelector('#sheetAddSpell').onclick = () => addSheetRow('spells');
-  dialog.querySelector('#sheetExport').onclick = exportCharacterSheet;
+  dialog.querySelector('#sheetExport').onclick = () => {if(!globalThis.CharacterAdobeView||CharacterAdobeView.validate())exportCharacterSheet();};
   dialog.querySelector('#sheetPrint').onclick = () => {
+    if(globalThis.CharacterAdobeView?.active()){CharacterAdobeView.print();return;}
     readSheetForm();
     openSheetPrintDialog();
   };
+  globalThis.CharacterAdobeView?.install();
 }
 function selectSheetTab(key) {
+  if(globalThis.CharacterAdobeView?.routeSection(key))return;
   const dialog = document.getElementById('characterSheetDialog');
   if (!dialog)
     return;
@@ -442,6 +446,7 @@ function updateSheetCalculations() {
   });
   // Repeating editors rebuild their controls above; decorate their final fields.
   markUnfinishedCharacterFields(validation?.issues || []);
+  globalThis.CharacterAdobeView?.refresh(d);
 }
 function addSheetRow(key) {
   readSheetForm();
@@ -463,10 +468,12 @@ async function saveCharacterSheet({reportValidation=true}={}) {
   const s = sheetSession;
   if (!s || s.saving || (s.uid && s.uid!==auth.currentUser?.uid))
     return false;
+  if(globalThis.CharacterAdobeView&&!CharacterAdobeView.validate())return false;
   const form = document.getElementById('characterSheetForm');
   const invalid = [...form.querySelectorAll('input,select,textarea')].find(input => !input.checkValidity());
   if (invalid) {
-    selectSheetTab(invalid.closest('[data-sheet-section]').dataset.sheetSection);
+    const section=invalid.closest('[data-sheet-section]')?.dataset.sheetSection;
+    if(section)selectSheetTab(section);
     sheetStatus(invalid.validationMessage||'Correct the highlighted sheet field before saving.',true);
     if(reportValidation)invalid.reportValidity();
     return false;

@@ -1,0 +1,145 @@
+'use strict';
+/* Alternate rendering of the current session. No SDK, storage or second engine. */
+var CharacterAdobeView=(()=>{
+ const VERSION='20261027-adobe-sheet-v1',assets=new Map(),sessions=new WeakMap();let current=null;
+ const option=(text,value)=>Object.assign(document.createElement('option'),{textContent:text,value});
+ const editorTargets={classes:['Class, level & hit points','#sheetAdobeProgression'],hp:['Class, level & hit points','#sheetAdobeProgression'],abilities:['Ability scores & skills','#sheet-skills'],skills:['Ability scores & skills','#sheet-skills'],origins:['Origins & class choices','#sheetBuildControls'],features:['Origins & class choices','#sheetBuildControls'],background:['Origins & class choices','#sheetBuildControls'],equipment:['Equipment & treasure','#sheet-inventory'],inventory:['Equipment & treasure','#sheet-inventory'],spells:['Spells','#sheet-spells'],feats:['Feats','#sheet-feats'],attacks:['Combat & resources','#sheet-combat'],resources:['Combat & resources','#sheet-combat'],conditions:['Combat & resources','#sheet-combat'],combat:['Combat & resources','#sheet-combat'],notes:['Adventure journal','#sheet-notes'],story:['Background & appearance','#sheet-story'],builder:['Origins & class choices','#sheetBuildControls']};
+ const active=()=>!!(current?.host.isConnected&&current.session===sheetSession&&current.state.style==='adobe');
+ function key(s){return ['sheet-style',s.uid,s.campaignId,s.adventureId||'campaign',s.characterId].join(':');}
+ function state(s){if(!sessions.has(s)){let style='standard';try{if(localStorage.getItem(key(s))==='adobe')style='adobe';}catch{}sessions.set(s,{style,page:'page-1',zoom:'fit',notesOffset:0,derived:null,editor:null});}return sessions.get(s);}
+ async function json(path){if(!assets.has(path))assets.set(path,fetch(new URL('data/adobe-pages/'+path+'?v='+VERSION,document.baseURI)).then(r=>{if(!r.ok)throw Error('The Adobe page could not be loaded.');return r.json();}).catch(e=>{assets.delete(path);throw e}));return assets.get(path);}
+ function context(c=current){
+  const s=c.session,d=c.state.derived||CharacterSheetModel.derive(s.data,s.identity.level,sheetEquipmentLoot());
+  const list=path=>[...document.querySelectorAll('#characterSheetForm [name="'+path+'"] option')].map(o=>({value:o.value,label:o.textContent,disabled:o.disabled}));
+  return {data:s.data,identity:s.identity,derived:d,pageId:c.state.page,notesOffset:c.state.notesOffset,options:{races:list('build.race'),backgrounds:list('build.background'),'profile.gender':list('profile.gender'),alignment:list('alignment')},className:id=>CharacterAdobeEngine.className(id),hitDie:id=>CharacterProgression.classes?.[id]?.hitDie||'',features:entry=>CharacterClassProgression.unlocked(entry.classId,entry.level,entry.subclassId,s.data.build.edition,entry.classId==='artificer'?CharacterClassFeatureChoices.artificerSource(s.data).id:undefined).map(f=>f.name+' (level '+f.level+'): '+(f.summary||'')),background:CharacterBackgrounds.get(s.data.build.background),inventory:sheetEquipmentLoot().map(e=>({name:e.item?.name||'',quantity:e.quantity,weight:e.item?.weight??''}))};
+ }
+ function notice(text,error=false){if(!current)return;const node=current.shadow.getElementById('adobeStatus');node.textContent=text;node.classList.toggle('error',error);}
+ function valid(c=current,focus=true){if(!c?.host.isConnected)return true;const invalid=[...c.controls.values()].find(row=>row.input.getAttribute('aria-invalid')==='true');if(!invalid)return true;if(focus){c.state.style='adobe';applyStyle(c);invalid.input.focus();notice(invalid.input.dataset.error||'Correct the highlighted Adobe field.',true);}return false;}
+ function write(field,value){
+  const c=current,s=c?.session;if(!c?.host.isConnected||s!==sheetSession||s.uid!==auth.currentUser?.uid||s.campaignId!==activeCampaign?.id)throw Error('The character session has changed. Reopen the sheet before editing.');
+  const edit=CharacterAdobeFields.planEdit(field,value,context(c));
+  if(edit.journalIndex!==undefined){
+   if(edit.journalIndex>=300)throw Error('The journal has reached its note limit.');
+   readSheetForm();const next=structuredClone(s.data);
+   while(next.adobe.journal.length<=edit.journalIndex){const n=next.adobe.journal.length;next.adobe.journal.push({id:'adobe-note-'+crypto.randomUUID(),title:'Adobe note '+(n+1),category:'General',text:''});}
+   next.adobe.journal[edit.journalIndex].text=edit.value;const normalized=CharacterSheetModel.normalize(next);
+   if(normalized.adobe.journal[edit.journalIndex]?.text!==edit.value)throw Error('This note exceeds the journal’s remaining space.');
+   s.data=normalized;s.dirty=true;fillSheetForm();renderCharacterJournal();updateSheetCalculations();sheetStatus('Unsaved changes');return;
+  }
+  const input=document.querySelector('#characterSheetForm [name="'+edit.path+'"]');
+  if(input){
+   if(input.disabled||input.readOnly)throw Error('This choice is controlled by the shared character rules.');
+   if(input.type==='checkbox')input.checked=!!edit.value;else input.value=String(edit.value);
+   input.dispatchEvent(new Event('change',{bubbles:true}));
+  }else{
+   readSheetForm();const next=structuredClone(s.data),keys=edit.path.split('.'),last=keys.pop();let target=next;
+   if(keys[0]==='identity'){s.identity[last]=edit.value;}else{for(const k of keys)target=target[k];target[last]=edit.value;s.data=CharacterSheetModel.normalize(next);}
+   s.dirty=true;fillSheetForm();updateSheetCalculations();sheetStatus('Unsaved changes');
+  }
+ }
+ function commit(row){try{write(row.field,row.input.type==='checkbox'?row.input.checked:row.input.value);row.input.removeAttribute('aria-invalid');delete row.input.dataset.error;notice('Updated the shared character. Save sheet to keep the change.');refresh(current?.state.derived);}catch(e){row.input.setAttribute('aria-invalid','true');row.input.dataset.error=e.message;notice(e.message,true);}}
+ function description(row,ctx){const d=CharacterAdobeFields.describe(row.field,ctx),standard=d.path?document.querySelector('#characterSheetForm [name="'+d.path+'"]'):null;if(standard&&(standard.disabled||standard.readOnly))return {...d,state:'computed',reason:'Controlled by the shared character rules.'};return d;}
+ function updateControl(row,ctx){
+  const d=description(row,ctx),input=row.input;row.descriptor=d;row.host.dataset.state=d.state;
+  input.title=row.field.label+' — '+(d.state==='pending'?d.reason:d.state==='computed'?d.reason||'Calculated by the shared character engine.':'Edits the same saved character as Standard.');
+  if(d.command)input.title+=' Double-click or press Enter to open its controls.';
+  if(input.tagName==='SELECT'){
+   const opts=d.options||row.field.options?.map(v=>({value:v,label:v}))||[];const signature=JSON.stringify(opts);
+   if(row.options!==signature){input.replaceChildren(option('',''),...opts.map(o=>{const n=option(o.label,o.value);n.disabled=!!o.disabled;return n}));row.options=signature;}
+   if(d.value!==''&&!Array.from(input.options).some(o=>o.value===String(d.value))){const n=option(String(d.value)+' (saved)',String(d.value));n.disabled=true;input.append(n);}
+  }
+  const editing=current.shadow.activeElement===input&&input.type!=='checkbox';
+  if(!editing&&input.getAttribute('aria-invalid')!=='true'){if(input.type==='checkbox')input.checked=!!d.value;else input.value=String(d.value??'');}
+  if(input.type==='checkbox'||input.tagName==='SELECT')input.disabled=d.state!=='editable';else input.readOnly=d.state!=='editable';
+ }
+ function makeControl(field,i,c){
+  const d=description({field},context(c)),host=document.createElement('label'),input=document.createElement(d.kind==='select'?'select':d.kind==='textarea'?'textarea':'input');
+  host.className='field';const [x,y,r,b]=field.rect;Object.assign(host.style,{left:100*x/c.page.width+'%',top:100*y/c.page.height+'%',width:100*(r-x)/c.page.width+'%',height:100*(b-y)/c.page.height+'%',fontSize:'calc(var(--scale) * '+field.fontSize+'px)'});
+  const label=document.createElement('span');label.className='sr-only';label.textContent=field.label;input.dataset.pdfField=field.id;input.setAttribute('aria-label',field.label);
+  if(input.tagName==='INPUT'){input.type=d.kind==='checkbox'?'checkbox':d.kind==='number'?'number':'text';if(input.type==='number'){input.min=String(d.min??0);input.max=String(d.max??1000000);input.step='1';}}
+  if(input.tagName==='TEXTAREA'){input.rows=2;input.maxLength=d.max||20000;}else if(input.type==='text')input.maxLength=d.max||12000;
+  if(/^(Str|Dex|Con|Int|Wis|Cha)( |$)|^(AC|HP Max|Proficiency Bonus|Passive Perception|Initiative bonus|Spell save DC|HD\d|Speed)/.test(field.id))host.classList.add('center');
+  host.append(label,input);const row={field,host,input,options:null};
+  input.addEventListener('change',()=>{if(row.descriptor.state==='editable')commit(row)});
+  input.addEventListener('input',()=>{if(row.descriptor.state==='editable'){c.session.dirty=true;sheetStatus('Unsaved changes');}});
+  input.addEventListener('dblclick',()=>{if(row.descriptor.command)openEditor(row.descriptor.command)});
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'&&input.tagName!=='TEXTAREA'){e.preventDefault();if(row.descriptor.state==='editable')commit(row);else if(row.descriptor.command)openEditor(row.descriptor.command);}});
+  updateControl(row,context(c));return row;
+ }
+ function resize(c=current){if(!c?.page||!c.host.isConnected)return;const paper=c.shadow.getElementById('adobePaper'),viewport=c.shadow.getElementById('adobeViewport'),width=c.state.zoom==='fit'?Math.min(1180,Math.max(240,viewport.clientWidth-24)):c.page.width*96/72*Number(c.state.zoom);paper.style.width=width+'px';paper.style.aspectRatio=c.page.width+'/'+c.page.height;paper.style.setProperty('--scale',width/c.page.width);}
+ function buttonCommand(id){
+  if(id==='SkillsClick')return 'skills';if(id==='Buttons.HP Max')return 'hp';if(id==='Heal')return 'conditions';
+  if(/Class Features|Background Menu/.test(id))return 'origins';
+  if(/Equipment|Magic Item|Ammunition|Ammo/.test(id))return 'equipment';
+  if(/Feat/.test(id))return 'feats';if(/Spell/.test(id))return 'spells';
+  if(/Notes/.test(id))return 'notes';return null;
+ }
+ async function loadPage(id){
+  const c=current;if(!c)return;if(!valid(c)){c.shadow.getElementById('adobePage').value=c.state.page;return;}
+  const token=++c.generation;c.state.page=id;c.shadow.getElementById('adobeRetry').hidden=true;c.shadow.getElementById('adobePaper').hidden=true;c.shadow.getElementById('adobePrint').disabled=true;notice('Loading Adobe page…');
+  try{
+   const page=await json(id+'.json');if(c!==current||c.session!==sheetSession||!c.host.isConnected||token!==c.generation)return;
+   c.page=page;c.controls.clear();const paper=c.shadow.getElementById('adobePaper');paper.replaceChildren();
+   const image=document.createElement('img');image.className='artwork';image.src=new URL('data/adobe-pages/'+id+'.webp?v='+VERSION,document.baseURI);image.alt='';image.setAttribute('aria-hidden','true');paper.append(image);
+   for(let i=0;i<page.fields.length;i++){const field=page.fields[i];if(field.id.endsWith('.toFocus'))continue;const row=makeControl(field,i,c);c.controls.set(field.id,row);paper.append(row.host);}
+   for(const source of page.buttons){const b=document.createElement('button'),[x,y,r,bottom]=source.rect;b.type='button';b.className='pdf-button';b.dataset.pdfButton=source.id;b.textContent=source.caption||'›';b.setAttribute('aria-label',source.label);b.title=source.label;Object.assign(b.style,{left:100*x/page.width+'%',top:100*y/page.height+'%',width:100*(r-x)/page.width+'%',height:100*(bottom-y)/page.height+'%'});b.onclick=()=>{const cmd=buttonCommand(source.id);if(cmd)openEditor(cmd);else notice('This PDF control is still being connected: '+source.label,true);};paper.append(b);}
+   await image.decode();if(c!==current||c.session!==sheetSession||!c.host.isConnected||token!==c.generation)return;
+   paper.hidden=false;c.shadow.getElementById('adobePrint').disabled=false;resize(c);refresh(c.state.derived);notice('Adobe preview — connected fields use your shared character. Other controls are still being connected.');
+   c.shadow.getElementById('adobeNotes').hidden=!/notes|page-5/i.test(id);
+   c.shadow.getElementById('adobeEditionNotice').hidden=!/PRsheet|page-6/.test(id);
+  }catch(e){if(c===current&&token===c.generation){notice(e.message,true);c.shadow.getElementById('adobeRetry').hidden=false;}}
+ }
+ function closeEditor(clear=true){
+  const c=current;if(!c?.editor)return;const {header,panels}=c.editor;c.editor=null;
+  if(clear)c.state.editor=null;
+  for(const [node,hidden] of panels)if(node.isConnected)node.hidden=hidden;
+  header.remove();if(c.form.isConnected){c.form.querySelector('.sheet-body').hidden=c.state.style==='adobe';c.host.hidden=c.state.style!=='adobe';}
+ }
+ function openEditor(command){
+  const c=current;if(!active()||!valid(c))return;const entry=editorTargets[command];if(!entry){notice('This workflow is still being connected.',true);return;}
+  closeEditor();const node=document.querySelector(entry[1]);if(!node){notice('These shared controls are not available for this character yet.',true);return;}
+  const panel=node.closest('[data-sheet-section]');if(!panel)return;
+  const header=document.createElement('header');header.className='adobe-shared-editor-heading';header.id='adobeSharedEditor';
+  const h=document.createElement('h3'),close=document.createElement('button');h.textContent=entry[0];close.type='button';close.textContent='Back to Adobe sheet';close.onclick=()=>closeEditor();header.append(h,close);
+  const body=c.form.querySelector('.sheet-body'),panels=[...body.querySelectorAll('[data-sheet-section]')].map(n=>[n,n.hidden]);
+  for(const [n] of panels)n.hidden=n!==panel;
+  body.classList.remove('sheet-readonly-page');body.hidden=false;c.host.hidden=true;body.before(header);c.editor={header,panels};c.state.editor=command;
+ }
+ function applyStyle(c){
+  const form=document.getElementById('characterSheetForm');if(!form)return;const adobe=c.state.style==='adobe';c.select.value=adobe?'adobe':'standard';form.dataset.sheetStyle=c.select.value;
+  form.querySelector('.sheet-body').hidden=adobe;const nav=form.querySelector('.sheet-page-navigation')||form.querySelector('.sheet-tabs');if(nav)nav.hidden=adobe;c.host.hidden=!adobe;
+ }
+ async function setStyle(value,{persist=true}={}){
+  const c=current;if(!c||!['standard','adobe'].includes(value))return false;
+  if(!valid(c)){c.select.value='adobe';return false;}if(value==='standard')closeEditor();readSheetForm();c.state.style=value;applyStyle(c);
+  if(persist)try{localStorage.setItem(key(c.session),value);}catch{}
+  if(value==='adobe'&&!c.shadow.querySelector('link')){const link=document.createElement('link');link.rel='stylesheet';link.href=new URL('css/character-adobe-view.css?v='+VERSION,document.baseURI);c.shadow.prepend(link);}
+  if(value==='adobe'&&!c.manifest){
+   try{const manifest=await json('pages.json');if(c!==current||c.session!==sheetSession||!c.host.isConnected)return false;c.manifest=manifest;
+    const select=c.shadow.getElementById('adobePage');select.replaceChildren(...manifest.pages.map(p=>option(p.title+(p.optional?' · optional':''),p.id)));select.value=c.state.page;await loadPage(c.state.page);
+   }catch(e){if(c===current){notice(e.message,true);c.shadow.getElementById('adobeRetry').hidden=false;}}
+  }else if(value==='adobe'&&!c.page)await loadPage(c.state.page);
+  return true;
+ }
+ function refresh(derived){
+  const s=sheetSession;if(!s)return;const st=state(s);if(derived)st.derived=derived;
+  const c=current;if(!c||c.session!==s||!c.host.isConnected||!c.page)return;const ctx=context(c);for(const row of c.controls.values())updateControl(row,ctx);
+ }
+ async function print(){const c=current;if(!active()||!c.page||!valid(c)||c.shadow.getElementById('adobePaper').hidden)return;try{await c.shadow.querySelector('.artwork').decode();const style=document.getElementById('adobePrintPageStyle')||document.createElement('style');style.id='adobePrintPageStyle';style.textContent='@media print{@page{size:'+Number(c.page.width)+'pt '+Number(c.page.height)+'pt;margin:0}}';document.head.append(style);document.body.classList.add('printing-adobe-sheet','printing-character-sheet');window.print();}catch{notice('The page artwork could not be loaded for printing. Retry the page.',true);}}
+ function destroy(){if(!current)return;const c=current;closeEditor(false);c.observer?.disconnect();++c.generation;current=null;}
+ function install(){
+  const s=sheetSession,form=document.getElementById('characterSheetForm');if(!s||!form)return;
+  if(current?.form===form)return;destroy();const st=state(s),select=document.createElement('select'),label=document.createElement('label');select.id='sheetStyle';select.setAttribute('aria-label','Character sheet style');select.append(option('Standard','standard'),option('Adobe · preview','adobe'));label.className='sheet-style-choice';label.append(document.createTextNode('Sheet style '),select);form.querySelector('.sheet-header .sheet-actions').prepend(label);
+  const host=document.createElement('section');host.id='sheetAdobeView';host.setAttribute('aria-label','Adobe character sheet');host.hidden=true;host.dataset.noContextHelp='';form.querySelector('.sheet-body').before(host);const shadow=host.attachShadow({mode:'open'});
+  shadow.innerHTML='<section class="adobe-toolbar" aria-label="Adobe sheet tools"><label>Page <select id="adobePage"></select></label><label>Zoom <select id="adobeZoom"><option value="fit">Fit width</option><option value="1">100%</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option></select></label><label>Shared controls <select id="adobeEditor"><option value="abilities">Ability scores & skills</option><option value="classes">Class, level & HP</option><option value="origins">Origins & features</option><option value="resources">Combat & resources</option><option value="equipment">Equipment</option><option value="spells">Spells</option><option value="feats">Feats</option><option value="notes">Journal</option><option value="story">Background</option></select></label><button type="button" id="adobeOpenEditor">Open controls</button><button type="button" id="adobePrint" disabled>Print page</button></section><p class="preview-note">Adobe view is under construction. Connected fields edit the same character as Standard. Calculated fields use the shared engine; unfinished fields are read-only. Use Save sheet to keep changes.</p><p id="adobeEditionNotice" class="edition-note" hidden>This page reproduces the original 2014 reference. Your character still uses its selected rule edition.</p><p id="adobeStatus" role="status"></p><button type="button" id="adobeRetry" hidden>Retry page</button><div id="adobeNotes" hidden><button type="button" id="adobePreviousNotes">Previous notes</button><button type="button" id="adobeNextNotes">More notes</button></div><div id="adobeViewport" class="paper-viewport" role="region" aria-label="Adobe paper, scroll to explore when zoomed" tabindex="0"><div id="adobePaper" class="paper" hidden></div></div>';
+  const c=current={session:s,state:st,form,select,host,shadow,controls:new Map(),page:null,manifest:null,generation:0,editor:null};
+  select.value=st.style;select.onchange=()=>setStyle(select.value);shadow.getElementById('adobePage').onchange=e=>loadPage(e.target.value);shadow.getElementById('adobeZoom').value=st.zoom;shadow.getElementById('adobeZoom').onchange=e=>{st.zoom=e.target.value;resize(c);};shadow.getElementById('adobeOpenEditor').onclick=()=>openEditor(shadow.getElementById('adobeEditor').value);shadow.getElementById('adobeRetry').onclick=()=>c.manifest?loadPage(st.page):setStyle('adobe');
+  shadow.getElementById('adobePrint').onclick=print;
+  const notePage=delta=>{st.notesOffset=Math.max(0,Math.min(Math.min(298,Math.floor(s.data.adobe.journal.length/2)*2),st.notesOffset+delta));refresh(st.derived);};shadow.getElementById('adobePreviousNotes').onclick=()=>notePage(-2);shadow.getElementById('adobeNextNotes').onclick=()=>notePage(2);
+  if(typeof ResizeObserver==='function'){c.observer=new ResizeObserver(()=>resize(c));c.observer.observe(shadow.getElementById('adobeViewport'));}applyStyle(c);if(st.style==='adobe')setStyle('adobe',{persist:false}).then(()=>{if(c===current&&st.editor)openEditor(st.editor)});
+ }
+ window.addEventListener('resize',()=>resize());
+ window.addEventListener('afterprint',()=>{document.body.classList.remove('printing-adobe-sheet','printing-character-sheet');document.getElementById('adobePrintPageStyle')?.remove();});
+ return {install,refresh,destroy,active,setStyle,print,validate:()=>valid(),openEditor,routeSection:key=>{if(!active())return false;if(key==='overview'){closeEditor();return true;}if(!editorTargets[key])return false;openEditor(key);return true;}};
+})();
+if(typeof globalThis!=='undefined')globalThis.CharacterAdobeView=CharacterAdobeView;

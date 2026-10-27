@@ -63,7 +63,7 @@ var CharacterAdobeFields=(()=>{
  }
  function planEdit(field,value,context){
   const d=describe(field,context);if(d.state!=='editable')throw Error('This field is calculated or is not connected.');
-  if(d.kind==='checkbox'){if(typeof value!=='boolean')throw Error('Choose checked or unchecked.');if(d.rank)return {...d,value:value?d.rank:0};if(d.count)return {...d,value:value?d.count:d.count-1};return {...d,value};}
+  if(d.kind==='checkbox'){if(typeof value!=='boolean')throw Error('Choose checked or unchecked.');if(d.rank)return {...d,value:value?d.rank:d.rank===2?Math.min(d.currentRank,1):0};if(d.count)return {...d,value:value?d.count:d.count-1};return {...d,value};}
   if(d.kind==='number'){if(String(value).trim()===''||!Number.isInteger(Number(value))||Number(value)<(d.min??0)||Number(value)>(d.max??1000000))throw Error('Enter a whole number from '+(d.min??0)+' to '+(d.max??1000000)+'.');return {...d,value:Number(value)};}
   value=String(value??'');if(value.length>(d.max??12000))throw Error('This text is too long.');
   if(d.kind==='select'&&value&&!d.options.some(o=>o.value===value&&!o.disabled))throw Error('Choose an available option.');

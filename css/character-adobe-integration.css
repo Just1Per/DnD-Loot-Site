@@ -761,3 +761,7 @@
 #sheetPageManager .sheet-control-prototype-link h4{margin:0 0 6px}
 #sheetPageManager .sheet-control-prototype-link p{font-size:13px;line-height:1.55}
 #sheetPageManager .sheet-control-prototype-link a{display:inline-flex;align-items:center;min-height:44px;padding:10px 14px;box-sizing:border-box;text-decoration:none}
+
+.sheet-style-choice{display:flex;align-items:center;gap:6px;font-size:12px}.sheet-style-choice select{min-height:44px;max-width:170px}
+.adobe-shared-editor-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 24px;background:#f6efdf;border-bottom:1px solid #b7a17d}.adobe-shared-editor-heading h3{margin:0}.adobe-shared-editor-heading button{min-height:44px}
+@media print{body.printing-adobe-sheet #characterSheetForm>*:not(#sheetAdobeView){display:none!important}body.printing-adobe-sheet #sheetAdobeView{display:block!important}body.printing-adobe-sheet #characterSheetForm,body.printing-adobe-sheet #characterSheetDialog{padding:0!important;margin:0!important;max-width:none!important;width:100%!important;box-shadow:none!important;border:0!important}}
