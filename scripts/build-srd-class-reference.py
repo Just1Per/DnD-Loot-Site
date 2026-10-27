@@ -47,6 +47,9 @@ for edition in ('2014','2024'):
             extra={('2014','cleric'):[12],('2014','warlock'):[16],('2024','rogue'):[10]}.get((edition,owner['id']),[])
             ls=sorted(set(ls)|set(extra))
         if edition=='2024' and owner['id']=='sorcerer' and f['name']=='Metamagic' and ls:ls=sorted(set(ls)|{17})
+        # The pinned legacy Monk stores every movement value as a table column.
+        # Keep the feature itself at its first unlock rather than omitting it.
+        if edition=='2014' and owner['id']=='monk' and f['name']=='Unarmored Movement':ls=[2]
         if not ls:continue
         group='subclasses' if owner['parent'] else 'classes'
         row=groups[group].setdefault(owner['id'],{'id':owner['id'],'name':owner['name'],'parentId':owners.get(owner['parent'],{}).get('id') if owner['parent'] else None,'hitDie':owner['hitDie'],'savingThrows':owner['savingThrows'],'casterType':owner['casterType'],'features':[]})

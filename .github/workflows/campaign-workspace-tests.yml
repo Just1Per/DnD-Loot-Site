@@ -183,6 +183,7 @@ jobs:
         npm --prefix tests run test:barbarian-rage
         npm --prefix tests run test:fighter-resources
         npm --prefix tests run test:class-capstones
+        npm --prefix tests run test:class-movement
         npm --prefix tests run test:monk-points
         npm --prefix tests run test:monk-martial-arts
         npm --prefix tests run test:class-orders

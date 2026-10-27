@@ -64,7 +64,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Danger Sense **[unreviewed]**<br>Reckless Attack **[unreviewed]** |
 | 3 | Primal Path **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[implemented]**<br>Fast Movement **[unreviewed]** |
+| 5 | Extra Attack **[implemented]**<br>Fast Movement **[implemented]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | Feral Instinct **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
@@ -90,7 +90,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Primal Path · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
-| Fast Movement · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Fast Movement · 5 | Automatic +10 ft walking speed at actual Barbarian 5 when no Heavy armor is worn. Physical equipment, multiclass combination, magical speed minima, saved base preservation, Overview and print verified. Temporary conditions and alternate forms remain separate. | [tests/class-movement-speeds.cjs](../tests/class-movement-speeds.cjs), [tests/class-movement-speeds-browser.cjs](../tests/class-movement-speeds-browser.cjs) |
 | Feral Instinct · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Brutal Critical · 9 | Source-rule comparison and structured fields still need review. | Pending |
@@ -293,7 +293,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Unarmored Defense **[implemented]** |
-| 2 | Ki **[partial]** |
+| 2 | Ki **[partial]**<br>Unarmored Movement **[partial]** |
 | 3 | Deflect Missiles **[unreviewed]**<br>Monastic Tradition **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
 | 5 | Extra Attack **[implemented]**<br>Stunning Strike **[unreviewed]** |
@@ -317,6 +317,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | --- | --- | --- |
 | Unarmored Defense · 1 | Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice. | [tests/character-equipment.cjs](../tests/character-equipment.cjs), [tests/monk-martial-arts-browser.cjs](../tests/monk-martial-arts-browser.cjs) |
 | Ki · 2 | Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review. | [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
+| Unarmored Movement · 2 | Automatic walking-speed table at actual Monk 2–20, blocked by worn armor or a readied shield. Multiclass combination, magical speed minima, saved base preservation, Overview and print verified. Vertical/liquid movement permissions and temporary forms remain separate. | [tests/class-movement-speeds.cjs](../tests/class-movement-speeds.cjs), [tests/class-movement-speeds-browser.cjs](../tests/class-movement-speeds-browser.cjs) |
 | Deflect Missiles · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Monastic Tradition · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -655,7 +656,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 2 | Danger Sense **[unreviewed]**<br>Reckless Attack **[unreviewed]** |
 | 3 | Barbarian Subclass **[unreviewed]**<br>Primal Knowledge **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
-| 5 | Extra Attack **[implemented]**<br>Fast Movement **[unreviewed]** |
+| 5 | Extra Attack **[implemented]**<br>Fast Movement **[implemented]** |
 | 6 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 7 | Feral Instinct **[unreviewed]**<br>Instinctive Pounce **[unreviewed]** |
 | 8 | Ability Score Improvement **[partial]** |
@@ -683,7 +684,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Primal Knowledge · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
-| Fast Movement · 5 | Source-rule comparison and structured fields still need review. | Pending |
+| Fast Movement · 5 | Automatic +10 ft walking speed at actual Barbarian 5 when no Heavy armor is worn. Physical equipment, multiclass combination, magical speed minima, saved base preservation, Overview and print verified. Temporary conditions and alternate forms remain separate. | [tests/class-movement-speeds.cjs](../tests/class-movement-speeds.cjs), [tests/class-movement-speeds-browser.cjs](../tests/class-movement-speeds-browser.cjs) |
 | Feral Instinct · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Instinctive Pounce · 7 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
@@ -882,7 +883,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Class level | Features arriving at this level |
 | --- | --- |
 | 1 | Martial Arts **[partial]**<br>Unarmored Defense **[implemented]** |
-| 2 | Monk's Focus **[partial]**<br>Unarmored Movement **[unreviewed]**<br>Uncanny Metabolism **[unreviewed]** |
+| 2 | Monk's Focus **[partial]**<br>Unarmored Movement **[partial]**<br>Uncanny Metabolism **[unreviewed]** |
 | 3 | Deflect Attacks **[unreviewed]**<br>Monk Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
 | 5 | Extra Attack **[implemented]**<br>Stunning Strike **[unreviewed]** |
@@ -907,7 +908,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Martial Arts · 1 | Actual Monk1–20 revised die, Simple Melee and Light Martial Melee eligibility (including Greatclub), automatic better Strength/Dexterity without overwriting explicit choices, separate Grapple/Shove DC reminders and independent Bonus Action Unarmed Strike. Physical conditions, magic/style/offhand values, source/multiclass, save/print/Guide covered; subclass/optional/racial exceptions and action/target enforcement remain separate. | [tests/monk-martial-arts.cjs](../tests/monk-martial-arts.cjs), [tests/monk-martial-arts-browser.cjs](../tests/monk-martial-arts-browser.cjs) |
 | Unarmored Defense · 1 | Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice. | [tests/character-equipment.cjs](../tests/character-equipment.cjs), [tests/monk-martial-arts-browser.cjs](../tests/monk-martial-arts-browser.cjs) |
 | Monk's Focus · 2 | Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review. | [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
-| Unarmored Movement · 2 | Source-rule comparison and structured fields still need review. | Pending |
+| Unarmored Movement · 2 | Automatic walking-speed table at actual Monk 2–20, blocked by worn armor or a readied shield. Multiclass combination, magical speed minima, saved base preservation, Overview and print verified. Vertical/liquid movement permissions and temporary forms remain separate. | [tests/class-movement-speeds.cjs](../tests/class-movement-speeds.cjs), [tests/class-movement-speeds-browser.cjs](../tests/class-movement-speeds-browser.cjs) |
 | Uncanny Metabolism · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Deflect Attacks · 3 | Source-rule comparison and structured fields still need review. | Pending |
 | Monk Subclass · 3 | Source-rule comparison and structured fields still need review. | Pending |
