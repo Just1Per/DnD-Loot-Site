@@ -124,11 +124,14 @@ function inventoryUnitWeight(item){
  if(raw!==undefined&&raw!==''&&Number.isFinite(Number(raw))&&Number(raw)>=0)return Number(raw);
  const base=sheetBaseGear().find(g=>[g.name,g.unitName].some(n=>n?.toLowerCase()===item.name?.toLowerCase()));return base?Number(base.weight)||0:null;
 }
+// One carried-weight projection for Standard and the Adobe paper view.
+function characterInventoryWeight(data,entries){
+ let gear=0,unknown=0;for(const entry of entries){const quantity=Number(entry.quantity);if(!Number.isFinite(quantity)||quantity<=0)continue;const weight=inventoryUnitWeight(entry.item||{});if(weight===null)unknown++;else gear+=weight*quantity;}
+ const coins=Object.values(data.coins||{}).reduce((sum,value)=>sum+(Number(value)||0),0)/50;return {gear,coins,total:gear+coins,unknown};
+}
 function updateInventoryTotals(stats){
  const host=document.getElementById('sheetInventoryTotals');if(!host||!sheetSession)return;
- const s=sheetSession;let weight=s.data.personalGear.filter(g=>g.carried).reduce((n,g)=>n+g.weight*g.quantity,0),unknown=0;
- for(const e of inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0)){const w=inventoryUnitWeight(inventoryItem(e));if(w===null)unknown++;else weight+=w*e.quantity;}
- const coins=Object.values(s.data.coins).reduce((a,b)=>a+b,0)/50;
+ const s=sheetSession,{gear:weight,coins,unknown}=characterInventoryWeight(s.data,sheetEquipmentLoot());
  host.innerHTML=`<strong>${(weight+coins).toFixed(2)} lb</strong><small>Gear ${weight.toFixed(2)} lb · coins ${coins.toFixed(2)} lb</small>${unknown?`<p>${unknown} campaign item(s) have unknown weight; total is incomplete.</p>`:''}<small>Uncarried personal gear is excluded. Bags do not automatically reduce their contents’ weight.</small>`;
  const attuned=s.data.equipmentState.loadout.filter(g=>g.attuned).map(g=>sheetEquipmentLoot().find(e=>e.id===g.id)).filter(e=>e&&(((typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(e.item))||!!e.item.attunement)));
  document.getElementById('sheetInventoryAttuned').innerHTML='<p id="sheetAttunementSummary" class="sheet-help">Attunement: '+attuned.length+' / '+stats.gear.attunementLimit+' slots. '+(stats.gear.attunementLimit>3?'Artificer class levels increase your limit. ':'')+'Attuned backpack items still use slots.</p>'+Array.from({length:Math.max(stats.gear.attunementLimit,attuned.length)},(_,i)=>`<div class="sheet-attunement-line">${i+1}. ${sheetEscape(attuned[i]?.item.name||'—')}</div>`).join('');

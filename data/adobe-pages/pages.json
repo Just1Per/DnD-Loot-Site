@@ -12,15 +12,15 @@
     {
       "id": "page-2",
       "title": "Features & equipment",
-      "fields": 184,
-      "buttons": 58,
+      "fields": 187,
+      "buttons": 59,
       "optional": false
     },
     {
       "id": "page-3",
-      "title": "Feats & magic items",
+      "title": "Feats, magic items & extra gear",
       "fields": 146,
-      "buttons": 50,
+      "buttons": 45,
       "optional": false
     },
     {
@@ -67,9 +67,9 @@
     },
     {
       "id": "template-ASfront",
-      "title": "Extra character page",
+      "title": "More feats, magic items & gear",
       "fields": 146,
-      "buttons": 50,
+      "buttons": 45,
       "optional": true
     },
     {
@@ -81,9 +81,9 @@
     },
     {
       "id": "template-ASoverflow",
-      "title": "Extra features",
+      "title": "More feats, magic items & resources",
       "fields": 91,
-      "buttons": 44,
+      "buttons": 37,
       "optional": true
     },
     {

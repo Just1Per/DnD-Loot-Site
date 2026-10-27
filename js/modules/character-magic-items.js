@@ -26,6 +26,10 @@ var CharacterMagicItems=(()=>{
     const key=clean(name),rule=variantRule(name);
     return {key,known:knownNames.has(key)||!!rule,rule,attunement:!!rule?.attunement};
   }
+  function isMagical(item={}){
+    const metadata=info(item),mechanics=E.infer(item),category=String(item.category||'').trim().toLowerCase(),rarity=String(item.rarity||'').replace(/[ -]/g,'').toLowerCase();
+    return metadata.known||item.attunement===true||['potion','ring','rod','scroll','staff','wand','wondrous item'].includes(category)||['uncommon','rare','veryrare','legendary','artifact'].includes(rarity)||!!(mechanics.acBonus||mechanics.attackBonus||mechanics.damageBonus||mechanics.extraDamage);
+  }
   function requiresAttunement(item={}){
     return item.attunement===true||info(item).attunement;
   }
@@ -134,7 +138,7 @@ var CharacterMagicItems=(()=>{
   }
 
   E.infer=infer;
-  return {reference,info,requiresAttunement,infer,apply,augmentGear};
+  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterMagicItems=CharacterMagicItems;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterMagicItems;

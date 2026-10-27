@@ -73,3 +73,13 @@ The spell and continuation templates now show the shared selected spell rows and
 Each template reserves a column-heading row: the first page holds 55 spells and continuation pages 70. Navigation preserves all 150 supported model entries. Generic table-frame artwork is retained from the blank template; source character values and portraits remain excluded. Browser tests use 132 imported spell references to exercise continuation and verify independent Wizard/Warlock values, preparation limits, slot pools, persistence, source-size print, browser Print and mobile accessibility.
 
 This does not complete the source spell-sheet menus or every conditional PDF variant. Automatic grants still follow the existing generator; choosing/generating spells remains available through the shared controls. Spell-row layout customization, source row commands and additional rules parity remain tracked work.
+
+### Owned items and inventory checkpoint
+
+Magic-item slots use carried records from the existing inventory. Their dropdowns arrange those records on the paper; they cannot grant an unowned item. The private `paperMagicOrder` presentation preference is bounded, deduplicated and saved in the existing Adobe metadata envelope. Attunement invokes the existing controller, including ownership and class limits. Rejected commands restore the displayed state without blocking a valid sheet save. Item and feat arrows open the existing information dialogs.
+
+Combined continuation pages show further feats, magic items and equipment; the original overflow template also displays magic slots 6–12, feats 5–8 and limited features 9–16. A hidden-row preference in the supplied filled PDF is cleared for generic inventory layouts so equipment row 51 remains available. Generic attunement-frame artwork is retained without importing source character values. Tool and individual-weapon indicators now read the common class/feat entitlements, including Rogue tools.
+
+Weight uses one shared projection in both views: scoped carried entries plus coins, with unknown item weights made explicit. No carrying-capacity or encumbrance formula is invented for unconnected fields. The original SR/LR feature buttons invoke the shared feature recovery commands; unsupported PDF controls remain visibly unavailable while their mappings are completed.
+
+Browser coverage includes three-slot rejection and recovery, unchanged item ownership/catalogue data, live AC, item ordering and save/reopen, removed-item isolation, equipment row 51, continuation and alternate overflow layouts, source-size print and mobile accessibility. No new Firestore or Storage rules are needed.

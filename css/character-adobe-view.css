@@ -11,3 +11,5 @@
 .pdf-button[data-pdf-button^="spells.checkbox."]{background:transparent;color:#111;border:0;font-size:calc(var(--scale)*7px)}
 
 .pdf-button[data-pdf-button^="Image.SpellSlots.Checkboxes."]{background:#f8f8f8;color:#222;border:1px solid #888;font-size:calc(var(--scale)*6px)}.pdf-button[data-pdf-button^="Image.SpellSlots.Checkboxes."]:disabled{border-color:#ddd;color:#888;background:transparent;cursor:default}#adobeSpellNavigation button:disabled{opacity:.5;cursor:default}
+
+.adobe-subnavigation{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px;font-size:13px}.adobe-subnavigation button{min-height:44px;padding:9px 10px;border:1px solid #b29b76;border-radius:4px;background:#fffaf0;color:#35251b;font:14px Arial,sans-serif;cursor:pointer}.adobe-subnavigation button:disabled{opacity:.5;cursor:default}@media print{.adobe-subnavigation{display:none!important}}

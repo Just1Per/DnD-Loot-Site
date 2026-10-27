@@ -6,12 +6,12 @@ from pypdf import PdfReader
 from PIL import Image
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('first_page',ROOT/'scripts/build-adobe-control-prototype.py');base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
-TITLES={'page-1':'Character & combat','page-2':'Features & equipment','page-3':'Feats & magic items','page-4':'Background & appearance','page-5':'Notes','page-6':'Player reference (2014)','AScomp':'Companion','WSfront':'Wild Shape','SSfront':'Spell sheet','SSmore':'More spells','ALlog':'Adventure log','ASoverflow':'Extra features','ASnotes':'Extra notes','ASbackgr':'Extra background','ASfront':'Extra character page','PRsheet':'Extra reference (2014)','blank':'Blank page'}
+TITLES={'page-1':'Character & combat','page-2':'Features & equipment','page-3':'Feats, magic items & extra gear','page-4':'Background & appearance','page-5':'Notes','page-6':'Player reference (2014)','AScomp':'Companion','WSfront':'Wild Shape','SSfront':'Spell sheet','SSmore':'More spells','ALlog':'Adventure log','ASoverflow':'More feats, magic items & resources','ASnotes':'Extra notes','ASbackgr':'Extra background','ASfront':'More feats, magic items & gear','PRsheet':'Extra reference (2014)','blank':'Blank page'}
 def name(n):return re.sub(r'^P\d+\.[^.]+\.','',n)
 def safe_art(w):
  n=name(w.field_name)
  # Generic spell-table frames live in button appearances, with user text in separate widgets.
- return n.startswith(('spellshead.Image.','spellsdiv.Image.'))or n in base.STATIC_FIELDS or n.startswith('Image.calc_boxes.')or n.startswith('Image.DnDLogo')or n in ['AmmoLeft.Icon.Arrows','AmmoRight.Icon.Arrows']
+ return n.startswith(('spellshead.Image.','spellsdiv.Image.','Image.MagicItemAttuned.'))or n in base.STATIC_FIELDS or n.startswith('Image.calc_boxes.')or n.startswith('Image.DnDLogo')or n in ['AmmoLeft.Icon.Arrows','AmmoRight.Icon.Arrows']
 def export(source,target):
  r=PdfReader(source);names=r.trailer['/Root']['/Names'].get('/Templates',{}).get('/Names',[])
  pages=[('page-'+str(i+1),i)for i,page in enumerate(r.pages)]
@@ -29,8 +29,10 @@ def export(source,target):
   widgets=list(p.widgets()or[]);fields=[];buttons=[];counts=collections.Counter()
   for w in widgets:
    _,raw=doc.xref_get_key(w.xref,'F');flags=int(raw)if raw.isdigit()else 0
-   if flags&35 or not p.rect.contains(w.rect)or w.rect.get_area()<=0 or safe_art(w):continue
-   n=name(w.field_name);counts[n]+=1;ident=n+(' #'+str(counts[n])if counts[n]>1 else'');rect=[round(v,3)for v in w.rect]
+   n=name(w.field_name);gear_row=bool(re.fullmatch(r'(Adventuring Gear|Extra\.Gear) (Row|Amount|Weight|Button) \d+',n))
+   # Reset the supplied character's hidden-row preference on blank inventory layouts.
+   if flags&35 and not gear_row or not p.rect.contains(w.rect)or w.rect.get_area()<=0 or safe_art(w):continue
+   counts[n]+=1;ident=n+(' #'+str(counts[n])if counts[n]>1 else'');rect=[round(v,3)for v in w.rect]
    if w.field_type_string=='Button':
     # Very large image hit areas are decorative, never blank giant buttons.
     if w.rect.get_area()<p.rect.get_area()*.15:buttons.append({'id':ident,'label':base.label(n),'rect':rect,'caption':str(getattr(w,'button_caption','')or'')[:80]})

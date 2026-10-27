@@ -14,6 +14,7 @@ var CharacterAdobeFields=(()=>{
   'Background_Faction.Text':['profile.organization','text',200],
   'Background_Organisation.Left':['allies','textarea',12000],'Background_Organisation.Right':['profile.organizationNotes','textarea',12000],
   Background_Appearance:['appearance','textarea',12000],Background_Enemies:['enemies','textarea',12000],Background_History:['backstory','textarea',12000],
+  'Extra.Other Holdings':['equipment','textarea',12000],
   Lifestyle:['profile.lifestyle','text',200],
   'Copper Pieces':['coins.cp','number',1000000],'Silver Pieces':['coins.sp','number',1000000],'Electrum Pieces':['coins.ep','number',1000000],'Gold Pieces':['coins.gp','number',1000000],'Platinum Pieces':['coins.pp','number',1000000]
  };
@@ -39,7 +40,7 @@ var CharacterAdobeFields=(()=>{
   if(id==='Class and Levels'){const rows=d.progression?.classLevels||[];return computed(rows.map(c=>(context.className?.(c.classId)||c.classId)+(rows.length>1?' '+c.level:'')).join(' / '),{command:'classes'});}
   if(id==='Total Experience')return edit('experience',data.experience||0,'number',1000000000,{command:'classes'});
   if(id==='Next level')return computed(d.progression?.xp?.next??'',{command:'classes'});
-  if((m=/^Feat (Name|Note|Description) ([1-4])$/.exec(id))){const row=context.feats?.[Number(m[2])-1];return computed(!row?'':m[1]==='Name'?row.name:m[1]==='Note'?[row.origin,row.source].filter(Boolean).join(' · '):[row.description,...(row.report?.warnings||[])].filter(Boolean).join('\n'),{kind:m[1]==='Description'?'textarea':'text',command:'feats'});}
+  if((m=/^Feat (Name|Note|Description) ([1-8])$/.exec(id))){const row=context.feats?.[(context.featOffset||0)+Number(m[2])-1];return computed(!row?'':m[1]==='Name'?row.name:m[1]==='Note'?[row.origin,row.source].filter(Boolean).join(' · '):[row.description,...(row.report?.warnings||[])].filter(Boolean).join('\n'),{kind:m[1]==='Description'?'textarea':'text',command:'feats'});}
   if(id==='Race')return edit('build.race',data.build.race,'select',undefined,{options:options.races||[]});
   if(id==='Background')return edit('build.background',data.build.background,'select',undefined,{options:options.backgrounds||[]});
   if(Object.hasOwn(abilities,id))return computed(d.scores[abilities[id]],{command:'abilities'});
@@ -49,6 +50,9 @@ var CharacterAdobeFields=(()=>{
   if(Object.hasOwn(skills,id))return computed(sign(d.skills[skills[id]]));
   if((m=/^(Acr|Ani|Arc|Ath|Dec|His|Ins|Inti|Inv|Med|Nat|Perc|Perf|Pers|Rel|Sle|Ste|Sur) (Prof|Exp)$/.exec(id))){const key=skills[m[1]],auto=Math.max(d.effects.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0,d.classExpertise?.skills.includes(key)?2:0),rank=Math.max(data.skills[key].rank,auto),wanted=m[2]==='Exp'?2:1;return auto>=wanted?computed(true,{kind:'checkbox',reason:'Granted by class, feat or character choices.'}):edit('skills.'+key+'.rank',rank>=wanted,'checkbox',2,{rank:wanted,currentRank:data.skills[key].rank});}
   if((m=/^Proficiency (Armor (Light|Medium|Heavy)|Shields|Weapon (Simple|Martial))$/.exec(id))){const name=m[2]?m[2]+' armor':m[3]?m[3]+' weapons':'shields';return computed(m[2]?!!context.armorTraining?.(m[2].toLowerCase()):(d.effects.proficiencies||[]).some(p=>p.toLowerCase()===name.toLowerCase()),{kind:'checkbox',command:'origins',reason:'Training from the shared class, feat and origin choices.'});}
+  if(id==='Proficiency Weapon Other')return computed(!!context.otherWeapons?.length,{kind:'checkbox',reason:'Individual weapon training from the shared class, feat and origin choices.'});
+  if(id==='Proficiency Weapon Other Description')return computed((context.otherWeapons||[]).join(', '),{command:'origins'});
+  if(id==='MoreProficiencies'){const languages=d.effects.languages||[],tools=context.toolNames||[];return computed([...languages.slice(6),...lines(data.languages).slice(Math.max(0,6-languages.length)),...tools.slice(6),...lines(data.proficiencies).slice(Math.max(0,6-tools.length))].join('\n'),{kind:'textarea',command:'origins'});}
   if(id==='HP Max')return computed(d.hpMax,{command:'hp'});
   if(id==='Proficiency Bonus')return computed(sign(d.pb));
   if(id==='AC')return computed(d.ac,{command:'equipment'});
@@ -61,17 +65,20 @@ var CharacterAdobeFields=(()=>{
   if(id==='Spell DC 1 Mod')return edit('spellAbility',data.spellAbility,'select',undefined,{options:Object.entries(abilities).map(([name,value])=>({value,label:name}))});
   if((m=/^Death Save (Success|Fail)([123])$/.exec(id))){const path=m[1]==='Success'?'deathSuccess':'deathFailure',index=Number(m[2]);return edit(path,data[path]>=index,'checkbox',3,{count:index});}
   if((m=/^Resistance Damage Type ([1-6])$/.exec(id))){const auto=d.effects.resistances||[],i=Number(m[1])-1,manual=lines(data.resistances);return i<auto.length?computed(auto[i]):edit('resistances',manual[i-auto.length]||'','text',12000,{listIndex:i-auto.length});}
-  if((m=/^(Language|Tool) ([1-6])$/.exec(id))){const automatic=m[1]==='Language'?d.effects.languages:(d.toolTraining?.tools||[]).map(t=>t.name),i=Number(m[2])-1,path=m[1]==='Language'?'languages':'proficiencies',manual=lines(data[path]);return i<automatic.length?computed(automatic[i]):edit(path,manual[i-automatic.length]||'','text',12000,{listIndex:i-automatic.length});}
+  if((m=/^(Language|Tool) ([1-6])$/.exec(id))){const automatic=m[1]==='Language'?d.effects.languages:context.toolNames||(d.toolTraining?.tools||[]).map(t=>t.name),i=Number(m[2])-1,path=m[1]==='Language'?'languages':'proficiencies',manual=lines(data[path]);return i<automatic.length?computed(automatic[i]):edit(path,manual[i-automatic.length]||'','text',12000,{listIndex:i-automatic.length});}
   if(id==='Size Category')return computed(d.effects.race?.size||data.profile.size);
   if(id==='Class Features')return computed([...(d.progression.classLevels||[]).flatMap(c=>context.features?.(c)||[]),data.features].filter(Boolean).join('\n\n'),{kind:'textarea',command:'features'});
   if(id==='Racial Traits')return computed([...(d.effects.race?.traits||[]),...(d.effects.specialSenses||[]).map(s=>s.name+': '+s.detail)].join('\n\n'),{kind:'textarea'});
   if(id==='Background Feature')return computed(context.background?.feature?.name||context.background?.featureName||'',{command:'background'});
   if(id==='Background Feature Description')return computed(typeof context.background?.feature==='string'?context.background.feature:context.background?.feature?.description||'',{kind:'textarea'});
+  if((m=/^Extra\.Magic Item(?: (Note|Attuned|Description))? ([1-9]|1[0-2])$/.exec(id))){const row=context.magicItems?.[(context.magicOffset||0)+Number(m[2])-1],key=m[1];if(!key)return row?{state:'editable',kind:'select',value:row.id,magicSlot:(context.magicOffset||0)+Number(m[2])-1,requiredChoice:true,options:(context.magicItems||[]).map(item=>({value:item.id,label:item.name}))}:computed('',{kind:'select',reason:'Add carried magic items using the shared Inventory controls.'});if(key==='Attuned')return row?.requiresAttunement?{state:'editable',kind:'checkbox',value:!!row.attuned,attunementId:row.id}:computed(false,{kind:'checkbox',reason:'This item does not require attunement.'});return computed(!row?'':key==='Description'?row.description:key==='Note'?row.note:row.name,{kind:key==='Description'?'textarea':'text',command:'equipment',itemId:row?.id});}
+  if(id==='Weight Carried'){const weight=context.inventoryWeight;return computed(weight?weight.total.toFixed(2)+(weight.unknown?' + ?':''):'',{command:'equipment',reason:weight?.unknown?weight.unknown+' carried items have unknown weight; the shown total excludes them.':'Carried gear plus coin weight from the shared Inventory calculation.'});}
+  if(id.startsWith('Display.Weighttxt.LbKg'))return computed('lb');
   if(id==='Notes.Left'||id==='Notes.Right'){const index=(context.notesOffset||0)+(id==='Notes.Right'?1:0),note=data.adobe?.journal?.[index];return {state:'editable',kind:'textarea',value:note?.text||'',journalIndex:index,max:20000};}
   if((m=/^HD([123]) (Level|Die)$/.exec(id))){const row=d.progression.classLevels[Number(m[1])-1];return computed(row?m[2]==='Level'?row.level:context.hitDie?.(row.classId)||'':'');}
-  if((m=/^Limited Feature (?:Max Usages |Used |Recovery )?([1-8])$/.exec(id))){const row=d.classResources?.[Number(m[1])-1];return computed(!row?'':id.startsWith('Limited Feature Max')?row.unlimited?'∞':row.max:id.startsWith('Limited Feature Used')?row.used:id.startsWith('Limited Feature Recovery')?row.recovery:row.name,{command:'resources'});}
+  if((m=/^Limited Feature (?:Max Usages |Used |Recovery )?([1-9]|1[0-6])$/.exec(id))){const row=d.classResources?.[Number(m[1])-1];return computed(!row?'':id.startsWith('Limited Feature Max')?row.unlimited?'∞':row.max:id.startsWith('Limited Feature Used')?row.used:id.startsWith('Limited Feature Recovery')?row.recovery:row.name,{command:'resources'});}
   if((m=/^Attack\.([1-5])\.(Weapon Selection|Range|To Hit|Damage|Damage Type|Description|Mod)$/.exec(id))){const rows=[...(d.gear.attacks||[]).filter(a=>a.equipped).map(a=>({name:a.name,range:a.range,hit:a.attack===null?'—':sign(a.attack),damage:a.damage,notes:a.notes})),...(d.actions||[])],row=rows[Number(m[1])-1],key={'Weapon Selection':'name','Range':'range','To Hit':'hit','Damage':'damage','Damage Type':'damageType','Description':'notes','Mod':'ability'}[m[2]];return computed(Array.isArray(row?.[key])?row[key].join('\n'):row?.[key]||'',{command:'attacks'});}
-  if((m=/^(Adventuring Gear|Extra\.Gear) (Row|Amount|Weight) (\d+)$/.exec(id))){const offset=m[1]==='Extra.Gear'?54:0,row=context.inventory?.[offset+Number(m[3])-1];return computed(!row?'':m[2]==='Row'?row.name:m[2]==='Amount'?row.quantity:row.weight??'',{command:'equipment'});}
+  if((m=/^(Adventuring Gear|Extra\.Gear) (Row|Amount|Weight) (\d+)$/.exec(id))){const offset=m[1]==='Extra.Gear'?(context.extraGearOffset??54):0,row=context.inventory?.[offset+Number(m[3])-1];return computed(!row?'':m[2]==='Row'?row.name:m[2]==='Amount'?row.quantity:row.weight??'',{command:'equipment',itemId:row?.id});}
   return {state:'pending',value:'',kind:typeof field==='object'?field.kind:'text',reason:'This PDF field is still being connected.'};
  }
  function planEdit(field,value,context){
@@ -79,6 +86,7 @@ var CharacterAdobeFields=(()=>{
   if(d.kind==='checkbox'){if(typeof value!=='boolean')throw Error('Choose checked or unchecked.');if(d.rank)return {...d,value:value?d.rank:d.rank===2?Math.min(d.currentRank,1):0};if(d.count)return {...d,value:value?d.count:d.count-1};return {...d,value};}
   if(d.kind==='number'){if(String(value).trim()===''||!Number.isInteger(Number(value))||Number(value)<(d.min??0)||Number(value)>(d.max??1000000))throw Error('Enter a whole number from '+(d.min??0)+' to '+(d.max??1000000)+'.');return {...d,value:Number(value)};}
   value=String(value??'');if(value.length>(d.max??12000))throw Error('This text is too long.');
+  if(d.requiredChoice&&!value)throw Error('Choose a carried magic item.');
   if(d.kind==='select'&&value&&!d.options.some(o=>o.value===value&&!o.disabled))throw Error('Choose an available option.');
   if(d.listIndex!==undefined){const current=lines(get(context.data,d.path));current[d.listIndex]=value;value=current.filter(Boolean).join('; ');}
   return {...d,value};
