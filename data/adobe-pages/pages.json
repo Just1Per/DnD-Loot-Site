@@ -1,0 +1,125 @@
+{
+  "format": 1,
+  "sourceVersion": "MPMB 13.0.4",
+  "pages": [
+    {
+      "id": "page-1",
+      "title": "Character & combat",
+      "fields": 295,
+      "buttons": 43,
+      "optional": false
+    },
+    {
+      "id": "page-2",
+      "title": "Features & equipment",
+      "fields": 184,
+      "buttons": 58,
+      "optional": false
+    },
+    {
+      "id": "page-3",
+      "title": "Feats & magic items",
+      "fields": 146,
+      "buttons": 50,
+      "optional": false
+    },
+    {
+      "id": "page-4",
+      "title": "Background & appearance",
+      "fields": 19,
+      "buttons": 2,
+      "optional": false
+    },
+    {
+      "id": "page-5",
+      "title": "Notes",
+      "fields": 2,
+      "buttons": 1,
+      "optional": false
+    },
+    {
+      "id": "page-6",
+      "title": "Player reference (2014)",
+      "fields": 1,
+      "buttons": 0,
+      "optional": false
+    },
+    {
+      "id": "template-ALlog",
+      "title": "Adventure log",
+      "fields": 77,
+      "buttons": 8,
+      "optional": true
+    },
+    {
+      "id": "template-ASbackgr",
+      "title": "Extra background",
+      "fields": 19,
+      "buttons": 2,
+      "optional": true
+    },
+    {
+      "id": "template-AScomp",
+      "title": "Companion",
+      "fields": 134,
+      "buttons": 8,
+      "optional": true
+    },
+    {
+      "id": "template-ASfront",
+      "title": "Extra character page",
+      "fields": 146,
+      "buttons": 50,
+      "optional": true
+    },
+    {
+      "id": "template-ASnotes",
+      "title": "Extra notes",
+      "fields": 2,
+      "buttons": 1,
+      "optional": true
+    },
+    {
+      "id": "template-ASoverflow",
+      "title": "Extra features",
+      "fields": 91,
+      "buttons": 44,
+      "optional": true
+    },
+    {
+      "id": "template-PRsheet",
+      "title": "Extra reference (2014)",
+      "fields": 1,
+      "buttons": 0,
+      "optional": true
+    },
+    {
+      "id": "template-SSfront",
+      "title": "Spell sheet",
+      "fields": 577,
+      "buttons": 69,
+      "optional": true
+    },
+    {
+      "id": "template-SSmore",
+      "title": "More spells",
+      "fields": 711,
+      "buttons": 72,
+      "optional": true
+    },
+    {
+      "id": "template-WSfront",
+      "title": "Wild Shape",
+      "fields": 420,
+      "buttons": 1,
+      "optional": true
+    },
+    {
+      "id": "template-blank",
+      "title": "Blank page",
+      "fields": 0,
+      "buttons": 0,
+      "optional": true
+    }
+  ]
+}
