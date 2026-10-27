@@ -27,6 +27,20 @@ var CharacterAdobeFields=(()=>{
   const id=typeof field==='string'?field:field.id,{data,derived:d,identity,options={}}=context;
   if(Object.hasOwn(raw,id)){const [path,kind,max]=raw[id],value=get(path.startsWith('identity.')?{identity}:data,path);return edit(path,value,kind,max,{options:options[path]||[]});}
   let m;
+  if(id.startsWith('Comp.')||id==='Cnote.Left'){
+   const c=context.companion,stats=context.companionStats,index=context.companionIndex||0,prefix='adobe.companions.'+index+'.';if(!c)return computed('',{command:'companion'});
+   const bindings={'Comp.Desc.Name':['name','text',120],'Comp.Desc.Size':['size','select',undefined], 'Comp.Use.AC':['ac','number',50],'Comp.Use.HP.Max':['hpMax','number',100000],'Comp.Use.HP.Current':['hpCurrent','number',100000],'Comp.Use.HP.Temp':['hpTemp','number',100000],'Comp.Use.Speed':['speed','number',1000],'Comp.Use.Traits':['traits','textarea',8000],'Cnote.Left':['notes','textarea',8000]};
+   if(bindings[id]){const [key,kind,max]=bindings[id];return edit(prefix+key,c[key],kind,max,{options:key==='size'?['Tiny','Small','Medium','Large','Huge'].map(value=>({value,label:value})):undefined});}
+   if(id==='Comp.Use.Combat.Init.Mod')return computed(sign(stats.initiative),{command:'companion'});
+   if(id==='Comp.Use.Skills.Perc.Pass.Mod')return computed(stats.passive);
+   if(id==='Comp.Desc.MonsterType')return computed(context.companionCreature?.type||'');
+   if(id==='Comp.Use.Senses')return computed(context.companionCreature?.senses||'',{command:'companion'});
+   if(id==='Comp.Type')return edit(prefix+'type',c.type,'select',undefined,{options:[{value:'companion',label:'Companion'},{value:'familiar',label:'Familiar'},{value:'wildshape',label:'Manual Wild Shape reference'}]});
+   if(id==='Comp.Race')return {state:'editable',kind:'select',value:context.companionCreatureId||'',options:context.companionCreatures||[],companionCreature:index,requiredChoice:true,choiceMessage:'Choose a companion creature.'};
+   if(id==='Comp.Use.Proficiency Bonus')return c.type==='wildshape'?computed(sign(stats.pb),{reason:'Character proficiency bonus for this manual form reference.'}):edit(prefix+'profBonus',c.profBonus,'number',10);
+   if((m=/^Comp\.Use\.Ability\.(Str|Dex|Con|Int|Wis|Cha)\.(Score|Mod|ST\.Mod|ST\.Prof)$/.exec(id))){const key=abilities[m[1]],part=m[2];if(part==='Score')return c.type==='wildshape'&&['int','wis','cha'].includes(key)?computed(stats.scores[key],{command:'abilities'}):edit(prefix+'abilities.'+key,c.abilities[key],'number',30,{min:1});if(part==='ST.Prof')return edit(prefix+'saveProficient.'+key,c.saveProficient[key],'checkbox');return computed(sign(part==='Mod'?stats.mods[key]:stats.saves[key]));}
+   if((m=/^Comp\.Use\.Skills\.([A-Za-z]+)\.(Prof|Exp|Mod)$/.exec(id))&&skills[m[1]]){const key=skills[m[1]],part=m[2];if(part==='Mod')return computed(sign(stats.skills[key]));const wanted=part==='Exp'?2:1,automatic=stats.skillRanks[key]>c.skillRank[key]?stats.skillRanks[key]:0;return automatic>=wanted?computed(true,{kind:'checkbox',reason:'Inherited from the character for this manual form reference.'}):edit(prefix+'skillRank.'+key,stats.skillRanks[key]>=wanted,'checkbox',2,{rank:wanted,currentRank:c.skillRank[key]});}
+  }
   if(id==='zAdvLog.PC Name')return computed(identity.name);
   if((m=/^spells\.(name|description|save|school|time|range|components|duration|book|page)\.(\d+)$/.exec(id))){const index=Number(m[2]),key=m[1];if(index===0)return computed({name:'Spell',description:'Description',save:'Save',school:'School',time:'Time',range:'Range',components:'Comp.',duration:'Duration',book:'B',page:'P'}[key],{reason:'Column heading.'});const row=context.spellRows?.[(context.spellOffset||0)+index-1];let value='';if(row){value=key==='name'?row.spell.name:key==='description'?[row.description,row.mark?.detail,...(row.mark?.notes||[]),row.invocation?context.invocationText?.(row.invocation):'',row.beast?.relevant?row.beast.detail:''].filter(Boolean).join(' '):key==='time'?row.spell.casting:key==='range'?row.range:key==='book'?row.c?.source:key==='page'?row.c?.page:key==='save'||key==='school'?row.c?.[key]:row.spell[key];}return computed(value,{command:'spells',spellIndex:row&&(key==='name'||key==='description')?row.i:undefined});}
   if(id==='spellshead.Text.header.0')return computed(context.spellProfile?.name||'All selected spells',{command:'spells'});
@@ -86,7 +100,7 @@ var CharacterAdobeFields=(()=>{
   if(d.kind==='checkbox'){if(typeof value!=='boolean')throw Error('Choose checked or unchecked.');if(d.rank)return {...d,value:value?d.rank:d.rank===2?Math.min(d.currentRank,1):0};if(d.count)return {...d,value:value?d.count:d.count-1};return {...d,value};}
   if(d.kind==='number'){if(String(value).trim()===''||!Number.isInteger(Number(value))||Number(value)<(d.min??0)||Number(value)>(d.max??1000000))throw Error('Enter a whole number from '+(d.min??0)+' to '+(d.max??1000000)+'.');return {...d,value:Number(value)};}
   value=String(value??'');if(value.length>(d.max??12000))throw Error('This text is too long.');
-  if(d.requiredChoice&&!value)throw Error('Choose a carried magic item.');
+  if(d.requiredChoice&&!value)throw Error(d.choiceMessage||'Choose a carried magic item.');
   if(d.kind==='select'&&value&&!d.options.some(o=>o.value===value&&!o.disabled))throw Error('Choose an available option.');
   if(d.listIndex!==undefined){const current=lines(get(context.data,d.path));current[d.listIndex]=value;value=current.filter(Boolean).join('; ');}
   return {...d,value};

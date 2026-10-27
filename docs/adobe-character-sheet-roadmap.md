@@ -87,3 +87,9 @@ Browser coverage includes three-slot rejection and recovery, unchanged item owne
 ### Source printing and combat readouts
 
 Per-annotation print flags hide source UI commands from paper, while data indicators for prepared spells and remaining spell slots remain printable. The browser regression checks real generated PDF content and source dimensions. Manual attacks now appear beside equipped attacks and use the existing derived attack bonuses; damage remains the shared manual text. Feat resource rows join class resources and invoke the existing common resource controls. Both spend and long-rest recovery are verified without a second resource model.
+
+### Connected companion-page checkpoint
+
+The original companion template selects existing companion/familiar cards and edits the same bounded model. Its creature dropdown calls the existing picker and preserves familiar filters. Core identity/size, separate HP, AC, movement, abilities, saves, skills, proficiency, traits and notes are connected. A shared companion projection now supplies both Standard cards and paper readouts, including initiative and passive Perception. Shared-editor updates are recalculated when returning to the paper.
+
+Manual Wild Shape reference cards preserve the existing mental-score, PB and skill inheritance. They are explicitly separate from the Druid’s active Wild Shape engine and its use/HP state. The dedicated Wild Shape template, companion images, source attack-table semantics and other unsupported fields remain pending. Browser coverage checks separate companions, creature filtering, bounded edits, inherited fields, shared-editor visibility, save/reopen, print and mobile accessibility.
