@@ -432,9 +432,12 @@
           "name": "Fast Movement",
           "level": 5,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Automatic +10 ft walking speed at actual Barbarian 5 when no Heavy armor is worn. Physical equipment, multiclass combination, magical speed minima, saved base preservation, Overview and print verified. Temporary conditions and alternate forms remain separate.",
+          "evidence": [
+            "tests/class-movement-speeds.cjs",
+            "tests/class-movement-speeds-browser.cjs"
+          ]
         },
         {
           "id": "2014:barbarian:7:feral-instinct",
@@ -2035,6 +2038,18 @@
           ]
         },
         {
+          "id": "2014:monk:2:unarmored-movement",
+          "name": "Unarmored Movement",
+          "level": 2,
+          "source": "SRD 5.1",
+          "state": "partial",
+          "scope": "Automatic walking-speed table at actual Monk 2–20, blocked by worn armor or a readied shield. Multiclass combination, magical speed minima, saved base preservation, Overview and print verified. Vertical/liquid movement permissions and temporary forms remain separate.",
+          "evidence": [
+            "tests/class-movement-speeds.cjs",
+            "tests/class-movement-speeds-browser.cjs"
+          ]
+        },
+        {
           "id": "2014:monk:3:deflect-missiles",
           "name": "Deflect Missiles",
           "level": 3,
@@ -2239,7 +2254,8 @@
         {
           "level": 2,
           "newFeatures": [
-            "2014:monk:2:ki"
+            "2014:monk:2:ki",
+            "2014:monk:2:unarmored-movement"
           ]
         },
         {
@@ -4547,9 +4563,12 @@
           "name": "Fast Movement",
           "level": 5,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Automatic +10 ft walking speed at actual Barbarian 5 when no Heavy armor is worn. Physical equipment, multiclass combination, magical speed minima, saved base preservation, Overview and print verified. Temporary conditions and alternate forms remain separate.",
+          "evidence": [
+            "tests/class-movement-speeds.cjs",
+            "tests/class-movement-speeds-browser.cjs"
+          ]
         },
         {
           "id": "2024:barbarian:7:feral-instinct",
@@ -6114,9 +6133,12 @@
           "name": "Unarmored Movement",
           "level": 2,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Automatic walking-speed table at actual Monk 2–20, blocked by worn armor or a readied shield. Multiclass combination, magical speed minima, saved base preservation, Overview and print verified. Vertical/liquid movement permissions and temporary forms remain separate.",
+          "evidence": [
+            "tests/class-movement-speeds.cjs",
+            "tests/class-movement-speeds-browser.cjs"
+          ]
         },
         {
           "id": "2024:monk:2:uncanny-metabolism",

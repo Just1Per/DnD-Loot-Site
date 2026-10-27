@@ -274,6 +274,7 @@ var CharacterSheetModel = (() => {
     const classExpertise=ClassChoices.expertise(d,{level,effects,feats});
     const weaponTraining=ClassChoices.weaponTraining(d,{level,effects,feats});
     effects.proficiencies=[...new Set([...effects.proficiencies,...weaponTraining.proficiencies])];
+    const baseWalkingSpeed=Number(effects.speed)||0;
     const magicItems=Magic?Magic.apply(d,scores,effects,loot,level):{active:[],reports:[],warnings:[]};
     if(d.build.scoreMode==='base')effects.hpBonus+=Math.max(1,Math.min(20,Number(level)||1))*(mod(scores.con)-mod(originCon));
     for (const key of Object.keys(abilities)) {
@@ -327,6 +328,8 @@ var CharacterSheetModel = (() => {
     result.gear=Equipment.derive(d,result,loot,level);
     if(Magic)result.gear=Magic.augmentGear(d,result.gear,magicItems);
     result.ac=result.gear.ac;
+    const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
+    result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     return result;
   }
