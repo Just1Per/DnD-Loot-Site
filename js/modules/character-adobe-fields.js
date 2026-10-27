@@ -26,6 +26,15 @@ var CharacterAdobeFields=(()=>{
   const id=typeof field==='string'?field:field.id,{data,derived:d,identity,options={}}=context;
   if(Object.hasOwn(raw,id)){const [path,kind,max]=raw[id],value=get(path.startsWith('identity.')?{identity}:data,path);return edit(path,value,kind,max,{options:options[path]||[]});}
   let m;
+  if(id==='zAdvLog.PC Name')return computed(identity.name);
+  if((m=/^spells\.(name|description|save|school|time|range|components|duration|book|page)\.(\d+)$/.exec(id))){const index=Number(m[2]),key=m[1];if(index===0)return computed({name:'Spell',description:'Description',save:'Save',school:'School',time:'Time',range:'Range',components:'Comp.',duration:'Duration',book:'B',page:'P'}[key],{reason:'Column heading.'});const row=context.spellRows?.[(context.spellOffset||0)+index-1];let value='';if(row){value=key==='name'?row.spell.name:key==='description'?[row.description,row.mark?.detail,...(row.mark?.notes||[]),row.invocation?context.invocationText?.(row.invocation):'',row.beast?.relevant?row.beast.detail:''].filter(Boolean).join(' '):key==='time'?row.spell.casting:key==='range'?row.range:key==='book'?row.c?.source:key==='page'?row.c?.page:key==='save'||key==='school'?row.c?.[key]:row.spell[key];}return computed(value,{command:'spells',spellIndex:row&&(key==='name'||key==='description')?row.i:undefined});}
+  if(id==='spellshead.Text.header.0')return computed(context.spellProfile?.name||'All selected spells',{command:'spells'});
+  if(id==='spellshead.ability.0')return computed(context.spellProfile?.ability?.toUpperCase()||'',{command:'spells'});
+  if(id==='spellshead.prepare.0')return computed(context.spellProfile?.mode==='known'?'':context.spellProfile?.spellCount??'',{command:'spells'});
+  if(id==='spellshead.attack.0')return computed(context.spellStats?sign(context.spellStats.attack):'',{command:'spells'});
+  if(id==='spellshead.dc.0')return computed(context.spellStats?.dc??'',{command:'spells'});
+  if(id==='spellsdiv.Text.0')return computed('Selected spells · sorted by level');
+  if(id==='SpellSheetInformation')return computed((context.spellPact?'Pact Magic slots shown above are separate from ordinary Spellcasting slots. ':'Ordinary Spellcasting slots shown above are separate from Pact Magic. ')+'Choose a caster above to see its ability, attack modifier and save DC. Prepared choices and slots use the shared Spells controls. Spell descriptions may be abbreviated; open Spells for full information.');
   if(id==='Character Level')return data.adobe?.useExperience?computed(d.progression.targetLevel):edit('identity.level',identity.level,'number',20,{min:1});
   if(id==='Class and Levels'){const rows=d.progression?.classLevels||[];return computed(rows.map(c=>(context.className?.(c.classId)||c.classId)+(rows.length>1?' '+c.level:'')).join(' / '),{command:'classes'});}
   if(id==='Total Experience')return edit('experience',data.experience||0,'number',1000000000,{command:'classes'});

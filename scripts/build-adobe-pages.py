@@ -10,7 +10,8 @@ TITLES={'page-1':'Character & combat','page-2':'Features & equipment','page-3':'
 def name(n):return re.sub(r'^P\d+\.[^.]+\.','',n)
 def safe_art(w):
  n=name(w.field_name)
- return n in base.STATIC_FIELDS or n.startswith('Image.calc_boxes.')or n.startswith('Image.DnDLogo')or n in ['AmmoLeft.Icon.Arrows','AmmoRight.Icon.Arrows']
+ # Generic spell-table frames live in button appearances, with user text in separate widgets.
+ return n.startswith(('spellshead.Image.','spellsdiv.Image.'))or n in base.STATIC_FIELDS or n.startswith('Image.calc_boxes.')or n.startswith('Image.DnDLogo')or n in ['AmmoLeft.Icon.Arrows','AmmoRight.Icon.Arrows']
 def export(source,target):
  r=PdfReader(source);names=r.trailer['/Root']['/Names'].get('/Templates',{}).get('/Names',[])
  pages=[('page-'+str(i+1),i)for i,page in enumerate(r.pages)]

@@ -661,6 +661,7 @@ function openSheetPrintDialog() {
   printDialog.showModal();
 }
 window.addEventListener('beforeprint', () => {
+  if(globalThis.CharacterAdobeView?.active()){CharacterAdobeView.preparePrint();return;}
   if (!document.body.classList.contains('printing-character-sheet')) prepareSheetPrint(new Set(['overview']));
 });
 function renderSheetBuildControls() {

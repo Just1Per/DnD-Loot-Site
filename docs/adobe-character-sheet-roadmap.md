@@ -65,3 +65,11 @@ The first-page print check verifies one page at the source dimensions (approxima
 A shared armor-training predicate recognizes the existing “All armor” entitlement. This also removes a false untrained-armor warning for legacy Fighter/Paladin characters; Medium-only training still does not grant Heavy armor. The Adobe indicator uses that same predicate.
 
 The scanner also walks the AcroForm tree independently of page widgets, records calculation order and page lifecycle actions, and checks action chains for cycles. The supplied PDF has no unplaced leaf fields or page lifecycle actions. Calculation-order entries may refer to parent field groups rather than individual widgets; both are inventoried. Synthetic PDF tests cover inherited actions, hidden fields, unplaced fields, cycle handling, dynamic menu discovery and omission of filled values/script arguments.
+
+### Connected spell-page checkpoint
+
+The spell and continuation templates now show the shared selected spell rows and reference metadata, with separate caster headers for multiclass ability/attack/DC. Prepared choices invoke the existing Wizard controller and enforce its allowance; known/fixed-prepared lists do not gain a new preparation toggle. Ordinary Spellcasting and Pact Magic counts stay separate, including after save/reopen. Full information opens through the existing spell dialog. The same row presentation supplies the current Standard generated table, including invocation ranges, class effects and Beast Spells reminders.
+
+Each template reserves a column-heading row: the first page holds 55 spells and continuation pages 70. Navigation preserves all 150 supported model entries. Generic table-frame artwork is retained from the blank template; source character values and portraits remain excluded. Browser tests use 132 imported spell references to exercise continuation and verify independent Wizard/Warlock values, preparation limits, slot pools, persistence, source-size print, browser Print and mobile accessibility.
+
+This does not complete the source spell-sheet menus or every conditional PDF variant. Automatic grants still follow the existing generator; choosing/generating spells remains available through the shared controls. Spell-row layout customization, source row commands and additional rules parity remain tracked work.
