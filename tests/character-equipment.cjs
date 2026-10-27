@@ -64,3 +64,27 @@ test('automatic unarmored formulas cover Barbarian Monk and Draconic Sorcerer',(
  assert.equal(E.derive(data([{classId:'sorcerer',level:5,subclassId:'draconic-bloodline'}]),stats,[]).ac,15);
  assert.equal(E.derive(data([{classId:'sorcerer',level:5,subclassId:'draconic-bloodline'}],'2024'),stats,[]).ac,16);
 });
+
+test('multiclass Unarmored Defense keeps legacy first-granting and revised best-formula rules distinct',()=>{
+ const stats={mods:{str:0,dex:2,con:1,int:0,wis:4,cha:0},scores:{str:10,dex:14,con:12,int:10,wis:18,cha:10},effects:{proficiencies:['shields']},feats:{acBonus:0,reports:[],rangedBonus:0},pb:2};
+ for(const edition of ['2014','2024'])for(let level=2;level<=20;level++)for(const order of [['barbarian','monk'],['monk','barbarian']]){
+  const data={build:{edition,classId:order[0]},equipmentState:{loadout:[]},adobe:{classLevels:order.map((classId,i)=>({classId,level:i?level-1:1}))}},before=JSON.stringify(data),r=E.derive(data,stats,[],level);
+  assert.equal(r.ac,edition==='2024'?16:order[0]==='barbarian'?13:16);assert.match(r.unarmoredDefenseNote,edition==='2024'?/one eligible formula/:new RegExp(order[0]==='barbarian'?'Barbarian is the first':'Monk is the first'));assert.equal(JSON.stringify(data),before);
+ }
+});
+test('first-granting defense keeps its own shield rule rather than falling back to the later class',()=>{
+ const stats={mods:{str:0,dex:2,con:4,int:0,wis:1,cha:0},scores:{str:10,dex:14,con:18,int:10,wis:12,cha:10},effects:{proficiencies:['shields']},feats:{acBonus:0,reports:[],rangedBonus:0},pb:2},l=[loot('shield','Shield')];
+ for(const edition of ['2014','2024'])for(const first of ['monk','barbarian']){const data={build:{edition,classId:first},adobe:{classLevels:[{classId:first,level:1},{classId:first==='monk'?'barbarian':'monk',level:1}]},equipmentState:{loadout:[{id:'shield',equipped:true}]}};assert.equal(E.derive(data,stats,l,2).ac,edition==='2024'||first==='barbarian'?18:14);data.equipmentState.loadout[0].equipped=false;assert.equal(E.derive(data,stats,l,2).ac,edition==='2024'||first==='barbarian'?16:13);}
+});
+test('unarmored defense respects level caps, zero levels, saved envelopes and live class removal',()=>{
+ const stats={mods:{str:0,dex:2,con:1,int:0,wis:4,cha:0},scores:{str:10,dex:14,con:12,int:10,wis:18,cha:10},effects:{proficiencies:[]},feats:{acBonus:0,reports:[],rangedBonus:0},pb:2};
+ const data={build:{edition:'2014',classId:'fighter'},equipmentState:{loadout:[]},adobe:{classLevels:[{classId:'fighter',level:20},{classId:'monk',level:1},{classId:'barbarian',level:1}]}};assert.equal(E.derive(data,stats,[],20).ac,12);
+ data.adobe.classLevels=[{classId:'fighter',level:1},{classId:'barbarian',level:0},{classId:'monk',level:1}];assert.equal(E.derive(data,stats,[],2).ac,16);
+ data.rulesChoices={grants:{__adobe:{data:structuredClone(data.adobe)}}};data.adobe.classLevels=[{classId:'barbarian',level:1},{classId:'monk',level:1}];assert.equal(E.derive(data,stats,[],2).ac,13,'live Adobe state supersedes an old save envelope');
+ data.rulesChoices.grants.__adobe.data=structuredClone(data.adobe);delete data.adobe;assert.equal(E.derive(data,stats,[],2).ac,13);data.rulesChoices.grants.__adobe.data.classLevels.shift();assert.equal(E.derive(data,stats,[],2).ac,16);
+});
+test('permitted natural armor and Draconic Resilience remain alternatives, and worn armor replaces unarmored formulas',()=>{
+ const stats={mods:{str:0,dex:2,con:1,int:0,wis:4,cha:4},scores:{str:10,dex:14,con:12,int:10,wis:18,cha:18},effects:{proficiencies:['heavy armor']},feats:{acBonus:0,reports:[],rangedBonus:0},pb:2};
+ const data={build:{edition:'2014',classId:'barbarian'},adobe:{classLevels:[{classId:'barbarian',level:1},{classId:'monk',level:1},{classId:'sorcerer',level:1,subclassId:'draconic-bloodline'}]},equipmentState:{loadout:[]}};assert.equal(E.derive(data,stats,[],3).ac,15);stats.effects.race={name:'Natural armor',naturalArmor:{base:17}};assert.equal(E.derive(data,stats,[],3).ac,17);
+ const armor=loot('plate','Plate');data.equipmentState.loadout=[{id:'plate',equipped:true}];const r=E.derive(data,stats,[armor],3);assert.equal(r.ac,18);assert.equal(r.unarmoredDefenseNote,'');
+});

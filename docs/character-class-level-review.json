@@ -366,9 +366,12 @@
           "name": "Unarmored Defense",
           "level": 1,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice.",
+          "evidence": [
+            "tests/character-equipment.cjs",
+            "tests/monk-martial-arts-browser.cjs"
+          ]
         },
         {
           "id": "2014:barbarian:2:danger-sense",
@@ -2006,9 +2009,12 @@
           "name": "Unarmored Defense",
           "level": 1,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice.",
+          "evidence": [
+            "tests/character-equipment.cjs",
+            "tests/monk-martial-arts-browser.cjs"
+          ]
         },
         {
           "id": "2014:monk:2:ki",
@@ -4439,9 +4445,12 @@
           "name": "Unarmored Defense",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice.",
+          "evidence": [
+            "tests/character-equipment.cjs",
+            "tests/monk-martial-arts-browser.cjs"
+          ]
         },
         {
           "id": "2024:barbarian:1:weapon-mastery",
@@ -6060,9 +6069,12 @@
           "name": "Unarmored Defense",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "implemented",
+          "scope": "Actual class levels and worn armor/shield conditions determine the legal formula; legacy multiclassing keeps only the first granting class in saved class-list order, while revised rules compare eligible formulas without adding them. Other permitted natural armor/Draconic formulas remain alternatives. No saved values are rewritten; Inventory, source help and Combat print explain the choice.",
+          "evidence": [
+            "tests/character-equipment.cjs",
+            "tests/monk-martial-arts-browser.cjs"
+          ]
         },
         {
           "id": "2024:monk:2:monk-s-focus",

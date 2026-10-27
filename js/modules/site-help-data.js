@@ -15,7 +15,7 @@ var SiteHelpData=(()=>{
   'spellAttackBonus':'Adds a manual adjustment to spell attack rolls. Generated class sheets include this adjustment alongside their own ability modifier and proficiency bonus.',
   'spellDCBonus':'Adds a manual adjustment to spell save DC. Use this for a bonus that is not already calculated from your choices or items.',
   'inspiration':'Records whether your character currently has Inspiration. Toggle it on Overview when it is gained or spent.',
-  'ac':'Your recorded armor class. In automatic equipment mode, the displayed total is calculated from worn armor, Dexterity, shields and supported bonuses.',
+  'ac':'Armor Class is calculated from worn armor, Dexterity, shields and supported bonuses. In 2014 multiclassing, Unarmored Defense comes from the first granting class in your class list. In 2024, one highest eligible formula is used. Formulas never add together.',
   'hpMax':'Maximum hit points, calculated from class levels, Constitution, your HP method and supported bonuses. The HP panel explains the sources.',
   'initiativeBonus':'Adds an extra initiative bonus beyond Dexterity and supported automatic effects. Do not enter a bonus here if the engine already includes it.',
   'passiveBonus':'Adds a manual adjustment to passive perception. Use it only for effects not already included by your character choices.',

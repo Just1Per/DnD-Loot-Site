@@ -354,6 +354,25 @@ const errors = [];
         ).violations,
     );
     assert.deepEqual(a11y, []);
+    await page.evaluate(()=>{
+      const d=sheetSession.data;d.build.edition='2014';d.build.classId='barbarian';d.build.race='human';d.build.scoreMode='final';d.abilities={str:12,dex:14,con:12,int:10,wis:18,cha:10};d.adobe.classLevels=[{classId:'barbarian',level:1},{classId:'monk',level:1}];d.equipmentState.loadout=[];sheetSession.identity.level=2;renderCharacterSheet();selectSheetTab('inventory');
+    });
+    assert.match(await page.locator('#sheetInventoryDefense').textContent(),/13 AC/);
+    assert.match(await page.locator('#sheetInventoryDefense').textContent(),/Barbarian is the first granting class/);
+    await page.evaluate(async()=>{await saveCharacterSheet({reportValidation:false});closeCharacterSheet(true);await openCharacterSheet('c1');selectSheetTab('inventory');});
+    assert.match(await page.locator('#sheetInventoryDefense').textContent(),/13 AC/);
+    const multiclassPrint=await page.evaluate(()=>{CharacterSheetPrint.prepare(new Set(['combat']));const text=document.querySelector('[data-paper-section=combat]').textContent;CharacterSheetPrint.clear();return text;});
+    assert.match(multiclassPrint,/Barbarian is the first granting class/);
+    await page.evaluate(()=>{sheetSession.data.adobe.classLevels.reverse();sheetSession.data.build.classId='monk';renderCharacterSheet();selectSheetTab('inventory');});
+    assert.match(await page.locator('#sheetInventoryDefense').textContent(),/16 AC/);
+    assert.match(await page.locator('#sheetInventoryDefense').textContent(),/Monk is the first granting class/);
+    await page.evaluate(()=>{sheetSession.data.build.edition='2024';sheetSession.data.adobe.classLevels.reverse();sheetSession.data.build.classId='barbarian';renderCharacterSheet();selectSheetTab('inventory');});
+    assert.match(await page.locator('#sheetInventoryDefense').textContent(),/16 AC/);
+    assert.match(await page.locator('[data-unarmored-defense-note]').textContent(),/one eligible formula/);
+    await page.setViewportSize({width:320,height:900});
+    assert.equal(await page.locator('[data-unarmored-defense-note]').evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);
+    assert.deepEqual(await page.evaluate(async()=>(await axe.run('#sheetInventoryDefense',{rules:{'color-contrast':{enabled:false}}})).violations.map(v=>v.id)),[]);
+    console.log('PASS first-granting multiclass Unarmored Defense, source explanation, recalculation, save/reopen and print');
     assert.deepEqual(errors, []);
     console.log(
       "PASS real Monk unarmed/weapon picker, automatic and explicit ability, saved references, source editions, armor suppression/recovery, level17 die, print, mobile and accessibility",
