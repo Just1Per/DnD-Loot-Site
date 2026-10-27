@@ -86,7 +86,7 @@ fs.mkdirSync(out,{recursive:true});
   const info=require('node:child_process').execFileSync('pdfinfo',[pdf],{encoding:'utf8'});
   assert.match(info,/Pages:\s+1\b/);
   const text=require('node:child_process').execFileSync('pdftotext',[pdf,'-'],{encoding:'utf8'});
-  assert.match(text,/Eldritch Blast/);
+  assert.match(text,/Eldritch Blast/);assert.match(text,/1\s*\/\s*2/);
   await page.evaluate(()=>window.dispatchEvent(new Event('afterprint')));
   const nativePdf=path.join(out,'adobe-connected-native-spell-print.pdf');await page.pdf({path:nativePdf,preferCSSPageSize:true,printBackground:true});assert.match(require('node:child_process').execFileSync('pdftotext',[nativePdf,'-'],{encoding:'utf8'}),/Eldritch Blast/);assert.match(require('node:child_process').execFileSync('pdfinfo',[nativePdf],{encoding:'utf8'}),/Pages:\s+1\b/);
   await page.locator('#sheetSave').click();await page.waitForFunction(()=>!sheetSession.saving&&!sheetSession.dirty);

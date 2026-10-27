@@ -83,3 +83,7 @@ Combined continuation pages show further feats, magic items and equipment; the o
 Weight uses one shared projection in both views: scoped carried entries plus coins, with unknown item weights made explicit. No carrying-capacity or encumbrance formula is invented for unconnected fields. The original SR/LR feature buttons invoke the shared feature recovery commands; unsupported PDF controls remain visibly unavailable while their mappings are completed.
 
 Browser coverage includes three-slot rejection and recovery, unchanged item ownership/catalogue data, live AC, item ordering and save/reopen, removed-item isolation, equipment row 51, continuation and alternate overflow layouts, source-size print and mobile accessibility. No new Firestore or Storage rules are needed.
+
+### Source printing and combat readouts
+
+Per-annotation print flags hide source UI commands from paper, while data indicators for prepared spells and remaining spell slots remain printable. The browser regression checks real generated PDF content and source dimensions. Manual attacks now appear beside equipped attacks and use the existing derived attack bonuses; damage remains the shared manual text. Feat resource rows join class resources and invoke the existing common resource controls. Both spend and long-rest recovery are verified without a second resource model.

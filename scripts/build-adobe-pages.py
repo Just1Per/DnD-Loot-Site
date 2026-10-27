@@ -35,7 +35,7 @@ def export(source,target):
    counts[n]+=1;ident=n+(' #'+str(counts[n])if counts[n]>1 else'');rect=[round(v,3)for v in w.rect]
    if w.field_type_string=='Button':
     # Very large image hit areas are decorative, never blank giant buttons.
-    if w.rect.get_area()<p.rect.get_area()*.15:buttons.append({'id':ident,'label':base.label(n),'rect':rect,'caption':str(getattr(w,'button_caption','')or'')[:80]})
+    if w.rect.get_area()<p.rect.get_area()*.15:buttons.append({'id':ident,'label':base.label(n),'rect':rect,'caption':str(getattr(w,'button_caption','')or'')[:80],'printable':bool(flags&4)})
     continue
    if w.field_type_string not in ['Text','ComboBox','CheckBox']:continue
    font=w.text_fontsize if w.text_fontsize>0 else 12 if n=='Speed'else min(20,max(6.5,w.rect.height*.7));opts=[]
@@ -43,7 +43,7 @@ def export(source,target):
     if isinstance(option,(tuple,list)):option=option[-1]
     if str(option).strip()and str(option)not in opts:opts.append(str(option))
    if n.startswith('Spell DC ')and not opts:opts=list(base.ABILITIES.values())
-   fields.append({'id':ident,'sourceField':w.field_name,'label':base.label(n),'kind':{'Text':'textarea'if w.field_flags&4096 else'text','ComboBox':'select','CheckBox':'checkbox'}[w.field_type_string],'rect':rect,'fontSize':round(font,2),'pdfReadOnly':bool(w.field_flags&1),**({'options':opts}if opts else{})})
+   fields.append({'id':ident,'sourceField':w.field_name,'label':base.label(n),'kind':{'Text':'textarea'if w.field_flags&4096 else'text','ComboBox':'select','CheckBox':'checkbox'}[w.field_type_string],'rect':rect,'fontSize':round(font,2),'pdfReadOnly':bool(w.field_flags&1),'printable':bool(flags&4),**({'options':opts}if opts else{})})
   for w in widgets:
    if not safe_art(w):p.delete_widget(w)
   pix=p.get_pixmap(matrix=fitz.Matrix(2.5,2.5),alpha=False);im=Image.frombytes('RGB',(pix.width,pix.height),pix.samples);im.save(target/(key+'.webp'),format='WEBP',lossless=True,method=6)
