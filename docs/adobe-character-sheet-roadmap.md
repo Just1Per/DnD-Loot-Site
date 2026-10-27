@@ -103,3 +103,7 @@ The active card reads the actual engine profile and its HP edits call the shared
 ### Equipment notes
 
 The large Notes field on the equipment page and each combined continuation is editable. Stable journal IDs preserve separate page notes inside the same bounded journal; they are also accessible in Standard, with descriptive titles and the Items category. General Notes pages omit these reserved equipment entries so writing ordinary notes cannot overwrite equipment-page text. Existing journal size and count limits still apply atomically. Browser coverage checks separate continuation text, ordinary notes, save/reopen and printing.
+
+### Organization symbol
+
+The background symbol frame now opens a collapsed Organization symbol editor in Standard Background. It uses the same MIME validation, resizing and bounded JPEG output as the existing portrait uploader, with a separate private saved image. Removing the symbol preserves the portrait. Both Adobe and Standard print show the symbol; source background PDF tests verify artwork plus both private images, rejected SVG input, removal, isolation and save/reopen. This does not reproduce all original image-menu operations or add companion images.

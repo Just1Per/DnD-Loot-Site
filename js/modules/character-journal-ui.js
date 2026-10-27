@@ -1,5 +1,15 @@
 'use strict';
 const characterNoteCategories=['General','NPCs','Locations','Sessions','Quests','Factions','Items','Lore','Ideas'];
+async function characterSheetImageData(file){
+   if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Choose a PNG, JPEG or WebP image.');
+   if(file.size>15*1024*1024)throw Error('Choose an image smaller than 15 MB.');
+   const image=new Image(),url=URL.createObjectURL(file);
+   try{await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(Error('This image could not be opened.'));image.src=url;});}finally{URL.revokeObjectURL(url);}
+   const canvas=document.createElement('canvas'),scale=Math.min(1,480/Math.max(image.naturalWidth,image.naturalHeight));canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
+   const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0,canvas.width,canvas.height);
+   let value=canvas.toDataURL('image/jpeg',.8);if(value.length>160000)value=canvas.toDataURL('image/jpeg',.5);if(value.length>160000)throw Error('This image is too detailed. Try a smaller picture.');
+   return value;
+}
 function setupCharacterJournal(){
  const story=document.getElementById('sheet-story'),portrait=document.createElement('section');portrait.id='sheetPortraitEditor';portrait.className='sheet-portrait-editor';
  portrait.innerHTML='<div class="sheet-portrait-preview"><span>Character portrait</span></div><div><h4>Character portrait</h4><label class="sheet-field">Choose picture<input id="sheetPortraitUpload" type="file" accept="image/png,image/jpeg,image/webp"></label><button type="button" id="sheetPortraitOverviewToggle">Add picture to Overview</button><button type="button" id="sheetPortraitRemove">Remove picture</button><p class="sheet-help" id="sheetPortraitStatus">Saved privately with your character sheet.</p></div>';
@@ -10,23 +20,20 @@ function setupCharacterJournal(){
   const file=event.target.files?.[0],session=sheetSession;if(!file)return;
   const status=document.getElementById('sheetPortraitStatus');
   try{
-   if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Choose a PNG, JPEG or WebP image.');
-   if(file.size>15*1024*1024)throw Error('Choose an image smaller than 15 MB.');
-   const image=new Image(),url=URL.createObjectURL(file);
-   try{await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(Error('This image could not be opened.'));image.src=url;});}finally{URL.revokeObjectURL(url);}
-   if(sheetSession!==session)return;
-   const canvas=document.createElement('canvas'),scale=Math.min(1,480/Math.max(image.naturalWidth,image.naturalHeight));canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));
-   const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0,canvas.width,canvas.height);
-   let value=canvas.toDataURL('image/jpeg',.8);if(value.length>160000)value=canvas.toDataURL('image/jpeg',.5);if(value.length>160000)throw Error('This image is too detailed. Try a smaller picture.');
+   const value=await characterSheetImageData(file);if(sheetSession!==session)return;
    readSheetForm();session.data.adobe.portrait=value;session.dirty=true;updateSheetCalculations();status.textContent='Picture added. Save your character sheet to keep it.';
   }catch(error){status.textContent=error.message;}finally{event.target.value='';}
  };
+ const symbol=document.createElement('details');symbol.id='sheetOrganizationSymbolEditor';symbol.className='sheet-organization-symbol';symbol.innerHTML='<summary>Organization symbol</summary><div class="sheet-portrait-editor"><div class="sheet-portrait-preview" id="sheetOrganizationSymbolPreview"><span>No organization symbol</span></div><div><label class="sheet-field">Choose organization symbol<input id="sheetOrganizationSymbolUpload" type="file" accept="image/png,image/jpeg,image/webp"></label><button type="button" id="sheetOrganizationSymbolRemove">Remove symbol</button><p class="sheet-help" id="sheetOrganizationSymbolStatus">Saved privately with your character sheet.</p></div></div>';story.querySelector('.sheet-story-left').append(symbol);
+ document.getElementById('sheetOrganizationSymbolRemove').onclick=()=>{readSheetForm();sheetSession.data.adobe.organizationSymbol='';sheetSession.dirty=true;updateSheetCalculations();};
+ document.getElementById('sheetOrganizationSymbolUpload').onchange=async event=>{const file=event.target.files?.[0],session=sheetSession;if(!file)return;const status=document.getElementById('sheetOrganizationSymbolStatus');try{const value=await characterSheetImageData(file);if(sheetSession!==session)return;readSheetForm();session.data.adobe.organizationSymbol=value;session.dirty=true;updateSheetCalculations();status.textContent='Symbol added. Save your character sheet to keep it.';}catch(error){status.textContent=error.message;}finally{event.target.value='';}};
  const host=document.getElementById('sheetJournal');host.dataset.category='All';host.dataset.selected='';renderCharacterJournal();updateCharacterPortrait();
 }
 function updateCharacterPortrait(){
  if(!sheetSession)return;const host=document.getElementById('sheetPortraitEditor');if(!host)return;
  const data=sheetSession.data.adobe,preview=host.querySelector('.sheet-portrait-preview');
  preview.innerHTML=data.portrait?`<img src="${sheetEscape(data.portrait)}" alt="Character portrait">`:'<span>Character portrait</span>';
+ const symbolPreview=document.getElementById('sheetOrganizationSymbolPreview');if(symbolPreview)symbolPreview.innerHTML=data.organizationSymbol?'<img src="'+sheetEscape(data.organizationSymbol)+'" alt="Organization symbol">':'<span>No organization symbol</span>';const symbolRemove=document.getElementById('sheetOrganizationSymbolRemove');if(symbolRemove)symbolRemove.disabled=!data.organizationSymbol;
  const toggle=document.getElementById('sheetPortraitOverviewToggle');toggle.disabled=!data.portrait;toggle.setAttribute('aria-pressed',String(data.showPortraitOnOverview));toggle.textContent=data.showPortraitOnOverview?'Remove picture from Overview':'Add picture to Overview';document.getElementById('sheetPortraitRemove').disabled=!data.portrait;
 }
 function renderCharacterJournal(){

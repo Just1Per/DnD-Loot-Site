@@ -11,7 +11,7 @@ The live contracts are `character-adobe-fields.js`, `character-adobe-view.js` an
 | Heal / HP / inspiration / death saves | Shared Overview editor or bounded raw values/counters | Core save/reopen and invalid-input checks; source Heal menu remains partial |
 | Tool, language and weapon training | Existing class/feat/origin effects plus permitted manual entries | Rogue and inherited training checks; full original option dialogs remain partial |
 | Portrait | Existing private upload, resizing, removal and persistence | Browser upload/save/reopen; original portrait popup operations not all reproduced |
-| Organization Symbol | Unavailable | Image model/editor still missing |
+| Organization Symbol | Private upload/removal using the shared portrait image validator/resizer; separate saved symbol and Standard editor | Source and Standard print, rejected SVG, portrait isolation and save/reopen tested; original popup operations remain partial |
 | SR / LR beside limited features | Existing eligible feature-use recovery, including feat pools | Second Wind and Lucky browser checks; these buttons do not restore HP or spell slots |
 | Dawn and other item-charge recovery | Unavailable | Shared item-charge model/recovery still missing |
 | Attack rows | Equipped attacks, manual attacks and existing derived actions; common bonuses | Manual editor and persistence tested; only five paper rows, further source attack menus remain partial |
