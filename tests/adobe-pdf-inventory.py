@@ -38,7 +38,7 @@ class InventoryTests(unittest.TestCase):
         internal = writer._add_object(dictionary(T=TextStringObject('Internal'), FT=NameObject('/Tx'),
                                                   AA=dictionary(C=action('internalCalculate()'))))
         writer._root_object[NameObject('/AcroForm')] = writer._add_object(dictionary(
-            Fields=ArrayObject([parent_ref, internal]), CO=ArrayObject([widget_ref, internal])))
+            Fields=ArrayObject([parent_ref, internal]), CO=ArrayObject([parent_ref, widget_ref, internal])))
         page[NameObject('/Annots')] = ArrayObject([widget_ref])
         page[NameObject('/AA')] = dictionary(O=action('pageOpened()'))
         writer._root_object[NameObject('/OpenAction')] = action('documentOpened()')
@@ -51,8 +51,11 @@ class InventoryTests(unittest.TestCase):
         self.assertTrue(field['readOnly'])
         self.assertFalse(field['visible'])
         self.assertEqual({a['event'] for a in field['actions']}, {'K', 'C'})
-        self.assertEqual(report['calculationOrder'], ['Group.Score', 'Internal'])
+        self.assertEqual(report['calculationOrder'], ['Group', 'Group.Score', 'Internal'])
         self.assertEqual(report['unplacedFields'][0]['field'], 'Internal')
+        self.assertEqual(report['fieldGroups'][0]['field'], 'Group')
+        self.assertEqual(report['fieldGroups'][0]['children'], 1)
+        self.assertEqual(report['fieldGroups'][0]['actions'][0]['calls'], ['validate'])
         self.assertEqual(report['pageActions'][0]['calls'], ['pageOpened'])
         self.assertEqual(report['documentActions'][0]['calls'], ['documentOpened'])
         exported = json.dumps(report)
@@ -93,7 +96,7 @@ class InventoryTests(unittest.TestCase):
             path = pathlib.Path(temporary) / 'blank.pdf'
             writer.write(path)
             report = scanner.scan(path)
-        for key in ['widgets', 'unplacedFields', 'calculationOrder', 'pageActions', 'dynamicUI']:
+        for key in ['widgets', 'fieldGroups', 'unplacedFields', 'calculationOrder', 'pageActions', 'dynamicUI']:
             self.assertEqual(report[key], [])
         self.assertEqual(report['pages'][0]['widgetCount'], 0)
 
