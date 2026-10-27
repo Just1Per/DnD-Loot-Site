@@ -115,8 +115,10 @@ jobs:
     - name: Install PDF text verification
       timeout-minutes: 3
       run: sudo apt-get install -y poppler-utils
-    - name: Hover help hit testing and Sorcerer point recovery
-      run: npm --prefix tests run test:sorcerer-metamagic
+    - name: Resource hover help, rest recovery and turn actions
+      run: |
+        npm --prefix tests run test:sorcerer-metamagic
+        npm --prefix tests run test:ranger-resources
     - name: NPC reading, exact-record reopening and return navigation
       run: |-
         npm --prefix tests run test:campaign-npcs
@@ -172,7 +174,7 @@ jobs:
         npm --prefix tests run test:divine-channels
         npm --prefix tests run test:wizard-recovery
         npm --prefix tests run test:paladin-healing
-        npm --prefix tests run test:ranger-resources
+        npm --prefix tests run test:ranger-terrain
         npm --prefix tests run test:bard-inspiration
         npm --prefix tests run test:barbarian-rage
         npm --prefix tests run test:fighter-resources

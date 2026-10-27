@@ -46,11 +46,15 @@ var CharacterBuildValidation=(()=>{
       const route=routeWarning(warning);
       add(rows,route.category,warning,route.tab,'warning',route.target);
     }
-    for(const [index,entry] of (progression.classLevels||[]).entries()){
+    for(const [index,entry] of (progression.assignedClassLevels||progression.classLevels||[]).entries()){
       const className=globalThis.CharacterAdobeEngine?.className?.(entry.classId)||entry.classId||'Class';
       const groups=globalThis.CharacterClassFeatureChoices?.status?.(data,entry,data?.build?.edition||'2014')||[];
       for(const group of groups){
-        if(group.missing>0)add(rows,'Class feature',`${className}: choose ${group.missing} more ${group.name}.`,'builder','warning',`[data-class-feature-choice="${index}"][data-choice-group="${group.id}"]`);
+        if(group.overflow?.length&&group.valid.length===group.allowed){
+          const issue=add(rows,'Class feature',`${className}: ${group.overflow.length} saved ${group.name} choice${group.overflow.length===1?' is':'s are'} inactive at this class level. Your current choices are valid.`,'builder','warning',`[data-class-feature-choice="${index}"][data-choice-group="${group.id}"]`);
+          if(issue)issue.groupNotice=true;
+        }
+        else if(group.missing>0)add(rows,'Class feature',`${className}: choose ${group.missing} more ${group.name}.`,'builder','warning',`[data-class-feature-choice="${index}"][data-choice-group="${group.id}"]`);
         else if(!group.complete)add(rows,'Class feature',`${className}: review ${group.name}; one or more selections no longer qualify.`,'builder','warning',`[data-class-feature-choice="${index}"][data-choice-group="${group.id}"]`);
       }
     }
@@ -64,7 +68,7 @@ var CharacterBuildValidation=(()=>{
     }
     const assigned=Number(progression.assignedLevel||0),target=Number(progression.targetLevel||identity.level||1);
     if(assigned<target)add(rows,'Class levels',`Assign ${target-assigned} remaining class level${target-assigned===1?'':'s'}.`,'builder','warning',assigned?'[data-up]':'[name="build.classId"]');
-    for(const [index,entry] of (progression.classLevels||[]).entries()){
+    for(const [index,entry] of (progression.assignedClassLevels||progression.classLevels||[]).entries()){
       const subclasses=globalThis.CharacterSubclassData,edition=data?.build?.edition||'2014',choices=globalThis.CharacterClassFeatureChoices,source=entry.classId==='artificer'?choices?.artificerSource(data):null;
       if(source&&!source.eligible){add(rows,'Artificer version','Choose a compatible Artificer version and core edition.','builder','warning','[data-artificer-source]');continue;}
       if(entry.subclassId){const row=subclasses?.find?.(entry.subclassId);if(source&&row&&subclasses.compatible&&!subclasses.compatible(row,edition,source.id))add(rows,'Subclass','Choose a subclass matching the selected Artificer version.','builder','warning',`[data-subclass="${index}"]`);continue;}

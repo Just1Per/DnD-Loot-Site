@@ -388,16 +388,16 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Favored Enemy **[unreviewed]**<br>Natural Explorer **[unreviewed]** |
+| 1 | Favored Enemy **[unreviewed]**<br>Natural Explorer **[partial]** |
 | 2 | Fighting Style **[partial]**<br>Spellcasting **[partial]** |
 | 3 | Primeval Awareness **[unreviewed]**<br>Ranger Archetype **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
 | 5 | Extra Attack **[implemented]** |
-| 6 | Favored Enemy **[unreviewed]**<br>Natural Explorer **[unreviewed]** |
+| 6 | Favored Enemy **[unreviewed]**<br>Natural Explorer **[partial]** |
 | 7 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 8 | Ability Score Improvement **[partial]**<br>Land's Stride **[unreviewed]** |
 | 9 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 10 | Hide in Plain Sight **[unreviewed]**<br>Natural Explorer **[unreviewed]** |
+| 10 | Hide in Plain Sight **[unreviewed]**<br>Natural Explorer **[partial]** |
 | 11 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
@@ -412,7 +412,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
 | Favored Enemy · 1 | Source-rule comparison and structured fields still need review. | Pending |
-| Natural Explorer · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Natural Explorer · 1 | Structured distinct favored-terrain choices at actual Ranger levels1/6/10, with duplicate/allowance validation, inactive choice retention, multiclass/save/source handling, inline explanation, Overview and print. Related proficient INT/WIS checks and hour-long travel benefits remain conditional reminders, never permanent skill bonuses; optional replacement features require their own source workflow. | [tests/legacy-ranger-terrain.cjs](../tests/legacy-ranger-terrain.cjs), [tests/legacy-ranger-terrain-browser.cjs](../tests/legacy-ranger-terrain-browser.cjs) |
 | Fighting Style · 2 | Base class and Feats choices share the correct allowance, with duplicate/alias guards. Additional subclass/feat style sources and situational effects remain in the wider review. | [tests/fighting-style-entitlements.cjs](../tests/fighting-style-entitlements.cjs), [tests/fighting-style-entitlements-browser.cjs](../tests/fighting-style-entitlements-browser.cjs) |
 | Spellcasting · 2 | Class-aware spell access, preparation and multiclass profiles exist. Verify the complete feature and all source-specific exceptions at every level. | [tests/character-spellcasting.cjs](../tests/character-spellcasting.cjs), [tests/character-progression.cjs](../tests/character-progression.cjs) |
 | Primeval Awareness · 3 | Source-rule comparison and structured fields still need review. | Pending |
@@ -420,11 +420,11 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Ability Score Improvement · 4 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Extra Attack · 5 | Derived attacks per normal Attack action on your turn use actual class levels and the highest allowance, never add multiclass sources, and remain separate from damage, spells, Bonus Actions and Reactions. Compatible Bard/Wizard/Artificer subclasses and conditional Warlock pact-weapon counts are covered; special attack replacements still resolve from their own rules. | [tests/class-extra-attack.cjs](../tests/class-extra-attack.cjs), [tests/class-extra-attack-browser.cjs](../tests/class-extra-attack-browser.cjs) |
 | Favored Enemy · 6 | Source-rule comparison and structured fields still need review. | Pending |
-| Natural Explorer · 6 | Source-rule comparison and structured fields still need review. | Pending |
+| Natural Explorer · 6 | Structured distinct favored-terrain choices at actual Ranger levels1/6/10, with duplicate/allowance validation, inactive choice retention, multiclass/save/source handling, inline explanation, Overview and print. Related proficient INT/WIS checks and hour-long travel benefits remain conditional reminders, never permanent skill bonuses; optional replacement features require their own source workflow. | [tests/legacy-ranger-terrain.cjs](../tests/legacy-ranger-terrain.cjs), [tests/legacy-ranger-terrain-browser.cjs](../tests/legacy-ranger-terrain-browser.cjs) |
 | Ability Score Improvement · 8 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Land's Stride · 8 | Source-rule comparison and structured fields still need review. | Pending |
 | Hide in Plain Sight · 10 | Source-rule comparison and structured fields still need review. | Pending |
-| Natural Explorer · 10 | Source-rule comparison and structured fields still need review. | Pending |
+| Natural Explorer · 10 | Structured distinct favored-terrain choices at actual Ranger levels1/6/10, with duplicate/allowance validation, inactive choice retention, multiclass/save/source handling, inline explanation, Overview and print. Related proficient INT/WIS checks and hour-long travel benefits remain conditional reminders, never permanent skill bonuses; optional replacement features require their own source workflow. | [tests/legacy-ranger-terrain.cjs](../tests/legacy-ranger-terrain.cjs), [tests/legacy-ranger-terrain-browser.cjs](../tests/legacy-ranger-terrain-browser.cjs) |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Favored Enemy · 14 | Source-rule comparison and structured fields still need review. | Pending |
 | Vanish · 14 | Source-rule comparison and structured fields still need review. | Pending |
