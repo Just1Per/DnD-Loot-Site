@@ -357,9 +357,12 @@
           "name": "Rage",
           "level": 1,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual-level use pool, finite Spend/Undo, source-specific rest recovery, duration/armor/Strength-attack/resistance/spell restrictions, persistence and print. Spending records resource use; Rage activation, conditional damage, damage resistance and turn/duration resolution remain table decisions.",
+          "evidence": [
+            "tests/barbarian-rage-resources.cjs",
+            "tests/barbarian-rage-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:barbarian:1:unarmored-defense",
@@ -498,9 +501,12 @@
           "name": "Persistent Rage",
           "level": 15,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual level15 duration/end-condition reminder; original 1-minute cap remains. Active Rage ending and turn resolution remain table decisions.",
+          "evidence": [
+            "tests/barbarian-rage-resources.cjs",
+            "tests/barbarian-rage-resources-browser.cjs"
+          ]
         },
         {
           "id": "2014:barbarian:16:ability-score-improvement",
@@ -4445,9 +4451,12 @@
           "name": "Rage",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual-level use pool, finite Spend/Undo, source-specific rest recovery, duration/armor/Strength-attack/resistance/spell restrictions, persistence and print. Spending records resource use; Rage activation, conditional damage, damage resistance and turn/duration resolution remain table decisions.",
+          "evidence": [
+            "tests/barbarian-rage-resources.cjs",
+            "tests/barbarian-rage-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:barbarian:1:unarmored-defense",
@@ -4616,9 +4625,12 @@
           "name": "Persistent Rage",
           "level": 15,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Source-specific level15 duration/end-condition reminder. Revised Initiative recovery explicitly restores the pool once per Long Rest with a separate control and saved limit; ordinary Initiative reset does not consume this optional feature. Active Rage duration and conditions remain table decisions.",
+          "evidence": [
+            "tests/barbarian-rage-resources.cjs",
+            "tests/barbarian-rage-resources-browser.cjs"
+          ]
         },
         {
           "id": "2024:barbarian:16:ability-score-improvement",
