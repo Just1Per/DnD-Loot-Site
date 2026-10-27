@@ -60,7 +60,7 @@ var CharacterSheetPrint=(()=>{
   const features=classes.map(c=>{const source=c.classId==='artificer'?CharacterClassFeatureChoices.artificerSource(data).id:undefined,subclass=CharacterSubclassData.find(c.subclassId),groups=CharacterClassProgression.byLevel(c.classId,c.level,c.subclassId,data.build.edition,source),choices=CharacterClassFeatureChoices.groups(c,data.build.edition,data).map(g=>[g.name||g.label||g.id,CharacterClassFeatureChoices.selections(data,g).map(id=>g.options.find(o=>o.id===id)?.name||id).filter(Boolean).join(', ')||'Not selected']);
    return block(CharacterAdobeEngine.className(c.classId)+' · Level '+c.level,facts([['Subclass',subclass?.name||'—'],...choices])+Object.entries(groups).map(([level,items])=>'<div class="sheet-paper-feature-group"><h4>Level '+esc(level)+'</h4>'+items.map(f=>'<div class="sheet-paper-feature"><strong>'+esc(f.name)+'</strong>'+prose(f.summary||'Source reference')+(f.action||f.recharge?'<small>'+esc([f.action,f.recharge].filter(Boolean).join(' · '))+'</small>':'')+'</div>').join('')+'</div>').join(''));
   }).join('');
-  return block('Character choices',facts([['Rules',data.build.edition],['Species',d.effects.race?.name||data.species||'—'],['Background',CharacterBackgrounds.get(data.build.background)?.name||data.background||'—']])+reference('#sheetBuildSummaryContent'))+features;
+  return block('Character choices',facts([['Rules',data.build.edition],['Species',d.effects.race?.name||data.species||'—'],['Background',CharacterBackgrounds.get(data.build.background)?.name||data.background||'—']])+reference('#sheetBuildSummaryContent'))+block('Languages',prose([...d.effects.languages,data.languages].filter(Boolean).join(' · ')))+features;
  }
  function feats(data,d){
   const cards=selectedFeatCards(data,d);

@@ -22,6 +22,7 @@ var SiteHelpData=(()=>{
   'deathSuccess':'Tracks successful death saving throws. Review and clear the counters when the character recovers or the encounter changes.',
   'deathFailure':'Tracks failed death saving throws. These are encounter records rather than changes to maximum hit points.',
   'proficiencies':'Records additional armor, weapon or tool training. Automatically granted training is shown separately on Overview; avoid entering it twice.',
+  'additional learned languages':'Record a language granted by a feature, training or DM approval. Standard, Rare and Setting/dialect groups include Abyssal, Celestial, Infernal, Sylvan and Undercommon. This does not grant extra starting choices. Class languages and the 2024 Rogue’s additional Thieves’ Cant language have their own source. Custom text is preserved. Save the sheet after changes.',
   'languages':'Records additional languages. Species, background, supported feats and class languages also contribute to Overview. Rogue levels add Thieves’ Cant; Druid levels add Druidic, including multiclass characters.',
   'resistances':'Records damage resistances or defenses that are not already calculated. It is a reminder; damage decisions remain with the player and table.',
   'conditions':'Records current conditions so you can see them on Overview. Review each condition’s rules when making rolls or taking actions.',

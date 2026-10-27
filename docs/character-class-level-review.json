@@ -7158,9 +7158,11 @@
           "level": 1,
           "source": "SRD 5.2.1",
           "state": "partial",
-          "scope": "Fixed language appears. The additional language choice still needs structured support.",
+          "scope": "Actual revised Rogue 1, including multiclass: fixed Thieves’ Cant language plus one structured additional Standard/Rare-table language. Exact missing/duplicate choice warning, saved source-specific choice, Overview/print/Guide and source-removal preservation. Secret communication and in-game language use remain table resolved.",
           "evidence": [
-            "tests/character-class-expertise.cjs"
+            "tests/character-languages.cjs",
+            "tests/character-languages-browser.cjs",
+            "tests/character-languages-rules.cjs"
           ]
         },
         {

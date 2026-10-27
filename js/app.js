@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261026-druid-beast-spells-v1";
+const ASSET_VERSION = "20261026-language-choices-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -101,6 +101,7 @@ const FEATURE_FILES = [
   "./modules/character-catalog.js",
   "./modules/character-divine-channel.js",
   "./modules/character-class-feature-choices.js",
+  "./modules/character-languages.js",
   "./modules/character-paladin-auras.js",
   "./modules/character-build-validation.js",
   "./modules/character-adobe-data.js",
@@ -118,6 +119,7 @@ const FEATURE_FILES = [
   "./modules/character-sheet-model.js",
   "./modules/character-sheet-store.js",
   "./modules/character-overview-ui.js",
+  "./modules/character-languages-ui.js",
   "./modules/character-play-ui.js",
   "./modules/character-point-buy-ui.js",
   "./modules/character-inventory-ui.js",
