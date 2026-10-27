@@ -1,4 +1,4 @@
-// Shared Monk Ki/Focus pool against an isolated character-sheet fixture.
+// Sorcerer points, Metamagic and contextual-help hit testing in an isolated sheet fixture.
 const fs=require('node:fs'),path=require('node:path');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const root=path.resolve(__dirname,'..'),out=process.env.UI_OUTPUT_DIR||require('node:os').tmpdir()+'/campaignatlas-ui-checks';fs.mkdirSync(out,{recursive:true});
@@ -34,14 +34,20 @@ const errors=[];
  await spend.click();assert.equal(await remaining.textContent(),'1 / 5');assert.equal(await spend.isDisabled(),true);
  // Reproduce the real overlap: focused Metamagic help appears over Short Rest.
  // A raw pointer click must still reach the action; no sleeps, retries or hidden help.
- await page.evaluate(()=>{SiteHelp.refresh();const m=document.querySelector('[data-metamagic]');m.blur();m.focus();});
+ await page.evaluate(async()=>{
+  await document.fonts.ready;
+  document.getElementById('sheetFeatResources').scrollIntoView({block:'center',behavior:'instant'});
+  SiteHelp.refresh();const m=document.querySelector('[data-metamagic]');m.blur();m.focus({preventScroll:true});
+ });
  const restBox=await page.locator('[data-combat-recover=short]').boundingBox();
  assert.equal(await page.locator('#vaultContextHelp').isVisible(),true);
  const restHit=await page.evaluate(()=>{
   const b=document.querySelector('[data-combat-recover=short]'),r=b.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2),tip=document.getElementById('vaultContextHelp'),dialog=document.getElementById('characterSheetDialog');
-  return{matches:b.contains(hit),button:r.toJSON(),hit:hit?.outerHTML.slice(0,240),tip:tip.getBoundingClientRect().toJSON(),tipPointer:getComputedStyle(tip).pointerEvents,pinned:tip.dataset.pinned,viewport:[innerWidth,innerHeight],dialog:dialog.getBoundingClientRect().toJSON(),fonts:document.fonts.status};
+  const t=tip.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2;
+  return{matches:b.contains(hit),overlap:x>=t.left&&x<=t.right&&y>=t.top&&y<=t.bottom,button:r.toJSON(),hit:hit?.outerHTML.slice(0,240),tip:t.toJSON(),tipPointer:getComputedStyle(tip).pointerEvents,pinned:tip.dataset.pinned,viewport:[innerWidth,innerHeight],dialog:dialog.getBoundingClientRect().toJSON(),fonts:document.fonts.status};
  });
  if(!restHit.matches)await page.screenshot({path:out+'/sorcery-rest-hit-failure.png',fullPage:false});
+ assert.equal(restHit.overlap,true,'fixture keeps visible help over the rest action: '+JSON.stringify(restHit));
  assert.equal(restHit.matches,true,'hover help never intercepts the underlying rest action: '+JSON.stringify(restHit));
  await page.mouse.click(restBox.x+restBox.width/2,restBox.y+restBox.height/2);
  assert.equal(await remaining.textContent(),'3 / 5');
