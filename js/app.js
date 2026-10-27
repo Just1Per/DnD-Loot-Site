@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261027-class-movement-v1";
+const ASSET_VERSION = "20261027-class-movement-v2";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -103,6 +103,7 @@ const FEATURE_FILES = [
   "./modules/character-class-feature-choices.js",
   "./modules/character-monk-martial-arts.js",
   "./modules/character-class-movement.js",
+  "./modules/character-barbarian-rage.js",
   "./modules/character-languages.js",
   "./modules/character-paladin-auras.js",
   "./modules/character-build-validation.js",
