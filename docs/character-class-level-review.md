@@ -60,7 +60,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Rage **[unreviewed]**<br>Unarmored Defense **[unreviewed]** |
+| 1 | Rage **[partial]**<br>Unarmored Defense **[unreviewed]** |
 | 2 | Danger Sense **[unreviewed]**<br>Reckless Attack **[unreviewed]** |
 | 3 | Primal Path **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -74,7 +74,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | Brutal Critical **[unreviewed]** |
 | 14 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 15 | Persistent Rage **[unreviewed]** |
+| 15 | Persistent Rage **[partial]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | Brutal Critical **[unreviewed]** |
 | 18 | Indomitable Might **[unreviewed]** |
@@ -83,7 +83,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Rage · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Rage · 1 | Actual-level use pool, finite Spend/Undo, source-specific rest recovery, duration/armor/Strength-attack/resistance/spell restrictions, persistence and print. Spending records resource use; Rage activation, conditional damage, damage resistance and turn/duration resolution remain table decisions. | [tests/barbarian-rage-resources.cjs](../tests/barbarian-rage-resources.cjs), [tests/barbarian-rage-resources-browser.cjs](../tests/barbarian-rage-resources-browser.cjs) |
 | Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Danger Sense · 2 | Source-rule comparison and structured fields still need review. | Pending |
 | Reckless Attack · 2 | Source-rule comparison and structured fields still need review. | Pending |
@@ -97,7 +97,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Relentless Rage · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Brutal Critical · 13 | Source-rule comparison and structured fields still need review. | Pending |
-| Persistent Rage · 15 | Source-rule comparison and structured fields still need review. | Pending |
+| Persistent Rage · 15 | Actual level15 duration/end-condition reminder; original 1-minute cap remains. Active Rage ending and turn resolution remain table decisions. | [tests/barbarian-rage-resources.cjs](../tests/barbarian-rage-resources.cjs), [tests/barbarian-rage-resources-browser.cjs](../tests/barbarian-rage-resources-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Brutal Critical · 17 | Source-rule comparison and structured fields still need review. | Pending |
 | Indomitable Might · 18 | Source-rule comparison and structured fields still need review. | Pending |
@@ -651,7 +651,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Rage **[unreviewed]**<br>Unarmored Defense **[unreviewed]**<br>Weapon Mastery **[partial]** |
+| 1 | Rage **[partial]**<br>Unarmored Defense **[unreviewed]**<br>Weapon Mastery **[partial]** |
 | 2 | Danger Sense **[unreviewed]**<br>Reckless Attack **[unreviewed]** |
 | 3 | Barbarian Subclass **[unreviewed]**<br>Primal Knowledge **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]** |
@@ -665,7 +665,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | 12 | Ability Score Improvement **[partial]** |
 | 13 | Improved Brutal Strike **[unreviewed]** |
 | 14 | No new named base-class feature in the shipped reference; check scaling and subclass progression separately. |
-| 15 | Persistent Rage **[unreviewed]** |
+| 15 | Persistent Rage **[partial]** |
 | 16 | Ability Score Improvement **[partial]** |
 | 17 | Improved Brutal Strike (Enhanced) **[unreviewed]** |
 | 18 | Indomitable Might **[unreviewed]** |
@@ -674,7 +674,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Rage · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Rage · 1 | Actual-level use pool, finite Spend/Undo, source-specific rest recovery, duration/armor/Strength-attack/resistance/spell restrictions, persistence and print. Spending records resource use; Rage activation, conditional damage, damage resistance and turn/duration resolution remain table decisions. | [tests/barbarian-rage-resources.cjs](../tests/barbarian-rage-resources.cjs), [tests/barbarian-rage-resources-browser.cjs](../tests/barbarian-rage-resources-browser.cjs) |
 | Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Weapon Mastery · 1 | Weapon choices, class-level allowance, proficiency gating and property reminders exist. Audit remaining property-specific statistics/conditions against the source. | [tests/weapon-mastery.cjs](../tests/weapon-mastery.cjs), [tests/weapon-mastery-browser.cjs](../tests/weapon-mastery-browser.cjs) |
 | Danger Sense · 2 | Source-rule comparison and structured fields still need review. | Pending |
@@ -691,7 +691,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 | Relentless Rage · 11 | Source-rule comparison and structured fields still need review. | Pending |
 | Ability Score Improvement · 12 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Improved Brutal Strike · 13 | Source-rule comparison and structured fields still need review. | Pending |
-| Persistent Rage · 15 | Source-rule comparison and structured fields still need review. | Pending |
+| Persistent Rage · 15 | Source-specific level15 duration/end-condition reminder. Revised Initiative recovery explicitly restores the pool once per Long Rest with a separate control and saved limit; ordinary Initiative reset does not consume this optional feature. Active Rage duration and conditions remain table decisions. | [tests/barbarian-rage-resources.cjs](../tests/barbarian-rage-resources.cjs), [tests/barbarian-rage-resources-browser.cjs](../tests/barbarian-rage-resources-browser.cjs) |
 | Ability Score Improvement · 16 | Actual class-level feat/ASI budget exists. Verify every ability-increase path, caps and user-facing choice against the source. | [tests/character-play-rules.cjs](../tests/character-play-rules.cjs), [tests/multiclass-asi-browser.cjs](../tests/multiclass-asi-browser.cjs) |
 | Improved Brutal Strike (Enhanced) · 17 | Source-rule comparison and structured fields still need review. | Pending |
 | Indomitable Might · 18 | Source-rule comparison and structured fields still need review. | Pending |

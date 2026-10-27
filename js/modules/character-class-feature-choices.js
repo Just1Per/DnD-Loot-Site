@@ -716,6 +716,7 @@ var CharacterClassFeatureChoices=(()=>{
     }
     const bard=bardLevels(data,level);
     if(bard){const key=groupKey(edition,'bard','bardic-inspiration-uses'),used=spent(key),max=Math.max(1,Math.min(10,Math.trunc(Number(mods.cha)||0))),die='1d'+(bard>=15?12:bard>=10?10:bard>=5?8:6),superior=bard>=(edition==='2024'?18:20),resets=['long',...(bard>=5?['short']:[]),...(superior?['initiative']:[])];rows.push({id:'bard-inspiration',key,name:'Bardic Inspiration',source:edition+' Bard',className:'Bard',level:bard,max,used,remaining:Math.max(0,max-used),die,slotRecovery:edition==='2024'&&bard>=5,resets,recovery:(bard>=5?'Short or Long Rest recovery':'Long Rest recovery')+(superior?(edition==='2024'?' · Initiative: regain to 2 uses':' · Initiative: regain 1 if empty'):''),unit:'uses',useLabel:'Give inspiration',undoLabel:'Undo use',description:'Bonus Action · Give one creature other than yourself within 60 ft an inspiration die ('+die+'). '+(edition==='2024'?'Within 1 hour, the recipient can add the die after failing a d20 Test. It must be able to see or hear you.':'Within 10 minutes, the recipient can add the die to one ability check, attack roll or saving throw, after the d20 but before the outcome. It must be able to hear you.')+' A creature can hold only one Bardic Inspiration die at a time.'});}
+    const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null),rageRow=rage?.resource(data,{level});if(rageRow)rows.push(rageRow);
     const divine=globalThis.CharacterDivineChannel||(typeof require==='function'?require('./character-divine-channel'):null);rows.push(...(divine?.resources(data,{level,mods})||[]));
     const wild=globalThis.CharacterWildShape||(typeof require==='function'?require('./character-wild-shape'):null);rows.push(...(wild?.resources(data,{level})||[]));
     return rows;
@@ -740,7 +741,7 @@ var CharacterClassFeatureChoices=(()=>{
     data.adobe=next;return true;
   }
   function changeClassResource(data,id,delta,context){
-    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.managedSlots||resource.managedWildShape||resource.channelEffects&&delta>0||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&delta>resource.remaining||delta<0&&-delta>resource.used)return false;
+    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.unlimited||resource.managedSlots||resource.managedWildShape||resource.channelEffects&&delta>0||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&delta>resource.remaining||delta<0&&-delta>resource.used)return false;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.max(0,resource.used+delta))]}};return true;
   }
   function resetClassResources(data,event,context={}){
@@ -770,6 +771,7 @@ var CharacterClassFeatureChoices=(()=>{
       }
     }
     if(Object.keys(updates).length)data.adobe={...stored,classFeatureChoices:{...choices,...updates}};
+    const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null);rage?.onRest(data,event,{level:total});
     const companion=globalThis.CharacterWildCompanion||(typeof require==='function'?require('./character-wild-companion'):null);companion?.onRest(data,event);
     const conversions=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);conversions?.onRest(data,event);
     const intervention=globalThis.CharacterClericIntervention||(typeof require==='function'?require('./character-cleric-intervention'):null);intervention?.onRest(data,event);

@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261026-monk-martial-arts-v1";
+const ASSET_VERSION = "20261027-barbarian-rage-v1";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -102,6 +102,7 @@ const FEATURE_FILES = [
   "./modules/character-divine-channel.js",
   "./modules/character-class-feature-choices.js",
   "./modules/character-monk-martial-arts.js",
+  "./modules/character-barbarian-rage.js",
   "./modules/character-languages.js",
   "./modules/character-paladin-auras.js",
   "./modules/character-build-validation.js",

@@ -173,6 +173,7 @@ jobs:
         npm --prefix tests run test:ranger-resources
         npm --prefix tests run test:sorcerer-metamagic
         npm --prefix tests run test:bard-inspiration
+        npm --prefix tests run test:barbarian-rage
         npm --prefix tests run test:fighter-resources
         npm --prefix tests run test:class-capstones
         npm --prefix tests run test:monk-points
