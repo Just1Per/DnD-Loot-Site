@@ -881,7 +881,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Class level | Features arriving at this level |
 | --- | --- |
-| 1 | Martial Arts **[unreviewed]**<br>Unarmored Defense **[unreviewed]** |
+| 1 | Martial Arts **[partial]**<br>Unarmored Defense **[unreviewed]** |
 | 2 | Monk's Focus **[partial]**<br>Unarmored Movement **[unreviewed]**<br>Uncanny Metabolism **[unreviewed]** |
 | 3 | Deflect Attacks **[unreviewed]**<br>Monk Subclass **[unreviewed]** |
 | 4 | Ability Score Improvement **[partial]**<br>Slow Fall **[unreviewed]** |
@@ -904,7 +904,7 @@ The runtime matrix separately checks that core derivation succeeds for every cla
 
 | Feature / level | Review scope | Test evidence |
 | --- | --- | --- |
-| Martial Arts · 1 | Source-rule comparison and structured fields still need review. | Pending |
+| Martial Arts · 1 | Actual Monk1–20 revised die, Simple Melee and Light Martial Melee eligibility (including Greatclub), automatic better Strength/Dexterity without overwriting explicit choices, separate Grapple/Shove DC reminders and independent Bonus Action Unarmed Strike. Physical conditions, magic/style/offhand values, source/multiclass, save/print/Guide covered; subclass/optional/racial exceptions and action/target enforcement remain separate. | [tests/monk-martial-arts.cjs](../tests/monk-martial-arts.cjs), [tests/monk-martial-arts-browser.cjs](../tests/monk-martial-arts-browser.cjs) |
 | Unarmored Defense · 1 | Source-rule comparison and structured fields still need review. | Pending |
 | Monk's Focus · 2 | Shared point pool, actual class-level maximum, finite spend/undo, Short/Long Rest recovery, current feature DC, save/reopen and print. Individual technique actions, revised Uncanny Metabolism and Perfect Focus recovery remain in the wider review. | [tests/monk-ki-and-focus.cjs](../tests/monk-ki-and-focus.cjs), [tests/monk-ki-and-focus-browser.cjs](../tests/monk-ki-and-focus-browser.cjs) |
 | Unarmored Movement · 2 | Source-rule comparison and structured fields still need review. | Pending |
