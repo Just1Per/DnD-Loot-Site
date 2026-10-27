@@ -132,7 +132,7 @@
     "test:barbarian-rage": "node barbarian-rage-resources-browser.cjs",
     "test:class-movement": "node class-movement-speeds-browser.cjs",
     "test:control-prototype": "node control-prototype-browser.cjs",
-    "test:adobe-connected": "node adobe-connected-sheet-browser.cjs && node adobe-spell-pages-browser.cjs && node adobe-items-browser.cjs && node adobe-companions-browser.cjs"
+    "test:adobe-connected": "node adobe-connected-sheet-browser.cjs && node adobe-spell-pages-browser.cjs && node adobe-items-browser.cjs && node adobe-companions-browser.cjs && node adobe-wild-shape-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.51.1",

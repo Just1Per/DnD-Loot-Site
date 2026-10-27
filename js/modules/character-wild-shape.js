@@ -433,10 +433,20 @@ var CharacterWildShape = (() => {
     ];
   }
   function profile(d, ctx = {}) {
-    const s = state(d, ctx.level);
+    return profileForState(d, ctx, state(d, ctx.level));
+  }
+  // Reference sheets use the same calculations without assuming a form,
+  // consuming a use, or changing the saved active form/HP/equipment.
+  function referenceProfile(d, id, ctx = {}) {
+    if (!eligible(d, id, ctx.level)) return null;
+    const row = catalogue.get(id), saved = state(d, ctx.level);
+    const p = profileForState(d, ctx, {...saved,activeId:id,hp:row.data.hp,gear:'merged'}, true);
+    return p?.valid ? {...p,reference:true,tempHP:0} : p;
+  }
+  function profileForState(d, ctx, s, reference = false) {
     if (!s.activeId) return null;
     const row = catalogue?.get(s.activeId);
-    if (!row || !eligible(d, s.activeId, ctx.level) || blocked(d, ctx.level))
+    if (!row || !eligible(d, s.activeId, ctx.level) || (!reference && blocked(d, ctx.level)))
       return {
         valid: false,
         state: s,
@@ -535,16 +545,13 @@ var CharacterWildShape = (() => {
       /\b(STR|DEX|CON|INT|WIS|CHA)\s*:\s*([+−-]?\d+)/gi,
     ))
       beastSaves[m[1].toLowerCase()] = Number(m[2].replace("−", "-"));
+    const saveProficient = Object.fromEntries(A.map(a=>[a,!!(d.saves?.[a]?.proficient || effects.saves.includes(a) || a in beastSaves)]));
     const saves = Object.fromEntries(
         A.map((a) => [
           a,
           Math.max(
             mods[a] +
-              (d.saves?.[a]?.proficient ||
-              effects.saves.includes(a) ||
-              a in beastSaves
-                ? pb
-                : 0),
+              (saveProficient[a] ? pb : 0),
             beastSaves[a] ?? -Infinity,
           ) +
             Number(d.saves?.[a]?.bonus || 0) +
@@ -552,7 +559,7 @@ var CharacterWildShape = (() => {
             (s.moonNew && s.level >= 6 && a === "con" ? mods.wis : 0),
         ]),
       ),
-      skills = {};
+      skills = {}, skillRanks = {};
     for (const [id, [name, ability]] of Object.entries(model.skills)) {
       const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
         match = String(b.skills || "").match(
@@ -570,11 +577,13 @@ var CharacterWildShape = (() => {
         order =
           (bare.classOrders?.reports || []).filter((r) => r.skills.includes(id))
             .length * Math.max(1, mods.wis);
+      skillRanks[id] = rank;
       skills[id] =
         Math.max(mods[ability] + Math.floor(rank * pb), beast) +
         (d.skills?.[id]?.bonus || 0) +
         order;
     }
+    const passive = 10 + skills.perception + (d.passiveBonus || 0) + (feats.passiveBonus || 0);
     const actor = ctx.derived || model.derive(d, level, loot),
       notes = [
         "Equipment: " +
@@ -663,7 +672,10 @@ var CharacterWildShape = (() => {
       mods,
       pb,
       saves,
+      saveProficient,
       skills,
+      skillRanks,
+      passive,
       ac: best.value + shield + (gear?.bonus || 0) + (gear?.defense || 0),
       acSource: best.name,
       speed: effects.speed ?? b.speed,
@@ -672,10 +684,7 @@ var CharacterWildShape = (() => {
         String(b.senses || "").replace(
           /passive perception:?\s*\d+/gi,
           "passive Perception: " +
-            (10 +
-              skills.perception +
-              (d.passiveBonus || 0) +
-              (feats.passiveBonus || 0)),
+            passive,
         ),
         ...(bare.effects.specialSenses || []).map(
           (sense) => sense.name + ": " + sense.detail,
@@ -737,6 +746,7 @@ var CharacterWildShape = (() => {
     heal,
     resources,
     profile,
+    referenceProfile,
   };
 })();
 if (typeof module !== "undefined" && module.exports)
