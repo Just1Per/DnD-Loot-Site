@@ -15,6 +15,7 @@ Static inspection has produced the following counts across the six active pages 
 | All widget occurrences | 4,548 |
 | Pushbutton occurrences | 567 |
 | Widgets with action callbacks | 2,355 |
+| Fields in original calculation order | 463 |
 | Named script/data modules | 24 |
 | Dynamic UI sites needing expansion/review | 287 |
 
@@ -62,3 +63,5 @@ No Firestore or Storage rule changes are included. Existing session access contr
 The first-page print check verifies one page at the source dimensions (approximately 595 × 792 pt) and the character name in extracted PDF text. The final Adobe view passes the selected WCAG A/AA axe rules in Chromium 154. These checks do not establish full keyboard, screen-reader or all-page parity.
 
 A shared armor-training predicate recognizes the existing “All armor” entitlement. This also removes a false untrained-armor warning for legacy Fighter/Paladin characters; Medium-only training still does not grant Heavy armor. The Adobe indicator uses that same predicate.
+
+The scanner also walks the AcroForm tree independently of page widgets, records calculation order and page lifecycle actions, and checks action chains for cycles. The supplied PDF has no unplaced leaf fields or page lifecycle actions. Synthetic PDF tests cover inherited actions, hidden fields, unplaced fields, cycle handling, dynamic menu discovery and omission of filled values/script arguments.

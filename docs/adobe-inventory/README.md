@@ -1,6 +1,6 @@
 # Adobe PDF function inventory
 
-Static scan of the supplied first-sheet reference. No filled values or executable PDF code are included.
+Static scan of the supplied Adobe reference. No filled values or executable PDF code are included.
 
 - Active pages: 6
 - Widgets on active pages: 1235
@@ -8,6 +8,9 @@ Static scan of the supplied first-sheet reference. No filled values or executabl
 - Widgets across all page objects: 4548
 - Pushbuttons: 567
 - Widgets with actions: 2355
+- Fields without a placed widget: 0
+- Entries in Acrobat calculation order: 463
+- Page lifecycle actions: 0
 - Named script/data modules: 24
 - Dynamic UI sites needing expansion: 287
 

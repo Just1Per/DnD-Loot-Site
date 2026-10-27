@@ -44,6 +44,11 @@ jobs:
         cache-dependency-path: tests/package-lock.json
     - name: Install test dependencies
       run: npm ci --prefix tests
+    - name: Static Adobe inventory uses metadata only
+      timeout-minutes: 2
+      run: |
+        python -m pip install --disable-pip-version-check pypdf==6.10.0
+        python tests/adobe-pdf-inventory.py
     - name: Hosting runtime and operational file boundaries
       run: npm --prefix tests run test:packaging
     - name: Verify Ubuntu package setup
