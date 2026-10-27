@@ -26,7 +26,34 @@ const errors=[];
 
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2024';d.build.classId='sorcerer';d.adobe.classLevels=[{classId:'sorcerer',level:5}];d.adobe.classFeatureChoices={};renderCharacterSheet();selectSheetTab('builder')});
  const choices=page.locator('[data-choice-group=metamagic]');assert.equal(await choices.count(),2);await choices.nth(0).selectOption('quickened-spell');await choices.nth(1).selectOption('heightened-spell');await page.evaluate(()=>selectSheetTab('combat'));
- const remaining=page.locator('[aria-label="Sorcery Points uses remaining"]'),meta=page.locator('[data-metamagic]'),spend=page.locator('[data-spend-metamagic]');assert.equal(await remaining.textContent(),'5 / 5');await meta.selectOption('quickened-spell');assert.match(await spend.textContent(),/2 points/);await spend.click();assert.equal(await remaining.textContent(),'3 / 5');await meta.selectOption('heightened-spell');assert.match(await page.locator('[data-metamagic-detail]').textContent(),/disadvantage on saves/);await spend.click();assert.equal(await remaining.textContent(),'1 / 5');assert.equal(await spend.isDisabled(),true);await page.locator('[data-combat-recover=short]').click();assert.equal(await remaining.textContent(),'3 / 5');await page.locator('[data-combat-recover=short]').click();assert.equal(await remaining.textContent(),'3 / 5');assert.match(await page.locator('#sheetFeatResources').textContent(),/already used/);
+ const remaining=page.locator('[aria-label="Sorcery Points uses remaining"]'),meta=page.locator('[data-metamagic]'),spend=page.locator('[data-spend-metamagic]');
+ assert.equal(await remaining.textContent(),'5 / 5');
+ await meta.selectOption('quickened-spell');assert.match(await spend.textContent(),/2 points/);
+ await spend.click();assert.equal(await remaining.textContent(),'3 / 5');
+ await meta.selectOption('heightened-spell');assert.match(await page.locator('[data-metamagic-detail]').textContent(),/disadvantage on saves/);
+ await spend.click();assert.equal(await remaining.textContent(),'1 / 5');assert.equal(await spend.isDisabled(),true);
+ // Reproduce the real overlap: focused Metamagic help appears over Short Rest.
+ // A raw pointer click must still reach the action; no sleeps, retries or hidden help.
+ await page.evaluate(()=>{SiteHelp.refresh();const m=document.querySelector('[data-metamagic]');m.blur();m.focus();});
+ const restBox=await page.locator('[data-combat-recover=short]').boundingBox();
+ assert.equal(await page.locator('#vaultContextHelp').isVisible(),true);
+ assert.equal(await page.evaluate(()=>{
+  const b=document.querySelector('[data-combat-recover=short]'),r=b.getBoundingClientRect();
+  return b.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));
+ }),true,'hover help never intercepts the underlying rest action');
+ await page.mouse.click(restBox.x+restBox.width/2,restBox.y+restBox.height/2);
+ assert.equal(await remaining.textContent(),'3 / 5');
+ await page.locator('[data-combat-recover=short]').click();assert.equal(await remaining.textContent(),'3 / 5');
+ assert.match(await page.locator('#sheetFeatResources').textContent(),/already used/);
+ // Explicitly pinned help remains readable/interactive; Escape keeps the sheet open.
+ await page.locator('#sheetFeatResources h4 .vault-help-badge').click();
+ assert.equal(await page.locator('#vaultContextHelp').isVisible(),true);
+ assert.equal(await page.evaluate(()=>{
+  const t=document.getElementById('vaultContextHelp'),r=t.getBoundingClientRect();
+  return t.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));
+ }),true,'pinned help retains pointer interaction');
+ await page.keyboard.press('Escape');assert.equal(await page.locator('#vaultContextHelp').isHidden(),true);
+ assert.equal(await remaining.textContent(),'3 / 5');
  await page.locator('#sheetSave').click();await page.waitForFunction(()=>!sheetSession.saving&&!sheetSession.dirty);await page.evaluate(async()=>{closeCharacterSheet(true);await openCharacterSheet('c1');selectSheetTab('combat')});assert.equal(await remaining.textContent(),'3 / 5');assert.equal(await meta.locator('option').count(),2);await page.locator('[data-combat-recover=short]').click();assert.equal(await remaining.textContent(),'3 / 5');await page.locator('[data-combat-recover=long]').click();assert.equal(await remaining.textContent(),'5 / 5');
  await page.evaluate(()=>CharacterSheetPrint.prepare(new Set(['combat'])));assert.match(await page.locator('[data-paper-section=combat]').textContent(),/Sorcery Points.*5 \/ 5 points.*Quickened Spell/s);await page.evaluate(()=>{CharacterSheetPrint.clear();selectSheetTab('overview')});assert.match(await page.locator('#sheetOverviewReadout').textContent(),/Sorcery Points: 5 \/ 5 points/);
  await page.evaluate(()=>{sheetSession.data.build.edition='2014';sheetSession.data.adobe.classFeatureChoices['2014:sorcerer:metamagic']=['twinned-spell','subtle-spell'];renderCharacterSheet();selectSheetTab('combat')});await meta.selectOption('twinned-spell');await page.locator('[data-metamagic-level]').selectOption('3');assert.match(await spend.textContent(),/3 points/);await spend.click();assert.equal(await remaining.textContent(),'2 / 5');await page.locator('[data-metamagic-level]').selectOption('0');assert.match(await spend.textContent(),/1 point/);await spend.click();assert.equal(await remaining.textContent(),'1 / 5');await meta.selectOption('subtle-spell');assert.equal(await page.locator('[data-metamagic-level-field]').isHidden(),true);

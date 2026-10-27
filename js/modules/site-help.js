@@ -82,10 +82,10 @@ var SiteHelp=(()=>{
   return (control.tagName==='SELECT'?'Choose ':control.type==='checkbox'?'Enable or clear ':'Enter ')+pretty+' for this '+ctx+'. '+(ctx==='item'?'It is shown with the item or used by its supported configuration. Save the item to keep changes.':ctx==='account'?'It identifies or configures the account. Save the account form to keep changes.':ctx==='campaign'?'It configures the active campaign. Use this section’s save action to apply changes.':'It records this detail in the current section. Save the character sheet or form to keep changes.');
  }
  function boxText(label){const key=norm(label).replace(/^[^a-z]+/,'');return D.boxes[key]||(/^post layout(?: ·|$)/.test(key)?D.boxes['post layout']:null)||(/spell sheet|generated spell/.test(key)?D.boxes.spells:/pact magic/.test(key)?'Warlock’s separate slot pool. Mark spent Pact Magic slots here; short or long rest restores them.':/class features|class reference|features unlocked/.test(key)?D.boxes['class reference']:/point buy/.test(key)?D.boxes['point buy']:/calculated from/.test(key)?D.boxes['calculated from your choices']:null);}
- function hide(){clearTimeout(hideTimer);if(active){active.removeAttribute('aria-describedby');if(active.classList.contains('vault-help-badge'))active.setAttribute('aria-expanded','false');}active=null;pinned=false;if(tip)tip.hidden=true;}
+ function hide(){clearTimeout(hideTimer);if(active){active.removeAttribute('aria-describedby');if(active.classList.contains('vault-help-badge'))active.setAttribute('aria-expanded','false');}active=null;pinned=false;if(tip){tip.hidden=true;tip.dataset.pinned='false';}}
  function position(){if(!active||!tip)return;const rect=active.getBoundingClientRect?.()||{left:8,right:24,top:8,bottom:24},width=tip.getBoundingClientRect?.().width||300,height=tip.getBoundingClientRect?.().height||100;const vw=window.innerWidth||360,vh=window.innerHeight||800;tip.style.left=Math.max(8,Math.min(rect.left,vw-width-8))+'px';tip.style.top=(rect.bottom+8+height<=vh?rect.bottom+8:Math.max(8,rect.top-height-8))+'px';}
  /** Put tooltips in the active native dialog’s top layer so they remain readable. */
- function show(button){clearTimeout(hideTimer);if(active!==button)hide();active=button;const modal=button.closest('dialog');(modal?.open?modal:document.body).appendChild(tip);tip.textContent=button._vaultHelp;tip.hidden=false;button.setAttribute('aria-describedby',tip.id);if(button.classList.contains('vault-help-badge'))button.setAttribute('aria-expanded','true');position();}
+ function show(button){clearTimeout(hideTimer);if(active!==button)hide();active=button;const modal=button.closest('dialog');(modal?.open?modal:document.body).appendChild(tip);tip.textContent=button._vaultHelp;tip.hidden=false;tip.dataset.pinned=String(pinned);button.setAttribute('aria-describedby',tip.id);if(button.classList.contains('vault-help-badge'))button.setAttribute('aria-expanded','true');position();}
  // Repeated sheet fields share section help; labels and keyboard focus explain individual values.
  function inlineHelp(control,label,text){
   if(inlineDecorated.has(control)||!label)return;
@@ -102,7 +102,7 @@ var SiteHelp=(()=>{
   else if(host.tagName==='SUMMARY'&&!host.closest('#sheet-overview')){const row=document.createElement('div');row.className='vault-help-disclosure';const details=host.parentElement;details.before(row);row.append(details,b);}
   else if(host.tagName==='INPUT'||host.tagName==='SELECT'||host.tagName==='TEXTAREA'||host.tagName==='BUTTON')host.after(b);else host.appendChild(b);
   b.addEventListener('pointerenter',()=>show(b));b.addEventListener('pointerleave',()=>{if(!pinned)hideTimer=setTimeout(hide,200);});b.addEventListener('focus',()=>show(b));b.addEventListener('blur',()=>{if(!pinned)hide();});
-  b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(active===b&&pinned)hide();else{show(b);pinned=true;}});
+  b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(active===b&&pinned)hide();else{show(b);pinned=true;tip.dataset.pinned='true';}});
  }
  /** Decorate new controls once, restoring badges if a renderer replaced their heading. */
  function refresh(){

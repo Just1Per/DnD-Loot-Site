@@ -33,3 +33,9 @@ Counters, damage columns and feature text were checked against Wizards' SRD 5.1/
 Eight focused engine tests cover both editions at levels 1–20, finite/unlimited limits, invalid changes, source-specific rest recovery, optional Initiative confirmation and limits, over-cap saved spending, multiclass caps, independent pools, saved envelopes and inactive choices. `test:barbarian-rage` exercises real Combat controls, save/reopen, print, HP isolation, source changes, unlimited uses, mobile layout and accessibility. The top Guide explains the flow.
 
 State uses the existing string-array class-feature-choice map. No Firestore/Storage rule change, new persisted schema, migration or production deployment is required or performed.
+
+## Resource action regression
+
+The complete GitHub browser run exposed a Sorcerer Short Rest click that left the pool at 1/5 instead of 3/5. Reproduction showed the transient Metamagic help popup overlapping the rest button and receiving the click; the resource calculation itself was correct. Hover/focus help now allows pointer actions to reach the controls underneath. Explicitly pinned help remains interactive, and Escape closes it without closing the sheet.
+
+The Sorcerer browser test deliberately displays the real help over the rest action, checks hit testing and uses a raw pointer click before asserting the correct recovery and once-per-Long-Rest limit. It also checks pinned-help interaction and Escape. This regression check does not hide the tooltip, retry the click or change point totals directly.

@@ -11,7 +11,7 @@ button.vault-help-badge.vault-help-badge,
 }
 button.vault-help-badge:hover,button.vault-help-badge[aria-expanded=true],#characterSheetDialog button.vault-help-badge:is(:hover,[aria-expanded=true]){background:#f1dfb7;color:#4f1919;border-color:#8f6226}
 button.vault-help-badge:focus-visible{outline:2px solid #7c2828;outline-offset:3px}
-.vault-context-help{position:fixed;z-index:100000;box-sizing:border-box;width:min(330px,calc(100vw - 16px));padding:12px 14px;background:#fff9ed;color:#352419;border:1px solid #b3935d;border-radius:8px;box-shadow:0 5px 18px #21140530;font:14px/1.5 Georgia,serif;white-space:normal;overflow-wrap:anywhere;text-transform:none;letter-spacing:0}
+.vault-context-help{position:fixed;pointer-events:none;z-index:100000;box-sizing:border-box;width:min(330px,calc(100vw - 16px));padding:12px 14px;background:#fff9ed;color:#352419;border:1px solid #b3935d;border-radius:8px;box-shadow:0 5px 18px #21140530;font:14px/1.5 Georgia,serif;white-space:normal;overflow-wrap:anywhere;text-transform:none;letter-spacing:0}
 .vault-context-help[hidden],#siteGuideButton[hidden]{display:none!important}
 .vault-help-login-field{display:inline-flex;align-items:center;min-width:0;max-width:100%}
 .vault-help-login-field input{min-width:0}
@@ -40,3 +40,6 @@ button.vault-help-badge[hidden]{display:none!important}
 
 /* Dense sheet tables use label/focus explanations instead of a badge per cell. */
 .vault-help-inline{cursor:help}
+
+/* Transient hover/focus help cannot consume clicks on the form beneath it. */
+.vault-context-help[data-pinned="true"]{pointer-events:auto}
