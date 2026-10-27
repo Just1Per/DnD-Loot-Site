@@ -167,11 +167,13 @@ var CharacterEquipment = (() => {
       warnings.push('Shield training not found'+(data.build.edition==='2024'?'; shield AC is inactive.':'; check armor penalties.'));
       if(data.build.edition==='2024'){shield=0;if(shieldEntry.magicActive){const source=sources.find(s=>s.name===shieldEntry.item.name);if(source){bonus-=source.value;sources.splice(sources.indexOf(source),1);}}}
     }
+    const Martial=globalThis.CharacterMonkMartialArts||(typeof require==='function'?require('./character-monk-martial-arts'):null),martialArts=Martial?.state(data,level,entries);
     for(const r of entries){
       const w=r.profile,m=r.mechanics,ch=r.choice;
       if(m.kind!=='weapon'||!w)continue;
       const notes=[];
       let ability=ch.ability==='auto'?(w.props.includes('finesse')?(stats.mods.dex>stats.mods.str?'dex':'str'):w.rangeType==='ranged'?'dex':'str'):ch.ability;
+      const monkWeapon=martialArts?.active&&Martial.weapon(w,martialArts.edition);if(monkWeapon&&ch.ability==='auto')ability=Martial.ability(stats.mods);
       let useTwo=w.props.includes('twoHanded')||ch.mode==='twoHanded'&&!!w.versatile;
       if(m.base==='lance')useTwo=ch.mode!=='mounted';
       const isThrown=ch.mode==='thrown'&&w.props.includes('thrown');
@@ -181,7 +183,8 @@ var CharacterEquipment = (() => {
       const ab=stats.mods[ability],extra=offhand?Math.min(0,ab):ab;
       const attack=ab+(proficient?stats.pb:0)+(r.magicActive?m.attackBonus:0)+(w.rangeType==='ranged'?stats.feats.rangedBonus:0);
       const damageBonus=extra+(r.magicActive?m.damageBonus:0);
-      const damage=w.damage?`${useVersatile?w.versatile:w.damage}${damageBonus?' '+(damageBonus<0?'−':'+')+' '+Math.abs(damageBonus):''} ${w.damageType}${r.magicActive&&m.extraDamage?' + '+m.extraDamage:''}`:'Special action — resolve manually';
+      const ordinaryDie=useVersatile?w.versatile:w.damage,damageDie=monkWeapon?Martial.dice(ordinaryDie,martialArts.die):ordinaryDie;if(monkWeapon&&w.damage)notes.push(Martial.note(martialArts,damageDie));
+      const damage=w.damage?`${damageDie}${damageBonus?' '+(damageBonus<0?'−':'+')+' '+Math.abs(damageBonus):''} ${w.damageType}${r.magicActive&&m.extraDamage?' + '+m.extraDamage:''}`:'Special action — resolve manually';
       if(useTwo&&shieldEntry)notes.push('Two hands required: stow shield before attacking.');
       if(w.props.includes('ammunition'))notes.push('Requires ammunition; consumption is manual.');
       if(w.props.includes('loading'))notes.push('Loading limits attacks.');
@@ -202,7 +205,7 @@ var CharacterEquipment = (() => {
     }
     // Defense follows the owned armor actually worn, independent of the manual feat reminder.
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
-    return {entries,attacks,warnings,attuned,attunementLimit:attunement.limit,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
+    return {entries,attacks,martialArts,warnings,attuned,attunementLimit:attunement.limit,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
   return {attunementLimit,attunementState,weapons,armor,normalize,infer,profile,choices,trained,derive};
 })();

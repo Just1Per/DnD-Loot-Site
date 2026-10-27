@@ -101,6 +101,7 @@ const FEATURE_FILES = [
   "./modules/character-catalog.js",
   "./modules/character-divine-channel.js",
   "./modules/character-class-feature-choices.js",
+  "./modules/character-monk-martial-arts.js",
   "./modules/character-languages.js",
   "./modules/character-paladin-auras.js",
   "./modules/character-build-validation.js",

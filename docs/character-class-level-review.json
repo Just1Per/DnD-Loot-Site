@@ -6048,9 +6048,12 @@
           "name": "Martial Arts",
           "level": 1,
           "source": "SRD 5.2.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Actual Monk1–20 revised die, Simple Melee and Light Martial Melee eligibility (including Greatclub), automatic better Strength/Dexterity without overwriting explicit choices, separate Grapple/Shove DC reminders and independent Bonus Action Unarmed Strike. Physical conditions, magic/style/offhand values, source/multiclass, save/print/Guide covered; subclass/optional/racial exceptions and action/target enforcement remain separate.",
+          "evidence": [
+            "tests/monk-martial-arts.cjs",
+            "tests/monk-martial-arts-browser.cjs"
+          ]
         },
         {
           "id": "2024:monk:1:unarmored-defense",
