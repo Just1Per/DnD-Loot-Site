@@ -67,6 +67,12 @@ var WorldPostLayouts=(()=>{
   s.host.querySelector('[data-world-results]').textContent=`${shown} of ${rows.length} ${archived?'archived':'active'} world entries shown.`;
   const add=s.host.querySelector('[data-new-record]');if(add)add.textContent='+ Add '+(category&&category!=='Location'?category.toLowerCase():'place');
   entryState(null,s);
+  list.querySelectorAll('[data-open-record]').forEach(button=>button.onclick=async()=>{
+   if(!current(s)||s.busy)return;
+   rememberWorldList(s);
+   if(s.record?.id===button.dataset.openRecord&&s.dirty){worldPane(s,true);return;}
+   s.worldOpening=true;try{await W.openRecord(button.dataset.openRecord);}finally{s.worldOpening=false;}
+  });
  }
  function replacePublications(s,rows){
   s.worldPublications=new Map(rows.map(row=>[row.id,row]));s.worldKnown.clear();s.worldSharingLoaded=true;W.renderList();
@@ -90,9 +96,37 @@ var WorldPostLayouts=(()=>{
   }catch(error){if(active()){select.value='';status.textContent=`Could not load sharing status: ${error.message}. Refresh to try again.`;W.renderList();}}
   finally{if(active())button.disabled=false;}
  }
+ // On small screens, browsing and editing share one pane without replacing the form.
+ function worldPane(s,editing){
+  if(!current(s))return;
+  s.host.dataset.worldPane=editing?'editor':'list';
+  const resume=s.host.querySelector('[data-world-resume]');
+  resume.hidden=!s.record;
+  if(s.record)resume.textContent=(s.dirty?'Resume unsaved draft: ':'Continue editing: ')+(W.draft()?.title||'Untitled World post');
+  if(typeof window.matchMedia!=='function'||!window.matchMedia('(max-width:760px)').matches)return;
+  if(editing){
+   const back=s.host.querySelector('[data-world-back]');back?.focus({preventScroll:true});
+   s.host.querySelector('[data-workspace-page]')?.scrollIntoView({block:'start'});
+  }else{
+   const list=s.host.querySelector('[data-workspace-list]');list.scrollTop=s.worldListScroll||0;
+   const selected=[...list.querySelectorAll('[data-open-record]')].find(button=>button.dataset.openRecord===s.record?.id&&!button.hidden);
+   (selected||resume)?.focus({preventScroll:true});window.scrollTo(0,s.worldPageScroll||0);
+  }
+ }
+ function rememberWorldList(s){
+  if(s.host.dataset.worldPane==='list'){
+   s.worldListScroll=s.host.querySelector('[data-workspace-list]').scrollTop;
+   s.worldPageScroll=window.scrollY;
+  }
+ }
  function toolbar(host,s){
   s.worldPublications=new Map();s.worldKnown=new Set();s.worldSharingLoaded=false;s.worldSharingRequest=0;
   host.innerHTML=`<div class="world-browse-controls"><label class="workspace-field"><span>Player visibility</span><select data-world-visibility disabled><option value="">All entries</option><option value="private">Private drafts</option><option value="shared">Shared with players</option><option value="changed">Versions differ</option></select></label><button type="button" data-world-refresh>Refresh sharing status</button></div><p data-world-sharing-overview role="status"></p><p data-world-results role="status"></p>`;
+  s.host.dataset.worldPane='list';
+  const resume=document.createElement('button');resume.type='button';resume.dataset.worldResume='';resume.className='world-resume';resume.hidden=true;
+  resume.onclick=()=>{if(!s.busy&&!s.worldOpening)worldPane(s,true);};s.host.querySelector('.workspace-sidebar').prepend(resume);
+  const listStatus=document.createElement('p');listStatus.dataset.worldListStatus='';listStatus.setAttribute('role','status');listStatus.hidden=true;resume.after(listStatus);
+  const add=s.host.querySelector('[data-new-record]');add.addEventListener('click',()=>rememberWorldList(s),true);
   categoryFilters(s);
   host.querySelector('[data-world-visibility]').onchange=()=>W.renderList();host.querySelector('[data-world-refresh]').onclick=()=>refreshSharing(s);
   for(const label of s.host.querySelectorAll('.workspace-sidebar label')){
@@ -138,7 +172,9 @@ var WorldPostLayouts=(()=>{
   input.addEventListener('input',syncCustom);
   input.addEventListener('invalid',()=>{field.hidden=false;});
   if(s.record.revision){const index=s.rows.findIndex(row=>row.id===s.record.id);if(index>=0)s.rows[index]={...s.rows[index],...s.record};}
-  W.renderList();entryState(null,s);
+  const back=document.createElement('button');back.type='button';back.dataset.worldBack='';back.className='world-editor-back';back.textContent='← Back to World posts';back.onclick=()=>{if(!s.busy)worldPane(s,false);};
+  s.host.querySelector('[data-workspace-page]').prepend(back);
+  W.renderList();entryState(null,s);worldPane(s,true);
  };
  config.onEdit=entryState;
  config.onSaved=(_host,s)=>{

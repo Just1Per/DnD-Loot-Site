@@ -127,6 +127,7 @@
     "test:beast-spells": "node druid-beast-spells-browser.cjs",
     "test:languages": "node character-languages-browser.cjs",
     "test:dm-navigation": "node dm-workspace-navigation-browser.cjs",
+    "test:world-editor-navigation": "node world-editor-navigation-browser.cjs",
     "test:monk-martial-arts": "node monk-martial-arts-browser.cjs"
   },
   "devDependencies": {

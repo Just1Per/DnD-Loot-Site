@@ -161,3 +161,16 @@
 .one-shot-workspace button:not(.vault-help-badge),.one-shot-workspace input:not([type=checkbox]),.one-shot-workspace select{min-height:44px}
 .one-shot-more>summary:focus-visible,.one-shot-private>summary:focus-visible,.one-shot-management>summary:focus-visible{outline:2px solid #9b1d1d;outline-offset:2px}
 @media(max-width:760px){.one-shot-section{padding:18px 0}.one-shot-actions{top:var(--one-shot-sticky-top,100px)}.one-shot-private{padding:0 12px}.one-shot-invitation{padding:16px}.one-shot-workspace .workspace-page{padding:14px}}
+
+/* Keep a mobile World reader's list, filters and live draft intact while switching panes. */
+.world-editor-back{display:none}
+.world-resume{display:none;width:100%;margin-bottom:14px;white-space:normal;overflow-wrap:anywhere;text-align:left}
+@media(max-width:760px){
+ .world-resume:not([hidden]){display:block}
+ .campaign-workspace[data-world-pane=list] .workspace-page,
+ .campaign-workspace[data-world-pane=editor] .workspace-sidebar,
+ .campaign-workspace[data-world-pane=editor]>[data-workspace-tools]{display:none}
+ .campaign-workspace[data-world-pane=editor] .world-editor-back{display:block;margin:0 0 16px;min-height:44px}
+ .campaign-workspace[data-world-pane] .workspace-page{scroll-margin-top:130px}
+ .campaign-workspace[data-world-pane] .workspace-list{max-height:50vh}
+}
