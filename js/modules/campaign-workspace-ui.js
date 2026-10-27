@@ -12,6 +12,8 @@ var CampaignWorkspace = (() => {
   function status(message, error=false) {
     const host = session?.host.querySelector('[data-workspace-status]');
     if(host){host.textContent=message;host.classList.toggle('workspace-error',error);}
+    const listStatus=session?.host.querySelector('[data-world-list-status]');
+    if(listStatus){listStatus.textContent=message;listStatus.hidden=!error;listStatus.classList.toggle('workspace-error',error);}
   }
   function clear(force=false) {
     if(!force && session?.dirty && !confirm('Discard unsaved campaign workspace changes?')) return false;

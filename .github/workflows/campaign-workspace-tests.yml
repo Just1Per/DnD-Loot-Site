@@ -198,6 +198,7 @@ jobs:
       run: |-
         npm --prefix tests run test:dm-workspace
         npm --prefix tests run test:dm-navigation
+        npm --prefix tests run test:world-editor-navigation
     - name: Creature and NPC preparation, optional combat and template preservation
       run: npm --prefix tests run test:creature-editor
     - name: Deferred creature catalogue, retry and context changes
