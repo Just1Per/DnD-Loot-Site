@@ -141,7 +141,7 @@ var CharacterWildShapeUI = (() => {
           " · preserved.") +
       " Temporary HP: " +
       p.tempHP +
-      '.</p><div class="sheet-wild-abilities">' +
+      '.</p><section class="sheet-wild-spellcasting"><h5 data-context-help="beast spells">Spellcasting in this form</h5><p class="sheet-help">' + esc(p.spellNote) + '</p><button type="button" data-wild-spells>Review spells & component requirements</button></section><div class="sheet-wild-abilities">' +
       Object.entries(p.scores)
         .map(
           ([a, v]) =>
@@ -495,6 +495,10 @@ var CharacterWildShapeUI = (() => {
   }
   function bind(host, ctx) {
     const actor = sheetSession;
+    host.querySelector('[data-wild-spells]')?.addEventListener('click',()=>{
+      if(sheetSession!==actor||activeCampaign?.id!==actor.campaignId||actor.uid&&auth.currentUser?.uid!==actor.uid)return;
+      selectSheetTab('spells');document.getElementById('sheetSpellReadout')?.scrollIntoView({block:'start'});
+    });
     host.querySelectorAll("[data-wild-end]").forEach(
       (b) =>
         (b.onclick = () => {

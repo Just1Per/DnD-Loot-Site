@@ -698,12 +698,7 @@ var CharacterWildShape = (() => {
       actions,
       traits: b.traits,
       notes,
-      spellNote:
-        s.level >= 18
-          ? s.modern
-            ? "Beast Spells: spellcasting is available except for costly or consumed Material components."
-            : "Beast Spells: eligible Druid spells can use Verbal/Somatic components; Material component restrictions still apply."
-          : "Wild Shape normally prevents spellcasting; retained subclass exceptions follow their own source rules. Concentration on an existing spell continues.",
+      spellNote: (globalThis.CharacterDruidSpellcasting || (typeof require === 'function' ? require('./character-druid-spellcasting') : null))?.summary(d,{level:ctx.level}) || 'Check Beast Spells and Material component rules before casting in Wild Shape.',
     };
   }
   return {
