@@ -27,7 +27,10 @@ var CharacterAdobeFields=(()=>{
   if(Object.hasOwn(raw,id)){const [path,kind,max]=raw[id],value=get(path.startsWith('identity.')?{identity}:data,path);return edit(path,value,kind,max,{options:options[path]||[]});}
   let m;
   if(id==='Character Level')return data.adobe?.useExperience?computed(d.progression.targetLevel):edit('identity.level',identity.level,'number',20,{min:1});
-  if(id==='Class and Levels')return computed((d.progression?.classLevels||[]).map(c=>(context.className?.(c.classId)||c.classId)+' '+c.level).join(' / '),{command:'classes'});
+  if(id==='Class and Levels'){const rows=d.progression?.classLevels||[];return computed(rows.map(c=>(context.className?.(c.classId)||c.classId)+(rows.length>1?' '+c.level:'')).join(' / '),{command:'classes'});}
+  if(id==='Total Experience')return edit('experience',data.experience||0,'number',1000000000,{command:'classes'});
+  if(id==='Next level')return computed(d.progression?.xp?.next??'',{command:'classes'});
+  if((m=/^Feat (Name|Note|Description) ([1-4])$/.exec(id))){const row=context.feats?.[Number(m[2])-1];return computed(!row?'':m[1]==='Name'?row.name:m[1]==='Note'?[row.origin,row.source].filter(Boolean).join(' · '):[row.description,...(row.report?.warnings||[])].filter(Boolean).join('\n'),{kind:m[1]==='Description'?'textarea':'text',command:'feats'});}
   if(id==='Race')return edit('build.race',data.build.race,'select',undefined,{options:options.races||[]});
   if(id==='Background')return edit('build.background',data.build.background,'select',undefined,{options:options.backgrounds||[]});
   if(Object.hasOwn(abilities,id))return computed(d.scores[abilities[id]],{command:'abilities'});
@@ -36,6 +39,7 @@ var CharacterAdobeFields=(()=>{
   if((m=/^(Str|Dex|Con|Int|Wis|Cha) ST Prof$/.exec(id))){const key=abilities[m[1]],automatic=d.effects.saves.includes(key);return automatic?computed(true,{kind:'checkbox',reason:'Granted by class or character choices.'}):edit('saves.'+key+'.proficient',data.saves[key].proficient,'checkbox');}
   if(Object.hasOwn(skills,id))return computed(sign(d.skills[skills[id]]));
   if((m=/^(Acr|Ani|Arc|Ath|Dec|His|Ins|Inti|Inv|Med|Nat|Perc|Perf|Pers|Rel|Sle|Ste|Sur) (Prof|Exp)$/.exec(id))){const key=skills[m[1]],auto=Math.max(d.effects.skills.includes(key)?1:0,d.feats.expertise.includes(key)?2:0,d.classExpertise?.skills.includes(key)?2:0),rank=Math.max(data.skills[key].rank,auto),wanted=m[2]==='Exp'?2:1;return auto>=wanted?computed(true,{kind:'checkbox',reason:'Granted by class, feat or character choices.'}):edit('skills.'+key+'.rank',rank>=wanted,'checkbox',2,{rank:wanted,currentRank:data.skills[key].rank});}
+  if((m=/^Proficiency (Armor (Light|Medium|Heavy)|Shields|Weapon (Simple|Martial))$/.exec(id))){const name=m[2]?m[2]+' armor':m[3]?m[3]+' weapons':'shields';return computed(m[2]?!!context.armorTraining?.(m[2].toLowerCase()):(d.effects.proficiencies||[]).some(p=>p.toLowerCase()===name.toLowerCase()),{kind:'checkbox',command:'origins',reason:'Training from the shared class, feat and origin choices.'});}
   if(id==='HP Max')return computed(d.hpMax,{command:'hp'});
   if(id==='Proficiency Bonus')return computed(sign(d.pb));
   if(id==='AC')return computed(d.ac,{command:'equipment'});

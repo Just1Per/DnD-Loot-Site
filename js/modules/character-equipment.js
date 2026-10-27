@@ -82,6 +82,9 @@ var CharacterEquipment = (() => {
     const seen=new Set();
     return {acMode:'equipment',acAdjustment:0,loadout:(Array.isArray(raw?.loadout)?raw.loadout:[]).filter(v=>v&&typeof v.id==='string'&&v.id.length<=200&&!seen.has(v.id)&&seen.add(v.id)).slice(0,200).map(v=>({id:v.id,equipped:v.equipped===true,attuned:v.attuned===true,ability:['str','dex','con','int','wis','cha'].includes(v.ability)?v.ability:'auto',proficiency:['yes','no'].includes(v.proficiency)?v.proficiency:'auto',mode:['twoHanded','thrown','offhand','mounted'].includes(v.mode)?v.mode:'normal'}))};
   }
+  function armorTrained(group,profs=[]) {
+    return ['light','medium','heavy'].includes(group)&&profs.some(p=>['all armor',group+' armor'].includes(String(p).toLowerCase()));
+  }
   function trained(w,profs) {
     const entries=profs.map(p=>p.toLowerCase());
     return entries.some(p=>p===w.name.toLowerCase()||p===w.name.toLowerCase()+'s'||p===w.group+' weapons'||w.group==='martial'&&((p==='martial weapons with the light property'&&w.props.includes('light'))||(p==='martial weapons with the finesse or light property'&&(w.props.includes('light')||w.props.includes('finesse')))));
@@ -158,7 +161,7 @@ var CharacterEquipment = (() => {
     const profs=stats.effects.proficiencies;
     if(armorEntry){
       const p=armorEntry.profile;
-      if(!profs.some(v=>v.toLowerCase()===p.group+' armor'))warnings.push(p.name+': armor training not found; check STR/DEX penalties and spellcasting restrictions.');
+      if(!armorTrained(p.group,profs))warnings.push(p.name+': armor training not found; check STR/DEX penalties and spellcasting restrictions.');
       if(p.stealth)warnings.push(p.name+': disadvantage on Stealth.');
       if(p.strength>stats.scores.str)warnings.push(p.name+': strength requirement not met; apply speed penalty unless exempt.');
     }
@@ -212,6 +215,6 @@ var CharacterEquipment = (() => {
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
     return {entries,attacks,martialArts,unarmoredDefenseNote,warnings,attuned,attunementLimit:attunement.limit,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
-  return {attunementLimit,attunementState,weapons,armor,normalize,infer,profile,choices,trained,derive};
+  return {attunementLimit,attunementState,weapons,armor,normalize,infer,profile,choices,trained,armorTrained,derive};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterEquipment;

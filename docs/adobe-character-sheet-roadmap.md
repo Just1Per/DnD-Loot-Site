@@ -47,16 +47,18 @@ Keep the dense paper styling isolated from global app CSS. Load layouts only whe
 
 The committed source inventory is in [adobe-inventory](adobe-inventory/README.md). The reproducible exporter creates six active and eleven user-facing optional layouts under `data/adobe-pages/`; the internal remember template is intentionally excluded. Layouts and artwork load only when requested.
 
-The connected preview adds a Standard/Adobe selector for the same saved character. Initial bindings cover identity, current/temporary HP, inspiration, common ability/save/skill totals and manual training, race/background catalogue choices, death saves, languages/resistances, coins, appearance/personality/organization fields and existing journal entries. Shared editors retain their original DOM, handlers and save path. Calculated fields remain read-only; unsupported fields are explicitly unfinished. Raw profile additions are preserved and editable in Standard too.
+The connected preview adds a Standard/Adobe selector for the same saved character. Initial bindings cover identity, current/temporary HP, inspiration, common ability/save/skill totals and manual training, race/background catalogue choices, death saves, languages/resistances, coins, appearance/personality/organization fields, existing journal entries, selected feats with their shared source/reference descriptions, and the existing private portrait. Shared editors retain their original DOM, handlers and save path. Calculated fields remain read-only; unsupported fields are explicitly unfinished. Raw profile additions are preserved and editable in Standard too.
 
 This is an intermediate foundation, not complete source parity. Automatic training, item effects and computed values come from the existing engine; PDF-specific menus are not a substitute for missing shared rules. Spells, companions, Wild Shape, adventure logs, conditional layouts, full source-button semantics and many per-page bindings remain pending. Opening a related editor does not mean that every PDF menu action has been implemented.
 
 ### Verification
 
-- `node --test tests/adobe-field-adapter.cjs tests/character-play-rules.cjs`: 20 passing checks for derived outputs, whitelist validation, limits, protected training, death counters, journal bindings and profile round trips.
+- `node --test tests/adobe-field-adapter.cjs tests/character-play-rules.cjs`: 22 passing checks for derived outputs, whitelist validation, limits, protected training, death counters, journal bindings and profile round trips.
 - `npm --prefix tests run test:adobe-connected`: functional browser flow for lazy loading, shared editing, style round trips, actual save/reopen, validation and mobile zoom. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
-- Development browser: Chromium 154. The locally downloaded Chromium 134 also hangs in a baseline Standard-skills test; compatibility with the GitHub runner must be verified rather than reported as passing. The connected check is registered in CI.
+- Development browser: Chromium 154. The first connected checkpoint also passed the GitHub Engines and DOM job, including the connected browser/print/accessibility check. New increments must pass their own exact-head checks.
 
 No Firestore or Storage rule changes are included. Existing session access controls and save envelope apply. No assistant merge, production deployment, rule deployment or data migration is authorized.
 
 The first-page print check verifies one page at the source dimensions (approximately 595 × 792 pt) and the character name in extracted PDF text. The final Adobe view passes the selected WCAG A/AA axe rules in Chromium 154. These checks do not establish full keyboard, screen-reader or all-page parity.
+
+A shared armor-training predicate recognizes the existing “All armor” entitlement. This also removes a false untrained-armor warning for legacy Fighter/Paladin characters; Medium-only training still does not grant Heavy armor. The Adobe indicator uses that same predicate.

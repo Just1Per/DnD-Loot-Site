@@ -88,3 +88,5 @@ test('permitted natural armor and Draconic Resilience remain alternatives, and w
  const data={build:{edition:'2014',classId:'barbarian'},adobe:{classLevels:[{classId:'barbarian',level:1},{classId:'monk',level:1},{classId:'sorcerer',level:1,subclassId:'draconic-bloodline'}]},equipmentState:{loadout:[]}};assert.equal(E.derive(data,stats,[],3).ac,15);stats.effects.race={name:'Natural armor',naturalArmor:{base:17}};assert.equal(E.derive(data,stats,[],3).ac,17);
  const armor=loot('plate','Plate');data.equipmentState.loadout=[{id:'plate',equipped:true}];const r=E.derive(data,stats,[armor],3);assert.equal(r.ac,18);assert.equal(r.unarmoredDefenseNote,'');
 });
+
+test('All armor covers each armor group without granting Heavy training to a Medium-only character',()=>{for(const group of ['light','medium','heavy'])assert.equal(E.armorTrained(group,['All armor']),true);assert.equal(E.armorTrained('heavy',['Light armor','Medium armor']),false);const gear=[loot('mail','Chain Mail')];const d=make(gear,{build:{edition:'2014',classId:'fighter'},abilities:{str:16}});assert.ok(!M.derive(d,5,gear).gear.warnings.some(w=>/armor training not found/i.test(w)));});
