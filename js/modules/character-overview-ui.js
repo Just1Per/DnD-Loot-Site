@@ -51,7 +51,7 @@ function markUnfinishedCharacterFields(issues){
  root.querySelectorAll('.sheet-required-marker').forEach(marker=>marker.remove());
  root.querySelectorAll('.sheet-field-needs-attention').forEach(el=>el.classList.remove('sheet-field-needs-attention'));
  for(const issue of issues||[]){
-   if(!issue.target||!issue.tab)continue;
+   if(!issue.target||!issue.tab||issue.groupNotice)continue;
    const page=root.querySelector('#sheet-'+issue.tab);if(!page)continue;
    let candidates=[];
    try{candidates=[...page.querySelectorAll(issue.target)].filter(sheetIssueFieldAvailable);}catch(error){continue;}

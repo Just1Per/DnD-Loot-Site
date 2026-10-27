@@ -751,3 +751,8 @@
 #characterSheetDialog .sheet-required-marker{display:inline-grid;place-items:center;vertical-align:middle;margin-left:6px;width:15px;height:15px;border-radius:50%;background:#a32d35;color:#fff;font:bold 11px/1 sans-serif;box-shadow:0 0 0 2px #fffaf2;cursor:help}
 #characterSheetDialog .sheet-field-needs-attention select,#characterSheetDialog .sheet-field-needs-attention input{border-color:#bc6466}
 #characterSheetDialog .sheet-required-marker:focus-visible{outline:2px solid #632d21;outline-offset:3px}
+
+/* One shared explanation keeps the favored-terrain choices short and readable. */
+.sheet-class-choice-card [data-natural-explorer-rules]{margin-top:6px}
+.sheet-class-choice-card [data-natural-explorer-rules]>summary{box-sizing:border-box;min-height:44px;padding:12px 0;cursor:pointer;font:700 .75rem/1.5 Georgia,serif;color:#5c1d1d}
+.sheet-class-choice-card [data-natural-explorer-rules]>summary:focus-visible{outline:2px solid #9b1d1d;outline-offset:2px}

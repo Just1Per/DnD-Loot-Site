@@ -2697,9 +2697,12 @@
           "name": "Natural Explorer",
           "level": 1,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Structured distinct favored-terrain choices at actual Ranger levels1/6/10, with duplicate/allowance validation, inactive choice retention, multiclass/save/source handling, inline explanation, Overview and print. Related proficient INT/WIS checks and hour-long travel benefits remain conditional reminders, never permanent skill bonuses; optional replacement features require their own source workflow.",
+          "evidence": [
+            "tests/legacy-ranger-terrain.cjs",
+            "tests/legacy-ranger-terrain-browser.cjs"
+          ]
         },
         {
           "id": "2014:ranger:2:fighting-style",
@@ -2781,9 +2784,12 @@
           "name": "Natural Explorer",
           "level": 6,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Structured distinct favored-terrain choices at actual Ranger levels1/6/10, with duplicate/allowance validation, inactive choice retention, multiclass/save/source handling, inline explanation, Overview and print. Related proficient INT/WIS checks and hour-long travel benefits remain conditional reminders, never permanent skill bonuses; optional replacement features require their own source workflow.",
+          "evidence": [
+            "tests/legacy-ranger-terrain.cjs",
+            "tests/legacy-ranger-terrain-browser.cjs"
+          ]
         },
         {
           "id": "2014:ranger:8:ability-score-improvement",
@@ -2820,9 +2826,12 @@
           "name": "Natural Explorer",
           "level": 10,
           "source": "SRD 5.1",
-          "state": "unreviewed",
-          "scope": "Source-rule comparison and structured fields still need review.",
-          "evidence": []
+          "state": "partial",
+          "scope": "Structured distinct favored-terrain choices at actual Ranger levels1/6/10, with duplicate/allowance validation, inactive choice retention, multiclass/save/source handling, inline explanation, Overview and print. Related proficient INT/WIS checks and hour-long travel benefits remain conditional reminders, never permanent skill bonuses; optional replacement features require their own source workflow.",
+          "evidence": [
+            "tests/legacy-ranger-terrain.cjs",
+            "tests/legacy-ranger-terrain-browser.cjs"
+          ]
         },
         {
           "id": "2014:ranger:12:ability-score-improvement",

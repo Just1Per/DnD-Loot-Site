@@ -532,6 +532,7 @@ var CharacterClassFeatureChoices=(()=>{
     const names=classId==='paladin'?['Defense','Dueling','Great Weapon Fighting','Protection']:['Archery','Defense','Dueling','Two-Weapon Fighting'];
     definitions[edition][classId]=[{id:'fighting-style',name:'Fighting Style',minLevel:2,count:()=>1,options:()=>edition==='2024'?fighter2024():fighter2014.filter(o=>names.includes(o.name)),referenceComplete:true}];
   }
+  definitions['2014'].ranger.push({id:'natural-explorer',name:'Natural Explorer',choiceLabel:'Favored terrain',compactChoices:true,helpKey:'natural explorer',minLevel:1,count:l=>pickTable([[1,1],[6,2],[10,3]],l),referenceComplete:true,options:()=>['Arctic','Coast','Desert','Forest','Grassland','Mountain','Swamp','Underdark'].map(name=>option(name,{source:name==='Underdark'?'PHB 2014':'SRD 5.1',referenceComplete:true,automationComplete:false,effectLabel:'conditional terrain benefits',detail:'Favored terrain for related Intelligence/Wisdom skill checks and travel of at least 1 hour. Benefits depend on the current terrain and task.'}))});
   // Class controls and the legacy Feats picker spend one shared allowance.
   // Reading this state never migrates or deletes saved selections.
   function fightingStyleState(data,{level,catalog}={}){
@@ -676,6 +677,10 @@ var CharacterClassFeatureChoices=(()=>{
   function rangerFeatures(data,{level=1,mods={}}={}){
     const actual=rangerLevels(data,level),modern=data.build?.edition==='2024',wis=Math.max(-5,Math.min(10,Math.trunc(Number(mods.wis)||0))),reports=[],senses=[];
     const die=modern&&actual>=20?'1d10':'1d6';
+    if(!modern&&actual){
+      const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},group=status({...data,adobe:stored},{classId:'ranger',level:actual},'2014').find(row=>row.id==='natural-explorer'),terrains=(group?.valid||[]).map(id=>group.options.find(option=>option.id===id)?.name).filter(Boolean);
+      reports.push({id:'natural-explorer',name:'Natural Explorer',terrains,allowed:group?.allowed||0,detail:(terrains.length?'Favored terrain: '+terrains.join(', ')+'. ':'Choose favored terrain in Character Builder. ')+'For related Intelligence/Wisdom skill checks in which you are proficient, use double proficiency once; this does not add again to Expertise. Travel benefits require at least 1 hour in favored terrain.'});
+    }
     if(modern&&actual>=13)reports.push({id:'relentless-hunter',name:'Relentless Hunter',detail:'Damage cannot break Concentration on your Hunter’s Mark. Other causes of losing Concentration still apply.'});
     if(modern&&actual>=17)reports.push({id:'precise-hunter',name:'Precise Hunter',detail:'Advantage on attack rolls against the creature currently marked by your Hunter’s Mark; other targets are unchanged.'});
     if(modern&&actual>=20)reports.push({id:'foe-slayer',name:'Foe Slayer',detail:'Your Hunter’s Mark damage die is 1d10 instead of 1d6.'});
@@ -685,7 +690,7 @@ var CharacterClassFeatureChoices=(()=>{
   function huntersMarkEffect(data,spell,{level=1,features,slot=1}={}){
     if(!spell||String(spell.name||'').toLowerCase().replace(/[’‘]/g,"'").trim()!=="hunter's mark")return null;
     const ranger=features||rangerFeatures(data,{level}),die=ranger.edition==='2024'&&ranger.level>=20?'1d10':'1d6',modern=spell.edition==='2024',trigger=modern?'hit with an attack roll':'hit with a weapon attack',damage=die+(modern?' Force':' extra damage')+' per '+trigger;
-    const notes=ranger.reports.map(row=>row.name+': '+row.detail);
+    const notes=ranger.reports.filter(row=>['relentless-hunter','precise-hunter','foe-slayer'].includes(row.id)).map(row=>row.name+': '+row.detail);
     const duration=slot>=5?'Concentration, up to 24 hours':slot>=3?'Concentration, up to 8 hours':'Concentration, up to 1 hour';
     return{die,damage,duration,detail:'Hunter’s Mark deals '+damage+' against the marked target. Casting the spell makes no attack roll.',notes};
   }
