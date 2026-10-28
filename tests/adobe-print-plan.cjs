@@ -15,6 +15,8 @@ test('each caster gets its own header, continuation offsets and slot-pool presen
  assert.deepEqual(pages.map(p=>[p.page,p.spellCaster,p.spellPage]),[['template-SSfront','wizard',undefined],['template-SSmore','wizard',0],['template-SSmore','wizard',1],['template-SSfront','warlock',undefined],['template-SSfront','unassigned',undefined]]);
  assert.throws(()=>P.create({spellGroups:[{id:'wizard',count:1},{id:'wizard',count:2}]}));assert.throws(()=>P.create({spellGroups:[{id:'wizard',count:-1}]}));
 });
-test('action overflow prints its original page only when populated, without repeating other lists',()=>{const pages=P.create({actionOverflow:true});assert.equal(pages.length,6);assert.deepEqual(pages.at(-1),{page:'template-ASoverflow',actionsOnly:true});});
+test('action overflow prints its original page only when populated, without repeating other lists',()=>{const pages=P.create({actionOverflow:true});assert.equal(pages.length,6);assert.deepEqual(pages.at(-1),{page:'template-ASoverflow',combatOnly:true});});
 
 test('a fourth hit-die pool gets a read-only notes continuation instead of disappearing',()=>{const pages=P.create({hitDiceOverflow:true});assert.equal(pages.length,6);assert.deepEqual(pages.at(-1),{page:'template-ASnotes',hitDiceOverflow:true});});
+
+test('limited-feature overflow shares one original combat page with action overflow',()=>{assert.deepEqual(P.create({resourceOverflow:true}).at(-1),{page:'template-ASoverflow',combatOnly:true});assert.equal(P.create({resourceOverflow:true,actionOverflow:true}).filter(row=>row.page==='template-ASoverflow').length,1);});

@@ -54,8 +54,8 @@ This is an intermediate foundation, not complete source parity. Automatic traini
 
 ### Verification
 
-- `npm --prefix tests test`: 607 unit checks and 369 DOM checks pass at the latest local checkpoint, including adapter validation, shared rules and regression coverage.
-- `npm --prefix tests run test:adobe-connected`: nineteen functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
+- `npm --prefix tests test`: 611 unit checks and 369 DOM checks pass at the latest local checkpoint, including adapter validation, shared rules and regression coverage.
+- `npm --prefix tests run test:adobe-connected`: twenty functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
 - Development browser: Chromium 154. The first connected checkpoint also passed the GitHub Engines and DOM job, including the connected browser/print/accessibility check. New increments must pass their own exact-head checks.
 
 No Firestore or Storage rule changes are included. Existing session access controls and save envelope apply. No assistant merge, production deployment, rule deployment or data migration is authorized.
@@ -203,3 +203,9 @@ Explicit Active gear/Backpack column choices now survive model normalization and
 ### Shared limited-feature counters
 
 Editable paper Used cells now use the same bounded class/feat setters as Standard Combat. Maximum and recovery remain calculated. Counters do not roll, heal, cast or change spell slots. Arcane Recovery, Wild Shape and Channel Divinity retain their dedicated related-effect workflows. Earlier spent counts remain readable after class/level reduction; Standard Undo can still reduce those counts. Original row arrangement menus and custom item-charge recovery remain pending.
+
+### Original Limited Feature row menus
+
+The original sixteen PF feature rows now arrange stable class/feat references across the eight-row first/overflow boundary. Clearing/deleting hides only the paper reference; actual grants, spent counters and Standard Combat remain intact. Restore automatic rows resets only paper order/visibility. Untouched automatic spaces still accept newly granted features. Full insertions fail without dropping a row.
+
+Connected printing now includes resource overflow and action overflow together on one original combat overflow layout, without repeating the item/feat lists. Pool state remains read from the common engine, and printing never rewrites the paper arrangement.
