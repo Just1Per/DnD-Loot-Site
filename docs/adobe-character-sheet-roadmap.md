@@ -107,3 +107,7 @@ The large Notes field on the equipment page and each combined continuation is ed
 ### Organization symbol
 
 The background symbol frame now opens a collapsed Organization symbol editor in Standard Background. It uses the same MIME validation, resizing and bounded JPEG output as the existing portrait uploader, with a separate private saved image. Removing the symbol preserves the portrait. Both Adobe and Standard print show the symbol; source background PDF tests verify artwork plus both private images, rejected SVG input, removal, isolation and save/reopen. This does not reproduce all original image-menu operations or add companion images.
+
+### Shared XP addition
+
+The source Add Experience button opens a compact Add experience control in the existing progression editor, available when XP mode is explicitly enabled. It updates the ordinary experience field; the existing progression owns level and multiclass calculations. Amount/total limits are validated without making an unapplied amount block sheet saving. Enter activates Add XP, and gaining a level prompts review of class allocation and new choices. Numeric paper fields display the common parsed XP total, including saved values containing thousands separators. Browser coverage checks invalid amounts, overflow, milestone mode, shared multiclass advancement, preservation and save/reopen.

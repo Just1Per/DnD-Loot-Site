@@ -7,7 +7,7 @@ The live contracts are `character-adobe-fields.js`, `character-adobe-view.js` an
 | Source area or control | Current web behavior | Verification / remaining gap |
 | --- | --- | --- |
 | Core identity, abilities, saves and skills | Shared character identity/derived totals; manual save/skill choices retain granted training | First-page browser, adapter tests; original modifier menus remain partial |
-| Add Experience / Class and Levels / Set Max HP | Opens existing advancement and HP controls | Shared editor verified; original additive-XP prompt/menu not reproduced |
+| Add Experience / Class and Levels / Set Max HP | Opens existing advancement and HP controls; Add Experience focuses a bounded shared XP-addition control when XP mode is enabled | Comma-formatted totals, Enter, validation, common multiclass progression and save/reopen tested; other original advancement popup options remain partial |
 | Heal / HP / inspiration / death saves | Shared Overview editor or bounded raw values/counters | Core save/reopen and invalid-input checks; source Heal menu remains partial |
 | Tool, language and weapon training | Existing class/feat/origin effects plus permitted manual entries | Rogue and inherited training checks; full original option dialogs remain partial |
 | Portrait | Existing private upload, resizing, removal and persistence | Browser upload/save/reopen; original portrait popup operations not all reproduced |

@@ -68,7 +68,7 @@ var CharacterAdobeFields=(()=>{
   if(id==='SpellSheetInformation')return computed((context.spellPact?'Pact Magic slots shown above are separate from ordinary Spellcasting slots. ':'Ordinary Spellcasting slots shown above are separate from Pact Magic. ')+'Choose a caster above to see its ability, attack modifier and save DC. Prepared choices and slots use the shared Spells controls. Spell descriptions may be abbreviated; open Spells for full information.');
   if(id==='Character Level')return data.adobe?.useExperience?computed(d.progression.targetLevel):edit('identity.level',identity.level,'number',20,{min:1});
   if(id==='Class and Levels'){const rows=d.progression?.classLevels||[];return computed(rows.map(c=>(context.className?.(c.classId)||c.classId)+(rows.length>1?' '+c.level:'')).join(' / '),{command:'classes'});}
-  if(id==='Total Experience')return edit('experience',data.experience||0,'number',1000000000,{command:'classes'});
+  if(id==='Total Experience')return edit('experience',d.progression?.xp?.xp??(data.experience||0),'number',1000000000,{command:'classes'});
   if(id==='Next level')return computed(d.progression?.xp?.next??'',{command:'classes'});
   if((m=/^Feat (Name|Note|Description) ([1-8])$/.exec(id))){const row=context.feats?.[(context.featOffset||0)+Number(m[2])-1];return computed(!row?'':m[1]==='Name'?row.name:m[1]==='Note'?[row.origin,row.source].filter(Boolean).join(' · '):[row.description,...(row.report?.warnings||[])].filter(Boolean).join('\n'),{kind:m[1]==='Description'?'textarea':'text',command:'feats'});}
   if(id==='Race')return edit('build.race',data.build.race,'select',undefined,{options:options.races||[]});
