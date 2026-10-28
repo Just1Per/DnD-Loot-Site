@@ -47,6 +47,9 @@ var CharacterAdobeFields=(()=>{
    const c=context.companion,stats=context.companionStats,index=context.companionIndex||0,prefix='adobe.companions.'+index+'.';if(!c)return computed('',{command:'companion'});
    const bindings={'Comp.Desc.Name':['name','text',120],'Comp.Desc.Height':['height','text',120],'Comp.Desc.Weight':['weight','text',120],'Comp.Desc.Age':['age','text',120],'Comp.Desc.Sex':['gender','text',120],'Comp.Use.Features':['features','textarea',8000],'Comp.Desc.Size':['size','select',undefined], 'Comp.Use.AC':['ac','number',50],'Comp.Use.HP.Max':['hpMax','number',100000],'Comp.Use.HP.Current':['hpCurrent','number',100000],'Comp.Use.HP.Temp':['hpTemp','number',100000],'Comp.Use.Speed':['speed','number',1000],'Comp.Use.Traits':['traits','textarea',8000],'Cnote.Left':['notes','textarea',8000]};
    if(bindings[id]){const [key,kind,max]=bindings[id];return edit(prefix+key,c[key],kind,max,{options:key==='size'?['Tiny','Small','Medium','Large','Huge'].map(value=>({value,label:value})):undefined});}
+   if(id==='Comp.Use.HD.Level')return computed(stats.hitDiceCount||'',{command:'companion'});
+   if(id==='Comp.Use.HD.Die')return computed(stats.hitDie?'d'+stats.hitDie:'',{command:'companion'});
+   if(id==='Comp.Use.HD.Used')return stats.hitDiceCount?edit(prefix+'hitDiceUsed',c.hitDiceUsed,'number',stats.hitDiceCount):computed('',{command:'companion',reason:'Choose a catalogue creature with recorded hit dice.'});
    if(id==='Comp.Use.Combat.Init.Mod')return computed(sign(stats.initiative),{command:'companion'});
    if(id==='Comp.Use.Skills.Perc.Pass.Mod')return computed(stats.passive);
    if(id==='Comp.Desc.MonsterType'||id==='Comp.Desc.Alignment'){const key=id.endsWith('MonsterType')?'creatureType':'alignment';return edit(prefix+key,c[key]||(key==='creatureType'?context.companionCreature?.type||'':''),'select',120,{options:(typeof field==='object'?field.options||[]:[]).map(value=>({value,label:value}))});}

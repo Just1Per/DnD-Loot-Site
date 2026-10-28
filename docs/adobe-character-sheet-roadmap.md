@@ -123,3 +123,9 @@ Standard companion print now reuses `CharacterCompanionCards.project`, removing 
 Each companion now has its own bounded private picture, editable from the original paper frame or inside its collapsed Standard adjustments. It reuses the character portrait validator/resizer. The two overlapping source image controls share one accessible web surface. Upload completion verifies the original card/session still exists, so removal/reordering cannot attach a late file to a different creature. Both print styles include the picture.
 
 The store exposes a non-mutating estimate of its persisted UTF-8 data, excluding the duplicate runtime Adobe alias. All shared image uploads check that budget before changing a picture, retaining space below Firestore’s document ceiling. Oversized candidates leave existing data intact. No image upload to public Storage or rule change is introduced. Tests cover independent pictures, removal, rejected SVG, save/reopen, generated PDF images, late completion and budgeting.
+
+### Saved creature lookup and hit dice
+
+The shared creature catalogue now resolves stored display names as well as IDs. This fixes the source dropdown appearing empty after choosing/saving a creature, missing catalogue senses, and clearing valid creatures on companion-role changes. Names match without incidental case/whitespace differences.
+
+Companion hit-die count and die come from the selected creature’s actual catalogue metadata through the common projection. A separate bounded used counter persists on that companion; loading another catalogue creature resets it with its other fresh statistics. Standard adjustments and print use the same values. No hit dice are inferred from HP, and this change does not implement automatic dice rolling/healing or rest recovery. Browser tests cover saved selection, senses, role changes, real catalogue dice and used-counter persistence.
