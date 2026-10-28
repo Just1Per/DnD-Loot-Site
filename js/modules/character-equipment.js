@@ -57,12 +57,16 @@ var CharacterEquipment = (() => {
   }
   function infer(item={}) {
     if(item.mechanics)return {...normalize(item.mechanics),inferred:false};
-    let name=String(item.name||'').trim().toLowerCase(),bonus=0;
-    const match=name.match(/^(.*?)\s*,?\s*\+([123])$/);
-    if(match){name=match[1].replace(/,\s*$/,'').trim();bonus=Number(match[2]);}
-    name=name.replace(/ armour$| armor$/,'');
-    const id=key(name),kind=Object.hasOwn(weapons,id)?'weapon':Object.hasOwn(armor,id)?'armor':name==='shield'?'shield':'none';
-    return {...normalize({kind,base:id,acBonus:kind==='armor'||kind==='shield'?bonus:0,attackBonus:kind==='weapon'?bonus:0,damageBonus:kind==='weapon'?bonus:0}),inferred:kind!=='none'};
+    const parsed=parseName(item.name),bonus=parsed.bonus,kind=parsed.kind;
+    return {...normalize({kind,base:parsed.base,acBonus:kind==='armor'||kind==='shield'?bonus:0,attackBonus:kind==='weapon'?bonus:0,damageBonus:kind==='weapon'?bonus:0}),inferred:kind!=='none'};
+  }
+  function parseName(value){
+    let name=String(value||'').trim().toLowerCase().replace(/\s+/g,' '),bonus=0;
+    const prefix=/^\+([123])\s+(.+)$/.exec(name),suffix=/^(.+?)\s*,?\s*(?:\+([123])|\(\+([123])\))$/.exec(name);
+    if(prefix){name=prefix[2];bonus=Number(prefix[1]);}else if(suffix){name=suffix[1].trim();bonus=Number(suffix[2]||suffix[3]);}
+    if(name.includes('+'))return{kind:'none',base:'',bonus:0,key:''};
+    name=name.replace(/ armour$| armor$/,'').trim();const id=key(name),kind=Object.hasOwn(weapons,id)?'weapon':Object.hasOwn(armor,id)?'armor':name==='shield'?'shield':'none';
+    return{kind,base:kind==='shield'?'':kind==='none'?'':id,bonus:kind==='none'?0:bonus,key:kind==='none'?'':kind+':'+id+':'+bonus};
   }
   function profile(m,edition) {
     const e=m.edition==='character'?edition:m.edition;
@@ -203,7 +207,7 @@ var CharacterEquipment = (() => {
       if(offhand)notes.push('Extra Light-weapon attack: confirm eligibility; positive ability damage omitted.');
       if(m.base==='net')notes.push(w.edition==='2024'?'2024 Net uses an action/attack replacement and a save; no weapon attack roll.':'2014 Net special attack restrictions apply.');
       if(w.mastery){const mastery=stats.weaponTraining?.masteries.find(v=>v.base===m.base);notes.push(mastery?'Mastery: '+w.mastery+' · unlocked ('+mastery.source+'); resolve the effect at the table.':'Mastery: '+w.mastery+' · not selected. Choose eligible Weapon Mastery on Abilities & Skills.');}
-      attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
+      attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,damageType:w.damageType||'',range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
     }
     const styles=typeof CharacterClassFeatureChoices==='undefined'?[]:CharacterClassFeatureChoices.styles(data,level);
     for(const attack of attacks){
@@ -213,10 +217,12 @@ var CharacterEquipment = (() => {
       if(styles.some(s=>s.name==='Dueling')&&profile.rangeType==='melee'&&!profile.props.includes('twoHanded')&&entry.choice.mode!=='twoHanded'&&!entries.some(e=>e.active&&e.entry.id!==attack.id&&e.mechanics.kind==='weapon'))attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>{const total=(sign==='−'?-1:1)*Number(n||0)+2;return dice+(total?' '+(total<0?'−':'+')+' '+Math.abs(total):'');});
       if(styles.some(s=>s.name==='Two-Weapon Fighting')&&entry.choice.mode==='offhand'&&profile.props.includes('light')&&stats.mods[attack.ability]>0){attack.notes=attack.notes.map(note=>note.replace('positive ability damage omitted.','Fighting Style adds your ability modifier to damage.'));attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>dice+' + '+((sign==='−'?-1:1)*Number(n||0)+stats.mods[attack.ability]));}
     }
+    // Format the separate paper damage cell only after all common style effects.
+    for(const attack of attacks)attack.damageDice=attack.damageType?attack.damage.replace(' '+attack.damageType,''):attack.damage;
     // Defense follows the owned armor actually worn, independent of the manual feat reminder.
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
     return {entries,attacks,martialArts,unarmoredDefenseNote,warnings,attuned,attunementLimit:attunement.limit,base,baseParts,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
-  return {attunementLimit,attunementState,weapons,armor,normalize,infer,profile,choices,trained,armorTrained,derive};
+  return {attunementLimit,attunementState,weapons,armor,normalize,infer,parseName,profile,choices,trained,armorTrained,derive};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterEquipment;

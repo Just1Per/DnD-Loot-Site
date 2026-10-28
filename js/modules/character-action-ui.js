@@ -48,9 +48,9 @@ function openAttackPicker(index=null){
   if(kind.value==='manual'){
    if(session.data.attacks.length>=30){get('attackPickerError').textContent='Maximum 30 custom attacks.';return;}
    if(index!==null)session.data.actions.splice(index,1);
-   session.data.attacks.push({name:get('attackName').value,ability:ability.value==='auto'?'str':ability.value,proficient:get('attackProficient').checked,bonus:Number(get('attackBonus').value)||0,damage:get('attackDamage').value,range:get('attackRange').value});session.data=CharacterSheetModel.normalize(session.data);renderSheetRows();fillSheetForm();
+   session.data.attacks.push({...(initial?.id?{id:initial.id}:{}),name:get('attackName').value,ability:ability.value==='auto'?'str':ability.value,proficient:get('attackProficient').checked,bonus:Number(get('attackBonus').value)||0,damage:get('attackDamage').value,range:get('attackRange').value});session.data=CharacterSheetModel.normalize(session.data);renderSheetRows();fillSheetForm();
   }else{
-   const value=CharacterActions.normalize([current()])[0];
+   const value=CharacterActions.normalize([current()])[0];if(initial?.id)value.id=initial.id;
    if(!value.name)value.name=CharacterActions.resolve(value,session.data,session.identity.level,stats(),sheetEquipmentLoot(),CharacterCatalog.data?.spells||[]).name;
    if(index===null){if(session.data.actions.length>=60){get('attackPickerError').textContent='Maximum 60 automatic actions.';return;}session.data.actions.push(value);}else session.data.actions[index]=value;
   }

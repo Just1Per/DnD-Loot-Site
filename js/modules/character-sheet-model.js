@@ -205,6 +205,7 @@ var CharacterSheetModel = (() => {
       });
     }
     result.attacks = (Array.isArray(raw.attacks) ? raw.attacks : []).slice(0, 30).map(a => ({
+      ...(typeof a?.id==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(a.id)?{id:a.id}:{}),
       name: text(a?.name),
       ability: abilities[a?.ability] ? a.ability : 'str',
       proficient: !!a?.proficient,

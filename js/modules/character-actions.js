@@ -2,7 +2,7 @@
 var CharacterActions = (()=>{
  const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
  const ab=['str','dex','con','int','wis','cha'],text=v=>String(v||'').slice(0,200),sign=n=>(n>=0?'+':'')+n;
- function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({kind:['loot','weapon','spell','racial','improvised','unarmed'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name)}));}
+ function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({...(typeof r?.id==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)?{id:r.id}:{}),kind:['loot','weapon','spell','racial','improvised','unarmed'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name)}));}
  const add=(dice,n)=>dice+(n?' '+(n<0?'−':'+')+' '+Math.abs(n):'');
  function diceAt(scales,level,fallback){const keys=Object.keys(scales||{}).map(Number).filter(k=>k<=level).sort((a,b)=>b-a);return keys.length?scales[keys[0]]:fallback;}
  function increase(base,extra,times){const a=/^(\d+)d(\d+)$/.exec(base),b=/^(\d+)d(\d+)$/.exec(extra||'');return a&&b&&a[2]===b[2]?`${Number(a[1])+Number(b[1])*times}d${a[2]}`:base;}
@@ -22,7 +22,7 @@ var CharacterActions = (()=>{
    const temp={...data,equipmentState:{...data.equipmentState,loadout:[...loadout.filter(c=>c.id!==entry.id),{...existing,id:entry.id,equipped:!!existing?.equipped,attuned:!!existing?.attuned,ability:a.ability==='auto'?(existing?.ability||'auto'):a.ability,proficiency:existing?.proficiency||'auto',mode:a.mode}]}};
    const result=E.derive(temp,stats,item?loot:[...loot,entry],level).attacks.find(r=>r.id===entry.id);
    if(!result)return unavailable('This item needs weapon mechanics configured by the DM.');
-   const out={...row,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,range:result.range,ability:result.ability,notes:result.notes};
+   const out={...row,proficient:result.proficient,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,range:result.range,ability:result.ability,notes:result.notes};
    if(m.base==='net'&&result.edition==='2024'){out.hit='DEX DC '+(8+stats.pb+stats.mods.dex);out.ability='dex';out.damage='Restrained; no damage';out.notes.push('Large or smaller target; an attack replacement.');}
    if(item&&!existing?.equipped)out.notes.push('In backpack: ready this item before using it.');
    if(!item)out.notes.push('Reference weapon; this does not add equipment to inventory.');
