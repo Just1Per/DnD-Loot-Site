@@ -767,3 +767,5 @@
 @media print{body.printing-adobe-sheet #characterSheetForm>*:not(#sheetAdobeView){display:none!important}body.printing-adobe-sheet #sheetAdobeView{display:block!important}body.printing-adobe-sheet #characterSheetForm,body.printing-adobe-sheet #characterSheetDialog{padding:0!important;margin:0!important;max-width:none!important;width:100%!important;box-shadow:none!important;border:0!important}}
 
 #characterSheetDialog .sheet-companion-picture .sheet-portrait-preview img{object-fit:contain}
+
+#characterSheetDialog .sheet-companion-attacks details{border-bottom:1px solid #d5c5a0;padding:4px 0}#characterSheetDialog .sheet-companion-attacks summary,#characterSheetDialog .sheet-companion-manual-attacks summary{min-height:44px;padding:10px 0;line-height:1.5}#characterSheetDialog .sheet-companion-attacks p{line-height:1.5}

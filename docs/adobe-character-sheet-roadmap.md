@@ -54,8 +54,8 @@ This is an intermediate foundation, not complete source parity. Automatic traini
 
 ### Verification
 
-- `npm --prefix tests test`: 553 unit checks and 369 DOM checks pass at the latest local checkpoint, including adapter validation, shared rules and regression coverage.
-- `npm --prefix tests run test:adobe-connected`: seven functional browser flows for core editing, spells, items, companions, Wild Shape, XP and private companion pictures, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
+- `npm --prefix tests test`: 563 unit checks and 369 DOM checks pass at the latest local checkpoint, including adapter validation, shared rules and regression coverage.
+- `npm --prefix tests run test:adobe-connected`: eight functional browser flows for core editing, spells, items, companions, Wild Shape, XP, private companion pictures and natural attacks, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
 - Development browser: Chromium 154. The first connected checkpoint also passed the GitHub Engines and DOM job, including the connected browser/print/accessibility check. New increments must pass their own exact-head checks.
 
 No Firestore or Storage rule changes are included. Existing session access controls and save envelope apply. No assistant merge, production deployment, rule deployment or data migration is authorized.
@@ -129,3 +129,11 @@ The store exposes a non-mutating estimate of its persisted UTF-8 data, excluding
 The shared creature catalogue now resolves stored display names as well as IDs. This fixes the source dropdown appearing empty after choosing/saving a creature, missing catalogue senses, and clearing valid creatures on companion-role changes. Names match without incidental case/whitespace differences.
 
 Companion hit-die count and die come from the selected creature’s actual catalogue metadata through the common projection. A separate bounded used counter persists on that companion; loading another catalogue creature resets it with its other fresh statistics. Standard adjustments and print use the same values. No hit dice are inferred from HP, and this change does not implement automatic dice rolling/healing or rest recovery. Browser tests cover saved selection, senses, role changes, real catalogue dice and used-counter persistence.
+
+### Shared base-creature combat and training
+
+The earlier compact creature data omitted source attack modifiers and full skill/save/trait information. A reproducible literal-only parser now supplements the 127 existing creatures from the supplied PDF, validating unchanged base attack facts before writing. It never executes PDF scripts, callbacks or expression strings; synthetic tests verify this. The browser does not load the parser or its build-time dependency.
+
+One `CharacterCompanionRules` module supplies Standard cards, Adobe fields and print: natural to-hit/damage, fixed-damage exceptions, explicit save DCs and saved per-card paper attack selections. Creature selection fills its actual skill/save training, full trait text, alignment, languages and vulnerabilities. It retains genuine manual attack notes and avoids printing old auto-generated attack text twice. Familiar action restrictions remain tied to the summoning feature; printed conditional DCs and effects remain source references.
+
+Validation covers all 127 base creatures and 168 attacks, owl/cat fixed damage, wolf scaling, mephit DC modifiers, source information arrows, training, metadata fidelity, paper selections, save/reopen and both print views. The source catalogue is identified as 2014; the character’s selected edition is unchanged.
