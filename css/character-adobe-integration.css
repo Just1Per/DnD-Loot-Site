@@ -771,3 +771,5 @@
 #characterSheetDialog .sheet-companion-attacks details{border-bottom:1px solid #d5c5a0;padding:4px 0}#characterSheetDialog .sheet-companion-attacks summary,#characterSheetDialog .sheet-companion-manual-attacks summary{min-height:44px;padding:10px 0;line-height:1.5}#characterSheetDialog .sheet-companion-attacks p{line-height:1.5}
 
 .sheet-adventure-log{margin-top:1rem;border:1px solid var(--border,#cbb895);border-radius:6px;padding:1rem}.sheet-adventure-log>summary{cursor:pointer;font-weight:bold}.sheet-log-balances{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:1rem 0}.sheet-log-balances>section{border:1px solid var(--border,#cbb895);border-radius:5px;padding:10px;min-width:0}.sheet-adventure-log [aria-invalid="true"]{outline:2px solid #a01919}.sheet-adventure-log [data-log-status]{color:#a01919}
+
+.adobe-notes-options{max-width:32rem}.adobe-notes-options>label{display:flex;align-items:center;gap:10px;min-height:44px}.adobe-notes-options .sheet-inline-controls{margin-top:1rem}
