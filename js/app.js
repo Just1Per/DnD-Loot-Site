@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261028-adobe-sheet-v24";
+const ASSET_VERSION = "20261028-adobe-sheet-v25";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -221,6 +221,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-adobe-builder-ui.js",
     "./modules/character-companion-rules.js",
     "./modules/character-adobe-pages.js",
+    "./modules/character-paper-resources.js",
     "./modules/character-paper-combat-ui.js",
     "./modules/character-named-equipment-ui.js",
     "./modules/character-adobe-fields.js",

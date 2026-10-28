@@ -393,11 +393,8 @@ function renderFeatEffectControls(report,level) {
 function changeFeatUse(key,delta) {
   readSheetForm();
   const stats=CharacterSheetModel.derive(sheetSession.data,sheetSession.identity.level);
-  const report=stats.feats.reports.find(r=>r.key===key),resource=report&&CharacterFeatRules.resource(report.def,sheetSession.identity.level);
-  if(!resource || delta>0&&report.warnings.length)return;
-  const c=sheetSession.data.rulesChoices.effects[key] ||= CharacterFeatRules.choice();
-  if(delta>0&&c.used>=resource.max)return;
-  c.used=Math.max(0,Math.min(99,c.used+delta));catalogChanged();
+  const used=CharacterFeatRules.choice(sheetSession.data.rulesChoices.effects[key]).used;
+  if(Number.isInteger(delta)&&CharacterFeatRules.setUsed(sheetSession.data,key,used+delta,{level:sheetSession.identity.level,reports:stats.feats.reports}))catalogChanged();
 }
 function renderFeatCombatResources(stats) {
   let host=document.getElementById('sheetFeatResources');

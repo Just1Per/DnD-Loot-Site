@@ -745,9 +745,13 @@ var CharacterClassFeatureChoices=(()=>{
     if(value==='pact')next.pactSlotsUsed=slot.used+1;else if(!slot.created){const index=Number(value)-1;data.slots||=Array.from({length:9},()=>({max:0,used:0}));data.slots[index]={...data.slots[index],max:slot.max,used:slot.used+1};}
     data.adobe=next;return true;
   }
+  function setClassResourceUsed(data,id,value,context){
+    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.unlimited||resource.managedSlots||resource.managedWildShape||!Number.isInteger(value)||value<0||value>resource.max&&value>=resource.used||resource.channelEffects&&value>resource.used)return false;
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(value)]}};return true;
+  }
   function changeClassResource(data,id,delta,context){
-    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.unlimited||resource.managedSlots||resource.managedWildShape||resource.channelEffects&&delta>0||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&delta>resource.remaining||delta<0&&-delta>resource.used)return false;
-    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.max(0,resource.used+delta))]}};return true;
+    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&delta>resource.remaining||delta<0&&-delta>resource.used)return false;
+    return setClassResourceUsed(data,id,resource.used+delta,context);
   }
   function resetClassResources(data,event,context={}){
     if(!['short','long','initiative','turn'].includes(event))return;
@@ -1044,6 +1048,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{blessedStrikes,clericVitality,applyClericVitality,cantripRange,elementalFury,useChannelDivinity,wizardLevels,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{blessedStrikes,clericVitality,applyClericVitality,cantripRange,elementalFury,useChannelDivinity,wizardLevels,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,setClassResourceUsed,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

@@ -159,6 +159,12 @@ var CharacterFeatRules = (() => {
     const r={'Boon of Fortitude':{label:'Extra healing (apply the CON bonus when eligible)',resets:['turn']},'Boon of Fate':{label:'Improve Fate',resets:['initiative','short','long']},'Boon of Combat Prowess':{label:'Peerless Aim',resets:['turn']},'Grappler':{label:'Punch and Grab',resets:['turn']},'Savage Attacker':{label:'Extra damage roll',resets:['turn']}}[def.name]||null;
     return r?{max:1,...r}:null;
   }
+  function setUsed(data,key,value,{level=1,reports=[]}={}) {
+    const report=reports.find(row=>row.key===key),selected=entries(data,level).find(row=>row.key===key),pool=report&&resource(report.def,level);
+    if(!selected||selected.id!==report?.id||!pool||!Number.isInteger(value)||value<0)return false;
+    const previous=choice(data.rulesChoices?.effects?.[key]);if(value>pool.max&&value>=previous.used||value>previous.used&&report.warnings?.length)return false;
+    data.rulesChoices.effects[key]={...previous,used:value};return true;
+  }
   function remove(data,key) {
     const before=entries(data).filter(e=>!e.origin),index=before.findIndex(e=>e.key===key);
     if(index<0)return;
@@ -175,6 +181,6 @@ var CharacterFeatRules = (() => {
     if(event==='long')for(const [key,grant] of Object.entries(data.rulesChoices.grants||{}))if(!key.startsWith('__'))grant.used=0;
     for(const e of entries(data))if(resource(definitions[e.id])?.resets.includes(event)&&data.rulesChoices.effects[e.key])data.rulesChoices.effects[e.key].used=0;
   }
-  return {definitions,choice,entries,trainingOptions,apply,resource,reset,remove};
+  return {definitions,choice,entries,trainingOptions,apply,resource,setUsed,reset,remove};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterFeatRules;
