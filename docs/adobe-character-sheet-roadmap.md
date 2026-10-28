@@ -145,3 +145,9 @@ The ALlog template uses six entries per page, up to 120 private records in the e
 Standard Notes contains a collapsed, lazily rendered Adventure Log editor for the same records. Source entry arrows open that exact entry. Both styles save together and Standard Notes print includes escaped log records; Adobe Print page retains original dimensions. Invalid edits stay visible and block saving/navigation until corrected. Expanding an early note cannot silently truncate a later note when the 100,000-character log budget is full.
 
 The log is a private record, separate from campaign Journal/recaps. It does not award character XP, coins or owned items. Original expression syntax, insert/reorder/duplicate/delete menus, explicit character-transfer actions and remaining conditional options are still pending; opening the shared editor is not full original popup parity. No Firebase rule changes or migration.
+
+### Adventure Log entry operations
+
+The shared editor now moves complete entries earlier/later, inserts blanks, duplicates, clears in place and removes/shifts records. Opening balances stay global and later balances recalculate. Clear/remove use the existing accessible confirmation dialog; its session/log/index guard prevents an old confirmation modifying a replaced sheet. Row and note-space limits reject an operation atomically. Copying an entry repeats its recorded rewards only inside the log. Editing a field no longer replaces the editor DOM on blur, so a pending edit does not consume the next command click.
+
+Original expression syntax, other log menu variants and explicit XP/treasure transfer remain pending. These entry operations do not change character XP, coins, inventory or campaign recaps.

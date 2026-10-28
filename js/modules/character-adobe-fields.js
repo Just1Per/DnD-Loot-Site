@@ -68,7 +68,7 @@ var CharacterAdobeFields=(()=>{
    if(id==='AdvLog.Class and Levels')return computed((d.progression?.classLevels||[]).map(c=>(context.className?.(c.classId)||c.classId)+' '+c.level).join(' / '));
    if(id==='AdvLog.Player Name')return edit('profile.playerName',data.profile.playerName,'text',120);
    if(id==='AdvLog.sheetNumber')return computed((context.logPage||0)+1);
-   if(id==='AdvLogS.Background_Faction.Text'||id==='AdvLog.DCI.Text'){const key=id==='AdvLog.DCI.Text'?'playerId':'faction';return {state:'editable',kind:'text',value:log[key],max:key==='faction'?160:100,logEdit:{index:0,key,part:'header'}};}
+   if(id==='AdvLogS.Background_Faction.Text'||id==='AdvLog.DCI.Text'){const key=id==='AdvLog.DCI.Text'?'playerId':'faction';return {state:'editable',kind:key==='faction'?'select':'text',options:key==='faction'?(typeof field==='object'?field.options||[]:[]).map(value=>({value,label:value})):undefined,value:log[key],max:key==='faction'?160:100,logEdit:{index:0,key,part:'header'}};}
    if((m=/^Text\.AdvLog\.([1-6])$/.exec(id)))return computed('Entry '+(offset+Number(m[1])));
    if((m=/^AdvLog\.([1-6])\.(adventure|session|dm|date|notes|xp|gold|downtime|renown|magicItems)(?:\.(start|gain|total))?$/.exec(id))){const index=offset+Number(m[1])-1,key=m[2],part=m[3],rows=context.logRows||L.project(log),row=rows[index],numeric=L.keys.includes(key);if(!row)return computed('');
     if(numeric&&(!part||!['start','gain','total'].includes(part)))return computed('');

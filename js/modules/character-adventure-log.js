@@ -29,6 +29,24 @@ var CharacterAdventureLog=(()=>{
   if(log.rows.reduce((sum,entry)=>sum+entry.notes.length,0)>100000)throw Error('The adventure log has reached its remaining note space.');
   return log;
  }
- return {keys,MAX_ROWS,amount,normalize,project,edit};
+ function operation(raw,index,command){
+  if(!Number.isInteger(index)||index<0||index>=MAX_ROWS)throw Error('Choose an existing log entry.');
+  const log=normalize(raw),rows=log.rows;
+  if(!['earlier','later','insert','duplicate','clear','remove'].includes(command))throw Error('Unknown adventure log command.');
+  if(command==='insert'){
+   if(index>rows.length)throw Error('Add or select an entry before inserting here.');
+  }else if(index>=rows.length)throw Error('This entry has not been recorded yet.');
+  if(['insert','duplicate'].includes(command)&&rows.length>=MAX_ROWS)throw Error('The log has reached its 120-entry limit. Remove an entry before adding another.');
+  if(command==='earlier'||command==='later'){
+   const next=index+(command==='earlier'?-1:1);if(next<0||next>=rows.length)throw Error('This entry cannot move further.');
+   [rows[index],rows[next]]=[rows[next],rows[index]];index=next;
+  }else if(command==='insert')rows.splice(index,0,normalize({rows:[{}]}).rows[0]);
+  else if(command==='duplicate'){rows.splice(index+1,0,structuredClone(rows[index]));index++;}
+  else if(command==='clear')rows[index]=normalize({rows:[{}]}).rows[0];
+  else {rows.splice(index,1);index=Math.max(0,Math.min(index,rows.length-1));}
+  if(rows.reduce((sum,row)=>sum+row.notes.length,0)>100000)throw Error('Duplicating this entry exceeds the adventure log’s note space.');
+  return {log,index};
+ }
+ return {keys,MAX_ROWS,amount,normalize,project,edit,operation};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterAdventureLog;
