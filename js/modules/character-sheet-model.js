@@ -139,6 +139,7 @@ var CharacterSheetModel = (() => {
         id: 'personal-'+String(g.id||i).replace(/^personal-/, '').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,80),
         name: String(g.name||'Item').slice(0,160), quantity: number(g.quantity,1,0,9999),
         weight: Math.max(0,Math.min(99999,Number(g.weight)||0)), location: String(g.location||'Backpack').slice(0,80),
+        ...(['left','right'].includes(g.inventorySide)?{inventorySide:g.inventorySide}:{}),
         carried: g.carried!==false, notes: String(g.notes||'').slice(0,500),
         edition: g.edition==='2024'?'2024':'2014'
       })).filter((g,i,a)=>a.findIndex(x=>x.id===g.id)===i),

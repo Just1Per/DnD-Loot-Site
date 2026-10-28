@@ -22,7 +22,7 @@ var CharacterActions = (()=>{
    const temp={...data,equipmentState:{...data.equipmentState,loadout:[...loadout.filter(c=>c.id!==entry.id),{...existing,id:entry.id,equipped:!!existing?.equipped,attuned:!!existing?.attuned,ability:a.ability==='auto'?(existing?.ability||'auto'):a.ability,proficiency:existing?.proficiency||'auto',mode:a.mode}]}};
    const result=E.derive(temp,stats,item?loot:[...loot,entry],level).attacks.find(r=>r.id===entry.id);
    if(!result)return unavailable('This item needs weapon mechanics configured by the DM.');
-   const out={...row,proficient:result.proficient,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,range:result.range,ability:result.ability,notes:result.notes};
+   const out={...row,proficient:result.proficient,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,damageDice:result.damageDice,damageType:result.damageType,range:result.range,ability:result.ability,notes:result.notes};
    if(m.base==='net'&&result.edition==='2024'){out.hit='DEX DC '+(8+stats.pb+stats.mods.dex);out.ability='dex';out.damage='Restrained; no damage';out.notes.push('Large or smaller target; an attack replacement.');}
    if(item&&!existing?.equipped)out.notes.push('In backpack: ready this item before using it.');
    if(!item)out.notes.push('Reference weapon; this does not add equipment to inventory.');
