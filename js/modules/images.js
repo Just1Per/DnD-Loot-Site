@@ -21,7 +21,9 @@ function getBaseImageId(itemId) {
   return base.replace(/[-_\s]+/g, "-").replace(/^[-_]+|[-_]+$/g, "") || itemId;
 }
 
-const IMAGE_SESSION_PREFIX = "dnd-item-image:";
+// v2 keeps a formerly normalized (and potentially wrong) URL from masking an
+// exact filename after an upgrade. Only successful public lookups are cached.
+const IMAGE_SESSION_PREFIX = "dnd-item-image:v2:";
 
 function getCachedImageUrl(itemId) {
   if (!itemId) return "";
@@ -51,22 +53,56 @@ async function loadStorageImage(path) {
 
 // Only shared, public catalogue art uses this cache. Private campaign art stays separate.
 const pendingPublicImages = new Map();
-async function resolveImageUrl(itemId) {
-  const baseId = getBaseImageId(itemId);
-  const cached = getCachedImageUrl(itemId) || getCachedImageUrl(baseId);
+async function resolvePublicImageFile(itemId) {
+  const cached = getCachedImageUrl(itemId);
   if (cached) return cached;
-
-  let pending = pendingPublicImages.get(baseId);
+  let pending = pendingPublicImages.get(itemId);
   if (!pending) {
-    pending = loadStorageImage(`dnd-item-images/${baseId}.png`).then(url => {
-      if (url) cacheImageUrl(baseId, url);
+    pending = loadStorageImage(`dnd-item-images/${itemId}.png`).then(url => {
+      if (url) cacheImageUrl(itemId, url);
       return url;
-    }).finally(() => pendingPublicImages.delete(baseId));
-    pendingPublicImages.set(baseId, pending);
+    }).finally(() => pendingPublicImages.delete(itemId));
+    pendingPublicImages.set(itemId, pending);
   }
-  const url = await pending;
+  return pending;
+}
+
+async function resolveImageUrl(itemId) {
+  if (typeof itemId !== 'string' || !itemId || itemId.length > 200 || /[/\\]/.test(itemId)) return PLACEHOLDER_IMAGE;
+  // Uploads use the exact ID. Normalization is only a fallback for old variants.
+  const exact = await resolvePublicImageFile(itemId);
+  if (exact) return exact;
+  const baseId = getBaseImageId(itemId);
+  const url = baseId !== itemId ? await resolvePublicImageFile(baseId) : '';
   if (url) cacheImageUrl(itemId, url);
   return url || PLACEHOLDER_IMAGE;
+}
+
+function forgetImageUrl(url) {
+  for (const [id, cached] of imageCache) if (cached === url) {
+    imageCache.delete(id);
+    try { sessionStorage.removeItem(IMAGE_SESSION_PREFIX + id); } catch {}
+  }
+}
+
+const boundPublicImages = new WeakSet();
+function bindPublicImageRecovery(img) {
+  if (boundPublicImages.has(img)) return;
+  boundPublicImages.add(img);
+  let recovering = false;
+  const recover = async () => {
+    if (!img.isConnected || img.getAttribute('src') === PLACEHOLDER_IMAGE) return;
+    forgetImageUrl(img.getAttribute('src'));
+    if (recovering) { img.src = PLACEHOLDER_IMAGE; return; }
+    recovering = true; // One recovery per rendered card, including a failed fallback.
+    delete img.dataset.imageItemId;
+    img.src = PLACEHOLDER_IMAGE;
+    const url = await resolveImageUrl(img.dataset.imageSourceId);
+    if (img.isConnected) img.src = url;
+  };
+  img.addEventListener('error', recover);
+  // A direct URL can fail before the newly inserted card is observed.
+  if (img.complete && !img.naturalWidth) recover();
 }
 
 async function loadArchivedItemImage(img) {
@@ -101,9 +137,6 @@ const imageObserver = "IntersectionObserver" in window
           if (!img.isConnected) return;
           img.src = url;
 
-          const item = items.find(i => i.id === itemId);
-          if (item && url !== PLACEHOLDER_IMAGE) item.imageUrl = url;
-
           delete img.dataset.imageItemId;
         });
       });
@@ -111,6 +144,7 @@ const imageObserver = "IntersectionObserver" in window
   : null;
 
 function observePendingImages(root = document) {
+  root.querySelectorAll?.('img[data-image-source-id]').forEach(bindPublicImageRecovery);
   const pending = root.querySelectorAll?.("img[data-image-item-id], img[data-private-item-image-path]") || [];
 
   pending.forEach(img => {
@@ -143,13 +177,15 @@ function itemImageMarkup(item, className, extraAttrs = "") {
     return `<img src="${PLACEHOLDER_IMAGE}" class="${className}" alt="${escapeHtml(item.name||'')}" loading="lazy" decoding="async"${allowed?` data-private-item-image-path="${escapeHtml(path)}"`:''} ${extraAttrs}>`;
   }
   if(item.artwork?.status==='none')return `<img src="${PLACEHOLDER_IMAGE}" class="${className}" alt="${escapeHtml(item.name||'')}" loading="lazy" ${extraAttrs}>`;
-  const imageId = item.imageBaseId || item.id;
-  const cached = item.imageUrl || getCachedImageUrl(imageId);
+  const imageId = item.imageBaseId || item.rootItemId || item.id;
+  // Campaign copies can still have thumbnail-only records or an old placeholder
+  // in imageUrl. A placeholder is not an illustration and must not stop lookup.
+  const direct = [item.imageUrl, item.thumbnailUrl, item.thumbUrl].find(value => typeof value === 'string' && /^https:\/\//i.test(value));
+  const cached = direct || getCachedImageUrl(imageId);
   const src = cached || PLACEHOLDER_IMAGE;
   const pending = cached ? "" : ` data-image-item-id="${escapeHtml(imageId)}"`;
   return `<img src="${escapeHtml(src)}" class="${className}" alt="${escapeHtml(item.name || "")}"
-    loading="lazy" decoding="async"${pending} ${extraAttrs}
-    onerror="this.src='${PLACEHOLDER_IMAGE}'; delete this.dataset.imageItemId;">`;
+    loading="lazy" decoding="async" data-image-source-id="${escapeHtml(imageId || '')}"${pending} ${extraAttrs}>`;
 }
 
 async function uploadItemImage(itemId,file,{campaignId=null}={}) {
