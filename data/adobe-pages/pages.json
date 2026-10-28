@@ -47,7 +47,7 @@
     {
       "id": "template-ALlog",
       "title": "Adventure log",
-      "fields": 77,
+      "fields": 132,
       "buttons": 8,
       "optional": true
     },

@@ -42,9 +42,10 @@ const {createCharacterSheetStore}=require('../js/modules/character-sheet-store')
  // Artificer source/subclass caches stay inside the existing stable grants envelope.
  const C=require('../js/modules/character-class-feature-choices');
  const artificer=M.normalize({build:{classId:'artificer',edition:'2024'}});artificer.adobe={classLevels:[{classId:'artificer',level:5,subclassId:'armorer-legacy'}],classFeatureChoices:{}};
- assert.equal(C.setArtificerSource(artificer,'efa'),true);artificer.adobe.classLevels[0].subclassId='cartographer-efota';artificer.adobe.classFeatureChoices['2024:artificer:flash-of-genius-uses']=['2'];
+ assert.equal(C.setArtificerSource(artificer,'efa'),true);artificer.adobe.classLevels[0].subclassId='cartographer-efota';artificer.adobe.classFeatureChoices['2024:artificer:flash-of-genius-uses']=['2'];const Log=require('../js/modules/character-adventure-log');artificer.adobe.adventureLog=Log.edit({},6,'gold','-0.25','gain');
  const artificerIdentity={...identity,class:'Artificer'};await store.save({campaignId:'a',characterId:'c1',revision:1,data:artificer,identity:artificerIdentity,previousIdentity:identity});
  const savedArtificer=await store.load('a','c1');assert.equal(savedArtificer.data.rulesChoices.grants.__adobe.data.classFeatureChoices[C.artificerSourceKey][0],'efa');assert.equal(savedArtificer.data.rulesChoices.grants.__adobe.data.classFeatureChoices['2014:artificer:tce-subclass'][0],'armorer-legacy');assert.equal(C.artificerSource(savedArtificer.data).id,'efa');
+ assert.equal(savedArtificer.data.rulesChoices.grants.__adobe.data.adventureLog.rows[6].gain.gold,-0.25);await assertFails(getDoc(doc(env.authenticatedContext('other').firestore(),'campaigns/a/characterSheets/c1')));
  assert.equal(raw.data.advancement.hpMode,'fixed');
  assert.ok(Array.isArray(raw.data.advancement.classLevels));
  // Owners may delete their own character under the current lifecycle rules.

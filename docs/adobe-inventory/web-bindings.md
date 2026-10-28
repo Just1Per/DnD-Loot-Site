@@ -20,6 +20,7 @@ The live contracts are `character-adobe-fields.js`, `character-adobe-view.js` an
 | Magic-item dropdowns | Arrange carried records without granting items | Private paper order tested; original item catalogue/menu commands remain partial |
 | Gear arrows | Existing information dialog for that carried entry | Exact row 51 tested; quantity/removal/storage edits remain in shared Inventory |
 | Equipment Notes and Other Holdings | Separate bounded shared journal entries and common equipment notes | Continuation/ordinary-note isolation and save/reopen verified |
+| Adventure Log (ALlog) | Six-entry pages, shared private records, editable opening balances, signed gains and automatic carry-forward totals; entry arrows open the same Standard Notes editor | Bounded to 120 entries; gold uses integer-hundredth accounting. Does not award character XP, coins or items. Original expression syntax, row insert/reorder/duplicate/delete menus and XP/treasure transfer remain partial |
 | Notes / Extra Notes page buttons | Open shared Journal; paper fields edit existing entries | Journal count/text budgets retained; original page-insertion menus not reproduced |
 | Spell row information | Shared full spell dialog and shared catalogue presentation | 132-spell continuation, invocation ranges and source print tested |
 | Spell preparation circles | Existing Wizard preparation command; fixed/known lists stay read-only | Allowance, automatic grants, multiclass and persistence tested |
@@ -35,9 +36,8 @@ The live contracts are `character-adobe-fields.js`, `character-adobe-view.js` an
 | Wild Shape values / active HP / return to normal | Shared engine profiles and commands | Both editions, continuation, separate legacy HP, revised HP, validation, persistence and print tested |
 | Wild Shape hit-die metadata / further source actions / conditional menus | Unavailable or incomplete | Do not infer missing statistics from HP or execute source scripts |
 | Player reference / extra reference | Original blank 2014 artwork, with edition notice | Current character edition remains unchanged; references are not a rules engine |
-| Adventure Log | Blank original layout only | Structured log fields, calculations, advancement effects and Standard workflow pending |
 | Header icon, reload/reset, layout/source/automation settings and remaining dynamic menus | Unavailable unless explicitly routed above | Review the static inventory and 287 dynamic UI sites individually |
-| Print | Selected paper at source dimensions; UI-only annotations hidden, data indicators retained | Core, spells, items, companions and Wild Shape PDFs checked; whole-sheet print and overflow remain pending |
+| Print | Selected paper at source dimensions; UI-only annotations hidden, data indicators retained | Core, spells, items, companions, Wild Shape and Adventure Log PDFs checked; whole-sheet print and overflow remain pending |
 | Save / export / access | Existing session, store, revisions and access checks | Shared save/reopen and invalid-input protection checked; further access-loss/stale-write parity audit pending |
 
 All unlisted source fields, buttons and dynamic menu actions remain unresolved. Full parity requires a per-function review of the inventory and each supported rule edition/source; layout exports and passing checks alone are insufficient. PR #250 stays a draft.

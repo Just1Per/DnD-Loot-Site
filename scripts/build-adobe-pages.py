@@ -31,7 +31,8 @@ def export(source,target):
    _,raw=doc.xref_get_key(w.xref,'F');flags=int(raw)if raw.isdigit()else 0
    n=name(w.field_name);gear_row=bool(re.fullmatch(r'(Adventuring Gear|Extra\.Gear) (Row|Amount|Weight|Button) \d+',n))
    # Reset the supplied character's hidden-row preference on blank inventory layouts.
-   if flags&35 and not gear_row or not p.rect.contains(w.rect)or w.rect.get_area()<=0 or safe_art(w):continue
+   log_balance=key=='template-ALlog'and bool(re.fullmatch(r'AdvLog\.[1-6]\.(xp|gold|downtime|renown|magicItems)\.(start|total)',n))
+   if flags&35 and not(gear_row or log_balance)or not p.rect.contains(w.rect)or w.rect.get_area()<=0 or safe_art(w):continue
    counts[n]+=1;ident=n+(' #'+str(counts[n])if counts[n]>1 else'');rect=[round(v,3)for v in w.rect]
    if w.field_type_string=='Button':
     # Very large image hit areas are decorative, never blank giant buttons.
