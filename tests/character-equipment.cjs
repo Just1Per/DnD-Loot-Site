@@ -90,3 +90,8 @@ test('permitted natural armor and Draconic Resilience remain alternatives, and w
 });
 
 test('All armor covers each armor group without granting Heavy training to a Medium-only character',()=>{for(const group of ['light','medium','heavy'])assert.equal(E.armorTrained(group,['All armor']),true);assert.equal(E.armorTrained('heavy',['Light armor','Medium armor']),false);const gear=[loot('mail','Chain Mail')];const d=make(gear,{build:{edition:'2014',classId:'fighter'},abilities:{str:16}});assert.ok(!M.derive(d,5,gear).gear.warnings.some(w=>/armor training not found/i.test(w)));});
+
+test('one armor formula exposes exact additive components for paper readouts, including capped and negative DEX',()=>{
+ for(const [name,dex,expected]of [['Chain Mail',18,{armor:16,dex:0,other:0,otherLabel:''}],['Half Plate',18,{armor:15,dex:2,other:0,otherLabel:''}],['Leather',8,{armor:11,dex:-1,other:0,otherLabel:''}]]){const l=[loot('armor',name)],r=M.derive(make(l,{abilities:{dex}}),5,l);assert.deepEqual(r.gear.baseParts,expected);assert.equal(Object.values(r.gear.baseParts).filter(v=>typeof v==='number').reduce((a,b)=>a+b,0),r.gear.base);}
+ for(const classId of ['barbarian','monk','sorcerer']){const d=make([],{build:{classId},abilities:{dex:14,con:16,wis:18,cha:18},adobe:{classLevels:[{classId,subclassId:'draconic-bloodline',level:5}]}}),r=M.derive(d,5,[]);const parts=r.gear.baseParts;assert.equal(parts.armor+parts.dex+parts.other,r.gear.base);assert.equal(r.gear.base+r.gear.shield+r.gear.bonus+r.gear.defense,r.ac);}
+});

@@ -175,3 +175,9 @@ Notes.Options now opens an accessible menu for the current notes page. Left/righ
 Source Action, Bonus Action and Reaction now have twelve private reminder rows each. Their row menus mirror moves, opposing overflow columns, insertion, deletion and clearing without dropping occupied rows. Standard Combat exposes the same collapsed editor. Automatic class/spell insertion into these reminders is not yet implemented.
 
 Both original ammunition trackers keep remaining and loaded counts, source-specific 8/10/20/50 positions and the original static glyphs. Reload loads from remaining ammunition and never grants gear or changes owned inventory quantities. Hidden source variants are exported as blank geometry and shown by the shared tracker projection; no Acrobat scripts run. Both print styles include the state, and populated action overflow selects its source page without repeating other lists.
+
+### Armor components and second DC checkpoint
+
+The original AC readouts now show additive components from the same selected armor formula as the character total, including class/racial natural armor. Armor selection uses actual carried gear through the existing equipment controller. Components cannot grant a separate paper AC or bypass ownership/attunement.
+
+The original Show/Hide 2nd DC control switches its original single/dual selector geometry and static glyph. Its independent secondary ability and bounded extra adjustment use the shared casting-stat calculation and persist with the private character. Toggling a displayed ability DC never changes a caster profile’s actual casting ability. Source and Standard printing include the second DC.

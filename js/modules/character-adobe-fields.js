@@ -25,11 +25,13 @@ var CharacterAdobeFields=(()=>{
  const edit=(path,value,kind='text',max=12000,extra={})=>({state:'editable',path,value:value??(kind==='checkbox'?false:''),kind,max,...extra});
  function describe(field,context){
   const id=typeof field==='string'?field:field.id,{data,derived:d,identity,options={}}=context;
+  const secondDC=data.adobe?.paperCombat?.secondaryDC?.visible===true;
+  if(typeof field==='object'&&field.dcLayout&&((field.dcLayout==='dual')!==secondDC))return computed('',{hidden:true,kind:field.kind});
   if(Object.hasOwn(raw,id)){const [path,kind,max]=raw[id],value=get(path.startsWith('identity.')?{identity}:data,path);return edit(path,value,kind,max,{options:options[path]||[]});}
   let m;
   if((m=/^(Action|Bonus Action|Reaction) ([1-9]|1[0-2])$/.exec(id))){const group={Action:'action','Bonus Action':'bonus',Reaction:'reaction'}[m[1]],index=Number(m[2])-1;return {state:'editable',kind:'text',value:data.adobe?.paperCombat?.actions?.[group]?.[index]||'',max:4000,paperAction:{group,index}};}
   if((m=/^Ammo(Left|Right)Display\.(Name|Amount)$/.exec(id))){const index=m[1]==='Left'?0:1,row=CharacterPaperCombat.ammoProjection(data.adobe?.paperCombat?.ammunition?.[index]),key=m[2]==='Name'?'name':'amount';return {state:'editable',kind:key==='name'?'text':'number',value:row[key],max:key==='name'?120:1000000,choices:Object.keys(CharacterPaperCombat.ammoTypes),ammoEdit:{index,key},reason:'Paper ammunition tracker. Reload uses remaining ammunition; inventory quantities are managed separately.'};}
-  if((m=/^Ammo(Left|Right)\.(Top|Base|Bullet)\.(?:Axe\.)?\d+$/.exec(id))){const index=m[1]==='Left'?0:1,row=CharacterPaperCombat.ammoProjection(data.adobe?.paperCombat?.ammunition?.[index]),slot=CharacterPaperCombat.sourceAmmoSlot(row,id.replace(/^Ammo(?:Left|Right)\./,''));return {state:'editable',kind:'checkbox',value:slot>=row.loaded,hidden:slot<0,ammoEdit:{index,key:'mark'},reason:'Checked means spent or unavailable in the current load.'};}
+  if((m=/^Ammo(Left|Right)\.(Top|Base|Bullet)\.(?:Axe\.)?\d+$/.exec(id))){const index=m[1]==='Left'?0:1,row=CharacterPaperCombat.ammoProjection(data.adobe?.paperCombat?.ammunition?.[index]),slot=CharacterPaperCombat.sourceAmmoSlot(row,id.replace(/^Ammo(?:Left|Right)\./,''));return {state:'editable',kind:'checkbox',value:slot>=row.loaded,hidden:slot<0||!row.name&&row.amount===0,ammoEdit:{index,key:'mark'},reason:'Checked means spent or unavailable in the current load.'};}
   if(id.startsWith('Wildshape')){
    const state=context.wild;if(!state)return computed('',{command:'companion'});
    if(id==='Wildshapes.Info.Uses')return computed(state.available?(state.maxUses===Infinity?'Unlimited':state.remaining+' / '+state.maxUses):'Requires Druid 2',{command:'companion'});
@@ -108,13 +110,22 @@ var CharacterAdobeFields=(()=>{
   if(id==='HP Max')return computed(d.hpMax,{command:'hp'});
   if(id==='Proficiency Bonus')return computed(sign(d.pb));
   if(id==='AC')return computed(d.ac,{command:'equipment'});
+  if(id.startsWith('AC ')||id==='Medium Armor'||id==='Heavy Armor'||id==='Stealth Disadv.alphabeta'){
+   const gear=d.gear,armor=gear.entries.find(row=>row.active&&row.mechanics.kind==='armor'),shield=gear.entries.find(row=>row.active&&row.mechanics.kind==='shield'),parts=gear.baseParts;
+   if(id==='AC Armor Description')return{state:'editable',kind:'select',value:armor?.entry.id||'',options:gear.entries.filter(row=>row.mechanics.kind==='armor'&&row.profile).map(row=>({value:row.entry.id,label:row.item.name})),blankLabel:gear.baseLabel.startsWith('Unarmored')?gear.baseLabel:'No worn armor',armorChoice:true};
+   if(id==='Medium Armor'||id==='Heavy Armor')return computed(armor?.profile?.group===(id==='Medium Armor'?'medium':'heavy'),{kind:'checkbox',command:'equipment'});
+   const values={'AC Armor Bonus':parts?.armor??gear.base,'AC Shield Bonus':gear.shield,'AC Dexterity Modifier':parts?.dex??'','AC Magic':gear.bonus,'AC Misc Mod 1':gear.defense+gear.adjustment,'AC Misc Mod 2':parts?.other??0,'AC Shield Bonus Description':shield?.item.name||'','AC Magic Description':gear.sources.map(row=>row.name).join(', '),'AC Misc Mod 1 Description':gear.defense?'Defense':'','AC Misc Mod 2 Description':parts?.otherLabel||'','Stealth Disadv.alphabeta':gear.warnings.some(w=>/disadvantage on Stealth/.test(w))?'Disadv.':''};
+   if(Object.hasOwn(values,id))return computed(values[id],{command:'equipment',reason:'Uses the same selected armor formula, equipment and bonuses as the shared Armor Class total.'});
+  }
   if(id==='Initiative bonus')return computed(sign(d.initiative));
   if(id==='Passive Perception')return computed(d.passive);
   if(id==='Speed')return computed((d.effects.speed||0)+' ft');
   if(id==='Vision')return computed([d.effects.darkvision?'Darkvision '+d.effects.darkvision+' ft':'',...(d.effects.specialSenses||[]).map(s=>s.name+': '+s.detail)].filter(Boolean).join('\n'),{kind:'textarea'});
   if(id==='Saving Throw advantages / disadvantages')return computed([data.conditions,...(d.saveTraining?.reports||[]).map(r=>r.detail)].filter(Boolean).join('\n'),{kind:'textarea',command:'conditions'});
   if(id==='Spell save DC 1')return computed(d.spellDC);
-  if(id==='Spell DC 1 Mod')return edit('spellAbility',data.spellAbility,'select',undefined,{options:Object.entries(abilities).map(([name,value])=>({value,label:name}))});
+  if(id==='Spell DC 1 Mod'||id==='Spell DC 1 Mod #2')return edit('spellAbility',data.spellAbility,'select',undefined,{options:Object.entries(abilities).map(([name,value])=>({value,label:name}))});
+  if(id==='Spell save DC 2')return computed(context.secondaryDCStats?.dc??'',{hidden:!secondDC,reason:'Second ability save DC from the shared casting calculation.'});
+  if(id==='Spell DC 2 Mod')return edit('adobe.paperCombat.secondaryDC.ability',data.adobe?.paperCombat?.secondaryDC?.ability||'int','select',undefined,{hidden:!secondDC,options:Object.entries(abilities).map(([name,value])=>({value,label:name}))});
   if((m=/^Death Save (Success|Fail)([123])$/.exec(id))){const path=m[1]==='Success'?'deathSuccess':'deathFailure',index=Number(m[2]);return edit(path,data[path]>=index,'checkbox',3,{count:index});}
   if((m=/^Resistance Damage Type ([1-6])$/.exec(id))){const auto=d.effects.resistances||[],i=Number(m[1])-1,manual=lines(data.resistances);return i<auto.length?computed(auto[i]):edit('resistances',manual[i-auto.length]||'','text',12000,{listIndex:i-auto.length});}
   if((m=/^(Language|Tool) ([1-6])$/.exec(id))){const automatic=m[1]==='Language'?d.effects.languages:context.toolNames||(d.toolTraining?.tools||[]).map(t=>t.name),i=Number(m[2])-1,path=m[1]==='Language'?'languages':'proficiencies',manual=lines(data[path]);return i<automatic.length?computed(automatic[i]):edit(path,manual[i-automatic.length]||'','text',12000,{listIndex:i-automatic.length});}

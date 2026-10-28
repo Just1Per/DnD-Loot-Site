@@ -130,10 +130,11 @@ var CharacterEquipment = (() => {
       }
       if(r.requiresAttunement&&!r.magicActive)warnings.push(r.item.name+': magical bonuses require attunement.');
     }
-    let base=10+stats.mods.dex,baseLabel='Unarmored: 10 + DEX',unarmoredDefenseNote='';
+    let base=10+stats.mods.dex,baseLabel='Unarmored: 10 + DEX',unarmoredDefenseNote='',baseParts={armor:10,dex:stats.mods.dex,other:0,otherLabel:''};
     if(armorEntry){
       const p=armorEntry.profile;
-      base=p.baseAC+(p.group==='heavy'?0:p.group==='medium'?Math.min(2,stats.mods.dex):stats.mods.dex);
+      baseParts={armor:p.baseAC,dex:p.group==='heavy'?0:p.group==='medium'?Math.min(2,stats.mods.dex):stats.mods.dex,other:0,otherLabel:''};
+      base=baseParts.armor+baseParts.dex;
       baseLabel=p.name;
     } else {
       const adobe=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};
@@ -145,18 +146,19 @@ var CharacterEquipment = (() => {
       const defenses=classLevels.filter(entry=>['barbarian','monk'].includes(entry.classId)),firstDefense=defenses[0]?.classId,modern=data.build?.edition==='2024',defenseAvailable=id=>modern?defenses.some(entry=>entry.classId===id):firstDefense===id;
       if(defenses.length>1)unarmoredDefenseNote=modern?'2024 multiclass armor calculation: use one eligible formula at a time, never combine them. The highest eligible formula is shown.':'2014 multiclass Unarmored Defense: '+(firstDefense==='barbarian'?'Barbarian':'Monk')+' is the first granting class. The later class does not grant a second Unarmored Defense formula.';
       const subclass=(id,sub,min=1)=>classLevels.some(entry=>entry.classId===id&&entry.subclassId===sub&&Number(entry.level||0)>=min);
-      const alternatives=[{value:10+stats.mods.dex,label:'Unarmored: 10 + DEX',shield:true}];
+      const formula=(armor,dex,other,label,shield=true,otherLabel='')=>({value:armor+dex+other,armor,dex,other,otherLabel,label,shield});
+      const alternatives=[formula(10,stats.mods.dex,0,'Unarmored: 10 + DEX')];
       const race=stats.effects?.race||(typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null);
       if(race?.naturalArmor){
         const ability=race.naturalArmor.ability,mod=ability?Number(stats.mods?.[ability]||0):0;
-        alternatives.push({value:Number(race.naturalArmor.base||10)+mod,label:(race.name||'Racial')+' natural armor',shield:true});
+        alternatives.push(formula(Number(race.naturalArmor.base||10),ability==='dex'?mod:0,ability&&ability!=='dex'?mod:0,(race.name||'Racial')+' natural armor',true,ability&&ability!=='dex'?ability.toUpperCase():''));
       }
-      if(defenseAvailable('barbarian'))alternatives.push({value:10+stats.mods.dex+stats.mods.con,label:'Barbarian Unarmored Defense',shield:true});
-      if(defenseAvailable('monk')&&!shieldEntry)alternatives.push({value:10+stats.mods.dex+stats.mods.wis,label:'Monk Unarmored Defense',shield:false});
-      if(data.build?.edition==='2014'&&subclass('sorcerer','draconic-bloodline',1))alternatives.push({value:13+stats.mods.dex,label:'Draconic Resilience',shield:true});
-      if(data.build?.edition==='2024'&&subclass('sorcerer','draconic-bloodline',3))alternatives.push({value:10+stats.mods.dex+stats.mods.cha,label:'Draconic Resilience',shield:true});
+      if(defenseAvailable('barbarian'))alternatives.push(formula(10,stats.mods.dex,stats.mods.con,'Barbarian Unarmored Defense',true,'CON'));
+      if(defenseAvailable('monk')&&!shieldEntry)alternatives.push(formula(10,stats.mods.dex,stats.mods.wis,'Monk Unarmored Defense',false,'WIS'));
+      if(data.build?.edition==='2014'&&subclass('sorcerer','draconic-bloodline',1))alternatives.push(formula(13,stats.mods.dex,0,'Draconic Resilience'));
+      if(data.build?.edition==='2024'&&subclass('sorcerer','draconic-bloodline',3))alternatives.push(formula(10,stats.mods.dex,stats.mods.cha,'Draconic Resilience',true,'CHA'));
       const best=alternatives.sort((a,b)=>b.value-a.value)[0];
-      base=best.value;baseLabel=best.label;
+      base=best.value;baseLabel=best.label;baseParts={armor:best.armor,dex:best.dex,other:best.other,otherLabel:best.otherLabel};
     }
     const profs=stats.effects.proficiencies;
     if(armorEntry){
@@ -213,7 +215,7 @@ var CharacterEquipment = (() => {
     }
     // Defense follows the owned armor actually worn, independent of the manual feat reminder.
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
-    return {entries,attacks,martialArts,unarmoredDefenseNote,warnings,attuned,attunementLimit:attunement.limit,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
+    return {entries,attacks,martialArts,unarmoredDefenseNote,warnings,attuned,attunementLimit:attunement.limit,base,baseParts,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
   return {attunementLimit,attunementState,weapons,armor,normalize,infer,profile,choices,trained,armorTrained,derive};
 })();
