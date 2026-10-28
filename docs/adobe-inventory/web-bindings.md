@@ -26,8 +26,8 @@ The live contracts are `character-adobe-fields.js`, `character-adobe-view.js` an
 | Spell-slot buttons | Open common ordinary/Pact slot controls | Distinct pools and remaining counts tested; original icon/menu operations remain partial |
 | Spell-sheet generation / row menus | Related shared Spells editor | Original row customization, variants and generation menus remain incomplete |
 | Companion Options / Set Max HP / Heal / attack arrows | Open existing companion/familiar editor | Shared-editor visibility and return synchronization tested; original popup menus remain partial |
-| Companion core fields | Existing card identity, filtered creature picker, HP, AC, movement, scores, saves, skills, traits and notes | Multiple companions, familiar filtering, inherited manual-form values and persistence tested |
-| Companion images, hit dice, death saves, source attack table and extra description fields | Unavailable where no shared model/binding exists | Must be connected deliberately; manual-reference cards are separate from active Druid forms |
+| Companion core fields | Existing card identity, filtered creature picker, HP, AC, movement, scores, saves, skills, traits, descriptions, additional features, death-save counters and notes | Multiple companions, familiar filtering, inherited manual-form values and persistence tested |
+| Companion images, hit dice and source attack table | Unavailable where no shared model/binding exists | Must be connected deliberately; manual-reference cards are separate from active Druid forms |
 | Wild Shape Options | Existing Druid controls under Companions | Original source menu options still partial |
 | Wild Shape form dropdowns | Edition-aware known choices (2024) or private paper references (2014) | References spend no uses; legacy seen confirmation stays in the common transformation flow |
 | Wild Shape values / active HP / return to normal | Shared engine profiles and commands | Both editions, continuation, separate legacy HP, revised HP, validation, persistence and print tested |

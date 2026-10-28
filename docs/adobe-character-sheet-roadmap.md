@@ -111,3 +111,9 @@ The background symbol frame now opens a collapsed Organization symbol editor in 
 ### Shared XP addition
 
 The source Add Experience button opens a compact Add experience control in the existing progression editor, available when XP mode is explicitly enabled. It updates the ordinary experience field; the existing progression owns level and multiclass calculations. Amount/total limits are validated without making an unapplied amount block sheet saving. Enter activates Add XP, and gaining a level prompts review of class allocation and new choices. Numeric paper fields display the common parsed XP total, including saved values containing thousands separators. Browser coverage checks invalid amounts, overflow, milestone mode, shared multiclass advancement, preservation and save/reopen.
+
+### Companion descriptions and counters
+
+Companion descriptions (height, weight, age, gender, alignment and creature type), additional feature notes and bounded death-save counters are now shared fields. Standard exposes these inside Notes & manual adjustments, preserving the compact card; the original paper fields edit the same card. Loading another catalogue creature restores its catalogue creature type. Descriptions and additional notes do not grant mechanical bonuses.
+
+Standard companion print now reuses `CharacterCompanionCards.project`, removing its separate copies of skill/save calculations. Browser checks verify description/counter isolation, persistence, literal feature text, ordinary character values and printed metadata. Companion images, hit-die data and source attack-table semantics remain unfinished.

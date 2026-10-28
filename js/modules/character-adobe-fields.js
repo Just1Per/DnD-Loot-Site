@@ -45,11 +45,12 @@ var CharacterAdobeFields=(()=>{
   }
   if(id.startsWith('Comp.')||id==='Cnote.Left'){
    const c=context.companion,stats=context.companionStats,index=context.companionIndex||0,prefix='adobe.companions.'+index+'.';if(!c)return computed('',{command:'companion'});
-   const bindings={'Comp.Desc.Name':['name','text',120],'Comp.Desc.Size':['size','select',undefined], 'Comp.Use.AC':['ac','number',50],'Comp.Use.HP.Max':['hpMax','number',100000],'Comp.Use.HP.Current':['hpCurrent','number',100000],'Comp.Use.HP.Temp':['hpTemp','number',100000],'Comp.Use.Speed':['speed','number',1000],'Comp.Use.Traits':['traits','textarea',8000],'Cnote.Left':['notes','textarea',8000]};
+   const bindings={'Comp.Desc.Name':['name','text',120],'Comp.Desc.Height':['height','text',120],'Comp.Desc.Weight':['weight','text',120],'Comp.Desc.Age':['age','text',120],'Comp.Desc.Sex':['gender','text',120],'Comp.Use.Features':['features','textarea',8000],'Comp.Desc.Size':['size','select',undefined], 'Comp.Use.AC':['ac','number',50],'Comp.Use.HP.Max':['hpMax','number',100000],'Comp.Use.HP.Current':['hpCurrent','number',100000],'Comp.Use.HP.Temp':['hpTemp','number',100000],'Comp.Use.Speed':['speed','number',1000],'Comp.Use.Traits':['traits','textarea',8000],'Cnote.Left':['notes','textarea',8000]};
    if(bindings[id]){const [key,kind,max]=bindings[id];return edit(prefix+key,c[key],kind,max,{options:key==='size'?['Tiny','Small','Medium','Large','Huge'].map(value=>({value,label:value})):undefined});}
    if(id==='Comp.Use.Combat.Init.Mod')return computed(sign(stats.initiative),{command:'companion'});
    if(id==='Comp.Use.Skills.Perc.Pass.Mod')return computed(stats.passive);
-   if(id==='Comp.Desc.MonsterType')return computed(context.companionCreature?.type||'');
+   if(id==='Comp.Desc.MonsterType'||id==='Comp.Desc.Alignment'){const key=id.endsWith('MonsterType')?'creatureType':'alignment';return edit(prefix+key,c[key]||(key==='creatureType'?context.companionCreature?.type||'':''),'select',120,{options:(typeof field==='object'?field.options||[]:[]).map(value=>({value,label:value}))});}
+   if((m=/^Comp\.Use\.DeathSave\.(Success|Fail)\.([123])$/.exec(id))){const key=m[1]==='Success'?'deathSuccess':'deathFailure',count=Number(m[2]);return edit(prefix+key,c[key]>=count,'checkbox',3,{count});}
    if(id==='Comp.Use.Senses')return computed(context.companionCreature?.senses||'',{command:'companion'});
    if(id==='Comp.Type')return edit(prefix+'type',c.type,'select',undefined,{options:[{value:'companion',label:'Companion'},{value:'familiar',label:'Familiar'},{value:'wildshape',label:'Manual Wild Shape reference'}]});
    if(id==='Comp.Race')return {state:'editable',kind:'select',value:context.companionCreatureId||'',options:context.companionCreatures||[],companionCreature:index,requiredChoice:true,choiceMessage:'Choose a companion creature.'};
