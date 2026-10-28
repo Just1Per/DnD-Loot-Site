@@ -222,18 +222,38 @@ test('campaign owner still opens without a membership record and failed reads fa
 });
 
 
-test('concurrent public image variants share one lookup, cache success and retry misses',async()=>{
-  const calls=[];let release;
+test('public artwork tries exact filenames before sharing a legacy variant fallback',async()=>{
+  const calls=[];
   const {context}=runtime('images.js',{imageCache:new Map(),storage:{},ref:(_,p)=>p,
-    PLACEHOLDER_IMAGE:'placeholder',getDownloadURL:p=>{calls.push(p);return new Promise(resolve=>{release=resolve})}});
+    PLACEHOLDER_IMAGE:'placeholder',getDownloadURL:async p=>{calls.push(p);return p==='dnd-item-images/sword.png'?'https://public.example/sword.png':''}});
   const first=context.resolveImageUrl('Sword-plus-1-red');
   const second=context.resolveImageUrl('Sword-plus-2-blue');
-  assert.deepEqual(calls,['dnd-item-images/sword.png']);
-  release('https://public.example/sword.png');
   assert.deepEqual(await Promise.all([first,second]),['https://public.example/sword.png','https://public.example/sword.png']);
-  assert.equal(await context.resolveImageUrl('Sword-green'),'https://public.example/sword.png');
+  assert.deepEqual(calls,['dnd-item-images/Sword-plus-1-red.png','dnd-item-images/Sword-plus-2-blue.png','dnd-item-images/sword.png']);
+  assert.equal(await context.resolveImageUrl('Sword-plus-1-red'),'https://public.example/sword.png');
+  assert.equal(calls.length,3);
+  assert.equal(await context.resolveImageUrl('wand'),'placeholder');
+  assert.equal(await context.resolveImageUrl('wand'),'placeholder');
+  assert.equal(calls.filter(p=>p==='dnd-item-images/wand.png').length,2,'misses remain retryable');
+});
+
+test('exact artwork wins over a cached shared variant and deduplicates concurrent readers',async()=>{
+  const calls=[];
+  const {context}=runtime('images.js',{imageCache:new Map([['sword','https://public.example/base.png']]),storage:{},ref:(_,p)=>p,
+    PLACEHOLDER_IMAGE:'placeholder',getDownloadURL:async p=>{calls.push(p);return 'https://public.example/exact.png'}});
+  const urls=await Promise.all([context.resolveImageUrl('Sword-red-2'),context.resolveImageUrl('Sword-red-2')]);
+  assert.deepEqual(urls,['https://public.example/exact.png','https://public.example/exact.png']);
+  assert.deepEqual(calls,['dnd-item-images/Sword-red-2.png']);
+  for(const id of ['',null,'../private','campaign/x','a'.repeat(201)])assert.equal(await context.resolveImageUrl(id),'placeholder');
   assert.equal(calls.length,1);
-  const missing=context.resolveImageUrl('wand');release('');assert.equal(await missing,'placeholder');
-  const retry=context.resolveImageUrl('wand');assert.equal(calls.length,3);release('https://public.example/wand.png');
-  assert.equal(await retry,'https://public.example/wand.png');
+});
+
+test('campaign artwork uses source identity and thumbnail hints without bypassing private/no-art records',()=>{
+  const {context}=runtime('images.js',{imageCache:new Map(),PLACEHOLDER_IMAGE:'placeholder',activeCampaign:{id:'a'},canManageCampaign:()=>false,escapeHtml:s=>String(s)});
+  const copy={id:'random-copy-id',rootItemId:'Sword-red-2',name:'Sword'};
+  assert.match(context.itemImageMarkup(copy,'art'),/data-image-item-id="Sword-red-2"/);
+  assert.match(context.itemImageMarkup({...copy,imageUrl:'placeholder.png'},'art'),/data-image-item-id="Sword-red-2"/);
+  assert.match(context.itemImageMarkup({...copy,thumbnailUrl:'https:\/\/public.example\/thumb.png'},'art'),/src="https:\/\/public.example\/thumb.png"/);
+  assert.doesNotMatch(context.itemImageMarkup({...copy,artwork:{status:'none'},imageUrl:'https:\/\/public.example\/old.png'},'art'),/data-image|public.example/);
+  assert.doesNotMatch(context.itemImageMarkup({...copy,archivedImage:{path:'campaign-catalogue-images/a/private'},imageUrl:'https:\/\/public.example\/old.png'},'art'),/data-image|public.example/);
 });
