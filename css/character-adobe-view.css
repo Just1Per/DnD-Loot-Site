@@ -18,3 +18,5 @@
 @media print{[data-printable="false"]{display:none!important}}
 
 .pdf-button.image-control[data-pdf-button="Comp.img.Image"]:has(img){background:#fff;border:calc(var(--scale)*5px) solid transparent;background-clip:padding-box}
+
+.adobe-print-batch{display:none}@media print{:host([data-print-batch]) .paper-viewport{display:none!important}:host([data-print-batch]) .adobe-print-batch{display:block!important}.adobe-print-batch>.paper{break-after:page}.adobe-print-batch>.paper:last-child{break-after:auto}}

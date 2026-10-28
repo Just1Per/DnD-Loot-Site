@@ -151,3 +151,11 @@ The log is a private record, separate from campaign Journal/recaps. It does not 
 The shared editor now moves complete entries earlier/later, inserts blanks, duplicates, clears in place and removes/shifts records. Opening balances stay global and later balances recalculate. Clear/remove use the existing accessible confirmation dialog; its session/log/index guard prevents an old confirmation modifying a replaced sheet. Row and note-space limits reject an operation atomically. Copying an entry repeats its recorded rewards only inside the log. Editing a field no longer replaces the editor DOM on blur, so a pending edit does not consume the next command click.
 
 Original expression syntax, other log menu variants and explicit XP/treasure transfer remain pending. These entry operations do not change character XP, coins, inventory or campaign recaps.
+
+### Connected multi-page printing
+
+Print connected pages snapshots the existing character, identity and scoped inventory, then renders blank source layouts with the same field adapter and shared engine. It includes five base layouts, populated combined equipment/feat/item continuations, ordinary notes, each caster’s spell ranges, recorded companions, Druid references and Adventure Log pages. The 2014 reference remains optional through the existing Rules-page flag. Per-caster headers preserve their casting statistics and ordinary/Pact slot pools. No page or character state is changed by preparing the batch.
+
+A pure plan validates counts and fails explicitly above 400 pages. Generation/session/auth guards cancel abandoned asynchronous preparations; images decode before printing, and afterprint removes the temporary DOM. Original print flags continue to omit UI-only controls. The regression inspects an actual 15-page PDF, including last continuation content and source dimensions, private picture nodes, Wizard/Warlock slot separation, stable data/page, invalid inputs and closing the sheet while a page is loading.
+
+This adds connected-page batch printing, not complete source print parity. Long text remains inside original fixed-size fields and can clip; the control and Guide disclose this. Automatic text overflow, other conditional variants and remaining source customization are still pending. No new Firebase rules, uploads or production changes.

@@ -78,7 +78,7 @@ var CharacterAdobeFields=(()=>{
   }
   if(id==='zAdvLog.PC Name'||id==='AdvLog.PC Name')return computed(identity.name);
   if((m=/^spells\.(name|description|save|school|time|range|components|duration|book|page)\.(\d+)$/.exec(id))){const index=Number(m[2]),key=m[1];if(index===0)return computed({name:'Spell',description:'Description',save:'Save',school:'School',time:'Time',range:'Range',components:'Comp.',duration:'Duration',book:'B',page:'P'}[key],{reason:'Column heading.'});const row=context.spellRows?.[(context.spellOffset||0)+index-1];let value='';if(row){value=key==='name'?row.spell.name:key==='description'?[row.description,row.mark?.detail,...(row.mark?.notes||[]),row.invocation?context.invocationText?.(row.invocation):'',row.beast?.relevant?row.beast.detail:''].filter(Boolean).join(' '):key==='time'?row.spell.casting:key==='range'?row.range:key==='book'?row.c?.source:key==='page'?row.c?.page:key==='save'||key==='school'?row.c?.[key]:row.spell[key];}return computed(value,{command:'spells',spellIndex:row&&(key==='name'||key==='description')?row.i:undefined});}
-  if(id==='spellshead.Text.header.0')return computed(context.spellProfile?.name||'All selected spells',{command:'spells'});
+  if(id==='spellshead.Text.header.0')return computed(context.spellProfile?.name||context.spellCasterLabel||'All selected spells',{command:'spells'});
   if(id==='spellshead.ability.0')return computed(context.spellProfile?.ability?.toUpperCase()||'',{command:'spells'});
   if(id==='spellshead.prepare.0')return computed(context.spellProfile?.mode==='known'?'':context.spellProfile?.spellCount??'',{command:'spells'});
   if(id==='spellshead.attack.0')return computed(context.spellStats?sign(context.spellStats.attack):'',{command:'spells'});
