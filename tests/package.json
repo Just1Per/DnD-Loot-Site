@@ -133,7 +133,7 @@
     "test:barbarian-rage": "node barbarian-rage-resources-browser.cjs",
     "test:class-movement": "node class-movement-speeds-browser.cjs",
     "test:control-prototype": "node control-prototype-browser.cjs",
-    "test:adobe-connected": "node adobe-connected-sheet-browser.cjs && node adobe-spell-pages-browser.cjs && node adobe-items-browser.cjs && node adobe-companions-browser.cjs && node adobe-wild-shape-browser.cjs && node adobe-xp-browser.cjs && node adobe-companion-images-browser.cjs && node adobe-companion-attacks-browser.cjs && node adobe-adventure-log-browser.cjs && node adobe-log-operations-browser.cjs && node adobe-multipage-print-browser.cjs && node adobe-text-overflow-browser.cjs && node adobe-notes-options-browser.cjs && node adobe-paper-combat-browser.cjs && node adobe-defenses-dc-browser.cjs"
+    "test:adobe-connected": "node adobe-connected-sheet-browser.cjs && node adobe-spell-pages-browser.cjs && node adobe-items-browser.cjs && node adobe-companions-browser.cjs && node adobe-wild-shape-browser.cjs && node adobe-xp-browser.cjs && node adobe-companion-images-browser.cjs && node adobe-companion-attacks-browser.cjs && node adobe-adventure-log-browser.cjs && node adobe-log-operations-browser.cjs && node adobe-multipage-print-browser.cjs && node adobe-text-overflow-browser.cjs && node adobe-notes-options-browser.cjs && node adobe-paper-combat-browser.cjs && node adobe-defenses-dc-browser.cjs && node adobe-hit-dice-browser.cjs"
   },
   "devDependencies": {
     "axe-core": "4.14.0",

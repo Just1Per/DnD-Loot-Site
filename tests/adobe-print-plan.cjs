@@ -16,3 +16,5 @@ test('each caster gets its own header, continuation offsets and slot-pool presen
  assert.throws(()=>P.create({spellGroups:[{id:'wizard',count:1},{id:'wizard',count:2}]}));assert.throws(()=>P.create({spellGroups:[{id:'wizard',count:-1}]}));
 });
 test('action overflow prints its original page only when populated, without repeating other lists',()=>{const pages=P.create({actionOverflow:true});assert.equal(pages.length,6);assert.deepEqual(pages.at(-1),{page:'template-ASoverflow',actionsOnly:true});});
+
+test('a fourth hit-die pool gets a read-only notes continuation instead of disappearing',()=>{const pages=P.create({hitDiceOverflow:true});assert.equal(pages.length,6);assert.deepEqual(pages.at(-1),{page:'template-ASnotes',hitDiceOverflow:true});});

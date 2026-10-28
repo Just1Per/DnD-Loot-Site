@@ -181,3 +181,9 @@ Both original ammunition trackers keep remaining and loaded counts, source-speci
 The original AC readouts now show additive components from the same selected armor formula as the character total, including class/racial natural armor. Armor selection uses actual carried gear through the existing equipment controller. Components cannot grant a separate paper AC or bypass ownership/attunement.
 
 The original Show/Hide 2nd DC control switches its original single/dual selector geometry and static glyph. Its independent secondary ability and bounded extra adjustment use the shared casting-stat calculation and persist with the private character. Toggling a displayed ability DC never changes a caster profile’s actual casting ability. Source and Standard printing include the second DC.
+
+### Character hit-dice pools
+
+Used counters now follow actual capped class levels grouped by die size; saved spent values remain keyed to the die when class order or levels change. Standard Combat shows all active pools. The original three paper rows remain, with a complete notes continuation when a fourth die size is active.
+
+Long Rest recovery is explicit and edition-aware: 2014 permits an allocation up to half the total dice, rounded down (minimum one); 2024 recovers all spent dice. Counters and recovery do not heal HP, restore spell slots, change feature uses, award XP or touch inventory. The existing rest buttons continue to identify their own scope.
