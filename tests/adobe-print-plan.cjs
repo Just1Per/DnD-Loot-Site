@@ -15,3 +15,4 @@ test('each caster gets its own header, continuation offsets and slot-pool presen
  assert.deepEqual(pages.map(p=>[p.page,p.spellCaster,p.spellPage]),[['template-SSfront','wizard',undefined],['template-SSmore','wizard',0],['template-SSmore','wizard',1],['template-SSfront','warlock',undefined],['template-SSfront','unassigned',undefined]]);
  assert.throws(()=>P.create({spellGroups:[{id:'wizard',count:1},{id:'wizard',count:2}]}));assert.throws(()=>P.create({spellGroups:[{id:'wizard',count:-1}]}));
 });
+test('action overflow prints its original page only when populated, without repeating other lists',()=>{const pages=P.create({actionOverflow:true});assert.equal(pages.length,6);assert.deepEqual(pages.at(-1),{page:'template-ASoverflow',actionsOnly:true});});

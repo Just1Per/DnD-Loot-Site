@@ -169,3 +169,9 @@ The 400-page limit also covers added notes and fails explicitly. A session close
 ### Original Notes options
 
 Notes.Options now opens an accessible menu for the current notes page. Left/right writing lines are independent private preferences, normalized to 150 page indices and stored in the existing Adobe envelope. Source mask geometry is exported from the original hidden Whiteout fields without any filled values. White masks sit above the blank art and below text; active note fields and connected print pages use the same preference. Defaults retain lines. More notes uses existing bounded navigation; Open Journal uses the shared editor. Destructive hide/remove-page commands remain pending. Dialog state is guarded against changed sessions/pages and removed on sheet close.
+
+### Actions and ammunition checkpoint
+
+Source Action, Bonus Action and Reaction now have twelve private reminder rows each. Their row menus mirror moves, opposing overflow columns, insertion, deletion and clearing without dropping occupied rows. Standard Combat exposes the same collapsed editor. Automatic class/spell insertion into these reminders is not yet implemented.
+
+Both original ammunition trackers keep remaining and loaded counts, source-specific 8/10/20/50 positions and the original static glyphs. Reload loads from remaining ammunition and never grants gear or changes owned inventory quantities. Hidden source variants are exported as blank geometry and shown by the shared tracker projection; no Acrobat scripts run. Both print styles include the state, and populated action overflow selects its source page without repeating other lists.

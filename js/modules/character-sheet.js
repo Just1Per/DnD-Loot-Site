@@ -475,7 +475,9 @@ async function saveCharacterSheet({reportValidation=true}={}) {
     const section=invalid.closest('[data-sheet-section]')?.dataset.sheetSection;
     if(section)selectSheetTab(section);
     sheetStatus(invalid.validationMessage||'Correct the highlighted sheet field before saving.',true);
-    if(reportValidation)invalid.reportValidity();
+    // The inline status already explains the error. Native validation popovers
+    // during a click can trap older Chromium; focus after the event completes.
+    if(reportValidation)requestAnimationFrame(()=>{if(sheetSession===s&&invalid.isConnected)invalid.focus();});
     return false;
   }
   readSheetForm();

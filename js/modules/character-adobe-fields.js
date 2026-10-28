@@ -27,6 +27,9 @@ var CharacterAdobeFields=(()=>{
   const id=typeof field==='string'?field:field.id,{data,derived:d,identity,options={}}=context;
   if(Object.hasOwn(raw,id)){const [path,kind,max]=raw[id],value=get(path.startsWith('identity.')?{identity}:data,path);return edit(path,value,kind,max,{options:options[path]||[]});}
   let m;
+  if((m=/^(Action|Bonus Action|Reaction) ([1-9]|1[0-2])$/.exec(id))){const group={Action:'action','Bonus Action':'bonus',Reaction:'reaction'}[m[1]],index=Number(m[2])-1;return {state:'editable',kind:'text',value:data.adobe?.paperCombat?.actions?.[group]?.[index]||'',max:4000,paperAction:{group,index}};}
+  if((m=/^Ammo(Left|Right)Display\.(Name|Amount)$/.exec(id))){const index=m[1]==='Left'?0:1,row=CharacterPaperCombat.ammoProjection(data.adobe?.paperCombat?.ammunition?.[index]),key=m[2]==='Name'?'name':'amount';return {state:'editable',kind:key==='name'?'text':'number',value:row[key],max:key==='name'?120:1000000,choices:Object.keys(CharacterPaperCombat.ammoTypes),ammoEdit:{index,key},reason:'Paper ammunition tracker. Reload uses remaining ammunition; inventory quantities are managed separately.'};}
+  if((m=/^Ammo(Left|Right)\.(Top|Base|Bullet)\.(?:Axe\.)?\d+$/.exec(id))){const index=m[1]==='Left'?0:1,row=CharacterPaperCombat.ammoProjection(data.adobe?.paperCombat?.ammunition?.[index]),slot=CharacterPaperCombat.sourceAmmoSlot(row,id.replace(/^Ammo(?:Left|Right)\./,''));return {state:'editable',kind:'checkbox',value:slot>=row.loaded,hidden:slot<0,ammoEdit:{index,key:'mark'},reason:'Checked means spent or unavailable in the current load.'};}
   if(id.startsWith('Wildshape')){
    const state=context.wild;if(!state)return computed('',{command:'companion'});
    if(id==='Wildshapes.Info.Uses')return computed(state.available?(state.maxUses===Infinity?'Unlimited':state.remaining+' / '+state.maxUses):'Requires Druid 2',{command:'companion'});
@@ -132,7 +135,7 @@ var CharacterAdobeFields=(()=>{
   return {state:'pending',value:'',kind:typeof field==='object'?field.kind:'text',reason:'This PDF field is still being connected.'};
  }
  function planEdit(field,value,context){
-  const d=describe(field,context);if(d.state!=='editable')throw Error('This field is calculated or is not connected.');
+  const d=describe(field,context);if(d.state!=='editable'||d.hidden)throw Error('This field is calculated or is not connected.');
   if(d.kind==='checkbox'){if(typeof value!=='boolean')throw Error('Choose checked or unchecked.');if(d.rank)return {...d,value:value?d.rank:d.rank===2?Math.min(d.currentRank,1):0};if(d.count)return {...d,value:value?d.count:d.count-1};return {...d,value};}
   if(d.kind==='number'){if(String(value).trim()===''||!Number.isInteger(Number(value))||Number(value)<(d.min??0)||Number(value)>(d.max??1000000))throw Error('Enter a whole number from '+(d.min??0)+' to '+(d.max??1000000)+'.');return {...d,value:Number(value)};}
   value=String(value??'');if(value.length>(d.max??12000))throw Error('This text is too long.');
