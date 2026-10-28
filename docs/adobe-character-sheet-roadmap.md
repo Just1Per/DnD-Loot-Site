@@ -50,12 +50,12 @@ The committed source inventory is in [adobe-inventory](adobe-inventory/README.md
 
 The connected preview adds a Standard/Adobe selector for the same saved character. Initial bindings cover identity, current/temporary HP, inspiration, common ability/save/skill totals and manual training, race/background catalogue choices, death saves, languages/resistances, coins, appearance/personality/organization fields, existing journal entries, selected feats with their shared source/reference descriptions, and the existing private portrait. Shared editors retain their original DOM, handlers and save path. Calculated fields remain read-only; unsupported fields are explicitly unfinished. Raw profile additions are preserved and editable in Standard too.
 
-This is an intermediate foundation, not complete source parity. Automatic training, item effects and computed values come from the existing engine; PDF-specific menus are not a substitute for missing shared rules. Spells, companions, Wild Shape, adventure logs, conditional layouts, full source-button semantics and many per-page bindings remain pending. Opening a related editor does not mean that every PDF menu action has been implemented.
+This is an intermediate foundation, not complete source parity. Automatic training, item effects and computed values come from the existing engine; PDF-specific menus are not a substitute for missing shared rules. Spells, companions and Wild Shape are connected in the later checkpoints below. Structured adventure logs, conditional layouts, remaining source-button semantics, whole-sheet print and some per-page bindings are still pending. Opening a related editor does not mean that every PDF menu action has been implemented.
 
 ### Verification
 
-- `node --test tests/adobe-field-adapter.cjs tests/character-play-rules.cjs`: 22 passing checks for derived outputs, whitelist validation, limits, protected training, death counters, journal bindings and profile round trips.
-- `npm --prefix tests run test:adobe-connected`: functional browser flow for lazy loading, shared editing, style round trips, actual save/reopen, validation and mobile zoom. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
+- `npm --prefix tests test`: 553 unit checks and 369 DOM checks pass at the latest local checkpoint, including adapter validation, shared rules and regression coverage.
+- `npm --prefix tests run test:adobe-connected`: seven functional browser flows for core editing, spells, items, companions, Wild Shape, XP and private companion pictures, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
 - Development browser: Chromium 154. The first connected checkpoint also passed the GitHub Engines and DOM job, including the connected browser/print/accessibility check. New increments must pass their own exact-head checks.
 
 No Firestore or Storage rule changes are included. Existing session access controls and save envelope apply. No assistant merge, production deployment, rule deployment or data migration is authorized.
@@ -117,3 +117,9 @@ The source Add Experience button opens a compact Add experience control in the e
 Companion descriptions (height, weight, age, gender, alignment and creature type), additional feature notes and bounded death-save counters are now shared fields. Standard exposes these inside Notes & manual adjustments, preserving the compact card; the original paper fields edit the same card. Loading another catalogue creature restores its catalogue creature type. Descriptions and additional notes do not grant mechanical bonuses.
 
 Standard companion print now reuses `CharacterCompanionCards.project`, removing its separate copies of skill/save calculations. Browser checks verify description/counter isolation, persistence, literal feature text, ordinary character values and printed metadata. Companion images, hit-die data and source attack-table semantics remain unfinished.
+
+### Private companion pictures
+
+Each companion now has its own bounded private picture, editable from the original paper frame or inside its collapsed Standard adjustments. It reuses the character portrait validator/resizer. The two overlapping source image controls share one accessible web surface. Upload completion verifies the original card/session still exists, so removal/reordering cannot attach a late file to a different creature. Both print styles include the picture.
+
+The store exposes a non-mutating estimate of its persisted UTF-8 data, excluding the duplicate runtime Adobe alias. All shared image uploads check that budget before changing a picture, retaining space below Firestore’s document ceiling. Oversized candidates leave existing data intact. No image upload to public Storage or rule change is introduced. Tests cover independent pictures, removal, rejected SVG, save/reopen, generated PDF images, late completion and budgeting.

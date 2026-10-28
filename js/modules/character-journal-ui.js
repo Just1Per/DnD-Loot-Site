@@ -10,6 +10,7 @@ async function characterSheetImageData(file){
    let value=canvas.toDataURL('image/jpeg',.8);if(value.length>160000)value=canvas.toDataURL('image/jpeg',.5);if(value.length>160000)throw Error('This image is too detailed. Try a smaller picture.');
    return value;
 }
+function assertCharacterImageBudget(candidate){if(characterSheetStore.estimateBytes(candidate)>900000)throw Error('This character sheet has no room for another picture. Try a simpler image or remove an existing picture.');}
 function setupCharacterJournal(){
  const story=document.getElementById('sheet-story'),portrait=document.createElement('section');portrait.id='sheetPortraitEditor';portrait.className='sheet-portrait-editor';
  portrait.innerHTML='<div class="sheet-portrait-preview"><span>Character portrait</span></div><div><h4>Character portrait</h4><label class="sheet-field">Choose picture<input id="sheetPortraitUpload" type="file" accept="image/png,image/jpeg,image/webp"></label><button type="button" id="sheetPortraitOverviewToggle">Add picture to Overview</button><button type="button" id="sheetPortraitRemove">Remove picture</button><p class="sheet-help" id="sheetPortraitStatus">Saved privately with your character sheet.</p></div>';
@@ -21,12 +22,12 @@ function setupCharacterJournal(){
   const status=document.getElementById('sheetPortraitStatus');
   try{
    const value=await characterSheetImageData(file);if(sheetSession!==session)return;
-   readSheetForm();session.data.adobe.portrait=value;session.dirty=true;updateSheetCalculations();status.textContent='Picture added. Save your character sheet to keep it.';
+   readSheetForm();const candidate=structuredClone(session.data);candidate.adobe.portrait=value;assertCharacterImageBudget(candidate);session.data.adobe.portrait=value;session.dirty=true;updateSheetCalculations();status.textContent='Picture added. Save your character sheet to keep it.';
   }catch(error){status.textContent=error.message;}finally{event.target.value='';}
  };
  const symbol=document.createElement('details');symbol.id='sheetOrganizationSymbolEditor';symbol.className='sheet-organization-symbol';symbol.innerHTML='<summary>Organization symbol</summary><div class="sheet-portrait-editor"><div class="sheet-portrait-preview" id="sheetOrganizationSymbolPreview"><span>No organization symbol</span></div><div><label class="sheet-field">Choose organization symbol<input id="sheetOrganizationSymbolUpload" type="file" accept="image/png,image/jpeg,image/webp"></label><button type="button" id="sheetOrganizationSymbolRemove">Remove symbol</button><p class="sheet-help" id="sheetOrganizationSymbolStatus">Saved privately with your character sheet.</p></div></div>';story.querySelector('.sheet-story-left').append(symbol);
  document.getElementById('sheetOrganizationSymbolRemove').onclick=()=>{readSheetForm();sheetSession.data.adobe.organizationSymbol='';sheetSession.dirty=true;updateSheetCalculations();};
- document.getElementById('sheetOrganizationSymbolUpload').onchange=async event=>{const file=event.target.files?.[0],session=sheetSession;if(!file)return;const status=document.getElementById('sheetOrganizationSymbolStatus');try{const value=await characterSheetImageData(file);if(sheetSession!==session)return;readSheetForm();session.data.adobe.organizationSymbol=value;session.dirty=true;updateSheetCalculations();status.textContent='Symbol added. Save your character sheet to keep it.';}catch(error){status.textContent=error.message;}finally{event.target.value='';}};
+ document.getElementById('sheetOrganizationSymbolUpload').onchange=async event=>{const file=event.target.files?.[0],session=sheetSession;if(!file)return;const status=document.getElementById('sheetOrganizationSymbolStatus');try{const value=await characterSheetImageData(file);if(sheetSession!==session)return;readSheetForm();const candidate=structuredClone(session.data);candidate.adobe.organizationSymbol=value;assertCharacterImageBudget(candidate);session.data.adobe.organizationSymbol=value;session.dirty=true;updateSheetCalculations();status.textContent='Symbol added. Save your character sheet to keep it.';}catch(error){status.textContent=error.message;}finally{event.target.value='';}};
  const host=document.getElementById('sheetJournal');host.dataset.category='All';host.dataset.selected='';renderCharacterJournal();updateCharacterPortrait();
 }
 function updateCharacterPortrait(){

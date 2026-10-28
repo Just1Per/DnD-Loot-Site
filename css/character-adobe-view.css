@@ -16,3 +16,5 @@
 
 /* Match the source annotation print flag: UI commands disappear; data indicators stay. */
 @media print{[data-printable="false"]{display:none!important}}
+
+.pdf-button.image-control[data-pdf-button="Comp.img.Image"]:has(img){background:#fff;border:calc(var(--scale)*5px) solid transparent;background-clip:padding-box}
