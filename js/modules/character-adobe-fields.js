@@ -78,7 +78,7 @@ var CharacterAdobeFields=(()=>{
    if((m=/^AdvLog\.([1-6])\.(adventure|session|dm|date|notes|xp|gold|downtime|renown|magicItems)(?:\.(start|gain|total))?$/.exec(id))){const index=offset+Number(m[1])-1,key=m[2],part=m[3],rows=context.logRows||L.project(log),row=rows[index],numeric=L.keys.includes(key);if(!row)return computed('');
     if(numeric&&(!part||!['start','gain','total'].includes(part)))return computed('');
     const value=numeric?row[part][key]:row[key];if(part==='total'||part==='start'&&index!==0){const hidden=part==='total'?row.gain[key]==='':row.gain[key]===''&&(rows[index-1]?.gain[key]??'')==='';return computed(hidden?'':value);}
-    return {state:'editable',kind:key==='notes'?'textarea':'text',value:part==='start'?log.start[key]:value,max:key==='notes'?4000:200,logEdit:{index,key,part:part||'text'},reason:numeric?'Enter a signed number. Log balances are independent of character XP, coins and owned items.':''};
+    return {state:'editable',kind:key==='notes'?'textarea':'text',value:part==='start'?(log.startExpressions?.[key]??log.start[key]):numeric&&part==='gain'?(row.expressions?.[key]??value):value,max:key==='notes'?4000:200,logEdit:{index,key,part:part||'text'},reason:numeric?'Enter an amount or arithmetic using +, −, ×, ÷ and parentheses. Gold results allow two decimal places; other balances use whole numbers.':''};
    }
   }
   if(id==='zAdvLog.PC Name'||id==='AdvLog.PC Name')return computed(identity.name);
