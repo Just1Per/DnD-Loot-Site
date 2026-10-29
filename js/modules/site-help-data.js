@@ -10,7 +10,7 @@ var SiteHelpData=(()=>{
   'build.backgroundFeat':'Choose the feat allowed by your background. Its supported effects are calculated and it appears with your other feats after saving.',
   'build.raceFeat':'Select the feat granted by your species when its rules offer one. The Feats page shows the selected feat and its supported effects.',
   'adobe.useExperience':'Uses your recorded experience to determine character level. Leave this off when your campaign uses milestone leveling.',
-  'adobe.hpMode':'Chooses fixed, rolled or maximum hit points for class levels after the first. Constitution and supported feat/item bonuses are added by the engine.',
+  'adobe.hpMode':'Chooses fixed, Adobe average, rolled or maximum hit points for class levels after the first. Adobe average retains half points and rounds the combined total once; it is a separate table choice from fixed HP. Constitution and supported feat/item bonuses are added by the engine.',
   'spellAbility':'Sets the ability for manually entered spellcasting. Generated class sheets use each class’s own spellcasting ability instead.',
   'spellAttackBonus':'Adds a manual adjustment to spell attack rolls. Generated class sheets include this adjustment alongside their own ability modifier and proficiency bonus.',
   'spellDCBonus':'Adds a manual adjustment to spell save DC. Use this for a bonus that is not already calculated from your choices or items.',

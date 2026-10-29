@@ -24,7 +24,7 @@ var CharacterPlayRules = (()=>{
   return {
    asiSpent:Math.max(0,Math.min(7,Math.trunc(Number(raw.asiSpent)||0))),lessons:raw.lessons===true,
    useExperience:raw.useExperience===true,xp:Math.max(0,Math.min(1000000000,Math.trunc(Number(raw.xp)||0))),
-   hpMode:['fixed','rolled','max','manual'].includes(raw.hpMode)?raw.hpMode:'fixed',hpRolls,
+   hpMode:['fixed','average','rolled','max','manual'].includes(raw.hpMode)?raw.hpMode:'fixed',hpRolls,
    classLevels,extraPages,
    companion:{name:text(companionRaw.name,160),type:text(companionRaw.type,100),size:text(companionRaw.size,40),ac:Math.max(0,Math.min(99,Math.trunc(Number(companionRaw.ac)||10))),hpMax:Math.max(0,Math.min(99999,Math.trunc(Number(companionRaw.hpMax)||0))),hpCurrent:Math.max(0,Math.min(99999,Math.trunc(Number(companionRaw.hpCurrent)||0))),speed:text(companionRaw.speed,100),initiative:Math.max(-50,Math.min(50,Math.trunc(Number(companionRaw.initiative)||0))),proficiency:Math.max(0,Math.min(20,Math.trunc(Number(companionRaw.proficiency)||0))),abilities,saves:text(companionRaw.saves,1000),skills:text(companionRaw.skills,2000),senses:text(companionRaw.senses,1000),attacks:text(companionRaw.attacks,4000),traits:text(companionRaw.traits,6000),notes:text(companionRaw.notes,6000)}
   };

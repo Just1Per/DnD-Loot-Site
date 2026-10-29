@@ -10,6 +10,13 @@ function characterSpellPresentation(data,derived,level){
   return {spell,i,c,description,invocation,mark,beast,profile,automatic,preparationEditable:profile?.mode==='spellbook'&&spell.level>0&&!automatic,range:invocation?.range||(c?CharacterClassFeatureChoices.cantripRange(c,derived.progression?.targetLevel||level,spell.range):spell.range)};
  }).sort((a,b)=>a.spell.level-b.spell.level||a.spell.name.localeCompare(b.spell.name));
 }
+function applyCharacterBackgroundDetail(value,session=sheetSession,key=CharacterAdobeEngine.backgroundKey(session?.data)){
+ if(!session||session!==sheetSession||session.uid!==auth.currentUser?.uid||session.campaignId!==activeCampaign?.id)throw Error('This character session is no longer active.');
+ if(typeof value!=='string'||value.length>200)throw Error('Use at most 200 characters for the background detail.');
+ readSheetForm();if(CharacterAdobeEngine.backgroundKey(session.data)!==key)throw Error('The background changed. Reopen its detail before editing.');
+ const details=session.data.adobe.backgroundDetails;if(value&&!Object.hasOwn(details,key)&&Object.keys(details).length>=64)throw Error('Remove an unused background detail before adding another.');
+ if(value)details[key]=value;else delete details[key];session.dirty=true;updateSheetCalculations();sheetStatus('Background detail updated. Save sheet to keep changes.');
+}
 function setupCharacterPlayUI(){
  const f=sheetField,form=document.getElementById('characterSheetForm'),story=document.getElementById('sheet-story');
  const profile=document.createElement('div');profile.className='sheet-grid sheet-profile';
@@ -18,6 +25,9 @@ function setupCharacterPlayUI(){
  const lifestyle=profile.querySelector('[name="profile.lifestyle"]'),suggestions=document.createElement('datalist'),cost=document.createElement('small');
  suggestions.id='sheetLifestyleOptions';for(const row of CharacterPlayRules.lifestyles){const option=document.createElement('option');option.value=row.name;suggestions.append(option);}
  cost.id='sheetLifestyleCost';cost.className='sheet-help';lifestyle.setAttribute('list',suggestions.id);lifestyle.setAttribute('aria-describedby',cost.id);lifestyle.maxLength=200;lifestyle.after(suggestions,cost);
+ const detail=document.createElement('label');detail.className='sheet-field sheet-background-detail';detail.innerHTML='<span>Background detail <small id="sheetBackgroundDetailName"></small></span><input id="sheetBackgroundDetail" type="text" maxlength="200" aria-describedby="sheetBackgroundDetailHelp"><small id="sheetBackgroundDetailHelp" class="sheet-help">Optional temple, specialty or former role. Kept separately for each background; does not grant training.</small>';profile.prepend(detail);
+ const backgroundSession=sheetSession,backgroundInput=detail.querySelector('input');
+ backgroundInput.onchange=()=>{if(!backgroundInput.isConnected||backgroundSession!==sheetSession||backgroundSession.uid!==auth.currentUser?.uid||backgroundSession.campaignId!==activeCampaign?.id)return;try{backgroundInput.removeAttribute('aria-invalid');backgroundInput.setCustomValidity('');applyCharacterBackgroundDetail(backgroundInput.value,backgroundSession,backgroundInput.dataset.backgroundKey);}catch(error){backgroundInput.setAttribute('aria-invalid','true');backgroundInput.setCustomValidity(error.message);sheetStatus(error.message,true);}};backgroundInput.oninput=backgroundInput.onchange;
  const alignment=form.querySelector('[name="alignment"]');alignment.closest('label').remove();
  profile.insertAdjacentHTML('beforeend',f('Alignment','alignment','select',{values:[['','Choose alignment'],...Object.keys(CharacterPlayRules.alignments).map(x=>[x,x]),...(sheetSession.data.alignment&&!Object.hasOwn(CharacterPlayRules.alignments,sheetSession.data.alignment)?[[sheetSession.data.alignment,sheetSession.data.alignment+' (saved)']]:[])]})+'<p id="sheetAlignmentHelp" class="sheet-help"></p>');
  story.querySelector('h3').after(profile);
@@ -59,6 +69,7 @@ function updateCharacterPlayUI(d){
  const saveTraining=document.getElementById('sheetClassSaveTraining');if(saveTraining)saveTraining.innerHTML=(d.saveTraining?.reports||[]).map(row=>'<p data-class-save-training="'+row.id+'"><strong>'+sheetEscape(row.name)+':</strong> '+sheetEscape(row.detail)+'</p>').join('')+(d.deathSaveBonus?'<p>Death saving throw bonus <strong>'+CharacterSheetModel.signed(d.deathSaveBonus)+'</strong>.</p>':'');
  renderPaladinAuraControls(d);
  updateStorySuggestions();
+ const backgroundDetail=CharacterAdobeEngine.backgroundDetail(sheetSession.data),backgroundInput=document.getElementById('sheetBackgroundDetail');if(backgroundInput){const changed=backgroundInput.dataset.backgroundKey!==backgroundDetail.key;if(changed){backgroundInput.removeAttribute('aria-invalid');backgroundInput.setCustomValidity('');}if(changed||backgroundInput.getAttribute('aria-invalid')!=='true'&&backgroundInput!==document.activeElement)backgroundInput.value=backgroundDetail.value;backgroundInput.dataset.backgroundKey=backgroundDetail.key;document.getElementById('sheetBackgroundDetailName').textContent='· '+(CharacterBackgrounds.get(sheetSession.data.build.background)?.name||sheetSession.data.background||'Custom background');}
  const lifestyle=CharacterPlayRules.lifestyle(sheetSession.data.profile.lifestyle),cost=document.getElementById('sheetLifestyleCost');if(cost)cost.textContent=lifestyle?'Daily cost: '+lifestyle.cost+' · guidance only; coins are recorded separately.':sheetSession.data.profile.lifestyle?'Custom lifestyle · agree its daily cost with your DM.':'Choose a lifestyle suggestion or enter your own.';
  const s=sheetSession,help=document.getElementById('sheetAlignmentHelp');if(help)help.textContent=CharacterPlayRules.alignments[s.data.alignment]||'';
  const host=document.getElementById('sheetSpellReadout');if(!host)return;

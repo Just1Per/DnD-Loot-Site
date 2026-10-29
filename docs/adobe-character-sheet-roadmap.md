@@ -279,7 +279,7 @@ The labels remain read-only and open the existing Spells controls through Enter/
 
 A read-only browser pass through all seventeen layouts, using a synthetic 2014 Wizard 20, still finds these unmapped fields after the XP, weight, lifestyle, slot-label and Tool-row connections:
 
-- First page: Background Extra and encumbered speed.
+- First page: encumbered speed. Background Extra is connected by the subsequent increment below.
 - Features & equipment: encumbrance threshold, push/drag/lift, carrying-capacity field and two attuned-item display/heading controls. The carrying-capacity and carried-weight option buttons also remain unavailable.
 
 This is a field-binding audit for one scenario, not a completion percentage or a full rules audit. Enabled links to shared editors remain partial equivalents; original dynamic menus, class-specific companion scaling, conditional layouts and unimplemented automation still require the per-function review in the ledger. These findings are separate from the static scan’s 567 repeated pushbutton occurrences and 287 dynamic UI sites.
@@ -299,3 +299,21 @@ Coverage includes all six abilities, levels 1–20, source/edition switches, mul
 Rejected XP additions now retain their explanation through unrelated recalculation and unchanged blur. Both styles still use one pending input; correcting it through the shared controls clears the paper error without awarding XP. Applying an addition continues to use the existing progression controller, and unapplied drafts remain excluded from saving and printing.
 
 Automatic Tool-row training now requires a recognized shared-catalogue tool or an explicit derived tool-training/expertise record. Armor and weapon proficiency text cannot grant a bonus to a generic ability check. Unclassified custom checks keep their manual proficiency/expertise controls. Tests cover the category boundary, real manual tool training, protected grants and the XP draft's redraw/blur/correction lifecycle. No data format or rules changes.
+
+
+### Background Extra and per-background details
+
+The original first-page Background Extra field now edits the same short detail as Standard Background & appearance. It supports the source's free-text fallback (temple, specialty or former role); it does not rename the Custom Background, change background entitlements or invent an extra-choice list. Native source-specific dynamic dropdown variants still require a separate metadata review.
+
+Details are retained independently when switching backgrounds, including separate legacy/revised background IDs. Up to 64 nonempty details of 200 characters use the existing bounded private grants envelope. Clearing a detail removes only that background's entry. Detached editors, lost authentication and attempts to edit the previously selected background are rejected. Shared invalid input blocks saving through the existing validation. Source and Standard prints include the active detail without mutating data. No schema, Firestore/Storage rule, production write or migration change.
+
+Coverage includes direct/shared edits, switching away/back, custom-name and HP/coin/skill/inventory isolation, malformed key/value normalization, validation, private save/reopen/access, mobile/axe, both print styles and actual PDF text. Full Adobe parity remains unfinished and this PR remains draft.
+
+
+### Original average HP method
+
+The common HP engine and both sheet styles now offer **Adobe average HP** alongside the existing fixed, rolled and maximum methods. A static review of `calcHPtotals` and `SetHPTooltip` confirms that Adobe maximizes the first character level, keeps exact later die averages, applies the per-level minimum of one HP after Constitution, then rounds the accumulated total once. For a CON 10 Wizard, level 3 is 13 average HP versus 14 fixed HP. This optional source method does not change the default table method. No Acrobat callback or imported expression is executed.
+
+The shared breakdown lists final rounding separately from minimum-HP corrections, so class, Constitution, rounding and supported feat/item contributions reconcile exactly. Multiclass uses the first character level, not a new maximum for each added class. Switching methods preserves recorded rolls, current/temp HP, death saves and other resources; HP is not healed automatically. The original Set Max HP button continues to open the shared controls. Native one-shot/manual override and companion-specific average calculations remain distinct unfinished source workflows.
+
+Coverage includes all thirteen classes at levels 1–20, odd/even totals, Constitution minimums, multiclass, separate bonus/rounding contributions, fixed/rolled/max preservation, source/shared updates, save/reopen/private access, mobile/axe and both print styles with actual PDF. The optional method remains in the existing private envelope; no schema change, Firebase rules or production migration.

@@ -806,3 +806,7 @@
 .sheet-custom-tool-training input{margin:0}
 .sheet-custom-tool-adjustment{max-width:220px}
 @media(max-width:600px){.sheet-custom-tool-fields{grid-template-columns:minmax(0,1fr)}}
+
+/* One readable row for the shared short background detail, including mobile. */
+#characterSheetDialog .sheet-profile>.sheet-background-detail{grid-column:1/-1}
+#characterSheetDialog .sheet-background-detail small{font-size:12px;font-weight:400;line-height:1.5}

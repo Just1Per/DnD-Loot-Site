@@ -26,6 +26,7 @@ var CharacterAdobeFields=(()=>{
   const id=typeof field==='string'?field:field.id,{data,derived:d,identity,options={}}=context;
   const secondDC=data.adobe?.paperCombat?.secondaryDC?.visible===true;
   if(typeof field==='object'&&field.dcLayout&&((field.dcLayout==='dual')!==secondDC))return computed('',{hidden:true,kind:field.kind});
+  if(id==='Background Extra'){const detail=context.backgroundDetail||{key:'custom',value:''};return{state:'editable',kind:'text',value:detail.value,max:200,backgroundDetail:detail.key,reason:'A short detail for this background, such as a temple, specialty or former role. This does not change your background or grant proficiencies.'};}
   if(id==='Lifestyle'){
    const value=context.lifestyle?.id||data.profile.lifestyle,choices=options.lifestyles||[],saved=value&&!choices.some(row=>row.value===value)?[{value,label:value}]:[];
    return edit('profile.lifestyle',value,'select',200,{options:[...choices,...saved],fitWidth:true,reason:'Choose a lifestyle for its daily cost. Use Shared controls → Background to enter a custom lifestyle.'});
