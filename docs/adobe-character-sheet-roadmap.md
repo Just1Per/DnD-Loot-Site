@@ -55,7 +55,7 @@ This is an intermediate foundation, not complete source parity. Automatic traini
 ### Verification
 
 - `npm --prefix tests test`: 611 unit checks and 369 DOM checks pass at the latest local checkpoint, including adapter validation, shared rules and regression coverage.
-- `npm --prefix tests run test:adobe-connected`: twenty-six functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
+- `npm --prefix tests run test:adobe-connected`: twenty-seven functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
 - Development browser: Chromium 154. The first connected checkpoint also passed the GitHub Engines and DOM job, including the connected browser/print/accessibility check. New increments must pass their own exact-head checks.
 
 No Firestore or Storage rule changes are included. Existing session access controls and save envelope apply. No assistant merge, production deployment, rule deployment or data migration is authorized.
@@ -266,3 +266,20 @@ Unapplied amounts are excluded from printed fields and text-overflow continuatio
 Background & appearance and Extra background now show the original seven-choice Lifestyle dropdown and its matching daily cost. The factual names/prices come from the supplied PDF’s static Lists.Lifestyles table; no Acrobat code is executed. Both paper layouts use the existing profile.lifestyle field and the same pure lookup as Standard.
 
 Standard keeps its editable lifestyle text with compact suggestions and a cost hint, so custom descriptions survive unchanged. Existing capitalization/spacing is preserved until a new choice is made. An unknown custom description has no guessed price; empty selections clear the displayed cost. Lifestyle selection is guidance and never subtracts coins. Coverage includes all seven prices, custom/blank values, continuation background, save/reopen, actual printed names/costs, read-only viewing/printing and unchanged coins/XP/inventory. No Firebase rules, persisted schema changes or migration.
+
+
+### Original spell-slot total labels
+
+The nine SpellSlots.Extra level labels now follow the original SetSpellSlotsCheckboxes behavior: a pool above four slots shows OF followed by its maximum; four or fewer shows no extra label. The value is calculated from the same pool as the adjacent remaining/maximum tracker. A selected Warlock uses Pact Magic at its own slot level, while other caster views use ordinary Spellcasting. Druid-created independent pools retain their existing identity.
+
+The labels remain read-only and open the existing Spells controls through Enter/double-click. Tests cover boundaries, unchanged maxima during spending, shared maximum edits, ordinary/Pact separation, read-only viewing/printing, save/reopen, actual PDF output and unchanged coins/XP/inventory. This connects existing totals without introducing slot arithmetic, stored state or rules changes.
+
+
+### Remaining unmapped fields in the live layout audit
+
+A read-only browser pass through all seventeen layouts, using a synthetic 2014 Wizard 20, still finds these unmapped fields after the XP, weight, lifestyle and slot-label connections:
+
+- First page: Background Extra; the custom Tool name, proficiency, expertise and bonus row; encumbered speed.
+- Features & equipment: encumbrance threshold, push/drag/lift, carrying-capacity field and two attuned-item display/heading controls. The carrying-capacity and carried-weight option buttons also remain unavailable.
+
+This is a field-binding audit for one scenario, not a completion percentage or a full rules audit. Enabled links to shared editors remain partial equivalents; original dynamic menus, class-specific companion scaling, conditional layouts and unimplemented automation still require the per-function review in the ledger. These findings are separate from the static scan’s 567 repeated pushbutton occurrences and 287 dynamic UI sites.

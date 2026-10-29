@@ -64,3 +64,10 @@ test('lifestyle choice and computed daily cost project the shared profile and pr
  assert.equal(A.describe('Lifestyle',c).kind,'select');assert.equal(A.describe('Lifestyle',c).value,'modest');assert.equal(A.describe('Lifestyle daily cost',c).value,'1 gp');assert.equal(A.planEdit('Lifestyle','poor',c).path,'profile.lifestyle');assert.throws(()=>A.planEdit('Lifestyle daily cost','99 gp',c));assert.throws(()=>A.planEdit('Lifestyle','not-an-option',c));
  c.data.profile.lifestyle='Guild lodging';c.lifestyle=P.lifestyle(c.data.profile.lifestyle);assert.equal(A.planEdit('Lifestyle','Guild lodging',c).value,'Guild lodging');assert.equal(A.describe('Lifestyle daily cost',c).value,'');assert.equal(A.planEdit('Lifestyle','',c).value,'');assert.equal(c.data.profile.lifestyle,'Guild lodging');
 });
+
+
+test('original extra-slot labels use the matching pool maximum above four, never remaining slots or another pool',()=>{
+ const c=context();for(const max of [0,1,4,5,7,20]){c.data.slots[0]={max,used:Math.min(max,3)};assert.equal(A.describe('SpellSlots.Extra.lvl1',c).value,max>4?'OF '+max:'');assert.throws(()=>A.planEdit('SpellSlots.Extra.lvl1','OF 99',c));}
+ c.data.slots[2]={max:8,used:4};assert.equal(A.describe('SpellSlots.Extra.lvl3',c).value,'OF 8');c.spellPact={count:2,used:1,slotLevel:3};for(let level=1;level<=9;level++)assert.equal(A.describe('SpellSlots.Extra.lvl'+level,c).value,'');
+ c.spellPact={count:6,used:5,slotLevel:3};assert.equal(A.describe('SpellSlots.Extra.lvl3',c).value,'OF 6');assert.equal(A.describe('SpellSlots.Extra.lvl1',c).value,'');
+});

@@ -1,7 +1,7 @@
 'use strict';
 /* Alternate rendering of the current session. No SDK, storage or second engine. */
 var CharacterAdobeView=(()=>{
- const VERSION='20261029-adobe-sheet-v33',assets=new Map(),sessions=new WeakMap();let current=null;
+ const VERSION='20261029-adobe-sheet-v34',assets=new Map(),sessions=new WeakMap();let current=null;
  const SPELL_CAPACITY={front:55,more:70};let fieldMeasure=null;try{fieldMeasure=document.createElement('canvas').getContext?.('2d')||null;}catch{}
  const option=(text,value)=>Object.assign(document.createElement('option'),{textContent:text,value});
  const editorTargets={itemResources:['Item uses & charges','#sheetItemResources'],paperCombat:['Actions & ammunition','#sheetPaperCombat'],companion:['Companions & familiars','#sheet-companion'],vitals:['Hit points & Inspiration','#sheet-overview'],classes:['Class, level & hit points','#sheetAdobeProgression'],hp:['Class, level & hit points','#sheetAdobeProgression'],abilities:['Ability scores & skills','#sheet-skills'],skills:['Ability scores & skills','#sheet-skills'],origins:['Origins & class choices','#sheetBuildControls'],features:['Origins & class choices','#sheetBuildControls'],background:['Origins & class choices','#sheetBuildControls'],equipment:['Equipment & treasure','#sheet-inventory'],inventory:['Equipment & treasure','#sheet-inventory'],spells:['Spells','#sheet-spells'],feats:['Feats','#sheet-feats'],attacks:['Combat & resources','#sheet-combat'],resources:['Combat & resources','#sheet-combat'],conditions:['Combat & resources','#sheet-combat'],combat:['Combat & resources','#sheet-combat'],notes:['Adventure journal','#sheet-notes'],story:['Background & appearance','#sheet-story'],builder:['Origins & class choices','#sheetBuildControls']};
