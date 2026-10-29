@@ -64,3 +64,8 @@ test('reused normalized annotations are checked again after either text or numer
  const original=L.edit({},0,'gold','1+2','gain'),snapshot=JSON.stringify(original),copy=L.normalize(original);assert.equal(copy.rows[0].expressions.gold,'1+2');copy.rows[0].gain.gold=4;assert.equal(L.normalize(copy).rows[0].expressions,undefined);assert.equal(L.normalize(original).rows[0].expressions.gold,'1+2');assert.equal(JSON.stringify(original),snapshot);
  copy.rows[0].expressions.gold='2+2';assert.equal(L.normalize(copy).rows[0].expressions.gold,'2+2');copy.rows[0].expressions.gold='globalThis.compromised=true';assert.equal(L.normalize(copy).rows[0].expressions,undefined);assert.equal(L.normalize(original).rows[0].expressions.gold,'1+2');assert.equal(globalThis.compromised,undefined);
 });
+
+test('moving a final recorded entry into the next empty row keeps the whole record and preserves the hard 120-row bound',()=>{
+ const original=L.edit(L.edit({},5,'adventure','Last record','text'),5,'gold','12 / 2','gain'),snapshot=JSON.stringify(original),next=L.operation(original,5,'later');assert.equal(next.index,6);assert.equal(next.log.rows.length,7);assert.equal(next.log.rows[5].adventure,'');assert.equal(next.log.rows[6].adventure,'Last record');assert.equal(next.log.rows[6].expressions.gold,'12 / 2');assert.equal(L.project(next.log)[6].total.gold,6);assert.equal(JSON.stringify(original),snapshot);
+ const full=L.edit({},119,'adventure','Final allowed record','text');assert.throws(()=>L.operation(full,119,'later'));assert.equal(full.rows.length,120);
+});

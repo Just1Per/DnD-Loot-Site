@@ -83,7 +83,7 @@ var CharacterAdventureLog=(()=>{
   }else if(index>=rows.length)throw Error('This entry has not been recorded yet.');
   if(['insert','duplicate'].includes(command)&&rows.length>=MAX_ROWS)throw Error('The log has reached its 120-entry limit. Remove an entry before adding another.');
   if(command==='earlier'||command==='later'){
-   const next=index+(command==='earlier'?-1:1);if(next<0||next>=rows.length)throw Error('This entry cannot move further.');
+   const next=index+(command==='earlier'?-1:1);if(next<0||next>=MAX_ROWS)throw Error('This entry cannot move further.');if(next===rows.length)rows.push(normalize({rows:[{}]}).rows[0]);
    [rows[index],rows[next]]=[rows[next],rows[index]];index=next;
   }else if(command==='insert')rows.splice(index,0,normalize({rows:[{}]}).rows[0]);
   else if(command==='duplicate'){rows.splice(index+1,0,structuredClone(rows[index]));index++;}

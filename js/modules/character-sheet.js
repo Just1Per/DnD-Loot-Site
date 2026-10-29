@@ -66,6 +66,7 @@ function closeCharacterSheet(force = false) {
   }
   document.getElementById('sheetItemResourceRecovery')?.remove();
   document.getElementById('sheetPaperIcons')?.remove();
+  document.getElementById('sheetPaperLogMenu')?.remove();
   document.body.classList.remove('printing-character-sheet','printing-overview-only');
   document.getElementById('sheetOverviewReadout')?.style.removeProperty('zoom');
   document.getElementById('characterSheetChooser').replaceChildren();
