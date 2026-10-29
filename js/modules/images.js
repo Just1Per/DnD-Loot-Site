@@ -97,12 +97,32 @@ function bindPublicImageRecovery(img) {
     recovering = true; // One recovery per rendered card, including a failed fallback.
     delete img.dataset.imageItemId;
     img.src = PLACEHOLDER_IMAGE;
-    const url = await resolveImageUrl(img.dataset.imageSourceId);
-    if (img.isConnected) img.src = url;
+    await applyResolvedItemImage(img,img.dataset.imageSourceId);
   };
   img.addEventListener('error', recover);
   // A direct URL can fail before the newly inserted card is observed.
   if (img.complete && !img.naturalWidth) recover();
+}
+
+const pendingCampaignItemImages=new Map();
+const safeCampaignImageSegment=value=>typeof value==='string'&&value.length>0&&value.length<=200&&!/[/\\\u0000-\u001f]/.test(value)&&!['.','..'].includes(value);
+function campaignImageCurrent(img,campaignId,uid){return img.isConnected&&typeof auth!=='undefined'&&auth.currentUser?.uid===uid&&typeof activeCampaign!=='undefined'&&activeCampaign?.id===campaignId&&img.dataset.campaignImageUid===uid;}
+async function loadCampaignItemImage(img){
+ if(img.dataset.campaignImageTried)return false;
+ const uid=typeof auth!=='undefined'?auth.currentUser?.uid:null,campaignId=typeof activeCampaign!=='undefined'?activeCampaign?.id:null,path=img.dataset.campaignItemImagePath,parts=path?.split('/');
+ if(!uid||!safeCampaignImageSegment(campaignId)||parts?.length!==3||parts[0]!=='campaign-item-images'||parts[1]!==campaignId||!safeCampaignImageSegment(parts[2])||!campaignImageCurrent(img,campaignId,uid))return false;
+ img.dataset.campaignImageTried='true';const sdk=window.__DND_VAULT_DEPS__;if(typeof sdk?.getBlob!=='function')return false;
+ try{
+  const key=JSON.stringify([uid,campaignId,path]);let pending=pendingCampaignItemImages.get(key);
+  if(!pending){pending=sdk.getBlob(ref(storage,path),5*1024*1024).finally(()=>pendingCampaignItemImages.delete(key));pendingCampaignItemImages.set(key,pending);}
+  const blob=await pending;if(!campaignImageCurrent(img,campaignId,uid)||!/^image\/(png|jpeg|webp)$/.test(blob.type)||blob.size>=5*1024*1024)return false;
+  const url=URL.createObjectURL(blob),revoke=()=>URL.revokeObjectURL(url);img.addEventListener('load',revoke,{once:true});img.addEventListener('error',revoke,{once:true});img.src=url;return true;
+ }catch{return false;}
+}
+async function applyResolvedItemImage(img,itemId){
+ const url=await resolveImageUrl(itemId);if(!img.isConnected)return;
+ if(url===PLACEHOLDER_IMAGE&&await loadCampaignItemImage(img))return;
+ if(img.isConnected)img.src=url;
 }
 
 async function loadArchivedItemImage(img) {
@@ -133,12 +153,7 @@ const imageObserver = "IntersectionObserver" in window
         const itemId = img.dataset.imageItemId;
         if (!itemId) return;
 
-        resolveImageUrl(itemId).then(url => {
-          if (!img.isConnected) return;
-          img.src = url;
-
-          delete img.dataset.imageItemId;
-        });
+        applyResolvedItemImage(img,itemId).then(()=>delete img.dataset.imageItemId);
       });
     }, { rootMargin: "500px 0px" })
   : null;
@@ -161,22 +176,20 @@ function observePendingImages(root = document) {
     if (imageObserver) {
       imageObserver.observe(img);
     } else {
-      resolveImageUrl(itemId).then(url => {
-        if (!img.isConnected) return;
-        img.src = url;
-        delete img.dataset.imageItemId;
-      });
+      applyResolvedItemImage(img,itemId).then(()=>delete img.dataset.imageItemId);
     }
   });
 }
 
-function itemImageMarkup(item, className, extraAttrs = "") {
+function itemImageMarkup(item, className, extraAttrs = "",{campaignId=null}={}) {
   if(item.archivedImage){
     const path=item.archivedImage.path||'',prefix=`campaign-catalogue-images/${activeCampaign?.id}/`;
     const allowed=canManageCampaign()&&path.startsWith(prefix)&&/^[a-f0-9]{64}\/[a-f0-9]{64}$/.test(path.slice(prefix.length));
     return `<img src="${PLACEHOLDER_IMAGE}" class="${className}" alt="${escapeHtml(item.name||'')}" loading="lazy" decoding="async"${allowed?` data-private-item-image-path="${escapeHtml(path)}"`:''} ${extraAttrs}>`;
   }
   if(item.artwork?.status==='none')return `<img src="${PLACEHOLDER_IMAGE}" class="${className}" alt="${escapeHtml(item.name||'')}" loading="lazy" ${extraAttrs}>`;
+  const uid=typeof auth!=='undefined'?auth.currentUser?.uid:null;
+  const campaignFallback=uid&&safeCampaignImageSegment(campaignId)&&safeCampaignImageSegment(item.id)&&typeof activeCampaign!=='undefined'&&activeCampaign?.id===campaignId?` data-campaign-item-image-path="${escapeHtml('campaign-item-images/'+campaignId+'/'+item.id)}" data-campaign-image-uid="${escapeHtml(uid)}"`:'';
   const imageId = item.imageBaseId || item.rootItemId || item.id;
   // Campaign copies can still have thumbnail-only records or an old placeholder
   // in imageUrl. A placeholder is not an illustration and must not stop lookup.
@@ -185,7 +198,7 @@ function itemImageMarkup(item, className, extraAttrs = "") {
   const src = cached || PLACEHOLDER_IMAGE;
   const pending = cached ? "" : ` data-image-item-id="${escapeHtml(imageId)}"`;
   return `<img src="${escapeHtml(src)}" class="${className}" alt="${escapeHtml(item.name || "")}"
-    loading="lazy" decoding="async" data-image-source-id="${escapeHtml(imageId || '')}"${pending} ${extraAttrs}>`;
+    loading="lazy" decoding="async" data-image-source-id="${escapeHtml(imageId || '')}"${pending}${campaignFallback} ${extraAttrs}>`;
 }
 
 async function uploadItemImage(itemId,file,{campaignId=null}={}) {

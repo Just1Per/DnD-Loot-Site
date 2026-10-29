@@ -88,4 +88,38 @@ const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42
  assert.equal(await page.evaluate(()=>detached.getAttribute('src')),await page.evaluate(()=>PLACEHOLDER_IMAGE));
  assert.deepEqual(errors,[]);
  console.log('PASS Late public artwork does not update detached cards');
+ await page.evaluate(bytes=>{
+  window.pauseImage=false;currentRole='player';auth.currentUser={uid:'player'};imageCache.clear();sessionStorage.clear();window.blobReads=[];window.revoked=[];
+  const revoke=URL.revokeObjectURL.bind(URL);URL.revokeObjectURL=url=>{revoked.push(url);revoke(url)};
+  window.__DND_VAULT_DEPS__={getBlob:async(p,limit)=>{blobReads.push([p,limit]);await new Promise(resolve=>setTimeout(resolve,25));if(window.pauseBlob)await new Promise(resolve=>window.releaseBlob=resolve);if(!p.endsWith('/recovered')&&!p.endsWith('/late'))throw Error('Synthetic missing campaign image');return new Blob([new Uint8Array(bytes)],{type:window.blobType||'image/png'});}};
+  window.recovered={id:'recovered',rootItemId:'retired-art',name:'Recovered item',visible:true};window.recoveryState=JSON.stringify(recovered);
+  paint('library',[recovered]);paint('inventory',[{item:recovered}]);
+ },[...png]);
+ await loaded('#library img, #inventory img');
+ assert.deepEqual(await page.evaluate(()=>blobReads),[['campaign-item-images/a/recovered',5*1024*1024]]);
+ assert.equal(await page.locator('#library img').evaluate(img=>img.src.startsWith('blob:')),true);
+ assert.equal(await page.evaluate(()=>JSON.stringify(recovered)===recoveryState),true);
+ assert.equal(await page.evaluate(()=>[...imageCache.values(),...Object.values(sessionStorage)].some(v=>String(v).startsWith('blob:'))),false);
+ await page.waitForFunction(()=>revoked.length===2);
+ console.log('PASS Players see campaign-local illustrations in Library and Inventory; one authenticated read, no URL/token persistence');
+ const blobsBefore=await page.evaluate(()=>blobReads.length);
+ await page.evaluate(()=>{
+  const host=document.getElementById('other');host.replaceChildren(createCard({...recovered,campaignId:'a'},{root:true}));observePendingImages(host);
+  paint('library',[{...recovered,artwork:{status:'none'}},{...recovered,archivedImage:{path:'campaign-catalogue-images/a/'+'a'.repeat(64)+'/'+'b'.repeat(64)}}]);
+  window.segmentChecks=['normal-id','has0and1','two_words'].every(safeCampaignImageSegment)&&['../bad','bad/path','bad\\path','bad\u0000path'].every(v=>!safeCampaignImageSegment(v));
+ });
+ await page.waitForFunction(()=>!document.querySelector('#other img').dataset.imageItemId);
+ assert.equal(await page.locator('#other [data-campaign-item-image-path], #library [data-campaign-item-image-path]').count(),0);
+ assert.equal(await page.evaluate(()=>blobReads.length),blobsBefore);assert.equal(await page.evaluate(()=>segmentChecks),true);
+ console.log('PASS Root Catalogue, no-art and private archive records never borrow campaign artwork');
+ await page.evaluate(()=>{window.blobType='image/svg+xml';paint('other',[recovered]);});
+ await page.waitForFunction(()=>document.querySelector('#other img').dataset.campaignImageTried==='true'&&pendingCampaignItemImages.size===0);
+ assert.equal(await page.locator('#other img').getAttribute('src'),await page.evaluate(()=>PLACEHOLDER_IMAGE));
+ await page.evaluate(()=>{window.blobType='image/png';window.pauseBlob=true;paint('other',[{id:'late',rootItemId:'absent',name:'Changing campaign'}]);});
+ await page.waitForFunction(()=>!!window.releaseBlob);
+ await page.evaluate(()=>{window.late=document.querySelector('#other img');activeCampaign={id:'b'};auth.currentUser={uid:'different-player'};window.pauseBlob=false;releaseBlob();});
+ await page.waitForFunction(()=>pendingCampaignItemImages.size===0);
+ assert.equal(await page.evaluate(()=>late.getAttribute('src')),await page.evaluate(()=>PLACEHOLDER_IMAGE));
+ console.log('PASS Invalid MIME and late responses after account/campaign changes preserve placeholders');
+ assert.deepEqual(errors,[]);
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

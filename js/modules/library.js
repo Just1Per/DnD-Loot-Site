@@ -65,7 +65,7 @@ function createCard(item,context={}) {
     ${!root&&!savedMode&&quantity?`<p class="inventory-quantity">${entry?'Owned':manager?'Assigned':'You own'}: ${quantity}</p>`:''}
     ${manager&&!savedMode&&stock?`<p class="supply-label">Available: ${stock.unlimited?'Unlimited':(stock.capacity-stock.claimed)} · ${item.lootMode==='player'?'Player looting':'DM assignment only'}</p>`:''}
     ${!root&&!manager&&!entry&&!savedMode?`<p class="supply-label">${item.lootMode!=='player'?'DM assignment only':'Player looting enabled'}</p>`:''}</div>
-    ${context.savedUnavailable?'<div class="card-art saved-item-unavailable" role="img" aria-label="Item details unavailable">?</div>':itemImageMarkup(item,'card-art')}
+    ${context.savedUnavailable?'<div class="card-art saved-item-unavailable" role="img" aria-label="Item details unavailable">?</div>':itemImageMarkup(item,'card-art','',{campaignId:root?null:activeCampaign?.id})}
     <div class="card-body"><div class="item-description">${escapeHtml(item.description||'')}</div>${(item.properties||[]).map(p=>`<div class="property-block"><span class="property-title">${escapeHtml(p.title)}:</span> ${escapeHtml(p.text)}</div>`).join('')}${item.quote?`<i>${escapeHtml(item.quote)}</i>`:''}${itemAttributionMarkup(item)}</div>
     ${savedMode?`<div class="owner-badge">Saved for: ${escapeHtml(characters.find(c=>c.id===savedEntry.characterId)?.name||'Character')}</div>`:''}
     ${manager&&!savedMode&&!entry&&owned.length?`<div class="owner-badge">${owned.map(e=>`${escapeHtml(characters.find(c=>c.id===e.characterId)?.name||'Character')} × ${e.quantity}`).join(' · ')}</div>`:''}

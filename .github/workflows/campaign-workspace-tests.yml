@@ -17,6 +17,8 @@ name: Campaign workspace checks
     - tests/**
     - scripts/campaign-image-cors.json
     - scripts/diagnose-campaign-item-images.mjs
+    - scripts/campaign-image-recovery.mjs
+    - scripts/recover-campaign-item-images.mjs
     - scripts/prepare-campaign-image-cors.cjs
     - scripts/item-catalogue-migration*.mjs
     - scripts/item-artwork-policy.mjs
@@ -67,7 +69,7 @@ jobs:
         npm --prefix tests run test:catalogue-migration
         npm --prefix tests run test:reviewed-catalogue
         npm --prefix tests run test:campaign-item-images
-        node --test tests/campaign-item-image-diagnostic.cjs
+        node --test tests/campaign-item-image-diagnostic.cjs tests/campaign-image-recovery.cjs tests/campaign-image-recovery-sdk.cjs
     - name: Report failed engine output in check annotations
       if: failure()
       run: |
