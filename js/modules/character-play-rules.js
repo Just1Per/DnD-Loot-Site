@@ -4,6 +4,14 @@ var CharacterPlayRules = (()=>{
  'Lawful Good':'Acts with honor, compassion, and duty.', 'Neutral Good':'Helps others without strict allegiance to rules or rebellion.', 'Chaotic Good':'Fights injustice guided by personal conscience.',
  'Lawful Neutral':'Follows laws, traditions, or a personal code.', 'True Neutral':'Seeks balance or survival without a strong moral allegiance.', 'Chaotic Neutral':'Values personal freedom and resists authority.',
  'Lawful Evil':'Uses rules and hierarchies to exploit and oppress.', 'Neutral Evil':'Pursues personal benefit without remorse.', 'Chaotic Evil':'Acts through hatred, greed, and destructive violence.'};
+ // Daily lifestyle prices in the supplied MPMB 13.0.4 Lists.Lifestyles table.
+ // Guidance only: choosing a lifestyle never spends a character's coins.
+ const lifestyles=Object.freeze([
+  ['wretched','Wretched','—'],['squalid','Squalid','1 sp'],['poor','Poor','2 sp'],
+  ['modest','Modest','1 gp'],['comfortable','Comfortable','2 gp'],
+  ['wealthy','Wealthy','4 gp'],['aristocratic','Aristocratic','10 gp min.']
+ ].map(([id,name,cost])=>Object.freeze({id,name,cost})));
+ const lifestyle=value=>{const key=String(value??'').trim().toLowerCase();return lifestyles.find(row=>row.id===key)||null;};
  const norm=(raw={})=>({playerName:String(raw.playerName||'').slice(0,120),faith:String(raw.faith||'').slice(0,200),organization:String(raw.organization||'').slice(0,200),organizationNotes:String(raw.organizationNotes||'').slice(0,12000),lifestyle:String(raw.lifestyle||'').slice(0,200),gender:['male','female','other'].includes(raw.gender)?raw.gender:'',age:Math.max(0,Math.min(100000,Number(raw.age)||0)),size:['small','medium','large'].includes(raw.size)?raw.size:'',height:Math.max(0,Math.min(100000,Number(raw.height)||0)),weight:Math.max(0,Math.min(100000,Number(raw.weight)||0)),hair:String(raw.hair||'').slice(0,200),eyes:String(raw.eyes||'').slice(0,200),skin:String(raw.skin||'').slice(0,200)});
  const text=(value,max=1000)=>String(value??'').slice(0,max);
  const advancement=(raw={})=>{
@@ -65,6 +73,6 @@ var CharacterPlayRules = (()=>{
   if(feat.category==='O'&&b.lessons)return '';
   return b.remaining?'':'No available feat / ASI choice at this class level';
  }
- return {alignments,normalizeProfile:norm,normalizeAdvancement:advancement,budget,eligible};
+ return {alignments,lifestyles,lifestyle,normalizeProfile:norm,normalizeAdvancement:advancement,budget,eligible};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPlayRules;

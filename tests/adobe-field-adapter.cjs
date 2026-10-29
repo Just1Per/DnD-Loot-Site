@@ -57,3 +57,10 @@ test('equipment column subtotals are read-only shared projections, with explicit
 test('inline XP addition is a transient draft and remains conditional on the shared experience mode',()=>{
  const c=context(),snapshot=JSON.stringify(c.data);const off=A.describe('Add Experience',c);assert.equal(off.state,'computed');assert.equal(off.transient,true);assert.equal(off.command,'classes');c.data.adobe.useExperience=true;c.xpAdditionDraft='7500';const on=A.describe('Add Experience',c);assert.equal(on.state,'editable');assert.equal(on.value,'7500');assert.equal(on.xpAddition,true);assert.equal(on.transient,true);assert.equal(A.planEdit('Add Experience','7500',c).path,undefined);assert.throws(()=>A.planEdit('Add Experience','9'.repeat(11),c));c.data.adobe.useExperience=undefined;delete c.data.adobe.useExperience;assert.equal(JSON.stringify(c.data),snapshot);
 });
+
+
+test('lifestyle choice and computed daily cost project the shared profile and preserve custom saved text',()=>{
+ const P=require('../js/modules/character-play-rules'),c=context();c.options.lifestyles=P.lifestyles.map(row=>({value:row.id,label:row.name}));c.data.profile.lifestyle='  Modest  ';c.lifestyle=P.lifestyle(c.data.profile.lifestyle);
+ assert.equal(A.describe('Lifestyle',c).kind,'select');assert.equal(A.describe('Lifestyle',c).value,'modest');assert.equal(A.describe('Lifestyle daily cost',c).value,'1 gp');assert.equal(A.planEdit('Lifestyle','poor',c).path,'profile.lifestyle');assert.throws(()=>A.planEdit('Lifestyle daily cost','99 gp',c));assert.throws(()=>A.planEdit('Lifestyle','not-an-option',c));
+ c.data.profile.lifestyle='Guild lodging';c.lifestyle=P.lifestyle(c.data.profile.lifestyle);assert.equal(A.planEdit('Lifestyle','Guild lodging',c).value,'Guild lodging');assert.equal(A.describe('Lifestyle daily cost',c).value,'');assert.equal(A.planEdit('Lifestyle','',c).value,'');assert.equal(c.data.profile.lifestyle,'Guild lodging');
+});

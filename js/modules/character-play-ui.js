@@ -15,6 +15,9 @@ function setupCharacterPlayUI(){
  const profile=document.createElement('div');profile.className='sheet-grid sheet-profile';
  profile.innerHTML=f('Gender','profile.gender','select',{values:[['','Choose'],['male','Male'],['female','Female'],['other','Other']]})+f('Age (years)','profile.age','number',{min:0})+f('Size','profile.size','select',{values:[['','Choose'],['small','Small'],['medium','Medium'],['large','Large']]})+f('Height (cm)','profile.height','number',{min:0})+f('Weight (kg)','profile.weight','number',{min:0})+['hair','eyes','skin'].map(k=>f(k==='skin'?'Skin color':k[0].toUpperCase()+k.slice(1),'profile.'+k)).join('');
  profile.insertAdjacentHTML('beforeend','<details class="sheet-profile-more"><summary>Player, faith & organization</summary>'+f('Player name','profile.playerName')+f('Faith / deity','profile.faith')+f('Organization','profile.organization')+f('Organization notes','profile.organizationNotes','textarea')+f('Lifestyle','profile.lifestyle')+'</details>');
+ const lifestyle=profile.querySelector('[name="profile.lifestyle"]'),suggestions=document.createElement('datalist'),cost=document.createElement('small');
+ suggestions.id='sheetLifestyleOptions';for(const row of CharacterPlayRules.lifestyles){const option=document.createElement('option');option.value=row.name;suggestions.append(option);}
+ cost.id='sheetLifestyleCost';cost.className='sheet-help';lifestyle.setAttribute('list',suggestions.id);lifestyle.setAttribute('aria-describedby',cost.id);lifestyle.maxLength=200;lifestyle.after(suggestions,cost);
  const alignment=form.querySelector('[name="alignment"]');alignment.closest('label').remove();
  profile.insertAdjacentHTML('beforeend',f('Alignment','alignment','select',{values:[['','Choose alignment'],...Object.keys(CharacterPlayRules.alignments).map(x=>[x,x]),...(sheetSession.data.alignment&&!Object.hasOwn(CharacterPlayRules.alignments,sheetSession.data.alignment)?[[sheetSession.data.alignment,sheetSession.data.alignment+' (saved)']]:[])]})+'<p id="sheetAlignmentHelp" class="sheet-help"></p>');
  story.querySelector('h3').after(profile);
@@ -56,6 +59,7 @@ function updateCharacterPlayUI(d){
  const saveTraining=document.getElementById('sheetClassSaveTraining');if(saveTraining)saveTraining.innerHTML=(d.saveTraining?.reports||[]).map(row=>'<p data-class-save-training="'+row.id+'"><strong>'+sheetEscape(row.name)+':</strong> '+sheetEscape(row.detail)+'</p>').join('')+(d.deathSaveBonus?'<p>Death saving throw bonus <strong>'+CharacterSheetModel.signed(d.deathSaveBonus)+'</strong>.</p>':'');
  renderPaladinAuraControls(d);
  updateStorySuggestions();
+ const lifestyle=CharacterPlayRules.lifestyle(sheetSession.data.profile.lifestyle),cost=document.getElementById('sheetLifestyleCost');if(cost)cost.textContent=lifestyle?'Daily cost: '+lifestyle.cost+' · guidance only; coins are recorded separately.':sheetSession.data.profile.lifestyle?'Custom lifestyle · agree its daily cost with your DM.':'Choose a lifestyle suggestion or enter your own.';
  const s=sheetSession,help=document.getElementById('sheetAlignmentHelp');if(help)help.textContent=CharacterPlayRules.alignments[s.data.alignment]||'';
  const host=document.getElementById('sheetSpellReadout');if(!host)return;
  const esc=sheetEscape;

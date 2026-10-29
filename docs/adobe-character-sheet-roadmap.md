@@ -55,7 +55,7 @@ This is an intermediate foundation, not complete source parity. Automatic traini
 ### Verification
 
 - `npm --prefix tests test`: 611 unit checks and 369 DOM checks pass at the latest local checkpoint, including adapter validation, shared rules and regression coverage.
-- `npm --prefix tests run test:adobe-connected`: twenty-five functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
+- `npm --prefix tests run test:adobe-connected`: twenty-six functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
 - Development browser: Chromium 154. The first connected checkpoint also passed the GitHub Engines and DOM job, including the connected browser/print/accessibility check. New increments must pass their own exact-head checks.
 
 No Firestore or Storage rule changes are included. Existing session access controls and save envelope apply. No assistant merge, production deployment, rule deployment or data migration is authorized.
@@ -259,3 +259,10 @@ Unknown weights stay explicit: a compact + marks a known minimum and ? means the
 The original first-page Add Experience field now shares the Standard control’s single pending amount. Typing an amount leaves character data and its dirty state unchanged. Only Enter or Add Experience awards XP through the existing progression and multiclass workflow. The pending amount and its inline validation state are shared across styles; an invalid unapplied amount does not prevent saving the actual character.
 
 Unapplied amounts are excluded from printed fields and text-overflow continuations, and are cleared on reopen. Old detached controls, another opened character session and lost authentication cannot award XP. Browser coverage checks direct additions, limits, multiclass advancement, unaffected HP/coins/inventory/companions, save/reopen, actual PDF text and stale-session guards. No new persisted fields, Firebase rules or production migration.
+
+
+### Lifestyle choices and daily-cost guidance
+
+Background & appearance and Extra background now show the original seven-choice Lifestyle dropdown and its matching daily cost. The factual names/prices come from the supplied PDF’s static Lists.Lifestyles table; no Acrobat code is executed. Both paper layouts use the existing profile.lifestyle field and the same pure lookup as Standard.
+
+Standard keeps its editable lifestyle text with compact suggestions and a cost hint, so custom descriptions survive unchanged. Existing capitalization/spacing is preserved until a new choice is made. An unknown custom description has no guessed price; empty selections clear the displayed cost. Lifestyle selection is guidance and never subtracts coins. Coverage includes all seven prices, custom/blank values, continuation background, save/reopen, actual printed names/costs, read-only viewing/printing and unchanged coins/XP/inventory. No Firebase rules, persisted schema changes or migration.
