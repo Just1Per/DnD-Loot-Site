@@ -330,6 +330,8 @@ var CharacterSheetModel = (() => {
     result.gear=Equipment.derive(d,result,loot,level);
     if(Magic)result.gear=Magic.augmentGear(d,result.gear,magicItems);
     result.ac=result.gear.ac;
+    const ItemResources=globalThis.CharacterItemResources||(typeof require==='function'?require('./character-item-resources'):null);
+    result.itemResources=ItemResources?ItemResources.project(data,result.gear):[];
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);

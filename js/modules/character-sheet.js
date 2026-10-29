@@ -64,6 +64,7 @@ function closeCharacterSheet(force = false) {
   if (dialog) {
     dialog.remove();
   }
+  document.getElementById('sheetItemResourceRecovery')?.remove();
   document.body.classList.remove('printing-character-sheet','printing-overview-only');
   document.getElementById('sheetOverviewReadout')?.style.removeProperty('zoom');
   document.getElementById('characterSheetChooser').replaceChildren();
@@ -472,6 +473,7 @@ async function saveCharacterSheet({reportValidation=true}={}) {
   const form = document.getElementById('characterSheetForm');
   const invalid = [...form.querySelectorAll('input,select,textarea')].find(input => !input.checkValidity());
   if (invalid) {
+    for(let parent=invalid.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;
     const section=invalid.closest('[data-sheet-section]')?.dataset.sheetSection;
     if(section)selectSheetTab(section);
     sheetStatus(invalid.validationMessage||'Correct the highlighted sheet field before saving.',true);

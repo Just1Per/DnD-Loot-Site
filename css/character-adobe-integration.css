@@ -780,3 +780,14 @@
 
 .sheet-paper-action-menu details { margin:1rem 0; overflow-wrap:anywhere; }
 .sheet-paper-action-menu summary { min-height:44px; padding:10px 0; cursor:pointer; font-weight:600; }
+
+.sheet-item-resources [data-item-resource-row] { border:1px solid var(--border,#cbb895); border-radius:5px; padding:12px; margin-top:12px; }
+.sheet-item-resources [data-item-resource-row]>summary { overflow-wrap:anywhere; }
+.sheet-item-resources [data-item-remaining] { display:inline-block; margin-left:.65rem; font-weight:400; }
+.sheet-item-resources [data-item-resource-row]>button { margin-top:.6rem; }
+.sheet-item-resources [data-item-status],.sheet-item-recovery [data-item-recovery-status] { color:#8b1f16; overflow-wrap:anywhere; }
+.sheet-item-recovery { max-width:42rem; max-height:85vh; overflow:auto; }
+.sheet-item-recovery section { border:1px solid var(--border,#cbb895); border-radius:5px; padding:12px; margin:12px 0; }
+.sheet-item-recovery label { display:flex; align-items:center; flex-wrap:wrap; gap:8px; min-height:44px; }
+.sheet-item-recovery input[type=text] { width:100%; min-height:44px; }
+.sheet-item-recovery button { min-height:44px; }

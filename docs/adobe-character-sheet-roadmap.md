@@ -209,3 +209,14 @@ Editable paper Used cells now use the same bounded class/feat setters as Standar
 The original sixteen PF feature rows now arrange stable class/feat references across the eight-row first/overflow boundary. Clearing/deleting hides only the paper reference; actual grants, spent counters and Standard Combat remain intact. Restore automatic rows resets only paper order/visibility. Untouched automatic spaces still accept newly granted features. Full insertions fail without dropping a row.
 
 Connected printing now includes resource overflow and action overflow together on one original combat overflow layout, without repeating the item/feat lists. Pool state remains read from the common engine, and printing never rewrites the paper arrangement.
+
+
+### Private item-use and charge counters
+
+Supported owned inventory rows now project a shared private counter into Standard Combat and the original Limited Feature rows. The imported metadata contains 76 named literal definitions from the supplied 2014 reference; 16 computed, ambiguous or unsupported entries are excluded rather than guessed. Static extraction never executes Acrobat callbacks. Future edition-specific item references remain separate work.
+
+Existing inventory starts with an unknown remaining amount. The player explicitly records the current amount before using a counter. A stack does not multiply capacity; separately tracked copies need separate inventory rows. Charges/uses require integers; durations are converted to minutes in six-second rounds. Used, Use and Undo preserve the inventory and never spend campaign stock, coins, HP or spell slots.
+
+Dawn on the source paper opens eligible item recovery. Shared controls also offer item-only Short/Long Rest recovery. Full recharge and partial rolled/manual amounts are separate, validated operations; entering a partial roll never restores the whole pool. A stale or canceled dialog changes nothing. Removing/renaming an inventory row retains its spent record; unavailable counters can be explicitly forgotten to free private ledger space.
+
+Both print styles include the counters. Source rows beyond sixteen continue on complete read-only notes pages, independent of journal and fourth-hit-die notes. Initialization, decimal source editing, invalid-field saving, partial Dawn, item rest recovery, save/reopen, removed/restored inventory, mobile/axe, actual exported PDF completeness and other-character access denial are tested. Custom/computed item pools, item-specific destruction rolls, automatic magic-item spells/effects and a consolidated whole-character rest workflow remain pending.

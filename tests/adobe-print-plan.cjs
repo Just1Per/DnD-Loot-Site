@@ -20,3 +20,5 @@ test('action overflow prints its original page only when populated, without repe
 test('a fourth hit-die pool gets a read-only notes continuation instead of disappearing',()=>{const pages=P.create({hitDiceOverflow:true});assert.equal(pages.length,6);assert.deepEqual(pages.at(-1),{page:'template-ASnotes',hitDiceOverflow:true});});
 
 test('limited-feature overflow shares one original combat page with action overflow',()=>{assert.deepEqual(P.create({resourceOverflow:true}).at(-1),{page:'template-ASoverflow',combatOnly:true});assert.equal(P.create({resourceOverflow:true,actionOverflow:true}).filter(row=>row.page==='template-ASoverflow').length,1);});
+
+test('additional counter notes are independent of journal and fourth-hit-die continuation pages',()=>{const pages=P.create({resourceNotes:true,hitDiceOverflow:true,resourceOverflow:true});assert.equal(pages.filter(row=>row.resourceNotes).length,1);assert.equal(pages.filter(row=>row.hitDiceOverflow).length,1);assert.equal(pages.filter(row=>row.page==='template-ASoverflow').length,1);assert.equal(pages.length,8);});
