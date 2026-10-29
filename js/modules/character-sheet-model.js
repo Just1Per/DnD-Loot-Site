@@ -337,6 +337,8 @@ var CharacterSheetModel = (() => {
     result.itemResources=ItemResources?ItemResources.project(data,result.gear):[];
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
+    const Carry=globalThis.CharacterCarrying||(typeof require==='function'?require('./character-carrying'):null);
+    result.carrying=Carry.limits(data,{scores,effects});
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     return result;
   }

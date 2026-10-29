@@ -55,7 +55,8 @@ var CharacterSheetPrint=(()=>{
  }
  function inventory(data,d){
   const rows=sheetEquipmentLoot().map(entry=>{const item=entry.item||{},gear=d.gear.entries.find(g=>g.entry.id===entry.id),personal=data.personalGear.find(g=>g.id===entry.id);return [esc(item.name||personal?.name||'Item')+prose(personal?.notes||item.description),esc(entry.quantity),esc(personal?.location||'Active gear'),esc(personal?.weight??item.weight??'—'),esc([gear?.choice.equipped?'Worn':'Not worn',gear?.choice.attuned?'Attuned':''].filter(Boolean).join(' · '))];});
-  return facts(Object.entries(data.coins).map(([key,value])=>[key.toUpperCase(),value]))+block('Equipment & treasure',rows.length?'<div class="sheet-paper-inventory">'+table(['Item & notes','Qty','Location','Weight','Status'],rows)+'</div>':prose('No items recorded.'))+block('Equipment notes',prose(data.equipment));
+  const carrying=CharacterCarrying.status(d.carrying,characterInventoryWeight(data,sheetEquipmentLoot())),capacity=block('Carrying capacity',facts([['Rule',carrying.mode==='variant'?'2014 variant encumbrance':'Standard carrying capacity'],['Recorded weight',(carrying.unknown?'At least ':'')+carrying.total.toFixed(2)+' lb'],['Capacity',carrying.enabled?carrying.capacity+' lb':'Disabled'],['Push / drag / lift',carrying.enabled?carrying.pushDragLift+' lb':'Disabled'],['Status',carrying.label]])+prose(carrying.detail)+prose(carrying.includeCoins?'Coins included at 50 per lb.':'Coin weight excluded.'));
+  return capacity+facts(Object.entries(data.coins).map(([key,value])=>[key.toUpperCase(),value]))+block('Equipment & treasure',rows.length?'<div class="sheet-paper-inventory">'+table(['Item & notes','Qty','Location','Weight','Status'],rows)+'</div>':prose('No items recorded.'))+block('Equipment notes',prose(data.equipment));
  }
  function builder(data,d){
   const classes=d.progression.classLevels;

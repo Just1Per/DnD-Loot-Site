@@ -1,6 +1,6 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
-const context={CharacterAdobeData:{gear:[{id:'abacus',name:'Abacus',weight:2,edition:'2014'}],baseEquipment:[]},CampaignRules:{allowed:()=>true}};
+const context={CharacterCarrying:require('../js/modules/character-carrying'),CharacterAdobeData:{gear:[{id:'abacus',name:'Abacus',weight:2,edition:'2014'}],baseEquipment:[]},CampaignRules:{allowed:()=>true}};
 vm.createContext(context);vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/modules/character-inventory-ui.js'),'utf8'),context);
 const weight=(data,entries)=>JSON.parse(JSON.stringify(context.characterInventoryWeight(data,entries)));
 const item=(quantity,name,unit)=>({quantity,item:{name,properties:unit===undefined?[]:[{title:'Weight per unit (lb)',text:String(unit)}]}});
@@ -23,3 +23,5 @@ test('paper columns reuse the same quantity/unit-weight calculation without addi
  const rows=[{quantity:3,weight:2.5},{quantity:2,weight:null},{quantity:1,weight:0},{quantity:0,weight:99},{quantity:1,weight:-1}],before=JSON.stringify(rows),result=JSON.parse(JSON.stringify(context.characterInventoryRowsWeight(rows)));assert.deepEqual(result,{gear:7.5,unknown:2});assert.equal(JSON.stringify(rows),before);
  const entries=[item(3,'Declared',2.5),item(2,'Unknown')];assert.deepEqual(weight({coins:{gp:50}},entries),{gear:7.5,unknown:1,coins:1,total:8.5});assert.deepEqual(JSON.parse(JSON.stringify(context.characterInventoryRowsWeight(entries,e=>context.inventoryUnitWeight(e.item)))),{gear:7.5,unknown:1});
 });
+
+test('excluding coins changes the one shared total without changing purse or gear weights',()=>{const data={coins:{gp:50},adobe:{carrying:{includeCoins:false}}},rows=[item(2,'Abacus')],before=JSON.stringify({data,rows});assert.deepEqual(weight(data,rows),{gear:4,coins:0,total:4,unknown:0});assert.equal(JSON.stringify({data,rows}),before);});

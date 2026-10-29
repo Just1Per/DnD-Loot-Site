@@ -130,7 +130,7 @@ function characterInventoryRowsWeight(entries,unitWeight=entry=>entry.weight){
 }
 function characterInventoryWeight(data,entries){
  const {gear,unknown}=characterInventoryRowsWeight(entries,entry=>inventoryUnitWeight(entry.item||{}));
- const coins=Object.values(data.coins||{}).reduce((sum,value)=>sum+(Number(value)||0),0)/50;return {gear,coins,total:gear+coins,unknown};
+ const counted=CharacterCarrying.normalize(CharacterCarrying.stored(data).carrying).includeCoins,coins=counted?Object.values(data.coins||{}).reduce((sum,value)=>sum+(Number(value)||0),0)/50:0;return {gear,coins,total:gear+coins,unknown};
 }
 function updateInventoryTotals(stats){
  const host=document.getElementById('sheetInventoryTotals');if(!host||!sheetSession)return;

@@ -194,6 +194,7 @@ var CharacterRules2024 = (() => {
       }
     });
     add('goliath', 'Goliath', {
+      carryingSizeSteps: 1,
       speed: 35,
       traits: [
         'Escape-grapple checks have advantage; carrying capacity uses one larger size.',

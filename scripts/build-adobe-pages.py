@@ -26,10 +26,18 @@ def export(source,target):
    doc.xref_set_key(page,'Type','/Page');doc.xref_set_key(page,'Parent',str(root_id)+' 0 R');doc.xref_set_key(root_id,'Kids','['+str(page)+' 0 R]');doc.xref_set_key(root_id,'Count','1')
    doc=fitz.open(stream=doc.tobytes(),filetype='pdf');p=doc[0]
   else:p=doc[page]
-  widgets=list(p.widgets()or[]);fields=[];buttons=[];note_masks=[];ammo_icons=[];secondary_dc=None;counts=collections.Counter()
+  widgets=list(p.widgets()or[]);fields=[];buttons=[];note_masks=[];ammo_icons=[];secondary_dc=None;carrying_art=None;counts=collections.Counter()
   for w in widgets:
    _,raw=doc.xref_get_key(w.xref,'F');flags=int(raw)if raw.isdigit()else 0
    n=name(w.field_name)
+   if n=='Weight Carrying Capacity.Button'and key=='page-2':
+    icon_doc=fitz.open(source);icon_page=icon_doc[page]
+    for candidate in list(icon_page.widgets()or[]):
+     if candidate.field_name==w.field_name:icon_doc.xref_set_key(candidate.xref,'F','4')
+     else:icon_page.delete_widget(candidate)
+    pix=icon_page.get_pixmap(matrix=fitz.Matrix(3,3),clip=w.rect,alpha=False);asset='carrying-capacity.webp'
+    Image.frombytes('RGB',(pix.width,pix.height),pix.samples).save(target/asset,format='WEBP',lossless=True,method=6)
+    carrying_art={'rect':[round(v,3)for v in w.rect],'asset':asset};icon_doc.close()
    if n=='Image.SaveDC'and key=='page-1':
     icon_doc=fitz.open(source);icon_page=icon_doc[page]
     for candidate in list(icon_page.widgets()or[]):
@@ -56,7 +64,8 @@ def export(source,target):
    log_balance=key=='template-ALlog'and bool(re.fullmatch(r'AdvLog\.[1-6]\.(xp|gold|downtime|renown|magicItems)\.(start|total)',n))
    ammo_check=bool(re.fullmatch(r'Ammo(Left|Right)\.(Top|Base|Bullet)\.(Axe\.)?\d+',n))
    dc_field=n in ['Spell DC 1 Mod','Spell DC 2 Mod','Spell save DC 2']
-   if flags&35 and not(gear_row or log_balance or ammo_check or dc_field)or not p.rect.contains(w.rect)or w.rect.get_area()<=0 or safe_art(w):continue
+   carry_field=key=='page-2'and n=='Weight Heavily Encumbered'
+   if flags&35 and not(carry_field or gear_row or log_balance or ammo_check or dc_field)or not p.rect.contains(w.rect)or w.rect.get_area()<=0 or safe_art(w):continue
    counts[n]+=1;ident=n+(' #'+str(counts[n])if counts[n]>1 else'');rect=[round(v,3)for v in w.rect]
    if w.field_type_string=='Button':
     # Very large image hit areas are decorative, never blank giant buttons.
@@ -73,7 +82,7 @@ def export(source,target):
   for w in widgets:
    if not safe_art(w):p.delete_widget(w)
   pix=p.get_pixmap(matrix=fitz.Matrix(2.5,2.5),alpha=False);im=Image.frombytes('RGB',(pix.width,pix.height),pix.samples);im.save(target/(key+'.webp'),format='WEBP',lossless=True,method=6)
-  title=TITLES.get(key,TITLES.get(key.replace('template-',''),key));data={'format':1,'id':key,'title':title,'width':round(p.rect.width,3),'height':round(p.rect.height,3),'fields':fields,'buttons':buttons,**({'noteLineMasks':note_masks}if note_masks else{}),**({'ammoIcons':ammo_icons}if ammo_icons else{}),**({'secondaryDC':secondary_dc}if secondary_dc else{})}
+  title=TITLES.get(key,TITLES.get(key.replace('template-',''),key));data={'format':1,'id':key,'title':title,'width':round(p.rect.width,3),'height':round(p.rect.height,3),'fields':fields,'buttons':buttons,**({'noteLineMasks':note_masks}if note_masks else{}),**({'ammoIcons':ammo_icons}if ammo_icons else{}),**({'secondaryDC':secondary_dc}if secondary_dc else{}),**({'carryingArtwork':carrying_art}if carrying_art else{})}
   (target/(key+'.json')).write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n');manifest.append({'id':key,'title':title,'fields':len(fields),'buttons':len(buttons),'optional':key.startswith('template-')});print(key,len(fields),len(buttons),flush=True)
  (target/'pages.json').write_text(json.dumps({'format':1,'sourceVersion':'MPMB 13.0.4','pages':manifest},indent=2)+'\n')
 if __name__=='__main__':

@@ -810,3 +810,17 @@
 /* One readable row for the shared short background detail, including mobile. */
 #characterSheetDialog .sheet-profile>.sheet-background-detail{grid-column:1/-1}
 #characterSheetDialog .sheet-background-detail small{font-size:12px;font-weight:400;line-height:1.5}
+
+/* Capacity stays one compact, collapsible inventory section. */
+.sheet-carrying-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.sheet-carrying-metrics small,.sheet-carrying-metrics strong{display:block}
+.sheet-carrying [data-carry-state]{font-weight:600}
+.sheet-carrying[data-state=over] [data-carry-state]{color:var(--vault-burgundy,#811b20)}
+.sheet-carrying>.sheet-check{display:flex;align-items:center;gap:8px}
+.sheet-carrying>.sheet-check input{margin:0}
+
+#characterSheetDialog .sheet-carrying{max-width:760px;margin:16px 0}
+#characterSheetDialog .sheet-carrying>.sheet-field{max-width:480px}
+#characterSheetDialog .sheet-carrying .sheet-help{font-weight:400}
+
+#characterSheetDialog .sheet-carrying>.sheet-check{display:flex;justify-content:flex-start;align-items:center;gap:8px;max-width:480px;text-align:left}

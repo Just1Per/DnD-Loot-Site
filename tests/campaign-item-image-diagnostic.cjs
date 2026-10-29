@@ -48,3 +48,16 @@ test('metadata authorization failures remain failures rather than reports claimi
  const {diagnoseCampaignItemImages}=await ready,{port}=fixture();port.objectMetadata=async()=>{throw Error('Synthetic read denied')};
  await assert.rejects(diagnoseCampaignItemImages(options,port),/read denied/);
 });
+
+test('explicit archive auto mode checks only recorded same-owner/campaign objects and keeps output redacted',async()=>{
+ const {diagnoseCampaignItemImages}=await ready,{port,objects,reads}=fixture();objects.clear();const privatePath='private-item-library-images/owner/private/digest';objects.add('demo-archive/'+privatePath);port.findArchives=async()=>[{assets:[{bucket:'demo-archive',privatePath},{bucket:'other-archive',privatePath:'campaign-catalogue-images/campaign/private/digest'},{bucket:'private-other',privatePath:'private-item-library-images/another/private/digest'}]}];
+ const result=await diagnoseCampaignItemImages({...options,archiveBucket:'auto'},port),row=result.matches[0];assert.equal(result.archiveBucketDiscovery,true);assert.equal(row.checkedArchiveAssets,2);assert.equal(row.existingArchiveAssets,1);assert.equal(row.unconfiguredArchiveAssets,1);assert.equal(row.unrecognizedArchivePaths,1);assert.equal(row.unconfiguredArchiveBuckets,0);assert.ok(reads.some(([bucket,object])=>bucket==='demo-archive'&&object===privatePath));assert.ok(!reads.some(([bucket])=>bucket==='private-other'));assert.doesNotMatch(JSON.stringify(result),/PRIVATE|SECRET|demo-archive|private\/digest|another/);assert.equal(result.productionWrites,0);
+});
+test('unchecked archives distinguish an unconfigured bucket, invalid bucket and foreign path without claiming missing bytes',async()=>{
+ const {diagnoseCampaignItemImages}=await ready,{port,reads}=fixture();port.findArchives=async()=>[{assets:[{bucket:'not-configured',privatePath:'private-item-library-images/owner/p/d'},{bucket:'invalid/bucket',privatePath:'private-item-library-images/owner/p/d'},{bucket:'demo-archive',privatePath:'campaign-catalogue-images/another/p/d'}]}];
+ const result=await diagnoseCampaignItemImages(options,port),row=result.matches[0];assert.equal(row.unconfiguredArchiveAssets,3);assert.equal(row.checkedArchiveAssets,0);assert.equal(row.unconfiguredArchiveBuckets,1);assert.equal(row.invalidArchiveReferences,1);assert.equal(row.unrecognizedArchivePaths,1);assert.ok(reads.every(([bucket])=>bucket==='demo-source'));
+});
+test('auto mode refuses excessive referenced buckets and retains permission failures as errors',async()=>{
+ const {diagnoseCampaignItemImages}=await ready,{port}=fixture();port.findArchives=async()=>[{assets:Array.from({length:5},(_,i)=>({bucket:'archive-'+i,privatePath:'campaign-catalogue-images/campaign/p/d'}))}];await assert.rejects(diagnoseCampaignItemImages({...options,archiveBucket:'auto'},port),/four archive buckets/);
+ port.findArchives=async()=>[{assets:[{bucket:'demo-archive',privatePath:'campaign-catalogue-images/campaign/p/d'}]}];port.objectMetadata=async bucket=>{if(bucket==='demo-archive')throw Error('Synthetic archive read denied');return{exists:false}};await assert.rejects(diagnoseCampaignItemImages({...options,archiveBucket:'auto'},port),/archive read denied/);
+});

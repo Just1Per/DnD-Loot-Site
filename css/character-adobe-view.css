@@ -25,6 +25,6 @@
 
 .adobe-note-mask{position:absolute;background:#fff;pointer-events:none}
 
-.adobe-ammo-icon,.adobe-secondary-dc-icon{position:absolute;pointer-events:none;object-fit:fill}
+.adobe-carrying-art,.adobe-ammo-icon,.adobe-secondary-dc-icon{position:absolute;pointer-events:none;object-fit:fill}
 
 .field input[type="number"]{appearance:textfield;-moz-appearance:textfield}.field input[type="number"]::-webkit-outer-spin-button,.field input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}

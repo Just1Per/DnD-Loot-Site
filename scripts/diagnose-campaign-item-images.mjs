@@ -40,7 +40,7 @@ export async function diagnoseCampaignItemImages(options,port){
  check(campaigns.length===1&&!campaigns[0].deletedAt&&validId(campaigns[0].id)&&validId(campaigns[0].ownerId),'The exact campaign name must identify one active campaign with an owner.');
  const campaign=campaigns[0],rows=await port.findItems(campaign.id,itemName);
  check(rows.length>0&&rows.length<=20,'No matching campaign item, or more than 20 matches; narrow the exact item name.');
- const matches=[];
+ const matches=[],discoverArchiveBuckets=archiveBucket==='auto';
  for(const row of rows){
   const sourceId=row.rootItemId||row.catalogueArchive?.sourceId||row.id;
   const root=validId(sourceId)?await port.readRoot(sourceId):null;
@@ -53,19 +53,22 @@ export async function diagnoseCampaignItemImages(options,port){
   const direct=directReference(row,bucket),directStatus={kind:direct.kind};
   if(direct.object)directStatus.exists=(await port.objectMetadata(bucket,direct.object)).exists;
   const archives=validId(sourceId)?await port.findArchives(campaign.id,campaign.ownerId,sourceId):[];
-  let archivedAssets=0,existingArchiveAssets=0,unconfiguredArchiveAssets=0;
+  let archivedAssets=0,existingArchiveAssets=0,unconfiguredArchiveAssets=0,checkedArchiveAssets=0,unconfiguredArchiveBuckets=0,unrecognizedArchivePaths=0,invalidArchiveReferences=0;const discoveredBuckets=new Set();
   for(const record of archives)for(const asset of (record.assets||[])){
    archivedAssets++;
    const assetBucket=asset.bucket||bucket;
    const allowedPath=typeof asset.privatePath==='string'&&(asset.privatePath.startsWith(`private-item-library-images/${campaign.ownerId}/`)||asset.privatePath.startsWith(`campaign-catalogue-images/${campaign.id}/`));
-   if(![bucket,archiveBucket].includes(assetBucket)||!allowedPath){unconfiguredArchiveAssets++;continue;}
-   if((await port.objectMetadata(assetBucket,asset.privatePath)).exists)existingArchiveAssets++;
+   if(!allowedPath){unconfiguredArchiveAssets++;unrecognizedArchivePaths++;continue;}
+   if(!validBucket(assetBucket)){unconfiguredArchiveAssets++;invalidArchiveReferences++;continue;}
+   if(discoverArchiveBuckets){discoveredBuckets.add(assetBucket);check(discoveredBuckets.size<=4,'More than four archive buckets are referenced; review the item scope before continuing.');}
+   if(![bucket,archiveBucket].includes(assetBucket)&&!discoverArchiveBuckets){unconfiguredArchiveAssets++;unconfiguredArchiveBuckets++;continue;}
+   checkedArchiveAssets++;if((await port.objectMetadata(assetBucket,asset.privatePath)).exists)existingArchiveAssets++;
   }
   matches.push({rootRecord:root?(root.catalogueStatus==='approved-v1'?'approved':'unapproved'):'missing',
    artworkDisabled:row.artwork?.status==='none',privateArchiveReference:!!row.archivedImage,
-   direct:directStatus,fallbacks,archiveRecords:archives.length,archiveSearchMayBeTruncated:archives.length>=21,archivedAssets,existingArchiveAssets,unconfiguredArchiveAssets});
+   direct:directStatus,fallbacks,archiveRecords:archives.length,archiveSearchMayBeTruncated:archives.length>=21,archivedAssets,checkedArchiveAssets,existingArchiveAssets,unconfiguredArchiveAssets,unconfiguredArchiveBuckets,unrecognizedArchivePaths,invalidArchiveReferences});
  }
- return {format:1,readOnly:true,productionWrites:0,matches};
+ return {format:1,readOnly:true,productionWrites:0,archiveBucketDiscovery:discoverArchiveBuckets,matches};
 }
 
 async function main(){
