@@ -285,8 +285,11 @@ var CharacterSheetModel = (() => {
     }
     const Aura=globalThis.CharacterPaladinAuras||(typeof require==='function'?require('./character-paladin-auras'):null),paladinAuras=Aura.derive(d,{level,mods});for(const key of Object.keys(saves))saves[key]+=paladinAuras.bonus;
     classOrders.skillBonuses={};for(const report of classOrders.reports){report.bonus=report.skills.length?Math.max(1,mods.wis):0;for(const key of report.skills)classOrders.skillBonuses[key]=(classOrders.skillBonuses[key]||0)+report.bonus;}
-    for (const [key, [, ability]] of Object.entries(skills))
-      checks[key] = mods[ability] + Math.floor(pb * Math.max(d.skills[key].rank, effects.skills.includes(key) ? 1 : 0, feats.expertise.includes(key) ? 2 : 0, classExpertise.skills.includes(key) ? 2 : 0,effects.halfSkillProficiency?.5:0)) + d.skills[key].bonus + (classOrders.skillBonuses[key]||0);
+    const Check=globalThis.CharacterToolChecks||(typeof require==='function'?require('./character-tool-checks'):null);
+    for (const [key, [, ability]] of Object.entries(skills)){
+      const rank=Math.max(d.skills[key].rank,effects.skills.includes(key)?1:0,feats.expertise.includes(key)?2:0,classExpertise.skills.includes(key)?2:0);
+      checks[key]=mods[ability]+Math.max(Math.floor(pb*rank),rank>=1?0:Check.untrained(pb,effects,ability,'skill'))+d.skills[key].bonus+(classOrders.skillBonuses[key]||0);
+    }
     const toolTraining=ClassChoices.toolTraining(d,{level,effects,mods,classExpertise});
     const rangerFeatures=ClassChoices.rangerFeatures(d,{level,mods});
     effects.specialSenses=[...(effects.specialSenses||[]),...rangerFeatures.senses];
@@ -320,7 +323,7 @@ var CharacterSheetModel = (() => {
       mods,
       saves,
       skills: checks,
-      initiative: mods.dex + d.initiativeBonus + (effects.initiativeBonus || 0) + (effects.halfInitiativeProficiency&&!effects.initiativeProficiency?Math.floor(pb/2):0),
+      initiative: mods.dex + d.initiativeBonus + (effects.initiativeBonus || 0) + (!effects.initiativeProficiency?Check.untrained(pb,effects,'dex','initiative'):0),
       passive: 10 + checks.perception + d.passiveBonus + feats.passiveBonus,
       spellAttack: mods[d.spellAbility] + pb + d.spellAttackBonus,
       spellDC: 8 + mods[d.spellAbility] + pb + d.spellDCBonus,

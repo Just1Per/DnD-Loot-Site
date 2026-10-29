@@ -55,7 +55,7 @@ This is an intermediate foundation, not complete source parity. Automatic traini
 ### Verification
 
 - `npm --prefix tests test`: 611 unit checks and 369 DOM checks pass at the latest local checkpoint, including adapter validation, shared rules and regression coverage.
-- `npm --prefix tests run test:adobe-connected`: twenty-seven functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
+- `npm --prefix tests run test:adobe-connected`: twenty-eight functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
 - Development browser: Chromium 154. The first connected checkpoint also passed the GitHub Engines and DOM job, including the connected browser/print/accessibility check. New increments must pass their own exact-head checks.
 
 No Firestore or Storage rule changes are included. Existing session access controls and save envelope apply. No assistant merge, production deployment, rule deployment or data migration is authorized.
@@ -277,9 +277,18 @@ The labels remain read-only and open the existing Spells controls through Enter/
 
 ### Remaining unmapped fields in the live layout audit
 
-A read-only browser pass through all seventeen layouts, using a synthetic 2014 Wizard 20, still finds these unmapped fields after the XP, weight, lifestyle and slot-label connections:
+A read-only browser pass through all seventeen layouts, using a synthetic 2014 Wizard 20, still finds these unmapped fields after the XP, weight, lifestyle, slot-label and Tool-row connections:
 
-- First page: Background Extra; the custom Tool name, proficiency, expertise and bonus row; encumbered speed.
+- First page: Background Extra and encumbered speed.
 - Features & equipment: encumbrance threshold, push/drag/lift, carrying-capacity field and two attuned-item display/heading controls. The carrying-capacity and carried-weight option buttons also remain unavailable.
 
 This is a field-binding audit for one scenario, not a completion percentage or a full rules audit. Enabled links to shared editors remain partial equivalents; original dynamic menus, class-specific companion scaling, conditional layouts and unimplemented automation still require the per-function review in the ledger. These findings are separate from the static scan’s 567 repeated pushbutton occurrences and 287 dynamic UI sites.
+
+
+### Original custom Tool row
+
+The original first-page Tool name, Prof, Exp and calculated bonus now share one private custom-check record with Standard Abilities & skills. An explicit parenthesized ability, such as Thieves’ Tools (Dex), selects the modifier; without one the total remains blank, matching UpdateTooSkill. The compact shared editor adds an ability picker and bounded adjustment, with inline label help instead of repeated question buttons.
+
+Known tool names inherit the existing proficiency and class expertise, including the separate Artificer sources. Granted ranks cannot be unchecked here; manual ranks stay with this check and survive class changes. Proficiency is included once, or twice in total for expertise. Existing Artificer per-tool selections remain unchanged. A common untrained-check calculation covers 2014 Bard and Champion rounding, skills and initiative; revised Bard receives half proficiency on skills only. Class levels are capped and duplicate rows do not unlock benefits.
+
+Coverage includes all six abilities, levels 1–20, source/edition switches, multiclass/removal, invalid adjustments, unchanged other character/inventory state, private persistence/access, stale controls, mobile/axe and source/Standard print with actual PDF verification. The bounded record stays in the existing private grants envelope; no Firebase rule change or migration. Original global/arbitrary expression modifiers and proficiency-dice variants are still separate parity work.

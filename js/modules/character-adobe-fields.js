@@ -95,6 +95,12 @@ var CharacterAdobeFields=(()=>{
   if(id==='spellsdiv.Text.0')return computed('Selected spells · sorted by level');
   if((m=/^SpellSlots\.Extra\.lvl([1-9])$/.exec(id))){const level=Number(m[1]),maximum=context.spellPact?(level===context.spellPact.slotLevel?context.spellPact.count:0):data.slots[level-1]?.max||0;return computed(maximum>4?'OF '+maximum:'',{command:'spells',reason:'Total spell slots at this level, using the same pool as the tracker above. Change or spend slots in the shared Spells controls.'});}
   if(id==='SpellSheetInformation')return computed((context.spellPact?'Pact Magic slots shown above are separate from ordinary Spellcasting slots. ':'Ordinary Spellcasting slots shown above are separate from Pact Magic. ')+'Choose a caster above to see its ability, attack modifier and save DC. Prepared choices and slots use the shared Spells controls. Spell descriptions may be abbreviated; open Spells for full information.');
+  if(['Too Text','Too','Too Prof','Too Exp'].includes(id)){
+   const row=d.customToolCheck||{name:'',rank:0,automaticRank:0,total:null};
+   if(id==='Too Text')return {state:'editable',kind:'text',value:row.name,max:200,customToolCheck:'name',command:'customTool',reason:'Write the tool/check name and its ability, for example Thieves’ Tools (Dex). Use the shared controls for an ability picker and check adjustment.'};
+   if(id==='Too')return computed(row.total===null?'':sign(row.total),{command:'customTool',reason:row.total===null?'Add an ability in parentheses, such as (Dex), to calculate this check.':'Calculated from the same ability, tool training and check adjustment as Standard.'});
+   const wanted=id==='Too Exp'?2:1;return row.automaticRank>=wanted?computed(true,{kind:'checkbox',command:'customTool',reason:'Included in your existing tool training. Change its original choice to remove it.'}):{state:'editable',kind:'checkbox',value:row.rank>=wanted,customToolCheck:wanted===2?'expertise':'proficient',command:'customTool'};
+  }
   if(id==='Character Level')return data.adobe?.useExperience?computed(d.progression.targetLevel):edit('identity.level',identity.level,'number',20,{min:1});
   if(id==='Class and Levels'){const rows=d.progression?.classLevels||[];return computed(rows.map(c=>(context.className?.(c.classId)||c.classId)+(rows.length>1?' '+c.level:'')).join(' / '),{command:'classes'});}
   if(id==='Total Experience')return edit('experience',d.progression?.xp?.xp??(data.experience||0),'number',1000000000,{command:'classes'});

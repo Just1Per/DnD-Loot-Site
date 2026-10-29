@@ -71,3 +71,8 @@ test('original extra-slot labels use the matching pool maximum above four, never
  c.data.slots[2]={max:8,used:4};assert.equal(A.describe('SpellSlots.Extra.lvl3',c).value,'OF 8');c.spellPact={count:2,used:1,slotLevel:3};for(let level=1;level<=9;level++)assert.equal(A.describe('SpellSlots.Extra.lvl'+level,c).value,'');
  c.spellPact={count:6,used:5,slotLevel:3};assert.equal(A.describe('SpellSlots.Extra.lvl3',c).value,'OF 6');assert.equal(A.describe('SpellSlots.Extra.lvl1',c).value,'');
 });
+
+
+test('original Tool row edits one shared custom check and protects calculated totals and granted expertise',()=>{
+ const c=context(),T=require('../js/modules/character-tool-checks');c.derived.customToolCheck=T.project({name:'Repair (Dex)',rank:1},{...c.derived,pb:3});assert.equal(A.describe('Too Text',c).value,'Repair (Dex)');assert.equal(A.planEdit('Too Text','Repair (Int)',c).customToolCheck,'name');assert.equal(A.planEdit('Too Exp',true,c).customToolCheck,'expertise');assert.throws(()=>A.planEdit('Too','99',c));c.derived.customToolCheck=T.project({name:'Thieves’ tools (Dex)'},{...c.derived,pb:3,effects:{proficiencies:['Thieves’ tools']},classExpertise:{tools:[{name:'Thieves’ tools'}]}});for(const id of ['Too Prof','Too Exp']){assert.equal(A.describe(id,c).value,true);assert.throws(()=>A.planEdit(id,false,c));}
+});
