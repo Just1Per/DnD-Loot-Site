@@ -18,7 +18,7 @@ var CharacterAdobePrintOverflow=(()=>{
  function collect(batch){
   const records=[];
   for(const paper of batch.children)for(const info of paper.printFields||[]){
-   const {host,control,label}=info;if(!control.isConnected||control.type==='checkbox')continue;
+   const {host,control,label}=info;if(!control.isConnected||control.type==='checkbox'||host.dataset.printable==='false')continue;
    const text=control.tagName==='SELECT'?control.options[control.selectedIndex]?.textContent||'':String(control.value??'');if(!text.trim())continue;
    const line=control.tagName!=='TEXTAREA',probe=prose(text);probe.style.textAlign=getComputedStyle(control).textAlign;
    if(line){probe.classList.add('adobe-print-line');probe.style.lineHeight=control.clientHeight+'px';}

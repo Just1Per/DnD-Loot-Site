@@ -55,7 +55,7 @@ This is an intermediate foundation, not complete source parity. Automatic traini
 ### Verification
 
 - `npm --prefix tests test`: 611 unit checks and 369 DOM checks pass at the latest local checkpoint, including adapter validation, shared rules and regression coverage.
-- `npm --prefix tests run test:adobe-connected`: twenty functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
+- `npm --prefix tests run test:adobe-connected`: twenty-five functional browser flows covering core editing, spells, items, companions, Wild Shape, XP, private pictures, natural attacks, logs, complete printing, paper actions/ammunition, AC/secondary DC, hit dice and typed equipment, with save/reopen, validation and applicable print/accessibility checks. Browser and PDF tools must be installed; accessibility dependencies use the same optional browser-test setup as existing tests.
 - Development browser: Chromium 154. The first connected checkpoint also passed the GitHub Engines and DOM job, including the connected browser/print/accessibility check. New increments must pass their own exact-head checks.
 
 No Firestore or Storage rule changes are included. Existing session access controls and save envelope apply. No assistant merge, production deployment, rule deployment or data migration is authorized.
@@ -110,7 +110,7 @@ The background symbol frame now opens a collapsed Organization symbol editor in 
 
 ### Shared XP addition
 
-The source Add Experience button opens a compact Add experience control in the existing progression editor, available when XP mode is explicitly enabled. It updates the ordinary experience field; the existing progression owns level and multiclass calculations. Amount/total limits are validated without making an unapplied amount block sheet saving. Enter activates Add XP, and gaining a level prompts review of class allocation and new choices. Numeric paper fields display the common parsed XP total, including saved values containing thousands separators. Browser coverage checks invalid amounts, overflow, milestone mode, shared multiclass advancement, preservation and save/reopen.
+When XP mode is explicitly enabled, the source Add Experience text field accepts an amount directly on the first page. Enter or its button applies it through the same controller as the Standard Add experience control, without opening an editor. With no pending amount, the paper button opens the shared progression controls. It updates the ordinary experience field; the existing progression owns level and multiclass calculations. Amount/total limits are validated without making an unapplied amount block sheet saving. Enter activates Add XP, and gaining a level prompts review of class allocation and new choices. Numeric paper fields display the common parsed XP total, including saved values containing thousands separators. Browser coverage checks invalid amounts, overflow, milestone mode, shared multiclass advancement, preservation and save/reopen.
 
 ### Companion descriptions and counters
 
@@ -252,3 +252,10 @@ Clear/Delete retain confirmation and reject stale sessions or lost authenticatio
 The original three main equipment subtotals and two-column continuation subtotals now use the same quantity/unit-weight calculation as Standard Inventory. Source rows retain unit weights, matching the supplied CalcWeightSubtotal function; each subtotal multiplies quantity for its own eighteen-row column. Base, first extra and later extra offsets remain separate. Coins contribute only to Weight Carried, so they are not counted again in every column.
 
 Unknown weights stay explicit: a compact + marks a known minimum and ? means there is no known subtotal. Short computed subtotal values may shrink within a readable font bound to fit the original narrow box; long values still use the existing complete-text print continuation. No carrying-capacity formula or encumbrance penalty is invented. Browser coverage includes quantities, actual unknown entries, scoped/un-carried/other-character exclusion, unit rows, continued columns, live inventory updates, unchanged data/currency, narrow-field layout, actual PDF content and save/reopen.
+
+
+### Inline XP additions and pending drafts
+
+The original first-page Add Experience field now shares the Standard control’s single pending amount. Typing an amount leaves character data and its dirty state unchanged. Only Enter or Add Experience awards XP through the existing progression and multiclass workflow. The pending amount and its inline validation state are shared across styles; an invalid unapplied amount does not prevent saving the actual character.
+
+Unapplied amounts are excluded from printed fields and text-overflow continuations, and are cleared on reopen. Old detached controls, another opened character session and lost authentication cannot award XP. Browser coverage checks direct additions, limits, multiclass advancement, unaffected HP/coins/inventory/companions, save/reopen, actual PDF text and stale-session guards. No new persisted fields, Firebase rules or production migration.
