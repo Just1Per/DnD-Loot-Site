@@ -292,3 +292,10 @@ The original first-page Tool name, Prof, Exp and calculated bonus now share one 
 Known tool names inherit the existing proficiency and class expertise, including the separate Artificer sources. Granted ranks cannot be unchecked here; manual ranks stay with this check and survive class changes. Proficiency is included once, or twice in total for expertise. Existing Artificer per-tool selections remain unchanged. A common untrained-check calculation covers 2014 Bard and Champion rounding, skills and initiative; revised Bard receives half proficiency on skills only. Class levels are capped and duplicate rows do not unlock benefits.
 
 Coverage includes all six abilities, levels 1–20, source/edition switches, multiclass/removal, invalid adjustments, unchanged other character/inventory state, private persistence/access, stale controls, mobile/axe and source/Standard print with actual PDF verification. The bounded record stays in the existing private grants envelope; no Firebase rule change or migration. Original global/arbitrary expression modifiers and proficiency-dice variants are still separate parity work.
+
+
+### Pending XP feedback and tool-training categories
+
+Rejected XP additions now retain their explanation through unrelated recalculation and unchanged blur. Both styles still use one pending input; correcting it through the shared controls clears the paper error without awarding XP. Applying an addition continues to use the existing progression controller, and unapplied drafts remain excluded from saving and printing.
+
+Automatic Tool-row training now requires a recognized shared-catalogue tool or an explicit derived tool-training/expertise record. Armor and weapon proficiency text cannot grant a bonus to a generic ability check. Unclassified custom checks keep their manual proficiency/expertise controls. Tests cover the category boundary, real manual tool training, protected grants and the XP draft's redraw/blur/correction lifecycle. No data format or rules changes.

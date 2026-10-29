@@ -62,7 +62,7 @@ var CharacterAdobeEngine=(()=>{
     classFeatureChoices:typeof CharacterClassFeatureChoices!=='undefined'?
      classes.flatMap(e=>CharacterClassFeatureChoices.status(d,e,d.build.edition)):[]
    };
-   r.customToolCheck=CharacterToolChecks.project(d.adobe.customToolCheck,{...r,proficiencies:d.proficiencies});
+   r.customToolCheck=CharacterToolChecks.project(d.adobe.customToolCheck,{...r,proficiencies:d.proficiencies,toolNames:CharacterRules.tools});
    return r;
   };
   // Core HP helpers use their original normalizer; restore the progression adapter.

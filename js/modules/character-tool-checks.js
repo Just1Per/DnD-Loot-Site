@@ -13,7 +13,8 @@ var CharacterToolChecks=(()=>{
  function project(raw,context={}){
   const row=normalize(raw),lower=row.name.toLowerCase(),ability=abilities.find(id=>lower.includes('('+id+')'))||'',toolName=row.name.replace(suffix,'').trim(),toolKey=key(toolName);
   const same=name=>!!toolKey&&key(name)===toolKey,training=context.toolTraining?.tools?.find(tool=>same(tool.name));
-  const proficient=training||[...(context.effects?.proficiencies||[]),...String(context.proficiencies||'').split(/[,;\n]+/)].some(same);
+  const recognized=!!toolKey&&(context.toolNames||[]).some(same);
+  const proficient=training||recognized&&[...(context.effects?.proficiencies||[]),...String(context.proficiencies||'').split(/[,;\n]+/)].some(same);
   const expertise=training?.expertise||(context.classExpertise?.tools||[]).some(tool=>same(tool.name));
   const automaticRank=expertise?2:proficient?1:0,rank=Math.max(row.rank,automaticRank),pb=Number(context.pb)||0;
   const half=!rank?untrained(pb,context.effects,ability):0;

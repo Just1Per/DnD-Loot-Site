@@ -2,7 +2,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const T=require('../js/modules/character-tool-checks'),M=require('../js/modules/character-sheet-model'),C=require('../js/modules/character-class-feature-choices');
 const build=(classId,level,edition='2014',subclassId='')=>{const data=M.normalize({abilities:{str:14,dex:16,con:12,int:18,wis:10,cha:8},build:{classId,edition,scoreMode:'final'}});data.adobe={classLevels:[{classId,level,subclassId}],classFeatureChoices:{}};return data;};
-const check=(d,l,raw)=>T.project(raw,{...M.derive(d,l),proficiencies:d.proficiencies});
+const check=(d,l,raw)=>T.project(raw,{...M.derive(d,l),proficiencies:d.proficiencies,toolNames:require('../js/modules/character-rules').tools});
 test('original tool names select an explicit parenthesized ability without evaluating code or guessing Dexterity',()=>{
  const mods={str:2,dex:3,con:1,int:4,wis:0,cha:-1};for(const ability of T.abilities){const row=T.project({name:'Custom ('+ability.toUpperCase()+')'},{mods,pb:3});assert.equal(row.ability,ability);assert.equal(row.total,mods[ability]);}
  for(const name of ['Thieves tools','Tool ( Dexterity )','Tool (Luck)','(()=>4)()','Tool (DEXTERITY)'])assert.equal(T.project({name},{mods,pb:3}).total,null);
@@ -51,4 +51,11 @@ test('normalization and rejected edits retain the record atomically without chan
 
 test('legacy Rogue tool expertise is inherited from its real class choice and stays independent of a manual check rank',()=>{
  const d=build('rogue',5),before=JSON.stringify(d);const r=M.derive(d,5);assert.equal(C.setExpertise(d,C.groupKey('2014','rogue','expertise'),0,'thieves-tools',{level:5,effects:r.effects,feats:r.feats}),true);const selected=JSON.stringify(d);assert.notEqual(selected,before);assert.equal(check(d,5,{name:'Thieves’ tools (Dex)',rank:0}).total,9);assert.equal(check(d,5,{name:'Thieves’ tools (Dex)',rank:2}).total,9);assert.equal(JSON.stringify(d),selected);d.adobe.classLevels=[{classId:'wizard',level:5}];d.build.classId='wizard';assert.equal(check(d,5,{name:'Thieves’ tools (Dex)',rank:0}).automaticRank,0);
+});
+
+
+test('armor, weapon and uncategorized proficiency text never grants a tool-check bonus',()=>{
+ const d=build('fighter',5);for(const name of ['Heavy armor','Martial weapons','Shields']){const row=check(d,5,{name:name+' (Str)'});assert.equal(row.automaticRank,0);assert.equal(row.total,2);}
+ d.proficiencies='Custom training; Thieves’ tools';assert.equal(check(d,5,{name:'Custom training (Dex)'}).automaticRank,0);assert.equal(check(d,5,{name:'Thieves’ tools (Dex)'}).automaticRank,1);assert.equal(check(d,5,{name:'Thieves’ tools (Dex)'}).total,6);
+ const ctx={...M.derive(d,5),proficiencies:d.proficiencies,toolNames:require('../js/modules/character-rules').tools};assert.throws(()=>T.edit({name:'Thieves’ tools (Dex)'},'proficient',false,ctx));
 });

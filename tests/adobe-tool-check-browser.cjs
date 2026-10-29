@@ -11,6 +11,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
   await page.locator('#sheetStyle').selectOption('adobe');const host=page.locator('#sheetAdobeView'),field=id=>host.locator('[data-pdf-field="'+id+'"]');await field('Too Text').waitFor({state:'visible'});
   assert.equal(await host.locator('#adobeEditor option[value="customTool"]').count(),1);
   assert.equal(await field('Too').inputValue(),'');assert.equal(await page.evaluate(()=>sheetSession.dirty),false);
+  await field('Too Text').fill('Heavy armor (Str)');await field('Too Text').press('Tab');assert.equal(await field('Too Prof').isChecked(),false);assert.equal(await field('Too').inputValue(),String(await page.evaluate(()=>CharacterSheetModel.signed(CharacterSheetModel.derive(sheetSession.data,5).mods.str))));
   await field('Too Text').fill('Lock repair');await field('Too Text').press('Tab');assert.equal(await field('Too').inputValue(),'');
   await field('Too Text').fill('Lock repair (Dex)');await field('Too Text').press('Tab');assert.equal(await field('Too').inputValue(),'+3');
   await field('Too Prof').press('Space');assert.equal(await field('Too').inputValue(),'+6');await field('Too Exp').press('Space');assert.equal(await field('Too').inputValue(),'+9');await field('Too Exp').press('Space');assert.equal(await field('Too').inputValue(),'+6');assert.equal(await field('Too Prof').isChecked(),true);
