@@ -1,0 +1,310 @@
+{
+  "format": 1,
+  "source": "MPMB v13.0.4 Printer Friendly",
+  "icons": [
+    {
+      "id": "class-artificer",
+      "group": "Class",
+      "label": "Artificer",
+      "asset": "class-artificer.webp",
+      "width": 381,
+      "height": 384
+    },
+    {
+      "id": "class-barbarian",
+      "group": "Class",
+      "label": "Barbarian",
+      "asset": "class-barbarian.webp",
+      "width": 205,
+      "height": 384
+    },
+    {
+      "id": "class-bard",
+      "group": "Class",
+      "label": "Bard",
+      "asset": "class-bard.webp",
+      "width": 116,
+      "height": 384
+    },
+    {
+      "id": "class-cleric",
+      "group": "Class",
+      "label": "Cleric",
+      "asset": "class-cleric.webp",
+      "width": 227,
+      "height": 384
+    },
+    {
+      "id": "class-druid",
+      "group": "Class",
+      "label": "Druid",
+      "asset": "class-druid.webp",
+      "width": 233,
+      "height": 384
+    },
+    {
+      "id": "class-fighter",
+      "group": "Class",
+      "label": "Fighter",
+      "asset": "class-fighter.webp",
+      "width": 384,
+      "height": 358
+    },
+    {
+      "id": "class-monk",
+      "group": "Class",
+      "label": "Monk",
+      "asset": "class-monk.webp",
+      "width": 191,
+      "height": 384
+    },
+    {
+      "id": "class-paladin",
+      "group": "Class",
+      "label": "Paladin",
+      "asset": "class-paladin.webp",
+      "width": 253,
+      "height": 384
+    },
+    {
+      "id": "class-ranger",
+      "group": "Class",
+      "label": "Ranger",
+      "asset": "class-ranger.webp",
+      "width": 219,
+      "height": 384
+    },
+    {
+      "id": "class-rogue",
+      "group": "Class",
+      "label": "Rogue",
+      "asset": "class-rogue.webp",
+      "width": 313,
+      "height": 384
+    },
+    {
+      "id": "class-sorcerer",
+      "group": "Class",
+      "label": "Sorcerer",
+      "asset": "class-sorcerer.webp",
+      "width": 165,
+      "height": 384
+    },
+    {
+      "id": "class-warlock",
+      "group": "Class",
+      "label": "Warlock",
+      "asset": "class-warlock.webp",
+      "width": 159,
+      "height": 384
+    },
+    {
+      "id": "class-wizard",
+      "group": "Class",
+      "label": "Wizard",
+      "asset": "class-wizard.webp",
+      "width": 231,
+      "height": 384
+    },
+    {
+      "id": "faction-emeraldenclave-symbol",
+      "group": "Faction symbol",
+      "label": "Emerald Enclave",
+      "asset": "faction-emeraldenclave-symbol.webp",
+      "width": 335,
+      "height": 384
+    },
+    {
+      "id": "faction-emeraldenclave-banner",
+      "group": "Faction banner",
+      "label": "Emerald Enclave",
+      "asset": "faction-emeraldenclave-banner.webp",
+      "width": 223,
+      "height": 384
+    },
+    {
+      "id": "faction-emeraldenclave-icon",
+      "group": "Faction icon",
+      "label": "Emerald Enclave",
+      "asset": "faction-emeraldenclave-icon.webp",
+      "width": 187,
+      "height": 384
+    },
+    {
+      "id": "faction-harpers-symbol",
+      "group": "Faction symbol",
+      "label": "Harpers",
+      "asset": "faction-harpers-symbol.webp",
+      "width": 384,
+      "height": 384
+    },
+    {
+      "id": "faction-harpers-banner",
+      "group": "Faction banner",
+      "label": "Harpers",
+      "asset": "faction-harpers-banner.webp",
+      "width": 223,
+      "height": 384
+    },
+    {
+      "id": "faction-harpers-icon",
+      "group": "Faction icon",
+      "label": "Harpers",
+      "asset": "faction-harpers-icon.webp",
+      "width": 374,
+      "height": 384
+    },
+    {
+      "id": "faction-lordsalliance-symbol",
+      "group": "Faction symbol",
+      "label": "Lords’ Alliance",
+      "asset": "faction-lordsalliance-symbol.webp",
+      "width": 384,
+      "height": 384
+    },
+    {
+      "id": "faction-lordsalliance-banner",
+      "group": "Faction banner",
+      "label": "Lords’ Alliance",
+      "asset": "faction-lordsalliance-banner.webp",
+      "width": 223,
+      "height": 384
+    },
+    {
+      "id": "faction-lordsalliance-icon",
+      "group": "Faction icon",
+      "label": "Lords’ Alliance",
+      "asset": "faction-lordsalliance-icon.webp",
+      "width": 384,
+      "height": 356
+    },
+    {
+      "id": "faction-ordergauntlet-symbol",
+      "group": "Faction symbol",
+      "label": "Order of the Gauntlet",
+      "asset": "faction-ordergauntlet-symbol.webp",
+      "width": 312,
+      "height": 384
+    },
+    {
+      "id": "faction-ordergauntlet-banner",
+      "group": "Faction banner",
+      "label": "Order of the Gauntlet",
+      "asset": "faction-ordergauntlet-banner.webp",
+      "width": 223,
+      "height": 384
+    },
+    {
+      "id": "faction-ordergauntlet-icon",
+      "group": "Faction icon",
+      "label": "Order of the Gauntlet",
+      "asset": "faction-ordergauntlet-icon.webp",
+      "width": 140,
+      "height": 384
+    },
+    {
+      "id": "faction-zhentarim-symbol",
+      "group": "Faction symbol",
+      "label": "Zhentarim",
+      "asset": "faction-zhentarim-symbol.webp",
+      "width": 328,
+      "height": 384
+    },
+    {
+      "id": "faction-zhentarim-banner",
+      "group": "Faction banner",
+      "label": "Zhentarim",
+      "asset": "faction-zhentarim-banner.webp",
+      "width": 223,
+      "height": 384
+    },
+    {
+      "id": "faction-zhentarim-icon",
+      "group": "Faction icon",
+      "label": "Zhentarim",
+      "asset": "faction-zhentarim-icon.webp",
+      "width": 316,
+      "height": 384
+    },
+    {
+      "id": "season-tod",
+      "group": "Adventure League season",
+      "label": "1 · Tyranny of Dragons",
+      "asset": "season-tod.webp",
+      "width": 180,
+      "height": 384
+    },
+    {
+      "id": "season-ee",
+      "group": "Adventure League season",
+      "label": "2 · Elemental Evil",
+      "asset": "season-ee.webp",
+      "width": 384,
+      "height": 310
+    },
+    {
+      "id": "season-rod",
+      "group": "Adventure League season",
+      "label": "3 · Rage of Demons",
+      "asset": "season-rod.webp",
+      "width": 384,
+      "height": 367
+    },
+    {
+      "id": "season-cos",
+      "group": "Adventure League season",
+      "label": "4 · Curse of Strahd",
+      "asset": "season-cos.webp",
+      "width": 228,
+      "height": 384
+    },
+    {
+      "id": "season-skt",
+      "group": "Adventure League season",
+      "label": "5 · Storm King’s Thunder",
+      "asset": "season-skt.webp",
+      "width": 284,
+      "height": 384
+    },
+    {
+      "id": "season-totyp",
+      "group": "Adventure League season",
+      "label": "6 · Tales from the Yawning Portal",
+      "asset": "season-totyp.webp",
+      "width": 384,
+      "height": 326
+    },
+    {
+      "id": "season-toa",
+      "group": "Adventure League season",
+      "label": "7 · Tomb of Annihilation",
+      "asset": "season-toa.webp",
+      "width": 282,
+      "height": 384
+    },
+    {
+      "id": "season-wda",
+      "group": "Adventure League season",
+      "label": "8 · Waterdeep Adventures",
+      "asset": "season-wda.webp",
+      "width": 384,
+      "height": 379
+    },
+    {
+      "id": "season-dia",
+      "group": "Adventure League season",
+      "label": "9 · Descent into Avernus",
+      "asset": "season-dia.webp",
+      "width": 384,
+      "height": 384
+    },
+    {
+      "id": "season-rotf",
+      "group": "Adventure League season",
+      "label": "10 · Rime of the Frostmaiden",
+      "asset": "season-rotf.webp",
+      "width": 279,
+      "height": 384
+    }
+  ]
+}
