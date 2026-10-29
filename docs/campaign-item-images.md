@@ -36,11 +36,19 @@ Run this one-line command from the checkout, replacing the campaign name with it
 node scripts/diagnose-campaign-item-images.mjs --project dnd-loot-site --bucket dnd-loot-site.firebasestorage.app --campaign-name "EXACT CAMPAIGN NAME" --item-name "Robes of the Second Strike"
 ```
 
-If the owner's library uses a separate private archive bucket, add `--archive-bucket EXACT_PRIVATE_BUCKET_NAME`. Only the explicitly configured source/archive buckets are probed. Unknown external URLs and other buckets are reported as unchecked. Missing credentials or denied metadata reads stop the command; they are not reported as missing files.
+If the owner’s library uses a separate private archive bucket, add `--archive-bucket EXACT_PRIVATE_BUCKET_NAME`. If you do not know its name, explicitly opt into discovering buckets **only from the matching item’s already-recorded archive references**:
+
+```sh
+node scripts/diagnose-campaign-item-images.mjs --project dnd-loot-site --bucket dnd-loot-site.firebasestorage.app --archive-bucket auto --campaign-name "EXACT CAMPAIGN NAME" --item-name "Robes of the Second Strike"
+```
+
+Auto mode reads metadata only for recorded objects beneath the selected campaign or its owner’s private-library prefix, using the operator’s existing read permission. It never lists bucket contents, probes another owner/campaign’s paths, downloads images or changes records. More than four referenced archive buckets stops the command. The JSON still omits names, IDs, buckets, object paths and credentials. Unknown external URLs remain unchecked. Missing credentials or denied metadata reads stop the command; they are not reported as missing files.
 
 The command reads selected Firestore fields and Storage object metadata only. It performs no document/object writes, downloads, token creation, deployment or migration, and writes no local exports. The JSON report contains status/counts without campaign/item names, IDs, paths, tokens, original prose or image bytes. Reported archive existence is a metadata check, not a new checksum verification. The report can be shared to determine the next repair:
 
 - `fallbacks[*].exists: true` with `publishedForPlayers: false`: the file exists but its shared publication marker is absent or mismatched.
+- `checkedArchiveAssets: 0` with `unconfiguredArchiveBuckets > 0`: archive bytes have not been checked; specify the archive bucket or explicitly use auto mode.
+- `unrecognizedArchivePaths > 0` or `invalidArchiveReferences > 0`: a recorded reference falls outside the permitted scope or has a malformed bucket. It remains unchecked even in auto mode.
 - Missing shared files with `existingArchiveAssets > 0`: the image is preserved privately; the browser resolver cannot restore it by itself. A separately reviewed image-only recovery would be needed.
 - `artworkDisabled: true`: the item explicitly suppresses artwork.
 - `privateArchiveReference: true`: the normal shared lookup is intentionally bypassed for DM-private image handling.
