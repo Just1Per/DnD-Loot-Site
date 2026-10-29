@@ -19,7 +19,7 @@ function allowance(node){
 }
 function recoveryRule(label,additional,hasDynamicAdditional){
  const normalized=label.toLowerCase().replace(/\s+/g,' ').trim();
- const event=({'dawn':'dawn','day':'dawn','daily':'dawn','short rest':'short','long rest':'long','never':'never'})[normalized]||'manual';
+ const event=({'dawn':'dawn','short rest':'short','long rest':'long','never':'never'})[normalized]||'manual';
  if(event==='never')return{event,mode:'none'};
  if(event==='manual'||hasDynamicAdditional)return{event,mode:'manual'};
  const roll=/^regains?\s+(\d{1,3})d(\d{1,3})(?:\s*([+-])\s*(\d{1,3}))?$/i.exec(additional);

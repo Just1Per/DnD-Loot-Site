@@ -20,6 +20,7 @@ test('conflicting normalized names are excluded instead of silently choosing a c
  const same=parseReference(`var Base_MagicItemsList={a:{name:'Wand',usages:7,recovery:'dawn'},b:{name:'Wand',usages:7,recovery:'dawn'}};`);assert.equal(same.definitions.length,1);
 });
 test('unknown recovery qualifiers stay manual and numeric/dice limits reject expressions and excessive values',()=>{
+ assert.deepEqual(recoveryRule('daily','',false),{event:'manual',mode:'manual'});assert.deepEqual(recoveryRule('day','',false),{event:'manual',mode:'manual'});
  assert.deepEqual(recoveryRule('dawn','regains half the charges',false),{event:'dawn',mode:'manual'});assert.deepEqual(recoveryRule('after 7 days','',false),{event:'manual',mode:'manual'});assert.deepEqual(recoveryRule('dawn','',true),{event:'dawn',mode:'manual'});
  assert.deepEqual(recoveryRule('long rest','minutes',false),{event:'long',mode:'all'});assert.equal(recoveryRule('dawn','regains 999d999+999',false).mode,'manual');
  for(const value of [0,-1,1.5,10001,'1+2','7 charges; run()','Infinity'])assert.equal(allowance({type:'Literal',value}),null);

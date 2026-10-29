@@ -20,7 +20,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=
  await archive.getByRole('button',{name:'Forget saved counter'}).click();await page.locator('#siteConfirmationDialog [data-site-cancel]').click();
  await page.evaluate(()=>{inventory.unshift(removedWand);updateSheetCalculations();});assert.equal(await archive.isVisible(),false);assert.equal(await row(0).locator('[data-item-remaining]').textContent(),'3 / 7 charges');
  // Both native controls remain usable on small screens and expose named fields.
- await page.setViewportSize({width:390,height:844});await row(0).locator('summary').click();
+ await page.setViewportSize({width:390,height:844});await row(0).locator('summary').click();await page.evaluate(()=>SiteHelp.refresh());assert.equal(await panel.locator('.vault-help-badge').count(),0);assert.match(await row(0).locator('[data-item-used]').getAttribute('aria-description'),/never changes inventory/);
  await page.addScriptTag({path:require.resolve(process.env.AXE_PATH||'axe-core/axe.min.js')});assert.deepEqual(await page.evaluate(async()=>{const r=await axe.run(document.getElementById('sheetItemResources'),{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return r.violations.map(v=>v.id)}),[]);
  assert.equal(await panel.evaluate(n=>n.scrollWidth<=n.clientWidth),true);
  fs.mkdirSync('/tmp/campaignatlas-ui-checks',{recursive:true});await panel.screenshot({path:'/tmp/campaignatlas-ui-checks/adobe-item-counters-mobile.png'});
