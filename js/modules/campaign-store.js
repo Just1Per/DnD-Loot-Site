@@ -22,7 +22,7 @@ function createCampaignStore(sdk) {
     const name = String(v.name || '').trim();
     if (!name)
       fail('Item name is required.');
-    const imageUrl = String(v.imageUrl || '');
+    const imageUrl = String(v.imageUrl || v.thumbnailUrl || v.thumbUrl || '');
     if (imageUrl && !/^https:\/\//i.test(imageUrl))
       fail('Image URL must use HTTPS.');
     return {
@@ -123,7 +123,7 @@ function createCampaignStore(sdk) {
         name: root ? raw.name : raw.name + ' (Copy)',
         campaignId: d.campaignId,
         rootItemId: root ? d.sourceId : raw.rootItemId || null,
-        imageBaseId: raw.artwork?.status==='none'?'':raw.imageBaseId || (root ? d.sourceId : ''),
+        imageBaseId: raw.artwork?.status==='none'?'':raw.imageBaseId || (root ? d.sourceId : raw.rootItemId || d.sourceId),
         ...(raw.artwork?{artwork:raw.artwork}:{}),
         ...(raw.rights?{rights:raw.rights}:{}),
         ...(!root&&raw.archivedImage?{archivedImage:raw.archivedImage}:{}),
