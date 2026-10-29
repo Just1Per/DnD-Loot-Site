@@ -125,8 +125,11 @@ function inventoryUnitWeight(item){
  const base=sheetBaseGear().find(g=>[g.name,g.unitName].some(n=>n?.toLowerCase()===item.name?.toLowerCase()));return base?Number(base.weight)||0:null;
 }
 // One carried-weight projection for Standard and the Adobe paper view.
+function characterInventoryRowsWeight(entries,unitWeight=entry=>entry.weight){
+ let gear=0,unknown=0;for(const entry of entries){const quantity=Number(entry.quantity);if(!Number.isFinite(quantity)||quantity<=0)continue;const weight=unitWeight(entry);if(weight===null||weight===undefined||weight===''||!Number.isFinite(Number(weight))||Number(weight)<0||!Number.isFinite(Number(weight)*quantity)||!Number.isFinite(gear+Number(weight)*quantity))unknown++;else gear+=Number(weight)*quantity;}return {gear,unknown};
+}
 function characterInventoryWeight(data,entries){
- let gear=0,unknown=0;for(const entry of entries){const quantity=Number(entry.quantity);if(!Number.isFinite(quantity)||quantity<=0)continue;const weight=inventoryUnitWeight(entry.item||{});if(weight===null)unknown++;else gear+=weight*quantity;}
+ const {gear,unknown}=characterInventoryRowsWeight(entries,entry=>inventoryUnitWeight(entry.item||{}));
  const coins=Object.values(data.coins||{}).reduce((sum,value)=>sum+(Number(value)||0),0)/50;return {gear,coins,total:gear+coins,unknown};
 }
 function updateInventoryTotals(stats){
