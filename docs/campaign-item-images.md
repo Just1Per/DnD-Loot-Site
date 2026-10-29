@@ -54,3 +54,7 @@ The command reads selected Firestore fields and Storage object metadata only. It
 - `privateArchiveReference: true`: the normal shared lookup is intentionally bypassed for DM-private image handling.
 
 This diagnostic deliberately does not copy private assets back into the shared catalogue or change campaign/item visibility. `node --test tests/campaign-item-image-diagnostic.cjs` verifies these distinctions, redacted output and refusal of ambiguous scopes.
+
+## Campaign-specific recovery
+
+When the diagnosis finds a preserved private asset, use the separately reviewed [campaign image recovery tool](campaign-image-recovery.md). Its default is a read-only preparation, not a repair. An explicit later operator Apply can create verified campaign-member image copies without restoring a retired root entry or exposing the private archive. Campaign cards support those authenticated tokenless images; Root Catalogue, no-art and DM-private archive handling stay separate.
