@@ -41,3 +41,32 @@
 .adobe-tools-grid label{flex:0 1 270px;min-width:0;}
 .adobe-tools-grid select{width:100%;min-width:0;max-width:100%;}
 @media(max-width:600px){.adobe-tools-grid label{flex:1 1 100%;}}
+
+/* Continuous live sheets share the same field renderer and character session. */
+.adobe-continuous{display:grid;grid-template-columns:190px minmax(0,1fr);gap:18px;align-items:start}
+.adobe-continuous[hidden]{display:none!important}
+.adobe-continuous-rail{position:sticky;top:var(--adobe-header-offset,110px);max-height:calc(100dvh - var(--adobe-header-offset,110px) - 20px);overflow:auto;padding:14px 10px;border:1px solid #c4ae8d;border-radius:8px;background:#fffaf0;font-size:13px}
+.adobe-continuous-rail h2,.adobe-continuous-rail h3{margin:2px 8px 10px;color:#5c1d1d;font:600 14px Georgia,serif}
+.adobe-continuous-rail h3{margin-top:22px;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.adobe-continuous-rail nav{display:grid;gap:3px}
+.adobe-continuous-rail button{display:block;width:100%;min-height:36px;padding:8px;text-align:left;border:1px solid transparent;border-radius:4px;background:transparent;color:#513d29;font:13px/1.4 Arial,sans-serif;cursor:pointer}
+.adobe-continuous-rail button:hover,.adobe-continuous-rail button:focus-visible{background:#f0e5d1;border-color:#b69c77;outline:none}
+.adobe-continuous-rail [aria-current="page"]{border-color:#977855;background:#eee0c5;font-weight:700}
+.adobe-continuous-main{min-width:0}
+.adobe-continuous-status{margin:0 0 12px;font-size:13px;color:#61503d}
+.adobe-continuous-sheet{scroll-margin-top:calc(var(--adobe-header-offset,110px) + 14px);margin:0 0 28px;min-width:0}
+.adobe-continuous-heading{margin:0;padding:12px 14px;border:1px solid #c3b6a0;border-bottom:0;border-radius:6px 6px 0 0;background:#f7f0e3;color:#5c1d1d;font:600 15px/1.4 Georgia,serif}
+.adobe-continuous-paper{padding:12px;overflow-x:auto;border:1px solid #c3b6a0;background:#d8d1c7;min-width:0}
+.adobe-continuous-paper>.paper[hidden]{display:none!important}
+.adobe-continuous-placeholder{display:flex;align-items:center;justify-content:center;gap:14px;flex-direction:column;width:100%;background:#fffaf2;color:#74634c;font:14px/1.5 Arial,sans-serif}
+.adobe-continuous-placeholder[hidden]{display:none!important}
+.adobe-continuous-placeholder button{padding:10px 16px;min-height:44px;border:1px solid #b29b76;border-radius:4px;background:white;color:#513d29;cursor:pointer}
+.adobe-continuous-mobile{display:none}
+:host([data-adobe-layout="continuous"]) .adobe-subnavigation,:host([data-adobe-layout="continuous"]) #adobeNotes,:host([data-adobe-layout="continuous"]) #adobeSpellCasterLabel,:host([data-adobe-layout="continuous"]) .adobe-toolbar label:has(#adobeCompanion){display:none!important}
+@media(max-width:760px){.adobe-continuous{display:block}.adobe-continuous-rail{display:none}.adobe-continuous-mobile{display:flex;position:sticky;top:var(--adobe-header-offset,144px);z-index:5;gap:8px;align-items:center;padding:10px 8px;border:1px solid #b29b76;background:#fffaf0;font:13px Arial,sans-serif}.adobe-continuous-mobile select{flex:1;min-width:0;min-height:42px;padding:8px;border:1px solid #b29b76;border-radius:4px;background:white;color:#513d29;font:14px Arial,sans-serif}.adobe-continuous-heading{font-size:14px}.adobe-continuous-paper{padding:8px}.adobe-continuous-status{margin-top:10px}}
+@media print{.adobe-continuous{display:block!important}.adobe-continuous-rail,.adobe-continuous-mobile,.adobe-continuous-heading,.adobe-continuous-status,.adobe-continuous-placeholder{display:none!important}.adobe-continuous-sheet{display:none!important;margin:0}.adobe-continuous-sheet[data-print-active]{display:block!important}.adobe-continuous-paper{padding:0;border:0;background:white;overflow:visible}:host([data-print-batch]) .adobe-continuous{display:none!important}}
+
+.adobe-continuous-rail button:focus-visible{outline:2px solid #2169a8;outline-offset:1px}
+@media(max-width:760px){.adobe-continuous-sheet{scroll-margin-top:calc(var(--adobe-header-offset,144px) + 76px)}}
+
+.adobe-continuous-sheet[data-selected]>.adobe-continuous-heading{background:#eee1c8;box-shadow:inset 3px 0 #6b2b25}

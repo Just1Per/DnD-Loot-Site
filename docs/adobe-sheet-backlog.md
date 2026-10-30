@@ -37,3 +37,7 @@ Added an Adobe-owned selected-first feat dialog for granted/advancement choices,
 ### Feedback from the first preview test
 
 Hide unavailable choices from the other rule edition in Adobe pickers, preserving existing saved selections. The next display task is a continuous editable stack of the connected paper sheets with a fixed left shortcut rail (including direct Spell slots navigation) and a compact mobile alternative. Keep the shared character engine, input validation, private save and printing; avoid disconnected screenshots or a second character draft per page.
+
+### Continuous display checkpoint v45
+
+View → All sheets adds a continuous editable stack with a fixed left shortcut menu and compact mobile Jump to. It reuses the same live fields/controllers and session, keeps caster/companion/continuation contexts separate, mounts pages on demand, retains invalid/focused drafts, and preserves the existing private save and print paths. Single page remains an alternative with the selected layout retained. The preference is local and scoped per user/character. No global default or rules changed. See [continuous-sheet behavior and tests](adobe-continuous-sheets.md). The remaining native editor bridges and numbered mechanical/layout parity tasks remain open.
