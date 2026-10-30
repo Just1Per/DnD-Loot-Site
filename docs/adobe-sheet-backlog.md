@@ -41,3 +41,11 @@ Hide unavailable choices from the other rule edition in Adobe pickers, preservin
 ### Continuous display checkpoint v45
 
 View → All sheets adds a continuous editable stack with a fixed left shortcut menu and compact mobile Jump to. It reuses the same live fields/controllers and session, keeps caster/companion/continuation contexts separate, mounts pages on demand, retains invalid/focused drafts, and preserves the existing private save and print paths. Single page remains an alternative with the selected layout retained. The preference is local and scoped per user/character. No global default or rules changed. See [continuous-sheet behavior and tests](adobe-continuous-sheets.md). The remaining native editor bridges and numbered mechanical/layout parity tasks remain open.
+
+## Preview feedback — v46
+
+- Left navigation now lists actual numbered sheet pages, without a second section-shortcut list.
+- Native Add pages offers spell, companion and rules pages first, plus original templates. Repeated companions/continuations retain independent data. Blank optional choices persist locally after a successful open and join the connected print output.
+- Readable/searchable Adobe pickers replace raw browser menus on source fields and native class/ability/feat dialogs. Race/background lists come from shared catalogues rather than the Standard DOM; names stay short on paper and source details appear in the picker. Source resistance/ammo suggestions, six companion sizes and Cohort/Mount roles are included.
+- [All exported nonempty option lists are reviewed](adobe-inventory/dropdown-audit.md); computed fields and unimplemented source overrides are explicitly recorded. This is not full functional parity.
+- The user’s self-contained Adobe requirement remains the release target. Origins, full spell/equipment/advanced companion management and the remaining legacy editor bridges still require native replacement. Do not merge #250 as a completed 1:1 version.

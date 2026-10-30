@@ -53,7 +53,7 @@ The live contracts are `character-adobe-fields.js`, `character-adobe-view.js` an
 | Print | Selected paper or connected-page batch at source dimensions; populated continuation ranges, per-caster spell headers and separate Pact slots, companion pictures and log records | Actual PDFs checked for source dimensions/content, complete long text on measured numbered notes continuations, UI cleanup, stable page/data, invalid-input guards and session cancellation before/after attaching print DOM. Print page intentionally stays a fixed source page; Print connected pages includes full long text. Remaining source print variants are still pending; this is not full source-function parity |
 | Save / export / access | Existing session, store, revisions and access checks | Shared save/reopen and invalid-input protection checked; further access-loss/stale-write parity audit pending |
 
-All unlisted source fields, buttons and dynamic menu actions remain unresolved. Full parity requires a per-function review of the inventory and each supported rule edition/source; layout exports and passing checks alone are insufficient. PR #250 stays a draft.
+All unlisted source fields, buttons and dynamic menu actions remain unresolved. Full parity requires a per-function review of the inventory and each supported rule edition/source; layout exports and passing checks alone are insufficient. PR #250 remains an unmerged test build.
 
 ### Companion maximum HP — v41
 
@@ -96,3 +96,9 @@ The Adobe race/background and subclass pickers now hide other-edition options ra
 ## Continuous editable display (v45)
 
 The shared interactive builder now renders both Single page and a lazy All sheets stack. Each live context owns its source page, caster, companion and continuation offsets; edits still use the same adapters, model, controllers and private save. Left shortcuts focus exact source fields/buttons. Mobile Jump to sits below the measured site header. Single fallback retains the selected context, and inactive/disposed contexts cannot write into a reopened character. Original Notes options and More notes retain the selected continuation rather than changing page one. Existing print-only explanatory notes remain print output, avoiding duplicate editable journal records. Selected-paper and connected printing are both checked as real PDFs. The [continuous display document](../adobe-continuous-sheets.md) records lifecycle, lazy-mount and scope details.
+
+## Original page navigation and dropdown review (v46)
+
+The All sheets rail now represents source pages only. Native Add pages can open/add optional spells, companions and the original rules reference; additional original layouts sit in a compact disclosure. Repeated companions and note/detail/log continuations keep their own context. Extra blank layouts use scoped local preferences, persist only after a successful open and join connected printing without duplicate page keys. Character flags/creature records continue through the existing private save.
+
+Source dropdowns and native class/ability/feat selectors open a bounded, searchable Adobe picker. The actual authoritative options and change controllers remain in use. Race/background metadata comes directly from shared catalogues, with edition/campaign filtering and saved-choice retention; source details appear separately from the short paper name. All original resistance/ammo suggestions, six companion sizes and the Cohort/Mount roles are supported. [The dropdown audit](dropdown-audit.md) reviews all exported option lists, records calculated fields and remaining override/catalogue differences, and does not claim full source parity.

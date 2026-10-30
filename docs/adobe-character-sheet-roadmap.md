@@ -2,7 +2,7 @@
 
 The goal is a selectable Adobe/MPMB presentation of the **same saved character** used by Standard, reproducing the supplied sheet's pages, fields, text and functions. Keep one rules engine and save/revision/access-control path. Do not create a second character or silently import the standalone prototype draft.
 
-This is one ongoing draft PR. Review and test intermediate versions here; full parity is not claimed by the initial visual prototype.
+This is one ongoing, unmerged test PR. Review and test intermediate versions here; full parity is not claimed by the initial visual prototype.
 
 ## Source inventory
 
@@ -370,3 +370,7 @@ The v44 native feat popup replaces the paper Feats bridge: selected-first cards,
 ## Continuous paper display (v45)
 
 The requested long-sheet option is available through View → All sheets, with a left section/page rail and a mobile Jump to menu. It uses the same interactive builder and private character session as Single page. Per-page contexts retain caster, companion, note/log and extra-detail offsets; all views reuse shared derived values. Source metadata loads on demand, distant view DOM can be released, and focused/invalid views stay available. The single-page alternative and both print paths retain their behavior. This display does not complete the remaining native editors or source-function parity. See [behavior and validation](adobe-continuous-sheets.md).
+
+### Preview feedback v46 — original pages and option pickers
+
+The rail now represents actual sheet pages, with native Add pages for spell, companion and rules layouts plus the remaining original templates. Additional companions/continuations have independent contexts, local blank-page preferences and complete connected printing. Native searchable pickers provide readable source-field and class/ability/feat choices. Race/background lists are built from shared catalogue data instead of Standard DOM options; short paper names and separate source details reduce visual clutter. The [complete exported-dropdown audit](adobe-inventory/dropdown-audit.md) records supported source choices and the remaining computed/manual/catalogue differences. This is an incremental test point, not release-ready full parity.

@@ -70,3 +70,15 @@
 @media(max-width:760px){.adobe-continuous-sheet{scroll-margin-top:calc(var(--adobe-header-offset,144px) + 76px)}}
 
 .adobe-continuous-sheet[data-selected]>.adobe-continuous-heading{background:#eee1c8;box-shadow:inset 3px 0 #6b2b25}
+
+/* One destination per source page. Section links are intentionally absent. */
+.adobe-continuous-rail [data-stack-page]{display:grid;grid-template-columns:23px minmax(0,1fr);gap:7px;align-items:start;padding:10px 7px;min-height:44px}
+.adobe-page-number{font-size:11px;letter-spacing:.05em;color:#7e6b52;padding-top:2px;font-variant-numeric:tabular-nums}
+.adobe-continuous-rail .adobe-add-pages{margin-top:16px;border:1px solid #b29b76;background:#f3e6cb;text-align:center;font-weight:600;min-height:44px}
+.adobe-continuous-mobile button{min-height:42px;padding:8px;border:1px solid #b29b76;border-radius:4px;background:#f3e6cb;color:#513d29;font:13px Arial,sans-serif;white-space:nowrap;cursor:pointer}
+.field select{padding-right:calc(var(--scale)*7px);background-size:calc(var(--scale)*5px) auto;background-position:right calc(var(--scale)*1px) center;cursor:pointer}
+.field select:not(:disabled):hover,.field:has(.adobe-choice-browse:not([hidden])) input:hover{background-color:#f3f0e9;box-shadow:inset 0 -1px #aa9477}
+.adobe-choice-browse{position:absolute;right:0;top:0;height:100%;width:calc(var(--scale)*9px);min-width:0;min-height:0;border:0;padding:0;background:#f2ede4;color:#65543d;font:inherit;cursor:pointer;line-height:1}
+.adobe-choice-browse:focus-visible{outline:2px solid #2169a8}
+.field:has(.adobe-choice-browse:not([hidden])) input{padding-right:calc(var(--scale)*10px)}
+@media print{.adobe-choice-browse{display:none!important}.field select{background-image:none!important;padding-right:0}.field:has(.adobe-choice-browse) input{padding-right:0}}
