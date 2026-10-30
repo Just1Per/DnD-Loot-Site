@@ -824,3 +824,11 @@
 #characterSheetDialog .sheet-carrying .sheet-help{font-weight:400}
 
 #characterSheetDialog .sheet-carrying>.sheet-check{display:flex;justify-content:flex-start;align-items:center;gap:8px;max-width:480px;text-align:left}
+
+/* Source HP options retain compact, readable choices on desktop and mobile. */
+.sheet-hp-options [hidden],#sheetHPManual[hidden]{display:none!important}
+.sheet-hp-options section+section{margin-top:1.25rem;border-top:1px solid var(--border-color,#d4c4a5);padding-top:1rem}
+.sheet-hp-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+.sheet-hp-choice-grid button{display:flex;flex-direction:column;gap:.35rem;align-items:center;justify-content:center;min-height:4.5rem;padding:.6rem;white-space:normal}
+.sheet-hp-choice-grid strong{font-size:1.2rem}
+@media(max-width:480px){.sheet-hp-choice-grid{grid-template-columns:1fr}.sheet-hp-choice-grid button{flex-direction:row;justify-content:space-between;min-height:2.75rem}}

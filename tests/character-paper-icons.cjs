@@ -2,7 +2,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const M=require('../js/modules/character-sheet-model'),vm=require('node:vm');
 const context=vm.createContext({CharacterSheetModel:{__adobeIntegrated:true},CharacterProgression:require('../js/modules/character-progression'),CharacterCarrying:require('../js/modules/character-carrying'),CharacterToolChecks:require('../js/modules/character-tool-checks'),CharacterPaperCombat:require('../js/modules/character-paper-combat'),CharacterItemResources:require('../js/modules/character-item-resources'),CharacterAdventureLog:require('../js/modules/character-adventure-log'),CharacterFeatRules:require('../js/modules/character-feat-rules'),CharacterClassProgression:require('../js/modules/character-class-progression'),CharacterClassFeatureChoices:require('../js/modules/character-class-feature-choices')});
-vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/modules/character-adobe-engine.js'),'utf8'),context);const E=context.CharacterAdobeEngine;
+context.CharacterHitPointOptions=require('../js/modules/character-hit-point-options');vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/modules/character-adobe-engine.js'),'utf8'),context);const E=context.CharacterAdobeEngine;
 const manifest=require('../data/adobe-icons/icons.json');
 test('the built-in artwork contains exactly the original 13 classes, 15 faction variants and 10 seasons',()=>{
  assert.equal(manifest.icons.length,38);assert.equal(new Set(manifest.icons.map(row=>row.id)).size,38);

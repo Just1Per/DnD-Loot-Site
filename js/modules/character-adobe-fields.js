@@ -119,7 +119,7 @@ var CharacterAdobeFields=(()=>{
   if(id==='Proficiency Weapon Other')return computed(!!context.otherWeapons?.length,{kind:'checkbox',reason:'Individual weapon training from the shared class, feat and origin choices.'});
   if(id==='Proficiency Weapon Other Description')return computed((context.otherWeapons||[]).join(', '),{command:'origins'});
   if(id==='MoreProficiencies'){const languages=d.effects.languages||[],tools=context.toolNames||[];return computed([...languages.slice(6),...lines(data.languages).slice(Math.max(0,6-languages.length)),...tools.slice(6),...lines(data.proficiencies).slice(Math.max(0,6-tools.length))].join('\n'),{kind:'textarea',command:'origins'});}
-  if(id==='HP Max')return computed(d.hpMax,{command:'hp'});
+  if(id==='HP Max')return {state:'editable',kind:'number',min:0,max:1000000,value:d.hpMax,hpMaximum:true,command:'hp',reason:data.adobe?.hpMode==='manual'?'Manual maximum HP; automatic changes do not replace this value.':'Set a maximum once; the next class, Constitution or supported HP-bonus change resumes the selected automatic method.'};
   if(id==='Proficiency Bonus')return computed(sign(d.pb));
   if(id==='AC')return computed(d.ac,{command:'equipment'});
   if(id.startsWith('AC ')||id==='Medium Armor'||id==='Heavy Armor'||id==='Stealth Disadv.alphabeta'){

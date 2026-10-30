@@ -78,3 +78,5 @@ test('original Tool row edits one shared custom check and protects calculated to
 });
 
 test('Background Extra is a bounded detail intent and never renames the custom background',()=>{const c=context();c.data.background='Custom origin name';c.backgroundDetail={key:'acolyte',value:'Temple attendant'};const edit=A.planEdit('Background Extra','Shrine keeper',c);assert.equal(edit.backgroundDetail,'acolyte');assert.equal(edit.value,'Shrine keeper');assert.equal(edit.path,undefined);assert.equal(A.describe('Background Extra',c).value,'Temple attendant');assert.throws(()=>A.planEdit('Background Extra','x'.repeat(201),c));assert.equal(c.data.background,'Custom origin name');});
+
+test('paper maximum HP is a bounded one-shot/manual command rather than a second HP record',()=>{const c=context();for(const value of ['',-1,1.5,1000001])assert.throws(()=>A.planEdit('HP Max',value,c));const edit=A.planEdit('HP Max','25',c);assert.equal(edit.hpMaximum,true);assert.equal(edit.value,25);assert.equal(edit.path,undefined);});
