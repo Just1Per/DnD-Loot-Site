@@ -29,3 +29,11 @@ The immediate priority is a native class/level/subclass dialog opened by a singl
 ### Native configuration checkpoint v43
 
 Implemented in the #250 worktree: single-click Level/Class and Levels popup with isolated draft, class/edition/subclass/source selection, multiclass allocation, XP and one-shot limits, class choices, invocation cantrips, class skills/Expertise/weapon training, Artificer tools and HP review. An independent abilities/saves/skills popup includes point-buy validation and collapsed starting spreads. Both keep the paper visible and the old builder hidden. They retain unrelated state and require the normal Save sheet after Apply. The remaining origins/feat/spell/equipment/companion and paper-tool bridges are still open work; this checkpoint does not mark native parity complete.
+
+### Native feat checkpoint v44
+
+Added an Adobe-owned selected-first feat dialog for granted/advancement choices, rule information, supported effect controls, weapon choices, simple resources, description display and Magic Initiate selection/free use/spellbook actions. The existing pure entitlement/effect functions remain authoritative. The native class Training step now includes the revised Rogue’s extra language. Origins, DM feat-grant/approval administration, class spell management, equipment, companions and remaining paper-tool bridges remain open; the global default is unchanged.
+
+### Feedback from the first preview test
+
+Hide unavailable choices from the other rule edition in Adobe pickers, preserving existing saved selections. The next display task is a continuous editable stack of the connected paper sheets with a fixed left shortcut rail (including direct Spell slots navigation) and a compact mobile alternative. Keep the shared character engine, input validation, private save and printing; avoid disconnected screenshots or a second character draft per page.

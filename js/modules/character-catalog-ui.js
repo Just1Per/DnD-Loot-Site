@@ -358,10 +358,10 @@ function updateSheetCatalogGrants() {
     article.querySelector('[data-copy-grant]').onclick=()=>{const choice=getChoice();if(!C.validateGrant(grant,choice,sheetSession.data).errors.length)addCatalogSpells(choice.spells,grant.edition==='2024'?choice.spells[2]:'');};
   });
 }
-function renderFeatEffectControls(report,level) {
+function renderFeatEffectControls(report,level,data=sheetSession.data) {
   const {def,choice:c,warnings,automated}=report,esc=sheetEscape;
   const select=(label,field,rows,value)=>`<label class="sheet-field">${esc(label)}<select data-feat-choice="${field}">${rows.map(([key,text])=>`<option value="${esc(key)}" ${String(key)===String(value)?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
-  if(report.managedOrigin&&def.name==='Skilled'){const field=report.key==='origin-human'?'humanFeatChoices':'backgroundFeatChoices',values=sheetSession.data.build[field]||[];return '<p class="sheet-help">Selected training: '+values.map(value=>esc(value.startsWith('skill:')?CharacterSheetModel.skills[value.slice(6)]?.[0]||value:value.replace(/^tool:/,''))).filter(Boolean).join(' · ')+'</p>'+(warnings.length?'<p class="sheet-error">'+warnings.map(esc).join(' ')+'</p>':'')+'<button type="button" data-open-granted-training="'+field+'">Change granted training below</button>'; }
+  if(report.managedOrigin&&def.name==='Skilled'){const field=report.key==='origin-human'?'humanFeatChoices':'backgroundFeatChoices',values=data.build[field]||[];return '<p class="sheet-help">Selected training: '+values.map(value=>esc(value.startsWith('skill:')?CharacterSheetModel.skills[value.slice(6)]?.[0]||value:value.replace(/^tool:/,''))).filter(Boolean).join(' · ')+'</p>'+(warnings.length?'<p class="sheet-error">'+warnings.map(esc).join(' ')+'</p>':'')+'<button type="button" data-open-granted-training="'+field+'">Change granted training below</button>'; }
   let html='<div class="sheet-grid">';
   const prereqs=featReference(CharacterCatalog.find(report.id,'feats')||def)?.requirements||[];
   if(prereqs.length)html+='<p class="sheet-help"><strong>Prerequisites:</strong> '+prereqs.map(esc).join(' · ')+'. Review these when choosing this feat.</p>';

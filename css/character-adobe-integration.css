@@ -889,3 +889,5 @@
 .adobe-native-steps{position:sticky;top:0;z-index:1}
 
 @media print{.adobe-native-dialog,.adobe-native-dialog::backdrop{display:none!important}}
+
+.adobe-native-feat-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.adobe-native-feat-head button{flex-shrink:0;min-width:38px;min-height:38px}.adobe-native-dialog details{margin:12px 0}.adobe-native-dialog details .sheet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,195px),1fr));gap:12px}
