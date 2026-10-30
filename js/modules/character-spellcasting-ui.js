@@ -72,6 +72,7 @@
   }
 
   async function openGenerator(classId=''){
+    if(globalThis.CharacterAdobeView?.active()){CharacterAdobeView.openEditor('spells',classId);return;}
     if(!sheetSession)return;
     try{if(!CharacterCatalog.data)await CharacterCatalog.load();}catch(error){sheetStatus('Could not load spell catalogue: '+error.message,true);return;}
     readSheetForm();

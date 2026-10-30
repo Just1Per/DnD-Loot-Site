@@ -1,7 +1,7 @@
 'use strict';
 /* Alternate rendering of the current session. No SDK, storage or second engine. */
 var CharacterAdobeView=(()=>{
- const VERSION='20261030-adobe-sheet-v50',assets=new Map(),sessions=new WeakMap();let current=null;
+ const VERSION='20261030-adobe-sheet-v51',assets=new Map(),sessions=new WeakMap();let current=null;
  const SPELL_CAPACITY={front:55,more:70};let fieldMeasure=null;try{fieldMeasure=document.createElement('canvas').getContext?.('2d')||null;}catch{}
  const xpAdditionError=()=>document.getElementById('sheetXPAmount')?.getAttribute('aria-invalid')==='true'?document.getElementById('sheetXPAddStatus')?.textContent||'Correct the unapplied XP amount.':'';
  const option=(text,value)=>Object.assign(document.createElement('option'),{textContent:text,value});
@@ -156,8 +156,8 @@ var CharacterAdobeView=(()=>{
   for(const [node,hidden] of panels)if(node.isConnected)node.hidden=hidden;
   header.remove();if(c.form.isConnected){body.classList.toggle('sheet-readonly-page',wasReadOnly);body.hidden=c.state.style==='adobe';c.host.hidden=c.state.style!=='adobe';}if(clear&&c.session===sheetSession&&c.host.isConnected)updateSheetCalculations();
  }
- function openEditor(command){
-  const c=current;if(!active()||!valid(c))return;if(['classes','features','abilities','skills','feats','hp','spells'].includes(command)&&closeEditor()===false)return;if(command==='classes'||command==='features'){CharacterAdobeClassUI.open(command==='features'?'choices':'classes');return;}if(command==='abilities'||command==='skills'){CharacterAdobeAbilityUI.open(command==='skills'?'skills':'scores');return;}if(command==='feats'){CharacterAdobeFeatUI.open();return;}if(command==='spells'){CharacterAdobeSpellUI.open(activePaper()?.state.spellCaster||'');return;}if(command==='hp'){openCharacterHitPointOptions();return;}const entry=editorTargets[command];if(!entry){notice('This workflow is still being connected.',true);return;}
+ function openEditor(command,classId=''){
+  const c=current;if(!active()||!valid(c))return;if(['classes','features','abilities','skills','feats','hp','spells'].includes(command)&&closeEditor()===false)return;if(command==='classes'||command==='features'){CharacterAdobeClassUI.open(command==='features'?'choices':'classes');return;}if(command==='abilities'||command==='skills'){CharacterAdobeAbilityUI.open(command==='skills'?'skills':'scores');return;}if(command==='feats'){CharacterAdobeFeatUI.open();return;}if(command==='spells'){CharacterAdobeSpellUI.open(classId||activePaper()?.state.spellCaster||'');return;}if(command==='hp'){openCharacterHitPointOptions();return;}const entry=editorTargets[command];if(!entry){notice('This workflow is still being connected.',true);return;}
   if(closeEditor()===false)return;const node=document.querySelector(entry[1]);if(!node){notice('These shared controls are not available for this character yet.',true);return;}
   if(command==='customTool'||command==='carrying')node.open=true;
   if(command==='notes')renderCharacterAdventureLog();

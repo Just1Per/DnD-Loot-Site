@@ -1,6 +1,6 @@
 # Native Adobe spell selection
 
-In Adobe preview, open a spell page and choose **Choose spells**. The button is available in the single-page toolbar, above each caster's page in All sheets, and on the original paper. The page's caster is selected initially. No Standard panel opens.
+In Adobe preview, open a spell page and choose **Choose spells**. The button is available in the single-page toolbar, above each caster's page in All sheets, and on the original paper. The page's caster is selected initially. No Standard panel opens for selection. Existing Generate/update actions also delegate to this dialog while Adobe is active; Standard retains its existing generator.
 
 The dialog offers **Available spells** and **Your selection**, with name/search, reachable spell level and school filters. Exact names rank first. Clicking a name previews casting time, range, components, duration, description and source before choosing it. On mobile, the reference opens as a detail view with **Back to spells**. Results are rendered in batches of forty.
 
