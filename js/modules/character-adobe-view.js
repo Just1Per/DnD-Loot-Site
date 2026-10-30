@@ -1,7 +1,7 @@
 'use strict';
 /* Alternate rendering of the current session. No SDK, storage or second engine. */
 var CharacterAdobeView=(()=>{
- const VERSION='20261030-adobe-sheet-v46',assets=new Map(),sessions=new WeakMap();let current=null;
+ const VERSION='20261030-adobe-sheet-v47',assets=new Map(),sessions=new WeakMap();let current=null;
  const SPELL_CAPACITY={front:55,more:70};let fieldMeasure=null;try{fieldMeasure=document.createElement('canvas').getContext?.('2d')||null;}catch{}
  const xpAdditionError=()=>document.getElementById('sheetXPAmount')?.getAttribute('aria-invalid')==='true'?document.getElementById('sheetXPAddStatus')?.textContent||'Correct the unapplied XP amount.':'';
  const option=(text,value)=>Object.assign(document.createElement('option'),{textContent:text,value});
