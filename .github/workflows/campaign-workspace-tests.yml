@@ -69,7 +69,7 @@ jobs:
         npm --prefix tests run test:catalogue-migration
         npm --prefix tests run test:reviewed-catalogue
         npm --prefix tests run test:campaign-item-images
-        node --test tests/campaign-item-image-diagnostic.cjs tests/campaign-image-recovery.cjs tests/campaign-image-recovery-sdk.cjs
+        node --test tests/campaign-item-image-diagnostic.cjs tests/campaign-image-recovery.cjs tests/campaign-image-recovery-sdk.cjs tests/campaign-image-recovery-feedback.cjs
     - name: Report failed engine output in check annotations
       if: failure()
       run: |
