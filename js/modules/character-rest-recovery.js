@@ -1,0 +1,14 @@
+'use strict';
+/* HP/Hit Dice recovery shared by Standard and original Heal controls. No automatic rest. */
+var CharacterRestRecovery=(()=>{
+ const P=typeof CharacterPaperCombat!=='undefined'?CharacterPaperCombat:require('./character-paper-combat'),L=typeof CharacterProgression!=='undefined'?CharacterProgression:require('./character-progression');
+ const integer=(value,max)=>Number.isSafeInteger(value)&&value>=0&&value<=max;
+ const edition=value=>{if(!['2014','2024'].includes(value))throw Error('Choose a supported rules edition.');return value;};
+ function characterState(data,derived){const maximum=derived?.hpMax;if(!integer(maximum,1000000))throw Error('The character maximum HP needs correction.');const level=derived.progression.targetLevel,classes=derived.progression.classLevels,rules=edition(data.build.edition),dice=P.hitDiceRecovery(data.adobe.paperCombat,classes,L.hitDieFor,level,rules);return{maximum,level,classes,edition:rules,...dice};}
+ function defaultPlan(state){let remaining=state.budget;return Object.fromEntries(state.rows.map(row=>{const value=Math.min(remaining,row.used);remaining-=value;return[String(row.die),value];}));}
+ function restoreCharacter(data,derived,plan,{recoverDice=true}={}){if(typeof recoverDice!=='boolean')throw Error('Choose whether to recover Hit Dice.');const state=characterState(data,derived),next=structuredClone(data);if(recoverDice&&state.budget)next.adobe.paperCombat=P.recoverHitDice(data.adobe.paperCombat,state.classes,plan,L.hitDieFor,state.level,state.edition);next.hpCurrent=state.maximum;next.hpTemp=0;next.deathSuccess=0;next.deathFailure=0;return next;}
+ function companionState(companion,count,rules){edition(rules);if(!integer(count,1000)||!integer(companion.hpMax,100000)||!integer(companion.hitDiceUsed,1000))throw Error('Correct the companion HP and Hit Dice first.');const spent=Math.min(count,companion.hitDiceUsed),budget=rules==='2014'?Math.min(spent,Math.max(1,Math.floor(count/2))):spent;return{maximum:companion.hpMax,count,spent,budget,edition:rules};}
+ function restoreCompanion(companion,count,rules,value,{recoverDice=true}={}){if(typeof recoverDice!=='boolean')throw Error('Choose whether to recover Hit Dice.');const state=companionState(companion,count,rules),next=structuredClone(companion);if(recoverDice&&state.budget){if(!integer(value,state.budget)||value<1||rules==='2024'&&value!==state.budget)throw Error(rules==='2024'?'A 2024 Long Rest recovers all spent Hit Dice.':'Choose from 1 to '+state.budget+' spent dice to recover.');next.hitDiceUsed=state.spent-value;}next.hpCurrent=state.maximum;next.hpTemp=0;next.deathSuccess=0;next.deathFailure=0;return next;}
+ return {characterState,defaultPlan,restoreCharacter,companionState,restoreCompanion};
+})();
+if(typeof module!=='undefined'&&module.exports)module.exports=CharacterRestRecovery;

@@ -832,3 +832,12 @@
 .sheet-hp-choice-grid button{display:flex;flex-direction:column;gap:.35rem;align-items:center;justify-content:center;min-height:4.5rem;padding:.6rem;white-space:normal}
 .sheet-hp-choice-grid strong{font-size:1.2rem}
 @media(max-width:480px){.sheet-hp-choice-grid{grid-template-columns:1fr}.sheet-hp-choice-grid button{flex-direction:row;justify-content:space-between;min-height:2.75rem}}
+
+.sheet-rest-recovery [hidden]{display:none!important}
+.sheet-rest-preview{margin:1rem 0;padding:.65rem .8rem;background:#f4efe5;border:1px solid #d4c4a5;border-radius:5px}
+.sheet-rest-preview>div{display:flex;justify-content:space-between;gap:1rem;margin:.35rem 0}
+.sheet-rest-preview dd{margin:0;text-align:right;font-weight:600}
+.sheet-rest-recovery [data-rest-dice-fields]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
+.sheet-rest-recovery [data-rest-dice-fields]:has([data-rest-companion-dice]){grid-template-columns:1fr}
+.sheet-rest-recovery [data-rest-dice-fields] .sheet-field{display:grid;gap:.3rem;margin:0}
+.sheet-rest-recovery [data-rest-dice-fields] input{margin:0;min-width:0}
