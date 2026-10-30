@@ -76,3 +76,5 @@ The original SkillsClick menu now selects alphabetical or ability order and expl
 Show extra features previously led to the feats/items continuation. It now opens the same foldable Sheet tools panel above the paper. Page, zoom and print stay visible; shared character controls, Modifiers and Skill options are grouped inside. Open/closed state is retained locally by user, campaign and character. The PDF button no longer changes the selected page. The tools never print and need no database configuration.
 
 Persisted preferences remain in the existing private Adobe grants envelope; no new Firestore/Storage rules, schema version, index or production migration. Item, Adventure Log and conditional-layout menu operations remain tracked under their separate [backlog points](../adobe-sheet-backlog.md).
+
+Readied spell actions use the same `castingStats` helper as spell pages, including generic/caster-specific attack/DC modifiers and optional proficiency dice. The regression uses legal Wizard/Warlock cantrips plus a prepared save spell and verifies actual readied attack/DC totals, preserved selections/resources and private save/reopen.
