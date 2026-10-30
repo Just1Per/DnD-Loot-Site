@@ -242,7 +242,8 @@ var CharacterSheetModel = (() => {
     return {rows,invalid,spent,remaining:27-spent,budget:27,valid:!invalid.length&&spent<=27};
   }
   function derive(data, level, loot = []) {
-    const d = normalize(data), pb = proficiency(level), mods = {}, saves = {}, checks = {};
+    const Override=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),d=normalize(data),pb=Override?Override.proficiency(data,proficiency(level)):proficiency(level),mods={},saves={},checks={};
+    const modifierExpressions=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).modifiers,modifierReport=[],bonus=(key,base=0)=>Override?Override.value(modifierExpressions,key,base,{mods,pb},modifierReport):base;
     // Keep class assignments available to core rules before feats/equipment are calculated.
     const assigned=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels;
     if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:ClassChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
@@ -279,16 +280,18 @@ var CharacterSheetModel = (() => {
     const baseWalkingSpeed=Number(effects.speed)||0;
     const magicItems=Magic?Magic.apply(d,scores,effects,loot,level):{active:[],reports:[],warnings:[]};
     if(d.build.scoreMode==='base')effects.hpBonus+=Math.max(1,Math.min(20,Number(level)||1))*(mod(scores.con)-mod(originCon));
+    for(const key of Object.keys(abilities))mods[key]=mod(scores[key]);
+    const saveAll=bonus('save.all'),skillAll=bonus('skill.all');
     for (const key of Object.keys(abilities)) {
       mods[key] = mod(scores[key]);
-      saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + d.saves[key].bonus + artificerFeatures.saveBonus;
+      saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + bonus('save.'+key,d.saves[key].bonus)+saveAll + artificerFeatures.saveBonus;
     }
     const Aura=globalThis.CharacterPaladinAuras||(typeof require==='function'?require('./character-paladin-auras'):null),paladinAuras=Aura.derive(d,{level,mods});for(const key of Object.keys(saves))saves[key]+=paladinAuras.bonus;
     classOrders.skillBonuses={};for(const report of classOrders.reports){report.bonus=report.skills.length?Math.max(1,mods.wis):0;for(const key of report.skills)classOrders.skillBonuses[key]=(classOrders.skillBonuses[key]||0)+report.bonus;}
     const Check=globalThis.CharacterToolChecks||(typeof require==='function'?require('./character-tool-checks'):null);
     for (const [key, [, ability]] of Object.entries(skills)){
       const rank=Math.max(d.skills[key].rank,effects.skills.includes(key)?1:0,feats.expertise.includes(key)?2:0,classExpertise.skills.includes(key)?2:0);
-      checks[key]=mods[ability]+Math.max(Math.floor(pb*rank),rank>=1?0:Check.untrained(pb,effects,ability,'skill'))+d.skills[key].bonus+(classOrders.skillBonuses[key]||0);
+      checks[key]=mods[ability]+Math.max(Math.floor(pb*rank),rank>=1?0:Check.untrained(pb,effects,ability,'skill'))+bonus('skill.'+key,d.skills[key].bonus)+skillAll+(classOrders.skillBonuses[key]||0);
     }
     const toolTraining=ClassChoices.toolTraining(d,{level,effects,mods,classExpertise});
     const rangerFeatures=ClassChoices.rangerFeatures(d,{level,mods});
@@ -323,16 +326,17 @@ var CharacterSheetModel = (() => {
       mods,
       saves,
       skills: checks,
-      initiative: mods.dex + d.initiativeBonus + (effects.initiativeBonus || 0) + (!effects.initiativeProficiency?Check.untrained(pb,effects,'dex','initiative'):0),
-      passive: 10 + checks.perception + d.passiveBonus + feats.passiveBonus,
-      spellAttack: mods[d.spellAbility] + pb + d.spellAttackBonus,
-      spellDC: 8 + mods[d.spellAbility] + pb + d.spellDCBonus,
+      initiative: mods.dex + bonus('initiative',d.initiativeBonus) + (effects.initiativeBonus || 0) + (!effects.initiativeProficiency?Check.untrained(pb,effects,'dex','initiative'):0),
+      passive: 10 + checks.perception + bonus('passive',d.passiveBonus) + feats.passiveBonus,
+      spellAttack: mods[d.spellAbility] + pb + bonus('spell.attack',d.spellAttackBonus),
+      spellDC: 8 + mods[d.spellAbility] + pb + bonus('dc.primary',d.spellDCBonus),
       attacks: d.attacks.map(a => mods[a.ability] + (a.proficient ? pb : 0) + a.bonus + (a.rangedWeapon ? feats.rangedBonus : 0))
     };
     result.magicItems=magicItems;
     result.gear=Equipment.derive(d,result,loot,level);
     if(Magic)result.gear=Magic.augmentGear(d,result.gear,magicItems);
-    result.ac=result.gear.ac;
+    const acModifiers={magic:bonus('ac.magic'),misc1:bonus('ac.misc1'),misc2:bonus('ac.misc2')},extraAC=acModifiers.magic+acModifiers.misc1+acModifiers.misc2;result.gear.adjustment+=extraAC;result.gear.ac+=extraAC;result.ac=result.gear.ac;
+    result.modifiers={ac:acModifiers,expressions:Override?Override.normalize(modifierExpressions):{},report:modifierReport,allSkills:skillAll,allSaves:saveAll,spellAttackBonus:bonus('spell.attack',d.spellAttackBonus),spellDCBonus:bonus('dc.primary',d.spellDCBonus)};
     const ItemResources=globalThis.CharacterItemResources||(typeof require==='function'?require('./character-item-resources'):null);
     result.itemResources=ItemResources?ItemResources.project(data,result.gear):[];
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
@@ -340,6 +344,9 @@ var CharacterSheetModel = (() => {
     const Carry=globalThis.CharacterCarrying||(typeof require==='function'?require('./character-carrying'):null);
     result.carrying=Carry.limits(data,{scores,effects});
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
+    if(Override){result.gear.attacks=result.gear.attacks.map(row=>Override.attack(row,'attack:gear:'+row.id,modifierExpressions,{mods,pb},level));result.manualAttacks=d.attacks.map((row,i)=>Override.attack({...row,hit:result.attacks[i]},'attack:attack:'+row.id,modifierExpressions,{mods,pb},level));result.attacks=result.manualAttacks.map((row,i)=>row.attack??result.attacks[i]);result.actions=result.actions.map((row,i)=>Override.attack(row,'attack:attack:'+d.actions[i]?.id,modifierExpressions,{mods,pb},level));}
+
+    if(Override)Override.dice({...d,adobe:data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}},result);
     return result;
   }
   function damage(data, amount) {

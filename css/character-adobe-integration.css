@@ -841,3 +841,15 @@
 .sheet-rest-recovery [data-rest-dice-fields]:has([data-rest-companion-dice]){grid-template-columns:1fr}
 .sheet-rest-recovery [data-rest-dice-fields] .sheet-field{display:grid;gap:.3rem;margin:0}
 .sheet-rest-recovery [data-rest-dice-fields] input{margin:0;min-width:0}
+
+/* Native equivalent of the original modifier and skill-option popups. */
+.sheet-modifier-dialog{width:min(620px,calc(100vw - 28px));max-height:calc(100dvh - 28px);overflow:auto;box-sizing:border-box;}
+.sheet-modifier-dialog .sheet-field{display:grid;gap:5px;margin:12px 0;}
+.sheet-modifier-dialog .sheet-field input,.sheet-modifier-dialog .sheet-field select{width:100%;min-height:42px;box-sizing:border-box;}
+.sheet-modifier-dialog .sheet-modifier-result{display:block;padding:12px;border:1px solid #8a7355;border-radius:4px;background:#f6f0e5;font-weight:600;}
+.sheet-modifier-dialog .sheet-inline-controls{display:flex;gap:8px;flex-wrap:wrap;}
+.sheet-modifier-dialog [hidden]{display:none!important;}
+.sheet-modifier-dialog li{margin:8px 0;}
+.sheet-modifier-dialog li small{display:block;}
+#sheetModifierControls [data-active-modifiers]:empty{display:none;}
+#sheetModifierControls [data-active-modifiers]{margin-top:12px;}

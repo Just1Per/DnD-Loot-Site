@@ -5,7 +5,7 @@ function applyCharacterPaperCombat(next){
  if(!characterPaperCombatCurrent(sheetSession))return false;
  sheetSession.data.adobe.paperCombat=next;sheetSession.dirty=true;globalThis.CharacterAdobeView?.refresh();renderCharacterPaperCombat();sheetStatus('Combat reminders updated. Save sheet to keep changes.');return true;
 }
-function characterSecondaryDCStats(data,derived){const second=data.adobe.paperCombat.secondaryDC;return CharacterSpellcasting.castingStats({ability:second.ability},derived,{spellDCBonus:Number(data.spellDCBonus||0)+second.bonus});}
+function characterSecondaryDCStats(data,derived){const second=data.adobe.paperCombat.secondaryDC;return CharacterSpellcasting.castingStats({ability:second.ability},derived,{spellDCBonus:Number(data.spellDCBonus||0),secondaryDCBonus:CharacterModifiers.value(data.adobe.modifiers,'dc.secondary',second.bonus,derived)});}
 function renderCharacterPaperCombat(derived){
  const parent=document.getElementById('sheet-combat');if(!parent||!sheetSession)return;
  let host=document.getElementById('sheetPaperCombat');if(!host){host=document.createElement('details');host.id='sheetPaperCombat';host.className='sheet-paper-combat';host.innerHTML='<summary>Actions & ammunition · paper reminders</summary>';parent.append(host);host.ontoggle=()=>{if(host.open)renderCharacterPaperCombat();};}

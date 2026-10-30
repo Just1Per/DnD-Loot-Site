@@ -7,7 +7,7 @@ var CharacterPaperAttacks=(()=>{
   const sign=n=>(Number(n)>=0?'+':'')+Number(n||0);
   return [
    ...(derived.gear.attacks||[]).map(row=>({...row,key:'gear:'+row.id,origin:'gear',entryId:row.id,abilityChoice:derived.gear.entries?.find(entry=>entry.entry.id===row.id)?.choice.ability||'auto',damage:row.damageDice??row.damage,hit:row.attack===null?'—':sign(row.attack),default:row.equipped,notes:[...(row.notes||[]),...(!row.equipped?['In backpack: ready this item before using it.']:[])]})),
-   ...(data.attacks||[]).map((row,i)=>({...row,key:row.id?'attack:'+row.id:'legacy-manual:'+i,origin:'manual',index:i,hit:sign(derived.attacks[i]),default:true})),
+   ...(data.attacks||[]).map((raw,i)=>{const row=derived.manualAttacks?.[i]||raw;return({...row,key:row.id?'attack:'+row.id:'legacy-manual:'+i,origin:'manual',index:i,hit:sign(derived.attacks[i]),default:true});}),
    ...(derived.actions||[]).map((row,i)=>({...row,key:data.actions[i]?.id?'attack:'+data.actions[i].id:'legacy-action:'+i,origin:'action',index:i,damage:row.damageDice??row.damage,default:true}))
   ];
  }

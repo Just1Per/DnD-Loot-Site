@@ -28,3 +28,16 @@
 .adobe-carrying-art,.adobe-ammo-icon,.adobe-secondary-dc-icon{position:absolute;pointer-events:none;object-fit:fill}
 
 .field input[type="number"]{appearance:textfield;-moz-appearance:textfield}.field input[type="number"]::-webkit-outer-spin-button,.field input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+.adobe-tools{flex:1 0 100%;border:1px solid #b29b76;border-radius:6px;background:#fffaf0;margin-top:4px;}
+.adobe-tools>summary{padding:12px;cursor:pointer;font-size:14px;font-weight:600;}
+.adobe-tools>summary span{font-size:12px;font-weight:400;color:#665747;margin-left:8px;}
+.adobe-tools-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;padding:0 14px 14px;}
+.adobe-tools-grid section{display:flex;gap:8px;align-items:end;flex-wrap:wrap;}
+.adobe-tools-grid h3{flex:1 0 100%;font-size:12px;text-transform:uppercase;letter-spacing:.04em;margin:6px 0;color:#5c1d1d;}
+.adobe-tools-grid label{flex:1 1 180px;}
+@media(max-width:600px){.adobe-tools-grid{grid-template-columns:1fr;gap:8px;}.adobe-tools>summary span{display:block;margin:4px 0 0 14px;}.adobe-tools-grid button{flex:1 1 150px;}}
+.adobe-tools-grid section{align-content:start;}
+.adobe-tools-grid label{flex:0 1 270px;min-width:0;}
+.adobe-tools-grid select{width:100%;min-width:0;max-width:100%;}
+@media(max-width:600px){.adobe-tools-grid label{flex:1 1 100%;}}

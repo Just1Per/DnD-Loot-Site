@@ -411,7 +411,8 @@ function readSheetForm() {
     let target = data;
     for (const key of keys)
       target = target[key];
-    target[last] = input.type === 'checkbox' ? input.checked : input.type === 'number' || input.name.endsWith('.rank') ? Number(input.value) : input.value;
+    const next=input.type==='checkbox'?input.checked:input.type==='number'||input.name.endsWith('.rank')?Number(input.value):input.value;
+    const modifierKey=globalThis.CharacterModifiers?.pathKey(input.name,data);if(modifierKey&&target[last]!==next&&data.adobe?.modifiers)delete data.adobe.modifiers[modifierKey];target[last]=next;
   });
   if(!canManageCampaign())data.advancement.asiSpent=CharacterPlayRules.normalizeAdvancement(s.data.advancement).asiSpent;
   s.identity = {

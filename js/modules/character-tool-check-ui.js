@@ -5,7 +5,7 @@ function applyCharacterToolCheck(field,value,session=sheetSession){
  if(!characterToolCheckCurrent(session))throw Error('This character session is no longer active.');
  readSheetForm();const derived=CharacterSheetModel.derive(session.data,session.identity.level,sheetEquipmentLoot());
  const next=CharacterToolChecks.edit(session.data.adobe.customToolCheck,field,value,{...derived,proficiencies:session.data.proficiencies,toolNames:CharacterRules.tools});
- session.data.adobe.customToolCheck=next;session.dirty=true;updateSheetCalculations();sheetStatus('Custom check updated. Save sheet to keep changes.');return true;
+ session.data.adobe.customToolCheck=next;if(field==='bonus')delete session.data.adobe.modifiers.tool;session.dirty=true;updateSheetCalculations();sheetStatus('Custom check updated. Save sheet to keep changes.');return true;
 }
 function renderCharacterToolCheck(derived){
  const session=sheetSession,parent=document.getElementById('sheet-skills');if(!parent||!session)return;
