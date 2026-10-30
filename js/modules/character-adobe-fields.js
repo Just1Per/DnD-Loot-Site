@@ -98,7 +98,7 @@ var CharacterAdobeFields=(()=>{
   if(id==='spellshead.attack.0')return computed(context.spellStats?sign(context.spellStats.attack):'',{command:'spells'});
   if(id==='spellshead.dc.0')return computed(context.spellStats?.dc??'',{command:'spells'});
   if(id==='spellsdiv.Text.0')return computed('Selected spells · sorted by level');
-  if((m=/^SpellSlots\.Extra\.lvl([1-9])$/.exec(id))){const level=Number(m[1]),maximum=context.spellPact?(level===context.spellPact.slotLevel?context.spellPact.count:0):data.slots[level-1]?.max||0;return computed(maximum>4?'OF '+maximum:'',{command:'spells',reason:'Total spell slots at this level, using the same pool as the tracker above. Change or spend slots in the shared Spells controls.'});}
+  if((m=/^SpellSlots\.Extra\.lvl([1-9])$/.exec(id))){const level=Number(m[1]),maximum=context.spellPact?(level===context.spellPact.slotLevel?context.spellPact.count:0):data.slots[level-1]?.max||0;return computed(maximum>4?'OF '+maximum:'',{command:'spellSlots',reason:'Total spell slots at this level, using the same pool as the tracker above. Open spell slot controls to change or spend this pool.'});}
   if(id==='SpellSheetInformation')return computed((context.spellPact?'Pact Magic slots shown above are separate from ordinary Spellcasting slots. ':'Ordinary Spellcasting slots shown above are separate from Pact Magic. ')+'Choose a caster above to see its ability, attack modifier and save DC. Prepared choices and slots use the shared Spells controls. Spell descriptions may be abbreviated; open Spells for full information.');
   if(['Too Text','Too','Too Prof','Too Exp'].includes(id)){
    const row=d.customToolCheck||{name:'',rank:0,automaticRank:0,total:null};
