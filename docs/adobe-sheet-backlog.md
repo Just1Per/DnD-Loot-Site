@@ -20,6 +20,12 @@ Agreed with the user on 30 October 2026. Keep this work in PR #250. No assistant
 
 Character data stays in the existing private save/grants envelope. Each point must state tests and any actual rule changes in the PR. Keep future unsupported options read-only/unavailable and describe their remaining scope honestly.
 
-## Later UX discussion
+## Adobe owns every workflow — revised requirement
 
-The user approved **collapsed initially, then remember the choice** for Sheet tools. The current Level field does not open a level-up popup; class levels are assigned separately. A guided level-up review (class allocation, automatic features, required choices, HP and confirmation) was discussed as a separate possible flow. It is not included in point 1; verify total/assigned-level consistency when that flow is designed.
+The user approved **collapsed initially, then remember the choice** for Sheet tools. After testing, the user clarified that Adobe must provide every setting itself and is intended to become the future standard. Opening Standard/builder panels is an interim bridge, not completed Adobe parity. Shared rules, private persistence and catalogue data remain reusable.
+
+The immediate priority is a native class/level/subclass dialog opened by a single click on Level or Class and Levels. It must include rule/source eligibility, multiclass allocation, class choices and training, HP review, Apply/Cancel, and retained resources. Follow with native origins/abilities/feats/spells/equipment/companions and the remaining paper tools; remove each legacy navigation bridge only when its replacement is working and tested. Do not switch the global default until this complete path has been tested. The remaining numbered mechanics/layout tasks above still apply.
+
+### Native configuration checkpoint v43
+
+Implemented in the #250 worktree: single-click Level/Class and Levels popup with isolated draft, class/edition/subclass/source selection, multiclass allocation, XP and one-shot limits, class choices, invocation cantrips, class skills/Expertise/weapon training, Artificer tools and HP review. An independent abilities/saves/skills popup includes point-buy validation and collapsed starting spreads. Both keep the paper visible and the old builder hidden. They retain unrelated state and require the normal Save sheet after Apply. The remaining origins/feat/spell/equipment/companion and paper-tool bridges are still open work; this checkpoint does not mark native parity complete.

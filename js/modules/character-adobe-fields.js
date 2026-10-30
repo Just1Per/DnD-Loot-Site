@@ -105,8 +105,8 @@ var CharacterAdobeFields=(()=>{
    if(id==='Too')return computed(row.total===null?'':sign(row.total),{command:'customTool',reason:row.total===null?'Add an ability in parentheses, such as (Dex), to calculate this check.':'Calculated from the same ability, tool training and check adjustment as Standard.'});
    const wanted=id==='Too Exp'?2:1;return row.automaticRank>=wanted?computed(true,{kind:'checkbox',command:'customTool',reason:'Included in your existing tool training. Change its original choice to remove it.'}):{state:'editable',kind:'checkbox',value:row.rank>=wanted,customToolCheck:wanted===2?'expertise':'proficient',command:'customTool'};
   }
-  if(id==='Character Level')return data.adobe?.useExperience?computed(d.progression.targetLevel):edit('identity.level',identity.level,'number',20,{min:1});
-  if(id==='Class and Levels'){const rows=d.progression?.classLevels||[];return computed(rows.map(c=>(context.className?.(c.classId)||c.classId)+(rows.length>1?' '+c.level:'')).join(' / '),{command:'classes'});}
+  if(id==='Character Level')return computed(d.progression?.targetLevel??identity.level,{command:'classes',singleClick:true,reason:'Choose class, level and subclass in the Adobe sheet.'});
+  if(id==='Class and Levels'){const rows=d.progression?.classLevels||[];return computed(rows.map(c=>(context.className?.(c.classId)||c.classId)+(rows.length>1?' '+c.level:'')).join(' / '),{command:'classes',singleClick:true});}
   if(id==='Total Experience')return edit('experience',d.progression?.xp?.xp??(data.experience||0),'number',1000000000,{command:'classes'});
   if(id==='Next level')return computed(d.progression?.xp?.next??'',{command:'classes'});
   if((m=/^Feat (Name|Note|Description) ([1-8])$/.exec(id))){const row=context.feats?.[(context.featOffset||0)+Number(m[2])-1];return computed(!row?'':m[1]==='Name'?row.name:m[1]==='Note'?[row.origin,row.source].filter(Boolean).join(' · '):[row.description,...(row.report?.warnings||[])].filter(Boolean).join('\n'),{kind:m[1]==='Description'?'textarea':'text',command:'feats'});}

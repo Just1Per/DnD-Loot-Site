@@ -853,3 +853,39 @@
 .sheet-modifier-dialog li small{display:block;}
 #sheetModifierControls [data-active-modifiers]:empty{display:none;}
 #sheetModifierControls [data-active-modifiers]{margin-top:12px;}
+
+/* Adobe-native progression stays over the paper, including compact screens. */
+.adobe-native-dialog{width:min(820px,calc(100vw - 24px));padding:0;max-height:92dvh;overscroll-behavior:contain}
+.adobe-native-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:22px 24px 10px}
+.adobe-native-head h2{margin:3px 0 8px;font-size:1.35rem}
+.adobe-native-head>button{min-width:40px;min-height:40px;font-size:1.4rem}
+.adobe-native-dialog .sheet-eyebrow{font-size:.68rem;letter-spacing:.14em;color:#765d40}
+.adobe-native-steps{display:flex;gap:6px;padding:8px 24px;flex-wrap:wrap;border-bottom:1px solid #d6c5aa;background:#f5efe3}
+.adobe-native-steps button{flex:1;min-width:110px;min-height:40px;padding:8px;color:#5b3827;border:1px solid transparent;background:transparent}
+.adobe-native-steps [aria-current="step"]{background:#fffdf8;border-color:#8a7355;font-weight:700}
+.adobe-native-summary{padding:0 24px;color:#675744;font-size:.9rem}
+.adobe-native-dialog>section{padding:0 24px 16px}
+.adobe-native-class,.adobe-native-group{margin:16px 0;padding:16px;border:1px solid #d8c7ad;border-radius:8px;background:#fffdf9}
+.adobe-native-class>header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.adobe-native-dialog h3{font-size:1rem;margin:0 0 10px;color:#5c1d1d}
+.adobe-native-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,195px),1fr));gap:12px}
+.adobe-native-dialog .sheet-field{display:flex;flex-direction:column;gap:5px;margin:8px 0;min-width:0}
+.adobe-native-dialog select,.adobe-native-dialog input{box-sizing:border-box;max-width:100%;min-height:40px;padding:8px;border:1px solid #b39c7f;border-radius:4px;background:#fff;color:#30271f;font-size:.95rem}
+.adobe-native-dialog input[type="checkbox"]{width:20px;min-height:20px}
+.adobe-native-dialog [aria-invalid="true"]{outline:2px solid #a52a2a}
+.adobe-native-toggle{display:flex;gap:10px;align-items:center;margin:16px 0}
+.adobe-native-choice{border-top:1px solid #e5d8c5;padding-top:8px;margin-top:12px}
+.adobe-native-choice h4{margin:6px 0}
+.adobe-native-dialog .sheet-help{font-size:.88rem;line-height:1.5;color:#665744}
+.adobe-native-dialog #adobeClassStatus{margin:0;padding:8px 24px;color:#8b2727;min-height:1.5em}
+.adobe-native-footer{display:flex;gap:8px;flex-wrap:wrap;position:sticky;bottom:0;padding:14px 24px;border-top:1px solid #d8c7ad;background:#fdfbf7}
+.adobe-native-footer button{min-height:42px;padding:8px 14px}
+.adobe-native-footer .btn-primary{margin-left:auto;background:#5c1d1d;color:#fff;border-color:#5c1d1d}
+.adobe-native-xp{display:flex;align-items:end;gap:12px}
+@media(max-width:520px){.adobe-native-head,.adobe-native-steps,.adobe-native-dialog>section,.adobe-native-footer{padding-left:14px;padding-right:14px}.adobe-native-summary{padding:0 14px}.adobe-native-class,.adobe-native-group{padding:12px}.adobe-native-footer button{flex:1}.adobe-native-footer .btn-primary{flex-basis:100%;order:2}.adobe-native-head h2{font-size:1.15rem}}
+
+.adobe-native-message{padding:8px 24px;color:#765032;min-height:1.5em}
+
+.adobe-native-steps{position:sticky;top:0;z-index:1}
+
+@media print{.adobe-native-dialog,.adobe-native-dialog::backdrop{display:none!important}}
