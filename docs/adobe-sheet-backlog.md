@@ -49,3 +49,7 @@ View → All sheets adds a continuous editable stack with a fixed left shortcut 
 - Readable/searchable Adobe pickers replace raw browser menus on source fields and native class/ability/feat dialogs. Race/background lists come from shared catalogues rather than the Standard DOM; names stay short on paper and source details appear in the picker. Source resistance/ammo suggestions, six companion sizes and Cohort/Mount roles are included.
 - [All exported nonempty option lists are reviewed](adobe-inventory/dropdown-audit.md); computed fields and unimplemented source overrides are explicitly recorded. This is not full functional parity.
 - The user’s self-contained Adobe requirement remains the release target. Origins, full spell/equipment/advanced companion management and the remaining legacy editor bridges still require native replacement. Do not merge #250 as a completed 1:1 version.
+
+### v48 stability follow-up
+
+Navigation reclaims older prefetch views at completion, even for cached destinations. Visible, focused, selected and invalid drafts are retained; the prefetch buffer alone cannot exceed the twelve-view budget. The regression covers a tall viewport with delayed animation frames and checks each completed jump. Keyboard opening/canceling a picker leaves a clean character unchanged. The associated UI build is v48; no rules change.
