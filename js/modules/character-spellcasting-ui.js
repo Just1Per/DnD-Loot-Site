@@ -156,25 +156,8 @@
     const p=currentProfile();
     return p?draftRows(p.classId):[];
   }
-  function selectionError(p,rows){
-    rows=counted(p,rows);
-    const cantrips=rows.filter(s=>s.level===0),leveled=rows.filter(s=>s.level>0),prepared=leveled.filter(s=>s.prepared);
-    if(cantrips.length>p.cantrips)return 'Too many cantrips: choose at most '+p.cantrips+'. You currently have '+cantrips.length+'.';
-    if(p.mode==='spellbook'){
-      if(prepared.length>p.spellCount)return 'Too many prepared Wizard spells: prepare at most '+p.spellCount+'. You currently have '+prepared.length+'.';
-    }else if(leveled.length>p.spellCount)return 'Too many level 1+ spells: choose at most '+p.spellCount+'. You currently have '+leveled.length+'.';
-    return'';
-  }
-  function completionNotice(p,rows){
-    rows=counted(p,rows);
-    const cantrips=rows.filter(s=>s.level===0),leveled=rows.filter(s=>s.level>0),prepared=leveled.filter(s=>s.prepared),parts=[];
-    if(cantrips.length<p.cantrips)parts.push((p.cantrips-cantrips.length)+' cantrip'+(p.cantrips-cantrips.length===1?'':'s')+' remaining');
-    if(p.mode==='spellbook'){
-      if(leveled.length<p.bookMinimum)parts.push((p.bookMinimum-leveled.length)+' spellbook spell'+(p.bookMinimum-leveled.length===1?'':'s')+' remaining from level progression');
-      if(prepared.length<p.spellCount)parts.push((p.spellCount-prepared.length)+' prepared spell'+(p.spellCount-prepared.length===1?'':'s')+' remaining');
-    }else if(leveled.length<p.spellCount)parts.push((p.spellCount-leveled.length)+' '+S.modeLabel(p).toLowerCase()+' remaining');
-    return parts.length?'Incomplete: '+parts.join(' · ')+'. You can still generate and continue later.':'Ready to generate.';
-  }
+  function selectionError(p,rows){return S.selectionState(p,rows,CharacterCatalog.rawData?.spells||[]).error;}
+  function completionNotice(p,rows){return S.selectionState(p,rows,CharacterCatalog.rawData?.spells||[]).notice;}
   function updateCount(){
     const p=currentProfile(),count=document.getElementById('spellGeneratorCount');
     if(!p||!count)return;

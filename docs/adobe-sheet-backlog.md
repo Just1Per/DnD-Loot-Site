@@ -53,3 +53,9 @@ View → All sheets adds a continuous editable stack with a fixed left shortcut 
 ### v48 stability follow-up
 
 Navigation reclaims older prefetch views at completion, even for cached destinations. Visible, focused, selected and invalid drafts are retained; the prefetch buffer alone cannot exceed the twelve-view budget. The regression covers a tall viewport with delayed animation frames and checks each completed jump. Keyboard opening/canceling a picker leaves a clean character unchanged. The associated UI build is v48; no rules change.
+
+## Native spell selection — v49
+
+Choose spells now opens an Adobe-owned catalogue/selection draft, with class/level/school filters, exact-name search ranking, inline spell facts/description and separate selected list. Reach and limits reuse CharacterSpellcasting and CharacterCatalog; Wizard book/preparation, automatic grants, both rule editions and Artificer source profiles remain shared. Class switch retains draft choices, while existing manual/unassigned/out-of-list entries and other resources remain intact. Apply changes only spells; Cancel/Escape/session guards discard the local draft. Mobile has a dedicated detail view and Back to spells. Paper, single-page toolbar and per-caster All sheets headings provide entry points. The single-spell information window is unchanged.
+
+This replaces the spell-selection bridge. Slot spending retains its existing separate route, and custom spell authoring, additional spell tools and the other remaining native-editor bridges still need parity work. No new rules or migration. See [spell picker](adobe-native-spell-picker.md).

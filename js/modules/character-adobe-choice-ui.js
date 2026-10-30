@@ -2,7 +2,7 @@
 /* Readable Adobe pickers; the original controls and shared change handlers remain authoritative. */
 var CharacterAdobeChoiceUI=(()=>{
  let owner=null,dialog=null,restore=null;
- const nativeDialogs='#adobeClassDialog, #adobeAbilityDialog, #adobeFeatDialog';
+ const nativeDialogs='#adobeClassDialog, #adobeAbilityDialog, #adobeFeatDialog, #adobeSpellDialog';
  function label(field){
   const id=field.id,labels={'Comp.Race':'Companion creature','Comp.Type':'Companion role','Comp.Desc.Size':'Creature size','Comp.Desc.MonsterType':'Creature type','Comp.Desc.Alignment':'Alignment','AC Armor Description':'Armor','AC Shield Bonus Description':'Shield','Spell DC 1 Mod':'Save DC ability','Spell DC 1 Mod #2':'Save DC ability','Spell DC 2 Mod':'Second save DC ability','AdvLogS.Background_Faction.Text':'Faction'};if(labels[id])return labels[id];
   const patterns=[[/^Resistance Damage Type (\d+)$/,'Resistance'],[/^Extra\.Magic Item (\d+)$/,'Magic item'],[/^Wildshape\.Race\.(\d+)$/,'Wild Shape form'],[/^Comp\.Use\.Attack\.(\d+)\.Weapon Selection$/,'Companion attack'],[/^Attack\.(\d+)\.Weapon Selection$/,'Attack'],[/^Attack\.(\d+)\.Mod$/,'Attack ability']];for(const [pattern,title]of patterns){const match=pattern.exec(id);if(match)return title+' '+match[1];}if(/^Ammo(?:Left|Right)Display.Name$/.test(id))return id.includes('Left')?'Left ammunition tracker':'Right ammunition tracker';return id;
