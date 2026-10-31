@@ -72,6 +72,7 @@
   }
 
   async function openGenerator(classId=''){
+    if(globalThis.CharacterAdobeView?.active()){CharacterAdobeView.openEditor('spells',classId);return;}
     if(!sheetSession)return;
     try{if(!CharacterCatalog.data)await CharacterCatalog.load();}catch(error){sheetStatus('Could not load spell catalogue: '+error.message,true);return;}
     readSheetForm();
@@ -102,7 +103,7 @@
     if(p.cantrips)detail.push(p.cantrips+' cantrip'+(p.cantrips===1?'':'s'));
     if(p.mode==='spellbook')detail.push('at least '+p.bookMinimum+' spellbook spells from leveling','prepare '+p.spellCount);
     else detail.push(p.spellCount+' '+S.modeLabel(p).toLowerCase());
-    document.getElementById('spellGeneratorRequirement').innerHTML='<strong>'+esc(p.name)+' '+p.level+' · '+esc(p.edition)+(p.sourceLabel?' · '+esc(p.sourceLabel):'')+'</strong><span>'+detail.join(' · ')+'</span><small>Reachable spell level: '+(p.maxSpellLevel||'cantrips only')+' · Spellcasting ability: '+esc(abilityName(p.ability))+' '+signed(casting.modifier)+' · Spell attack '+signed(casting.attack)+' · Save DC '+casting.dc+' · '+(p.changeTiming==='long-rest'?'List can be changed after a long rest.':'List normally changes when you gain a class level.')+'</small><small>Selected in this builder: '+cantrips+' cantrips · '+leveled+' level 1+ spells'+(p.mode==='spellbook'?' · '+prepared+' prepared':'')+'.</small>';
+    document.getElementById('spellGeneratorRequirement').innerHTML='<strong>'+esc(p.name)+' '+p.level+' · '+esc(p.edition)+(p.sourceLabel?' · '+esc(p.sourceLabel):'')+'</strong><span>'+detail.join(' · ')+'</span><small>Reachable spell level: '+(p.maxSpellLevel||'cantrips only')+' · Spellcasting ability: '+esc(abilityName(p.ability))+' '+signed(casting.modifier)+' · Spell attack '+signed(casting.attack)+' · Save DC '+casting.dc+' · '+(p.changeTiming==='long-rest'?'List can be changed after a long rest.':'List normally changes when you gain a class level.')+'</small><small>Selected in this builder: '+cantrips+' cantrips · '+leveled+' level 1+ spells'+(S.isPreparedToggleUseful(p)?' · '+prepared+' prepared':'')+'.</small>';
     renderList();
   }
 
@@ -129,7 +130,7 @@
     rows.sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name));
     host.innerHTML=rows.map(spell=>{
       const old=existing.get(spell.id),checked=!!old,automatic=grants(p).some(s=>s.id===spell.id);
-      const prep=p.mode==='spellbook'&&spell.level>0?'<label class="sheet-spell-prepared-choice"><input type="checkbox" data-spell-prepared data-spell-id="'+esc(spell.id)+'" '+(old?.prepared?'checked ':'')+(checked?'':'disabled')+'><span>Prepared</span></label>':'';
+      const prep=S.isPreparedToggleUseful(p)&&spell.level>0&&!automatic?'<label class="sheet-spell-prepared-choice"><input type="checkbox" data-spell-prepared data-spell-id="'+esc(spell.id)+'" '+(old?.prepared?'checked ':'')+(checked?'':'disabled')+'><span>Prepared</span></label>':'';
       return '<article class="sheet-spell-generator-row"><label><input type="checkbox" data-spell-pick data-spell-id="'+esc(spell.id)+'" '+(checked?'checked':'')+(automatic?' disabled':'')+'><span><strong>'+esc(spell.name)+'</strong><small>'+(spell.level?'Level '+spell.level:'Cantrip')+' · '+esc(spell.school||'')+' · '+esc(spell.source||spell.book||'')+(automatic?' · Always prepared':'')+'</small></span></label>'+prep+'<button type="button" class="sheet-info-button" data-spell-info="'+esc(spell.id)+'">i</button></article>';
     }).join('')||'<p class="sheet-empty">No eligible spells match this filter.</p>';
     host.querySelectorAll('[data-spell-info]').forEach(button=>button.onclick=()=>openSpellInformation({catalogId:button.dataset.spellInfo}));
@@ -156,31 +157,15 @@
     const p=currentProfile();
     return p?draftRows(p.classId):[];
   }
-  function selectionError(p,rows){
-    rows=counted(p,rows);
-    const cantrips=rows.filter(s=>s.level===0),leveled=rows.filter(s=>s.level>0),prepared=leveled.filter(s=>s.prepared);
-    if(cantrips.length>p.cantrips)return 'Too many cantrips: choose at most '+p.cantrips+'. You currently have '+cantrips.length+'.';
-    if(p.mode==='spellbook'){
-      if(prepared.length>p.spellCount)return 'Too many prepared Wizard spells: prepare at most '+p.spellCount+'. You currently have '+prepared.length+'.';
-    }else if(leveled.length>p.spellCount)return 'Too many level 1+ spells: choose at most '+p.spellCount+'. You currently have '+leveled.length+'.';
-    return'';
-  }
-  function completionNotice(p,rows){
-    rows=counted(p,rows);
-    const cantrips=rows.filter(s=>s.level===0),leveled=rows.filter(s=>s.level>0),prepared=leveled.filter(s=>s.prepared),parts=[];
-    if(cantrips.length<p.cantrips)parts.push((p.cantrips-cantrips.length)+' cantrip'+(p.cantrips-cantrips.length===1?'':'s')+' remaining');
-    if(p.mode==='spellbook'){
-      if(leveled.length<p.bookMinimum)parts.push((p.bookMinimum-leveled.length)+' spellbook spell'+(p.bookMinimum-leveled.length===1?'':'s')+' remaining from level progression');
-      if(prepared.length<p.spellCount)parts.push((p.spellCount-prepared.length)+' prepared spell'+(p.spellCount-prepared.length===1?'':'s')+' remaining');
-    }else if(leveled.length<p.spellCount)parts.push((p.spellCount-leveled.length)+' '+S.modeLabel(p).toLowerCase()+' remaining');
-    return parts.length?'Incomplete: '+parts.join(' · ')+'. You can still generate and continue later.':'Ready to generate.';
-  }
+  function selectionError(p,rows){return S.selectionState(p,rows,CharacterCatalog.rawData?.spells||[]).error;}
+  function completionNotice(p,rows){return S.selectionState(p,rows,CharacterCatalog.rawData?.spells||[]).notice;}
   function updateCount(){
     const p=currentProfile(),count=document.getElementById('spellGeneratorCount');
     if(!p||!count)return;
     const rows=counted(p,selections()),cantrips=rows.filter(s=>s.level===0).length,leveled=rows.filter(s=>s.level>0).length,prepared=rows.filter(s=>s.level>0&&s.prepared).length;
     const parts=['Cantrips '+cantrips+'/'+p.cantrips];
     if(p.mode==='spellbook')parts.push('Spellbook '+leveled+'/'+p.bookMinimum+' minimum','Prepared '+prepared+'/'+p.spellCount);
+    else if(p.mode==='prepared')parts.push('On sheet '+leveled,'Prepared '+prepared+'/'+p.spellCount);
     else parts.push(S.modeLabel(p)+' '+leveled+'/'+p.spellCount);
     if(grants(p).length)parts.push(grants(p).length+' always prepared · additional to allowance');
     const error=selectionError(p,rows),notice=completionNotice(p,rows);
@@ -197,7 +182,7 @@
     const other=sheetSession.data.spells.filter(spell=>spell.classId!==p.classId);
     for(const row of rows){
       row.classId=p.classId;
-      if(p.mode!=='spellbook')row.prepared=p.mode==='prepared'||p.mode==='fixed-prepared';
+      if(!S.isPreparedToggleUseful(p))row.prepared=p.mode==='fixed-prepared';
     }
     const manual=sheetSession.data.spells.filter(spell=>spell.classId===p.classId&&!spell.catalogId);
     if(other.length+rows.length+manual.length>150){sheetStatus('Too many spell rows. Remove unused spells before generating.',true);return;}
@@ -257,28 +242,26 @@
     const host=document.getElementById('sheetSpellReadout');
     if(!host||!sheetSession)return;
     adoptLegacySpells(d);
-    const all=sheetSession.data.spells.map((spell,i)=>({spell,i}));
+    const all=characterSpellPresentation(sheetSession.data,d,sheetSession.identity.level);
     const classProfiles=profiles(d),known=new Set(classProfiles.map(p=>p.classId));
     const other=all.filter(({spell})=>!known.has(spell.classId));
     const sheets=classProfiles.map(p=>({profile:p,rows:all.filter(({spell})=>spell.classId===p.classId)}));
     if(other.length)sheets.push({profile:null,rows:other});
     host.innerHTML=sheets.map(({profile:p,rows})=>{
-      const showPrepared=p?.mode==='spellbook',colspan=showPrepared?12:11;
+      const showPrepared=S.isPreparedToggleUseful(p),colspan=showPrepared?12:11;
       rows.sort((a,b)=>a.spell.level-b.spell.level||a.spell.name.localeCompare(b.spell.name));
       const casting=p?S.castingStats(p,d,sheetSession.data):null,counts=p?S.selectionCounts(p,rows.map(row=>row.spell),CharacterCatalog.rawData?.spells||[]):null;
       const amount=p?.mode==='known'?counts.leveled:counts?.prepared;
       const count=p?counts.cantrips+'/'+p.cantrips+' cantrips · '+amount+'/'+p.spellCount+' '+(p.mode==='spellbook'?'prepared spells':S.modeLabel(p).toLowerCase())+(p.mode==='spellbook'?' · '+counts.leveled+' in spellbook':'')+(counts.automatic?' · '+counts.automatic+' always prepared (extra)':''):'';
       const pool=p?(p.classId==='warlock'?'Pact Magic: '+(d.progression?.pact?.count||0)+' slots at level '+(d.progression?.pact?.slotLevel||1)+' · Separate pool above':(classProfiles.filter(profile=>profile.classId!=='warlock').length>1?'Shared Spellcasting slots above':'Spellcasting slots above')):'';
       const header=p?'<header class="sheet-class-spell-header"><div><span class="sheet-eyebrow">'+esc(p.name)+' · Level '+p.level+' · '+esc(p.edition)+(p.sourceLabel?' · '+esc(p.sourceLabel):'')+'</span><h4>'+esc(p.name)+' spell sheet</h4><p>'+esc(count)+'</p></div><button type="button" class="btn-primary" data-generate-class="'+esc(p.classId)+'">Generate / update '+esc(p.name)+'</button></header><dl class="sheet-class-spell-metrics"><div><dt>Spellcasting ability</dt><dd>'+esc(abilityName(casting.ability))+' '+signed(casting.modifier)+'</dd></div><div><dt>Spell attack</dt><dd>'+signed(casting.attack)+'</dd></div><div><dt>Save DC</dt><dd>'+casting.dc+'</dd></div><div><dt>Maximum spell level</dt><dd>'+p.maxSpellLevel+'</dd></div></dl><p class="sheet-help">'+esc(pool)+'</p>':'<header class="sheet-class-spell-header"><div><h4>Other / unassigned spells</h4><p>Choose a class for each spell to use its preparation allowance and casting ability.</p></div></header>';
-      const table=rows.map(({spell,i})=>{
-        const catalog=CharacterCatalog.find(spell.catalogId),description=catalog?.shortDescription||catalog?.description||spell.notes||'Source reference only';
-        const invocation=CharacterClassFeatureChoices.cantripModifier(sheetSession.data,d.cantripInvocations,spell.catalogId,spell.classId),invocationNote=invocation?'<small class="sheet-help" data-cantrip-modifier="'+esc(spell.catalogId)+'">'+esc(CharacterClassFeatureChoices.cantripModifierText(invocation))+'</small>':'';
-        const mark=CharacterClassFeatureChoices.huntersMarkEffect(sheetSession.data,catalog,{level:d.progression?.targetLevel||sheetSession.identity.level,classId:spell.classId,features:d.rangerFeatures}),markNote=mark?'<small class="sheet-help" data-class-spell-effect="'+esc(spell.catalogId)+'">'+esc([mark.detail,...mark.notes].join(' '))+'</small>':'';
-        const beast=globalThis.CharacterDruidSpellcasting?.assess(sheetSession.data,catalog||spell,{level:d.progression?.targetLevel||sheetSession.identity.level,classId:spell.classId}),beastNote=beast?.relevant?'<small class="sheet-help sheet-beast-spell-status" data-beast-spell-status="'+esc(beast.status)+'" tabindex="0" title="'+esc(beast.detail)+'">'+esc(beast.label)+'</small>':'';
-        const automatic=grants(p).some(s=>s.id===spell.catalogId);
+      const table=rows.map(({spell,i,c:catalog,description,invocation,mark,beast,automatic,range})=>{
+        const invocationNote=invocation?'<small class="sheet-help" data-cantrip-modifier="'+esc(spell.catalogId)+'">'+esc(CharacterClassFeatureChoices.cantripModifierText(invocation))+'</small>':'';
+        const markNote=mark?'<small class="sheet-help" data-class-spell-effect="'+esc(spell.catalogId)+'">'+esc([mark.detail,...mark.notes].join(' '))+'</small>':'';
+        const beastNote=beast?.relevant?'<small class="sheet-help sheet-beast-spell-status" data-beast-spell-status="'+esc(beast.status)+'" tabindex="0" title="'+esc(beast.detail)+'">'+esc(beast.label)+'</small>':'';
         const prep=showPrepared?'<td>'+(spell.level===0?'—':automatic?'Always':'<button type="button" data-generated-prepare="'+i+'" class="sheet-slot-orb" aria-label="Prepare '+esc(spell.name)+' for '+esc(p.name)+'" aria-pressed="'+spell.prepared+'"></button>')+'</td>':'';
         const assignment=!p?'<select data-spell-assign="'+i+'" aria-label="Spellcasting class for '+esc(spell.name)+'"><option value="">'+esc(spell.classId||'Choose class')+'</option>'+classProfiles.map(profile=>'<option value="'+esc(profile.classId)+'">'+esc(profile.name)+'</option>').join('')+'</select>':'';
-        return '<tr data-class-spell-index="'+i+'">'+prep+'<td>'+(spell.level||'C')+'</td><td class="sheet-class-spell-name"><strong>'+esc(spell.name)+'</strong><small>'+esc(catalog?.edition||'Custom')+(automatic?' · Always prepared':'')+'</small>'+assignment+'<button type="button" class="sheet-info-button" data-generated-spell-info="'+i+'" aria-label="Information about '+esc(spell.name)+'">i</button></td><td>'+esc(description.replace(/\s+/g,' ').slice(0,180))+(description.length>180?'…':'')+invocationNote+markNote+beastNote+'</td><td>'+esc(catalog?.save||'—')+'</td><td>'+esc(catalog?.school||'—')+'</td><td>'+esc(spell.casting)+'</td><td>'+esc(invocation?.range||(catalog?CharacterClassFeatureChoices.cantripRange(catalog,d.progression?.targetLevel||sheetSession.identity.level,spell.range):spell.range))+'</td><td>'+esc(spell.components)+'</td><td>'+esc(spell.duration)+'</td><td title="'+esc(catalog?.book||'')+'">'+esc(catalog?.source||'—')+'</td><td>'+(catalog?.page?esc(catalog.page):'—')+'</td></tr>';
+        return '<tr data-class-spell-index="'+i+'">'+prep+'<td>'+(spell.level||'C')+'</td><td class="sheet-class-spell-name"><strong>'+esc(spell.name)+'</strong><small>'+esc(catalog?.edition||'Custom')+(automatic?' · Always prepared':'')+'</small>'+assignment+'<button type="button" class="sheet-info-button" data-generated-spell-info="'+i+'" aria-label="Information about '+esc(spell.name)+'">i</button></td><td>'+esc(description.replace(/\s+/g,' ').slice(0,180))+(description.length>180?'…':'')+invocationNote+markNote+beastNote+'</td><td>'+esc(catalog?.save||'—')+'</td><td>'+esc(catalog?.school||'—')+'</td><td>'+esc(spell.casting)+'</td><td>'+esc(range)+'</td><td>'+esc(spell.components)+'</td><td>'+esc(spell.duration)+'</td><td title="'+esc(catalog?.book||'')+'">'+esc(catalog?.source||'—')+'</td><td>'+(catalog?.page?esc(catalog.page):'—')+'</td></tr>';
       }).join('')||'<tr><td colspan="'+colspan+'">'+(p?'Generate '+esc(p.name)+' spells to fill this class sheet.':'No spells assigned.')+'</td></tr>';
       return '<section class="sheet-class-spell-sheet" data-spell-sheet-class="'+esc(p?.classId||'unassigned')+'">'+header+'<div class="sheet-spell-table-wrap" tabindex="0" role="region" aria-label="'+esc(p?.name||'Unassigned')+' spell table"><table class="sheet-spell-table" aria-label="'+esc(p?.name||'Unassigned')+' spells"><thead><tr>'+(showPrepared?'<th scope="col">Prep</th>':'')+['Lv','Spell','Short description','Save','School','Time','Range','Comp','Duration','B','P'].map(t=>'<th scope="col">'+t+'</th>').join('')+'</tr></thead><tbody>'+table+'</tbody></table></div></section>';
     }).join('')||'<p class="sheet-help">No spellcasting class detected.</p>';
@@ -291,14 +274,14 @@
     host.querySelectorAll('[data-generated-spell-info]').forEach(button=>button.onclick=()=>openSpellInformation({index:Number(button.dataset.generatedSpellInfo)}));
     host.querySelectorAll('[data-generated-prepare]').forEach(button=>button.onclick=()=>{
       const i=Number(button.dataset.generatedPrepare);let spell=sheetSession.data.spells[i];const profile=spell&&classProfile(spell.classId,d);
-      if(!spell||profile?.mode!=='spellbook'||spell.level===0||grants(profile).some(s=>s.id===spell.catalogId))return;
+      if(!spell||!S.isPreparedToggleUseful(profile)||spell.level===0||grants(profile).some(s=>s.id===spell.catalogId))return;
       readSheetForm();
       spell=sheetSession.data.spells[i];
       const current=counted(profile,currentClassSpells(profile.classId)).filter(row=>row.level>0&&row.prepared).length;
-      if(!spell.prepared&&current>=profile.spellCount){sheetStatus('This Wizard can prepare '+profile.spellCount+' spells. Unprepare one first.',true);return;}
+      if(!spell.prepared&&current>=profile.spellCount){sheetStatus('This '+profile.name+' can prepare '+profile.spellCount+' spells. Unprepare one first.',true);return;}
       spell.prepared=!spell.prepared;
       const hidden=document.querySelector('[name="spells.'+i+'.prepared"]');if(hidden)hidden.checked=spell.prepared;
-      sheetSession.dirty=true;updateSheetCalculations();sheetStatus('Wizard preparation changed. Save to keep it.');
+      sheetSession.dirty=true;updateSheetCalculations();sheetStatus(profile.name+' preparation changed. Save to keep it.');
     });
   }
 
@@ -311,7 +294,7 @@
       if(title&&!title.querySelector('.sheet-spell-class-badge'))title.insertAdjacentHTML('beforeend',' <span class="sheet-spell-class-badge">'+esc(p.name)+'</span>');
       const prepared=document.querySelector('[name="spells.'+i+'.prepared"]')?.closest('label');
       if(prepared){
-        if(p.mode==='spellbook'){prepared.hidden=false;prepared.querySelector('span').textContent='Prepared from spellbook';}
+        if(S.isPreparedToggleUseful(p)){prepared.hidden=false;prepared.querySelector('span').textContent=p.mode==='spellbook'?'Prepared from spellbook':'Prepared';}
         else prepared.hidden=true;
       }
     });

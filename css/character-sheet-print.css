@@ -66,6 +66,8 @@
  #characterSheetDialog .sheet-paper-slot-pools .sheet-paper-facts { grid-template-columns:repeat(3,minmax(0,1fr)); }
  #characterSheetDialog .sheet-paper-feature { margin:1mm 0 3mm; break-inside:avoid; }
  #characterSheetDialog .sheet-paper-note { break-inside:auto; margin-bottom:5mm; }
+ #characterSheetDialog .sheet-paper-symbol {float:right;width:22mm;margin:0 0 3mm 4mm;text-align:center;font-size:8pt;}
+ #characterSheetDialog .sheet-paper-symbol img {display:block;width:100%;height:22mm;object-fit:contain;}
  #characterSheetDialog .sheet-paper-portrait { float:right; width:32mm; height:32mm; object-fit:cover; border-radius:50%; margin:0 0 3mm 4mm; }
  #characterSheetDialog .sheet-paper-page .sheet-defense-emblem { display:none; }
  #characterSheetDialog .sheet-paper-page .sheet-hp-sources { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1mm 4mm; margin:0; }

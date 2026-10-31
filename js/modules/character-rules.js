@@ -1301,13 +1301,16 @@ var CharacterRules = (() => {
     // Fixed class languages are derived, including multiclass levels; manual notes stay untouched.
     const languageClasses=classLevels.length?classLevels:[{classId:b.classId,level:lvl}];
     let languageLevelsRemaining=Math.max(0,Math.trunc(Number(lvl)||0));
+    const checkTrainingSeen=new Set();
     for(const entry of languageClasses){
       const classLevel=Math.min(languageLevelsRemaining,Math.max(0,Math.trunc(Number(entry.level)||0)));
       languageLevelsRemaining-=classLevel;
       if(!classLevel)continue;
+      const firstCheckClass=!checkTrainingSeen.has(entry.classId);checkTrainingSeen.add(entry.classId);
+      if(firstCheckClass&&b.edition==='2014'&&entry.classId==='fighter'&&entry.subclassId==='champion'&&classLevel>=7)result.halfPhysicalAbilityProficiency=true;
       if(entry.classId==='rogue')result.languages.push('Thieves’ Cant');
       if(entry.classId==='druid')result.languages.push('Druidic');
-      if(entry.classId==='bard'&&classLevel>=2){result.halfSkillProficiency=true;result.halfInitiativeProficiency=b.edition==='2014';}
+      if(firstCheckClass&&entry.classId==='bard'&&classLevel>=2){result.halfSkillProficiency=true;result.halfInitiativeProficiency=b.edition==='2014';result.halfAbilityProficiency=b.edition==='2014';}
     }
     result.languages=[...new Set(result.languages)];
     result.proficiencies=[...new Set(result.proficiencies)];

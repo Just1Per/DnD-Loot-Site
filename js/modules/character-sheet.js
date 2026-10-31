@@ -52,6 +52,7 @@ function sheetStatus(message, error = false) {
 function closeCharacterSheet(force = false) {
   if(!force&&!SheetNavigation.guard(()=>closeCharacterSheet(true)))return false;
   if(typeof SheetNavigation!=='undefined')SheetNavigation.cancel();
+  globalThis.CharacterAdobeView?.destroy();
   ++sheetGeneration;
   closeSpellInformation();
   if(typeof closeFeatInformation==='function')closeFeatInformation();
@@ -63,6 +64,9 @@ function closeCharacterSheet(force = false) {
   if (dialog) {
     dialog.remove();
   }
+  document.getElementById('sheetItemResourceRecovery')?.remove();
+  document.getElementById('sheetPaperIcons')?.remove();
+  document.getElementById('sheetPaperLogMenu')?.remove();
   document.body.classList.remove('printing-character-sheet','printing-overview-only');
   document.getElementById('sheetOverviewReadout')?.style.removeProperty('zoom');
   document.getElementById('characterSheetChooser').replaceChildren();
@@ -333,13 +337,16 @@ function renderCharacterSheet() {
   });
   dialog.querySelector('#sheetAddAttack').onclick = () => openAttackPicker();
   dialog.querySelector('#sheetAddSpell').onclick = () => addSheetRow('spells');
-  dialog.querySelector('#sheetExport').onclick = exportCharacterSheet;
+  dialog.querySelector('#sheetExport').onclick = () => {if(!globalThis.CharacterAdobeView||CharacterAdobeView.validate())exportCharacterSheet();};
   dialog.querySelector('#sheetPrint').onclick = () => {
+    if(globalThis.CharacterAdobeView?.active()){CharacterAdobeView.print();return;}
     readSheetForm();
     openSheetPrintDialog();
   };
+  globalThis.CharacterAdobeView?.install();
 }
 function selectSheetTab(key) {
+  if(globalThis.CharacterAdobeView?.routeSection(key))return;
   const dialog = document.getElementById('characterSheetDialog');
   if (!dialog)
     return;
@@ -404,7 +411,8 @@ function readSheetForm() {
     let target = data;
     for (const key of keys)
       target = target[key];
-    target[last] = input.type === 'checkbox' ? input.checked : input.type === 'number' || input.name.endsWith('.rank') ? Number(input.value) : input.value;
+    const next=input.type==='checkbox'?input.checked:input.type==='number'||input.name.endsWith('.rank')?Number(input.value):input.value;
+    const modifierKey=globalThis.CharacterModifiers?.pathKey(input.name,data);if(modifierKey&&target[last]!==next&&data.adobe?.modifiers)delete data.adobe.modifiers[modifierKey];target[last]=next;
   });
   if(!canManageCampaign())data.advancement.asiSpent=CharacterPlayRules.normalizeAdvancement(s.data.advancement).asiSpent;
   s.identity = {
@@ -442,6 +450,7 @@ function updateSheetCalculations() {
   });
   // Repeating editors rebuild their controls above; decorate their final fields.
   markUnfinishedCharacterFields(validation?.issues || []);
+  globalThis.CharacterAdobeView?.refresh(d);
 }
 function addSheetRow(key) {
   readSheetForm();
@@ -463,12 +472,17 @@ async function saveCharacterSheet({reportValidation=true}={}) {
   const s = sheetSession;
   if (!s || s.saving || (s.uid && s.uid!==auth.currentUser?.uid))
     return false;
+  if(globalThis.CharacterAdobeView&&!CharacterAdobeView.validate())return false;
   const form = document.getElementById('characterSheetForm');
   const invalid = [...form.querySelectorAll('input,select,textarea')].find(input => !input.checkValidity());
   if (invalid) {
-    selectSheetTab(invalid.closest('[data-sheet-section]').dataset.sheetSection);
+    for(let parent=invalid.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;
+    const section=invalid.closest('[data-sheet-section]')?.dataset.sheetSection;
+    if(section)selectSheetTab(section);
     sheetStatus(invalid.validationMessage||'Correct the highlighted sheet field before saving.',true);
-    if(reportValidation)invalid.reportValidity();
+    // The inline status already explains the error. Native validation popovers
+    // during a click can trap older Chromium; focus after the event completes.
+    if(reportValidation)requestAnimationFrame(()=>{if(sheetSession===s&&invalid.isConnected)invalid.focus();});
     return false;
   }
   readSheetForm();
@@ -654,6 +668,7 @@ function openSheetPrintDialog() {
   printDialog.showModal();
 }
 window.addEventListener('beforeprint', () => {
+  if(globalThis.CharacterAdobeView?.active()){CharacterAdobeView.preparePrint();return;}
   if (!document.body.classList.contains('printing-character-sheet')) prepareSheetPrint(new Set(['overview']));
 });
 function renderSheetBuildControls() {

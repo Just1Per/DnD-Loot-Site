@@ -57,4 +57,8 @@ assert.ok(CharacterMagicItems.requiresAttunement({name:'Amulet of Health'}));
   assert.equal(effects.darkvision,120);
 }
 
+assert.equal(CharacterMagicItems.isMagical({name:'Dagger',category:'Weapon',rarity:'Common'}),false);
+assert.equal(CharacterMagicItems.isMagical({name:'Healing Potion',category:'Potion',rarity:'Common'}),true);
+assert.equal(CharacterMagicItems.isMagical({name:'Ring of Protection'}),true);
+assert.equal(CharacterMagicItems.isMagical({name:'Custom ward',mechanics:{kind:'accessory',acBonus:1}}),true);
 console.log('SUCCESS Adobe magic-item reference and automatic effects');

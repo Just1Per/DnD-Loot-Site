@@ -53,3 +53,12 @@ test('multiclass advancement preserves saved choices and DM approvals when a mil
  const feat=catalog.feats.find(f=>f.edition==='2024'&&f.category==='G'&&f.minimumLevel<=4);assert.equal(P.eligible(d,4,feat,catalog.feats),'');
  delete d.rulesChoices.grants.__dm;assert.match(P.eligible(d,4,feat,catalog.feats),/No available feat/);
 });
+
+
+test('daily lifestyle guidance matches the original table without guessing custom costs or changing coins',()=>{
+ const expected=[['wretched','—'],['squalid','1 sp'],['poor','2 sp'],['modest','1 gp'],['comfortable','2 gp'],['wealthy','4 gp'],['aristocratic','10 gp min.']];
+ assert.equal(P.lifestyles.length,expected.length);
+ for(const [id,cost]of expected){const row=P.lifestyle(id);assert.equal(row.cost,cost);assert.equal(P.lifestyle('  '+row.name.toUpperCase()+'  '),row);assert.ok(Object.isFrozen(row));}
+ for(const custom of ['',null,undefined,'Modest custom cost','Guild lodging','__proto__'])assert.equal(P.lifestyle(custom),null);
+ const data=M.normalize({profile:{lifestyle:'  Modest  '},coins:{gp:42}}),before=JSON.stringify(data);assert.equal(P.lifestyle(data.profile.lifestyle).cost,'1 gp');assert.equal(JSON.stringify(data),before);assert.ok(Object.isFrozen(P.lifestyles));
+});

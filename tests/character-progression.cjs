@@ -37,3 +37,20 @@ for(const hpMode of ['fixed','max','rolled']) {
 const low=P.calculateHP({classLevels:[{classId:'wizard',level:2}],constitution:1,hpMode:'rolled',hpRolls:[1]});
 assert.equal(low.minimumHP,5);assert.equal(low.max,2);
 console.log('SUCCESS HP source totals reconcile fixed, rolled, multiclass and minimum HP');
+
+// Static source audit: calcHPtotals keeps exact averages; SetHPTooltip uses Math.round once.
+for(const [levels,expected] of [[2,10],[3,13],[4,17],[20,73]]){
+ const hp=P.calculateHP({classLevels:[{classId:'wizard',level:levels}],constitution:10,hpMode:'average'});
+ assert.equal(hp.max,expected);assert.equal(hp.mode,'average');
+ assert.equal(hp.classHP+hp.constitutionHP+hp.minimumHP+hp.roundingHP+hp.bonuses+hp.totalMinimumHP,hp.max);
+}
+for(const classId of ['artificer','barbarian','bard','cleric','druid','fighter','monk','paladin','ranger','rogue','sorcerer','warlock','wizard'])for(let level=1;level<=20;level++){
+ const die=P.hitDieFor(classId),hp=P.calculateHP({classLevels:[{classId,level}],constitution:14,hpMode:'average'});
+ assert.equal(hp.max,Math.round(die+2+(level-1)*((die+1)/2+2)));
+}
+const averageMulti=P.calculateHP({classLevels:[{classId:'fighter',level:2},{classId:'wizard',level:2}],constitution:14,hpMode:'average',bonuses:8,bonusSources:[{name:'Tough',value:8}]});
+assert.equal(averageMulti.classHP+averageMulti.constitutionHP+averageMulti.minimumHP+averageMulti.roundingHP+averageMulti.bonuses+averageMulti.totalMinimumHP,averageMulti.max);
+assert.equal(averageMulti.max,39);assert.equal(averageMulti.roundingHP,0.5);assert.equal(averageMulti.classHP,22.5);
+assert.equal(P.calculateHP({classLevels:[{classId:'wizard',level:20}],constitution:1,hpMode:'average'}).max,20);
+assert.equal(P.calculateHP({classLevels:[{classId:'wizard',level:3}],constitution:10,hpMode:'fixed'}).max,14);
+console.log('SUCCESS Adobe average HP: one final rounding, first-level maximum, all class levels, multiclass, bonuses and minimum HP');

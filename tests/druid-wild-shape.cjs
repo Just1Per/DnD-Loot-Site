@@ -408,3 +408,7 @@ test("approved worn items apply physical and mental overrides and conditional AC
   assert.equal(p.hpMax, 11);
   assert.equal(d.hpCurrent, 28);
 });
+
+test("reference form profiles share rule calculations without assuming forms or mutating active HP and resources",()=>{
+ for(const edition of ['2014','2024']){const d=make(5,edition);const before=JSON.stringify(d);const reference=W.referenceProfile(d,wolf(edition),{level:5});assert.equal(reference.valid,true);assert.equal(reference.reference,true);assert.equal(reference.scores.int,12);assert.equal(W.profile(d,{level:5}),null);assert.equal(JSON.stringify(d),before);assert.equal(W.referenceProfile(d,'forged-form',{level:5}),null);assert.equal(W.referenceProfile(d,wolf(edition==='2014'?'2024':'2014'),{level:5}),null);if(edition==='2024')learn(d,wolf(edition),5);assert.equal(shape(d,5),true);assert.equal(W.setHP(d,1,{level:5}),true);const activeBefore=JSON.stringify(d);const preview=W.referenceProfile(d,wolf(edition),{level:5});assert.equal(preview.valid,true);assert.equal(W.profile(d,{level:5}).hp,1);assert.equal(JSON.stringify(d),activeBefore);if(edition==='2014')assert.ok(preview.hp>1);}
+});

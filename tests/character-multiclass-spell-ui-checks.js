@@ -14,13 +14,14 @@
    await panel(id).querySelector('[data-generate-class]').onclick();
    const dialog=document.getElementById('sheetSpellGenerator');
    check(id+' button opens its own class generator',dialog.open&&document.getElementById('spellGeneratorClass').value===id&&dialog.querySelector('h3').textContent.startsWith(CharacterSpellcasting.labels[id]));
-   const input=[...dialog.querySelectorAll('[data-spell-pick]')].find(el=>el.dataset.spellId===spellId);check(id+' can choose the shared spell',!!input);input.checked=true;input.onchange();dialog.querySelector('#spellGeneratorApply').onclick();
+   const input=[...dialog.querySelectorAll('[data-spell-pick]')].find(el=>el.dataset.spellId===spellId);check(id+' can choose the shared spell',!!input);input.checked=true;input.onchange();const prep=[...dialog.querySelectorAll('[data-spell-prepared]')].find(el=>el.dataset.spellId===spellId);prep.checked=true;prep.onchange();dialog.querySelector('#spellGeneratorApply').onclick();
   };
   await generate('druid',shared.id);await generate('cleric',shared.id);
   check('A shared spell remains two independent class entries',sheetSession.data.spells.filter(s=>s.catalogId===shared.id).length===2&&panel('druid').querySelectorAll('tbody tr[data-class-spell-index]').length===2&&panel('cleric').querySelectorAll('tbody tr[data-class-spell-index]').length===1);
   const speech=CharacterCatalog.rawData.spells.find(s=>s.name==='Speak with Animals'&&s.edition==='2024');
   check('Druidic adds only its own always-prepared extra spell',sheetSession.data.spells.filter(s=>s.catalogId===speech.id).length===1&&sheetSession.data.spells.some(s=>s.catalogId===speech.id&&s.classId==='druid'&&s.prepared)&&!panel('cleric').textContent.includes('Speak with Animals'));
   check('Prepared allowances use individual class levels',panel('druid').textContent.includes('1/5 prepared spells')&&panel('cleric').textContent.includes('1/4 prepared spells'));
+  const paperSpells=characterSpellPresentation(sheetSession.data,CharacterSheetModel.derive(sheetSession.data,3),3);check('Paper preparation controls are available for ordinary Druid and Cleric spells, with automatic grants locked',paperSpells.every(row=>row.preparationEditable===(!row.automatic&&row.spell.level>0)));
   check('Each class sheet shows its own Wisdom modifier attack and save DC', ['druid','cleric'].every(id=>panel(id).querySelector('.sheet-class-spell-metrics').textContent.includes('Wisdom +2')&&panel(id).querySelector('.sheet-class-spell-metrics').textContent.includes('Save DC12')));
   await panel('druid').querySelector('[data-generate-class]').onclick();
   check('Class spell choices cannot use higher shared multiclass slot levels', [...document.querySelectorAll('[data-spell-pick]')].every(el=>CharacterCatalog.find(el.dataset.spellId).level<=1));
@@ -30,6 +31,9 @@
   const candidates=[...document.querySelectorAll('[data-spell-pick]')].filter(el=>!el.disabled&&CharacterCatalog.find(el.dataset.spellId).level>0).slice(0,5);
   check('Fixture has enough Cleric spells to check its preparation limit',candidates.length===5);
   for(const input of candidates){input.checked=true;input.onchange();}
+  check('Cleric reference spells can exceed its daily preparation allowance',!document.getElementById('spellGeneratorCount').classList.contains('is-invalid'));
+  const preparation=candidates.map(input=>[...document.querySelectorAll('[data-spell-prepared]')].find(el=>el.dataset.spellId===input.dataset.spellId));
+  for(const input of preparation){input.checked=true;input.onchange();}
   document.getElementById('spellGeneratorApply').onclick();
   check('Cleric cannot borrow unused Druid preparation allowance',document.getElementById('sheetSpellGenerator').open&&document.getElementById('spellGeneratorCount').classList.contains('is-invalid'));
   document.getElementById('sheetSpellGenerator').close();
