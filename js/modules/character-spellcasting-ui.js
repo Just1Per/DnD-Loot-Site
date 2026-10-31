@@ -103,7 +103,7 @@
     if(p.cantrips)detail.push(p.cantrips+' cantrip'+(p.cantrips===1?'':'s'));
     if(p.mode==='spellbook')detail.push('at least '+p.bookMinimum+' spellbook spells from leveling','prepare '+p.spellCount);
     else detail.push(p.spellCount+' '+S.modeLabel(p).toLowerCase());
-    document.getElementById('spellGeneratorRequirement').innerHTML='<strong>'+esc(p.name)+' '+p.level+' · '+esc(p.edition)+(p.sourceLabel?' · '+esc(p.sourceLabel):'')+'</strong><span>'+detail.join(' · ')+'</span><small>Reachable spell level: '+(p.maxSpellLevel||'cantrips only')+' · Spellcasting ability: '+esc(abilityName(p.ability))+' '+signed(casting.modifier)+' · Spell attack '+signed(casting.attack)+' · Save DC '+casting.dc+' · '+(p.changeTiming==='long-rest'?'List can be changed after a long rest.':'List normally changes when you gain a class level.')+'</small><small>Selected in this builder: '+cantrips+' cantrips · '+leveled+' level 1+ spells'+(p.mode==='spellbook'?' · '+prepared+' prepared':'')+'.</small>';
+    document.getElementById('spellGeneratorRequirement').innerHTML='<strong>'+esc(p.name)+' '+p.level+' · '+esc(p.edition)+(p.sourceLabel?' · '+esc(p.sourceLabel):'')+'</strong><span>'+detail.join(' · ')+'</span><small>Reachable spell level: '+(p.maxSpellLevel||'cantrips only')+' · Spellcasting ability: '+esc(abilityName(p.ability))+' '+signed(casting.modifier)+' · Spell attack '+signed(casting.attack)+' · Save DC '+casting.dc+' · '+(p.changeTiming==='long-rest'?'List can be changed after a long rest.':'List normally changes when you gain a class level.')+'</small><small>Selected in this builder: '+cantrips+' cantrips · '+leveled+' level 1+ spells'+(S.isPreparedToggleUseful(p)?' · '+prepared+' prepared':'')+'.</small>';
     renderList();
   }
 
@@ -130,7 +130,7 @@
     rows.sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name));
     host.innerHTML=rows.map(spell=>{
       const old=existing.get(spell.id),checked=!!old,automatic=grants(p).some(s=>s.id===spell.id);
-      const prep=p.mode==='spellbook'&&spell.level>0?'<label class="sheet-spell-prepared-choice"><input type="checkbox" data-spell-prepared data-spell-id="'+esc(spell.id)+'" '+(old?.prepared?'checked ':'')+(checked?'':'disabled')+'><span>Prepared</span></label>':'';
+      const prep=S.isPreparedToggleUseful(p)&&spell.level>0&&!automatic?'<label class="sheet-spell-prepared-choice"><input type="checkbox" data-spell-prepared data-spell-id="'+esc(spell.id)+'" '+(old?.prepared?'checked ':'')+(checked?'':'disabled')+'><span>Prepared</span></label>':'';
       return '<article class="sheet-spell-generator-row"><label><input type="checkbox" data-spell-pick data-spell-id="'+esc(spell.id)+'" '+(checked?'checked':'')+(automatic?' disabled':'')+'><span><strong>'+esc(spell.name)+'</strong><small>'+(spell.level?'Level '+spell.level:'Cantrip')+' · '+esc(spell.school||'')+' · '+esc(spell.source||spell.book||'')+(automatic?' · Always prepared':'')+'</small></span></label>'+prep+'<button type="button" class="sheet-info-button" data-spell-info="'+esc(spell.id)+'">i</button></article>';
     }).join('')||'<p class="sheet-empty">No eligible spells match this filter.</p>';
     host.querySelectorAll('[data-spell-info]').forEach(button=>button.onclick=()=>openSpellInformation({catalogId:button.dataset.spellInfo}));
@@ -165,6 +165,7 @@
     const rows=counted(p,selections()),cantrips=rows.filter(s=>s.level===0).length,leveled=rows.filter(s=>s.level>0).length,prepared=rows.filter(s=>s.level>0&&s.prepared).length;
     const parts=['Cantrips '+cantrips+'/'+p.cantrips];
     if(p.mode==='spellbook')parts.push('Spellbook '+leveled+'/'+p.bookMinimum+' minimum','Prepared '+prepared+'/'+p.spellCount);
+    else if(p.mode==='prepared')parts.push('On sheet '+leveled,'Prepared '+prepared+'/'+p.spellCount);
     else parts.push(S.modeLabel(p)+' '+leveled+'/'+p.spellCount);
     if(grants(p).length)parts.push(grants(p).length+' always prepared · additional to allowance');
     const error=selectionError(p,rows),notice=completionNotice(p,rows);
@@ -181,7 +182,7 @@
     const other=sheetSession.data.spells.filter(spell=>spell.classId!==p.classId);
     for(const row of rows){
       row.classId=p.classId;
-      if(p.mode!=='spellbook')row.prepared=p.mode==='prepared'||p.mode==='fixed-prepared';
+      if(!S.isPreparedToggleUseful(p))row.prepared=p.mode==='fixed-prepared';
     }
     const manual=sheetSession.data.spells.filter(spell=>spell.classId===p.classId&&!spell.catalogId);
     if(other.length+rows.length+manual.length>150){sheetStatus('Too many spell rows. Remove unused spells before generating.',true);return;}
@@ -247,7 +248,7 @@
     const sheets=classProfiles.map(p=>({profile:p,rows:all.filter(({spell})=>spell.classId===p.classId)}));
     if(other.length)sheets.push({profile:null,rows:other});
     host.innerHTML=sheets.map(({profile:p,rows})=>{
-      const showPrepared=p?.mode==='spellbook',colspan=showPrepared?12:11;
+      const showPrepared=S.isPreparedToggleUseful(p),colspan=showPrepared?12:11;
       rows.sort((a,b)=>a.spell.level-b.spell.level||a.spell.name.localeCompare(b.spell.name));
       const casting=p?S.castingStats(p,d,sheetSession.data):null,counts=p?S.selectionCounts(p,rows.map(row=>row.spell),CharacterCatalog.rawData?.spells||[]):null;
       const amount=p?.mode==='known'?counts.leveled:counts?.prepared;
@@ -273,14 +274,14 @@
     host.querySelectorAll('[data-generated-spell-info]').forEach(button=>button.onclick=()=>openSpellInformation({index:Number(button.dataset.generatedSpellInfo)}));
     host.querySelectorAll('[data-generated-prepare]').forEach(button=>button.onclick=()=>{
       const i=Number(button.dataset.generatedPrepare);let spell=sheetSession.data.spells[i];const profile=spell&&classProfile(spell.classId,d);
-      if(!spell||profile?.mode!=='spellbook'||spell.level===0||grants(profile).some(s=>s.id===spell.catalogId))return;
+      if(!spell||!S.isPreparedToggleUseful(profile)||spell.level===0||grants(profile).some(s=>s.id===spell.catalogId))return;
       readSheetForm();
       spell=sheetSession.data.spells[i];
       const current=counted(profile,currentClassSpells(profile.classId)).filter(row=>row.level>0&&row.prepared).length;
-      if(!spell.prepared&&current>=profile.spellCount){sheetStatus('This Wizard can prepare '+profile.spellCount+' spells. Unprepare one first.',true);return;}
+      if(!spell.prepared&&current>=profile.spellCount){sheetStatus('This '+profile.name+' can prepare '+profile.spellCount+' spells. Unprepare one first.',true);return;}
       spell.prepared=!spell.prepared;
       const hidden=document.querySelector('[name="spells.'+i+'.prepared"]');if(hidden)hidden.checked=spell.prepared;
-      sheetSession.dirty=true;updateSheetCalculations();sheetStatus('Wizard preparation changed. Save to keep it.');
+      sheetSession.dirty=true;updateSheetCalculations();sheetStatus(profile.name+' preparation changed. Save to keep it.');
     });
   }
 
@@ -293,7 +294,7 @@
       if(title&&!title.querySelector('.sheet-spell-class-badge'))title.insertAdjacentHTML('beforeend',' <span class="sheet-spell-class-badge">'+esc(p.name)+'</span>');
       const prepared=document.querySelector('[name="spells.'+i+'.prepared"]')?.closest('label');
       if(prepared){
-        if(p.mode==='spellbook'){prepared.hidden=false;prepared.querySelector('span').textContent='Prepared from spellbook';}
+        if(S.isPreparedToggleUseful(p)){prepared.hidden=false;prepared.querySelector('span').textContent=p.mode==='spellbook'?'Prepared from spellbook':'Prepared';}
         else prepared.hidden=true;
       }
     });

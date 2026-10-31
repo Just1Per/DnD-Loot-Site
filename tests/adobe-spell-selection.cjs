@@ -6,6 +6,15 @@ test('known and fixed-prepared selections enforce cantrip and leveled pools inde
 test('Wizard spellbook minimum is guidance, preparation is bounded, and learned extras remain valid',()=>{
  const p=S.profile('wizard',3,'2014',{int:16}),rows=Array.from({length:40},(_,i)=>({level:1,prepared:i<p.spellCount}));assert.equal(S.selectionState(p,rows).error,'');assert.match(S.selectionState(p,[]).notice,/spellbook spell/);rows[p.spellCount].prepared=true;assert.match(S.selectionState(p,rows).error,/Too many prepared Wizard/);
 });
+test('prepared classes can retain extra reference spells while only preparation uses their allowance',()=>{
+ for(const edition of ['2014','2024'])for(const classId of ['cleric','druid','paladin','ranger','artificer']){
+  const p=S.profile(classId,5,edition,{wis:16,cha:16,int:16});if(p.mode!=='prepared')continue;
+  const rows=Array.from({length:p.spellCount+6},(_,i)=>({level:1,prepared:i<p.spellCount})),before=JSON.stringify(rows),state=S.selectionState(p,rows);
+  assert.equal(state.error,'',classId+' '+edition+' reference list must not use preparation allowance');assert.equal(state.limits.prepared,p.spellCount);assert.equal(state.counts.leveled,p.spellCount+6);assert.equal(state.counts.prepared,p.spellCount);
+  rows[p.spellCount].prepared=true;assert.match(S.selectionState(p,rows).error,/Too many prepared/);rows[p.spellCount].prepared=false;
+  assert.match(S.selectionState(p,rows.map(row=>({...row,prepared:false}))).notice,/prepared spells? remaining/);assert.equal(JSON.stringify(rows),before);
+ }
+});
 test('automatic grants remain additional and source changes recalculate counting without writing rows',()=>{
  const catalogue=require('../data/rules/catalog.json').spells,p=S.profile('druid',1,'2024',{wis:16}),grant=S.automaticGrants(p,catalogue).find(row=>row.name==='Speak with Animals'),rows=[{catalogId:grant.id,level:1,prepared:true},...Array.from({length:p.spellCount},()=>({level:1,prepared:true}))],before=JSON.stringify(rows),state=S.selectionState(p,rows,catalogue);assert.equal(state.error,'');assert.equal(state.counts.automatic,1);assert.equal(state.counts.leveled,p.spellCount);assert.equal(JSON.stringify(rows),before);
 });

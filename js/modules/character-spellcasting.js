@@ -183,10 +183,11 @@ var CharacterSpellcasting=(()=>{
   }
   function countedSelections(p,rows,catalogue=[]){const ids=new Set(automaticGrants(p,catalogue).map(s=>s.id));return rows.filter(s=>!ids.has(s.catalogId));}
   function selectionState(p,rows,catalogue=[],baseline=null){
-    const counts=selectionCounts(p,rows,catalogue),before=baseline?selectionCounts(p,baseline,catalogue):null,limits={cantrips:p.cantrips,...(p.mode==='spellbook'?{prepared:p.spellCount}:{leveled:p.spellCount})},errors=[],inherited=[];
-    for(const [key,max]of Object.entries(limits))if(counts[key]>max){const message=key==='cantrips'?'Too many cantrips: choose at most '+max+'. You currently have '+counts[key]+'.':key==='prepared'?'Too many prepared Wizard spells: prepare at most '+max+'. You currently have '+counts[key]+'.':'Too many level 1+ spells: choose at most '+max+'. You currently have '+counts[key]+'.';if(before&&counts[key]<=before[key])inherited.push(message);else errors.push(message);}
+    const counts=selectionCounts(p,rows,catalogue),before=baseline?selectionCounts(p,baseline,catalogue):null,limits={cantrips:p.cantrips,...(isPreparedToggleUseful(p)?{prepared:p.spellCount}:{leveled:p.spellCount})},errors=[],inherited=[];
+    for(const [key,max]of Object.entries(limits))if(counts[key]>max){const message=key==='cantrips'?'Too many cantrips: choose at most '+max+'. You currently have '+counts[key]+'.':key==='prepared'?'Too many prepared '+p.name+' spells: prepare at most '+max+'. You currently have '+counts[key]+'.':'Too many level 1+ spells: choose at most '+max+'. You currently have '+counts[key]+'.';if(before&&counts[key]<=before[key])inherited.push(message);else errors.push(message);}
     const missing=[];if(counts.cantrips<p.cantrips)missing.push((p.cantrips-counts.cantrips)+' cantrip'+(p.cantrips-counts.cantrips===1?'':'s')+' remaining');
-    if(p.mode==='spellbook'){if(counts.leveled<p.bookMinimum)missing.push((p.bookMinimum-counts.leveled)+' spellbook spell'+(p.bookMinimum-counts.leveled===1?'':'s')+' remaining from level progression');if(counts.prepared<p.spellCount)missing.push((p.spellCount-counts.prepared)+' prepared spell'+(p.spellCount-counts.prepared===1?'':'s')+' remaining');}
+    if(p.mode==='spellbook'&&counts.leveled<p.bookMinimum)missing.push((p.bookMinimum-counts.leveled)+' spellbook spell'+(p.bookMinimum-counts.leveled===1?'':'s')+' remaining from level progression');
+    if(isPreparedToggleUseful(p)){if(counts.prepared<p.spellCount)missing.push((p.spellCount-counts.prepared)+' prepared spell'+(p.spellCount-counts.prepared===1?'':'s')+' remaining');}
     else if(counts.leveled<p.spellCount)missing.push((p.spellCount-counts.leveled)+' '+modeLabel(p).toLowerCase()+' remaining');
     return{counts,limits,error:errors[0]||'',inherited,notice:missing.length?'Incomplete: '+missing.join(' · ')+'. You can still generate and continue later.':'Ready to generate.'};
   }

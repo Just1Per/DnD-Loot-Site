@@ -14,7 +14,7 @@
    await panel(id).querySelector('[data-generate-class]').onclick();
    const dialog=document.getElementById('sheetSpellGenerator');
    check(id+' button opens its own class generator',dialog.open&&document.getElementById('spellGeneratorClass').value===id&&dialog.querySelector('h3').textContent.startsWith(CharacterSpellcasting.labels[id]));
-   const input=[...dialog.querySelectorAll('[data-spell-pick]')].find(el=>el.dataset.spellId===spellId);check(id+' can choose the shared spell',!!input);input.checked=true;input.onchange();dialog.querySelector('#spellGeneratorApply').onclick();
+   const input=[...dialog.querySelectorAll('[data-spell-pick]')].find(el=>el.dataset.spellId===spellId);check(id+' can choose the shared spell',!!input);input.checked=true;input.onchange();const prep=[...dialog.querySelectorAll('[data-spell-prepared]')].find(el=>el.dataset.spellId===spellId);prep.checked=true;prep.onchange();dialog.querySelector('#spellGeneratorApply').onclick();
   };
   await generate('druid',shared.id);await generate('cleric',shared.id);
   check('A shared spell remains two independent class entries',sheetSession.data.spells.filter(s=>s.catalogId===shared.id).length===2&&panel('druid').querySelectorAll('tbody tr[data-class-spell-index]').length===2&&panel('cleric').querySelectorAll('tbody tr[data-class-spell-index]').length===1);
@@ -30,6 +30,9 @@
   const candidates=[...document.querySelectorAll('[data-spell-pick]')].filter(el=>!el.disabled&&CharacterCatalog.find(el.dataset.spellId).level>0).slice(0,5);
   check('Fixture has enough Cleric spells to check its preparation limit',candidates.length===5);
   for(const input of candidates){input.checked=true;input.onchange();}
+  check('Cleric reference spells can exceed its daily preparation allowance',!document.getElementById('spellGeneratorCount').classList.contains('is-invalid'));
+  const preparation=candidates.map(input=>[...document.querySelectorAll('[data-spell-prepared]')].find(el=>el.dataset.spellId===input.dataset.spellId));
+  for(const input of preparation){input.checked=true;input.onchange();}
   document.getElementById('spellGeneratorApply').onclick();
   check('Cleric cannot borrow unused Druid preparation allowance',document.getElementById('sheetSpellGenerator').open&&document.getElementById('spellGeneratorCount').classList.contains('is-invalid'));
   document.getElementById('sheetSpellGenerator').close();
