@@ -71,3 +71,7 @@ Prepared spell circles on the source paper now enable all prepared classes, usin
 ## Stay on Adobe and readable armor choices (v54)
 
 Remaining shared editors now open as bounded modal sections over the Adobe paper, retaining the original form/controller and Save button. Close restores controls and focus; errors/save status stay visible inside the popup. Rules route to the source reference page; unknown routes remain on Adobe. Explicit Sheet style selection is the deliberate Standard switch. Source dropdowns and nested popup choices share the light searchable picker, with mechanics-derived Light/Medium/Heavy/Shield labels at the right. These changes close navigation escapes, while specialized source-layout parity work remains. See [navigation audit](adobe-native-navigation-audit.md).
+
+## Source equipment operations — local work after v55
+
+The original magic-item menu is audited action by action in [the equipment function audit](adobe-equipment-function-audit.md). The next component preserves the source Move/Insert/Clear/Delete distinctions, owned-item selection, full text and common equipment/attunement rules. Empty positions and removed references are private paper state; Clear/Delete end the removed reference’s effects while retaining inventory ownership/uses. Catalogue/type/gear variations, attunement visibility and weight inclusion/modifiers still remain. The original footer and copy destinations are implemented in the next local component. Point 3 is open.

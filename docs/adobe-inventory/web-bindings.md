@@ -116,3 +116,11 @@ Generic source commands retain Adobe paper and open a modal section using the ex
 ## Movement and load — v55
 
 The model, Inventory, paper readout and print share a pure carried-weight projection, including quantities, optional coins and recognized enhanced equipment weights. Load and armor slowing follows permanent class/item speed calculations; explicit movement conditions apply last. The optional 2014 variant ignores the armor Strength column rather than stacking it. Original free-text Conditions is editable in an Adobe modal section and retains its private field. Speed updates while focused when inventory snapshots change. See [rules, boundaries and remaining scope](../adobe-movement-and-load.md).
+
+## Magic-item source rows — local work after v55
+
+Source arrows open a native row menu with the original description, owned selector and Move/Insert empty/Clear/Delete behavior. Insert refuses a full table; Delete keeps the original partly empty first-page boundary; Clear preserves a blank. Clear/Delete end the selected reference’s equipment/attunement effects atomically, keeping physical ownership, quantities and uses. Missing ownership retains a named unavailable slot. The new private paper arrangement is normalized/bounded, saves in the existing grants envelope, and supplies source/continuation/print values. Additional source actions remain tracked explicitly in [the audit](../adobe-equipment-function-audit.md); this is not complete item-menu parity.
+
+## Source equipment footer/copy destinations — v56
+
+Equipment layout controls the original page-2 Attuned Magical Items heading and three references. The source whiteout rectangle is applied in live/selected/connected print; displaced physical gear moves to Extra Equipment. Original magic-item copy destinations retain blank reference quantities and known unit weights, reusing existing appearances without duplicating ownership or physical mass. Full sections reject replacement. References remain independently clearable; toggling the footer preserves them. Private save/reopen, actual connected PDF, mobile/axe, quantities/subtotals and resource isolation are covered. See [function audit](../adobe-equipment-function-audit.md) for remaining source operations.

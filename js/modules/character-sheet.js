@@ -52,6 +52,7 @@ function sheetStatus(message, error = false) {
 function closeCharacterSheet(force = false) {
   if(!force&&!SheetNavigation.guard(()=>closeCharacterSheet(true)))return false;
   if(typeof SheetNavigation!=='undefined')SheetNavigation.cancel();
+  globalThis.CharacterPaperMagicUI?.destroy();
   globalThis.CharacterAdobeView?.destroy();
   ++sheetGeneration;
   closeSpellInformation();
