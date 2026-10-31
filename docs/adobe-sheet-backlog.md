@@ -67,3 +67,7 @@ Fixed the native and shared generator using prepared-class allowance as the refe
 ## Direct paper preparation (v53)
 
 Prepared spell circles on the source paper now enable all prepared classes, using the same shared preparation action and allowance. Single/continuous/continuation, keyboard, blocked over-preparation, grant/cantrip protection, class/resource isolation and private Save/reopen have browser coverage. The popup remains optional for daily preparation.
+
+## Stay on Adobe and readable armor choices (v54)
+
+Remaining shared editors now open as bounded modal sections over the Adobe paper, retaining the original form/controller and Save button. Close restores controls and focus; errors/save status stay visible inside the popup. Rules route to the source reference page; unknown routes remain on Adobe. Explicit Sheet style selection is the deliberate Standard switch. Source dropdowns and nested popup choices share the light searchable picker, with mechanics-derived Light/Medium/Heavy/Shield labels at the right. These changes close navigation escapes, while specialized source-layout parity work remains. See [navigation audit](adobe-native-navigation-audit.md).

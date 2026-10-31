@@ -18,7 +18,7 @@ const out=process.env.UI_OUTPUT_DIR||require('node:os').tmpdir()+'/campaignatlas
  await page.evaluate(()=>{sheetSession.data.build.classId='rogue';sheetSession.data.adobe.classLevels=[{classId:'rogue',level:5}];fillSheetForm();updateSheetCalculations();});
  assert.equal(await field('Tool 1').inputValue(),'Thieves’ tools');assert.match(await field('Language 2').inputValue(),/Thieves.*Cant/);assert.match(await field('Proficiency Weapon Other Description').inputValue(),/Rapier/);
  await page.evaluate(()=>{sheetSession.data.build.classId='fighter';sheetSession.data.adobe.classLevels=[{classId:'fighter',level:5}];fillSheetForm();updateSheetCalculations();});
- await field('Limited Feature 1').dblclick();await page.locator('[data-class-resource="fighter-second-wind"][data-delta="1"]').click();await page.getByRole('button',{name:'Back to Adobe sheet',exact:true}).click();assert.equal(await field('Limited Feature Used 1').inputValue(),'1');
+ await field('Limited Feature 1').dblclick();await page.locator('[data-class-resource="fighter-second-wind"][data-delta="1"]').click();await page.getByRole('button',{name:'Close editor',exact:true}).click();assert.equal(await field('Limited Feature Used 1').inputValue(),'1');
  const hpBeforeRest=await page.evaluate(()=>sheetSession.data.hpCurrent);await paper.locator('[data-pdf-button="SR"]').click();assert.equal(await field('Limited Feature Used 1').inputValue(),'0');assert.equal(await page.evaluate(()=>sheetSession.data.hpCurrent),hpBeforeRest);
  await paper.locator('#adobePage').selectOption('page-2');await field('Adventuring Gear Row 51').waitFor({state:'visible'});
  assert.equal(await field('Adventuring Gear Row 51').inputValue(),await page.evaluate(()=>sheetEquipmentLoot()[50].item.name));

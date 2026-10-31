@@ -86,3 +86,5 @@
 .adobe-choice-browse:focus-visible{outline:2px solid #2169a8}
 .field:has(.adobe-choice-browse:not([hidden])) input{padding-right:calc(var(--scale)*10px)}
 @media print{.adobe-choice-browse{display:none!important}.field select{background-image:none!important;padding-right:0}.field:has(.adobe-choice-browse) input{padding-right:0}}
+:host{color-scheme:light}.field select{color-scheme:light;background-color:#fffcf5}.adobe-toolbar select,.adobe-continuous-mobile select{color-scheme:light}
+@media print{.field select{background-color:transparent!important}}
