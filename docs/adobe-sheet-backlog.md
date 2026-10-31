@@ -10,7 +10,7 @@ Agreed with the user on 30 October 2026. Keep this work in PR #250. No assistant
    - Skill ordering and training-origin menu, with source/companion/print parity.
    - Shared persistent tool disclosure over the paper. Source Show extra features opens it; page, zoom and print remain directly available. Disclosure is a local scoped preference, separate from character mechanics.
    - The feature-specific menus for items, logs and layouts belong to points 3, 4 and 7; their unresolved actions remain explicit in the function ledger.
-2. **Movement and encumbrance.** Accurate encumbered speed and movement/condition/equipment coupling. Keep both rule editions clear.
+2. **Movement and encumbrance — implemented in v55; validation recorded in PR #250.** One shared carried-weight projection drives final character Speed, optional 2014 encumbrance, Heavy armor, supported item/racial exceptions and recognized edition-specific movement conditions. Native Movement/Conditions popups explain the result. Unknown weights remain explicit; other condition effects are reminders. Creature/form inheritance and per-section weight flags remain points 5 and 3. See [scope and calculations](adobe-movement-and-load.md).
 3. **Equipment and magic items.** Additional weight-inclusion choices, attuned-display/footer behavior, remaining item commands and supported computed/custom pools/effects.
 4. **Adventure Log.** Remaining page/date options, add/reset/remove behavior and controlled character XP/treasure transfers.
 5. **Class-specific companions.** Per-feature class/level scaling beyond ordinary creature Hit Dice, with multiclass and retained-state tests.

@@ -27,6 +27,7 @@ var CharacterRules = (() => {
         wis: 1
       },
       speed: 25,
+      ignoreHeavyArmorSpeed: true,
       size: 'Medium',
       darkvision: 60,
       languages: [

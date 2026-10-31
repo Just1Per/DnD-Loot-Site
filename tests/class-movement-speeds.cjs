@@ -7,6 +7,8 @@ global.CharacterMagicItems=require('../js/modules/character-magic-items');
 const M=require('../js/modules/character-sheet-model'),E=CharacterEquipment,P=require('../js/modules/character-class-progression');
 const make=(classId,level,edition='2024',race='human')=>{
  const d=M.normalize({speed:30,build:{classId,edition,race}});
+ // Isolate class bonus gates; below-requirement armor is covered by load-movement tests.
+ d.abilities.str=15;
  d.adobe={classLevels:[{classId,level}],classFeatureChoices:{'keep:choice':['saved']}};return d;
 };
 function equip(d,names){

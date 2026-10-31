@@ -135,7 +135,7 @@ var CharacterAdobeFields=(()=>{
   }
   if(id==='Initiative bonus')return computed(sign(d.initiative));
   if(id==='Passive Perception')return computed(d.passive);
-  if(id==='Speed')return computed((d.effects.speed||0)+' ft');
+  if(id==='Speed')return computed((d.effects.speed||0)+' ft',{command:'carrying',reason:d.movement?.detail||'Walking speed from the shared character calculations.'});
   if(id==='Vision')return computed([d.effects.darkvision?'Darkvision '+d.effects.darkvision+' ft':'',...(d.effects.specialSenses||[]).map(s=>s.name+': '+s.detail)].filter(Boolean).join('\n'),{kind:'textarea'});
   if(id==='Saving Throw advantages / disadvantages')return computed([data.conditions,...(d.saveTraining?.reports||[]).map(r=>r.detail)].filter(Boolean).join('\n'),{kind:'textarea',command:'conditions'});
   if(id==='Spell save DC 1')return computed(d.spellDC);

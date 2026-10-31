@@ -1,4 +1,9 @@
 /* Adobe/MPMB-inspired character engine additions, styled as part of the Vault character journal. */
+/* Focused paper commands show their section without the surrounding inventory/combat list. */
+.adobe-editor-dialog[data-adobe-editor="carrying"] [data-sheet-section]:has(>#sheetCarrying)>:not(#sheetCarrying),
+.adobe-editor-dialog[data-adobe-editor="conditions"] [data-sheet-section]:has(>#sheetMovementConditions)>:not(#sheetMovementConditions){display:none!important}
+.adobe-editor-dialog [data-movement-notes]{padding-left:1.25rem;line-height:1.6}
+.adobe-editor-dialog #sheetMovementConditions textarea{box-sizing:border-box;width:100%;min-height:84px;resize:vertical}
 .sheet-adobe-progression {
   margin-top: 1rem;
   padding: 18px;

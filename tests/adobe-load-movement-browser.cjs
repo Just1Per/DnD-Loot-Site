@@ -1,0 +1,33 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process');
+const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
+(async()=>{const browser=await chromium.launch({headless:true});try{
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const host=page.locator('#sheetAdobeView'),speed=()=>host.locator('[data-pdf-field="Speed"]'),editor=page.locator('#adobeSharedEditor');
+ for(const edition of ['2014','2024']){
+  await page.evaluate(async edition=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition=edition;d.build.classId='fighter';d.build.race=edition==='2024'?'human-2024':'human';d.build.scoreMode='final';d.conditions='';d.abilities.str=10;d.coins={cp:0,sp:0,ep:0,gp:0,pp:0};d.personalGear=[];d.hpCurrent=17;d.hpTemp=3;d.adobe.classLevels=[{classId:'fighter',level:5}];d.adobe.carrying={mode:'basic',includeCoins:true,multiplier:1};items=[{id:'load',name:'Heavy pack',visible:true,properties:[{title:'Weight per unit (lb)',text:'60'}]}];inventory=[{id:'mine',itemId:'load',characterId:'c1',userId:'player',quantity:1},{id:'other',itemId:'load',characterId:'c2',userId:'other',quantity:999}];renderCharacterSheet();window.loadResources=JSON.stringify({hp:d.hpCurrent,temp:d.hpTemp,coins:d.coins,slots:d.slots,spells:d.spells});},edition);
+  await page.locator('#sheetStyle').selectOption('adobe');await speed().waitFor({state:'visible'});assert.equal(await speed().inputValue(),'30 ft');
+  await speed().dblclick();await editor.waitFor({state:'visible'});assert.equal(await host.isVisible(),true);assert.match(await editor.locator('h2').textContent(),/Movement/);assert.equal(await editor.locator('#sheetInventory').isVisible(),false,'focused movement command hides unrelated equipment without moving its controls');
+  await editor.locator('[data-carry="mode"]').selectOption('variant');assert.match(await editor.locator('[data-carry-detail]').textContent(),/Walking speed 20 ft/);await editor.locator('[data-adobe-editor-close]').click();assert.equal(await speed().inputValue(),'20 ft');
+  assert.equal(await speed().evaluate(n=>n.getRootNode().activeElement===n),true,'returned focus must not freeze computed Speed');
+  await page.evaluate(()=>{inventory.find(r=>r.id==='mine').quantity=2;refreshCharacterSheetInventory();});assert.equal(await speed().inputValue(),'10 ft');assert.match(await speed().getAttribute('title'),/Disadvantage on physical/);
+  assert.equal(await page.evaluate(()=>sheetSession.data.speed),30,'derived load never overwrites the saved base speed');
+  await page.locator('#sheetSave').click();await page.waitForFunction(()=>!sheetSession.saving&&!sheetSession.dirty);await page.evaluate(async()=>{closeCharacterSheet(true);await openCharacterSheet('c1')});await speed().waitFor({state:'visible'});assert.equal(await speed().inputValue(),'10 ft');
+  fs.mkdirSync('/tmp/campaignatlas-ui-checks',{recursive:true});await host.locator('#adobePrint').click();await page.waitForFunction(()=>document.body.classList.contains('printing-adobe-sheet'));const pdf='/tmp/campaignatlas-ui-checks/adobe-load-movement-'+edition+'.pdf';await page.pdf({path:pdf,preferCSSPageSize:true,printBackground:true});assert.match(execFileSync('pdftotext',[pdf,'-'],{encoding:'utf8'}),/10 ft/);await page.evaluate(()=>dispatchEvent(new Event('afterprint')));
+  await speed().press('Enter');await editor.waitFor({state:'visible'});await editor.locator('[data-carry="mode"]').selectOption('basic');await editor.locator('[data-adobe-editor-close]').click();assert.equal(await speed().inputValue(),'30 ft');assert.equal(await page.evaluate(()=>inventory.find(r=>r.id==='other').quantity),999);
+  assert.equal(await page.evaluate(()=>JSON.stringify({hp:sheetSession.data.hpCurrent,temp:sheetSession.data.hpTemp,coins:sheetSession.data.coins,slots:sheetSession.data.slots,spells:sheetSession.data.spells})),await page.evaluate(()=>loadResources));
+  for(const [condition,expected] of [['Grappled','0 ft'],['Stunned',edition==='2014'?'0 ft':'30 ft'],['Exhaustion 2',edition==='2014'?'15 ft':'20 ft']]){
+   await page.evaluate(()=>CharacterAdobeView.openEditor('conditions'));await editor.waitFor({state:'visible'});await editor.locator('[name="conditions"]').fill(condition);await editor.locator('[name="conditions"]').press('Tab');await editor.locator('[data-adobe-editor-close]').click();assert.equal(await speed().inputValue(),expected,edition+' '+condition);
+  }
+  await page.locator('#sheetSave').click();await page.waitForFunction(()=>!sheetSession.saving&&!sheetSession.dirty);await page.evaluate(async()=>{closeCharacterSheet(true);await openCharacterSheet('c1')});await speed().waitFor({state:'visible'});assert.equal(await speed().inputValue(),edition==='2014'?'15 ft':'20 ft');assert.equal(await page.evaluate(()=>sheetSession.data.conditions),'Exhaustion 2');
+  assert.equal(await page.locator('#sheetStyle').inputValue(),'adobe');
+ }
+ await page.evaluate(()=>CharacterAdobeView.openEditor('carrying'));await editor.waitFor({state:'visible'});
+ await page.addScriptTag({path:require.resolve(process.env.AXE_PATH||'axe-core/axe.min.js')});
+ assert.deepEqual(await page.evaluate(async()=>(await axe.run(document.getElementById('adobeSharedEditor'),{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))),[]);
+ await page.setViewportSize({width:390,height:844});assert.equal(await editor.evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);await page.screenshot({path:'/tmp/campaignatlas-ui-checks/adobe-movement-v55-mobile.png'});await editor.locator('[data-adobe-editor-close]').click();
+ await page.evaluate(()=>CharacterAdobeView.openEditor('conditions'));await editor.waitFor({state:'visible'});
+ assert.deepEqual(await page.evaluate(async()=>(await axe.run(document.getElementById('adobeSharedEditor'),{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))),[]);
+ assert.equal(await editor.evaluate(n=>n.scrollWidth<=n.clientWidth+1),true);await page.screenshot({path:'/tmp/campaignatlas-ui-checks/adobe-conditions-v55-mobile.png'});await editor.locator('[data-adobe-editor-close]').click();
+ assert.deepEqual(errors,[]);console.log('PASS live load-to-Speed in both editions, scoped quantities, native focused popups, versioned Grappled/Stunned/Exhaustion, preserved base/resources, private save/reopen, actual source PDFs and mobile/axe');
+}finally{await browser.close();}})().catch(error=>{console.error(error);process.exitCode=1});

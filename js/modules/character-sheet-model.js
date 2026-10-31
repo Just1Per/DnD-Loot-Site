@@ -333,6 +333,8 @@ var CharacterSheetModel = (() => {
       attacks: d.attacks.map(a => mods[a.ability] + (a.proficient ? pb : 0) + a.bonus + (a.rangedWeapon ? feats.rangedBonus : 0))
     };
     result.magicItems=magicItems;
+    const Carry=globalThis.CharacterCarrying||(typeof require==='function'?require('./character-carrying'):null);
+    result.carrying=Carry.limits(data,{scores,effects});
     result.gear=Equipment.derive(d,result,loot,level);
     if(Magic)result.gear=Magic.augmentGear(d,result.gear,magicItems);
     const acModifiers={magic:bonus('ac.magic'),misc1:bonus('ac.misc1'),misc2:bonus('ac.misc2')},extraAC=acModifiers.magic+acModifiers.misc1+acModifiers.misc2;result.gear.adjustment+=extraAC;result.gear.ac+=extraAC;result.ac=result.gear.ac;
@@ -341,8 +343,9 @@ var CharacterSheetModel = (() => {
     result.itemResources=ItemResources?ItemResources.project(data,result.gear):[];
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
-    const Carry=globalThis.CharacterCarrying||(typeof require==='function'?require('./character-carrying'):null);
-    result.carrying=Carry.limits(data,{scores,effects});
+    result.weight=Carry.weight(data,result.gear.entries.map(row=>row.entry));
+    result.movement=Carry.movement(data,{limits:result.carrying,weight:result.weight,scores,effects,gear:result.gear,magicItems});
+    Object.assign(effects,result.movement.speeds);
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     if(Override){result.gear.attacks=result.gear.attacks.map(row=>Override.attack(row,'attack:gear:'+row.id,modifierExpressions,{mods,pb},level));result.manualAttacks=d.attacks.map((row,i)=>Override.attack({...row,hit:result.attacks[i]},'attack:attack:'+row.id,modifierExpressions,{mods,pb},level));result.attacks=result.manualAttacks.map((row,i)=>row.attack??result.attacks[i]);result.actions=result.actions.map((row,i)=>Override.attack(row,'attack:attack:'+d.actions[i]?.id,modifierExpressions,{mods,pb},level));}
 

@@ -119,19 +119,12 @@ function renderCharacterInventory(){
  host.querySelectorAll('[data-active-attune]').forEach(b=>b.onclick=()=>{const c=s.data.equipmentState.loadout.find(v=>v.id===b.dataset.activeAttune);setSheetEquipmentChoice(b.dataset.activeAttune,'attuned',!c?.attuned);});
  observePendingImages(host);
 }
-function inventoryUnitWeight(item){
- const raw=item.properties?.find(p=>p.title==='Weight per unit (lb)')?.text;
- if(raw!==undefined&&raw!==''&&Number.isFinite(Number(raw))&&Number(raw)>=0)return Number(raw);
- const base=sheetBaseGear().find(g=>[g.name,g.unitName].some(n=>n?.toLowerCase()===item.name?.toLowerCase()));return base?Number(base.weight)||0:null;
-}
-// One carried-weight projection for Standard and the Adobe paper view.
-function characterInventoryRowsWeight(entries,unitWeight=entry=>entry.weight){
- let gear=0,unknown=0;for(const entry of entries){const quantity=Number(entry.quantity);if(!Number.isFinite(quantity)||quantity<=0)continue;const weight=unitWeight(entry);if(weight===null||weight===undefined||weight===''||!Number.isFinite(Number(weight))||Number(weight)<0||!Number.isFinite(Number(weight)*quantity)||!Number.isFinite(gear+Number(weight)*quantity))unknown++;else gear+=Number(weight)*quantity;}return {gear,unknown};
-}
-function characterInventoryWeight(data,entries){
- const {gear,unknown}=characterInventoryRowsWeight(entries,entry=>inventoryUnitWeight(entry.item||{}));
- const counted=CharacterCarrying.normalize(CharacterCarrying.stored(data).carrying).includeCoins,coins=counted?Object.values(data.coins||{}).reduce((sum,value)=>sum+(Number(value)||0),0)/50:0;return {gear,coins,total:gear+coins,unknown};
-}
+const characterInventoryWeightReferences=new WeakMap();
+function characterInventoryWeightReference(){if(!characterInventoryWeightReferences.has(CharacterAdobeData))characterInventoryWeightReferences.set(CharacterAdobeData,[...CharacterAdobeData.gear,...(CharacterAdobeData.baseEquipment||[])]);return characterInventoryWeightReferences.get(CharacterAdobeData);}
+function inventoryUnitWeight(item){return CharacterCarrying.unitWeight(item,characterInventoryWeightReference());}
+// One pure carried-weight projection for the model, Inventory and Adobe paper.
+function characterInventoryRowsWeight(entries,unitWeight=entry=>entry.weight){return CharacterCarrying.rowsWeight(entries,unitWeight);}
+function characterInventoryWeight(data,entries){return CharacterCarrying.weight(data,entries,characterInventoryWeightReference());}
 function updateInventoryTotals(stats){
  const host=document.getElementById('sheetInventoryTotals');if(!host||!sheetSession)return;
  const s=sheetSession,{gear:weight,coins,unknown}=characterInventoryWeight(s.data,sheetEquipmentLoot());

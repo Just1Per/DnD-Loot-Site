@@ -169,7 +169,7 @@ var CharacterEquipment = (() => {
       const p=armorEntry.profile;
       if(!armorTrained(p.group,profs))warnings.push(p.name+': armor training not found; check STR/DEX penalties and spellcasting restrictions.');
       if(p.stealth)warnings.push(p.name+': disadvantage on Stealth.');
-      if(p.strength>stats.scores.str)warnings.push(p.name+': strength requirement not met; apply speed penalty unless exempt.');
+      if(p.strength>stats.scores.str&&(stats.carrying?.mode||data.adobe?.carrying?.mode||data.rulesChoices?.grants?.__adobe?.data?.carrying?.mode)!=='variant')warnings.push(p.name+': strength requirement not met; Movement includes the applicable speed rule and exceptions.');
     }
     let shield=shieldEntry?2:0;
     const raceForAC=stats.effects?.race||(typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null);

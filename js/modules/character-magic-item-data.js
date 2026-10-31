@@ -387,6 +387,7 @@ var CharacterMagicItemReference = {
     "boots of striding and springing": {
       "attunement": true,
       "speed": {
+        "ignoreArmorAndEncumbrance": true,
         "walk": {
           "mode": "minimum",
           "value": 30
