@@ -63,3 +63,7 @@ This replaces the spell-selection bridge. Slot spending retains its existing sep
 ## Cleric reference list and daily preparation (v52)
 
 Fixed the native and shared generator using prepared-class allowance as the reference-list cap. Cleric and other prepared classes can add reachable reference spells, independently mark Prepared, and retain both states through Save/reopen and Standard round trips. Cantrip/known/fixed-prepared limits and separate always-prepared grants remain in force. Guide and regression coverage updated; no Firebase rule change.
+
+## Direct paper preparation (v53)
+
+Prepared spell circles on the source paper now enable all prepared classes, using the same shared preparation action and allowance. Single/continuous/continuation, keyboard, blocked over-preparation, grant/cantrip protection, class/resource isolation and private Save/reopen have browser coverage. The popup remains optional for daily preparation.

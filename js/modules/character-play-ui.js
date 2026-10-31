@@ -7,7 +7,7 @@ function characterSpellPresentation(data,derived,level){
   const invocation=CharacterClassFeatureChoices.cantripModifier(data,derived.cantripInvocations,spell.catalogId,spell.classId);
   const mark=CharacterClassFeatureChoices.huntersMarkEffect(data,c,{level:derived.progression?.targetLevel||level,classId:spell.classId,features:derived.rangerFeatures});
   const beast=globalThis.CharacterDruidSpellcasting?.assess(data,c||spell,{level:derived.progression?.targetLevel||level,classId:spell.classId}),profile=byClass.get(spell.classId),automatic=!!automaticByClass.get(spell.classId)?.has(spell.catalogId);
-  return {spell,i,c,description,invocation,mark,beast,profile,automatic,preparationEditable:profile?.mode==='spellbook'&&spell.level>0&&!automatic,range:invocation?.range||(c?CharacterClassFeatureChoices.cantripRange(c,derived.progression?.targetLevel||level,spell.range):spell.range)};
+  return {spell,i,c,description,invocation,mark,beast,profile,automatic,preparationEditable:CharacterSpellcasting.isPreparedToggleUseful(profile)&&spell.level>0&&!automatic,range:invocation?.range||(c?CharacterClassFeatureChoices.cantripRange(c,derived.progression?.targetLevel||level,spell.range):spell.range)};
  }).sort((a,b)=>a.spell.level-b.spell.level||a.spell.name.localeCompare(b.spell.name));
 }
 function applyCharacterBackgroundDetail(value,session=sheetSession,key=CharacterAdobeEngine.backgroundKey(session?.data)){

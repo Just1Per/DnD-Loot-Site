@@ -21,6 +21,7 @@
   const speech=CharacterCatalog.rawData.spells.find(s=>s.name==='Speak with Animals'&&s.edition==='2024');
   check('Druidic adds only its own always-prepared extra spell',sheetSession.data.spells.filter(s=>s.catalogId===speech.id).length===1&&sheetSession.data.spells.some(s=>s.catalogId===speech.id&&s.classId==='druid'&&s.prepared)&&!panel('cleric').textContent.includes('Speak with Animals'));
   check('Prepared allowances use individual class levels',panel('druid').textContent.includes('1/5 prepared spells')&&panel('cleric').textContent.includes('1/4 prepared spells'));
+  const paperSpells=characterSpellPresentation(sheetSession.data,CharacterSheetModel.derive(sheetSession.data,3),3);check('Paper preparation controls are available for ordinary Druid and Cleric spells, with automatic grants locked',paperSpells.every(row=>row.preparationEditable===(!row.automatic&&row.spell.level>0)));
   check('Each class sheet shows its own Wisdom modifier attack and save DC', ['druid','cleric'].every(id=>panel(id).querySelector('.sheet-class-spell-metrics').textContent.includes('Wisdom +2')&&panel(id).querySelector('.sheet-class-spell-metrics').textContent.includes('Save DC12')));
   await panel('druid').querySelector('[data-generate-class]').onclick();
   check('Class spell choices cannot use higher shared multiclass slot levels', [...document.querySelectorAll('[data-spell-pick]')].every(el=>CharacterCatalog.find(el.dataset.spellId).level<=1));
