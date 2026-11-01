@@ -96,6 +96,24 @@ var CharacterPaperGearLayout=(()=>{
   state.hidden=state.hidden.filter(id=>id!==source.key);state.layout=state.layout.filter(row=>row.slot!==target&&row.key!==source.key);state.layout.push({slot:target,key:source.key,name:source.unavailable?source.name.replace(/(?: \(unavailable\))+$/,''):source.name});
   return{state:normalize(state),index:target,key:source.key};
  }
- return{maxRows,normalize,project,operation,edit,automatic,choose,put,transfer};
+ const matchName=name=>String(name||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/^[\s-]+/,'').replace(/[’‘']/g,'').replace(/\s+/g,' ').trim();
+ function combination(raw,base,index,destination,options={}){
+  const {entries}=project(raw,base,options);section(entries,index,options.footer);const source=entries[index];
+  if(!source?.name||source.unavailable||source.header||!['gear','extra'].includes(destination)||options.footer&&index>=50&&index<54)return null;
+  const start=destination==='gear'?0:54,end=destination==='gear'?(options.footer?49:53):89;if(index>=start&&index<=end)return null;
+  for(let target=start;target<=end;target++){
+   const row=entries[target];if(!row?.name||row.unavailable||matchName(row.name)!==matchName(source.name))continue;
+   // Source AddToInv uses one for a blank/zero incoming amount; a blank existing amount also means one.
+   const incoming=source.quantity===''||Number(source.quantity)===0?1:Number(source.quantity),existing=row.quantity===''?1:Number(row.quantity),amount=incoming+existing;
+   if(!Number.isFinite(amount)||incoming<0||existing<0||amount>1000000)throw Error('The combined paper amount must be from 0 to 1000000.');
+   return{target,index,sourceKey:source.key,targetKey:row.key,sourceName:source.name,targetName:row.name,incoming,existing,amount,weight:row.weight,location:row.location||''};
+  }return null;
+ }
+ function combine(raw,base,index,destination,options={}){
+  const preview=combination(raw,base,index,destination,options);if(!preview)throw Error('Choose a matching equipment line on the other page.');
+  const result=operation(raw,base,index,'delete',options),state=result.state;state.values[preview.targetKey]={...(state.values[preview.targetKey]||{}),quantity:preview.amount};
+  return{state:normalize(state),index:preview.target,preview};
+ }
+ return{maxRows,normalize,project,operation,edit,automatic,choose,put,transfer,combination,combine};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPaperGearLayout;

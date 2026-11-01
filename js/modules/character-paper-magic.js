@@ -41,7 +41,14 @@ var CharacterPaperMagic=(()=>{
   else{if(visible[index]){hidden.add(visible[index].entry.id);deactivate=[visible[index].entry.id];}slots[index]=record(all.find(row=>row.entry.id===id));}
   hidden.delete(id);return{state:normalize({slots,hidden:[...hidden]}),index,deactivate};
  }
- return{normalize,rows,operation,choose};
+ function copy(raw,all,id){
+  if(!validId(id)||!all.some(row=>row.entry.id===id))throw Error('Choose an owned magic item.');
+  const state=normalize(raw),visible=rows(state,all),existing=visible.findIndex(row=>row?.entry.id===id&&!row.unavailable);
+  if(existing>=0)return{state,index:existing,deactivate:[],reused:true};
+  const index=visible.findIndex(row=>!row);if(index<0)throw Error('The magic-item table is full. No existing item was changed.');
+  return{...choose(state,all,index,id),reused:false};
+ }
+ return{normalize,rows,operation,choose,copy};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterPaperMagic=CharacterPaperMagic;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPaperMagic;

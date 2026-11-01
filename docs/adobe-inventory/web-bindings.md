@@ -144,3 +144,13 @@ Native character Gear menus include the original Put Gear/Tool branch. Source fa
 ### Original equipment page transfers — v61
 
 Native Gear rows move to the original Equipment/Extra Equipment table using one private source/target update and focus the destination in Single/All sheets. Optional copy keys preserve independent references after cross-page moves; legacy keys normalize without changing identity. See [transfer behavior and remaining parity](../adobe-gear-page-transfers.md).
+
+
+### Original matching-name arithmetic — v62
+
+Gear transfer menus preview an optional Move & combine action for an existing destination name. Shared pure layout logic calculates bounded original blank/zero fallback amounts and updates the destination after source-column Delete in one proposal. Destination weight/location are preserved; the source paper reference becomes hidden while owned records/resources remain. Cancel, stale controls and invalid/full-separate destinations cannot partially apply. Explicit separate Move remains available. Connected browser coverage includes actual PDF, source/physical weight, Save/reopen and mobile/accessibility. See [arithmetic scope](../adobe-gear-page-transfers.md).
+
+
+### Native footer Copy to Magic Items — v63
+
+Footer Gear arrows route to an Adobe-owned popup instead of the general layout editor. A pure paperMagic copy proposal reuses a visible owned identity or restores its hidden reference into the first empty row. No replacement/equipment activation occurs. Source-reference Clear confirms; full/missing/stale cases refuse. Correct repeated five-row continuations are selected and focused in both view modes. [Scope](../adobe-magic-footer-copy.md) keeps original free-text recognition and remaining footer branches explicit.

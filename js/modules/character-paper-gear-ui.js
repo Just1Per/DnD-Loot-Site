@@ -14,7 +14,7 @@ var CharacterPaperGearUI=(()=>{
   const apply=result=>{session.data.adobe.paperInventory=result.state;selected=result.index;session.dirty=true;fillSheetForm();updateSheetCalculations();sheetStatus('Equipment paper row updated. Physical ownership is unchanged. Save sheet to keep it.');snapshot=signature();render();};
   function render(){
    const all=physical(),state=session.data.adobe.paperInventory,list=CharacterPaperInventory.gearRows(state,all),row=list[selected],esc=sheetEscape,footer=state.attunedFooter&&selected>=50&&selected<54;
-   if(footer){close();CharacterAdobeView.openEditor('paperInventory');return;}
+   if(footer){close();CharacterPaperInventoryUI.openFooter(selected);return;}
    const offset=selected<54?0:54+36*Math.floor((selected-54)/36),local=selected-offset,count=selected<54?54:36,last=selected<54&&state.attunedFooter?49:count-1,columns=selected<54?3:2;
    dialog.innerHTML='<header class="adobe-gear-head"><div><span>EQUIPMENT · '+(selected<54?'PAGE 2':'EXTRA EQUIPMENT')+' · ROW '+(local+1)+'</span><h2 id="adobeGearTitle" tabindex="-1">'+esc(row?.name||'Empty equipment row')+'</h2><p>Arrange and edit the original paper fields. Save sheet keeps your changes.</p></div><div><button type="button" data-gear-save>Save sheet</button><button type="button" data-gear-done>Done</button></div></header>'+
     '<div class="adobe-gear-body"><section><details data-gear-choice-editor '+(!row?'open':'')+'><summary>'+(row?'Change item on this line':'Choose an item for this line')+'</summary><label>Choose an owned item<select data-gear-choice aria-label="Choose an owned equipment item"><option value="">Choose an item</option>'+all.map(entry=>'<option value="'+esc(entry.id)+'" '+(row?.key==='p:'+entry.id?'selected':'')+'>'+esc(entry.name)+'</option>').join('')+'</select></label><p class="adobe-gear-help">An item already on the paper swaps places with this row. Replacing or clearing a reference keeps the owned item, equipment effects and recorded uses in Inventory.</p></details></section>'+
@@ -43,12 +43,20 @@ var CharacterPaperGearUI=(()=>{
     if(!guard())return;try{apply(CharacterPaperInventory.gearAction(state,all,selected,command));dialog.querySelector('[data-gear-done]').focus();}catch(error){status.textContent=error.message;}
    };
    dialog.querySelector('[data-gear-description]').onclick=()=>{if(!guard()||!clean())return;close();openInventoryItemInformation(row.id);};
-   for(const button of dialog.querySelectorAll('[data-gear-transfer]'))button.onclick=async()=>{
-    if(!guard()||!clean())return;const destination=button.dataset.gearTransfer;let result;
-    try{result=CharacterPaperInventory.gearAction(state,all,selected,'page:'+destination);apply(result);}catch(error){status.textContent=error.message;return;}
-    close();const label=destination==='gear'?'Equipment (page 2)':'Extra Equipment (page 3)',message='Moved to '+label+', row '+(destination==='gear'?result.index+1:result.index-53)+'. Save sheet to keep it.';sheetStatus(message);
+   const finishTransfer=async(result,destination,combined=false)=>{
+    apply(result);close();const label=destination==='gear'?'Equipment (page 2)':'Extra Equipment (page 3)',message=(combined?'Combined paper amounts on ':'Moved to ')+label+', row '+(destination==='gear'?result.index+1:result.index-53)+'. Save sheet to keep it.';sheetStatus(message);
     try{const shown=await CharacterAdobeView.showEquipmentRow(result.index);if(!shown&&characterHPCurrent(session))sheetStatus(message+' Use the page menu to reopen the destination.',true);}catch{if(characterHPCurrent(session))sheetStatus(message+' The destination could not be loaded; retry it from the page menu.',true);}
    };
+   for(const button of dialog.querySelectorAll('[data-gear-transfer]')){
+    const destination=button.dataset.gearTransfer;button.onclick=async()=>{if(!guard()||!clean())return;try{await finishTransfer(CharacterPaperInventory.gearAction(state,all,selected,'page:'+destination),destination);}catch(error){status.textContent=error.message;}};
+    let preview;try{preview=CharacterPaperInventory.combination(state,all,selected,destination);}catch{continue;}if(!preview)continue;
+    const group=document.createElement('div');group.className='adobe-gear-combine';group.innerHTML='<h4>Combine matching paper amounts</h4><p>'+esc(preview.targetName)+' · '+(destination==='gear'?'page 2':'page 3')+', row '+(destination==='gear'?preview.target+1:preview.target-53)+'</p><p>Amount '+preview.existing+' + '+preview.incoming+' = <strong>'+preview.amount+'</strong>. Destination unit weight: '+(preview.weight===null?'unknown':esc(preview.weight)+' lb')+'. Location: '+esc(preview.location||'not recorded')+'.</p><button type="button" data-gear-combine="'+destination+'">Move &amp; combine paper amounts</button><p class="adobe-gear-help">The original combine action keeps the destination’s weight and location. A blank or 0 incoming amount counts one. Physical ownership and uses stay unchanged.</p>';button.closest('section').append(group);
+    group.querySelector('button').onclick=async()=>{
+     if(!guard()||!clean())return;
+     if(!await SiteConfirmation.ask({title:'Move and combine these paper amounts?',paragraphs:[preview.sourceName+' → '+preview.targetName,'Amount '+preview.existing+' + '+preview.incoming+' = '+preview.amount+'.','The destination’s unit weight and location are retained. The source column closes its gap.','Owned items, equipped effects and recorded uses stay in Inventory.'],confirmLabel:'Move & combine',isCurrent:allowed}))return;
+     if(!guard())return;try{await finishTransfer(CharacterPaperInventory.gearAction(state,all,selected,'combine:'+destination),destination,true);}catch(error){status.textContent=error.message;}
+    };
+   }
    dialog.querySelector('[data-gear-equipment]').onclick=()=>{if(!guard()||!clean())return;close();CharacterAdobeView.openEditor('equipment');};
    CharacterPaperGearCatalogUI.install({dialog,row,session,index:selected,allowed,guard,clean,apply:proposal=>{session.data.personalGear=proposal.personalGear;apply({state:proposal.paperInventory,index:proposal.index});dialog.querySelector('[data-gear-done]').focus();}});
   }

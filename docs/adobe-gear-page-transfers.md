@@ -1,4 +1,4 @@
-# Original character equipment page transfers — v61
+# Original character equipment page transfers — v61 / v62
 
 PR #250, equipment backlog point 3. Source reference: `InventoryLineOptions` → `movepage`, `InvDelete` and `AddToInv`, read statically from the supplied PDF. Character Gear references can move between Equipment (page 2) and Extra Equipment (page 3); later equipment continuations can move into either original table.
 
@@ -14,7 +14,9 @@ Preferences reuse private `paperInventory` in the existing schema-14 grants enve
 
 ## Remaining original branches
 
-Source `AddToInv` can combine matching names. This checkpoint preserves separate owned/copy references rather than silently combining their amounts, weights or locations; original matching-name combination remains a separate parity task. It is not claimed complete here. Companion transfers, footer-specific Copy to Magic Items and remaining magic catalogue/type/checkbox options also remain open. The current companion template's missing Gear fields require further static layout/layer review.
+Source `AddToInv` matching-name arithmetic is available as an explicit **Move & combine paper amounts** action in v62. The existing Move action still keeps references separate. When a matching name exists on the destination page, a preview shows the existing and incoming amounts, resulting amount, destination unit weight and location. Confirmation retains the destination fields, hides the source paper reference and closes only its source column. It can use a full destination because no new row is required. Blank incoming amounts and incoming 0 count one, following the original combine function; a blank existing amount counts one, while an existing 0 stays zero. This is distinct from ordinary subtotal calculation, where 0 counts none.
+
+Combining is a snapshot of the paper fields, not a merge of owned stock. Separate owned identities, equipment effects and item uses are retained. Destination weight/location win, so section mass can change; the preview makes these fields explicit. The combined amount is private and survives Save/reopen and print. Matching ignores case, apostrophes and container indentation, retaining enhancement signs; it does not attempt the source’s full synonym/regular-expression catalogue parsing. Invalid or overflowing amounts, missing ownership and changed sessions refuse without partial application. Source nonnumeric amount expressions are outside the web’s bounded numeric/blank paper fields. Catalogue placement and reference-copy commands retain their existing separate behavior. Companion transfers, footer-specific Copy to Magic Items and remaining magic catalogue/type/checkbox options also remain open. The current companion template's missing Gear fields require further static layout/layer review.
 
 ## Validation
 

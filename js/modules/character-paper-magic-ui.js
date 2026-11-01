@@ -61,5 +61,5 @@ var CharacterPaperMagicUI=(()=>{
   dialog.addEventListener('cancel',event=>{event.preventDefault();close();});dialog.addEventListener('close',()=>{observer?.disconnect();dialog.remove();});
   document.getElementById('characterSheetDialog').append(dialog);render();dialog.showModal();dialog.querySelector('[data-magic-done]').focus();
  }
- return{all,rows,count,choose,open,destroy:()=>currentClose?.()};
+ return{all,rows,count,choose,apply,open,destroy:()=>currentClose?.()};
 })();

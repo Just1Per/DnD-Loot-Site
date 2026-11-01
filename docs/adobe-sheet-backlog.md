@@ -95,3 +95,13 @@ Original row menu Put Gear/Tool now offers 106 Gear and 37 separate Tools with c
 ## Equipment page transfers — v61
 
 Ordinary Gear and copy references move atomically between the original page-2/page-3 tables, with source-column compaction and first-empty target placement. Fields, independent reference identity and physical stock are retained. The destination opens/focuses the moved row in Single/All sheets; full targets refuse without losing data. Multiple copied references survive moving to one page and can be cleared individually. Native close handling prevents focus jumping back. Companion transfers, original matching-name amount combination, footer-specific Magic Item actions, magic variants/visibility and units remain open. Functionality and calculations from the supplied Adobe sheet remain the primary target; visual work supports those flows.
+
+
+## Original matching-name amount combination — v62
+
+Gear page transfers now offer an explicit previewed Move & combine when the destination contains a matching name. It shows existing + incoming = result, destination unit weight and location before confirmation, including full-page destinations. Original blank/0 incoming and blank existing fallback arithmetic is retained; the source column compacts while physical records/effects/uses stay unchanged. Save/reopen and print retain the private paper amount. The ordinary Move option keeps references separate. This covers numeric/blank matching-name arithmetic, not full source synonym parsing, catalogue combining or nonnumeric amounts. Companion transfers, footer-specific Magic Item actions, magic variants/visibility and units remain open in point 3. See [transfer scope](adobe-gear-page-transfers.md).
+
+
+## Footer Copy to Magic Items — v63
+
+Footer arrows now open native Save/Done, owned-reference Copy, full text and confirmed Clear. Copy reuses an existing magic row or restores a hidden one into its first empty position, focusing the correct repeated continuation in Single/All sheets. Physical records, effects, attunement and resources are retained; full tables and stale controls refuse. Source free-text recognition and other footer editing/move branches remain open alongside companion transfers, magic catalogue/variants/visibility and units. Point 3 is not complete. See [footer scope](adobe-magic-footer-copy.md).

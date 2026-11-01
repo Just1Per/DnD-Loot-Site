@@ -56,10 +56,11 @@ var CharacterPaperInventory=(()=>{
  function gearRows(raw,all){const base=project(raw,all,{base:true});return Layout.project(base.state.gearLayout,base.entries,{footer:base.state.attunedFooter,copyRows:base.copyRows}).entries;}
  function gearAction(raw,all,index,command,...args){
   const base=project(raw,all,{base:true}),options={footer:base.state.attunedFooter,copyRows:base.copyRows};
-  const result=command==='edit'?{state:Layout.edit(base.state.gearLayout,base.entries,index,...args,options),index}:command==='choose'?Layout.choose(base.state.gearLayout,base.entries,index,args[0],options):command==='put'?Layout.put(base.state.gearLayout,base.entries,index,args[0],options):command.startsWith('page:')?Layout.transfer(base.state.gearLayout,base.entries,index,command.slice(5),options):Layout.operation(base.state.gearLayout,base.entries,index,command,options);
+  const result=command==='edit'?{state:Layout.edit(base.state.gearLayout,base.entries,index,...args,options),index}:command==='choose'?Layout.choose(base.state.gearLayout,base.entries,index,args[0],options):command==='put'?Layout.put(base.state.gearLayout,base.entries,index,args[0],options):command.startsWith('page:')?Layout.transfer(base.state.gearLayout,base.entries,index,command.slice(5),options):command.startsWith('combine:')?Layout.combine(base.state.gearLayout,base.entries,index,command.slice(8),options):Layout.operation(base.state.gearLayout,base.entries,index,command,options);
   base.state.gearLayout=result.state;if(command.startsWith('page:')&&result.key?.startsWith('c:'))base.state.copies=base.state.copies.map(row=>row.key===result.key?{...row,destination:command.slice(5),slot:result.index}:row);return{state:base.state,index:result.index};
  }
- return{normalize,project,copy,remove,footer,gearRows,gearAction};
+ function combination(raw,all,index,destination){const base=project(raw,all,{base:true});return Layout.combination(base.state.gearLayout,base.entries,index,destination,{footer:base.state.attunedFooter,copyRows:base.copyRows});}
+ return{normalize,project,copy,remove,footer,gearRows,gearAction,combination};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterPaperInventory=CharacterPaperInventory;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPaperInventory;
