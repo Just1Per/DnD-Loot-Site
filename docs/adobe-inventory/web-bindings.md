@@ -140,3 +140,7 @@ Original Adventuring Gear/Extra Equipment arrows and Enter/double-click on their
 ### Original catalogue placement — v60
 
 Native character Gear menus include the original Put Gear/Tool branch. Source facts preserve 106 Gear amounts and 37 Tools separately from owned stock. Atomic Add & place, overwrite confirmation, unknown-weight entry, campaign eligibility and lazy/retry metadata are described in [catalogue placement](../adobe-gear-catalogue-placement.md). Owning a tool does not grant proficiency; shared class/feat training still controls rolls.
+
+### Original equipment page transfers — v61
+
+Native Gear rows move to the original Equipment/Extra Equipment table using one private source/target update and focus the destination in Single/All sheets. Optional copy keys preserve independent references after cross-page moves; legacy keys normalize without changing identity. See [transfer behavior and remaining parity](../adobe-gear-page-transfers.md).

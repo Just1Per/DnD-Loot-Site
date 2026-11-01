@@ -91,3 +91,7 @@ The original CalcWeightSubtotal uses one unit when an equipment amount is blank.
 ## Original Gear and Tools catalogue — v60
 
 Original row menu Put Gear/Tool now offers 106 Gear and 37 separate Tools with categories, source amounts, weights and prices. Preview/Cancel stays read-only; Add & place applies private inventory plus paper placement together, preserving overwritten stock/effects and spending no coins. Unknown tool weights require an explicit value; campaign edition policy, limits and stale guards apply. Metadata loads on demand with Retry. Save/reopen, PDF and mobile/accessibility have a dedicated connected flow. Page/companion transfers, magic variants/visibility and units remain open; point 3 is not complete. See [catalogue placement](adobe-gear-catalogue-placement.md).
+
+## Equipment page transfers — v61
+
+Ordinary Gear and copy references move atomically between the original page-2/page-3 tables, with source-column compaction and first-empty target placement. Fields, independent reference identity and physical stock are retained. The destination opens/focuses the moved row in Single/All sheets; full targets refuse without losing data. Multiple copied references survive moving to one page and can be cleared individually. Native close handling prevents focus jumping back. Companion transfers, original matching-name amount combination, footer-specific Magic Item actions, magic variants/visibility and units remain open. Functionality and calculations from the supplied Adobe sheet remain the primary target; visual work supports those flows.

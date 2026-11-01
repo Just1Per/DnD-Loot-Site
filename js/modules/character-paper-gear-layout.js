@@ -19,9 +19,9 @@ var CharacterPaperGearLayout=(()=>{
   return{layout,hidden,values};
  }
  function project(raw,base,{footer=false,copyRows=[]}={}){
-  const state=normalize(raw),copies=new Map(copyRows.map(row=>[row.slot,row.destination])),byKey=new Map(),tagged=base.map((row,i)=>{
+  const state=normalize(raw),copies=new Map(copyRows.map(row=>[row.slot,row])),byKey=new Map(),tagged=base.map((row,i)=>{
    if(!row||row.header)return row;
-   const id=(row.footer?'f:':row.reference?'c:'+copies.get(i)+':':'p:')+row.id,value={...row,key:id,location:row.location||''};byKey.set(id,value);return value;
+   const copy=copies.get(i),id=row.footer?'f:'+row.id:row.reference?copy?.key||'c:'+copy?.destination+':'+row.id:'p:'+row.id,value={...row,key:id,location:row.location||'',...(row.reference&&!row.footer?{copyDestination:copy?.destination}: {})};byKey.set(id,value);return value;
   }),hidden=new Set(state.hidden),entries=[],used=new Set(),reserved=new Set(),deferred=[];
   if(footer){entries[50]=base[50];for(let i=50;i<54;i++)reserved.add(i);}
   const place=(slot,row)=>{const value={...row,...(state.values[row.key]||{})};if(value.unavailable&&!value.name.endsWith(' (unavailable)'))value.name+=' (unavailable)';entries[slot]=value;used.add(row.key);};
@@ -38,7 +38,7 @@ var CharacterPaperGearLayout=(()=>{
    if(!row||row.header||used.has(row.key)||!available(row.key))continue;
    let slot=!entries[i]&&(!reserved.has(i)||row.footer)?i:row.footer?[51,52,53].find(slot=>!entries[slot]):-1;
    if(slot===undefined)throw Error('The three footer rows are full.');
-   if(slot<0){if(row.reference){const extra=row.key.startsWith('c:extra:'),target=free(extra?54:0,extra?89:footer?49:53);slot=target<0?firstFree(90):target;}else slot=firstFree();}place(slot,row);
+   if(slot<0){if(row.reference){const extra=row.copyDestination?row.copyDestination==='extra':row.key.startsWith('c:extra:'),target=free(extra?54:0,extra?89:footer?49:53);slot=target<0?firstFree(90):target;}else slot=firstFree();}place(slot,row);
   }
   for(const row of deferred)if(!used.has(row.key))place(firstFree(54),row);
   // Retain explicit empty positions, including a trailing Delete/Insert result.
@@ -56,7 +56,7 @@ var CharacterPaperGearLayout=(()=>{
   const state=normalize(raw),oldPins=new Set(state.layout.filter(row=>row.empty).map(row=>row.slot));
   for(const slot of pins)oldPins.add(slot);
   for(let i=0;i<before.length;i++)if(before[i]&&!before[i].header&&!after[i])oldPins.add(i);
-  state.layout=after.flatMap((row,i)=>row&&!row.header?[{slot:i,key:row.key,name:row.name}]:oldPins.has(i)?[{slot:i,empty:true}]:[]);
+  state.layout=after.flatMap((row,i)=>row&&!row.header?[{slot:i,key:row.key,name:row.unavailable?row.name.replace(/(?: \(unavailable\))+$/,''):row.name}]:oldPins.has(i)?[{slot:i,empty:true}]:[]);
   for(const slot of oldPins)if(slot>=after.length)state.layout.push({slot,empty:true});
   state.hidden=[...new Set([...state.hidden,...hidden])];return normalize(state);
  }
@@ -84,6 +84,18 @@ var CharacterPaperGearLayout=(()=>{
   const {entries:before}=project(raw,base,options),part=section(before,index,options.footer);if(part.table.footer&&part.index>=50)throw Error('Use the original footer reference controls.');
   const after=[...before];after[index]={...source,key:id};const state=arranged(raw,before,after,{hidden:before[index]?[before[index].key]:[]});state.hidden=state.hidden.filter(key=>key!==id);return{state,index};
  }
- return{maxRows,normalize,project,operation,edit,automatic,choose,put};
+ function transfer(raw,base,index,destination,options={}){
+  const {entries}=project(raw,base,options),part=section(entries,index,options.footer),source=entries[index];
+  if(!['gear','extra'].includes(destination))throw Error('Choose Equipment (page 2) or Extra Equipment (page 3).');
+  if(!source?.name||source.header||part.table.footer&&part.index>=50)throw Error('Choose an ordinary populated equipment row.');
+  const start=destination==='gear'?0:54,end=destination==='gear'?(options.footer?49:53):89;
+  if(index>=start&&index<=end)throw Error('This reference is already on that equipment page.');
+  let target=-1;for(let i=start;i<=end;i++)if(!entries[i]){target=i;break;}
+  if(target<0)throw Error('The destination equipment page is full. Nothing was moved.');
+  const result=operation(raw,base,index,'delete',options),state=result.state;
+  state.hidden=state.hidden.filter(id=>id!==source.key);state.layout=state.layout.filter(row=>row.slot!==target&&row.key!==source.key);state.layout.push({slot:target,key:source.key,name:source.unavailable?source.name.replace(/(?: \(unavailable\))+$/,''):source.name});
+  return{state:normalize(state),index:target,key:source.key};
+ }
+ return{maxRows,normalize,project,operation,edit,automatic,choose,put,transfer};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPaperGearLayout;

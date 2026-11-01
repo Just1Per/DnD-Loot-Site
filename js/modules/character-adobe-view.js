@@ -1,7 +1,7 @@
 'use strict';
 /* Alternate rendering of the current session. No SDK, storage or second engine. */
 var CharacterAdobeView=(()=>{
- const VERSION='20261101-adobe-sheet-v60',assets=new Map(),sessions=new WeakMap();let current=null;
+ const VERSION='20261101-adobe-sheet-v61',assets=new Map(),sessions=new WeakMap();let current=null;
  const SPELL_CAPACITY={front:55,more:70};let fieldMeasure=null;try{fieldMeasure=document.createElement('canvas').getContext?.('2d')||null;}catch{}
  const xpAdditionError=()=>document.getElementById('sheetXPAmount')?.getAttribute('aria-invalid')==='true'?document.getElementById('sheetXPAddStatus')?.textContent||'Correct the unapplied XP amount.':'';
  const option=(text,value)=>Object.assign(document.createElement('option'),{textContent:text,value});
@@ -362,7 +362,14 @@ var CharacterAdobeView=(()=>{
   if(typeof ResizeObserver==='function'){c.observer=new ResizeObserver(()=>resize(c));c.observer.observe(shadow.getElementById('adobeViewport'));}applyStyle(c);if(st.style==='adobe')setStyle('adobe',{persist:false}).then(()=>{if(c===current&&st.editor)openEditor(st.editor)});
  }
  window.addEventListener('resize',()=>resize());
+ async function showEquipmentRow(index){
+  const root=current;if(!active(root)||!Number.isInteger(index)||index<0||index>=90||!valid(root))return false;
+  const page=index<54?'page-2':'page-3';if(root.continuous?.enabled)await root.continuous.jumpPage(page);else await loadPage(page);
+  if(current!==root||!active(root)||!characterHPCurrent(root.session))return false;
+  const view=activePaper(),button=(index<54?'Adventuring Gear Button '+(index+1):'Extra.Gear Button '+(index-53)),target=paperFor(view).querySelector('[data-pdf-button="'+button+'"]');
+  if(!target)return false;target.scrollIntoView({block:'center'});target.focus({preventScroll:true});return true;
+ }
  window.addEventListener('afterprint',()=>{if(current)clearPrintBatch(current);document.body.classList.remove('printing-adobe-sheet','printing-character-sheet');document.getElementById('adobePrintPageStyle')?.remove();});
- return {install,refresh,destroy,active,connectedPlans,renderConnectedPage,showPage:loadPage,setStyle,print,printConnected,preparePrint,validate:()=>valid(),openEditor,selectLogEntry,routeSection:key=>{if(!active())return false;if(key==='overview'){closeEditor();return true;}if(key==='rules'){if(closeEditor()!==false)loadPage('page-6');return true;}if(!editorTargets[key]){notice('This section is not available on the Adobe sheet yet.',true);return true;}openEditor(key);return true;}};
+ return {install,refresh,destroy,active,connectedPlans,renderConnectedPage,showPage:loadPage,showEquipmentRow,setStyle,print,printConnected,preparePrint,validate:()=>valid(),openEditor,selectLogEntry,routeSection:key=>{if(!active())return false;if(key==='overview'){closeEditor();return true;}if(key==='rules'){if(closeEditor()!==false)loadPage('page-6');return true;}if(!editorTargets[key]){notice('This section is not available on the Adobe sheet yet.',true);return true;}openEditor(key);return true;}};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterAdobeView=CharacterAdobeView;

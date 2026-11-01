@@ -44,3 +44,21 @@ test('the final bounded continuation is a complete original table and cannot dis
 test('footer reference positions cannot be forged into ordinary gear or the protected heading',()=>{
  const state=L.normalize({layout:[{slot:0,key:'f:wand'},{slot:50,key:'f:ring'},{slot:53,key:'f:cloak'}]});assert.deepEqual(state.layout,[{slot:53,key:'f:cloak',name:''}]);
 });
+test('page transfers keep all fields and reference identity, compact only the source column and leave physical data unchanged',()=>{
+ const base=items(20),before=JSON.stringify(base);let state=L.edit({},base,2,'quantity','3');state=L.edit(state,base,2,'location','Saddlebag');const result=L.transfer(state,base,2,'extra'),rows=L.project(result.state,base).entries;assert.equal(result.index,54);assert.equal(rows[54].id,'item-2');assert.equal(rows[54].quantity,3);assert.equal(rows[54].location,'Saddlebag');assert.equal(rows[2].id,'item-3');assert.equal(rows[17],null);assert.equal(rows[18].id,'item-18');assert.equal(rows.filter(Boolean).length,20);assert.equal(JSON.stringify(base),before);
+});
+test('returning to page 2 fills the first empty row without merging another owned record with the same name',()=>{
+ const base=items(6);base[1].name=base[0].name;const moved=L.transfer({},base,0,'extra'),returned=L.transfer(moved.state,base,54,'gear'),rows=L.project(returned.state,base).entries;assert.equal(returned.index,5);assert.equal(rows[0].id,'item-1');assert.equal(rows[5].id,'item-0');assert.equal(rows.filter(row=>row?.name==='Item 0').length,2);
+});
+test('a full destination rejects before deleting the source, including footer reservations',()=>{
+ const base=items(91),before=JSON.stringify(base);assert.throws(()=>L.transfer({},base,0,'extra'),/full.*Nothing was moved/);assert.equal(JSON.stringify(base),before);const footer=[...base.slice(0,50),{header:true},null,null,null,...base.slice(50)];assert.throws(()=>L.transfer({},footer,54,'gear',{footer:true}),/full/);assert.equal(footer[50].header,true);
+});
+test('moving independent paper copies retains their blank amounts and never creates an extra physical row',()=>{
+ const base=items(6);base[54]={...base[0],reference:true,quantity:''};const options={copyRows:[{slot:54,destination:'extra'}]},moved=L.transfer({},base,54,'gear',options),rows=L.project(moved.state,base,options).entries;assert.equal(rows[moved.index].key,'c:extra:item-0');assert.equal(rows[moved.index].quantity,'');assert.equal(rows.filter(row=>row?.key==='p:item-0').length,1);assert.equal(rows[54],null);
+});
+test('later continuations can move into the original page-3 table, while invalid/same-page/heading moves are rejected',()=>{
+ const base=items(92);base[54]=null;const result=L.transfer({},base,90,'extra');assert.equal(result.index,54);assert.equal(L.project(result.state,base).entries[54].id,'item-90');assert.throws(()=>L.transfer({},items(6),0,'gear'),/already/);assert.throws(()=>L.transfer({},items(6),0,'companion'),/Choose Equipment/);assert.throws(()=>L.transfer({},items(6),50,'extra',{footer:true}),/editable/);
+});
+test('moving a missing owned reference does not repeatedly append unavailable markers',()=>{
+ const base=items(6),placed=L.operation({},base,0,'down').state,missing=base.slice(1),moved=L.operation(placed,missing,1,'down').state,page=L.transfer(moved,missing,2,'extra').state;assert.equal(L.project(page,missing).entries[54].name,'Item 0 (unavailable)');assert.equal(page.layout.find(row=>row.key==='p:item-0').name,'Item 0');
+});

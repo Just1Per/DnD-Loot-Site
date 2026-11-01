@@ -37,3 +37,12 @@ test('a copied item cleared from its paper row can be copied back to the chosen 
 test('clearing a footer reference after arranging rows cannot leave a stale unavailable copy',()=>{
  const all=owned(6);let state=P.copy(P.footer({},true),all,'owned-0','footer').state;state=P.gearAction(state,all,0,'down').state;state=P.remove(state,'owned-0','footer');assert.equal(P.project(state,all).entries.slice(51,54).filter(Boolean).length,0);assert.equal(P.project(state,all).entries.filter(row=>row?.id==='owned-0').length,1);
 });
+test('a moved copy has stable identity, correct current destination and can be copied again without replacing its moved appearance',()=>{
+ const all=owned(6);let state=P.copy({},all,'owned-0','extra').state;const originalKey=state.copies[0].key;state=P.gearAction(state,all,54,'page:gear').state;let projection=P.project(state,all);assert.equal(state.copies[0].key,originalKey);assert.equal(state.copies[0].destination,'gear');assert.equal(projection.copyRows[0].slot,6);assert.equal(projection.copyRows[0].displaced,false);state=P.copy(state,all,'owned-0','extra').state;projection=P.project(state,all);assert.equal(state.copies.length,2);assert.equal(new Set(state.copies.map(row=>row.key)).size,2);assert.equal(projection.entries[6].id,'owned-0');assert.equal(projection.entries[54].id,'owned-0');assert.equal(projection.entries.filter(row=>row&&!row.reference).length,6);
+});
+test('multiple independent copies can share a destination; clearing one does not remove another',()=>{
+ const all=owned(6);let state=P.copy({},all,'owned-0','extra').state;state=P.gearAction(state,all,54,'page:gear').state;state=P.copy(state,all,'owned-0','extra').state;state=P.gearAction(state,all,54,'page:gear').state;const rows=P.project(state,all).copyRows;assert.equal(rows.length,2);assert.deepEqual(rows.map(row=>row.slot),[6,7]);state=P.remove(state,'owned-0','gear',rows[0].key);const remaining=P.project(state,all);assert.equal(remaining.copyRows.length,1);assert.equal(remaining.copyRows[0].key,rows[1].key);assert.equal(remaining.entries[7].quantity,'');
+});
+test('copy restores only a missing destination and fills an explicitly cleared paper gap exactly',()=>{
+ const all=owned(6);let state=P.gearAction({},all,0,'page:extra').state;assert.equal(P.project(state,all).entries[5],null);const copied=P.copy(state,all,'owned-0','gear');assert.equal(copied.slot,5);assert.equal(P.project(copied.state,all).entries[5].id,'owned-0');assert.equal(P.project(copied.state,all).entries[54].id,'owned-0');
+});
