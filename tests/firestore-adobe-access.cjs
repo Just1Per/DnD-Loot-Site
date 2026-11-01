@@ -50,7 +50,7 @@ const {createCharacterSheetStore}=require('../js/modules/character-sheet-store')
  artificer.adobe.modifiers={'save.str':'2+Str','skill.arcana':'max(Int|1)','attack:gear:private-wand:hit':'Prof'};artificer.adobe.skillOrder='ability';artificer.adobe.proficiencyDice=true;artificer.adobe.companions[0].modifiers={'save.str':'oProf'};
  artificer.adobe.hpMode='manual';artificer.hpMax=47;artificer.adobe.hpOverride={value:47,basis:'private-reviewed-hp-basis'};artificer.adobe.carrying={mode:'variant',includeCoins:false,multiplier:1.25};
  artificer.adobe.paperWeight=require('../js/modules/character-paper-weight').normalize({mode:'adobe',sections:['cCoi','cP2L','cAmL'],overrides:{'ammo:0':.1,armor:0}});
- artificer.adobe.paperInventory=require('../js/modules/character-paper-inventory').normalize({attunedFooter:true,footer:[{id:'owned-wand',name:'Private wand'}],copies:[{id:'owned-wand',name:'Private wand',slot:54,destination:'extra'}]});
+ artificer.adobe.paperInventory=require('../js/modules/character-paper-inventory').normalize({gearLayout:{layout:[{slot:1,key:'p:private-wand',name:'Private wand'},{slot:0,empty:true}],hidden:['p:private-removed'],values:{'p:private-wand':{quantity:2,weight:.25,location:'Private pack'}}},attunedFooter:true,footer:[{id:'owned-wand',name:'Private wand'}],copies:[{id:'owned-wand',name:'Private wand',slot:54,destination:'extra'}]});
  artificer.adobe.paperMagic=require('../js/modules/character-paper-magic').normalize({slots:[{id:'owned-wand',name:'Private wand',empty:false},{empty:true}],hidden:['removed-reference']});
  artificer.adobe.backgroundDetails={acolyte:'Private temple detail','criminal-2014':'Private former role'};
  artificer.adobe.customToolCheck={name:'Private repair (Int)',rank:1,bonus:2};

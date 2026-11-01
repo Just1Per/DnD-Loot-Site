@@ -25,3 +25,15 @@ test('removing ownership retains a named unavailable reference, and clearing the
 test('malformed copy state is bounded, deduplicated and isolated between original destinations',()=>{
  const raw={attunedFooter:'yes',footer:[{id:'x'},{id:'x'},{id:'bad/id'}],copies:[{id:'x',slot:54,destination:'extra'},{id:'x',slot:55,destination:'extra'},{id:'x',slot:1,destination:'gear'},{id:'y',slot:999,destination:'extra'}]},before=JSON.stringify(raw),n=P.normalize(raw);assert.equal(n.attunedFooter,false);assert.equal(n.footer[1],null);assert.equal(n.footer[2],null);assert.equal(n.copies.length,2);assert.equal(JSON.stringify(raw),before);
 });
+test('Gear line operations and field overrides persist privately and drive the same paper projection',()=>{
+ const all=owned(6),before=JSON.stringify(all);let state=P.gearAction({},all,0,'edit','quantity',3).state;state=P.gearAction(state,all,0,'edit','weight',.5).state;state=P.gearAction(state,all,0,'down').state;state=P.normalize(JSON.parse(JSON.stringify(state)));const row=P.project(state,all).entries[1];assert.equal(row.id,'owned-0');assert.equal(row.quantity,3);assert.equal(row.weight,.5);assert.equal(JSON.stringify(all),before);
+});
+test('choosing an owned row swaps its existing reference or restores a cleared reference without creating stock',()=>{
+ const all=owned(6);let state=P.gearAction({},all,0,'choose','owned-2').state;assert.equal(P.project(state,all).entries[2].id,'owned-0');state=P.gearAction(state,all,0,'clear').state;assert.equal(P.project(state,all).entries[0],null);state=P.gearAction(state,all,0,'choose','owned-2').state;assert.equal(P.project(state,all).entries[0].id,'owned-2');assert.equal(P.project(state,all).entries.filter(Boolean).length,6);assert.throws(()=>P.gearAction(state,all,0,'choose','other-owner'),/owned/);
+});
+test('a copied item cleared from its paper row can be copied back to the chosen section',()=>{
+ const all=owned(6);let state=P.copy({},all,'owned-0','extra').state;state=P.gearAction(state,all,54,'clear').state;assert.equal(P.project(state,all).entries.some(row=>row?.key==='c:extra:owned-0'),false);const restored=P.copy(state,all,'owned-0','extra');assert.equal(restored.reused,false);const row=P.project(restored.state,all).entries.findIndex(row=>row?.key==='c:extra:owned-0');assert.ok(row>=54&&row<=89);assert.equal(P.project(restored.state,all).entries[row].quantity,'');assert.equal(all[0].quantity,1);
+});
+test('clearing a footer reference after arranging rows cannot leave a stale unavailable copy',()=>{
+ const all=owned(6);let state=P.copy(P.footer({},true),all,'owned-0','footer').state;state=P.gearAction(state,all,0,'down').state;state=P.remove(state,'owned-0','footer');assert.equal(P.project(state,all).entries.slice(51,54).filter(Boolean).length,0);assert.equal(P.project(state,all).entries.filter(row=>row?.id==='owned-0').length,1);
+});

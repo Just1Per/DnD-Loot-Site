@@ -1057,3 +1057,29 @@
 #adobeWeightDialog [data-weight-apply]{background:#742b25;color:#fff;border-color:#742b25}
 @media(max-width:600px){.adobe-weight-head{padding:16px}.adobe-weight-head h2{font-size:23px}.adobe-weight-scroll{padding:16px}.adobe-weight-sources{grid-template-columns:1fr}.adobe-weight-preview{gap:12px;padding:14px}.adobe-weight-preview strong{font-size:21px}#adobeWeightDialog>footer{padding:12px 16px;flex-wrap:wrap}#adobeWeightDialog>footer>div{width:100%}#adobeWeightDialog>footer button{flex:1}.adobe-weight-section-list>label{padding:12px 10px;gap:9px}.adobe-weight-field input{width:120px}}
 @media print{#adobeWeightDialog{display:none!important}}
+
+/* Original Gear operations use a readable native menu over the fixed source paper. */
+#adobeGearDialog{width:min(850px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;color-scheme:light;background:#fffdf7;color:#453328;box-sizing:border-box}
+#adobeGearDialog[open]{display:flex;flex-direction:column;overflow:hidden}
+.adobe-gear-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;background:#f6efdf;padding:22px 26px;border-bottom:1px solid #d9cbb4}
+.adobe-gear-head>div:first-child{min-width:0;flex:1}.adobe-gear-head>div:last-child{display:flex;gap:8px;flex-shrink:0}
+.adobe-gear-head span{font:700 11px Arial,sans-serif;letter-spacing:.1em;color:#725134}
+.adobe-gear-head h2{font:600 26px/1.3 Georgia,serif;color:#642921;margin:7px 0;overflow-wrap:anywhere}
+.adobe-gear-head p{font-size:13px;line-height:1.6;margin:0}
+.adobe-gear-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 26px}
+.adobe-gear-body section{padding:20px 0;border-bottom:1px solid #e1d4be}.adobe-gear-body section:last-child{border:0}
+#adobeGearDialog h3{font:600 18px Georgia,serif;margin:0 0 12px}
+#adobeGearDialog label{display:grid;gap:7px;min-width:0;font-size:13px;font-weight:600}
+#adobeGearDialog :is(input,select){width:100%;min-width:0;min-height:44px;box-sizing:border-box;font-size:16px;color:#453328;background:#fff;border:1px solid #b7a17d;border-radius:4px;padding:9px}
+.adobe-gear-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#adobeGearDialog details summary{cursor:pointer;min-height:44px;box-sizing:border-box;font-weight:600;padding:12px 0}
+#adobeGearDialog details[open] summary{margin-bottom:10px}
+#characterSheetPage #adobeGearDialog button{min-height:44px;white-space:normal}
+.adobe-gear-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#adobeGearDialog [data-gear-apply]{background:#742b25;color:#fff;border-color:#742b25}
+.adobe-gear-help{font-size:13px;line-height:1.7;margin:12px 0 0}
+#adobeGearDialog [aria-invalid=true]{outline:2px solid #922d25}
+#adobeGearDialog>footer{background:#fffaf1;border-top:1px solid #d9cbb4;padding:12px 26px;flex-shrink:0}
+#adobeGearDialog [data-gear-status]{font-size:13px;line-height:1.6;min-height:20px;margin:0}
+@media(max-width:600px){.adobe-gear-head{padding:16px;flex-wrap:wrap;gap:12px}.adobe-gear-head h2{font-size:23px}.adobe-gear-head>div:last-child{width:100%}.adobe-gear-head button{flex:1}.adobe-gear-body{padding:0 16px}.adobe-gear-fields{grid-template-columns:1fr}.adobe-gear-actions button{flex:1 1 130px}#adobeGearDialog>footer{padding:12px 16px}}
+@media print{#adobeGearDialog{display:none!important}}

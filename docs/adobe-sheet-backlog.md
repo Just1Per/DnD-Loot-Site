@@ -79,3 +79,7 @@ The original magic-item menu is audited action by action in [the equipment funct
 ## Weight Carried settings — v57
 
 The original twelve section choices and separate unit-weight fields now have a native draft with Apply/Cancel, section subtotals, movement preview and automatic reset. Inventory remains available; the explicit Adobe mode follows the original additive calculation, coin rounding and total ammunition. Preferences save privately and feed the shared movement engine. Legacy manual/final ability totals are retained during unrelated recalculations; selecting Point buy still explicitly uses base scores. Gear-row direct edits, magic catalogue/type variants and checkbox visibility remain open in point 3. See [weight settings](adobe-weight-settings.md).
+
+## Equipment paper rows — v58
+
+The original character Gear/Extra Equipment arrows now open native row options. Stable moves, column moves, first-empty Insert, distinct Clear/current-column Delete and private paper fields preserve physical ownership/resources. Owned selection swaps/restores references; selected-source weight and print follow edited amounts/weights. Light searchable choices, top Save/Done and collapsed editing keep the menu compact. Catalogue Put Gear/Tool, page/companion transfers, magic variants/visibility and unit-system options still keep point 3 open. See [Gear scope](adobe-gear-row-integration.md).

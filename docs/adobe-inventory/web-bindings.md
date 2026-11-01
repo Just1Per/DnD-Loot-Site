@@ -128,3 +128,7 @@ Equipment layout controls the original page-2 Attuned Magical Items heading and 
 ## Original Weight Carried dialog and separate field weights — v57
 
 The original Weight Carried button/field opens an Adobe-owned draft dialog. All twelve flags, original four default sections, imperial coin rounding, additive section behavior and total ammunition map to shared field data. Armor/shield/attack/ammunition/magic unit overrides are bounded numeric values; Automatic resets them. Inventory remains the compatible source option. Apply updates only weight/carrying preferences; Cancel/Escape, stale/session guards and private save/reopen protect character data. The selected result drives main-character movement and both print styles. Standard carrying/Speed uses the existing separate explanation. Gear-row editing and metric/layout controls remain in their respective backlog tasks.
+
+### Gear rows — v58
+
+Original Adventuring Gear/Extra Equipment arrows and Enter/double-click on their fields open the native row menu. Private stable positions retain four source fields and blank gaps through inventory changes; Move/Insert/Clear/Delete/column actions, owned-reference restoration and paper numeric/text overrides are connected. Physical inventory/equipped effects remain shared and unchanged; source-based weight uses the edited fields. See [scope, safeguards and remaining catalogue/transfers](../adobe-gear-row-integration.md).

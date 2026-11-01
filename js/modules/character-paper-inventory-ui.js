@@ -1,7 +1,7 @@
 'use strict';
 /* The original footer and copy destinations change paper references, not ownership. */
 var CharacterPaperInventoryUI=(()=>{
- const project=(data,loot=sheetEquipmentLoot())=>CharacterPaperInventory.project(data.adobe.paperInventory,loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{})})));
+ const project=(data,loot=sheetEquipmentLoot())=>CharacterPaperInventory.project(data.adobe.paperInventory,loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:data.personalGear.find(row=>row.id===entry.id)?.location||''})));
  function apply(state,message,session=sheetSession){
   if(!characterPaperCombatCurrent(session))throw Error('This character session is no longer active.');
   readSheetForm();session.data.adobe.paperInventory=CharacterPaperInventory.normalize(state);session.dirty=true;fillSheetForm();updateSheetCalculations();sheetStatus(message+' Save sheet to keep it.');
