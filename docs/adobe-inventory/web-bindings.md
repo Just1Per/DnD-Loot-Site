@@ -136,3 +136,7 @@ Original Adventuring Gear/Extra Equipment arrows and Enter/double-click on their
 ### Blank equipment amounts — v59
 
 `CalcWeightSubtotal` treats a blank amount as one unit. Source column display and selected weight now share this rule; explicit 0 stays zero. Ammo totals/coins retain their separate behavior and physical Inventory remains deduplicated ownership. See the correction in [weight settings](../adobe-weight-settings.md).
+
+### Original catalogue placement — v60
+
+Native character Gear menus include the original Put Gear/Tool branch. Source facts preserve 106 Gear amounts and 37 Tools separately from owned stock. Atomic Add & place, overwrite confirmation, unknown-weight entry, campaign eligibility and lazy/retry metadata are described in [catalogue placement](../adobe-gear-catalogue-placement.md). Owning a tool does not grant proficiency; shared class/feat training still controls rolls.

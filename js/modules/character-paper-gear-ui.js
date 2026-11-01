@@ -43,8 +43,9 @@ var CharacterPaperGearUI=(()=>{
    };
    dialog.querySelector('[data-gear-description]').onclick=()=>{if(!guard()||!clean())return;close();openInventoryItemInformation(row.id);};
    dialog.querySelector('[data-gear-equipment]').onclick=()=>{if(!guard()||!clean())return;close();CharacterAdobeView.openEditor('equipment');};
+   CharacterPaperGearCatalogUI.install({dialog,row,session,index:selected,allowed,guard,clean,apply:proposal=>{session.data.personalGear=proposal.personalGear;apply({state:proposal.paperInventory,index:proposal.index});dialog.querySelector('[data-gear-done]').focus();}});
   }
   dialog.addEventListener('cancel',event=>{event.preventDefault();close();});dialog.addEventListener('close',close);document.getElementById('characterSheetDialog').append(dialog);render();if(!dialog.isConnected)return;if(typeof SiteHelp!=='undefined')SiteHelp.hide();dialog.showModal();dialog.querySelector('h2').focus();
  }
- return{open,destroy:()=>currentClose?.()};
+ return{open,physical,destroy:()=>currentClose?.()};
 })();

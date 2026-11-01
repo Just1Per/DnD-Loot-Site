@@ -87,3 +87,7 @@ The original character Gear/Extra Equipment arrows now open native row options. 
 ## Source blank-amount rule — v59
 
 The original CalcWeightSubtotal uses one unit when an equipment amount is blank. Corrected all source columns and selected-section totals, including footer/copied references and private row overrides; 0 still counts none. Physical Inventory weight is unchanged. Source tests and the Gear/footer browser flows cover this distinction before continuing Put Gear/Tool catalogue work.
+
+## Original Gear and Tools catalogue — v60
+
+Original row menu Put Gear/Tool now offers 106 Gear and 37 separate Tools with categories, source amounts, weights and prices. Preview/Cancel stays read-only; Add & place applies private inventory plus paper placement together, preserving overwritten stock/effects and spending no coins. Unknown tool weights require an explicit value; campaign edition policy, limits and stale guards apply. Metadata loads on demand with Retry. Save/reopen, PDF and mobile/accessibility have a dedicated connected flow. Page/companion transfers, magic variants/visibility and units remain open; point 3 is not complete. See [catalogue placement](adobe-gear-catalogue-placement.md).

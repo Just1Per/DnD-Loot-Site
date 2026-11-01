@@ -79,6 +79,11 @@ var CharacterPaperGearLayout=(()=>{
   if(from>=0)[after[index],after[from]]=[after[from],after[index]];else after[index]={...source,key:selectedKey};
   const state=arranged(raw,before,after,{hidden:removed});state.hidden=state.hidden.filter(key=>key!==selectedKey);return{state,index};
  }
- return{maxRows,normalize,project,operation,edit,automatic,choose};
+ function put(raw,base,index,source,options={}){
+  const id='p:'+source?.id;if(!key(id)||base.some(row=>row?.id===source.id))throw Error('Choose a new private equipment reference.');
+  const {entries:before}=project(raw,base,options),part=section(before,index,options.footer);if(part.table.footer&&part.index>=50)throw Error('Use the original footer reference controls.');
+  const after=[...before];after[index]={...source,key:id};const state=arranged(raw,before,after,{hidden:before[index]?[before[index].key]:[]});state.hidden=state.hidden.filter(key=>key!==id);return{state,index};
+ }
+ return{maxRows,normalize,project,operation,edit,automatic,choose,put};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPaperGearLayout;

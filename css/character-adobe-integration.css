@@ -1083,3 +1083,12 @@
 #adobeGearDialog [data-gear-status]{font-size:13px;line-height:1.6;min-height:20px;margin:0}
 @media(max-width:600px){.adobe-gear-head{padding:16px;flex-wrap:wrap;gap:12px}.adobe-gear-head h2{font-size:23px}.adobe-gear-head>div:last-child{width:100%}.adobe-gear-head button{flex:1}.adobe-gear-body{padding:0 16px}.adobe-gear-fields{grid-template-columns:1fr}.adobe-gear-actions button{flex:1 1 130px}#adobeGearDialog>footer{padding:12px 16px}}
 @media print{#adobeGearDialog{display:none!important}}
+.adobe-gear-catalog-section [data-catalog-preview]{margin-top:16px;padding:16px;background:#f7f0e3;border:1px solid #dfd0b8;border-radius:6px}
+#adobeGearDialog [data-catalog-preview] h4{font:600 20px Georgia,serif;color:#642921;margin:0 0 14px}
+.adobe-catalog-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 14px}
+.adobe-catalog-facts dt{font:12px/1.5 Arial,sans-serif;color:#6b5842}.adobe-catalog-facts dd{font-size:14px;line-height:1.6;margin:4px 0 0;overflow-wrap:anywhere}
+#adobeGearDialog [data-catalog-preview] small{font-size:12px;line-height:1.6;font-weight:400}
+#adobeGearDialog [data-catalog-weight]{max-width:180px}
+#characterSheetPage #adobeGearDialog [data-catalog-add]{background:#742b25;color:#fff;border-color:#742b25;margin-top:14px}
+#adobeGearDialog [data-catalog-status]{font-size:13px;line-height:1.6;margin:10px 0 0}
+@media(max-width:600px){.adobe-catalog-facts{grid-template-columns:1fr 1fr}.adobe-catalog-facts>div:last-child{grid-column:1/-1}#adobeGearDialog [data-catalog-add]{width:100%}}

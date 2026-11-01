@@ -40,7 +40,7 @@ var CharacterPaperInventory=(()=>{
  function gearRows(raw,all){const base=project(raw,all,{base:true});return Layout.project(base.state.gearLayout,base.entries,{footer:base.state.attunedFooter,copyRows:base.copyRows}).entries;}
  function gearAction(raw,all,index,command,...args){
   const base=project(raw,all,{base:true}),options={footer:base.state.attunedFooter,copyRows:base.copyRows};
-  const result=command==='edit'?{state:Layout.edit(base.state.gearLayout,base.entries,index,...args,options),index}:command==='choose'?Layout.choose(base.state.gearLayout,base.entries,index,args[0],options):Layout.operation(base.state.gearLayout,base.entries,index,command,options);
+  const result=command==='edit'?{state:Layout.edit(base.state.gearLayout,base.entries,index,...args,options),index}:command==='choose'?Layout.choose(base.state.gearLayout,base.entries,index,args[0],options):command==='put'?Layout.put(base.state.gearLayout,base.entries,index,args[0],options):Layout.operation(base.state.gearLayout,base.entries,index,command,options);
   base.state.gearLayout=result.state;return{state:base.state,index:result.index};
  }
  return{normalize,project,copy,remove,footer,gearRows,gearAction};
