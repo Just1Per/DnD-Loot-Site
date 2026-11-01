@@ -83,3 +83,7 @@ The original twelve section choices and separate unit-weight fields now have a n
 ## Equipment paper rows — v58
 
 The original character Gear/Extra Equipment arrows now open native row options. Stable moves, column moves, first-empty Insert, distinct Clear/current-column Delete and private paper fields preserve physical ownership/resources. Owned selection swaps/restores references; selected-source weight and print follow edited amounts/weights. Light searchable choices, top Save/Done and collapsed editing keep the menu compact. Catalogue Put Gear/Tool, page/companion transfers, magic variants/visibility and unit-system options still keep point 3 open. See [Gear scope](adobe-gear-row-integration.md).
+
+## Source blank-amount rule — v59
+
+The original CalcWeightSubtotal uses one unit when an equipment amount is blank. Corrected all source columns and selected-section totals, including footer/copied references and private row overrides; 0 still counts none. Physical Inventory weight is unchanged. Source tests and the Gear/footer browser flows cover this distinction before continuing Put Gear/Tool catalogue work.

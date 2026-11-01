@@ -132,3 +132,7 @@ The original Weight Carried button/field opens an Adobe-owned draft dialog. All 
 ### Gear rows — v58
 
 Original Adventuring Gear/Extra Equipment arrows and Enter/double-click on their fields open the native row menu. Private stable positions retain four source fields and blank gaps through inventory changes; Move/Insert/Clear/Delete/column actions, owned-reference restoration and paper numeric/text overrides are connected. Physical inventory/equipped effects remain shared and unchanged; source-based weight uses the edited fields. See [scope, safeguards and remaining catalogue/transfers](../adobe-gear-row-integration.md).
+
+### Blank equipment amounts — v59
+
+`CalcWeightSubtotal` treats a blank amount as one unit. Source column display and selected weight now share this rule; explicit 0 stays zero. Ammo totals/coins retain their separate behavior and physical Inventory remains deduplicated ownership. See the correction in [weight settings](../adobe-weight-settings.md).

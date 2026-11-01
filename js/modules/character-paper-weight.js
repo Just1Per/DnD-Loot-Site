@@ -30,10 +30,10 @@ var CharacterPaperWeight=(()=>{
   else if(command==='automatic'){if(!validKey(key))throw Error('Choose an available weight field.');delete out.overrides[key];}
   else throw Error('Choose an available weight setting.');return out;
  }
- function subtotal(rows,overrides){
+ function subtotal(rows,overrides,blankQuantityIsOne=false){
   let total=0,unknown=0;
   for(const row of rows||[]){
-   const quantity=row.quantity===undefined?1:Number(row.quantity);if(!Number.isFinite(quantity)||quantity<0){unknown++;continue;}if(quantity===0)continue;
+   const quantity=row.quantity===undefined||blankQuantityIsOne&&row.quantity===''?1:Number(row.quantity);if(!Number.isFinite(quantity)||quantity<0){unknown++;continue;}if(quantity===0)continue;
    const unit=Object.hasOwn(overrides,row.key)?overrides[row.key]:row.weight;
    if(unit===null||unit===undefined||!['number','string'].includes(typeof unit)||!Number.isFinite(number(unit))||number(unit)<0||!Number.isFinite(total+number(unit)*quantity)){unknown++;continue;}
    total+=number(unit)*quantity;
@@ -43,7 +43,7 @@ var CharacterPaperWeight=(()=>{
  function calculate(raw,{groups={},coins={},inventoryWeight={gear:0,coins:0,total:0,unknown:0}}={}){
   const preferences=normalize(raw),selected=new Set(preferences.sections);
   const rows=sections.map(section=>{
-   const result=section.id==='cCoi'?subtotal(Object.entries(coins).map(([key,count])=>({key:'coin:'+key,weight:1/50,quantity:count})),{}):subtotal(groups[section.id],preferences.overrides);
+   const result=section.id==='cCoi'?subtotal(Object.entries(coins).map(([key,count])=>({key:'coin:'+key,weight:1/50,quantity:count})),{}):subtotal(groups[section.id],preferences.overrides,/^cP[23]/.test(section.id));
    // Original imperial CalcWeightCarried floors coin weight to one decimal place.
    if(section.id==='cCoi')result.total=Math.floor(result.total*10+1e-9)/10;
    return{...section,...result,selected:selected.has(section.id)};
@@ -52,7 +52,8 @@ var CharacterPaperWeight=(()=>{
   const adobe={gear:total-coinTotal,coins:coinTotal,total,unknown,source:'adobe'};
   return{preferences,rows,adobe,inventory:inventoryWeight,weight:preferences.mode==='adobe'?adobe:inventoryWeight};
  }
- return{sections,defaults,normalize,edit,calculate};
+ function columnWeight(rows){const result=subtotal((rows||[]).filter(row=>row&&!row.header),{},true);return{gear:result.total,unknown:result.unknown};}
+ return{sections,defaults,normalize,edit,calculate,columnWeight};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterPaperWeight=CharacterPaperWeight;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPaperWeight;

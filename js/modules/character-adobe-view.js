@@ -1,7 +1,7 @@
 'use strict';
 /* Alternate rendering of the current session. No SDK, storage or second engine. */
 var CharacterAdobeView=(()=>{
- const VERSION='20261101-adobe-sheet-v58',assets=new Map(),sessions=new WeakMap();let current=null;
+ const VERSION='20261101-adobe-sheet-v59',assets=new Map(),sessions=new WeakMap();let current=null;
  const SPELL_CAPACITY={front:55,more:70};let fieldMeasure=null;try{fieldMeasure=document.createElement('canvas').getContext?.('2d')||null;}catch{}
  const xpAdditionError=()=>document.getElementById('sheetXPAmount')?.getAttribute('aria-invalid')==='true'?document.getElementById('sheetXPAddStatus')?.textContent||'Correct the unapplied XP amount.':'';
  const option=(text,value)=>Object.assign(document.createElement('option'),{textContent:text,value});
@@ -18,7 +18,7 @@ var CharacterAdobeView=(()=>{
   const magicPage=['page-3','template-ASfront','template-ASoverflow'].includes(c.state.page),spellPage=/^template-SS(front|more)$/.test(c.state.page),profiles=spellPage?CharacterSpellcasting.profiles(s.data,d.progression?.targetLevel||s.identity.level,d.scores):[],profile=profiles.find(p=>p.classId===c.state.spellCaster),spellRows=spellPage?characterSpellPresentation(s.data,d,s.identity.level).filter(row=>c.state.spellCaster==='all'||(row.spell.classId||'unassigned')===c.state.spellCaster):[];
   const paperInventory=['page-2','page-3','template-ASfront'].includes(c.state.page)?CharacterPaperInventoryUI.project(s.data,loot).entries:[];
   const weightOffset=c.state.page==='page-2'?0:c.state.page==='template-ASfront'?90+36*c.state.extraPage:54;
-  const inventorySubtotals=paperInventory.length?Array.from({length:c.state.page==='page-2'?3:2},(_,column)=>characterInventoryRowsWeight(paperInventory.slice(weightOffset+18*column,weightOffset+18*(column+1)).filter(Boolean))):[];
+  const inventorySubtotals=paperInventory.length?Array.from({length:c.state.page==='page-2'?3:2},(_,column)=>CharacterPaperWeight.columnWeight(paperInventory.slice(weightOffset+18*column,weightOffset+18*(column+1)))):[];
   const normTool=value=>String(value).toLowerCase().replace(/[’‘]/g,"'").trim(),toolNames=CharacterRules.tools.filter(name=>(d.effects.proficiencies||[]).some(value=>normTool(value)===normTool(name))),otherWeapons=Object.values(CharacterEquipment.weapons).filter(w=>!(d.effects.proficiencies||[]).some(value=>String(value).toLowerCase()===w.group+' weapons')&&CharacterEquipment.trained(w,d.effects.proficiencies||[])).map(w=>w.name);
   const magicEntries=magicPage?CharacterPaperMagicUI.rows(s.data,d):[];
   const list=path=>{

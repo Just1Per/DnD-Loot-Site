@@ -2,6 +2,10 @@
 
 PR #250, equipment backlog point 3. The supplied PDF's `WeightToCalc_Button` and `CalcWeightCarried` define this operation. Scripts were inspected as reference data, never executed. Native web controls retain the source choices and existing private character engine.
 
+## Original blank equipment amounts — v59 correction
+
+Static review of `CalcWeightSubtotal` confirms that blank equipment amounts count one unit, including copied/footer/tool references. Explicit 0 counts none; decimals multiply normally. Adobe column subtotals and selected-section totals follow this rule. Physical Inventory totals still use owned quantities and do not count copied references. The earlier v57 blank-as-zero assumption has been corrected; source mode remains explicitly additive. No data migration or rule change.
+
 ## Use and calculation
 
 Click page 2's Weight Carried value/button, Sheet tools → Weight Carried settings, or Inventory → Weight settings. This is a draft: Apply to sheet changes the character; Save sheet retains it. Cancel/Escape discards the draft. The weight/speed result stays visible while reviewing lower sections. The capacity/Speed explanation remains a separate existing control.
@@ -25,4 +29,4 @@ Manual/legacy final ability scores retain their mode during unrelated UI recalcu
 
 Pure tests cover original defaults/additive fields/coin rounding, selected unknowns, numeric bounds, enhanced weights, original columns/footer, ammunition, stable magic references and selected-weight/movement coupling. The connected browser test covers draft/Cancel, all twelve choices, preview versus live model, invalid/decimal overrides and reset, mobile pinned results/accessibility, private save/reopen, actual PDF, stale/account/session guards and retained resources/legacy final-score mode. Existing point-buy, carrying, engine/DOM, full Adobe, packaging and private permission checks remain required.
 
-Direct ordinary Gear/Tool row edits/moves/transfers, their private field options, magic catalogue/type/base-gear choices, checkbox visibility and unit-system/layout variants remain open. This component does not complete the whole source equipment system or PR #250's full 1:1 audit.
+Ordinary character Gear field/row operations are connected in v58. Catalogue Gear/Tool placement, page/companion transfers, magic catalogue/type/base-gear choices, checkbox visibility and unit-system/layout variants remain open. This component does not complete the whole source equipment system or PR #250's full 1:1 audit.

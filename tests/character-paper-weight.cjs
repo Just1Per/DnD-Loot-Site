@@ -13,8 +13,8 @@ test('the existing physical Inventory weight remains the default and is unchange
 test('original ammunition uses the total remaining amount, not remaining plus loaded icons',()=>{
  const result=W.calculate({mode:'adobe',sections:['cAmL','cAmR']},{groups:{cAmL:[{key:'ammo:0',weight:.05,quantity:29,loaded:19}],cAmR:[{key:'ammo:1',weight:.075,quantity:20}]}});assert.ok(Math.abs(result.weight.total-2.95)<1e-9);
 });
-test('blank quantities on source reference copies add no weight, while known units and explicit overrides are respected',()=>{
- const raw={mode:'adobe',sections:['cP3L','cMaI'],overrides:{'magic:owned-wand':2.5}},before=JSON.stringify(raw),result=W.calculate(raw,{groups:{cP3L:[{key:'reference',weight:5,quantity:''}],cMaI:[{key:'magic:owned-wand',weight:1}]}});assert.equal(result.weight.total,2.5);assert.equal(JSON.stringify(raw),before);
+test('original blank equipment amounts count one unit, including copied references, while explicit magic overrides stay separate',()=>{
+ const raw={mode:'adobe',sections:['cP3L','cMaI'],overrides:{'magic:owned-wand':2.5}},before=JSON.stringify(raw),result=W.calculate(raw,{groups:{cP3L:[{key:'reference',weight:5,quantity:''}],cMaI:[{key:'magic:owned-wand',weight:1}]}});assert.equal(result.weight.total,7.5);assert.equal(JSON.stringify(raw),before);
 });
 test('source coin rounding and explicit zero/empty sections retain the original numerical behavior',()=>{
  for(const [count,expected]of [[0,0],[3,0],[5,.1],[49,.9],[50,1],[53,1],[55,1.1]])assert.equal(W.calculate({mode:'adobe',sections:['cCoi']},{coins:{gp:count}}).weight.total,expected);
@@ -25,4 +25,12 @@ test('unknown selected fields stay explicit and cannot remove known burden or pr
 });
 test('bounded numeric overrides and canonical flags reject executable strings and leave drafts unchanged on error',()=>{
  const raw={mode:'adobe',sections:['cArm'],overrides:{armor:65}},before=JSON.stringify(raw);assert.throws(()=>W.edit(raw,'weight','armor','2+2'));assert.throws(()=>W.edit(raw,'weight','armor',Infinity));assert.throws(()=>W.edit(raw,'weight','../file',5));assert.equal(JSON.stringify(raw),before);assert.equal(W.edit(raw,'weight','armor',0).overrides.armor,0);assert.equal(W.edit(raw,'weight','armor','2,5').overrides.armor,2.5);assert.equal(W.edit(raw,'automatic','armor').overrides.armor,undefined);assert.deepEqual(W.normalize({sections:['cArm','cArm','other']}).sections,['cArm']);
+});
+test('CalcWeightSubtotal blank/zero/decimal amounts agree across all source columns and never change physical Inventory or ammo',()=>{
+ for(const section of ['cP2L','cP2M','cP2R','cP3L','cP3R'])for(const [quantity,expected]of [['',8],[0,0],[1,8],[2,16],[.5,4]]){
+  const groups={[section]:[{weight:8,quantity}]};assert.equal(W.calculate({mode:'adobe',sections:[section]},{groups}).weight.total,expected);assert.equal(W.columnWeight(groups[section]).gear,expected);
+ }
+ assert.equal(W.calculate({mode:'adobe',sections:['cAmL']},{groups:{cAmL:[{weight:8,quantity:''}]}}).weight.total,0);
+ const physical={gear:8,coins:0,total:8,unknown:0};assert.equal(W.calculate({},{inventoryWeight:physical,groups:{cP2L:[{weight:8,quantity:''}]}}).weight,physical);
+ assert.deepEqual(W.columnWeight([{header:true,quantity:'',weight:null},{quantity:'',weight:null},{quantity:0,weight:null}]),{gear:0,unknown:1});
 });
