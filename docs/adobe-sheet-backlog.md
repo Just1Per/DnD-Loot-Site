@@ -75,3 +75,7 @@ Remaining shared editors now open as bounded modal sections over the Adobe paper
 ## Source equipment operations — local work after v55
 
 The original magic-item menu is audited action by action in [the equipment function audit](adobe-equipment-function-audit.md). The next component preserves the source Move/Insert/Clear/Delete distinctions, owned-item selection, full text and common equipment/attunement rules. Empty positions and removed references are private paper state; Clear/Delete end the removed reference’s effects while retaining inventory ownership/uses. Catalogue/type/gear variations, attunement visibility and weight inclusion/modifiers still remain. The original footer and copy destinations are implemented in the next local component. Point 3 is open.
+
+## Weight Carried settings — v57
+
+The original twelve section choices and separate unit-weight fields now have a native draft with Apply/Cancel, section subtotals, movement preview and automatic reset. Inventory remains available; the explicit Adobe mode follows the original additive calculation, coin rounding and total ammunition. Preferences save privately and feed the shared movement engine. Legacy manual/final ability totals are retained during unrelated recalculations; selecting Point buy still explicitly uses base scores. Gear-row direct edits, magic catalogue/type variants and checkbox visibility remain open in point 3. See [weight settings](adobe-weight-settings.md).

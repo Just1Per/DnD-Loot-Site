@@ -4,9 +4,9 @@
    Items still require the player to mark them Equipped / worn, and attunement is enforced here
    when the Adobe reference marks a supported item as requiring it. */
 var CharacterMagicItems=(()=>{
-  const E=CharacterEquipment;
+  const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
   const priorInfer=E.infer.bind(E);
-  const reference=typeof CharacterMagicItemReference!=='undefined'?CharacterMagicItemReference:{names:[],automation:{}};
+  const reference=typeof CharacterMagicItemReference!=='undefined'?CharacterMagicItemReference:typeof require==='function'?require('./character-magic-item-data'):{names:[],automation:{}};
   const clean=value=>String(value||'').trim().toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9+]+/g,' ').replace(/\s+/g,' ').trim();
   const knownNames=new Set((reference.names||[]).map(clean));
   const rules=new Map(Object.entries(reference.automation||{}).map(([name,rule])=>[clean(name),rule]));
@@ -137,7 +137,8 @@ var CharacterMagicItems=(()=>{
     return result;
   }
 
-  E.infer=infer;
+  // The host installs the bridge; a plain Node metadata import must not mutate another model.
+  if(typeof CharacterEquipment!=='undefined')E.infer=infer;
   return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterMagicItems=CharacterMagicItems;

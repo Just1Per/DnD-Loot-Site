@@ -343,12 +343,18 @@ var CharacterSheetModel = (() => {
     result.itemResources=ItemResources?ItemResources.project(data,result.gear):[];
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
-    result.weight=Carry.weight(data,result.gear.entries.map(row=>row.entry));
-    result.movement=Carry.movement(data,{limits:result.carrying,weight:result.weight,scores,effects,gear:result.gear,magicItems});
-    Object.assign(effects,result.movement.speeds);
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     if(Override){result.gear.attacks=result.gear.attacks.map(row=>Override.attack(row,'attack:gear:'+row.id,modifierExpressions,{mods,pb},level));result.manualAttacks=d.attacks.map((row,i)=>Override.attack({...row,hit:result.attacks[i]},'attack:attack:'+row.id,modifierExpressions,{mods,pb},level));result.attacks=result.manualAttacks.map((row,i)=>row.attack??result.attacks[i]);result.actions=result.actions.map((row,i)=>Override.attack(row,'attack:attack:'+d.actions[i]?.id,modifierExpressions,{mods,pb},level));}
 
+    result.inventoryWeight=Carry.weight(data,result.gear.entries.map(row=>row.entry));
+    result.weight=result.inventoryWeight;
+    const PaperWeight=globalThis.CharacterPaperWeight||(typeof require==='function'?require('./character-paper-weight'):null);
+    if(PaperWeight?.normalize(data.adobe?.paperWeight||data.rulesChoices?.grants?.__adobe?.data?.paperWeight).mode==='adobe'){
+      const Fields=globalThis.CharacterPaperWeightFields||(typeof require==='function'?require('./character-paper-weight-fields'):null);
+      result.paperWeight=PaperWeight.calculate(data.adobe?.paperWeight||data.rulesChoices?.grants?.__adobe?.data?.paperWeight,Fields.collect(data,result));result.weight=result.paperWeight.weight;
+    }
+    result.movement=Carry.movement(data,{limits:result.carrying,weight:result.weight,scores,effects,gear:result.gear,magicItems});
+    Object.assign(effects,result.movement.speeds);
     if(Override)Override.dice({...d,adobe:data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}},result);
     return result;
   }

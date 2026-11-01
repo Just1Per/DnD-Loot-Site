@@ -124,11 +124,12 @@ function characterInventoryWeightReference(){if(!characterInventoryWeightReferen
 function inventoryUnitWeight(item){return CharacterCarrying.unitWeight(item,characterInventoryWeightReference());}
 // One pure carried-weight projection for the model, Inventory and Adobe paper.
 function characterInventoryRowsWeight(entries,unitWeight=entry=>entry.weight){return CharacterCarrying.rowsWeight(entries,unitWeight);}
-function characterInventoryWeight(data,entries){return CharacterCarrying.weight(data,entries,characterInventoryWeightReference());}
+function characterInventoryWeight(data,entries,derived){if(typeof CharacterPaperWeight!=='undefined'&&CharacterPaperWeight.normalize(data.adobe?.paperWeight).mode==='adobe')return derived?.weight||CharacterSheetModel.derive(data,sheetSession?.identity.level||1,entries).weight;return CharacterCarrying.weight(data,entries,characterInventoryWeightReference());}
 function updateInventoryTotals(stats){
  const host=document.getElementById('sheetInventoryTotals');if(!host||!sheetSession)return;
- const s=sheetSession,{gear:weight,coins,unknown}=characterInventoryWeight(s.data,sheetEquipmentLoot());
- host.innerHTML=`<strong>${(weight+coins).toFixed(2)} lb</strong><small>Gear ${weight.toFixed(2)} lb · coins ${coins.toFixed(2)} lb</small>${unknown?`<p>${unknown} campaign item(s) have unknown weight; total is incomplete.</p>`:''}<small>Uncarried personal gear is excluded. Bags do not automatically reduce their contents’ weight.</small>`;
+ const s=sheetSession,{gear:weight,coins,unknown}=characterInventoryWeight(s.data,sheetEquipmentLoot(),stats);
+ host.innerHTML=`<strong>${(weight+coins).toFixed(2)} lb</strong><small>${stats.weight?.source==='adobe'?'Selected sheet sections':'Gear'} ${weight.toFixed(2)} lb · coins ${coins.toFixed(2)} lb</small>${unknown?`<p>${unknown} campaign item(s) have unknown weight; total is incomplete.</p>`:''}<small>Uncarried personal gear is excluded. Bags do not automatically reduce their contents’ weight.</small>`;
+ if(typeof CharacterPaperWeightUI!=='undefined'){const button=document.createElement('button');button.type='button';button.textContent='Weight settings';button.onclick=()=>CharacterPaperWeightUI.open();host.append(button);}
  const attuned=s.data.equipmentState.loadout.filter(g=>g.attuned).map(g=>sheetEquipmentLoot().find(e=>e.id===g.id)).filter(e=>e&&(((typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(e.item))||!!e.item.attunement)));
  document.getElementById('sheetInventoryAttuned').innerHTML='<p id="sheetAttunementSummary" class="sheet-help">Attunement: '+attuned.length+' / '+stats.gear.attunementLimit+' slots. '+(stats.gear.attunementLimit>3?'Artificer class levels increase your limit. ':'')+'Attuned backpack items still use slots.</p>'+Array.from({length:Math.max(stats.gear.attunementLimit,attuned.length)},(_,i)=>`<div class="sheet-attunement-line">${i+1}. ${sheetEscape(attuned[i]?.item.name||'—')}</div>`).join('');
 }

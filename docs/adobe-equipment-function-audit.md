@@ -23,7 +23,7 @@ The local native menu includes the existing equipped/attuned controls, original 
 
 ## Source carried-weight dialog
 
-Checked `WeightToCalc_Button` in module `Functions1`. Original flags are Armor, Shield, Weapons, left/right ammunition, Coins, page-2 left/middle/right equipment columns, page-3 left/right extra equipment columns, and Magic Items. Coin inclusion and standard/optional-variant rule selection already work. Remaining flags, source weight-adjustment fields and ammunition integration are required; physically owned entries must not be counted twice merely because the same item appears on multiple paper sections. Unknown weights remain explicit.
+Checked `WeightToCalc_Button` in module `Functions1`. Original flags are Armor, Shield, Weapons, left/right ammunition, Coins, page-2 left/middle/right equipment columns, page-3 left/right extra equipment columns, and Magic Items. Implemented in v57: all twelve flags, original defaults (coins and page-2 columns), additive selected-section totals, original imperial coin rounding, unit field overrides and total-ammunition integration. Inventory remains the existing default and counts each physical item once; the explicit Adobe calculation adds selected fields exactly as the source does, including independently selected representations of the same item. Copy-reference quantities remain blank. Unknown weights stay marked. Gear-row direct edits, unit-system settings and remaining original gear actions are separate work.
 
 ## Preserve the agreed release boundary
 
