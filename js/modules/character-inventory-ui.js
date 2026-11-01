@@ -10,7 +10,7 @@ function inventorySideLabel(side){return side==='left'?'Active gear':'Backpack';
 
 function personalGearEntries(includeInactive=false) {
  const s=sheetSession;if(!s)return [];
- return s.data.personalGear.filter(g=>includeInactive||g.quantity>0&&g.carried).map(g=>({id:g.id,itemId:g.id,characterId:s.characterId,quantity:g.quantity,personal:true,item:{id:g.id,name:g.name,description:g.notes,properties:[{title:'Weight per unit (lb)',text:String(g.weight)}],mechanics:CharacterEquipment.infer({name:g.name})}}));
+ return CharacterMagicItemChoices.project(s.data.personalGear.filter(g=>includeInactive||g.quantity>0&&g.carried).map(g=>({id:g.id,itemId:g.id,characterId:s.characterId,quantity:g.quantity,personal:true,item:{id:g.id,name:g.name,description:g.notes,properties:[{title:'Weight per unit (lb)',text:String(g.weight)}],mechanics:CharacterEquipment.infer({name:g.name})}})),s.data.equipmentState.loadout);
 }
 function sheetBaseGear(){return [...CharacterAdobeData.gear,...(CharacterAdobeData.baseEquipment||[])].filter(g=>CampaignRules.allowed(g)).map(g=>({...g,name:g.unitName||g.name}));}
 function renderSheetGearPicker(){

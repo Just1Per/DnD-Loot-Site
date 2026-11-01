@@ -2,7 +2,7 @@
 function sheetEquipmentLoot() {
   const s=sheetSession;
   if(!s||activeCampaign?.id!==s.campaignId)return [];
-  return (s.adventureId?[]:inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0)).map(e=>({...e,item:inventoryItem(e)})).concat(personalGearEntries());
+  return CharacterMagicItemChoices.project((s.adventureId?[]:inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0)).map(e=>({...e,item:inventoryItem(e)})).concat(personalGearEntries()),s.data.equipmentState.loadout);
 }
 function renderEquipmentCalculations(stats) {
   let host=document.getElementById('sheetEquipmentSummary');

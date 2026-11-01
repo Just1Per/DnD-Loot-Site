@@ -154,3 +154,8 @@ Gear transfer menus preview an optional Move & combine action for an existing de
 ### Native footer Copy to Magic Items — v63
 
 Footer Gear arrows route to an Adobe-owned popup instead of the general layout editor. A pure paperMagic copy proposal reuses a visible owned identity or restores its hidden reference into the first empty row. No replacement/equipment activation occurs. Source-reference Clear confirms; full/missing/stale cases refuse. Correct repeated five-row continuations are selected and focused in both view modes. [Scope](../adobe-magic-footer-copy.md) keeps original free-text recognition and remaining footer branches explicit.
+
+
+## Original item-choice branch — v64
+
+A pure bounded choice projection supplies effective item names and existing rule effects from private equipmentState.loadout.magicVariant. Native Giant Strength/Resistance type selection previews and confirms, retaining ownership/equipment/resources. Core and UI projections unwrap the source before reapplying/resetting; shared first-record limits and original-source snapshots protect invalid/stale cases. See [scope and safeguards](../adobe-magic-item-variants.md).

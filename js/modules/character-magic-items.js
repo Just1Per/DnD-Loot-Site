@@ -4,6 +4,7 @@
    Items still require the player to mark them Equipped / worn, and attunement is enforced here
    when the Adobe reference marks a supported item as requiring it. */
 var CharacterMagicItems=(()=>{
+  const ItemChoices=typeof CharacterMagicItemChoices!=='undefined'?CharacterMagicItemChoices:require('./character-magic-item-choices');
   const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
   const priorInfer=E.infer.bind(E);
   const reference=typeof CharacterMagicItemReference!=='undefined'?CharacterMagicItemReference:typeof require==='function'?require('./character-magic-item-data'):{names:[],automation:{}};
@@ -31,7 +32,7 @@ var CharacterMagicItems=(()=>{
     return metadata.known||item.attunement===true||['potion','ring','rod','scroll','staff','wand','wondrous item'].includes(category)||['uncommon','rare','veryrare','legendary','artifact'].includes(rarity)||!!(mechanics.acBonus||mechanics.attackBonus||mechanics.damageBonus||mechanics.extraDamage);
   }
   function requiresAttunement(item={}){
-    return item.attunement===true||info(item).attunement;
+    return item.attunement===true||info(item).attunement||ItemChoices.supported(item);
   }
   function infer(item={}){
     if(item?.mechanics)return priorInfer(item);
@@ -51,6 +52,7 @@ var CharacterMagicItems=(()=>{
   }
 
   function activeEntries(data,loot=[],level){
+    loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
     const choices=Array.isArray(data?.equipmentState?.loadout)?data.equipmentState.loadout:[];
     const owned=new Map();
     for(const entry of loot||[]){

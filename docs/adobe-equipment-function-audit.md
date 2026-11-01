@@ -9,7 +9,7 @@ Checked `MakeMagicItemMenu_MagicItemOptions` in source module `Functions3`, incl
 | Original action | Web status / remaining work |
 | --- | --- |
 | Apply / change item | Existing owned-item selector changes the paper order; full original catalogue application remains required |
-| Change item choice / base gear type | Remains required, using source-specific mechanical choices |
+| Change item choice / base gear type | Giant Strength belts (six types) and Resistance rings (ten types) connected in v64 with preview/shared effects/private persistence; other families and base-gear types remain required |
 | Show full text | Existing private item reference; new native row-menu entry implemented locally |
 | Move up / down, including third/overflow boundary | Existing stable order; native row controls implemented locally |
 | Insert empty item | Implemented locally: explicit empty position, first empty slot below, no destructive insertion when full |
@@ -43,3 +43,8 @@ The static footer caption was checked directly on the original read-only field: 
 ## Footer Copy to Magic Items — v63
 
 The original footer arrows now open a dedicated Adobe popup. Owned-reference Copy to Magic Items reuses/restores into the first empty magic row and focuses the correct repeated continuation in Single/All sheets. Full destinations refuse. Confirmed Clear reference leaves the owned item, magic row, equipped effects and attunement intact. The web retains explicit shared attunement controls rather than silently reactivating a cleared item's effects. Original free-text/catalogue recognition and remaining footer field/move operations stay open. See [scope and validation](adobe-magic-footer-copy.md).
+
+
+## Supported original magic variants — v64
+
+Native magic rows expose isolated source-type preview/confirmation for six Giant Strength belts and ten Resistance rings. Shared equipment choices drive actual STR/resistance/attunement, ordinary attacks and both sheet presentations; catalogue/stock/resources remain unchanged. Original-source snapshots prevent a selected name hiding a catalogue change during confirmation. See [variant behavior and tests](adobe-magic-item-variants.md). Other item families/base gear remain open.

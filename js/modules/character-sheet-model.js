@@ -7,6 +7,7 @@ var CharacterSheetModel = (() => {
   const Rules = typeof CharacterRules !== 'undefined' ? CharacterRules : require('./character-rules');
   const Catalog = typeof CharacterCatalog !== 'undefined' ? CharacterCatalog : require('./character-catalog');
   const Feats=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
+  const ItemChoices=typeof CharacterMagicItemChoices!=='undefined'?CharacterMagicItemChoices:require('./character-magic-item-choices');
   const Equipment=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
   const Magic=typeof CharacterMagicItems!=='undefined'?CharacterMagicItems:null;
   const abilities = {
@@ -243,6 +244,7 @@ var CharacterSheetModel = (() => {
   }
   function derive(data, level, loot = []) {
     const Override=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),d=normalize(data),pb=Override?Override.proficiency(data,proficiency(level)):proficiency(level),mods={},saves={},checks={};
+    loot=ItemChoices.project(loot,d.equipmentState.loadout);
     const modifierExpressions=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).modifiers,modifierReport=[],bonus=(key,base=0)=>Override?Override.value(modifierExpressions,key,base,{mods,pb},modifierReport):base;
     // Keep class assignments available to core rules before feats/equipment are calculated.
     const assigned=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels;

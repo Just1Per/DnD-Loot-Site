@@ -1,6 +1,7 @@
 /* Equipment mechanics are explicit DM data; descriptions are never executable rules.
    Factual weapon/armor statistics: SRD 5.1 / 5.2. See docs/character-equipment.md. */
 var CharacterEquipment = (() => {
+  const ItemChoices=typeof CharacterMagicItemChoices!=='undefined'?CharacterMagicItemChoices:require('./character-magic-item-choices');
   const n=(v,min=-30,max=30)=>Math.max(min,Math.min(max,Math.trunc(Number(v)||0)));
   const text=v=>String(v??'').slice(0,200);
   const rows=[
@@ -84,7 +85,7 @@ var CharacterEquipment = (() => {
   }
   function choices(raw={}) {
     const seen=new Set();
-    return {acMode:'equipment',acAdjustment:0,loadout:(Array.isArray(raw?.loadout)?raw.loadout:[]).filter(v=>v&&typeof v.id==='string'&&v.id.length<=200&&!seen.has(v.id)&&seen.add(v.id)).slice(0,200).map(v=>({id:v.id,equipped:v.equipped===true,attuned:v.attuned===true,ability:['str','dex','con','int','wis','cha'].includes(v.ability)?v.ability:'auto',proficiency:['yes','no'].includes(v.proficiency)?v.proficiency:'auto',mode:['twoHanded','thrown','offhand','mounted'].includes(v.mode)?v.mode:'normal'}))};
+    return {acMode:'equipment',acAdjustment:0,loadout:(Array.isArray(raw?.loadout)?raw.loadout:[]).filter(v=>v&&typeof v.id==='string'&&v.id.length<=200&&!seen.has(v.id)&&seen.add(v.id)).slice(0,200).map(v=>({id:v.id,...(ItemChoices.valid(v.magicVariant)?{magicVariant:v.magicVariant}:{}),equipped:v.equipped===true,attuned:v.attuned===true,ability:['str','dex','con','int','wis','cha'].includes(v.ability)?v.ability:'auto',proficiency:['yes','no'].includes(v.proficiency)?v.proficiency:'auto',mode:['twoHanded','thrown','offhand','mounted'].includes(v.mode)?v.mode:'normal'}))};
   }
   function armorTrained(group,profs=[]) {
     return ['light','medium','heavy'].includes(group)&&profs.some(p=>['all armor',group+' armor'].includes(String(p).toLowerCase()));
@@ -101,11 +102,13 @@ var CharacterEquipment = (() => {
     return artificer>=18?6:artificer>=14?5:artificer>=10?4:3;
   }
   function attunementState(data,loot=[],level){
+    loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
     const limit=attunementLimit(data,level),owned=new Map(loot.filter(row=>row&&Number(row.quantity)>0).map(row=>[row.id,row])),ids=[];
     for(const choice of choices(data?.equipmentState).loadout){const item=owned.get(choice.id)?.item;if(!item||!choice.attuned)continue;const needs=(typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(item))||!!item.attunement;if(needs)ids.push(choice.id);}
     return{limit,count:ids.length,active:new Set(ids.slice(0,limit))};
   }
   function derive(data,stats,loot=[],level) {
+    loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
     const c=choices(data.equipmentState),warnings=[],sources=[],attacks=[],seen=new Set(),names=new Set();
     const owned=loot.filter(e=>e&&Number(e.quantity)>0&&typeof e.id==='string'&&!seen.has(e.id)&&seen.add(e.id));
     const entries=owned.map(e=>({entry:e,item:e.item||{},choice:c.loadout.find(v=>v.id===e.id)||{id:e.id,equipped:false,attuned:false,ability:'auto',proficiency:'auto',mode:'normal'},mechanics:CharacterEquipment.infer(e.item)}));

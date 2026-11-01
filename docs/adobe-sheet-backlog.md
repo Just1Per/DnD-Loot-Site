@@ -105,3 +105,8 @@ Gear page transfers now offer an explicit previewed Move & combine when the dest
 ## Footer Copy to Magic Items — v63
 
 Footer arrows now open native Save/Done, owned-reference Copy, full text and confirmed Clear. Copy reuses an existing magic row or restores a hidden one into its first empty position, focusing the correct repeated continuation in Single/All sheets. Physical records, effects, attunement and resources are retained; full tables and stale controls refuse. Source free-text recognition and other footer editing/move branches remain open alongside companion transfers, magic catalogue/variants/visibility and units. Point 3 is not complete. See [footer scope](adobe-magic-footer-copy.md).
+
+
+## Original magic variants — v64
+
+Six Giant Strength belt types and ten Resistance ring types now have native preview/Cancel/Apply, shared STR/resistance/attunement behavior, private save/reopen and source print. Choices live on the existing equipment state, retain original records/resources and follow the owned item in both presentations. The original-source guard catches catalogue changes during confirmation. Other magic families, base-gear choices and remaining point-3 functions stay open. See [scope](adobe-magic-item-variants.md).
