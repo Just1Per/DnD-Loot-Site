@@ -144,3 +144,19 @@ The public Adobe presentation now always opens All sheets, ignoring a previously
 The retained single-page renderer remains an internal controller-test presentation. Existing browser controller regressions now explicitly opt into that fixture profile; a new production-default browser flow verifies the actual public always-All UI, ignored old preferences, side navigation, optional pages, zoom, printing from all three entry points, private persistence, mobile and accessibility. This does not restore a user-facing Single-page option.
 
 The newly supplied spell-generator screenshots are the next spell-sheet design task: source-separated class/race/feat steps and Origin of Entry, known-spell choices versus prepared-class full reachable lists, separate preparation, display modes that do not grant extra access, and class-level-gated subclass grants. These are queued; the current spell picker remains in use. Full 5e data expansion into a versioned reference catalogue/Firebase is still incomplete.
+
+
+### Set Max HP cascading menu v71
+
+The original first-page Set Max HP button now opens the supplied two-branch menu: “Change the Max HP to” offers current average/fixed/maximum totals and an entered final value; “Set the Max HP to automatically assume” offers average, fixed, maximum and “Don't change the maximum HP automatically”. The selected method is checked, and totals use the existing shared progression calculator including multiclass dice, Constitution and supported bonuses. Manual freezes the current final maximum, including any one-shot override. Choosing a new automatic method clears that override. Recorded rolls and the existing detailed HP options remain reachable from the Change branch. The maximum field's existing double-click opens the same cascade; direct numeric editing remains supported.
+
+The custom-value dialog is transactional, validates bounded whole values, supports Enter/Cancel and restores focus. Flyouts reuse the existing keyboard, touch and edge-mirroring controller. Session/build/actor/save guards reject stale choices; maximum changes preserve current/temporary HP, death saves, recorded rolls, spell references, inventory, coins and spent resources. Saving remains explicit. A production always-All browser flow covers menu labels/totals, checked modes, one-shot expiry, manual persistence, custom validation/Cancel, keyboard/focus, mobile/axe and stale/detached guards. Existing detailed HP calculation, persistence and print coverage remains in place.
+
+The source-step spell generator and full versioned 5e catalogue/Firebase import remain queued as described above.
+
+
+### DC selectors and single-click ability entry v71
+
+Clicking any of the six first-page ability scores now opens the existing transactional native Ability scores & skills editor immediately. Previously this required a double-click. Apply recalculates dependent totals; Cancel discards its draft. The ability component-table expansion remains separate backlog.
+
+Show/Hide 2nd DC retains the original dual layout: each visible DC has its own six-ability selector. The primary selector is shared across single/dual layouts; the secondary selection survives hiding. These use shared ability modifiers and proficiency without replacing per-class spellcasting abilities. The HP and second-DC source buttons now sit above focused overlapping fields, so a focused score/maximum cannot intercept the next button click. A production always-All browser regression exercises actual pointer clicks, both DC selectors and all six score entry points, draft Apply/Cancel, dependent totals, save/reopen, connected print, resource/caster isolation and mobile accessibility.

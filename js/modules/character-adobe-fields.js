@@ -116,8 +116,8 @@ var CharacterAdobeFields=(()=>{
   if((m=/^Feat (Name|Note|Description) ([1-8])$/.exec(id))){const row=context.feats?.[(context.featOffset||0)+Number(m[2])-1];return computed(!row?'':m[1]==='Name'?row.name:m[1]==='Note'?[row.origin,row.source].filter(Boolean).join(' · '):[row.description,...(row.report?.warnings||[])].filter(Boolean).join('\n'),{kind:m[1]==='Description'?'textarea':'text',command:'feats'});}
   if(id==='Race')return edit('build.race',data.build.race,'select',undefined,{options:options.races||[]});
   if(id==='Background')return edit('build.background',data.build.background,'select',undefined,{options:options.backgrounds||[]});
-  if(Object.hasOwn(abilities,id))return computed(d.scores[abilities[id]],{command:'abilities'});
-  if((m=/^(Str|Dex|Con|Int|Wis|Cha) Mod$/.exec(id)))return computed(sign(d.mods[abilities[m[1]]]));
+  if(Object.hasOwn(abilities,id))return computed(d.scores[abilities[id]],{command:'abilities',singleClick:true,reason:'Click to edit ability scores, then Apply to sheet.'});
+  if((m=/^(Str|Dex|Con|Int|Wis|Cha) Mod$/.exec(id)))return computed(sign(d.mods[abilities[m[1]]]),{command:'abilities',singleClick:true,reason:'Click to edit the ability score used for this modifier.'});
   if((m=/^(Str|Dex|Con|Int|Wis|Cha) ST Mod$/.exec(id)))return computed(sign(d.saves[abilities[m[1]]]));
   if((m=/^(Str|Dex|Con|Int|Wis|Cha) ST Prof$/.exec(id))){const key=abilities[m[1]],automatic=d.effects.saves.includes(key);return automatic?computed(true,{kind:'checkbox',reason:'Granted by class or character choices.'}):edit('saves.'+key+'.proficient',data.saves[key].proficient,'checkbox');}
   if(Object.hasOwn(skills,id))return computed(sign(d.skills[skills[id]]));
