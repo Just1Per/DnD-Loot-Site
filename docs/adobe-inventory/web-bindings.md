@@ -159,3 +159,7 @@ Footer Gear arrows route to an Adobe-owned popup instead of the general layout e
 ## Original item-choice branch — v64
 
 A pure bounded choice projection supplies effective item names and existing rule effects from private equipmentState.loadout.magicVariant. Native Giant Strength/Resistance type selection previews and confirms, retaining ownership/equipment/resources. Core and UI projections unwrap the source before reapplying/resetting; shared first-record limits and original-source snapshots protect invalid/stale cases. See [scope and safeguards](../adobe-magic-item-variants.md).
+
+## v65 direct build choices and background suggestions
+
+Class and Levels is now an inline Class dropdown with Subclass immediately on its right. The final Multiclass command opens the existing native class-level dialog; Level continues to open that dialog. Future subclasses persist as planned selections and expose no active subclass ID until their source-specific class level is reached. The second-page Background Menu/Add Features and the four narrative browse arrows open the anchored background suggestion menu. Hover/click/touch/keyboard, Custom free text, replacement confirmation and ordinary private Save are supported. See [scope and data provenance](../adobe-inline-character-choices.md).

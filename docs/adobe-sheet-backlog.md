@@ -110,3 +110,9 @@ Footer arrows now open native Save/Done, owned-reference Copy, full text and con
 ## Original magic variants — v64
 
 Six Giant Strength belt types and ten Resistance ring types now have native preview/Cancel/Apply, shared STR/resistance/attunement behavior, private save/reopen and source print. Choices live on the existing equipment state, retain original records/resources and follow the owned item in both presentations. The original-source guard catches catalogue changes during confirmation. Other magic families, base-gear choices and remaining point-3 functions stay open. See [scope](adobe-magic-item-variants.md).
+
+### Direct character choices checkpoint v65
+
+Class and Subclass now sit together on the first paper page; the final Class option, Multiclass, opens the native allocation popup. A selected future subclass is retained as planned and activates only at the correct class level for its edition/source. The reviewed 2014/2024 JSON class facts supply activation thresholds; existing shared effect rules remain authoritative. This is a source foundation, not a completed external catalogue import.
+
+Background and Race remain direct filtered dropdowns with Custom last. Add Features on page two opens an anchored background-specific Personality trait/Ideal/Bond/Flaw menu with hover, touch and keyboard support. Suggestions remain editable; Custom focuses the existing text field, and replacement asks first. Guide and contextual information are updated. No rules deployment or production migration is needed. See [implementation scope](adobe-inline-character-choices.md) and [Danish preview test](adobe-v65-testplan-da.md). Numbered points 3–8, remaining external source/effect coverage and final 1:1 audit remain open.

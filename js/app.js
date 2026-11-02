@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261101-adobe-sheet-v64";
+const ASSET_VERSION = "20261102-adobe-sheet-v65";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -149,6 +149,8 @@ const FEATURE_FILES = [
   "./modules/character-hit-point-options.js",
   "./modules/character-companion-hit-points.js",
   "./modules/character-rest-recovery.js",
+  "./modules/character-rule-choice-data.js",
+  "./modules/character-subclass-planning.js",
   "./modules/character-adobe-engine.js",
   "./modules/character-spellcasting.js",
   "./modules/images.js",
@@ -259,7 +261,9 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-paper-icons-ui.js",
     "./modules/character-modifier-ui.js",
     "./modules/character-adobe-build-plan.js",
-    "./modules/character-adobe-class-ui.js",
+    "./modules/character-adobe-background-choice-ui.js",
+  "./modules/character-adobe-inline-build.js",
+  "./modules/character-adobe-class-ui.js",
     "./modules/character-adobe-ability-ui.js",
     "./modules/character-adobe-feat-ui.js",
     "./modules/character-adobe-spell-ui.js",
