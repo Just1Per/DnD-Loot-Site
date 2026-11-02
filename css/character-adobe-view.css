@@ -93,3 +93,5 @@
 .adobe-narrative-field textarea{padding-right:calc(var(--scale) * 14px)!important}.adobe-narrative-choice{position:absolute!important;right:0;top:0;width:calc(var(--scale) * 13px)!important;min-width:0!important;height:calc(var(--scale) * 13px)!important;min-height:0!important;margin:0!important;padding:0!important;font:calc(var(--scale) * 10px) Arial,sans-serif!important;border:0!important;background:#fff8e8!important;color:#642921!important;z-index:4}
 
 @media print{.adobe-narrative-choice{display:none!important}.adobe-narrative-field textarea{padding-right:0!important}}
+/* Invisible source hit targets must not paint over the weight/capacity labels. */
+.pdf-button[data-pdf-button="Weight Carried Button"],.pdf-button[data-pdf-button="Weight Carrying Capacity.Button"]{background:transparent;border:0;color:transparent}

@@ -16,7 +16,7 @@ The searchable Adobe pickers use the existing authoritative field options and sh
 | Attack ability | 5 | Six original abilities plus Auto for supported attack rows; computed rows retain their engine ability. |
 | Attack damage | 5 | Computed for equipment/action references; retained in the editable manual damage text. Separate source damage-type override remains pending. |
 | Ammunition | 2 | All 16 original ammunition names, plus retained custom names; same original icon/load relationships. |
-| Background feature | 1 | Derived from the selected background. Independent feature replacement is still a parity task. |
+| Background feature | 1 | Original Adobe feature-name dropdown plus Automatic/Custom. Saved per-background narrative override and editable description/source reference; background grants remain independent. |
 | Log faction | 1 | Original faction choices with the existing private log header. |
 | Companion type | 1 | All four original roles: Cohort, Companion, Familiar and Mount. Manual Wild Shape reference remains an additional existing web role. |
 | Companion creature | 1 | Shared permitted creature catalogue, with Familiar/Wild Shape restrictions. Arbitrary player-race entries are not creature statistics. |

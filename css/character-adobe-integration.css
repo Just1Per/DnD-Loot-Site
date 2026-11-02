@@ -1140,3 +1140,4 @@ dialog.adobe-flyout-host{position:fixed!important;inset:0!important;width:100vw!
 @media print{dialog.adobe-flyout-host{display:none!important}}
 .adobe-skill-help{position:fixed;z-index:2147483647;box-sizing:border-box;width:min(360px,calc(100vw - 20px));max-height:calc(100dvh - 20px);overflow:auto;border:1px solid #bca78b;border-radius:4px;padding:12px 14px;background:#fff8e9;color:#453328;box-shadow:0 5px 18px #2b190f30;font:14px/1.5 Arial,sans-serif}.adobe-skill-help p{margin:0 0 12px}.adobe-skill-help ul{margin:8px 0 0;padding-left:18px}.adobe-skill-help li+li{margin-top:9px}.adobe-flyout-back{position:sticky;top:0;z-index:2}
 @media print{.adobe-skill-help{display:none!important}}
+#adobeBackgroundFeatureDialog textarea{box-sizing:border-box;width:100%;padding:10px;border:1px solid #b39c7f;border-radius:4px;background:#fff;color:#30271f;font:15px/1.5 Arial,sans-serif;resize:vertical}
