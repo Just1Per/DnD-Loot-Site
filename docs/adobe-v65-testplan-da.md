@@ -1,6 +1,6 @@
 # Test af Adobe-arket — v65
 
-Brug preview fra PR #250 med `?v=20261102-adobe-sheet-v65`. Der kræves ingen nye Firebase-regler. Gem kun på en testkarakter, hvis du vil bevare din normale karakter.
+Brug preview fra PR #250 med `?v=20261102-adobe-sheet-v65-2`. Der kræves ingen nye Firebase-regler. Gem kun på en testkarakter, hvis du vil bevare din normale karakter.
 
 1. Åbn karakteren i **Adobe · preview**. Vælg Class direkte på første side. **Subclass** skal stå umiddelbart til højre.
 2. Med 2014-regler: vælg Wizard level 1 og Evocation. Den skal stå som planlagt til Wizard level 2. Sculpt Spells skal først vises ved Wizard level 2.

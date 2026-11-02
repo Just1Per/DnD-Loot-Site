@@ -41,8 +41,9 @@ var CharacterAdobeEngine=(()=>{
   CharacterCatalog.normalize=raw=>{const keep=raw?.grants?.[KEY]?.data,out=catalogNormalize(raw);if(keep)out.grants[KEY]={data:normalize(keep),used:0};return out};
   CharacterSheetModel.normalize=raw=>{const out=modelNormalize(raw);out.adobe=normalize(stored(raw),out.build.edition);if(!out.adobe.pactSlotsSeparated){const classes=out.adobe.classLevels;const pureWarlock=classes.length?classes.every(c=>c.classId==='warlock'):out.build?.classId==='warlock';if(pureWarlock)out.adobe.pactSlotsUsed=Math.min(4,out.slots.reduce((sum,slot)=>sum+(Number(slot.used)||0),0));out.adobe.pactSlotsSeparated=true;}if(!out.adobe.notesMigrated){if(out.notes)out.adobe.journal.unshift({id:'legacy-session-notes',title:'Previous session notes',category:'Sessions',text:out.notes});out.adobe.notesMigrated=true;}out.notes='';out.rulesChoices.grants[KEY]={data:out.adobe,used:0};return out};
   CharacterSheetModel.derive=(raw,l,loot=[])=>{
-   const d=CharacterSheetModel.normalize(raw),lv=level(d,l),r=modelDerive(d,lv,loot);
-   const classes=classLevels(d,lv),assigned=classLevels(d,lv,true);
+   const d=CharacterSheetModel.normalize(raw),lv=level(d,l),classes=classLevels(d,lv),assigned=classLevels(d,lv,true);
+   // Core mechanics must see the same unlocked subclass/class levels as the paper, including XP advancement.
+   const r=modelDerive({...d,adobe:{...d.adobe,classLevels:classes}},lv,loot);
    const hpOptions={
     classLevels:classes,constitution:r.scores.con,hpMode:d.adobe.hpMode,
     hpRolls:d.adobe.hpRolls,bonuses:hpBonus(d,r,lv),bonusSources:r.effects.hpSources||[]

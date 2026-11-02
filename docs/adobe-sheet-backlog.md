@@ -24,7 +24,7 @@ Character data stays in the existing private save/grants envelope. Each point mu
 
 The user approved **collapsed initially, then remember the choice** for Sheet tools. After testing, the user clarified that Adobe must provide every setting itself and is intended to become the future standard. Opening Standard/builder panels is an interim bridge, not completed Adobe parity. Shared rules, private persistence and catalogue data remain reusable.
 
-The immediate priority is a native class/level/subclass dialog opened by a single click on Level or Class and Levels. It must include rule/source eligibility, multiclass allocation, class choices and training, HP review, Apply/Cancel, and retained resources. Follow with native origins/abilities/feats/spells/equipment/companions and the remaining paper tools; remove each legacy navigation bridge only when its replacement is working and tested. Do not switch the global default until this complete path has been tested. The remaining numbered mechanics/layout tasks above still apply.
+The class/level priority has a native Level popup since v43 and direct Class/Subclass choices since v65. The final Class option, Multiclass, opens the allocation popup. It includes rule/source eligibility, multiclass allocation, class choices and training, HP review, Apply/Cancel, and retained resources. Continue the remaining native origins/equipment/companion workflows and paper tools; remove each legacy navigation bridge only when its replacement is working and tested. Do not switch the global default until this complete path has been tested. The remaining numbered mechanics/layout tasks above still apply.
 
 ### Native configuration checkpoint v43
 

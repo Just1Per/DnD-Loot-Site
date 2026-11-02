@@ -27,6 +27,6 @@ No foreign JavaScript is executed by this command.
 
 ## Persistence and validation
 
-The existing private `rulesChoices.grants.__adobe.data.classLevels` envelope stores optional `plannedSubclassId`. Only an unlocked selection is exposed as `subclassId` to the existing feature/spell engine. Save normalization uses the character's edition. No Firestore or Storage rule changes, production migration or catalogue writes are required.
+The existing private `rulesChoices.grants.__adobe.data.classLevels` envelope stores optional `plannedSubclassId`. Only an unlocked selection is exposed as `subclassId` to the existing feature/spell engine. Save normalization uses the character's edition. Core mechanics and the paper share a read-only effective class-level projection for XP advancement; this does not rewrite the stored allocation. A retained revised-rules Draconic subclass therefore changes real AC at its unlock, rather than only updating the displayed class label. No Firestore or Storage rule changes, production migration or catalogue writes are required.
 
 Coverage: all supported class unlock levels from 1–20 in both editions; actual Wizard 2014 level 1→2 and revised level 2→3→2; multiclass class-level isolation; planned save/reopen and emulator access restrictions; native multiclass Apply/Cancel; direct race/background changes; hover/touch/keyboard narrative selection, editable/custom text, replacement cancellation, stale menus; unchanged spent resources; mobile accessibility; connected PDF and existing Adobe browser regressions.
