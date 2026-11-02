@@ -2,7 +2,7 @@
 var CharacterActions = (()=>{
  const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
  const ab=['str','dex','con','int','wis','cha'],text=v=>String(v||'').slice(0,200),sign=n=>(n>=0?'+':'')+n;
- function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({...(typeof r?.id==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)?{id:r.id}:{}),kind:['loot','weapon','spell','racial','improvised','unarmed','grapple','shove'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name)}));}
+ function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({...(typeof r?.id==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)?{id:r.id}:{}),kind:['loot','weapon','spell','racial','improvised','unarmed','grapple','shove','granted-spell'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name)}));}
  const add=(dice,n)=>dice+(n?' '+(n<0?'−':'+')+' '+Math.abs(n):'');
  function diceAt(scales,level,fallback){const keys=Object.keys(scales||{}).map(Number).filter(k=>k<=level).sort((a,b)=>b-a);return keys.length?scales[keys[0]]:fallback;}
  function increase(base,extra,times){const a=/^(\d+)d(\d+)$/.exec(base),b=/^(\d+)d(\d+)$/.exec(extra||'');return a&&b&&a[2]===b[2]?`${Number(a[1])+Number(b[1])*times}d${a[2]}`:base;}
@@ -33,6 +33,13 @@ var CharacterActions = (()=>{
   if(a.kind==='racial'){
    const breath=stats.effects.breath;if(a.ref!=='breath'||!breath)return unavailable('This species no longer grants this breath weapon.');
    return {...row,name:'Breath weapon',hit:breath.save.toUpperCase()+' DC '+(8+stats.pb+stats.mods.con),damage:`${breath.dice}d${breath.die||6} ${breath.type}`,range:breath.area,ability:'con',notes:[breath.usage||'Action; once per short or long rest.','Successful save: half damage. Track uses separately.']};
+  }
+  if(a.kind==='granted-spell'){
+   const Access=globalThis.CharacterAttackAccess||(typeof require==='function'?require('./character-attack-access'):null),grant=Access?.spells(data,level,stats,{catalogue:spells}).find(row=>row.kind==='granted-spell'&&row.ref===a.ref);
+   if(!grant)return unavailable('This spell is no longer granted by the current class, race or feat choices.');
+   const ref=grant.spell.id+(grant.classId?'::'+grant.classId:''),copy={...data,spells:[{catalogId:grant.spell.id,classId:grant.classId},...data.spells]};
+   const resolved=resolve({...a,kind:'spell',ref,ability:grant.ability,slot:Math.max(grant.slot,a.slot)},copy,level,stats,loot,spells);
+   return {...resolved,notes:[grant.source,...resolved.notes]};
   }
   if(a.kind==='spell'){
    const source=spellReference(a.ref),spell=spells.find(s=>s.id===source.spellId);if(!spell)return unavailable('Spell catalogue unavailable.');
