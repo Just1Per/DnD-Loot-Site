@@ -163,3 +163,7 @@ A pure bounded choice projection supplies effective item names and existing rule
 ## v65 direct build choices and background suggestions
 
 Class and Levels is now an inline Class dropdown with Subclass immediately on its right. The final Multiclass command opens the existing native class-level dialog; Level continues to open that dialog. Future subclasses persist as planned selections and expose no active subclass ID until their source-specific class level is reached. The second-page Background Menu/Add Features and the four narrative browse arrows open the anchored background suggestion menu. Hover/click/touch/keyboard, Custom free text, replacement confirmation and ordinary private Save are supported. See [scope and data provenance](../adobe-inline-character-choices.md).
+
+## v66 original Add Equipment / Choose Feature
+
+Equipment.menu opens the dedicated owned Add Equipment popup with current-edition reference equipment, packs, exact source-matched background choices and Custom item. It previews physical quantities/weights and explicit starting coins before confirmation; Save uses existing private fields. Class Features Menu opens a focused feature category editor, including shared training and Druid forms in a dedicated popup. It reuses the shared engine/component without Standard page navigation. Automatic features remain automatic. See [scope, provenance and remaining gaps](../adobe-equipment-feature-menus.md).
