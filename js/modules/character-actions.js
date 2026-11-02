@@ -2,7 +2,7 @@
 var CharacterActions = (()=>{
  const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
  const ab=['str','dex','con','int','wis','cha'],text=v=>String(v||'').slice(0,200),sign=n=>(n>=0?'+':'')+n;
- function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({...(typeof r?.id==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)?{id:r.id}:{}),kind:['loot','weapon','spell','racial','improvised','unarmed'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name)}));}
+ function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({...(typeof r?.id==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)?{id:r.id}:{}),kind:['loot','weapon','spell','racial','improvised','unarmed','grapple','shove'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name)}));}
  const add=(dice,n)=>dice+(n?' '+(n<0?'−':'+')+' '+Math.abs(n):'');
  function diceAt(scales,level,fallback){const keys=Object.keys(scales||{}).map(Number).filter(k=>k<=level).sort((a,b)=>b-a);return keys.length?scales[keys[0]]:fallback;}
  function increase(base,extra,times){const a=/^(\d+)d(\d+)$/.exec(base),b=/^(\d+)d(\d+)$/.exec(extra||'');return a&&b&&a[2]===b[2]?`${Number(a[1])+Number(b[1])*times}d${a[2]}`:base;}
@@ -62,6 +62,10 @@ var CharacterActions = (()=>{
    const Casting=globalThis.CharacterSpellcasting||(typeof require==='function'?require('./character-spellcasting'):null),casting=Casting?Casting.castingStats({classId:owner,ability},stats,data):{attack:mod+stats.pb+data.spellAttackBonus,dc:8+stats.pb+mod+data.spellDCBonus};
    const types=(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');
    return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(casting.attack):spell.save?spell.save+' DC '+casting.dc:'Effect',damage:damage||'See spell effect',range:invocation?.range||CFC.cantripRange(spell,level),notes};
+  }
+  if(a.kind==='grapple'||a.kind==='shove'){
+   const modern=data.build.edition==='2024',martial=stats.gear?.martialArts,ability=modern&&martial?.active&&stats.mods.dex>stats.mods.str?'dex':'str',dc=8+stats.pb+stats.mods[ability],grapple=a.kind==='grapple';
+   return {...row,name:grapple?'Grapple':'Shove',ability,hit:modern?'STR/DEX DC '+dc:sign(stats.skills?.athletics??stats.mods.str),damage:grapple?'Grappled':'Prone / push 5 ft',range:'5 ft',notes:[modern?'Unarmed Strike option. The target chooses a Strength or Dexterity save against DC '+dc+'.':'Use an Athletics check contested by the target’s Athletics or Acrobatics.',grapple?'Requires a free hand; check target size and grapple restrictions.':'Choose to knock the target Prone or push it 5 feet; check size restrictions.','Resolve the target and conditions at the table. Selecting this reference does not spend an action.']};
   }
   const unarmed=a.kind==='unarmed',Martial=globalThis.CharacterMonkMartialArts||(typeof require==='function'?require('./character-monk-martial-arts'):null),martial=unarmed?(stats.gear?.martialArts||E.derive(data,stats,loot,level).martialArts):null,ability=a.ability==='auto'?(unarmed&&martial?.active?Martial.ability(stats.mods):!unarmed&&a.mode==='thrown'?'dex':'str'):a.ability;
   const tavern=(stats.effects.originFeats||[]).includes('Tavern Brawler')||stats.feats.reports.some(r=>r.def.name==='Tavern Brawler'&&!r.warnings.length);

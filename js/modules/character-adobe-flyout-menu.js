@@ -1,0 +1,39 @@
+'use strict';
+/* Owned accessible context menus: nested choices, viewport-aware flyouts and touch/keyboard parity. */
+var CharacterAdobeFlyoutMenu=(()=>{
+ let dispose=null;
+ function open(anchor,{id,title,items,isCurrent=()=>true,onStale=()=>{},onClose=()=>{},initialPath=[]}={}){
+  dispose?.();if(!anchor?.isConnected||!isCurrent())return null;
+  const dialog=document.createElement('dialog');dialog.id=id;dialog.className='adobe-flyout-host';dialog.dataset.noContextHelp='';dialog.setAttribute('aria-label',title);let closed=false,busy=false,timer=null,path=[],panels=[];
+  const current=()=>!closed&&dialog.isConnected&&anchor.isConnected&&isCurrent();
+  function close(){if(closed)return;closed=true;clearTimeout(timer);if(dispose===close)dispose=null;window.removeEventListener('resize',resize);if(dialog.open)dialog.close();dialog.remove();if(anchor.isConnected)anchor.focus({preventScroll:true});onClose();}dispose=close;
+  function guard(){if(current())return true;close();onStale();return false;}
+  const rows=branch=>typeof branch==='function'?branch():branch||[];
+  function position(){if(closed)return;let source=anchor.getBoundingClientRect();for(let index=0;index<panels.length;index++){const panel=panels[index],box=panel.getBoundingClientRect();let left,top;if(!index){left=Math.min(source.left,innerWidth-box.width-10);top=source.bottom+4;}else{const parent=panels[index-1].querySelector('[data-flyout-id="'+CSS.escape(path[index-1])+'"]');if(!parent)continue;const rect=parent.getBoundingClientRect(),parentBox=panels[index-1].getBoundingClientRect();left=parentBox.right+2;if(left+box.width>innerWidth-10)left=parentBox.left-box.width-2;top=rect.top;}panel.style.left=Math.max(10,Math.min(left,innerWidth-box.width-10))+'px';panel.style.top=Math.max(10,Math.min(top,innerHeight-box.height-10))+'px';}}
+  function resize(){draw();}
+  function focus(panel,last=false){const targets=[...panel.querySelectorAll('button:not(:disabled)')];(last?targets.at(-1):targets[0])?.focus({preventScroll:true});}
+  function draw(){
+   const active=document.activeElement,focused=dialog.contains(active)?active.dataset.flyoutId:null;panels=[];dialog.replaceChildren();let branch=rows(items);
+   for(let depth=0;depth<=path.length;depth++){
+    const panel=document.createElement('section');panel.className='adobe-flyout-panel'+(depth?' adobe-flyout-submenu':' adobe-flyout-main');panel.setAttribute('role','menu');panel.setAttribute('aria-label',depth?title+' choices':title);panel.dataset.flyoutDepth=String(depth);const parent=depth?panels[depth-1].items.find(item=>item.id===path[depth-1]):null;
+    if(depth&&(innerWidth<=600||matchMedia('(pointer:coarse)').matches)){const back=document.createElement('button');back.type='button';back.dataset.flyoutBack='';back.className='adobe-flyout-back';back.setAttribute('role','menuitem');back.textContent='‹ Back';back.onclick=()=>{path=path.slice(0,depth-1);draw();focus(panels.at(-1));};panel.append(back);}
+    if(parent?.menuAttributes)for(const [name,value]of Object.entries(parent.menuAttributes))panel.setAttribute(name,value);
+    if(parent?.heading){const heading=document.createElement('h3');heading.className='adobe-flyout-heading';heading.setAttribute('aria-hidden','true');heading.dataset.backgroundHeading='';heading.textContent=parent.heading;panel.append(heading);}
+    panel.items=branch;
+    for(const item of branch){if(item.separator){const line=document.createElement('hr');line.setAttribute('role','separator');panel.append(line);continue;}const button=document.createElement('button');button.type='button';button.dataset.flyoutId=item.id;button.disabled=!!(typeof item.disabled==='function'?item.disabled():item.disabled);button.setAttribute('role',item.checked?'menuitemcheckbox':'menuitem');const checked=item.checked?!!item.checked():false;if(item.checked)button.setAttribute('aria-checked',String(checked));if(item.items){button.setAttribute('aria-haspopup','menu');button.setAttribute('aria-expanded',String(path[depth]===item.id));}for(const [name,value]of Object.entries(item.attributes||{}))button.setAttribute(name,value);
+     const check=document.createElement('span');check.className='adobe-flyout-check';check.setAttribute('aria-hidden','true');check.textContent=checked?'✓':'';const label=document.createElement('span');label.className='adobe-flyout-label';label.textContent=item.label;button.append(check,label);if(item.detail){const detail=document.createElement('small');detail.textContent=item.detail;label.append(detail);}if(item.items){const arrow=document.createElement('span');arrow.className='adobe-flyout-arrow';arrow.setAttribute('aria-hidden','true');arrow.textContent='›';button.append(arrow);}
+     const expand=(keyboard=false)=>{if(busy||!guard()||button.disabled||!item.items)return;clearTimeout(timer);path=[...path.slice(0,depth),item.id];draw();if(keyboard)focus(panels[depth+1]);};
+     button.onclick=async()=>{if(busy||!guard()||button.disabled)return;clearTimeout(timer);if(item.items){expand();return;}busy=true;try{if(item.closeBefore){close();await item.select?.();}else{const keep=await item.select?.();if(keep&&guard())draw();else close();}}catch(error){if(!closed){const status=document.createElement('p');status.className='adobe-flyout-error';status.setAttribute('role','alert');status.textContent=error.message;panel.append(status);position();}}finally{busy=false;}};
+     button.onpointermove=event=>{if(event.pointerType!=='mouse'||!event.movementX&&!event.movementY||busy)return;clearTimeout(timer);if(item.items)timer=setTimeout(()=>expand(),160);};button.onpointerleave=()=>clearTimeout(timer);
+     button.onkeydown=event=>{const targets=[...panel.querySelectorAll('button:not(:disabled)')],index=targets.indexOf(button);if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){event.preventDefault();const next=event.key==='Home'?0:event.key==='End'?targets.length-1:(index+(event.key==='ArrowDown'?1:-1)+targets.length)%targets.length;targets[next]?.focus();}else if(event.key==='ArrowRight'&&item.items){event.preventDefault();expand(true);}else if(event.key==='ArrowLeft'&&depth){event.preventDefault();path=path.slice(0,depth-1);draw();panels[depth-1].querySelector('[data-flyout-id="'+CSS.escape(parent.id)+'"]')?.focus();}};panel.append(button);
+    }
+    if(!depth){const line=document.createElement('hr');line.setAttribute('role','separator');const done=document.createElement('button');done.type='button';done.dataset.flyoutClose='';done.setAttribute('role','menuitem');done.textContent='Close menu';done.onclick=close;done.onkeydown=event=>{if(event.key==='ArrowUp'){event.preventDefault();[...panel.querySelectorAll('[data-flyout-id]:not(:disabled)')].at(-1)?.focus();}if(event.key==='Home'){event.preventDefault();focus(panel);}};panel.append(line,done);}
+    panel.addEventListener('pointerenter',()=>clearTimeout(timer));dialog.append(panel);panels.push(panel);if(depth===path.length)break;const next=branch.find(item=>item.id===path[depth]);if(!next?.items){path=path.slice(0,depth);break;}branch=rows(next.items);
+   }
+   position();if(focused){const target=[...dialog.querySelectorAll('[data-flyout-id]')].find(node=>node.dataset.flyoutId===focused);target?.focus({preventScroll:true});}
+  }
+  dialog.addEventListener('cancel',event=>{event.preventDefault();close();});dialog.addEventListener('close',close);dialog.addEventListener('click',event=>{if(event.target===dialog)close();});dialog.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();if(path.length){path=path.slice(0,-1);draw();focus(panels.at(-1));}else close();}});
+  document.getElementById('characterSheetDialog').append(dialog);path=[...initialPath];draw();dialog.showModal();position();focus(panels.at(-1));window.addEventListener('resize',resize);return{element:dialog,close,refresh:()=>{if(guard())draw();}};
+ }
+ return{open,destroy:()=>dispose?.()};
+})();
