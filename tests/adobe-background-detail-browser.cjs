@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');sheetSession.data.build.edition='2014';sheetSession.data.build.background='acolyte';sheetSession.data.background='Kept custom background name';renderCharacterSheet();readSheetForm();sheetSession.dirty=false;window.detailUntouched=JSON.stringify({inventory,items,coins:sheetSession.data.coins,hp:sheetSession.data.hpCurrent,skills:sheetSession.data.skills,xp:sheetSession.data.experience});});
  await page.locator('#sheetStyle').selectOption('adobe');const host=page.locator('#sheetAdobeView'),field=host.locator('[data-pdf-field="Background Extra"]');await field.waitFor({state:'visible'});assert.equal(await field.getAttribute('readonly'),null);assert.equal(await field.inputValue(),'');assert.equal(await page.evaluate(()=>sheetSession.dirty),false);
  await field.fill('Temple of the Silver Star');await field.press('Tab');assert.equal(await page.evaluate(()=>sheetSession.data.adobe.backgroundDetails.acolyte),'Temple of the Silver Star');assert.equal(await page.locator('#sheetBackgroundDetail').inputValue(),'Temple of the Silver Star');assert.equal(await page.evaluate(()=>sheetSession.data.background),'Kept custom background name');

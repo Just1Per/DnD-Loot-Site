@@ -21,3 +21,7 @@ The generic popup moves the original form body and Save button temporarily, show
 Dropdowns use a light appearance, including when the operating system prefers dark mode. Armor suggestions and owned armor selectors show a right-side Light, Medium or Heavy badge from the existing equipment profile. Shields, Unarmored and custom definitions have explicit labels. Enhancement values are retained, and searching a type finds its choices. This display does not grant armor training or change armor calculations.
 
 Browser regressions cover every Sheet tools option, original source actions, nested searchable choices, original Save/status, Escape/focus/restoration, rules/unknown routing, session disposal, mobile/accessibility, armor types/enhancements, dark-system appearance and cancellation. The broader Adobe suite retains save, print, class, spell, inventory and companion checks. No Firebase rules or data migration are required.
+
+## v70 public presentation
+
+All sheets is the only exposed Adobe layout. Side shortcuts/mobile navigation select pages; optional pages use Add pages. Each paper card’s top-left magnifier opens zoom choices and its printer prepares all connected pages. Header Print and Ctrl/Cmd+P use the same route. Page/View selectors, Sheet tools and the old source Show extra features route are not exposed. The browser print window selects the wanted pages. Internal single-page renderer tests use an explicit fixture presentation; they are not a product option.

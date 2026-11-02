@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');const out=process.env.UI_OUTPUT_DIR||require('node:os').tmpdir()+'/campaignatlas-ui-checks';fs.mkdirSync(out,{recursive:true});
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');sheetSession.data.adobe.companions=CharacterAdobeEngine.normalize({companions:[{name:'Scout',type:'familiar'},{name:'Guardian',type:'companion'}]}).companions;renderCharacterSheet()});
  await page.locator('#sheetStyle').selectOption('adobe');const paper=page.locator('#sheetAdobeView');await paper.locator('[data-pdf-field="HP Current"]').waitFor({state:'visible'});await paper.locator('#adobePage').selectOption('template-AScomp');const picture=()=>paper.locator('[data-pdf-button="Comp.img.Image"]');await picture().waitFor({state:'visible'});
  const png=async color=>Buffer.from(await page.evaluate(color=>{const c=document.createElement('canvas');c.width=24;c.height=32;const x=c.getContext('2d');x.fillStyle=color;x.fillRect(0,0,24,32);return c.toDataURL('image/png').split(',')[1]},color),'base64'),blue=await png('#235f93'),green=await png('#337644');

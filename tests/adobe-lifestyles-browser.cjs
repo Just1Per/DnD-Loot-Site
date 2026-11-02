@@ -4,7 +4,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+  const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
   await page.evaluate(async()=>{
    auditSeed('player');testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');sheetSession.data.profile.lifestyle='  Modest  ';sheetSession.data.coins.gp=42;sheetSession.data.experience='6500';renderCharacterSheet();readSheetForm();sheetSession.dirty=false;
    window.lifestyleUntouched=JSON.stringify({coins:sheetSession.data.coins,xp:sheetSession.data.experience,inventory,items});

@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{
   auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.build.race='human';d.build.scoreMode='base';d.abilities.str=9;d.coins={cp:0,sp:0,ep:0,gp:0,pp:0};d.adobe.classLevels=[{classId:'fighter',level:5}];d.adobe.carrying={mode:'variant',includeCoins:true,multiplier:1};d.adobe.paperInventory.attunedFooter=true;d.adobe.paperCombat.ammunition[0]={name:'Arrows',amount:100,loaded:20};
   items=Array.from({length:56},(_,i)=>({id:'load-'+i,name:'Supplies '+i,visible:true,properties:[{title:'Weight per unit (lb)',text:'1'}]}));inventory=items.map(item=>({id:item.id,itemId:item.id,characterId:'c1',userId:'player',quantity:1}));renderCharacterSheet();window.weightResources=JSON.stringify({hp:d.hpCurrent,coins:d.coins,slots:d.slots,ammunition:d.adobe.paperCombat.ammunition,features:d.adobe.classFeatureChoices});window.weightOwnership=JSON.stringify({items,inventory});

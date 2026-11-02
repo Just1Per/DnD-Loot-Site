@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict');const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.adobe.classLevels=[{classId:'fighter',level:3},{classId:'wizard',level:2}];d.adobe.paperCombat.hitDiceUsed={6:1,8:4,10:2,12:0};d.hpCurrent=7;d.slots[0].used=1;renderCharacterSheet();window.restUnchanged=JSON.stringify({hp:d.hpCurrent,slots:d.slots,xp:d.experience,coins:d.coins,choices:d.adobe.classFeatureChoices});});
  await page.locator('#sheetStyle').selectOption('adobe');const host=page.locator('#sheetAdobeView'),field=id=>host.locator('[data-pdf-field="'+id+'"]');await field('HD1 Used').waitFor({state:'visible'});assert.equal(await field('HD1 Level').inputValue(),'3');assert.equal(await field('HD1 Die').inputValue(),'d10');assert.equal(await field('HD2 Die').inputValue(),'d6');await field('HD1 Used').fill('3');await field('HD1 Used').press('Tab');assert.equal(await page.evaluate(()=>sheetSession.data.hpCurrent),7);
  await field('HD1 Used').fill('4');await field('HD1 Used').press('Tab');assert.equal(await field('HD1 Used').getAttribute('aria-invalid'),'true');await page.locator('#sheetSave').click();assert.equal(await page.evaluate(()=>sheetSession.dirty),true);await field('HD1 Used').fill('3');await field('HD1 Used').press('Tab');

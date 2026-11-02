@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');sheetSession.data.experience='6500';sheetSession.data.coins.gp=42;renderCharacterSheet()});
  await page.locator('#sheetStyle').selectOption('adobe');const paper=page.locator('#sheetAdobeView'),field=id=>paper.locator('[data-pdf-field="'+id+'"]');await paper.locator('#adobePage').selectOption('template-ALlog');await field('AdvLog.1.xp.total').waitFor({state:'visible'});
  const change=async(id,value)=>{await field(id).fill(value);await field(id).press('Tab');};

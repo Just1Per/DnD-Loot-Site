@@ -4,7 +4,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const root=path.resolve(__dirname,'..'),out=process.env.UI_OUTPUT_DIR||require('node:os').tmpdir()+'/campaignatlas-ui-checks';fs.mkdirSync(out,{recursive:true});
 const assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  const requests=[];page.on('request',r=>requests.push(r.url()));
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.build.race='human';d.build.scoreMode='final';d.abilities.str=16;d.hpCurrent=17;d.coins.gp=23;d.rulesChoices.feats=[Object.keys(CharacterFeatRules.definitions).find(id=>CharacterFeatRules.definitions[id].name==='Alert'&&CharacterFeatRules.definitions[id].edition==='2014')];d.attacks=[{name:'Manual test strike',ability:'str',proficient:true,bonus:2,rangedWeapon:false,damage:'1d8 + 3',range:'5 ft',notes:'Shared attack'}];d.rulesChoices.feats.push(Object.keys(CharacterFeatRules.definitions).find(id=>CharacterFeatRules.definitions[id].name==='Lucky'&&CharacterFeatRules.definitions[id].edition==='2014'));d.adobe.classLevels=[{classId:'fighter',level:5}];renderCharacterSheet()});
  assert.equal(await page.locator('#sheetStyle').inputValue(),'standard');assert.equal(requests.some(u=>u.includes('/data/adobe-pages/')),false);

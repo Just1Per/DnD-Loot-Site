@@ -6,7 +6,7 @@ fs.mkdirSync(out,{recursive:true});
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+  const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
   await page.evaluate(async()=>{
    auditSeed('dm');characters[0].level=5;characters[0].class='Wizard';
    testSheetDocs['campaigns/a/characters/c1']={...characters[0]};

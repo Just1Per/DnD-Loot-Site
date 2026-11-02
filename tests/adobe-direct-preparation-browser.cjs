@@ -4,7 +4,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+  const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
   const host=page.locator('#sheetAdobeView');
   const noPopup=async()=>{
    assert.equal(await page.locator('#adobeSpellDialog,#adobeSharedEditor').count(),0);

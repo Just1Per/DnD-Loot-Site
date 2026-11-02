@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs');const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');});
  await page.locator('#sheetStyle').selectOption('adobe');const host=page.locator('#sheetAdobeView'),field=id=>host.locator('[data-pdf-field="'+id+'"]'),button=id=>host.locator('[data-pdf-button="'+id+'"]');
  await field('Action 1').waitFor({state:'visible'});await field('Action 1').fill('Take cover <literal>');await field('Action 1').press('Tab');await field('Action 6').fill('Sixth action');await field('Action 6').press('Tab');await field('Reaction 1').fill('Opportunity attack');await field('Reaction 1').press('Tab');

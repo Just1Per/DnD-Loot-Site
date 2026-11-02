@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser),requests=[];page.on('request',request=>requests.push(request.url()));
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true}),requests=[];page.on('request',request=>requests.push(request.url()));
  await page.evaluate(async()=>{auditSeed('player');testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');sheetSession.data.adobe.adventureLog=CharacterAdventureLog.edit({},0,'adventure','Icon print check','text');renderCharacterSheet();window.iconRulesBefore=JSON.stringify({inventory,items,hp:sheetSession.data.hpCurrent,coins:sheetSession.data.coins,slots:sheetSession.data.slots,classId:sheetSession.data.build.classId});});
  assert.equal(requests.some(url=>url.includes('/data/adobe-icons/')),false,'The icon library must stay deferred');
  await page.locator('#sheetStyle').selectOption('adobe');const host=page.locator('#sheetAdobeView'),dialog=page.locator('#sheetPaperIcons'),header=host.locator('[data-pdf-button="HeaderIcon"]');await header.waitFor({state:'visible'});

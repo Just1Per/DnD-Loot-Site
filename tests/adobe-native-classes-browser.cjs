@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),{chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.build.race='human';d.build.scoreMode='final';d.adobe.classLevels=[{classId:'fighter',level:1,subclassId:''}];sheetSession.identity.level=1;d.hpCurrent=7;d.hpTemp=2;d.coins.gp=42;renderCharacterSheet();readSheetForm();window.nativeClassKept=JSON.stringify({hp:sheetSession.data.hpCurrent,temp:sheetSession.data.hpTemp,coins:sheetSession.data.coins,inventory,items});});
  // Shared catalogue gates are exercised across every available class and level, not guessed by the UI.
  await page.evaluate(()=>{for(const edition of ['2014','2024'])for(const classId of Object.keys(CharacterRules.classes))for(let level=1;level<=20;level++){const d=CharacterSheetModel.normalize(sheetSession.data);d.build.edition=edition;d.build.classId=classId;d.adobe.classLevels=[{classId,level,subclassId:''}];for(const row of CharacterAdobeClassUI.subclasses(d,d.adobe.classLevels[0])){if(row.classId!==classId||!CharacterSubclassData.compatible(row,edition,classId==='artificer'?'tce':undefined))throw Error('Invalid native subclass gate');}}});

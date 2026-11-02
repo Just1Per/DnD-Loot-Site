@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process'),{chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{
   auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.classId='fighter';d.adobe.classLevels=[{classId:'fighter',level:5}];d.coins={cp:0,sp:0,ep:0,gp:0,pp:0};d.adobe.paperInventory.attunedFooter=true;d.adobe.paperWeight={mode:'adobe',sections:['cP2L','cP2M','cP2R']};
   items=Array.from({length:56},(_,i)=>({id:'gear-'+i,name:'Supply '+i,visible:true,description:'Description for supply '+i,properties:[{title:'Weight per unit (lb)',text:'1'}]}));inventory=items.map(item=>({id:item.id,itemId:item.id,characterId:'c1',userId:'player',quantity:1}));renderCharacterSheet();window.gearOwnership=JSON.stringify({items,inventory});window.gearResources=JSON.stringify({hp:d.hpCurrent,coins:d.coins,slots:d.slots,uses:d.adobe.itemResources,equipment:d.equipmentState});

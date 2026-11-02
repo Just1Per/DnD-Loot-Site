@@ -4,7 +4,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+  const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
   await page.evaluate(async()=>{
    auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.build.scoreMode='final';d.adobe.classLevels=[{classId:'fighter',level:5}];d.abilities.dex=16;d.abilities.int=18;d.coins.gp=42;renderCharacterSheet();readSheetForm();sheetSession.dirty=false;window.toolUnchanged=JSON.stringify({inventory,items,coins:sheetSession.data.coins,hp:sheetSession.data.hpCurrent,spells:sheetSession.data.spells,skills:sheetSession.data.skills});
   });

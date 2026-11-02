@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');sheetSession.data.build.edition='2024';sheetSession.data.build.classId='wizard';sheetSession.data.build.background='acolyte';sheetSession.data.adobe.classLevels=[{classId:'wizard',level:5}];renderCharacterSheet();});
  await page.locator('#sheetStyle').selectOption('adobe');
  const host=page.locator('#sheetAdobeView'),editor=page.locator('#adobeSharedEditor');

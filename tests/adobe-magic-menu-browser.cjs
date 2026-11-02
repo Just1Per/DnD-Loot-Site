@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{
   auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.race='human';d.build.classId='fighter';d.build.scoreMode='final';d.abilities.dex=10;d.adobe.classLevels=[{classId:'fighter',level:5}];d.equipmentState.acMode='equipment';
   items=Array.from({length:6},(_,i)=>({id:'magic-'+i,name:'Ward '+(i+1),description:'Full private description '+(i+1),category:'Wondrous Item',rarity:'Rare',attunement:true,mechanics:CharacterEquipment.normalize({kind:'accessory',acBonus:1}),properties:[],visible:true}));

@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs');const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.build.scoreMode='final';d.abilities.str=16;d.abilities.dex=14;d.adobe.classLevels=[{classId:'fighter',level:5}];d.personalGear=[{id:'personal-sword',name:'Longsword +1',quantity:1,carried:true,location:'Worn'},{id:'personal-dagger',name:'Dagger',quantity:1,carried:true,location:'Worn'}];d.equipmentState.loadout=d.personalGear.map(row=>({id:row.id,equipped:true}));d.attacks=[{name:'Approved strike',ability:'str',proficient:true,bonus:2,damage:'1d6 + 3'}];d.actions=[{kind:'unarmed',name:'Unarmed'}];renderCharacterSheet();});
  await page.locator('#sheetStyle').selectOption('adobe');const host=page.locator('#sheetAdobeView'),field=id=>host.locator('[data-pdf-field="'+id+'"]'),menu=page.locator('#sheetPaperAttackMenu');await field('AC').waitFor({state:'visible'});
  const names=()=>Promise.all([1,2,3,4,5].map(i=>field('Attack.'+i+'.Weapon Selection').inputValue())),command=c=>menu.locator('[data-paper-attack-command="'+c+'"]');

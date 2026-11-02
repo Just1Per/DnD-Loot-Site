@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.build.scoreMode='final';d.experience='6,500';d.adobe.classLevels=[{classId:'fighter',level:3},{classId:'rogue',level:2}];d.adobe.companions[0].name='Keep this familiar';renderCharacterSheet()});
  await page.locator('#sheetStyle').selectOption('adobe');const paper=page.locator('#sheetAdobeView'),field=id=>paper.locator('[data-pdf-field="'+id+'"]');await field('Total Experience').waitFor({state:'visible'});assert.equal(await field('Total Experience').inputValue(),'6500');
  const dialog=page.locator('#adobeClassDialog');await paper.locator('[data-pdf-button="Add Experience Button"]').click();await dialog.locator('[data-native-use-xp]').check();await dialog.locator('[data-native-apply]').click();assert.equal(await field('Character Level').getAttribute('readonly'),'');assert.equal(await field('Character Level').inputValue(),'5');

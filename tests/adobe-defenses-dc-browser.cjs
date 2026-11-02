@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs');const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.build.race='human';d.build.scoreMode='final';d.abilities.dex=18;d.abilities.int=16;d.abilities.wis=14;d.abilities.cha=12;d.adobe.classLevels=[{classId:'fighter',level:3},{classId:'wizard',level:2}];
   items=[['heavy','Chain Mail',{kind:'armor',base:'chain-mail'}],['medium','Half Plate',{kind:'armor',base:'half-plate'}],['light','Leather',{kind:'armor',base:'leather'}],['shield','Shield',{kind:'shield'}],['ward','Ward ring',{kind:'accessory',acBonus:1}]].map(([id,name,mechanics])=>({id,name,mechanics:CharacterEquipment.normalize(mechanics),visible:true,properties:[]}));inventory=items.map(item=>({id:'owned-'+item.id,itemId:item.id,characterId:'c1',userId:'player',quantity:1,item}));d.equipmentState.loadout=inventory.map(entry=>({id:entry.id,equipped:['heavy','shield','ward'].includes(entry.itemId),attuned:false}));window.beforeOwned=JSON.stringify(inventory);renderCharacterSheet();
  });

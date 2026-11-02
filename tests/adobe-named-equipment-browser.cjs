@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs');const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.build.race='human';d.build.scoreMode='final';d.abilities.str=16;d.abilities.dex=14;d.adobe.classLevels=[{classId:'fighter',level:5}];d.attacks=[];d.actions=[];d.personalGear=[];d.equipmentState.loadout=[];window.sharedBefore=JSON.stringify({inventory,items,coins:d.coins});renderCharacterSheet();});
  await page.locator('#sheetStyle').selectOption('adobe');const host=page.locator('#sheetAdobeView'),field=id=>host.locator('[data-pdf-field="'+id+'"]');await field('AC').waitFor({state:'visible'});
  const edit=async(id,value)=>{await field(id).fill(value);await field(id).press('Tab');},equal=async(id,value)=>assert.equal(await field(id).inputValue(),String(value),id);

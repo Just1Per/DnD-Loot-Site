@@ -95,3 +95,6 @@
 @media print{.adobe-narrative-choice{display:none!important}.adobe-narrative-field textarea{padding-right:0!important}}
 /* Invisible source hit targets must not paint over the weight/capacity labels. */
 .pdf-button[data-pdf-button="Weight Carried Button"],.pdf-button[data-pdf-button="Weight Carrying Capacity.Button"]{background:transparent;border:0;color:transparent}
+/* Zoom and print belong to each paper card; page selection stays in the side rail. */
+.adobe-paper-topbar{display:flex;align-items:center;gap:14px;background:#fffdf8;border-bottom:1px solid #d8c7a6;padding:6px 10px}.adobe-paper-topbar .adobe-continuous-heading{flex:1;margin:0;padding:5px 0;background:transparent;border:0}.adobe-paper-controls{display:flex;gap:4px;flex-shrink:0}.adobe-paper-controls button{display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid #c5b18b;border-radius:5px;background:#fffaf0;color:#5b3426;cursor:pointer}.adobe-paper-controls button:hover{background:#f3e7d0}.adobe-paper-controls button:focus-visible{outline:2px solid #2469a4;outline-offset:2px}.adobe-paper-controls button:disabled{opacity:.6;cursor:wait}
+@media print{.adobe-paper-topbar,.adobe-paper-controls{display:none!important}}

@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const out=process.env.UI_OUTPUT_DIR||require('node:os').tmpdir()+'/campaignatlas-ui-checks';fs.mkdirSync(out,{recursive:true});
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.classId='fighter';d.build.scoreMode='final';d.abilities.int=16;d.skills.arcana.rank=2;d.adobe.classLevels=[{classId:'fighter',level:5}];d.adobe.companions=CharacterAdobeEngine.normalize({companions:[{name:'Scout',type:'familiar',creature:'Owl',hpCurrent:2,hpMax:4,abilities:{dex:14},skillRank:{perception:1}},{name:'Pack friend',type:'companion',hpCurrent:9,hpMax:12,abilities:{str:16},profBonus:2}]}).companions;renderCharacterSheet()});
  await page.locator('#sheetStyle').selectOption('adobe');const paper=page.locator('#sheetAdobeView'),field=id=>paper.locator('[data-pdf-field="'+id+'"]');await field('HP Current').waitFor({state:'visible'});
  await paper.locator('#adobePage').selectOption('template-AScomp');await field('Comp.Desc.Name').waitFor({state:'visible'});assert.equal(await field('Comp.Desc.Name').inputValue(),'Scout');assert.equal(await field('Comp.Use.Ability.Dex.Mod').inputValue(),'+2');assert.equal(await field('Comp.Use.Skills.Perc.Mod').inputValue(),'+2');

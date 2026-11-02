@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{auditSeed('player');testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');let log=CharacterAdventureLog.edit({},0,'gold','5','start');log=CharacterAdventureLog.edit(log,0,'adventure','First','text');log=CharacterAdventureLog.edit(log,0,'gold','2','gain');log=CharacterAdventureLog.edit(log,1,'adventure','Second','text');log=CharacterAdventureLog.edit(log,1,'gold','-1','gain');sheetSession.data.adobe.adventureLog=log;renderCharacterSheet()});
  await page.locator('#sheetStyle').selectOption('adobe');const paper=page.locator('#sheetAdobeView'),field=id=>paper.locator('[data-pdf-field="'+id+'"]');await paper.locator('#adobePage').selectOption('template-ALlog');await field('AdvLog.1.xp.total').waitFor({state:'visible'});await paper.locator('[data-pdf-button="Button.AdvLog.2"]').click();await page.locator('#sheetPaperLogMenu [data-paper-log-editor]').click();const host=page.locator('#sheetAdventureLog');
  await host.evaluate(n=>{window.logEventTrace=[];for(const type of ['mousedown','mouseup','click','change','toggle'])n.addEventListener(type,e=>logEventTrace.push({type,tag:e.target.tagName,cmd:e.target.dataset.logCommand,field:e.target.dataset.logField,index:n.dataset.index,connected:e.target.isConnected}),true)});

@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
- const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser);
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  const host=page.locator('#sheetAdobeView'),speed=()=>host.locator('[data-pdf-field="Speed"]'),editor=page.locator('#adobeSharedEditor');
  for(const edition of ['2014','2024']){
   await page.evaluate(async edition=>{auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition=edition;d.build.classId='fighter';d.build.race=edition==='2024'?'human-2024':'human';d.build.scoreMode='final';d.conditions='';d.abilities.str=10;d.coins={cp:0,sp:0,ep:0,gp:0,pp:0};d.personalGear=[];d.hpCurrent=17;d.hpTemp=3;d.adobe.classLevels=[{classId:'fighter',level:5}];d.adobe.carrying={mode:'basic',includeCoins:true,multiplier:1};items=[{id:'load',name:'Heavy pack',visible:true,properties:[{title:'Weight per unit (lb)',text:'60'}]}];inventory=[{id:'mine',itemId:'load',characterId:'c1',userId:'player',quantity:1},{id:'other',itemId:'load',characterId:'c2',userId:'other',quantity:999}];renderCharacterSheet();window.loadResources=JSON.stringify({hp:d.hpCurrent,temp:d.hpTemp,coins:d.coins,slots:d.slots,spells:d.spells});},edition);
