@@ -35,12 +35,22 @@ function featPreviewText(feat){
 }
 // Reuse the feat reference text, keeping full bundled descriptions when available.
 function featOverviewDescription(id,data=sheetSession?.data){
+  const sheetCopy=data?.adobe?.featText?.[id];
+  if(sheetCopy&&Object.hasOwn(sheetCopy,'description'))return sheetCopy.description;
   const feat=characterFindFeat(id,data),def=CharacterFeatRules.definition(data,id);
   if(!feat&&!def)return '';
   const text=String(feat?.description||'').trim();
   if(text&&!/consult the source|source reference only|complete rules/i.test(text))return text;
   const ref=featReference(feat||def);
   return [...new Set([ref?.summary,...(ref?.facts||[])].filter(Boolean))].join('\n')||(feat?featPreviewText(feat):'');
+}
+// Catalogue text is a starting point. Once a player edits their sheet copy, it belongs to them.
+function featSheetText(card,data=sheetSession?.data){
+ const saved=data?.adobe?.featText?.[card?.id]||{},defaultDescription=featOverviewDescription(card?.id,data)||card?.summary||'';
+ return {
+  name:Object.hasOwn(saved,'name')?saved.name:card?.name||'',
+  description:Object.hasOwn(saved,'description')?saved.description:defaultDescription
+ };
 }
 function toggleFeatOverviewDescription(id){
   if(!sheetSession)return;readSheetForm();
@@ -64,13 +74,15 @@ function selectedFeatCards(data,stats) {
   const sourceLabel=report=>report.key==='origin-background'?'Background · '+(bg?.name||'Custom background'):report.key==='origin-human'?'Race · Human Versatile':report.classFeature?'Class · Fighting Style':report.origin?'Race · '+(race?.name||report.originLabel||'Granted feat'):'Chosen feat';
   const cards=stats.feats.reports.map(report=>{
     const feat=featInformationRecord(report.id,data),source=[feat.book||feat.source,feat.page?'p. '+feat.page:''].filter(Boolean).join(' · ');
-    return {id:report.id,key:report.key,name:feat.name||report.def.displayName||report.def.name,edition:feat.edition||report.def.edition,source,origin:sourceLabel(report),summary:featPreviewText(feat),report};
+    const sheetCopy=data.adobe?.featText?.[report.id]||{};
+    return {id:report.id,key:report.key,name:Object.hasOwn(sheetCopy,'name')?sheetCopy.name:feat.name||report.def.displayName||report.def.name,edition:feat.edition||report.def.edition,source,origin:sourceLabel(report),summary:featPreviewText(feat),report};
   });
   const append=(key,name,origin)=>{
     if(!name||cards.some(card=>card.key===key))return;
     const base=String(name).replace(/ \((?:Cleric|Druid|Wizard)\)$/,''),rows=CharacterCatalog.data?.feats||[],found=rows.find(f=>f.edition===data.build.edition&&(f.name===name||(CharacterFeatRules.definitions[f.id]?.name||f.name)===name))||rows.find(f=>f.edition===data.build.edition&&f.name===base),id=found?.id||'reference:'+data.build.edition+'|'+name;
     const feat=found||featInformationRecord(id);
-    cards.push({id,key,name,edition:data.build.edition,source:[feat.book||feat.source,feat.page?'p. '+feat.page:''].filter(Boolean).join(' · '),origin,summary:featPreviewText(feat),report:null});
+    const sheetCopy=data.adobe?.featText?.[id]||{};
+    cards.push({id,key,name:Object.hasOwn(sheetCopy,'name')?sheetCopy.name:name,edition:data.build.edition,source:[feat.book||feat.source,feat.page?'p. '+feat.page:''].filter(Boolean).join(' · '),origin,summary:featPreviewText(feat),report:null});
   };
   if(data.build.edition==='2024'){
     const name=bg?.featChoices?.length?(bg.featChoices.includes(data.build.backgroundFeat)?data.build.backgroundFeat:''):(bg?.feat||data.build.backgroundFeat);

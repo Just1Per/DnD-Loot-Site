@@ -71,7 +71,7 @@ var CharacterAdobeView=(()=>{
    input.dispatchEvent(new Event('change',{bubbles:true}));
   }else{
    readSheetForm();const next=structuredClone(s.data),keys=edit.path.split('.'),last=keys.pop();let target=next;
-   if(keys[0]==='identity'){s.identity[last]=edit.value;}else{for(const k of keys)target=target[k];target[last]=edit.value;s.data=CharacterSheetModel.normalize(next);}
+   if(keys[0]==='identity'){s.identity[last]=edit.value;}else{for(const k of keys){if(['__proto__','constructor','prototype'].includes(k))throw Error('This field is not connected.');target=target[k]||={};}target[last]=edit.value;s.data=CharacterSheetModel.normalize(next);}
    s.dirty=true;fillSheetForm();if(edit.path.startsWith('adobe.companions.'))CharacterCompanionCards.render();updateSheetCalculations();sheetStatus('Unsaved changes');
   }
  }
