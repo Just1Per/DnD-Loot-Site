@@ -64,6 +64,29 @@ var CharacterAdobeSpellUI=(()=>{
   }
   dialog.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();close();}},true);dialog.addEventListener('cancel',event=>{event.preventDefault();close();});render();document.body.append(dialog);dialog.showModal();dialog.querySelector('#adobeSpellTitle').focus();
  }
+ async function openRaceChoices(){
+  const session=sheetSession;if(!characterHPCurrent(session)||session.saving||!CharacterAdobeView.validate())return;
+  try{if(!C.data)await C.load();}catch{sheetStatus('Could not load the spell catalogue. Try again.',true);return;}
+  if(!characterHPCurrent(session)||session.saving||!CharacterAdobeView.active())return;readSheetForm();
+  document.getElementById('adobeRaceSpellDialog')?.remove();
+  const opener=document.activeElement?.shadowRoot?.activeElement||document.activeElement,level=session.identity.level,race=CharacterRules.profile(session.data.build,level),highElf=session.data.build.race==='high-elf',pool=highElf?'wizard':race?.cantripPool,needsCantrip=highElf||!!pool,needsAbility=!highElf&&!!(race?.spellChoice||race?.spells?.some(row=>row.ability==='choice')||pool),snapshot=JSON.stringify({data:session.data,identity:session.identity,loot:sheetEquipmentLoot()});
+  if(!race){sheetStatus('Choose a race before choosing racial spells.',true);return;}
+  const allowed=()=>characterHPCurrent(session)&&!session.saving&&dialog.isConnected&&JSON.stringify({data:session.data,identity:session.identity,loot:sheetEquipmentLoot()})===snapshot;
+  const options=(()=>{const all=C.spells({edition:session.data.build.edition,level:0});if(highElf||pool==='wizard')return all.filter(spell=>(spell.classesByEdition?.[session.data.build.edition]||spell.classes||[]).includes('wizard'));if(pool==='sorcerer')return all.filter(spell=>['Blade Ward','Friends'].includes(spell.name)||(spell.classesByEdition?.[session.data.build.edition]||spell.classes||[]).includes('sorcerer'));if(Array.isArray(pool))return all.filter(spell=>pool.includes(spell.name));return[];})();
+  let cantrip=highElf?session.data.build.cantrip:session.data.build.raceCantrip,ability=session.data.build.raceAbility,message='';
+  const dialog=document.createElement('dialog');dialog.id='adobeRaceSpellDialog';dialog.className='vault-dialog adobe-native-dialog';dialog.setAttribute('aria-labelledby','adobeRaceSpellTitle');dialog.dataset.noContextHelp='';
+  const close=()=>{if(dialog.open)dialog.close();dialog.remove();if(opener?.isConnected)opener.focus({preventScroll:true});};
+  const fixed=(race.spells||[]).filter(spell=>level>=spell.level).map(spell=>spell.name+' — '+spell.usage).join('\n');
+  function render(){
+   const name=race.name||'Race',chosen=options.find(spell=>spell.name===cantrip),invalid=needsCantrip&&(!chosen||!CampaignRules.allowed(chosen))||needsAbility&&!['int','wis','cha'].includes(ability);
+   dialog.innerHTML='<header class="adobe-native-head"><div><span class="sheet-eyebrow">ADOBE CHARACTER</span><h2 id="adobeRaceSpellTitle" tabindex="-1">Set '+esc(name)+' spells</h2><p>Race spells are separate from your class spell allowance.</p></div><button type="button" data-race-spell-close aria-label="Close racial spell choices">×</button></header><section>'+(needsCantrip?'<article class="adobe-native-group"><h3>Extra cantrip</h3><label class="sheet-field"><span>Cantrip</span><select data-race-spell-cantrip><option value="">Choose a cantrip</option>'+options.map(spell=>'<option value="'+esc(spell.name)+'" '+(spell.name===cantrip?'selected':'')+'>'+esc(spell.name+' · '+spell.school)+'</option>').join('')+'</select></label><p class="sheet-help">'+esc(chosen?(chosen.casting+' · '+chosen.range+' · '+chosen.components):'Choose a cantrip granted by this race.')+'</p></article>':'')+(needsAbility?'<article class="adobe-native-group"><h3>Spellcasting ability</h3><label class="sheet-field"><span>Ability</span><select data-race-spell-ability><option value="">Choose ability</option>'+['int','wis','cha'].map(key=>'<option value="'+key+'" '+(key===ability?'selected':'')+'>'+esc(M.abilities[key])+'</option>').join('')+'</select></label></article>':'')+(fixed?'<article class="adobe-native-group"><h3>Other racial spells</h3><p class="sheet-help">These are already granted at this character level.</p><p>'+esc(fixed)+'</p></article>':'')+(!needsCantrip&&!needsAbility&&!fixed?'<p>This race has no spell choice at the current level.</p>':'')+'</section><p class="adobe-native-message" role="status">'+esc(message)+'</p><footer class="adobe-native-footer"><span>Apply updates only this race spell choice.</span><button type="button" data-race-spell-close>Cancel</button><button type="button" class="btn-primary" data-race-spell-apply '+(invalid?'disabled':'')+'>Apply to sheet</button></footer>';
+   dialog.querySelectorAll('[data-race-spell-close]').forEach(button=>button.onclick=close);
+   dialog.querySelector('[data-race-spell-cantrip]')?.addEventListener('change',event=>{cantrip=event.target.value;render();});
+   dialog.querySelector('[data-race-spell-ability]')?.addEventListener('change',event=>{ability=event.target.value;render();});
+   dialog.querySelector('[data-race-spell-apply]')?.addEventListener('click',()=>{if(!allowed()){close();sheetStatus('The character changed. Reopen racial spell choices.',true);return;}const next=structuredClone(session.data);if(highElf)next.build.cantrip=cantrip;else if(needsCantrip)next.build.raceCantrip=cantrip;if(needsAbility)next.build.raceAbility=ability;session.data=M.normalize(next);session.dirty=true;renderSheetRows();fillSheetForm();updateSheetCalculations();close();sheetStatus('Racial spell choices applied. Save sheet to keep them.');});
+  }
+  dialog.addEventListener('cancel',event=>{event.preventDefault();close();});render();document.body.append(dialog);dialog.showModal();dialog.querySelector('#adobeRaceSpellTitle').focus();
+ }
  async function openSources(initialClass=''){
   const session=sheetSession;if(!characterHPCurrent(session)||session.saving||!CharacterAdobeView.validate())return;
   try{if(!C.data)await C.load();}catch{sheetStatus('Could not load the spell catalogue. Try again.',true);return;}
@@ -81,7 +104,7 @@ var CharacterAdobeSpellUI=(()=>{
    dialog.querySelectorAll('[data-spell-sources-close]').forEach(button=>button.onclick=close);
    dialog.querySelectorAll('[data-spell-source-step]').forEach(button=>button.onclick=()=>{if(!allowed()){close();sheetStatus('The character changed. Reopen Generate spell sheet.',true);return;}step=steps.findIndex(([key])=>key===button.dataset.spellSourceStep);render();});
    dialog.querySelectorAll('[data-spell-source-class]').forEach(button=>button.onclick=()=>{if(!allowed()){close();sheetStatus('The character changed. Reopen Generate spell sheet.',true);return;}close();open(button.dataset.spellSourceClass||initialClass);});
-   dialog.querySelector('[data-spell-source-race]')?.addEventListener('click',()=>{if(!allowed()){close();sheetStatus('The character changed. Reopen Generate spell sheet.',true);return;}close();CharacterAdobeView.openEditor('origins');});
+   dialog.querySelector('[data-spell-source-race]')?.addEventListener('click',()=>{if(!allowed()){close();sheetStatus('The character changed. Reopen Generate spell sheet.',true);return;}close();openRaceChoices();});
    dialog.querySelector('[data-spell-source-feat]')?.addEventListener('click',()=>{if(!allowed()){close();sheetStatus('The character changed. Reopen Generate spell sheet.',true);return;}close();CharacterAdobeFeatUI.open();});
   }
   dialog.addEventListener('cancel',event=>{event.preventDefault();close();});render();document.body.append(dialog);dialog.showModal();dialog.querySelector('#adobeSpellSourcesTitle').focus();
