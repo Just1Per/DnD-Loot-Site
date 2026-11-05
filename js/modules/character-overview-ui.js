@@ -11,11 +11,15 @@ function focusSheetBuildIssue(issue){
  let targets=[];
  try{if(issue.target)targets=[...page.querySelectorAll(issue.target)];}catch(error){console.warn('Invalid character warning target',issue.target,error);}
  let field=targets.find(el=>sheetIssueFieldAvailable(el)&&('value' in el)&&!el.value)||targets.find(sheetIssueFieldAvailable);
+ if(issue.category==='Feat'){const choices=targets.flatMap(target=>[...target.querySelectorAll?.('select,input,textarea')||[]]);field=choices.find(control=>control.tagName==='SELECT'&&sheetIssueFieldAvailable(control)&&!control.value)||choices.find(control=>sheetIssueFieldAvailable(control)&&!control.value)||field;}
  if(!field){sheetStatus('Could not locate the setting for this notice. Please report it.');console.warn('Unresolved character warning',issue);return;}
  if(!['INPUT','SELECT','TEXTAREA','BUTTON'].includes(field.tagName))field=[...field.querySelectorAll('select,input,textarea')].find(sheetIssueFieldAvailable)||[...field.querySelectorAll('button')].find(sheetIssueFieldAvailable)||field;
  for(let node=field;node&&node!==root;node=node.parentElement){if(node.tagName==='DETAILS')node.open=true;if(node.hidden)node.hidden=false;}
  sheetStatus(issue.message,true);
  field.scrollIntoView?.({block:'center',behavior:'smooth'});field.focus?.();field.classList.add('sheet-fix-target');
+ // Feat cards can refresh after switching tabs. Keep the Fix action on its
+ // promised first editable field when that refresh replaces the original node.
+ requestAnimationFrame(()=>{if(!issue.target)return;let refreshed=[];try{refreshed=[...page.querySelectorAll(issue.target)];}catch{}const choices=issue.category==='Feat'?refreshed.flatMap(target=>[...target.querySelectorAll?.('select,input,textarea')||[]]):[];const next=choices.find(control=>control.tagName==='SELECT'&&sheetIssueFieldAvailable(control)&&!control.value)||choices.find(control=>sheetIssueFieldAvailable(control)&&!control.value)||refreshed.find(el=>sheetIssueFieldAvailable(el)&&('value' in el)&&!el.value)||refreshed.find(sheetIssueFieldAvailable);const editable=next&&['INPUT','SELECT','TEXTAREA','BUTTON'].includes(next.tagName)?next:[...next?.querySelectorAll?.('select,input,textarea')||[]].find(sheetIssueFieldAvailable);editable?.focus?.();});
  setTimeout(()=>field.classList.remove('sheet-fix-target'),2500);
 }
 /* A display-only journal page. Editable fields remain in their dedicated tabs. */
