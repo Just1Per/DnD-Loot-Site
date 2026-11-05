@@ -1,0 +1,18 @@
+{
+  "format": 1,
+  "id": "5etools-v1",
+  "repository": "https://github.com/5etools-mirror-3/5etools-src",
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "licensePolicy": "Metadata only. Never copy entries, fluff, images, or non-SRD rules prose into generated output.",
+  "domains": {
+    "books": {"path": "books.json", "key": "book"},
+    "spells": {"index": "spells/index.json", "directory": "spells", "key": "spell"},
+    "feats": {"path": "feats.json", "key": "feat"},
+    "backgrounds": {"path": "backgrounds.json", "key": "background"},
+    "items": {"path": "items.json", "key": "item"},
+    "baseItems": {"path": "items-base.json", "key": "baseitem"},
+    "species": {"path": "races.json", "key": "race"},
+    "classes": {"index": "class/index.json", "directory": "class", "key": "class"},
+    "subclasses": {"index": "class/index.json", "directory": "class", "key": "subclass"}
+  }
+}

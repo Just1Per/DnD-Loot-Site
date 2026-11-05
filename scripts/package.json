@@ -1,1 +1,1 @@
-{"name":"dnd-vault-catalog-tools","private":true,"type":"module","scripts":{"import:rules":"node import-rules.mjs"},"dependencies":{"firebase-admin":"^13.10.0"}}
+{"name":"dnd-vault-catalog-tools","private":true,"type":"module","scripts":{"import:rules":"node import-rules.mjs","build:5etools-metadata":"python3 build-5etools-metadata.py","import:5etools-metadata":"node import-5etools-metadata.mjs"},"dependencies":{"firebase-admin":"^13.10.0"}}
