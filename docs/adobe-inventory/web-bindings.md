@@ -179,3 +179,11 @@ Both attack pickers use CharacterAttackAccess. Ordinary choices require a record
 ## v69 background feature and weight hit-target display
 
 Background Feature is a real source-field dropdown; the full original name list is available under legacy rules, with Automatic/Custom and retained saved choices. Independent per-background names/descriptions live in the existing private Adobe envelope; core background trait names follow the selected narrative feature without changing numerical grants. Missing long source text is represented by a source reference, not invented rules. Weight Carried and Carrying Capacity source buttons use transparent hit targets so the original labels/artwork remain visible. Their geometry, commands, calculations and print bands are retained.
+
+## v72 player feats and race size guidance
+
+Player-selected catalogue feats are free by default, including extra/early choices. Counts and prerequisites guide the player; supported effects can be enabled despite prerequisites. The DM’s existing catalogue hiding blocks new selection and preserves existing records. Automatic class/origin grants retain their source rules.
+
+Custom feats are private definitions in the character's existing Adobe data envelope, never campaign catalogue records. The editor permits only bounded plain text and named optional mechanics (HP per character level, walking speed and armor training); matching a published feat by name cannot import rules. The player can edit their own definition and cannot delete a selected one. A DM may add a generic hidden policy record for its opaque ID, without copying its private name or description, to block future selection. Existing use is retained.
+
+Height and Weight fields provide hover/focus/click guidance from numeric random-height/weight tables. It displays the calculated minimum and maximum in both unit systems and explicitly labels an earlier-printing reference or no verified range. It is advisory only: direct entries, character mechanics and saved values remain unchanged.

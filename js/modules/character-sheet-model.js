@@ -250,6 +250,7 @@ var CharacterSheetModel = (() => {
     const assigned=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels;
     if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:ClassChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
     const backgroundFeatures=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).backgroundFeatures;if(backgroundFeatures)d.adobe={...d.adobe,backgroundFeatures};
+    const PersonalFeats=globalThis.CharacterPersonalFeats||(typeof require==='function'?require('./character-personal-feats'):null),personalFeats=PersonalFeats?.records(data)||{};if(Object.keys(personalFeats).length)d.adobe={...d.adobe,personalFeats};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
     const languageTraining=(globalThis.CharacterLanguages||(typeof require==='function'?require('./character-languages'):null))?.apply(effects,d,{level});
     const classOrders=ClassChoices.orders(d,{level});

@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261102-adobe-sheet-v71";
+const ASSET_VERSION = "20261102-adobe-sheet-v72";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -92,6 +92,8 @@ const FEATURE_FILES = [
     "./modules/character-background-features.js",
   "./modules/character-rules-2024.js",
   "./modules/character-rules.js",
+  "./modules/character-race-size-data.js",
+  "./modules/character-size-guidance.js",
   "./modules/character-subclass-data.js",
   "./modules/character-expanded-subclass-data.js",
   "./modules/character-srd-class-data.js",
@@ -99,6 +101,7 @@ const FEATURE_FILES = [
   "./modules/character-rules-catalog-store.js",
   "./modules/character-feat-data.js",
   "./modules/character-feat-reference.js",
+  "./modules/character-personal-feats.js",
   "./modules/character-feat-rules.js",
   "./modules/character-catalog.js",
   "./modules/character-divine-channel.js",
@@ -275,6 +278,8 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-adobe-druid-forms-ui.js",
     "./modules/character-adobe-class-ui.js",
     "./modules/character-adobe-ability-ui.js",
+    "./modules/character-size-guidance-ui.js",
+    "./modules/character-personal-feat-ui.js",
     "./modules/character-adobe-feat-ui.js",
     "./modules/character-adobe-spell-ui.js",
     "./modules/character-paper-weight-ui.js",

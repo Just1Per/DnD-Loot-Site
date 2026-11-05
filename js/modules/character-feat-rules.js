@@ -1,10 +1,12 @@
 /* Deterministic sheet effects. Situational combat resolution remains with the table. */
 var CharacterFeatRules = (() => {
   const definitions=typeof CharacterFeatData!=='undefined'?CharacterFeatData:require('./character-feat-data');
+  const Personal=typeof CharacterPersonalFeats!=='undefined'?CharacterPersonalFeats:require('./character-personal-feats');
+  function definition(data,id){const personal=Personal.definition(data,id),base=Object.hasOwn(definitions,id)?definitions[id]:null;return personal||(typeof CampaignRules==='undefined'?base:CampaignRules.definition(id,base));}
   const abilityKeys=['str','dex','con','int','wis','cha'];
   function choice(raw={}) {
     const safe=v=>typeof v==='string'?v.slice(0,100):'';
-    return {option:Number.isInteger(raw.option)&&raw.option>=0&&raw.option<2?raw.option:0,abilities:[0,1].map(i=>abilityKeys.includes(raw.abilities?.[i])?raw.abilities[i]:''),training:[0,1,2].map(i=>safe(raw.training?.[i])),expertise:safe(raw.expertise),confirmed:raw.confirmed===true,armored:raw.armored===true,used:Math.max(0,Math.min(99,Math.trunc(Number(raw.used)||0)))};
+    return {option:Number.isInteger(raw.option)&&raw.option>=0&&raw.option<2?raw.option:0,abilities:[0,1].map(i=>abilityKeys.includes(raw.abilities?.[i])?raw.abilities[i]:''),training:[0,1,2].map(i=>safe(raw.training?.[i])),expertise:safe(raw.expertise),confirmed:raw.confirmed===true,armored:raw.armored===true,used:Math.max(0,Math.min(99,Math.trunc(Number(raw.used)||0))),...(raw.ignorePrerequisites===true?{ignorePrerequisites:true}:{})};
   }
   function entries(data,level) {
     const seen={};const result=(data.rulesChoices?.feats||[]).map(id=>{seen[id]=(seen[id]||0)+1;return {id,key:id+(seen[id]>1?'--'+seen[id]:'')};});
@@ -51,15 +53,16 @@ var CharacterFeatRules = (() => {
     let acBonus=0,rangedBonus=0,passiveBonus=0,speedBonus=0,athleteClimb=false;
     for(const entry of entries(data,level)) {
       const bundled=Object.hasOwn(definitions,entry.id)?definitions[entry.id]:null;
-      const def=typeof CampaignRules==='undefined'?bundled:CampaignRules.definition(entry.id,bundled);
+      const def=definition(data,entry.id);
       if(!def){reports.push({...entry,def:{name:entry.id,edition:'Unknown',source:'Reference',ability:[],requirements:[]},choice:choice(),warnings:['No bundled automation definition; selection preserved.'],automated:[]});continue;}
-      const c=choice(data.rulesChoices?.effects?.[entry.key]),warnings=[],automated=[],identity=def.name==='Mobile'&&def.source==='PHB'?'Speedy':def.name;
+      const c=choice(data.rulesChoices?.effects?.[entry.key]),warnings=[],automated=[],identity=def.personal?'personal:'+entry.id:def.name==='Mobile'&&def.source==='PHB'?'Speedy':def.name;
       const report={...entry,def,choice:c,warnings,automated};reports.push(report);
       if(entry.managedOrigin){if(!origins[identity]){warnings.push('Duplicate or unavailable Origin feat: no effects applied.');continue;}origins[identity]--;}
       else {if(seen.has(identity)&&(!def.repeatable||seen.get(identity)!==def.edition)){warnings.push('Duplicate feat: no additional effects applied.');continue;}seen.set(identity,def.edition);}
       const moderatelyArmored=def.name==='Moderately Armored'&&['PHB','XPHB'].includes(def.source);
       const hasLightArmor=effects.proficiencies.some(v=>String(v).toLowerCase()==='light armor');
-      warnings.push(...requirements(def,scores,level,c.confirmed||(moderatelyArmored&&hasLightArmor)));
+      const prerequisiteWarnings=requirements(def,scores,level,c.confirmed||(moderatelyArmored&&hasLightArmor));
+      if(c.ignorePrerequisites)report.guidance=prerequisiteWarnings;else warnings.push(...prerequisiteWarnings);
       report.prerequisiteInfo=moderatelyArmored?['Light armor training: '+(hasLightArmor?'provided by your character choices.':'not detected; review your character’s training.')]:[];
       if(def.name==='War Caster'){
         const classes=data.adobe?.classLevels?.length?data.adobe.classLevels:[{classId:data.build.classId,level}];
@@ -150,10 +153,11 @@ var CharacterFeatRules = (() => {
     effects.speed+=speedBonus;
     if(athleteClimb)effects.climb=Math.max(effects.climb,effects.speed);
     effects.proficiencies=[...new Set(effects.proficiencies)];effects.skills=[...new Set(effects.skills)];effects.saves=[...new Set(effects.saves)];
-    for(const r of reports)for(const message of r.warnings)effects.warnings.push(r.def.name+': '+message);
+    for(const r of reports)for(const message of [...r.warnings,...(r.guidance||[])])effects.warnings.push(r.def.name+': '+message);
     return {reports,expertise,acBonus,rangedBonus,passiveBonus,speedBonus};
   }
   function resource(def,level=1) {
+    if(!def||def.personal)return null;
     if(def?.name==='Lucky'&&['PHB','XPHB'].includes(def.source))return {label:'Luck points',max:def.edition==='2014'?3:Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1,resets:['long']};
     if(!def || def.edition!=='2024')return null;
     const r={'Boon of Fortitude':{label:'Extra healing (apply the CON bonus when eligible)',resets:['turn']},'Boon of Fate':{label:'Improve Fate',resets:['initiative','short','long']},'Boon of Combat Prowess':{label:'Peerless Aim',resets:['turn']},'Grappler':{label:'Punch and Grab',resets:['turn']},'Savage Attacker':{label:'Extra damage roll',resets:['turn']}}[def.name]||null;
@@ -181,6 +185,12 @@ var CharacterFeatRules = (() => {
     if(event==='long')for(const [key,grant] of Object.entries(data.rulesChoices.grants||{}))if(!key.startsWith('__'))grant.used=0;
     for(const e of entries(data))if(resource(definitions[e.id])?.resets.includes(event)&&data.rulesChoices.effects[e.key])data.rulesChoices.effects[e.key].used=0;
   }
-  return {definitions,choice,entries,trainingOptions,apply,resource,setUsed,reset,remove};
+  function addManual(data,feat){
+    let key=feat.id;
+    if(data.build.edition==='2014'&&data.build.race==='variant-human'&&feat.edition==='2014'&&!feat.personal&&!data.build.raceFeat){data.build.raceFeat=feat.name;key='variant';}
+    else {if(data.rulesChoices.feats.length>=30)throw Error('Maximum 30 additional feats.');data.rulesChoices.feats.push(feat.id);const count=data.rulesChoices.feats.filter(id=>id===feat.id).length;if(count>1)key+='--'+count;}
+    data.rulesChoices.effects[key]=choice({...data.rulesChoices.effects[key],ignorePrerequisites:true});return key;
+  }
+  return {definitions,definition,choice,entries,trainingOptions,apply,resource,setUsed,reset,remove,addManual};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterFeatRules;

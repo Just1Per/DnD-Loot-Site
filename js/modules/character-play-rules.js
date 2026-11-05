@@ -60,10 +60,10 @@ var CharacterPlayRules = (()=>{
   const F=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
   const definition=F.definitions[feat.id];
   const selected=(data.rulesChoices.feats||[]).map(id=>catalog.find(f=>f.id===id)).filter(Boolean);
-  if(selected.some(f=>f.name===feat.name&&(!definition?.repeatable||f.edition!==feat.edition)))return 'This feat is already selected';
+  if(selected.some(f=>(feat.personal?f.id===feat.id:!f.personal&&f.name===feat.name)&&(!definition?.repeatable||f.edition!==feat.edition)))return 'This feat is already selected';
   const req=definition?.requirements||[];
   if(scores&&req.length&&!req.some(r=>level>=r.level&&(!r.ability.length||r.ability.some(a=>Object.entries(a).every(([k,v])=>scores[k]>=v)))))return 'Level / ability prerequisite is not met';
-  if(data.build.edition==='2014'&&data.build.race==='variant-human'&&!data.build.raceFeat&&feat.edition==='2014')return '';
+  if(data.build.edition==='2014'&&data.build.race==='variant-human'&&!data.build.raceFeat&&feat.edition==='2014'&&!feat.personal)return '';
   const b=budget(data,level,catalog);
   if(feat.category==='FS'){
    const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
@@ -73,6 +73,16 @@ var CharacterPlayRules = (()=>{
   if(feat.category==='O'&&b.lessons)return '';
   return b.remaining?'':'No available feat / ASI choice at this class level';
  }
- return {alignments,lifestyles,lifestyle,normalizeProfile:norm,normalizeAdvancement:advancement,budget,eligible};
+ // Advancement/prerequisite rules advise player choices; campaign catalogue policy is checked by callers.
+ function featSelection(data,level,feat,catalog,scores){
+  if(!feat)return {blocked:'Feat unavailable',guidance:''};
+  const F=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules'),definition=F.definition(data,feat.id),identity=definition?.personal?'personal:'+feat.id:definition?.name||feat.name;
+  const duplicate=F.entries(data,level).some(entry=>{const other=F.definition(data,entry.id)||catalog.find(row=>row.id===entry.id);return (other?.personal?'personal:'+entry.id:other?.name)===identity&&(!definition?.repeatable||other.edition!==feat.edition);});
+  const guidance=eligible(data,level,feat,catalog,scores);
+  const variant=data.build.edition==='2014'&&data.build.race==='variant-human'&&!data.build.raceFeat&&feat.edition==='2014'&&!feat.personal;
+  const blocked=duplicate?'This feat is already selected':!variant&&data.rulesChoices.feats.length>=30?'Maximum 30 additional feats.':'';
+  return {blocked,guidance:blocked?'':guidance};
+ }
+ return {alignments,lifestyles,lifestyle,normalizeProfile:norm,normalizeAdvancement:advancement,budget,eligible,featSelection};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPlayRules;

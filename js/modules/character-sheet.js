@@ -54,6 +54,7 @@ function closeCharacterSheet(force = false) {
   if(typeof SheetNavigation!=='undefined')SheetNavigation.cancel();
   globalThis.CharacterPaperGearUI?.destroy();
   globalThis.CharacterPaperMagicUI?.destroy();
+  globalThis.CharacterSizeGuidanceUI?.destroy();globalThis.CharacterPersonalFeatUI?.destroy();
   globalThis.CharacterAdobeView?.destroy();
   ++sheetGeneration;
   closeSpellInformation();

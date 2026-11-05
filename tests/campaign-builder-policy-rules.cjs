@@ -27,6 +27,14 @@ const {doc,setDoc,getDoc,getDocs,collection,deleteDoc,updateDoc}=require('fireba
   await assertSucceeds(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{revision:2,updatedBy:'player','data.notes':'Player changed notes'}));
   assert.equal((await getDoc(doc(db.player,'campaigns/a/characters/c1'))).data().notes,undefined);await assertFails(getDoc(doc(db.outsider,'campaigns/a/characterSheets/c1')));
  });
+ await check('Player can save a freely selected feat and prerequisite guidance override without editing DM permissions',async()=>{
+  const M=require('../js/modules/character-sheet-model'),F=require('../js/modules/character-feat-rules'),{createCharacterSheetStore}=require('../js/modules/character-sheet-store'),sdk=require('firebase/firestore');
+  const store=createCharacterSheetStore({...sdk,db:db.player,auth:{currentUser:{uid:'player'}}}),saved=await store.load('a','c1'),data=M.normalize(saved.data),feat=require('../data/rules/catalog.json').feats.find(row=>row.name==='Boon of Fortitude'&&row.edition==='2024');
+  F.addManual(data,feat);const identity={name:'Arden',class:'Wizard',level:6};
+  await assertSucceeds(store.save({campaignId:'a',characterId:'c1',revision:saved.revision,data,identity,previousIdentity:identity}));
+  const result=(await getDoc(doc(db.player,'campaigns/a/characterSheets/c1'))).data();assert.ok(result.data.rulesChoices.feats.includes(feat.id));assert.equal(result.data.rulesChoices.effects[feat.id].ignorePrerequisites,true);assert.equal(result.data.rulesChoices.grants.__dm.bonusFeats,1);
+  await assertFails(updateDoc(doc(db.player,'campaigns/a/featCatalog/custom-ward'),{hidden:false}));await assertFails(updateDoc(doc(db.player,'campaigns/a/characterSheets/c1'),{'data.rulesChoices.grants.__dm.bonusFeats':2}));
+ });
  console.log('SUCCESS',count,'campaign policy permission checks');
  }finally{await env.cleanup();}
 })().catch(error=>{console.error(error);process.exitCode=1;});
