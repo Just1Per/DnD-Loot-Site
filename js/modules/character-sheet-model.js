@@ -227,6 +227,13 @@ var CharacterSheetModel = (() => {
       range: text(s?.range),
       duration: text(s?.duration),
       components: text(s?.components),
+      // Catalogue data is only a starting point. These source columns belong to
+      // the character row so a player can annotate or replace every text field
+      // on the printable spell sheet without losing the selected catalogue ID.
+      save: text(s?.save),
+      school: text(s?.school),
+      book: text(s?.book),
+      page: text(s?.page),
       notes: text(s?.notes)
     }));
     return result;
