@@ -22,6 +22,17 @@ Brug dette ark, når du opretter **den samme karakter** i det originale Adobe-ar
 | Spellcaster? | ☐ Nej ☐ Ja, klasse:  |
 | Browser og enhed |  |
 
+## Anbefalede testkarakterer
+
+I behøver ikke teste alle tre i én session. Fordel dem mellem testere, og skriv hvilken profil der blev brugt. De dækker de vigtigste forskelle i spell-flowet.
+
+| Profil | Formål | Mindstekrav |
+| --- | --- | --- |
+| Fighter, level 3 | Grundark, HP, feats, equipment, attacks, print og frie tekstfelter | 2014 eller 2024, et valgt feat, mindst to våben og lidt gear |
+| Sorcerer, level 3 | Known-spell flow | Vælg cantrips og kendte spells; ret en spellbeskrivelse bagefter |
+| Cleric, level 3 | Prepared-spell flow | Vælg cantrips, vis subclass-spells og markér prepared spells |
+| High Elf eller karakter med Magic Initiate | Race-/feat-spell flow | Vælg race- eller feat-spell og skriv hvor den vises på arket |
+
 ## Sådan gives feedback
 
 Udfør hvert trin først i Adobe og derefter på hjemmesiden. Brug denne skala:
