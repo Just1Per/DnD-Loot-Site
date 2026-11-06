@@ -82,7 +82,11 @@ def metadata(kind, row, books):
         hd = row.get('hd') if isinstance(row.get('hd'), dict) else {}
         out.update(hitDie=number(hd.get('faces')), spellcastingAbility=scalar((row.get('spellcastingAbility') or ''), 20))
     elif kind == 'subclass':
-        out.update(className=scalar(row.get('className')), classSource=scalar(row.get('classSource'), 60), shortName=scalar(row.get('shortName')))
+        class_name, class_source = scalar(row.get('className')), scalar(row.get('classSource'), 60)
+        # Subclass names are not globally unique (for example across classes and
+        # source books), so their stable id also includes their parent class.
+        out['id'] = stable_id(kind, out['source'], class_source + '\0' + class_name + '\0' + out['name'])
+        out.update(className=class_name, classSource=class_source, shortName=scalar(row.get('shortName')))
     return out
 
 def main():
@@ -141,8 +145,16 @@ def main():
                 record = metadata(kind, row, books)
                 if record:
                     output[output_key].append(record)
-    for rows in output.values():
-        rows.sort(key=lambda row: (row['name'].lower(), row['source'], row['id']))
+    # A few class-index files repeat the same subclass. Keep one identical record,
+    # but fail loudly if two source files disagree about a stable record id.
+    for key, rows in output.items():
+        unique = {}
+        for row in rows:
+            previous = unique.get(row['id'])
+            if previous is not None and previous != row:
+                raise ValueError('Conflicting duplicate metadata record: ' + row['id'])
+            unique[row['id']] = row
+        output[key] = sorted(unique.values(), key=lambda row: (row['name'].lower(), row['source'], row['id']))
     try:
         manifest_name = str(args.manifest.relative_to(ROOT))
     except ValueError:
