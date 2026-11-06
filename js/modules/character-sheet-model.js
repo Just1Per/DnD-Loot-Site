@@ -309,12 +309,16 @@ var CharacterSheetModel = (() => {
     effects.specialSenses=[...(effects.specialSenses||[]),...rangerFeatures.senses];
     if(rangerFeatures.blindsight)effects.blindsight=Math.max(effects.blindsight||0,rangerFeatures.blindsight);
     effects.ignoreUnseenAttackDisadvantage=!!effects.ignoreUnseenAttackDisadvantage||rangerFeatures.ignoreUnseenAttackDisadvantage;
+    const warDomain=ClassChoices.warDomain(d,{level,mods});
+    if(warDomain.avatar){effects.resistances=[...new Set([...(effects.resistances||[]),'Bludgeoning, Piercing, and Slashing (nonmagical attacks)'])];effects.traits=[...(effects.traits||[]),warDomain.avatar.detail];}
+    if(warDomain.divineStrike)effects.traits=[...(effects.traits||[]),warDomain.divineStrike.detail];
     const result = {
       effects,
       languageTraining,
       rangerFeatures,
       druidElementalFury:ClassChoices.elementalFury(d,{level,mods}),
       clericBlessedStrikes:ClassChoices.blessedStrikes(d,{level,mods}),
+      warDomain,
       clericIntervention:(globalThis.CharacterClericIntervention||(typeof require==='function'?require('./character-cleric-intervention'):null))?.summary(d,{level})||'',
       paladinAuras,
       attackAction:AttackProgression.derive(d,level),

@@ -20,6 +20,7 @@ var CharacterClassProgression=(()=>{
     'berserker':{classId:'barbarian',name:'Path of the Berserker',features:[['Frenzy',3],['Mindless Rage',6],['Intimidating Presence',10],['Retaliation',14]]},
     'lore':{classId:'bard',name:'College of Lore',features:[['Bonus Proficiencies',3],['Cutting Words',3],['Additional Magical Secrets',6],['Peerless Skill',14]]},
     'life-domain':{classId:'cleric',name:'Life Domain',features:[['Bonus Proficiency',1],['Disciple of Life',1],['Channel Divinity: Preserve Life',2],['Blessed Healer',6],['Divine Strike',8],['Supreme Healing',17]]},
+    'war-domain':{classId:'cleric',name:'War Domain',features:[['Bonus Proficiencies',1],['War Priest',1],['Channel Divinity: Guided Strike',2],["Channel Divinity: War God’s Blessing",6],['Divine Strike',8],['Avatar of Battle',17]]},
     'land':{classId:'druid',name:'Circle of the Land',features:[['Bonus Cantrip',2],['Natural Recovery',2],['Circle Spells',3],["Land's Stride",6],["Nature's Ward",10],["Nature's Sanctuary",14]]},
     'champion':{classId:'fighter',name:'Champion',features:[['Improved Critical',3],['Remarkable Athlete',7],['Superior Critical',15],['Survivor',18]]},
     'open-hand':{classId:'monk',name:'Way of the Open Hand',features:[['Hand Technique',3],['Wholeness of Body',6],['Tranquility',11]]},

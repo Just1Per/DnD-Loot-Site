@@ -27,6 +27,7 @@ var CharacterActions = (()=>{
    if(item&&!existing?.equipped)out.notes.push('In backpack: ready this item before using it.');
    if(!item)out.notes.push('Reference weapon; this does not add equipment to inventory.');
    if(stats.clericBlessedStrikes?.choice==='divine-strike'&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.clericBlessedStrikes.detail);
+   if(stats.warDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.warDomain.divineStrike.detail);
    if(stats.druidElementalFury?.choice==='primal-strike'&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.druidElementalFury.detail);
    return out;
   }
