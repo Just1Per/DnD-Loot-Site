@@ -2,6 +2,7 @@
  * Public/SRD mechanics are summarized in original wording. Non-SRD expansion records use
  * concise original summaries rather than copied source-book prose. */
 var CharacterClassProgression=(()=>{
+  const SubclassFeatureData=typeof CharacterSubclassFeatureData!=='undefined'?CharacterSubclassFeatureData:(typeof require==='function'?require('./character-subclass-feature-data'):null);
   const legacyClasses={
     barbarian:{name:'Barbarian',subclassTitle:'Primal Path',subclass:'berserker',features:[['Rage',1],['Unarmored Defense',1],['Reckless Attack',2],['Danger Sense',2],['Primal Path',3],['Fast Movement',5],['Feral Instinct',7],['Brutal Critical',9],['Relentless Rage',11],['Persistent Rage',15],['Indomitable Might',18],['Primal Champion',20]]},
     bard:{name:'Bard',subclassTitle:'Bard College',subclass:'lore',features:[['Spellcasting',1],['Bardic Inspiration',1],['Jack of All Trades',2],['Song of Rest',2],['Bard College',3],['Expertise',3],['Font of Inspiration',5],['Countercharm',6],['Magical Secrets',10],['Superior Inspiration',20]]},
@@ -228,6 +229,8 @@ var CharacterClassProgression=(()=>{
     if(detailed&&detailed.classId===classId&&(!detailed.edition||detailed.edition===editionOf(edition)))return detailed.features;
     const srd=srdSubclassFeatures(subclassId,edition);
     if(Array.isArray(srd)&&srd.length)return srd;
+    const generated=SubclassFeatureData?.features?.(subclassId);
+    if(Array.isArray(generated)&&generated.length)return generated.map(row=>feature(row.name,row.level,'Pinned source feature reference. Detailed mechanics are not automated yet.',{source:SubclassFeatureData.records?.[subclassId]?.source||'5etools metadata',incomplete:true}));
     const old=subclasses[subclassId];
     if(old?.classId===classId)return old.features.map(([name,level])=>feature(name,level,'Detailed rules text has not been added to the web catalogue yet.',{incomplete:true}));
     return[];

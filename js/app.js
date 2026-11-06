@@ -97,6 +97,7 @@ const FEATURE_FILES = [
   "./modules/character-subclass-data.js",
   "./modules/character-expanded-subclass-data.js",
   "./modules/character-srd-class-data.js",
+  "./modules/character-subclass-feature-data.js",
   "./modules/character-class-progression.js",
   "./modules/character-rules-catalog-store.js",
   "./modules/character-feat-data.js",

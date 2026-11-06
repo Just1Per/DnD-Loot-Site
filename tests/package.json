@@ -120,6 +120,7 @@
     "test:druid-wild-shape": "node druid-wild-shape-browser.cjs",
     "test:paladin-auras": "node paladin-protective-auras-browser.cjs",
     "test:divine-channels": "node --test war-domain-cleric.cjs && node divine-channel-resources-browser.cjs",
+    "test:subclass-features": "node --test subclass-feature-reference.cjs",
     "test:wizard-recovery": "node wizard-arcane-recovery-browser.cjs",
     "test:paladin-healing": "node paladin-lay-on-hands-browser.cjs",
     "test:ranger-terrain": "node legacy-ranger-terrain-browser.cjs",

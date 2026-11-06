@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-06T17:26:16.184Z",
+  "generatedAt": "2026-11-06T17:45:32.701Z",
   "source": {
     "repository": "5etools-mirror-3/5etools-src",
     "revision": "b9061583536101068b3a59d27e886d1fa664e366",
@@ -11,10 +11,10 @@
     "sourceVerified": 162,
     "alternateSource": 24,
     "notInPinnedSource": 0,
-    "runtimeFeatureLists": 25,
+    "runtimeFeatureLists": 186,
     "partialMechanics": 1,
-    "referenceOnly": 24,
-    "notInRuntime": 161
+    "referenceOnly": 185,
+    "notInRuntime": 0
   },
   "classes": [
     {
@@ -23,10 +23,10 @@
       "sourceVerified": 6,
       "alternateSource": 4,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 0,
+      "runtimeFeatureLists": 10,
       "partial-mechanics": 0,
-      "reference-only": 0,
-      "not-in-runtime": 10
+      "reference-only": 10,
+      "not-in-runtime": 0
     },
     {
       "classId": "barbarian",
@@ -34,10 +34,10 @@
       "sourceVerified": 13,
       "alternateSource": 0,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 13,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 11
+      "reference-only": 13,
+      "not-in-runtime": 0
     },
     {
       "classId": "bard",
@@ -45,10 +45,10 @@
       "sourceVerified": 12,
       "alternateSource": 2,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 14,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 12
+      "reference-only": 14,
+      "not-in-runtime": 0
     },
     {
       "classId": "cleric",
@@ -56,10 +56,10 @@
       "sourceVerified": 18,
       "alternateSource": 2,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 3,
+      "runtimeFeatureLists": 20,
       "partial-mechanics": 1,
-      "reference-only": 2,
-      "not-in-runtime": 17
+      "reference-only": 19,
+      "not-in-runtime": 0
     },
     {
       "classId": "druid",
@@ -67,10 +67,10 @@
       "sourceVerified": 11,
       "alternateSource": 0,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 11,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 9
+      "reference-only": 11,
+      "not-in-runtime": 0
     },
     {
       "classId": "fighter",
@@ -78,10 +78,10 @@
       "sourceVerified": 14,
       "alternateSource": 1,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 15,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 13
+      "reference-only": 15,
+      "not-in-runtime": 0
     },
     {
       "classId": "monk",
@@ -89,10 +89,10 @@
       "sourceVerified": 13,
       "alternateSource": 1,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 14,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 12
+      "reference-only": 14,
+      "not-in-runtime": 0
     },
     {
       "classId": "paladin",
@@ -100,10 +100,10 @@
       "sourceVerified": 13,
       "alternateSource": 1,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 14,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 12
+      "reference-only": 14,
+      "not-in-runtime": 0
     },
     {
       "classId": "ranger",
@@ -111,10 +111,10 @@
       "sourceVerified": 12,
       "alternateSource": 2,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 14,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 12
+      "reference-only": 14,
+      "not-in-runtime": 0
     },
     {
       "classId": "rogue",
@@ -122,10 +122,10 @@
       "sourceVerified": 11,
       "alternateSource": 4,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 15,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 13
+      "reference-only": 15,
+      "not-in-runtime": 0
     },
     {
       "classId": "sorcerer",
@@ -133,10 +133,10 @@
       "sourceVerified": 10,
       "alternateSource": 4,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 14,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 12
+      "reference-only": 14,
+      "not-in-runtime": 0
     },
     {
       "classId": "warlock",
@@ -144,10 +144,10 @@
       "sourceVerified": 13,
       "alternateSource": 1,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 14,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 12
+      "reference-only": 14,
+      "not-in-runtime": 0
     },
     {
       "classId": "wizard",
@@ -155,10 +155,10 @@
       "sourceVerified": 16,
       "alternateSource": 2,
       "notInPinnedSource": 0,
-      "runtimeFeatureLists": 2,
+      "runtimeFeatureLists": 18,
       "partial-mechanics": 0,
-      "reference-only": 2,
-      "not-in-runtime": 16
+      "reference-only": 18,
+      "not-in-runtime": 0
     }
   ],
   "subclasses": [
@@ -171,9 +171,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "alchemist-efota",
@@ -184,9 +189,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "armorer-legacy",
@@ -197,9 +207,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 15,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "armorer-efota",
@@ -210,9 +225,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "artillerist-legacy",
@@ -223,9 +243,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "artillerist-efota",
@@ -236,9 +261,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "battle-smith-legacy",
@@ -249,9 +279,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "battle-smith-efota",
@@ -262,9 +297,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "cartographer-efota",
@@ -275,9 +315,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "EFA",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "reanimator-rthw",
@@ -288,9 +333,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "RHW",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "ancestral-guardian",
@@ -301,9 +351,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "battlerager",
@@ -314,9 +369,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "SCAG",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "beast",
@@ -327,9 +387,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "berserker",
@@ -376,9 +441,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "BGG",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "storm-herald",
@@ -389,9 +459,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 14,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "totem-warrior",
@@ -402,9 +477,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 21,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "wild-heart-2024",
@@ -415,9 +495,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "world-tree-2024",
@@ -428,9 +513,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "zealot",
@@ -441,9 +531,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "zealot-2024",
@@ -454,9 +549,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "wild-magic-barbarian",
@@ -467,9 +567,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "creation",
@@ -480,9 +585,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "dance-2024",
@@ -493,9 +602,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "eloquence",
@@ -506,9 +619,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "glamour",
@@ -519,9 +636,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "glamour-2024",
@@ -532,9 +653,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "lore",
@@ -579,9 +704,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "VRGR",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "spirits-rthw",
@@ -592,9 +721,13 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "VRGR",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "swords",
@@ -605,9 +738,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "college-of-the-moon-frhof",
@@ -618,9 +755,13 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "FRHoF",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "valor",
@@ -631,9 +772,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "valor-2024",
@@ -644,9 +789,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "whispers",
@@ -657,9 +806,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "arcana-domain",
@@ -670,9 +823,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "SCAG",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "death-domain",
@@ -683,9 +843,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "DMG",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "forge-domain",
@@ -696,9 +863,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "grave-domain",
@@ -709,9 +883,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "grave-domain-rthw",
@@ -722,9 +903,16 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "knowledge-domain",
@@ -735,9 +923,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "knowledge-domain-frhof",
@@ -748,9 +943,16 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "life-domain",
@@ -797,9 +999,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "light-domain-2024",
@@ -810,9 +1019,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "nature-domain",
@@ -823,9 +1036,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "order-domain",
@@ -836,9 +1056,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "peace-domain",
@@ -849,9 +1076,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "tempest-domain",
@@ -862,9 +1096,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "trickery-domain",
@@ -875,9 +1116,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "trickery-domain-2024",
@@ -888,9 +1136,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "twilight-domain",
@@ -901,9 +1153,16 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "war-domain",
@@ -914,10 +1173,11 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 6,
+      "runtimeFeatureRecords": 10,
       "runtimeFeatureLevels": [
         1,
         2,
+        3,
         6,
         8,
         17
@@ -933,9 +1193,13 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "dreams",
@@ -946,9 +1210,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "spores",
@@ -959,9 +1229,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "stars",
@@ -972,9 +1248,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "land",
@@ -1025,9 +1307,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "moon-2024",
@@ -1038,9 +1326,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "sea-2024",
@@ -1051,9 +1344,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "shepherd",
@@ -1064,9 +1362,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "stars-2024",
@@ -1077,9 +1381,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "wildfire",
@@ -1090,9 +1399,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "arcane-archer",
@@ -1103,9 +1418,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "banneret-frhof",
@@ -1116,9 +1437,15 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "FRHoF",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "battle-master",
@@ -1129,9 +1456,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 14,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "battle-master-2024",
@@ -1142,9 +1475,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "cavalier",
@@ -1155,9 +1494,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "champion",
@@ -1206,9 +1551,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "EGW",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "eldritch-knight",
@@ -1219,9 +1570,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "eldritch-knight-2024",
@@ -1232,9 +1589,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "psi-warrior",
@@ -1245,9 +1608,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "psi-warrior-2024",
@@ -1258,9 +1627,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "purple-dragon-knight",
@@ -1271,9 +1646,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "SCAG",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "rune-knight",
@@ -1284,9 +1665,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "samurai",
@@ -1297,9 +1684,15 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "mercy-2024",
@@ -1310,9 +1703,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "shadow-2024",
@@ -1323,9 +1721,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "elements-2024",
@@ -1336,9 +1739,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "open-hand-2024",
@@ -1367,9 +1775,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "shadow",
@@ -1380,9 +1793,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "ascendant-dragon",
@@ -1393,9 +1811,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "FTD",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "astral-self",
@@ -1406,9 +1829,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "drunken-master",
@@ -1419,9 +1847,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "four-elements",
@@ -1432,9 +1865,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "kensei",
@@ -1445,9 +1883,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "long-death",
@@ -1458,9 +1901,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "SCAG",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "open-hand",
@@ -1489,9 +1937,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "conquest",
@@ -1502,9 +1955,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "devotion",
@@ -1556,9 +2014,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "glory-2024",
@@ -1569,9 +2032,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "redemption",
@@ -1582,9 +2050,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "ancients",
@@ -1595,9 +2068,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "ancients-2024",
@@ -1608,9 +2086,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "crown",
@@ -1621,9 +2104,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "SCAG",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "noble-genies-frhof",
@@ -1634,9 +2122,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "FRHoF",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "watchers",
@@ -1647,9 +2140,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "vengeance",
@@ -1660,9 +2158,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "vengeance-2024",
@@ -1673,9 +2176,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "oathbreaker",
@@ -1686,9 +2194,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "DMG",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "beast-master",
@@ -1699,9 +2212,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "beast-master-2024",
@@ -1712,9 +2230,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "drakewarden",
@@ -1725,9 +2248,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "FTD",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "fey-wanderer",
@@ -1738,9 +2266,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "fey-wanderer-2024",
@@ -1751,9 +2284,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "gloom-stalker",
@@ -1764,9 +2302,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "gloom-stalker-2024",
@@ -1777,9 +2320,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "hollow-warden-rthw",
@@ -1790,9 +2338,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "RHW",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "horizon-walker",
@@ -1803,9 +2356,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "hunter",
@@ -1852,9 +2410,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "swarmkeeper",
@@ -1865,9 +2428,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "winter-walker-frhof",
@@ -1878,9 +2446,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "FRHoF",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "arcane-trickster",
@@ -1891,9 +2464,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "arcane-trickster-2024",
@@ -1904,9 +2482,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "assassin",
@@ -1917,9 +2500,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "assassin-2024",
@@ -1930,9 +2518,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "inquisitive",
@@ -1943,9 +2536,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "mastermind",
@@ -1956,9 +2554,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "phantom",
@@ -1969,9 +2572,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "phantom-rthw",
@@ -1982,9 +2590,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "scion-of-the-three-frhof",
@@ -1995,9 +2608,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "FRHoF",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "scout",
@@ -2008,9 +2626,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "soulknife",
@@ -2021,9 +2644,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "soulknife-2024",
@@ -2034,9 +2662,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "swashbuckler",
@@ -2047,9 +2680,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "thief",
@@ -2096,9 +2734,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "aberrant-sorcery-2024",
@@ -2109,9 +2753,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "clockwork-sorcery-2024",
@@ -2122,9 +2771,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "clockwork-soul",
@@ -2135,9 +2789,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "divine-soul",
@@ -2148,9 +2808,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "draconic-bloodline",
@@ -2197,9 +2863,15 @@
       "minimumLevel": 1,
       "sourceStatus": "alternate-source",
       "matchedSource": "DSotDQ",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "shadow-magic",
@@ -2210,9 +2882,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "shadow-sorcery-rthw",
@@ -2223,9 +2901,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "RHW",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "spellfire-sorcery-frhof",
@@ -2236,9 +2919,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "FRHoF",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "storm-sorcery",
@@ -2249,9 +2937,15 @@
       "minimumLevel": 1,
       "sourceStatus": "alternate-source",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "wild-magic",
@@ -2262,9 +2956,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "wild-magic-sorcery-2024",
@@ -2275,9 +2975,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "archfey-patron-2024",
@@ -2288,9 +2993,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "celestial-patron-2024",
@@ -2301,9 +3011,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "fiend-patron-2024",
@@ -2314,9 +3029,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "great-old-one-patron-2024",
@@ -2327,9 +3047,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "archfey",
@@ -2340,9 +3065,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "celestial",
@@ -2353,9 +3084,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "fathomless",
@@ -2366,9 +3103,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "fiend",
@@ -2397,9 +3140,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "great-old-one",
@@ -2410,9 +3159,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "hexblade",
@@ -2423,9 +3178,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "undead",
@@ -2454,9 +3215,15 @@
       "minimumLevel": 1,
       "sourceStatus": "verified",
       "matchedSource": "SCAG",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "undead-patron-rthw",
@@ -2467,9 +3234,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "RHW",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "abjurer-2024",
@@ -2480,9 +3252,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "bladesinger-frhof",
@@ -2493,9 +3270,14 @@
       "minimumLevel": 3,
       "sourceStatus": "alternate-source",
       "matchedSource": "FRHoF",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "bladesinging",
@@ -2506,9 +3288,15 @@
       "minimumLevel": 2,
       "sourceStatus": "alternate-source",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "chronurgy",
@@ -2519,9 +3307,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "EGW",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "diviner-2024",
@@ -2532,9 +3326,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "evoker-2024",
@@ -2563,9 +3362,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "EGW",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "illusionist-2024",
@@ -2576,9 +3381,14 @@
       "minimumLevel": 3,
       "sourceStatus": "verified",
       "matchedSource": "XPHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "scribes",
@@ -2589,9 +3399,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "TCE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "abjuration",
@@ -2602,9 +3418,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "conjuration",
@@ -2615,9 +3437,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "divination",
@@ -2628,9 +3456,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "enchantment",
@@ -2641,9 +3475,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "evocation",
@@ -2672,9 +3512,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "necromancy",
@@ -2685,9 +3531,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "transmutation",
@@ -2698,9 +3550,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "PHB",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     },
     {
       "id": "war-magic",
@@ -2711,9 +3569,15 @@
       "minimumLevel": 2,
       "sourceStatus": "verified",
       "matchedSource": "XGE",
-      "runtimeFeatureRecords": 0,
-      "runtimeFeatureLevels": [],
-      "coverage": "not-in-runtime"
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "reference-only"
     }
   ]
 }
