@@ -495,6 +495,10 @@ var CharacterWildShapeUI = (() => {
   }
   function bind(host, ctx) {
     const actor = sheetSession;
+    // Guards stay with each control after a redraw or character/session change.
+    for(const node of host.querySelectorAll('button,input,select'))for(const type of ['click','input','change'])node.addEventListener(type,event=>{
+      if(!current(actor)||!node.isConnected||actor.saving){event.preventDefault();event.stopImmediatePropagation();}
+    },true);
     host.querySelector('[data-wild-spells]')?.addEventListener('click',()=>{
       if(sheetSession!==actor||activeCampaign?.id!==actor.campaignId||actor.uid&&auth.currentUser?.uid!==actor.uid)return;
       selectSheetTab('spells');document.getElementById('sheetSpellReadout')?.scrollIntoView({block:'start'});

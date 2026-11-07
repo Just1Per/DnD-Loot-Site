@@ -436,9 +436,13 @@ var CharacterClassFeatureChoices=(()=>{
     data,
     { level, mods, catalog, entries, classId = "druid" },
   ) {
-    const boost =
+    const light = classId === "cleric" ? lightDomain(data, { level, mods }) : null,
+      knowledge = classId === "cleric" ? knowledgeDomain(data, { level, mods }) : null,
+      boost =
         classId === "cleric"
-          ? blessedStrikes(data, { level, mods })
+          ? (light?.active && light.level >= 8) || (knowledge?.active && knowledge.level >= 8)
+            ? { choice: "potent-spellcasting", wis: light?.active ? light.wis : knowledge.wis }
+            : blessedStrikes(data, { level, mods })
           : elementalFury(data, { level, mods }),
       out = Object.create(null);
     if (boost.choice !== "potent-spellcasting") return out;
@@ -650,6 +654,48 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
     for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='wizard'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
   }
+  function warDomain(data,{level=1,mods={}}={}){
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),cleric=0,subclass='';const seen=new Set();
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='cleric'&&!seen.has('cleric')){cleric=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
+    const active=edition==='2014'&&subclass==='war-domain'&&cleric>=1,wis=Math.max(-5,Math.min(10,Math.trunc(Number(mods.wis)||0)));
+    return{active,level:active?cleric:0,warPriestUses:active?Math.max(1,wis):0,divineStrike:active&&cleric>=8?{dice:cleric>=14?'2d8':'1d8',detail:'Divine Strike · Once on each of your turns when you hit with a weapon attack, deal an extra '+(cleric>=14?'2d8':'1d8')+' damage of the weapon’s type.'}:null,avatar:active&&cleric>=17?{detail:'Avatar of Battle · Resistance to bludgeoning, piercing and slashing damage from nonmagical attacks.'}:null};
+  }
+  function lifeDomain(data,{level=1}={}){
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),cleric=0,subclass='';const seen=new Set();
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='cleric'&&!seen.has('cleric')){cleric=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
+    const active=edition==='2014'&&subclass==='life-domain'&&cleric>=1,strike=active&&cleric>=8?(cleric>=14?'2d8':'1d8'):'';
+    return{active,level:active?cleric:0,disciple:active?'When you use a spell of level 1 or higher to restore HP, the spell restores an additional 2 + the spell’s level HP.':null,blessedHealer:active&&cleric>=6?'When you cast a level 1+ spell that restores HP to another creature, regain 2 + the spell’s level HP.':null,divineStrike:strike?{dice:strike,detail:'Divine Strike · Once on each of your turns when you hit with a weapon attack, deal an extra '+strike+' radiant damage.'}:null,supremeHealing:active&&cleric>=17?'Supreme Healing · When you would roll dice to restore HP with a spell, use the highest number possible for each die.':null};
+  }
+  function lightDomain(data,{level=1,mods={}}={}){
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),cleric=0,subclass='';const seen=new Set();
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='cleric'&&!seen.has('cleric')){cleric=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
+    const active=edition==='2014'&&subclass==='light-domain'&&cleric>=1,wis=Math.max(-5,Math.min(10,Math.trunc(Number(mods.wis)||0)));
+    return{active,level:active?cleric:0,wis,wardingFlareUses:active?Math.max(1,wis):0,bonusCantrip:active?'Choose one Wizard cantrip that counts as a Cleric cantrip for you. Select and add it in the spell list.':null,improvedFlare:active&&cleric>=6?'Improved Flare · You can protect another creature within 30 ft with Warding Flare.':null,potentSpellcasting:active&&cleric>=8?'Potent Spellcasting · Add your Wisdom modifier to damage from Cleric cantrips.':null,corona:active&&cleric>=17?'Corona of Light · Action · for 1 minute, shed bright light in a 60-foot radius. Hostile creatures in the bright light have vulnerability to Fire and Radiant damage.':null};
+  }
+  function tempestDomain(data,{level=1,mods={}}={}){
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),cleric=0,subclass='';const seen=new Set();
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='cleric'&&!seen.has('cleric')){cleric=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
+    const active=edition==='2014'&&subclass==='tempest-domain'&&cleric>=1,wis=Math.max(-5,Math.min(10,Math.trunc(Number(mods.wis)||0))),strike=active&&cleric>=8?(cleric>=14?'2d8':'1d8'):'';
+    return{active,level:active?cleric:0,wis,wrathUses:active?Math.max(1,wis):0,wrath:active?'Wrath of the Storm · Reaction · when a creature within 5 ft hits you with an attack, it makes a Dexterity save against your Cleric spell save DC. On a failure it takes 2d8 Lightning or Thunder damage; half on success.':null,thunderbolt:active&&cleric>=6?'Thunderbolt Strike · When you deal Lightning damage to a Large or smaller creature, you can push it up to 10 ft away. Resolve position and each hit separately.':null,divineStrike:strike?{dice:strike,detail:'Divine Strike · Once on each of your turns when you hit with a weapon attack, deal an extra '+strike+' thunder damage.'}:null,stormborn:active&&cleric>=17?'Stormborn · While you are not underground or indoors, you have a flying speed equal to your current walking speed.':null};
+  }
+  function natureDomain(data,{level=1}={}){
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),cleric=0,subclass='';const seen=new Set();
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='cleric'&&!seen.has('cleric')){cleric=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
+    const active=edition==='2014'&&subclass==='nature-domain'&&cleric>=1,strike=active&&cleric>=8?(cleric>=14?'2d8':'1d8'):'';
+    return{active,level:active?cleric:0,acolyte:active?'Acolyte of Nature · Choose one Druid cantrip and add it to your Cleric spells. Choose Animal Handling, Nature or Survival proficiency in Character Builder.':null,dampen:active&&cleric>=6?'Dampen Elements · Reaction · when you or a creature within 30 ft takes Acid, Cold, Fire, Lightning or Thunder damage, grant resistance to that instance of damage.':null,divineStrike:strike?{dice:strike,detail:'Divine Strike · Once on each of your turns when you hit with a weapon attack, deal an extra '+strike+' Cold, Fire, or Lightning damage.'}:null,master:active&&cleric>=17?'Master of Nature · Bonus Action · command a Beast or Plant charmed by your Charm Animals and Plants feature to take the action you choose on its next turn.':null};
+  }
+  function knowledgeDomain(data,{level=1,mods={}}={}){
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),cleric=0,subclass='';const seen=new Set();
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='cleric'&&!seen.has('cleric')){cleric=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
+    const active=edition==='2014'&&subclass==='knowledge-domain'&&cleric>=1,wis=Math.max(-5,Math.min(10,Math.trunc(Number(mods.wis)||0)));
+    return{active,level:active?cleric:0,wis,blessings:active?'Blessings of Knowledge · Choose two languages and two skills from Arcana, History, Nature and Religion. You gain proficiency and double proficiency bonus for those skills; select and record them in Character Builder.':null,potentSpellcasting:active&&cleric>=8?'Potent Spellcasting · Add your Wisdom modifier to damage from Cleric cantrips.':null,visions:active&&cleric>=17?'Visions of the Past · After 1 minute of meditation, receive a vision of recent events around an object or location. An object reveals 1 day of history per minute, up to 6 days; a location reveals 1 hour per minute, up to 6 hours.':null};
+  }
+  function trickeryDomain(data,{level=1}={}){
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),cleric=0,subclass='';const seen=new Set();
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='cleric'&&!seen.has('cleric')){cleric=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
+    const active=edition==='2014'&&subclass==='trickery-domain'&&cleric>=1,strike=active&&cleric>=8?(cleric>=14?'2d8':'1d8'):'';
+    return{active,level:active?cleric:0,blessing:active?'Blessing of the Trickster · Action · touch one willing creature other than yourself to give it advantage on Dexterity (Stealth) checks for 1 hour.':null,divineStrike:strike?{dice:strike,detail:'Divine Strike · Once on each of your turns when you hit with a weapon attack, deal an extra '+strike+' poison damage.'}:null,improved:active&&cleric>=17?'Improved Duplicity · When you use Invoke Duplicity, create up to four duplicates instead of one. As a Bonus Action, move any number of them up to 30 ft, to a maximum of 120 ft from you.':null};
+  }
   function druidCreatedSlots(data){const helper=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);return helper?.createdSlots(data)||[];}
   function arcaneRecovery(data,context={}){
     const level=context.level||1,actual=wizardLevels(data,level);if(!actual)return null;
@@ -721,6 +767,9 @@ var CharacterClassFeatureChoices=(()=>{
     }
     const bard=bardLevels(data,level);
     if(bard){const key=groupKey(edition,'bard','bardic-inspiration-uses'),used=spent(key),max=Math.max(1,Math.min(10,Math.trunc(Number(mods.cha)||0))),die='1d'+(bard>=15?12:bard>=10?10:bard>=5?8:6),superior=bard>=(edition==='2024'?18:20),resets=['long',...(bard>=5?['short']:[]),...(superior?['initiative']:[])];rows.push({id:'bard-inspiration',key,name:'Bardic Inspiration',source:edition+' Bard',className:'Bard',level:bard,max,used,remaining:Math.max(0,max-used),die,slotRecovery:edition==='2024'&&bard>=5,resets,recovery:(bard>=5?'Short or Long Rest recovery':'Long Rest recovery')+(superior?(edition==='2024'?' · Initiative: regain to 2 uses':' · Initiative: regain 1 if empty'):''),unit:'uses',useLabel:'Give inspiration',undoLabel:'Undo use',description:'Bonus Action · Give one creature other than yourself within 60 ft an inspiration die ('+die+'). '+(edition==='2024'?'Within 1 hour, the recipient can add the die after failing a d20 Test. It must be able to see or hear you.':'Within 10 minutes, the recipient can add the die to one ability check, attack roll or saving throw, after the d20 but before the outcome. It must be able to hear you.')+' A creature can hold only one Bardic Inspiration die at a time.'});}
+    const war=warDomain(data,{level,mods});if(war.active){const key=groupKey('2014','cleric','war-priest-uses'),used=spent(key),max=war.warPriestUses;rows.push({id:'cleric-war-priest',key,name:'War Priest',source:'2014 War Domain',className:'Cleric',level:war.level,max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',useLabel:'Use War Priest',undoLabel:'Undo use',description:'After you take the Attack action, make one weapon attack as a Bonus Action.'});}
+    const light=lightDomain(data,{level,mods});if(light.active){const key=groupKey('2014','cleric','warding-flare-uses'),used=spent(key),max=light.wardingFlareUses;rows.push({id:'cleric-warding-flare',key,name:'Warding Flare',source:'2014 Light Domain',className:'Cleric',level:light.level,max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',useLabel:'Use reaction',undoLabel:'Undo use',description:'Reaction · when a creature you can see attacks you. Impose disadvantage on its attack roll. The attacker is unaffected if it cannot be blinded.'});}
+    const tempest=tempestDomain(data,{level,mods});if(tempest.active){const key=groupKey('2014','cleric','wrath-of-the-storm-uses'),used=spent(key),max=tempest.wrathUses;rows.push({id:'cleric-wrath-of-the-storm',key,name:'Wrath of the Storm',source:'2014 Tempest Domain',className:'Cleric',level:tempest.level,max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',useLabel:'Use reaction',undoLabel:'Undo use',description:tempest.wrath});}
     const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null),rageRow=rage?.resource(data,{level});if(rageRow)rows.push(rageRow);
     const divine=globalThis.CharacterDivineChannel||(typeof require==='function'?require('./character-divine-channel'):null);rows.push(...(divine?.resources(data,{level,mods})||[]));
     const wild=globalThis.CharacterWildShape||(typeof require==='function'?require('./character-wild-shape'):null);rows.push(...(wild?.resources(data,{level})||[]));
@@ -745,9 +794,13 @@ var CharacterClassFeatureChoices=(()=>{
     if(value==='pact')next.pactSlotsUsed=slot.used+1;else if(!slot.created){const index=Number(value)-1;data.slots||=Array.from({length:9},()=>({max:0,used:0}));data.slots[index]={...data.slots[index],max:slot.max,used:slot.used+1};}
     data.adobe=next;return true;
   }
+  function setClassResourceUsed(data,id,value,context){
+    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.unlimited||resource.managedSlots||resource.managedWildShape||!Number.isInteger(value)||value<0||value>resource.max&&value>=resource.used||resource.channelEffects&&value>resource.used)return false;
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(value)]}};return true;
+  }
   function changeClassResource(data,id,delta,context){
-    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.unlimited||resource.managedSlots||resource.managedWildShape||resource.channelEffects&&delta>0||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&delta>resource.remaining||delta<0&&-delta>resource.used)return false;
-    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.max(0,resource.used+delta))]}};return true;
+    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&delta>resource.remaining||delta<0&&-delta>resource.used)return false;
+    return setClassResourceUsed(data,id,resource.used+delta,context);
   }
   function resetClassResources(data,event,context={}){
     if(!['short','long','initiative','turn'].includes(event))return;
@@ -764,6 +817,9 @@ var CharacterClassFeatureChoices=(()=>{
     const paladin=paladinLevels(data,total),layKey=groupKey(edition,'paladin','lay-on-hands-spent');if(event==='long'&&paladin&&choices[layKey])updates[layKey]=['0'];
     const ranger=rangerLevels(data,total);
     if(event==='long'&&edition==='2024')for(const [id,minimum]of [['hunters-mark',1],['tireless',10],['natures-veil',14]]){const key=groupKey(edition,'ranger',id+'-uses');if(ranger>=minimum&&choices[key])updates[key]=['0'];}
+    const war=warDomain(data,{level:total,mods:context.mods||{}}),warKey=groupKey('2014','cleric','war-priest-uses');if(event==='long'&&war.active&&choices[warKey])updates[warKey]=['0'];
+    const light=lightDomain(data,{level:total,mods:context.mods||{}}),lightKey=groupKey('2014','cleric','warding-flare-uses');if(event==='long'&&light.active&&choices[lightKey])updates[lightKey]=['0'];
+    const tempest=tempestDomain(data,{level:total,mods:context.mods||{}}),tempestKey=groupKey('2014','cleric','wrath-of-the-storm-uses');if(event==='long'&&tempest.active&&choices[tempestKey])updates[tempestKey]=['0'];
     const foeKey=groupKey('2014','ranger','foe-slayer-uses');if(event==='turn'&&edition==='2014'&&ranger>=20&&choices[foeKey])updates[foeKey]=['0'];
     const fighter=fighterLevels(data,total);
     for(const [id,min] of [['second-wind',1],['action-surge',2],['indomitable',9]]){if(!rest||fighter<min||event==='short'&&id==='indomitable')continue;const key=groupKey(edition,'fighter',id+'-uses'),raw=choices[key]?.[0];if(!/^\d{1,3}$/.test(raw||''))continue;updates[key]=[String(event==='short'&&edition==='2024'&&id==='second-wind'?Math.max(0,Math.min(Number(raw),fighter>=10?4:fighter>=4?3:2)-1):0)];}
@@ -895,6 +951,7 @@ var CharacterClassFeatureChoices=(()=>{
     return out;
   }
   function groups(entry,edition='2014',data){
+    if(globalThis.CharacterSubclassPlanning)entry=CharacterSubclassPlanning.sync(entry,edition);
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));
     const rows=[...base,...sub];if(entry?.classId==='artificer'&&data&&!artificerSource(data).eligible)return[];
@@ -1044,6 +1101,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{blessedStrikes,clericVitality,applyClericVitality,cantripRange,elementalFury,useChannelDivinity,wizardLevels,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{blessedStrikes,clericVitality,applyClericVitality,cantripRange,elementalFury,useChannelDivinity,wizardLevels,warDomain,lifeDomain,lightDomain,tempestDomain,natureDomain,knowledgeDomain,trickeryDomain,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,setClassResourceUsed,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;

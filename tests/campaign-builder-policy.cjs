@@ -19,7 +19,7 @@ test('Custom payload normalization bounds numbers and rejects unknown armor trai
 });
 test('Renaming a standard feat preserves its mechanical identity; custom effects apply and remain after hiding',()=>{
  const context={console,module:undefined,require,activeCampaign:{id:'a'},structuredClone};vm.createContext(context);
- for(const file of ['campaign-rules','character-feat-data','character-feat-rules'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/modules/'+file+'.js'),'utf8'),context);
+ for(const file of ['campaign-rules','character-feat-data','character-personal-feats','character-feat-rules'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../js/modules/'+file+'.js'),'utf8'),context);
  const tough=Object.entries(context.CharacterFeatData).find(([,d])=>d.name==='Tough'&&d.edition==='2014');
  context.CharacterCampaignRows=[{id:tough[0],name:'Campaign Tough',description:'Changed',edition:'2014'},{id:'custom-ward',name:'Ward',edition:'2024',custom:true,hpPerLevel:2,speedBonus:5,armorTraining:['medium']}];vm.runInContext("CampaignRules.setOverrides('a',CharacterCampaignRows)",context);
  const def=vm.runInContext('CampaignRules.definition('+JSON.stringify(tough[0])+',CharacterFeatData['+JSON.stringify(tough[0])+'])',context);assert.equal(def.name,'Tough');assert.equal(def.displayName,'Campaign Tough');

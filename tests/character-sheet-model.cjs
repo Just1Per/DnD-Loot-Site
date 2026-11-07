@@ -19,3 +19,5 @@ test('point buy prices nonlinear base scores and flags invalid or over-budget ar
  assert.deepEqual(M.pointBuy({str:16,dex:8,con:8,int:8,wis:8,cha:8}).invalid,['str']);
  assert.equal(M.normalize({build:{scoreMethod:'pointBuy'}}).build.scoreMethod,'pointBuy');
 });
+
+test('explicit inventory column survives save normalization while legacy rows and invalid columns remain unchanged',()=>{const data=M.normalize({personalGear:[{id:'bow',name:'Shortbow',location:'Backpack',inventorySide:'right'},{id:'sword',name:'Sword',inventorySide:'left'},{id:'legacy',name:'Legacy'},{id:'bad',name:'Invalid',inventorySide:'forged'}]});assert.equal(M.normalize(JSON.parse(JSON.stringify(data))).personalGear[0].inventorySide,'right');assert.equal(data.personalGear[1].inventorySide,'left');assert.equal(Object.hasOwn(data.personalGear[2],'inventorySide'),false);assert.equal(Object.hasOwn(data.personalGear[3],'inventorySide'),false);});

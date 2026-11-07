@@ -31,7 +31,7 @@ var CampaignRules=(()=>{
  }
  function feats(base,campaign=active(),includeHidden=false){
   const ids=new Set(base.map(r=>r.id)),rows=base.map(r=>feat(r.id,r,campaign)).concat(records(campaign).filter(r=>r.custom&&!ids.has(r.id)).map(r=>feat(r.id,null,campaign)));
-  return includeHidden?rows:rows.filter(r=>!r.hidden&&allowed(r,campaign));
+  const publicRows=rows.filter(row=>!String(row.id).startsWith('personal-feat-'));return includeHidden?publicRows:publicRows.filter(r=>!r.hidden&&allowed(r,campaign));
  }
  const selectableFeat=(id,base,campaign=active())=>feats(base,campaign).some(r=>r.id===id);
  function backgroundAllowed(row,campaign=active()){

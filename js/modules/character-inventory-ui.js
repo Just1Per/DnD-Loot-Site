@@ -10,7 +10,7 @@ function inventorySideLabel(side){return side==='left'?'Active gear':'Backpack';
 
 function personalGearEntries(includeInactive=false) {
  const s=sheetSession;if(!s)return [];
- return s.data.personalGear.filter(g=>includeInactive||g.quantity>0&&g.carried).map(g=>({id:g.id,itemId:g.id,characterId:s.characterId,quantity:g.quantity,personal:true,item:{id:g.id,name:g.name,description:g.notes,properties:[{title:'Weight per unit (lb)',text:String(g.weight)}],mechanics:CharacterEquipment.infer({name:g.name})}}));
+ return CharacterMagicItemChoices.project(s.data.personalGear.filter(g=>includeInactive||g.quantity>0&&g.carried).map(g=>({id:g.id,itemId:g.id,characterId:s.characterId,quantity:g.quantity,personal:true,item:{id:g.id,name:g.name,description:g.notes,properties:[{title:'Weight per unit (lb)',text:String(g.weight)}],mechanics:CharacterEquipment.infer({name:g.name})}})),s.data.equipmentState.loadout);
 }
 function sheetBaseGear(){return [...CharacterAdobeData.gear,...(CharacterAdobeData.baseEquipment||[])].filter(g=>CampaignRules.allowed(g)).map(g=>({...g,name:g.unitName||g.name}));}
 function renderSheetGearPicker(){
@@ -119,17 +119,17 @@ function renderCharacterInventory(){
  host.querySelectorAll('[data-active-attune]').forEach(b=>b.onclick=()=>{const c=s.data.equipmentState.loadout.find(v=>v.id===b.dataset.activeAttune);setSheetEquipmentChoice(b.dataset.activeAttune,'attuned',!c?.attuned);});
  observePendingImages(host);
 }
-function inventoryUnitWeight(item){
- const raw=item.properties?.find(p=>p.title==='Weight per unit (lb)')?.text;
- if(raw!==undefined&&raw!==''&&Number.isFinite(Number(raw))&&Number(raw)>=0)return Number(raw);
- const base=sheetBaseGear().find(g=>[g.name,g.unitName].some(n=>n?.toLowerCase()===item.name?.toLowerCase()));return base?Number(base.weight)||0:null;
-}
+const characterInventoryWeightReferences=new WeakMap();
+function characterInventoryWeightReference(){if(!characterInventoryWeightReferences.has(CharacterAdobeData))characterInventoryWeightReferences.set(CharacterAdobeData,[...CharacterAdobeData.gear,...(CharacterAdobeData.baseEquipment||[])]);return characterInventoryWeightReferences.get(CharacterAdobeData);}
+function inventoryUnitWeight(item){return CharacterCarrying.unitWeight(item,characterInventoryWeightReference());}
+// One pure carried-weight projection for the model, Inventory and Adobe paper.
+function characterInventoryRowsWeight(entries,unitWeight=entry=>entry.weight){return CharacterCarrying.rowsWeight(entries,unitWeight);}
+function characterInventoryWeight(data,entries,derived){if(typeof CharacterPaperWeight!=='undefined'&&CharacterPaperWeight.normalize(data.adobe?.paperWeight).mode==='adobe')return derived?.weight||CharacterSheetModel.derive(data,sheetSession?.identity.level||1,entries).weight;return CharacterCarrying.weight(data,entries,characterInventoryWeightReference());}
 function updateInventoryTotals(stats){
  const host=document.getElementById('sheetInventoryTotals');if(!host||!sheetSession)return;
- const s=sheetSession;let weight=s.data.personalGear.filter(g=>g.carried).reduce((n,g)=>n+g.weight*g.quantity,0),unknown=0;
- for(const e of inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0)){const w=inventoryUnitWeight(inventoryItem(e));if(w===null)unknown++;else weight+=w*e.quantity;}
- const coins=Object.values(s.data.coins).reduce((a,b)=>a+b,0)/50;
- host.innerHTML=`<strong>${(weight+coins).toFixed(2)} lb</strong><small>Gear ${weight.toFixed(2)} lb · coins ${coins.toFixed(2)} lb</small>${unknown?`<p>${unknown} campaign item(s) have unknown weight; total is incomplete.</p>`:''}<small>Uncarried personal gear is excluded. Bags do not automatically reduce their contents’ weight.</small>`;
+ const s=sheetSession,{gear:weight,coins,unknown}=characterInventoryWeight(s.data,sheetEquipmentLoot(),stats);
+ host.innerHTML=`<strong>${(weight+coins).toFixed(2)} lb</strong><small>${stats.weight?.source==='adobe'?'Selected sheet sections':'Gear'} ${weight.toFixed(2)} lb · coins ${coins.toFixed(2)} lb</small>${unknown?`<p>${unknown} campaign item(s) have unknown weight; total is incomplete.</p>`:''}<small>Uncarried personal gear is excluded. Bags do not automatically reduce their contents’ weight.</small>`;
+ if(typeof CharacterPaperWeightUI!=='undefined'){const button=document.createElement('button');button.type='button';button.textContent='Weight settings';button.onclick=()=>CharacterPaperWeightUI.open();host.append(button);}
  const attuned=s.data.equipmentState.loadout.filter(g=>g.attuned).map(g=>sheetEquipmentLoot().find(e=>e.id===g.id)).filter(e=>e&&(((typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(e.item))||!!e.item.attunement)));
  document.getElementById('sheetInventoryAttuned').innerHTML='<p id="sheetAttunementSummary" class="sheet-help">Attunement: '+attuned.length+' / '+stats.gear.attunementLimit+' slots. '+(stats.gear.attunementLimit>3?'Artificer class levels increase your limit. ':'')+'Attuned backpack items still use slots.</p>'+Array.from({length:Math.max(stats.gear.attunementLimit,attuned.length)},(_,i)=>`<div class="sheet-attunement-line">${i+1}. ${sheetEscape(attuned[i]?.item.name||'—')}</div>`).join('');
 }

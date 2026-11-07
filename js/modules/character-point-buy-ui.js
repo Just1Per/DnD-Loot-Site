@@ -23,8 +23,9 @@
     const method = root.querySelector('[name="build.scoreMethod"]');
     const mode = root.querySelector('[name="build.scoreMode"]');
     if (!method || !mode) return;
-    mode.value = 'base';
-    if(sheetSession?.data?.build)sheetSession.data.build.scoreMode='base';
+    // Point buy requires base scores. Manual/legacy final totals retain their existing meaning.
+    if(method.value==='pointBuy'){mode.value='base';if(sheetSession?.data?.build)sheetSession.data.build.scoreMode='base';}
+    else mode.value=sheetSession?.data?.build?.scoreMode==='base'?'base':'total';
   }
 
   function applyLimitsAndValidity() {

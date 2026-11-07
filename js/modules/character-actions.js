@@ -2,7 +2,7 @@
 var CharacterActions = (()=>{
  const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
  const ab=['str','dex','con','int','wis','cha'],text=v=>String(v||'').slice(0,200),sign=n=>(n>=0?'+':'')+n;
- function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({kind:['loot','weapon','spell','racial','improvised','unarmed'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name)}));}
+ function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({...(typeof r?.id==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)?{id:r.id}:{}),kind:['loot','weapon','spell','racial','improvised','unarmed','grapple','shove','granted-spell'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name)}));}
  const add=(dice,n)=>dice+(n?' '+(n<0?'−':'+')+' '+Math.abs(n):'');
  function diceAt(scales,level,fallback){const keys=Object.keys(scales||{}).map(Number).filter(k=>k<=level).sort((a,b)=>b-a);return keys.length?scales[keys[0]]:fallback;}
  function increase(base,extra,times){const a=/^(\d+)d(\d+)$/.exec(base),b=/^(\d+)d(\d+)$/.exec(extra||'');return a&&b&&a[2]===b[2]?`${Number(a[1])+Number(b[1])*times}d${a[2]}`:base;}
@@ -22,17 +22,29 @@ var CharacterActions = (()=>{
    const temp={...data,equipmentState:{...data.equipmentState,loadout:[...loadout.filter(c=>c.id!==entry.id),{...existing,id:entry.id,equipped:!!existing?.equipped,attuned:!!existing?.attuned,ability:a.ability==='auto'?(existing?.ability||'auto'):a.ability,proficiency:existing?.proficiency||'auto',mode:a.mode}]}};
    const result=E.derive(temp,stats,item?loot:[...loot,entry],level).attacks.find(r=>r.id===entry.id);
    if(!result)return unavailable('This item needs weapon mechanics configured by the DM.');
-   const out={...row,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,range:result.range,ability:result.ability,notes:result.notes};
+   const out={...row,proficient:result.proficient,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,damageDice:result.damageDice,damageType:result.damageType,range:result.range,ability:result.ability,notes:result.notes};
    if(m.base==='net'&&result.edition==='2024'){out.hit='DEX DC '+(8+stats.pb+stats.mods.dex);out.ability='dex';out.damage='Restrained; no damage';out.notes.push('Large or smaller target; an attack replacement.');}
    if(item&&!existing?.equipped)out.notes.push('In backpack: ready this item before using it.');
    if(!item)out.notes.push('Reference weapon; this does not add equipment to inventory.');
    if(stats.clericBlessedStrikes?.choice==='divine-strike'&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.clericBlessedStrikes.detail);
+   if(stats.warDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.warDomain.divineStrike.detail);
+   if(stats.lifeDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.lifeDomain.divineStrike.detail);
+   if(stats.tempestDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.tempestDomain.divineStrike.detail);
+   if(stats.natureDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.natureDomain.divineStrike.detail);
+   if(stats.trickeryDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.trickeryDomain.divineStrike.detail);
    if(stats.druidElementalFury?.choice==='primal-strike'&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.druidElementalFury.detail);
    return out;
   }
   if(a.kind==='racial'){
    const breath=stats.effects.breath;if(a.ref!=='breath'||!breath)return unavailable('This species no longer grants this breath weapon.');
    return {...row,name:'Breath weapon',hit:breath.save.toUpperCase()+' DC '+(8+stats.pb+stats.mods.con),damage:`${breath.dice}d${breath.die||6} ${breath.type}`,range:breath.area,ability:'con',notes:[breath.usage||'Action; once per short or long rest.','Successful save: half damage. Track uses separately.']};
+  }
+  if(a.kind==='granted-spell'){
+   const Access=globalThis.CharacterAttackAccess||(typeof require==='function'?require('./character-attack-access'):null),grant=Access?.spells(data,level,stats,{catalogue:spells}).find(row=>row.kind==='granted-spell'&&row.ref===a.ref);
+   if(!grant)return unavailable('This spell is no longer granted by the current class, race or feat choices.');
+   const ref=grant.spell.id+(grant.classId?'::'+grant.classId:''),copy={...data,spells:[{catalogId:grant.spell.id,classId:grant.classId},...data.spells]};
+   const resolved=resolve({...a,kind:'spell',ref,ability:grant.ability,slot:Math.max(grant.slot,a.slot)},copy,level,stats,loot,spells);
+   return {...resolved,notes:[grant.source,...resolved.notes]};
   }
   if(a.kind==='spell'){
    const source=spellReference(a.ref),spell=spells.find(s=>s.id===source.spellId);if(!spell)return unavailable('Spell catalogue unavailable.');
@@ -59,8 +71,13 @@ var CharacterActions = (()=>{
    if(invocation?.damageBonus!==undefined){if(damage)damage=add(damage,invocation.damageBonus);notes.push(invocation.damageSource+': '+sign(invocation.damageBonus)+' to this cantrip’s damage rolls.');}
    if(spell.level===0&&source.classId==='cleric'&&invocation?.sourceClass==='cleric'&&stats.clericBlessedStrikes?.vitalityAvailable)notes.push('Improved Blessed Strikes: after dealing damage to a creature, grant '+stats.clericBlessedStrikes.amount+' temporary HP to yourself or another creature within 60 ft. Resolve the trigger in Combat.');
    if(invocation?.range)notes.push(invocation.rangeSource+': range '+invocation.range+'.');
+   const Casting=globalThis.CharacterSpellcasting||(typeof require==='function'?require('./character-spellcasting'):null),casting=Casting?Casting.castingStats({classId:owner,ability},stats,data):{attack:mod+stats.pb+data.spellAttackBonus,dc:8+stats.pb+mod+data.spellDCBonus};
    const types=(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');
-   return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(mod+stats.pb+data.spellAttackBonus):spell.save?spell.save+' DC '+(8+stats.pb+mod+data.spellDCBonus):'Effect',damage:damage||'See spell effect',range:invocation?.range||CFC.cantripRange(spell,level),notes};
+   return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(casting.attack):spell.save?spell.save+' DC '+casting.dc:'Effect',damage:damage||'See spell effect',range:invocation?.range||CFC.cantripRange(spell,level),notes};
+  }
+  if(a.kind==='grapple'||a.kind==='shove'){
+   const modern=data.build.edition==='2024',martial=stats.gear?.martialArts,ability=modern&&martial?.active&&stats.mods.dex>stats.mods.str?'dex':'str',dc=8+stats.pb+stats.mods[ability],grapple=a.kind==='grapple';
+   return {...row,name:grapple?'Grapple':'Shove',ability,hit:modern?'STR/DEX DC '+dc:sign(stats.skills?.athletics??stats.mods.str),damage:grapple?'Grappled':'Prone / push 5 ft',range:'5 ft',notes:[modern?'Unarmed Strike option. The target chooses a Strength or Dexterity save against DC '+dc+'.':'Use an Athletics check contested by the target’s Athletics or Acrobatics.',grapple?'Requires a free hand; check target size and grapple restrictions.':'Choose to knock the target Prone or push it 5 feet; check size restrictions.','Resolve the target and conditions at the table. Selecting this reference does not spend an action.']};
   }
   const unarmed=a.kind==='unarmed',Martial=globalThis.CharacterMonkMartialArts||(typeof require==='function'?require('./character-monk-martial-arts'):null),martial=unarmed?(stats.gear?.martialArts||E.derive(data,stats,loot,level).martialArts):null,ability=a.ability==='auto'?(unarmed&&martial?.active?Martial.ability(stats.mods):!unarmed&&a.mode==='thrown'?'dex':'str'):a.ability;
   const tavern=(stats.effects.originFeats||[]).includes('Tavern Brawler')||stats.feats.reports.some(r=>r.def.name==='Tavern Brawler'&&!r.warnings.length);

@@ -4,9 +4,10 @@
    Items still require the player to mark them Equipped / worn, and attunement is enforced here
    when the Adobe reference marks a supported item as requiring it. */
 var CharacterMagicItems=(()=>{
-  const E=CharacterEquipment;
+  const ItemChoices=typeof CharacterMagicItemChoices!=='undefined'?CharacterMagicItemChoices:require('./character-magic-item-choices');
+  const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
   const priorInfer=E.infer.bind(E);
-  const reference=typeof CharacterMagicItemReference!=='undefined'?CharacterMagicItemReference:{names:[],automation:{}};
+  const reference=typeof CharacterMagicItemReference!=='undefined'?CharacterMagicItemReference:typeof require==='function'?require('./character-magic-item-data'):{names:[],automation:{}};
   const clean=value=>String(value||'').trim().toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9+]+/g,' ').replace(/\s+/g,' ').trim();
   const knownNames=new Set((reference.names||[]).map(clean));
   const rules=new Map(Object.entries(reference.automation||{}).map(([name,rule])=>[clean(name),rule]));
@@ -26,8 +27,12 @@ var CharacterMagicItems=(()=>{
     const key=clean(name),rule=variantRule(name);
     return {key,known:knownNames.has(key)||!!rule,rule,attunement:!!rule?.attunement};
   }
+  function isMagical(item={}){
+    const metadata=info(item),mechanics=E.infer(item),category=String(item.category||'').trim().toLowerCase(),rarity=String(item.rarity||'').replace(/[ -]/g,'').toLowerCase();
+    return metadata.known||item.attunement===true||['potion','ring','rod','scroll','staff','wand','wondrous item'].includes(category)||['uncommon','rare','veryrare','legendary','artifact'].includes(rarity)||!!(mechanics.acBonus||mechanics.attackBonus||mechanics.damageBonus||mechanics.extraDamage);
+  }
   function requiresAttunement(item={}){
-    return item.attunement===true||info(item).attunement;
+    return item.attunement===true||info(item).attunement||ItemChoices.supported(item);
   }
   function infer(item={}){
     if(item?.mechanics)return priorInfer(item);
@@ -47,6 +52,7 @@ var CharacterMagicItems=(()=>{
   }
 
   function activeEntries(data,loot=[],level){
+    loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
     const choices=Array.isArray(data?.equipmentState?.loadout)?data.equipmentState.loadout:[];
     const owned=new Map();
     for(const entry of loot||[]){
@@ -133,8 +139,9 @@ var CharacterMagicItems=(()=>{
     return result;
   }
 
-  E.infer=infer;
-  return {reference,info,requiresAttunement,infer,apply,augmentGear};
+  // The host installs the bridge; a plain Node metadata import must not mutate another model.
+  if(typeof CharacterEquipment!=='undefined')E.infer=infer;
+  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterMagicItems=CharacterMagicItems;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterMagicItems;

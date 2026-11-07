@@ -73,3 +73,6 @@ scripts/.source-cache/
 
 # Generated app test output
 tests/dom-results.json
+
+# Python caches from reproducible PDF tools
+scripts/__pycache__/

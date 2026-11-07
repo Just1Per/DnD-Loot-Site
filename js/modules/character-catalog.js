@@ -112,7 +112,7 @@ var CharacterCatalog = (() => {
     return {errors,picks,classId,ability};
   }
   function spellRow(spell) {
-    return {name:`${spell.name} [${spell.edition}]`,level:spell.level,prepared:false,casting:spell.casting,range:spell.range,duration:spell.duration,components:spell.components,notes:`${spell.book}, p. ${spell.page} · ${spell.school}${spell.ritual?' · Ritual':''}\n\n${spell.description || 'Reference entry: consult this source for the complete rules.'}${spell.license?'\n\n'+spell.license:''}`,catalogId:spell.id};
+    return {name:`${spell.name} [${spell.edition}]`,level:spell.level,prepared:false,casting:spell.casting,range:spell.range,duration:spell.duration,components:spell.components,save:spell.save||'',school:spell.school||'',book:spell.source||spell.book||'',page:spell.page||'',notes:`${spell.book}, p. ${spell.page} · ${spell.school}${spell.ritual?' · Ritual':''}\n\n${spell.description || 'Reference entry: consult this source for the complete rules.'}${spell.license?'\n\n'+spell.license:''}`,catalogId:spell.id};
   }
   function longRest(data) {
     for(const [key,g] of Object.entries(data.rulesChoices.grants))if(!key.startsWith('__'))g.used=0;

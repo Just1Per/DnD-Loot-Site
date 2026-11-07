@@ -275,6 +275,7 @@ var CharacterRaceCatalog = (() => {
       ]
     });
     add('firbolg-mpmm', 'Firbolg', {
+      carryingSizeSteps: 1,
       traits: [
         powerful,
         'Concealment: bonus action invisibility until your next turn starts; ends on attacking, dealing damage or forcing a save. PB uses per long rest.',
@@ -360,6 +361,7 @@ var CharacterRaceCatalog = (() => {
       ]
     });
     add('goliath-mpmm', 'Goliath', {
+      carryingSizeSteps: 1,
       skills: ['athletics'],
       resistances: ['Cold'],
       traits: [
@@ -527,6 +529,7 @@ var CharacterRaceCatalog = (() => {
     }, 'AI');
     const monstrous = (id, name, extra) => add(id + '-mpmm', name, extra, 'MPMM', 'Monstrous');
     monstrous('bugbear', 'Bugbear', {
+      carryingSizeSteps: 1,
       darkvision: 60,
       skills: ['stealth'],
       traits: [
@@ -537,6 +540,7 @@ var CharacterRaceCatalog = (() => {
       ]
     });
     monstrous('centaur', 'Centaur', {
+      carryingSizeSteps: 1,
       creatureType: 'Fey',
       speed: 40,
       skillCount: 1,
@@ -645,6 +649,7 @@ var CharacterRaceCatalog = (() => {
       ]
     });
     monstrous('orc', 'Orc', {
+      carryingSizeSteps: 1,
       darkvision: 60,
       traits: [
         powerful,
@@ -784,6 +789,7 @@ var CharacterRaceCatalog = (() => {
     });
     races.reborn.traits.push('No food, water, breathing or sleep. Conscious inactive 4-hour long rest. Disease, poison and death saves have advantage.', 'After rolling a skill check, add 1d6; PB uses per long rest.');
     setting('loxodon', 'Loxodon', {
+      carryingSizeSteps: 1,
       flexible: false,
       extraLanguage: false,
       asi: {
@@ -923,6 +929,7 @@ var CharacterRaceCatalog = (() => {
       ]
     }, 'AAG');
     setting('giff', 'Giff', {
+      carryingSizeSteps: 1,
       swim: 30,
       proficiencies: ['Firearms'],
       traits: [

@@ -113,7 +113,7 @@ var CharacterSpellcasting=(()=>{
   function profiles(data,targetLevel,scores={}){
     const edition=data?.build?.edition==='2024'?'2024':'2014';
     const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null),extra=choices?.orders(data,{level:targetLevel}).cantrips||{};
-    return classEntries(data,targetLevel).map(entry=>{const source=entry.classId==='artificer'?choices?.artificerSource(data).id:undefined,p=profile(entry.classId,entry.level,edition,scores,source);return p?{...p,cantrips:p.cantrips+(extra[entry.classId]||0),subclassId:entry.subclassId||''}:null;}).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
+    return classEntries(data,targetLevel).map(entry=>{const source=entry.classId==='artificer'?choices?.artificerSource(data).id:undefined,p=profile(entry.classId,entry.level,edition,scores,source);const M=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),adobe=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},context={mods:Object.fromEntries(Object.entries(scores).map(([key,value])=>[key,Math.floor((value-10)/2)])),pb:M?M.proficiency(data,2+Math.floor((Math.max(1,targetLevel)-1)/4)):2+Math.floor((Math.max(1,targetLevel)-1)/4)},adjustment=p&&M?M.value(adobe.modifiers,'spell:'+entry.classId+':prepare',0,context):0;return p?{...p,spellCount:['prepared','spellbook'].includes(p.mode)?Math.max(0,Math.min(150,p.spellCount+adjustment)):p.spellCount,cantrips:p.cantrips+(extra[entry.classId]||0),subclassId:entry.subclassId||''}:null;}).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
   }
 
   // Always-prepared grants are separate from the player's preparation allowance.
@@ -174,13 +174,23 @@ var CharacterSpellcasting=(()=>{
   }
   function castingStats(p,derived,adjustments={}){
     const modifier=Number(derived?.mods?.[p?.ability]||0),pb=Number(derived?.pb||0);
-    return {ability:p?.ability||'',modifier,attack:pb+modifier+(Number(adjustments.spellAttackBonus)||0),dc:8+pb+modifier+(Number(adjustments.spellDCBonus)||0)};
+    const M=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),expressions=derived?.modifiers?.expressions||{},attackBonus=derived?.modifiers?.spellAttackBonus??(Number(adjustments.spellAttackBonus)||0),dcBonus=derived?.modifiers?.spellDCBonus??(Number(adjustments.spellDCBonus)||0),secondary=Number(adjustments.secondaryDCBonus)||0;
+    return {ability:p?.ability||'',modifier,attack:(derived?.proficiencyDice?0:pb)+modifier+attackBonus+(p?.classId&&M?M.value(expressions,'spell:'+p.classId+':attack',0,derived):0),dc:8+pb+modifier+dcBonus+secondary+(p?.classId&&M?M.value(expressions,'spell:'+p.classId+':dc',0,derived):0)};
   }
   function selectionCounts(p,rows,catalogue=[]){
     const ordinary=countedSelections(p,rows,catalogue);
     return {cantrips:ordinary.filter(s=>s.level===0).length,leveled:ordinary.filter(s=>s.level>0).length,prepared:ordinary.filter(s=>s.level>0&&s.prepared).length,automatic:rows.filter(s=>!ordinary.includes(s)).length};
   }
   function countedSelections(p,rows,catalogue=[]){const ids=new Set(automaticGrants(p,catalogue).map(s=>s.id));return rows.filter(s=>!ids.has(s.catalogId));}
+  function selectionState(p,rows,catalogue=[],baseline=null){
+    const counts=selectionCounts(p,rows,catalogue),before=baseline?selectionCounts(p,baseline,catalogue):null,limits={cantrips:p.cantrips,...(isPreparedToggleUseful(p)?{prepared:p.spellCount}:{leveled:p.spellCount})},errors=[],inherited=[];
+    for(const [key,max]of Object.entries(limits))if(counts[key]>max){const message=key==='cantrips'?'Too many cantrips: choose at most '+max+'. You currently have '+counts[key]+'.':key==='prepared'?'Too many prepared '+p.name+' spells: prepare at most '+max+'. You currently have '+counts[key]+'.':'Too many level 1+ spells: choose at most '+max+'. You currently have '+counts[key]+'.';if(before&&counts[key]<=before[key])inherited.push(message);else errors.push(message);}
+    const missing=[];if(counts.cantrips<p.cantrips)missing.push((p.cantrips-counts.cantrips)+' cantrip'+(p.cantrips-counts.cantrips===1?'':'s')+' remaining');
+    if(p.mode==='spellbook'&&counts.leveled<p.bookMinimum)missing.push((p.bookMinimum-counts.leveled)+' spellbook spell'+(p.bookMinimum-counts.leveled===1?'':'s')+' remaining from level progression');
+    if(isPreparedToggleUseful(p)){if(counts.prepared<p.spellCount)missing.push((p.spellCount-counts.prepared)+' prepared spell'+(p.spellCount-counts.prepared===1?'':'s')+' remaining');}
+    else if(counts.leveled<p.spellCount)missing.push((p.spellCount-counts.leveled)+' '+modeLabel(p).toLowerCase()+' remaining');
+    return{counts,limits,error:errors[0]||'',inherited,notice:missing.length?'Incomplete: '+missing.join(' · ')+'. You can still generate and continue later.':'Ready to generate.'};
+  }
 
   function isPreparedToggleUseful(p){
     return !!p && (p.mode==='prepared'||p.mode==='spellbook');
@@ -194,6 +204,6 @@ var CharacterSpellcasting=(()=>{
     return'Spells';
   }
 
-  return {castingStats,selectionCounts,automaticGrants,countedSelections,grantTables,profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
+  return {castingStats,selectionCounts,selectionState,automaticGrants,countedSelections,grantTables,profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterSpellcasting;

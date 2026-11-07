@@ -1,0 +1,28 @@
+'use strict';
+/* Static source audit only: never executes PDF callbacks or reads saved character values. */
+const fs=require('node:fs'),path=require('node:path'),root=path.resolve(__dirname,'..');
+const groups=[
+ ['Race / background',/^(Race|Background)$/,'Edition and campaign catalogue; retain the current saved choice. Imported PDF names do not automatically grant web mechanics.'],
+ ['Background detail',/^Background Extra$/,'Editable per-background text. The PDF options are the filled source character’s current background variant; do not offer its Haunted One list for every other background.'],
+ ['Resistances',/^Resistance Damage Type /,'All 13 original damage types are suggestions for manual rows. Automatic resistances remain calculated; custom text stays editable.'],
+ ['Armor',/^AC Armor Description$/,'Shared recognized armor, owned names and +1/+2/+3 variants; Unarmored clears worn armor. Source Mage Armor, Inertial Armor and manual Unarmored Defense formula overrides are not yet independent named-equipment commands.'],
+ ['Save DC ability',/^Spell DC /,'The original six ability choices, with full names and shared spell/secondary-DC keys.'],
+ ['Recovery',/^Limited Feature Recovery /,'Calculated from the actual feature/item pool. Arbitrarily replacing a class feature recharge is not exposed as a cosmetic dropdown.'],
+ ['Attack weapon',/^Attack\.\d\.Weapon Selection$/,'Shared supported weapon catalogue, owned equipment and existing attack references; +1/+2/+3 recognition retained. Conditional racial/spell/source attacks require their actual grants.'],
+ ['Attack ability',/^Attack\.\d\.Mod$/,'Six original abilities plus Auto for supported attack rows; computed rows retain their engine ability.'],
+ ['Attack damage',/^Attack\.\d\.Damage Type$/,'Computed for equipment/action references; retained in the editable manual damage text. Separate source damage-type override remains pending.'],
+ ['Ammunition',/^Ammo(?:Left|Right)Display.Name$/,'All 16 original ammunition names, plus retained custom names; same original icon/load relationships.'],
+ ['Background feature',/^Background Feature$/,'Derived from the selected background. Independent feature replacement is still a parity task.'],
+ ['Log faction',/^AdvLogS.Background_Faction.Text$/,'Original faction choices with the existing private log header.'],
+ ['Companion type',/^Comp.Type$/,'All four original roles: Cohort, Companion, Familiar and Mount. Manual Wild Shape reference remains an additional existing web role.'],
+ ['Companion creature',/^Comp.Race$/,'Shared permitted creature catalogue, with Familiar/Wild Shape restrictions. Arbitrary player-race entries are not creature statistics.'],
+ ['Companion size / type / alignment',/^Comp.Desc.(Size|MonsterType|Alignment)$/,'All original six sizes, fourteen creature types and nine alignments; bounded private companion fields.'],
+ ['Companion attack',/^Comp.Use.Attack.\d./,'Only that creature’s calculated natural attacks; full creature attack choice/override parity remains pending.'],
+ ['Owned magic item',/^Extra.Magic Item \d+$/,'Only owned magic items, preserving ownership/attunement and source slot order. Original catalogue acquisition remains separate.'],
+ ['Feat',/^Feat Name \d+$/,'Native selected-first feat dialog; source/edition/level/budget and existing grants apply. Source PDF imported names alone do not grant a feat.'],
+ ['Wild Shape creature',/^Wildshape.Race.\d$/,'Actual edition/level-eligible forms and retained known/seen references.'],
+ ['Wild Shape calculated fields',/^Wildshape.\d.(MonsterType|Size|Attack.\d.Damage Type)$/,'Derived from the selected form; not an editable replacement for that creature’s rules.']
+];
+function audit(){const manifest=JSON.parse(fs.readFileSync(path.join(root,'data/adobe-pages/pages.json'),'utf8')),rows=[];for(const page of manifest.pages){const source=JSON.parse(fs.readFileSync(path.join(root,'data/adobe-pages',page.id+'.json'),'utf8'));for(const field of source.fields){if(!field.options?.length)continue;const group=groups.find(([,pattern])=>pattern.test(field.id));if(!group)throw Error('Unreviewed source dropdown: '+page.id+' / '+field.id);rows.push({page:page.id,field:field.id,options:field.options,group:group[0]});}}return {format:1,source:'Original PDF page/template exports; no filled values or Acrobat code',fields:rows.length,groups:groups.map(([name,,behavior])=>({name,fields:rows.filter(row=>row.group===name).length,behavior})),rows};}
+if(require.main===module){const result=audit();if(process.argv.includes('--markdown')){console.log('# Original Adobe dropdown audit\n\nStatic review of all '+result.fields+' nonempty exported option lists, across all original pages and optional templates. Lists are source metadata, including the supplied character’s imported content; they are not a second mechanics catalogue. No PDF script is executed.\n\nThe searchable Adobe pickers use the existing authoritative field options and shared engine. Selected values survive filtering. Rule edition and campaign source restrictions still apply. This audit records the remaining differences explicitly; it does not certify complete 1:1 functional parity.\n\n| Original dropdown family | Fields | Current behavior / remaining difference |\n| --- | ---: | --- |');for(const row of result.groups)console.log('| '+row.name+' | '+row.fields+' | '+row.behavior+' |');console.log('\nSource: `data/adobe-pages/*.json`; rerun `node scripts/audit-adobe-dropdowns.cjs --markdown`. The original PDF and the full static/dynamic function inventory remain the parity reference.');}else console.log(JSON.stringify({format:result.format,source:result.source,fields:result.fields,groups:result.groups},null,2));}
+module.exports={audit};
