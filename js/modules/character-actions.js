@@ -30,6 +30,7 @@ var CharacterActions = (()=>{
    if(stats.warDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.warDomain.divineStrike.detail);
    if(stats.lifeDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.lifeDomain.divineStrike.detail);
    if(stats.tempestDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.tempestDomain.divineStrike.detail);
+   if(stats.natureDomain?.divineStrike&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.natureDomain.divineStrike.detail);
    if(stats.druidElementalFury?.choice==='primal-strike'&&!(m.base==='net'&&result.edition==='2024'))out.notes.push(stats.druidElementalFury.detail);
    return out;
   }

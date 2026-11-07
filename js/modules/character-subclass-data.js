@@ -7,6 +7,7 @@ var CharacterSubclassData = (() => {
     ['life-domain','cleric','Life Domain',1],
     ['light-domain','cleric','Light Domain',1],
     ['tempest-domain','cleric','Tempest Domain',1],
+    ['nature-domain','cleric','Nature Domain',1],
     ['war-domain','cleric','War Domain',1],
     ['land','druid','Circle of the Land',2],
     ['champion','fighter','Champion',3],

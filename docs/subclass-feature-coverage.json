@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-07T06:06:03.638Z",
+  "generatedAt": "2026-11-07T06:08:00.493Z",
   "source": {
     "repository": "5etools-mirror-3/5etools-src",
     "revision": "b9061583536101068b3a59d27e886d1fa664e366",
@@ -12,8 +12,8 @@
     "alternateSource": 24,
     "notInPinnedSource": 0,
     "runtimeFeatureLists": 186,
-    "partialMechanics": 4,
-    "referenceOnly": 182,
+    "partialMechanics": 5,
+    "referenceOnly": 181,
     "notInRuntime": 0
   },
   "classes": [
@@ -57,8 +57,8 @@
       "alternateSource": 2,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 20,
-      "partial-mechanics": 4,
-      "reference-only": 16,
+      "partial-mechanics": 5,
+      "reference-only": 15,
       "not-in-runtime": 0
     },
     {
@@ -1045,7 +1045,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "order-domain",
