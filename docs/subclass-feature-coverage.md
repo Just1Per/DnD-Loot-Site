@@ -12,7 +12,7 @@ A source match does **not** mean that feature rules are present in the applicati
 
 | Selectable subclasses | Exact source match | Alternate source | Missing from pinned source | Runtime feature lists | Partial mechanics | Reference only | Not in runtime |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 186 | 162 | 24 | 0 | 186 | 1 | 185 | 0 |
+| 186 | 162 | 24 | 0 | 186 | 3 | 183 | 0 |
 
 ## By class
 
@@ -21,7 +21,7 @@ A source match does **not** mean that feature rules are present in the applicati
 | Artificer | 10 | 6 | 4 | 0 | 10 | 0 | 10 | 0 |
 | Barbarian | 13 | 13 | 0 | 0 | 13 | 0 | 13 | 0 |
 | Bard | 14 | 12 | 2 | 0 | 14 | 0 | 14 | 0 |
-| Cleric | 20 | 18 | 2 | 0 | 20 | 1 | 19 | 0 |
+| Cleric | 20 | 18 | 2 | 0 | 20 | 3 | 17 | 0 |
 | Druid | 11 | 11 | 0 | 0 | 11 | 0 | 11 | 0 |
 | Fighter | 15 | 14 | 1 | 0 | 15 | 0 | 15 | 0 |
 | Monk | 14 | 13 | 1 | 0 | 14 | 0 | 14 | 0 |
@@ -80,9 +80,9 @@ A source match does **not** mean that feature rules are present in the applicati
 | Cleric | Grave Domain | 2024 | RTHW | alternate-source (XGE) | 1, 2, 3, 6, 8, 17 | reference only |
 | Cleric | Knowledge Domain | 2014 | PHB | verified | 1, 2, 3, 6, 8, 17 | reference only |
 | Cleric | Knowledge Domain | 2024 | FRHOF | alternate-source (PHB) | 1, 2, 3, 6, 8, 17 | reference only |
-| Cleric | Life Domain | 2014 | PHB | verified | 1, 2, 6, 8, 17 | reference only |
+| Cleric | Life Domain | 2014 | PHB | verified | 1, 2, 6, 8, 17 | partial mechanics |
 | Cleric | Life Domain | 2024 | PHB24 | verified | 3, 6, 17 | reference only |
-| Cleric | Light Domain | 2014 | PHB | verified | 1, 2, 3, 6, 8, 17 | reference only |
+| Cleric | Light Domain | 2014 | PHB | verified | 1, 2, 3, 6, 8, 17 | partial mechanics |
 | Cleric | Light Domain | 2024 | PHB24 | verified | 3, 6, 17 | reference only |
 | Cleric | Nature Domain | 2014 | PHB | verified | 1, 2, 3, 6, 8, 17 | reference only |
 | Cleric | Order Domain | 2014 | TCE | verified | 1, 2, 3, 6, 8, 17 | reference only |
