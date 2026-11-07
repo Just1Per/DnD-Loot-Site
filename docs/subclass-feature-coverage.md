@@ -4,7 +4,7 @@ Generated from the selectable subclass catalogue and the pinned 5etools cache. T
 
 A source match does **not** mean that feature rules are present in the application. “Alternate source” means the same class/subclass exists in the pinned cache, but under a different book identifier.
 
-- **Partial mechanics**: War Domain has its grants, War Priest resource, Channel Divinity choices, Divine Strike reminder and Avatar of Battle resistance in the rules engine. Table decisions still remain manual.
+- **Partial mechanics**: the seven original 2014 Cleric domains (Life, Light, Nature, Knowledge, Tempest, Trickery and War) have reviewed grants, resources and/or Channel Divinity mechanics. Table decisions still remain manual.
 - **Reference only**: the sheet has a level-by-level feature list, but no complete source-specific mechanic adapter.
 - **Not in runtime**: selectable in Character Builder, but has no subclass feature rows at runtime.
 

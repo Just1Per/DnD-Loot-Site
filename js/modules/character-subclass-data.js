@@ -29,4 +29,10 @@ var CharacterSubclassData = (() => {
   const find = id => all[id] || null;
   return {all,forClass,eligible,find};
 })();
-if (typeof module !== 'undefined' && module.exports) module.exports = CharacterSubclassData;
+if (typeof module !== 'undefined' && module.exports) {
+  // Rule modules are also loaded independently by Node and browser test entrypoints.
+  // Load the complete catalogue here so feature validation never depends on app.js order.
+  globalThis.CharacterSubclassData = CharacterSubclassData;
+  require('./character-expanded-subclass-data');
+  module.exports = CharacterSubclassData;
+}
