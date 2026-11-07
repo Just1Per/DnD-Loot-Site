@@ -24,7 +24,7 @@ function sourceMatch(row,source){
   return {exact:candidates.find(candidate=>candidate.source===expectedSource)||null,alternate:candidates[0]||null};
 }
 function state(row,features){
-  if(row.id==='war-domain')return 'partial-mechanics';
+  if(['war-domain','life-domain','light-domain'].includes(row.id))return 'partial-mechanics';
   return features.length?'reference-only':'not-in-runtime';
 }
 function review(){

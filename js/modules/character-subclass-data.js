@@ -5,6 +5,7 @@ var CharacterSubclassData = (() => {
     ['berserker','barbarian','Path of the Berserker',3],
     ['lore','bard','College of Lore',3],
     ['life-domain','cleric','Life Domain',1],
+    ['light-domain','cleric','Light Domain',1],
     ['war-domain','cleric','War Domain',1],
     ['land','druid','Circle of the Land',2],
     ['champion','fighter','Champion',3],

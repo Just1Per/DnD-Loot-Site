@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-06T17:45:32.701Z",
+  "generatedAt": "2026-11-07T06:02:07.087Z",
   "source": {
     "repository": "5etools-mirror-3/5etools-src",
     "revision": "b9061583536101068b3a59d27e886d1fa664e366",
@@ -12,8 +12,8 @@
     "alternateSource": 24,
     "notInPinnedSource": 0,
     "runtimeFeatureLists": 186,
-    "partialMechanics": 1,
-    "referenceOnly": 185,
+    "partialMechanics": 3,
+    "referenceOnly": 183,
     "notInRuntime": 0
   },
   "classes": [
@@ -57,8 +57,8 @@
       "alternateSource": 2,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 20,
-      "partial-mechanics": 1,
-      "reference-only": 19,
+      "partial-mechanics": 3,
+      "reference-only": 17,
       "not-in-runtime": 0
     },
     {
@@ -971,7 +971,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "life-domain-2024",
@@ -1008,7 +1008,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "light-domain-2024",
