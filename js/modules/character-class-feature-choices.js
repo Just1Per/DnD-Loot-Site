@@ -437,10 +437,11 @@ var CharacterClassFeatureChoices=(()=>{
     { level, mods, catalog, entries, classId = "druid" },
   ) {
     const light = classId === "cleric" ? lightDomain(data, { level, mods }) : null,
+      knowledge = classId === "cleric" ? knowledgeDomain(data, { level, mods }) : null,
       boost =
         classId === "cleric"
-          ? light?.active && light.level >= 8
-            ? { choice: "potent-spellcasting", wis: light.wis }
+          ? (light?.active && light.level >= 8) || (knowledge?.active && knowledge.level >= 8)
+            ? { choice: "potent-spellcasting", wis: light?.active ? light.wis : knowledge.wis }
             : blessedStrikes(data, { level, mods })
           : elementalFury(data, { level, mods }),
       out = Object.create(null);
@@ -682,6 +683,12 @@ var CharacterClassFeatureChoices=(()=>{
     for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='cleric'&&!seen.has('cleric')){cleric=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
     const active=edition==='2014'&&subclass==='nature-domain'&&cleric>=1,strike=active&&cleric>=8?(cleric>=14?'2d8':'1d8'):'';
     return{active,level:active?cleric:0,acolyte:active?'Acolyte of Nature · Choose one Druid cantrip and add it to your Cleric spells. Choose Animal Handling, Nature or Survival proficiency in Character Builder.':null,dampen:active&&cleric>=6?'Dampen Elements · Reaction · when you or a creature within 30 ft takes Acid, Cold, Fire, Lightning or Thunder damage, grant resistance to that instance of damage.':null,divineStrike:strike?{dice:strike,detail:'Divine Strike · Once on each of your turns when you hit with a weapon attack, deal an extra '+strike+' Cold, Fire, or Lightning damage.'}:null,master:active&&cleric>=17?'Master of Nature · Bonus Action · command a Beast or Plant charmed by your Charm Animals and Plants feature to take the action you choose on its next turn.':null};
+  }
+  function knowledgeDomain(data,{level=1,mods={}}={}){
+    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),cleric=0,subclass='';const seen=new Set();
+    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='cleric'&&!seen.has('cleric')){cleric=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
+    const active=edition==='2014'&&subclass==='knowledge-domain'&&cleric>=1,wis=Math.max(-5,Math.min(10,Math.trunc(Number(mods.wis)||0)));
+    return{active,level:active?cleric:0,wis,blessings:active?'Blessings of Knowledge · Choose two languages and two skills from Arcana, History, Nature and Religion. You gain proficiency and double proficiency bonus for those skills; select and record them in Character Builder.':null,potentSpellcasting:active&&cleric>=8?'Potent Spellcasting · Add your Wisdom modifier to damage from Cleric cantrips.':null,visions:active&&cleric>=17?'Visions of the Past · After 1 minute of meditation, receive a vision of recent events around an object or location. An object reveals 1 day of history per minute, up to 6 days; a location reveals 1 hour per minute, up to 6 hours.':null};
   }
   function druidCreatedSlots(data){const helper=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);return helper?.createdSlots(data)||[];}
   function arcaneRecovery(data,context={}){
@@ -1088,6 +1095,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{blessedStrikes,clericVitality,applyClericVitality,cantripRange,elementalFury,useChannelDivinity,wizardLevels,warDomain,lifeDomain,lightDomain,tempestDomain,natureDomain,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,setClassResourceUsed,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{blessedStrikes,clericVitality,applyClericVitality,cantripRange,elementalFury,useChannelDivinity,wizardLevels,warDomain,lifeDomain,lightDomain,tempestDomain,natureDomain,knowledgeDomain,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,setClassResourceUsed,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;
