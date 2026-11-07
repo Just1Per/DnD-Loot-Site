@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-07T06:09:23.186Z",
+  "generatedAt": "2026-11-07T06:10:55.355Z",
   "source": {
     "repository": "5etools-mirror-3/5etools-src",
     "revision": "b9061583536101068b3a59d27e886d1fa664e366",
@@ -12,8 +12,8 @@
     "alternateSource": 24,
     "notInPinnedSource": 0,
     "runtimeFeatureLists": 186,
-    "partialMechanics": 6,
-    "referenceOnly": 180,
+    "partialMechanics": 7,
+    "referenceOnly": 179,
     "notInRuntime": 0
   },
   "classes": [
@@ -57,8 +57,8 @@
       "alternateSource": 2,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 20,
-      "partial-mechanics": 6,
-      "reference-only": 14,
+      "partial-mechanics": 7,
+      "reference-only": 13,
       "not-in-runtime": 0
     },
     {
@@ -1125,7 +1125,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "trickery-domain-2024",

@@ -315,6 +315,7 @@ var CharacterSheetModel = (() => {
     const tempestDomain=ClassChoices.tempestDomain(d,{level,mods});
     const natureDomain=ClassChoices.natureDomain(d,{level});
     const knowledgeDomain=ClassChoices.knowledgeDomain(d,{level,mods});
+    const trickeryDomain=ClassChoices.trickeryDomain(d,{level});
     if(warDomain.avatar){effects.resistances=[...new Set([...(effects.resistances||[]),'Bludgeoning, Piercing, and Slashing (nonmagical attacks)'])];effects.traits=[...(effects.traits||[]),warDomain.avatar.detail];}
     if(warDomain.divineStrike)effects.traits=[...(effects.traits||[]),warDomain.divineStrike.detail];
     for(const detail of [lifeDomain.disciple,lifeDomain.blessedHealer,lifeDomain.divineStrike?.detail,lifeDomain.supremeHealing])if(detail)effects.traits=[...(effects.traits||[]),detail];
@@ -322,6 +323,7 @@ var CharacterSheetModel = (() => {
     for(const detail of [tempestDomain.wrath,tempestDomain.thunderbolt,tempestDomain.divineStrike?.detail,tempestDomain.stormborn])if(detail)effects.traits=[...(effects.traits||[]),detail];
     for(const detail of [natureDomain.acolyte,natureDomain.dampen,natureDomain.divineStrike?.detail,natureDomain.master])if(detail)effects.traits=[...(effects.traits||[]),detail];
     for(const detail of [knowledgeDomain.blessings,knowledgeDomain.potentSpellcasting,knowledgeDomain.visions])if(detail)effects.traits=[...(effects.traits||[]),detail];
+    for(const detail of [trickeryDomain.blessing,trickeryDomain.divineStrike?.detail,trickeryDomain.improved])if(detail)effects.traits=[...(effects.traits||[]),detail];
     if(tempestDomain.stormborn)effects.conditionalSpeeds=[...(effects.conditionalSpeeds||[]),{type:'fly',speed:effects.speed||30,condition:'While not underground or indoors'}];
     const result = {
       effects,
@@ -335,6 +337,7 @@ var CharacterSheetModel = (() => {
       tempestDomain,
       natureDomain,
       knowledgeDomain,
+      trickeryDomain,
       clericIntervention:(globalThis.CharacterClericIntervention||(typeof require==='function'?require('./character-cleric-intervention'):null))?.summary(d,{level})||'',
       paladinAuras,
       attackAction:AttackProgression.derive(d,level),

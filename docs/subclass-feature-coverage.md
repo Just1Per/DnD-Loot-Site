@@ -12,7 +12,7 @@ A source match does **not** mean that feature rules are present in the applicati
 
 | Selectable subclasses | Exact source match | Alternate source | Missing from pinned source | Runtime feature lists | Partial mechanics | Reference only | Not in runtime |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 186 | 162 | 24 | 0 | 186 | 6 | 180 | 0 |
+| 186 | 162 | 24 | 0 | 186 | 7 | 179 | 0 |
 
 ## By class
 
@@ -21,7 +21,7 @@ A source match does **not** mean that feature rules are present in the applicati
 | Artificer | 10 | 6 | 4 | 0 | 10 | 0 | 10 | 0 |
 | Barbarian | 13 | 13 | 0 | 0 | 13 | 0 | 13 | 0 |
 | Bard | 14 | 12 | 2 | 0 | 14 | 0 | 14 | 0 |
-| Cleric | 20 | 18 | 2 | 0 | 20 | 6 | 14 | 0 |
+| Cleric | 20 | 18 | 2 | 0 | 20 | 7 | 13 | 0 |
 | Druid | 11 | 11 | 0 | 0 | 11 | 0 | 11 | 0 |
 | Fighter | 15 | 14 | 1 | 0 | 15 | 0 | 15 | 0 |
 | Monk | 14 | 13 | 1 | 0 | 14 | 0 | 14 | 0 |
@@ -88,7 +88,7 @@ A source match does **not** mean that feature rules are present in the applicati
 | Cleric | Order Domain | 2014 | TCE | verified | 1, 2, 3, 6, 8, 17 | reference only |
 | Cleric | Peace Domain | 2014 | TCE | verified | 1, 2, 3, 6, 8, 17 | reference only |
 | Cleric | Tempest Domain | 2014 | PHB | verified | 1, 2, 3, 6, 8, 17 | partial mechanics |
-| Cleric | Trickery Domain | 2014 | PHB | verified | 1, 2, 3, 6, 8, 17 | reference only |
+| Cleric | Trickery Domain | 2014 | PHB | verified | 1, 2, 3, 6, 8, 17 | partial mechanics |
 | Cleric | Trickery Domain | 2024 | PHB24 | verified | 3, 6, 17 | reference only |
 | Cleric | Twilight Domain | 2014 | TCE | verified | 1, 2, 3, 6, 8, 17 | reference only |
 | Cleric | War Domain | 2014 | PHB | verified | 1, 2, 3, 6, 8, 17 | partial mechanics |
