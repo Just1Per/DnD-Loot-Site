@@ -389,6 +389,8 @@ var CharacterSheetModel = (() => {
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
     for(const speed of barbarianSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
+    result.barbarianCombat=Paths.apply(d,result,{level});
+    if(result.barbarianCombat.size)result.carrying=Carry.limits(data,{scores,effects});
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     if(Override){result.gear.attacks=result.gear.attacks.map(row=>Override.attack(row,'attack:gear:'+row.id,modifierExpressions,{mods,pb},level));result.manualAttacks=d.attacks.map((row,i)=>Override.attack({...row,hit:result.attacks[i]},'attack:attack:'+row.id,modifierExpressions,{mods,pb},level));result.attacks=result.manualAttacks.map((row,i)=>row.attack??result.attacks[i]);result.actions=result.actions.map((row,i)=>Override.attack(row,'attack:attack:'+d.actions[i]?.id,modifierExpressions,{mods,pb},level));}
 
@@ -409,10 +411,12 @@ var CharacterSheetModel = (() => {
     const absorbed = Math.min(n, d.hpTemp);
     d.hpTemp -= absorbed;
     d.hpCurrent = Math.max(0, d.hpCurrent - (n - absorbed));
+    if(d.hpCurrent===0){const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);Paths.endDivineForm(d,{level:20});}
     return d;
   }
   function heal(data, amount, level = 1) {
     const d = normalize(data);
+    if(d.hpCurrent===0){const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);Paths.endDivineForm(d,{level});}
     d.hpCurrent = Math.min(derive(d, level).hpMax, d.hpCurrent + number(amount, 0, 0));
     return d;
   }

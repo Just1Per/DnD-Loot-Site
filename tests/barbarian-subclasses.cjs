@@ -67,3 +67,34 @@ test('Elemental Cleaver computes element, scaling, thrown range and Strength-onl
  const d=make('giant','2014',14);choose(d,'cleaver-weapon','battleaxe');choose(d,'elemental-cleaver','cold');d.actions=[{kind:'weapon',ref:'barbarian-elemental-cleaver',mode:'thrown'}];let r=M.derive(d,14);assert.equal(r.actions[0].hit,'+9');assert.equal(r.actions[0].damage,'1d8 + 4 + 3 + 2d6 cold');assert.equal(r.actions[0].range,'20/60 ft');d.actions[0].mode='twoHanded';r=M.derive(d,14);assert.match(r.actions[0].damage,/1d10/);assert.equal(r.actions[0].range,'15 ft');
  choose(d,'cleaver-weapon','longbow');d.actions[0].mode='normal';r=M.derive(d,14);assert.equal(r.actions[0].ability,'dex');assert.ok(!r.actions[0].damage.includes(' + 3 + '));
 });
+test('Rage activation applies and removes conditional defenses without treating generic spending as activation',()=>{
+ const d=make('berserker-2024','2024',6),opts={level:6};C.changeClassResource(d,'barbarian-rage',1,opts);assert.equal(M.derive(d,6).barbarianCombat.raging,false);B.enterRage(d,opts);let r=M.derive(d,6);assert.ok(r.effects.immunities.includes('Charmed'));assert.ok(r.effects.resistances.includes('Slashing'));assert.equal(B.endRage(d,opts),true);r=M.derive(d,6);assert.ok(!r.effects.immunities.includes('Charmed'));assert.ok(!r.effects.resistances.includes('Slashing'));
+});
+test('Totem and Wild Heart keep distinct resistances and temporary movement; rests end Rage',()=>{
+ const d=make('totem-warrior','2014',14);choose(d,'totem-spirit','elk');choose(d,'totemic-attunement','eagle');const normal=M.derive(d,14).effects.speed;B.enterRage(d,{level:14});let r=M.derive(d,14);assert.equal(r.effects.speed,normal+15);assert.equal(r.effects.fly,normal+15);C.resetClassResources(d,'short',{level:14});assert.equal(M.derive(d,14).effects.speed,normal);
+ const w=make('wild-heart-2024','2024',14);choose(w,'rage-of-the-wilds','bear');choose(w,'power-of-the-wilds','falcon');B.enterRage(w,{level:14});r=M.derive(w,14);assert.ok(r.effects.resistances.includes('Fire'));assert.ok(!r.effects.resistances.includes('Force'));assert.equal(r.effects.fly,r.effects.speed);const t=make('totem-warrior','2014',3);choose(t,'totem-spirit','bear');B.enterRage(t,{level:3});assert.ok(M.derive(t,3).effects.resistances.includes('Force'));
+});
+test('World Tree Rage grants temporary HP without stacking or changing current HP',()=>{
+ const d=make('world-tree-2024','2024',10);d.hpCurrent=17;d.hpTemp=3;B.enterRage(d,{level:10});assert.equal(d.hpTemp,10);assert.equal(d.hpCurrent,17);B.endRage(d,{level:10});d.hpTemp=25;B.enterRage(d,{level:10});assert.equal(d.hpTemp,25);
+});
+test('revised Zealot divine form requires actual Rage, uses its own pool and ends its effects at 0 HP',()=>{
+ const d=make('zealot-2024','2024',14);d.hpCurrent=20;assert.equal(B.activateDivineForm(d,{level:14}),false);B.enterRage(d,{level:14});assert.equal(B.activateDivineForm(d,{level:14}),true);let r=M.derive(d,14);assert.ok(r.effects.resistances.includes('Psychic'));assert.equal(r.effects.fly,r.effects.speed);assert.equal(B.activateDivineForm(d,{level:14}),false);d.hpCurrent=0;r=M.derive(d,14);assert.ok(!r.effects.resistances.includes('Psychic'));
+});
+test('first-hit resolution enforces active source, dice, Reckless/Strength conditions and turn recovery',()=>{
+ const d=make('berserker-2024','2024',9),opts={level:9,diceTotal:12,strength:true,reckless:true};assert.equal(B.resolveHit(d,opts),null);B.enterRage(d,opts);assert.equal(B.resolveHit(d,{...opts,reckless:false}),null);assert.equal(B.resolveHit(d,{...opts,diceTotal:19}),null);assert.equal(B.resolveHit(d,opts).total,12);assert.equal(B.resolveHit(d,opts),null);C.resetClassResources(d,'turn',opts);assert.equal(B.resolveHit(d,opts).dice,'3d6');
+});
+test('divine form cannot return after damage to 0 HP and subsequent healing',()=>{
+ let d=make('zealot-2024','2024',14);d.hpCurrent=20;B.enterRage(d,{level:14});B.activateDivineForm(d,{level:14});d=M.damage(d,20);d=M.heal(d,10,14);assert.ok(!M.derive(d,14).effects.resistances.includes('Psychic'));
+});
+test('Wild Surge AC applies only for active Rage and the selected table result',()=>{
+ const d=make('wild-magic-barbarian','2014',6);choose(d,'wild-surge','6');const base=M.derive(d,6).ac;B.enterRage(d,{level:6});assert.equal(M.derive(d,6).ac,base+1);choose(d,'wild-surge','5');assert.equal(M.derive(d,6).ac,base);B.endRage(d,{level:6});assert.equal(M.derive(d,6).ac,base);
+});
+test('Heavy armor blocks revised Rage benefits while legacy Bear retains its explicit resistance',()=>{
+ for(const [edition,id]of [['2014','totem-warrior'],['2024','wild-heart-2024']]){const d=make(id,edition,14);choose(d,edition==='2014'?'totem-spirit':'rage-of-the-wilds','bear');d.equipmentState={loadout:[{id:'plate',equipped:true}]};const loot=[{id:'plate',quantity:1,item:{name:'Plate'}}];B.enterRage(d,{level:14});const r=M.derive(d,14,loot);assert.equal(r.effects.resistances.includes('Fire'),edition==='2014');assert.equal(r.barbarianCombat.requested,true);}
+});
+test('Giant active size changes carrying limits without stacking and returns to normal after Rage',()=>{
+ const d=make('giant','2014',14);choose(d,'giant-size','huge');const before=M.derive(d,14);B.enterRage(d,{level:14});const raging=M.derive(d,14);assert.equal(raging.effects.size,'Huge');assert.equal(raging.carrying.capacity,before.carrying.capacity*4);assert.equal(M.derive(d,14).carrying.capacity,raging.carrying.capacity);B.endRage(d,{level:14});assert.equal(M.derive(d,14).carrying.capacity,before.carrying.capacity);
+});
+test('owned Giant infusion retains current bonuses and becomes unavailable after inventory removal',()=>{
+ const d=make('giant','2014',14);choose(d,'cleaver-weapon','battleaxe');choose(d,'elemental-cleaver','cold');d.actions=[{kind:'weapon',ref:'barbarian-cleaver-owned:axe',mode:'thrown'}];d.equipmentState={loadout:[{id:'axe',equipped:true}]};const loot=[{id:'axe',quantity:1,item:{name:'Battleaxe +1'}}];let r=M.derive(d,14,loot);assert.equal(r.actions[0].hit,'+10');assert.match(r.actions[0].damage,/1d8 \+ 5 \+ 3 \+ 2d6 cold/);assert.equal(M.derive(d,14,[]).actions[0].available,false);assert.equal(r.actions[0].range,'20/60 ft');
+});

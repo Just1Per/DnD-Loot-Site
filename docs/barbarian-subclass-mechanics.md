@@ -14,11 +14,18 @@ Implemented integrations:
 - Beast natural weapons, Battlerager armor spikes and Elemental Cleaver standard-weapon references in the existing attack picker. Form/edition/level changes deactivate stale references. Strength/proficiency, applicable Rage damage, reach, element and Cleaver dice are calculated.
 - Ritual and limited-feature spell grants in the existing spell selector, separate from preparation allowances and without granting Barbarian spell slots. Casting restrictions survive conversion to sheet rows.
 
-Remaining work before declaring Barbarian complete:
+Additional combat integrations:
 
-- Automatic application of temporary combat forms, auras and conditional hit modifiers. Current reports specify dice, DCs, action timing, targets, equipment requirements and duration; they do not change every attack or permanently activate Rage bonuses.
+- Explicit Rage activation/end and rest expiry apply temporary resistances, Berserker condition immunities, Totem movement, Wild Heart flight, Wild Surge AC, and Giant size/carrying changes. Heavy-armor rules remain edition-specific.
+- World Tree grants its own temporary HP on entry without stacking. Revised Zealot has separate divine-form activation/end, flight/resistances and removal on damage to 0 HP.
+- Frenzy/Divine Fury offer a guarded first-hit roll calculation and once-per-turn reset in Combat.
+- Owned Giant infusion references preserve weapon bonuses and current attunement, and deactivate when ownership is lost.
+
+Remaining table adjudication and integration work:
+
+- Targets, aura membership, attack eligibility, visibility, available growth space, duration and action/reaction timing remain explicit table decisions. Giant growth can be disabled when space is unavailable.
 - Automatic handling of event-specific temporary HP, damage reduction, death prevention, ally effects, forced movement and slot recovery received by another character.
-- Owned magic-item bonuses on the Giant infused-weapon reference. The existing owned inventory attack retains those bonuses; the infusion reference explicitly uses the selected standard weapon.
+- Direct HP edits and external conditions still need their corresponding end/duration controls; the sheet does not run a combat clock or observe another character’s state.
 
 The mechanics audit deliberately retains `partial-mechanics` for these paths. A source review or a report is not a claim of full automation.
 

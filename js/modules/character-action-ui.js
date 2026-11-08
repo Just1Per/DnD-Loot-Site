@@ -19,12 +19,12 @@ function openAttackPicker(index=null){
  }
  function modes(){
   const old=mode.value,a=current(),item=kind.value==='loot'?sheetEquipmentLoot().find(e=>e.id===ref.value)?.item:kind.value==='weapon'&&CharacterEquipment.weapons[ref.value]?{name:CharacterEquipment.weapons[ref.value].name}:null;
-  const cleaver=ref.value==='barbarian-elemental-cleaver'?CharacterBarbarianSubclasses.context(session.data,{level:session.identity.level}).pick('cleaver-weapon'):'';
+  const cleaver=(ref.value==='barbarian-elemental-cleaver'||ref.value.startsWith('barbarian-cleaver-owned:'))?CharacterBarbarianSubclasses.context(session.data,{level:session.identity.level}).pick('cleaver-weapon'):'';
   const p=cleaver?CharacterEquipment.weapons[cleaver]:item?CharacterEquipment.profile(CharacterEquipment.infer(item),session.data.build.edition):null;
   const props=Array.isArray(p?.props)?p.props:[];
   let values=[['normal',props.includes('twoHanded')?'Normal (two hands required)':'Normal']];
   if(p?.versatile)values.push(['twoHanded','Two hands (versatile)']);
-  if(ref.value==='barbarian-elemental-cleaver'||props.includes('thrown')||kind.value==='improvised'||kind.value==='loot'&&!p)values.push(['thrown','Thrown']);
+  if(ref.value==='barbarian-elemental-cleaver'||ref.value.startsWith('barbarian-cleaver-owned:')||props.includes('thrown')||kind.value==='improvised'||kind.value==='loot'&&!p)values.push(['thrown','Thrown']);
   if(props.includes('light'))values.push(['offhand','Extra Light-weapon attack']);
   mode.innerHTML=values.map(([v,n])=>`<option value="${v}">${n}</option>`).join('');if(values.some(([v])=>v===old))mode.value=old;
   get('attackModeLabel').hidden=['spell','cantrip','racial','manual','grapple','shove','granted-spell'].includes(kind.value);
@@ -35,7 +35,7 @@ function openAttackPicker(index=null){
  function choices(){
   let rows=[];const d=stats();
   if(kind.value==='loot')rows=sheetEquipmentLoot().map(e=>[e.id,e.item.name+' · '+e.quantity+' owned']);
-  if(kind.value==='weapon')rows=[...Object.entries(CharacterEquipment.weapons).map(([k,v])=>[k,v.name]),...(globalThis.CharacterBarbarianSubclasses?.attackReferences(session.data,{level:session.identity.level})||[]).map(r=>[r.ref,r.name])];
+  if(kind.value==='weapon')rows=[...Object.entries(CharacterEquipment.weapons).map(([k,v])=>[k,v.name]),...(globalThis.CharacterBarbarianSubclasses?.attackReferences(session.data,{level:session.identity.level,loot:sheetEquipmentLoot()})||[]).map(r=>[r.ref,r.name])];
   if(['spell','cantrip'].includes(kind.value))rows=CharacterAttackAccess.spells(session.data,session.identity.level,d).filter(row=>row.kind==='spell'&&(kind.value==='cantrip'?row.spell.level===0:row.spell.level>0)).map(row=>[row.ref,row.spell.name+' · '+row.source]);
   if(kind.value==='granted-spell')rows=CharacterAttackAccess.spells(session.data,session.identity.level,d).filter(row=>row.kind==='granted-spell').map(row=>[row.ref,row.spell.name+' · '+row.source]);
   if(kind.value==='racial'&&d.effects.breath)rows=[['breath','Dragonborn breath weapon']];

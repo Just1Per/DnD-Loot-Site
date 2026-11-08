@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T18:28:24.867Z",
+  "generatedAt": "2026-11-08T21:31:39.017Z",
   "summary": {
     "total": 186,
     "partialMechanics": 20,
@@ -318,8 +318,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -350,8 +350,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -382,8 +382,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -414,8 +414,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -446,8 +446,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -478,8 +478,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -510,8 +510,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -542,8 +542,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -574,8 +574,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -606,8 +606,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -638,8 +638,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -670,8 +670,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },
@@ -693,7 +693,7 @@
         "defense": false,
         "spellcasting": false,
         "combat": true,
-        "builderChoices": false,
+        "builderChoices": true,
         "manualGuidance": true
       },
       "sourceReview": {
@@ -702,8 +702,8 @@
         "levels": "3–20"
       },
       "limitations": [
-        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
-        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
       "status": "partial-mechanics"
     },

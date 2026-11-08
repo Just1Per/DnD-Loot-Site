@@ -13,7 +13,8 @@ var CharacterBarbarianSubclasses=(()=>{
       if(e.classId==='barbarian'&&!seen.has(e.classId)){actual=n;id=e.subclassId||'';}seen.add(e.classId);
     }
     const key=name=>C.groupKey(edition,'barbarian',id+':'+name);
-    return{edition,modern:edition==='2024',id,level:actual,active:actual>=3&&ids[edition].includes(id),pb:Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1,mods,choices,key,pick:name=>{const g=definitions.find(g=>g.edition===edition&&g.id===id&&g.definition.id===name)?.definition,v=choices[key(name)]?.[0];return g&&actual>=g.minLevel&&g.options().some(o=>o.id===v)?v:''},rage:actual>=16?4:actual>=9?3:2};
+    const stateKey=edition+':barbarian:rage-state',raging=actual>0&&choices[stateKey]?.[0]===(id||'base');
+    return{stateKey,raging,edition,modern:edition==='2024',id,level:actual,active:actual>=3&&ids[edition].includes(id),pb:Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1,mods,choices,key,pick:name=>{const g=definitions.find(g=>g.edition===edition&&g.id===id&&g.definition.id===name)?.definition,v=choices[key(name)]?.[0];return g&&actual>=g.minLevel&&g.options().some(o=>o.id===v)?v:''},rage:actual>=16?4:actual>=9?3:2};
   }
   const slug=name=>String(name).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   const definitions=[];
@@ -25,10 +26,13 @@ var CharacterBarbarianSubclasses=(()=>{
   choice('2014','totem-warrior','tiger-skills',6,['Athletics','Acrobatics','Stealth','Survival'],2);
   choice('2014','storm-herald','environment',3,['Desert','Sea','Tundra']);
   choice('2014','zealot','divine-fury',3,['Necrotic','Radiant']);
+  choice('2014','wild-magic-barbarian','wild-surge',3,['1','2','3','4','5','6','7','8']);
   choice('2014','beast','form-of-the-beast',3,['Bite','Claws','Tail']);
   choice('2014','beast','bestial-soul',6,['Swim','Climb','Jump']);
   choice('2014','giant','giant-language',3,()=>{const R=globalThis.CharacterRules||(typeof require==='function'?require('./character-rules'):null);return(R?.languages||[]).filter(name=>!["Thieves’ Cant","Thieves' Cant",'Druidic','Giant'].includes(name));});
   choice('2014','giant','giant-cantrip',3,['Druidcraft','Thaumaturgy']);
+  choice('2014','giant','giant-growth',3,['Room available','No space']);
+  choice('2014','giant','giant-size',14,['Large','Huge']);
   choice('2014','giant','cleaver-weapon',6,()=>{const E=globalThis.CharacterEquipment||(typeof require==='function'?require('./character-equipment'):null);return Object.values(E?.weapons||{}).map(w=>w.name);});
   choice('2014','giant','elemental-cleaver',6,['Acid','Cold','Fire','Lightning','Thunder']);
   choice('2024','wild-heart-2024','rage-of-the-wilds',3,['Bear','Eagle','Wolf']);
@@ -135,9 +139,65 @@ var CharacterBarbarianSubclasses=(()=>{
   function enterRage(d,opts={}){
     const Rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null),row=Rage.resource(d,opts),c=context(d,opts);
     if(!row||!row.unlimited&&!row.remaining)return false;
-    const choices={...c.choices};if(!row.unlimited)choices[row.key]=[String(row.used+1)];
+    const choices={...c.choices,[c.stateKey]:[c.id||'base'],[c.key('first-hit-used')]:['0'],[c.key('divine-form')]:[]};if(!row.unlimited)choices[row.key]=[String(row.used+1)];
     for(const pool of derive(d,opts).resources)if(pool.resets.includes('rage'))choices[pool.key]=['0'];
-    d.adobe={...store(d),classFeatureChoices:choices};return true;
+    if(Object.keys(choices).length>100)return false;
+    d.adobe={...store(d),classFeatureChoices:choices};if(c.active&&c.id==='world-tree-2024')d.hpTemp=Math.max(Number(d.hpTemp)||0,c.level);return true;
+  }
+  function endRage(d,opts={}){
+    const c=context(d,opts);if(!c.raging)return false;
+    d.adobe={...store(d),classFeatureChoices:{...c.choices,[c.stateKey]:[],[c.key('divine-form')]:[]}};return true;
+  }
+  function apply(d,stats,{level=1}={}){
+    const c=context(d,{level,mods:stats.mods}),e=stats.effects,armor=stats.gear?.entries?.find(r=>r.active&&r.mechanics.kind==='armor'),heavy=armor?.profile?.group==='heavy',raging=c.raging&&!(c.modern&&heavy);
+    const out={requested:c.raging,raging,blocked:c.modern&&!!heavy,immunities:[],resistances:[],speedBonus:0,fly:0,ac:0};
+    if(!raging)return out;
+    if(!heavy)out.resistances.push('Bludgeoning','Piercing','Slashing');
+    if(c.active){
+      if(c.id==='giant'&&c.pick('giant-growth')!=='no-space'){const sizes=['Tiny','Small','Medium','Large','Huge','Gargantuan'],current=sizes.indexOf(e.size||'Medium'),chosen=c.level>=14&&c.pick('giant-size')==='huge'?'Huge':'Large';if(current<sizes.indexOf(chosen)){out.size=chosen;e.size=chosen;}}
+      if(['berserker','berserker-2024'].includes(c.id)&&c.level>=6)out.immunities.push('Charmed','Frightened');
+      if(c.id==='totem-warrior'){
+        if(c.pick('totem-spirit')==='bear')out.resistances.push('Acid','Bludgeoning','Cold','Fire','Force','Lightning','Necrotic','Piercing','Poison','Radiant','Slashing','Thunder');
+        if(c.pick('totem-spirit')==='elk'&&!heavy)out.speedBonus=15;
+        if(c.level>=14&&c.pick('totemic-attunement')==='eagle')out.fly=e.speed+out.speedBonus;
+      }
+      if(c.id==='wild-heart-2024'){
+        if(c.pick('rage-of-the-wilds')==='bear')out.resistances.push('Acid','Cold','Fire','Lightning','Poison','Thunder');
+        if(c.level>=14&&c.pick('power-of-the-wilds')==='falcon'&&!armor)out.fly=e.speed;
+      }
+      if(c.id==='wild-magic-barbarian'&&c.pick('wild-surge')==='6')out.ac=1;
+      if(c.id==='zealot-2024'&&c.level>=14&&c.choices[c.key('divine-form')]?.[0]==='active'&&Number(d.hpCurrent)>0){
+        out.fly=e.speed;out.hover=true;e.hover=true;out.resistances.push('Necrotic','Psychic','Radiant');
+      }
+    }
+    e.resistances=[...new Set([...(e.resistances||[]),...out.resistances])];e.immunities=[...new Set([...(e.immunities||[]),...out.immunities])];
+    e.speed+=out.speedBonus;if(out.fly)e.fly=Math.max(e.fly||0,out.fly);
+    if(out.ac){stats.ac+=out.ac;stats.gear.ac+=out.ac;stats.gear.adjustment+=out.ac;}
+    return out;
+  }
+  function endDivineForm(d,opts={}){
+    const c=context(d,opts);if(c.choices[c.key('divine-form')]?.[0]!=='active')return false;
+    d.adobe={...store(d),classFeatureChoices:{...c.choices,[c.key('divine-form')]:[]}};return true;
+  }
+  function activateDivineForm(d,opts={}){
+    const c=context(d,opts),pool=derive(d,opts).resources.find(r=>r.id==='barbarian-rage-gods');
+    if(!c.raging||!pool?.remaining||Number(d.hpCurrent)<=0||c.choices[c.key('divine-form')]?.[0]==='active')return false;
+    d.adobe={...store(d),classFeatureChoices:{...c.choices,[pool.key]:[String(pool.used+1)],[c.key('divine-form')]:['active']}};return true;
+  }
+  function resolveHit(d,{level=1,mods={},diceTotal,reckless=false,strength=false,weapon=true,unarmed=false}={}){
+    const c=context(d,{level,mods});if(!c.active||!c.raging||c.choices[c.key('first-hit-used')]?.[0]==='1')return null;
+    let dice=0,bonus=0,types=[];
+    if(c.id==='berserker-2024'&&reckless===true&&strength===true&&(weapon===true||unarmed===true)){dice=c.rage;types=['attack'];}
+    if(['zealot','zealot-2024'].includes(c.id)&&(weapon===true||c.modern&&unarmed===true)){dice=1;bonus=Math.floor(c.level/2);types=c.modern?['Necrotic','Radiant']:[c.pick('divine-fury')].filter(Boolean);}
+    if(!dice||!types.length||!Number.isInteger(diceTotal)||diceTotal<dice||diceTotal>dice*6)return null;
+    d.adobe={...store(d),classFeatureChoices:{...c.choices,[c.key('first-hit-used')]:['1']}};
+    return{dice:dice+'d6',rolled:diceTotal,bonus,total:diceTotal+bonus,types};
+  }
+  function onEvent(d,event,{level=1}={}){
+    const c=context(d,{level}),choices={...c.choices};let changed=false;
+    if(event==='turn'&&c.raging){choices[c.key('first-hit-used')]=['0'];changed=true;}
+    if(['short','long'].includes(event)){for(const edition of ['2014','2024']){const key=edition+':barbarian:rage-state';if(choices[key]?.length){choices[key]=[];changed=true;}}}
+    if(changed)d.adobe={...store(d),classFeatureChoices:choices};
   }
   function recharge(d,id,opts={}){
     const row=derive(d,opts).resources.find(r=>r.id===id),Rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null),rage=Rage.resource(d,opts);
@@ -148,20 +208,20 @@ var CharacterBarbarianSubclasses=(()=>{
     const c=context(d,opts);if(!c.active)return[];
     if(c.id==='beast'){const form=c.pick('form-of-the-beast');return ['bite','claws','tail'].includes(form)?[{ref:'barbarian-beast-'+form,name:'Beast '+form+' · during Rage'}]:[];}
     if(c.id==='battlerager')return[{ref:'barbarian-armor-spikes',name:'Armor spikes · spiked armor and Rage'}];
-    if(c.id==='giant'&&c.level>=6&&c.pick('cleaver-weapon')&&c.pick('elemental-cleaver'))return[{ref:'barbarian-elemental-cleaver',name:'Elemental Cleaver · held weapon during Rage'}];
+    if(c.id==='giant'&&c.level>=6&&c.pick('cleaver-weapon')&&c.pick('elemental-cleaver')){const E=globalThis.CharacterEquipment||(typeof require==='function'?require('./character-equipment'):null);return[{ref:'barbarian-elemental-cleaver',name:'Elemental Cleaver · standard weapon reference'},...(opts.loot||[]).filter(e=>e.quantity>0&&E.infer(e.item).base===c.pick('cleaver-weapon')).map(e=>({ref:'barbarian-cleaver-owned:'+e.id,name:'Elemental Cleaver · '+e.item.name+' (owned)'}))];}
     return[];
   }
   function resolveAttack(ref,d,stats,opts={}){
     const c=context(d,{...opts,mods:stats.mods}),available=attackReferences(d,opts).some(r=>r.ref===ref),sign=n=>(n>=0?'+':'')+n;
     if(!available)return{name:'Unavailable subclass weapon',hit:'—',damage:'—',range:'—',available:false,notes:['Choose the matching Barbarian subclass and weapon form in Character Builder.']};
     const str=Number(stats.mods?.str)||0,notes=['Use only during an active Rage. Adding this reference does not start Rage or create inventory.'],base={available:true,ability:'str',proficient:true,hit:sign(str+stats.pb),range:'5 ft',notes};
-    if(ref==='barbarian-elemental-cleaver'){
+    if(ref==='barbarian-elemental-cleaver'||ref.startsWith('barbarian-cleaver-owned:')){
       const E=globalThis.CharacterEquipment||(typeof require==='function'?require('./character-equipment'):null),weapon=c.pick('cleaver-weapon'),profile=E.weapons[weapon];if(!profile)return{...base,available:false,name:'Unavailable infused weapon',damage:'—'};
-      const entry={id:'barbarian-cleaver-reference',quantity:1,item:{name:profile.name}},temp={...d,equipmentState:{...d.equipmentState,loadout:[{id:entry.id,equipped:true,ability:opts.ability||'auto',proficiency:'auto',mode:opts.mode==='thrown'?'normal':opts.mode||'normal'}]}};
-      const row=E.derive(temp,stats,[entry],opts.level).attacks.find(a=>a.id===entry.id),dice=c.level>=14?'2d6':'1d6',type=c.pick('elemental-cleaver');
+      const owned=ref.startsWith('barbarian-cleaver-owned:')?(opts.loot||[]).find(e=>e.id===ref.slice('barbarian-cleaver-owned:'.length)):null,entry=owned||{id:'barbarian-cleaver-reference',quantity:1,item:{name:profile.name}},loadout=E.choices(d.equipmentState).loadout,temp={...d,equipmentState:{...d.equipmentState,loadout:[...loadout.filter(e=>e.id!==entry.id),{...loadout.find(e=>e.id===entry.id),id:entry.id,equipped:true,ability:opts.ability||'auto',proficiency:'auto',mode:opts.mode==='thrown'?'normal':opts.mode||'normal'}]}};
+      const row=E.derive(temp,stats,owned?opts.loot:[entry],opts.level).attacks.find(a=>a.id===entry.id),dice=c.level>=14?'2d6':'1d6',type=c.pick('elemental-cleaver');
       if(!row)return{...base,available:false,name:'Unavailable infused weapon',damage:'—'};
-      const rageBonus=row.ability==='str'&&(profile.rangeType==='melee'||opts.mode==='thrown')?c.rage:0,damage=/^\d+d\d+/.test(row.damage)?row.damage.replace(new RegExp('\\s*'+row.damageType+'$','i'),'')+(rageBonus?' + '+rageBonus:'')+' + '+dice+' '+type:row.damage;
-      return{...base,name:'Elemental Cleaver · '+profile.name,ability:row.ability,proficient:row.proficient,hit:sign(row.attack),damage,damageDice:row.damage.match(/^\d+d\d+/)?.[0]||'',damageType:type,range:opts.mode==='thrown'?'20/60 ft':profile.rangeType==='melee'?(parseInt(row.range,10)+(c.level>=14?10:5))+' ft':row.range,notes:[...notes,...row.notes,'Use the chosen held weapon; this reference omits owned magic-item bonuses. Thrown range 20/60; returns immediately. A Bonus Action can change the element. '+(rageBonus?'Rage damage is included.':'Rage damage requires a qualifying Strength attack.') ]};
+      const rageBonus=row.ability==='str'&&(profile.rangeType==='melee'||opts.mode==='thrown')?c.rage:0,damage=/^\d+d\d+/.test(row.damage)?row.damage.replace(new RegExp('\\s*'+row.damageType+'(?=\\s*(?:\\+|$))','i'),'')+(rageBonus?' + '+rageBonus:'')+' + '+dice+' '+type:row.damage;
+      return{...base,name:'Elemental Cleaver · '+entry.item.name,ability:row.ability,proficient:row.proficient,hit:sign(row.attack),damage,damageDice:row.damage.match(/^\d+d\d+/)?.[0]||'',damageType:type,range:opts.mode==='thrown'?'20/60 ft':profile.rangeType==='melee'?(parseInt(row.range,10)+(c.level>=14?10:5))+' ft':row.range,notes:[...notes,...row.notes,(owned?'Owned weapon bonuses and current attunement are retained. ':'Standard reference; choose an owned infusion reference to retain magic-item bonuses. ')+'Thrown range 20/60; returns immediately. A Bonus Action can change the element. '+(rageBonus?'Rage damage is included.':'Rage damage requires a qualifying Strength attack.') ]};
     }
     const tail=ref==='barbarian-beast-tail',claws=ref==='barbarian-beast-claws',spikes=ref==='barbarian-armor-spikes',die=spikes?'1d4':claws?'1d6':'1d8',type=claws?'slashing':'piercing';
     if(spikes)notes.push('Requires worn spiked armor. Bonus Action spike attack; a successful Attack-action grapple deals 3 piercing separately.');
@@ -171,6 +231,6 @@ var CharacterBarbarianSubclasses=(()=>{
     if(!spikes&&c.level>=6)notes.push('Counts as magical against nonmagical resistance and immunity.');
     return{...base,name:spikes?'Battlerager armor spikes':'Beast '+c.pick('form-of-the-beast'),damage:die+' '+sign(str+c.rage)+' '+type,damageDice:die,damageType:type,range:tail?'10 ft':'5 ft',notes:[...notes,'Rage damage +'+c.rage+' is included.']};
   }
-  return{ids,definitions,context,derive,enterRage,recharge,attackReferences,resolveAttack};
+  return{ids,definitions,context,derive,enterRage,endRage,apply,activateDivineForm,endDivineForm,resolveHit,onEvent,recharge,attackReferences,resolveAttack};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterBarbarianSubclasses;
