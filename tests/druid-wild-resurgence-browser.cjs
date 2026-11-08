@@ -433,6 +433,9 @@ const errors = [];
     );
     assert.deepEqual(accessibility.violations, []);
     assert.equal(await page.evaluate(() => wildFetches), 0);
+    await page.evaluate(()=>{const d=sheetSession.data;d.build.classId='druid';d.build.edition='2024';d.conditions='';d.adobe.classLevels=[{classId:'druid',subclassId:'stars-2024',level:14}];d.adobe.classFeatureChoices={};sheetSession.identity.level=14;CharacterClassFeatureChoices.set(d,d.adobe.classLevels[0],'starry-constellation',0,'dragon');renderCharacterSheet();selectSheetTab('combat');});
+    await page.locator('[data-circle-form]').selectOption('starry');await page.locator('[data-circle-activate]').click();assert.equal(await page.evaluate(()=>CharacterWildShape.state(sheetSession.data,14).used),1);assert.equal(await page.evaluate(()=>CharacterSheetModel.derive(sheetSession.data,14).effects.fly),20);await page.locator('[data-circle-end="starry"]').click();assert.equal(await page.evaluate(()=>CharacterSheetModel.derive(sheetSession.data,14).druidCombat.starry),false);
+    await page.evaluate(()=>{const d=sheetSession.data;d.build.edition='2014';d.build.autoSlots=true;d.adobe.classLevels=[{classId:'druid',subclassId:'land',level:6}];d.adobe.classFeatureChoices={};sheetSession.identity.level=6;d.slots.forEach(s=>s.used=0);d.slots[0].used=1;d.slots[1].used=1;renderCharacterSheet();selectSheetTab('combat');});await page.locator('[data-circle-recovery="slot-1"]').fill('1');await page.locator('[data-circle-recover]').click();assert.equal(await page.evaluate(()=>sheetSession.data.slots[1].used),0);assert.equal(await page.locator('[data-circle-recover]').isDisabled(),true);
     assert.deepEqual(errors, []);
     console.log(
       "PASS Wild Resurgence ordinary/higher/Pact payments, own-turn gates/reset, conservation, save/reopen, rest/source state, stale account protection, print, mobile and accessibility",

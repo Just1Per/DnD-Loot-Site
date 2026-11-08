@@ -9,7 +9,7 @@ for(const row of Object.values(S.all)){
  const grants=[];
  for(const group of source.additionalSpells||[])for(const kind of ['known','prepared'])for(const [at,spells]of Object.entries(group[kind]||{})){
   if(!/^\d+$/.test(at))continue;const values=Array.isArray(spells)?spells:Array.isArray(spells?._)?spells._:[];
-  for(const spell of values)if(typeof spell==='string')grants.push({level:Number(at),name:spell.split('|')[0].split('#')[0],kind});
+  for(const spell of values)if(typeof spell==='string')grants.push({level:Number(at),name:spell.split('|')[0].split('#')[0],kind,...(group.name?{group:group.name}:{})});
  }
  records[row.id]={source:source.source,edition:row.edition,grants};
 }

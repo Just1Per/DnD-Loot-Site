@@ -322,6 +322,7 @@ var CharacterSheetModel = (() => {
     effects.traits=[...(effects.traits||[]),...barbarianSubclass.reports.map(row=>row.name+' · '+row.detail),...barbarianSubclass.spells.map(row=>row.name+' · '+row.casting+(row.ability?' · '+row.ability.toUpperCase():''))];
     const bardSubclass=Colleges.derive(d,{level,mods});effects.traits=[...(effects.traits||[]),...bardSubclass.reports.map(row=>row.name+' · '+row.detail)];
     const clericSubclass=Domains.derive(d,{level,mods,saves:effects.saves});effects.resistances=[...new Set([...(effects.resistances||[]),...clericSubclass.resistances])];effects.immunities=[...new Set([...(effects.immunities||[]),...clericSubclass.immunities])];if(clericSubclass.darkvision)effects.darkvision=Math.max(effects.darkvision||0,clericSubclass.darkvision);effects.traits=[...(effects.traits||[]),...clericSubclass.reports.map(row=>row.name+' · '+row.detail)];
+    const Circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null),druidSubclass=Circles.derive(d,{level,mods});effects.languages=[...new Set([...(effects.languages||[]),...druidSubclass.languages])];effects.resistances=[...new Set([...(effects.resistances||[]),...druidSubclass.resistances])];effects.immunities=[...new Set([...(effects.immunities||[]),...druidSubclass.immunities])];effects.traits=[...(effects.traits||[]),...druidSubclass.reports.map(row=>row.name+' · '+row.detail)];
     const berserker=ClassChoices.berserker(d,{level,mods});
     const warDomain=ClassChoices.warDomain(d,{level,mods});
     const lifeDomain=ClassChoices.lifeDomain(d,{level});
@@ -351,6 +352,7 @@ var CharacterSheetModel = (() => {
       barbarianSubclass,
       bardSubclass,
       clericSubclass,
+      druidSubclass,
       warDomain,
       lifeDomain,
       lightDomain,
@@ -399,6 +401,8 @@ var CharacterSheetModel = (() => {
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
     for(const speed of barbarianSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
+    for(const speed of druidSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
+    result.druidCombat=Circles.apply(d,result,{level});
     result.clericCombat=Domains.apply(d,result,{level});
     result.bardCombat=Colleges.apply(d,result,{level});
     result.barbarianCombat=Paths.apply(d,result,{level});

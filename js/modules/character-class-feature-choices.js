@@ -469,7 +469,7 @@ var CharacterClassFeatureChoices=(()=>{
       seen.add(entry?.classId);
     }
     const index = spellIndex(catalog);
-    const granted=classId==='cleric'?domain.spells.filter(s=>s.level===0).map(s=>({catalogId:s.id,classId:'cleric'})):[];
+    const Circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null),grants=classId==='cleric'?domain.spells:Circles.derive(data,{level,mods}).spells,granted=grants.filter(s=>s.level===0).map(s=>({catalogId:s.id,classId}));
     for (const selected of [...(data.spells||[]),...granted]) {
       const spell =
         index.byId.get(selected.catalogId) ||
@@ -775,6 +775,7 @@ var CharacterClassFeatureChoices=(()=>{
     const paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);rows.push(...(paths?.derive(data,{level,mods}).resources||[]));
     const colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null);rows.push(...(colleges?.derive(data,{level,mods}).resources||[]));
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);rows.push(...(domains?.derive(data,{level,mods}).resources||[]));
+    const circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);rows.push(...(circles?.derive(data,{level,mods}).resources||[]));
     return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
@@ -801,7 +802,7 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(value)]}};return true;
   }
   function changeClassResource(data,id,delta,context){
-    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&delta>resource.remaining||delta<0&&-delta>resource.used)return false;
+    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&(delta>resource.remaining||resource.maxSpend&&delta>resource.maxSpend)||delta<0&&-delta>resource.used)return false;
     return setClassResourceUsed(data,id,resource.used+delta,context);
   }
   function resetClassResources(data,event,context={}){
@@ -838,6 +839,7 @@ var CharacterClassFeatureChoices=(()=>{
     paths?.onEvent(data,event,{level:total});
     const colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null);colleges?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);domains?.onEvent(data,event,{level:total,mods:context.mods||{}});
+    const circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);circles?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null);rage?.onRest(data,event,{level:total});
     const companion=globalThis.CharacterWildCompanion||(typeof require==='function'?require('./character-wild-companion'):null);companion?.onRest(data,event);
     const conversions=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);conversions?.onRest(data,event);
@@ -957,7 +959,7 @@ var CharacterClassFeatureChoices=(()=>{
     return out;
   }
   function groups(entry,edition='2014',data){
-    if(typeof require==='function'){require('./character-barbarian-subclasses');require('./character-bard-subclasses');require('./character-cleric-subclasses');}
+    if(typeof require==='function'){require('./character-barbarian-subclasses');require('./character-bard-subclasses');require('./character-cleric-subclasses');require('./character-druid-subclasses');}
     if(globalThis.CharacterSubclassPlanning)entry=CharacterSubclassPlanning.sync(entry,edition);
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));

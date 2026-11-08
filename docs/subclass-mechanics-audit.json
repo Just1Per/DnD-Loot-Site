@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T21:53:08.538Z",
+  "generatedAt": "2026-11-08T22:05:27.289Z",
   "summary": {
     "total": 186,
-    "partialMechanics": 47,
-    "referenceOnly": 139,
+    "partialMechanics": 58,
+    "referenceOnly": 128,
     "byClass": {
       "artificer": {
         "total": 10,
@@ -24,7 +24,7 @@
       },
       "druid": {
         "total": 11,
-        "partialMechanics": 0
+        "partialMechanics": 11
       },
       "fighter": {
         "total": 15,
@@ -1823,14 +1823,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "spores",
@@ -1847,14 +1856,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "stars",
@@ -1871,14 +1889,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "land",
@@ -1898,14 +1925,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "land-2024",
@@ -1921,14 +1957,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "moon",
@@ -1945,14 +1990,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "moon-2024",
@@ -1968,14 +2022,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "sea-2024",
@@ -1991,14 +2054,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "shepherd",
@@ -2015,14 +2087,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "stars-2024",
@@ -2038,14 +2119,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "wildfire",
@@ -2062,14 +2152,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "arcane-archer",

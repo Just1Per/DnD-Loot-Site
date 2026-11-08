@@ -118,6 +118,7 @@ var CharacterSpellcasting=(()=>{
     if(path?.spells.length)result.push({classId:'barbarian',name:'Barbarian subclass spells',level:path.level,edition,ability:path.spells[0].ability||'',cantrips:0,spellCount:0,mode:'innate',maxSpellLevel:path.spells.some(s=>s.name==='Commune with Nature')?5:path.spells.some(s=>s.name==='Clairvoyance')?3:path.spells.some(s=>s.name==='Beast Sense')?2:0,bookMinimum:0,changeTiming:'subclass',subclassId:path.id,subclassSpellGrants:path.spells});
     const Colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null),college=Colleges?.derive(data,{level:targetLevel});for(const profile of result)if(profile.classId==='bard')profile.subclassSpellGrants=college?.spells||[];
     const Domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null),domain=Domains?.derive(data,{level:targetLevel});for(const profile of result)if(profile.classId==='cleric')profile.subclassSpellGrants=domain?.spells||[];
+    const Circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null),circle=Circles?.derive(data,{level:targetLevel});for(const profile of result)if(profile.classId==='druid')profile.subclassSpellGrants=circle?.spells||[];
     return result;
   }
 
