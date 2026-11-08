@@ -109,7 +109,7 @@
 
   function eligible(p){
     if(!CharacterCatalog.data)return[];
-    return CharacterCatalog.spells({edition:sheetSession.data.build.edition,classId:p.classId,classSource:p.sourceId}).filter(spell=>Number(spell.level)<=p.maxSpellLevel);
+    return CharacterCatalog.spells({edition:sheetSession.data.build.edition,classId:p.listClass||p.classId,classSource:p.sourceId}).filter(spell=>Number(spell.level)<=p.maxSpellLevel);
   }
   function renderList(){
     const p=currentProfile(),host=document.getElementById('spellGeneratorResults');
@@ -120,7 +120,7 @@
     const existing=draftMap(p.classId);
     let rows=CharacterCatalog.spells({
       edition:sheetSession.data.build.edition,
-      classId:p.classId,
+      classId:p.listClass||p.classId,
       classSource:p.sourceId,
       level:lvl,
       school,

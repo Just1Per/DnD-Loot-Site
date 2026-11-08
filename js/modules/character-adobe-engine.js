@@ -6,7 +6,7 @@ var CharacterAdobeEngine=(()=>{
  const Weight=globalThis.CharacterPaperWeight||(typeof require==='function'?require('./character-paper-weight'):null);
  const InventoryRows=globalThis.CharacterPaperInventory||(typeof require==='function'?require('./character-paper-inventory'):null);
  const MagicRows=globalThis.CharacterPaperMagic||(typeof require==='function'?require('./character-paper-magic'):null);
- const P=CharacterProgression,A=['str','dex','con','int','wis','cha'],CAST=new Set(['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard']),THIRD=new Set(['eldritch-knight','arcane-trickster']),KEY='__adobe';
+ const P=CharacterProgression,A=['str','dex','con','int','wis','cha'],CAST=new Set(['artificer','bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard']),THIRD=new Set(['eldritch-knight','eldritch-knight-2024','arcane-trickster','arcane-trickster-2024']),KEY='__adobe';
  const num=(v,d=0,min=-1e9,max=1e9)=>{v=Math.trunc(Number(v));return Number.isFinite(v)?Math.max(min,Math.min(max,v)):d};
  const rankMap=()=>Object.fromEntries(Object.keys(CharacterSheetModel.skills||{}).map(k=>[k,0]));
  const privateImage=value=>typeof value==='string'&&value.length<=160000&&/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(value)?value:'';

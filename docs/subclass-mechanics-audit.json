@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T22:05:27.289Z",
+  "generatedAt": "2026-11-08T22:26:33.951Z",
   "summary": {
     "total": 186,
-    "partialMechanics": 58,
-    "referenceOnly": 128,
+    "partialMechanics": 73,
+    "referenceOnly": 113,
     "byClass": {
       "artificer": {
         "total": 10,
@@ -28,7 +28,7 @@
       },
       "fighter": {
         "total": 15,
-        "partialMechanics": 0
+        "partialMechanics": 15
       },
       "monk": {
         "total": 14,
@@ -2185,14 +2185,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "banneret-frhof",
@@ -2209,14 +2218,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "battle-master",
@@ -2233,14 +2251,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
+        "resources": true,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "battle-master-2024",
@@ -2257,14 +2284,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
+        "resources": true,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "cavalier",
@@ -2281,14 +2317,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
+        "resources": true,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "champion",
@@ -2306,13 +2351,22 @@
       ],
       "mechanics": {
         "resources": false,
-        "defense": false,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "champion-2024",
@@ -2330,13 +2384,22 @@
       ],
       "mechanics": {
         "resources": false,
-        "defense": false,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "echo-knight",
@@ -2353,14 +2416,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
+        "resources": true,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "eldritch-knight",
@@ -2378,13 +2450,22 @@
       ],
       "mechanics": {
         "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "eldritch-knight-2024",
@@ -2402,13 +2483,22 @@
       ],
       "mechanics": {
         "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "psi-warrior",
@@ -2425,14 +2515,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "psi-warrior-2024",
@@ -2449,14 +2548,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "purple-dragon-knight",
@@ -2474,13 +2582,22 @@
       ],
       "mechanics": {
         "resources": false,
-        "defense": false,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "rune-knight",
@@ -2497,14 +2614,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
+        "resources": true,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "samurai",
@@ -2521,14 +2647,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
+        "resources": true,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "mercy-2024",

@@ -4,7 +4,7 @@ var CharacterPaperResources=(()=>{
  const feats=()=>typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
  const classes=()=>typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
  function rows(data,derived,level){return[
-  ...(derived.classResources||[]).map(row=>({...row,resourceKey:'class:'+row.id,resourceType:'class',resourceId:row.id,editableUsed:!row.unlimited&&!row.managedSlots&&!row.managedWildShape&&!row.channelEffects})),
+  ...(derived.classResources||[]).map(row=>({...row,resourceKey:'class:'+row.id,resourceType:'class',resourceId:row.id,editableUsed:!row.unlimited&&!row.managedSlots&&!row.managedWildShape&&!row.managedActivation&&!row.channelEffects})),
   ...(derived.feats?.reports||[]).flatMap(report=>{const pool=feats().resource(report.def,level);return pool?[{name:report.def.name+' · '+report.def.edition,max:pool.max,used:report.choice.used,remaining:Math.max(0,pool.max-report.choice.used),recovery:pool.resets.join(', '),resourceKey:'feat:'+report.key,resourceType:'feat',resourceId:report.key,editableUsed:true,warnings:report.warnings,description:pool.label}]:[];}),
   ...(derived.itemResources||[]).map(row=>({...row,name:row.name+(row.initialized?'':' · set counter'),recovery:row.definition.recovery+(row.definition.reminder?' · '+row.definition.reminder:''),resourceKey:'item:'+row.id,resourceType:'item',resourceId:row.id,editableUsed:row.initialized,used:row.initialized?row.used:'',description:row.sourceEdition+' item reference'}))
  ];}

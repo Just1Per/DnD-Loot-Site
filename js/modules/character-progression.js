@@ -25,7 +25,7 @@ var CharacterProgression = (() => {
 
   const FULL_CASTERS = new Set(['bard','cleric','druid','sorcerer','wizard']);
   const HALF_CASTERS = new Set(['artificer','paladin','ranger']);
-  const THIRD_CASTER_SUBCLASSES = new Set(['eldritch-knight','arcane-trickster']);
+  const THIRD_CASTER_SUBCLASSES = new Set(['eldritch-knight','eldritch-knight-2024','arcane-trickster','arcane-trickster-2024']);
 
   // Standard full-caster/multiclass Spellcasting slot progression, levels 0-20.
   const MULTICLASS_SLOTS = Object.freeze([
@@ -154,15 +154,16 @@ var CharacterProgression = (() => {
   }
 
   function casterLevel(classLevels, edition='2014') {
-    let total = 0;
+    let total = 0;const seen=new Set();
     for (const entry of normalizeClassLevels(classLevels)) {
+      if(seen.has(entry.classId))continue;seen.add(entry.classId);
       if (FULL_CASTERS.has(entry.classId)) total += entry.level;
       else if (entry.classId === 'artificer') total += Math.ceil(entry.level / 2);
       else if (entry.classId === 'paladin' || entry.classId === 'ranger') {
         // 2014 multiclass rules round these classes down. The 2024 classes begin
         // spellcasting at level 1, so round up when using the revised rules.
         total += edition === '2024' ? Math.ceil(entry.level / 2) : Math.floor(entry.level / 2);
-      } else if (THIRD_CASTER_SUBCLASSES.has(entry.subclassId)) total += Math.floor(entry.level / 3);
+      } else if (entry.level>=3&&THIRD_CASTER_SUBCLASSES.has(entry.subclassId)&&((entry.classId==='fighter'&&entry.subclassId.startsWith('eldritch-knight'))||(entry.classId==='rogue'&&entry.subclassId.startsWith('arcane-trickster')))) total += Math.floor(entry.level / 3);
     }
     return Math.max(0, Math.min(20, total));
   }

@@ -276,6 +276,10 @@ var CharacterSheetModel = (() => {
     effects.concentrationAdvantage=!!effects.concentrationAdvantage||invocationEffects.concentrationAdvantage;
     const Domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null),domainTraining=Domains.derive(d,{level,saves:effects.saves});
     effects.skills=[...new Set([...effects.skills,...domainTraining.skills])];effects.proficiencies=[...new Set([...effects.proficiencies,...domainTraining.proficiencies])];effects.saves=[...new Set([...effects.saves,...domainTraining.saves])];effects.languages=[...new Set([...(effects.languages||[]),...domainTraining.languages])];
+    const Archetypes=globalThis.CharacterFighterSubclasses||(typeof require==='function'?require('./character-fighter-subclasses'):null),fighterTraining=Archetypes.derive(d,{level,saves:effects.saves,skills:effects.skills});
+    effects.skills=[...new Set([...effects.skills,...fighterTraining.skills])];effects.saves=[...new Set([...effects.saves,...fighterTraining.saves])];effects.proficiencies=[...new Set([...effects.proficiencies,...fighterTraining.proficiencies])];effects.languages=[...new Set([...(effects.languages||[]),...fighterTraining.languages])];effects.runeToolExpertise=fighterTraining.toolExpertise;
+    if(d.build.autoSlots&&fighterTraining.active&&['eldritch-knight','eldritch-knight-2024'].includes(fighterTraining.id)){const P=globalThis.CharacterProgression||(typeof require==='function'?require('./character-progression'):null),raw=d.adobe?.classLevels||[],rows=[];let left=Math.min(20,Math.max(1,Number(level)||1));const seen=new Set();for(const e of raw){const actual=Math.min(left,Math.max(0,Number(e.level)||0));left-=actual;if(actual&&!seen.has(e.classId))rows.push({...e,level:actual});seen.add(e.classId);}effects.slotMax=rows.length===1?[...P.MULTICLASS_SLOTS[Math.ceil(fighterTraining.level/3)]]:P.spellSlots(rows,d.build.edition);}
+
     const artisanTool=ClassChoices.artisanTool(d,level);
     if(ClassChoices.artificerLevels(d,level).starting)effects.proficiencies=effects.proficiencies.filter(name=>name!=='Choose one artisan tool');
     if(artisanTool&&!effects.proficiencies.includes(artisanTool))effects.proficiencies.push(artisanTool);
@@ -290,7 +294,7 @@ var CharacterSheetModel = (() => {
       return{...feature,appliedAbilityIncreases,automatic:d.build.scoreMode==='base'};
     });
     const classExpertise=ClassChoices.expertise(d,{level,effects,feats});
-    classExpertise.skills=[...new Set([...classExpertise.skills,...domainTraining.expertise])];
+    classExpertise.skills=[...new Set([...classExpertise.skills,...domainTraining.expertise,...fighterTraining.expertise])];
     const weaponTraining=ClassChoices.weaponTraining(d,{level,effects,feats});
     effects.proficiencies=[...new Set([...effects.proficiencies,...weaponTraining.proficiencies])];
     const baseWalkingSpeed=Number(effects.speed)||0;
@@ -323,6 +327,7 @@ var CharacterSheetModel = (() => {
     const bardSubclass=Colleges.derive(d,{level,mods});effects.traits=[...(effects.traits||[]),...bardSubclass.reports.map(row=>row.name+' · '+row.detail)];
     const clericSubclass=Domains.derive(d,{level,mods,saves:effects.saves});effects.resistances=[...new Set([...(effects.resistances||[]),...clericSubclass.resistances])];effects.immunities=[...new Set([...(effects.immunities||[]),...clericSubclass.immunities])];if(clericSubclass.darkvision)effects.darkvision=Math.max(effects.darkvision||0,clericSubclass.darkvision);effects.traits=[...(effects.traits||[]),...clericSubclass.reports.map(row=>row.name+' · '+row.detail)];
     const Circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null),druidSubclass=Circles.derive(d,{level,mods});effects.languages=[...new Set([...(effects.languages||[]),...druidSubclass.languages])];effects.resistances=[...new Set([...(effects.resistances||[]),...druidSubclass.resistances])];effects.immunities=[...new Set([...(effects.immunities||[]),...druidSubclass.immunities])];effects.traits=[...(effects.traits||[]),...druidSubclass.reports.map(row=>row.name+' · '+row.detail)];
+    const fighterSubclass=Archetypes.derive(d,{level,mods,saves:effects.saves,skills:effects.skills});effects.resistances=[...new Set([...(effects.resistances||[]),...fighterSubclass.resistances])];effects.immunities=[...new Set([...(effects.immunities||[]),...fighterSubclass.immunities])];effects.advantageSkills=[...new Set([...(effects.advantageSkills||[]),...fighterSubclass.advantageSkills])];effects.initiativeAdvantage=!!effects.initiativeAdvantage||fighterSubclass.initiativeAdvantage;if(fighterSubclass.darkvision)effects.darkvision=Math.max(effects.darkvision||0,fighterSubclass.darkvision);effects.traits=[...(effects.traits||[]),...fighterSubclass.reports.map(row=>row.name+' · '+row.detail)];
     const berserker=ClassChoices.berserker(d,{level,mods});
     const warDomain=ClassChoices.warDomain(d,{level,mods});
     const lifeDomain=ClassChoices.lifeDomain(d,{level});
@@ -353,6 +358,7 @@ var CharacterSheetModel = (() => {
       bardSubclass,
       clericSubclass,
       druidSubclass,
+      fighterSubclass,
       warDomain,
       lifeDomain,
       lightDomain,
@@ -402,6 +408,7 @@ var CharacterSheetModel = (() => {
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
     for(const speed of barbarianSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
     for(const speed of druidSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
+    result.fighterCombat=Archetypes.apply(d,result,{level});if(result.fighterCombat.size)result.carrying=Carry.limits(data,{scores,effects});
     result.druidCombat=Circles.apply(d,result,{level});
     result.clericCombat=Domains.apply(d,result,{level});
     result.bardCombat=Colleges.apply(d,result,{level});

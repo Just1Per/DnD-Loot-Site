@@ -776,6 +776,7 @@ var CharacterClassFeatureChoices=(()=>{
     const colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null);rows.push(...(colleges?.derive(data,{level,mods}).resources||[]));
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);rows.push(...(domains?.derive(data,{level,mods}).resources||[]));
     const circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);rows.push(...(circles?.derive(data,{level,mods}).resources||[]));
+    const archetypes=globalThis.CharacterFighterSubclasses||(typeof require==='function'?require('./character-fighter-subclasses'):null);rows.push(...(archetypes?.derive(data,{level,mods}).resources||[]));
     return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
@@ -840,6 +841,7 @@ var CharacterClassFeatureChoices=(()=>{
     const colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null);colleges?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);domains?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);circles?.onEvent(data,event,{level:total,mods:context.mods||{}});
+    const archetypes=globalThis.CharacterFighterSubclasses||(typeof require==='function'?require('./character-fighter-subclasses'):null);archetypes?.onEvent(data,event,{...context,level:total,mods:context.mods||{}});
     const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null);rage?.onRest(data,event,{level:total});
     const companion=globalThis.CharacterWildCompanion||(typeof require==='function'?require('./character-wild-companion'):null);companion?.onRest(data,event);
     const conversions=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);conversions?.onRest(data,event);
@@ -959,12 +961,12 @@ var CharacterClassFeatureChoices=(()=>{
     return out;
   }
   function groups(entry,edition='2014',data){
-    if(typeof require==='function'){require('./character-barbarian-subclasses');require('./character-bard-subclasses');require('./character-cleric-subclasses');require('./character-druid-subclasses');}
+    if(typeof require==='function'){require('./character-barbarian-subclasses');require('./character-bard-subclasses');require('./character-cleric-subclasses');require('./character-druid-subclasses');require('./character-fighter-subclasses');}
     if(globalThis.CharacterSubclassPlanning)entry=CharacterSubclassPlanning.sync(entry,edition);
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));
     const rows=[...base,...sub];if(entry?.classId==='artificer'&&data&&!artificerSource(data).eligible)return[];
-    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel&&(!g.startingOnly||!data||artificerLevels(data,20).starting)&&(!g.multiclassOnly||data&&!artificerLevels(data,20).starting)&&(!g.artificerVersion||data&&artificerSource(data).eligible&&artificerSource(data).id===g.artificerVersion)).map(g=>{const source=entry.classId==='artificer'&&data?artificerSource(data):null;return{...g,...(source?{sourceLabel:source.label}:{}),key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0))||0)),options:g.options(entry,edition).map(option=>source&&g.id==='artisan-tool'?{...option,source:source.source,edition:source.sourceEdition}:option)};});
+    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel&&(!g.startingOnly||!data||artificerLevels(data,20).starting)&&(!g.multiclassOnly||data&&!artificerLevels(data,20).starting)&&(!g.artificerVersion||data&&artificerSource(data).eligible&&artificerSource(data).id===g.artificerVersion)).map(g=>{const source=entry.classId==='artificer'&&data?artificerSource(data):null;return{...g,...(source?{sourceLabel:source.label}:{}),key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0,entry,data))||0)),options:g.options(entry,edition).map(option=>source&&g.id==='artisan-tool'?{...option,source:source.source,edition:source.sourceEdition}:option)};});
   }
   function registerSubclass(edition,classId,subclassId,definition){
     edition=edition==='2024'?'2024':'2014';const key=safe(classId)+':'+safe(subclassId);
@@ -974,7 +976,7 @@ var CharacterClassFeatureChoices=(()=>{
   function hasSpell(data,name){return (data?.spells||[]).some(s=>String(spellIndex(spellCatalogue()).byId.get(s.catalogId)?.name||s.name||'').toLowerCase().replace(/\s*\[[^\]]+\]\s*$/,'')===String(name).toLowerCase());}
   function prerequisite(option,group,data,entry){
     const reasons=[];
-    if((option.minLevel||0)>entry.level)reasons.push('Warlock level '+option.minLevel+'+');
+    if((option.minLevel||0)>entry.level)reasons.push((entry.classId[0].toUpperCase()+entry.classId.slice(1))+' level '+option.minLevel+'+');
     const selected=selections(data,group);
     if(option.requiresInvocation&&!selected.includes(option.requiresInvocation))reasons.push('requires '+option.requiresInvocation.replaceAll('-',' '));
     if(option.requiresGroup){
