@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T22:38:25.625Z",
+  "generatedAt": "2026-11-08T22:42:47.458Z",
   "summary": {
     "total": 186,
-    "partialMechanics": 101,
-    "referenceOnly": 85,
+    "partialMechanics": 115,
+    "referenceOnly": 71,
     "byClass": {
       "artificer": {
         "total": 10,
@@ -40,7 +40,7 @@
       },
       "ranger": {
         "total": 14,
-        "partialMechanics": 0
+        "partialMechanics": 14
       },
       "rogue": {
         "total": 15,
@@ -3580,14 +3580,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "beast-master-2024",
@@ -3603,14 +3612,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "drakewarden",
@@ -3626,14 +3644,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "fey-wanderer",
@@ -3649,14 +3676,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "fey-wanderer-2024",
@@ -3672,14 +3708,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "gloom-stalker",
@@ -3695,14 +3740,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "gloom-stalker-2024",
@@ -3718,14 +3772,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "hollow-warden-rthw",
@@ -3741,14 +3804,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "horizon-walker",
@@ -3764,14 +3836,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "hunter",
@@ -3787,14 +3868,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "hunter-2024",
@@ -3810,14 +3900,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "monster-slayer",
@@ -3833,14 +3932,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "swarmkeeper",
@@ -3856,14 +3964,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "winter-walker-frhof",
@@ -3879,14 +3996,23 @@
         15
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "arcane-trickster",
