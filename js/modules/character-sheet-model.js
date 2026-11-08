@@ -300,6 +300,7 @@ var CharacterSheetModel = (() => {
     const Aura=globalThis.CharacterPaladinAuras||(typeof require==='function'?require('./character-paladin-auras'):null),paladinAuras=Aura.derive(d,{level,mods});for(const key of Object.keys(saves))saves[key]+=paladinAuras.bonus;
     classOrders.skillBonuses={};for(const report of classOrders.reports){report.bonus=report.skills.length?Math.max(1,mods.wis):0;for(const key of report.skills)classOrders.skillBonuses[key]=(classOrders.skillBonuses[key]||0)+report.bonus;}
     const Check=globalThis.CharacterToolChecks||(typeof require==='function'?require('./character-tool-checks'):null);
+    const PathSkills=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);effects.skills=[...new Set([...effects.skills,...PathSkills.derive(d,{level,mods}).skills])];
     for (const [key, [, ability]] of Object.entries(skills)){
       const rank=Math.max(d.skills[key].rank,effects.skills.includes(key)?1:0,feats.expertise.includes(key)?2:0,classExpertise.skills.includes(key)?2:0);
       checks[key]=mods[ability]+Math.max(Math.floor(pb*rank),rank>=1?0:Check.untrained(pb,effects,ability,'skill'))+bonus('skill.'+key,d.skills[key].bonus)+skillAll+(classOrders.skillBonuses[key]||0);
@@ -309,6 +310,10 @@ var CharacterSheetModel = (() => {
     effects.specialSenses=[...(effects.specialSenses||[]),...rangerFeatures.senses];
     if(rangerFeatures.blindsight)effects.blindsight=Math.max(effects.blindsight||0,rangerFeatures.blindsight);
     effects.ignoreUnseenAttackDisadvantage=!!effects.ignoreUnseenAttackDisadvantage||rangerFeatures.ignoreUnseenAttackDisadvantage;
+    const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null),barbarianSubclass=Paths.derive(d,{level,mods});
+    effects.resistances=[...new Set([...(effects.resistances||[]),...barbarianSubclass.resistances])];
+    for(const sense of barbarianSubclass.senses)effects[sense.type]=(effects[sense.type]||0)+sense.increase;
+    effects.traits=[...(effects.traits||[]),...barbarianSubclass.reports.map(row=>row.name+' · '+row.detail),...barbarianSubclass.spells.map(row=>row.name+' · '+row.casting+(row.ability?' · '+row.ability.toUpperCase():''))];
     const berserker=ClassChoices.berserker(d,{level,mods});
     const warDomain=ClassChoices.warDomain(d,{level,mods});
     const lifeDomain=ClassChoices.lifeDomain(d,{level});
@@ -317,7 +322,7 @@ var CharacterSheetModel = (() => {
     const natureDomain=ClassChoices.natureDomain(d,{level});
     const knowledgeDomain=ClassChoices.knowledgeDomain(d,{level,mods});
     const trickeryDomain=ClassChoices.trickeryDomain(d,{level});
-    for(const detail of [berserker.frenzy,berserker.mindless,berserker.intimidating,berserker.retaliation])if(detail)effects.traits=[...(effects.traits||[]),detail];
+
     if(warDomain.avatar){effects.resistances=[...new Set([...(effects.resistances||[]),'Bludgeoning, Piercing, and Slashing (nonmagical attacks)'])];effects.traits=[...(effects.traits||[]),warDomain.avatar.detail];}
     if(warDomain.divineStrike)effects.traits=[...(effects.traits||[]),warDomain.divineStrike.detail];
     for(const detail of [lifeDomain.disciple,lifeDomain.blessedHealer,lifeDomain.divineStrike?.detail,lifeDomain.supremeHealing])if(detail)effects.traits=[...(effects.traits||[]),detail];
@@ -334,6 +339,7 @@ var CharacterSheetModel = (() => {
       druidElementalFury:ClassChoices.elementalFury(d,{level,mods}),
       clericBlessedStrikes:ClassChoices.blessedStrikes(d,{level,mods}),
       berserker,
+      barbarianSubclass,
       warDomain,
       lifeDomain,
       lightDomain,
@@ -372,6 +378,7 @@ var CharacterSheetModel = (() => {
     result.magicItems=magicItems;
     const Carry=globalThis.CharacterCarrying||(typeof require==='function'?require('./character-carrying'):null);
     result.carrying=Carry.limits(data,{scores,effects});
+    if(barbarianSubclass.carryMultiplier)for(const key of ['capacity','pushDragLift'])result.carrying[key]*=barbarianSubclass.carryMultiplier;
     result.gear=Equipment.derive(d,result,loot,level);
     if(Magic)result.gear=Magic.augmentGear(d,result.gear,magicItems);
     const acModifiers={magic:bonus('ac.magic'),misc1:bonus('ac.misc1'),misc2:bonus('ac.misc2')},extraAC=acModifiers.magic+acModifiers.misc1+acModifiers.misc2;result.gear.adjustment+=extraAC;result.gear.ac+=extraAC;result.ac=result.gear.ac;
@@ -380,6 +387,7 @@ var CharacterSheetModel = (() => {
     result.itemResources=ItemResources?ItemResources.project(data,result.gear):[];
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
+    for(const speed of barbarianSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     if(Override){result.gear.attacks=result.gear.attacks.map(row=>Override.attack(row,'attack:gear:'+row.id,modifierExpressions,{mods,pb},level));result.manualAttacks=d.attacks.map((row,i)=>Override.attack({...row,hit:result.attacks[i]},'attack:attack:'+row.id,modifierExpressions,{mods,pb},level));result.attacks=result.manualAttacks.map((row,i)=>row.attack??result.attacks[i]);result.actions=result.actions.map((row,i)=>Override.attack(row,'attack:attack:'+d.actions[i]?.id,modifierExpressions,{mods,pb},level));}
 

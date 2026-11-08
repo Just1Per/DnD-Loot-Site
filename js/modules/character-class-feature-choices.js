@@ -654,11 +654,10 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),actual=0;const seen=new Set();
     for(const entry of entries){const count=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=count;if(entry.classId==='wizard'&&!seen.has(entry.classId))actual=count;seen.add(entry.classId);}return actual;
   }
-  function berserker(data,{level=1,mods={}}={}){
-    const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),barbarian=0,subclass='';const seen=new Set();
-    for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId==='barbarian'&&!seen.has('barbarian')){barbarian=actual;subclass=entry.subclassId||'';}seen.add(entry.classId);}
-    const active=edition==='2014'&&subclass==='berserker'&&barbarian>=3,cha=Math.max(-5,Math.min(10,Math.trunc(Number(mods.cha)||0))),dc=8+Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1+cha;
-    return{active,level:active?barbarian:0,frenzy:active?'Frenzy · When you enter Rage, choose Frenzy. While raging, make one melee weapon attack as a Bonus Action on each turn after this one. When the Rage ends, gain one level of Exhaustion.':null,mindless:active&&barbarian>=6?'Mindless Rage · While raging, you cannot be Charmed or Frightened. If already Charmed or Frightened when you enter Rage, the effect is suspended while the Rage lasts.':null,intimidating:active&&barbarian>=10?'Intimidating Presence · Action · one creature within 30 ft that can see or hear you makes a Wisdom save, DC '+dc+'. Failure: Frightened for up to 1 minute; it can repeat the save at the end of each turn.':null,retaliation:active&&barbarian>=14?'Retaliation · Reaction · when a creature within 5 ft damages you, make one melee weapon attack against it.':null};
+  function berserker(data,context={}){
+    const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null),path=Paths?.derive(data,context),active=path?.active&&path.id==='berserker';
+    const detail=name=>active?path.reports.find(row=>row.name===name)?.detail||null:null;
+    return{active:!!active,level:active?path.level:0,frenzy:detail('Frenzy'),mindless:detail('Mindless Rage'),intimidating:detail('Intimidating Presence'),retaliation:detail('Retaliation')};
   }
   function warDomain(data,{level=1,mods={}}={}){
     const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level,subclassId:data.build?.subclassId||''}];let remaining=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),cleric=0,subclass='';const seen=new Set();
@@ -779,6 +778,7 @@ var CharacterClassFeatureChoices=(()=>{
     const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null),rageRow=rage?.resource(data,{level});if(rageRow)rows.push(rageRow);
     const divine=globalThis.CharacterDivineChannel||(typeof require==='function'?require('./character-divine-channel'):null);rows.push(...(divine?.resources(data,{level,mods})||[]));
     const wild=globalThis.CharacterWildShape||(typeof require==='function'?require('./character-wild-shape'):null);rows.push(...(wild?.resources(data,{level})||[]));
+    const paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);rows.push(...(paths?.derive(data,{level,mods}).resources||[]));
     return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
@@ -811,6 +811,7 @@ var CharacterClassFeatureChoices=(()=>{
   function resetClassResources(data,event,context={}){
     if(!['short','long','initiative','turn'].includes(event))return;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),edition=data.build?.edition==='2024'?'2024':'2014',entries=stored.classLevels||[],total=Number(context.level)||(entries.length?Math.min(20,entries.reduce((sum,entry)=>sum+Math.max(0,Number(entry.level)||0),0)):1),rest=event==='short'||event==='long',updates={};
+    const paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);for(const row of paths?.derive(data,{level:total,mods:context.mods||{}}).resources||[])if(row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
     const monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),hasMonk=entries.length?monkLevels(data,total)>=2:data.build?.classId==='monk';
     const source=artificerSource(data),artificer=artificerLevels(data,total),currentFlashKey=source.id==='efa'?groupKey('2024','artificer','flash-of-genius-uses'):flashKey;
     if(source.eligible&&artificer.level>=7&&choices[currentFlashKey]){const raw=choices[currentFlashKey][0];if(event==='long')updates[currentFlashKey]=['0'];else if(event==='short'&&source.id==='efa'&&artificer.level>=14&&/^\d{1,3}$/.test(raw||'')){const model=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null),row=context.classResources?.find(row=>row.id==='artificer-flash-of-genius')||model?.derive(data,total,context.loot||[]).classResources?.find(row=>row.id==='artificer-flash-of-genius'),max=row?.max||Math.max(1,Math.trunc(Number(context.mods?.int)||1));updates[currentFlashKey]=[String(row?.shortRecovery==='all'?0:Math.max(0,Math.min(Number(raw),max)-1))];}}if(rest&&hasMonk&&choices[monkKey])updates[monkKey]=['0'];
@@ -957,6 +958,7 @@ var CharacterClassFeatureChoices=(()=>{
     return out;
   }
   function groups(entry,edition='2014',data){
+    if(typeof require==='function')require('./character-barbarian-subclasses');
     if(globalThis.CharacterSubclassPlanning)entry=CharacterSubclassPlanning.sync(entry,edition);
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));

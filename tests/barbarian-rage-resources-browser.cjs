@@ -315,6 +315,23 @@ const errors = [];
     );
     await undo.click();
     assert.equal(await pool.textContent(), "2 / 2");
+    await page.evaluate(() => {
+      sheetSession.data.build.edition = '2024';
+      sheetSession.data.adobe.classLevels = [{classId:'barbarian',subclassId:'zealot-2024',level:14}];
+      sheetSession.data.adobe.classFeatureChoices = {};
+      sheetSession.identity.level = 14;
+      renderCharacterSheet(); selectSheetTab('combat');
+    });
+    await page.locator('[data-class-resource="barbarian-fanatical-focus"][data-delta="1"]').click();
+    assert.equal(await page.locator('[data-class-resource="barbarian-fanatical-focus"][data-delta="1"]').isDisabled(),true);
+    await page.locator('[data-enter-rage]').click();
+    assert.equal(await page.locator('[data-class-resource="barbarian-fanatical-focus"][data-delta="1"]').isDisabled(),false);
+    assert.equal(await pool.textContent(),'4 / 5');
+    await page.locator('[data-class-resource="barbarian-zealous-presence"][data-delta="1"]').click();
+    await page.locator('[data-rage-recharge="barbarian-zealous-presence"]').click();
+    assert.equal(await pool.textContent(),'3 / 5');
+    assert.equal(await page.locator('[data-class-resource="barbarian-zealous-presence"][data-delta="1"]').isDisabled(),false);
+    assert.equal(await page.evaluate(() => sheetSession.data.hpCurrent),originalHP);
     assert.deepEqual(errors, []);
     console.log(
       "PASS Rage spend/undo, actual source/level, optional Persistent Rage recovery, rest limits, save/reopen, legacy unlimited, HP isolation, print and responsive/accessibility",

@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T16:41:43.858Z",
+  "generatedAt": "2026-11-08T18:28:24.867Z",
   "summary": {
     "total": 186,
-    "partialMechanics": 8,
-    "referenceOnly": 178,
+    "partialMechanics": 20,
+    "referenceOnly": 166,
     "byClass": {
       "artificer": {
         "total": 10,
@@ -12,7 +12,7 @@
       },
       "barbarian": {
         "total": 13,
-        "partialMechanics": 1
+        "partialMechanics": 13
       },
       "bard": {
         "total": 14,
@@ -305,14 +305,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "battlerager",
@@ -331,11 +340,20 @@
         "resources": false,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "beast",
@@ -351,14 +369,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
+        "resources": true,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "berserker",
@@ -377,10 +404,19 @@
         "resources": false,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
         "manualGuidance": true
       },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
       "status": "partial-mechanics"
     },
     {
@@ -397,14 +433,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "giant",
@@ -422,12 +467,21 @@
       "mechanics": {
         "resources": false,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "storm-herald",
@@ -444,13 +498,22 @@
       ],
       "mechanics": {
         "resources": false,
-        "defense": false,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "totem-warrior",
@@ -467,13 +530,22 @@
       ],
       "mechanics": {
         "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "wild-heart-2024",
@@ -490,13 +562,22 @@
       ],
       "mechanics": {
         "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "world-tree-2024",
@@ -512,14 +593,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "zealot",
@@ -535,14 +625,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "zealot-2024",
@@ -558,14 +657,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "wild-magic-barbarian",
@@ -581,14 +689,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Conditional attacks, temporary forms and auras are reported with explicit triggers, not automatically applied to every roll.",
+        "Combat condition tracking, automatic application to conditional rolls, and temporary form activation remain pending."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "creation",
