@@ -121,6 +121,7 @@ const FEATURE_FILES = [
   "./modules/character-paladin-subclasses.js",
   "./modules/character-ranger-subclasses.js",
   "./modules/character-rogue-subclasses.js",
+  "./modules/character-sorcerer-subclasses.js",
   "./modules/character-subclass-runtime.js",
   "./modules/character-languages.js",
   "./modules/character-paladin-auras.js",

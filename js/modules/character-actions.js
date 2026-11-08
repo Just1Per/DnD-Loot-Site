@@ -81,7 +81,8 @@ var CharacterActions = (()=>{
    if(spell.level===0&&source.classId==='cleric'&&invocation?.sourceClass==='cleric'&&stats.clericBlessedStrikes?.vitalityAvailable)notes.push('Improved Blessed Strikes: after dealing damage to a creature, grant '+stats.clericBlessedStrikes.amount+' temporary HP to yourself or another creature within 60 ft. Resolve the trigger in Combat.');
    if(invocation?.range)notes.push(invocation.rangeSource+': range '+invocation.range+'.');
    const Casting=globalThis.CharacterSpellcasting||(typeof require==='function'?require('./character-spellcasting'):null),casting=Casting?Casting.castingStats({classId:owner,ability},stats,data):{attack:mod+stats.pb+data.spellAttackBonus,dc:8+stats.pb+mod+data.spellDCBonus};
-   const types=(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');
+   const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null),spellEffects=Runtime.modules().flatMap(r=>r.module.spellEffect?.(data,spell,stats,{level,owner})||[]);for(const effect of spellEffects){if(damage&&count===1)damage=add(damage,effect.bonus);notes.push(effect.name+': '+sign(effect.bonus)+' to '+effect.scope+'.');}
+   const types=(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');if(damage&&count>1)for(const effect of spellEffects)damage+=' '+sign(effect.bonus)+' once per spell';
    return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(casting.attack):spell.save?spell.save+' DC '+casting.dc:'Effect',damage:damage||'See spell effect',range:invocation?.range||CFC.cantripRange(spell,level),notes};
   }
   if(a.kind==='grapple'||a.kind==='shove'){

@@ -160,8 +160,7 @@ var CharacterClassFeatureChoices=(()=>{
   function spendMetamagic(data,id,spellLevel,context={}){
     const choice=metamagic(data,context).find(row=>row.id===id),resource=classResources(data,context).find(row=>row.id==='sorcery-points');if(!choice||!resource)return false;
     if(choice.cost===null&&(!Number.isInteger(spellLevel)||spellLevel<0||spellLevel>9))return false;
-    const cost=choice.cost===null?Math.max(1,spellLevel):choice.cost;if(resource.remaining<cost)return false;
-    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(Math.min(resource.used,resource.max)+cost)]}};return true;
+    let cost=choice.cost===null?Math.max(1,spellLevel):choice.cost;const updates={};if(context.lunarDiscount){const Origins=globalThis.CharacterSorcererSubclasses||(typeof require==='function'?require('./character-sorcerer-subclasses'):null),r=Origins.derive(data,context),boon=r.resources.find(p=>p.id==='sorcerer-boons'),schools={'full-moon':['abjuration','divination','a','d'],'new-moon':['enchantment','necromancy','e','n'],'crescent-moon':['illusion','transmutation','i','t']};if(r.id!=='lunar-sorcery'||r.level<6||!boon?.remaining||!schools[r.phase]?.includes(String(context.lunarSchool).toLowerCase()))return false;cost=Math.max(0,cost-1);updates[boon.key]=[String(boon.used+1)];}if(resource.remaining<cost)return false;updates[resource.key]=[String(Math.min(resource.used,resource.max)+cost)];const Runtime=globalThis.CharacterSubclassMechanics||(typeof require==='function'?require('./character-subclass-mechanics'):null);return Runtime.save(data,updates);
   }
 
   definitions['2024'].cleric=[{id:'divine-order',name:'Divine Order',minLevel:1,count:()=>1,referenceComplete:true,options:()=>[

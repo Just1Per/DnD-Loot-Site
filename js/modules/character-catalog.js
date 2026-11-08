@@ -70,7 +70,7 @@ var CharacterCatalog = (() => {
     return (catalogue?.spells||[]).filter(s=>{
       const versionOk=!edition || s.edition===edition || (legacy||artificer) && edition==='2024' && s.edition==='2014';
       const levelOk=level==='' || s.level===Number(level);
-      const classOk=artificer?!!choices?.artificerSpellAllowed(s,classSource,catalogue.spells,edition):!classId || (s.classesByEdition?.[edition]||s.classes||[]).includes(classId);
+      const classOk=artificer?!!choices?.artificerSpellAllowed(s,classSource,catalogue.spells,edition):!classId || (Array.isArray(classId)?classId:[classId]).some(id=>(s.classesByEdition?.[edition]||s.classes||[]).includes(id));
       const schoolOk=!school || String(s.school||'').toLowerCase()===String(school).toLowerCase();
       const searchable=[
         s.name,s.school,s.source,s.book,s.save,s.casting,s.range,

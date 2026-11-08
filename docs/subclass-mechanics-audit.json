@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T22:47:47.952Z",
+  "generatedAt": "2026-11-08T22:53:56.146Z",
   "summary": {
     "total": 186,
-    "partialMechanics": 130,
-    "referenceOnly": 56,
+    "partialMechanics": 144,
+    "referenceOnly": 42,
     "byClass": {
       "artificer": {
         "total": 10,
@@ -48,7 +48,7 @@
       },
       "sorcerer": {
         "total": 14,
-        "partialMechanics": 0
+        "partialMechanics": 14
       },
       "warlock": {
         "total": 14,
@@ -4509,14 +4509,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "aberrant-sorcery-2024",
@@ -4532,14 +4541,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "clockwork-sorcery-2024",
@@ -4555,14 +4573,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "clockwork-soul",
@@ -4579,14 +4606,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "divine-soul",
@@ -4603,14 +4639,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "draconic-bloodline",
@@ -4626,14 +4671,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "draconic-sorcery-2024",
@@ -4649,14 +4703,23 @@
         19
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "lunar-sorcery",
@@ -4673,14 +4736,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "shadow-magic",
@@ -4697,14 +4769,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "shadow-sorcery-rthw",
@@ -4720,14 +4801,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "spellfire-sorcery-frhof",
@@ -4743,14 +4833,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "storm-sorcery",
@@ -4767,14 +4866,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "wild-magic",
@@ -4791,14 +4899,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "wild-magic-sorcery-2024",
@@ -4814,14 +4931,23 @@
         18
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "archfey-patron-2024",
