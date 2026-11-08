@@ -190,6 +190,7 @@ var CharacterEquipment = (() => {
       if(m.kind!=='weapon'||!w)continue;
       const notes=[];
       let ability=ch.ability==='auto'?(w.props.includes('finesse')?(stats.mods.dex>stats.mods.str?'dex':'str'):w.rangeType==='ranged'?'dex':'str'):ch.ability;
+      const Patrons=globalThis.CharacterWarlockSubclasses||(typeof require==='function'?require('./character-warlock-subclasses'):null),patron=Patrons?.derive(data,{level,mods:stats.mods});if(ch.ability==='auto'&&patron?.active&&patron.base==='hexblade'&&patron.pick('hex-weapon')===r.entry.id&&!w.props.includes('twoHanded'))ability='cha';
       const monkWeapon=martialArts?.active&&(Martial.weapon(w,martialArts.edition)||martialArts.kenseiWeapons?.includes(w.name));if(monkWeapon&&ch.ability==='auto')ability=Martial.ability(stats.mods);
       let useTwo=w.props.includes('twoHanded')||ch.mode==='twoHanded'&&!!w.versatile;
       if(m.base==='lance')useTwo=ch.mode!=='mounted';

@@ -109,7 +109,7 @@
 
   function eligible(p){
     if(!CharacterCatalog.data)return[];
-    return CharacterCatalog.spells({edition:sheetSession.data.build.edition,classId:p.listClasses||p.listClass||p.classId,classSource:p.sourceId}).filter(spell=>Number(spell.level)<=p.maxSpellLevel);
+    return [...CharacterCatalog.spells({edition:sheetSession.data.build.edition,classId:p.listClasses||p.listClass||p.classId,classSource:p.sourceId}),...(p.expandedSpellOptions||[])].filter(spell=>Number(spell.level)<=p.maxSpellLevel);
   }
   function renderList(){
     const p=currentProfile(),host=document.getElementById('spellGeneratorResults');
@@ -126,7 +126,7 @@
       school,
       search:q
     }).filter(spell=>Number(spell.level)<=p.maxSpellLevel);
-    for(const spell of grants(p))if(!rows.some(s=>s.id===spell.id)&&(lvl===''||String(spell.level)===lvl)&&(!school||spell.school===school)&&(!q||spell.name.toLowerCase().includes(q.toLowerCase())))rows.push(spell);
+    for(const spell of [...grants(p),...(p.expandedSpellOptions||[]).filter(s=>s.level<=p.maxSpellLevel)])if(!rows.some(s=>s.id===spell.id)&&(lvl===''||String(spell.level)===lvl)&&(!school||spell.school===school)&&(!q||spell.name.toLowerCase().includes(q.toLowerCase())))rows.push(spell);
     rows.sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name));
     host.innerHTML=rows.map(spell=>{
       const old=existing.get(spell.id),checked=!!old,automatic=grants(p).some(s=>s.id===spell.id);

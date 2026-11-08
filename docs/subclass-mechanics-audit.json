@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T22:53:56.146Z",
+  "generatedAt": "2026-11-08T23:00:32.631Z",
   "summary": {
     "total": 186,
-    "partialMechanics": 144,
-    "referenceOnly": 42,
+    "partialMechanics": 158,
+    "referenceOnly": 28,
     "byClass": {
       "artificer": {
         "total": 10,
@@ -52,7 +52,7 @@
       },
       "warlock": {
         "total": 14,
-        "partialMechanics": 0
+        "partialMechanics": 14
       },
       "wizard": {
         "total": 18,
@@ -4963,14 +4963,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "celestial-patron-2024",
@@ -4986,14 +4995,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "fiend-patron-2024",
@@ -5009,14 +5027,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "great-old-one-patron-2024",
@@ -5032,14 +5059,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "archfey",
@@ -5056,14 +5092,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "celestial",
@@ -5080,14 +5125,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "fathomless",
@@ -5104,14 +5158,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "fiend",
@@ -5127,14 +5190,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "genie",
@@ -5151,14 +5223,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "great-old-one",
@@ -5175,14 +5256,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "hexblade",
@@ -5199,14 +5289,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "undead",
@@ -5222,14 +5321,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "undying",
@@ -5246,14 +5354,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "undead-patron-rthw",
@@ -5269,14 +5386,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "abjurer-2024",

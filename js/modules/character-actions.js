@@ -10,6 +10,7 @@ var CharacterActions = (()=>{
  function resolve(raw,data,level,stats,loot=[],spells=[]){
   const a=normalize([raw])[0],row={name:a.name||a.ref||a.kind,hit:'—',damage:'—',range:'—',notes:[],available:true,ability:''};
   const unavailable=reason=>({...row,available:false,notes:[reason]});
+  if(a.kind==='weapon'&&a.ref.startsWith('warlock-')){const Sub=globalThis.CharacterWarlockSubclasses||(typeof require==='function'?require('./character-warlock-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('rogue-')){const Sub=globalThis.CharacterRogueSubclasses||(typeof require==='function'?require('./character-rogue-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('monk-')){const Sub=globalThis.CharacterMonkSubclasses||(typeof require==='function'?require('./character-monk-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('druid-')){const Circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);return Circles.resolveAttack(a.ref,data,stats,{level});}
@@ -82,7 +83,7 @@ var CharacterActions = (()=>{
    if(invocation?.range)notes.push(invocation.rangeSource+': range '+invocation.range+'.');
    const Casting=globalThis.CharacterSpellcasting||(typeof require==='function'?require('./character-spellcasting'):null),casting=Casting?Casting.castingStats({classId:owner,ability},stats,data):{attack:mod+stats.pb+data.spellAttackBonus,dc:8+stats.pb+mod+data.spellDCBonus};
    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null),spellEffects=Runtime.modules().flatMap(r=>r.module.spellEffect?.(data,spell,stats,{level,owner})||[]);for(const effect of spellEffects){if(damage&&count===1)damage=add(damage,effect.bonus);notes.push(effect.name+': '+sign(effect.bonus)+' to '+effect.scope+'.');}
-   const types=(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');if(damage&&count>1)for(const effect of spellEffects)damage+=' '+sign(effect.bonus)+' once per spell';
+   const types=spellEffects.find(e=>e.damageType)?.damageType||(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');if(damage&&count>1)for(const effect of spellEffects)if(effect.bonus)damage+=' '+sign(effect.bonus)+' once per spell';
    return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(casting.attack):spell.save?spell.save+' DC '+casting.dc:'Effect',damage:damage||'See spell effect',range:invocation?.range||CFC.cantripRange(spell,level),notes};
   }
   if(a.kind==='grapple'||a.kind==='shove'){

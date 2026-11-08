@@ -14,3 +14,11 @@ for(const row of Object.values(S.all)){
  records[row.id]={source:source.source,edition:row.edition,grants};
 }
 const output=path.join(root,'js/modules/character-subclass-spell-data.js');fs.writeFileSync(output,"'use strict';\n// Generated pinned subclass spell names/levels only; no source entries.\nvar CharacterSubclassSpellData="+JSON.stringify(records)+";\nif(typeof module!=='undefined'&&module.exports)module.exports=CharacterSubclassSpellData;\n");console.log(JSON.stringify({subclasses:Object.keys(records).length,fixedGrants:Object.values(records).reduce((n,r)=>n+r.grants.length,0)}));
+// Legacy patron lists expand selection; they never become automatic prepared grants.
+const catalogue=require('../data/rules/catalog.json').spells,expanded={};
+for(const row of Object.values(S.all).filter(r=>r.classId==='warlock'&&r.edition==='2014')){
+ const s=sources.find(s=>norm(s.name)===norm(row.name)&&s.source===F.records[row.id].source&&s.additionalSpells);if(!s)throw Error('Missing expanded patron '+row.id);const spells=[];
+ for(const group of s.additionalSpells||[])for(const values of Object.values(group.expanded||{}))for(const name of Array.isArray(values)?values:[]){if(typeof name!=='string')continue;const spell=catalogue.find(p=>p.edition===row.edition&&norm(p.name)===norm(name.split('|')[0]));if(spell)spells.push({name:spell.name,level:Math.max(1,2*spell.level-1),...(group.name?{group:group.name}:{})});}
+ expanded[row.id]={edition:row.edition,spells};
+}
+fs.writeFileSync(path.join(root,'js/modules/character-subclass-expanded-spell-data.js'),"'use strict';\n// Generated pinned spell names and minimum patron levels; expanded choices, not grants.\nvar CharacterSubclassExpandedSpellData="+JSON.stringify(expanded)+";\nif(typeof module!=='undefined'&&module.exports)module.exports=CharacterSubclassExpandedSpellData;\n");
