@@ -40,3 +40,30 @@ test('Giant grants Giant or one selected replacement only when Giant is already 
  const d=make('giant','2014',3);choose(d,'giant-language','draconic');assert.ok(M.derive(d,3).effects.languages.includes('Giant'));assert.ok(!M.derive(d,3).effects.languages.includes('Draconic'));
  d.languages='Giant';assert.ok(M.derive(d,3).effects.languages.includes('Draconic'));d.adobe.classLevels[0].level=2;assert.ok(!M.derive(d,2).effects.languages.includes('Draconic'));
 });
+test('Ancestral Guardian shield scales at 6/10/14 and Consult shares one short-rest pool',()=>{
+ for(const [n,die]of [[6,'2d6'],[10,'3d6'],[14,'4d6'],[20,'4d6']]){const d=make('ancestral-guardian','2014',n),r=B.derive(d,{level:n});assert.equal(r.combat.find(f=>f.name==='Spirit Shield').dice,die);assert.equal(r.reports.some(f=>f.name==='Vengeful Ancestors'),n>=14);if(n>=10){assert.equal(C.changeClassResource(d,'barbarian-consult-spirits',1,{level:n}),true);assert.equal(C.changeClassResource(d,'barbarian-consult-spirits',1,{level:n}),false);C.resetClassResources(d,'short',{level:n});assert.equal(C.classResources(d,{level:n}).find(f=>f.id==='barbarian-consult-spirits').remaining,1);}}
+});
+test('Beast unlocks magical weapons, infection and hunt separately with character proficiency uses',()=>{
+ for(const n of [3,6,9,10,13,14,20]){const d=make('beast','2014',n),r=B.derive(d,{level:n,mods:{con:3}});assert.equal(r.combat.find(f=>f.name==='Form of the Beast').magical,n>=6);assert.equal(r.resources.some(f=>f.id==='barbarian-infectious-fury'),n>=10);assert.equal(r.resources.some(f=>f.id==='barbarian-call-hunt'),n>=14);for(const pool of r.resources)assert.equal(pool.max,Math.ceil(n/4)+1);}
+});
+test('Wild Magic awareness and bolstering share neither uses nor recovery with Rage',()=>{
+ const d=make('wild-magic-barbarian','2014',14),opts={level:14,mods:{con:3}},r=B.derive(d,opts);assert.equal(r.combat.find(f=>f.name==='Wild Surge').dc,16);assert.equal(r.resources.length,2);assert.ok(r.resources.every(f=>f.max===5));assert.equal(C.changeClassResource(d,'barbarian-magic-awareness',1,opts),true);assert.equal(C.classResources(d,opts).find(f=>f.id==='barbarian-bolstering-magic').used,0);C.resetClassResources(d,'short',opts);assert.equal(C.classResources(d,opts).find(f=>f.id==='barbarian-magic-awareness').used,1);C.resetClassResources(d,'long',opts);assert.equal(C.classResources(d,opts).find(f=>f.id==='barbarian-magic-awareness').used,0);
+});
+test('Giant reach, thrown damage and Cleaver dice scale from Barbarian rather than total level',()=>{
+ for(const [n,reach,die]of [[3,5,null],[6,5,'1d6'],[13,5,'1d6'],[14,10,'2d6'],[20,10,'2d6']]){const r=B.derive(make('giant','2014',n),{level:n,mods:{str:4}});assert.equal(r.combat.find(f=>f.name==="Giant's Havoc").reachBonus,reach);assert.equal(r.combat.find(f=>f.name==='Elemental Cleaver')?.dice||null,die);assert.equal(r.combat.some(f=>f.name==='Mighty Impel'),n>=10);}
+});
+test('World Tree vitality and branches use the correct level and Strength DC; extended teleport is per Rage',()=>{
+ for(const n of [3,6,10,14,20]){const r=B.derive(make('world-tree-2024','2024',n),{level:n,mods:{str:4}});assert.equal(r.combat.find(f=>f.name==='Vitality of the Tree').temporaryHP,n);if(n>=6)assert.equal(r.combat.find(f=>f.name==='Branches of the Tree').dc,12+Math.ceil(n/4)+1);assert.equal(r.resources.some(f=>f.resets.includes('rage')),n>=14);}
+});
+test('Battlerager temporary HP floor and revised Zealot healing pool follow exact breakpoints',()=>{
+ assert.equal(B.derive(make('battlerager','2014',6),{level:6,mods:{con:-2}}).combat.find(f=>f.name==='Reckless Abandon').temporaryHP,1);
+ for(const [n,dice]of [[3,4],[5,4],[6,5],[11,5],[12,6],[16,6],[17,7],[20,7]])assert.equal(B.derive(make('zealot-2024','2024',n),{level:n}).resources.find(f=>f.id==='barbarian-warrior-gods').max,dice);
+});
+test('Beast and armor-spike reference actions compute Strength, proficiency, Rage and source gating',()=>{
+ const A=require('../js/modules/character-actions'),d=make('beast','2014',6);choose(d,'form-of-the-beast','tail');d.actions=[{kind:'weapon',ref:'barbarian-beast-tail'}];let r=M.derive(d,6);assert.equal(r.actions[0].hit,'+7');assert.equal(r.actions[0].damage,'1d8 +6 piercing');assert.equal(r.actions[0].range,'10 ft');assert.match(r.actions[0].notes.join(' '),/magical/);choose(d,'form-of-the-beast','claws');assert.equal(M.derive(d,6).actions[0].available,false);
+ const b=make('battlerager','2014',3),stats=M.derive(b,3),attack=A.resolve({kind:'weapon',ref:'barbarian-armor-spikes'},b,3,stats);assert.equal(attack.damage,'1d4 +6 piercing');assert.match(attack.notes.join(' '),/spiked armor/);
+});
+test('Elemental Cleaver computes element, scaling, thrown range and Strength-only Rage damage',()=>{
+ const d=make('giant','2014',14);choose(d,'cleaver-weapon','battleaxe');choose(d,'elemental-cleaver','cold');d.actions=[{kind:'weapon',ref:'barbarian-elemental-cleaver',mode:'thrown'}];let r=M.derive(d,14);assert.equal(r.actions[0].hit,'+9');assert.equal(r.actions[0].damage,'1d8 + 4 + 3 + 2d6 cold');assert.equal(r.actions[0].range,'20/60 ft');d.actions[0].mode='twoHanded';r=M.derive(d,14);assert.match(r.actions[0].damage,/1d10/);assert.equal(r.actions[0].range,'15 ft');
+ choose(d,'cleaver-weapon','longbow');d.actions[0].mode='normal';r=M.derive(d,14);assert.equal(r.actions[0].ability,'dex');assert.ok(!r.actions[0].damage.includes(' + 3 + '));
+});

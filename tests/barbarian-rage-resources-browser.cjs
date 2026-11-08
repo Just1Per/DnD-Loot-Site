@@ -332,6 +332,20 @@ const errors = [];
     assert.equal(await pool.textContent(),'3 / 5');
     assert.equal(await page.locator('[data-class-resource="barbarian-zealous-presence"][data-delta="1"]').isDisabled(),false);
     assert.equal(await page.evaluate(() => sheetSession.data.hpCurrent),originalHP);
+    await page.evaluate(() => {
+      sheetSession.data.build.edition = '2014';
+      sheetSession.data.adobe.classLevels = [{classId:'barbarian',subclassId:'beast',level:6}];
+      sheetSession.data.adobe.classFeatureChoices = {};
+      sheetSession.identity.level = 6;
+      CharacterClassFeatureChoices.set(sheetSession.data,sheetSession.data.adobe.classLevels[0],'form-of-the-beast',0,'tail');
+      renderCharacterSheet(); openAttackPicker();
+    });
+    await page.locator('#attackKind').selectOption('weapon');
+    await page.locator('#attackRef').selectOption('barbarian-beast-tail');
+    assert.match(await page.locator('#attackPreview').textContent(),/1d8/);
+    assert.match(await page.locator('#attackPreview').textContent(),/10 ft/);
+    await page.locator('#attackConfirm').click();
+    assert.equal(await page.evaluate(() => sheetSession.data.actions.some(a=>a.ref==='barbarian-beast-tail')),true);
     assert.deepEqual(errors, []);
     console.log(
       "PASS Rage spend/undo, actual source/level, optional Persistent Rage recovery, rest limits, save/reopen, legacy unlimited, HP isolation, print and responsive/accessibility",

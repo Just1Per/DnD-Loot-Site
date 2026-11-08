@@ -11,13 +11,14 @@ Implemented integrations:
 - Short/Long Rest recovery and explicit **Enter Rage** control. Generic spending does not reset subclass counters. Enter Rage spends one use and resets once-per-Rage counters atomically; unlimited legacy Rage does not spend a finite counter.
 - Revised Zealous Presence/Intimidating Presence can spend one Rage to restore their independent use. This is distinct from entering Rage.
 - Permanent Storm Soul resistance/swim, Bestial Soul swim/climb, Wild Heart senses/swim/climb, Tiger skill proficiency, and Bear Aspect carrying/lifting capacity. Walking-derived movement follows class speed bonuses.
+- Beast natural weapons, Battlerager armor spikes and Elemental Cleaver standard-weapon references in the existing attack picker. Form/edition/level changes deactivate stale references. Strength/proficiency, applicable Rage damage, reach, element and Cleaver dice are calculated.
 - Ritual and limited-feature spell grants in the existing spell selector, separate from preparation allowances and without granting Barbarian spell slots. Casting restrictions survive conversion to sheet rows.
 
 Remaining work before declaring Barbarian complete:
 
 - Automatic application of temporary combat forms, auras and conditional hit modifiers. Current reports specify dice, DCs, action timing, targets, equipment requirements and duration; they do not change every attack or permanently activate Rage bonuses.
 - Automatic handling of event-specific temporary HP, damage reduction, death prevention, ally effects, forced movement and slot recovery received by another character.
-- Equipment-specific attack rows for natural/spiked/infused weapons.
+- Owned magic-item bonuses on the Giant infused-weapon reference. The existing owned inventory attack retains those bonuses; the infusion reference explicitly uses the selected standard weapon.
 
 The mechanics audit deliberately retains `partial-mechanics` for these paths. A source review or a report is not a claim of full automation.
 

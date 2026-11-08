@@ -29,6 +29,7 @@ var CharacterBarbarianSubclasses=(()=>{
   choice('2014','beast','bestial-soul',6,['Swim','Climb','Jump']);
   choice('2014','giant','giant-language',3,()=>{const R=globalThis.CharacterRules||(typeof require==='function'?require('./character-rules'):null);return(R?.languages||[]).filter(name=>!["Thieves’ Cant","Thieves' Cant",'Druidic','Giant'].includes(name));});
   choice('2014','giant','giant-cantrip',3,['Druidcraft','Thaumaturgy']);
+  choice('2014','giant','cleaver-weapon',6,()=>{const E=globalThis.CharacterEquipment||(typeof require==='function'?require('./character-equipment'):null);return Object.values(E?.weapons||{}).map(w=>w.name);});
   choice('2014','giant','elemental-cleaver',6,['Acid','Cold','Fire','Lightning','Thunder']);
   choice('2024','wild-heart-2024','rage-of-the-wilds',3,['Bear','Eagle','Wolf']);
   choice('2024','wild-heart-2024','aspect-of-the-wilds',6,['Owl','Panther','Salmon']);
@@ -143,6 +144,33 @@ var CharacterBarbarianSubclasses=(()=>{
     if(!row?.rageRecharge||!row.used||!rage?.remaining)return false;
     d.adobe={...store(d),classFeatureChoices:{...C.normalize(store(d).classFeatureChoices),[row.key]:['0'],[rage.key]:[String(rage.used+1)]}};return true;
   }
-  return{ids,definitions,context,derive,enterRage,recharge};
+  function attackReferences(d,opts={}){
+    const c=context(d,opts);if(!c.active)return[];
+    if(c.id==='beast'){const form=c.pick('form-of-the-beast');return ['bite','claws','tail'].includes(form)?[{ref:'barbarian-beast-'+form,name:'Beast '+form+' · during Rage'}]:[];}
+    if(c.id==='battlerager')return[{ref:'barbarian-armor-spikes',name:'Armor spikes · spiked armor and Rage'}];
+    if(c.id==='giant'&&c.level>=6&&c.pick('cleaver-weapon')&&c.pick('elemental-cleaver'))return[{ref:'barbarian-elemental-cleaver',name:'Elemental Cleaver · held weapon during Rage'}];
+    return[];
+  }
+  function resolveAttack(ref,d,stats,opts={}){
+    const c=context(d,{...opts,mods:stats.mods}),available=attackReferences(d,opts).some(r=>r.ref===ref),sign=n=>(n>=0?'+':'')+n;
+    if(!available)return{name:'Unavailable subclass weapon',hit:'—',damage:'—',range:'—',available:false,notes:['Choose the matching Barbarian subclass and weapon form in Character Builder.']};
+    const str=Number(stats.mods?.str)||0,notes=['Use only during an active Rage. Adding this reference does not start Rage or create inventory.'],base={available:true,ability:'str',proficient:true,hit:sign(str+stats.pb),range:'5 ft',notes};
+    if(ref==='barbarian-elemental-cleaver'){
+      const E=globalThis.CharacterEquipment||(typeof require==='function'?require('./character-equipment'):null),weapon=c.pick('cleaver-weapon'),profile=E.weapons[weapon];if(!profile)return{...base,available:false,name:'Unavailable infused weapon',damage:'—'};
+      const entry={id:'barbarian-cleaver-reference',quantity:1,item:{name:profile.name}},temp={...d,equipmentState:{...d.equipmentState,loadout:[{id:entry.id,equipped:true,ability:opts.ability||'auto',proficiency:'auto',mode:opts.mode==='thrown'?'normal':opts.mode||'normal'}]}};
+      const row=E.derive(temp,stats,[entry],opts.level).attacks.find(a=>a.id===entry.id),dice=c.level>=14?'2d6':'1d6',type=c.pick('elemental-cleaver');
+      if(!row)return{...base,available:false,name:'Unavailable infused weapon',damage:'—'};
+      const rageBonus=row.ability==='str'&&(profile.rangeType==='melee'||opts.mode==='thrown')?c.rage:0,damage=/^\d+d\d+/.test(row.damage)?row.damage.replace(new RegExp('\\s*'+row.damageType+'$','i'),'')+(rageBonus?' + '+rageBonus:'')+' + '+dice+' '+type:row.damage;
+      return{...base,name:'Elemental Cleaver · '+profile.name,ability:row.ability,proficient:row.proficient,hit:sign(row.attack),damage,damageDice:row.damage.match(/^\d+d\d+/)?.[0]||'',damageType:type,range:opts.mode==='thrown'?'20/60 ft':profile.rangeType==='melee'?(parseInt(row.range,10)+(c.level>=14?10:5))+' ft':row.range,notes:[...notes,...row.notes,'Use the chosen held weapon; this reference omits owned magic-item bonuses. Thrown range 20/60; returns immediately. A Bonus Action can change the element. '+(rageBonus?'Rage damage is included.':'Rage damage requires a qualifying Strength attack.') ]};
+    }
+    const tail=ref==='barbarian-beast-tail',claws=ref==='barbarian-beast-claws',spikes=ref==='barbarian-armor-spikes',die=spikes?'1d4':claws?'1d6':'1d8',type=claws?'slashing':'piercing';
+    if(spikes)notes.push('Requires worn spiked armor. Bonus Action spike attack; a successful Attack-action grapple deals 3 piercing separately.');
+    else if(claws)notes.push('Requires an empty hand. Once on your turn, one extra claw attack as part of the Attack action.');
+    else if(tail)notes.push('Reaction against a visible attacker within 10 ft that hits you: +1d8 AC against that attack.');
+    else notes.push('Once on your turn, a damaging bite hit heals '+c.pb+' HP if you were below half HP when it hit; apply healing separately.');
+    if(!spikes&&c.level>=6)notes.push('Counts as magical against nonmagical resistance and immunity.');
+    return{...base,name:spikes?'Battlerager armor spikes':'Beast '+c.pick('form-of-the-beast'),damage:die+' '+sign(str+c.rage)+' '+type,damageDice:die,damageType:type,range:tail?'10 ft':'5 ft',notes:[...notes,'Rage damage +'+c.rage+' is included.']};
+  }
+  return{ids,definitions,context,derive,enterRage,recharge,attackReferences,resolveAttack};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterBarbarianSubclasses;

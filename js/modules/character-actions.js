@@ -10,6 +10,9 @@ var CharacterActions = (()=>{
  function resolve(raw,data,level,stats,loot=[],spells=[]){
   const a=normalize([raw])[0],row={name:a.name||a.ref||a.kind,hit:'—',damage:'—',range:'—',notes:[],available:true,ability:''};
   const unavailable=reason=>({...row,available:false,notes:[reason]});
+  if(a.kind==='weapon'&&a.ref.startsWith('barbarian-')){
+   const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);return Paths.resolveAttack(a.ref,data,stats,{level,mode:a.mode,ability:a.ability});
+  }
   if(a.kind==='weapon'||a.kind==='loot'){
    const item=a.kind==='loot'?loot.find(e=>e.id===a.ref&&e.quantity>0):null;
    if(a.kind==='loot'&&!item)return unavailable('This item is no longer in this character’s inventory.');
