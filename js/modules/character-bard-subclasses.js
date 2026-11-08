@@ -120,19 +120,8 @@ var CharacterBardSubclasses=(()=>{
  }
  function releaseSpirit(d,opts={}){const r=derive(d,opts);if(!r.channeledSpirit)return null;return R.save(d,{[r.key('channeled-spirit')]:[]})?r.channeledSpirit:null;}
  function onEvent(d,event,opts={}){const r=derive(d,opts),updates={};if(!r.active)return;for(const row of r.resources)if(row.resets.includes(event)&&r.choices[row.key])updates[row.key]=['0'];if(['turn','short','long'].includes(event)){for(const action of r.actions){const key=r.key(['defensive-flourish','slashing-flourish','mobile-flourish'].includes(action.id)?'flourish-turn':action.id+'-turn');if(r.choices[key])updates[key]=['0'];}if(r.choices[r.key('flourish-ac')])updates[r.key('flourish-ac')]=['0'];}if(['short','long'].includes(event)&&r.choices[r.key('channeled-spirit')])updates[r.key('channeled-spirit')]=[];R.save(d,updates);}
- function paymentSlots(d,{level=1,stats=null}={}){
-  const M=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null),derived=stats||M.derive(d,level),maxima=derived.effects.slotMax||d.slots?.map(r=>r.max)||[],rows=[];
-  for(let i=0;i<9;i++){const max=Number(maxima[i])||0,used=Math.max(0,Number(d.slots?.[i]?.used)||0);if(max>0)rows.push({id:'slot-'+i,level:i+1,available:Math.max(0,max-used),max,used});}
-  const p=derived.progression?.pact;if(p?.count){const used=Number(R.stored(d).pactSlotsUsed)||0;rows.push({id:'pact',level:p.slotLevel,available:Math.max(0,p.count-used),max:p.count,used});}return rows;
- }
- function pay(d,id,source,opts={}){
-  const r=derive(d,opts),row=r.resources.find(row=>row.id===id);if(!row)return false;
-  const C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);
-  if(source==='inspiration'){const pool=C.classResources(d,opts).find(r=>r.id==='bard-inspiration');if(!row.inspirationRecharge||!row.used||!pool?.remaining)return false;return R.save(d,{[pool.key]:[String(pool.used+1)],[row.key]:['0']});}
-  const minimum=row.slotRecharge||row.slotAlternative,slot=paymentSlots(d,opts).find(s=>s.id===source);if(!minimum||!slot?.available||slot.level<minimum||row.slotRecharge&&!row.used)return false;
-  const updates=row.slotRecharge?{[row.key]:['0']}:{};if(!R.save(d,updates))return false;
-  if(slot.id==='pact')d.adobe={...R.stored(d),pactSlotsUsed:slot.used+1};else {const index=Number(slot.id.slice(5));d.slots||=Array.from({length:9},()=>({max:0,used:0}));d.slots[index]={...d.slots[index],max:slot.max,used:slot.used+1};}return true;
- }
+ function paymentSlots(d,opts={}){return R.paymentSlots(d,opts);}
+ function pay(d,id,source,opts={}){return R.payResource(d,derive(d,opts).resources.find(row=>row.id===id),source,opts);}
  function apply(d,stats,{level=1}={}){
   const r=derive(d,{level,mods:stats.mods}),physical=stats.gear.entries.filter(e=>e.active),unarmored=!physical.some(e=>['armor','shield'].includes(e.mechanics.kind)),out={dance:r.active&&r.id==='dance-2024'&&unarmored,die:r.die,minimumChecks:{}};
   if(out.dance){const base=10+stats.mods.dex+stats.mods.cha;if(base>stats.gear.base){const increase=base-stats.gear.base;stats.gear.base=base;stats.gear.baseLabel='Dance: 10 + DEX + CHA';stats.gear.baseParts={armor:10,dex:stats.mods.dex,other:stats.mods.cha,otherLabel:'CHA'};stats.gear.ac+=increase;stats.ac+=increase;}}

@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T21:40:43.095Z",
+  "generatedAt": "2026-11-08T21:53:08.538Z",
   "summary": {
     "total": 186,
-    "partialMechanics": 34,
-    "referenceOnly": 152,
+    "partialMechanics": 47,
+    "referenceOnly": 139,
     "byClass": {
       "artificer": {
         "total": 10,
@@ -20,7 +20,7 @@
       },
       "cleric": {
         "total": 20,
-        "partialMechanics": 7
+        "partialMechanics": 20
       },
       "druid": {
         "total": 11,
@@ -1157,14 +1157,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "death-domain",
@@ -1182,14 +1191,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "forge-domain",
@@ -1207,14 +1225,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "grave-domain",
@@ -1232,14 +1259,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "grave-domain-rthw",
@@ -1257,14 +1293,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "knowledge-domain",
@@ -1282,13 +1327,22 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
         "manualGuidance": true
       },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
       "status": "partial-mechanics"
     },
     {
@@ -1307,14 +1361,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "life-domain",
@@ -1331,13 +1394,22 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
         "manualGuidance": true
       },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
       "status": "partial-mechanics"
     },
     {
@@ -1353,14 +1425,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "light-domain",
@@ -1378,13 +1459,22 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
         "manualGuidance": true
       },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
       "status": "partial-mechanics"
     },
     {
@@ -1400,14 +1490,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "nature-domain",
@@ -1425,13 +1524,22 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
         "manualGuidance": true
       },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
       "status": "partial-mechanics"
     },
     {
@@ -1450,14 +1558,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "peace-domain",
@@ -1475,14 +1592,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "tempest-domain",
@@ -1500,13 +1626,22 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
         "manualGuidance": true
       },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
       "status": "partial-mechanics"
     },
     {
@@ -1525,13 +1660,22 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
         "manualGuidance": true
       },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
       "status": "partial-mechanics"
     },
     {
@@ -1547,14 +1691,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "twilight-domain",
@@ -1572,14 +1725,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "war-domain",
@@ -1597,13 +1759,22 @@
         17
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
         "manualGuidance": true
       },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
       "status": "partial-mechanics"
     },
     {
@@ -1619,14 +1790,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "dreams",

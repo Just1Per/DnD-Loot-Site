@@ -117,6 +117,7 @@ var CharacterSpellcasting=(()=>{
     const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null),path=Paths?.derive(data,{level:targetLevel});
     if(path?.spells.length)result.push({classId:'barbarian',name:'Barbarian subclass spells',level:path.level,edition,ability:path.spells[0].ability||'',cantrips:0,spellCount:0,mode:'innate',maxSpellLevel:path.spells.some(s=>s.name==='Commune with Nature')?5:path.spells.some(s=>s.name==='Clairvoyance')?3:path.spells.some(s=>s.name==='Beast Sense')?2:0,bookMinimum:0,changeTiming:'subclass',subclassId:path.id,subclassSpellGrants:path.spells});
     const Colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null),college=Colleges?.derive(data,{level:targetLevel});for(const profile of result)if(profile.classId==='bard')profile.subclassSpellGrants=college?.spells||[];
+    const Domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null),domain=Domains?.derive(data,{level:targetLevel});for(const profile of result)if(profile.classId==='cleric')profile.subclassSpellGrants=domain?.spells||[];
     return result;
   }
 
@@ -164,6 +165,7 @@ var CharacterSpellcasting=(()=>{
   const spellKey=name=>String(name||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]/g,'');
   function automaticGrants(p,catalogue=[]){
     if(!p)return[];
+    if(p.classId==='cleric'){const Domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null),grants=p.subclassSpellGrants||Domains.derive({build:{edition:p.edition,classId:'cleric'},adobe:{classLevels:[{classId:'cleric',subclassId:p.subclassId,level:p.level}],classFeatureChoices:{}}},{level:p.level}).spells;return grants.flatMap(g=>{const found=catalogue.find(s=>s.edition===p.edition&&spellKey(s.name)===spellKey(g.name));return found?[{...found,...g,id:found.id}]:catalogue.length?[]:[g];});}
     if(p.classId==='barbarian')return(p.subclassSpellGrants||[]).flatMap(grant=>{const spell=catalogue.find(s=>spellKey(s.name)===spellKey(grant.name)&&s.edition===p.edition);return spell?[{...spell,grantSource:'barbarian / '+p.subclassId,castingRestriction:grant.casting,spellcastingAbility:grant.ability,ritual:grant.casting==='ritual only'||spell.ritual}]:[];});
     const names=[];
     if(p.classId==='artificer'&&p.sourceId==='efa')names.push('Mending');

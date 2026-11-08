@@ -274,6 +274,8 @@ var CharacterSheetModel = (() => {
     effects.specialSenses=[...(effects.specialSenses||[]),...invocationEffects.senses];
     if(invocationEffects.truesight)effects.truesight=Math.max(effects.truesight||0,invocationEffects.truesight);
     effects.concentrationAdvantage=!!effects.concentrationAdvantage||invocationEffects.concentrationAdvantage;
+    const Domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null),domainTraining=Domains.derive(d,{level,saves:effects.saves});
+    effects.skills=[...new Set([...effects.skills,...domainTraining.skills])];effects.proficiencies=[...new Set([...effects.proficiencies,...domainTraining.proficiencies])];effects.saves=[...new Set([...effects.saves,...domainTraining.saves])];effects.languages=[...new Set([...(effects.languages||[]),...domainTraining.languages])];
     const artisanTool=ClassChoices.artisanTool(d,level);
     if(ClassChoices.artificerLevels(d,level).starting)effects.proficiencies=effects.proficiencies.filter(name=>name!=='Choose one artisan tool');
     if(artisanTool&&!effects.proficiencies.includes(artisanTool))effects.proficiencies.push(artisanTool);
@@ -288,6 +290,7 @@ var CharacterSheetModel = (() => {
       return{...feature,appliedAbilityIncreases,automatic:d.build.scoreMode==='base'};
     });
     const classExpertise=ClassChoices.expertise(d,{level,effects,feats});
+    classExpertise.skills=[...new Set([...classExpertise.skills,...domainTraining.expertise])];
     const weaponTraining=ClassChoices.weaponTraining(d,{level,effects,feats});
     effects.proficiencies=[...new Set([...effects.proficiencies,...weaponTraining.proficiencies])];
     const baseWalkingSpeed=Number(effects.speed)||0;
@@ -318,6 +321,7 @@ var CharacterSheetModel = (() => {
     for(const sense of barbarianSubclass.senses)effects[sense.type]=(effects[sense.type]||0)+sense.increase;
     effects.traits=[...(effects.traits||[]),...barbarianSubclass.reports.map(row=>row.name+' · '+row.detail),...barbarianSubclass.spells.map(row=>row.name+' · '+row.casting+(row.ability?' · '+row.ability.toUpperCase():''))];
     const bardSubclass=Colleges.derive(d,{level,mods});effects.traits=[...(effects.traits||[]),...bardSubclass.reports.map(row=>row.name+' · '+row.detail)];
+    const clericSubclass=Domains.derive(d,{level,mods,saves:effects.saves});effects.resistances=[...new Set([...(effects.resistances||[]),...clericSubclass.resistances])];effects.immunities=[...new Set([...(effects.immunities||[]),...clericSubclass.immunities])];if(clericSubclass.darkvision)effects.darkvision=Math.max(effects.darkvision||0,clericSubclass.darkvision);effects.traits=[...(effects.traits||[]),...clericSubclass.reports.map(row=>row.name+' · '+row.detail)];
     const berserker=ClassChoices.berserker(d,{level,mods});
     const warDomain=ClassChoices.warDomain(d,{level,mods});
     const lifeDomain=ClassChoices.lifeDomain(d,{level});
@@ -327,6 +331,7 @@ var CharacterSheetModel = (() => {
     const knowledgeDomain=ClassChoices.knowledgeDomain(d,{level,mods});
     const trickeryDomain=ClassChoices.trickeryDomain(d,{level});
 
+    if(clericSubclass.pick('legacy-blessing')==='blessed-strikes'){for(const row of [warDomain,lifeDomain,tempestDomain,natureDomain,trickeryDomain])row.divineStrike=null;lightDomain.potentSpellcasting=null;knowledgeDomain.potentSpellcasting=null;}
     if(warDomain.avatar){effects.resistances=[...new Set([...(effects.resistances||[]),'Bludgeoning, Piercing, and Slashing (nonmagical attacks)'])];effects.traits=[...(effects.traits||[]),warDomain.avatar.detail];}
     if(warDomain.divineStrike)effects.traits=[...(effects.traits||[]),warDomain.divineStrike.detail];
     for(const detail of [lifeDomain.disciple,lifeDomain.blessedHealer,lifeDomain.divineStrike?.detail,lifeDomain.supremeHealing])if(detail)effects.traits=[...(effects.traits||[]),detail];
@@ -345,6 +350,7 @@ var CharacterSheetModel = (() => {
       berserker,
       barbarianSubclass,
       bardSubclass,
+      clericSubclass,
       warDomain,
       lifeDomain,
       lightDomain,
@@ -393,6 +399,7 @@ var CharacterSheetModel = (() => {
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
     for(const speed of barbarianSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
+    result.clericCombat=Domains.apply(d,result,{level});
     result.bardCombat=Colleges.apply(d,result,{level});
     result.barbarianCombat=Paths.apply(d,result,{level});
     if(result.barbarianCombat.size)result.carrying=Carry.limits(data,{scores,effects});
