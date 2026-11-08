@@ -15,9 +15,10 @@ var CharacterBarbarianSubclasses=(()=>{
     const key=name=>C.groupKey(edition,'barbarian',id+':'+name);
     return{edition,modern:edition==='2024',id,level:actual,active:actual>=3&&ids[edition].includes(id),pb:Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1,mods,choices,key,pick:name=>{const g=definitions.find(g=>g.edition===edition&&g.id===id&&g.definition.id===name)?.definition,v=choices[key(name)]?.[0];return g&&actual>=g.minLevel&&g.options().some(o=>o.id===v)?v:''},rage:actual>=16?4:actual>=9?3:2};
   }
+  const slug=name=>String(name).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   const definitions=[];
   function choice(edition,id,name,minLevel,options,count=1){
-    const definition={id:name,name:name.replaceAll('-',' '),minLevel,count:()=>count,referenceComplete:true,options:()=>options.map(name=>({id:name.toLowerCase().replaceAll(' ','-'),name,source:edition+' Barbarian',referenceComplete:true,automationComplete:false}))};
+    const definition={id:name,name:name.replaceAll('-',' '),minLevel,count:()=>count,referenceComplete:true,options:()=>(typeof options==='function'?options():options).map(name=>({id:slug(name),name,source:edition+' Barbarian',referenceComplete:true,automationComplete:false}))};
     definitions.push({edition,id,definition});C.registerSubclass(edition,'barbarian',id,definition);
   }
   for(const [name,at]of [['totem-spirit',3],['aspect-of-the-beast',6],['totemic-attunement',14]])choice('2014','totem-warrior',name,at,['Bear','Eagle','Elk','Tiger','Wolf']);
@@ -26,6 +27,7 @@ var CharacterBarbarianSubclasses=(()=>{
   choice('2014','zealot','divine-fury',3,['Necrotic','Radiant']);
   choice('2014','beast','form-of-the-beast',3,['Bite','Claws','Tail']);
   choice('2014','beast','bestial-soul',6,['Swim','Climb','Jump']);
+  choice('2014','giant','giant-language',3,()=>{const R=globalThis.CharacterRules||(typeof require==='function'?require('./character-rules'):null);return(R?.languages||[]).filter(name=>!["Thieves’ Cant","Thieves' Cant",'Druidic','Giant'].includes(name));});
   choice('2014','giant','giant-cantrip',3,['Druidcraft','Thaumaturgy']);
   choice('2014','giant','elemental-cleaver',6,['Acid','Cold','Fire','Lightning','Thunder']);
   choice('2024','wild-heart-2024','rage-of-the-wilds',3,['Bear','Eagle','Wolf']);
@@ -33,7 +35,7 @@ var CharacterBarbarianSubclasses=(()=>{
   choice('2024','wild-heart-2024','power-of-the-wilds',14,['Falcon','Lion','Ram']);
   function derive(d,opts={}){
     const c=context(d,opts),n=c.level,p=c.pb,m=c.mods,r=c.rage;
-    const out={...c,reports:[],resources:[],resistances:[],skills:[],spells:[],senses:[],speeds:[],combat:[]};if(!c.active)return out;
+    const out={...c,reports:[],resources:[],resistances:[],skills:[],languages:[],spells:[],senses:[],speeds:[],combat:[]};if(!c.active)return out;
     const report=(at,name,detail,extra={})=>{if(n>=at)out.reports.push({level:at,name,detail,...extra});};
     const combat=(at,name,detail,extra={})=>{if(n>=at){out.combat.push({name,detail,...extra});report(at,name,detail);}};
     const resource=(at,id,name,max,resets,description,extra={})=>{
@@ -93,6 +95,8 @@ var CharacterBarbarianSubclasses=(()=>{
       report(14,'Controlled Surge','Roll twice for each surge and choose either; doubles permit any table result.');
     }
     if(c.id==='giant'){
+      const known=[...(opts.languages||[]),...String(d.languages||'').split(/[,;\n]/)].map(name=>String(name).trim().toLowerCase()),R=globalThis.CharacterRules||(typeof require==='function'?require('./character-rules'):null),alternative=R?.languages.find(name=>slug(name)===c.pick('giant-language'));
+      if(!known.includes('giant'))out.languages.push('Giant');else if(alternative&&!known.includes(alternative.toLowerCase()))out.languages.push(alternative);
       report(3,'Giant Power','Learn Giant, or another language if already known; choose Druidcraft or Thaumaturgy (Wisdom) in Builder.');
       if(c.pick('giant-cantrip'))spell(3,c.pick('giant-cantrip'),'wis','cantrip');
       combat(3,"Giant's Havoc",'During Rage: +'+(n>=14?10:5)+' ft reach, grow to '+(n>=14?'Large or Huge':'Large if smaller')+' if space permits; Strength ranged thrown attacks add Rage damage +'+r+'.',{reachBonus:n>=14?10:5,thrownDamageBonus:r,requires:['rage']});

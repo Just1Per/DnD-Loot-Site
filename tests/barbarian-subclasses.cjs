@@ -36,3 +36,7 @@ test('Barbarian ritual and feature grants enter spell selection without prepared
  const profiles=S.profiles(d,10),p=profiles.find(p=>p.classId==='barbarian');assert.ok(p);assert.equal(p.spellCount,0);assert.equal(p.ability,'wis');const grants=S.automaticGrants(p,catalogue);assert.equal(grants.length,3);assert.ok(grants.every(g=>g.ritual&&g.castingRestriction==='ritual only'));assert.equal(S.selectionState(p,grants.map(g=>({catalogId:g.id,level:g.level,prepared:true})),catalogue).error,'');assert.deepEqual(S.classEntries(d,10),[]);
  const g=make('giant','2014',3);choose(g,'giant-cantrip','thaumaturgy');assert.equal(S.profiles(g,3).find(p=>p.classId==='barbarian').subclassSpellGrants[0].name,'thaumaturgy');
 });
+test('Giant grants Giant or one selected replacement only when Giant is already known',()=>{
+ const d=make('giant','2014',3);choose(d,'giant-language','draconic');assert.ok(M.derive(d,3).effects.languages.includes('Giant'));assert.ok(!M.derive(d,3).effects.languages.includes('Draconic'));
+ d.languages='Giant';assert.ok(M.derive(d,3).effects.languages.includes('Draconic'));d.adobe.classLevels[0].level=2;assert.ok(!M.derive(d,2).effects.languages.includes('Draconic'));
+});

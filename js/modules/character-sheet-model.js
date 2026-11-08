@@ -310,7 +310,8 @@ var CharacterSheetModel = (() => {
     effects.specialSenses=[...(effects.specialSenses||[]),...rangerFeatures.senses];
     if(rangerFeatures.blindsight)effects.blindsight=Math.max(effects.blindsight||0,rangerFeatures.blindsight);
     effects.ignoreUnseenAttackDisadvantage=!!effects.ignoreUnseenAttackDisadvantage||rangerFeatures.ignoreUnseenAttackDisadvantage;
-    const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null),barbarianSubclass=Paths.derive(d,{level,mods});
+    const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null),barbarianSubclass=Paths.derive(d,{level,mods,languages:effects.languages});
+    effects.languages=[...new Set([...(effects.languages||[]),...barbarianSubclass.languages])];
     effects.resistances=[...new Set([...(effects.resistances||[]),...barbarianSubclass.resistances])];
     for(const sense of barbarianSubclass.senses)effects[sense.type]=(effects[sense.type]||0)+sense.increase;
     effects.traits=[...(effects.traits||[]),...barbarianSubclass.reports.map(row=>row.name+' · '+row.detail),...barbarianSubclass.spells.map(row=>row.name+' · '+row.casting+(row.ability?' · '+row.ability.toUpperCase():''))];
