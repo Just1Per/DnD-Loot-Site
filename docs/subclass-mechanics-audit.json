@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T21:31:39.017Z",
+  "generatedAt": "2026-11-08T21:40:43.095Z",
   "summary": {
     "total": 186,
-    "partialMechanics": 20,
-    "referenceOnly": 166,
+    "partialMechanics": 34,
+    "referenceOnly": 152,
     "byClass": {
       "artificer": {
         "total": 10,
@@ -16,7 +16,7 @@
       },
       "bard": {
         "total": 14,
-        "partialMechanics": 0
+        "partialMechanics": 14
       },
       "cleric": {
         "total": 20,
@@ -720,14 +720,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "dance-2024",
@@ -742,14 +751,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
+        "resources": true,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "eloquence",
@@ -764,14 +782,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "glamour",
@@ -786,14 +813,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "glamour-2024",
@@ -808,14 +844,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "lore",
@@ -830,14 +875,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "lore-2024",
@@ -852,14 +906,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "spirits",
@@ -874,14 +937,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "spirits-rthw",
@@ -896,14 +968,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
+        "spellcasting": true,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "swords",
@@ -918,14 +999,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
+        "resources": true,
+        "defense": true,
         "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "college-of-the-moon-frhof",
@@ -940,14 +1030,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "valor",
@@ -962,14 +1061,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "valor-2024",
@@ -984,14 +1092,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "whispers",
@@ -1006,14 +1123,23 @@
         14
       ],
       "mechanics": {
-        "resources": false,
+        "resources": true,
         "defense": false,
         "spellcasting": false,
-        "combat": false,
+        "combat": true,
         "builderChoices": false,
-        "manualGuidance": false
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "arcana-domain",

@@ -116,6 +116,7 @@ var CharacterSpellcasting=(()=>{
     const result=classEntries(data,targetLevel).map(entry=>{const source=entry.classId==='artificer'?choices?.artificerSource(data).id:undefined,p=profile(entry.classId,entry.level,edition,scores,source);const M=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),adobe=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},context={mods:Object.fromEntries(Object.entries(scores).map(([key,value])=>[key,Math.floor((value-10)/2)])),pb:M?M.proficiency(data,2+Math.floor((Math.max(1,targetLevel)-1)/4)):2+Math.floor((Math.max(1,targetLevel)-1)/4)},adjustment=p&&M?M.value(adobe.modifiers,'spell:'+entry.classId+':prepare',0,context):0;return p?{...p,spellCount:['prepared','spellbook'].includes(p.mode)?Math.max(0,Math.min(150,p.spellCount+adjustment)):p.spellCount,cantrips:p.cantrips+(extra[entry.classId]||0),subclassId:entry.subclassId||''}:null;}).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
     const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null),path=Paths?.derive(data,{level:targetLevel});
     if(path?.spells.length)result.push({classId:'barbarian',name:'Barbarian subclass spells',level:path.level,edition,ability:path.spells[0].ability||'',cantrips:0,spellCount:0,mode:'innate',maxSpellLevel:path.spells.some(s=>s.name==='Commune with Nature')?5:path.spells.some(s=>s.name==='Clairvoyance')?3:path.spells.some(s=>s.name==='Beast Sense')?2:0,bookMinimum:0,changeTiming:'subclass',subclassId:path.id,subclassSpellGrants:path.spells});
+    const Colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null),college=Colleges?.derive(data,{level:targetLevel});for(const profile of result)if(profile.classId==='bard')profile.subclassSpellGrants=college?.spells||[];
     return result;
   }
 
@@ -174,7 +175,8 @@ var CharacterSpellcasting=(()=>{
     const tableEdition=String(p.subclassId||'').endsWith('-2024')?'2024':'2014';
     for(const [minimum,...spells] of grantTables[tableEdition]?.[subclass]||[])if(p.level>=Math.max(minimum,p.edition==='2024'?3:1))names.push(...spells);
     const seen=new Set();
-    return names.flatMap(name=>{const key=spellKey(name);if(seen.has(key))return[];seen.add(key);const spell=catalogue.find(s=>spellKey(s.name)===key&&s.edition===p.edition)||catalogue.find(s=>spellKey(s.name)===key&&s.edition===tableEdition);return spell?[{...spell,grantSource:p.classId+' / '+(p.subclassId||'class')}]:[];});
+    const rows=names.flatMap(name=>{const key=spellKey(name);if(seen.has(key))return[];seen.add(key);const spell=catalogue.find(s=>spellKey(s.name)===key&&s.edition===p.edition)||catalogue.find(s=>spellKey(s.name)===key&&s.edition===tableEdition);return spell?[{...spell,grantSource:p.classId+' / '+(p.subclassId||'class')}]:[];});
+    const existing=new Set(rows.map(s=>s.id));return [...rows,...(p.subclassSpellGrants||[]).filter(s=>!existing.has(s.id))];
   }
   function castingStats(p,derived,adjustments={}){
     const modifier=Number(derived?.mods?.[p?.ability]||0),pb=Number(derived?.pb||0);

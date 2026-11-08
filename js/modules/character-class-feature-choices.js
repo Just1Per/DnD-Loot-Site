@@ -779,6 +779,7 @@ var CharacterClassFeatureChoices=(()=>{
     const divine=globalThis.CharacterDivineChannel||(typeof require==='function'?require('./character-divine-channel'):null);rows.push(...(divine?.resources(data,{level,mods})||[]));
     const wild=globalThis.CharacterWildShape||(typeof require==='function'?require('./character-wild-shape'):null);rows.push(...(wild?.resources(data,{level})||[]));
     const paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);rows.push(...(paths?.derive(data,{level,mods}).resources||[]));
+    const colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null);rows.push(...(colleges?.derive(data,{level,mods}).resources||[]));
     return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
@@ -840,6 +841,7 @@ var CharacterClassFeatureChoices=(()=>{
     }
     if(Object.keys(updates).length)data.adobe={...stored,classFeatureChoices:{...choices,...updates}};
     paths?.onEvent(data,event,{level:total});
+    const colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null);colleges?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null);rage?.onRest(data,event,{level:total});
     const companion=globalThis.CharacterWildCompanion||(typeof require==='function'?require('./character-wild-companion'):null);companion?.onRest(data,event);
     const conversions=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);conversions?.onRest(data,event);
@@ -959,7 +961,7 @@ var CharacterClassFeatureChoices=(()=>{
     return out;
   }
   function groups(entry,edition='2014',data){
-    if(typeof require==='function')require('./character-barbarian-subclasses');
+    if(typeof require==='function'){require('./character-barbarian-subclasses');require('./character-bard-subclasses');}
     if(globalThis.CharacterSubclassPlanning)entry=CharacterSubclassPlanning.sync(entry,edition);
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));

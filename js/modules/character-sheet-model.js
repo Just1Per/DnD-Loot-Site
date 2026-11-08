@@ -264,6 +264,8 @@ var CharacterSheetModel = (() => {
     effects.proficiencies=[...new Set([...effects.proficiencies,...classOrders.proficiencies])];
     const artificerFeatures=ClassChoices.artificerFeatures(d,{level,attunedCount:Equipment.attunementState(d,loot,level).active.size});
     effects.skills=[...new Set([...effects.skills,...artificerFeatures.skills])];
+    const Colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null),bardTraining=Colleges.derive(d,{level});
+    effects.skills=[...new Set([...effects.skills,...bardTraining.skills])];effects.proficiencies=[...new Set([...effects.proficiencies,...bardTraining.proficiencies])];effects.languages=[...new Set([...(effects.languages||[]),...bardTraining.languages])];
     const saveTraining=ClassChoices.saveTraining(d,{level});
     if(artificerFeatures.soulOfArtifice)saveTraining.reports.push({id:'soul-of-artifice',name:'Soul of Artifice',classId:'artificer',abilities:[],detail:'All saving throws, including death saves, gain +'+artificerFeatures.saveBonus+' from '+artificerFeatures.attuned+' attuned magic items.'});
     effects.saves=[...new Set([...effects.saves,...saveTraining.abilities])];
@@ -315,6 +317,7 @@ var CharacterSheetModel = (() => {
     effects.resistances=[...new Set([...(effects.resistances||[]),...barbarianSubclass.resistances])];
     for(const sense of barbarianSubclass.senses)effects[sense.type]=(effects[sense.type]||0)+sense.increase;
     effects.traits=[...(effects.traits||[]),...barbarianSubclass.reports.map(row=>row.name+' · '+row.detail),...barbarianSubclass.spells.map(row=>row.name+' · '+row.casting+(row.ability?' · '+row.ability.toUpperCase():''))];
+    const bardSubclass=Colleges.derive(d,{level,mods});effects.traits=[...(effects.traits||[]),...bardSubclass.reports.map(row=>row.name+' · '+row.detail)];
     const berserker=ClassChoices.berserker(d,{level,mods});
     const warDomain=ClassChoices.warDomain(d,{level,mods});
     const lifeDomain=ClassChoices.lifeDomain(d,{level});
@@ -341,6 +344,7 @@ var CharacterSheetModel = (() => {
       clericBlessedStrikes:ClassChoices.blessedStrikes(d,{level,mods}),
       berserker,
       barbarianSubclass,
+      bardSubclass,
       warDomain,
       lifeDomain,
       lightDomain,
@@ -389,6 +393,7 @@ var CharacterSheetModel = (() => {
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
     for(const speed of barbarianSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
+    result.bardCombat=Colleges.apply(d,result,{level});
     result.barbarianCombat=Paths.apply(d,result,{level});
     if(result.barbarianCombat.size)result.carrying=Carry.limits(data,{scores,effects});
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
