@@ -12,14 +12,14 @@ A source match does **not** mean that feature rules are present in the applicati
 
 | Selectable subclasses | Exact source match | Alternate source | Missing from pinned source | Runtime feature lists | Partial mechanics | Reference only | Not in runtime |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 186 | 162 | 24 | 0 | 186 | 7 | 179 | 0 |
+| 186 | 162 | 24 | 0 | 186 | 8 | 178 | 0 |
 
 ## By class
 
 | Class | Selectable | Exact source | Alternate source | Missing pinned source | Runtime feature list | Partial mechanics | Reference only | Not in runtime |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Artificer | 10 | 6 | 4 | 0 | 10 | 0 | 10 | 0 |
-| Barbarian | 13 | 13 | 0 | 0 | 13 | 0 | 13 | 0 |
+| Barbarian | 13 | 13 | 0 | 0 | 13 | 1 | 12 | 0 |
 | Bard | 14 | 12 | 2 | 0 | 14 | 0 | 14 | 0 |
 | Cleric | 20 | 18 | 2 | 0 | 20 | 7 | 13 | 0 |
 | Druid | 11 | 11 | 0 | 0 | 11 | 0 | 11 | 0 |
@@ -49,7 +49,7 @@ A source match does **not** mean that feature rules are present in the applicati
 | Barbarian | Path of the Ancestral Guardian | 2014 | XGE | verified | 3, 6, 10, 14 | reference only |
 | Barbarian | Path of the Battlerager | 2014 | SCAG | verified | 3, 6, 10, 14 | reference only |
 | Barbarian | Path of the Beast | 2014 | TCE | verified | 3, 6, 10, 14 | reference only |
-| Barbarian | Path of the Berserker | 2014 | PHB | verified | 3, 6, 10, 14 | reference only |
+| Barbarian | Path of the Berserker | 2014 | PHB | verified | 3, 6, 10, 14 | partial mechanics |
 | Barbarian | Path of the Berserker | 2024 | PHB24 | verified | 3, 6, 10, 14 | reference only |
 | Barbarian | Path of the Giant | 2014 | BGG | verified | 3, 6, 10, 14 | reference only |
 | Barbarian | Path of the Storm Herald | 2014 | XGE | verified | 3, 6, 10, 14 | reference only |

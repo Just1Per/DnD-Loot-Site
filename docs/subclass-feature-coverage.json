@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-07T20:06:18.132Z",
+  "generatedAt": "2026-11-08T07:30:39.390Z",
   "source": {
     "repository": "5etools-mirror-3/5etools-src",
     "revision": "b9061583536101068b3a59d27e886d1fa664e366",
@@ -12,8 +12,8 @@
     "alternateSource": 24,
     "notInPinnedSource": 0,
     "runtimeFeatureLists": 186,
-    "partialMechanics": 7,
-    "referenceOnly": 179,
+    "partialMechanics": 8,
+    "referenceOnly": 178,
     "notInRuntime": 0
   },
   "classes": [
@@ -35,8 +35,8 @@
       "alternateSource": 0,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 13,
-      "partial-mechanics": 0,
-      "reference-only": 13,
+      "partial-mechanics": 1,
+      "reference-only": 12,
       "not-in-runtime": 0
     },
     {
@@ -412,7 +412,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "berserker-2024",
