@@ -780,7 +780,7 @@ var CharacterClassFeatureChoices=(()=>{
     const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);rows.push(...(Runtime?.derive(data,{level,mods}).flatMap(r=>r.resources)||[]));return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
-    const row=classResources(data,context).find(row=>row.id===id);if(!row?.channelEffects?.some(effect=>effect.id===effectId)||!row.remaining)return false;const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[row.key]:[String(row.used+1)],[row.effectKey]:[effectId]}};return true;
+    const row=classResources(data,context).find(row=>row.id===id);if(!row?.channelEffects?.some(effect=>effect.id===effectId)||!row.remaining)return false;const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[row.key]:[String(row.used+1)],[row.effectKey]:[effectId],...(row.channelEffects.find(e=>e.id===effectId)?.activationKey?{[row.channelEffects.find(e=>e.id===effectId).activationKey]:['active']}:{})}};return true;
   }
   function bardSlotRecovery(data,context={}){
     const resource=classResources(data,context).find(row=>row.id==='bard-inspiration');if(!resource?.slotRecovery)return[];

@@ -199,10 +199,12 @@ var CharacterEquipment = (() => {
       const offhand=ch.mode==='offhand'&&w.props.includes('light');
       const ab=stats.mods[ability],extra=offhand?Math.min(0,ab):ab;
       const MonkSub=globalThis.CharacterMonkSubclasses||(typeof require==='function'?require('./character-monk-subclasses'):null),ks=MonkSub?.derive(data,{level,mods:stats.mods}),isKensei=ks?.kenseiWeapons?.includes(w.name),sharpen=isKensei&&ks.pick('sharpen-active')==='active'&&ks.pick('sharpened-type')===ks.kenseiWeapons.map(v=>v.toLowerCase().replace(/[^a-z0-9]+/g,'-')).find(v=>v===w.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'))&&!(r.magicActive&&(m.attackBonus||m.damageBonus))?Math.min(3,ks.used('sharpen-bonus')):0;
-      const attack=sharpen+ab+(proficient?stats.pb:0)+(r.magicActive?m.attackBonus:0)+(w.rangeType==='ranged'?stats.feats.rangedBonus:0);
-      const damageBonus=sharpen+extra+(r.magicActive?m.damageBonus:0);
+      const Oaths=globalThis.CharacterPaladinSubclasses||(typeof require==='function'?require('./character-paladin-subclasses'):null),oath=Oaths?.derive(data,{level,mods:stats.mods}),sacred=oath?.active&&oath.id.startsWith('devotion')&&oath.pick('sacred-weapon-active')==='active'&&oath.pick('sacred-item')===r.entry.id&&(!oath.modern||w.rangeType==='melee')&&!/unconscious/i.test(data.conditions||'')?Math.max(1,stats.mods.cha):0,hate=oath?.active&&oath.id==='oathbreaker'&&oath.level>=7&&w.rangeType==='melee'&&!isThrown?Math.max(1,stats.mods.cha):0;
+      const attack=sacred+sharpen+ab+(proficient?stats.pb:0)+(r.magicActive?m.attackBonus:0)+(w.rangeType==='ranged'?stats.feats.rangedBonus:0);
+      const damageBonus=hate+sharpen+extra+(r.magicActive?m.damageBonus:0);
       const ordinaryDie=useVersatile?w.versatile:w.damage,damageDie=monkWeapon?Martial.dice(ordinaryDie,martialArts.die):ordinaryDie;if(monkWeapon&&w.damage)notes.push(Martial.note(martialArts,damageDie));
       const damage=w.damage?`${damageDie}${damageBonus?' '+(damageBonus<0?'−':'+')+' '+Math.abs(damageBonus):''} ${w.damageType}${r.magicActive&&m.extraDamage?' + '+m.extraDamage:''}`:'Special action — resolve manually';
+      if(sacred)notes.push('Sacred Weapon: +'+sacred+' attack; '+(oath.modern?'may use Radiant damage.':'counts as magical.'));if(hate)notes.push('Aura of Hate: +'+hate+' melee weapon damage.');
       if(sharpen)notes.push('Sharpen the Blade: +'+sharpen+' attack and damage while active.');if(isKensei&&ks.level>=6)notes.push('Kensei weapon counts as magical.');if(isKensei&&w.rangeType==='ranged'&&ks.pick('shot-active')==='active')notes.push('Kensei’s Shot: add 1d4 '+w.damageType+' on each hit this turn.');
       if(useTwo&&shieldEntry)notes.push('Two hands required: stow shield before attacking.');
       if(w.props.includes('ammunition'))notes.push('Requires ammunition; consumption is manual.');
