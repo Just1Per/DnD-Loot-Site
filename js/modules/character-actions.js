@@ -10,6 +10,7 @@ var CharacterActions = (()=>{
  function resolve(raw,data,level,stats,loot=[],spells=[]){
   const a=normalize([raw])[0],row={name:a.name||a.ref||a.kind,hit:'—',damage:'—',range:'—',notes:[],available:true,ability:''};
   const unavailable=reason=>({...row,available:false,notes:[reason]});
+  if(a.kind==='weapon'&&a.ref.startsWith('rogue-')){const Sub=globalThis.CharacterRogueSubclasses||(typeof require==='function'?require('./character-rogue-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('monk-')){const Sub=globalThis.CharacterMonkSubclasses||(typeof require==='function'?require('./character-monk-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('druid-')){const Circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);return Circles.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('barbarian-')){

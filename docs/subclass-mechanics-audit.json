@@ -1,10 +1,10 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T22:42:47.458Z",
+  "generatedAt": "2026-11-08T22:47:47.952Z",
   "summary": {
     "total": 186,
-    "partialMechanics": 115,
-    "referenceOnly": 71,
+    "partialMechanics": 130,
+    "referenceOnly": 56,
     "byClass": {
       "artificer": {
         "total": 10,
@@ -44,7 +44,7 @@
       },
       "rogue": {
         "total": 15,
-        "partialMechanics": 0
+        "partialMechanics": 15
       },
       "sorcerer": {
         "total": 14,
@@ -4028,14 +4028,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "arcane-trickster-2024",
@@ -4051,14 +4060,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "assassin",
@@ -4074,14 +4092,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "assassin-2024",
@@ -4097,14 +4124,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "inquisitive",
@@ -4120,14 +4156,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "mastermind",
@@ -4143,14 +4188,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "phantom",
@@ -4166,14 +4220,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "phantom-rthw",
@@ -4189,14 +4252,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "scion-of-the-three-frhof",
@@ -4212,14 +4284,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "scout",
@@ -4235,14 +4316,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "soulknife",
@@ -4258,14 +4348,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "soulknife-2024",
@@ -4281,14 +4380,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "swashbuckler",
@@ -4304,14 +4412,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "thief",
@@ -4327,14 +4444,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "thief-2024",
@@ -4350,14 +4476,23 @@
         17
       ],
       "mechanics": {
-        "resources": false,
-        "defense": false,
-        "spellcasting": false,
-        "combat": false,
-        "builderChoices": false,
-        "manualGuidance": false
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
       },
-      "status": "reference-only"
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
     },
     {
       "id": "aberrant-mind",

@@ -282,6 +282,7 @@ var CharacterSheetModel = (() => {
 
     const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null),subclassTraining=Runtime.derive(d,{level});
     for(const row of subclassTraining){effects.skills=[...new Set([...effects.skills,...(row.skills||[])])];effects.saves=[...new Set([...effects.saves,...(row.saves||[])])];effects.proficiencies=[...new Set([...effects.proficiencies,...(row.proficiencies||[])])];effects.languages=[...new Set([...(effects.languages||[]),...(row.languages||[])])];}
+    const trickster=subclassTraining.find(r=>r.classId==='rogue'&&r.id.startsWith('arcane-trickster'));if(d.build.autoSlots&&trickster){const P=globalThis.CharacterProgression||(typeof require==='function'?require('./character-progression'):null),raw=d.adobe?.classLevels||[],rows=[];let left=Math.min(20,Math.max(1,Number(level)||1));const seen=new Set();for(const e of raw){const actual=Math.min(left,Math.max(0,Number(e.level)||0));left-=actual;if(actual&&!seen.has(e.classId))rows.push({...e,level:actual});seen.add(e.classId);}effects.slotMax=rows.length===1?[...P.MULTICLASS_SLOTS[Math.ceil(trickster.level/3)]]:P.spellSlots(rows,d.build.edition);}
     const artisanTool=ClassChoices.artisanTool(d,level);
     if(ClassChoices.artificerLevels(d,level).starting)effects.proficiencies=effects.proficiencies.filter(name=>name!=='Choose one artisan tool');
     if(artisanTool&&!effects.proficiencies.includes(artisanTool))effects.proficiencies.push(artisanTool);
@@ -296,7 +297,7 @@ var CharacterSheetModel = (() => {
       return{...feature,appliedAbilityIncreases,automatic:d.build.scoreMode==='base'};
     });
     const classExpertise=ClassChoices.expertise(d,{level,effects,feats});
-    classExpertise.skills=[...new Set([...classExpertise.skills,...domainTraining.expertise,...fighterTraining.expertise])];
+    classExpertise.skills=[...new Set([...classExpertise.skills,...domainTraining.expertise,...fighterTraining.expertise,...subclassTraining.flatMap(r=>r.expertise||[])])];
     const weaponTraining=ClassChoices.weaponTraining(d,{level,effects,feats});
     effects.proficiencies=[...new Set([...effects.proficiencies,...weaponTraining.proficiencies])];
     const baseWalkingSpeed=Number(effects.speed)||0;

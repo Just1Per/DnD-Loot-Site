@@ -102,7 +102,7 @@ var CharacterSpellcasting=(()=>{
       for(const row of raw){
         const level=Math.min(remaining,Math.max(0,Math.trunc(Number(row?.level)||0)));remaining-=level;
         if(!level||seen.has(row?.classId))continue;seen.add(row.classId);
-        if(Object.hasOwn(ability,row.classId)||row.classId==='fighter'&&['eldritch-knight','eldritch-knight-2024'].includes(row.subclassId))entries.push({classId:row.classId,level,subclassId:row.subclassId||''});
+        if(Object.hasOwn(ability,row.classId)||(row.classId==='fighter'&&['eldritch-knight','eldritch-knight-2024'].includes(row.subclassId)||row.classId==='rogue'&&['arcane-trickster','arcane-trickster-2024'].includes(row.subclassId)))entries.push({classId:row.classId,level,subclassId:row.subclassId||''});
       }
       return entries;
     }
@@ -111,9 +111,9 @@ var CharacterSpellcasting=(()=>{
   }
 
   function knightProfile(entry,edition){
-    if(entry.classId!=='fighter'||entry.level<3||entry.subclassId!==(edition==='2024'?'eldritch-knight-2024':'eldritch-knight'))return null;
+    const rogue=entry.classId==='rogue',base=rogue?'arcane-trickster':'eldritch-knight';if(!['fighter','rogue'].includes(entry.classId)||entry.level<3||entry.subclassId!==base+(edition==='2024'?'-2024':''))return null;
     const n=entry.level,known=[0,0,3,4,4,4,5,6,6,7,8,8,9,10,10,11,11,11,12,13][n-1];
-    return{classId:'fighter',name:'Eldritch Knight',level:n,edition,ability:'int',listClass:'wizard',cantrips:n>=10?3:2,spellCount:known,mode:edition==='2024'?'fixed-prepared':'known',maxSpellLevel:n>=19?4:n>=13?3:n>=7?2:1,bookMinimum:0,changeTiming:'level',...(edition==='2014'?{restrictedSchools:['abjuration','evocation','a','v'],unrestricted:n>=20?4:n>=14?3:n>=8?2:1}:{} )};
+    return{classId:entry.classId,name:rogue?'Arcane Trickster':'Eldritch Knight',level:n,edition,ability:'int',listClass:'wizard',cantrips:n>=10?3:2,spellCount:known,mode:edition==='2024'?'fixed-prepared':'known',maxSpellLevel:n>=19?4:n>=13?3:n>=7?2:1,bookMinimum:0,changeTiming:'level',...(edition==='2014'?{restrictedSchools:rogue?['enchantment','illusion','e','i']:['abjuration','evocation','a','v'],unrestricted:n>=20?4:n>=14?3:n>=8?2:1}:{} )};
   }
   function profiles(data,targetLevel,scores={}){
     const edition=data?.build?.edition==='2024'?'2024':'2014';
