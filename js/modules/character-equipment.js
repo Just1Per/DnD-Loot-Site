@@ -190,7 +190,7 @@ var CharacterEquipment = (() => {
       if(m.kind!=='weapon'||!w)continue;
       const notes=[];
       let ability=ch.ability==='auto'?(w.props.includes('finesse')?(stats.mods.dex>stats.mods.str?'dex':'str'):w.rangeType==='ranged'?'dex':'str'):ch.ability;
-      const monkWeapon=martialArts?.active&&Martial.weapon(w,martialArts.edition);if(monkWeapon&&ch.ability==='auto')ability=Martial.ability(stats.mods);
+      const monkWeapon=martialArts?.active&&(Martial.weapon(w,martialArts.edition)||martialArts.kenseiWeapons?.includes(w.name));if(monkWeapon&&ch.ability==='auto')ability=Martial.ability(stats.mods);
       let useTwo=w.props.includes('twoHanded')||ch.mode==='twoHanded'&&!!w.versatile;
       if(m.base==='lance')useTwo=ch.mode!=='mounted';
       const isThrown=ch.mode==='thrown'&&w.props.includes('thrown');
@@ -198,10 +198,12 @@ var CharacterEquipment = (() => {
       const trainedAuto=trained(w,profs),proficient=ch.proficiency==='yes'||ch.proficiency!=='no'&&trainedAuto;
       const offhand=ch.mode==='offhand'&&w.props.includes('light');
       const ab=stats.mods[ability],extra=offhand?Math.min(0,ab):ab;
-      const attack=ab+(proficient?stats.pb:0)+(r.magicActive?m.attackBonus:0)+(w.rangeType==='ranged'?stats.feats.rangedBonus:0);
-      const damageBonus=extra+(r.magicActive?m.damageBonus:0);
+      const MonkSub=globalThis.CharacterMonkSubclasses||(typeof require==='function'?require('./character-monk-subclasses'):null),ks=MonkSub?.derive(data,{level,mods:stats.mods}),isKensei=ks?.kenseiWeapons?.includes(w.name),sharpen=isKensei&&ks.pick('sharpen-active')==='active'&&ks.pick('sharpened-type')===ks.kenseiWeapons.map(v=>v.toLowerCase().replace(/[^a-z0-9]+/g,'-')).find(v=>v===w.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'))&&!(r.magicActive&&(m.attackBonus||m.damageBonus))?Math.min(3,ks.used('sharpen-bonus')):0;
+      const attack=sharpen+ab+(proficient?stats.pb:0)+(r.magicActive?m.attackBonus:0)+(w.rangeType==='ranged'?stats.feats.rangedBonus:0);
+      const damageBonus=sharpen+extra+(r.magicActive?m.damageBonus:0);
       const ordinaryDie=useVersatile?w.versatile:w.damage,damageDie=monkWeapon?Martial.dice(ordinaryDie,martialArts.die):ordinaryDie;if(monkWeapon&&w.damage)notes.push(Martial.note(martialArts,damageDie));
       const damage=w.damage?`${damageDie}${damageBonus?' '+(damageBonus<0?'−':'+')+' '+Math.abs(damageBonus):''} ${w.damageType}${r.magicActive&&m.extraDamage?' + '+m.extraDamage:''}`:'Special action — resolve manually';
+      if(sharpen)notes.push('Sharpen the Blade: +'+sharpen+' attack and damage while active.');if(isKensei&&ks.level>=6)notes.push('Kensei weapon counts as magical.');if(isKensei&&w.rangeType==='ranged'&&ks.pick('shot-active')==='active')notes.push('Kensei’s Shot: add 1d4 '+w.damageType+' on each hit this turn.');
       if(useTwo&&shieldEntry)notes.push('Two hands required: stow shield before attacking.');
       if(w.props.includes('ammunition'))notes.push('Requires ammunition; consumption is manual.');
       if(w.props.includes('loading'))notes.push('Loading limits attacks.');

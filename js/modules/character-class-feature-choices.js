@@ -777,7 +777,7 @@ var CharacterClassFeatureChoices=(()=>{
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);rows.push(...(domains?.derive(data,{level,mods}).resources||[]));
     const circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);rows.push(...(circles?.derive(data,{level,mods}).resources||[]));
     const archetypes=globalThis.CharacterFighterSubclasses||(typeof require==='function'?require('./character-fighter-subclasses'):null);rows.push(...(archetypes?.derive(data,{level,mods}).resources||[]));
-    return rows;
+    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);rows.push(...(Runtime?.derive(data,{level,mods}).flatMap(r=>r.resources)||[]));return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
     const row=classResources(data,context).find(row=>row.id===id);if(!row?.channelEffects?.some(effect=>effect.id===effectId)||!row.remaining)return false;const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[row.key]:[String(row.used+1)],[row.effectKey]:[effectId]}};return true;
@@ -842,6 +842,7 @@ var CharacterClassFeatureChoices=(()=>{
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);domains?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);circles?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const archetypes=globalThis.CharacterFighterSubclasses||(typeof require==='function'?require('./character-fighter-subclasses'):null);archetypes?.onEvent(data,event,{...context,level:total,mods:context.mods||{}});
+    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);Runtime?.onEvent(data,event,{...context,level:total,mods:context.mods||{}});
     const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null);rage?.onRest(data,event,{level:total});
     const companion=globalThis.CharacterWildCompanion||(typeof require==='function'?require('./character-wild-companion'):null);companion?.onRest(data,event);
     const conversions=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);conversions?.onRest(data,event);
@@ -961,7 +962,7 @@ var CharacterClassFeatureChoices=(()=>{
     return out;
   }
   function groups(entry,edition='2014',data){
-    if(typeof require==='function'){require('./character-barbarian-subclasses');require('./character-bard-subclasses');require('./character-cleric-subclasses');require('./character-druid-subclasses');require('./character-fighter-subclasses');}
+    if(typeof require==='function'){require('./character-barbarian-subclasses');require('./character-bard-subclasses');require('./character-cleric-subclasses');require('./character-druid-subclasses');require('./character-fighter-subclasses');require('./character-subclass-runtime').modules();}
     if(globalThis.CharacterSubclassPlanning)entry=CharacterSubclassPlanning.sync(entry,edition);
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));

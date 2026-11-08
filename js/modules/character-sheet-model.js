@@ -280,6 +280,8 @@ var CharacterSheetModel = (() => {
     effects.skills=[...new Set([...effects.skills,...fighterTraining.skills])];effects.saves=[...new Set([...effects.saves,...fighterTraining.saves])];effects.proficiencies=[...new Set([...effects.proficiencies,...fighterTraining.proficiencies])];effects.languages=[...new Set([...(effects.languages||[]),...fighterTraining.languages])];effects.runeToolExpertise=fighterTraining.toolExpertise;
     if(d.build.autoSlots&&fighterTraining.active&&['eldritch-knight','eldritch-knight-2024'].includes(fighterTraining.id)){const P=globalThis.CharacterProgression||(typeof require==='function'?require('./character-progression'):null),raw=d.adobe?.classLevels||[],rows=[];let left=Math.min(20,Math.max(1,Number(level)||1));const seen=new Set();for(const e of raw){const actual=Math.min(left,Math.max(0,Number(e.level)||0));left-=actual;if(actual&&!seen.has(e.classId))rows.push({...e,level:actual});seen.add(e.classId);}effects.slotMax=rows.length===1?[...P.MULTICLASS_SLOTS[Math.ceil(fighterTraining.level/3)]]:P.spellSlots(rows,d.build.edition);}
 
+    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null),subclassTraining=Runtime.derive(d,{level});
+    for(const row of subclassTraining){effects.skills=[...new Set([...effects.skills,...(row.skills||[])])];effects.saves=[...new Set([...effects.saves,...(row.saves||[])])];effects.proficiencies=[...new Set([...effects.proficiencies,...(row.proficiencies||[])])];effects.languages=[...new Set([...(effects.languages||[]),...(row.languages||[])])];}
     const artisanTool=ClassChoices.artisanTool(d,level);
     if(ClassChoices.artificerLevels(d,level).starting)effects.proficiencies=effects.proficiencies.filter(name=>name!=='Choose one artisan tool');
     if(artisanTool&&!effects.proficiencies.includes(artisanTool))effects.proficiencies.push(artisanTool);
@@ -347,6 +349,7 @@ var CharacterSheetModel = (() => {
     for(const detail of [knowledgeDomain.blessings,knowledgeDomain.potentSpellcasting,knowledgeDomain.visions])if(detail)effects.traits=[...(effects.traits||[]),detail];
     for(const detail of [trickeryDomain.blessing,trickeryDomain.divineStrike?.detail,trickeryDomain.improved])if(detail)effects.traits=[...(effects.traits||[]),detail];
     if(tempestDomain.stormborn)effects.conditionalSpeeds=[...(effects.conditionalSpeeds||[]),{type:'fly',speed:effects.speed||30,condition:'While not underground or indoors'}];
+    const additionalSubclasses=Runtime.derive(d,{level,mods});for(const row of additionalSubclasses){effects.resistances=[...new Set([...(effects.resistances||[]),...(row.resistances||[]).filter(Boolean)])];effects.immunities=[...new Set([...(effects.immunities||[]),...(row.immunities||[])])];if(row.darkvisionBonus)effects.darkvision=(effects.darkvision||0)+row.darkvisionBonus;if(row.darkvision)effects.darkvision=Math.max(effects.darkvision||0,row.darkvision);if(row.blindsight)effects.blindsight=Math.max(effects.blindsight||0,row.blindsight);effects.traits=[...(effects.traits||[]),...row.reports.map(r=>r.name+' · '+r.detail)];}
     const result = {
       effects,
       languageTraining,
@@ -359,6 +362,7 @@ var CharacterSheetModel = (() => {
       clericSubclass,
       druidSubclass,
       fighterSubclass,
+      additionalSubclasses,
       warDomain,
       lifeDomain,
       lightDomain,
@@ -408,6 +412,7 @@ var CharacterSheetModel = (() => {
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
     for(const speed of barbarianSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
     for(const speed of druidSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
+    Runtime.apply(d,result,{level});
     result.fighterCombat=Archetypes.apply(d,result,{level});if(result.fighterCombat.size)result.carrying=Carry.limits(data,{scores,effects});
     result.druidCombat=Circles.apply(d,result,{level});
     result.clericCombat=Domains.apply(d,result,{level});

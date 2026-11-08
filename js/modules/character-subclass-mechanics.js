@@ -1,7 +1,7 @@
 'use strict';
 // Shared subclass boundaries and counters. No source entries are shipped here.
 var CharacterSubclassMechanics=(()=>{
- const C=()=>globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);
+ const C=()=>globalThis.CharacterClassFeatureChoices?.normalize?globalThis.CharacterClassFeatureChoices:(typeof require==='function'?require('./character-class-feature-choices'):null);
  const stored=d=>d.adobe||d.rulesChoices?.grants?.__adobe?.data||{};
  const slug=v=>String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,100);
  const catalogue=()=>globalThis.CharacterCatalog?.rawData?.spells||(typeof require==='function'?require('../../data/rules/catalog.json').spells:[]);
@@ -30,6 +30,11 @@ var CharacterSubclassMechanics=(()=>{
   const updates=row.slotRecharge?{[row.key]:[String(Math.max(0,Math.min(row.used,row.max)-(row.slotRecoveryAmount||row.max)))]}:{};if(!save(d,updates))return false;
   if(slot.id==='pact')d.adobe={...stored(d),pactSlotsUsed:slot.used+1};else {const index=Number(slot.id.slice(5));d.slots||=Array.from({length:9},()=>({max:0,used:0}));d.slots[index]={...d.slots[index],max:slot.max,used:slot.used+1};}return true;
  }
- return{context,stored,slug,catalogue,group,resource,save,spellOptions,selectedSpells,fixedSpells,paymentSlots,payResource};
+ function resolveAction(d,r,id,{level=1,mods={},roll=0,points=null,self=false}={}){
+  const a=r.active&&r.actions?.find(a=>a.id===id);if(!a)return null;const cost=a.variable===undefined?(a.cost||0):Number(points??a.cost??0);if(!Number.isInteger(cost)||cost<(a.cost||0)||cost>(a.variable??a.cost??0)||a.once&&r.used(id+'-turn'))return null;if(a.faces&&(!Number.isInteger(roll)||roll<(a.dice||1)||roll>a.faces*(a.dice||1)))return null;
+  const pool=cost?C().classResources(d,{level,mods}).find(p=>p.id===a.pool):null;if(cost&&(!pool||pool.remaining<cost))return null;const updates={};if(cost)updates[pool.key]=[String(pool.used+cost)];if(a.once)updates[r.key(id+'-turn')]=['1'];if(a.active)updates[r.key(a.active+'-active')]=['active'];if(!save(d,updates))return null;const amount=Math.max(a.min??-99,(a.faces?roll:0)+(a.add||0));if(a.tempHP)d.hpTemp=Math.max(Number(d.hpTemp)||0,a.tempHP);if(a.selfHeal||a.heal&&self){const M=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null);d.hpCurrent=Math.min(M.derive(d,level).hpMax,Math.max(0,Number(d.hpCurrent)||0)+Math.max(0,amount));}return{amount,spent:cost,dc:r.dc,detail:a.detail};
+ }
+ function events(d,r,event,{turnKeys=[],activeNames=[]}={}){if(!r.active)return false;const updates={};for(const p of r.resources||[])if(p.resets?.includes(event))updates[p.key]=[String(event==='short'&&p.shortRecovery?Math.max(0,Math.min(p.used,p.max)-p.shortRecovery):0)];if(['turn','short','long'].includes(event))for(const a of r.actions||[])if(a.once)updates[r.key(a.id+'-turn')]=['0'];for(const key of activeNames)if(['short','long'].includes(event)||event==='turn'&&turnKeys.includes(key))if(r.pick(key+'-active'))updates[r.key(key+'-active')]=[];return save(d,updates);}
+ return{resolveAction,events,context,stored,slug,catalogue,group,resource,save,spellOptions,selectedSpells,fixedSpells,paymentSlots,payResource};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterSubclassMechanics;
