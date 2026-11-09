@@ -34,7 +34,7 @@ var CharacterAdobeFields=(()=>{
    const value=context.lifestyle?.id||data.profile.lifestyle,choices=options.lifestyles||[],saved=value&&!choices.some(row=>row.value===value)?[{value,label:value}]:[];
    return edit('profile.lifestyle',value,'select',200,{options:[...choices,...saved],fitWidth:true,reason:'Choose a lifestyle for its daily cost. Use Shared controls → Background to enter a custom lifestyle.'});
   }
-  if(id==='Lifestyle daily cost')return computed(context.lifestyle?.cost||'',{kind:'textarea',fitWidth:true,reason:context.lifestyle?'Daily lifestyle guidance; choosing it does not spend coins.':'Choose a standard lifestyle to show its daily cost. Custom lifestyles keep their own agreed cost.'});
+  if(id==='Lifestyle daily cost')return computed(context.lifestyle?.cost||'',{kind:'text',fitWidth:true,reason:context.lifestyle?'Daily lifestyle guidance; choosing it does not spend coins.':'Choose a standard lifestyle to show its daily cost. Custom lifestyles keep their own agreed cost.'});
   if(Object.hasOwn(raw,id)){const [path,kind,max]=raw[id],value=get(path.startsWith('identity.')?{identity}:data,path);return edit(path,value,kind,max,{options:options[path]||[]});}
   let m;
   if((m=/^(Action|Bonus Action|Reaction) ([1-9]|1[0-2])$/.exec(id))){const group={Action:'action','Bonus Action':'bonus',Reaction:'reaction'}[m[1]],index=Number(m[2])-1;return {state:'editable',kind:'text',value:data.adobe?.paperCombat?.actions?.[group]?.[index]||'',max:4000,paperAction:{group,index}};}

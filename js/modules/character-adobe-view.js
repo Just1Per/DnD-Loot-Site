@@ -91,7 +91,7 @@ var CharacterAdobeView=(()=>{
   if(d.choices){const choices=row.host.querySelector('datalist'),signature=JSON.stringify(d.choices);if(choices&&row.choices!==signature){choices.replaceChildren(...d.choices.map(value=>option(value,value)));row.choices=signature;}}
   const editing=d.state==='editable'&&current.shadow.activeElement===input&&input.type!=='checkbox'&&input.tagName!=='SELECT';
   if(!editing&&input.getAttribute('aria-invalid')!=='true'){if(input.type==='checkbox')input.checked=!!d.value;else input.value=String(d.value??'');}
-  if(d.fitWidth&&fieldMeasure){const size=row.field.fontSize||7;fieldMeasure.font=size+'px Arial';const text=input.tagName==='SELECT'?input.options[input.selectedIndex]?.textContent||String(d.value??''):String(d.value??''),width=fieldMeasure.measureText(text).width,available=Math.max(1,row.field.rect[2]-row.field.rect[0]-(input.tagName==='SELECT'?10:1)),fit=width>available?Math.max(Math.min(5.5,size),size*available/width):size;row.host.style.fontSize='calc(var(--scale) * '+fit+'px)';}
+  if(d.fitWidth&&fieldMeasure){const size=row.field.fontSize||7;fieldMeasure.font=size+'px Arial';const text=input.tagName==='SELECT'?input.options[input.selectedIndex]?.textContent||String(d.value??''):String(d.value??''),width=fieldMeasure.measureText(text).width,available=Math.max(1,row.field.rect[2]-row.field.rect[0]-(input.tagName==='SELECT'?10:3)),fit=width>available?Math.max(Math.min(5.5,size),size*available/width):size;row.host.style.fontSize='calc(var(--scale) * '+fit+'px)';}
   if(input.type==='checkbox'||input.tagName==='SELECT')input.disabled=d.state!=='editable';else input.readOnly=d.state!=='editable';
  }
  function makeControl(field,i,c,ctx){

@@ -13,12 +13,13 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
   const host=page.locator('#sheetAdobeView'),choose=id=>host.locator('#adobePage').selectOption(id),field=id=>host.locator('[data-pdf-field="'+id+'"]');
   await choose('page-4');await field('Lifestyle').waitFor({state:'visible'});
   assert.equal(await field('Lifestyle').evaluate(node=>node.tagName),'SELECT');
+  assert.equal(await field('Lifestyle daily cost').evaluate(node=>node.tagName),'INPUT','Daily Price must stay on one line');
   assert.equal(await field('Lifestyle').inputValue(),'modest');assert.equal(await field('Lifestyle daily cost').inputValue(),'1 gp');
   assert.equal(await page.evaluate(()=>sheetSession.data.profile.lifestyle),'  Modest  ');assert.equal(await page.evaluate(()=>sheetSession.dirty),false);
   for(const [id,cost]of [['wretched','—'],['squalid','1 sp'],['poor','2 sp'],['modest','1 gp'],['comfortable','2 gp'],['wealthy','4 gp'],['aristocratic','10 gp min.']]){
    await field('Lifestyle').selectOption(id);assert.equal(await page.evaluate(()=>sheetSession.data.profile.lifestyle),id);assert.equal(await field('Lifestyle daily cost').inputValue(),cost);assert.equal(await field('Lifestyle daily cost').evaluate(node=>node.scrollHeight<=node.clientHeight+1),true);assert.equal(await page.locator('[name="profile.lifestyle"]').inputValue(),id);assert.match(await page.locator('#sheetLifestyleCost').textContent(),/Daily cost:/);
   }
-  await choose('template-ASbackgr');await field('Lifestyle').waitFor({state:'visible'});assert.equal(await field('Lifestyle').inputValue(),'aristocratic');assert.equal(await field('Lifestyle daily cost').inputValue(),'10 gp min.');
+  await choose('template-ASbackgr');await field('Lifestyle').waitFor({state:'visible'});assert.equal(await field('Lifestyle').inputValue(),'aristocratic');assert.equal(await field('Lifestyle daily cost').inputValue(),'10 gp min.');assert.equal(await field('Lifestyle daily cost').evaluate(node=>node.tagName),'INPUT');
   await page.evaluate(()=>CharacterAdobeView.openEditor('story'));
   const shared=page.locator('[name="profile.lifestyle"]');await shared.locator('..').evaluate(node=>node.closest('details').open=true);
   assert.equal(await page.locator('#sheetLifestyleOptions option').count(),7);await shared.fill('Guild lodging by agreement');await shared.press('Tab');assert.match(await page.locator('#sheetLifestyleCost').textContent(),/Custom lifestyle/);
