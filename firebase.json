@@ -4,6 +4,7 @@
     "ignore": [
       "firebase.json",
       "**/.*",
+      "**/.*/**",
       "**/node_modules/**",
       "tests/**",
       "docs/**",
@@ -18,7 +19,12 @@
       "README*",
       "**/*.log",
       "data/rules/adobe-parity-baseline.json",
-      "data/rules/srd-magic-item-text-hashes.json"
+      "data/rules/srd-magic-item-text-hashes.json",
+      "work/**",
+      "attachments/**",
+      "coverage/**",
+      "test-results/**",
+      "playwright-report/**"
     ],
     "headers": [
       {

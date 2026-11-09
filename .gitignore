@@ -76,3 +76,10 @@ tests/dom-results.json
 
 # Python caches from reproducible PDF tools
 scripts/__pycache__/
+
+# Local investigation, uploads and browser/test reports (never runtime assets)
+/work/
+/attachments/
+/coverage/
+/test-results/
+/playwright-report/

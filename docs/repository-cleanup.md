@@ -48,3 +48,7 @@ Nothing in this cleanup runs an import, migration, production rule deployment or
 The current engine suite passes (27 reported test entries), the aggregate UI suite passes 363 DOM checks, and focused auth passes 9 checks. Actual app browser coverage passes for character loot/saved cards, editor/navigation guards, player image sharing and party Journal behavior. The existing 33-state page audit also passes at desktop and mobile sizes with no axe violations. Demo retirement does not remove the real app or emulator suites. No additional production rule deployment is required by this cleanup.
 
 Follow-up verification: clean `npm ci --prefix functions --ignore-scripts --no-audit --no-fund` installs 178 dependencies instead of 538 lock entries; the operator's Admin SDK app/Firestore/Storage modules load without credentials. Operator regression tests pass 44 checks with two platform-specific skips. `test:packaging` verifies Firebase's actual Hosting file selection, including required runtime modules/styles/data and legal assets. Published operator ZIPs/checksums and the historical migration are unchanged. Linux/Windows CI also clean-installs and checks the retained SDK.
+
+## November 2026 follow-up
+
+The current configuration review, measured tracked sizes, Hosting boundary fix and Adobe CI partition are recorded in [Oprydning og konfiguration](repository-configuration-review-da.md). Earlier measurements above are historical checkpoints. Retained operator/recovery inputs, attribution and Standard-backed Adobe popup components remain in place.

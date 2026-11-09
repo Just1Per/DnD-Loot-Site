@@ -39,6 +39,8 @@ Browser fixtures use synthetic data, not production accounts. The campaign works
 npm --prefix tests run test:workspace-rules
 ```
 
+Adobe browser suites use one manifest (`tests/adobe-connected-suites.json`). Run all with `npm --prefix tests run test:adobe-connected`, or select a CI shard with `-- --shard 1/3`; add `--list` to inspect its files. CI runs all three shards on separate runners and requires every shard to pass. See the [current configuration review](docs/repository-configuration-review-da.md) for measured sizes, Hosting boundaries and follow-up work.
+
 The additional package scripts under `tests/package.json` select individual features. Use the existing emulator configuration and project flags rather than production credentials.
 
 ## Deployment and operational tools
