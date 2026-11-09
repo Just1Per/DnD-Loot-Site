@@ -18,6 +18,7 @@ name: Campaign workspace checks
     - firebase.workspace-test.json
     - data/rules/monsters.json
     - tests/**
+    - scripts/run-adobe-connected.cjs
     - scripts/campaign-image-cors.json
     - scripts/diagnose-campaign-item-images.mjs
     - scripts/campaign-image-recovery.mjs
@@ -71,8 +72,6 @@ jobs:
         mkdir -p /tmp/campaignatlas-ui-checks
         set -o pipefail
         npm --prefix tests test 2>&1 | tee /tmp/campaignatlas-ui-checks/engine-dom.log
-    - name: Connected Adobe sheet save, print and accessibility
-      run: npm --prefix tests run test:adobe-connected
     - name: Character Overview display controls
       run: npm --prefix tests run test:builder
     - name: Catalogue migration and reviewed-catalogue logic
@@ -107,6 +106,45 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: campaignatlas-ui-checks-engine
+        path: /tmp/campaignatlas-ui-checks
+        if-no-files-found: ignore
+  adobe:
+    name: Adobe browser shard ${{ matrix.shard }}/3
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: tests/package-lock.json
+    - name: Install test dependencies
+      run: npm ci --prefix tests
+    - name: Prepare bounded Ubuntu package downloads
+      timeout-minutes: 1
+      run: sudo bash .github/scripts/prepare-browser-apt.sh
+    - name: Install Chromium
+      timeout-minutes: 6
+      run: npx --prefix tests playwright install --with-deps chromium
+    - name: Install PDF text verification
+      timeout-minutes: 3
+      run: sudo apt-get install -y poppler-utils
+    - name: Connected Adobe regressions
+      run: |
+        mkdir -p /tmp/campaignatlas-ui-checks
+        set -o pipefail
+        npm --prefix tests run test:adobe-connected -- --shard ${{ matrix.shard }}/3 2>&1 | tee /tmp/campaignatlas-ui-checks/adobe-shard.log
+    - name: Upload Adobe screenshots, PDFs and suite timings
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: campaignatlas-adobe-shard-${{ matrix.shard }}
+        retention-days: 14
         path: /tmp/campaignatlas-ui-checks
         if-no-files-found: ignore
   browser:
@@ -326,6 +364,7 @@ jobs:
     - engine
     - browser
     - permissions
+    - adobe
     if: always()
     timeout-minutes: 2
     steps:
@@ -334,9 +373,10 @@ jobs:
         ENGINE_RESULT: ${{ needs.engine.result }}
         BROWSER_RESULT: ${{ needs.browser.result }}
         PERMISSION_RESULT: ${{ needs.permissions.result }}
+        ADOBE_RESULT: ${{ needs.adobe.result }}
       run: |
-        if [[ "$ENGINE_RESULT" != success || "$BROWSER_RESULT" != success || "$PERMISSION_RESULT" != success ]]; then
-          echo "::error::Regression groups: engines=$ENGINE_RESULT, browser=$BROWSER_RESULT, permissions=$PERMISSION_RESULT"
+        if [[ "$ENGINE_RESULT" != success || "$BROWSER_RESULT" != success || "$PERMISSION_RESULT" != success || "$ADOBE_RESULT" != success ]]; then
+          echo "::error::Regression groups: engines=$ENGINE_RESULT, browser=$BROWSER_RESULT, permissions=$PERMISSION_RESULT, adobe=$ADOBE_RESULT"
           exit 1
         fi
-        echo "All engine, browser and permission checks passed."
+        echo "All engine, browser, Adobe shard and permission checks passed."
