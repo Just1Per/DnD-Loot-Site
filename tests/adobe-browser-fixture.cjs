@@ -1,7 +1,7 @@
 // Deterministic authenticated app fixture for the connected Adobe browser checks.
 const fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'..');
-module.exports=async(browser,{legacyPresentation=false}={})=>{const errors=[];
+module.exports=async(browser,{legacyPresentation=false,adobeOnly=false}={})=>{const errors=[];
  const page=await browser.newPage({viewport:{width:1440,height:1000}});page.setDefaultTimeout(7000);
  page.on('pageerror',error=>errors.push(error.message));
  let html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'').replace(/<link\b[^>]*href="([^"]*)"[^>]*>/gi,(tag,href)=>href.startsWith('css/')?'<style data-audit-file="'+href.split('?')[0]+'">'+fs.readFileSync(path.join(root,href.split('?')[0]),'utf8')+'\n/*# sourceURL='+href.split('?')[0]+' */</style>':tag);
@@ -16,7 +16,7 @@ module.exports=async(browser,{legacyPresentation=false}={})=>{const errors=[];
  for(const name of modules)await page.addScriptTag({path:root+'/js/modules/'+name+'.js'});
  // Controller regressions may explicitly exercise the retained single-page renderer.
  if(legacyPresentation)await page.evaluate(()=>{const install=CharacterAdobeStackUI.install;CharacterAdobeStackUI.install=root=>install(root,{legacyControls:true});});
- await page.evaluate(()=>{CharacterCatalog.set(__testCatalog);document.getElementById('siteBootPanel')?.remove()});await page.addScriptTag({path:root+'/tests/dom-state.js'});
+ await page.evaluate(()=>{CharacterCatalog.set(__testCatalog);document.getElementById('siteBootPanel')?.remove()});await page.addScriptTag({path:root+'/tests/dom-state.js'});if(adobeOnly)await page.evaluate(()=>{CharacterAdobeView.install=testOriginalAdobeInstall;});
  await page.evaluate(data=>{window.__testMonsters=data;window.fetch=async u=>(String(u).includes('/data/adobe-icons/')||String(u).includes('/data/adobe-pages/')||String(u).includes('wild-shapes-v1.json')||String(u).includes('adobe-tools.json')||String(u).includes('adobe-starting-equipment.json'))?window.__realFetch(u):({ok:true,json:async()=>String(u).includes('monsters.json')?__testMonsters:__testCatalog});window.auditSeed=role=>{closeCharacterSheet(true);CampaignWorkspace.clear(true);SiteHelp.onLogout();seed(role,role==='other'?'player':role);document.getElementById('loginControls').style.display='none';document.getElementById('logoutButton').style.display='inline-block';document.getElementById('adminTab').style.display=role==='admin'?'inline-block':'none';document.getElementById('userDisplay').textContent='Sample '+role;document.getElementById('activeCampaignName').textContent=activeCampaign.name;renderDMTools();SiteHelp.onLogin();};},JSON.parse(fs.readFileSync(root+'/data/rules/monsters.json','utf8')));
 
 

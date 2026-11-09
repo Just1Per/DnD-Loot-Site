@@ -23,7 +23,8 @@
       "testReferences": [
         "adobe-connected-sheet-browser.cjs",
         "adobe-dc-ability-controls-browser.cjs",
-        "adobe-native-abilities-browser.cjs"
+        "adobe-native-abilities-browser.cjs",
+        "adobe-only-browser.cjs"
       ]
     },
     {
@@ -147,6 +148,20 @@
       ]
     },
     {
+      "id": "sheetPageManager",
+      "file": "js/modules/character-adobe-pages.js",
+      "line": 9,
+      "kind": "dialog-template",
+      "category": "standard-only",
+      "entry": "Standard page navigation → Add pages",
+      "notes": "Templatebygget dialog bevaret bag skjult Standard-navigation; Adobe bruger adobePagesDialog.",
+      "testReferences": [
+        "character-adobe-page-manager-checks.cjs",
+        "control-prototype-browser.cjs",
+        "sheet-tools-loading-browser.cjs"
+      ]
+    },
+    {
       "id": "adobeSpellDialog",
       "file": "js/modules/character-adobe-spell-ui.js",
       "line": 11,
@@ -247,6 +262,7 @@
         "adobe-native-classes-browser.cjs",
         "adobe-native-feats-browser.cjs",
         "adobe-native-spells-browser.cjs",
+        "adobe-only-browser.cjs",
         "adobe-page-choices-browser.cjs",
         "adobe-paper-combat-browser.cjs",
         "adobe-paper-controls-browser.cjs",

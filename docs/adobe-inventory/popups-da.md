@@ -2,7 +2,7 @@
 
 Genereret med `node scripts/audit-adobe-popups.cjs`. Dette er en statisk kortlægning, ikke et løfte om fuld funktionel paritet. Gentagne IDs er samme popup-familie. Testreferencer betyder, at testen nævner id’et; de er ikke i sig selv et bestået testresultat.
 
-Der er 42 registrerede popup-familier og 27 editor-routes.
+Der er 43 registrerede popup-familier og 27 editor-routes.
 
 ## Popup-familier
 
@@ -18,6 +18,7 @@ Der er 42 registrerede popup-familier og 27 editor-routes.
 | adobeDruidFormsDialog | moves-component | Class features → Druid forms | Flytter #sheetDruidWildShape med placeholder; native skal må ikke forveksles med uafhængigt indhold. | [character-adobe-druid-forms-ui.js:10](../../js/modules/character-adobe-druid-forms-ui.js#L10) |
 | adobeEquipmentDialog | adobe-dialog | Equipment.menu eller Special features → Equipment | Native add/preview/confirm; bruger fælles inventory/state. | [character-adobe-equipment-ui.js:8](../../js/modules/character-adobe-equipment-ui.js#L8) |
 | adobeFeatDialog | adobe-dialog | Feat-knapper eller Special features → Feats | Kan åbne personal feat-editor og feat information. | [character-adobe-feat-ui.js:7](../../js/modules/character-adobe-feat-ui.js#L7) |
+| sheetPageManager | standard-only | Standard page navigation → Add pages | Templatebygget dialog bevaret bag skjult Standard-navigation; Adobe bruger adobePagesDialog. | [character-adobe-pages.js:9](../../js/modules/character-adobe-pages.js#L9) |
 | adobeSpellDialog | adobe-dialog | Choose spells, spell-felt/knap, Special features | Native selection draft; bruger casting-engine og fælles spell-rendering. | [character-adobe-spell-ui.js:11](../../js/modules/character-adobe-spell-ui.js#L11) |
 | adobeRaceSpellDialog | adobe-dialog | Generate spell sheet → Race spells | Race-cantrip/ability-valg; fælles session. | [character-adobe-spell-ui.js:78](../../js/modules/character-adobe-spell-ui.js#L78) |
 | adobeSpellSourcesDialog | adobe-dialog | Special features → Generate spell sheet | Viderestiller til class/race/feat-spellvalg. | [character-adobe-spell-ui.js:97](../../js/modules/character-adobe-spell-ui.js#L97) |
@@ -139,7 +140,7 @@ sharedCommand klikker stadig på kontroller i #characterSheetForm (bl.a. spell p
 2. Afkobl de aktive routes til adobeSharedEditor og Druid Forms-komponenten fra den gamle panelsamling.
 3. Flyt genbrugte popup-renderere ud af blandede moduler (fx spell information fra Overview, feat information fra Catalogue), før de gamle moduler slettes.
 4. Afkobl sharedCommand og de fælles form-sync-hooks; test det nye ejerskab.
-5. Test hver familie med åbning, relevant ændring, Apply/Cancel, Escape, fokus, Save/genåbn, mobil, print hvor relevant og sen/asynkron sessionlukning. Først derefter fjernes Standard-præsentationen.
+5. Test hver familie med åbning, relevant ændring, Apply/Cancel, Escape, fokus, Save/genåbn, mobil, print hvor relevant og sen/asynkron sessionlukning. Først derefter slettes Standard-koden. Det synlige visningsvalg kan skjules tidligere, når alle bagvedliggende komponenter bevares.
 
 Originale knapper uden en implementeret funktion kan stadig være disabled; denne kortlægning kalder dem ikke fungerende popups. Browserens printdialog og filvælger er platformkontroller, ikke egne popup-familier. Den konkrete browser-confirm ved Long Rest er registreret som infrastruktur.
 
