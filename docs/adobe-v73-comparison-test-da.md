@@ -2,6 +2,8 @@
 
 Brug dette ark, når du opretter **den samme karakter** i det originale Adobe-ark og på hjemmesidens Adobe-ark. Formålet er at finde forskelle i arbejdsgang, information, beregninger og frihed til at tilpasse sin egen karaktertekst. Det er lige så nyttigt at beskrive noget, der er bedre på hjemmesiden, som noget der mangler.
 
+Se også den konkrete [Mithral-reference, fund og udfasningskrav](adobe-mithral-validation-da.md). Den registrerer forskelle i den udfyldte original og adskiller testdækning fra fuld PDF-paritet.
+
 ## Før I starter
 
 - Brug samme D&D-regelsæt i begge ark: **2014** eller **2024**.
