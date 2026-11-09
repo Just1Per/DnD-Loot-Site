@@ -780,7 +780,7 @@ var CharacterClassFeatureChoices=(()=>{
     const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);rows.push(...(Runtime?.derive(data,{level,mods}).flatMap(r=>r.resources)||[]));return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
-    const row=classResources(data,context).find(row=>row.id===id);if(!row?.channelEffects?.some(effect=>effect.id===effectId)||!row.remaining)return false;const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[row.key]:[String(row.used+1)],[row.effectKey]:[effectId],...(row.channelEffects.find(e=>e.id===effectId)?.activationKey?{[row.channelEffects.find(e=>e.id===effectId).activationKey]:['active']}:{})}};return true;
+    const row=classResources(data,context).find(row=>row.id===id),effect=row?.channelEffects?.find(effect=>effect.id===effectId);if(!effect||!row.remaining)return false;const R=globalThis.CharacterSubclassMechanics||(typeof require==='function'?require('./character-subclass-mechanics'):null);return R.save(data,{[row.key]:[String(row.used+1)],[row.effectKey]:[effectId],...(effect.activationKey?{[effect.activationKey]:['active']}:{})});
   }
   function bardSlotRecovery(data,context={}){
     const resource=classResources(data,context).find(row=>row.id==='bard-inspiration');if(!resource?.slotRecovery)return[];
@@ -967,7 +967,7 @@ var CharacterClassFeatureChoices=(()=>{
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));
     const rows=[...base,...sub];if(entry?.classId==='artificer'&&data&&!artificerSource(data).eligible)return[];
-    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel&&(!g.startingOnly||!data||artificerLevels(data,20).starting)&&(!g.multiclassOnly||data&&!artificerLevels(data,20).starting)&&(!g.artificerVersion||data&&artificerSource(data).eligible&&artificerSource(data).id===g.artificerVersion)).map(g=>{const source=entry.classId==='artificer'&&data?artificerSource(data):null;return{...g,...(source?{sourceLabel:source.label}:{}),key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0,entry,data))||0)),options:g.options(entry,edition).map(option=>source&&g.id==='artisan-tool'?{...option,source:source.source,edition:source.sourceEdition}:option)};});
+    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel&&(!g.startingOnly||!data||artificerLevels(data,20).starting)&&(!g.multiclassOnly||data&&!artificerLevels(data,20).starting)&&(!g.artificerVersion||data&&artificerSource(data).eligible&&artificerSource(data).id===g.artificerVersion)).map(g=>{const source=entry.classId==='artificer'&&data?artificerSource(data):null;return{...g,...(source?{sourceLabel:source.label}:{}),key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0,entry,data))||0)),options:g.options(entry,edition,data).map(option=>source&&g.id==='artisan-tool'?{...option,source:source.source,edition:source.sourceEdition}:option)};});
   }
   function registerSubclass(edition,classId,subclassId,definition){
     edition=edition==='2024'?'2024':'2014';const key=safe(classId)+':'+safe(subclassId);
@@ -991,7 +991,7 @@ var CharacterClassFeatureChoices=(()=>{
   function status(data,entry,edition='2014'){
     return groups(entry,edition,data).map(group=>{
       const picked=selections(data,group).slice(0,group.allowed);
-      const seen=new Set(),valid=picked.filter(id=>{const opt=group.options.find(o=>o.id===id);if(!opt||seen.has(id)&&!opt.repeatable||!prerequisite(opt,group,data,entry).eligible)return false;seen.add(id);return true;});
+      const seen=new Set(),valid=picked.filter((id,index)=>{const opt=group.options.find(o=>o.id===id);if(!opt||opt.allowedSlots&&!opt.allowedSlots.includes(index)||seen.has(id)&&!opt.repeatable||!prerequisite(opt,group,data,entry).eligible)return false;seen.add(id);return true;});
       if(group.id==='fighting-style'){const active=fightingStyleState(data).rows.filter(row=>row.key===group.key).map(row=>row.option.id);for(let i=valid.length-1;i>=0;i--)if(!active.includes(valid[i]))valid.splice(i,1);}
       const overflow=(normalize(data?.adobe?.classFeatureChoices)[group.key]||[]).slice(group.allowed).filter(Boolean);
       const legacyFeat=group.id==='fighting-style'?fightingStyleState(data).legacyGroups[group.key]:null,filled=valid.length+(legacyFeat?1:0);
@@ -1010,7 +1010,7 @@ var CharacterClassFeatureChoices=(()=>{
     const current=[...selections(data,group)],id=safe(value),option=group.options.find(o=>o.id===id);
     if(id&&typeof CampaignRules!=='undefined'&&!CampaignRules.allowed(option))return false;
     if(id&&option?.featId&&typeof CampaignRules!=='undefined'&&!CampaignRules.selectableFeat(option.featId,globalThis.CharacterCatalog?.rawData?.feats||[]))return false;
-    if(id&&(!option||!prerequisite(option,group,data,entry).eligible||!option.repeatable&&current.some((v,i)=>i!==index&&v===id)))return false;
+    if(id&&(!option||option.allowedSlots&&!option.allowedSlots.includes(index)||!prerequisite(option,group,data,entry).eligible||!option.repeatable&&current.some((v,i)=>i!==index&&v===id)))return false;
     const next=[...current];while(next.length<=index)next.push('');next[index]=id;
     const candidate={...data,adobe:{...data.adobe,classFeatureChoices:{...data.adobe.classFeatureChoices,[group.key]:next}}};
     if(group.id==='fighting-style'&&fightingStyleReason(data,entry,id))return false;

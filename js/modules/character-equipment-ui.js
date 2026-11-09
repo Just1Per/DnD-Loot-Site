@@ -37,7 +37,7 @@ function setSheetEquipmentChoice(id,key,value){
  }
  choice[key]=value;
  if(key==='equipped'&&value&&['armor','shield'].includes(m.kind))for(const other of state.loadout){const e=owned.find(e=>e.id===other.id);if(other.id!==id&&e&&CharacterEquipment.infer(e.item).kind===m.kind)other.equipped=false;}
- s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Equipment updated. Save sheet to keep it.');
+ CharacterSubclassRuntime.reconcileEquipment(s.data,{level:s.identity.level,loot:owned});s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Equipment updated. Save sheet to keep it.');
 }
 function renderItemMechanicsEditor(item) {
   let host=document.getElementById('itemMechanicsEditor');

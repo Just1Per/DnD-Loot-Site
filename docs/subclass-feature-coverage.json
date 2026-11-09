@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-08T07:30:39.390Z",
+  "generatedAt": "2026-11-09T07:39:17.962Z",
   "source": {
     "repository": "5etools-mirror-3/5etools-src",
     "revision": "b9061583536101068b3a59d27e886d1fa664e366",
@@ -12,8 +12,8 @@
     "alternateSource": 24,
     "notInPinnedSource": 0,
     "runtimeFeatureLists": 186,
-    "partialMechanics": 8,
-    "referenceOnly": 178,
+    "partialMechanics": 186,
+    "referenceOnly": 0,
     "notInRuntime": 0
   },
   "classes": [
@@ -24,8 +24,8 @@
       "alternateSource": 4,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 10,
-      "partial-mechanics": 0,
-      "reference-only": 10,
+      "partial-mechanics": 10,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -35,8 +35,8 @@
       "alternateSource": 0,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 13,
-      "partial-mechanics": 1,
-      "reference-only": 12,
+      "partial-mechanics": 13,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -46,8 +46,8 @@
       "alternateSource": 2,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 14,
-      "partial-mechanics": 0,
-      "reference-only": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -57,8 +57,8 @@
       "alternateSource": 2,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 20,
-      "partial-mechanics": 7,
-      "reference-only": 13,
+      "partial-mechanics": 20,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -68,8 +68,8 @@
       "alternateSource": 0,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 11,
-      "partial-mechanics": 0,
-      "reference-only": 11,
+      "partial-mechanics": 11,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -79,8 +79,8 @@
       "alternateSource": 1,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 15,
-      "partial-mechanics": 0,
-      "reference-only": 15,
+      "partial-mechanics": 15,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -90,8 +90,8 @@
       "alternateSource": 1,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 14,
-      "partial-mechanics": 0,
-      "reference-only": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -101,8 +101,8 @@
       "alternateSource": 1,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 14,
-      "partial-mechanics": 0,
-      "reference-only": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -112,8 +112,8 @@
       "alternateSource": 2,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 14,
-      "partial-mechanics": 0,
-      "reference-only": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -123,8 +123,8 @@
       "alternateSource": 4,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 15,
-      "partial-mechanics": 0,
-      "reference-only": 15,
+      "partial-mechanics": 15,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -134,8 +134,8 @@
       "alternateSource": 4,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 14,
-      "partial-mechanics": 0,
-      "reference-only": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -145,8 +145,8 @@
       "alternateSource": 1,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 14,
-      "partial-mechanics": 0,
-      "reference-only": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
       "not-in-runtime": 0
     },
     {
@@ -156,8 +156,8 @@
       "alternateSource": 2,
       "notInPinnedSource": 0,
       "runtimeFeatureLists": 18,
-      "partial-mechanics": 0,
-      "reference-only": 18,
+      "partial-mechanics": 18,
+      "reference-only": 0,
       "not-in-runtime": 0
     }
   ],
@@ -178,7 +178,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "alchemist-efota",
@@ -196,7 +196,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "armorer-legacy",
@@ -214,7 +214,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "armorer-efota",
@@ -232,7 +232,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "artillerist-legacy",
@@ -250,7 +250,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "artillerist-efota",
@@ -268,7 +268,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "battle-smith-legacy",
@@ -286,7 +286,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "battle-smith-efota",
@@ -304,7 +304,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "cartographer-efota",
@@ -322,7 +322,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "reanimator-rthw",
@@ -340,7 +340,7 @@
         9,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "ancestral-guardian",
@@ -358,7 +358,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "battlerager",
@@ -376,7 +376,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "beast",
@@ -394,7 +394,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "berserker",
@@ -430,7 +430,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "giant",
@@ -448,7 +448,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "storm-herald",
@@ -466,7 +466,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "totem-warrior",
@@ -484,7 +484,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "wild-heart-2024",
@@ -502,7 +502,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "world-tree-2024",
@@ -520,7 +520,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "zealot",
@@ -538,7 +538,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "zealot-2024",
@@ -556,7 +556,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "wild-magic-barbarian",
@@ -574,7 +574,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "creation",
@@ -591,7 +591,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "dance-2024",
@@ -608,7 +608,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "eloquence",
@@ -625,7 +625,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "glamour",
@@ -642,7 +642,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "glamour-2024",
@@ -659,7 +659,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "lore",
@@ -676,7 +676,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "lore-2024",
@@ -693,7 +693,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "spirits",
@@ -710,7 +710,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "spirits-rthw",
@@ -727,7 +727,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "swords",
@@ -744,7 +744,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "college-of-the-moon-frhof",
@@ -761,7 +761,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "valor",
@@ -778,7 +778,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "valor-2024",
@@ -795,7 +795,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "whispers",
@@ -812,7 +812,7 @@
         6,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "arcana-domain",
@@ -832,7 +832,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "death-domain",
@@ -852,7 +852,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "forge-domain",
@@ -872,7 +872,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "grave-domain",
@@ -892,7 +892,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "grave-domain-rthw",
@@ -912,7 +912,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "knowledge-domain",
@@ -952,7 +952,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "life-domain",
@@ -988,7 +988,7 @@
         6,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "light-domain",
@@ -1025,7 +1025,7 @@
         6,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "nature-domain",
@@ -1065,7 +1065,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "peace-domain",
@@ -1085,7 +1085,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "tempest-domain",
@@ -1142,7 +1142,7 @@
         6,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "twilight-domain",
@@ -1162,7 +1162,7 @@
         8,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "war-domain",
@@ -1199,7 +1199,7 @@
         6,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "dreams",
@@ -1218,7 +1218,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "spores",
@@ -1237,7 +1237,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "stars",
@@ -1256,7 +1256,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "land",
@@ -1278,7 +1278,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "land-2024",
@@ -1296,7 +1296,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "moon",
@@ -1315,7 +1315,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "moon-2024",
@@ -1333,7 +1333,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "sea-2024",
@@ -1351,7 +1351,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "shepherd",
@@ -1370,7 +1370,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "stars-2024",
@@ -1388,7 +1388,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "wildfire",
@@ -1407,7 +1407,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "arcane-archer",
@@ -1426,7 +1426,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "banneret-frhof",
@@ -1445,7 +1445,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "battle-master",
@@ -1464,7 +1464,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "battle-master-2024",
@@ -1483,7 +1483,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "cavalier",
@@ -1502,7 +1502,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "champion",
@@ -1521,7 +1521,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "champion-2024",
@@ -1540,7 +1540,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "echo-knight",
@@ -1559,7 +1559,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "eldritch-knight",
@@ -1578,7 +1578,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "eldritch-knight-2024",
@@ -1597,7 +1597,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "psi-warrior",
@@ -1616,7 +1616,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "psi-warrior-2024",
@@ -1635,7 +1635,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "purple-dragon-knight",
@@ -1654,7 +1654,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "rune-knight",
@@ -1673,7 +1673,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "samurai",
@@ -1692,7 +1692,7 @@
         15,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "mercy-2024",
@@ -1710,7 +1710,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "shadow-2024",
@@ -1728,7 +1728,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "elements-2024",
@@ -1746,7 +1746,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "open-hand-2024",
@@ -1764,7 +1764,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "mercy",
@@ -1782,7 +1782,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "shadow",
@@ -1800,7 +1800,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "ascendant-dragon",
@@ -1818,7 +1818,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "astral-self",
@@ -1836,7 +1836,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "drunken-master",
@@ -1854,7 +1854,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "four-elements",
@@ -1872,7 +1872,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "kensei",
@@ -1890,7 +1890,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "long-death",
@@ -1908,7 +1908,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "open-hand",
@@ -1926,7 +1926,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "sun-soul",
@@ -1944,7 +1944,7 @@
         11,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "conquest",
@@ -1962,7 +1962,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "devotion",
@@ -1985,7 +1985,7 @@
         18,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "devotion-2024",
@@ -2003,7 +2003,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "glory",
@@ -2021,7 +2021,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "glory-2024",
@@ -2039,7 +2039,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "redemption",
@@ -2057,7 +2057,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "ancients",
@@ -2075,7 +2075,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "ancients-2024",
@@ -2093,7 +2093,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "crown",
@@ -2111,7 +2111,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "noble-genies-frhof",
@@ -2129,7 +2129,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "watchers",
@@ -2147,7 +2147,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "vengeance",
@@ -2165,7 +2165,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "vengeance-2024",
@@ -2183,7 +2183,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "oathbreaker",
@@ -2201,7 +2201,7 @@
         15,
         20
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "beast-master",
@@ -2219,7 +2219,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "beast-master-2024",
@@ -2237,7 +2237,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "drakewarden",
@@ -2255,7 +2255,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "fey-wanderer",
@@ -2273,7 +2273,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "fey-wanderer-2024",
@@ -2291,7 +2291,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "gloom-stalker",
@@ -2309,7 +2309,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "gloom-stalker-2024",
@@ -2327,7 +2327,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "hollow-warden-rthw",
@@ -2345,7 +2345,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "horizon-walker",
@@ -2363,7 +2363,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "hunter",
@@ -2381,7 +2381,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "hunter-2024",
@@ -2399,7 +2399,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "monster-slayer",
@@ -2417,7 +2417,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "swarmkeeper",
@@ -2435,7 +2435,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "winter-walker-frhof",
@@ -2453,7 +2453,7 @@
         11,
         15
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "arcane-trickster",
@@ -2471,7 +2471,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "arcane-trickster-2024",
@@ -2489,7 +2489,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "assassin",
@@ -2507,7 +2507,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "assassin-2024",
@@ -2525,7 +2525,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "inquisitive",
@@ -2543,7 +2543,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "mastermind",
@@ -2561,7 +2561,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "phantom",
@@ -2579,7 +2579,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "phantom-rthw",
@@ -2597,7 +2597,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "scion-of-the-three-frhof",
@@ -2615,7 +2615,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "scout",
@@ -2633,7 +2633,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "soulknife",
@@ -2651,7 +2651,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "soulknife-2024",
@@ -2669,7 +2669,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "swashbuckler",
@@ -2687,7 +2687,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "thief",
@@ -2705,7 +2705,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "thief-2024",
@@ -2723,7 +2723,7 @@
         13,
         17
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "aberrant-mind",
@@ -2742,7 +2742,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "aberrant-sorcery-2024",
@@ -2760,7 +2760,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "clockwork-sorcery-2024",
@@ -2778,7 +2778,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "clockwork-soul",
@@ -2797,7 +2797,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "divine-soul",
@@ -2816,7 +2816,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "draconic-bloodline",
@@ -2834,7 +2834,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "draconic-sorcery-2024",
@@ -2852,7 +2852,7 @@
         14,
         19
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "lunar-sorcery",
@@ -2871,7 +2871,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "shadow-magic",
@@ -2890,7 +2890,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "shadow-sorcery-rthw",
@@ -2908,7 +2908,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "spellfire-sorcery-frhof",
@@ -2926,7 +2926,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "storm-sorcery",
@@ -2945,7 +2945,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "wild-magic",
@@ -2964,7 +2964,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "wild-magic-sorcery-2024",
@@ -2982,7 +2982,7 @@
         14,
         18
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "archfey-patron-2024",
@@ -3000,7 +3000,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "celestial-patron-2024",
@@ -3018,7 +3018,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "fiend-patron-2024",
@@ -3036,7 +3036,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "great-old-one-patron-2024",
@@ -3054,7 +3054,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "archfey",
@@ -3073,7 +3073,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "celestial",
@@ -3092,7 +3092,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "fathomless",
@@ -3111,7 +3111,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "fiend",
@@ -3129,7 +3129,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "genie",
@@ -3148,7 +3148,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "great-old-one",
@@ -3167,7 +3167,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "hexblade",
@@ -3186,7 +3186,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "undead",
@@ -3204,7 +3204,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "undying",
@@ -3223,7 +3223,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "undead-patron-rthw",
@@ -3241,7 +3241,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "abjurer-2024",
@@ -3259,7 +3259,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "bladesinger-frhof",
@@ -3277,7 +3277,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "bladesinging",
@@ -3296,7 +3296,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "chronurgy",
@@ -3315,7 +3315,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "diviner-2024",
@@ -3333,7 +3333,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "evoker-2024",
@@ -3351,7 +3351,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "graviturgy",
@@ -3370,7 +3370,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "illusionist-2024",
@@ -3388,7 +3388,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "scribes",
@@ -3407,7 +3407,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "abjuration",
@@ -3426,7 +3426,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "conjuration",
@@ -3445,7 +3445,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "divination",
@@ -3464,7 +3464,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "enchantment",
@@ -3483,7 +3483,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "evocation",
@@ -3501,7 +3501,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "illusion",
@@ -3520,7 +3520,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "necromancy",
@@ -3539,7 +3539,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "transmutation",
@@ -3558,7 +3558,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     },
     {
       "id": "war-magic",
@@ -3577,7 +3577,7 @@
         10,
         14
       ],
-      "coverage": "reference-only"
+      "coverage": "partial-mechanics"
     }
   ]
 }

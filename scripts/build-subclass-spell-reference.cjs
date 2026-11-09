@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict';
-// Fixed spell names and levels only. Choices, expanded lists and source prose are excluded.
+// Spell names and levels only. Fixed grants and legacy expanded choices have separate outputs; source prose is excluded.
 const fs=require('node:fs'),path=require('node:path'),root=path.resolve(__dirname,'..');
 const S=require('../js/modules/character-subclass-data'),F=require('../js/modules/character-subclass-feature-data'),cache=path.join(__dirname,'.source-cache/5etools-v1/class'),norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9]/g,''),aliases={'purple-dragon-knight':'Purple Dragon Knight (Banneret)'};
 const sources=fs.readdirSync(cache).filter(f=>f.endsWith('.json')&&f!=='index.json').flatMap(f=>JSON.parse(fs.readFileSync(path.join(cache,f),'utf8')).subclass||[]),records={};
