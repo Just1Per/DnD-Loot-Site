@@ -38,7 +38,7 @@ var CharacterClassMovement = (() => {
     if (bonus) for (const row of magicItems?.active || []) {
       if (row.magicActive && row.meta.rule?.speed?.climb?.mode === 'walking') effects.climb = Math.max(Number(effects.climb) || 0, effects.speed);
     }
-    const calculation = 'Walking speed '+effects.speed+' ft. Base and other permanent bonuses: '+base+' ft; eligible class bonuses: +'+bonus+' ft. Item speed minima apply to this total.';
+    const calculation = 'Walking speed '+effects.speed+' ft before load, armor and conditions. Base and other permanent bonuses: '+base+' ft; eligible class bonuses: +'+bonus+' ft. Item speed minima apply to this total.';
     const detail = rows.length ? calculation+' '+rows.map(row=>row.name+': '+row.detail).join(' ') : '';
     return {rows, base, bonus, speed:effects.speed, calculation, detail};
   }

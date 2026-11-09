@@ -4,7 +4,15 @@ var CharacterPlayRules = (()=>{
  'Lawful Good':'Acts with honor, compassion, and duty.', 'Neutral Good':'Helps others without strict allegiance to rules or rebellion.', 'Chaotic Good':'Fights injustice guided by personal conscience.',
  'Lawful Neutral':'Follows laws, traditions, or a personal code.', 'True Neutral':'Seeks balance or survival without a strong moral allegiance.', 'Chaotic Neutral':'Values personal freedom and resists authority.',
  'Lawful Evil':'Uses rules and hierarchies to exploit and oppress.', 'Neutral Evil':'Pursues personal benefit without remorse.', 'Chaotic Evil':'Acts through hatred, greed, and destructive violence.'};
- const norm=(raw={})=>({gender:['male','female','other'].includes(raw.gender)?raw.gender:'',age:Math.max(0,Math.min(100000,Number(raw.age)||0)),size:['small','medium','large'].includes(raw.size)?raw.size:'',height:Math.max(0,Math.min(100000,Number(raw.height)||0)),weight:Math.max(0,Math.min(100000,Number(raw.weight)||0)),hair:String(raw.hair||'').slice(0,200),eyes:String(raw.eyes||'').slice(0,200),skin:String(raw.skin||'').slice(0,200)});
+ // Daily lifestyle prices in the supplied MPMB 13.0.4 Lists.Lifestyles table.
+ // Guidance only: choosing a lifestyle never spends a character's coins.
+ const lifestyles=Object.freeze([
+  ['wretched','Wretched','—'],['squalid','Squalid','1 sp'],['poor','Poor','2 sp'],
+  ['modest','Modest','1 gp'],['comfortable','Comfortable','2 gp'],
+  ['wealthy','Wealthy','4 gp'],['aristocratic','Aristocratic','10 gp min.']
+ ].map(([id,name,cost])=>Object.freeze({id,name,cost})));
+ const lifestyle=value=>{const key=String(value??'').trim().toLowerCase();return lifestyles.find(row=>row.id===key)||null;};
+ const norm=(raw={})=>({playerName:String(raw.playerName||'').slice(0,120),faith:String(raw.faith||'').slice(0,200),organization:String(raw.organization||'').slice(0,200),organizationNotes:String(raw.organizationNotes||'').slice(0,12000),lifestyle:String(raw.lifestyle||'').slice(0,200),gender:['male','female','other'].includes(raw.gender)?raw.gender:'',age:Math.max(0,Math.min(100000,Number(raw.age)||0)),size:['small','medium','large'].includes(raw.size)?raw.size:'',height:Math.max(0,Math.min(100000,Number(raw.height)||0)),weight:Math.max(0,Math.min(100000,Number(raw.weight)||0)),hair:String(raw.hair||'').slice(0,200),eyes:String(raw.eyes||'').slice(0,200),skin:String(raw.skin||'').slice(0,200)});
  const text=(value,max=1000)=>String(value??'').slice(0,max);
  const advancement=(raw={})=>{
   const classLevels=(Array.isArray(raw.classLevels)?raw.classLevels:[]).slice(0,20).map(v=>({classId:text(v?.classId||v?.class||'',80).toLowerCase(),level:Math.max(1,Math.min(20,Math.trunc(Number(v?.level)||1))),subclassId:text(v?.subclassId||v?.subclass||'',100).toLowerCase()})).filter(v=>v.classId);
@@ -16,7 +24,7 @@ var CharacterPlayRules = (()=>{
   return {
    asiSpent:Math.max(0,Math.min(7,Math.trunc(Number(raw.asiSpent)||0))),lessons:raw.lessons===true,
    useExperience:raw.useExperience===true,xp:Math.max(0,Math.min(1000000000,Math.trunc(Number(raw.xp)||0))),
-   hpMode:['fixed','rolled','max','manual'].includes(raw.hpMode)?raw.hpMode:'fixed',hpRolls,
+   hpMode:['fixed','average','rolled','max','manual'].includes(raw.hpMode)?raw.hpMode:'fixed',hpRolls,
    classLevels,extraPages,
    companion:{name:text(companionRaw.name,160),type:text(companionRaw.type,100),size:text(companionRaw.size,40),ac:Math.max(0,Math.min(99,Math.trunc(Number(companionRaw.ac)||10))),hpMax:Math.max(0,Math.min(99999,Math.trunc(Number(companionRaw.hpMax)||0))),hpCurrent:Math.max(0,Math.min(99999,Math.trunc(Number(companionRaw.hpCurrent)||0))),speed:text(companionRaw.speed,100),initiative:Math.max(-50,Math.min(50,Math.trunc(Number(companionRaw.initiative)||0))),proficiency:Math.max(0,Math.min(20,Math.trunc(Number(companionRaw.proficiency)||0))),abilities,saves:text(companionRaw.saves,1000),skills:text(companionRaw.skills,2000),senses:text(companionRaw.senses,1000),attacks:text(companionRaw.attacks,4000),traits:text(companionRaw.traits,6000),notes:text(companionRaw.notes,6000)}
   };
@@ -52,10 +60,10 @@ var CharacterPlayRules = (()=>{
   const F=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
   const definition=F.definitions[feat.id];
   const selected=(data.rulesChoices.feats||[]).map(id=>catalog.find(f=>f.id===id)).filter(Boolean);
-  if(selected.some(f=>f.name===feat.name&&(!definition?.repeatable||f.edition!==feat.edition)))return 'This feat is already selected';
+  if(selected.some(f=>(feat.personal?f.id===feat.id:!f.personal&&f.name===feat.name)&&(!definition?.repeatable||f.edition!==feat.edition)))return 'This feat is already selected';
   const req=definition?.requirements||[];
   if(scores&&req.length&&!req.some(r=>level>=r.level&&(!r.ability.length||r.ability.some(a=>Object.entries(a).every(([k,v])=>scores[k]>=v)))))return 'Level / ability prerequisite is not met';
-  if(data.build.edition==='2014'&&data.build.race==='variant-human'&&!data.build.raceFeat&&feat.edition==='2014')return '';
+  if(data.build.edition==='2014'&&data.build.race==='variant-human'&&!data.build.raceFeat&&feat.edition==='2014'&&!feat.personal)return '';
   const b=budget(data,level,catalog);
   if(feat.category==='FS'){
    const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
@@ -65,6 +73,16 @@ var CharacterPlayRules = (()=>{
   if(feat.category==='O'&&b.lessons)return '';
   return b.remaining?'':'No available feat / ASI choice at this class level';
  }
- return {alignments,normalizeProfile:norm,normalizeAdvancement:advancement,budget,eligible};
+ // Advancement/prerequisite rules advise player choices; campaign catalogue policy is checked by callers.
+ function featSelection(data,level,feat,catalog,scores){
+  if(!feat)return {blocked:'Feat unavailable',guidance:''};
+  const F=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules'),definition=F.definition(data,feat.id),identity=definition?.personal?'personal:'+feat.id:definition?.name||feat.name;
+  const duplicate=F.entries(data,level).some(entry=>{const other=F.definition(data,entry.id)||catalog.find(row=>row.id===entry.id);return (other?.personal?'personal:'+entry.id:other?.name)===identity&&(!definition?.repeatable||other.edition!==feat.edition);});
+  const guidance=eligible(data,level,feat,catalog,scores);
+  const variant=data.build.edition==='2014'&&data.build.race==='variant-human'&&!data.build.raceFeat&&feat.edition==='2014'&&!feat.personal;
+  const blocked=duplicate?'This feat is already selected':!variant&&data.rulesChoices.feats.length>=30?'Maximum 30 additional feats.':'';
+  return {blocked,guidance:blocked?'':guidance};
+ }
+ return {alignments,lifestyles,lifestyle,normalizeProfile:norm,normalizeAdvancement:advancement,budget,eligible,featSelection};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPlayRules;

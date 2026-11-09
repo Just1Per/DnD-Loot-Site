@@ -70,7 +70,7 @@ var CharacterCatalog = (() => {
     return (catalogue?.spells||[]).filter(s=>{
       const versionOk=!edition || s.edition===edition || (legacy||artificer) && edition==='2024' && s.edition==='2014';
       const levelOk=level==='' || s.level===Number(level);
-      const classOk=artificer?!!choices?.artificerSpellAllowed(s,classSource,catalogue.spells,edition):!classId || (s.classesByEdition?.[edition]||s.classes||[]).includes(classId);
+      const classOk=artificer?!!choices?.artificerSpellAllowed(s,classSource,catalogue.spells,edition):!classId || (Array.isArray(classId)?classId:[classId]).some(id=>(s.classesByEdition?.[edition]||s.classes||[]).includes(id));
       const schoolOk=!school || String(s.school||'').toLowerCase()===String(school).toLowerCase();
       const searchable=[
         s.name,s.school,s.source,s.book,s.save,s.casting,s.range,
@@ -112,7 +112,7 @@ var CharacterCatalog = (() => {
     return {errors,picks,classId,ability};
   }
   function spellRow(spell) {
-    return {name:`${spell.name} [${spell.edition}]`,level:spell.level,prepared:false,casting:spell.casting,range:spell.range,duration:spell.duration,components:spell.components,notes:`${spell.book}, p. ${spell.page} · ${spell.school}${spell.ritual?' · Ritual':''}\n\n${spell.description || 'Reference entry: consult this source for the complete rules.'}${spell.license?'\n\n'+spell.license:''}`,catalogId:spell.id};
+    return {name:`${spell.name} [${spell.edition}]`,level:spell.level,prepared:false,casting:spell.casting,range:spell.range,duration:spell.duration,components:spell.components,save:spell.save||'',school:spell.school||'',book:spell.source||spell.book||'',page:spell.page||'',notes:`${spell.book}, p. ${spell.page} · ${spell.school}${spell.ritual?' · Ritual':''}${spell.castingRestriction?' · '+spell.castingRestriction:''}${spell.spellcastingAbility?' · '+spell.spellcastingAbility.toUpperCase():''}\n\n${spell.description || 'Reference entry: consult this source for the complete rules.'}${spell.license?'\n\n'+spell.license:''}`,catalogId:spell.id};
   }
   function longRest(data) {
     for(const [key,g] of Object.entries(data.rulesChoices.grants))if(!key.startsWith('__'))g.used=0;

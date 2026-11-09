@@ -1,6 +1,7 @@
 /* Equipment mechanics are explicit DM data; descriptions are never executable rules.
    Factual weapon/armor statistics: SRD 5.1 / 5.2. See docs/character-equipment.md. */
 var CharacterEquipment = (() => {
+  const ItemChoices=typeof CharacterMagicItemChoices!=='undefined'?CharacterMagicItemChoices:require('./character-magic-item-choices');
   const n=(v,min=-30,max=30)=>Math.max(min,Math.min(max,Math.trunc(Number(v)||0)));
   const text=v=>String(v??'').slice(0,200);
   const rows=[
@@ -57,12 +58,16 @@ var CharacterEquipment = (() => {
   }
   function infer(item={}) {
     if(item.mechanics)return {...normalize(item.mechanics),inferred:false};
-    let name=String(item.name||'').trim().toLowerCase(),bonus=0;
-    const match=name.match(/^(.*?)\s*,?\s*\+([123])$/);
-    if(match){name=match[1].replace(/,\s*$/,'').trim();bonus=Number(match[2]);}
-    name=name.replace(/ armour$| armor$/,'');
-    const id=key(name),kind=Object.hasOwn(weapons,id)?'weapon':Object.hasOwn(armor,id)?'armor':name==='shield'?'shield':'none';
-    return {...normalize({kind,base:id,acBonus:kind==='armor'||kind==='shield'?bonus:0,attackBonus:kind==='weapon'?bonus:0,damageBonus:kind==='weapon'?bonus:0}),inferred:kind!=='none'};
+    const parsed=parseName(item.name),bonus=parsed.bonus,kind=parsed.kind;
+    return {...normalize({kind,base:parsed.base,acBonus:kind==='armor'||kind==='shield'?bonus:0,attackBonus:kind==='weapon'?bonus:0,damageBonus:kind==='weapon'?bonus:0}),inferred:kind!=='none'};
+  }
+  function parseName(value){
+    let name=String(value||'').trim().toLowerCase().replace(/\s+/g,' '),bonus=0;
+    const prefix=/^\+([123])\s+(.+)$/.exec(name),suffix=/^(.+?)\s*,?\s*(?:\+([123])|\(\+([123])\))$/.exec(name);
+    if(prefix){name=prefix[2];bonus=Number(prefix[1]);}else if(suffix){name=suffix[1].trim();bonus=Number(suffix[2]||suffix[3]);}
+    if(name.includes('+'))return{kind:'none',base:'',bonus:0,key:''};
+    name=name.replace(/ armour$| armor$/,'').trim();const id=key(name),kind=Object.hasOwn(weapons,id)?'weapon':Object.hasOwn(armor,id)?'armor':name==='shield'?'shield':'none';
+    return{kind,base:kind==='shield'?'':kind==='none'?'':id,bonus:kind==='none'?0:bonus,key:kind==='none'?'':kind+':'+id+':'+bonus};
   }
   function profile(m,edition) {
     const e=m.edition==='character'?edition:m.edition;
@@ -80,25 +85,30 @@ var CharacterEquipment = (() => {
   }
   function choices(raw={}) {
     const seen=new Set();
-    return {acMode:'equipment',acAdjustment:0,loadout:(Array.isArray(raw?.loadout)?raw.loadout:[]).filter(v=>v&&typeof v.id==='string'&&v.id.length<=200&&!seen.has(v.id)&&seen.add(v.id)).slice(0,200).map(v=>({id:v.id,equipped:v.equipped===true,attuned:v.attuned===true,ability:['str','dex','con','int','wis','cha'].includes(v.ability)?v.ability:'auto',proficiency:['yes','no'].includes(v.proficiency)?v.proficiency:'auto',mode:['twoHanded','thrown','offhand','mounted'].includes(v.mode)?v.mode:'normal'}))};
+    return {acMode:'equipment',acAdjustment:0,loadout:(Array.isArray(raw?.loadout)?raw.loadout:[]).filter(v=>v&&typeof v.id==='string'&&v.id.length<=200&&!seen.has(v.id)&&seen.add(v.id)).slice(0,200).map(v=>({id:v.id,...(ItemChoices.valid(v.magicVariant)?{magicVariant:v.magicVariant}:{}),equipped:v.equipped===true,attuned:v.attuned===true,ability:['str','dex','con','int','wis','cha'].includes(v.ability)?v.ability:'auto',proficiency:['yes','no'].includes(v.proficiency)?v.proficiency:'auto',mode:['twoHanded','thrown','offhand','mounted'].includes(v.mode)?v.mode:'normal'}))};
+  }
+  function armorTrained(group,profs=[]) {
+    return ['light','medium','heavy'].includes(group)&&profs.some(p=>['all armor',group+' armor'].includes(String(p).toLowerCase()));
   }
   function trained(w,profs) {
     const entries=profs.map(p=>p.toLowerCase());
-    return entries.some(p=>p===w.name.toLowerCase()||p===w.name.toLowerCase()+'s'||p===w.group+' weapons'||w.group==='martial'&&((p==='martial weapons with the light property'&&w.props.includes('light'))||(p==='martial weapons with the finesse or light property'&&(w.props.includes('light')||w.props.includes('finesse')))));
+    return entries.some(p=>p===w.name.toLowerCase()||p===w.name.toLowerCase()+'s'||p===w.group+' weapons'||p==='martial ranged weapons'&&w.group==='martial'&&w.rangeType==='ranged'||p==='melee martial weapons without heavy or two-handed'&&w.group==='martial'&&w.rangeType==='melee'&&!w.props.includes('heavy')&&!w.props.includes('twoHanded')||w.group==='martial'&&((p==='martial weapons with the light property'&&w.props.includes('light'))||(p==='martial weapons with the finesse or light property'&&(w.props.includes('light')||w.props.includes('finesse')))));
   }
   function attunementLimit(data,level){
     const stored=data?.adobe||data?.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data?.build?.classId,level:level||1}];
     let remaining=level===undefined?20:Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),artificer=0;
     const seen=new Set();for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(!seen.has(entry.classId)&&entry.classId==='artificer')artificer=actual;seen.add(entry.classId);}
-    const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);if(artificer&&!choices?.artificerSource(data).eligible)return 3;
-    return artificer>=18?6:artificer>=14?5:artificer>=10?4:3;
+    const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);if(artificer&&!choices?.artificerSource(data).eligible)artificer=0;const RS=globalThis.CharacterRogueSubclasses||(typeof require==='function'?require('./character-rogue-subclasses'):null),rogue=RS?.derive(data,{level:level===undefined?20:level}),thief=rogue?.active&&rogue.id==='thief-2024'&&rogue.level>=13;
+    return Math.max(thief?4:3,artificer>=18?6:artificer>=14?5:artificer>=10?4:3);
   }
   function attunementState(data,loot=[],level){
+    loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
     const limit=attunementLimit(data,level),owned=new Map(loot.filter(row=>row&&Number(row.quantity)>0).map(row=>[row.id,row])),ids=[];
     for(const choice of choices(data?.equipmentState).loadout){const item=owned.get(choice.id)?.item;if(!item||!choice.attuned)continue;const needs=(typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(item))||!!item.attunement;if(needs)ids.push(choice.id);}
     return{limit,count:ids.length,active:new Set(ids.slice(0,limit))};
   }
   function derive(data,stats,loot=[],level) {
+    loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
     const c=choices(data.equipmentState),warnings=[],sources=[],attacks=[],seen=new Set(),names=new Set();
     const owned=loot.filter(e=>e&&Number(e.quantity)>0&&typeof e.id==='string'&&!seen.has(e.id)&&seen.add(e.id));
     const entries=owned.map(e=>({entry:e,item:e.item||{},choice:c.loadout.find(v=>v.id===e.id)||{id:e.id,equipped:false,attuned:false,ability:'auto',proficiency:'auto',mode:'normal'},mechanics:CharacterEquipment.infer(e.item)}));
@@ -127,10 +137,11 @@ var CharacterEquipment = (() => {
       }
       if(r.requiresAttunement&&!r.magicActive)warnings.push(r.item.name+': magical bonuses require attunement.');
     }
-    let base=10+stats.mods.dex,baseLabel='Unarmored: 10 + DEX',unarmoredDefenseNote='';
+    let base=10+stats.mods.dex,baseLabel='Unarmored: 10 + DEX',unarmoredDefenseNote='',baseParts={armor:10,dex:stats.mods.dex,other:0,otherLabel:''};
     if(armorEntry){
       const p=armorEntry.profile;
-      base=p.baseAC+(p.group==='heavy'?0:p.group==='medium'?Math.min(2,stats.mods.dex):stats.mods.dex);
+      baseParts={armor:p.baseAC,dex:p.group==='heavy'?0:p.group==='medium'?Math.min(2,stats.mods.dex):stats.mods.dex,other:0,otherLabel:''};
+      base=baseParts.armor+baseParts.dex;
       baseLabel=p.name;
     } else {
       const adobe=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};
@@ -142,25 +153,26 @@ var CharacterEquipment = (() => {
       const defenses=classLevels.filter(entry=>['barbarian','monk'].includes(entry.classId)),firstDefense=defenses[0]?.classId,modern=data.build?.edition==='2024',defenseAvailable=id=>modern?defenses.some(entry=>entry.classId===id):firstDefense===id;
       if(defenses.length>1)unarmoredDefenseNote=modern?'2024 multiclass armor calculation: use one eligible formula at a time, never combine them. The highest eligible formula is shown.':'2014 multiclass Unarmored Defense: '+(firstDefense==='barbarian'?'Barbarian':'Monk')+' is the first granting class. The later class does not grant a second Unarmored Defense formula.';
       const subclass=(id,sub,min=1)=>classLevels.some(entry=>entry.classId===id&&entry.subclassId===sub&&Number(entry.level||0)>=min);
-      const alternatives=[{value:10+stats.mods.dex,label:'Unarmored: 10 + DEX',shield:true}];
+      const formula=(armor,dex,other,label,shield=true,otherLabel='')=>({value:armor+dex+other,armor,dex,other,otherLabel,label,shield});
+      const alternatives=[formula(10,stats.mods.dex,0,'Unarmored: 10 + DEX')];
       const race=stats.effects?.race||(typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null);
       if(race?.naturalArmor){
         const ability=race.naturalArmor.ability,mod=ability?Number(stats.mods?.[ability]||0):0;
-        alternatives.push({value:Number(race.naturalArmor.base||10)+mod,label:(race.name||'Racial')+' natural armor',shield:true});
+        alternatives.push(formula(Number(race.naturalArmor.base||10),ability==='dex'?mod:0,ability&&ability!=='dex'?mod:0,(race.name||'Racial')+' natural armor',true,ability&&ability!=='dex'?ability.toUpperCase():''));
       }
-      if(defenseAvailable('barbarian'))alternatives.push({value:10+stats.mods.dex+stats.mods.con,label:'Barbarian Unarmored Defense',shield:true});
-      if(defenseAvailable('monk')&&!shieldEntry)alternatives.push({value:10+stats.mods.dex+stats.mods.wis,label:'Monk Unarmored Defense',shield:false});
-      if(data.build?.edition==='2014'&&subclass('sorcerer','draconic-bloodline',1))alternatives.push({value:13+stats.mods.dex,label:'Draconic Resilience',shield:true});
-      if(data.build?.edition==='2024'&&subclass('sorcerer','draconic-bloodline',3))alternatives.push({value:10+stats.mods.dex+stats.mods.cha,label:'Draconic Resilience',shield:true});
+      if(defenseAvailable('barbarian'))alternatives.push(formula(10,stats.mods.dex,stats.mods.con,'Barbarian Unarmored Defense',true,'CON'));
+      if(defenseAvailable('monk')&&!shieldEntry)alternatives.push(formula(10,stats.mods.dex,stats.mods.wis,'Monk Unarmored Defense',false,'WIS'));
+      if(data.build?.edition==='2014'&&subclass('sorcerer','draconic-bloodline',1))alternatives.push(formula(13,stats.mods.dex,0,'Draconic Resilience'));
+      if(data.build?.edition==='2024'&&subclass('sorcerer','draconic-bloodline',3))alternatives.push(formula(10,stats.mods.dex,stats.mods.cha,'Draconic Resilience',true,'CHA'));
       const best=alternatives.sort((a,b)=>b.value-a.value)[0];
-      base=best.value;baseLabel=best.label;
+      base=best.value;baseLabel=best.label;baseParts={armor:best.armor,dex:best.dex,other:best.other,otherLabel:best.otherLabel};
     }
     const profs=stats.effects.proficiencies;
     if(armorEntry){
       const p=armorEntry.profile;
-      if(!profs.some(v=>v.toLowerCase()===p.group+' armor'))warnings.push(p.name+': armor training not found; check STR/DEX penalties and spellcasting restrictions.');
+      if(!armorTrained(p.group,profs))warnings.push(p.name+': armor training not found; check STR/DEX penalties and spellcasting restrictions.');
       if(p.stealth)warnings.push(p.name+': disadvantage on Stealth.');
-      if(p.strength>stats.scores.str)warnings.push(p.name+': strength requirement not met; apply speed penalty unless exempt.');
+      if(p.strength>stats.scores.str&&(stats.carrying?.mode||data.adobe?.carrying?.mode||data.rulesChoices?.grants?.__adobe?.data?.carrying?.mode)!=='variant')warnings.push(p.name+': strength requirement not met; Movement includes the applicable speed rule and exceptions.');
     }
     let shield=shieldEntry?2:0;
     const raceForAC=stats.effects?.race||(typeof CharacterRules!=='undefined'?CharacterRules.races?.[data.build?.race]:null);
@@ -178,18 +190,26 @@ var CharacterEquipment = (() => {
       if(m.kind!=='weapon'||!w)continue;
       const notes=[];
       let ability=ch.ability==='auto'?(w.props.includes('finesse')?(stats.mods.dex>stats.mods.str?'dex':'str'):w.rangeType==='ranged'?'dex':'str'):ch.ability;
-      const monkWeapon=martialArts?.active&&Martial.weapon(w,martialArts.edition);if(monkWeapon&&ch.ability==='auto')ability=Martial.ability(stats.mods);
+      const Patrons=globalThis.CharacterWarlockSubclasses||(typeof require==='function'?require('./character-warlock-subclasses'):null),patron=Patrons?.derive(data,{level,mods:stats.mods});if(ch.ability==='auto'&&patron?.active&&patron.base==='hexblade'&&patron.pick('hex-weapon')===String(r.entry.id).toLowerCase().replace(/[^a-z0-9]+/g,'-')&&!w.props.includes('twoHanded'))ability='cha';
+      const monkWeapon=martialArts?.active&&(Martial.weapon(w,martialArts.edition)||martialArts.kenseiWeapons?.includes(w.name));if(monkWeapon&&ch.ability==='auto')ability=w.rangeType==='ranged'&&!w.props.includes('finesse')&&!w.props.includes('thrown')?'dex':Martial.ability(stats.mods);
       let useTwo=w.props.includes('twoHanded')||ch.mode==='twoHanded'&&!!w.versatile;
       if(m.base==='lance')useTwo=ch.mode!=='mounted';
       const isThrown=ch.mode==='thrown'&&w.props.includes('thrown');
       const useVersatile=ch.mode==='twoHanded'&&w.versatile&&!isThrown;
       const trainedAuto=trained(w,profs),proficient=ch.proficiency==='yes'||ch.proficiency!=='no'&&trainedAuto;
+      const Traditions=globalThis.CharacterWizardSubclasses||(typeof require==='function'?require('./character-wizard-subclasses'):null),tradition=Traditions?.derive(data,{level,mods:stats.mods}),song=tradition?.active&&['bladesinging','bladesinger-frhof'].includes(tradition.id)&&tradition.pick('song-active')==='active'&&Traditions.songAllowed(tradition,{entries});if(song&&tradition.modern&&proficient&&ch.ability==='auto')ability='int';const victory=song&&!tradition.modern&&tradition.level>=14&&w.rangeType==='melee'&&!isThrown?Math.max(1,stats.mods.int):0;
+      const Specialists=globalThis.CharacterArtificerSubclasses||(typeof require==='function'?require('./character-artificer-subclasses'):null),specialist=Specialists?.derive(data,{level,mods:stats.mods}),MagicBridge=globalThis.CharacterMagicItems||(typeof require==='function'?require('./character-magic-items'):null);if(specialist?.active&&specialist.base==='battle-smith'&&ch.ability==='auto'&&r.magicActive&&(m.attackBonus||m.damageBonus||MagicBridge?.isMagical(r.item)))ability='int';
       const offhand=ch.mode==='offhand'&&w.props.includes('light');
       const ab=stats.mods[ability],extra=offhand?Math.min(0,ab):ab;
-      const attack=ab+(proficient?stats.pb:0)+(r.magicActive?m.attackBonus:0)+(w.rangeType==='ranged'?stats.feats.rangedBonus:0);
-      const damageBonus=extra+(r.magicActive?m.damageBonus:0);
+      const MonkSub=globalThis.CharacterMonkSubclasses||(typeof require==='function'?require('./character-monk-subclasses'):null),ks=MonkSub?.derive(data,{level,mods:stats.mods}),isKensei=ks?.kenseiWeapons?.includes(w.name),sharpen=isKensei&&ks.pick('sharpen-active')==='active'&&ks.pick('sharpened-type')===ks.kenseiWeapons.map(v=>v.toLowerCase().replace(/[^a-z0-9]+/g,'-')).find(v=>v===w.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'))&&!(r.magicActive&&(m.attackBonus||m.damageBonus))?Math.min(3,ks.used('sharpen-bonus')):0;
+      const Oaths=globalThis.CharacterPaladinSubclasses||(typeof require==='function'?require('./character-paladin-subclasses'):null),oath=Oaths?.derive(data,{level,mods:stats.mods}),sacred=oath?.active&&oath.id.startsWith('devotion')&&oath.pick('sacred-weapon-active')==='active'&&oath.pick('sacred-item')===String(r.entry.id).toLowerCase().replace(/[^a-z0-9]+/g,'-')&&(!oath.modern||w.rangeType==='melee')&&!/unconscious/i.test(data.conditions||'')?Math.max(1,stats.mods.cha):0,hate=oath?.active&&oath.id==='oathbreaker'&&oath.level>=7&&w.rangeType==='melee'&&!isThrown?Math.max(1,stats.mods.cha):0;
+      const attack=sacred+sharpen+ab+(proficient?stats.pb:0)+(r.magicActive?m.attackBonus:0)+(w.rangeType==='ranged'?stats.feats.rangedBonus:0);
+      const damageBonus=victory+hate+sharpen+extra+(r.magicActive?m.damageBonus:0);
       const ordinaryDie=useVersatile?w.versatile:w.damage,damageDie=monkWeapon?Martial.dice(ordinaryDie,martialArts.die):ordinaryDie;if(monkWeapon&&w.damage)notes.push(Martial.note(martialArts,damageDie));
-      const damage=w.damage?`${damageDie}${damageBonus?' '+(damageBonus<0?'−':'+')+' '+Math.abs(damageBonus):''} ${w.damageType}${r.magicActive&&m.extraDamage?' + '+m.extraDamage:''}`:'Special action — resolve manually';
+      let damage=w.damage?`${damageDie}${damageBonus?' '+(damageBonus<0?'−':'+')+' '+Math.abs(damageBonus):''} ${w.damageType}${r.magicActive&&m.extraDamage?' + '+m.extraDamage:''}`:'Special action — resolve manually';
+      if(victory)notes.push('Song of Victory: +'+victory+' melee weapon damage while active.');
+      if(sacred)notes.push('Sacred Weapon: +'+sacred+' attack; '+(oath.modern?'may use Radiant damage.':'counts as magical.'));if(hate)notes.push('Aura of Hate: +'+hate+' melee weapon damage.');
+      if(sharpen)notes.push('Sharpen the Blade: +'+sharpen+' attack and damage while active.');if(isKensei&&ks.level>=6)notes.push('Kensei weapon counts as magical.');if(isKensei&&w.rangeType==='ranged'&&ks.pick('shot-active')==='active'){damage+=' + 1d4 '+w.damageType;notes.push('Kensei’s Shot: extra1d4 included on each hit this turn.');}
       if(useTwo&&shieldEntry)notes.push('Two hands required: stow shield before attacking.');
       if(w.props.includes('ammunition'))notes.push('Requires ammunition; consumption is manual.');
       if(w.props.includes('loading'))notes.push('Loading limits attacks.');
@@ -198,7 +218,7 @@ var CharacterEquipment = (() => {
       if(offhand)notes.push('Extra Light-weapon attack: confirm eligibility; positive ability damage omitted.');
       if(m.base==='net')notes.push(w.edition==='2024'?'2024 Net uses an action/attack replacement and a save; no weapon attack roll.':'2014 Net special attack restrictions apply.');
       if(w.mastery){const mastery=stats.weaponTraining?.masteries.find(v=>v.base===m.base);notes.push(mastery?'Mastery: '+w.mastery+' · unlocked ('+mastery.source+'); resolve the effect at the table.':'Mastery: '+w.mastery+' · not selected. Choose eligible Weapon Mastery on Abilities & Skills.');}
-      attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
+      attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,damageType:w.damageType||'',range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
     }
     const styles=typeof CharacterClassFeatureChoices==='undefined'?[]:CharacterClassFeatureChoices.styles(data,level);
     for(const attack of attacks){
@@ -208,10 +228,12 @@ var CharacterEquipment = (() => {
       if(styles.some(s=>s.name==='Dueling')&&profile.rangeType==='melee'&&!profile.props.includes('twoHanded')&&entry.choice.mode!=='twoHanded'&&!entries.some(e=>e.active&&e.entry.id!==attack.id&&e.mechanics.kind==='weapon'))attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>{const total=(sign==='−'?-1:1)*Number(n||0)+2;return dice+(total?' '+(total<0?'−':'+')+' '+Math.abs(total):'');});
       if(styles.some(s=>s.name==='Two-Weapon Fighting')&&entry.choice.mode==='offhand'&&profile.props.includes('light')&&stats.mods[attack.ability]>0){attack.notes=attack.notes.map(note=>note.replace('positive ability damage omitted.','Fighting Style adds your ability modifier to damage.'));attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>dice+' + '+((sign==='−'?-1:1)*Number(n||0)+stats.mods[attack.ability]));}
     }
+    // Format the separate paper damage cell only after all common style effects.
+    for(const attack of attacks)attack.damageDice=attack.damageType?attack.damage.replace(' '+attack.damageType,''):attack.damage;
     // Defense follows the owned armor actually worn, independent of the manual feat reminder.
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
-    return {entries,attacks,martialArts,unarmoredDefenseNote,warnings,attuned,attunementLimit:attunement.limit,base,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
+    return {entries,attacks,martialArts,unarmoredDefenseNote,warnings,attuned,attunementLimit:attunement.limit,base,baseParts,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
-  return {attunementLimit,attunementState,weapons,armor,normalize,infer,profile,choices,trained,derive};
+  return {attunementLimit,attunementState,weapons,armor,normalize,infer,parseName,profile,choices,trained,armorTrained,derive};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterEquipment;

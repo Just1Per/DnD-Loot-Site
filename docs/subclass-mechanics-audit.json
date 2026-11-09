@@ -1,0 +1,6086 @@
+{
+  "format": 1,
+  "generatedAt": "2026-11-09T07:39:17.888Z",
+  "summary": {
+    "total": 186,
+    "partialMechanics": 186,
+    "referenceOnly": 0,
+    "byClass": {
+      "artificer": {
+        "total": 10,
+        "partialMechanics": 10
+      },
+      "barbarian": {
+        "total": 13,
+        "partialMechanics": 13
+      },
+      "bard": {
+        "total": 14,
+        "partialMechanics": 14
+      },
+      "cleric": {
+        "total": 20,
+        "partialMechanics": 20
+      },
+      "druid": {
+        "total": 11,
+        "partialMechanics": 11
+      },
+      "fighter": {
+        "total": 15,
+        "partialMechanics": 15
+      },
+      "monk": {
+        "total": 14,
+        "partialMechanics": 14
+      },
+      "paladin": {
+        "total": 14,
+        "partialMechanics": 14
+      },
+      "ranger": {
+        "total": 14,
+        "partialMechanics": 14
+      },
+      "rogue": {
+        "total": 15,
+        "partialMechanics": 15
+      },
+      "sorcerer": {
+        "total": 14,
+        "partialMechanics": 14
+      },
+      "warlock": {
+        "total": 14,
+        "partialMechanics": 14
+      },
+      "wizard": {
+        "total": 18,
+        "partialMechanics": 18
+      }
+    }
+  },
+  "subclasses": [
+    {
+      "id": "alchemist-legacy",
+      "classId": "artificer",
+      "name": "Alchemist",
+      "edition": "2014",
+      "source": "ERLW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "alchemist-efota",
+      "classId": "artificer",
+      "name": "Alchemist",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "armorer-legacy",
+      "classId": "artificer",
+      "name": "Armorer",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "armorer-efota",
+      "classId": "artificer",
+      "name": "Armorer",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "artillerist-legacy",
+      "classId": "artificer",
+      "name": "Artillerist",
+      "edition": "2014",
+      "source": "ERLW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "artillerist-efota",
+      "classId": "artificer",
+      "name": "Artillerist",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "battle-smith-legacy",
+      "classId": "artificer",
+      "name": "Battle Smith",
+      "edition": "2014",
+      "source": "ERLW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "battle-smith-efota",
+      "classId": "artificer",
+      "name": "Battle Smith",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "cartographer-efota",
+      "classId": "artificer",
+      "name": "Cartographer",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "reanimator-rthw",
+      "classId": "artificer",
+      "name": "Reanimator",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-artificer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "ancestral-guardian",
+      "classId": "barbarian",
+      "name": "Path of the Ancestral Guardian",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "battlerager",
+      "classId": "barbarian",
+      "name": "Path of the Battlerager",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "beast",
+      "classId": "barbarian",
+      "name": "Path of the Beast",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "berserker",
+      "classId": "barbarian",
+      "name": "Path of the Berserker",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "berserker-2024",
+      "classId": "barbarian",
+      "name": "Path of the Berserker",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "giant",
+      "classId": "barbarian",
+      "name": "Path of the Giant",
+      "edition": "2014",
+      "source": "BGG",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "storm-herald",
+      "classId": "barbarian",
+      "name": "Path of the Storm Herald",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "totem-warrior",
+      "classId": "barbarian",
+      "name": "Path of the Totem Warrior",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "wild-heart-2024",
+      "classId": "barbarian",
+      "name": "Path of the Wild Heart",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "world-tree-2024",
+      "classId": "barbarian",
+      "name": "Path of the World Tree",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "zealot",
+      "classId": "barbarian",
+      "name": "Path of the Zealot",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "zealot-2024",
+      "classId": "barbarian",
+      "name": "Path of the Zealot",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "wild-magic-barbarian",
+      "classId": "barbarian",
+      "name": "Path of Wild Magic",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-barbarian.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, aura membership, reaction timing and duration remain table decisions.",
+        "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "creation",
+      "classId": "bard",
+      "name": "College of Creation",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "dance-2024",
+      "classId": "bard",
+      "name": "College of Dance",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "eloquence",
+      "classId": "bard",
+      "name": "College of Eloquence",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "glamour",
+      "classId": "bard",
+      "name": "College of Glamour",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "glamour-2024",
+      "classId": "bard",
+      "name": "College of Glamour",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "lore",
+      "classId": "bard",
+      "name": "College of Lore",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "lore-2024",
+      "classId": "bard",
+      "name": "College of Lore",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "spirits",
+      "classId": "bard",
+      "name": "College of Spirits",
+      "edition": "2014",
+      "source": "VRGR",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "spirits-rthw",
+      "classId": "bard",
+      "name": "College of Spirits",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "swords",
+      "classId": "bard",
+      "name": "College of Swords",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "college-of-the-moon-frhof",
+      "classId": "bard",
+      "name": "College of the Moon",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "valor",
+      "classId": "bard",
+      "name": "College of Valor",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "valor-2024",
+      "classId": "bard",
+      "name": "College of Valor",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "whispers",
+      "classId": "bard",
+      "name": "College of Whispers",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-bard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
+        "Companion command turns and external ally effects are described but not applied to another character automatically."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "arcana-domain",
+      "classId": "cleric",
+      "name": "Arcana Domain",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "death-domain",
+      "classId": "cleric",
+      "name": "Death Domain",
+      "edition": "2014",
+      "source": "DMG",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "forge-domain",
+      "classId": "cleric",
+      "name": "Forge Domain",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "grave-domain",
+      "classId": "cleric",
+      "name": "Grave Domain",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "grave-domain-rthw",
+      "classId": "cleric",
+      "name": "Grave Domain",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "knowledge-domain",
+      "classId": "cleric",
+      "name": "Knowledge Domain",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "knowledge-domain-frhof",
+      "classId": "cleric",
+      "name": "Knowledge Domain",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "life-domain",
+      "classId": "cleric",
+      "name": "Life Domain",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "life-domain-2024",
+      "classId": "cleric",
+      "name": "Life Domain",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "light-domain",
+      "classId": "cleric",
+      "name": "Light Domain",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "light-domain-2024",
+      "classId": "cleric",
+      "name": "Light Domain",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "nature-domain",
+      "classId": "cleric",
+      "name": "Nature Domain",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "order-domain",
+      "classId": "cleric",
+      "name": "Order Domain",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "peace-domain",
+      "classId": "cleric",
+      "name": "Peace Domain",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "tempest-domain",
+      "classId": "cleric",
+      "name": "Tempest Domain",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "trickery-domain",
+      "classId": "cleric",
+      "name": "Trickery Domain",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "trickery-domain-2024",
+      "classId": "cleric",
+      "name": "Trickery Domain",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "twilight-domain",
+      "classId": "cleric",
+      "name": "Twilight Domain",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "war-domain",
+      "classId": "cleric",
+      "name": "War Domain",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "war-domain-2024",
+      "classId": "cleric",
+      "name": "War Domain",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-cleric.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
+        "Duration controls must be ended at the table-specified time; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "dreams",
+      "classId": "druid",
+      "name": "Circle of Dreams",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "spores",
+      "classId": "druid",
+      "name": "Circle of Spores",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "stars",
+      "classId": "druid",
+      "name": "Circle of Stars",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "land",
+      "classId": "druid",
+      "name": "Circle of the Land",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        5,
+        6,
+        7,
+        9,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "land-2024",
+      "classId": "druid",
+      "name": "Circle of the Land",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "moon",
+      "classId": "druid",
+      "name": "Circle of the Moon",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "moon-2024",
+      "classId": "druid",
+      "name": "Circle of the Moon",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "sea-2024",
+      "classId": "druid",
+      "name": "Circle of the Sea",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "shepherd",
+      "classId": "druid",
+      "name": "Circle of the Shepherd",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "stars-2024",
+      "classId": "druid",
+      "name": "Circle of the Stars",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "wildfire",
+      "classId": "druid",
+      "name": "Circle of Wildfire",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-druid.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
+        "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "arcane-archer",
+      "classId": "fighter",
+      "name": "Arcane Archer",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "banneret-frhof",
+      "classId": "fighter",
+      "name": "Banneret",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "battle-master",
+      "classId": "fighter",
+      "name": "Battle Master",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "battle-master-2024",
+      "classId": "fighter",
+      "name": "Battle Master",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "cavalier",
+      "classId": "fighter",
+      "name": "Cavalier",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "champion",
+      "classId": "fighter",
+      "name": "Champion",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "champion-2024",
+      "classId": "fighter",
+      "name": "Champion",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "echo-knight",
+      "classId": "fighter",
+      "name": "Echo Knight",
+      "edition": "2014",
+      "source": "EGW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "eldritch-knight",
+      "classId": "fighter",
+      "name": "Eldritch Knight",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "eldritch-knight-2024",
+      "classId": "fighter",
+      "name": "Eldritch Knight",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "psi-warrior",
+      "classId": "fighter",
+      "name": "Psi Warrior",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "psi-warrior-2024",
+      "classId": "fighter",
+      "name": "Psi Warrior",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "purple-dragon-knight",
+      "classId": "fighter",
+      "name": "Purple Dragon Knight",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "rune-knight",
+      "classId": "fighter",
+      "name": "Rune Knight",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "samurai",
+      "classId": "fighter",
+      "name": "Samurai",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-fighter.json + optionalfeatures.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
+        "End active rune and turn effects with the duration controls; there is no encounter clock."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "mercy-2024",
+      "classId": "monk",
+      "name": "Warrior of Mercy",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "shadow-2024",
+      "classId": "monk",
+      "name": "Warrior of Shadow",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "elements-2024",
+      "classId": "monk",
+      "name": "Warrior of the Elements",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "open-hand-2024",
+      "classId": "monk",
+      "name": "Warrior of the Open Hand",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "mercy",
+      "classId": "monk",
+      "name": "Way of Mercy",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "shadow",
+      "classId": "monk",
+      "name": "Way of Shadow",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "ascendant-dragon",
+      "classId": "monk",
+      "name": "Way of the Ascendant Dragon",
+      "edition": "2014",
+      "source": "FTD",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "astral-self",
+      "classId": "monk",
+      "name": "Way of the Astral Self",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "drunken-master",
+      "classId": "monk",
+      "name": "Way of the Drunken Master",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "four-elements",
+      "classId": "monk",
+      "name": "Way of the Four Elements",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "kensei",
+      "classId": "monk",
+      "name": "Way of the Kensei",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "long-death",
+      "classId": "monk",
+      "name": "Way of the Long Death",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "open-hand",
+      "classId": "monk",
+      "name": "Way of the Open Hand",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "sun-soul",
+      "classId": "monk",
+      "name": "Way of the Sun Soul",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-monk.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "conquest",
+      "classId": "paladin",
+      "name": "Oath of Conquest",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "devotion",
+      "classId": "paladin",
+      "name": "Oath of Devotion",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        5,
+        7,
+        9,
+        13,
+        15,
+        17,
+        18,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "devotion-2024",
+      "classId": "paladin",
+      "name": "Oath of Devotion",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "glory",
+      "classId": "paladin",
+      "name": "Oath of Glory",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "glory-2024",
+      "classId": "paladin",
+      "name": "Oath of Glory",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "redemption",
+      "classId": "paladin",
+      "name": "Oath of Redemption",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "ancients",
+      "classId": "paladin",
+      "name": "Oath of the Ancients",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "ancients-2024",
+      "classId": "paladin",
+      "name": "Oath of the Ancients",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "crown",
+      "classId": "paladin",
+      "name": "Oath of the Crown",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "noble-genies-frhof",
+      "classId": "paladin",
+      "name": "Oath of the Noble Genies",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "watchers",
+      "classId": "paladin",
+      "name": "Oath of the Watchers",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "vengeance",
+      "classId": "paladin",
+      "name": "Oath of Vengeance",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "vengeance-2024",
+      "classId": "paladin",
+      "name": "Oath of Vengeance",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "oathbreaker",
+      "classId": "paladin",
+      "name": "Oathbreaker",
+      "edition": "2014",
+      "source": "DMG",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-paladin.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "beast-master",
+      "classId": "ranger",
+      "name": "Beast Master",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "beast-master-2024",
+      "classId": "ranger",
+      "name": "Beast Master",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "drakewarden",
+      "classId": "ranger",
+      "name": "Drakewarden",
+      "edition": "2014",
+      "source": "FTD",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "fey-wanderer",
+      "classId": "ranger",
+      "name": "Fey Wanderer",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "fey-wanderer-2024",
+      "classId": "ranger",
+      "name": "Fey Wanderer",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "gloom-stalker",
+      "classId": "ranger",
+      "name": "Gloom Stalker",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "gloom-stalker-2024",
+      "classId": "ranger",
+      "name": "Gloom Stalker",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "hollow-warden-rthw",
+      "classId": "ranger",
+      "name": "Hollow Warden",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "horizon-walker",
+      "classId": "ranger",
+      "name": "Horizon Walker",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "hunter",
+      "classId": "ranger",
+      "name": "Hunter",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "hunter-2024",
+      "classId": "ranger",
+      "name": "Hunter",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "monster-slayer",
+      "classId": "ranger",
+      "name": "Monster Slayer",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "swarmkeeper",
+      "classId": "ranger",
+      "name": "Swarmkeeper",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "winter-walker-frhof",
+      "classId": "ranger",
+      "name": "Winter Walker",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-ranger.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "arcane-trickster",
+      "classId": "rogue",
+      "name": "Arcane Trickster",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "arcane-trickster-2024",
+      "classId": "rogue",
+      "name": "Arcane Trickster",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "assassin",
+      "classId": "rogue",
+      "name": "Assassin",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "assassin-2024",
+      "classId": "rogue",
+      "name": "Assassin",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "inquisitive",
+      "classId": "rogue",
+      "name": "Inquisitive",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "mastermind",
+      "classId": "rogue",
+      "name": "Mastermind",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "phantom",
+      "classId": "rogue",
+      "name": "Phantom",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "phantom-rthw",
+      "classId": "rogue",
+      "name": "Phantom",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "scion-of-the-three-frhof",
+      "classId": "rogue",
+      "name": "Scion of the Three",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "scout",
+      "classId": "rogue",
+      "name": "Scout",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "soulknife",
+      "classId": "rogue",
+      "name": "Soulknife",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "soulknife-2024",
+      "classId": "rogue",
+      "name": "Soulknife",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "swashbuckler",
+      "classId": "rogue",
+      "name": "Swashbuckler",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "thief",
+      "classId": "rogue",
+      "name": "Thief",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "thief-2024",
+      "classId": "rogue",
+      "name": "Thief",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-rogue.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "aberrant-mind",
+      "classId": "sorcerer",
+      "name": "Aberrant Mind",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "aberrant-sorcery-2024",
+      "classId": "sorcerer",
+      "name": "Aberrant Sorcery",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "clockwork-sorcery-2024",
+      "classId": "sorcerer",
+      "name": "Clockwork Sorcery",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "clockwork-soul",
+      "classId": "sorcerer",
+      "name": "Clockwork Soul",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "divine-soul",
+      "classId": "sorcerer",
+      "name": "Divine Soul",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "draconic-bloodline",
+      "classId": "sorcerer",
+      "name": "Draconic Bloodline",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "draconic-sorcery-2024",
+      "classId": "sorcerer",
+      "name": "Draconic Sorcery",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14,
+        19
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "lunar-sorcery",
+      "classId": "sorcerer",
+      "name": "Lunar Sorcery",
+      "edition": "2014",
+      "source": "DSOTDQ",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "shadow-magic",
+      "classId": "sorcerer",
+      "name": "Shadow Magic",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "shadow-sorcery-rthw",
+      "classId": "sorcerer",
+      "name": "Shadow Sorcery",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "spellfire-sorcery-frhof",
+      "classId": "sorcerer",
+      "name": "Spellfire Sorcery",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "storm-sorcery",
+      "classId": "sorcerer",
+      "name": "Storm Sorcery",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "wild-magic",
+      "classId": "sorcerer",
+      "name": "Wild Magic",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "wild-magic-sorcery-2024",
+      "classId": "sorcerer",
+      "name": "Wild Magic Sorcery",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-sorcerer.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "archfey-patron-2024",
+      "classId": "warlock",
+      "name": "Archfey Patron",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "celestial-patron-2024",
+      "classId": "warlock",
+      "name": "Celestial Patron",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "fiend-patron-2024",
+      "classId": "warlock",
+      "name": "Fiend Patron",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "great-old-one-patron-2024",
+      "classId": "warlock",
+      "name": "Great Old One Patron",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "archfey",
+      "classId": "warlock",
+      "name": "The Archfey",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "celestial",
+      "classId": "warlock",
+      "name": "The Celestial",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "fathomless",
+      "classId": "warlock",
+      "name": "The Fathomless",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "fiend",
+      "classId": "warlock",
+      "name": "The Fiend",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "genie",
+      "classId": "warlock",
+      "name": "The Genie",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "great-old-one",
+      "classId": "warlock",
+      "name": "The Great Old One",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "hexblade",
+      "classId": "warlock",
+      "name": "The Hexblade",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "undead",
+      "classId": "warlock",
+      "name": "The Undead",
+      "edition": "2014",
+      "source": "VRGR",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "undying",
+      "classId": "warlock",
+      "name": "The Undying",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 1,
+      "featureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "1–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "undead-patron-rthw",
+      "classId": "warlock",
+      "name": "Undead Patron",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-warlock.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "abjurer-2024",
+      "classId": "wizard",
+      "name": "Abjurer",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "bladesinger-frhof",
+      "classId": "wizard",
+      "name": "Bladesinger",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "bladesinging",
+      "classId": "wizard",
+      "name": "Bladesinging",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "chronurgy",
+      "classId": "wizard",
+      "name": "Chronurgy Magic",
+      "edition": "2014",
+      "source": "EGW",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "diviner-2024",
+      "classId": "wizard",
+      "name": "Diviner",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "evoker-2024",
+      "classId": "wizard",
+      "name": "Evoker",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "graviturgy",
+      "classId": "wizard",
+      "name": "Graviturgy Magic",
+      "edition": "2014",
+      "source": "EGW",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "illusionist-2024",
+      "classId": "wizard",
+      "name": "Illusionist",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "featureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "3–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "scribes",
+      "classId": "wizard",
+      "name": "Order of Scribes",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "abjuration",
+      "classId": "wizard",
+      "name": "School of Abjuration",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "conjuration",
+      "classId": "wizard",
+      "name": "School of Conjuration",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "divination",
+      "classId": "wizard",
+      "name": "School of Divination",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "enchantment",
+      "classId": "wizard",
+      "name": "School of Enchantment",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "evocation",
+      "classId": "wizard",
+      "name": "School of Evocation",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": false,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "illusion",
+      "classId": "wizard",
+      "name": "School of Illusion",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": false,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "necromancy",
+      "classId": "wizard",
+      "name": "School of Necromancy",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": false,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "transmutation",
+      "classId": "wizard",
+      "name": "School of Transmutation",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": true,
+        "combat": true,
+        "builderChoices": true,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    },
+    {
+      "id": "war-magic",
+      "classId": "wizard",
+      "name": "War Magic",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 2,
+      "featureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "mechanics": {
+        "resources": true,
+        "defense": true,
+        "spellcasting": false,
+        "combat": true,
+        "builderChoices": false,
+        "manualGuidance": true
+      },
+      "sourceReview": {
+        "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+        "path": "class/class-wizard.json",
+        "levels": "2–20"
+      },
+      "limitations": [
+        "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
+        "Explicit activation/end controls apply self effects; no encounter clock is inferred."
+      ],
+      "status": "partial-mechanics"
+    }
+  ]
+}

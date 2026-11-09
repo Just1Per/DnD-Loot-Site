@@ -65,7 +65,8 @@ function createCharacterSheetStore(sdk) {
       return next;
     });
   }
-  return { load, save };
+  const estimateBytes = raw => new TextEncoder().encode(JSON.stringify(persistedData(raw))).byteLength;
+  return { load, save, estimateBytes };
 }
 if (typeof module !== 'undefined' && module.exports)
   module.exports = { createCharacterSheetStore };

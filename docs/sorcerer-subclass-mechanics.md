@@ -1,0 +1,9 @@
+# Sorcerer origin mechanics
+
+All eight legacy and six revised selectable origins were reviewed from their native start through level 20 against pinned `class/class-sorcerer.json`, revision `b9061583536101068b3a59d27e886d1fa664e366`.
+
+Shared Sorcery Points pay subclass actions and recharge. Aberrant grants/replacements, Psionic casting and selected paid revelations are gated independently. Clockwork has edition-specific Restore Balance uses, paid/consumable ward dice and higher-feature recharge. Divine Soul expands actual selectable spell lists, affinity/replacement grants and healing resources. Draconic has native AC, Base-mode HP, selected affinity, spell damage-roll bonus, distinct resistance and wing recovery. Shadow has source-specific senses, survival, summons and Umbral forms. Storm has languages, resistance/immunity, self/shared flight. Wild Magic has distinct Tides recovery triggers, Luck cost and high-level counters. Spellfire shares one Burst limit between its two options, restores points from Absorb, and tracks its crown. Lunar knows all unlocked phase spells, limits free current-phase casts, validates school-specific Metamagic discounts, tracks phases and phenomenon recovery.
+
+Activation/end controls apply self flight, swimming, AC/HP and resistances. Damage bonuses attach once to the appropriate spell damage roll, avoiding multiplication across rays. Target rolls, summon commands, transformation prerequisites, surge-table outcomes and duration/Concentration endings are table decisions described by short original instructions. The audit remains partial mechanics for these boundaries.
+
+Regression tests exercise every origin’s edition/level gates, point payment, wards, draconic values, revelation choices, expanded spell lists, Lunar spell grants/discounts, shared Spellfire limits, and source-dependent Luck. Browser tests exercise active wings and three-point recharge.

@@ -5,6 +5,12 @@ var CharacterSubclassData = (() => {
     ['berserker','barbarian','Path of the Berserker',3],
     ['lore','bard','College of Lore',3],
     ['life-domain','cleric','Life Domain',1],
+    ['light-domain','cleric','Light Domain',1],
+    ['tempest-domain','cleric','Tempest Domain',1],
+    ['nature-domain','cleric','Nature Domain',1],
+    ['knowledge-domain','cleric','Knowledge Domain',1],
+    ['trickery-domain','cleric','Trickery Domain',1],
+    ['war-domain','cleric','War Domain',1],
     ['land','druid','Circle of the Land',2],
     ['champion','fighter','Champion',3],
     ['open-hand','monk','Way of the Open Hand',3],
@@ -23,4 +29,10 @@ var CharacterSubclassData = (() => {
   const find = id => all[id] || null;
   return {all,forClass,eligible,find};
 })();
-if (typeof module !== 'undefined' && module.exports) module.exports = CharacterSubclassData;
+if (typeof module !== 'undefined' && module.exports) {
+  // Rule modules are also loaded independently by Node and browser test entrypoints.
+  // Load the complete catalogue here so feature validation never depends on app.js order.
+  globalThis.CharacterSubclassData = CharacterSubclassData;
+  require('./character-expanded-subclass-data');
+  module.exports = CharacterSubclassData;
+}

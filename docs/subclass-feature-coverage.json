@@ -1,0 +1,3583 @@
+{
+  "format": 1,
+  "generatedAt": "2026-11-09T07:39:17.962Z",
+  "source": {
+    "repository": "5etools-mirror-3/5etools-src",
+    "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+    "policy": "Compared against local pinned cache; no source prose is emitted."
+  },
+  "summary": {
+    "selectableSubclasses": 186,
+    "sourceVerified": 162,
+    "alternateSource": 24,
+    "notInPinnedSource": 0,
+    "runtimeFeatureLists": 186,
+    "partialMechanics": 186,
+    "referenceOnly": 0,
+    "notInRuntime": 0
+  },
+  "classes": [
+    {
+      "classId": "artificer",
+      "total": 10,
+      "sourceVerified": 6,
+      "alternateSource": 4,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 10,
+      "partial-mechanics": 10,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "barbarian",
+      "total": 13,
+      "sourceVerified": 13,
+      "alternateSource": 0,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 13,
+      "partial-mechanics": 13,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "bard",
+      "total": 14,
+      "sourceVerified": 12,
+      "alternateSource": 2,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "cleric",
+      "total": 20,
+      "sourceVerified": 18,
+      "alternateSource": 2,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 20,
+      "partial-mechanics": 20,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "druid",
+      "total": 11,
+      "sourceVerified": 11,
+      "alternateSource": 0,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 11,
+      "partial-mechanics": 11,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "fighter",
+      "total": 15,
+      "sourceVerified": 14,
+      "alternateSource": 1,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 15,
+      "partial-mechanics": 15,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "monk",
+      "total": 14,
+      "sourceVerified": 13,
+      "alternateSource": 1,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "paladin",
+      "total": 14,
+      "sourceVerified": 13,
+      "alternateSource": 1,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "ranger",
+      "total": 14,
+      "sourceVerified": 12,
+      "alternateSource": 2,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "rogue",
+      "total": 15,
+      "sourceVerified": 11,
+      "alternateSource": 4,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 15,
+      "partial-mechanics": 15,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "sorcerer",
+      "total": 14,
+      "sourceVerified": 10,
+      "alternateSource": 4,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "warlock",
+      "total": 14,
+      "sourceVerified": 13,
+      "alternateSource": 1,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 14,
+      "partial-mechanics": 14,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    },
+    {
+      "classId": "wizard",
+      "total": 18,
+      "sourceVerified": 16,
+      "alternateSource": 2,
+      "notInPinnedSource": 0,
+      "runtimeFeatureLists": 18,
+      "partial-mechanics": 18,
+      "reference-only": 0,
+      "not-in-runtime": 0
+    }
+  ],
+  "subclasses": [
+    {
+      "id": "alchemist-legacy",
+      "name": "Alchemist",
+      "classId": "artificer",
+      "edition": "2014",
+      "source": "ERLW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "alchemist-efota",
+      "name": "Alchemist",
+      "classId": "artificer",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "armorer-legacy",
+      "name": "Armorer",
+      "classId": "artificer",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 15,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "armorer-efota",
+      "name": "Armorer",
+      "classId": "artificer",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "artillerist-legacy",
+      "name": "Artillerist",
+      "classId": "artificer",
+      "edition": "2014",
+      "source": "ERLW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "artillerist-efota",
+      "name": "Artillerist",
+      "classId": "artificer",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "battle-smith-legacy",
+      "name": "Battle Smith",
+      "classId": "artificer",
+      "edition": "2014",
+      "source": "ERLW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "battle-smith-efota",
+      "name": "Battle Smith",
+      "classId": "artificer",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "cartographer-efota",
+      "name": "Cartographer",
+      "classId": "artificer",
+      "edition": "2024",
+      "source": "EFOTA",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "EFA",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "reanimator-rthw",
+      "name": "Reanimator",
+      "classId": "artificer",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "RHW",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        9,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "ancestral-guardian",
+      "name": "Path of the Ancestral Guardian",
+      "classId": "barbarian",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "battlerager",
+      "name": "Path of the Battlerager",
+      "classId": "barbarian",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "SCAG",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "beast",
+      "name": "Path of the Beast",
+      "classId": "barbarian",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "berserker",
+      "name": "Path of the Berserker",
+      "classId": "barbarian",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 4,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "berserker-2024",
+      "name": "Path of the Berserker",
+      "classId": "barbarian",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 4,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "giant",
+      "name": "Path of the Giant",
+      "classId": "barbarian",
+      "edition": "2014",
+      "source": "BGG",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "BGG",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "storm-herald",
+      "name": "Path of the Storm Herald",
+      "classId": "barbarian",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 14,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "totem-warrior",
+      "name": "Path of the Totem Warrior",
+      "classId": "barbarian",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 21,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "wild-heart-2024",
+      "name": "Path of the Wild Heart",
+      "classId": "barbarian",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "world-tree-2024",
+      "name": "Path of the World Tree",
+      "classId": "barbarian",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "zealot",
+      "name": "Path of the Zealot",
+      "classId": "barbarian",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "zealot-2024",
+      "name": "Path of the Zealot",
+      "classId": "barbarian",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "wild-magic-barbarian",
+      "name": "Path of Wild Magic",
+      "classId": "barbarian",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "creation",
+      "name": "College of Creation",
+      "classId": "bard",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "dance-2024",
+      "name": "College of Dance",
+      "classId": "bard",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "eloquence",
+      "name": "College of Eloquence",
+      "classId": "bard",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "glamour",
+      "name": "College of Glamour",
+      "classId": "bard",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "glamour-2024",
+      "name": "College of Glamour",
+      "classId": "bard",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "lore",
+      "name": "College of Lore",
+      "classId": "bard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 4,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "lore-2024",
+      "name": "College of Lore",
+      "classId": "bard",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 4,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "spirits",
+      "name": "College of Spirits",
+      "classId": "bard",
+      "edition": "2014",
+      "source": "VRGR",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "VRGR",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "spirits-rthw",
+      "name": "College of Spirits",
+      "classId": "bard",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "VRGR",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "swords",
+      "name": "College of Swords",
+      "classId": "bard",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "college-of-the-moon-frhof",
+      "name": "College of the Moon",
+      "classId": "bard",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "FRHoF",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "valor",
+      "name": "College of Valor",
+      "classId": "bard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "valor-2024",
+      "name": "College of Valor",
+      "classId": "bard",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "whispers",
+      "name": "College of Whispers",
+      "classId": "bard",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "arcana-domain",
+      "name": "Arcana Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "SCAG",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "death-domain",
+      "name": "Death Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "DMG",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "DMG",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "forge-domain",
+      "name": "Forge Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "grave-domain",
+      "name": "Grave Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "grave-domain-rthw",
+      "name": "Grave Domain",
+      "classId": "cleric",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "knowledge-domain",
+      "name": "Knowledge Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "knowledge-domain-frhof",
+      "name": "Knowledge Domain",
+      "classId": "cleric",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "life-domain",
+      "name": "Life Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "life-domain-2024",
+      "name": "Life Domain",
+      "classId": "cleric",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "light-domain",
+      "name": "Light Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "light-domain-2024",
+      "name": "Light Domain",
+      "classId": "cleric",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "nature-domain",
+      "name": "Nature Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "order-domain",
+      "name": "Order Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "peace-domain",
+      "name": "Peace Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "tempest-domain",
+      "name": "Tempest Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "trickery-domain",
+      "name": "Trickery Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "trickery-domain-2024",
+      "name": "Trickery Domain",
+      "classId": "cleric",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "twilight-domain",
+      "name": "Twilight Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "war-domain",
+      "name": "War Domain",
+      "classId": "cleric",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "war-domain-2024",
+      "name": "War Domain",
+      "classId": "cleric",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "dreams",
+      "name": "Circle of Dreams",
+      "classId": "druid",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "spores",
+      "name": "Circle of Spores",
+      "classId": "druid",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "stars",
+      "name": "Circle of Stars",
+      "classId": "druid",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "land",
+      "name": "Circle of the Land",
+      "classId": "druid",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        5,
+        6,
+        7,
+        9,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "land-2024",
+      "name": "Circle of the Land",
+      "classId": "druid",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "moon",
+      "name": "Circle of the Moon",
+      "classId": "druid",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "moon-2024",
+      "name": "Circle of the Moon",
+      "classId": "druid",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "sea-2024",
+      "name": "Circle of the Sea",
+      "classId": "druid",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "shepherd",
+      "name": "Circle of the Shepherd",
+      "classId": "druid",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "stars-2024",
+      "name": "Circle of the Stars",
+      "classId": "druid",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "wildfire",
+      "name": "Circle of Wildfire",
+      "classId": "druid",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "arcane-archer",
+      "name": "Arcane Archer",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "banneret-frhof",
+      "name": "Banneret",
+      "classId": "fighter",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "FRHoF",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "battle-master",
+      "name": "Battle Master",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 14,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "battle-master-2024",
+      "name": "Battle Master",
+      "classId": "fighter",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "cavalier",
+      "name": "Cavalier",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "champion",
+      "name": "Champion",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "champion-2024",
+      "name": "Champion",
+      "classId": "fighter",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "echo-knight",
+      "name": "Echo Knight",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "EGW",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "EGW",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "eldritch-knight",
+      "name": "Eldritch Knight",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "eldritch-knight-2024",
+      "name": "Eldritch Knight",
+      "classId": "fighter",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "psi-warrior",
+      "name": "Psi Warrior",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "psi-warrior-2024",
+      "name": "Psi Warrior",
+      "classId": "fighter",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "purple-dragon-knight",
+      "name": "Purple Dragon Knight",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "SCAG",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "rune-knight",
+      "name": "Rune Knight",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "samurai",
+      "name": "Samurai",
+      "classId": "fighter",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        10,
+        15,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "mercy-2024",
+      "name": "Warrior of Mercy",
+      "classId": "monk",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "shadow-2024",
+      "name": "Warrior of Shadow",
+      "classId": "monk",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "elements-2024",
+      "name": "Warrior of the Elements",
+      "classId": "monk",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "open-hand-2024",
+      "name": "Warrior of the Open Hand",
+      "classId": "monk",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 4,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "mercy",
+      "name": "Way of Mercy",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "shadow",
+      "name": "Way of Shadow",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "ascendant-dragon",
+      "name": "Way of the Ascendant Dragon",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "FTD",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "FTD",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "astral-self",
+      "name": "Way of the Astral Self",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "drunken-master",
+      "name": "Way of the Drunken Master",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "four-elements",
+      "name": "Way of the Four Elements",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "kensei",
+      "name": "Way of the Kensei",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "long-death",
+      "name": "Way of the Long Death",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "SCAG",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "open-hand",
+      "name": "Way of the Open Hand",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 4,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "sun-soul",
+      "name": "Way of the Sun Soul",
+      "classId": "monk",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        11,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "conquest",
+      "name": "Oath of Conquest",
+      "classId": "paladin",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "devotion",
+      "name": "Oath of Devotion",
+      "classId": "paladin",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        5,
+        7,
+        9,
+        13,
+        15,
+        17,
+        18,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "devotion-2024",
+      "name": "Oath of Devotion",
+      "classId": "paladin",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "glory",
+      "name": "Oath of Glory",
+      "classId": "paladin",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "glory-2024",
+      "name": "Oath of Glory",
+      "classId": "paladin",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "redemption",
+      "name": "Oath of Redemption",
+      "classId": "paladin",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "ancients",
+      "name": "Oath of the Ancients",
+      "classId": "paladin",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "ancients-2024",
+      "name": "Oath of the Ancients",
+      "classId": "paladin",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "crown",
+      "name": "Oath of the Crown",
+      "classId": "paladin",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "SCAG",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "noble-genies-frhof",
+      "name": "Oath of the Noble Genies",
+      "classId": "paladin",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "FRHoF",
+      "runtimeFeatureRecords": 11,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "watchers",
+      "name": "Oath of the Watchers",
+      "classId": "paladin",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "vengeance",
+      "name": "Oath of Vengeance",
+      "classId": "paladin",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 9,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "vengeance-2024",
+      "name": "Oath of Vengeance",
+      "classId": "paladin",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "oathbreaker",
+      "name": "Oathbreaker",
+      "classId": "paladin",
+      "edition": "2014",
+      "source": "DMG",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "DMG",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        15,
+        20
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "beast-master",
+      "name": "Beast Master",
+      "classId": "ranger",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "beast-master-2024",
+      "name": "Beast Master",
+      "classId": "ranger",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "drakewarden",
+      "name": "Drakewarden",
+      "classId": "ranger",
+      "edition": "2014",
+      "source": "FTD",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "FTD",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "fey-wanderer",
+      "name": "Fey Wanderer",
+      "classId": "ranger",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "fey-wanderer-2024",
+      "name": "Fey Wanderer",
+      "classId": "ranger",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "gloom-stalker",
+      "name": "Gloom Stalker",
+      "classId": "ranger",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "gloom-stalker-2024",
+      "name": "Gloom Stalker",
+      "classId": "ranger",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "hollow-warden-rthw",
+      "name": "Hollow Warden",
+      "classId": "ranger",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "RHW",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "horizon-walker",
+      "name": "Horizon Walker",
+      "classId": "ranger",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "hunter",
+      "name": "Hunter",
+      "classId": "ranger",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 4,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "hunter-2024",
+      "name": "Hunter",
+      "classId": "ranger",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "monster-slayer",
+      "name": "Monster Slayer",
+      "classId": "ranger",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "swarmkeeper",
+      "name": "Swarmkeeper",
+      "classId": "ranger",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "winter-walker-frhof",
+      "name": "Winter Walker",
+      "classId": "ranger",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "FRHoF",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        7,
+        11,
+        15
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "arcane-trickster",
+      "name": "Arcane Trickster",
+      "classId": "rogue",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "arcane-trickster-2024",
+      "name": "Arcane Trickster",
+      "classId": "rogue",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "assassin",
+      "name": "Assassin",
+      "classId": "rogue",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "assassin-2024",
+      "name": "Assassin",
+      "classId": "rogue",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "inquisitive",
+      "name": "Inquisitive",
+      "classId": "rogue",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "mastermind",
+      "name": "Mastermind",
+      "classId": "rogue",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "phantom",
+      "name": "Phantom",
+      "classId": "rogue",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "phantom-rthw",
+      "name": "Phantom",
+      "classId": "rogue",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "scion-of-the-three-frhof",
+      "name": "Scion of the Three",
+      "classId": "rogue",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "FRHoF",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "scout",
+      "name": "Scout",
+      "classId": "rogue",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "soulknife",
+      "name": "Soulknife",
+      "classId": "rogue",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "soulknife-2024",
+      "name": "Soulknife",
+      "classId": "rogue",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 10,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "swashbuckler",
+      "name": "Swashbuckler",
+      "classId": "rogue",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "thief",
+      "name": "Thief",
+      "classId": "rogue",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "thief-2024",
+      "name": "Thief",
+      "classId": "rogue",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        9,
+        13,
+        17
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "aberrant-mind",
+      "name": "Aberrant Mind",
+      "classId": "sorcerer",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "aberrant-sorcery-2024",
+      "name": "Aberrant Sorcery",
+      "classId": "sorcerer",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "clockwork-sorcery-2024",
+      "name": "Clockwork Sorcery",
+      "classId": "sorcerer",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "clockwork-soul",
+      "name": "Clockwork Soul",
+      "classId": "sorcerer",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "divine-soul",
+      "name": "Divine Soul",
+      "classId": "sorcerer",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "draconic-bloodline",
+      "name": "Draconic Bloodline",
+      "classId": "sorcerer",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        1,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "draconic-sorcery-2024",
+      "name": "Draconic Sorcery",
+      "classId": "sorcerer",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        19
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "lunar-sorcery",
+      "name": "Lunar Sorcery",
+      "classId": "sorcerer",
+      "edition": "2014",
+      "source": "DSOTDQ",
+      "minimumLevel": 1,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "DSotDQ",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "shadow-magic",
+      "name": "Shadow Magic",
+      "classId": "sorcerer",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "shadow-sorcery-rthw",
+      "name": "Shadow Sorcery",
+      "classId": "sorcerer",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "RHW",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "spellfire-sorcery-frhof",
+      "name": "Spellfire Sorcery",
+      "classId": "sorcerer",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "FRHoF",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "storm-sorcery",
+      "name": "Storm Sorcery",
+      "classId": "sorcerer",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 1,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "wild-magic",
+      "name": "Wild Magic",
+      "classId": "sorcerer",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "wild-magic-sorcery-2024",
+      "name": "Wild Magic Sorcery",
+      "classId": "sorcerer",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        14,
+        18
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "archfey-patron-2024",
+      "name": "Archfey Patron",
+      "classId": "warlock",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "celestial-patron-2024",
+      "name": "Celestial Patron",
+      "classId": "warlock",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "fiend-patron-2024",
+      "name": "Fiend Patron",
+      "classId": "warlock",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "great-old-one-patron-2024",
+      "name": "Great Old One Patron",
+      "classId": "warlock",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "archfey",
+      "name": "The Archfey",
+      "classId": "warlock",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "celestial",
+      "name": "The Celestial",
+      "classId": "warlock",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "fathomless",
+      "name": "The Fathomless",
+      "classId": "warlock",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "fiend",
+      "name": "The Fiend",
+      "classId": "warlock",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        1,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "genie",
+      "name": "The Genie",
+      "classId": "warlock",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "great-old-one",
+      "name": "The Great Old One",
+      "classId": "warlock",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "hexblade",
+      "name": "The Hexblade",
+      "classId": "warlock",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "undead",
+      "name": "The Undead",
+      "classId": "warlock",
+      "edition": "2014",
+      "source": "VRGR",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "VRGR",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        1,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "undying",
+      "name": "The Undying",
+      "classId": "warlock",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 1,
+      "sourceStatus": "verified",
+      "matchedSource": "SCAG",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        1,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "undead-patron-rthw",
+      "name": "Undead Patron",
+      "classId": "warlock",
+      "edition": "2024",
+      "source": "RTHW",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "RHW",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "abjurer-2024",
+      "name": "Abjurer",
+      "classId": "wizard",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "bladesinger-frhof",
+      "name": "Bladesinger",
+      "classId": "wizard",
+      "edition": "2024",
+      "source": "FRHOF",
+      "minimumLevel": 3,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "FRHoF",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "bladesinging",
+      "name": "Bladesinging",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "SCAG",
+      "minimumLevel": 2,
+      "sourceStatus": "alternate-source",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 8,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "chronurgy",
+      "name": "Chronurgy Magic",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "EGW",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "EGW",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "diviner-2024",
+      "name": "Diviner",
+      "classId": "wizard",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "evoker-2024",
+      "name": "Evoker",
+      "classId": "wizard",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "graviturgy",
+      "name": "Graviturgy Magic",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "EGW",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "EGW",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "illusionist-2024",
+      "name": "Illusionist",
+      "classId": "wizard",
+      "edition": "2024",
+      "source": "PHB24",
+      "minimumLevel": 3,
+      "sourceStatus": "verified",
+      "matchedSource": "XPHB",
+      "runtimeFeatureRecords": 6,
+      "runtimeFeatureLevels": [
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "scribes",
+      "name": "Order of Scribes",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "TCE",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "TCE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "abjuration",
+      "name": "School of Abjuration",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "conjuration",
+      "name": "School of Conjuration",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "divination",
+      "name": "School of Divination",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "enchantment",
+      "name": "School of Enchantment",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "evocation",
+      "name": "School of Evocation",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 5,
+      "runtimeFeatureLevels": [
+        2,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "illusion",
+      "name": "School of Illusion",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "necromancy",
+      "name": "School of Necromancy",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "transmutation",
+      "name": "School of Transmutation",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "PHB",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "PHB",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    },
+    {
+      "id": "war-magic",
+      "name": "War Magic",
+      "classId": "wizard",
+      "edition": "2014",
+      "source": "XGE",
+      "minimumLevel": 2,
+      "sourceStatus": "verified",
+      "matchedSource": "XGE",
+      "runtimeFeatureRecords": 7,
+      "runtimeFeatureLevels": [
+        2,
+        3,
+        6,
+        10,
+        14
+      ],
+      "coverage": "partial-mechanics"
+    }
+  ]
+}

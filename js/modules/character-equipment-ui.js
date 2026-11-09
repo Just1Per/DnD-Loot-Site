@@ -2,7 +2,7 @@
 function sheetEquipmentLoot() {
   const s=sheetSession;
   if(!s||activeCampaign?.id!==s.campaignId)return [];
-  return (s.adventureId?[]:inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0)).map(e=>({...e,item:inventoryItem(e)})).concat(personalGearEntries());
+  return CharacterMagicItemChoices.project((s.adventureId?[]:inventory.filter(e=>e.characterId===s.characterId&&e.quantity>0)).map(e=>({...e,item:inventoryItem(e)})).concat(personalGearEntries()),s.data.equipmentState.loadout);
 }
 function renderEquipmentCalculations(stats) {
   let host=document.getElementById('sheetEquipmentSummary');
@@ -37,7 +37,7 @@ function setSheetEquipmentChoice(id,key,value){
  }
  choice[key]=value;
  if(key==='equipped'&&value&&['armor','shield'].includes(m.kind))for(const other of state.loadout){const e=owned.find(e=>e.id===other.id);if(other.id!==id&&e&&CharacterEquipment.infer(e.item).kind===m.kind)other.equipped=false;}
- s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Equipment updated. Save sheet to keep it.');
+ CharacterSubclassRuntime.reconcileEquipment(s.data,{level:s.identity.level,loot:owned});s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Equipment updated. Save sheet to keep it.');
 }
 function renderItemMechanicsEditor(item) {
   let host=document.getElementById('itemMechanicsEditor');

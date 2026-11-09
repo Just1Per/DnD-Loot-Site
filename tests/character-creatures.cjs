@@ -8,6 +8,7 @@ assert.equal(air.name,'Air Elemental');
 assert.equal(air.ac,15);
 assert.equal(air.hp,90);
 assert.deepEqual(air.scores,[14,20,14,6,10,6]);
+assert.strictEqual(C.find('Owl'),C.find('owl'),'saved companion display names resolve to their catalogue record');assert.strictEqual(C.find('  BROWN BEAR  '),C.find('brown-bear'),'legacy display-name lookup ignores incidental case and whitespace');assert.equal(C.find('not-a-creature'),null);
 const bear=C.find('brown-bear');
 assert.equal(bear.type,'Beast');
 assert.equal(bear.cr,'1');

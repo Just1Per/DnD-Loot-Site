@@ -2,6 +2,7 @@
  * Public/SRD mechanics are summarized in original wording. Non-SRD expansion records use
  * concise original summaries rather than copied source-book prose. */
 var CharacterClassProgression=(()=>{
+  const SubclassFeatureData=typeof CharacterSubclassFeatureData!=='undefined'?CharacterSubclassFeatureData:(typeof require==='function'?require('./character-subclass-feature-data'):null);
   const legacyClasses={
     barbarian:{name:'Barbarian',subclassTitle:'Primal Path',subclass:'berserker',features:[['Rage',1],['Unarmored Defense',1],['Reckless Attack',2],['Danger Sense',2],['Primal Path',3],['Fast Movement',5],['Feral Instinct',7],['Brutal Critical',9],['Relentless Rage',11],['Persistent Rage',15],['Indomitable Might',18],['Primal Champion',20]]},
     bard:{name:'Bard',subclassTitle:'Bard College',subclass:'lore',features:[['Spellcasting',1],['Bardic Inspiration',1],['Jack of All Trades',2],['Song of Rest',2],['Bard College',3],['Expertise',3],['Font of Inspiration',5],['Countercharm',6],['Magical Secrets',10],['Superior Inspiration',20]]},
@@ -20,6 +21,7 @@ var CharacterClassProgression=(()=>{
     'berserker':{classId:'barbarian',name:'Path of the Berserker',features:[['Frenzy',3],['Mindless Rage',6],['Intimidating Presence',10],['Retaliation',14]]},
     'lore':{classId:'bard',name:'College of Lore',features:[['Bonus Proficiencies',3],['Cutting Words',3],['Additional Magical Secrets',6],['Peerless Skill',14]]},
     'life-domain':{classId:'cleric',name:'Life Domain',features:[['Bonus Proficiency',1],['Disciple of Life',1],['Channel Divinity: Preserve Life',2],['Blessed Healer',6],['Divine Strike',8],['Supreme Healing',17]]},
+    'war-domain':{classId:'cleric',name:'War Domain',features:[['Bonus Proficiencies',1],['War Priest',1],['Channel Divinity: Guided Strike',2],["Channel Divinity: War God’s Blessing",6],['Divine Strike',8],['Avatar of Battle',17]]},
     'land':{classId:'druid',name:'Circle of the Land',features:[['Bonus Cantrip',2],['Natural Recovery',2],['Circle Spells',3],["Land's Stride",6],["Nature's Ward",10],["Nature's Sanctuary",14]]},
     'champion':{classId:'fighter',name:'Champion',features:[['Improved Critical',3],['Remarkable Athlete',7],['Superior Critical',15],['Survivor',18]]},
     'open-hand':{classId:'monk',name:'Way of the Open Hand',features:[['Hand Technique',3],['Wholeness of Body',6],['Tranquility',11]]},
@@ -227,6 +229,8 @@ var CharacterClassProgression=(()=>{
     if(detailed&&detailed.classId===classId&&(!detailed.edition||detailed.edition===editionOf(edition)))return detailed.features;
     const srd=srdSubclassFeatures(subclassId,edition);
     if(Array.isArray(srd)&&srd.length)return srd;
+    const generated=SubclassFeatureData?.features?.(subclassId);
+    if(Array.isArray(generated)&&generated.length)return generated.map(row=>feature(row.name,row.level,'Pinned source feature reference. Detailed mechanics are not automated yet.',{source:SubclassFeatureData.records?.[subclassId]?.source||'5etools metadata',incomplete:true}));
     const old=subclasses[subclassId];
     if(old?.classId===classId)return old.features.map(([name,level])=>feature(name,level,'Detailed rules text has not been added to the web catalogue yet.',{incomplete:true}));
     return[];

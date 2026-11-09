@@ -25,7 +25,7 @@ var CharacterProgression = (() => {
 
   const FULL_CASTERS = new Set(['bard','cleric','druid','sorcerer','wizard']);
   const HALF_CASTERS = new Set(['artificer','paladin','ranger']);
-  const THIRD_CASTER_SUBCLASSES = new Set(['eldritch-knight','arcane-trickster']);
+  const THIRD_CASTER_SUBCLASSES = new Set(['eldritch-knight','eldritch-knight-2024','arcane-trickster','arcane-trickster-2024']);
 
   // Standard full-caster/multiclass Spellcasting slot progression, levels 0-20.
   const MULTICLASS_SLOTS = Object.freeze([
@@ -118,7 +118,7 @@ var CharacterProgression = (() => {
   function calculateHP({classLevels, constitution = 10, hpMode = 'fixed', hpRolls = [], bonuses = 0, bonusSources = []} = {}) {
     const levels = normalizeClassLevels(classLevels);
     const conMod = abilityMod(constitution);
-    const mode = ['fixed','max','rolled'].includes(hpMode) ? hpMode : 'fixed';
+    const mode = ['fixed','average','max','rolled'].includes(hpMode) ? hpMode : 'fixed';
     let characterLevel = 0;
     let base = 0;
     const breakdown = [];
@@ -129,6 +129,7 @@ var CharacterProgression = (() => {
         let dieHP;
         if (characterLevel === 1) dieHP = die;
         else if (mode === 'max') dieHP = die;
+        else if (mode === 'average') dieHP = (die + 1) / 2;
         else if (mode === 'rolled') {
           const supplied = Math.trunc(Number(hpRolls[characterLevel - 2]));
           dieHP = Number.isFinite(supplied) && supplied >= 1 && supplied <= die ? supplied : fixedHitPointsForDie(die);
@@ -138,26 +139,31 @@ var CharacterProgression = (() => {
         breakdown.push({characterLevel,classId:entry.classId,classLevel,hitDie:die,dieHP,conMod,gained});
       }
     }
+    // The source's average option rounds the accumulated total once, not each die.
+    const rawBase=base;
+    base=Math.round(base);
+    const roundingHP=base-rawBase;
     const extra = Math.trunc(Number(bonuses) || 0);
     const classHP=breakdown.reduce((sum,row)=>sum+row.dieHP,0),constitutionHP=conMod*characterLevel;
-    const minimumHP=base-classHP-constitutionHP;
+    const minimumHP=rawBase-classHP-constitutionHP;
     const sources=bonusSources.map(source=>({...source}));
     const unassigned=extra-sources.reduce((sum,source)=>sum+Number(source.value||0),0);
     if(unassigned)sources.push({kind:'other',name:'Other automatic bonuses',value:unassigned});
     const totalMinimumHP=Math.max(1,base+extra)-(base+extra);
-    return {max:Math.max(1, base + extra),base,bonuses:extra,conMod,mode,breakdown,classHP,constitutionHP,minimumHP,totalMinimumHP,bonusSources:sources};
+    return {max:Math.max(1, base + extra),base,bonuses:extra,conMod,mode,breakdown,classHP,constitutionHP,minimumHP,roundingHP,totalMinimumHP,bonusSources:sources};
   }
 
   function casterLevel(classLevels, edition='2014') {
-    let total = 0;
+    let total = 0;const seen=new Set();
     for (const entry of normalizeClassLevels(classLevels)) {
+      if(seen.has(entry.classId))continue;seen.add(entry.classId);
       if (FULL_CASTERS.has(entry.classId)) total += entry.level;
       else if (entry.classId === 'artificer') total += Math.ceil(entry.level / 2);
       else if (entry.classId === 'paladin' || entry.classId === 'ranger') {
         // 2014 multiclass rules round these classes down. The 2024 classes begin
         // spellcasting at level 1, so round up when using the revised rules.
         total += edition === '2024' ? Math.ceil(entry.level / 2) : Math.floor(entry.level / 2);
-      } else if (THIRD_CASTER_SUBCLASSES.has(entry.subclassId)) total += Math.floor(entry.level / 3);
+      } else if (entry.level>=3&&THIRD_CASTER_SUBCLASSES.has(entry.subclassId)&&((entry.classId==='fighter'&&entry.subclassId.startsWith('eldritch-knight'))||(entry.classId==='rogue'&&entry.subclassId.startsWith('arcane-trickster')))) total += Math.floor(entry.level / 3);
     }
     return Math.max(0, Math.min(20, total));
   }

@@ -27,6 +27,7 @@ var CharacterRules = (() => {
         wis: 1
       },
       speed: 25,
+      ignoreHeavyArmorSpeed: true,
       size: 'Medium',
       darkvision: 60,
       languages: [
@@ -1296,18 +1297,22 @@ var CharacterRules = (() => {
     // 2024 class multiclass traits: https://www.dndbeyond.com/sources/dnd/br-2024/character-classes
     if(b.edition==='2024')Object.assign(multiclassTraining,{barbarian:['Shields','Martial weapons'],druid:['Light armor','Shields'],fighter:['Light armor','Medium armor','Shields','Martial weapons'],monk:[],paladin:['Light armor','Medium armor','Shields','Martial weapons'],ranger:['Light armor','Medium armor','Shields','Martial weapons']});
     const featureChoices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null),artificerSource=featureChoices?.artificerSource(data);if(artificerSource?.id==='efa')multiclassTraining.artificer=artificerSource.eligible?['Light armor','Medium armor','Shields','Tinker’s tools']:[];
-    let trainingLevelsRemaining=Math.max(0,Math.trunc(Number(lvl)||0));const trainedClasses=new Set();
-    for(const [index,entry]of classLevels.entries()){const actual=Math.min(trainingLevelsRemaining,Math.max(0,Math.trunc(Number(entry.level)||0)));trainingLevelsRemaining-=actual;if(index&&actual&&!trainedClasses.has(entry.classId))result.proficiencies.push(...(multiclassTraining[entry.classId]||[]));trainedClasses.add(entry.classId);}
+    let trainingLevelsRemaining=Math.max(0,Math.trunc(Number(lvl)||0));const trainedClasses=new Set();let warDomain=false,lifeDomain=false,tempestDomain=false,natureDomain=false;
+    for(const [index,entry]of classLevels.entries()){const actual=Math.min(trainingLevelsRemaining,Math.max(0,Math.trunc(Number(entry.level)||0)));trainingLevelsRemaining-=actual;if(b.edition==='2014'&&actual&&entry.classId==='cleric'){warDomain||=entry.subclassId==='war-domain';lifeDomain||=entry.subclassId==='life-domain';tempestDomain||=entry.subclassId==='tempest-domain';natureDomain||=entry.subclassId==='nature-domain';}if(index&&actual&&!trainedClasses.has(entry.classId))result.proficiencies.push(...(multiclassTraining[entry.classId]||[]));trainedClasses.add(entry.classId);}
+    if(warDomain)result.proficiencies.push('Heavy armor','Martial weapons');if(lifeDomain)result.proficiencies.push('Heavy armor');if(tempestDomain)result.proficiencies.push('Heavy armor','Martial weapons');if(natureDomain)result.proficiencies.push('Heavy armor');
     // Fixed class languages are derived, including multiclass levels; manual notes stay untouched.
     const languageClasses=classLevels.length?classLevels:[{classId:b.classId,level:lvl}];
     let languageLevelsRemaining=Math.max(0,Math.trunc(Number(lvl)||0));
+    const checkTrainingSeen=new Set();
     for(const entry of languageClasses){
       const classLevel=Math.min(languageLevelsRemaining,Math.max(0,Math.trunc(Number(entry.level)||0)));
       languageLevelsRemaining-=classLevel;
       if(!classLevel)continue;
+      const firstCheckClass=!checkTrainingSeen.has(entry.classId);checkTrainingSeen.add(entry.classId);
+      if(firstCheckClass&&b.edition==='2014'&&entry.classId==='fighter'&&entry.subclassId==='champion'&&classLevel>=7)result.halfPhysicalAbilityProficiency=true;
       if(entry.classId==='rogue')result.languages.push('Thieves’ Cant');
       if(entry.classId==='druid')result.languages.push('Druidic');
-      if(entry.classId==='bard'&&classLevel>=2){result.halfSkillProficiency=true;result.halfInitiativeProficiency=b.edition==='2014';}
+      if(firstCheckClass&&entry.classId==='bard'&&classLevel>=2){result.halfSkillProficiency=true;result.halfInitiativeProficiency=b.edition==='2014';result.halfAbilityProficiency=b.edition==='2014';}
     }
     result.languages=[...new Set(result.languages)];
     result.proficiencies=[...new Set(result.proficiencies)];

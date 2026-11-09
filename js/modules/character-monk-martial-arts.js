@@ -29,8 +29,9 @@ var CharacterMonkMartialArts = (() => {
     const physical = entries.filter((row) => row.active),
       armor = physical.some((row) => row.mechanics.kind === "armor"),
       shield = physical.some((row) => row.mechanics.kind === "shield");
+    const Sub=globalThis.CharacterMonkSubclasses||(typeof require==='function'?require('./character-monk-subclasses'):null),kensei=Sub?.derive(data,{level}).kenseiWeapons||[];
     const otherWeapon = physical.some(
-      (row) => row.mechanics.kind === "weapon" && !weapon(row.profile, edition),
+      (row) => row.mechanics.kind === "weapon" && !weapon(row.profile, edition)&&!kensei.includes(row.profile?.name),
     );
     const reason = !actual
       ? ""
@@ -47,6 +48,7 @@ var CharacterMonkMartialArts = (() => {
       level: actual,
       edition,
       die,
+      kenseiWeapons:kensei,
       reason,
       summary: actual
         ? "Monk " +

@@ -315,6 +315,50 @@ const errors = [];
     );
     await undo.click();
     assert.equal(await pool.textContent(), "2 / 2");
+    await page.evaluate(() => {
+      sheetSession.data.build.edition = '2024';
+      sheetSession.data.adobe.classLevels = [{classId:'barbarian',subclassId:'zealot-2024',level:14}];
+      sheetSession.data.adobe.classFeatureChoices = {};
+      sheetSession.identity.level = 14;
+      renderCharacterSheet(); selectSheetTab('combat');
+    });
+    await page.locator('[data-class-resource="barbarian-fanatical-focus"][data-delta="1"]').click();
+    assert.equal(await page.locator('[data-class-resource="barbarian-fanatical-focus"][data-delta="1"]').isDisabled(),true);
+    await page.locator('[data-enter-rage]').click();
+    assert.equal(await page.locator('[data-class-resource="barbarian-fanatical-focus"][data-delta="1"]').isDisabled(),false);
+    assert.equal(await pool.textContent(),'4 / 5');
+    await page.locator('[data-class-resource="barbarian-zealous-presence"][data-delta="1"]').click();
+    await page.locator('[data-rage-recharge="barbarian-zealous-presence"]').click();
+    assert.equal(await pool.textContent(),'3 / 5');
+    assert.equal(await page.locator('[data-class-resource="barbarian-zealous-presence"][data-delta="1"]').isDisabled(),false);
+    assert.equal(await page.evaluate(() => sheetSession.data.hpCurrent),originalHP);
+    await page.evaluate(() => {
+      sheetSession.data.build.edition = '2014';
+      sheetSession.data.adobe.classLevels = [{classId:'barbarian',subclassId:'beast',level:6}];
+      sheetSession.data.adobe.classFeatureChoices = {};
+      sheetSession.identity.level = 6;
+      CharacterClassFeatureChoices.set(sheetSession.data,sheetSession.data.adobe.classLevels[0],'form-of-the-beast',0,'tail');
+      renderCharacterSheet(); openAttackPicker();
+    });
+    await page.locator('#attackKind').selectOption('weapon');
+    await page.locator('#attackRef').selectOption('barbarian-beast-tail');
+    assert.match(await page.locator('#attackPreview').textContent(),/1d8/);
+    assert.match(await page.locator('#attackPreview').textContent(),/10 ft/);
+    await page.locator('#attackConfirm').click();
+    assert.equal(await page.evaluate(() => sheetSession.data.actions.some(a=>a.ref==='barbarian-beast-tail')),true);
+    await page.evaluate(() => {
+      sheetSession.data.build.edition='2024';sheetSession.data.adobe.classLevels=[{classId:'barbarian',subclassId:'berserker-2024',level:9}];sheetSession.data.adobe.classFeatureChoices={};sheetSession.identity.level=9;renderCharacterSheet();selectSheetTab('combat');
+    });
+    await page.locator('[data-enter-rage]').click();
+    await page.locator('[data-subclass-hit-roll]').fill('12');
+    await page.locator('[data-subclass-hit-strength]').check();
+    await page.locator('[data-subclass-hit-reckless]').check();
+    await page.locator('[data-subclass-resolve-hit]').click();
+    assert.equal(await page.locator('[data-subclass-resolve-hit]').isDisabled(),true);
+    await page.locator('[data-combat-recover="turn"]').click();
+    assert.equal(await page.locator('[data-subclass-resolve-hit]').isDisabled(),false);
+    await page.locator('[data-end-rage]').click();
+    assert.equal(await page.locator('[data-subclass-resolve-hit]').count(),0);
     assert.deepEqual(errors, []);
     console.log(
       "PASS Rage spend/undo, actual source/level, optional Persistent Rage recovery, rest limits, save/reopen, legacy unlimited, HP isolation, print and responsive/accessibility",

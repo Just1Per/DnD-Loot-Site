@@ -102,7 +102,7 @@ var CharacterSpellcasting=(()=>{
       for(const row of raw){
         const level=Math.min(remaining,Math.max(0,Math.trunc(Number(row?.level)||0)));remaining-=level;
         if(!level||seen.has(row?.classId))continue;seen.add(row.classId);
-        if(Object.hasOwn(ability,row.classId))entries.push({classId:row.classId,level,subclassId:row.subclassId||''});
+        if(Object.hasOwn(ability,row.classId)||(row.classId==='fighter'&&['eldritch-knight','eldritch-knight-2024'].includes(row.subclassId)||row.classId==='rogue'&&['arcane-trickster','arcane-trickster-2024'].includes(row.subclassId)))entries.push({classId:row.classId,level,subclassId:row.subclassId||''});
       }
       return entries;
     }
@@ -110,10 +110,23 @@ var CharacterSpellcasting=(()=>{
     return Object.hasOwn(ability,id)?[{classId:id,level:clampLevel(targetLevel),subclassId:''}]:[];
   }
 
+  function knightProfile(entry,edition){
+    const rogue=entry.classId==='rogue',base=rogue?'arcane-trickster':'eldritch-knight';if(!['fighter','rogue'].includes(entry.classId)||entry.level<3||entry.subclassId!==base+(edition==='2024'?'-2024':''))return null;
+    const n=entry.level,known=[0,0,3,4,4,4,5,6,6,7,8,8,9,10,10,11,11,11,12,13][n-1];
+    return{classId:entry.classId,name:rogue?'Arcane Trickster':'Eldritch Knight',level:n,edition,ability:'int',listClass:'wizard',cantrips:n>=10?3:2,spellCount:known,mode:edition==='2024'?'fixed-prepared':'known',maxSpellLevel:n>=19?4:n>=13?3:n>=7?2:1,bookMinimum:0,changeTiming:'level',...(edition==='2014'?{restrictedSchools:rogue?['enchantment','illusion','e','i']:['abjuration','evocation','a','v'],unrestricted:n>=20?4:n>=14?3:n>=8?2:1}:{} )};
+  }
   function profiles(data,targetLevel,scores={}){
     const edition=data?.build?.edition==='2024'?'2024':'2014';
     const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null),extra=choices?.orders(data,{level:targetLevel}).cantrips||{};
-    return classEntries(data,targetLevel).map(entry=>{const source=entry.classId==='artificer'?choices?.artificerSource(data).id:undefined,p=profile(entry.classId,entry.level,edition,scores,source);return p?{...p,cantrips:p.cantrips+(extra[entry.classId]||0),subclassId:entry.subclassId||''}:null;}).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
+    const result=classEntries(data,targetLevel).map(entry=>{const source=entry.classId==='artificer'?choices?.artificerSource(data).id:undefined,p=knightProfile(entry,edition)||profile(entry.classId,entry.level,edition,scores,source);const M=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),adobe=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},context={mods:Object.fromEntries(Object.entries(scores).map(([key,value])=>[key,Math.floor((value-10)/2)])),pb:M?M.proficiency(data,2+Math.floor((Math.max(1,targetLevel)-1)/4)):2+Math.floor((Math.max(1,targetLevel)-1)/4)},adjustment=p&&M?M.value(adobe.modifiers,'spell:'+entry.classId+':prepare',0,context):0;return p?{...p,spellCount:['prepared','spellbook'].includes(p.mode)?Math.max(0,Math.min(150,p.spellCount+adjustment)):p.spellCount,cantrips:p.cantrips+(extra[entry.classId]||0),subclassId:entry.subclassId||''}:null;}).filter(Boolean).filter(p=>p.maxSpellLevel>0||p.cantrips>0||p.classId==='artificer');
+    const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null),path=Paths?.derive(data,{level:targetLevel});
+    if(path?.spells.length)result.push({classId:'barbarian',name:'Barbarian subclass spells',level:path.level,edition,ability:path.spells[0].ability||'',cantrips:0,spellCount:0,mode:'innate',maxSpellLevel:path.spells.some(s=>s.name==='Commune with Nature')?5:path.spells.some(s=>s.name==='Clairvoyance')?3:path.spells.some(s=>s.name==='Beast Sense')?2:0,bookMinimum:0,changeTiming:'subclass',subclassId:path.id,subclassSpellGrants:path.spells});
+    const Colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null),college=Colleges?.derive(data,{level:targetLevel});for(const profile of result)if(profile.classId==='bard')profile.subclassSpellGrants=college?.spells||[];
+    const Domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null),domain=Domains?.derive(data,{level:targetLevel});for(const profile of result)if(profile.classId==='cleric')profile.subclassSpellGrants=domain?.spells||[];
+    const Circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null),circle=Circles?.derive(data,{level:targetLevel});for(const profile of result)if(profile.classId==='druid')profile.subclassSpellGrants=circle?.spells||[];
+    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);for(const r of Runtime.derive(data,{level:targetLevel})){const existing=result.find(p=>p.classId===r.classId);if(existing){existing.subclassSpellGrants=r.spells||[];existing.expandedSpellOptions=r.expandedSpells||[];existing.blockedSpellIds=r.blockedSpellIds||[];existing.bookGrants=r.bookGrants||[];if(existing.mode==='spellbook')existing.bookMinimum+=existing.bookGrants.length;if(r.listClasses)existing.listClasses=r.listClasses;}if(r.spells?.length&&!existing)result.push({classId:r.classId,name:r.classId+' subclass spells',level:r.level,edition,ability:r.spellAbility||'wis',cantrips:0,spellCount:0,mode:'innate',maxSpellLevel:Math.max(0,...r.spells.map(s=>s.level)),bookMinimum:0,changeTiming:'subclass',subclassId:r.id,subclassSpellGrants:r.spells});}
+    const Archetypes=globalThis.CharacterFighterSubclasses||(typeof require==='function'?require('./character-fighter-subclasses'):null),archetype=Archetypes?.derive(data,{level:targetLevel});if(archetype?.spells.length&&!result.some(p=>p.classId==='fighter'))result.push({classId:'fighter',name:'Fighter subclass spells',level:archetype.level,edition,ability:archetype.id==='banneret-frhof'?'cha':'int',cantrips:0,spellCount:0,mode:'innate',maxSpellLevel:Math.max(0,...archetype.spells.map(s=>s.level)),bookMinimum:0,changeTiming:'subclass',subclassId:archetype.id,subclassSpellGrants:archetype.spells});
+    return result;
   }
 
   // Always-prepared grants are separate from the player's preparation allowance.
@@ -160,6 +173,8 @@ var CharacterSpellcasting=(()=>{
   const spellKey=name=>String(name||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]/g,'');
   function automaticGrants(p,catalogue=[]){
     if(!p)return[];
+    if(p.classId==='cleric'){const Domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null),grants=p.subclassSpellGrants||Domains.derive({build:{edition:p.edition,classId:'cleric'},adobe:{classLevels:[{classId:'cleric',subclassId:p.subclassId,level:p.level}],classFeatureChoices:{}}},{level:p.level}).spells;return grants.flatMap(g=>{const found=catalogue.find(s=>s.edition===p.edition&&spellKey(s.name)===spellKey(g.name));return found?[{...found,...g,id:found.id}]:catalogue.length?[]:[g];});}
+    if(p.classId==='barbarian')return(p.subclassSpellGrants||[]).flatMap(grant=>{const spell=catalogue.find(s=>spellKey(s.name)===spellKey(grant.name)&&s.edition===p.edition);return spell?[{...spell,grantSource:'barbarian / '+p.subclassId,castingRestriction:grant.casting,spellcastingAbility:grant.ability,ritual:grant.casting==='ritual only'||spell.ritual}]:[];});
     const names=[];
     if(p.classId==='artificer'&&p.sourceId==='efa')names.push('Mending');
     if(p.edition==='2024'&&p.classId==='paladin'){if(p.level>=2)names.push('Divine Smite');if(p.level>=5)names.push('Find Steed');}
@@ -170,17 +185,29 @@ var CharacterSpellcasting=(()=>{
     const tableEdition=String(p.subclassId||'').endsWith('-2024')?'2024':'2014';
     for(const [minimum,...spells] of grantTables[tableEdition]?.[subclass]||[])if(p.level>=Math.max(minimum,p.edition==='2024'?3:1))names.push(...spells);
     const seen=new Set();
-    return names.flatMap(name=>{const key=spellKey(name);if(seen.has(key))return[];seen.add(key);const spell=catalogue.find(s=>spellKey(s.name)===key&&s.edition===p.edition)||catalogue.find(s=>spellKey(s.name)===key&&s.edition===tableEdition);return spell?[{...spell,grantSource:p.classId+' / '+(p.subclassId||'class')}]:[];});
+    const rows=names.flatMap(name=>{const key=spellKey(name);if(seen.has(key))return[];seen.add(key);const spell=catalogue.find(s=>spellKey(s.name)===key&&s.edition===p.edition)||catalogue.find(s=>spellKey(s.name)===key&&s.edition===tableEdition);return spell?[{...spell,grantSource:p.classId+' / '+(p.subclassId||'class')}]:[];});
+    const existing=new Set(rows.map(s=>s.id));return [...rows,...(p.subclassSpellGrants||[]).filter(s=>!existing.has(s.id))];
   }
   function castingStats(p,derived,adjustments={}){
     const modifier=Number(derived?.mods?.[p?.ability]||0),pb=Number(derived?.pb||0);
-    return {ability:p?.ability||'',modifier,attack:pb+modifier+(Number(adjustments.spellAttackBonus)||0),dc:8+pb+modifier+(Number(adjustments.spellDCBonus)||0)};
+    const M=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),expressions=derived?.modifiers?.expressions||{},attackBonus=derived?.modifiers?.spellAttackBonus??(Number(adjustments.spellAttackBonus)||0),dcBonus=derived?.modifiers?.spellDCBonus??(Number(adjustments.spellDCBonus)||0),secondary=Number(adjustments.secondaryDCBonus)||0;
+    return {ability:p?.ability||'',modifier,attack:(derived?.proficiencyDice?0:pb)+modifier+attackBonus+(p?.classId&&M?M.value(expressions,'spell:'+p.classId+':attack',0,derived):0),dc:8+pb+modifier+dcBonus+secondary+(p?.classId&&M?M.value(expressions,'spell:'+p.classId+':dc',0,derived):0)};
   }
   function selectionCounts(p,rows,catalogue=[]){
     const ordinary=countedSelections(p,rows,catalogue);
     return {cantrips:ordinary.filter(s=>s.level===0).length,leveled:ordinary.filter(s=>s.level>0).length,prepared:ordinary.filter(s=>s.level>0&&s.prepared).length,automatic:rows.filter(s=>!ordinary.includes(s)).length};
   }
   function countedSelections(p,rows,catalogue=[]){const ids=new Set(automaticGrants(p,catalogue).map(s=>s.id));return rows.filter(s=>!ids.has(s.catalogId));}
+  function selectionState(p,rows,catalogue=[],baseline=null){
+    const counts=selectionCounts(p,rows,catalogue),before=baseline?selectionCounts(p,baseline,catalogue):null,limits={cantrips:p.cantrips,...(isPreparedToggleUseful(p)?{prepared:p.spellCount}:{leveled:p.spellCount})},errors=[],inherited=[];
+    for(const [key,max]of Object.entries(limits))if(counts[key]>max){const message=key==='cantrips'?'Too many cantrips: choose at most '+max+'. You currently have '+counts[key]+'.':key==='prepared'?'Too many prepared '+p.name+' spells: prepare at most '+max+'. You currently have '+counts[key]+'.':'Too many level 1+ spells: choose at most '+max+'. You currently have '+counts[key]+'.';if(before&&counts[key]<=before[key])inherited.push(message);else errors.push(message);}
+    if(p.restrictedSchools){const ordinary=countedSelections(p,rows,catalogue),offSchool=ordinary.filter(row=>{const spell=catalogue.find(s=>s.id===row.catalogId);return spell&&spell.level>0&&!p.restrictedSchools.includes(String(spell.school).toLowerCase());}).length;if(offSchool>p.unrestricted)errors.push('Eldritch Knight: at most '+p.unrestricted+' leveled spells may be outside Abjuration/Evocation.');}
+    const missing=[];if(counts.cantrips<p.cantrips)missing.push((p.cantrips-counts.cantrips)+' cantrip'+(p.cantrips-counts.cantrips===1?'':'s')+' remaining');
+    if(p.mode==='spellbook'&&counts.leveled<p.bookMinimum)missing.push((p.bookMinimum-counts.leveled)+' spellbook spell'+(p.bookMinimum-counts.leveled===1?'':'s')+' remaining from level progression');
+    if(isPreparedToggleUseful(p)){if(counts.prepared<p.spellCount)missing.push((p.spellCount-counts.prepared)+' prepared spell'+(p.spellCount-counts.prepared===1?'':'s')+' remaining');}
+    else if(counts.leveled<p.spellCount)missing.push((p.spellCount-counts.leveled)+' '+modeLabel(p).toLowerCase()+' remaining');
+    return{counts,limits,error:errors[0]||'',inherited,notice:missing.length?'Incomplete: '+missing.join(' · ')+'. You can still generate and continue later.':'Ready to generate.'};
+  }
 
   function isPreparedToggleUseful(p){
     return !!p && (p.mode==='prepared'||p.mode==='spellbook');
@@ -194,6 +221,6 @@ var CharacterSpellcasting=(()=>{
     return'Spells';
   }
 
-  return {castingStats,selectionCounts,automaticGrants,countedSelections,grantTables,profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
+  return {castingStats,selectionCounts,selectionState,automaticGrants,countedSelections,grantTables,profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterSpellcasting;

@@ -81,7 +81,7 @@
     add('lotusden-halfling-egw','Lotusden Halfling','2014','EGW','Setting specific',{size:'Small',traits:['Halfling Luck, Brave and Nimbleness plus Child of the Wood magic; source-specific spell details remain manual.'],partial:true});
     add('draconblood-dragonborn-egw','Draconblood Dragonborn','2014','EGW','Setting specific',{traits:['Dragonborn ancestry with Forceful Presence; breath ancestry details remain manual.'],partial:true});
     add('ravenite-dragonborn-egw','Ravenite Dragonborn','2014','EGW','Setting specific',{darkvision:60,traits:['Dragonborn ancestry with Vengeful Assault; breath ancestry details remain manual.'],partial:true});
-    add('orc-of-exandria-egw','Orc of Exandria','2014','EGW','Setting specific',{darkvision:60,traits:['Aggressive, Powerful Build and Primal Intuition; conditional details remain manual.'],partial:true});
+    add('orc-of-exandria-egw','Orc of Exandria','2014','EGW','Setting specific',{carryingSizeSteps:1,darkvision:60,traits:['Aggressive, Powerful Build and Primal Intuition; conditional details remain manual.'],partial:true});
 
     // Current Eberron options.
     add('changeling-efota','Changeling','2024','EFOTA','2024',{creatureType:'Fey',sizeChoice:true,traits:['Changeling Instincts and Shape-Shifter; Charisma checks benefit while shape-shifted.'],partial:true});
