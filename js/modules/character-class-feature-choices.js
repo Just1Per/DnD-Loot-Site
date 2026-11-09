@@ -712,6 +712,7 @@ var CharacterClassFeatureChoices=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},next={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[recovery.key]:['1']}};
     const slots=(data.slots||[]).map(row=>({...row}));
     for(const row of selected){if(row.created)next.classFeatureChoices[row.key]=['ready'];else if(row.id==='pact')next.pactSlotsUsed=row.used-row.count;else{const index=Number(row.id)-1;slots[index]={...slots[index],max:row.max,used:row.used-row.count};}}
+    const Traditions=globalThis.CharacterWizardSubclasses||(typeof require==='function'?require('./character-wizard-subclasses'):null),tradition=Traditions.derive(data,context),song=tradition.resources.find(p=>p.id==='wizard-song');if(tradition.id==='bladesinger-frhof'&&song?.used)next.classFeatureChoices[song.key]=[String(Math.max(0,Math.min(song.used,song.max)-1))];
     if(Object.keys(next.classFeatureChoices).length>100)return false;
     data.slots=slots;data.adobe=next;return true;
   }

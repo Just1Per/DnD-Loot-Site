@@ -13,6 +13,7 @@
       generatorDrafts.set(classId,new Map(rows));
     }
     const map=generatorDrafts.get(classId),p=classProfile(classId);
+    for(const spell of p?.bookGrants||[])if(CampaignRules.allowed(spell)&&!map.has(spell.id))map.set(spell.id,{...CharacterCatalog.spellRow(spell),classId,prepared:false});
     for(const spell of grants(p))map.set(spell.id,{...(map.get(spell.id)||CharacterCatalog.spellRow(spell)),classId,prepared:true});
     return map;
   }

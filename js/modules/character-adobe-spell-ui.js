@@ -10,6 +10,7 @@ var CharacterAdobeSpellUI=(()=>{
   const dialog=document.createElement('dialog'),opener=document.activeElement?.shadowRoot?.activeElement||document.activeElement;
   dialog.id='adobeSpellDialog';dialog.className='vault-dialog adobe-spell-dialog';dialog.setAttribute('aria-labelledby','adobeSpellTitle');dialog.dataset.noContextHelp='';
   const baseline=structuredClone(session.data.spells),draft=structuredClone(session.data),loot=structuredClone(sheetEquipmentLoot()),derived=M.derive(draft,session.identity.level,loot),profiles=S.profiles(draft,session.identity.level,derived.scores),visited=new Set();
+  for(const p of profiles)for(const spell of p.bookGrants||[])if(CampaignRules.allowed(spell)&&!draft.spells.some(s=>s.catalogId===spell.id&&s.classId===p.classId)&&draft.spells.length<150)draft.spells.push({...C.spellRow(spell),classId:p.classId,prepared:false});
   const snapshot=JSON.stringify({data:session.data,identity:session.identity,loot:sheetEquipmentLoot()});
   const allowed=()=>characterHPCurrent(session)&&!session.saving&&dialog.isConnected&&JSON.stringify({data:session.data,identity:session.identity,loot:sheetEquipmentLoot()})===snapshot;
   const close=()=>{if(dialog.open)dialog.close();dialog.remove();if(opener?.isConnected)opener.focus({preventScroll:true});};

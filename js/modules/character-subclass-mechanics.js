@@ -23,6 +23,7 @@ var CharacterSubclassMechanics=(()=>{
   for(let i=0;i<9;i++){const max=Number(maxima[i])||0,used=Math.max(0,Number(d.slots?.[i]?.used)||0);if(max>0)rows.push({id:'slot-'+i,level:i+1,available:Math.max(0,max-used),max,used});}
   const warlock=context(d,'warlock',{level}).level,p=derived.progression?.pact||(warlock?{count:warlock===1?1:warlock<11?2:warlock<17?3:4,slotLevel:Math.min(5,Math.ceil(warlock/2))}:null);if(p?.count){const used=Number(stored(d).pactSlotsUsed)||0;rows.push({id:'pact',level:p.slotLevel,available:Math.max(0,p.count-used),max:p.count,used});}return rows;
  }
+ function spendSlot(d,id,opts={},updates={}){const slot=paymentSlots(d,opts).find(s=>s.id===id);if(!slot?.available)return null;if(!save(d,updates))return null;if(id==='pact')d.adobe={...stored(d),pactSlotsUsed:slot.used+1};else{d.slots||=Array.from({length:9},()=>({max:0,used:0}));const i=Number(id.slice(5));d.slots[i]={...d.slots[i],max:slot.max,used:slot.used+1};}return slot;}
  function payResource(d,row,source,opts={}){
   if(!row)return false;
   const C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);
@@ -36,6 +37,6 @@ var CharacterSubclassMechanics=(()=>{
   const pool=cost?C().classResources(d,{level,mods}).find(p=>p.id===a.pool):null;if(cost&&(!pool||pool.remaining<cost))return null;const updates={...(a.updates||{})};if(cost)updates[pool.key]=[String(pool.used+cost)];if(a.once)updates[r.key((a.onceKey||id)+'-turn')]=['1'];if(a.active)updates[r.key(a.active+'-active')]=['active'];if(!save(d,updates))return null;const amount=Math.max(a.min??-99,(a.faces?roll:0)+(a.add||0));if(a.tempHP)d.hpTemp=Math.max(Number(d.hpTemp)||0,a.tempHP);if(a.selfHeal||a.heal&&self){const M=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null);d.hpCurrent=Math.min(M.derive(d,level).hpMax,Math.max(0,Number(d.hpCurrent)||0)+Math.max(0,amount));}return{amount,spent:cost,dc:r.dc,detail:a.detail};
  }
  function events(d,r,event,{turnKeys=[],activeNames=[]}={}){if(!r.active)return false;const updates={};for(const p of r.resources||[])if(p.resets?.includes(event))updates[p.key]=[String(event==='short'&&p.shortRecovery?Math.max(0,Math.min(p.used,p.max)-p.shortRecovery):0)];if(['turn','short','long'].includes(event))for(const a of r.actions||[])if(a.once)updates[r.key((a.onceKey||a.id)+'-turn')]=['0'];for(const key of activeNames)if(['short','long'].includes(event)||event==='turn'&&turnKeys.includes(key))if(r.pick(key+'-active'))updates[r.key(key+'-active')]=[];return save(d,updates);}
- return{expandedSpells,resolveAction,events,context,stored,slug,catalogue,group,resource,save,spellOptions,selectedSpells,fixedSpells,paymentSlots,payResource};
+ return{spendSlot,expandedSpells,resolveAction,events,context,stored,slug,catalogue,group,resource,save,spellOptions,selectedSpells,fixedSpells,paymentSlots,payResource};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterSubclassMechanics;
