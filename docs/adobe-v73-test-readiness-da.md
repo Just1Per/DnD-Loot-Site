@@ -1,5 +1,7 @@
 # Klar til Adobe-brugertest
 
+> Historisk v73-checkpoint. PR #250 er siden merget. Den aktuelle gennemgang af den udfyldte original og kravene før udfasning findes i [Mithral-valideringen](adobe-mithral-validation-da.md); tabellen nedenfor er ikke den aktuelle release-status.
+
 Dette er stoplisten før den første **bredere** sammenligningstest med Adobe-arket. Den afgrænser testen til karakteroprettelse, tekst på arket, spells, centrale PDF-knapper, gemning og print. Den betyder ikke, at hele PDF-paritetsbackloggen skal være færdig.
 
 ## Testblokeringer

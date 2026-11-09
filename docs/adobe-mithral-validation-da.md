@@ -46,3 +46,13 @@ Kør fra `tests`: `node adobe-mithral-reference-browser.cjs`. Testen er også de
 - Først når ingen blokerende fejl eller mistede funktioner står åbne: skift default til Adobe med midlertidig tilbagevej. Fjern derefter den gamle præsentation og dens overflødige kode.
 
 Den gamle visning er bevaret under denne gennemgang.
+
+## Lokal validering, 9. november 2026
+
+- Samlet engine/DOM-kørsel: 1.010 engine-tests og 371 DOM-checks bestået.
+- Efter recovery-etiketrettelsen: alle 35 field-adapter-tests bestået, inklusive bevarede fulde recovery-betingelser.
+- Alle 69 hidtidige scripts i den sammenhængende Adobe-browserpakke bestået.
+- Den nye Mithral-regression bestået med sidste fixture-rettelse til katalogets `city-watch-scag` og reference-XP 2.050.
+- De tre yderligere browserkontroller af spell-kilder, redigerbare spell/feat-kopier og Sorcerer point/metamagic bestået.
+
+Dette er lokale fixture-tests. GitHub-resultater står på den nye PR; en rigtig preview-brugertest er fortsat en selvstændig release-gate.

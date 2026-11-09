@@ -14,7 +14,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
    await openCharacterSheet('c1');
    const d = sheetSession.data;
    d.build.edition = '2014'; d.build.classId = 'sorcerer';
-   d.build.race = 'high-elf'; d.build.background = 'city-watch';
+   d.build.race = 'high-elf'; d.build.background = 'city-watch-scag'; d.experience = 2050;
    d.build.scoreMethod = 'manual'; d.build.scoreMode = 'final';
    d.build.cantrip = 'Fire Bolt'; d.build.autoSlots = true; d.spellAbility = 'cha';
    d.abilities = {str:15,dex:13,con:13,int:13,wis:16,cha:19};
@@ -31,6 +31,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
   await field('AC').waitFor({state:'visible'});
   assert.equal(await field('AC').inputValue(),'14');
   assert.equal(await field('Cha').inputValue(),'19');
+  assert.equal(await field('Background').inputValue(),'city-watch-scag');
   assert.equal(await field('Spell save DC 1').inputValue(),'14');
   assert.equal(await field('Limited Feature Recovery 1').inputValue(),'LR');
   const stats = await page.evaluate(() => {
