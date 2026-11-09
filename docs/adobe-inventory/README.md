@@ -1,5 +1,7 @@
 # Adobe PDF function inventory
 
+The web popup dependency map is in [Adobe-popups og afhængigheder](popups-da.md), with [machine-readable routes and test references](popups.json). This is the removal checklist for preserving popups when retiring Standard.
+
 Static scan of the supplied Adobe reference. No filled values or executable PDF code are included.
 
 - Active pages: 6

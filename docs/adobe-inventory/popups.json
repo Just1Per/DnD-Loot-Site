@@ -1,0 +1,1016 @@
+{
+  "format": 1,
+  "scope": "Static character dialog declarations, concrete Adobe flyouts, editor routes, nested bridges and shared infrastructure. Test references are not execution results.",
+  "popups": [
+    {
+      "id": "sheetAttackPicker",
+      "file": "js/modules/character-action-ui.js",
+      "line": 6,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Add/edit attack fra Combat",
+      "notes": "Bevar action-renderer og dens handlers; åbnes også fra bridge.",
+      "testReferences": []
+    },
+    {
+      "id": "adobeAbilityDialog",
+      "file": "js/modules/character-adobe-ability-ui.js",
+      "line": 7,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Ability-/skill-felter eller Special features",
+      "notes": "Eget draft; bruger fælles session/form-sync.",
+      "testReferences": [
+        "adobe-connected-sheet-browser.cjs",
+        "adobe-dc-ability-controls-browser.cjs",
+        "adobe-native-abilities-browser.cjs",
+        "adobe-only-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeAttackChoiceMenu",
+      "file": "js/modules/character-adobe-attack-menu.js",
+      "line": 14,
+      "kind": "flyout",
+      "category": "adobe-menu",
+      "entry": "Attack name-felt",
+      "notes": "Kan åbne spellvalg og attack row-menu.",
+      "testReferences": [
+        "adobe-attack-access-browser.cjs",
+        "adobe-attack-choice-flyout-browser.cjs",
+        "adobe-connected-sheet-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeBackgroundChoiceDialog",
+      "file": "js/modules/character-adobe-background-choice-ui.js",
+      "line": 16,
+      "kind": "flyout",
+      "category": "adobe-menu",
+      "entry": "Baggrundens traits/ideals/bonds/flaws og Background Menu",
+      "notes": "Forslag og egne tekster; ingen flytning af Standard-panel.",
+      "testReferences": [
+        "adobe-background-flyout-browser.cjs",
+        "adobe-inline-character-choices-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeBackgroundFeatureDialog",
+      "file": "js/modules/character-adobe-background-feature-ui.js",
+      "line": 5,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Background feature → Custom",
+      "notes": "Eget navn/tekst; bevarer øvrige baggrundsvalg.",
+      "testReferences": [
+        "adobe-background-feature-weight-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeChoiceDialog",
+      "file": "js/modules/character-adobe-choice-ui.js",
+      "line": 24,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Søgbare race/background/class/weapon/andre valglister",
+      "notes": "Generisk feltpicker; actual field descriptor afgør effekten.",
+      "testReferences": [
+        "adobe-armor-choices-browser.cjs",
+        "adobe-dc-ability-controls-browser.cjs",
+        "adobe-editor-dialogs-browser.cjs",
+        "adobe-gear-catalog-browser.cjs",
+        "adobe-inline-character-choices-browser.cjs",
+        "adobe-magic-variant-browser.cjs",
+        "adobe-page-choices-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeClassDialog",
+      "file": "js/modules/character-adobe-class-ui.js",
+      "line": 11,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Level/Class, Class Features Menu, Special features",
+      "notes": "Class, edition, subclass, metamagic/styles, training og HP-draft.",
+      "testReferences": [
+        "adobe-connected-sheet-browser.cjs",
+        "adobe-continuous-browser.cjs",
+        "adobe-edition-options-browser.cjs",
+        "adobe-equipment-feature-menus-browser.cjs",
+        "adobe-hp-methods-browser.cjs",
+        "adobe-hp-options-browser.cjs",
+        "adobe-inline-character-choices-browser.cjs",
+        "adobe-inline-xp-browser.cjs",
+        "adobe-mithral-reference-browser.cjs",
+        "adobe-native-classes-browser.cjs",
+        "adobe-page-choices-browser.cjs",
+        "adobe-xp-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeDruidFormsDialog",
+      "file": "js/modules/character-adobe-druid-forms-ui.js",
+      "line": 10,
+      "kind": "dialog",
+      "category": "moves-component",
+      "entry": "Class features → Druid forms",
+      "notes": "Flytter #sheetDruidWildShape med placeholder; native skal må ikke forveksles med uafhængigt indhold.",
+      "testReferences": [
+        "adobe-equipment-feature-menus-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeEquipmentDialog",
+      "file": "js/modules/character-adobe-equipment-ui.js",
+      "line": 8,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Equipment.menu eller Special features → Equipment",
+      "notes": "Native add/preview/confirm; bruger fælles inventory/state.",
+      "testReferences": [
+        "adobe-equipment-feature-menus-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeFeatDialog",
+      "file": "js/modules/character-adobe-feat-ui.js",
+      "line": 7,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Feat-knapper eller Special features → Feats",
+      "notes": "Kan åbne personal feat-editor og feat information.",
+      "testReferences": [
+        "adobe-connected-sheet-browser.cjs",
+        "adobe-edition-options-browser.cjs",
+        "adobe-native-feats-browser.cjs",
+        "adobe-personal-feats-browser.cjs",
+        "adobe-player-feats-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetPageManager",
+      "file": "js/modules/character-adobe-pages.js",
+      "line": 9,
+      "kind": "dialog-template",
+      "category": "standard-only",
+      "entry": "Standard page navigation → Add pages",
+      "notes": "Templatebygget dialog bevaret bag skjult Standard-navigation; Adobe bruger adobePagesDialog.",
+      "testReferences": [
+        "character-adobe-page-manager-checks.cjs",
+        "control-prototype-browser.cjs",
+        "sheet-tools-loading-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeSpellDialog",
+      "file": "js/modules/character-adobe-spell-ui.js",
+      "line": 11,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Choose spells, spell-felt/knap, Special features",
+      "notes": "Native selection draft; bruger casting-engine og fælles spell-rendering.",
+      "testReferences": [
+        "adobe-direct-preparation-browser.cjs",
+        "adobe-native-spells-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeRaceSpellDialog",
+      "file": "js/modules/character-adobe-spell-ui.js",
+      "line": 78,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Generate spell sheet → Race spells",
+      "notes": "Race-cantrip/ability-valg; fælles session.",
+      "testReferences": [
+        "adobe-spell-sources-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeSpellSourcesDialog",
+      "file": "js/modules/character-adobe-spell-ui.js",
+      "line": 97,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Special features → Generate spell sheet",
+      "notes": "Viderestiller til class/race/feat-spellvalg.",
+      "testReferences": [
+        "adobe-spell-sources-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobePagesDialog",
+      "file": "js/modules/character-adobe-stack-ui.js",
+      "line": 48,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "+ Add pages",
+      "notes": "Valg af spell-, companion-, notes- og andre sider.",
+      "testReferences": [
+        "adobe-page-choices-browser.cjs",
+        "adobe-paper-controls-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobePaperZoomMenu",
+      "file": "js/modules/character-adobe-stack-ui.js",
+      "line": 81,
+      "kind": "flyout",
+      "category": "adobe-menu",
+      "entry": "Forstørrelsesglas på arket",
+      "notes": "Bruger fortsat intern #adobeZoom-selector; den skjulte kontrol skal bevares indtil afkobling.",
+      "testReferences": [
+        "adobe-paper-controls-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeSpecialFeaturesMenu",
+      "file": "js/modules/character-adobe-view.js",
+      "line": 146,
+      "kind": "flyout",
+      "category": "adobe-menu",
+      "entry": "Show extra features",
+      "notes": "Blander native routes og shared bridges; se routetabel.",
+      "testReferences": [
+        "adobe-modifiers-browser.cjs",
+        "adobe-spell-sources-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeSharedEditor",
+      "file": "js/modules/character-adobe-view.js",
+      "line": 210,
+      "kind": "dialog",
+      "category": "moves-standard-body",
+      "entry": "Alle aktive bridge-routes i routetabellen",
+      "notes": "Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning.",
+      "testReferences": [
+        "adobe-adventure-log-browser.cjs",
+        "adobe-armor-choices-browser.cjs",
+        "adobe-carrying-browser.cjs",
+        "adobe-continuous-browser.cjs",
+        "adobe-direct-preparation-browser.cjs",
+        "adobe-editor-dialogs-browser.cjs",
+        "adobe-equipment-feature-menus-browser.cjs",
+        "adobe-equipment-layout-browser.cjs",
+        "adobe-feature-counters-browser.cjs",
+        "adobe-gear-page-transfers-browser.cjs",
+        "adobe-inline-xp-browser.cjs",
+        "adobe-load-movement-browser.cjs",
+        "adobe-mithral-reference-browser.cjs",
+        "adobe-native-abilities-browser.cjs",
+        "adobe-native-classes-browser.cjs",
+        "adobe-native-feats-browser.cjs",
+        "adobe-native-spells-browser.cjs",
+        "adobe-only-browser.cjs",
+        "adobe-page-choices-browser.cjs",
+        "adobe-paper-combat-browser.cjs",
+        "adobe-paper-controls-browser.cjs",
+        "adobe-slot-labels-browser.cjs",
+        "adobe-spell-pages-browser.cjs",
+        "adobe-tool-check-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeNotesOptions",
+      "file": "js/modules/character-adobe-view.js",
+      "line": 308,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Notes.Options",
+      "notes": "Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge.",
+      "testReferences": [
+        "adobe-continuous-browser.cjs",
+        "adobe-notes-options-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetFeatInformation",
+      "file": "js/modules/character-catalog-ui.js",
+      "line": 99,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Feat information fra native featvalg",
+      "notes": "Selvstændig læsning, men modulet indeholder også katalog/resource-renderere.",
+      "testReferences": [
+        "adobe-native-feats-browser.cjs",
+        "adobe-personal-feats-browser.cjs",
+        "feats-selected-overview-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetCompanionHPOptions",
+      "file": "js/modules/character-companion-hp-ui.js",
+      "line": 13,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Companion Set Max HP",
+      "notes": "Egen dialog; afhænger af companion state, ikke en flyttet popup-body.",
+      "testReferences": [
+        "adobe-companion-hp-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeHitPointMenu",
+      "file": "js/modules/character-hit-point-ui.js",
+      "line": 25,
+      "kind": "flyout",
+      "category": "adobe-menu",
+      "entry": "Set Max HP",
+      "notes": "Native flyout → sheetHitPointOptions og fælles HP-apply.",
+      "testReferences": [
+        "adobe-hp-flyout-browser.cjs",
+        "adobe-hp-methods-browser.cjs",
+        "adobe-hp-options-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetHitPointOptions",
+      "file": "js/modules/character-hit-point-ui.js",
+      "line": 34,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Set Max HP → avanceret/manual og hp-route",
+      "notes": "To visninger af samme dialog-id; automatisk/manual/one-shot.",
+      "testReferences": [
+        "adobe-hp-flyout-browser.cjs",
+        "adobe-hp-options-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetPersonalGearEditor",
+      "file": "js/modules/character-inventory-ui.js",
+      "line": 35,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Owned item information → Edit eller inventory-bridge",
+      "notes": "Selvstændig editor, men gemning opdaterer de fælles inventory-controls.",
+      "testReferences": []
+    },
+    {
+      "id": "sheetInventoryItemInformation",
+      "file": "js/modules/character-inventory-ui.js",
+      "line": 63,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Magic/gear information og item links",
+      "notes": "Kan åbne Edit item og ændre backpack/remove via fælles handlers.",
+      "testReferences": [
+        "adobe-attack-menus-browser.cjs",
+        "adobe-items-browser.cjs",
+        "adobe-magic-menu-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetItemResourceRecovery",
+      "file": "js/modules/character-item-resource-ui.js",
+      "line": 53,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Dawn/item resource recovery",
+      "notes": "Åbnes fra resource-bridge; modulet renderer #sheetItemResources.",
+      "testReferences": [
+        "adobe-item-resources-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetModifierDialog",
+      "file": "js/modules/character-modifier-ui.js",
+      "line": 25,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Bonusfelter, Ctrl/Meta/Shift-click, Modifiers",
+      "notes": "Egen form; afhænger af shared modifier-render/update hooks.",
+      "testReferences": [
+        "adobe-modifiers-browser.cjs",
+        "adobe-spell-modifiers-browser.cjs",
+        "adobe-tool-check-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetSkillOptions",
+      "file": "js/modules/character-modifier-ui.js",
+      "line": 46,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "SkillsClick",
+      "notes": "Egen popup til rækkefølge/training; åbner native skills-editor.",
+      "testReferences": [
+        "adobe-skill-hover-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetPaperAttackMenu",
+      "file": "js/modules/character-named-equipment-ui.js",
+      "line": 75,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Attack arrows eller attack picker → row options",
+      "notes": "Rækkefølge/clear/insert; kan åbne Combat-bridge.",
+      "testReferences": [
+        "adobe-attack-menus-browser.cjs",
+        "adobe-connected-sheet-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetSpellInformation",
+      "file": "js/modules/character-overview-ui.js",
+      "line": 143,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Spell information fra native spellvalg og ark",
+      "notes": "Selvstændig læsedialog; må ikke slettes sammen med Overview-modulet.",
+      "testReferences": [
+        "adobe-spell-pages-browser.cjs",
+        "cleric-divine-intervention-browser.cjs",
+        "dialogs-browser.cjs",
+        "druid-beast-spells-browser.cjs",
+        "ranger-class-resources-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetHitDiceRecovery",
+      "file": "js/modules/character-paper-combat-ui.js",
+      "line": 38,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Hit Dice-controls fra Actions/ammunition",
+      "notes": "Preview og forbrug af Hit Dice; fælles form/session.",
+      "testReferences": [
+        "adobe-hit-dice-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetPaperActionMenu",
+      "file": "js/modules/character-paper-combat-ui.js",
+      "line": 48,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Action/Bonus Action/Reaction-arrows",
+      "notes": "Egen row-menu; edit kan åbne paperCombat-bridge.",
+      "testReferences": [
+        "adobe-paper-combat-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeGearDialog",
+      "file": "js/modules/character-paper-gear-ui.js",
+      "line": 9,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Gear-arrows og Enter/dobbeltklik på gear",
+      "notes": "Native row-editor, source catalogue og confirmations; delt inventory-engine.",
+      "testReferences": [
+        "adobe-gear-catalog-browser.cjs",
+        "adobe-gear-combining-browser.cjs",
+        "adobe-gear-page-transfers-browser.cjs",
+        "adobe-gear-rows-browser.cjs",
+        "adobe-items-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetPaperIcons",
+      "file": "js/modules/character-paper-icons-ui.js",
+      "line": 16,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Header/log-icon og Symbol",
+      "notes": "Egen billedvælger/upload; fælles image-budget og private data.",
+      "testReferences": [
+        "adobe-connected-sheet-browser.cjs",
+        "adobe-paper-icons-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeFooterDialog",
+      "file": "js/modules/character-paper-inventory-ui.js",
+      "line": 31,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Equipment footer/layout-controls",
+      "notes": "Egen footer-popup; modulet ejer også bridge-komponenten #sheetPaperInventoryLayout.",
+      "testReferences": [
+        "adobe-magic-footer-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetPaperLogMenu",
+      "file": "js/modules/character-paper-log-ui.js",
+      "line": 6,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Adventure Log row arrows",
+      "notes": "Egen menu; Edit går gennem notes-bridge og #sheetAdventureLog.",
+      "testReferences": [
+        "adobe-adventure-log-browser.cjs",
+        "adobe-log-menus-browser.cjs",
+        "adobe-log-operations-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetPaperMagicMenu",
+      "file": "js/modules/character-paper-magic-ui.js",
+      "line": 28,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Magic item-arrows og variantvalg",
+      "notes": "Egen menu; nested information/confirmations og equipment handlers.",
+      "testReferences": [
+        "adobe-equipment-layout-browser.cjs",
+        "adobe-items-browser.cjs",
+        "adobe-magic-menu-browser.cjs",
+        "adobe-magic-variant-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetPaperResourceMenu",
+      "file": "js/modules/character-paper-resource-ui.js",
+      "line": 5,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Limited Feature arrows",
+      "notes": "Egen row-menu; Open feature controls åbner resources-bridge eller item controls.",
+      "testReferences": [
+        "adobe-feature-counters-browser.cjs",
+        "adobe-resource-menus-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeWeightDialog",
+      "file": "js/modules/character-paper-weight-ui.js",
+      "line": 10,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Weight Carried-knappen eller weight-route",
+      "notes": "Native draft; gammel editorTargets selector er skygget af native route.",
+      "testReferences": [
+        "adobe-background-feature-weight-browser.cjs",
+        "adobe-equipment-layout-browser.cjs",
+        "adobe-weight-settings-browser.cjs"
+      ]
+    },
+    {
+      "id": "personalFeatDialog",
+      "file": "js/modules/character-personal-feat-ui.js",
+      "line": 8,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Native Feats → Create/Edit personal feat",
+      "notes": "Egen draft og delete-confirmation; private save/data.",
+      "testReferences": [
+        "adobe-personal-feats-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetRestRecovery",
+      "file": "js/modules/character-rest-recovery-ui.js",
+      "line": 8,
+      "kind": "dialog",
+      "category": "shared-dialog",
+      "entry": "Heal/Comp.Heal og shared rest-controls",
+      "notes": "Selvstændigt HP/Hit Dice-preview; ikke en komplet reset af alle feature pools.",
+      "testReferences": [
+        "adobe-rest-recovery-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetPrintDialog",
+      "file": "js/modules/character-sheet.js",
+      "line": 641,
+      "kind": "dialog",
+      "category": "standard-only",
+      "entry": "Standard print fallback",
+      "notes": "Adobe print interceptes og bruger printConnected/preparePrint; behold fælles print-hooks under udfasning.",
+      "testReferences": [
+        "character-workspace-browser.cjs",
+        "feats-selected-overview-browser.cjs"
+      ]
+    },
+    {
+      "id": "sheetSpellGenerator",
+      "file": "js/modules/character-spellcasting-ui.js",
+      "line": 61,
+      "kind": "dialog",
+      "category": "nested-standard-dialog",
+      "entry": "Spell Slots/shared spell-controls → Generate",
+      "notes": "Legacy generator kan nås inde i spellSlots-bridge; native Choose spells erstatter ikke alle nested controls.",
+      "testReferences": [
+        "adobe-direct-preparation-browser.cjs",
+        "adobe-native-spells-browser.cjs",
+        "dialogs-browser.cjs",
+        "divine-and-primal-orders-browser.cjs",
+        "sheet-tools-loading-browser.cjs",
+        "ui-cleanup-browser.cjs"
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "command": "weight",
+      "title": "Weight Carried settings",
+      "selector": "#sheetInventoryTotals",
+      "implementation": "native",
+      "popup": "adobeWeightDialog"
+    },
+    {
+      "command": "paperInventory",
+      "title": "Equipment layout",
+      "selector": "#sheetPaperInventoryLayout",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "carrying",
+      "title": "Movement & carrying",
+      "selector": "#sheetCarrying",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "customTool",
+      "title": "Custom tool / ability check",
+      "selector": "#sheetCustomToolCheck",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "itemResources",
+      "title": "Item uses & charges",
+      "selector": "#sheetItemResources",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "paperCombat",
+      "title": "Actions & ammunition",
+      "selector": "#sheetPaperCombat",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "companion",
+      "title": "Companions & familiars",
+      "selector": "#sheet-companion",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "vitals",
+      "title": "Hit points & Inspiration",
+      "selector": "#characterSheetForm .sheet-vital-editor",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "classes",
+      "title": "Class, level & hit points",
+      "selector": "#sheetAdobeProgression",
+      "implementation": "native",
+      "popup": "adobeClassDialog"
+    },
+    {
+      "command": "hp",
+      "title": "Class, level & hit points",
+      "selector": "#sheetAdobeProgression",
+      "implementation": "native",
+      "popup": "sheetHitPointOptions"
+    },
+    {
+      "command": "abilities",
+      "title": "Ability scores & skills",
+      "selector": "#sheet-skills",
+      "implementation": "native",
+      "popup": "adobeAbilityDialog"
+    },
+    {
+      "command": "skills",
+      "title": "Ability scores & skills",
+      "selector": "#sheet-skills",
+      "implementation": "native",
+      "popup": "adobeAbilityDialog"
+    },
+    {
+      "command": "origins",
+      "title": "Origins & class choices",
+      "selector": "#sheetBuildControls",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "features",
+      "title": "Origins & class choices",
+      "selector": "#sheetBuildControls",
+      "implementation": "native",
+      "popup": "adobeClassDialog"
+    },
+    {
+      "command": "background",
+      "title": "Origins & class choices",
+      "selector": "#sheetBuildControls",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "equipment",
+      "title": "Equipment & treasure",
+      "selector": "#sheet-inventory",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "inventory",
+      "title": "Equipment & treasure",
+      "selector": "#sheet-inventory",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "spells",
+      "title": "Spells",
+      "selector": "#sheet-spells",
+      "implementation": "native",
+      "popup": "adobeSpellDialog"
+    },
+    {
+      "command": "spellSlots",
+      "title": "Spell slots",
+      "selector": "#sheet-spells",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "feats",
+      "title": "Feats",
+      "selector": "#sheet-feats",
+      "implementation": "native",
+      "popup": "adobeFeatDialog"
+    },
+    {
+      "command": "attacks",
+      "title": "Combat & resources",
+      "selector": "#sheet-combat",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "resources",
+      "title": "Feature resources",
+      "selector": "#sheetFeatResources",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "conditions",
+      "title": "Conditions & movement",
+      "selector": "#sheetMovementConditions",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "combat",
+      "title": "Combat & resources",
+      "selector": "#sheet-combat",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "notes",
+      "title": "Adventure journal",
+      "selector": "#sheet-notes",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "story",
+      "title": "Background & appearance",
+      "selector": "#sheet-story",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    },
+    {
+      "command": "builder",
+      "title": "Origins & class choices",
+      "selector": "#sheetBuildControls",
+      "implementation": "moves-standard-body",
+      "popup": "adobeSharedEditor"
+    }
+  ],
+  "infrastructure": [
+    {
+      "id": "characterSheetDialog",
+      "file": "js/modules/character-sheet.js",
+      "dependency": "Outer shell, #characterSheetForm, session/store, ownership and close/save lifecycle."
+    },
+    {
+      "id": "siteConfirmationDialog",
+      "file": "js/modules/site-confirmation.js",
+      "dependency": "Shared confirmation/Cancel, isCurrent guards and focus restoration."
+    },
+    {
+      "id": "CharacterAdobeFlyoutMenu",
+      "file": "js/modules/character-adobe-flyout-menu.js",
+      "dependency": "Generic dynamic flyout factory; concrete IDs listed above."
+    },
+    {
+      "id": "adobeSkillHelp-*",
+      "file": "js/modules/character-adobe-skill-help.js",
+      "dependency": "Non-modal skill provenance overlays; keep keyboard/touch/cleanup."
+    },
+    {
+      "id": "CharacterSizeGuidanceUI",
+      "file": "js/modules/character-size-guidance-ui.js",
+      "dependency": "Non-modal height/weight guidance overlay."
+    },
+    {
+      "id": "browser.confirm (Long Rest)",
+      "file": "js/modules/character-catalog-ui.js",
+      "dependency": "Platform confirmation used by the shared Long Rest handler; reached from Adobe through sharedCommand. Keep the confirmation and its cancellation behavior."
+    },
+    {
+      "id": "vaultContextHelp / siteGuideDialog",
+      "file": "js/modules/site-help.js",
+      "dependency": "Site-wide contextual help and guide; also used inside shared Adobe popups."
+    }
+  ],
+  "editorCalls": [
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 107,
+      "command": "dynamic",
+      "expression": "row.descriptor.command"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 145,
+      "command": "dynamic",
+      "expression": "id"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 172,
+      "command": "notes",
+      "expression": "'notes'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 172,
+      "command": "companion",
+      "expression": "'companion'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 172,
+      "command": "companion",
+      "expression": "'companion'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 172,
+      "command": "classes",
+      "expression": "'classes'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 172,
+      "command": "story",
+      "expression": "'story'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 172,
+      "command": "feats",
+      "expression": "'feats'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 172,
+      "command": "dynamic",
+      "expression": "cmd"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 214,
+      "command": "conditions",
+      "expression": "'conditions'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 313,
+      "command": "notes",
+      "expression": "'notes'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 391,
+      "command": "spells",
+      "expression": "'spells'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 396,
+      "command": "companion",
+      "expression": "'companion'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 397,
+      "command": "dynamic",
+      "expression": "editorChoice.value"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 407,
+      "command": "dynamic",
+      "expression": "st.editor"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 427,
+      "command": "dynamic",
+      "expression": "key"
+    },
+    {
+      "file": "js/modules/character-adventure-log-ui.js",
+      "line": 6,
+      "command": "notes",
+      "expression": "'notes'"
+    },
+    {
+      "file": "js/modules/character-item-resource-ui.js",
+      "line": 49,
+      "command": "itemResources",
+      "expression": "'itemResources'"
+    },
+    {
+      "file": "js/modules/character-named-equipment-ui.js",
+      "line": 82,
+      "command": "attacks",
+      "expression": "'attacks'"
+    },
+    {
+      "file": "js/modules/character-paper-gear-ui.js",
+      "line": 60,
+      "command": "equipment",
+      "expression": "'equipment'"
+    },
+    {
+      "file": "js/modules/character-paper-icons-ui.js",
+      "line": 23,
+      "command": "story",
+      "expression": "'story'"
+    },
+    {
+      "file": "js/modules/character-paper-inventory-ui.js",
+      "line": 47,
+      "command": "paperInventory",
+      "expression": "'paperInventory'"
+    },
+    {
+      "file": "js/modules/character-paper-log-ui.js",
+      "line": 14,
+      "command": "notes",
+      "expression": "'notes'"
+    },
+    {
+      "file": "js/modules/character-paper-magic-ui.js",
+      "line": 58,
+      "command": "paperInventory",
+      "expression": "'paperInventory'"
+    },
+    {
+      "file": "js/modules/character-paper-magic-ui.js",
+      "line": 60,
+      "command": "equipment",
+      "expression": "'equipment'"
+    },
+    {
+      "file": "js/modules/character-paper-resource-ui.js",
+      "line": 11,
+      "command": "resources",
+      "expression": "'resources'"
+    },
+    {
+      "file": "js/modules/character-spellcasting-ui.js",
+      "line": 76,
+      "command": "spells",
+      "expression": "'spells'"
+    }
+  ],
+  "sharedCommands": [
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 172,
+      "expression": "'[data-combat-recover=\"'+(source.id==='SR'?'short':'long')+'\"]'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 252,
+      "expression": "'[data-generated-prepare=\"'+entry.i+'\"]'"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "line": 396,
+      "expression": "'[data-wild-end]'"
+    }
+  ]
+}

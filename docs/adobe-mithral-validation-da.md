@@ -1,5 +1,7 @@
 # Adobe-sammenligning med Mithral
 
+**Senere brugerbeslutning, 9. november 2026:** Adobe bliver eneste synlige visning, mens den gamle kode og popup-komponenterne bevares. Kravene nedenfor om afkobling gælder fortsat før sletning af Standard-koden; de blokerer ikke skjulning af visningsvælgeren.
+
 Reference: brugerens udfyldte **MPMB v12.999 (Printer Friendly)**, modtaget 9. november 2026. Seks aktive sider og 2.125 formularwidgets i denne fil. Antallet omfatter også skjulte/gentagne controls og er ikke et mål for funktionsdækning. PDF, indlejret Acrobat-kode, personlige noter og fulde regeltekster indgår ikke i repoet.
 
 Websidernes eksisterende grafik er fra **MPMB v13.0.4**, mens den udfyldte reference er v12.999. Layoutforskelle skal registreres med de to versioner; webarket er ikke en pixelidentisk kopi af den vedhæftede fil.

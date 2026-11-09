@@ -1,3 +1,7 @@
+// Retained Standard controls are explicitly enabled only in legacy regression fixtures.
+function testEnableLegacyAdobeView(){if(typeof CharacterAdobeView==='undefined'||window.testOriginalAdobeInstall)return;window.testOriginalAdobeInstall=CharacterAdobeView.install;CharacterAdobeView.install=options=>testOriginalAdobeInstall({...options,allowStandard:true});}
+testEnableLegacyAdobeView();
+document.addEventListener('load',event=>{if(event.target?.tagName==='SCRIPT'&&/character-adobe-view\.js(?:[?]|$)/.test(event.target.src))testEnableLegacyAdobeView();},true);
 let fixtureItems=[],fixtureInventory=[],fixtureSupply={};
 loadItemsFromFirestore=async()=>{}; // Catalogue data is explicitly seeded below; loader behavior has its own browser coverage.
 markCatalogChanged=async()=>{};loadDashboardCharacters=async()=>{};observePendingImages=()=>{};

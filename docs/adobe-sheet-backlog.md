@@ -173,3 +173,9 @@ Players can also create private custom feats on their own character. A custom fe
 Hover, focus or click Height or Weight in either sheet presentation now shows read-only adult random-table guidance in centimetres/kilograms and feet/inches/pounds. The helper uses only numeric source-table facts; if the selected printing has no matching table it identifies an earlier-printing reference, and if no verified table exists it says so without inventing a range. It never restricts what the player may enter.
 
 Coverage includes level-1 selection beyond normal budgets and unmet prerequisites with actual effects, repeatable choices, private homebrew create/edit/delete boundaries, retained resources/private save/reopen, Standard/Adobe parity, cross-edition browsing, transactional Cancel, live DM catalogue blocks, retained hidden selections, race-table conversions/fallbacks and mobile accessibility.
+
+## Adobe som eneste tilgængelige visning
+
+Brugerbeslutning 9. november 2026: skjul valget af Standard og åbn altid karakterarket i Adobe. Bevar Standard-renderere, formularer, styles, session, gemning og de komponenter, som Adobe-popups bruger. En tidligere gemt Standard-præference skal ikke åbne den gamle visning.
+
+**Backlog:** Gennemgå senere den gamle visning som vedligeholdelsesreference. Brug [popup-kortlægningen](adobe-inventory/popups-da.md) til at vurdere, om en intern referencevisning skal genindføres, eller om komponenterne skal afkobles. Den gamle kode må først slettes efter særskilt gennemgang og test af alle popup-afhængigheder. Dette punkt genindfører ikke et synligt visningsvalg for spillere.
