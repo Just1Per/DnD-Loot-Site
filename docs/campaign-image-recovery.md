@@ -28,17 +28,33 @@ Only explicitly player-visible campaign items are eligible. Existing campaign im
 
 **Preparation is not permission to apply.** Review the summary and private plan first. A recovery copy is readable by the campaign's existing active members under the current Storage rules, including players. It is no longer restricted to the owner’s private archive. The destination bucket must have no `allUsers` or `allAuthenticatedUsers` IAM bindings, including conditional bindings. No new rules, indexes or bucket-policy deployment is part of this change.
 
+Before Apply, the following **local-only** check can locate the saved plan by its exact checksum. This avoids copying a long Windows path or assigning a CMD environment variable:
+
+```cmd
+node scripts/recover-campaign-item-images.mjs --check-plan auto --confirm-plan "SHA256_FROM_PREPARATION"
+```
+
+It reads only protected local recovery-plan files, checks the exact checksum, format and expiry, and reports `check: "local-plan-only"`, `planFileFound`, `planHashMatches`, `planUnexpired` and zero production writes. It does not initialize Firebase, re-read production metadata or verify image bytes. Auto searches only the existing private ImageRecovery directory, with at most 100 UUID plan folders. It refuses links, insecure folders and duplicate matches; it never guesses the newest plan or searches Downloads/other accounts. The plan remains unchanged, so plans prepared by #253 remain usable until their original expiration.
+
 Only the local operator can execute Apply, using their existing credentials with object read/create permissions. The saved plan expires after 24 hours; re-prepare after expiration or any campaign/item/source change. The project, bucket and destination are pinned by the plan and cannot be replaced by Apply flags.
 
 ```cmd
-node scripts/recover-campaign-item-images.mjs --apply-plan "ABSOLUTE_PRIVATE_PLAN_PATH" --confirm-plan "SHA256_FROM_PREPARATION" --acknowledge-campaign-member-access yes
+node scripts/recover-campaign-item-images.mjs --apply-plan auto --confirm-plan "SHA256_FROM_PREPARATION" --acknowledge-campaign-member-access yes
 ```
+
+Replace `SHA256_FROM_PREPARATION` with the exact checksum printed by your own preparation. The same `auto` selector uses that checksum to find one original private plan, then runs every existing Apply safeguard. An absolute private plan path is still accepted in place of `auto`; no `set /p` step is required.
 
 This is a **production Storage write** when run against the production project. The assistant does not run it or perform a deployment/production migration. It is provided for a later explicit operator decision.
 
 Apply rechecks the campaign and exact item version/visibility, verifies archive generation/metageneration and bounded downloaded bytes against the SHA-256 and PNG/JPEG/WebP signature, then creates a new destination with `ifGenerationMatch: 0`. Non-uniform buckets use an explicit private ACL for the new object; uniform buckets omit object ACLs. New metadata is limited to content type, private/no-store caching and attributable recovery-plan/byte checksums. Source download tokens and metadata are not copied.
 
 After creation, the copy is downloaded/checksummed and anonymous GCS/Firebase media HEAD requests must both return 401/403. A 404 is not accepted as privacy evidence. Campaign/item checks run again. These are separate Storage/Firestore operations, not a cross-service transaction: an interruption, concurrent edit or failed post-create verification can leave new copies. The tool stops, does not silently roll back/delete anything, and does not claim the batch succeeded. Keep the private plan for review. A retry with the same still-valid plan accepts only an existing tokenless copy tagged with that exact plan and byte checksum, re-verifies bytes/privacy, and never overwrites an unrelated destination.
+
+## Failure reports
+
+Failures now print redacted JSON with the last controlled stage, an error category and counts of attempted/completed Storage creates. A missing local plan reports `PLAN_FILE_NOT_FOUND` or `PLAN_NOT_FOUND` before Firebase is initialized. Expired plans report `PLAN_EXPIRED`; duplicate auto matches report `PLAN_AMBIGUOUS`. Missing Apply acknowledgement is rejected before reading any plan.
+
+When no create was attempted, the report includes `productionWrites: 0`. After an attempted create, a failed/ambiguous response can still have left a copy, so that zero-write claim is deliberately omitted and `mayHaveCreatedCopies: true` is reported. Completed creates remain counted if a later checksum/privacy check fails. Keep the original plan for review and safe retry; do not assume a stopped command rolled back. No file paths, source IDs, credentials, raw provider error messages or response bodies are logged. The stages/counts describe this invocation, not earlier attempts.
 
 ## Browser behavior and rules
 
@@ -49,7 +65,7 @@ The website code must be released through the normal user-controlled merge proce
 ## Validation
 
 ```sh
-node --test tests/campaign-image-recovery.cjs tests/campaign-image-recovery-sdk.cjs tests/campaign-item-image-diagnostic.cjs tests/runtime-cleanup.cjs
+node --test tests/campaign-image-recovery.cjs tests/campaign-image-recovery-sdk.cjs tests/campaign-image-recovery-feedback.cjs tests/campaign-item-image-diagnostic.cjs tests/runtime-cleanup.cjs
 npm --prefix tests run test:campaign-item-images
 npm --prefix tests run test:reviewed-catalogue
 npm --prefix tests run test:packaging
