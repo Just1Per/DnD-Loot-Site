@@ -1,0 +1,11 @@
+{
+  "name": "campaignatlas-test-hosting",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "firebase-tools": "14.27.0"
+  }
+}

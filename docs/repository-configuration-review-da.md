@@ -1,5 +1,7 @@
 # Oprydning og konfiguration — første gennemgang
 
+Opdatering 10. november: dependency-opdelingen er gennemført; se [profiler, installation og kørsel](test-dependency-profiles-da.md).
+
 Måling: 9. november 2026, udgangspunkt `cb6d431` på main. Dette er en gennemgang af repoet og dets lokale pakke-/testopsætning. Firebase-dokumenter, brugerdata og publicerede operatorpakker ændres ikke.
 
 ## Fund og udførte forbedringer
@@ -31,12 +33,12 @@ En SHA-256-gennemgang af data-/JavaScript-filer over 1 KB fandt ingen byte-ident
 
 ## Sådan køres testene
 
-- Hele den eksisterende sekvens: `npm --prefix tests run test:adobe-connected`
-- Én CI-del lokalt: `npm --prefix tests run test:adobe-connected -- --shard 1/3`
+- Hele den eksisterende sekvens: `npm --prefix tests run with -- browser npm --prefix tests run test:adobe-connected`
+- Én CI-del lokalt: `npm --prefix tests run with -- browser npm --prefix tests run test:adobe-connected -- --shard 1/3`
 - Se delens filer uden at starte browseren: samme kommando med `--list`.
 - Tilføj eller flyt en suite i `tests/adobe-connected-suites.json` — ikke i flere workflow-kommandolinjer.
-- Kontrollér partition/CLI og workflow-tilslutning: `node --test tests/adobe-suite-runner.cjs`.
-- Kontrollér den offentlige pakkes indhold uden deploy: `npm --prefix tests run test:packaging`.
+- Kontrollér partition/CLI og workflow-tilslutning: `npm --prefix tests run with -- "core,browser" node --test tests/adobe-suite-runner.cjs`.
+- Kontrollér den offentlige pakkes indhold uden deploy: `npm --prefix tests run with -- hosting npm --prefix tests run test:packaging`.
 
 Shards køres på separate GitHub-runnere. Tre browserprocesser på samme udviklingsmaskine kan være langsommere på grund af CPU-/RAM-konkurrence. Workflowet gør Adobe-gruppen uafhængig af engine/DOM og giver kortere delgrupper; den samlede wall time skal sammenlignes på faktiske CI-kørsler, også med runner-kø og installationer.
 
@@ -45,7 +47,7 @@ Den eksisterende offline startup-smoketest blev også kørt: seks starter nåede
 ## Næste oprydningspunkter
 
 1. Sammenlign CI-varigheder og eventuel skævhed mellem shards; brug de nye fil-timings før en anden fordeling vælges.
-2. Kortlæg dependency-behov pr. testrolle. Browserjobs installerer fortsat hele tests-pakken med Firebase-emulatorværktøjer; en separat browserpakke kan reducere installationer, men kræver kontrol af alle fixture-imports og lockfiles.
+2. Dependency-opdelingen er gennemført 10. november med fire profiler og egne lockfiles. Følg de faktiske installationstider og brug rollekontrollerne ved nye imports.
 3. Mål reel landing → login → kampagne → character sheet/Library på preview med netværk og cache adskilt. Den eksisterende offline startup-benchmark kan ikke stå alene som produktmåling.
 4. Gennemgå katalogdata for semantisk overlap og mulighed for versionerede, behovsstyrede dele. Bevar begge editions, referencer, source-id'er og eksisterende gemte karakterer.
 5. Saml de aktive dokumentationsindgange og marker historiske checkpoints. Bevar beslutninger, audits, attribution, reproducerbare generatorer og recovery-materiale.

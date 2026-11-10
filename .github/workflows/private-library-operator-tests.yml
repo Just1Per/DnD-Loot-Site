@@ -7,6 +7,9 @@ on:
       - 'functions/package-lock.json'
       - 'scripts/**'
       - 'tests/private-output.cjs'
+      - 'tests/dependencies/**'
+      - 'tests/test-dependency-profiles.cjs'
+      - 'tests/package.json'
       - 'tests/campaign-image-recovery.cjs'
       - 'tests/campaign-image-recovery-sdk.cjs'
       - 'tests/campaign-image-recovery-feedback.cjs'
@@ -32,6 +35,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Install lightweight dependency-profile checks
+        run: node scripts/test-profiles.cjs install core browser
+      - name: Verify isolated profiles on Linux and Windows
+        run: node scripts/test-profiles.cjs run "core,browser" -- node --test tests/test-dependency-profiles.cjs
       - name: Verify retained local operator SDK dependencies
         run: npm ci --prefix functions --ignore-scripts --no-audit --no-fund
       - name: Load operator Admin SDK without credentials or network requests

@@ -3,7 +3,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {spawnSync}=require('node:child_process');
 const root=path.resolve(__dirname,'..');
-const acorn=require(path.join(root,'tests/node_modules/acorn'));
+const acorn=require('acorn');
 const propertyName=p=>p.computed?null:p.key?.name??p.key?.value;
 const field=(object,key)=>object?.properties?.find(p=>p.type==='Property'&&p.kind==='init'&&propertyName(p)===key)?.value;
 const literal=node=>node?.type==='Literal'?node.value:undefined;

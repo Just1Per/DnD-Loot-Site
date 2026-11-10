@@ -1,6 +1,6 @@
 'use strict';
 // Static declaration/route inventory. No Acrobat code or browser-side rule entries.
-const fs=require('node:fs'),path=require('node:path'),acorn=require('../tests/node_modules/acorn');
+const fs=require('node:fs'),path=require('node:path'),acorn=require('acorn');
 const root=path.resolve(__dirname,'..');
 function walk(node,visit){if(!node||typeof node!=='object')return;visit(node);for(const [key,value]of Object.entries(node))if(key!=='loc'){if(Array.isArray(value))value.forEach(n=>walk(n,visit));else if(value&&typeof value==='object')walk(value,visit);}}
 const parse=text=>acorn.parse(text,{ecmaVersion:'latest',sourceType:'script',locations:true});

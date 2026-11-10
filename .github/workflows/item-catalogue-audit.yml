@@ -21,6 +21,8 @@ on:
       - 'tests/item-catalogue-decisions.cjs'
       - 'tests/item-catalogue-review-browser.cjs'
       - '.github/workflows/item-catalogue-audit.yml'
+      - 'tests/dependencies/browser/**'
+      - 'scripts/test-profiles.cjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -34,11 +36,11 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: tests/package-lock.json
+          cache-dependency-path: tests/dependencies/browser/package-lock.json
       - name: Install review browser dependencies
-        run: npm ci --prefix tests --no-audit --no-fund
+        run: node scripts/test-profiles.cjs install browser
       - name: Install Chromium
-        run: npx --prefix tests playwright install --with-deps chromium
+        run: node scripts/test-profiles.cjs run browser -- playwright install --with-deps chromium
       - name: Verify the self-contained review view
         run: node --test tests/item-catalogue-review-browser.cjs
   audit:
