@@ -19,6 +19,8 @@ name: Campaign workspace checks
     - data/rules/monsters.json
     - tests/**
     - scripts/run-adobe-connected.cjs
+    - scripts/test-profiles.cjs
+    - scripts/audit-adobe-popups.cjs
     - scripts/campaign-image-cors.json
     - scripts/diagnose-campaign-item-images.mjs
     - scripts/campaign-image-recovery.mjs
@@ -46,16 +48,16 @@ jobs:
       with:
         node-version: 22
         cache: npm
-        cache-dependency-path: tests/package-lock.json
+        cache-dependency-path: |
+          tests/dependencies/core/package-lock.json
+          tests/dependencies/browser/package-lock.json
     - name: Install test dependencies
-      run: npm ci --prefix tests
+      run: node scripts/test-profiles.cjs install core browser
     - name: Static Adobe inventory uses metadata only
       timeout-minutes: 2
       run: |
         python -m pip install --disable-pip-version-check pypdf==6.10.0
         python tests/adobe-pdf-inventory.py
-    - name: Hosting runtime and operational file boundaries
-      run: npm --prefix tests run test:packaging
     - name: Verify Ubuntu package setup
       run: node --test tests/ci-apt-setup.cjs
     - name: Prepare bounded Ubuntu package downloads
@@ -63,7 +65,7 @@ jobs:
       run: sudo bash .github/scripts/prepare-browser-apt.sh
     - name: Install Chromium
       timeout-minutes: 6
-      run: npx --prefix tests playwright install --with-deps chromium
+      run: node scripts/test-profiles.cjs run browser -- playwright install --with-deps chromium
     - name: Install PDF text verification
       timeout-minutes: 3
       run: sudo apt-get install -y poppler-utils
@@ -122,15 +124,15 @@ jobs:
       with:
         node-version: 22
         cache: npm
-        cache-dependency-path: tests/package-lock.json
+        cache-dependency-path: tests/dependencies/browser/package-lock.json
     - name: Install test dependencies
-      run: npm ci --prefix tests
+      run: node scripts/test-profiles.cjs install browser
     - name: Prepare bounded Ubuntu package downloads
       timeout-minutes: 1
       run: sudo bash .github/scripts/prepare-browser-apt.sh
     - name: Install Chromium
       timeout-minutes: 6
-      run: npx --prefix tests playwright install --with-deps chromium
+      run: node scripts/test-profiles.cjs run browser -- playwright install --with-deps chromium
     - name: Install PDF text verification
       timeout-minutes: 3
       run: sudo apt-get install -y poppler-utils
@@ -158,9 +160,9 @@ jobs:
       with:
         node-version: 22
         cache: npm
-        cache-dependency-path: tests/package-lock.json
+        cache-dependency-path: tests/dependencies/browser/package-lock.json
     - name: Install test dependencies
-      run: npm ci --prefix tests
+      run: node scripts/test-profiles.cjs install browser
     - name: Verify Ubuntu package setup
       run: node --test tests/ci-apt-setup.cjs
     - name: Prepare bounded Ubuntu package downloads
@@ -168,7 +170,7 @@ jobs:
       run: sudo bash .github/scripts/prepare-browser-apt.sh
     - name: Install Chromium
       timeout-minutes: 6
-      run: npx --prefix tests playwright install --with-deps chromium
+      run: node scripts/test-profiles.cjs run browser -- playwright install --with-deps chromium
     - name: Install PDF text verification
       timeout-minutes: 3
       run: sudo apt-get install -y poppler-utils
@@ -320,9 +322,9 @@ jobs:
       with:
         node-version: 22
         cache: npm
-        cache-dependency-path: tests/package-lock.json
+        cache-dependency-path: tests/dependencies/emulator/package-lock.json
     - name: Install test dependencies
-      run: npm ci --prefix tests
+      run: node scripts/test-profiles.cjs install emulator
     - uses: actions/setup-java@v4
       with:
         distribution: temurin
@@ -358,6 +360,21 @@ jobs:
       run: npm --prefix tests run test:rules
     - name: Firestore and private image permissions
       run: npm --prefix tests run test:workspace-rules
+  packaging:
+    name: Hosting file boundaries
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: tests/dependencies/hosting/package-lock.json
+    - name: Install Hosting selector dependencies
+      run: node scripts/test-profiles.cjs install hosting
+    - name: Verify actual Hosting file selection
+      run: npm --prefix tests run test:packaging
   workspace:
     runs-on: ubuntu-latest
     needs:
@@ -365,6 +382,7 @@ jobs:
     - browser
     - permissions
     - adobe
+    - packaging
     if: always()
     timeout-minutes: 2
     steps:
@@ -374,9 +392,10 @@ jobs:
         BROWSER_RESULT: ${{ needs.browser.result }}
         PERMISSION_RESULT: ${{ needs.permissions.result }}
         ADOBE_RESULT: ${{ needs.adobe.result }}
+        PACKAGING_RESULT: ${{ needs.packaging.result }}
       run: |
-        if [[ "$ENGINE_RESULT" != success || "$BROWSER_RESULT" != success || "$PERMISSION_RESULT" != success || "$ADOBE_RESULT" != success ]]; then
-          echo "::error::Regression groups: engines=$ENGINE_RESULT, browser=$BROWSER_RESULT, permissions=$PERMISSION_RESULT, adobe=$ADOBE_RESULT"
+        if [[ "$ENGINE_RESULT" != success || "$BROWSER_RESULT" != success || "$PERMISSION_RESULT" != success || "$ADOBE_RESULT" != success || "$PACKAGING_RESULT" != success ]]; then
+          echo "::error::Regression groups: engines=$ENGINE_RESULT, browser=$BROWSER_RESULT, permissions=$PERMISSION_RESULT, adobe=$ADOBE_RESULT, packaging=$PACKAGING_RESULT"
           exit 1
         fi
-        echo "All engine, browser, Adobe shard and permission checks passed."
+        echo "All engine, browser, Adobe shard, permission and Hosting boundary checks passed."

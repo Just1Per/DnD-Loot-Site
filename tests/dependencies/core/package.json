@@ -1,0 +1,12 @@
+{
+  "name": "campaignatlas-test-core",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "acorn": "8.18.0",
+    "linkedom": "0.18.13"
+  }
+}

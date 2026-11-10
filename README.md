@@ -20,26 +20,29 @@ Use Node 22/24 and Java 21 for Firebase emulators. Install the locked test depen
 
 ```sh
 npm ci --prefix tests
-npx --prefix tests playwright install --with-deps chromium
-npm --prefix tests test
+node scripts/test-profiles.cjs install core browser
+npm --prefix tests run with -- browser playwright install --with-deps chromium
+npm --prefix tests run with -- "core,browser" npm --prefix tests test
 ```
 
-For focused UI checks:
+Dependencies are isolated by role; see [test dependency profiles](docs/test-dependency-profiles-da.md) for a smaller browser-only installation, Windows usage and emulator requirements. Use `npm --prefix tests run with -- browser npm --prefix tests run <script>` for focused UI checks:
+
+For example:
 
 ```sh
-npm --prefix tests run test:auth-cleanup
-npm --prefix tests run test:character-workspace
-npm --prefix tests run test:campaign-journal
-npm --prefix tests run test:player-images
+npm --prefix tests run with -- "core,browser" npm --prefix tests run test:auth-cleanup
+npm --prefix tests run with -- browser npm --prefix tests run test:character-workspace
+npm --prefix tests run with -- browser npm --prefix tests run test:campaign-journal
+npm --prefix tests run with -- browser npm --prefix tests run test:player-images
 ```
 
 Browser fixtures use synthetic data, not production accounts. The campaign workspace workflow runs the broader browser, print and permission suites. Its print checks require Poppler (`pdftotext`). Emulator suites use project `demo-vault-test`:
 
 ```sh
-npm --prefix tests run test:workspace-rules
+npm --prefix tests run with -- emulator npm --prefix tests run test:workspace-rules
 ```
 
-Adobe browser suites use one manifest (`tests/adobe-connected-suites.json`). Run all with `npm --prefix tests run test:adobe-connected`, or select a CI shard with `-- --shard 1/3`; add `--list` to inspect its files. CI runs all three shards on separate runners and requires every shard to pass. See the [current configuration review](docs/repository-configuration-review-da.md) for measured sizes, Hosting boundaries and follow-up work.
+Adobe browser suites use one manifest (`tests/adobe-connected-suites.json`). Run all with `npm --prefix tests run with -- browser npm --prefix tests run test:adobe-connected`, or select a CI shard with `-- --shard 1/3`; add `--list` to inspect its files. CI runs all three shards on separate runners and requires every shard to pass. See the [current configuration review](docs/repository-configuration-review-da.md) for measured sizes, Hosting boundaries and follow-up work.
 
 The additional package scripts under `tests/package.json` select individual features. Use the existing emulator configuration and project flags rather than production credentials.
 
