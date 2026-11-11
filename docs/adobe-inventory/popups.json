@@ -226,7 +226,7 @@
     {
       "id": "adobeSpecialFeaturesMenu",
       "file": "js/modules/character-adobe-view.js",
-      "line": 146,
+      "line": 148,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Show extra features",
@@ -239,7 +239,7 @@
     {
       "id": "adobeSharedEditor",
       "file": "js/modules/character-adobe-view.js",
-      "line": 210,
+      "line": 212,
       "kind": "dialog",
       "category": "moves-standard-body",
       "entry": "Alle aktive bridge-routes i routetabellen",
@@ -274,7 +274,7 @@
     {
       "id": "adobeNotesOptions",
       "file": "js/modules/character-adobe-view.js",
-      "line": 308,
+      "line": 310,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Notes.Options",
@@ -835,97 +835,97 @@
   "editorCalls": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 107,
+      "line": 109,
       "command": "dynamic",
       "expression": "row.descriptor.command"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 145,
+      "line": 147,
       "command": "dynamic",
       "expression": "id"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 172,
+      "line": 174,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 172,
+      "line": 174,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 172,
+      "line": 174,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 172,
+      "line": 174,
       "command": "classes",
       "expression": "'classes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 172,
+      "line": 174,
       "command": "story",
       "expression": "'story'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 172,
+      "line": 174,
       "command": "feats",
       "expression": "'feats'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 172,
+      "line": 174,
       "command": "dynamic",
       "expression": "cmd"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 214,
+      "line": 216,
       "command": "conditions",
       "expression": "'conditions'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 313,
+      "line": 315,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 391,
+      "line": 393,
       "command": "spells",
       "expression": "'spells'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 396,
+      "line": 398,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 397,
+      "line": 399,
       "command": "dynamic",
       "expression": "editorChoice.value"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 407,
+      "line": 409,
       "command": "dynamic",
       "expression": "st.editor"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 427,
+      "line": 429,
       "command": "dynamic",
       "expression": "key"
     },
@@ -999,17 +999,17 @@
   "sharedCommands": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 172,
+      "line": 174,
       "expression": "'[data-combat-recover=\"'+(source.id==='SR'?'short':'long')+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 252,
+      "line": 254,
       "expression": "'[data-generated-prepare=\"'+entry.i+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 396,
+      "line": 398,
       "expression": "'[data-wild-end]'"
     }
   ]
