@@ -101,3 +101,11 @@
 @media print{.adobe-paper-topbar,.adobe-paper-controls{display:none!important}}
 
 .field[data-click-editor] input{cursor:pointer}
+
+.adobe-page-notice{position:sticky;top:var(--adobe-header-offset,8px);z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;margin:0 0 12px;border:1px solid #b6a27f;border-radius:7px;background:#fff7e6;box-shadow:0 3px 12px #33221115;font:14px/1.4 Arial,sans-serif}
+.adobe-page-notice button{min-height:44px;min-width:64px;border:1px solid #a98862;border-radius:5px;background:white;color:#642829;font:600 14px Arial,sans-serif;cursor:pointer}
+.adobe-page-notice button:focus-visible{outline:3px solid #2169a8;outline-offset:2px}
+@media(max-width:480px){.adobe-paper-topbar{gap:8px;padding:6px}.adobe-paper-controls{gap:2px}.adobe-paper-topbar .adobe-continuous-heading{font-size:14px}.adobe-page-notice{font-size:13px}}
+@media print{.adobe-page-notice{display:none!important}}
+
+.adobe-paper-topbar .adobe-continuous-heading{min-width:0;overflow-wrap:anywhere}

@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261111-background-features-v73";
+const ASSET_VERSION = "20261111-manage-pages-v75";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -173,6 +173,7 @@ const FEATURE_FILES = [
   "./modules/character-rest-recovery.js",
   "./modules/character-rule-choice-data.js",
   "./modules/character-subclass-planning.js",
+  "./modules/character-adobe-stack-plan.js",
   "./modules/character-adobe-engine.js",
   "./modules/character-spellcasting.js",
   "./modules/images.js",
@@ -302,7 +303,6 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-adobe-spell-ui.js",
     "./modules/character-paper-weight-ui.js",
     "./modules/character-adobe-choice-ui.js",
-    "./modules/character-adobe-stack-plan.js",
     "./modules/character-adobe-stack-ui.js",
     "./modules/character-adobe-view.js",
     "./modules/character-creature-ui.js",

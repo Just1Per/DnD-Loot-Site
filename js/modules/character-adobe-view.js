@@ -1,7 +1,7 @@
 'use strict';
 /* Alternate rendering of the current session. No SDK, storage or second engine. */
 var CharacterAdobeView=(()=>{
- const VERSION='20261102-adobe-sheet-v72',assets=new Map(),sessions=new WeakMap();let current=null;
+ const VERSION='20261111-manage-pages-v75',assets=new Map(),sessions=new WeakMap();let current=null;
  const SPELL_CAPACITY={front:55,more:70};let fieldMeasure=null;try{fieldMeasure=document.createElement('canvas').getContext?.('2d')||null;}catch{}
  const xpAdditionError=()=>document.getElementById('sheetXPAmount')?.getAttribute('aria-invalid')==='true'?document.getElementById('sheetXPAddStatus')?.textContent||'Correct the unapplied XP amount.':'';
  const option=(text,value)=>Object.assign(document.createElement('option'),{textContent:text,value});
@@ -350,7 +350,7 @@ var CharacterAdobeView=(()=>{
   const c=current;if(!active()||!c.page||c.printBusy||!valid(c)||closeEditor()===false)return;
   c.printBusy=true;c.shadow.getElementById('adobePrint').disabled=true;c.shadow.getElementById('adobePrintConnected').disabled=true;clearPrintBatch(c);
   try{
-   readSheetForm();const generation=c.generation,session=c.session,data=structuredClone(session.data),identity={...session.identity},loot=structuredClone(sheetEquipmentLoot()),derived=CharacterSheetModel.derive(data,identity.level,loot),plans=CharacterAdobeStackPlan.merge(printPlans(data,derived,loot),c.continuous?.extraPlans()||[]),batch=document.createElement('div');batch.className='adobe-print-batch';batch.setAttribute('aria-hidden','true');
+   readSheetForm();const generation=c.generation,session=c.session,data=structuredClone(session.data),identity={...session.identity},loot=structuredClone(sheetEquipmentLoot()),derived=CharacterSheetModel.derive(data,identity.level,loot),plans=CharacterAdobeStackPlan.visible(CharacterAdobeStackPlan.merge(printPlans(data,derived,loot),c.continuous?.extraPlans()||[]),data.adobe.pageLayout,{printing:true}),batch=document.createElement('div');batch.className='adobe-print-batch';batch.setAttribute('aria-hidden','true');
    const isCurrent=()=>c===current&&active()&&session===sheetSession&&session.uid===auth.currentUser?.uid&&session.campaignId===activeCampaign?.id&&generation===c.generation;
    notice('Preparing '+plans.length+' connected pages for printing…');
    if(plans.some(p=>p.page==='template-WSfront')&&!await CharacterWildShapeUI.load())throw Error('Wild Shape references could not be loaded.');

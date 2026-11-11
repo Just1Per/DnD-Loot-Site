@@ -28,6 +28,7 @@
     "adobe-edition-options-browser.cjs",
     "adobe-continuous-browser.cjs",
     "adobe-page-choices-browser.cjs",
+    "adobe-page-layout-browser.cjs",
     "adobe-connected-sheet-browser.cjs",
     "adobe-spell-pages-browser.cjs",
     "adobe-items-browser.cjs",

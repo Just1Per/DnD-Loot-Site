@@ -1144,3 +1144,25 @@ dialog.adobe-flyout-host{position:fixed!important;inset:0!important;width:100vw!
 
 /* Shared, read-only body-size reference in the sheet's own dialog layer. */
 .character-size-guidance{position:fixed;z-index:1000;max-width:min(360px,calc(100vw - 16px));max-height:calc(100vh - 16px);overflow:auto;padding:12px 14px;border:1px solid #b69a68;border-radius:6px;background:#fffaf0;color:#30251d;box-shadow:0 6px 22px #0003;font:14px/1.45 Arial,sans-serif;pointer-events:auto}.character-size-guidance strong{display:block;margin-bottom:6px}.character-size-guidance p{margin:5px 0}@media print{.character-size-guidance{display:none!important}}
+
+/* Page layout choices share the sheet's paper palette and stay usable on touch screens. */
+.adobe-page-tabs{display:flex;gap:6px;padding:5px;margin:18px 0;background:#efe6d7;border-radius:8px}
+.adobe-page-tabs button{flex:1;min-height:44px!important;border-color:transparent!important;background:transparent!important}
+.adobe-page-tabs button[aria-pressed=true]{background:white!important;border-color:#c7b28e!important;color:#642829!important;font-weight:700;box-shadow:0 1px 3px #33221112}
+.adobe-page-visibility{display:grid;border:1px solid #d8c8ae;border-radius:8px;overflow:hidden;background:white}
+.adobe-page-visibility-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;min-height:64px;cursor:pointer}
+.adobe-page-visibility-row+.adobe-page-visibility-row{border-top:1px solid #eee4d4}
+.adobe-page-visibility-row>span{min-width:0;overflow-wrap:anywhere}
+.adobe-page-visibility-row strong,.adobe-page-visibility-row small{display:block}
+.adobe-page-visibility-row strong{font-size:14px;color:#493729}
+.adobe-page-visibility-row small{font-size:12px;color:#706354;margin-top:3px}
+.adobe-page-visibility-row input{appearance:none;-webkit-appearance:none;flex:0 0 42px;width:42px;height:24px;min-height:24px;margin:0;border:1px solid #958a7c;border-radius:20px;background:#d6cfc4;cursor:pointer;position:relative}
+.adobe-page-visibility-row input:before{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:white;box-shadow:0 1px 3px #0003}
+.adobe-page-visibility-row input:checked{background:#71342f;border-color:#71342f}
+.adobe-page-visibility-row input:checked:before{left:21px}
+.adobe-page-visibility-row input:focus-visible{outline:3px solid #2169a8;outline-offset:3px}
+.adobe-page-visibility-row input:disabled{opacity:.5;cursor:default}
+.adobe-pages-print{display:flex;align-items:center;gap:10px;min-height:44px;margin-top:16px;font-weight:600;cursor:pointer}
+.adobe-pages-print input{flex:0 0 18px;width:18px;height:18px;min-height:18px;margin:0;accent-color:#71342f}
+.adobe-pages-print+p{font-size:12px;color:#706354;margin:0}
+@media(forced-colors:active){.adobe-page-visibility-row input{appearance:auto;-webkit-appearance:auto}.adobe-page-visibility-row input:before{display:none}}
