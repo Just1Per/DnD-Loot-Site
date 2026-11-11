@@ -31,7 +31,12 @@ const errors=[];
  await page.evaluate(()=>{sheetSession.data.adobe.useExperience=true;sheetSession.data.experience=355000;sheetSession.identity.level=1;renderCharacterSheet();selectSheetTab('spells');openSpellInformation({index:0})});assert.match(await page.locator('#sheetSpellInformation [data-class-spell-effect]').textContent(),/1d10 Force/,'XP-based level applies to saved spell information');await page.locator('[aria-label="Close spell information"]').click();await page.evaluate(()=>{sheetSession.data.adobe.useExperience=false;sheetSession.identity.level=20;renderCharacterSheet();selectSheetTab('spells')});
  await page.evaluate(()=>CharacterSheetPrint.prepare(new Set(['combat','spells','overview'])));assert.match(await page.locator('[data-paper-section=combat]').textContent(),/No attack roll/);assert.match(await page.locator('[data-paper-section=spells]').textContent(),/1d10 Force/);await page.evaluate(()=>CharacterSheetPrint.clear());
  await page.evaluate(()=>{sheetSession.data.build.edition='2014';renderCharacterSheet();selectSheetTab('combat')});assert.equal(await resource('hunters-mark').count(),0);assert.equal(await resource('tireless').count(),0);await resource('foe-slayer').click();assert.equal(await output('Foe Slayer').textContent(),'0 / 1');await page.evaluate(()=>{window.__turnClicks=[];for(const type of ['pointerdown','mousedown','mouseup','click'])document.addEventListener(type,event=>__turnClicks.push({type,target:event.target.outerHTML.slice(0,260)}),true)});
- await page.locator('[data-combat-recover=turn]').click();
+ // Spending the use rerenders the panel; asynchronous help badges change its height.
+ // Wait for that layout, then keep the real mouse click away from the viewport edge.
+ await page.locator('#sheetFeatResources h4 .vault-help-badge').waitFor({state:'visible'});
+ const turn=page.locator('[data-combat-recover=turn]');
+ await turn.evaluate(node=>node.scrollIntoView({block:'center',behavior:'instant'}));
+ await turn.click();
  const restored=await output('Foe Slayer').textContent();
  if(restored!=='1 / 1'){
   console.log('Turn action diagnostics: '+JSON.stringify(await page.evaluate(()=>{const b=document.querySelector('[data-combat-recover=turn]'),r=b.getBoundingClientRect(),tip=document.getElementById('vaultContextHelp');return{clicks:__turnClicks,button:r.toJSON(),viewport:[innerWidth,innerHeight],hit:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.outerHTML.slice(0,260),tip:{hidden:tip.hidden,pinned:tip.dataset.pinned,pointer:getComputedStyle(tip).pointerEvents},edition:sheetSession.data.build.edition,classes:sheetSession.data.adobe.classLevels,choice:sheetSession.data.adobe.classFeatureChoices}})));
