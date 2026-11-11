@@ -2,7 +2,7 @@
 
 Genereret med `node scripts/audit-adobe-popups.cjs`. Dette er en statisk kortlægning, ikke et løfte om fuld funktionel paritet. Gentagne IDs er samme popup-familie. Testreferencer betyder, at testen nævner id’et; de er ikke i sig selv et bestået testresultat.
 
-Der er 43 registrerede popup-familier og 27 editor-routes.
+Der er 44 registrerede popup-familier og 27 editor-routes.
 
 ## Popup-familier
 
@@ -22,8 +22,9 @@ Der er 43 registrerede popup-familier og 27 editor-routes.
 | adobeSpellDialog | adobe-dialog | Choose spells, spell-felt/knap, Special features | Native selection draft; bruger casting-engine og fælles spell-rendering. | [character-adobe-spell-ui.js:11](../../js/modules/character-adobe-spell-ui.js#L11) |
 | adobeRaceSpellDialog | adobe-dialog | Generate spell sheet → Race spells | Race-cantrip/ability-valg; fælles session. | [character-adobe-spell-ui.js:78](../../js/modules/character-adobe-spell-ui.js#L78) |
 | adobeSpellSourcesDialog | adobe-dialog | Special features → Generate spell sheet | Viderestiller til class/race/feat-spellvalg. | [character-adobe-spell-ui.js:97](../../js/modules/character-adobe-spell-ui.js#L97) |
-| adobePagesDialog | adobe-dialog | + Add pages | Valg af spell-, companion-, notes- og andre sider. | [character-adobe-stack-ui.js:48](../../js/modules/character-adobe-stack-ui.js#L48) |
-| adobePaperZoomMenu | adobe-menu | Forstørrelsesglas på arket | Bruger fortsat intern #adobeZoom-selector; den skjulte kontrol skal bevares indtil afkobling. | [character-adobe-stack-ui.js:81](../../js/modules/character-adobe-stack-ui.js#L81) |
+| adobePagesDialog | adobe-dialog | Manage pages / Add pages | Valg af spell-, companion-, notes- og andre sider. | [character-adobe-stack-ui.js:67](../../js/modules/character-adobe-stack-ui.js#L67) |
+| adobePaperZoomMenu | adobe-menu | Forstørrelsesglas på arket | Bruger fortsat intern #adobeZoom-selector; den skjulte kontrol skal bevares indtil afkobling. | [character-adobe-stack-ui.js:106](../../js/modules/character-adobe-stack-ui.js#L106) |
+| adobePageActionsMenu | adobe-menu | Page options ved zoom/print → Hide this page / Manage pages | Skjuler en bestemt side uden at slette data; genopretning via Undo eller sideoversigten. | [character-adobe-stack-ui.js:107](../../js/modules/character-adobe-stack-ui.js#L107) |
 | adobeSpecialFeaturesMenu | adobe-menu | Show extra features | Blander native routes og shared bridges; se routetabel. | [character-adobe-view.js:148](../../js/modules/character-adobe-view.js#L148) |
 | adobeSharedEditor | moves-standard-body | Alle aktive bridge-routes i routetabellen | Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning. | [character-adobe-view.js:212](../../js/modules/character-adobe-view.js#L212) |
 | adobeNotesOptions | adobe-dialog | Notes.Options | Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge. | [character-adobe-view.js:310](../../js/modules/character-adobe-view.js#L310) |
