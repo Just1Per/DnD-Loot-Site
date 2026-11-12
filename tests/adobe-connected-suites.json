@@ -10,6 +10,7 @@
     "adobe-hp-flyout-browser.cjs",
     "adobe-paper-controls-browser.cjs",
     "adobe-background-feature-weight-browser.cjs",
+    "adobe-background-clear-browser.cjs",
     "adobe-attack-access-browser.cjs",
     "adobe-skill-hover-browser.cjs",
     "adobe-attack-choice-flyout-browser.cjs",

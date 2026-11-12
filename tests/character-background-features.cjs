@@ -41,3 +41,15 @@ test('edited and intentionally empty 2024 descriptions survive background change
  d.build.background='farmer-2024';d=reopen(d);assert.equal(F.project(d).description,'');assert.equal(F.project(d).edited,true);
  d.build.background='sage-2024';F.describe(d,'Own spell notes.');d=reopen(d);assert.equal(F.project(d).description,'Own spell notes.');
 });
+
+test('clearing a background feature is a persistent empty choice without changing grants and can be selected again',()=>{
+ for(const [edition,background]of [['2014','folk-hero-2014'],['2024','acolyte-2024']]){
+  const d=M.normalize({build:{edition,background}});d.adobe={};const before=JSON.stringify({build:d.build,coins:d.coins,skills:d.skills,origin:M.derive(d,4).effects.originFeats});
+  F.set(d,'');const p=F.project(d);assert.equal(p.selection,'');assert.equal(p.name,'');assert.equal(p.description,'');assert.equal(p.reference,'');assert.ok(F.choices(d).some(o=>o.value===''&&!o.disabled));
+  assert.equal(JSON.stringify({build:d.build,coins:d.coins,skills:d.skills,origin:M.derive(d,4).effects.originFeats}),before);
+  assert.ok(!M.derive(d,4).effects.traits.some(s=>s.startsWith('Rustic Hospitality — background feature')));
+  d.adobe.backgroundFeatures=F.normalize(d.adobe.backgroundFeatures);assert.equal(F.project(d).selection,'');
+  d.build.background='sage-2024';assert.equal(F.project(d).selection,'auto');d.build.background=background;assert.equal(F.project(d).selection,'');
+  F.describe(d,'Notes without a feature name.');assert.equal(F.project(d).description,'Notes without a feature name.');F.set(d,'');assert.equal(F.project(d).description,'');F.set(d,'auto');assert.ok(F.project(d).name);assert.ok(F.project(d).description);
+ }
+});

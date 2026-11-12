@@ -76,6 +76,7 @@
       "notes": "Generisk feltpicker; actual field descriptor afgør effekten.",
       "testReferences": [
         "adobe-armor-choices-browser.cjs",
+        "adobe-background-clear-browser.cjs",
         "adobe-dc-ability-controls-browser.cjs",
         "adobe-editor-dialogs-browser.cjs",
         "adobe-gear-catalog-browser.cjs",
