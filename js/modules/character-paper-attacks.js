@@ -5,11 +5,11 @@ var CharacterPaperAttacks=(()=>{
  function normalize(raw){return Array.from({length:5},(_,i)=>{const row=raw?.[i];return{key:validKey(row?.key)?row.key:'',name:String(row?.name||'').slice(0,200),empty:row?.empty===true};});}
  function candidates(data,derived){
   const sign=n=>(Number(n)>=0?'+':'')+Number(n||0);
-  return [
+  const Combat=globalThis.CharacterFeatCombat||(typeof require==='function'?require('./character-feat-combat'):null);const base=[
    ...(derived.gear.attacks||[]).map(row=>({...row,key:'gear:'+row.id,origin:'gear',entryId:row.id,abilityChoice:derived.gear.entries?.find(entry=>entry.entry.id===row.id)?.choice.ability||'auto',damage:row.damageDice??row.damage,hit:row.attack===null?'—':sign(row.attack),default:row.equipped,notes:[...(row.notes||[]),...(!row.equipped?['In backpack: ready this item before using it.']:[])]})),
    ...(data.attacks||[]).map((raw,i)=>{const row=derived.manualAttacks?.[i]||raw;return({...row,key:row.id?'attack:'+row.id:'legacy-manual:'+i,origin:'manual',index:i,hit:sign(derived.attacks[i]),default:true});}),
-   ...(derived.actions||[]).map((row,i)=>({...row,key:data.actions[i]?.id?'attack:'+data.actions[i].id:'legacy-action:'+i,origin:'action',index:i,damage:row.damageDice??row.damage,default:true}))
-  ];
+   ...(derived.actions||[]).map((row,i)=>({...row,key:data.actions[i]?.id?'attack:'+data.actions[i].id:'legacy-action:'+i,origin:'action',sourceKind:data.actions[i]?.kind,edition:data.build?.edition||'2014',actionRef:data.actions[i]?.ref,actionMode:data.actions[i]?.mode,entryId:data.actions[i]?.kind==='loot'?data.actions[i].ref:undefined,index:i,damage:row.damageDice??row.damage,default:true}))
+  ];return [...base.map(row=>({...row,notes:[...(Array.isArray(row.notes)?row.notes:row.notes?[row.notes]:[]),...(Combat?.notes(data,derived,row,row.origin==='manual'?'manual':row.sourceKind||'weapon')||[])]})),...(Combat?.extraAttacks(data,derived)||[]).map(row=>({...row,damage:row.damageDice??row.damage}))];
  }
  function rows(raw,all){const slots=normalize(raw),reserved=new Set(slots.map(row=>row.key).filter(Boolean)),queue=all.filter(row=>row.default&&!reserved.has(row.key));return slots.map(slot=>slot.empty?null:slot.key?all.find(row=>row.key===slot.key)||{key:slot.key,name:(slot.name||'Saved attack')+' (unavailable)',hit:'—',damage:'',range:'',notes:['This saved source is no longer available. Choose carried gear or another existing attack.'],unavailable:true}:queue.shift()||null);}
  function select(raw,index,key,name,empty=false){if(!Number.isInteger(index)||index<0||index>4||typeof key!=='string'||key&&!validKey(key)||typeof name!=='string'||name.length>200)throw Error('Choose an available paper attack row.');const slots=normalize(raw);slots[index]={key,name,empty:empty===true};return slots;}

@@ -224,9 +224,10 @@ var CharacterEquipment = (() => {
     for(const attack of attacks){
       const entry=entries.find(e=>e.entry.id===attack.id),profile=entry?.profile;
       if(!profile)continue;
+      const crossbowFeat=(stats.feats?.reports||[]).find(r=>r.def.name==='Crossbow Expert'&&r.eligible&&!r.warnings.length&&['PHB','XPHB'].includes(r.def.source)),crossbow=/crossbow$/.test(entry.mechanics.base);if(crossbow&&crossbowFeat&&(crossbowFeat.def.source==='XPHB'||attack.proficient))attack.notes=attack.notes.map(note=>note==='Loading limits attacks.'?'Crossbow Expert: ignores Loading.':note);
       if(styles.some(s=>s.name==='Archery')&&profile.rangeType==='ranged'&&!stats.feats.rangedBonus)attack.attack+=2;
       if(styles.some(s=>s.name==='Dueling')&&profile.rangeType==='melee'&&!profile.props.includes('twoHanded')&&entry.choice.mode!=='twoHanded'&&!entries.some(e=>e.active&&e.entry.id!==attack.id&&e.mechanics.kind==='weapon'))attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>{const total=(sign==='−'?-1:1)*Number(n||0)+2;return dice+(total?' '+(total<0?'−':'+')+' '+Math.abs(total):'');});
-      if(styles.some(s=>s.name==='Two-Weapon Fighting')&&entry.choice.mode==='offhand'&&profile.props.includes('light')&&stats.mods[attack.ability]>0){attack.notes=attack.notes.map(note=>note.replace('positive ability damage omitted.','Fighting Style adds your ability modifier to damage.'));attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>dice+' + '+((sign==='−'?-1:1)*Number(n||0)+stats.mods[attack.ability]));}
+      if((styles.some(s=>s.name==='Two-Weapon Fighting')||crossbow&&crossbowFeat?.def.source==='XPHB')&&entry.choice.mode==='offhand'&&profile.props.includes('light')&&stats.mods[attack.ability]>0){attack.notes=attack.notes.map(note=>note.replace('positive ability damage omitted.',(styles.some(s=>s.name==='Two-Weapon Fighting')?'Fighting Style':'Crossbow Expert')+' adds your ability modifier to damage.'));attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>dice+' + '+((sign==='−'?-1:1)*Number(n||0)+stats.mods[attack.ability]));}
     }
     // Format the separate paper damage cell only after all common style effects.
     for(const attack of attacks)attack.damageDice=attack.damageType?attack.damage.replace(' '+attack.damageType,''):attack.damage;

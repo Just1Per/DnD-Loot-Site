@@ -10,7 +10,7 @@ Der er 44 registrerede popup-familier og 29 editor-routes.
 | --- | --- | --- | --- | --- |
 | sheetAttackPicker | shared-dialog | Add/edit attack fra Combat | Bevar action-renderer og dens handlers; åbnes også fra bridge. | [character-action-ui.js:6](../../js/modules/character-action-ui.js#L6) |
 | adobeAbilityDialog | adobe-dialog | Ability-/skill-felter eller Special features | Eget draft; bruger fælles session/form-sync. | [character-adobe-ability-ui.js:7](../../js/modules/character-adobe-ability-ui.js#L7) |
-| adobeAttackChoiceMenu | adobe-menu | Attack name-felt | Kan åbne spellvalg og attack row-menu. | [character-adobe-attack-menu.js:14](../../js/modules/character-adobe-attack-menu.js#L14) |
+| adobeAttackChoiceMenu | adobe-menu | Attack name-felt | Kan åbne spellvalg og attack row-menu. | [character-adobe-attack-menu.js:15](../../js/modules/character-adobe-attack-menu.js#L15) |
 | adobeBackgroundChoiceDialog | adobe-menu | Baggrundens traits/ideals/bonds/flaws og Background Menu | Forslag og egne tekster; ingen flytning af Standard-panel. | [character-adobe-background-choice-ui.js:16](../../js/modules/character-adobe-background-choice-ui.js#L16) |
 | adobeBackgroundFeatureDialog | adobe-dialog | Background feature → Custom | Eget navn/tekst; bevarer øvrige baggrundsvalg. | [character-adobe-background-feature-ui.js:5](../../js/modules/character-adobe-background-feature-ui.js#L5) |
 | adobeChoiceDialog | adobe-dialog | Søgbare race/background/class/weapon/andre valglister | Generisk feltpicker; actual field descriptor afgør effekten. | [character-adobe-choice-ui.js:24](../../js/modules/character-adobe-choice-ui.js#L24) |
@@ -25,9 +25,9 @@ Der er 44 registrerede popup-familier og 29 editor-routes.
 | adobePagesDialog | adobe-dialog | Manage pages / Add pages | Valg af spell-, companion-, notes- og andre sider. | [character-adobe-stack-ui.js:67](../../js/modules/character-adobe-stack-ui.js#L67) |
 | adobePaperZoomMenu | adobe-menu | Forstørrelsesglas på arket | Bruger fortsat intern #adobeZoom-selector; den skjulte kontrol skal bevares indtil afkobling. | [character-adobe-stack-ui.js:106](../../js/modules/character-adobe-stack-ui.js#L106) |
 | adobePageActionsMenu | adobe-menu | Page options ved zoom/print → Hide this page / Manage pages | Skjuler en bestemt side uden at slette data; genopretning via Undo eller sideoversigten. | [character-adobe-stack-ui.js:107](../../js/modules/character-adobe-stack-ui.js#L107) |
-| adobeSpecialFeaturesMenu | adobe-menu | Show extra features | Blander native routes og shared bridges; se routetabel. | [character-adobe-view.js:149](../../js/modules/character-adobe-view.js#L149) |
-| adobeSharedEditor | moves-standard-body | Alle aktive bridge-routes i routetabellen | Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning. | [character-adobe-view.js:213](../../js/modules/character-adobe-view.js#L213) |
-| adobeNotesOptions | adobe-dialog | Notes.Options | Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge. | [character-adobe-view.js:311](../../js/modules/character-adobe-view.js#L311) |
+| adobeSpecialFeaturesMenu | adobe-menu | Show extra features | Blander native routes og shared bridges; se routetabel. | [character-adobe-view.js:151](../../js/modules/character-adobe-view.js#L151) |
+| adobeSharedEditor | moves-standard-body | Alle aktive bridge-routes i routetabellen | Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning. | [character-adobe-view.js:215](../../js/modules/character-adobe-view.js#L215) |
+| adobeNotesOptions | adobe-dialog | Notes.Options | Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge. | [character-adobe-view.js:313](../../js/modules/character-adobe-view.js#L313) |
 | sheetFeatInformation | shared-dialog | Feat information fra native featvalg | Selvstændig læsning, men modulet indeholder også katalog/resource-renderere. | [character-catalog-ui.js:99](../../js/modules/character-catalog-ui.js#L99) |
 | sheetCompanionHPOptions | shared-dialog | Companion Set Max HP | Egen dialog; afhænger af companion state, ikke en flyttet popup-body. | [character-companion-hp-ui.js:13](../../js/modules/character-companion-hp-ui.js#L13) |
 | adobeHitPointMenu | adobe-menu | Set Max HP | Native flyout → sheetHitPointOptions og fælles HP-apply. | [character-hit-point-ui.js:25](../../js/modules/character-hit-point-ui.js#L25) |
@@ -43,7 +43,7 @@ Der er 44 registrerede popup-familier og 29 editor-routes.
 | sheetPaperActionMenu | shared-dialog | Action/Bonus Action/Reaction-arrows | Egen row-menu; edit kan åbne paperCombat-bridge. | [character-paper-combat-ui.js:48](../../js/modules/character-paper-combat-ui.js#L48) |
 | adobeGearDialog | adobe-dialog | Gear-arrows og Enter/dobbeltklik på gear | Native row-editor, source catalogue og confirmations; delt inventory-engine. | [character-paper-gear-ui.js:9](../../js/modules/character-paper-gear-ui.js#L9) |
 | sheetPaperIcons | shared-dialog | Header/log-icon og Symbol | Egen billedvælger/upload; fælles image-budget og private data. | [character-paper-icons-ui.js:16](../../js/modules/character-paper-icons-ui.js#L16) |
-| adobeFooterDialog | adobe-dialog | Equipment footer/layout-controls | Egen footer-popup; modulet ejer også bridge-komponenten #sheetPaperInventoryLayout. | [character-paper-inventory-ui.js:31](../../js/modules/character-paper-inventory-ui.js#L31) |
+| adobeFooterDialog | adobe-dialog | Equipment footer/layout-controls | Egen footer-popup; modulet ejer også bridge-komponenten #sheetPaperInventoryLayout. | [character-paper-inventory-ui.js:33](../../js/modules/character-paper-inventory-ui.js#L33) |
 | sheetPaperLogMenu | shared-dialog | Adventure Log row arrows | Egen menu; Edit går gennem notes-bridge og #sheetAdventureLog. | [character-paper-log-ui.js:6](../../js/modules/character-paper-log-ui.js#L6) |
 | sheetPaperMagicMenu | shared-dialog | Magic item-arrows og variantvalg | Egen menu; nested information/confirmations og equipment handlers. | [character-paper-magic-ui.js:28](../../js/modules/character-paper-magic-ui.js#L28) |
 | sheetPaperResourceMenu | shared-dialog | Limited Feature arrows | Egen row-menu; Open feature controls åbner resources-bridge eller item controls. | [character-paper-resource-ui.js:5](../../js/modules/character-paper-resource-ui.js#L5) |
@@ -109,28 +109,28 @@ sharedCommand klikker stadig på kontroller i #characterSheetForm (bl.a. spell p
 
 | Kald | Kode |
 | --- | --- |
-| row.descriptor.command | [character-adobe-view.js:110](../../js/modules/character-adobe-view.js#L110) |
-| id | [character-adobe-view.js:148](../../js/modules/character-adobe-view.js#L148) |
-| notes | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
-| companion | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
-| companion | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
-| experience | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
-| story | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
-| feats | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
-| cmd | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
-| conditions | [character-adobe-view.js:217](../../js/modules/character-adobe-view.js#L217) |
-| notes | [character-adobe-view.js:316](../../js/modules/character-adobe-view.js#L316) |
-| spells | [character-adobe-view.js:394](../../js/modules/character-adobe-view.js#L394) |
-| companion | [character-adobe-view.js:399](../../js/modules/character-adobe-view.js#L399) |
-| editorChoice.value | [character-adobe-view.js:400](../../js/modules/character-adobe-view.js#L400) |
-| st.editor | [character-adobe-view.js:410](../../js/modules/character-adobe-view.js#L410) |
-| key | [character-adobe-view.js:430](../../js/modules/character-adobe-view.js#L430) |
+| row.descriptor.command | [character-adobe-view.js:112](../../js/modules/character-adobe-view.js#L112) |
+| id | [character-adobe-view.js:150](../../js/modules/character-adobe-view.js#L150) |
+| notes | [character-adobe-view.js:177](../../js/modules/character-adobe-view.js#L177) |
+| companion | [character-adobe-view.js:177](../../js/modules/character-adobe-view.js#L177) |
+| companion | [character-adobe-view.js:177](../../js/modules/character-adobe-view.js#L177) |
+| experience | [character-adobe-view.js:177](../../js/modules/character-adobe-view.js#L177) |
+| story | [character-adobe-view.js:177](../../js/modules/character-adobe-view.js#L177) |
+| feats | [character-adobe-view.js:177](../../js/modules/character-adobe-view.js#L177) |
+| cmd | [character-adobe-view.js:177](../../js/modules/character-adobe-view.js#L177) |
+| conditions | [character-adobe-view.js:219](../../js/modules/character-adobe-view.js#L219) |
+| notes | [character-adobe-view.js:318](../../js/modules/character-adobe-view.js#L318) |
+| spells | [character-adobe-view.js:396](../../js/modules/character-adobe-view.js#L396) |
+| companion | [character-adobe-view.js:401](../../js/modules/character-adobe-view.js#L401) |
+| editorChoice.value | [character-adobe-view.js:402](../../js/modules/character-adobe-view.js#L402) |
+| st.editor | [character-adobe-view.js:412](../../js/modules/character-adobe-view.js#L412) |
+| key | [character-adobe-view.js:432](../../js/modules/character-adobe-view.js#L432) |
 | notes | [character-adventure-log-ui.js:6](../../js/modules/character-adventure-log-ui.js#L6) |
 | itemResources | [character-item-resource-ui.js:49](../../js/modules/character-item-resource-ui.js#L49) |
 | attacks | [character-named-equipment-ui.js:82](../../js/modules/character-named-equipment-ui.js#L82) |
 | equipment | [character-paper-gear-ui.js:60](../../js/modules/character-paper-gear-ui.js#L60) |
 | story | [character-paper-icons-ui.js:23](../../js/modules/character-paper-icons-ui.js#L23) |
-| paperInventory | [character-paper-inventory-ui.js:47](../../js/modules/character-paper-inventory-ui.js#L47) |
+| paperInventory | [character-paper-inventory-ui.js:49](../../js/modules/character-paper-inventory-ui.js#L49) |
 | notes | [character-paper-log-ui.js:14](../../js/modules/character-paper-log-ui.js#L14) |
 | paperInventory | [character-paper-magic-ui.js:58](../../js/modules/character-paper-magic-ui.js#L58) |
 | equipment | [character-paper-magic-ui.js:60](../../js/modules/character-paper-magic-ui.js#L60) |

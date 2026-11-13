@@ -159,6 +159,9 @@ var CharacterFeatRules = (() => {
   function resource(def,level=1) {
     if(!def||def.personal)return null;
     if(def?.name==='Lucky'&&['PHB','XPHB'].includes(def.source))return {label:'Luck points',max:def.edition==='2014'?3:Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1,resets:['long']};
+    if(def.name==='Martial Adept'&&def.source==='PHB')return {label:'Superiority die · d6',max:1,resets:['short','long']};
+    if(def.name==='Strike of the Giants'&&def.source==='BGG')return {label:'Giant strikes',max:Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1,resets:['long']};
+    if(def.name==='Savage Attacker'&&def.source==='PHB')return {label:'Melee weapon damage reroll',max:1,resets:['turn']};
     if(!def || def.edition!=='2024')return null;
     const r={'Boon of Fortitude':{label:'Extra healing (apply the CON bonus when eligible)',resets:['turn']},'Boon of Fate':{label:'Improve Fate',resets:['initiative','short','long']},'Boon of Combat Prowess':{label:'Peerless Aim',resets:['turn']},'Grappler':{label:'Punch and Grab',resets:['turn']},'Savage Attacker':{label:'Extra damage roll',resets:['turn']}}[def.name]||null;
     return r?{max:1,...r}:null;

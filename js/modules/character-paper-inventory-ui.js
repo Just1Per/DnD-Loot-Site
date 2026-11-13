@@ -2,7 +2,9 @@
 /* The original footer and copy destinations change paper references, not ownership. */
 var CharacterPaperInventoryUI=(()=>{
  let currentClose=null;
- const project=(data,loot=sheetEquipmentLoot())=>CharacterPaperInventory.project(data.adobe.paperInventory,loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:data.personalGear.find(row=>row.id===entry.id)?.location||''})));
+ const physical=(data,loot)=>loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:data.personalGear.find(row=>row.id===entry.id)?.location||''}));
+ const project=(data,loot=sheetEquipmentLoot())=>CharacterPaperInventory.project(data.adobe.paperInventory,physical(data,loot));
+ const editableRows=(data,loot=sheetEquipmentLoot())=>CharacterPaperInventory.gearRows(data.adobe.paperInventory,physical(data,loot));
  function apply(state,message,session=sheetSession){
   if(!characterPaperCombatCurrent(session))throw Error('This character session is no longer active.');
   readSheetForm();session.data.adobe.paperInventory=CharacterPaperInventory.normalize(state);session.dirty=true;fillSheetForm();updateSheetCalculations();sheetStatus(message+' Save sheet to keep it.');
@@ -56,5 +58,5 @@ var CharacterPaperInventoryUI=(()=>{
   if(!enabled)return;const source=page.fields.find(row=>row.id==='Attuned Magic Items Whiteout');if(!source)return;
   const mask=document.createElement('div'),[x,y,r,b]=source.rect;mask.className='adobe-equipment-footer-mask';mask.setAttribute('aria-hidden','true');Object.assign(mask.style,{position:'absolute',background:'#fff',pointerEvents:'none',left:100*x/page.width+'%',top:100*y/page.height+'%',width:100*(r-x)/page.width+'%',height:100*(b-y)/page.height+'%'});paper.insertBefore(mask,paper.querySelector('.field'));
  }
- return{project,copy,setFooter,render,artwork,openFooter,destroy:()=>currentClose?.()};
+ return{project,editableRows,copy,setFooter,render,artwork,openFooter,destroy:()=>currentClose?.()};
 })();
