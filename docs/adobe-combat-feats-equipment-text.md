@@ -13,3 +13,13 @@ On Equipment and Extra Equipment, populated ordinary item name, amount and weigh
 Edits use the existing private paper overrides and stable item keys. Names are sheet labels; physical stock, catalogue records, equipped mechanics and recorded uses retain their values. Amount and unit-weight overrides feed Adobe weight totals. Moved or removed sources cannot silently receive an edit intended for another row. Edits persist with Save sheet and appear in the connected PDF.
 
 Regression coverage includes `tests/character-feat-combat.cjs`, field-adapter assertions, and `tests/adobe-combat-feats-equipment-browser.cjs`: editions, feat eligibility and duplicates, counter recovery, conditional attack formulae, direct text/amount/weight edits, source isolation, moves, stale sessions, save/reopen, mobile accessibility and actual PDF output. Existing gear-row and attack suites remain registered.
+
+## Feat reactions
+
+The source review in [feat-reaction-audit.md](feat-reaction-audit.md) covers all 305 pinned feat entries and classifies all 56 direct reaction/opportunity-attack mentions, plus the revised Mage Slayer negative control. Records distinguish the player's reaction, other actors' reactions, passive changes and source-specific opportunity attacks.
+
+Selected eligible feats populate free Reaction fields on the first page, without replacing or storing copies over manual player notes. Clicking an automatic row opens its concise trigger, costs and current feat allowance. Hide/Restore controls retain the feat and its spent uses; only hidden source keys are stored in `adobe.paperCombat.hiddenReactions`. Further automatic rows appear on the existing combat continuation; remaining reactions and full rule cues are included in print notes.
+
+Sentinel, Polearm Master, legacy Mage Slayer, Orcish Fury, Greater Mark of Sentinel and Zhentarim Tactics provide applicable reaction-attack references. Normal weapon/unarmed calculations are reused, and selecting a reference does not spend a Reaction or feature use. Sentinel 2014 retaliation and Polearm Master 2024 Reactive Strike are explicitly not opportunity attacks. The revised Sentinel trigger is an opportunity attack; Mage Slayer 2024 does not inherit its legacy trigger. Greater Sentinel enhances the existing Guardian reaction rather than granting another reaction or pool.
+
+Reaction-specific feat allowances use the existing saved feat counter and recovery path. Spell slots, Hit Dice, target saves, temporary AC, resistance and healing remain explicit instructions and their existing controls. Other actors' reactions and passive opportunity-attack avoidance never become additional player attacks.

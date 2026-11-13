@@ -38,7 +38,8 @@
       "testReferences": [
         "adobe-attack-access-browser.cjs",
         "adobe-attack-choice-flyout-browser.cjs",
-        "adobe-connected-sheet-browser.cjs"
+        "adobe-connected-sheet-browser.cjs",
+        "adobe-feat-reactions-browser.cjs"
       ]
     },
     {
@@ -465,6 +466,7 @@
       "entry": "Action/Bonus Action/Reaction-arrows",
       "notes": "Egen row-menu; edit kan åbne paperCombat-bridge.",
       "testReferences": [
+        "adobe-feat-reactions-browser.cjs",
         "adobe-paper-combat-browser.cjs"
       ]
     },

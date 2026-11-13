@@ -159,6 +159,7 @@ var CharacterFeatRules = (() => {
   function resource(def,level=1) {
     if(!def||def.personal)return null;
     if(def?.name==='Lucky'&&['PHB','XPHB'].includes(def.source))return {label:'Luck points',max:def.edition==='2014'?3:Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1,resets:['long']};
+    const Reactions=globalThis.CharacterFeatReactions||(typeof require==='function'?require('./character-feat-reactions'):null),reactionPool=Reactions?.resource(def,level);if(reactionPool)return reactionPool;
     if(def.name==='Martial Adept'&&def.source==='PHB')return {label:'Superiority die · d6',max:1,resets:['short','long']};
     if(def.name==='Strike of the Giants'&&def.source==='BGG')return {label:'Giant strikes',max:Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1,resets:['long']};
     if(def.name==='Savage Attacker'&&def.source==='PHB')return {label:'Melee weapon damage reroll',max:1,resets:['turn']};

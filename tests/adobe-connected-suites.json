@@ -76,6 +76,7 @@
     "adobe-modifiers-browser.cjs",
     "adobe-spell-modifiers-browser.cjs",
     "adobe-carrying-browser.cjs",
-    "adobe-combat-feats-equipment-browser.cjs"
+    "adobe-combat-feats-equipment-browser.cjs",
+    "adobe-feat-reactions-browser.cjs"
   ]
 }

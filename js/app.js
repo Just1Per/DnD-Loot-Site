@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261113-combat-feats-equipment-v79";
+const ASSET_VERSION = "20261113-feat-reactions-v80";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -157,6 +157,7 @@ const FEATURE_FILES = [
   "./modules/character-equipment-ui.js",
   "./modules/character-catalog-ui.js",
   "./modules/character-adventure-log.js",
+  "./modules/character-feat-reactions.js",
   "./modules/character-feat-combat.js",
   "./modules/character-paper-attacks.js",
   "./modules/character-paper-magic.js",
