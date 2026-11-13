@@ -17,7 +17,7 @@ function declarations(){const rows=[];
  }return rows;
 }
 // Routing is inspected independently of old editorTargets entries: native branches shadow them.
-const native={edition:'adobeClassDialog',classes:'adobeClassDialog',features:'adobeClassDialog',abilities:'adobeAbilityDialog',skills:'adobeAbilityDialog',feats:'adobeFeatDialog',hp:'sheetHitPointOptions',spells:'adobeSpellDialog',weight:'adobeWeightDialog'};
+const native={experience:'adobeClassDialog',edition:'adobeClassDialog',classes:'adobeClassDialog',features:'adobeClassDialog',abilities:'adobeAbilityDialog',skills:'adobeAbilityDialog',feats:'adobeFeatDialog',hp:'sheetHitPointOptions',spells:'adobeSpellDialog',weight:'adobeWeightDialog'};
 function routes(){let object;walk(parse(read('js/modules/character-adobe-view.js')),n=>{if(n.type==='VariableDeclarator'&&n.id.name==='editorTargets')object=n.init;});if(!object)throw Error('Adobe editorTargets not found');return object.properties.map(p=>({command:p.key.name,title:p.value.elements[0].value,selector:p.value.elements[1].value,implementation:native[p.key.name]?'native':'moves-standard-body',popup:native[p.key.name]||'adobeSharedEditor'}));}
 const registry={
  sheetPageManager:['standard-only','Standard page navigation → Add pages','character-adobe-pages.js','Templatebygget dialog bevaret bag skjult Standard-navigation; Adobe bruger adobePagesDialog.'],

@@ -2,7 +2,7 @@
 
 Genereret med `node scripts/audit-adobe-popups.cjs`. Dette er en statisk kortlægning, ikke et løfte om fuld funktionel paritet. Gentagne IDs er samme popup-familie. Testreferencer betyder, at testen nævner id’et; de er ikke i sig selv et bestået testresultat.
 
-Der er 44 registrerede popup-familier og 28 editor-routes.
+Der er 44 registrerede popup-familier og 29 editor-routes.
 
 ## Popup-familier
 
@@ -59,6 +59,7 @@ Native branches kommer før editorTargets-opslaget. Deres gamle selectors er der
 
 | Command | Popup | Implementering | Standard-selector |
 | --- | --- | --- | --- |
+| experience | adobeClassDialog | native | #sheetAdobeXP |
 | edition | adobeClassDialog | native | #sheetBuildControls |
 | weight | adobeWeightDialog | native | #sheetInventoryTotals |
 | paperInventory | adobeSharedEditor | moves-standard-body | #sheetPaperInventoryLayout |
@@ -113,7 +114,7 @@ sharedCommand klikker stadig på kontroller i #characterSheetForm (bl.a. spell p
 | notes | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
 | companion | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
 | companion | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
-| classes | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
+| experience | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
 | story | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
 | feats | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |
 | cmd | [character-adobe-view.js:175](../../js/modules/character-adobe-view.js#L175) |

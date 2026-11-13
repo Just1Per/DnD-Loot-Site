@@ -76,7 +76,7 @@ var CharacterAdobeEngine=(()=>{
    if(access.length)r.effects.slotMax=Array.from({length:9},(_,i)=>Math.max(0,Math.min(99,Number(slots[i]||0)+CharacterModifiers.value(d.adobe.modifiers,'slot.'+(i+1),0,r,r.modifiers.report))));
    r.hpMax=hp.max;
    r.progression={
-    targetLevel:lv,xp:P.xpProgress(d.experience),classLevels:classes,assignedClassLevels:assigned,
+    targetLevel:lv,xp:P.xpProgress(d.experience,lv),classLevels:classes,assignedClassLevels:assigned,
     assignedLevel:assigned.reduce((sum,e)=>sum+e.level,0),hp,hitDice:P.hitDiceSummary(classes),
     spellAccess:access,isSpellcaster:access.length>0,
     pact:warlock?{count:warlock===1?1:warlock<11?2:warlock<17?3:4,slotLevel:Math.min(5,Math.ceil(warlock/2)),used:Math.min(d.adobe.pactSlotsUsed,warlock===1?1:warlock<11?2:warlock<17?3:4)}:null,

@@ -99,6 +99,7 @@
         "adobe-edition-options-browser.cjs",
         "adobe-equipment-feature-menus-browser.cjs",
         "adobe-front-edition-browser.cjs",
+        "adobe-front-experience-browser.cjs",
         "adobe-hp-methods-browser.cjs",
         "adobe-hp-options-browser.cjs",
         "adobe-inline-character-choices-browser.cjs",
@@ -621,6 +622,13 @@
   ],
   "routes": [
     {
+      "command": "experience",
+      "title": "Experience",
+      "selector": "#sheetAdobeXP",
+      "implementation": "native",
+      "popup": "adobeClassDialog"
+    },
+    {
       "command": "edition",
       "title": "Rules version",
       "selector": "#sheetBuildControls",
@@ -888,8 +896,8 @@
     {
       "file": "js/modules/character-adobe-view.js",
       "line": 175,
-      "command": "classes",
-      "expression": "'classes'"
+      "command": "experience",
+      "expression": "'experience'"
     },
     {
       "file": "js/modules/character-adobe-view.js",

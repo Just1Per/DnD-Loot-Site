@@ -28,6 +28,7 @@
     "adobe-weight-settings-browser.cjs",
     "adobe-edition-options-browser.cjs",
     "adobe-front-edition-browser.cjs",
+    "adobe-front-experience-browser.cjs",
     "adobe-continuous-browser.cjs",
     "adobe-page-choices-browser.cjs",
     "adobe-page-layout-browser.cjs",
