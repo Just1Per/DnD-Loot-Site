@@ -98,6 +98,7 @@
         "adobe-continuous-browser.cjs",
         "adobe-edition-options-browser.cjs",
         "adobe-equipment-feature-menus-browser.cjs",
+        "adobe-front-edition-browser.cjs",
         "adobe-hp-methods-browser.cjs",
         "adobe-hp-options-browser.cjs",
         "adobe-inline-character-choices-browser.cjs",
@@ -240,7 +241,7 @@
     {
       "id": "adobeSpecialFeaturesMenu",
       "file": "js/modules/character-adobe-view.js",
-      "line": 148,
+      "line": 149,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Show extra features",
@@ -253,7 +254,7 @@
     {
       "id": "adobeSharedEditor",
       "file": "js/modules/character-adobe-view.js",
-      "line": 212,
+      "line": 213,
       "kind": "dialog",
       "category": "moves-standard-body",
       "entry": "Alle aktive bridge-routes i routetabellen",
@@ -288,7 +289,7 @@
     {
       "id": "adobeNotesOptions",
       "file": "js/modules/character-adobe-view.js",
-      "line": 310,
+      "line": 311,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Notes.Options",
@@ -620,6 +621,13 @@
   ],
   "routes": [
     {
+      "command": "edition",
+      "title": "Rules version",
+      "selector": "#sheetBuildControls",
+      "implementation": "native",
+      "popup": "adobeClassDialog"
+    },
+    {
       "command": "weight",
       "title": "Weight Carried settings",
       "selector": "#sheetInventoryTotals",
@@ -849,97 +857,97 @@
   "editorCalls": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 109,
+      "line": 110,
       "command": "dynamic",
       "expression": "row.descriptor.command"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 147,
+      "line": 148,
       "command": "dynamic",
       "expression": "id"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 174,
+      "line": 175,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 174,
+      "line": 175,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 174,
+      "line": 175,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 174,
+      "line": 175,
       "command": "classes",
       "expression": "'classes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 174,
+      "line": 175,
       "command": "story",
       "expression": "'story'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 174,
+      "line": 175,
       "command": "feats",
       "expression": "'feats'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 174,
+      "line": 175,
       "command": "dynamic",
       "expression": "cmd"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 216,
+      "line": 217,
       "command": "conditions",
       "expression": "'conditions'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 315,
+      "line": 316,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 393,
+      "line": 394,
       "command": "spells",
       "expression": "'spells'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 398,
+      "line": 399,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 399,
+      "line": 400,
       "command": "dynamic",
       "expression": "editorChoice.value"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 409,
+      "line": 410,
       "command": "dynamic",
       "expression": "st.editor"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 429,
+      "line": 430,
       "command": "dynamic",
       "expression": "key"
     },
@@ -1013,17 +1021,17 @@
   "sharedCommands": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 174,
+      "line": 175,
       "expression": "'[data-combat-recover=\"'+(source.id==='SR'?'short':'long')+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 254,
+      "line": 255,
       "expression": "'[data-generated-prepare=\"'+entry.i+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 398,
+      "line": 399,
       "expression": "'[data-wild-end]'"
     }
   ]

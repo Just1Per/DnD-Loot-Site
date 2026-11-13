@@ -1166,3 +1166,10 @@ dialog.adobe-flyout-host{position:fixed!important;inset:0!important;width:100vw!
 .adobe-pages-print input{flex:0 0 18px;width:18px;height:18px;min-height:18px;margin:0;accent-color:#71342f}
 .adobe-pages-print+p{font-size:12px;color:#706354;margin:0}
 @media(forced-colors:active){.adobe-page-visibility-row input{appearance:auto;-webkit-appearance:auto}.adobe-page-visibility-row input:before{display:none}}
+
+.adobe-class-dialog[data-edition-only]{width:min(520px,calc(100vw - 24px))}
+.adobe-edition-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.adobe-edition-options button{min-height:64px!important;font-size:18px!important;border:1px solid #c7b28e!important;border-radius:8px;background:#fffaf1;color:#513d29}
+.adobe-edition-options button[aria-pressed=true]{border:2px solid #71342f!important;background:#f4e7d8;color:#642829;font-weight:700}
+.adobe-edition-options button:disabled{opacity:.5;cursor:not-allowed}
+.adobe-edition-options button:focus-visible{outline:3px solid #2169a8;outline-offset:3px}

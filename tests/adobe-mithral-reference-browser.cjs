@@ -93,12 +93,17 @@ const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
   const saved = await page.evaluate(()=>({choices:sheetSession.data.adobe.classFeatureChoices['2014:sorcerer:metamagic'],remaining:CharacterSheetModel.derive(sheetSession.data,3,sheetEquipmentLoot()).classResources.find(r=>r.id==='sorcery-points').remaining,hp:sheetSession.data.hpCurrent,gp:sheetSession.data.coins.gp}));
   assert.deepEqual(saved,{choices:['quickened-spell','empowered-spell'],remaining:1,hp:14,gp:31});
   // Revised Metamagic has its own saved choices and unlocks at Sorcerer 2.
+  await field('Rules Version').click();
+  await dialog.locator('[data-native-edition="2024"]').click();
+  await dialog.locator('[data-native-apply]').click();
   await field('Character Level').click();
-  await dialog.locator('[data-native-edition]').selectOption('2024');
   await dialog.locator('[data-native-step="choices"]').click();
   await choice(0).selectOption('heightened-spell');
   assert.match(await dialog.textContent(),/Heightened Spell · 2 points/);
   await dialog.locator('[data-native-cancel]').last().click();
+  await field('Rules Version').click();
+  await dialog.locator('[data-native-edition="2014"]').click();
+  await dialog.locator('[data-native-apply]').click();
   assert.equal(await page.evaluate(()=>sheetSession.data.build.edition),'2014');
   assert.deepEqual(errors,[]);
   console.log('PASS Mithral reference AC/abilities/PB, native Metamagic selection and prices, guarded spending, Adobe-only save/reopen, 320px layout and accessibility');

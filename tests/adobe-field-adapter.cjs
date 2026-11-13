@@ -92,3 +92,7 @@ test('Background Extra is a bounded detail intent and never renames the custom b
 test('paper maximum HP is a bounded one-shot/manual command rather than a second HP record',()=>{const c=context();for(const value of ['',-1,1.5,1000001])assert.throws(()=>A.planEdit('HP Max',value,c));const edit=A.planEdit('HP Max','25',c);assert.equal(edit.hpMaximum,true);assert.equal(edit.value,25);assert.equal(edit.path,undefined);});
 
 test('narrow paper recovery labels abbreviate only unambiguous rests and retain full conditions',()=>{const c=context();for(const [full,short]of [['Long Rest recovery','LR'],['long','LR'],['Short or Long Rest recovery','SR/LR'],['Short Rest','SR'],['Long Rest: all points · Short Rest: up to 2 once per Long Rest','Long Rest: all points · Short Rest: up to 2 once per Long Rest'],['Dawn · roll 1d6','Dawn · roll 1d6']]){c.resources=[{name:'Pool',recovery:full}];const before=JSON.stringify(c.resources),row=A.describe('Limited Feature Recovery 1',c);assert.equal(row.value,short);assert.equal(row.reason,full);assert.equal(JSON.stringify(c.resources),before);}});
+
+test('the front-page rules button reflects the saved edition and opens the protected edition workflow',()=>{
+ const c=context();for(const edition of ['2014','2024']){c.data.build.edition=edition;const field=A.describe('Rules Version',c);assert.equal(field.kind,'button');assert.equal(field.value,edition);assert.equal(field.command,'edition');assert.equal(field.singleClick,true);assert.throws(()=>A.planEdit('Rules Version','2024',c));}
+});
