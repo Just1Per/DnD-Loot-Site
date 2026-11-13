@@ -1,0 +1,22 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process'),{chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
+(async()=>{const browser=await chromium.launch({headless:true});try{
+ const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{adobeOnly:true});
+ await page.evaluate(async()=>{auditSeed('player');characters[0].level=4;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2024';d.build.race='human-2024';d.build.classId='fighter';d.build.scoreMode='final';d.adobe.classLevels=[{classId:'fighter',level:4}];renderCharacterSheet();readSheetForm();});
+ const host=page.locator('#sheetAdobeView'),first=host.locator('[data-continuous-page="page-1"]'),f=id=>first.locator('[data-pdf-field="'+id+'"]');
+ await f('Race').waitFor({state:'visible'});await f('Race').selectOption('satyr-mpmm');assert.equal(await f('Speed').inputValue(),'35 ft');
+ assert.match(await f('Race').locator('option:checked').textContent(),/MPMM/);assert.equal(await page.evaluate(()=>CharacterSheetModel.derive(sheetSession.data,4).effects.race.creatureType),'Fey');
+ await f('Speed').fill('40 ft; swim 20 ft');await f('Speed').press('Enter');assert.equal(await page.evaluate(()=>sheetSession.data.adobe.movementText),'40 ft; swim 20 ft');
+ await page.evaluate(()=>{sheetSession.data.conditions='Grappled';fillSheetForm();updateSheetCalculations();});assert.equal(await f('Speed').inputValue(),'40 ft; swim 20 ft');assert.match(await f('Speed').getAttribute('title'),/Walking speed 0 ft/);
+ await f('Speed').fill('');await f('Speed').press('Enter');assert.equal(await f('Speed').inputValue(),'0 ft');assert.equal(await page.evaluate(()=>sheetSession.data.adobe.movementText),'');
+ await page.evaluate(()=>{sheetSession.data.conditions='';fillSheetForm();updateSheetCalculations();});assert.equal(await f('Speed').inputValue(),'35 ft');
+ await f('Speed').press('Alt+Enter');const editor=page.locator('#adobeSharedEditor');await editor.waitFor({state:'visible'});assert.match(await editor.locator('h2').textContent(),/Movement/);await editor.locator('[data-adobe-editor-close]').click();
+ await f('Race').selectOption('satyr-mot');assert.equal(await f('Speed').inputValue(),'35 ft');assert.match(await f('Race').locator('option:checked').textContent(),/MOT/);
+ await f('Speed').fill('45 ft');await f('Speed').press('Tab');await page.locator('#sheetSave').click();await page.waitForFunction(()=>!sheetSession.saving&&!sheetSession.dirty);
+ await page.evaluate(async()=>{closeCharacterSheet(true);await openCharacterSheet('c1');});await f('Speed').waitFor({state:'visible'});assert.equal(await f('Speed').inputValue(),'45 ft');assert.equal(await f('Race').inputValue(),'satyr-mot');
+ await page.setViewportSize({width:390,height:844});await f('Speed').scrollIntoViewIfNeeded();await f('Speed').fill('35 ft');await f('Speed').press('Enter');assert.equal(await page.evaluate(()=>sheetSession.data.adobe.movementText),'');
+ await page.addScriptTag({path:require.resolve(process.env.AXE_PATH||'axe-core/axe.min.js')});assert.deepEqual(await page.evaluate(async()=>(await axe.run(document.getElementById('sheetAdobeView'),{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations.map(v=>v.id)),[]);
+ await page.setViewportSize({width:1440,height:1000});fs.mkdirSync('/tmp/campaignatlas-ui-checks',{recursive:true});await page.evaluate(()=>{window.satyrPrint=0;window.print=()=>satyrPrint++;});await host.locator('[data-paper-print]').first().click();await page.waitForFunction(()=>satyrPrint===1,null,{timeout:25000});
+ const pdf='/tmp/campaignatlas-ui-checks/adobe-satyr-movement.pdf';await page.pdf({path:pdf,preferCSSPageSize:true,printBackground:true});assert.match(execFileSync('pdftotext',[pdf,'-'],{encoding:'utf8'}),/35 ft/);await page.evaluate(()=>dispatchEvent(new Event('afterprint')));
+ assert.deepEqual(errors,[]);console.log('PASS Satyr source variants in 2024, 35 ft calculation, editable movement text, live automatic fallback/conditions, keyboard carrying controls, save/reopen, mobile/axe and actual PDF');
+}finally{await browser.close();}})().catch(error=>{console.error(error);process.exitCode=1;});

@@ -75,6 +75,10 @@
     "adobe-companion-hp-browser.cjs",
     "adobe-modifiers-browser.cjs",
     "adobe-spell-modifiers-browser.cjs",
-    "adobe-carrying-browser.cjs"
+    "adobe-carrying-browser.cjs",
+    "adobe-combat-feats-equipment-browser.cjs",
+    "adobe-feat-reactions-browser.cjs",
+    "adobe-satyr-movement-browser.cjs",
+    "adobe-spell-list-browser.cjs"
   ]
 }

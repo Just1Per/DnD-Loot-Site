@@ -1,0 +1,1178 @@
+{
+  "format": 1,
+  "source": {
+    "repository": "5etools-mirror-3/5etools-src",
+    "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+    "path": "data/feats.json",
+    "blob": "4dadd905268e42be9c450edebd86026162fdec10",
+    "featRecords": 305,
+    "policy": "Source names and original concise cues only; no full entries are emitted."
+  },
+  "scope": "Direct feat reaction/opportunity-attack rules. Spell grants retain their own casting controls. Source printings are separate records.",
+  "summary": {
+    "sourceMatches": 56,
+    "reviewed": 56,
+    "ownReactionRecords": 45,
+    "otherActorRecords": 7,
+    "passiveSourceMentions": 4,
+    "negativeControls": 1
+  },
+  "sourceMatches": [
+    {
+      "key": "ABH|Delicious Pain",
+      "name": "Delicious Pain",
+      "source": "ABH"
+    },
+    {
+      "key": "ABH|Vampire Hunter",
+      "name": "Vampire Hunter",
+      "source": "ABH"
+    },
+    {
+      "key": "AU|Arcane Omens",
+      "name": "Arcane Omens",
+      "source": "AU"
+    },
+    {
+      "key": "AU|Divination Adept",
+      "name": "Divination Adept",
+      "source": "AU"
+    },
+    {
+      "key": "AU|Elemental Familiar",
+      "name": "Elemental Familiar",
+      "source": "AU"
+    },
+    {
+      "key": "AU|Transmuted Anatomy",
+      "name": "Transmuted Anatomy",
+      "source": "AU"
+    },
+    {
+      "key": "AU|Warlike Familiar",
+      "name": "Warlike Familiar",
+      "source": "AU"
+    },
+    {
+      "key": "BGG|Fury of the Frost Giant",
+      "name": "Fury of the Frost Giant",
+      "source": "BGG"
+    },
+    {
+      "key": "BGG|Guile of the Cloud Giant",
+      "name": "Guile of the Cloud Giant",
+      "source": "BGG"
+    },
+    {
+      "key": "BGG|Vigor of the Hill Giant",
+      "name": "Vigor of the Hill Giant",
+      "source": "BGG"
+    },
+    {
+      "key": "DSotDQ|Adept of the White Robes",
+      "name": "Adept of the White Robes",
+      "source": "DSotDQ"
+    },
+    {
+      "key": "DSotDQ|Knight of the Crown",
+      "name": "Knight of the Crown",
+      "source": "DSotDQ"
+    },
+    {
+      "key": "EFA|Aberrant Dragonmark",
+      "name": "Aberrant Dragonmark",
+      "source": "EFA"
+    },
+    {
+      "key": "EFA|Greater Mark of Handling",
+      "name": "Greater Mark of Handling",
+      "source": "EFA"
+    },
+    {
+      "key": "EFA|Greater Mark of Passage",
+      "name": "Greater Mark of Passage",
+      "source": "EFA"
+    },
+    {
+      "key": "EFA|Greater Mark of Sentinel",
+      "name": "Greater Mark of Sentinel",
+      "source": "EFA"
+    },
+    {
+      "key": "EFA|Greater Mark of Warding",
+      "name": "Greater Mark of Warding",
+      "source": "EFA"
+    },
+    {
+      "key": "EFA|Mark of Sentinel",
+      "name": "Mark of Sentinel",
+      "source": "EFA"
+    },
+    {
+      "key": "FRHoF|Boon of Terror",
+      "name": "Boon of Terror",
+      "source": "FRHoF"
+    },
+    {
+      "key": "FRHoF|Boon of the Soul Drinker",
+      "name": "Boon of the Soul Drinker",
+      "source": "FRHoF"
+    },
+    {
+      "key": "FRHoF|Emerald Enclave Fledgling",
+      "name": "Emerald Enclave Fledgling",
+      "source": "FRHoF"
+    },
+    {
+      "key": "FRHoF|Lordly Resolve",
+      "name": "Lordly Resolve",
+      "source": "FRHoF"
+    },
+    {
+      "key": "FRHoF|Mythal Touched",
+      "name": "Mythal Touched",
+      "source": "FRHoF"
+    },
+    {
+      "key": "FRHoF|Tyro of the Gauntlet",
+      "name": "Tyro of the Gauntlet",
+      "source": "FRHoF"
+    },
+    {
+      "key": "FRHoF|Zhentarim Ruffian",
+      "name": "Zhentarim Ruffian",
+      "source": "FRHoF"
+    },
+    {
+      "key": "FRHoF|Zhentarim Tactics",
+      "name": "Zhentarim Tactics",
+      "source": "FRHoF"
+    },
+    {
+      "key": "FTD|Gift of the Chromatic Dragon",
+      "name": "Gift of the Chromatic Dragon",
+      "source": "FTD"
+    },
+    {
+      "key": "FTD|Gift of the Gem Dragon",
+      "name": "Gift of the Gem Dragon",
+      "source": "FTD"
+    },
+    {
+      "key": "FTD|Gift of the Metallic Dragon",
+      "name": "Gift of the Metallic Dragon",
+      "source": "FTD"
+    },
+    {
+      "key": "PHB|Defensive Duelist",
+      "name": "Defensive Duelist",
+      "source": "PHB"
+    },
+    {
+      "key": "PHB|Mage Slayer",
+      "name": "Mage Slayer",
+      "source": "PHB"
+    },
+    {
+      "key": "PHB|Mobile",
+      "name": "Mobile",
+      "source": "PHB"
+    },
+    {
+      "key": "PHB|Polearm Master",
+      "name": "Polearm Master",
+      "source": "PHB"
+    },
+    {
+      "key": "PHB|Sentinel",
+      "name": "Sentinel",
+      "source": "PHB"
+    },
+    {
+      "key": "PHB|Shield Master",
+      "name": "Shield Master",
+      "source": "PHB"
+    },
+    {
+      "key": "PHB|War Caster",
+      "name": "War Caster",
+      "source": "PHB"
+    },
+    {
+      "key": "RHW|Gathered Whispers",
+      "name": "Gathered Whispers",
+      "source": "RHW"
+    },
+    {
+      "key": "RHW|Mist Walker",
+      "name": "Mist Walker",
+      "source": "RHW"
+    },
+    {
+      "key": "RHW|Survivor",
+      "name": "Survivor",
+      "source": "RHW"
+    },
+    {
+      "key": "RHW|Symbiotic Being",
+      "name": "Symbiotic Being",
+      "source": "RHW"
+    },
+    {
+      "key": "SatO|Righteous Heritor",
+      "name": "Righteous Heritor",
+      "source": "SatO"
+    },
+    {
+      "key": "SCC|Strixhaven Mascot",
+      "name": "Strixhaven Mascot",
+      "source": "SCC"
+    },
+    {
+      "key": "XGE|Bountiful Luck",
+      "name": "Bountiful Luck",
+      "source": "XGE"
+    },
+    {
+      "key": "XGE|Fade Away",
+      "name": "Fade Away",
+      "source": "XGE"
+    },
+    {
+      "key": "XGE|Orcish Fury",
+      "name": "Orcish Fury",
+      "source": "XGE"
+    },
+    {
+      "key": "XGE|Second Chance",
+      "name": "Second Chance",
+      "source": "XGE"
+    },
+    {
+      "key": "XPHB|Boon of Energy Resistance",
+      "name": "Boon of Energy Resistance",
+      "source": "XPHB"
+    },
+    {
+      "key": "XPHB|Boon of the Night Spirit",
+      "name": "Boon of the Night Spirit",
+      "source": "XPHB"
+    },
+    {
+      "key": "XPHB|Defensive Duelist",
+      "name": "Defensive Duelist",
+      "source": "XPHB"
+    },
+    {
+      "key": "XPHB|Interception",
+      "name": "Interception",
+      "source": "XPHB"
+    },
+    {
+      "key": "XPHB|Polearm Master",
+      "name": "Polearm Master",
+      "source": "XPHB"
+    },
+    {
+      "key": "XPHB|Protection",
+      "name": "Protection",
+      "source": "XPHB"
+    },
+    {
+      "key": "XPHB|Sentinel",
+      "name": "Sentinel",
+      "source": "XPHB"
+    },
+    {
+      "key": "XPHB|Shield Master",
+      "name": "Shield Master",
+      "source": "XPHB"
+    },
+    {
+      "key": "XPHB|Speedy",
+      "name": "Speedy",
+      "source": "XPHB"
+    },
+    {
+      "key": "XPHB|War Caster",
+      "name": "War Caster",
+      "source": "XPHB"
+    }
+  ],
+  "records": [
+    {
+      "key": "ABH|Delicious Pain",
+      "name": "Delicious Pain",
+      "source": "ABH",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Delicious Pain reaction",
+        "max": 1,
+        "resets": [
+          "short",
+          "long"
+        ]
+      },
+      "detail": "Reaction immediately after taking Bludgeoning, Piercing or Slashing damage: gain Resistance to those types until your next turn."
+    },
+    {
+      "key": "ABH|Vampire Hunter",
+      "name": "Vampire Hunter",
+      "source": "ABH",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Vampire Hunter reaction",
+        "max": 1,
+        "resets": [
+          "short",
+          "long"
+        ]
+      },
+      "detail": "Reaction on Necrotic damage: reduce it by {PB}d6."
+    },
+    {
+      "key": "AU|Arcane Omens",
+      "name": "Arcane Omens",
+      "source": "AU",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "save",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Arcane Omens reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction: you or a creature you see within 30 ft fails a save; add 1d4 to that save."
+    },
+    {
+      "key": "AU|Divination Adept",
+      "name": "Divination Adept",
+      "source": "AU",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "reroll",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: a creature you see within 60 ft makes a D20 Test; give that roll Advantage or Disadvantage."
+    },
+    {
+      "key": "AU|Elemental Familiar",
+      "name": "Elemental Familiar",
+      "source": "AU",
+      "edition": "2024",
+      "actor": "familiar",
+      "kind": "command",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Your Bonus Action commands a familiar within 120 ft to use its Reaction for Energy Pulse: a 5-ft Emanation, DEX save against your familiar spell DC, 2d4 chosen-type damage and Prone for Medium/smaller targets on failure."
+    },
+    {
+      "key": "AU|Transmuted Anatomy",
+      "name": "Transmuted Anatomy",
+      "source": "AU",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "save",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Transmuted Anatomy reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction on a failed CON save: add 1d4, possibly turning it into a success."
+    },
+    {
+      "key": "AU|Warlike Familiar",
+      "name": "Warlike Familiar",
+      "source": "AU",
+      "edition": "2024",
+      "actor": "familiar",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Your familiar uses its Reaction when someone within 5 ft is hit: add your PB to that target’s AC against the attack. This does not spend your Reaction."
+    },
+    {
+      "key": "BGG|Fury of the Frost Giant",
+      "name": "Fury of the Frost Giant",
+      "source": "BGG",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "damage",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Fury of the Frost Giant reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction: a creature you see within 30 ft hits and damages you; CON DC {DC}. Failure deals 1d8 + {PB} Cold and sets Speed to 0 until its next turn ends."
+    },
+    {
+      "key": "BGG|Guile of the Cloud Giant",
+      "name": "Guile of the Cloud Giant",
+      "source": "BGG",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Guile of the Cloud Giant reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction: a creature you see hits you; resist that attack’s damage, then teleport up to 30 ft to a visible empty space."
+    },
+    {
+      "key": "BGG|Vigor of the Hill Giant",
+      "name": "Vigor of the Hill Giant",
+      "source": "BGG",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: an effect would move you at least 5 ft or knock you Prone; prevent that movement and Prone."
+    },
+    {
+      "key": "DSotDQ|Adept of the White Robes",
+      "name": "Adept of the White Robes",
+      "source": "DSotDQ",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: you or someone you see within 30 ft takes damage; spend a spell slot and reduce it by slot-level d6 + your spellcasting modifier. Apply the slot cost separately."
+    },
+    {
+      "key": "DSotDQ|Knight of the Crown",
+      "name": "Knight of the Crown",
+      "source": "DSotDQ",
+      "edition": "2014",
+      "actor": "ally",
+      "kind": "command",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Your Bonus Action commands an ally within 30 ft that can see or hear you: it can use its Reaction for one weapon attack, adding 1d8 damage on a hit. Your command has a PB-per-Long-Rest allowance."
+    },
+    {
+      "key": "EFA|Aberrant Dragonmark",
+      "name": "Aberrant Dragonmark",
+      "source": "EFA",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "save",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Aberrant Dragonmark reaction",
+        "max": 1,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction on a failed CON save: add 1d4, possibly turning it into a success."
+    },
+    {
+      "key": "EFA|Greater Mark of Handling",
+      "name": "Greater Mark of Handling",
+      "source": "EFA",
+      "edition": "2024",
+      "actor": "mount",
+      "kind": "command",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "While mounted, after your melee hit within 5 ft of the mount, the mount can use its Reaction to move its Speed or make one attack."
+    },
+    {
+      "key": "EFA|Greater Mark of Passage",
+      "name": "Greater Mark of Passage",
+      "source": "EFA",
+      "edition": "2024",
+      "actor": "allies",
+      "kind": "command",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Your slot-free Magical Passage can let up to two willing visible creatures within 30 ft use their Reactions to teleport up to 30 ft to visible empty spaces."
+    },
+    {
+      "key": "EFA|Greater Mark of Sentinel",
+      "name": "Greater Mark of Sentinel",
+      "source": "EFA",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "augment",
+      "attack": "anyAttack",
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "When you use Mark of Sentinel’s Vigilant Guardian, one weapon attack or Unarmed Strike can join that same Reaction."
+    },
+    {
+      "key": "EFA|Greater Mark of Warding",
+      "name": "Greater Mark of Warding",
+      "source": "EFA",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Greater Mark of Warding reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction: an attack targets you or someone you see within 30 ft; impose Disadvantage on that roll."
+    },
+    {
+      "key": "EFA|Mark of Sentinel",
+      "name": "Mark of Sentinel",
+      "source": "EFA",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Vigilant Guardian",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction: someone you see within 5 ft is hit; swap places and take the hit instead."
+    },
+    {
+      "key": "FRHoF|Boon of Terror",
+      "name": "Boon of Terror",
+      "source": "FRHoF",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "control",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Boon of Terror reaction",
+        "max": 1,
+        "resets": [
+          "short",
+          "long"
+        ]
+      },
+      "detail": "Reaction: a Frightened creature you see starts its turn within 60 ft without Total Cover; WIS DC {CHADC}. Failure forces it to spend its turn moving away as fast as possible."
+    },
+    {
+      "key": "FRHoF|Boon of the Soul Drinker",
+      "name": "Boon of the Soul Drinker",
+      "source": "FRHoF",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "healing",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Boon of the Soul Drinker reaction",
+        "max": 1,
+        "resets": [
+          "short",
+          "long"
+        ]
+      },
+      "detail": "Reaction: an enemy within 120 ft reaches 0 HP; regain 50 HP. Apply healing separately."
+    },
+    {
+      "key": "FRHoF|Emerald Enclave Fledgling",
+      "name": "Emerald Enclave Fledgling",
+      "source": "FRHoF",
+      "edition": "2024",
+      "actor": "none",
+      "kind": "avoidance",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "The Help-action position swap does not provoke opportunity attacks; it is not a Reaction."
+    },
+    {
+      "key": "FRHoF|Lordly Resolve",
+      "name": "Lordly Resolve",
+      "source": "FRHoF",
+      "edition": "2024",
+      "actor": "targets",
+      "kind": "command",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Your Bonus Action lets up to three targets within 60 ft that see you use their Reactions to stand if Speed is not 0. The ensuing protective benefits last up to 1 minute."
+    },
+    {
+      "key": "FRHoF|Mythal Touched",
+      "name": "Mythal Touched",
+      "source": "FRHoF",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "table",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Mythal Touched reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction when a spell attack hits you or you fail a spell save: roll on the Mythal-Touched Magic table. Required saves use DC {DC}."
+    },
+    {
+      "key": "FRHoF|Tyro of the Gauntlet",
+      "name": "Tyro of the Gauntlet",
+      "source": "FRHoF",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: an ally within 5 ft would be pushed or pulled; prevent it, provided the ally is not Incapacitated."
+    },
+    {
+      "key": "FRHoF|Zhentarim Ruffian",
+      "name": "Zhentarim Ruffian",
+      "source": "FRHoF",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "modifier",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Opportunity attack damage: roll the damage dice twice and choose either result. This changes damage; it does not grant an additional Reaction."
+    },
+    {
+      "key": "FRHoF|Zhentarim Tactics",
+      "name": "Zhentarim Tactics",
+      "source": "FRHoF",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "attack",
+      "attack": "melee",
+      "opportunityAttack": true,
+      "triggerRange": "5 ft",
+      "pool": null,
+      "detail": "Reaction immediately after a creature within 5 ft hits you with a melee attack: make an opportunity attack against it."
+    },
+    {
+      "key": "FTD|Gift of the Chromatic Dragon",
+      "name": "Gift of the Chromatic Dragon",
+      "source": "FTD",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Reactive Resistance",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction on Acid, Cold, Fire, Lightning or Poison damage: gain Resistance to that damage instance. This reaction allowance is separate from the once-per-Long-Rest weapon infusion."
+    },
+    {
+      "key": "FTD|Gift of the Gem Dragon",
+      "name": "Gift of the Gem Dragon",
+      "source": "FTD",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "damage",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Gift of the Gem Dragon reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction: take damage from a creature within 10 ft; STR DC {DC}. It takes 2d8 Force and a push up to 10 ft on failure; half damage and no push on success."
+    },
+    {
+      "key": "FTD|Gift of the Metallic Dragon",
+      "name": "Gift of the Metallic Dragon",
+      "source": "FTD",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Gift of the Metallic Dragon reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction: you or someone you see within 5 ft is hit; add {PB} AC against that attack."
+    },
+    {
+      "key": "PHB|Defensive Duelist",
+      "name": "Defensive Duelist",
+      "source": "PHB",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction on a melee hit against you: while wielding a proficient Finesse weapon, add {PB} AC against that attack only."
+    },
+    {
+      "key": "PHB|Mage Slayer",
+      "name": "Mage Slayer",
+      "source": "PHB",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "attack",
+      "attack": "meleeWeapon",
+      "opportunityAttack": false,
+      "triggerRange": "5 ft",
+      "pool": null,
+      "detail": "Reaction: when a creature within 5 ft casts a spell, make a melee weapon attack against it. This is not an opportunity attack."
+    },
+    {
+      "key": "PHB|Mobile",
+      "name": "Mobile",
+      "source": "PHB",
+      "edition": "2014",
+      "actor": "none",
+      "kind": "avoidance",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "After your melee attack against a creature, it cannot make opportunity attacks against you for the rest of that turn."
+    },
+    {
+      "key": "PHB|Polearm Master",
+      "name": "Polearm Master",
+      "source": "PHB",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "attack",
+      "attack": "polearm",
+      "opportunityAttack": true,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: an enemy entering your glaive, halberd, pike, quarterstaff or spear reach provokes an opportunity attack."
+    },
+    {
+      "key": "PHB|Sentinel",
+      "name": "Sentinel",
+      "source": "PHB",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "attack",
+      "attack": "meleeWeapon",
+      "opportunityAttack": false,
+      "triggerRange": "5 ft",
+      "pool": null,
+      "detail": "Reaction: when a creature within 5 ft attacks someone else without Sentinel, make a melee weapon attack. This attack is not an opportunity attack. Your opportunity hits set Speed to 0 this turn, and Disengage does not prevent your opportunity attacks."
+    },
+    {
+      "key": "PHB|Shield Master",
+      "name": "Shield Master",
+      "source": "PHB",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction after a successful DEX save for half damage: while holding a shield, take no damage instead."
+    },
+    {
+      "key": "PHB|War Caster",
+      "name": "War Caster",
+      "source": "PHB",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "spell",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: replace an opportunity attack caused by hostile movement with a one-action spell targeting only that creature. Check spell access, components and slot cost."
+    },
+    {
+      "key": "RHW|Gathered Whispers",
+      "name": "Gathered Whispers",
+      "source": "RHW",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Gathered Whispers reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction when an attack hits you: add {PB} AC against that attack."
+    },
+    {
+      "key": "RHW|Mist Walker",
+      "name": "Mist Walker",
+      "source": "RHW",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "movement",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Mist Walker reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction on damage or a failed save against Grappled/Restrained: teleport up to 15 ft to a visible empty space."
+    },
+    {
+      "key": "RHW|Survivor",
+      "name": "Survivor",
+      "source": "RHW",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "save",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Survivor reaction",
+        "max": 1,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction on a failed save against Charmed/Frightened: add {PB} to the save."
+    },
+    {
+      "key": "RHW|Symbiotic Being",
+      "name": "Symbiotic Being",
+      "source": "RHW",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "save",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction on a failed save: expend a Hit Die, roll it and add the result to that save. Record the spent Hit Die separately."
+    },
+    {
+      "key": "SatO|Righteous Heritor",
+      "name": "Righteous Heritor",
+      "source": "SatO",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Righteous Heritor reaction",
+        "max": 6,
+        "resets": [
+          "long"
+        ]
+      },
+      "detail": "Reaction: you or a creature within 30 ft takes damage; reduce it by 1d10 + {PB}."
+    },
+    {
+      "key": "SCC|Strixhaven Mascot",
+      "name": "Strixhaven Mascot",
+      "source": "SCC",
+      "edition": "2014",
+      "actor": "familiar",
+      "kind": "command",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "During your Attack action, give up one attack so your mascot familiar can use its Reaction for one attack."
+    },
+    {
+      "key": "XGE|Bountiful Luck",
+      "name": "Bountiful Luck",
+      "source": "XGE",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "reroll",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: an ally you see within 30 ft rolls a natural 1 on an attack, check or save; let it reroll and keep the new result. Your racial Lucky trait is unavailable before the end of your next turn."
+    },
+    {
+      "key": "XGE|Fade Away",
+      "name": "Fade Away",
+      "source": "XGE",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Fade Away reaction",
+        "max": 1,
+        "resets": [
+          "short",
+          "long"
+        ]
+      },
+      "detail": "Reaction immediately after taking damage: become Invisible until your next turn ends or you attack, deal damage or force a save."
+    },
+    {
+      "key": "XGE|Orcish Fury",
+      "name": "Orcish Fury",
+      "source": "XGE",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "attack",
+      "attack": "weapon",
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction immediately after using Relentless Endurance: make one weapon attack. This does not grant another use of that racial trait."
+    },
+    {
+      "key": "XGE|Second Chance",
+      "name": "Second Chance",
+      "source": "XGE",
+      "edition": "2014",
+      "actor": "self",
+      "kind": "reroll",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": {
+        "label": "Second Chance reaction",
+        "max": 1,
+        "resets": [
+          "initiative",
+          "short",
+          "long"
+        ]
+      },
+      "detail": "Reaction: a creature you see hits you; force an attack reroll. Recover on initiative, Short Rest or Long Rest."
+    },
+    {
+      "key": "XPHB|Boon of Energy Resistance",
+      "name": "Boon of Energy Resistance",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "damage",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction on damage of either chosen resistance type: redirect toward a visible creature within 60 ft without Total Cover. DEX DC {CONDC}; failure deals 2d12 + {CON} of the triggering type."
+    },
+    {
+      "key": "XPHB|Boon of the Night Spirit",
+      "name": "Boon of the Night Spirit",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "none",
+      "kind": "restriction",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Taking a Reaction ends the Invisibility granted by Merge with Shadows. This does not grant a new Reaction."
+    },
+    {
+      "key": "XPHB|Defensive Duelist",
+      "name": "Defensive Duelist",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction on a melee hit against you while holding a Finesse weapon: add {PB} AC against melee attacks until your next turn."
+    },
+    {
+      "key": "XPHB|Interception",
+      "name": "Interception",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: a creature you see hits someone else within 5 ft; reduce that damage by 1d10 + {PB}. Hold a shield or Simple/Martial weapon."
+    },
+    {
+      "key": "XPHB|Mage Slayer",
+      "name": "Mage Slayer",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "none",
+      "kind": "changed-rule",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "The revised feat does not grant the legacy spellcasting-triggered reaction attack."
+    },
+    {
+      "key": "XPHB|Polearm Master",
+      "name": "Polearm Master",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "attack",
+      "attack": "polearm",
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: a creature enters your quarterstaff, spear or Heavy + Reach weapon’s reach; make one melee attack. Reactive Strike is not an opportunity attack."
+    },
+    {
+      "key": "XPHB|Protection",
+      "name": "Protection",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: an enemy you see attacks someone else within 5 ft. With a shield, impose Disadvantage on that attack and further attacks against the target until your next turn while you stay within 5 ft."
+    },
+    {
+      "key": "XPHB|Sentinel",
+      "name": "Sentinel",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "attack",
+      "attack": "melee",
+      "opportunityAttack": true,
+      "triggerRange": "5 ft",
+      "pool": null,
+      "detail": "Reaction: a creature within 5 ft Disengages or hits someone else; make an opportunity attack. An opportunity hit sets its Speed to 0 for this turn."
+    },
+    {
+      "key": "XPHB|Shield Master",
+      "name": "Shield Master",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "defense",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction after a successful DEX save for half damage: while holding a shield, take no damage instead."
+    },
+    {
+      "key": "XPHB|Speedy",
+      "name": "Speedy",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "none",
+      "kind": "avoidance",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Opportunity attacks against you have Disadvantage. This does not grant you a Reaction."
+    },
+    {
+      "key": "XPHB|War Caster",
+      "name": "War Caster",
+      "source": "XPHB",
+      "edition": "2024",
+      "actor": "self",
+      "kind": "spell",
+      "attack": null,
+      "opportunityAttack": false,
+      "triggerRange": null,
+      "pool": null,
+      "detail": "Reaction: when a creature provokes an opportunity attack by leaving your reach, cast a one-action spell targeting only it instead. Check spell access, components and slot cost."
+    }
+  ]
+}

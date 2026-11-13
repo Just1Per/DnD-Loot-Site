@@ -3,17 +3,21 @@
 var CharacterPaperResources=(()=>{
  const feats=()=>typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
  const classes=()=>typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices');
- function rows(data,derived,level){return[
-  ...(derived.classResources||[]).map(row=>({...row,resourceKey:'class:'+row.id,resourceType:'class',resourceId:row.id,editableUsed:!row.unlimited&&!row.managedSlots&&!row.managedWildShape&&!row.managedActivation&&!row.channelEffects})),
-  ...(derived.feats?.reports||[]).flatMap(report=>{const pool=feats().resource(report.def,level);return pool?[{name:report.def.name+' · '+report.def.edition,max:pool.max,used:report.choice.used,remaining:Math.max(0,pool.max-report.choice.used),recovery:pool.resets.join(', '),resourceKey:'feat:'+report.key,resourceType:'feat',resourceId:report.key,editableUsed:true,warnings:report.warnings,description:pool.label}]:[];}),
-  ...(derived.itemResources||[]).map(row=>({...row,name:row.name+(row.initialized?'':' · set counter'),recovery:row.definition.recovery+(row.definition.reminder?' · '+row.definition.reminder:''),resourceKey:'item:'+row.id,resourceType:'item',resourceId:row.id,editableUsed:row.initialized,used:row.initialized?row.used:'',description:row.sourceEdition+' item reference'}))
- ];}
+ function rows(data,derived,level){
+  const Combat=globalThis.CharacterFeatCombat||(typeof require==='function'?require('./character-feat-combat'):null),Reactions=globalThis.CharacterFeatReactions||(typeof require==='function'?require('./character-feat-reactions'):null),reminders=Combat?.reminders(data,derived)||[],byKey=new Map(reminders.map(r=>[r.report.key,r])),featRows=(derived.feats?.reports||[]).flatMap(report=>{const pool=feats().resource(report.def,level),reminder=byKey.get(report.key);if(!pool&&!reminder||(Combat?.cues[report.def.name]||Reactions?.forFeat(report.def))&&!reminder)return[];return[{name:report.def.name+' · '+report.def.edition,max:pool?.max??'',used:pool?report.choice.used:'',remaining:pool?Math.max(0,pool.max-report.choice.used):'',recovery:pool?pool.resets.join(', '):'Trigger',resourceKey:'feat:'+report.key,resourceType:'feat',resourceId:report.key,editableUsed:!!pool,combatReminder:!!reminder,warnings:report.warnings,description:reminder?[pool?.label,reminder.detail].filter(Boolean).join(' · '):pool.label}];});
+  return[
+   ...featRows.filter(row=>row.combatReminder),
+   ...(derived.classResources||[]).map(row=>({...row,resourceKey:'class:'+row.id,resourceType:'class',resourceId:row.id,editableUsed:!row.unlimited&&!row.managedSlots&&!row.managedWildShape&&!row.managedActivation&&!row.channelEffects})),
+   ...featRows.filter(row=>!row.combatReminder),
+   ...(derived.itemResources||[]).map(row=>({...row,name:row.name+(row.initialized?'':' · set counter'),recovery:row.definition.recovery+(row.definition.reminder?' · '+row.definition.reminder:''),resourceKey:'item:'+row.id,resourceType:'item',resourceId:row.id,editableUsed:row.initialized,used:row.initialized?row.used:'',description:row.sourceEdition+' item reference'}))
+  ];
+ }
  const validKey=key=>typeof key==='string'&&/^(?:class|feat|item):[^/\r\n]{1,200}$/.test(key);
  function normalizeSlots(raw){return Array.from({length:16},(_,i)=>{const row=raw?.[i];return{key:validKey(row?.key)?row.key:'',name:String(row?.name||'').slice(0,200),empty:row?.empty===true};});}
  function normalizeHidden(raw){return [...new Set((Array.isArray(raw)?raw:[]).filter(validKey))].slice(0,200);}
  function displayRows(data,derived,level){const all=rows(data,derived,level),slots=normalizeSlots(data.adobe?.paperCombat?.resourceSlots),reserved=new Set([...slots.map(row=>row.key).filter(Boolean),...normalizeHidden(data.adobe?.paperCombat?.hiddenResources)]),queue=all.filter(row=>!reserved.has(row.resourceKey));return slots.map(slot=>slot.empty?null:slot.key?all.find(row=>row.resourceKey===slot.key)||{name:(slot.name||'Saved feature')+' (unavailable)',resourceKey:slot.key,max:'',used:'',recovery:'',editableUsed:false,unavailable:true}:queue.shift()||null);}
  function overflowRows(data,derived,level){const shown=new Set(displayRows(data,derived,level).filter(Boolean).map(row=>row.resourceKey)),hidden=new Set(normalizeHidden(data.adobe?.paperCombat?.hiddenResources));return rows(data,derived,level).filter(row=>!shown.has(row.resourceKey)&&!hidden.has(row.resourceKey));}
- function describeRows(rows){return rows.map(row=>row.name+'\nMaximum: '+(row.unlimited?'Unlimited':row.max)+(row.unit?' '+row.unit:'')+' · Used: '+(row.used===null||row.used===''?'Not recorded':row.used)+'\nRecovery: '+(row.recovery||'See feature rules')).join('\n\n');}
+ function describeRows(rows){return rows.map(row=>row.combatReminder&&row.max===''?row.name+'\n'+row.description:row.name+(row.description?'\n'+row.description:'')+'\nMaximum: '+(row.unlimited?'Unlimited':row.max)+(row.unit?' '+row.unit:'')+' · Used: '+(row.used===null||row.used===''?'Not recorded':row.used)+'\nRecovery: '+(row.recovery||'See feature rules')).join('\n\n');}
  function operation(data,derived,level,index,command){
   if(!Number.isInteger(index)||index<0||index>15)throw Error('Choose an available paper feature row.');
   const visible=displayRows(data,derived,level),stored=normalizeSlots(data.adobe?.paperCombat?.resourceSlots),hidden=normalizeHidden(data.adobe?.paperCombat?.hiddenResources),slots=visible.map((row,i)=>row?{key:row.resourceKey,name:row.name,empty:false}:{...stored[i]});let selected=index;

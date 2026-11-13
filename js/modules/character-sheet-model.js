@@ -234,6 +234,7 @@ var CharacterSheetModel = (() => {
       school: text(s?.school),
       book: text(s?.book),
       page: text(s?.page),
+      shortDescription: typeof s?.shortDescription==='string'?s.shortDescription.slice(0,400):'',
       notes: text(s?.notes)
     }));
     return result;

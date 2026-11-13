@@ -31,6 +31,7 @@ const registry={
  adobeDruidFormsDialog:['moves-component','Class features → Druid forms','character-adobe-druid-forms-ui.js','Flytter #sheetDruidWildShape med placeholder; native skal må ikke forveksles med uafhængigt indhold.'],
  adobeEquipmentDialog:['adobe-dialog','Equipment.menu eller Special features → Equipment','character-adobe-equipment-ui.js','Native add/preview/confirm; bruger fælles inventory/state.'],
  adobeFeatDialog:['adobe-dialog','Feat-knapper eller Special features → Feats','character-adobe-feat-ui.js','Kan åbne personal feat-editor og feat information.'],
+ adobeSpellListDialog:['adobe-dialog','Read spell list ved spell-arkets overskrift','character-adobe-spell-list-ui.js','Selvstændig læseliste med level-grupper, korte beskrivelser og udfoldede fulde noter; gemmer ikke separat spell-data.'],
  adobeSpellDialog:['adobe-dialog','Choose spells, spell-felt/knap, Special features','character-adobe-spell-ui.js','Native selection draft; bruger casting-engine og fælles spell-rendering.'],
  adobeRaceSpellDialog:['adobe-dialog','Generate spell sheet → Race spells','character-adobe-spell-ui.js','Race-cantrip/ability-valg; fælles session.'],
  adobeSpellSourcesDialog:['adobe-dialog','Special features → Generate spell sheet','character-adobe-spell-ui.js','Viderestiller til class/race/feat-spellvalg.'],

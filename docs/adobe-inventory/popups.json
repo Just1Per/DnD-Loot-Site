@@ -30,7 +30,7 @@
     {
       "id": "adobeAttackChoiceMenu",
       "file": "js/modules/character-adobe-attack-menu.js",
-      "line": 14,
+      "line": 15,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Attack name-felt",
@@ -38,7 +38,8 @@
       "testReferences": [
         "adobe-attack-access-browser.cjs",
         "adobe-attack-choice-flyout-browser.cjs",
-        "adobe-connected-sheet-browser.cjs"
+        "adobe-connected-sheet-browser.cjs",
+        "adobe-feat-reactions-browser.cjs"
       ]
     },
     {
@@ -165,6 +166,18 @@
       ]
     },
     {
+      "id": "adobeSpellListDialog",
+      "file": "js/modules/character-adobe-spell-list-ui.js",
+      "line": 11,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Read spell list ved spell-arkets overskrift",
+      "notes": "Selvstændig læseliste med level-grupper, korte beskrivelser og udfoldede fulde noter; gemmer ikke separat spell-data.",
+      "testReferences": [
+        "adobe-spell-list-browser.cjs"
+      ]
+    },
+    {
       "id": "adobeSpellDialog",
       "file": "js/modules/character-adobe-spell-ui.js",
       "line": 11,
@@ -242,7 +255,7 @@
     {
       "id": "adobeSpecialFeaturesMenu",
       "file": "js/modules/character-adobe-view.js",
-      "line": 149,
+      "line": 151,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Show extra features",
@@ -255,7 +268,7 @@
     {
       "id": "adobeSharedEditor",
       "file": "js/modules/character-adobe-view.js",
-      "line": 213,
+      "line": 215,
       "kind": "dialog",
       "category": "moves-standard-body",
       "entry": "Alle aktive bridge-routes i routetabellen",
@@ -282,6 +295,7 @@
         "adobe-page-choices-browser.cjs",
         "adobe-paper-combat-browser.cjs",
         "adobe-paper-controls-browser.cjs",
+        "adobe-satyr-movement-browser.cjs",
         "adobe-slot-labels-browser.cjs",
         "adobe-spell-pages-browser.cjs",
         "adobe-tool-check-browser.cjs"
@@ -290,7 +304,7 @@
     {
       "id": "adobeNotesOptions",
       "file": "js/modules/character-adobe-view.js",
-      "line": 311,
+      "line": 313,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Notes.Options",
@@ -465,6 +479,7 @@
       "entry": "Action/Bonus Action/Reaction-arrows",
       "notes": "Egen row-menu; edit kan åbne paperCombat-bridge.",
       "testReferences": [
+        "adobe-feat-reactions-browser.cjs",
         "adobe-paper-combat-browser.cjs"
       ]
     },
@@ -477,6 +492,7 @@
       "entry": "Gear-arrows og Enter/dobbeltklik på gear",
       "notes": "Native row-editor, source catalogue og confirmations; delt inventory-engine.",
       "testReferences": [
+        "adobe-combat-feats-equipment-browser.cjs",
         "adobe-gear-catalog-browser.cjs",
         "adobe-gear-combining-browser.cjs",
         "adobe-gear-page-transfers-browser.cjs",
@@ -500,7 +516,7 @@
     {
       "id": "adobeFooterDialog",
       "file": "js/modules/character-paper-inventory-ui.js",
-      "line": 31,
+      "line": 33,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Equipment footer/layout-controls",
@@ -547,6 +563,7 @@
       "entry": "Limited Feature arrows",
       "notes": "Egen row-menu; Open feature controls åbner resources-bridge eller item controls.",
       "testReferences": [
+        "adobe-combat-feats-equipment-browser.cjs",
         "adobe-feature-counters-browser.cjs",
         "adobe-resource-menus-browser.cjs"
       ]
@@ -865,97 +882,97 @@
   "editorCalls": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 110,
+      "line": 112,
       "command": "dynamic",
       "expression": "row.descriptor.command"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 148,
+      "line": 150,
       "command": "dynamic",
       "expression": "id"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 175,
+      "line": 177,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 175,
+      "line": 177,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 175,
+      "line": 177,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 175,
+      "line": 177,
       "command": "experience",
       "expression": "'experience'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 175,
+      "line": 177,
       "command": "story",
       "expression": "'story'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 175,
+      "line": 177,
       "command": "feats",
       "expression": "'feats'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 175,
+      "line": 177,
       "command": "dynamic",
       "expression": "cmd"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 217,
+      "line": 219,
       "command": "conditions",
       "expression": "'conditions'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 316,
+      "line": 318,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 394,
+      "line": 396,
       "command": "spells",
       "expression": "'spells'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 399,
+      "line": 401,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 400,
+      "line": 402,
       "command": "dynamic",
       "expression": "editorChoice.value"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 410,
+      "line": 412,
       "command": "dynamic",
       "expression": "st.editor"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 430,
+      "line": 432,
       "command": "dynamic",
       "expression": "key"
     },
@@ -991,7 +1008,7 @@
     },
     {
       "file": "js/modules/character-paper-inventory-ui.js",
-      "line": 47,
+      "line": 49,
       "command": "paperInventory",
       "expression": "'paperInventory'"
     },
@@ -1029,17 +1046,17 @@
   "sharedCommands": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 175,
+      "line": 177,
       "expression": "'[data-combat-recover=\"'+(source.id==='SR'?'short':'long')+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 255,
+      "line": 257,
       "expression": "'[data-generated-prepare=\"'+entry.i+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 399,
+      "line": 401,
       "expression": "'[data-wild-end]'"
     }
   ]

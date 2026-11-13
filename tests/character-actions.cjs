@@ -19,3 +19,14 @@ test('Action normalization preserves choices, bounds slots and limits count',()=
 test('Background suggestions follow edition-neutral background identity and variants',()=>{assert.deepEqual(S.get('criminal-2014'),S.get('criminal-2024'));assert.deepEqual(S.get('spy-2014'),S.get('criminal-2014'));assert.notDeepEqual(S.get('criminal-2024'),S.get('noble-2024'));assert.equal(S.get('custom').personality.length,0);});
 test('2014 Grapple and Shove use Athletics rather than a weapon attack or damage',()=>{const d=base();d.build.edition='2014';d.skills.athletics.rank=2;const snapshot=JSON.stringify({hp:d.hpCurrent,slots:d.slots,coins:d.coins});for(const kind of ['grapple','shove']){const a=run({kind},d);assert.equal(a.hit,'+10');assert.equal(a.range,'5 ft');assert.match(a.notes.join(' '),/contested/);assert.equal(a.damage,kind==='grapple'?'Grappled':'Prone / push 5 ft');}assert.equal(JSON.stringify({hp:d.hpCurrent,slots:d.slots,coins:d.coins}),snapshot);});
 test('2024 Grapple and Shove use STR/DEX saves, and active Monk Martial Arts can use Dexterity',()=>{const d=base();for(const kind of ['grapple','shove'])assert.equal(run({kind},d).hit,'STR/DEX DC 15');d.build.classId='monk';d.abilities.str=10;d.abilities.dex=18;assert.equal(run({kind:'grapple'},d).hit,'STR/DEX DC 15');d.build.edition='2014';assert.equal(run({kind:'grapple'},d).hit,'+0');assert.deepEqual(A.normalize([{kind:'grapple'},{kind:'shove'}]).map(row=>row.kind),['grapple','shove']);});
+
+test('Satyr sources retain their own Ram dice, Fey type, training and 35 ft speed in both rule editions',()=>{
+ for(const edition of ['2014','2024'])for(const [race,die,source]of [['satyr-mpmm','1d6','MPMM'],['satyr-mot','1d4','MOT']]){
+  const d=base();d.build.edition=edition;d.build.race=race;d.build.scoreMode='final';const r=M.derive(d,4);
+  assert.equal(r.effects.speed,35);assert.equal(r.effects.race.creatureType,'Fey');assert.equal(r.effects.race.book,source);
+  assert.ok(r.effects.skills.includes('performance'));assert.ok(r.effects.skills.includes('persuasion'));
+  assert.equal(run({kind:'unarmed'},d,4).damage,die+' + 4 bludgeoning');assert.match(r.effects.race.traits.join(' '),/Mirthful Leaps/);
+  assert.equal(r.effects.race.traits.join(' ').includes('other magical effects'),source==='MOT');
+ }
+ const d=base();d.build.race='satyr-mpmm';d.build.classId='monk';assert.equal(run({kind:'unarmed'},d,11).damage,'1d10 + 4 bludgeoning');
+});
