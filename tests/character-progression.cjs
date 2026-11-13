@@ -54,3 +54,10 @@ assert.equal(averageMulti.max,39);assert.equal(averageMulti.roundingHP,0.5);asse
 assert.equal(P.calculateHP({classLevels:[{classId:'wizard',level:20}],constitution:1,hpMode:'average'}).max,20);
 assert.equal(P.calculateHP({classLevels:[{classId:'wizard',level:3}],constitution:10,hpMode:'fixed'}).max,14);
 console.log('SUCCESS Adobe average HP: one final rounding, first-level maximum, all class levels, multiclass, bonuses and minimum HP');
+
+// The next XP threshold belongs to the current character level, even with milestone leveling.
+for(let level=1;level<=20;level++){
+ const p=P.xpProgress(0,level);assert.equal(p.level,1,'XP-derived level remains independent');assert.equal(p.next,level<20?P.XP_THRESHOLDS[level]:null);assert.equal(p.current,P.XP_THRESHOLDS[level-1]);assert.equal(p.remaining,level<20?P.XP_THRESHOLDS[level]:0);
+}
+assert.equal(P.xpProgress(355000,4).next,6500);assert.equal(P.xpProgress(355000,4).remaining,0);
+console.log('SUCCESS next-level XP follows character levels 1–20 independently of recorded XP');

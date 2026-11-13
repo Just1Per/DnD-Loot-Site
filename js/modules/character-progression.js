@@ -66,11 +66,13 @@ var CharacterProgression = (() => {
     return level;
   }
 
-  function xpProgress(value) {
+  function xpProgress(value, characterLevel = null) {
     const xp = Math.max(0, Math.trunc(Number(String(value ?? '').replace(/,/g,'')) || 0));
     const level = levelFromXP(xp);
-    const current = XP_THRESHOLDS[level - 1];
-    const next = level < 20 ? XP_THRESHOLDS[level] : null;
+    // Milestone sheets still show the threshold for their actual character level.
+    const thresholdLevel = characterLevel == null ? level : clampLevel(characterLevel);
+    const current = XP_THRESHOLDS[thresholdLevel - 1];
+    const next = thresholdLevel < 20 ? XP_THRESHOLDS[thresholdLevel] : null;
     return {
       xp,
       level,

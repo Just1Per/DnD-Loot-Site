@@ -114,3 +114,8 @@
 .field .adobe-rules-version:hover{background:#f3e5ce}
 .field .adobe-rules-version:focus-visible{outline:2px solid #2169a8;outline-offset:1px}
 @media print{.field .adobe-rules-version{border:0;border-radius:0;background:transparent;color:#111;gap:0;padding:0}.adobe-rules-arrow{display:none}.adobe-rules-version:after{content:' rules'}}
+
+.pdf-button.adobe-xp-mode{padding:0;border:1px solid #b39b78;border-radius:calc(var(--scale)*1px);background:#fff5e4;color:#65352c;font-size:calc(var(--scale)*5.5px);line-height:1;white-space:nowrap}
+.pdf-button.adobe-xp-mode[aria-pressed=true]{background:#f0e0c7;border-color:#71342f}
+.pdf-button.adobe-xp-mode:hover{background:#f3e5ce}
+.pdf-button.adobe-xp-mode:focus-visible{outline:2px solid #2169a8;outline-offset:1px}
