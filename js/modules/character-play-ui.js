@@ -3,11 +3,11 @@
 function characterSpellPresentation(data,derived,level){
  const profiles=CharacterSpellcasting.profiles(data,derived.progression?.targetLevel||level,derived.scores),byClass=new Map(profiles.map(p=>[p.classId,p])),automaticByClass=new Map(profiles.map(p=>[p.classId,new Set(CharacterSpellcasting.automaticGrants(p,CharacterCatalog.rawData?.spells||[]).map(s=>s.id))]));
  return data.spells.map((spell,i)=>{
-  const c=CharacterCatalog.find(spell.catalogId),description=spell.notes||c?.shortDescription||c?.description||'Source reference only';
+  const summaries=globalThis.CharacterSpellSummaries||(typeof require==='function'?require('./character-spell-summaries'):null),c=CharacterCatalog.find(spell.catalogId),description=spell.notes||c?.shortDescription||c?.description||'Source reference only';
   const invocation=CharacterClassFeatureChoices.cantripModifier(data,derived.cantripInvocations,spell.catalogId,spell.classId);
   const mark=CharacterClassFeatureChoices.huntersMarkEffect(data,c,{level:derived.progression?.targetLevel||level,classId:spell.classId,features:derived.rangerFeatures});
   const beast=globalThis.CharacterDruidSpellcasting?.assess(data,c||spell,{level:derived.progression?.targetLevel||level,classId:spell.classId}),profile=byClass.get(spell.classId),automatic=!!automaticByClass.get(spell.classId)?.has(spell.catalogId);
-  return {spell,i,c,description,save:spell.save||c?.save||'',school:spell.school||c?.school||'',book:spell.book||c?.source||c?.book||'',page:spell.page||c?.page||'',invocation,mark,beast,profile,automatic,preparationEditable:CharacterSpellcasting.isPreparedToggleUseful(profile)&&spell.level>0&&!automatic,range:invocation?.range||(c?CharacterClassFeatureChoices.cantripRange(c,derived.progression?.targetLevel||level,spell.range):spell.range)};
+  return {spell,i,c,description,shortDescription:summaries?.forRow(spell,c)||description,save:spell.save||c?.save||'',school:spell.school||c?.school||'',book:spell.book||c?.source||c?.book||'',page:spell.page||c?.page||'',invocation,mark,beast,profile,automatic,preparationEditable:CharacterSpellcasting.isPreparedToggleUseful(profile)&&spell.level>0&&!automatic,range:invocation?.range||(c?CharacterClassFeatureChoices.cantripRange(c,derived.progression?.targetLevel||level,spell.range):spell.range)};
  }).sort((a,b)=>a.spell.level-b.spell.level||a.spell.name.localeCompare(b.spell.name));
 }
 function applyCharacterBackgroundDetail(value,session=sheetSession,key=CharacterAdobeEngine.backgroundKey(session?.data)){

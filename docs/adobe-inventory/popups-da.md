@@ -2,7 +2,7 @@
 
 Genereret med `node scripts/audit-adobe-popups.cjs`. Dette er en statisk kortlægning, ikke et løfte om fuld funktionel paritet. Gentagne IDs er samme popup-familie. Testreferencer betyder, at testen nævner id’et; de er ikke i sig selv et bestået testresultat.
 
-Der er 44 registrerede popup-familier og 29 editor-routes.
+Der er 45 registrerede popup-familier og 29 editor-routes.
 
 ## Popup-familier
 
@@ -19,6 +19,7 @@ Der er 44 registrerede popup-familier og 29 editor-routes.
 | adobeEquipmentDialog | adobe-dialog | Equipment.menu eller Special features → Equipment | Native add/preview/confirm; bruger fælles inventory/state. | [character-adobe-equipment-ui.js:8](../../js/modules/character-adobe-equipment-ui.js#L8) |
 | adobeFeatDialog | adobe-dialog | Feat-knapper eller Special features → Feats | Kan åbne personal feat-editor og feat information. | [character-adobe-feat-ui.js:7](../../js/modules/character-adobe-feat-ui.js#L7) |
 | sheetPageManager | standard-only | Standard page navigation → Add pages | Templatebygget dialog bevaret bag skjult Standard-navigation; Adobe bruger adobePagesDialog. | [character-adobe-pages.js:9](../../js/modules/character-adobe-pages.js#L9) |
+| adobeSpellListDialog | adobe-dialog | Read spell list ved spell-arkets overskrift | Selvstændig læseliste med level-grupper, korte beskrivelser og udfoldede fulde noter; gemmer ikke separat spell-data. | [character-adobe-spell-list-ui.js:11](../../js/modules/character-adobe-spell-list-ui.js#L11) |
 | adobeSpellDialog | adobe-dialog | Choose spells, spell-felt/knap, Special features | Native selection draft; bruger casting-engine og fælles spell-rendering. | [character-adobe-spell-ui.js:11](../../js/modules/character-adobe-spell-ui.js#L11) |
 | adobeRaceSpellDialog | adobe-dialog | Generate spell sheet → Race spells | Race-cantrip/ability-valg; fælles session. | [character-adobe-spell-ui.js:78](../../js/modules/character-adobe-spell-ui.js#L78) |
 | adobeSpellSourcesDialog | adobe-dialog | Special features → Generate spell sheet | Viderestiller til class/race/feat-spellvalg. | [character-adobe-spell-ui.js:97](../../js/modules/character-adobe-spell-ui.js#L97) |

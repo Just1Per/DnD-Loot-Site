@@ -423,20 +423,33 @@ var CharacterRaceCatalog = (() => {
       traits: [flight]
     }, 'SCC');
     add('satyr-mpmm', 'Satyr', {
-      creatureType: 'Fey',
-      speed: 35,
-      skills: [
-        'performance',
-        'persuasion'
-      ],
-      toolCount: 1,
-      instrumentOnly: true,
+      page: 29,
+      creatureType: 'Fey', speed: 35,
+      skills: ['performance', 'persuasion'], toolCount: 1, instrumentOnly: true,
+      unarmedDamage: '1d6',
       traits: [
+        'Fey heritage: a horned, hoofed reveler; choose your own personality and ties to the Feywild.',
         'Ram: unarmed bludgeoning damage 1d6 + STR.',
-        'Spell saves have advantage.',
-        'Jumps gain 1d8 ft, including standing jumps; movement cost still applies.'
+        'Magic Resistance: advantage on saving throws against spells.',
+        'Mirthful Leaps: add 1d8 ft to a long or high jump, even standing; the distance still uses movement.',
+        'Reveler: Performance, Persuasion and one musical instrument.'
       ]
     });
+    add('satyr-mot', 'Satyr', {
+      page: 24,
+      creatureType: 'Fey', speed: 35,
+      asi: {cha: 2, dex: 1}, flexible: false,
+      languages: ['Common', 'Sylvan'], extraLanguage: false,
+      skills: ['performance', 'persuasion'], toolCount: 1, instrumentOnly: true,
+      unarmedDamage: '1d4',
+      traits: [
+        'Theros heritage: a horned, hoofed reveler from a world of gods and myths; choose your own beliefs and temperament.',
+        'Ram: unarmed bludgeoning damage 1d4 + STR.',
+        'Magic Resistance: advantage on saving throws against spells and other magical effects.',
+        'Mirthful Leaps: add 1d8 ft to a long or high jump, even standing; the distance still uses movement.',
+        'Reveler: Performance, Persuasion and one musical instrument.'
+      ]
+    }, 'MOT', 'Setting specific');
     for (const [id, name, resistance] of [
         [
           'sea-elf',

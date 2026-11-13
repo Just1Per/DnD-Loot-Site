@@ -166,6 +166,18 @@
       ]
     },
     {
+      "id": "adobeSpellListDialog",
+      "file": "js/modules/character-adobe-spell-list-ui.js",
+      "line": 11,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Read spell list ved spell-arkets overskrift",
+      "notes": "Selvstændig læseliste med level-grupper, korte beskrivelser og udfoldede fulde noter; gemmer ikke separat spell-data.",
+      "testReferences": [
+        "adobe-spell-list-browser.cjs"
+      ]
+    },
+    {
       "id": "adobeSpellDialog",
       "file": "js/modules/character-adobe-spell-ui.js",
       "line": 11,
@@ -283,6 +295,7 @@
         "adobe-page-choices-browser.cjs",
         "adobe-paper-combat-browser.cjs",
         "adobe-paper-controls-browser.cjs",
+        "adobe-satyr-movement-browser.cjs",
         "adobe-slot-labels-browser.cjs",
         "adobe-spell-pages-browser.cjs",
         "adobe-tool-check-browser.cjs"

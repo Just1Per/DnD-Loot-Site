@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261113-feat-reactions-v80";
+const ASSET_VERSION = "20261113-sheet-feedback-v81";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -104,6 +104,7 @@ const FEATURE_FILES = [
   "./modules/character-feat-reference.js",
   "./modules/character-personal-feats.js",
   "./modules/character-feat-rules.js",
+  "./modules/character-spell-summaries.js",
   "./modules/character-catalog.js",
   "./modules/character-divine-channel.js",
   "./modules/character-class-feature-choices.js",
@@ -303,6 +304,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-personal-feat-ui.js",
     "./modules/character-adobe-feat-ui.js",
     "./modules/character-adobe-spell-ui.js",
+    "./modules/character-adobe-spell-list-ui.js",
     "./modules/character-paper-weight-ui.js",
     "./modules/character-adobe-choice-ui.js",
     "./modules/character-adobe-stack-ui.js",

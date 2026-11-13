@@ -21,8 +21,9 @@ const assert=require('node:assert/strict'),{chromium}=require(process.env.PLAYWR
   assert.deepEqual(await page.evaluate(id=>sheetSession.data.adobe.featText[id],setup.featId),{name:'Early-warning training',description:'Player wording for this feat.'});
   await host.locator('#adobePage').selectOption('template-SSfront');
   await field('spells.name.1').fill('Arcane dart');await field('spells.name.1').press('Tab');
+  const fullSpellNotes=await page.evaluate(()=>sheetSession.data.spells[0].notes);
   await field('spells.description.1').fill('Player wording for this spell.');await field('spells.description.1').press('Tab');
-  assert.deepEqual(await page.evaluate(()=>({name:sheetSession.data.spells[0].name,notes:sheetSession.data.spells[0].notes,catalogId:sheetSession.data.spells[0].catalogId})),{name:'Arcane dart',notes:'Player wording for this spell.',catalogId:setup.spellId});
+  assert.deepEqual(await page.evaluate(()=>({name:sheetSession.data.spells[0].name,shortDescription:sheetSession.data.spells[0].shortDescription,notes:sheetSession.data.spells[0].notes,catalogId:sheetSession.data.spells[0].catalogId})),{name:'Arcane dart',shortDescription:'Player wording for this spell.',notes:fullSpellNotes,catalogId:setup.spellId});
   await page.locator('#sheetSave').click();await page.waitForFunction(()=>!sheetSession.saving&&!sheetSession.dirty);
   await page.evaluate(async()=>{closeCharacterSheet(true);await openCharacterSheet('c1')});
   await host.locator('#adobePage').selectOption('page-3');await field('Feat Name 1').waitFor({state:'visible'});
