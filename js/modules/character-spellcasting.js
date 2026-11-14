@@ -219,7 +219,7 @@ var CharacterSpellcasting=(()=>{
     return rows.filter(row=>{const mode=data.adobe?.spellDisplay?.[row.spell.classId];return mode!=='prepared'||!isPreparedToggleUseful(row.profile)||row.spell.level===0||row.automatic||row.spell.prepared;});
   }
   function prepareReference(data,p,spell,catalogue,allowed=()=>true){
-    if(!p||!isPreparedToggleUseful(p)||!spell||spell.level===0||!eligibleSpells(p,catalogue,allowed).some(row=>row.id===spell.id))throw Error('This spell is not available to prepare.');
+    if(!p||p.mode!=='prepared'||!spell||spell.level===0||!eligibleSpells(p,catalogue,allowed).some(row=>row.id===spell.id))throw Error('This spell is not available to prepare.');
     const rows=data.spells||[],old=rows.find(row=>row.classId===p.classId&&row.catalogId===spell.id);if(old)throw Error('Reopen this spell after the sheet updates.');
     if(rows.length>=150)throw Error('The saved spell list is full. Remove a saved reference first.');
     const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null),row={...C.spellRow(spell),classId:p.classId,prepared:true},classRows=rows.filter(s=>s.classId===p.classId),status=selectionState(p,[...classRows,row],catalogue,classRows);if(status.error)throw Error(status.error);return[...rows,row];
