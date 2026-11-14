@@ -62,3 +62,10 @@ assert.equal(CharacterMagicItems.isMagical({name:'Healing Potion',category:'Poti
 assert.equal(CharacterMagicItems.isMagical({name:'Ring of Protection'}),true);
 assert.equal(CharacterMagicItems.isMagical({name:'Custom ward',mechanics:{kind:'accessory',acBonus:1}}),true);
 console.log('SUCCESS Adobe magic-item reference and automatic effects');
+
+require('node:test').test('legacy Library attunement strings and reqAttune metadata enable the same rule as the boolean flag',()=>{
+ const Magic=require('../js/modules/character-magic-items');
+ for(const value of [true,1,'true',' yes ','Requires Attunement','requires attunement by a wizard','by a cleric','(requires attunement)']){assert.equal(Magic.requiresAttunement({name:'Legacy custom relic',attunement:value}),true,String(value));assert.equal(Magic.isMagical({name:'Legacy custom relic',attunement:value}),true,String(value));}
+ for(const value of [false,0,'false','no','none','not required','yesterday','requiredness','',null])assert.equal(Magic.requiresAttunement({name:'Custom item',attunement:value}),false,String(value));
+ assert.equal(Magic.requiresAttunement({name:'Imported relic',reqAttune:'by a wizard'}),true);assert.equal(Magic.requiresAttunement({name:'Imported relic',reqAttune:false}),false);
+});

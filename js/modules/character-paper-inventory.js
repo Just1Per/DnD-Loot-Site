@@ -9,8 +9,10 @@ var CharacterPaperInventory=(()=>{
    const key=row&&copyKey(row);if(!validId(row?.id)||!validCopyKey(key)||!['gear','extra'].includes(row.destination)||!Number.isInteger(row.slot)||row.slot<0||row.slot>89||copyIds.has(key))return false;copyIds.add(key);return true;
   }).map(row=>({id:row.id,name:String(row.name||'').slice(0,200),destination:row.destination,slot:row.slot,key:copyKey(row)}));
   const ids=new Set(),footer=Array.from({length:3},(_,i)=>{const row=raw?.footer?.[i];if(!validId(row?.id)||ids.has(row.id))return null;ids.add(row.id);return{id:row.id,name:String(row.name||'').slice(0,200)};});
-  return{autoAttuned:raw?.autoAttuned===true,attunedFooter:raw?.attunedFooter===true,footer,copies,gearLayout:Layout.normalize(raw?.gearLayout)};
+  const visibility=['shown','hidden'].includes(raw?.footerVisibility)?raw.footerVisibility:null;
+  return{...(visibility?{footerVisibility:visibility}:{}),autoAttuned:raw?.autoAttuned===true,attunedFooter:visibility?visibility==='shown':raw?.attunedFooter===true,footer,copies,gearLayout:Layout.normalize(raw?.gearLayout)};
  }
+ function initialize(raw={}){const state=normalize(raw);if(!state.footerVisibility){state.footerVisibility='shown';state.attunedFooter=true;if(!state.footer.some(Boolean))state.autoAttuned=true;}return state;}
  const range=(state,destination)=>destination==='gear'?[0,state.attunedFooter?49:53]:[54,89];
  const reference=(saved,byId)=>{const source=byId.get(saved.id);return source?{...source,quantity:'',reference:true}:{id:saved.id,name:(saved.name||'Saved item')+' (unavailable)',quantity:'',weight:null,reference:true,unavailable:true};};
  function automaticState(raw,all){
@@ -69,7 +71,7 @@ var CharacterPaperInventory=(()=>{
   else throw Error('Choose an original equipment destination.');
   state.gearLayout.layout=state.gearLayout.layout.filter(row=>!keys.includes(row.key));for(const key of keys)delete state.gearLayout.values[key];return state;
  }
- function footer(raw,enabled){if(typeof enabled!=='boolean')throw Error('Choose whether to show the footer.');return{...normalize(raw),attunedFooter:enabled};}
+ function footer(raw,enabled){if(typeof enabled!=='boolean')throw Error('Choose whether to show the footer.');return{...normalize(raw),attunedFooter:enabled,footerVisibility:enabled?'shown':'hidden'};}
  function gearRows(raw,all){const base=project(raw,all,{base:true});return continuation(base.state,all,Layout.project(base.state.gearLayout,base.entries,{footer:base.state.attunedFooter,copyRows:base.copyRows}).entries);}
  function gearAction(raw,all,index,command,...args){
   if(gearRows(raw,all)[index]?.automaticAttunement)throw Error('Change this item’s attunement on the Magic Items sheet.');
@@ -78,7 +80,7 @@ var CharacterPaperInventory=(()=>{
   base.state.gearLayout=result.state;if(command.startsWith('page:')&&result.key?.startsWith('c:'))base.state.copies=base.state.copies.map(row=>row.key===result.key?{...row,destination:command.slice(5),slot:result.index}:row);return{state:base.state,index:result.index};
  }
  function combination(raw,all,index,destination){const base=project(raw,all,{base:true});return Layout.combination(base.state.gearLayout,base.entries,index,destination,{footer:base.state.attunedFooter,copyRows:base.copyRows});}
- return{normalize,project,copy,remove,footer,gearRows,gearAction,combination};
+ return{normalize,initialize,project,copy,remove,footer,gearRows,gearAction,combination};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterPaperInventory=CharacterPaperInventory;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterPaperInventory;

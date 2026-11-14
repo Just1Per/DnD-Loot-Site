@@ -58,3 +58,9 @@ test('automatic footer ignores stale paper overrides and preserves extra slots o
  for(const rows of [P.project(raw,all).entries,P.gearRows(raw,all)]){const auto=rows.filter(row=>row?.automaticAttunement&&!row.automaticAttunementHeading);assert.equal(auto.length,6);assert.equal(new Set(auto.map(row=>row.id)).size,6);assert.equal(auto[0].name,'Item 0');assert.equal(rows.filter(row=>row&&!row.reference&&!row.header&&!row.automaticAttunementHeading).length,100);assert.ok(rows.findIndex(row=>row?.automaticAttunementHeading)>=90);assert.ok(rows.filter(row=>row?.automaticAttunementHeading).length===1);}
  assert.equal(JSON.stringify(raw),before);assert.equal(P.project(P.footer(raw,false),all).entries.some(row=>row?.automaticAttunement),false);
 });
+
+test('sheet initialization shows the attuned area before any click and migrates existing attunements without losing manual references',()=>{
+ for(const raw of [{},{attunedFooter:false,autoAttuned:false}]){const state=P.initialize(raw);assert.equal(state.attunedFooter,true);assert.equal(state.autoAttuned,true);assert.equal(state.footerVisibility,'shown');const rows=P.project(state,owned(2).map(row=>({...row,attuned:true}))).entries;assert.equal(rows[50].header,true);assert.equal(rows[51].id,'owned-0');}
+ const manual=P.initialize({attunedFooter:true,footer:[{id:'owned-1',name:'Kept reference'}]});assert.equal(manual.autoAttuned,false);assert.equal(manual.footer[0].name,'Kept reference');
+ const hidden=P.footer(P.initialize({}),false);assert.equal(P.initialize(JSON.parse(JSON.stringify(hidden))).attunedFooter,false);assert.equal(P.initialize(hidden).footerVisibility,'hidden');assert.equal(P.initialize(P.footer(hidden,true)).attunedFooter,true);
+});

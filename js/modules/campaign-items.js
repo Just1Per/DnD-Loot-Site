@@ -29,7 +29,14 @@ async function refreshCampaignData({itemsOnly=false}={}) {
 }
 function inventoryItem(entry) {
   const current=items.find(i=>i.id===entry.itemId);
-  return current && (current.updatedAt||0)>=(entry.item?.updatedAt||0) ? current : {...entry.item,id:entry.itemId,campaignId:entry.campaignId,campaign:activeCampaign?.name||'',visible:false};
+  if(current && (current.updatedAt||0)>=(entry.item?.updatedAt||0))return current;
+  const saved={...entry.item,id:entry.itemId,campaignId:entry.campaignId,campaign:activeCampaign?.name||'',visible:false};
+  // Older loot snapshots can have later timestamps but predate the requirement flag.
+  // Inherit only that fact from the same readable item; keep owned details and resources.
+  const sameName=typeof current?.name==='string'&&typeof saved.name==='string'&&current.name.normalize('NFKC').trim().toLowerCase()===saved.name.normalize('NFKC').trim().toLowerCase(),Magic=globalThis.CharacterMagicItems;
+  const needs=item=>Magic?Magic.requiresAttunement(item):item?.attunement===true;
+  if(sameName&&(!current.edition||!saved.edition||current.edition===saved.edition)&&needs(current)&&!needs(saved))saved.attunement=true;
+  return saved;
 }
 async function runVaultButton(button,work) {
   if(button?.disabled)return;
