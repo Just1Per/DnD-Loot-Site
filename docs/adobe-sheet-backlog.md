@@ -179,3 +179,10 @@ Coverage includes level-1 selection beyond normal budgets and unmet prerequisite
 Brugerbeslutning 9. november 2026: skjul valget af Standard og åbn altid karakterarket i Adobe. Bevar Standard-renderere, formularer, styles, session, gemning og de komponenter, som Adobe-popups bruger. En tidligere gemt Standard-præference skal ikke åbne den gamle visning.
 
 **Backlog:** Gennemgå senere den gamle visning som vedligeholdelsesreference. Brug [popup-kortlægningen](adobe-inventory/popups-da.md) til at vurdere, om en intern referencevisning skal genindføres, eller om komponenterne skal afkobles. Den gamle kode må først slettes efter særskilt gennemgang og test af alle popup-afhængigheder. Dette punkt genindfører ikke et synligt visningsvalg for spillere.
+
+
+## Source-step spell generator — v84
+
+The queued source-generator design is implemented: a visible Generate spell sheet entry, class/race/feat review steps with navigation, Origin of Entry, live source-specific sheets and casting statistics, independent known/book/preparation allowances, and selected/prepared-only/full reachable prepared-class presentation. Display preferences never grant extra spells or change use counters. Expanded subclass lists remain ordinary choices, while unlocked grants are separate. Generated source references and full lists do not duplicate saved spells; direct preparation explicitly saves one eligible reference with normal limits. Existing race/feat choice dialogs remain shared and transactional; unsupported feat mechanics are still reference/manual work. See [scope and tests](adobe-native-spell-picker.md#source-generator-and-printed-references--v84).
+
+The full versioned 5e catalogue/Firebase expansion and numbered parity tasks 3–8 remain separate backlog work. This checkpoint does not mark full PDF parity complete.

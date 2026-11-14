@@ -105,7 +105,7 @@ var SiteHelpData=(()=>{
   'combat':'Collects attacks, defenses and limited-use resources for encounters. HP is maximum HP; its calculation panel explains the sources.',
   'inventory':'Shows personal gear and campaign loot belonging to the character. Worn and attuned status control supported equipment effects.',
   'spells':'Keeps separate class spell lists, preparation allowances and casting statistics. Ordinary multiclass Spellcasting shares slots; Warlock Pact Magic has its own pool.',
-  'spellbook':'Generate and manage class spell lists here. Each class uses its own casting ability and preparation or known-spell allowance.',
+  'spellbook':'Generate spell sheet reviews class, race and feat sources. Choose spells manages each class independently. Spell sheet display can show selected, prepared-only or a prepared class’s full reachable list; displaying a list never teaches or prepares its spells. Origin of Entry identifies each source. Apply updates the draft; Save sheet keeps it.',
   'character builder':'Choose rules, species, background, class levels and class features. Supported choices feed the other sheet pages.',
   'feats':'Feat/ASI milestones follow each class’s actual level, including multiclass characters. Unassigned levels do not unlock choices. Choose allowed feats, complete their ability/training choices and review supported effects. You can add their descriptions to Overview.',
   'story':'Records appearance, personal history and background-inspired roleplay prompts. Story changes do not automatically grant new mechanics.',

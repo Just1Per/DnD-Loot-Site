@@ -188,6 +188,42 @@ var CharacterSpellcasting=(()=>{
     const rows=names.flatMap(name=>{const key=spellKey(name);if(seen.has(key))return[];seen.add(key);const spell=catalogue.find(s=>spellKey(s.name)===key&&s.edition===p.edition)||catalogue.find(s=>spellKey(s.name)===key&&s.edition===tableEdition);return spell?[{...spell,grantSource:p.classId+' / '+(p.subclassId||'class')}]:[];});
     const existing=new Set(rows.map(s=>s.id));return [...rows,...(p.subclassSpellGrants||[]).filter(s=>!existing.has(s.id))];
   }
+  // Catalogue access and printed references never change known/prepared allowances.
+  function eligibleSpells(p,catalogue=[],allowed=()=>true){
+    if(!p)return[];
+    const Choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null),automatic=automaticGrants(p,catalogue),ids=new Set(automatic.map(s=>s.id)),expanded=new Set((p.expandedSpellOptions||[]).map(s=>s.id));
+    const rows=catalogue.filter(spell=>{
+      if(!allowed(spell)||p.blockedSpellIds?.includes(spell.id))return false;
+      if(ids.has(spell.id))return true;
+      if(p.mode==='innate'||spell.level>p.maxSpellLevel||spell.level===0&&!p.cantrips)return false;
+      if(expanded.has(spell.id))return true;
+      if(p.classId==='artificer')return Choices.artificerSpellAllowed(spell,p.sourceId,catalogue,p.edition);
+      return spell.edition===p.edition&&(p.listClasses||[p.listClass||p.classId]).some(id=>(spell.classesByEdition?.[p.edition]||spell.classes||[]).includes(id));
+    });
+    for(const spell of automatic)if(spell.id&&!rows.some(row=>row.id===spell.id)&&allowed(spell)&&!p.blockedSpellIds?.includes(spell.id))rows.push(spell);
+    return rows;
+  }
+  const displayModes=p=>[['selected',p?.mode==='spellbook'?'Spellbook':'Selected spells'],...(isPreparedToggleUseful(p)?[['prepared','Prepared spells only']]:[]),...(p?.mode==='prepared'?[['full','Full reachable class list']]:[])];
+  function normalizeDisplay(raw={}){return Object.fromEntries(Object.entries(raw&&typeof raw==='object'?raw:{}).filter(([id,mode])=>Object.hasOwn(ability,id)||['fighter','rogue','barbarian'].includes(id)).filter(([,mode])=>['selected','prepared','full'].includes(mode)).slice(0,13));}
+  function sourceModel(data,level,derived,{catalogue=globalThis.CharacterCatalog?.rawData?.spells||[],allowed=spell=>typeof CampaignRules==='undefined'||CampaignRules.allowed(spell)}={}){
+    const Sub=globalThis.CharacterSubclassData||(typeof require==='function'?require('./character-subclass-data'):null),Planning=globalThis.CharacterSubclassPlanning||(typeof require==='function'?require('./character-subclass-planning'):null),adobe=data.adobe||{},edition=data.build.edition==='2024'?'2024':'2014';let remaining=clampLevel(level);const seen=new Set();
+    const classes=(derived.progression?.classLevels||adobe.classLevels||[]).flatMap(row=>{const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(row.level)||0)));remaining-=actual;if(!actual||seen.has(row.classId))return[];seen.add(row.classId);const chosen=Planning.selected(row),sub=Sub?.find(chosen),minimum=Math.max(Planning.minimum(row.classId,edition,chosen),Number(sub?(Sub?.effectiveMinimum?.(sub,edition)||sub.minimumLevel||0):0)),active=sub?.classId===row.classId&&actual>=minimum&&(edition==='2024'||sub.edition==='2014')&&allowed(sub);return[{...row,level:actual,subclassId:active?chosen:'',plannedSubclassId:''}];});
+    const effective={...data,adobe:{...adobe,classLevels:classes}},base=profiles(effective,level,derived.scores),Access=globalThis.CharacterAttackAccess||(typeof require==='function'?require('./character-attack-access'):null),grants=Access?.spells(effective,level,{...derived,progression:{...derived.progression,classLevels:classes}},{catalogue,allowed}).filter(row=>row.kind==='granted-spell')||[],sources=[...base];
+    for(const row of grants){const suffix=row.ref.split('::')[1],id=suffix==='race'?'race':suffix?.startsWith('feat-')?suffix:row.classId;row.sourceId=id;if(!id||sources.some(p=>p.classId===id))continue;sources.push({classId:id,name:row.source,ability:row.ability,edition:data.build.edition,level,mode:'innate',cantrips:0,spellCount:0,maxSpellLevel:0,sourceKind:id==='race'?'race':'feat'});}
+    return{profiles:sources,grants};
+  }
+  function sheetRows(data,level,derived,options={}){
+    const catalogue=options.catalogue||globalThis.CharacterCatalog?.rawData?.spells||[],model=options.model||sourceModel(data,level,derived,{...options,catalogue}),byClass=new Map(model.profiles.map(p=>[p.classId,p])),rows=(data.spells||[]).map((spell,i)=>({spell,i,profile:byClass.get(spell.classId),origin:byClass.get(spell.classId)?.name||'Personal / unassigned',automatic:false}));
+    for(const grant of model.grants){const p=byClass.get(grant.sourceId),existing=rows.find(row=>row.spell.classId===grant.sourceId&&row.spell.catalogId===grant.spell.id);if(existing){existing.automatic=true;existing.origin=grant.source;continue;}rows.push({spell:{...grant.spell,catalogId:grant.spell.id,classId:grant.sourceId,prepared:true,notes:grant.spell.description||''},i:'grant-'+rows.length,profile:p,origin:grant.source,usage:grant.usage||'',automatic:true,reference:true});}
+    for(const p of model.profiles){const mode=data.adobe?.spellDisplay?.[p.classId];if(mode!=='full'||p.mode!=='prepared')continue;for(const spell of eligibleSpells(p,catalogue,options.allowed||(spell=>typeof CampaignRules==='undefined'||CampaignRules.allowed(spell))))if(spell.level>0&&!rows.some(row=>row.spell.classId===p.classId&&row.spell.catalogId===spell.id))rows.push({spell:{...spell,catalogId:spell.id,classId:p.classId,prepared:false,notes:spell.description||''},i:'reference-'+rows.length,profile:p,origin:p.name+' · class-list reference',reference:true,automatic:false});}
+    return rows.filter(row=>{const mode=data.adobe?.spellDisplay?.[row.spell.classId];return mode!=='prepared'||!isPreparedToggleUseful(row.profile)||row.spell.level===0||row.automatic||row.spell.prepared;});
+  }
+  function prepareReference(data,p,spell,catalogue,allowed=()=>true){
+    if(!p||!isPreparedToggleUseful(p)||!spell||spell.level===0||!eligibleSpells(p,catalogue,allowed).some(row=>row.id===spell.id))throw Error('This spell is not available to prepare.');
+    const rows=data.spells||[],old=rows.find(row=>row.classId===p.classId&&row.catalogId===spell.id);if(old)throw Error('Reopen this spell after the sheet updates.');
+    if(rows.length>=150)throw Error('The saved spell list is full. Remove a saved reference first.');
+    const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null),row={...C.spellRow(spell),classId:p.classId,prepared:true},classRows=rows.filter(s=>s.classId===p.classId),status=selectionState(p,[...classRows,row],catalogue,classRows);if(status.error)throw Error(status.error);return[...rows,row];
+  }
   function castingStats(p,derived,adjustments={}){
     const modifier=Number(derived?.mods?.[p?.ability]||0),pb=Number(derived?.pb||0);
     const M=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),expressions=derived?.modifiers?.expressions||{},attackBonus=derived?.modifiers?.spellAttackBonus??(Number(adjustments.spellAttackBonus)||0),dcBonus=derived?.modifiers?.spellDCBonus??(Number(adjustments.spellDCBonus)||0),secondary=Number(adjustments.secondaryDCBonus)||0;
@@ -221,6 +257,6 @@ var CharacterSpellcasting=(()=>{
     return'Spells';
   }
 
-  return {castingStats,selectionCounts,selectionState,automaticGrants,countedSelections,grantTables,profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
+  return {eligibleSpells,displayModes,normalizeDisplay,sourceModel,sheetRows,prepareReference,castingStats,selectionCounts,selectionState,automaticGrants,countedSelections,grantTables,profile,profiles,classEntries,maxSpellLevel,isPreparedToggleUseful,modeLabel,ability,labels};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterSpellcasting;

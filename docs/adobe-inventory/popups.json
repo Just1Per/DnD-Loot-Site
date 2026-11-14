@@ -180,20 +180,21 @@
     {
       "id": "adobeSpellDialog",
       "file": "js/modules/character-adobe-spell-ui.js",
-      "line": 11,
+      "line": 12,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Choose spells, spell-felt/knap, Special features",
       "notes": "Native selection draft; bruger casting-engine og fælles spell-rendering.",
       "testReferences": [
         "adobe-direct-preparation-browser.cjs",
-        "adobe-native-spells-browser.cjs"
+        "adobe-native-spells-browser.cjs",
+        "adobe-source-generator-browser.cjs"
       ]
     },
     {
       "id": "adobeRaceSpellDialog",
       "file": "js/modules/character-adobe-spell-ui.js",
-      "line": 78,
+      "line": 82,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Generate spell sheet → Race spells",
@@ -205,12 +206,13 @@
     {
       "id": "adobeSpellSourcesDialog",
       "file": "js/modules/character-adobe-spell-ui.js",
-      "line": 97,
+      "line": 101,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Special features → Generate spell sheet",
       "notes": "Viderestiller til class/race/feat-spellvalg.",
       "testReferences": [
+        "adobe-source-generator-browser.cjs",
         "adobe-spell-sources-browser.cjs"
       ]
     },
@@ -451,6 +453,7 @@
       "entry": "Spell information fra native spellvalg og ark",
       "notes": "Selvstændig læsedialog; må ikke slettes sammen med Overview-modulet.",
       "testReferences": [
+        "adobe-source-generator-browser.cjs",
         "adobe-spell-pages-browser.cjs",
         "cleric-divine-intervention-browser.cjs",
         "dialogs-browser.cjs",
