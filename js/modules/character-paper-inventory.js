@@ -9,22 +9,39 @@ var CharacterPaperInventory=(()=>{
    const key=row&&copyKey(row);if(!validId(row?.id)||!validCopyKey(key)||!['gear','extra'].includes(row.destination)||!Number.isInteger(row.slot)||row.slot<0||row.slot>89||copyIds.has(key))return false;copyIds.add(key);return true;
   }).map(row=>({id:row.id,name:String(row.name||'').slice(0,200),destination:row.destination,slot:row.slot,key:copyKey(row)}));
   const ids=new Set(),footer=Array.from({length:3},(_,i)=>{const row=raw?.footer?.[i];if(!validId(row?.id)||ids.has(row.id))return null;ids.add(row.id);return{id:row.id,name:String(row.name||'').slice(0,200)};});
-  return{attunedFooter:raw?.attunedFooter===true,footer,copies,gearLayout:Layout.normalize(raw?.gearLayout)};
+  return{autoAttuned:raw?.autoAttuned===true,attunedFooter:raw?.attunedFooter===true,footer,copies,gearLayout:Layout.normalize(raw?.gearLayout)};
  }
  const range=(state,destination)=>destination==='gear'?[0,state.attunedFooter?49:53]:[54,89];
  const reference=(saved,byId)=>{const source=byId.get(saved.id);return source?{...source,quantity:'',reference:true}:{id:saved.id,name:(saved.name||'Saved item')+' (unavailable)',quantity:'',weight:null,reference:true,unavailable:true};};
+ function automaticState(raw,all){
+  const state=normalize(raw);if(!state.autoAttuned)return state;
+  const active=all.filter(row=>row.attuned===true),ids=new Set();state.footer=Array.from({length:3},(_,i)=>{const row=active.filter(row=>!ids.has(row.id))[0];if(!row)return null;ids.add(row.id);return{id:row.id,name:row.name};});
+  // The automatic list follows actual attunement; old paper-only hides/pins cannot conceal it.
+  state.gearLayout.layout=state.gearLayout.layout.filter(row=>!row.key?.startsWith('f:'));
+  state.gearLayout.hidden=state.gearLayout.hidden.filter(key=>!key.startsWith('f:'));
+  for(const key of Object.keys(state.gearLayout.values))if(key.startsWith('f:'))delete state.gearLayout.values[key];
+  return state;
+ }
+ function continuation(state,all,rows){
+  const entries=[...rows];if(!state.autoAttuned||!state.attunedFooter)return entries;
+  const seen=new Set(),active=all.filter(row=>row.attuned===true&&!seen.has(row.id)&&seen.add(row.id)).slice(3);if(!active.length)return entries;
+  // Keep extra attunement slots on their own complete equipment continuation, outside editable gear.
+  const start=Math.max(90,90+36*Math.ceil((entries.length-90)/36));
+  entries[start]={id:'',name:'ATTUNED MAGICAL ITEMS — CONTINUED',quantity:'',weight:null,automaticAttunement:true,automaticAttunementHeading:true};
+  active.forEach((row,i)=>{entries[start+i+1]={...row,quantity:'',reference:true,automaticAttunement:true,key:'auto-attuned:'+row.id};});return entries;
+ }
  function project(raw,all,{base=false}={}){
-  const state=normalize(raw),byId=new Map(all.map(row=>[row.id,row])),entries=state.attunedFooter?[...Array.from({length:50},(_,i)=>all[i]||null),{header:true,name:'',quantity:'',weight:null},...state.footer.map(row=>row?{...reference(row,byId),footer:true}:null),...all.slice(50)]:[...all];
+  const state=automaticState(raw,all),byId=new Map(all.map(row=>[row.id,row])),entries=state.attunedFooter?[...Array.from({length:50},(_,i)=>all[i]||null),{header:true,name:'',quantity:'',weight:null},...state.footer.map(row=>row?{...reference(row,byId),footer:true,...(state.autoAttuned?{automaticAttunement:true}:{})}:null),...all.slice(50)]:[...all];
   const copyRows=[];for(const saved of state.copies){const [start,end]=range(state,saved.destination);let slot=saved.slot>=start&&saved.slot<=end&&!entries[saved.slot]?saved.slot:-1;
    if(slot<0)for(let i=start;i<=end;i++)if(!entries[i]){slot=i;break;}
    // Inventory growth may displace a saved reference; keep it on a continuation.
    if(slot<0){slot=Math.max(90,entries.length);while(entries[slot])slot++;}
    entries[slot]=reference(saved,byId);copyRows.push({id:saved.id,key:saved.key,destination:saved.destination,slot,displaced:slot<start||slot>end});
   }
-  if(base||!state.gearLayout.layout.length&&!state.gearLayout.hidden.length&&!Object.keys(state.gearLayout.values).length)return{state,entries,copyRows};
+  if(base||!state.gearLayout.layout.length&&!state.gearLayout.hidden.length&&!Object.keys(state.gearLayout.values).length)return{state,entries:base?entries:continuation(state,all,entries),copyRows};
   const arranged=Layout.project(state.gearLayout,entries,{footer:state.attunedFooter,copyRows}).entries;
   for(const row of copyRows){row.slot=arranged.findIndex(value=>value?.key===row.key);const [start,end]=range(state,row.destination);row.displaced=row.slot<start||row.slot>end;}
-  return{state,entries:arranged,copyRows};
+  return{state,entries:continuation(state,all,arranged),copyRows};
  }
  function copy(raw,all,id,destination){
   if(!validId(id)||!all.some(row=>row.id===id))throw Error('Choose an owned item.');const state=normalize(raw),source=all.find(row=>row.id===id);
@@ -53,8 +70,9 @@ var CharacterPaperInventory=(()=>{
   state.gearLayout.layout=state.gearLayout.layout.filter(row=>!keys.includes(row.key));for(const key of keys)delete state.gearLayout.values[key];return state;
  }
  function footer(raw,enabled){if(typeof enabled!=='boolean')throw Error('Choose whether to show the footer.');return{...normalize(raw),attunedFooter:enabled};}
- function gearRows(raw,all){const base=project(raw,all,{base:true});return Layout.project(base.state.gearLayout,base.entries,{footer:base.state.attunedFooter,copyRows:base.copyRows}).entries;}
+ function gearRows(raw,all){const base=project(raw,all,{base:true});return continuation(base.state,all,Layout.project(base.state.gearLayout,base.entries,{footer:base.state.attunedFooter,copyRows:base.copyRows}).entries);}
  function gearAction(raw,all,index,command,...args){
+  if(gearRows(raw,all)[index]?.automaticAttunement)throw Error('Change this item’s attunement on the Magic Items sheet.');
   const base=project(raw,all,{base:true}),options={footer:base.state.attunedFooter,copyRows:base.copyRows};
   const result=command==='edit'?{state:Layout.edit(base.state.gearLayout,base.entries,index,...args,options),index}:command==='choose'?Layout.choose(base.state.gearLayout,base.entries,index,args[0],options):command==='put'?Layout.put(base.state.gearLayout,base.entries,index,args[0],options):command.startsWith('page:')?Layout.transfer(base.state.gearLayout,base.entries,index,command.slice(5),options):command.startsWith('combine:')?Layout.combine(base.state.gearLayout,base.entries,index,command.slice(8),options):Layout.operation(base.state.gearLayout,base.entries,index,command,options);
   base.state.gearLayout=result.state;if(command.startsWith('page:')&&result.key?.startsWith('c:'))base.state.copies=base.state.copies.map(row=>row.key===result.key?{...row,destination:command.slice(5),slot:result.index}:row);return{state:base.state,index:result.index};

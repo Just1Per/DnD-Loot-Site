@@ -46,3 +46,15 @@ test('multiple independent copies can share a destination; clearing one does not
 test('copy restores only a missing destination and fills an explicitly cleared paper gap exactly',()=>{
  const all=owned(6);let state=P.gearAction({},all,0,'page:extra').state;assert.equal(P.project(state,all).entries[5],null);const copied=P.copy(state,all,'owned-0','gear');assert.equal(copied.slot,5);assert.equal(P.project(copied.state,all).entries[5].id,'owned-0');assert.equal(P.project(copied.state,all).entries[54].id,'owned-0');
 });
+
+test('automatic attunement follows shared active flags, compacts the footer and keeps physical ownership unchanged',()=>{
+ const all=owned(6).map((row,i)=>({...row,attuned:i<3})),before=JSON.stringify(all),state={attunedFooter:true,autoAttuned:true};
+ let rows=P.gearRows(state,all);assert.deepEqual(rows.slice(51,54).map(row=>row.id),['owned-0','owned-1','owned-2']);assert.ok(rows.slice(51,54).every(row=>row.automaticAttunement));assert.equal(JSON.stringify(all),before);
+ all[0].attuned=false;rows=P.project(state,all).entries;assert.deepEqual(rows.slice(51,54).filter(Boolean).map(row=>row.id),['owned-1','owned-2']);
+ rows=P.project(state,all.slice(2)).entries;assert.deepEqual(rows.slice(51,54).filter(Boolean).map(row=>row.id),['owned-2']);assert.equal(all[0].quantity,1);assert.throws(()=>P.gearAction(state,all,51,'clear'),/attunement/);
+});
+test('automatic footer ignores stale paper overrides and preserves extra slots on a separate continuation without replacing gear',()=>{
+ const all=owned(100).map((row,i)=>({...row,attuned:i<6})),raw={attunedFooter:true,autoAttuned:true,footer:[{id:'gone',name:'Old manual copy'}],gearLayout:{hidden:['f:owned-0'],values:{'f:owned-0':{name:'Old alias'}}}},before=JSON.stringify(raw);
+ for(const rows of [P.project(raw,all).entries,P.gearRows(raw,all)]){const auto=rows.filter(row=>row?.automaticAttunement&&!row.automaticAttunementHeading);assert.equal(auto.length,6);assert.equal(new Set(auto.map(row=>row.id)).size,6);assert.equal(auto[0].name,'Item 0');assert.equal(rows.filter(row=>row&&!row.reference&&!row.header&&!row.automaticAttunementHeading).length,100);assert.ok(rows.findIndex(row=>row?.automaticAttunementHeading)>=90);assert.ok(rows.filter(row=>row?.automaticAttunementHeading).length===1);}
+ assert.equal(JSON.stringify(raw),before);assert.equal(P.project(P.footer(raw,false),all).entries.some(row=>row?.automaticAttunement),false);
+});

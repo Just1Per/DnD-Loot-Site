@@ -119,3 +119,8 @@
 .pdf-button.adobe-xp-mode[aria-pressed=true]{background:#f0e0c7;border-color:#71342f}
 .pdf-button.adobe-xp-mode:hover{background:#f3e5ce}
 .pdf-button.adobe-xp-mode:focus-visible{outline:2px solid #2169a8;outline-offset:1px}
+/* Preserve the source circle while giving its label a usable pointer/touch target. */
+.adobe-attunement-control::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:max(26px,100%);height:max(26px,100%)}
+@media(pointer:coarse){.adobe-attunement-control::before{width:max(44px,100%);height:max(44px,100%)}}
+.adobe-attunement-control input{position:relative;z-index:1}
+.adobe-attunement-control{z-index:3}

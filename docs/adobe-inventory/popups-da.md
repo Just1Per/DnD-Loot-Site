@@ -42,7 +42,7 @@ Der er 45 registrerede popup-familier og 29 editor-routes.
 | sheetSpellInformation | shared-dialog | Spell information fra native spellvalg og ark | Selvstændig læsedialog; må ikke slettes sammen med Overview-modulet. | [character-overview-ui.js:143](../../js/modules/character-overview-ui.js#L143) |
 | sheetHitDiceRecovery | shared-dialog | Hit Dice-controls fra Actions/ammunition | Preview og forbrug af Hit Dice; fælles form/session. | [character-paper-combat-ui.js:38](../../js/modules/character-paper-combat-ui.js#L38) |
 | sheetPaperActionMenu | shared-dialog | Action/Bonus Action/Reaction-arrows | Egen row-menu; edit kan åbne paperCombat-bridge. | [character-paper-combat-ui.js:48](../../js/modules/character-paper-combat-ui.js#L48) |
-| adobeGearDialog | adobe-dialog | Gear-arrows og Enter/dobbeltklik på gear | Native row-editor, source catalogue og confirmations; delt inventory-engine. | [character-paper-gear-ui.js:9](../../js/modules/character-paper-gear-ui.js#L9) |
+| adobeGearDialog | adobe-dialog | Gear-arrows og Enter/dobbeltklik på gear | Native row-editor, source catalogue og confirmations; delt inventory-engine. | [character-paper-gear-ui.js:10](../../js/modules/character-paper-gear-ui.js#L10) |
 | sheetPaperIcons | shared-dialog | Header/log-icon og Symbol | Egen billedvælger/upload; fælles image-budget og private data. | [character-paper-icons-ui.js:16](../../js/modules/character-paper-icons-ui.js#L16) |
 | adobeFooterDialog | adobe-dialog | Equipment footer/layout-controls | Egen footer-popup; modulet ejer også bridge-komponenten #sheetPaperInventoryLayout. | [character-paper-inventory-ui.js:33](../../js/modules/character-paper-inventory-ui.js#L33) |
 | sheetPaperLogMenu | shared-dialog | Adventure Log row arrows | Egen menu; Edit går gennem notes-bridge og #sheetAdventureLog. | [character-paper-log-ui.js:6](../../js/modules/character-paper-log-ui.js#L6) |
@@ -129,7 +129,7 @@ sharedCommand klikker stadig på kontroller i #characterSheetForm (bl.a. spell p
 | notes | [character-adventure-log-ui.js:6](../../js/modules/character-adventure-log-ui.js#L6) |
 | itemResources | [character-item-resource-ui.js:49](../../js/modules/character-item-resource-ui.js#L49) |
 | attacks | [character-named-equipment-ui.js:82](../../js/modules/character-named-equipment-ui.js#L82) |
-| equipment | [character-paper-gear-ui.js:60](../../js/modules/character-paper-gear-ui.js#L60) |
+| equipment | [character-paper-gear-ui.js:61](../../js/modules/character-paper-gear-ui.js#L61) |
 | story | [character-paper-icons-ui.js:23](../../js/modules/character-paper-icons-ui.js#L23) |
 | paperInventory | [character-paper-inventory-ui.js:49](../../js/modules/character-paper-inventory-ui.js#L49) |
 | notes | [character-paper-log-ui.js:14](../../js/modules/character-paper-log-ui.js#L14) |

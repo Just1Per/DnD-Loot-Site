@@ -486,7 +486,7 @@
     {
       "id": "adobeGearDialog",
       "file": "js/modules/character-paper-gear-ui.js",
-      "line": 9,
+      "line": 10,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Gear-arrows og Enter/dobbeltklik på gear",
@@ -522,6 +522,7 @@
       "entry": "Equipment footer/layout-controls",
       "notes": "Egen footer-popup; modulet ejer også bridge-komponenten #sheetPaperInventoryLayout.",
       "testReferences": [
+        "adobe-attunement-inventory-browser.cjs",
         "adobe-magic-footer-browser.cjs"
       ]
     },
@@ -548,6 +549,7 @@
       "entry": "Magic item-arrows og variantvalg",
       "notes": "Egen menu; nested information/confirmations og equipment handlers.",
       "testReferences": [
+        "adobe-attunement-inventory-browser.cjs",
         "adobe-equipment-layout-browser.cjs",
         "adobe-items-browser.cjs",
         "adobe-magic-menu-browser.cjs",
@@ -996,7 +998,7 @@
     },
     {
       "file": "js/modules/character-paper-gear-ui.js",
-      "line": 60,
+      "line": 61,
       "command": "equipment",
       "expression": "'equipment'"
     },
