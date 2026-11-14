@@ -80,6 +80,7 @@
     "adobe-feat-reactions-browser.cjs",
     "adobe-satyr-movement-browser.cjs",
     "adobe-spell-list-browser.cjs",
-    "adobe-attunement-inventory-browser.cjs"
+    "adobe-attunement-inventory-browser.cjs",
+    "adobe-source-generator-browser.cjs"
   ]
 }

@@ -107,6 +107,7 @@ var CharacterCatalog = (() => {
     });
     if(picks[0] && picks[0]?.id===picks[1]?.id) errors.push('Choose two different cantrips.');
     const ability=grant.edition==='2024'?choice.ability:({cleric:'wis',druid:'wis',wizard:'int',bard:'cha',sorcerer:'cha',warlock:'cha'}[classId]);
+    if(grant.edition==='2024'&&!['int','wis','cha'].includes(ability))errors.push('Choose Intelligence, Wisdom or Charisma for this feat.');
     if(data && classId && grants(data).some(other=>other.key!==grant.key && other.edition===grant.edition && (grant.edition==='2014' || (other.fixedClass||data.rulesChoices?.grants?.[other.key]?.classId)===classId))) errors.push(grant.edition==='2014'?'2014 Magic Initiate is not repeatable.':'Repeated Magic Initiate must use a different spell class.');
     if(data && grants(data).some(other=>other.edition!==grant.edition))errors.push('Choose one rules edition for Magic Initiate; do not stack its 2014 and 2024 versions.');
     return {errors,picks,classId,ability};
