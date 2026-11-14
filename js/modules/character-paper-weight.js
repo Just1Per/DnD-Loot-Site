@@ -52,7 +52,7 @@ var CharacterPaperWeight=(()=>{
   const adobe={gear:total-coinTotal,coins:coinTotal,total,unknown,source:'adobe'};
   return{preferences,rows,adobe,inventory:inventoryWeight,weight:preferences.mode==='adobe'?adobe:inventoryWeight};
  }
- function columnWeight(rows){const result=subtotal((rows||[]).filter(row=>row&&!row.header),{},true);return{gear:result.total,unknown:result.unknown};}
+ function columnWeight(rows){const result=subtotal((rows||[]).filter(row=>row&&!row.header&&!row.automaticAttunement),{},true);return{gear:result.total,unknown:result.unknown};}
  return{sections,defaults,normalize,edit,calculate,columnWeight};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterPaperWeight=CharacterPaperWeight;

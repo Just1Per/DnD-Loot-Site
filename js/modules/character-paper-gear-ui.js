@@ -2,8 +2,9 @@
 /* Original Gear row actions stay on the source paper and share its private save. */
 var CharacterPaperGearUI=(()=>{
  let currentClose=null;
- const physical=()=>sheetEquipmentLoot().map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:sheetSession.data.personalGear.find(row=>row.id===entry.id)?.location||''}));
+ const physical=()=>{const loot=sheetEquipmentLoot(),attuned=CharacterEquipment.attunementState(sheetSession.data,loot,CharacterAdobeEngine.level(sheetSession.data,sheetSession.identity.level)).active;return loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:sheetSession.data.personalGear.find(row=>row.id===entry.id)?.location||'',attuned:attuned.has(entry.id)}));};
  function open(index){
+  if(sheetSession&&CharacterPaperInventoryUI.project(sheetSession.data).entries[index]?.automaticAttunement){CharacterPaperInventoryUI.openFooter(index);return;}
   const session=sheetSession;if(!characterHPCurrent(session)||session.saving||!Number.isInteger(index)||index<0||index>=CharacterPaperGearLayout.maxRows||!CharacterAdobeView.validate())return;
   const opener=document.getElementById('sheetAdobeView')?.shadowRoot?.activeElement||document.activeElement;currentClose?.();let selected=index,observer,closed=false;
   const dialog=document.createElement('dialog');dialog.id='adobeGearDialog';dialog.className='vault-dialog adobe-gear-dialog';dialog.setAttribute('aria-labelledby','adobeGearTitle');dialog.dataset.noContextHelp='';

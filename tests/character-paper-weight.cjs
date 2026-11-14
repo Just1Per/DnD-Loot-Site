@@ -34,3 +34,7 @@ test('CalcWeightSubtotal blank/zero/decimal amounts agree across all source colu
  const physical={gear:8,coins:0,total:8,unknown:0};assert.equal(W.calculate({},{inventoryWeight:physical,groups:{cP2L:[{weight:8,quantity:''}]}}).weight,physical);
  assert.deepEqual(W.columnWeight([{header:true,quantity:'',weight:null},{quantity:'',weight:null},{quantity:0,weight:null}]),{gear:0,unknown:1});
 });
+
+test('automatically mirrored attuned rows do not add a second contribution to equipment column weight',()=>{
+ const W=require('../js/modules/character-paper-weight');assert.deepEqual(W.columnWeight([{name:'Physical',quantity:1,weight:2},{name:'Attuned reference',quantity:'',weight:2,automaticAttunement:true}]),{gear:2,unknown:0});
+});
