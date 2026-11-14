@@ -36,7 +36,7 @@ function setSheetEquipmentChoice(id,key,value){
   if(count>=limit){refreshCharacterSheetInventory();return sheetStatus('You already have '+(limit===3?'three':limit)+' attuned items. End one attunement first.',true);}
  }
  choice[key]=value;
- if(key==='attuned'){s.data.adobe.paperInventory={...CharacterPaperInventory.normalize(s.data.adobe.paperInventory),autoAttuned:true,attunedFooter:true};}
+ if(key==='attuned'){s.data.adobe.paperInventory={...CharacterPaperInventory.normalize(s.data.adobe.paperInventory),autoAttuned:true,attunedFooter:true,footerVisibility:'shown'};}
  if(key==='equipped'&&value&&['armor','shield'].includes(m.kind))for(const other of state.loadout){const e=owned.find(e=>e.id===other.id);if(other.id!==id&&e&&CharacterEquipment.infer(e.item).kind===m.kind)other.equipped=false;}
  CharacterSubclassRuntime.reconcileEquipment(s.data,{level:s.identity.level,loot:owned});s.dirty=true;refreshCharacterSheetInventory();sheetStatus('Equipment updated. Save sheet to keep it.');
 }

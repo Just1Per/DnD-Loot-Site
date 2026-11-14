@@ -1,10 +1,11 @@
 'use strict';
+// Exercise the deliberately hidden footer layout; default-visible migration has its own browser regression.
 const assert=require('node:assert/strict'),fs=require('node:fs'),{execFileSync}=require('node:child_process');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 (async()=>{const browser=await chromium.launch({headless:true});try{
  const {page,errors}=await require('./adobe-browser-fixture.cjs')(browser,{legacyPresentation:true});
  await page.evaluate(async()=>{
-  auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.race='human';d.build.classId='fighter';d.build.scoreMode='final';d.adobe.classLevels=[{classId:'fighter',level:5}];d.coins={cp:0,sp:0,ep:0,gp:0,pp:0};
+  auditSeed('player');characters[0].level=5;testSheetDocs['campaigns/a/characters/c1']={...characters[0]};await openCharacterSheet('c1');const d=sheetSession.data;d.build.edition='2014';d.build.race='human';d.build.classId='fighter';d.build.scoreMode='final';d.adobe.classLevels=[{classId:'fighter',level:5}];d.coins={cp:0,sp:0,ep:0,gp:0,pp:0};d.adobe.paperInventory=CharacterPaperInventory.footer({},false);
   items=Array.from({length:56},(_,i)=>({id:'gear-'+i,name:i<3?'Ward '+(i+1):'Supply '+i,category:i<3?'Wondrous Item':'Adventuring Gear',rarity:i<3?'Rare':'Common',attunement:i<3,description:'Owned item '+i,properties:[{title:'Weight per unit (lb)',text:'1'}],visible:true}));inventory=items.map((item,i)=>({id:'owned-'+i,itemId:item.id,characterId:'c1',userId:'player',quantity:1}));d.equipmentState.loadout=inventory.slice(0,3).map(entry=>({id:entry.id,equipped:true,attuned:true}));window.layoutOwnership=JSON.stringify({items,inventory});window.layoutResources=JSON.stringify({hp:d.hpCurrent,coins:d.coins,slots:d.slots,uses:d.adobe.itemResources});renderCharacterSheet();
  });
  await page.locator('#sheetStyle').selectOption('adobe');const host=page.locator('#sheetAdobeView'),field=id=>host.locator('[data-pdf-field="'+id+'"]'),editor=page.locator('#adobeSharedEditor'),menu=page.locator('#sheetPaperMagicMenu');

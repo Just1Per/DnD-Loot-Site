@@ -27,12 +27,13 @@ var CharacterMagicItems=(()=>{
     const key=clean(name),rule=variantRule(name);
     return {key,known:knownNames.has(key)||!!rule,rule,attunement:!!rule?.attunement};
   }
+  function attunementMetadata(value){return value===true||value===1||typeof value==='string'&&/^(?:true\b|yes\b|required\b|requires? attunement(?:\b|$)|by (?:a|an|the)\b|\(requires? attunement\b)/i.test(value.trim());}
   function isMagical(item={}){
     const metadata=info(item),mechanics=E.infer(item),category=String(item.category||'').trim().toLowerCase(),rarity=String(item.rarity||'').replace(/[ -]/g,'').toLowerCase();
-    return metadata.known||item.attunement===true||['potion','ring','rod','scroll','staff','wand','wondrous item'].includes(category)||['uncommon','rare','veryrare','legendary','artifact'].includes(rarity)||!!(mechanics.acBonus||mechanics.attackBonus||mechanics.damageBonus||mechanics.extraDamage);
+    return metadata.known||attunementMetadata(item.attunement)||attunementMetadata(item.reqAttune)||['potion','ring','rod','scroll','staff','wand','wondrous item'].includes(category)||['uncommon','rare','veryrare','legendary','artifact'].includes(rarity)||!!(mechanics.acBonus||mechanics.attackBonus||mechanics.damageBonus||mechanics.extraDamage);
   }
   function requiresAttunement(item={}){
-    return item.attunement===true||info(item).attunement||ItemChoices.supported(item);
+    return attunementMetadata(item.attunement)||attunementMetadata(item.reqAttune)||info(item).attunement||ItemChoices.supported(item);
   }
   function infer(item={}){
     if(item?.mechanics)return priorInfer(item);
