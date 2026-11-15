@@ -87,7 +87,7 @@ var CharacterMagicItems=(()=>{
       const itemKey=clean(row.item.name);
       if(seen.has(itemKey))continue;
       seen.add(itemKey);
-      const changed=[],abilityChanges=[];const fact=Pinned.find(row.item);if(/^[123] wand of the war mage$/.test(Pinned.key(row.item.name))&&Number(fact?.bonusSpellAttack)>0){const value=Number(fact.bonusSpellAttack);effects.itemSpellAttackBonus=(effects.itemSpellAttackBonus||0)+value;changed.push('spell attack +'+value);}
+      const changed=[],abilityChanges=[];const fact=Pinned.find(row.item);if(/^[123] wand of the war mage$/.test(Pinned.key(row.item.name))&&Number(fact?.bonusSpellAttack)>0){const value=Number(fact.bonusSpellAttack);effects.itemSpellAttackBonus=Math.max(effects.itemSpellAttackBonus||0,value);changed.push('spell attack +'+value+' (highest War Mage wand only)');}
       if(rule.abilityBonus)for(const [ability,bonus] of Object.entries(rule.abilityBonus)){
         if(!(ability in scores))continue;
         const before=scores[ability],next=before>20?before:Math.min(20,before+Number(bonus||0));
