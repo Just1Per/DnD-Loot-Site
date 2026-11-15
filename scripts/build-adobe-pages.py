@@ -85,5 +85,6 @@ def export(source,target):
   title=TITLES.get(key,TITLES.get(key.replace('template-',''),key));data={'format':1,'id':key,'title':title,'width':round(p.rect.width,3),'height':round(p.rect.height,3),'fields':fields,'buttons':buttons,**({'noteLineMasks':note_masks}if note_masks else{}),**({'ammoIcons':ammo_icons}if ammo_icons else{}),**({'secondaryDC':secondary_dc}if secondary_dc else{}),**({'carryingArtwork':carrying_art}if carrying_art else{})}
   (target/(key+'.json')).write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n');manifest.append({'id':key,'title':title,'fields':len(fields),'buttons':len(buttons),'optional':key.startswith('template-')});print(key,len(fields),len(buttons),flush=True)
  (target/'pages.json').write_text(json.dumps({'format':1,'sourceVersion':'MPMB 13.0.4','pages':manifest},indent=2)+'\n')
+ spec=importlib.util.spec_from_file_location('companion_equipment',ROOT/'scripts/build-adobe-companion-equipment.py');equipment=importlib.util.module_from_spec(spec);spec.loader.exec_module(equipment);equipment.update(source,target)
 if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('pdf',type=pathlib.Path);p.add_argument('--output',type=pathlib.Path,default=ROOT/'data/adobe-pages');a=p.parse_args();export(a.pdf,a.output)

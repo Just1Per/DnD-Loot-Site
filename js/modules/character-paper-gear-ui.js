@@ -2,7 +2,7 @@
 /* Original Gear row actions stay on the source paper and share its private save. */
 var CharacterPaperGearUI=(()=>{
  let currentClose=null;
- const physical=()=>{const loot=sheetEquipmentLoot(),attuned=CharacterEquipment.attunementState(sheetSession.data,loot,CharacterAdobeEngine.level(sheetSession.data,sheetSession.identity.level)).active;return loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:sheetSession.data.personalGear.find(row=>row.id===entry.id)?.location||'',attuned:attuned.has(entry.id)}));};
+ const physical=()=>{const loot=sheetEquipmentLoot(),attuned=CharacterEquipment.attunementState(sheetSession.data,loot,CharacterAdobeEngine.level(sheetSession.data,sheetSession.identity.level)).active;return CharacterCompanionEquipment.decorate(sheetSession.data,loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:sheetSession.data.personalGear.find(row=>row.id===entry.id)?.location||'',attuned:attuned.has(entry.id)})));};
  function open(index){
   if(sheetSession&&CharacterPaperInventoryUI.project(sheetSession.data).entries[index]?.automaticAttunement){CharacterPaperInventoryUI.openFooter(index);return;}
   const session=sheetSession;if(!characterHPCurrent(session)||session.saving||!Number.isInteger(index)||index<0||index>=CharacterPaperGearLayout.maxRows||!CharacterAdobeView.validate())return;
@@ -59,6 +59,8 @@ var CharacterPaperGearUI=(()=>{
     };
    }
    dialog.querySelector('[data-gear-equipment]').onclick=()=>{if(!guard()||!clean())return;close();CharacterAdobeView.openEditor('equipment');};
+   const carrierSection=document.createElement('section');carrierSection.innerHTML='<h3>Move owned item to a companion</h3><p class="adobe-gear-help">Move the entire owned stack and its carrying weight. Unequip worn items first. Copies are paper references; use the original owned row to move stock.</p><div class="adobe-gear-actions">'+session.data.adobe.companions.map((c,i)=>c.type!=='wildshape'?'<button type="button" data-gear-companion="'+i+'" '+(!row||row.unavailable||row.reference?'disabled':'')+'>Move to '+esc(c.name||c.creature||'Companion '+(i+1))+'</button>':'').join('')+'</div>';dialog.querySelector('.adobe-gear-body').append(carrierSection);
+   for(const button of carrierSection.querySelectorAll('[data-gear-companion]'))button.onclick=async()=>{if(!guard()||!clean())return;try{const proposal=await CharacterCompanionEquipmentUI.moveCharacter(selected,Number(button.dataset.gearCompanion),{isCurrent:allowed});if(!proposal)return;close();await CharacterAdobeView.showCompanionEquipment(proposal.companionIndex,proposal.index);sheetStatus('Item moved to companion equipment. Save sheet to keep it.');}catch(error){status.textContent=error.message;}};
    CharacterPaperGearCatalogUI.install({dialog,row,session,index:selected,allowed,guard,clean,apply:proposal=>{session.data.personalGear=proposal.personalGear;apply({state:proposal.paperInventory,index:proposal.index});dialog.querySelector('[data-gear-done]').focus();}});
   }
   dialog.addEventListener('cancel',event=>{event.preventDefault();close();});dialog.addEventListener('close',close);document.getElementById('characterSheetDialog').append(dialog);render();if(!dialog.isConnected)return;if(typeof SiteHelp!=='undefined')SiteHelp.hide();dialog.showModal();dialog.querySelector('h2').focus();

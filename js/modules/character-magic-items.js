@@ -63,7 +63,7 @@ var CharacterMagicItems=(()=>{
     const attunement=E.attunementState(data,loot,level);
     const result=[];
     for(const choice of choices){
-      if(!choice?.id||!choice.equipped)continue;
+      if(!choice?.id||!choice.equipped||(globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null))?.carrier(data,choice.id)>=0)continue;
       const entry=owned.get(choice.id);if(!entry)continue;
       const item=entry.item||{},meta=info(item),needs=requiresAttunement(item);
       let magicActive=!needs;

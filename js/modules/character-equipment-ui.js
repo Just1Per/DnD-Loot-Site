@@ -27,6 +27,7 @@ function setSheetEquipmentChoice(id,key,value){
  if(!sheetSession||!['equipped','attuned','ability','proficiency','mode'].includes(key))return;
  readSheetForm();const s=sheetSession,owned=sheetEquipmentLoot(),entry=owned.find(e=>e.id===id)||personalGearEntries(true).find(e=>e.id===id);if(!entry)return;
  if(['equipped','attuned'].includes(key)&&value&&!owned.some(e=>e.id===id))return sheetStatus('Carry this item before wearing or attuning it.',true);
+ if(key==='equipped'&&value&&CharacterCompanionEquipment.carrier(s.data,id)>=0){refreshCharacterSheetInventory();return sheetStatus('Move this item back from its companion before equipping it.',true);}
  const state=s.data.equipmentState,m=CharacterEquipment.infer(entry.item);let choice=state.loadout.find(v=>v.id===id);
  if(!choice){if(state.loadout.length>=200)return sheetStatus('Equipment selection limit reached.',true);choice=CharacterEquipment.choices({loadout:[{id}]}).loadout[0];state.loadout.push(choice);}
  if(key==='attuned'&&value&&!choice.attuned){

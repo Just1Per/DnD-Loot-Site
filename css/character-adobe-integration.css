@@ -1059,8 +1059,8 @@
 @media print{#adobeWeightDialog{display:none!important}}
 
 /* Original Gear operations use a readable native menu over the fixed source paper. */
-#adobeGearDialog{width:min(850px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;color-scheme:light;background:#fffdf7;color:#453328;box-sizing:border-box}
-#adobeGearDialog[open]{display:flex;flex-direction:column;overflow:hidden}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog){width:min(850px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;color-scheme:light;background:#fffdf7;color:#453328;box-sizing:border-box}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog)[open]{display:flex;flex-direction:column;overflow:hidden}
 .adobe-gear-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;background:#f6efdf;padding:22px 26px;border-bottom:1px solid #d9cbb4}
 .adobe-gear-head>div:first-child{min-width:0;flex:1}.adobe-gear-head>div:last-child{display:flex;gap:8px;flex-shrink:0}
 .adobe-gear-head span{font:700 11px Arial,sans-serif;letter-spacing:.1em;color:#725134}
@@ -1068,33 +1068,33 @@
 .adobe-gear-head p{font-size:13px;line-height:1.6;margin:0}
 .adobe-gear-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 26px}
 .adobe-gear-body section{padding:20px 0;border-bottom:1px solid #e1d4be}.adobe-gear-body section:last-child{border:0}
-#adobeGearDialog h3{font:600 18px Georgia,serif;margin:0 0 12px}
-#adobeGearDialog label{display:grid;gap:7px;min-width:0;font-size:13px;font-weight:600}
-#adobeGearDialog :is(input,select){width:100%;min-width:0;min-height:44px;box-sizing:border-box;font-size:16px;color:#453328;background:#fff;border:1px solid #b7a17d;border-radius:4px;padding:9px}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) h3{font:600 18px Georgia,serif;margin:0 0 12px}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) label{display:grid;gap:7px;min-width:0;font-size:13px;font-weight:600}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) :is(input,select){width:100%;min-width:0;min-height:44px;box-sizing:border-box;font-size:16px;color:#453328;background:#fff;border:1px solid #b7a17d;border-radius:4px;padding:9px}
 .adobe-gear-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-#adobeGearDialog details summary{cursor:pointer;min-height:44px;box-sizing:border-box;font-weight:600;padding:12px 0}
-#adobeGearDialog details[open] summary{margin-bottom:10px}
-#characterSheetPage #adobeGearDialog button{min-height:44px;white-space:normal}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) details summary{cursor:pointer;min-height:44px;box-sizing:border-box;font-weight:600;padding:12px 0}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) details[open] summary{margin-bottom:10px}
+#characterSheetPage :is(#adobeGearDialog,#adobeCompanionEquipmentDialog) button{min-height:44px;white-space:normal}
 .adobe-gear-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-#adobeGearDialog [data-gear-apply]{background:#742b25;color:#fff;border-color:#742b25}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) [data-gear-apply]{background:#742b25;color:#fff;border-color:#742b25}
 .adobe-gear-help{font-size:13px;line-height:1.7;margin:12px 0 0}
-#adobeGearDialog [aria-invalid=true]{outline:2px solid #922d25}
-#adobeGearDialog>footer{background:#fffaf1;border-top:1px solid #d9cbb4;padding:12px 26px;flex-shrink:0}
-#adobeGearDialog [data-gear-status]{font-size:13px;line-height:1.6;min-height:20px;margin:0}
-@media(max-width:600px){.adobe-gear-head{padding:16px;flex-wrap:wrap;gap:12px}.adobe-gear-head h2{font-size:23px}.adobe-gear-head>div:last-child{width:100%}.adobe-gear-head button{flex:1}.adobe-gear-body{padding:0 16px}.adobe-gear-fields{grid-template-columns:1fr}.adobe-gear-actions button{flex:1 1 130px}#adobeGearDialog>footer{padding:12px 16px}}
-@media print{#adobeGearDialog{display:none!important}}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) [aria-invalid=true]{outline:2px solid #922d25}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog)>footer{background:#fffaf1;border-top:1px solid #d9cbb4;padding:12px 26px;flex-shrink:0}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) [data-gear-status]{font-size:13px;line-height:1.6;min-height:20px;margin:0}
+@media(max-width:600px){.adobe-gear-head{padding:16px;flex-wrap:wrap;gap:12px}.adobe-gear-head h2{font-size:23px}.adobe-gear-head>div:last-child{width:100%}.adobe-gear-head button{flex:1}.adobe-gear-body{padding:0 16px}.adobe-gear-fields{grid-template-columns:1fr}.adobe-gear-actions button{flex:1 1 130px}:is(#adobeGearDialog,#adobeCompanionEquipmentDialog)>footer{padding:12px 16px}}
+@media print{:is(#adobeGearDialog,#adobeCompanionEquipmentDialog){display:none!important}}
 .adobe-gear-catalog-section [data-catalog-preview]{margin-top:16px;padding:16px;background:#f7f0e3;border:1px solid #dfd0b8;border-radius:6px}
-#adobeGearDialog [data-catalog-preview] h4{font:600 20px Georgia,serif;color:#642921;margin:0 0 14px}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) [data-catalog-preview] h4{font:600 20px Georgia,serif;color:#642921;margin:0 0 14px}
 .adobe-catalog-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 14px}
 .adobe-catalog-facts dt{font:12px/1.5 Arial,sans-serif;color:#6b5842}.adobe-catalog-facts dd{font-size:14px;line-height:1.6;margin:4px 0 0;overflow-wrap:anywhere}
-#adobeGearDialog [data-catalog-preview] small{font-size:12px;line-height:1.6;font-weight:400}
-#adobeGearDialog [data-catalog-weight]{max-width:180px}
-#characterSheetPage #adobeGearDialog [data-catalog-add]{background:#742b25;color:#fff;border-color:#742b25;margin-top:14px}
-#adobeGearDialog [data-catalog-status]{font-size:13px;line-height:1.6;margin:10px 0 0}
-@media(max-width:600px){.adobe-catalog-facts{grid-template-columns:1fr 1fr}.adobe-catalog-facts>div:last-child{grid-column:1/-1}#adobeGearDialog [data-catalog-add]{width:100%}}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) [data-catalog-preview] small{font-size:12px;line-height:1.6;font-weight:400}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) [data-catalog-weight]{max-width:180px}
+#characterSheetPage :is(#adobeGearDialog,#adobeCompanionEquipmentDialog) [data-catalog-add]{background:#742b25;color:#fff;border-color:#742b25;margin-top:14px}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) [data-catalog-status]{font-size:13px;line-height:1.6;margin:10px 0 0}
+@media(max-width:600px){.adobe-catalog-facts{grid-template-columns:1fr 1fr}.adobe-catalog-facts>div:last-child{grid-column:1/-1}:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) [data-catalog-add]{width:100%}}
 
 .adobe-gear-combine{margin-top:18px;padding:16px;border:1px solid #d9cbb4;border-radius:6px;background:#f7f0e3}
-#adobeGearDialog .adobe-gear-combine h4{font:600 17px Georgia,serif;margin:0 0 10px;color:#642921}
+:is(#adobeGearDialog,#adobeCompanionEquipmentDialog) .adobe-gear-combine h4{font:600 17px Georgia,serif;margin:0 0 10px;color:#642921}
 .adobe-gear-combine p{font-size:13px;line-height:1.6;margin:8px 0}
 
 #adobeFooterDialog{width:min(760px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;color-scheme:light;background:#fffdf7;color:#453328;box-sizing:border-box}
@@ -1218,3 +1218,7 @@ dialog.adobe-flyout-host{position:fixed!important;inset:0!important;width:100vw!
 .adobe-spell-source-list li{padding:10px 12px;border-left:3px solid #9c7d50;background:#f5eddf}
 .adobe-spell-source-list span{display:block;font-size:12px;color:#66553f;overflow-wrap:anywhere}
 @media(max-width:740px){.adobe-spell-display{padding:4px 16px 14px;align-items:stretch}.adobe-spell-display :is(label,p,button){width:100%;min-width:0;flex:1 0 100%}.adobe-spell-dialog[data-reading] .adobe-spell-display{display:none}}
+
+#adobeCompanionEquipmentDialog>footer{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+#adobeCompanionEquipmentDialog [data-companion-gear-status]{flex:1;min-width:160px;margin:0;font-size:13px;line-height:1.6}
+#adobeCompanionEquipmentDialog [data-companion-gear-edit]{background:#742b25;color:#fff;border-color:#742b25}

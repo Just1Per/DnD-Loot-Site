@@ -31,7 +31,7 @@ var CharacterCarrying=(()=>{
   let gear=0,unknown=0;for(const entry of entries){const quantity=Number(entry.quantity);if(!Number.isFinite(quantity)||quantity<=0)continue;const weight=unit(entry);if(weight===null||weight===undefined||weight===''||!Number.isFinite(Number(weight))||Number(weight)<0||!Number.isFinite(Number(weight)*quantity)||!Number.isFinite(gear+Number(weight)*quantity))unknown++;else gear+=Number(weight)*quantity;}return{gear,unknown};
  }
  function weight(data,entries,baseGear=references()){
-  const seen=new Set(),scoped=entries.filter(entry=>!entry.id||!seen.has(entry.id)&&seen.add(entry.id)),row=rowsWeight(scoped,entry=>unitWeight(entry.item||{},baseGear));let coins=0;
+  const Companion=globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null),seen=new Set(),scoped=entries.filter(entry=>Companion?.carrier(data,entry.id)<0||!Companion).filter(entry=>!entry.id||!seen.has(entry.id)&&seen.add(entry.id)),row=rowsWeight(scoped,entry=>unitWeight(entry.item||{},baseGear));let coins=0;
   if(normalize(stored(data).carrying).includeCoins)for(const value of Object.values(data.coins||{})){const count=Number(value);if(!Number.isFinite(count)||count<0||!Number.isFinite(coins+count/50))row.unknown++;else coins+=count/50;}
   return{gear:row.gear,coins,total:row.gear+coins,unknown:row.unknown};
  }

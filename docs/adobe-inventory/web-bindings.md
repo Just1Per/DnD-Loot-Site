@@ -193,3 +193,8 @@ Height and Weight fields provide hover/focus/click guidance from numeric random-
 The Danish [Adobe versus website comparison worksheet](../adobe-v73-comparison-test-da.md) gives testers a repeatable same-character setup, source-spell scenarios, ratings and a structured defect/idea form. It asks equally for features that are better on the website and for Adobe functions that are still missing.
 
 Catalogue choices now fill a player's own text copy on the paper. Background narrative fields already behaved this way; spells and feat names/descriptions now do too. Saving/reopening retains the edited copy, while the original selection ID remains authoritative for rules calculations, grants and source checks. This text-copy model should be reused for remaining selected catalogue text fields after their source-specific behavior is reviewed.
+
+
+### Companion equipment transfers — v85
+
+The hidden original 17-row companion equipment layer is restored. Native row controls and Manage equipment support whole-owned-stack carrier transfers, movement between independent creatures and returns to character gear. Paper annotations remain separate from live physical stock/load, and the printed footer includes a distinct physical load/capacity readout. Worn gear must first be unequipped; ownership, attunement and charges stay with the same ID. Companion removal returns its equipment safely. Class-specific creature rules, companion item bonuses and remaining original companion row-arrangement/copy commands remain separate work. See [scope](../adobe-companion-equipment.md).

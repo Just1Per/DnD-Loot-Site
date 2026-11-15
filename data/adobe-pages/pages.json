@@ -61,8 +61,8 @@
     {
       "id": "template-AScomp",
       "title": "Companion",
-      "fields": 134,
-      "buttons": 8,
+      "fields": 188,
+      "buttons": 25,
       "optional": true
     },
     {
