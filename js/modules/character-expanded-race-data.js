@@ -2,7 +2,7 @@
 /* Additional first-party D&D species/race entries that are absent from the base catalogue.
  * Conditional/source-specific features are summarized briefly and remain manual unless the shared engine already understands them. */
 (()=>{
-  const C=typeof CharacterRaceCatalog!=='undefined'?CharacterRaceCatalog:null;
+  const C=typeof CharacterRaceCatalog!=='undefined'?CharacterRaceCatalog:(typeof require==='function'?require('./character-race-catalog'):null);
   if(!C)return;
   Object.assign(C.sources,{
     FTD:'Fizban’s Treasury of Dragons',
@@ -17,6 +17,7 @@
     baseExtend(races);
     const add=(id,name,edition,book,category,extra={})=>{
       races[id]={
+        ...(races[id]||{}),
         name,edition,book,source:C.sources[book]||book,category,
         asi:{},flexible:edition==='2014',languages:[],creatureType:'Humanoid',
         speed:30,size:'Medium',traits:[],partial:true,...extra
@@ -32,7 +33,7 @@
         'Friend of the Sea: communicate simple ideas with swimming beasts.'
       ]
     });
-    add('shadar-kai-mpmm','Shadar-kai','2014','MPMM','Exotic',{
+    add('shadar-kai-mpmm','Shadar-Kai','2014','MPMM','Exotic',{
       sizeChoice:true,darkvision:60,resistances:['Necrotic'],skills:['perception'],
       traits:[
         'Blessing of the Raven Queen: bonus-action teleport up to 30 ft; uses scale with proficiency bonus and refresh on a long rest.',

@@ -272,8 +272,10 @@ var CharacterSheetModel = (() => {
     effects.saves=[...new Set([...effects.saves,...saveTraining.abilities])];
     const invocationEffects=ClassChoices.invocationEffects(d,{level});
     effects.skills=[...new Set([...effects.skills,...invocationEffects.skills])];
+    effects.traits.push(...invocationEffects.reports.map(row=>row.name+' · '+row.detail));
     effects.specialSenses=[...(effects.specialSenses||[]),...invocationEffects.senses];
     if(invocationEffects.truesight)effects.truesight=Math.max(effects.truesight||0,invocationEffects.truesight);
+    if(invocationEffects.blindsight)effects.blindsight=Math.max(effects.blindsight||0,invocationEffects.blindsight);
     effects.concentrationAdvantage=!!effects.concentrationAdvantage||invocationEffects.concentrationAdvantage;
     const Domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null),domainTraining=Domains.derive(d,{level,saves:effects.saves});
     effects.skills=[...new Set([...effects.skills,...domainTraining.skills])];effects.proficiencies=[...new Set([...effects.proficiencies,...domainTraining.proficiencies])];effects.saves=[...new Set([...effects.saves,...domainTraining.saves])];effects.languages=[...new Set([...(effects.languages||[]),...domainTraining.languages])];
@@ -431,6 +433,7 @@ var CharacterSheetModel = (() => {
       const Fields=globalThis.CharacterPaperWeightFields||(typeof require==='function'?require('./character-paper-weight-fields'):null);
       result.paperWeight=PaperWeight.calculate(data.adobe?.paperWeight||data.rulesChoices?.grants?.__adobe?.data?.paperWeight,Fields.collect(data,result));result.weight=result.paperWeight.weight;
     }
+    if(invocationEffects.swimEqualWalk)effects.swim=Math.max(effects.swim||0,effects.speed||0);
     result.movement=Carry.movement(data,{limits:result.carrying,weight:result.weight,scores,effects,gear:result.gear,magicItems});
     Object.assign(effects,result.movement.speeds);
     if(Override)Override.dice({...d,adobe:data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}},result);

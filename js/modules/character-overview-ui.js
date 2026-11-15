@@ -182,7 +182,7 @@ function updateBackgroundControls(d) {
   const fixedSkills=(bg.skills||[]).map(k=>CharacterSheetModel.skills[k]?.[0]||k);
   const optionalSkills=(bg.skillOptions||[]).map(k=>CharacterSheetModel.skills[k]?.[0]||k);
   const skillText=[fixedSkills.join(', '),optionalSkills.length?`choose ${bg.skillChoiceCount||1} from ${optionalSkills.join(', ')}`:''].filter(Boolean).join(' · ')||'Source/manual';
-  const toolText=[...(bg.fixedTools||[]).map(t=>CharacterBackgrounds.toolName(t,R.tools)),...(bg.toolChoices||[]).map(t=>({anyArtisansTool:'Choose one artisan tool',anyMusicalInstrument:'Choose one musical instrument',anyGamingSet:'Choose one gaming set',merchant:'Choose artisan/navigator tools or one extra language'}[t]||t))].join(', ')||'Source/manual';
+  const toolText=[...(bg.fixedTools||[]).map(t=>CharacterBackgrounds.toolName(t,R.tools)),...(bg.toolChoices||[]).map(t=>({anyArtisansTool:'Choose one artisan tool',anyMusicalInstrument:'Choose one musical instrument',anyGamingSet:'Choose one gaming set',merchant:'Choose artisan/navigator tools or one extra language'}[t]||(t?.from?'Choose: '+CharacterBackgrounds.toolOptions(t,R).join(' / '):t)))].join(', ')||'Source/manual';
   const source=CharacterBackgrounds.sourceName(bg),ref=bg.page?`${source}, p. ${bg.page}`:source;
   let mechanics='';
   if(bg.edition==='2024'){

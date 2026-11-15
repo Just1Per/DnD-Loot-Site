@@ -189,9 +189,11 @@ var CharacterRules = (() => {
     }
   };
   const Catalog = typeof CharacterRaceCatalog !== 'undefined' ? CharacterRaceCatalog : require('./character-race-catalog');
+  if(typeof CharacterRaceCatalog==='undefined'&&typeof require==='function')require('./character-expanded-race-data');
   Catalog.extend(races);
   const Modern = typeof CharacterRules2024 !== 'undefined' ? CharacterRules2024 : require('./character-rules-2024');
   Modern.extend(races);
+  (typeof CharacterOriginMechanics!=='undefined'?CharacterOriginMechanics:require('./character-origin-mechanics')).races(races);
   const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
   const abilityKeys = [
     'str',
@@ -1014,6 +1016,7 @@ var CharacterRules = (() => {
       race: own(races, b.race) ? b.race : '',
       classId: classes[b.classId] ? b.classId : '',
       background: Backgrounds.get(b.background) ? b.background : '',
+      backgroundSkills: [0,1].map(i=>String(b.backgroundSkills?.[i]||'').slice(0,40)),
       backgroundTools: [0,1].map(i=>String(b.backgroundTools?.[i]||'').slice(0,120)),
       backgroundReplacementSkills: [0,1].map(i=>String(b.backgroundReplacementSkills?.[i]||'').slice(0,40)),
       backgroundPattern: b.backgroundPattern === '111' ? '111' : '21',

@@ -108,6 +108,7 @@
         "adobe-mithral-reference-browser.cjs",
         "adobe-native-classes-browser.cjs",
         "adobe-page-choices-browser.cjs",
+        "adobe-pinned-legacy-browser.cjs",
         "adobe-xp-browser.cjs"
       ]
     },

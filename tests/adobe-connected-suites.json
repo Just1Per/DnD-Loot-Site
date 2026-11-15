@@ -82,6 +82,8 @@
     "adobe-spell-list-browser.cjs",
     "adobe-attunement-inventory-browser.cjs",
     "adobe-source-generator-browser.cjs",
-    "adobe-companion-equipment-browser.cjs"
+    "adobe-companion-equipment-browser.cjs",
+    "adobe-pinned-origins-browser.cjs",
+    "adobe-pinned-legacy-browser.cjs"
   ]
 }

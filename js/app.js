@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261115-companion-equipment-v85";
+const ASSET_VERSION = "20261115-pinned-character-v86";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -84,6 +84,9 @@ const FEATURE_FILES = [
   "./modules/character-magic-items.js",
   "./modules/campaign-store.js",
   "./modules/core.js",
+  "./modules/character-legacy-options.js",
+  "./modules/character-origin-facts.js",
+  "./modules/character-origin-mechanics.js",
   "./modules/character-race-catalog.js",
   "./modules/character-expanded-race-data.js",
   "./modules/character-background-data.js",
