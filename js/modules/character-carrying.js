@@ -22,6 +22,7 @@ var CharacterCarrying=(()=>{
  function unitWeight(item={},baseGear=references()){
   const raw=item.properties?.find(p=>p.title==='Weight per unit (lb)')?.text;
   if(raw!==undefined&&raw!==null&&raw!==''&&Number.isFinite(Number(raw))&&Number(raw)>=0)return Number(raw);
+  const pinned=(globalThis.CharacterPinnedItems||(typeof require==='function'?require('./character-pinned-items'):null))?.find(item);if(typeof pinned?.weight==='number'&&pinned.weight>=0)return pinned.weight;
   if(!weightIndexes.has(baseGear)){const index=new Map();for(const row of baseGear)for(const name of [row.name,row.unitName])if(name&&!index.has(name.toLowerCase()))index.set(name.toLowerCase(),row.weight);weightIndexes.set(baseGear,index);}
   const index=weightIndexes.get(baseGear),equipment=globalThis.CharacterEquipment||(typeof require==='function'?require('./character-equipment'):null),mechanics=equipment?.infer(item),baseName=mechanics?.kind==='shield'?'Shield':mechanics&&equipment.profile(mechanics,item.edition||'2014')?.name;
   const value=index.get(String(item.name||'').toLowerCase())??(baseName?index.get(baseName.toLowerCase()):undefined);
@@ -31,7 +32,9 @@ var CharacterCarrying=(()=>{
   let gear=0,unknown=0;for(const entry of entries){const quantity=Number(entry.quantity);if(!Number.isFinite(quantity)||quantity<=0)continue;const weight=unit(entry);if(weight===null||weight===undefined||weight===''||!Number.isFinite(Number(weight))||Number(weight)<0||!Number.isFinite(Number(weight)*quantity)||!Number.isFinite(gear+Number(weight)*quantity))unknown++;else gear+=Number(weight)*quantity;}return{gear,unknown};
  }
  function weight(data,entries,baseGear=references()){
-  const Companion=globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null),seen=new Set(),scoped=entries.filter(entry=>Companion?.carrier(data,entry.id)<0||!Companion).filter(entry=>!entry.id||!seen.has(entry.id)&&seen.add(entry.id)),row=rowsWeight(scoped,entry=>unitWeight(entry.item||{},baseGear));let coins=0;
+  const Containers=globalThis.CharacterItemContainers||(typeof require==='function'?require('./character-item-containers'):null),projection=Containers.project(data,entries.map(entry=>({...entry,weight:unitWeight(entry.item||{},baseGear)})));
+  entries=projection.entries;
+  const Companion=globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null),seen=new Set(),scoped=entries.filter(entry=>Companion?.carrier(data,entry.id)<0||!Companion).filter(entry=>!entry.id||!seen.has(entry.id)&&seen.add(entry.id)),row=rowsWeight(scoped,entry=>entry.weight);let coins=0;
   if(normalize(stored(data).carrying).includeCoins)for(const value of Object.values(data.coins||{})){const count=Number(value);if(!Number.isFinite(count)||count<0||!Number.isFinite(coins+count/50))row.unknown++;else coins+=count/50;}
   return{gear:row.gear,coins,total:row.gear+coins,unknown:row.unknown};
  }

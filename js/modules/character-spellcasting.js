@@ -226,7 +226,7 @@ var CharacterSpellcasting=(()=>{
   }
   function castingStats(p,derived,adjustments={}){
     const modifier=Number(derived?.mods?.[p?.ability]||0),pb=Number(derived?.pb||0);
-    const M=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),expressions=derived?.modifiers?.expressions||{},attackBonus=derived?.modifiers?.spellAttackBonus??(Number(adjustments.spellAttackBonus)||0),dcBonus=derived?.modifiers?.spellDCBonus??(Number(adjustments.spellDCBonus)||0),secondary=Number(adjustments.secondaryDCBonus)||0;
+    const M=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),expressions=derived?.modifiers?.expressions||{},attackBonus=derived?.modifiers?.spellAttackBonus??((Number(adjustments.spellAttackBonus)||0)+(Number(derived?.effects?.itemSpellAttackBonus)||0)),dcBonus=derived?.modifiers?.spellDCBonus??(Number(adjustments.spellDCBonus)||0),secondary=Number(adjustments.secondaryDCBonus)||0;
     return {ability:p?.ability||'',modifier,attack:(derived?.proficiencyDice?0:pb)+modifier+attackBonus+(p?.classId&&M?M.value(expressions,'spell:'+p.classId+':attack',0,derived):0),dc:8+pb+modifier+dcBonus+secondary+(p?.classId&&M?M.value(expressions,'spell:'+p.classId+':dc',0,derived):0)};
   }
   function selectionCounts(p,rows,catalogue=[]){

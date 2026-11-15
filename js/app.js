@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261115-pinned-character-v86";
+const ASSET_VERSION = "20261115-pinned-items-v87";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -77,6 +77,9 @@ const FEATURE_FILES = [
   "./modules/campaign-creatures.js",
   "./modules/personal-creature-library.js",
   "./modules/campaign-encounters.js",
+  "./modules/character-pinned-item-data.js",
+  "./modules/character-pinned-items.js",
+  "./modules/character-item-containers.js",
   "./modules/character-magic-item-choices.js",
   "./modules/character-equipment.js",
   "./modules/character-magic-armor.js",
@@ -284,6 +287,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
   "./modules/character-paper-gear-catalog-ui.js",
   "./modules/character-paper-gear-ui.js",
   "./modules/character-companion-equipment-ui.js",
+  "./modules/character-item-containers-ui.js",
     "./modules/character-named-equipment-ui.js",
     "./modules/character-adobe-fields.js",
     "./modules/character-adobe-print-plan.js",

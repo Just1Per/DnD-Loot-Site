@@ -84,6 +84,7 @@
     "adobe-source-generator-browser.cjs",
     "adobe-companion-equipment-browser.cjs",
     "adobe-pinned-origins-browser.cjs",
-    "adobe-pinned-legacy-browser.cjs"
+    "adobe-pinned-legacy-browser.cjs",
+    "adobe-pinned-items-browser.cjs"
   ]
 }

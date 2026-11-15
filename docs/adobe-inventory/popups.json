@@ -341,7 +341,8 @@
       "entry": "Companion equipment arrows, transfer destination og companion-card controls",
       "notes": "Native carrier/row editor; delt private inventory og carrying-engine.",
       "testReferences": [
-        "adobe-companion-equipment-browser.cjs"
+        "adobe-companion-equipment-browser.cjs",
+        "adobe-pinned-items-browser.cjs"
       ]
     },
     {
@@ -407,7 +408,20 @@
         "adobe-attack-menus-browser.cjs",
         "adobe-companion-equipment-browser.cjs",
         "adobe-items-browser.cjs",
-        "adobe-magic-menu-browser.cjs"
+        "adobe-magic-menu-browser.cjs",
+        "adobe-pinned-items-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeItemContainerDialog",
+      "file": "js/modules/character-item-containers-ui.js",
+      "line": 6,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Owned item information og source equipment row",
+      "notes": "Native explicit container placement; bevar fælles stock, private Adobe-envelope, carrying og companion-transfer helpers.",
+      "testReferences": [
+        "adobe-pinned-items-browser.cjs"
       ]
     },
     {
@@ -419,7 +433,8 @@
       "entry": "Dawn/item resource recovery",
       "notes": "Åbnes fra resource-bridge; modulet renderer #sheetItemResources.",
       "testReferences": [
-        "adobe-item-resources-browser.cjs"
+        "adobe-item-resources-browser.cjs",
+        "adobe-pinned-items-browser.cjs"
       ]
     },
     {
@@ -518,7 +533,8 @@
         "adobe-gear-combining-browser.cjs",
         "adobe-gear-page-transfers-browser.cjs",
         "adobe-gear-rows-browser.cjs",
-        "adobe-items-browser.cjs"
+        "adobe-items-browser.cjs",
+        "adobe-pinned-items-browser.cjs"
       ]
     },
     {
@@ -574,7 +590,8 @@
         "adobe-equipment-layout-browser.cjs",
         "adobe-items-browser.cjs",
         "adobe-magic-menu-browser.cjs",
-        "adobe-magic-variant-browser.cjs"
+        "adobe-magic-variant-browser.cjs",
+        "adobe-pinned-items-browser.cjs"
       ]
     },
     {
@@ -1019,7 +1036,7 @@
     },
     {
       "file": "js/modules/character-paper-gear-ui.js",
-      "line": 61,
+      "line": 62,
       "command": "equipment",
       "expression": "'equipment'"
     },

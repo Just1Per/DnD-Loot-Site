@@ -3,6 +3,7 @@
 var CharacterCompanionEquipment=(()=>{
  const capacity=17,validId=id=>typeof id==='string'&&id.length>0&&id.length<=200&&!/[\r\n/]/.test(id);
  const dep=(name,file)=>globalThis[name]||(typeof require==='function'?require(file):null);
+ const Containers=dep('CharacterItemContainers','./character-item-containers');
  const stored=data=>data?.adobe||data?.rulesChoices?.grants?.__adobe?.data||{};
  function fields(raw={}){
   const out={};for(const key of ['name','location'])if(typeof raw?.[key]==='string')out[key]=raw[key].slice(0,200);
@@ -21,15 +22,15 @@ var CharacterCompanionEquipment=(()=>{
  }
  function load(data,all,index){
   const Carry=dep('CharacterCarrying','./character-carrying'),rows=project(data,all,index).filter(row=>row&&carrier(data,row.id)===index),owned=new Map(all.map(row=>[row.id,row]));
-  const physical=Carry.rowsWeight(rows.map(row=>owned.get(row.id)).filter(Boolean)),paper=dep('CharacterPaperWeight','./character-paper-weight').columnWeight(rows.map(row=>({...row,companionCarried:false})));
+  const physical=Carry.rowsWeight(Containers.project(data,all).entries.filter(row=>rows.some(saved=>saved.id===row.id))),paper=dep('CharacterPaperWeight','./character-paper-weight').columnWeight(rows.map(row=>({...row,companionCarried:false})));
   const c=stored(data).companions?.[index],creature=dep('CharacterCreatureData','./character-creature-data')?.find(c?.creature),burden=creature?.id==='mule'&&creature.traits?.includes('Beast of Burden'),limits=Carry.limits({profile:{size:c?.size},adobe:{carrying:{includeCoins:false}}},{scores:{str:c?.abilities?.str||10},effects:{size:c?.size||'Medium',...(burden?{race:{name:'Beast of Burden',carryingSizeSteps:1}}:{})}});
   return{physical:{...physical,total:physical.gear},paper,status:Carry.status(limits,{total:physical.gear,unknown:physical.unknown})};
  }
  function context(data,all){
-  const adobe=stored(data);return{paperInventory:dep('CharacterPaperInventory','./character-paper-inventory').normalize(adobe.paperInventory),companions:(adobe.companions||[]).map(c=>({...c,equipment:normalize(c.equipment)})),all};
+  const adobe=stored(data);return{itemContainers:Containers.normalize(adobe.itemContainers),paperInventory:dep('CharacterPaperInventory','./character-paper-inventory').normalize(adobe.paperInventory),companions:(adobe.companions||[]).map(c=>({...c,equipment:normalize(c.equipment)})),all};
  }
  function target(out,index){if(out.companions[index]?.type==='wildshape')throw Error('A Wild Shape reference is not a separate equipment carrier.');if(!Number.isInteger(index)||index<0||!out.companions[index])throw Error('Choose an existing companion.');const slot=out.companions[index].equipment.rows.findIndex(row=>!row);if(slot<0)throw Error('This companion’s 17 equipment rows are full. Nothing was moved.');return slot;}
- function moveToCompanion(data,all,index,companionIndex){
+ function moveOneToCompanion(data,all,index,companionIndex){
   const Inventory=dep('CharacterPaperInventory','./character-paper-inventory'),out=context(data,all),slot=target(out,companionIndex),row=Inventory.gearRows(out.paperInventory,all)[index];
   if(!row||row.unavailable||row.header||row.automaticAttunement||row.reference||row.key!=='p:'+row.id)throw Error('Choose the item’s original owned equipment row, rather than a copied reference.');
   if(carrier(data,row.id)>=0)throw Error('This item is already carried by a companion.');
@@ -39,13 +40,13 @@ var CharacterCompanionEquipment=(()=>{
   out.paperInventory=Inventory.gearAction(out.paperInventory,all,index,'delete').state;
   return{...out,companionIndex,index:slot};
  }
- function moveBetween(data,all,from,index,to){
+ function moveOneBetween(data,all,from,index,to){
   const out=context(data,all),slot=target(out,to),source=out.companions[from]?.equipment.rows[index];if(!source||from===to)throw Error('Choose an item and a different companion.');
   if(!all.some(row=>row.id===source.id&&Number(row.quantity)>0))throw Error('This owned item is no longer available.');
   if(carrier(data,source.id)!==from)throw Error('This item is assigned to another companion.');
   out.companions[from].equipment.rows.splice(index,1);out.companions[from].equipment.rows.push(null);out.companions[to].equipment.rows[slot]=source;out.companions[to].equipment.visible=true;return{...out,companionIndex:to,index:slot};
  }
- function returnToCharacter(data,all,from,index,destination='gear'){
+ function returnOneToCharacter(data,all,from,index,destination='gear'){
   const out=context(data,all),c=out.companions[from],saved=c?.equipment.rows[index],Inventory=dep('CharacterPaperInventory','./character-paper-inventory');if(!saved)throw Error('Choose a companion equipment row.');if(carrier(data,saved.id)!==from)throw Error('This item is assigned to another companion.');
   if(!['gear','extra','automatic'].includes(destination))throw Error('Choose Equipment or Extra Equipment.');
   const entries=Inventory.gearRows(out.paperInventory,all),start=destination==='extra'?54:0,end=destination==='automatic'?dep('CharacterPaperGearLayout','./character-paper-gear-layout').maxRows-1:destination==='extra'?89:out.paperInventory.attunedFooter?49:53;let slot=-1;
@@ -53,16 +54,31 @@ var CharacterCompanionEquipment=(()=>{
   const key='p:'+saved.id,state=out.paperInventory.gearLayout;state.hidden=state.hidden.filter(id=>id!==key);state.layout=state.layout.filter(row=>row.key!==key&&row.slot!==slot);state.layout.push({slot,key,name:saved.name});state.values[key]={...(state.values[key]||{}),...saved.fields};
   c.equipment.rows.splice(index,1);c.equipment.rows.push(null);return{...out,index:slot};
  }
+ function moveToCompanion(data,all,index,to){
+  const I=dep('CharacterPaperInventory','./character-paper-inventory'),source=I.gearRows(stored(data).paperInventory,all)[index],ids=source?[source.id,...Containers.descendants(data,all,source.id)]:[];
+  if(ids.length>normalize(stored(data).companions?.[to]?.equipment).rows.filter(r=>!r).length)throw Error('This companion’s rows are full or have no space for the container and all contained stacks. Nothing was moved.');
+  if(data.equipmentState?.loadout?.some(choice=>ids.includes(choice.id)&&choice.equipped))throw Error('Unequip this item and its contents before moving them to a companion.');
+  let out=moveOneToCompanion(data,all,index,to);out.itemContainers=Containers.release(out.itemContainers,source.id);
+  for(const id of ids.slice(1)){const owned=all.find(r=>r.id===id),slot=out.companions[to].equipment.rows.findIndex(r=>!r);out.companions[to].equipment.rows[slot]={id,name:owned.name,fields:fields(out.paperInventory.gearLayout.values['p:'+id])};const row=I.gearRows(out.paperInventory,all).findIndex(r=>r?.key==='p:'+id&&!r.reference);if(row>=0)out.paperInventory=I.gearAction(out.paperInventory,all,row,'delete').state;else if(!out.paperInventory.gearLayout.hidden.includes('p:'+id))out.paperInventory.gearLayout.hidden.push('p:'+id);}
+  return{...out,movedIds:ids};
+ }
+ function moveBetween(data,all,from,index,to){
+  const source=normalize(stored(data).companions?.[from]?.equipment).rows[index],ids=source?[source.id,...Containers.descendants(data,all,source.id)]:[];if(ids.length>normalize(stored(data).companions?.[to]?.equipment).rows.filter(r=>!r).length)throw Error('This companion’s rows are full or have no space for the container and all contained stacks. Nothing was moved.');
+  let out=moveOneBetween(data,all,from,index,to),first=out.index;out.itemContainers=Containers.release(out.itemContainers,source.id);for(const id of ids.slice(1)){const slot=out.companions[from].equipment.rows.findIndex(r=>r?.id===id);out=moveOneBetween({...data,adobe:{...stored(data),...out}},all,from,slot,to);}return{...out,index:first};
+ }
+ function returnToCharacter(data,all,from,index,destination='gear'){
+  const source=normalize(stored(data).companions?.[from]?.equipment).rows[index],ids=source?[source.id,...Containers.descendants(data,all,source.id)]:[];let out=returnOneToCharacter(data,all,from,index,destination),first=out.index;out.itemContainers=Containers.release(out.itemContainers,source.id);for(const id of ids.slice(1)){const slot=out.companions[from].equipment.rows.findIndex(r=>r?.id===id);out=returnOneToCharacter({...data,adobe:{...stored(data),...out}},all,from,slot,destination);}return{...out,index:first};
+ }
  function edit(data,all,companionIndex,index,field,value){
   const out=context(data,all),row=out.companions[companionIndex]?.equipment.rows[index];if(!row||!project(data,all,companionIndex)[index]||project(data,all,companionIndex)[index].unavailable)throw Error('Choose an available companion equipment row.');
   const parsed=dep('CharacterPaperGearRows','./character-paper-gear-rows').edit({},0,field,value).rows[0][field];row.fields[field]=parsed;if(field==='weight'&&parsed==='')delete row.fields.weight;return out;
  }
  function removeCompanion(data,all,index){
   let out=context(data,all);if(out.companions.length<=1||!out.companions[index])throw Error('Keep at least one companion card.');
-  while(out.companions[index].equipment.rows.some(Boolean)){const slot=out.companions[index].equipment.rows.findIndex(Boolean);out=returnToCharacter({...data,adobe:{...stored(data),paperInventory:out.paperInventory,companions:out.companions}},all,index,slot,'automatic');}
+  while(out.companions[index].equipment.rows.some(Boolean)){const slot=out.companions[index].equipment.rows.findIndex(Boolean);out=returnToCharacter({...data,adobe:{...stored(data),paperInventory:out.paperInventory,companions:out.companions,itemContainers:out.itemContainers}},all,index,slot,'automatic');}
   out.companions.splice(index,1);return out;
  }
- function physical(data,loot){const Carry=dep('CharacterCarrying','./character-carrying');return decorate(data,loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:Carry.unitWeight(entry.item||{}),location:data.personalGear?.find(row=>row.id===entry.id)?.location||''})));}
+ function physical(data,loot){const Carry=dep('CharacterCarrying','./character-carrying');return decorate(data,loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,item:entry.item,weight:Carry.unitWeight(entry.item||{}),location:data.personalGear?.find(row=>row.id===entry.id)?.location||''})));}
  function carrierName(data,id){const i=carrier(data,id),c=stored(data).companions?.[i];return c?(c.name||c.creature||'Companion '+(i+1)):'';}
  return{carrierName,physical,capacity,normalize,carrier,decorate,project,load,moveToCompanion,moveBetween,returnToCharacter,edit,removeCompanion};
 })();

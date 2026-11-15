@@ -4,6 +4,7 @@
    Items still require the player to mark them Equipped / worn, and attunement is enforced here
    when the Adobe reference marks a supported item as requiring it. */
 var CharacterMagicItems=(()=>{
+  const Pinned=typeof CharacterPinnedItems!=='undefined'?CharacterPinnedItems:require('./character-pinned-items');
   const ItemChoices=typeof CharacterMagicItemChoices!=='undefined'?CharacterMagicItemChoices:require('./character-magic-item-choices');
   const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
   const priorInfer=E.infer.bind(E);
@@ -24,8 +25,8 @@ var CharacterMagicItems=(()=>{
   }
   function info(itemOrName){
     const name=typeof itemOrName==='string'?itemOrName:itemOrName?.name;
-    const key=clean(name),rule=variantRule(name);
-    return {key,known:knownNames.has(key)||!!rule,rule,attunement:!!rule?.attunement};
+    const key=clean(name),f=typeof itemOrName==='object'?Pinned.find(itemOrName):null,structured=f?{attunement:!!f.reqAttune,resistances:(f.resist||[]).filter(x=>typeof x==='string').map(x=>x[0].toUpperCase()+x.slice(1)),acBonus:Number(f.bonusAc)||0}:null,rule=variantRule(name)||structured;
+    return {key,known:knownNames.has(key)||!!variantRule(name)||!!f&&!!f.rarity&&!['none','unknown'].includes(f.rarity),rule,attunement:!!rule?.attunement};
   }
   function attunementMetadata(value){return value===true||value===1||typeof value==='string'&&/^(?:true\b|yes\b|required\b|requires? attunement(?:\b|$)|by (?:a|an|the)\b|\(requires? attunement\b)/i.test(value.trim());}
   function isMagical(item={}){
@@ -33,11 +34,12 @@ var CharacterMagicItems=(()=>{
     return metadata.known||attunementMetadata(item.attunement)||attunementMetadata(item.reqAttune)||['potion','ring','rod','scroll','staff','wand','wondrous item'].includes(category)||['uncommon','rare','veryrare','legendary','artifact'].includes(rarity)||!!(mechanics.acBonus||mechanics.attackBonus||mechanics.damageBonus||mechanics.extraDamage);
   }
   function requiresAttunement(item={}){
-    return attunementMetadata(item.attunement)||attunementMetadata(item.reqAttune)||info(item).attunement||ItemChoices.supported(item);
+    return attunementMetadata(item.attunement)||attunementMetadata(item.reqAttune)||info(item).attunement||ItemChoices.options(item).some(option=>option.attunement!==false);
   }
   function infer(item={}){
     if(item?.mechanics)return priorInfer(item);
-    const rule=variantRule(item?.name);
+    const rule=info(item).rule;
+    const f=Pinned.find(item);if(f?.baseItem){const base=priorInfer({name:f.baseItem.split('|')[0]});if(base.kind!=='none')return{...base,edition:f.edition,attackBonus:Number(f.bonusWeapon||f.bonusWeaponAttack)||base.attackBonus,damageBonus:Number(f.bonusWeapon||f.bonusWeaponDamage)||base.damageBonus,acBonus:Number(f.bonusAc)||base.acBonus};}
     if(rule?.weapon){
       const w=rule.weapon;
       return {...E.normalize({
@@ -85,7 +87,7 @@ var CharacterMagicItems=(()=>{
       const itemKey=clean(row.item.name);
       if(seen.has(itemKey))continue;
       seen.add(itemKey);
-      const changed=[],abilityChanges=[];
+      const changed=[],abilityChanges=[];const fact=Pinned.find(row.item);if(/^[123] wand of the war mage$/.test(Pinned.key(row.item.name))&&Number(fact?.bonusSpellAttack)>0){const value=Number(fact.bonusSpellAttack);effects.itemSpellAttackBonus=(effects.itemSpellAttackBonus||0)+value;changed.push('spell attack +'+value);}
       if(rule.abilityBonus)for(const [ability,bonus] of Object.entries(rule.abilityBonus)){
         if(!(ability in scores))continue;
         const before=scores[ability],next=before>20?before:Math.min(20,before+Number(bonus||0));

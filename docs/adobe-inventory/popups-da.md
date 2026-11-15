@@ -2,7 +2,7 @@
 
 Genereret med `node scripts/audit-adobe-popups.cjs`. Dette er en statisk kortlægning, ikke et løfte om fuld funktionel paritet. Gentagne IDs er samme popup-familie. Testreferencer betyder, at testen nævner id’et; de er ikke i sig selv et bestået testresultat.
 
-Der er 46 registrerede popup-familier og 29 editor-routes.
+Der er 47 registrerede popup-familier og 29 editor-routes.
 
 ## Popup-familier
 
@@ -36,6 +36,7 @@ Der er 46 registrerede popup-familier og 29 editor-routes.
 | sheetHitPointOptions | shared-dialog | Set Max HP → avanceret/manual og hp-route | To visninger af samme dialog-id; automatisk/manual/one-shot. | [character-hit-point-ui.js:34](../../js/modules/character-hit-point-ui.js#L34) |
 | sheetPersonalGearEditor | shared-dialog | Owned item information → Edit eller inventory-bridge | Selvstændig editor, men gemning opdaterer de fælles inventory-controls. | [character-inventory-ui.js:35](../../js/modules/character-inventory-ui.js#L35) |
 | sheetInventoryItemInformation | shared-dialog | Magic/gear information og item links | Kan åbne Edit item og ændre backpack/remove via fælles handlers. | [character-inventory-ui.js:67](../../js/modules/character-inventory-ui.js#L67) |
+| adobeItemContainerDialog | adobe-dialog | Owned item information og source equipment row | Native explicit container placement; bevar fælles stock, private Adobe-envelope, carrying og companion-transfer helpers. | [character-item-containers-ui.js:6](../../js/modules/character-item-containers-ui.js#L6) |
 | sheetItemResourceRecovery | shared-dialog | Dawn/item resource recovery | Åbnes fra resource-bridge; modulet renderer #sheetItemResources. | [character-item-resource-ui.js:53](../../js/modules/character-item-resource-ui.js#L53) |
 | sheetModifierDialog | shared-dialog | Bonusfelter, Ctrl/Meta/Shift-click, Modifiers | Egen form; afhænger af shared modifier-render/update hooks. | [character-modifier-ui.js:25](../../js/modules/character-modifier-ui.js#L25) |
 | sheetSkillOptions | shared-dialog | SkillsClick | Egen popup til rækkefølge/training; åbner native skills-editor. | [character-modifier-ui.js:46](../../js/modules/character-modifier-ui.js#L46) |
@@ -130,7 +131,7 @@ sharedCommand klikker stadig på kontroller i #characterSheetForm (bl.a. spell p
 | notes | [character-adventure-log-ui.js:6](../../js/modules/character-adventure-log-ui.js#L6) |
 | itemResources | [character-item-resource-ui.js:49](../../js/modules/character-item-resource-ui.js#L49) |
 | attacks | [character-named-equipment-ui.js:82](../../js/modules/character-named-equipment-ui.js#L82) |
-| equipment | [character-paper-gear-ui.js:61](../../js/modules/character-paper-gear-ui.js#L61) |
+| equipment | [character-paper-gear-ui.js:62](../../js/modules/character-paper-gear-ui.js#L62) |
 | story | [character-paper-icons-ui.js:23](../../js/modules/character-paper-icons-ui.js#L23) |
 | paperInventory | [character-paper-inventory-ui.js:49](../../js/modules/character-paper-inventory-ui.js#L49) |
 | notes | [character-paper-log-ui.js:14](../../js/modules/character-paper-log-ui.js#L14) |
