@@ -18,7 +18,8 @@ button.vault-help-badge:focus-visible{outline:2px solid #7c2828;outline-offset:3
 button.vault-help-badge[hidden]{display:none!important}
 .vault-help-dialog{box-sizing:border-box;width:min(760px,calc(100vw - 24px));max-height:90vh;padding:0;border:1px solid #b3935d;border-radius:12px;background:#fffaf0;color:#352419;box-shadow:0 16px 50px #21140555;overflow:auto}
 .vault-help-dialog::backdrop{background:#21140580}
-.vault-help-dialog>header{position:sticky;top:0;z-index:1;display:flex;gap:16px;justify-content:space-between;align-items:flex-start;padding:22px 24px 16px;background:#f5ebd6;border-bottom:1px solid #c9b48a}
+.vault-help-dialog>header{position:sticky;top:0;z-index:1;display:flex;flex-direction:row;flex-wrap:nowrap;gap:16px;justify-content:space-between;align-items:flex-start;padding:22px 24px 16px;background:#f5ebd6;border-bottom:1px solid #c9b48a}
+.vault-help-dialog>header>div{flex:1;min-width:0}
 .vault-help-dialog small{font:700 10px/1.3 Georgia,serif;letter-spacing:1px;color:#846529}
 .vault-help-dialog h2{font:700 24px/1.25 Georgia,serif;color:#651d1d;margin:5px 0 7px}
 .vault-help-dialog p{font:14px/1.55 Georgia,serif;margin:4px 0 12px}
@@ -43,3 +44,10 @@ button.vault-help-badge[hidden]{display:none!important}
 
 /* Transient hover/focus help cannot consume clicks on the form beneath it. */
 .vault-context-help[data-pinned="true"]{pointer-events:auto}
+
+.vault-help-dialog .vault-guide-reference{padding:8px 24px 20px;border-top:1px solid #c9b48a}
+.vault-guide-reference details{margin:8px 0;border:1px solid #dfd1b5;border-radius:6px;padding:0 12px}
+.vault-guide-reference summary{min-height:44px;display:list-item;align-content:center;padding:8px 0;box-sizing:border-box;cursor:pointer;font:700 15px/1.5 Georgia,serif;color:#652c22}
+.vault-guide-reference details[open]{padding-bottom:12px}.vault-guide-reference summary:focus-visible{outline:2px solid #7c2828;outline-offset:2px}
+.vault-help-dialog a{color:#752424;text-underline-offset:3px}.vault-help-dialog [data-guide-close][aria-label]{min-width:44px;min-height:44px;flex-shrink:0;align-self:flex-start}
+@media(max-width:500px){.vault-help-dialog .vault-guide-reference{padding:8px 16px 16px}}
