@@ -302,6 +302,7 @@
         "adobe-page-choices-browser.cjs",
         "adobe-paper-combat-browser.cjs",
         "adobe-paper-controls-browser.cjs",
+        "adobe-pinned-items-browser.cjs",
         "adobe-satyr-movement-browser.cjs",
         "adobe-slot-labels-browser.cjs",
         "adobe-spell-pages-browser.cjs",
