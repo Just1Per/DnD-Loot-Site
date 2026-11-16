@@ -198,3 +198,7 @@ Point 3 remains open for further magic/base-gear variant families, computed/cust
 ## Pinned source mechanics expansion
 
 Background language/tool facts, restricted skill choices, Pallid/Lotusden spell grants and free uses, Fizban ancestry resistances, the remaining 22 legacy invocations, Talisman and legacy Tasha's styles are implemented in the next delivery. See [scope and remaining manual decisions](pinned-character-mechanics.md). Item variants, extended item pools/effects and containers are the next part of that delivery; source-specific conditional mechanics remain explicitly bounded.
+
+## Pinned item facts and containers — v87
+
+The recommended item follow-up now supports additional source variant/base-gear families, both-edition numeric charges, bounded fixed/dice recovery and explicit owned container placements. Container contents follow companion transfers atomically; source-dependent physical weight remains separate from paper totals. See [delivered behavior and boundaries](pinned-item-mechanics.md). Remaining point-3 work includes inherited source records, conditional item powers, full compartment/volume handling, unit choices and the outstanding source row-arrangement/copy commands.

@@ -17,3 +17,5 @@ The 2014 invocation catalogue expands from 32 to all 54 pinned records, plus Pac
 Legacy Fighter/Paladin/Ranger style pools include their Tasha's options. Blessed/Druidic Warrior choose two eligible cantrips with Charisma/Wisdom class casting statistics. Blind Fighting adds 10-ft Blindsight, thrown-mode weapon attacks receive the +2 damage, and Unarmed Fighting uses d6/d8 according to held equipment without reducing a larger racial/Monk die. Superior Technique has a maneuver choice and an additional tracked die; apply its chosen maneuver and existing superiority die size at the table. Interception is a conditional reaction reminder.
 
 Validation includes source counts/prerequisites, exact choice grants, removal/level/edition/multiclass boundaries, free-use recovery, derived attacks, Adobe origins controls, private save/reopen and retained stock/HP/coins/slots.
+
+Item follow-up: [pinned item facts, variants, recovery and containers](pinned-item-mechanics.md).

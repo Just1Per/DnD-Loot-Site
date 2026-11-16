@@ -2,7 +2,7 @@
 /* Original Gear row actions stay on the source paper and share its private save. */
 var CharacterPaperGearUI=(()=>{
  let currentClose=null;
- const physical=()=>{const loot=sheetEquipmentLoot(),attuned=CharacterEquipment.attunementState(sheetSession.data,loot,CharacterAdobeEngine.level(sheetSession.data,sheetSession.identity.level)).active;return CharacterCompanionEquipment.decorate(sheetSession.data,loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:sheetSession.data.personalGear.find(row=>row.id===entry.id)?.location||'',attuned:attuned.has(entry.id)})));};
+ const physical=()=>{const loot=sheetEquipmentLoot(),attuned=CharacterEquipment.attunementState(sheetSession.data,loot,CharacterAdobeEngine.level(sheetSession.data,sheetSession.identity.level)).active;return CharacterCompanionEquipment.decorate(sheetSession.data,loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,item:entry.item,weight:inventoryUnitWeight(entry.item||{}),location:sheetSession.data.personalGear.find(row=>row.id===entry.id)?.location||'',attuned:attuned.has(entry.id)})));};
  function open(index){
   if(sheetSession&&CharacterPaperInventoryUI.project(sheetSession.data).entries[index]?.automaticAttunement){CharacterPaperInventoryUI.openFooter(index);return;}
   const session=sheetSession;if(!characterHPCurrent(session)||session.saving||!Number.isInteger(index)||index<0||index>=CharacterPaperGearLayout.maxRows||!CharacterAdobeView.validate())return;
@@ -43,6 +43,7 @@ var CharacterPaperGearUI=(()=>{
     if(['clear','delete'].includes(command)&&!await SiteConfirmation.ask({title:command==='clear'?'Clear this paper line?':'Delete this paper line?',paragraphs:[row?.name||'Empty row',command==='clear'?'The row stays blank.':'The rest of this column shifts up.','The owned item, its equipment effects, quantity and recorded uses stay in Inventory.'],confirmLabel:command==='clear'?'Clear line':'Delete line',isCurrent:allowed}))return;
     if(!guard())return;try{apply(CharacterPaperInventory.gearAction(state,all,selected,command));dialog.querySelector('[data-gear-done]').focus();}catch(error){status.textContent=error.message;}
    };
+   if(row&&!row.unavailable&&!row.header&&!row.reference){const placement=document.createElement('button');placement.type='button';placement.dataset.gearContainer='';placement.textContent='Container placement / contents';placement.onclick=()=>{if(!guard()||!clean())return;close();CharacterItemContainersUI.open(row.id);};dialog.querySelector('[data-gear-description]').after(placement);}
    dialog.querySelector('[data-gear-description]').onclick=()=>{if(!guard()||!clean())return;close();openInventoryItemInformation(row.id);};
    const finishTransfer=async(result,destination,combined=false)=>{
     apply(result);close();const label=destination==='gear'?'Equipment (page 2)':'Extra Equipment (page 3)',message=(combined?'Combined paper amounts on ':'Moved to ')+label+', row '+(destination==='gear'?result.index+1:result.index-53)+'. Save sheet to keep it.';sheetStatus(message);

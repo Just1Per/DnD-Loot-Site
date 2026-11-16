@@ -54,6 +54,7 @@ const registry={
  sheetSpellInformation:['shared-dialog','Spell information fra native spellvalg og ark','character-overview-ui.js','Selvstændig læsedialog; må ikke slettes sammen med Overview-modulet.'],
  sheetHitDiceRecovery:['shared-dialog','Hit Dice-controls fra Actions/ammunition','character-paper-combat-ui.js','Preview og forbrug af Hit Dice; fælles form/session.'],
  sheetPaperActionMenu:['shared-dialog','Action/Bonus Action/Reaction-arrows','character-paper-combat-ui.js','Egen row-menu; edit kan åbne paperCombat-bridge.'],
+ adobeItemContainerDialog:['adobe-dialog','Owned item information og source equipment row','character-item-containers-ui.js','Native explicit container placement; bevar fælles stock, private Adobe-envelope, carrying og companion-transfer helpers.'],
  adobeCompanionEquipmentDialog:['adobe-dialog','Companion equipment arrows, transfer destination og companion-card controls','character-companion-equipment-ui.js','Native carrier/row editor; delt private inventory og carrying-engine.'],
  adobeGearDialog:['adobe-dialog','Gear-arrows og Enter/dobbeltklik på gear','character-paper-gear-ui.js','Native row-editor, source catalogue og confirmations; delt inventory-engine.'],
  sheetPaperIcons:['shared-dialog','Header/log-icon og Symbol','character-paper-icons-ui.js','Egen billedvælger/upload; fælles image-budget og private data.'],

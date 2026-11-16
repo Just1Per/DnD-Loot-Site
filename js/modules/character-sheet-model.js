@@ -398,7 +398,7 @@ var CharacterSheetModel = (() => {
       skills: checks,
       initiative: mods.dex + bonus('initiative',d.initiativeBonus) + (effects.initiativeBonus || 0) + (!effects.initiativeProficiency?Check.untrained(pb,effects,'dex','initiative'):0),
       passive: 10 + checks.perception + bonus('passive',d.passiveBonus) + feats.passiveBonus,
-      spellAttack: mods[d.spellAbility] + pb + bonus('spell.attack',d.spellAttackBonus),
+      spellAttack: mods[d.spellAbility] + pb + bonus('spell.attack',d.spellAttackBonus)+(effects.itemSpellAttackBonus||0),
       spellDC: 8 + mods[d.spellAbility] + pb + bonus('dc.primary',d.spellDCBonus),
       attacks: d.attacks.map(a => mods[a.ability] + (a.proficient ? pb : 0) + a.bonus + (a.rangedWeapon ? feats.rangedBonus : 0))
     };
@@ -409,7 +409,7 @@ var CharacterSheetModel = (() => {
     result.gear=Equipment.derive(d,result,loot,level);
     if(Magic)result.gear=Magic.augmentGear(d,result.gear,magicItems);
     const acModifiers={magic:bonus('ac.magic'),misc1:bonus('ac.misc1'),misc2:bonus('ac.misc2')},extraAC=acModifiers.magic+acModifiers.misc1+acModifiers.misc2;result.gear.adjustment+=extraAC;result.gear.ac+=extraAC;result.ac=result.gear.ac;
-    result.modifiers={ac:acModifiers,expressions:Override?Override.normalize(modifierExpressions):{},report:modifierReport,allSkills:skillAll,allSaves:saveAll,spellAttackBonus:bonus('spell.attack',d.spellAttackBonus),spellDCBonus:bonus('dc.primary',d.spellDCBonus)};
+    result.modifiers={ac:acModifiers,expressions:Override?Override.normalize(modifierExpressions):{},report:modifierReport,allSkills:skillAll,allSaves:saveAll,spellAttackBonus:bonus('spell.attack',d.spellAttackBonus)+(effects.itemSpellAttackBonus||0),spellDCBonus:bonus('dc.primary',d.spellDCBonus)};
     const ItemResources=globalThis.CharacterItemResources||(typeof require==='function'?require('./character-item-resources'):null);
     result.itemResources=ItemResources?ItemResources.project(data,result.gear):[];
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
