@@ -23,3 +23,32 @@ test('large automatic continuations can be hidden without extending manual-page 
  const plan={page:'template-ASfront',extraPage:198},spell={page:'template-SSmore',spellCaster:'wizard',spellPage:199},layout=P.normalizeLayout({hidden:[plan,spell],added:[plan,spell]});assert.deepEqual(layout.hidden,[plan,spell]);assert.deepEqual(layout.added,[]);assert.deepEqual(P.visible([{page:'page-1'},plan,spell],layout),[{page:'page-1'}]);
  const overflow={page:'template-ASoverflow',combatOnly:true},notes={page:'template-ASnotes',resourceNotes:true};assert.ok(P.visible([{page:'page-1'},overflow,notes],{hidden:[{page:'page-1'}]},{printing:true}).includes(notes));
 });
+
+test('deleting an exact page removes its added/hidden declarations and survives normalization',()=>{
+ const note={page:'template-ASnotes',notesOffset:2},raw={added:[note,{page:'template-blank'}],hidden:[note],includeHiddenPrint:true},before=JSON.stringify(raw),out=P.remove(raw,note);
+ assert.deepEqual(out,{added:[{page:'template-blank'}],hidden:[],includeHiddenPrint:true,deleted:[note]});
+ assert.equal(JSON.stringify(raw),before);assert.deepEqual(P.normalizeLayout(JSON.parse(JSON.stringify(out))),out);assert.deepEqual(P.remove(out,note),out);
+ assert.deepEqual(P.restore(out,note),{added:[{page:'template-blank'}],hidden:[],includeHiddenPrint:true});
+});
+test('deleted pages stay out of live lists and all-page printing, independently of hidden pages',()=>{
+ const wizard={page:'template-SSfront',spellCaster:'wizard'},warlock={page:'template-SSfront',spellCaster:'warlock'},first={page:'template-AScomp',companionIndex:0},second={page:'template-AScomp',companionIndex:1},note={page:'template-ASnotes',notesOffset:2};
+ const plans=[{page:'page-1'},{page:'page-4'},wizard,warlock,first,second,note],layout={deleted:[wizard,first,note],hidden:[{page:'page-4'}],includeHiddenPrint:true},before=JSON.stringify([plans,layout]);
+ assert.deepEqual(P.available(plans,layout),[plans[0],plans[1],warlock,second]);
+ assert.deepEqual(P.visible(plans,layout),[plans[0],warlock,second]);
+ assert.deepEqual(P.visible(plans,layout,{printing:true}),[plans[0],plans[1],warlock,second]);
+ assert.equal(JSON.stringify([plans,layout]),before);
+ assert.ok(P.visible(plans,P.restore(layout,wizard)).some(p=>p===wizard));
+});
+test('removal records reject invalid plans, bound storage and never store supplied page content',()=>{
+ const normalized=P.normalizeLayout({deleted:[{page:'page-4',notes:'private',html:'<script>'},{page:'page-4'},{page:'missing'},{page:'template-AScomp',companionIndex:12},{page:'template-ASnotes',notesOffset:3}]});
+ assert.deepEqual(normalized.deleted,[{page:'page-4'}]);assert.equal(JSON.stringify(normalized).includes('private'),false);
+ assert.throws(()=>P.remove({}, {page:'missing'}),/editable/);assert.throws(()=>P.remove({}, {page:'template-ASnotes',resourceNotes:true}),/editable/);assert.throws(()=>P.restore({}, {page:'missing'}),/available/);
+ const full={deleted:Array.from({length:400},(_,extraPage)=>({page:'template-ASfront',extraPage}))};assert.equal(P.normalizeLayout(full).deleted.length,400);assert.throws(()=>P.remove(full,{page:'page-4'}),/full/);assert.equal(full.deleted.length,400);
+});
+test('stale layouts keep one destination and deleted parents cannot leak print-only continuations',()=>{
+ const main={page:'page-1'},background={page:'page-4'},overflow={page:'template-ASoverflow',combatOnly:true},counter={page:'template-ASnotes',resourceNotes:true},dice={page:'template-ASnotes',hitDiceOverflow:true};
+ assert.deepEqual(P.available([main,background],{deleted:[main,background]}),[main]);
+ assert.deepEqual(P.visible([main,background],{deleted:[main],hidden:[background]}),[background]);
+ assert.deepEqual(P.visible([main,background,overflow,counter,dice],{deleted:[main,overflow],includeHiddenPrint:true},{printing:true}),[background]);
+ assert.deepEqual(P.visible([main,background,overflow,counter,dice],{deleted:[main],includeHiddenPrint:true},{printing:true}),[background,overflow,counter]);
+});

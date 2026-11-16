@@ -208,3 +208,7 @@ The recommended item follow-up now supports additional source variant/base-gear 
 Alle 105 valgbare racer har nu korte, selvstændige forklaringer på de 427 forekomster af navngivne egenskaber i deres pinnede kilder. Henvisningerne til »normal elf« og »legacy Tiefling« er erstattet, og de tidligere tomme lister er udfyldt. Den rigtige kilde/udgave styrer blandt andet Trance, spell grants, recovery og valgmuligheder. Fremtidige fordele er mærket med deres krævede karakterniveau.
 
 Se [gennemgangen af alle racer](species-description-audit.md) og den tilhørende JSON. Dette punkt gælder beskrivelser; resterende automatisering og manglende racevalg i builderen skal gennemgås særskilt. Eksisterende markeringer af delvis/mønsterbaseret understøttelse bevares. Gemte karaktervalg og regelberegninger ændres ikke.
+
+## Sletning af sider med bevaret indhold — v89
+
+Efter brugerens valg fjerner **Delete page** siden fra arket, Your pages og al udskrift, mens karakterens indhold bevares. Funktionen findes i sidens ⋯-menu og som skraldespand ved synlighedskontakten i Manage pages. Skjul er fortsat et særskilt valg. Sletning bekræftes, gemmes på karakteren og modstår genberegning/genåbning. En bestemt companion-, caster- eller noteside kan tilføjes igen via Add pages → Removed pages med samme indhold. Den sidste synlige side er beskyttet. Se [omfang og tests](adobe-page-deletion.md) og [dansk testvejledning](adobe-page-deletion-testplan-da.md).
