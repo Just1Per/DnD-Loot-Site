@@ -936,7 +936,7 @@ function renderSheetBuildControls() {
   })).join('')).join('') }
   </div>
   <div class="sheet-grid two" id="sheetClassSkills">${ Array.from({ length: 4 }, (_, i) => f(`Class skill ${ i + 1 }`, `build.classSkills.${ i }`, 'select', { values: skillChoices })).join('') }</div>
-  <div id="sheetBackgroundSummary" class="sheet-rule-summary"></div><div id="sheetBackgroundTraining" class="sheet-grid">${[0,1].map(i=>f('Background tool choice '+(i+1),`build.backgroundTools.${i}`,'select',{values:[['','Choose tool'],...R.tools.map(t=>[t,t]),['Additional language','Additional language']]})).join('')}${[0,1].map(i=>f('Replacement background skill '+(i+1),`build.backgroundReplacementSkills.${i}`,'select',{values:skillChoices})).join('')}</div>
+  <div id="sheetBackgroundSummary" class="sheet-rule-summary"></div><div class="sheet-grid two">${[0,1].map(i=>f('Background skill choice '+(i+1),`build.backgroundSkills.${i}`,'select',{values:skillChoices})).join('')}</div><div id="sheetBackgroundTraining" class="sheet-grid">${[0,1].map(i=>f('Background tool choice '+(i+1),`build.backgroundTools.${i}`,'select',{values:[['','Choose tool'],...R.tools.map(t=>[t,t]),['Additional language','Additional language']]})).join('')}${[0,1].map(i=>f('Replacement background skill '+(i+1),`build.backgroundReplacementSkills.${i}`,'select',{values:skillChoices})).join('')}</div>
   <div class="sheet-grid two" id="sheetBackgroundChoices">${ f('Background language 1', 'build.backgroundLanguages.0', 'select', { values: languageChoices }) }${ f('Background language 2', 'build.backgroundLanguages.1', 'select', { values: languageChoices }) }</div>`;
   const raceSelect = document.querySelector('[name="build.race"]');
   raceSelect.innerHTML = '<option value="">Custom / manual</option>' + [
@@ -1042,6 +1042,8 @@ function updateSheetBuildSummary(derived) {
     option.disabled = !!option.value && (e.race?.languagePool ? !e.race.languagePool.includes(option.value) : false);
   const bg = CharacterBackgrounds.get(b.background);
   updateBackgroundControls(derived);
+  for(let i=0;i<2;i++){const field=form.querySelector('[name="build.backgroundSkills.'+i+'"]');if(field){setOptions('build.backgroundSkills.'+i,(bg?.skillOptions||[]).map(key=>[key,CharacterSheetModel.skills[key]?.[0]||key]),b.backgroundSkills?.[i]||'','Choose allowed skill');field.closest('label').hidden=!(bg&&!(b.edition==='2014'&&bg.edition==='2024')&&i<(bg.skillChoiceCount||0));}
+   const lang=form.querySelector('[name="build.backgroundLanguages.'+i+'"]');if(lang)for(const option of lang.options)option.disabled=!!option.value&&!CharacterBackgrounds.languageOptions(bg,i,R.languages).includes(option.value);}
   // Only present proficiencies actually granted by the selected background.
   for(let i=0;i<2;i++){
     const field=form.querySelector('[name="build.backgroundTools.'+i+'"]');

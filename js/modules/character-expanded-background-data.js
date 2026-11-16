@@ -3,7 +3,7 @@
  * Names, source labels, feature/feat names and skill relationships are factual metadata.
  * Source-specific prose, equipment and unverified choice details are intentionally not copied. */
 (()=>{
-  const D=typeof CharacterBackgroundData!=='undefined'?CharacterBackgroundData:null;
+  const D=typeof CharacterBackgroundData!=='undefined'?CharacterBackgroundData:(typeof require==='function'?require('./character-background-data'):null);
   if(!D)return;
   D.sourceNames=Object.freeze({
     ...(D.sourceNames||{}),

@@ -193,3 +193,8 @@ The full versioned 5e catalogue/Firebase expansion and numbered parity tasks 3â€
 Equipment audit refreshed after the attunement/footer and source-generator deliveries. The original hidden companion equipment layer is restored, with 17 rows and adjacent existing notes. Whole owned stacks move from character gear to companions, between companions and back, with correct physical carrier weight and retained paper annotations. Equipped/worn items must be unequipped before transfer; charges, attunement, quantities, ownership and creature statistics/notes are retained. Companion removal safely returns assigned items. Full/missing/stale destinations refuse atomically. See [scope and validation](adobe-companion-equipment.md).
 
 Point 3 remains open for further magic/base-gear variant families, computed/custom pools/effects and remaining source layout/unit options. Adventure Log (point 4), class-specific companion rules (point 5), action reminders, conditional layouts and final parity audit follow separately.
+
+
+## Pinned source mechanics expansion
+
+Background language/tool facts, restricted skill choices, Pallid/Lotusden spell grants and free uses, Fizban ancestry resistances, the remaining 22 legacy invocations, Talisman and legacy Tasha's styles are implemented in the next delivery. See [scope and remaining manual decisions](pinned-character-mechanics.md). Item variants, extended item pools/effects and containers are the next part of that delivery; source-specific conditional mechanics remain explicitly bounded.

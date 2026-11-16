@@ -60,6 +60,12 @@ var CharacterClassFeatureChoices=(()=>{
     option('Witch Sight',{minLevel:15})
   ].map(row=>({...row,source:'PHB 2014',referenceComplete:true,automationComplete:['agonizing-blast','eldritch-spear','devil-s-sight','witch-sight','eyes-of-the-rune-keeper','beguiling-influence'].includes(row.id)}));
 
+  const Legacy=typeof CharacterLegacyOptions!=='undefined'?CharacterLegacyOptions:require('./character-legacy-options');
+  const legacyFacts=(typeof CharacterOriginFacts!=='undefined'?CharacterOriginFacts:require('./character-origin-facts')).invocations2014;
+  inv2014.push(...legacyFacts.map(row=>option(row.name,{source:row.source,minLevel:row.level,referenceComplete:true,automationComplete:['Eldritch Mind','Gift of the Depths'].includes(row.name),detail:Legacy.details[safe(row.name)],...(row.pact?{requiresGroup:'pact-boon',requiresChoice:'pact-of-the-'+row.pact.toLowerCase()}:{}),...(row.requiresSpell?{requiresSpell:row.requiresSpell}:{}),...(row.requiresHex?{manualPrereq:'requires Hex or an eligible curse feature'}:{})})));
+  fighter2014.push(...['Blind Fighting','Interception','Superior Technique','Thrown Weapon Fighting','Unarmed Fighting'].map(name=>option(name,{source:'TCE',referenceComplete:true,automationComplete:false,detail:Legacy.styles[safe(name)]})));
+  fighter2014.push(...['Blessed Warrior','Druidic Warrior'].map(name=>option(name,{source:'TCE',referenceComplete:true,automationComplete:true,detail:Legacy.styles[safe(name)]})));
+
   const inv2024=[
     option('Agonizing Blast',{minLevel:2,repeatable:true}),
     option('Armor of Shadows'),
@@ -107,13 +113,14 @@ var CharacterClassFeatureChoices=(()=>{
 
   const definitions={
     '2014':{
-      fighter:[{id:'fighting-style',name:'Fighting Style',minLevel:1,count:()=>1,options:()=>fighter2014,referenceComplete:true}],
+      fighter:[{id:'fighting-style',name:'Fighting Style',minLevel:1,count:()=>1,options:()=>fighter2014.filter(o=>!['blessed-warrior','druidic-warrior'].includes(o.id)),referenceComplete:true}],
       warlock:[
         {id:'eldritch-invocations',name:'Eldritch Invocations',minLevel:2,count:l=>invocationLimit(l,'2014'),options:()=>inv2014,referenceComplete:true},
         {id:'pact-boon',name:'Pact Boon',minLevel:3,count:()=>1,options:()=>[
           option('Pact of the Blade',{source:'PHB 2014',referenceComplete:true,automationComplete:false}),
           option('Pact of the Chain',{source:'PHB 2014',referenceComplete:true,automationComplete:false}),
-          option('Pact of the Tome',{source:'PHB 2014',referenceComplete:true,automationComplete:false})
+          option('Pact of the Tome',{source:'PHB 2014',referenceComplete:true,automationComplete:false}),
+          option('Pact of the Talisman',{source:'TCE',referenceComplete:true,automationComplete:false,detail:'Its wearer may add 1d4 to a failed ability check, PB times per long rest. Recreate a lost talisman during a 1-hour ritual.'})
         ],referenceComplete:true}
       ]
     },
@@ -526,9 +533,11 @@ var CharacterClassFeatureChoices=(()=>{
   }
 
   for(const edition of ['2014','2024'])for(const classId of ['paladin','ranger']){
-    const names=classId==='paladin'?['Defense','Dueling','Great Weapon Fighting','Protection']:['Archery','Defense','Dueling','Two-Weapon Fighting'];
+    const names=classId==='paladin'?['Defense','Dueling','Great Weapon Fighting','Protection','Blind Fighting','Interception','Blessed Warrior']:['Archery','Defense','Dueling','Two-Weapon Fighting','Blind Fighting','Thrown Weapon Fighting','Druidic Warrior'];
     definitions[edition][classId]=[{id:'fighting-style',name:'Fighting Style',minLevel:2,count:()=>1,options:()=>edition==='2024'?fighter2024():fighter2014.filter(o=>names.includes(o.name)),referenceComplete:true}];
   }
+  for(const [classId,style,listClass]of [['paladin','blessed-warrior','cleric'],['ranger','druidic-warrior','druid']])definitions['2014'][classId].push({id:style+'-cantrips',name:Legacy.styles[style].split(';')[0],requiresStyle:style,minLevel:2,count:()=>2,referenceComplete:true,options:()=>spellCatalogue().filter(spell=>spell.edition==='2014'&&spell.level===0&&(spell.classesByEdition?.['2014']||spell.classes||[]).includes(listClass)).map(spell=>({id:safe(spell.id),spellId:spell.id,name:spell.name,source:spell.source,referenceComplete:true,automationComplete:true}))});
+  definitions['2014'].fighter.push({id:'superior-technique-maneuver',name:'Superior Technique maneuver',requiresStyle:'superior-technique',minLevel:1,count:()=>1,referenceComplete:true,options:()=>subclassDefinitions['2014']['fighter:battle-master'][0].options()});
   definitions['2014'].ranger.push({id:'natural-explorer',name:'Natural Explorer',choiceLabel:'Favored terrain',compactChoices:true,helpKey:'natural explorer',minLevel:1,count:l=>pickTable([[1,1],[6,2],[10,3]],l),referenceComplete:true,options:()=>['Arctic','Coast','Desert','Forest','Grassland','Mountain','Swamp','Underdark'].map(name=>option(name,{source:name==='Underdark'?'PHB 2014':'SRD 5.1',referenceComplete:true,automationComplete:false,effectLabel:'conditional terrain benefits',detail:'Favored terrain for related Intelligence/Wisdom skill checks and travel of at least 1 hour. Benefits depend on the current terrain and task.'}))});
   // Class controls and the legacy Feats picker spend one shared allowance.
   // Reading this state never migrates or deletes saved selections.
@@ -777,7 +786,17 @@ var CharacterClassFeatureChoices=(()=>{
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);rows.push(...(domains?.derive(data,{level,mods}).resources||[]));
     const circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);rows.push(...(circles?.derive(data,{level,mods}).resources||[]));
     const archetypes=globalThis.CharacterFighterSubclasses||(typeof require==='function'?require('./character-fighter-subclasses'):null);rows.push(...(archetypes?.derive(data,{level,mods}).resources||[]));
-    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);rows.push(...(Runtime?.derive(data,{level,mods}).flatMap(r=>r.resources)||[]));return rows;
+    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);rows.push(...(Runtime?.derive(data,{level,mods}).flatMap(r=>r.resources)||[]));rows.push(...(typeof CharacterOriginMechanics!=='undefined'?CharacterOriginMechanics:require('./character-origin-mechanics')).resources(data,level));
+    if(edition==='2014'){
+      const actual=actualClassLevel(data,'warlock',level),entry={classId:'warlock',level:actual},active=status({...data,adobe:data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}},entry,edition).find(g=>g.id==='eldritch-invocations');
+      for(const id of active?.valid||[]){const rule=Legacy.resources[id];if(!rule)continue;const key=groupKey(edition,'warlock',id+'-used'),used=spent(key),max=rule.pb?Math.ceil(level/4)+1:1;rows.push({id:'invocation-'+id,key,name:active.options.find(o=>o.id===id).name,source:'2014 Warlock invocation',className:'Warlock',max,used,remaining:Math.max(0,max-used),resets:rule.rest==='short'?['short','long']:['long'],recovery:rule.rest==='short'?'Short or Long Rest recovery':'Long Rest recovery',unit:'uses',useLabel:'Use feature',undoLabel:'Undo use',description:Legacy.details[id]});}
+    }
+    if(edition==='2014'){
+     const local={...data,adobe:data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}},entry={classId:'warlock',level:actualClassLevel(data,'warlock',level)},pact=status(local,entry,edition).find(g=>g.id==='pact-boon');
+     if(pact?.valid.includes('pact-of-the-talisman')){const key=groupKey(edition,'warlock','pact-talisman-used'),max=Math.ceil(level/4)+1,used=spent(key);rows.push({id:'invocation-pact-talisman',key,name:'Pact of the Talisman',source:'2014 Warlock',className:'Warlock',max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',description:'Its wearer adds 1d4 to a failed ability check.'});}
+     if(fightingStyleState(data,{level}).rows.some(row=>row.option.id==='superior-technique')){const key=groupKey(edition,'fighter','superior-technique-used'),used=spent(key);rows.push({id:'invocation-superior-technique',key,name:'Superior Technique',source:'2014 Fighting Style',className:'Fighter',max:1,used,remaining:Math.max(0,1-used),resets:['short','long'],recovery:'Short or Long Rest recovery',unit:'dice',description:'One additional superiority die: d6, or your existing superiority die size. Apply the chosen maneuver at the table.'});}
+    }
+    return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
     const row=classResources(data,context).find(row=>row.id===id),effect=row?.channelEffects?.find(effect=>effect.id===effectId);if(!effect||!row.remaining)return false;const R=globalThis.CharacterSubclassMechanics||(typeof require==='function'?require('./character-subclass-mechanics'):null);return R.save(data,{[row.key]:[String(row.used+1)],[row.effectKey]:[effectId],...(effect.activationKey?{[effect.activationKey]:['active']}:{})});
@@ -809,6 +828,8 @@ var CharacterClassFeatureChoices=(()=>{
   function resetClassResources(data,event,context={}){
     if(!['short','long','initiative','turn'].includes(event))return;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),edition=data.build?.edition==='2024'?'2024':'2014',entries=stored.classLevels||[],total=Number(context.level)||(entries.length?Math.min(20,entries.reduce((sum,entry)=>sum+Math.max(0,Number(entry.level)||0),0)):1),rest=event==='short'||event==='long',updates={};
+    for(const row of (typeof CharacterOriginMechanics!=='undefined'?CharacterOriginMechanics:require('./character-origin-mechanics')).resources(data,total))if(row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
+    for(const row of classResources(data,{...context,level:total}))if(row.id.startsWith('invocation-')&&row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
     const paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);for(const row of paths?.derive(data,{level:total,mods:context.mods||{}}).resources||[])if(row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
     const monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),hasMonk=entries.length?monkLevels(data,total)>=2:data.build?.classId==='monk';
     const source=artificerSource(data),artificer=artificerLevels(data,total),currentFlashKey=source.id==='efa'?groupKey('2024','artificer','flash-of-genius-uses'):flashKey;
@@ -866,9 +887,10 @@ var CharacterClassFeatureChoices=(()=>{
     }
     result.abilities=[...new Set(result.abilities)];return result;
   }
+  function actualClassLevel(data,classId,level){const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}];let left=level;for(const e of entries){const actual=Math.min(left,Math.max(0,Number(e.level)||0));left-=actual;if(e.classId===classId)return actual;}return 0;}
   function invocationEffects(data,{level=1}={}){
     level=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));const edition=data.build?.edition==='2024'?'2024':'2014',stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],local={...data,adobe:{...stored,classFeatureChoices:normalize(stored.classFeatureChoices)}};
-    const result={skills:[],senses:[],reports:[],truesight:0,concentrationAdvantage:false};let remaining=level;const seen=new Set();
+    const result={skills:[],senses:[],reports:[],truesight:0,concentrationAdvantage:false};for(const row of fightingStyleState(data,{level}).rows){const id=row.option.id;if(edition==='2014'&&Legacy.styles[id])result.reports.push({id,name:row.option.name,detail:Legacy.styles[id],edition});if(id==='blind-fighting'){result.blindsight=10;result.senses.push({id,name:row.option.name,range:10,detail:Legacy.styles[id]});}}let remaining=level;const seen=new Set();
     for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(entry.classId!=='warlock'||!actual||seen.has(entry.classId))continue;seen.add(entry.classId);
       const invocation=status(local,{...entry,level:actual},edition).find(group=>group.id==='eldritch-invocations');
       for(const id of invocation?.valid||[]){
@@ -877,7 +899,9 @@ var CharacterClassFeatureChoices=(()=>{
         if(id==='witch-sight'){if(edition==='2024'){result.truesight=30;detail='Truesight · 30 ft';}else detail='See true forms of creatures affected by shapechanging, illusion or transmutation · 30 ft · requires line of sight';result.senses.push({id,name,range:30,truesight:edition==='2024',detail});}
         if(id==='beguiling-influence'&&edition==='2014'){result.skills.push('deception','persuasion');detail='Proficiency in Deception and Persuasion; adds proficiency once.';}
         if(id==='eyes-of-the-rune-keeper'&&edition==='2014')detail='Read all writing. Spoken language proficiencies are separate.';
-        if(id==='eldritch-mind'&&edition==='2024'){result.concentrationAdvantage=true;detail='Advantage on Constitution saving throws to maintain Concentration.';}
+        if(id==='eldritch-mind'){result.concentrationAdvantage=true;detail='Advantage on Constitution saving throws to maintain Concentration.';}
+        if(edition==='2014'&&Legacy.details[id])detail=Legacy.details[id];
+        if(id==='gift-of-the-depths'){result.swimEqualWalk=true;detail=Legacy.details[id];}
         if(detail)result.reports.push({id,name,detail,edition,warlockLevel:actual});
       }
     }
@@ -942,6 +966,11 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(row=>row.valid&&!(row.key===key&&row.slot===slot)&&!after.reports.find(other=>other.key===row.key&&other.slot===row.slot)?.valid))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
+  function styleSpells(data,{level=1}={}){
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},local={...data,adobe:stored},result=[];if(data.build?.edition==='2024')return result;
+    for(const row of fightingStyleState(data,{level}).rows){const id=row.option.id;if(!['blessed-warrior','druidic-warrior'].includes(id))continue;const classId=id==='blessed-warrior'?'paladin':'ranger',entry={classId,level:actualClassLevel(data,classId,level)},g=status(local,entry,'2014').find(g=>g.id===id+'-cantrips');for(const chosen of g?.valid||[])result.push({spellId:g.options.find(o=>o.id===chosen).spellId,classId,ability:classId==='paladin'?'cha':'wis',source:row.option.name});}
+    return result;
+  }
   function styles(data,level){return fightingStyleState(data,{level}).rows.map(row=>row.option);}
   function fightingStyleReason(data,entry,id){
     if(!id)return '';
@@ -967,7 +996,7 @@ var CharacterClassFeatureChoices=(()=>{
     const base=(definitions[edition]?.[entry?.classId]||[]).map(g=>({...g,_scope:'class'}));
     const sub=(subclassDefinitions[edition]?.[(entry?.classId||'')+':'+(entry?.subclassId||'')]||[]).map(g=>({...g,_scope:'subclass'}));
     const rows=[...base,...sub];if(entry?.classId==='artificer'&&data&&!artificerSource(data).eligible)return[];
-    return rows.filter(g=>Number(entry?.level||0)>=g.minLevel&&(!g.startingOnly||!data||artificerLevels(data,20).starting)&&(!g.multiclassOnly||data&&!artificerLevels(data,20).starting)&&(!g.artificerVersion||data&&artificerSource(data).eligible&&artificerSource(data).id===g.artificerVersion)).map(g=>{const source=entry.classId==='artificer'&&data?artificerSource(data):null;return{...g,...(source?{sourceLabel:source.label}:{}),key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0,entry,data))||0)),options:g.options(entry,edition,data).map(option=>source&&g.id==='artisan-tool'?{...option,source:source.source,edition:source.sourceEdition}:option)};});
+    return rows.filter(g=>(!g.requiresStyle||!data||normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)[groupKey(edition,entry.classId,'fighting-style')]?.includes(g.requiresStyle))&&Number(entry?.level||0)>=g.minLevel&&(!g.startingOnly||!data||artificerLevels(data,20).starting)&&(!g.multiclassOnly||data&&!artificerLevels(data,20).starting)&&(!g.artificerVersion||data&&artificerSource(data).eligible&&artificerSource(data).id===g.artificerVersion)).map(g=>{const source=entry.classId==='artificer'&&data?artificerSource(data):null;return{...g,...(source?{sourceLabel:source.label}:{}),key:groupKey(edition,entry.classId,(g._scope==='subclass'?entry.subclassId+':':'')+g.id),allowed:Math.max(0,Math.min(20,Number(g.count(Number(entry.level)||0,entry,data))||0)),options:g.options(entry,edition,data).map(option=>source&&g.id==='artisan-tool'?{...option,source:source.source,edition:source.sourceEdition}:option)};});
   }
   function registerSubclass(edition,classId,subclassId,definition){
     edition=edition==='2024'?'2024':'2014';const key=safe(classId)+':'+safe(subclassId);
@@ -1113,6 +1142,6 @@ var CharacterClassFeatureChoices=(()=>{
     if(before.reports.some(r=>r.slots.some((s,i)=>s.valid&&!(r.key===key&&i===index)&&!after.reports.find(v=>v.key===r.key)?.slots[i]?.valid)))return false;
     data.adobe||={};data.adobe.classFeatureChoices={...choices,[key]:next};return true;
   }
-  return{berserker,blessedStrikes,clericVitality,applyClericVitality,cantripRange,elementalFury,useChannelDivinity,wizardLevels,warDomain,lifeDomain,lightDomain,tempestDomain,natureDomain,knowledgeDomain,trickeryDomain,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,setClassResourceUsed,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
+  return{styleSpells,berserker,blessedStrikes,clericVitality,applyClericVitality,cantripRange,elementalFury,useChannelDivinity,wizardLevels,warDomain,lifeDomain,lightDomain,tempestDomain,natureDomain,knowledgeDomain,trickeryDomain,arcaneRecovery,restoreArcaneSlots,resetArcaneDay,paladinLevels,huntersMarkEffect,rangerLevels,rangerFeatures,sorcererLevels,metamagic,spendMetamagic,artificerFeatures,artificerSourceKey,artificerVersions,artificerSource,setArtificerSource,artificerSpellAllowed,bardSlotRecovery,restoreBardFromSlot,abilityFeatures,monkLevels,orders,saveTraining,cantripModifier,cantripModifierText,cantripInvocations,setCantripInvocation,invocationEffects,classResources,changeClassResource,setClassResourceUsed,resetClassResources,artisanTool,toolTraining,setToolAbility,artificerLevels,fightingStyleReason,fightingStyleState,weaponTraining,setWeaponTraining,masteryHelp,expertise,setExpertise,styles,invocationProgression,invocationLimit,definitions,subclassDefinitions,registerSubclass,normalize,groupKey,groups,selections,prerequisite,status,set};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterClassFeatureChoices;
