@@ -24,7 +24,12 @@ const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
       else await host.locator('[data-stack-jump]').selectOption('sheet:' + await button.getAttribute('data-stack-page'));
     };
     const picker = page.locator('#adobeChoiceDialog');
-    await host.locator('[data-continuous-page="page-1"] [data-pdf-field="Race"]').press('Enter');
+    // A connected paper exists before its asynchronous mount finishes binding
+    // controls. Wait for that mount, then use the player's click entry point.
+    const front = host.locator('[data-continuous-page="page-1"]:not([aria-busy="true"])');
+    await front.locator('.paper').waitFor({state:'visible'});
+    await front.locator('[data-pdf-field="Race"]').click();
+    await picker.waitFor({state:'visible'});
     await picker.locator('[data-choice-search]').fill('shadar');
     await picker.locator('[data-choice-value="shadar-kai-mpmm"]').click();
     await navigate();
