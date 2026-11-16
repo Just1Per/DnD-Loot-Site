@@ -216,3 +216,8 @@ Efter brugerens valg fjerner **Delete page** siden fra arket, Your pages og al u
 ### Extra spells and numeric summaries v90
 
 Implemented following the spell-sheet user test: **Add other spells** supports campaign-permitted off-list/high-level catalogue choices and handwritten spells with edit/remove, draft/Cancel and private save/reopen. A separate Additional spells source preserves normal class limits, grants and resources. Short descriptions now include display-only damage, geometry and scaling facts from the pinned source plus original concise exceptions. The generated audit covers all 969 source records; personal short text remains independent. See [scope and regression checks](adobe-additional-spells.md) and [Danish user-test steps](adobe-additional-spells-testplan-da.md). This does not complete the remaining PDF parity or general spell-mechanics backlog.
+
+
+### Adobe AI Lookup v92
+
+The shared lookup is now directly available from paper controls, Table tools and native spell, reader, additional-spell, feat, subclass and owned-item information windows. Explicit reference controls replace reliance on legacy body selectors for these paths. Name, source and edition are prefilled without submitting a request or sending personal notes. Owned-session cancellation, keyboard/focus, mobile, fallback/error handling and stale requests are covered by the connected browser regression. See [scope and tests](adobe-ai-lookup.md).

@@ -89,6 +89,7 @@
     "adobe-species-descriptions-browser.cjs",
     "adobe-page-deletion-browser.cjs",
     "adobe-additional-spells-browser.cjs",
-    "adobe-player-guide-browser.cjs"
+    "adobe-player-guide-browser.cjs",
+    "adobe-ai-lookup-browser.cjs"
   ]
 }
