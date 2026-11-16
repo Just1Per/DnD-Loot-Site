@@ -202,3 +202,9 @@ Background language/tool facts, restricted skill choices, Pallid/Lotusden spell 
 ## Pinned item facts and containers — v87
 
 The recommended item follow-up now supports additional source variant/base-gear families, both-edition numeric charges, bounded fixed/dice recovery and explicit owned container placements. Container contents follow companion transfers atomically; source-dependent physical weight remains separate from paper totals. See [delivered behavior and boundaries](pinned-item-mechanics.md). Remaining point-3 work includes inherited source records, conditional item powers, full compartment/volume handling, unit choices and the outstanding source row-arrangement/copy commands.
+
+## Selvstændige racebeskrivelser — v88
+
+Alle 105 valgbare racer har nu korte, selvstændige forklaringer på de 427 forekomster af navngivne egenskaber i deres pinnede kilder. Henvisningerne til »normal elf« og »legacy Tiefling« er erstattet, og de tidligere tomme lister er udfyldt. Den rigtige kilde/udgave styrer blandt andet Trance, spell grants, recovery og valgmuligheder. Fremtidige fordele er mærket med deres krævede karakterniveau.
+
+Se [gennemgangen af alle racer](species-description-audit.md) og den tilhørende JSON. Dette punkt gælder beskrivelser; resterende automatisering og manglende racevalg i builderen skal gennemgås særskilt. Eksisterende markeringer af delvis/mønsterbaseret understøttelse bevares. Gemte karaktervalg og regelberegninger ændres ikke.

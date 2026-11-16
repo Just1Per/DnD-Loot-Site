@@ -1,0 +1,460 @@
+{
+  "dragonborn": {
+    "name": "Dragonborn",
+    "source": "PHB"
+  },
+  "hill-dwarf": {
+    "name": "Dwarf",
+    "source": "PHB",
+    "subrace": "Hill",
+    "subSource": "PHB"
+  },
+  "high-elf": {
+    "name": "Elf",
+    "source": "PHB",
+    "subrace": "High",
+    "subSource": "PHB"
+  },
+  "lightfoot-halfling": {
+    "name": "Halfling",
+    "source": "PHB",
+    "subrace": "Lightfoot",
+    "subSource": "PHB"
+  },
+  "human": {
+    "name": "Human",
+    "source": "PHB"
+  },
+  "rock-gnome": {
+    "name": "Gnome",
+    "source": "PHB",
+    "subrace": "Rock",
+    "subSource": "PHB"
+  },
+  "half-elf": {
+    "name": "Half-Elf",
+    "source": "PHB"
+  },
+  "half-orc": {
+    "name": "Half-Orc",
+    "source": "PHB"
+  },
+  "tiefling": {
+    "name": "Tiefling",
+    "source": "PHB"
+  },
+  "mountain-dwarf": {
+    "name": "Dwarf",
+    "source": "PHB",
+    "subrace": "Mountain",
+    "subSource": "PHB"
+  },
+  "wood-elf": {
+    "name": "Elf",
+    "source": "PHB",
+    "subrace": "Wood",
+    "subSource": "PHB"
+  },
+  "drow": {
+    "name": "Elf",
+    "source": "PHB",
+    "subrace": "Drow",
+    "subSource": "PHB"
+  },
+  "forest-gnome": {
+    "name": "Gnome",
+    "source": "PHB",
+    "subrace": "Forest",
+    "subSource": "PHB"
+  },
+  "stout-halfling": {
+    "name": "Halfling",
+    "source": "PHB",
+    "subrace": "Stout",
+    "subSource": "PHB"
+  },
+  "variant-human": {
+    "name": "Human",
+    "source": "PHB",
+    "subrace": "Variant",
+    "subSource": "PHB"
+  },
+  "aarakocra-mpmm": {
+    "name": "Aarakocra",
+    "source": "MPMM"
+  },
+  "aasimar-mpmm": {
+    "name": "Aasimar",
+    "source": "MPMM"
+  },
+  "changeling-mpmm": {
+    "name": "Changeling",
+    "source": "MPMM"
+  },
+  "deep-gnome-mpmm": {
+    "name": "Deep Gnome",
+    "source": "MPMM"
+  },
+  "duergar-mpmm": {
+    "name": "Duergar",
+    "source": "MPMM"
+  },
+  "eladrin-mpmm": {
+    "name": "Eladrin",
+    "source": "MPMM"
+  },
+  "fairy-mpmm": {
+    "name": "Fairy",
+    "source": "MPMM"
+  },
+  "firbolg-mpmm": {
+    "name": "Firbolg",
+    "source": "MPMM"
+  },
+  "genasi-air-mpmm": {
+    "name": "Genasi",
+    "source": "MPMM",
+    "subrace": "Air",
+    "subSource": "MPMM"
+  },
+  "genasi-earth-mpmm": {
+    "name": "Genasi",
+    "source": "MPMM",
+    "subrace": "Earth",
+    "subSource": "MPMM"
+  },
+  "genasi-fire-mpmm": {
+    "name": "Genasi",
+    "source": "MPMM",
+    "subrace": "Fire",
+    "subSource": "MPMM"
+  },
+  "genasi-water-mpmm": {
+    "name": "Genasi",
+    "source": "MPMM",
+    "subrace": "Water",
+    "subSource": "MPMM"
+  },
+  "githyanki-mpmm": {
+    "name": "Githyanki",
+    "source": "MPMM"
+  },
+  "githzerai-mpmm": {
+    "name": "Githzerai",
+    "source": "MPMM"
+  },
+  "goliath-mpmm": {
+    "name": "Goliath",
+    "source": "MPMM"
+  },
+  "harengon-mpmm": {
+    "name": "Harengon",
+    "source": "MPMM"
+  },
+  "kenku-mpmm": {
+    "name": "Kenku",
+    "source": "MPMM"
+  },
+  "locathah": {
+    "name": "Locathah",
+    "source": "LR"
+  },
+  "owlin": {
+    "name": "Owlin",
+    "source": "SCC"
+  },
+  "satyr-mpmm": {
+    "name": "Satyr",
+    "source": "MPMM"
+  },
+  "satyr-mot": {
+    "name": "Satyr",
+    "source": "MOT"
+  },
+  "sea-elf-mpmm": {
+    "name": "Sea Elf",
+    "source": "MPMM"
+  },
+  "shadar-kai-mpmm": {
+    "name": "Shadar-Kai",
+    "source": "MPMM"
+  },
+  "tabaxi-mpmm": {
+    "name": "Tabaxi",
+    "source": "MPMM"
+  },
+  "tortle-mpmm": {
+    "name": "Tortle",
+    "source": "MPMM"
+  },
+  "triton-mpmm": {
+    "name": "Triton",
+    "source": "MPMM"
+  },
+  "verdan": {
+    "name": "Verdan",
+    "source": "AI"
+  },
+  "bugbear-mpmm": {
+    "name": "Bugbear",
+    "source": "MPMM"
+  },
+  "centaur-mpmm": {
+    "name": "Centaur",
+    "source": "MPMM"
+  },
+  "goblin-mpmm": {
+    "name": "Goblin",
+    "source": "MPMM"
+  },
+  "grung": {
+    "name": "Grung",
+    "source": "OGA"
+  },
+  "hobgoblin-mpmm": {
+    "name": "Hobgoblin",
+    "source": "MPMM"
+  },
+  "kobold-mpmm": {
+    "name": "Kobold",
+    "source": "MPMM"
+  },
+  "lizardfolk-mpmm": {
+    "name": "Lizardfolk",
+    "source": "MPMM"
+  },
+  "minotaur-mpmm": {
+    "name": "Minotaur",
+    "source": "MPMM"
+  },
+  "orc-mpmm": {
+    "name": "Orc",
+    "source": "MPMM"
+  },
+  "shifter-mpmm": {
+    "name": "Shifter",
+    "source": "MPMM"
+  },
+  "yuan-ti-mpmm": {
+    "name": "Yuan-Ti",
+    "source": "MPMM"
+  },
+  "kender": {
+    "name": "Kender",
+    "source": "DSotDQ"
+  },
+  "kalashtar": {
+    "name": "Kalashtar",
+    "source": "ERLW"
+  },
+  "warforged": {
+    "name": "Warforged",
+    "source": "ERLW"
+  },
+  "dhampir": {
+    "name": "Dhampir",
+    "source": "VRGR"
+  },
+  "hexblood": {
+    "name": "Hexblood",
+    "source": "VRGR"
+  },
+  "reborn": {
+    "name": "Reborn",
+    "source": "VRGR"
+  },
+  "loxodon": {
+    "name": "Loxodon",
+    "source": "GGR"
+  },
+  "simic-hybrid": {
+    "name": "Simic Hybrid",
+    "source": "GGR"
+  },
+  "vedalken": {
+    "name": "Vedalken",
+    "source": "GGR"
+  },
+  "astral-elf": {
+    "name": "Astral Elf",
+    "source": "AAG"
+  },
+  "autognome": {
+    "name": "Autognome",
+    "source": "AAG"
+  },
+  "giff": {
+    "name": "Giff",
+    "source": "AAG"
+  },
+  "hadozee": {
+    "name": "Hadozee",
+    "source": "AAG"
+  },
+  "plasmoid": {
+    "name": "Plasmoid",
+    "source": "AAG"
+  },
+  "thri-kreen": {
+    "name": "Thri-kreen",
+    "source": "AAG"
+  },
+  "leonin": {
+    "name": "Leonin",
+    "source": "MOT"
+  },
+  "custom-lineage": {
+    "name": "Custom Lineage",
+    "source": "TCE"
+  },
+  "feral-tiefling-scag": {
+    "name": "Tiefling",
+    "source": "PHB",
+    "subrace": "Variant; Infernal Legacy",
+    "subSource": "SCAG"
+  },
+  "chromatic-dragonborn-ftd": {
+    "name": "Dragonborn (Chromatic)",
+    "source": "FTD"
+  },
+  "gem-dragonborn-ftd": {
+    "name": "Dragonborn (Gem)",
+    "source": "FTD"
+  },
+  "metallic-dragonborn-ftd": {
+    "name": "Dragonborn (Metallic)",
+    "source": "FTD"
+  },
+  "pallid-elf-egw": {
+    "name": "Elf",
+    "source": "PHB",
+    "subrace": "Pallid",
+    "subSource": "EGW"
+  },
+  "lotusden-halfling-egw": {
+    "name": "Halfling",
+    "source": "PHB",
+    "subrace": "Lotusden",
+    "subSource": "EGW"
+  },
+  "draconblood-dragonborn-egw": {
+    "name": "Dragonborn",
+    "source": "PHB",
+    "subrace": "Draconblood",
+    "subSource": "EGW"
+  },
+  "ravenite-dragonborn-egw": {
+    "name": "Dragonborn",
+    "source": "PHB",
+    "subrace": "Ravenite",
+    "subSource": "EGW"
+  },
+  "orc-of-exandria-egw": {
+    "name": "Orc",
+    "source": "EGW"
+  },
+  "changeling-efota": {
+    "name": "Changeling",
+    "source": "EFA"
+  },
+  "kalashtar-efota": {
+    "name": "Kalashtar",
+    "source": "EFA"
+  },
+  "khoravar-efota": {
+    "name": "Khoravar",
+    "source": "EFA"
+  },
+  "shifter-efota": {
+    "name": "Shifter",
+    "source": "EFA"
+  },
+  "warforged-efota": {
+    "name": "Warforged",
+    "source": "EFA"
+  },
+  "dhampir-rthw": {
+    "name": "Dhampir",
+    "source": "RHW"
+  },
+  "hexblood-rthw": {
+    "name": "Hexblood",
+    "source": "RHW"
+  },
+  "lupin-rthw": {
+    "name": "Lupin",
+    "source": "RHW"
+  },
+  "reborn-rthw": {
+    "name": "Reborn",
+    "source": "RHW"
+  },
+  "boggart-lfl": {
+    "name": "Boggart",
+    "source": "LFL"
+  },
+  "faerie-lfl": {
+    "name": "Faerie",
+    "source": "LFL"
+  },
+  "flamekin-lfl": {
+    "name": "Flamekin",
+    "source": "LFL"
+  },
+  "kithkin-lfl": {
+    "name": "Kithkin",
+    "source": "LFL"
+  },
+  "lorwyn-changeling-lfl": {
+    "name": "Lorwyn Changeling",
+    "source": "LFL"
+  },
+  "lorwyn-elf-lfl": {
+    "name": "Elf",
+    "source": "LFL"
+  },
+  "rimekin-lfl": {
+    "name": "Rimekin",
+    "source": "LFL"
+  },
+  "human-2024": {
+    "name": "Human",
+    "source": "XPHB"
+  },
+  "dragonborn-2024": {
+    "name": "Dragonborn",
+    "source": "XPHB"
+  },
+  "dwarf-2024": {
+    "name": "Dwarf",
+    "source": "XPHB"
+  },
+  "elf-2024": {
+    "name": "Elf",
+    "source": "XPHB"
+  },
+  "gnome-2024": {
+    "name": "Gnome",
+    "source": "XPHB"
+  },
+  "goliath-2024": {
+    "name": "Goliath",
+    "source": "XPHB"
+  },
+  "halfling-2024": {
+    "name": "Halfling",
+    "source": "XPHB"
+  },
+  "orc-2024": {
+    "name": "Orc",
+    "source": "XPHB"
+  },
+  "tiefling-2024": {
+    "name": "Tiefling",
+    "source": "XPHB"
+  },
+  "aasimar-2024": {
+    "name": "Aasimar",
+    "source": "XPHB"
+  }
+}

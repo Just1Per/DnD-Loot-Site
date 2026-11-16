@@ -53,7 +53,12 @@ test('Kobold legacy grants only selected option and prevents stale choice effect
  d.build.race='human';assert.equal(M.derive(d,1).effects.innate.length,0);
 });
 test('Aasimar revelation and Simic second enhancement are gated by level',()=>{
- const d=build('aasimar-mpmm',{raceFeature:'soul'});assert.ok(!M.derive(d,2).effects.traits.some(t=>t.includes('Revelation')));assert.ok(M.derive(d,3).effects.traits.some(t=>t.includes('Revelation')));
+ const d=build('aasimar-mpmm',{raceFeature:'soul'});
+ // The source overview explains future benefits with an explicit unlock level;
+ // the chosen form still must not become an active selection before level 3.
+ assert.match(M.derive(d,2).effects.traits.find(t=>t.startsWith('Celestial Revelation:')),/From level 3/);
+ assert.ok(!M.derive(d,2).effects.traits.some(t=>t.startsWith('Selected option: Radiant Soul')||t.startsWith('Radiant Soul:')));
+ assert.ok(M.derive(d,3).effects.traits.some(t=>t.startsWith('Selected option: Radiant Soul')));
  const sim=build('simic-hybrid',{raceFeature:'climb',raceFeature2:'water'});assert.equal(M.derive(sim,4).effects.climb,30);assert.equal(M.derive(sim,4).effects.swim,0);assert.equal(M.derive(sim,5).effects.swim,30);
  sim.build.raceFeature2='climb';assert.ok(M.derive(sim,5).effects.warnings.some(w=>w.includes('different second')));
 });

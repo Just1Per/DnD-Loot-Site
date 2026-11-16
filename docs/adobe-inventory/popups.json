@@ -83,7 +83,8 @@
         "adobe-gear-catalog-browser.cjs",
         "adobe-inline-character-choices-browser.cjs",
         "adobe-magic-variant-browser.cjs",
-        "adobe-page-choices-browser.cjs"
+        "adobe-page-choices-browser.cjs",
+        "adobe-species-descriptions-browser.cjs"
       ]
     },
     {
