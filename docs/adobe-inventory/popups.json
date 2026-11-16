@@ -221,7 +221,7 @@
     {
       "id": "adobePagesDialog",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 105,
+      "line": 106,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Manage pages / Add pages",
@@ -236,7 +236,7 @@
     {
       "id": "adobePaperZoomMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 161,
+      "line": 162,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Forstørrelsesglas på arket",
@@ -248,7 +248,7 @@
     {
       "id": "adobePageActionsMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 162,
+      "line": 163,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Page options ved zoom/print → Hide this page / Manage pages",

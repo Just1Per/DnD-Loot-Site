@@ -94,6 +94,7 @@ var CharacterAdobeStackUI=(()=>{
     if(P.key(m.lastHidden||{})===key){clearTimeout(m.undoTimer);m.lastHidden=null;container.querySelector('[data-page-notice]').hidden=true;}
     sync();try{localStorage.setItem(scope(root)+':pages',JSON.stringify([...m.manual.values()]));}catch{}
     if(wasActive){const target=m.pages[Math.min(Math.max(0,index),m.pages.length-1)];if(target)await jump(target.key);}
+    if(!isCurrent())return true;
     status(row.title+' deleted from the sheet. Contents retained; add the page again in Manage pages.');
     sheetStatus('Page deleted. Contents retained. Save sheet to keep the layout.');return true;
    } catch(error){status(error.message);if(m.pageDialog?.isConnected)m.pageDialog.querySelector('[data-pages-status]').textContent=error.message;return false;}
