@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261116-delete-pages-v89b";
+const ASSET_VERSION = "20261116-extra-spells-v90";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -112,6 +112,7 @@ const FEATURE_FILES = [
   "./modules/character-feat-reference.js",
   "./modules/character-personal-feats.js",
   "./modules/character-feat-rules.js",
+  "./modules/character-spell-effect-data.js",
   "./modules/character-spell-summaries.js",
   "./modules/character-catalog.js",
   "./modules/character-divine-channel.js",
@@ -187,6 +188,7 @@ const FEATURE_FILES = [
   "./modules/character-subclass-planning.js",
   "./modules/character-adobe-stack-plan.js",
   "./modules/character-adobe-engine.js",
+  "./modules/character-additional-spells.js",
   "./modules/character-spellcasting.js",
   "./modules/images.js",
   "./modules/catalog-cache.js",
@@ -315,6 +317,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-personal-feat-ui.js",
     "./modules/character-adobe-feat-ui.js",
     "./modules/character-adobe-spell-ui.js",
+    "./modules/character-adobe-additional-spell-ui.js",
     "./modules/character-adobe-spell-list-ui.js",
     "./modules/character-paper-weight-ui.js",
     "./modules/character-adobe-choice-ui.js",

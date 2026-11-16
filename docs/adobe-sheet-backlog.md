@@ -212,3 +212,7 @@ Se [gennemgangen af alle racer](species-description-audit.md) og den tilhørende
 ## Sletning af sider med bevaret indhold — v89
 
 Efter brugerens valg fjerner **Delete page** siden fra arket, Your pages og al udskrift, mens karakterens indhold bevares. Funktionen findes i sidens ⋯-menu og som skraldespand ved synlighedskontakten i Manage pages. Skjul er fortsat et særskilt valg. Sletning bekræftes, gemmes på karakteren og modstår genberegning/genåbning. En bestemt companion-, caster- eller noteside kan tilføjes igen via Add pages → Removed pages med samme indhold. Den sidste synlige side er beskyttet. Se [omfang og tests](adobe-page-deletion.md) og [dansk testvejledning](adobe-page-deletion-testplan-da.md).
+
+### Extra spells and numeric summaries v90
+
+Implemented following the spell-sheet user test: **Add other spells** supports campaign-permitted off-list/high-level catalogue choices and handwritten spells with edit/remove, draft/Cancel and private save/reopen. A separate Additional spells source preserves normal class limits, grants and resources. Short descriptions now include display-only damage, geometry and scaling facts from the pinned source plus original concise exceptions. The generated audit covers all 969 source records; personal short text remains independent. See [scope and regression checks](adobe-additional-spells.md) and [Danish user-test steps](adobe-additional-spells-testplan-da.md). This does not complete the remaining PDF parity or general spell-mechanics backlog.

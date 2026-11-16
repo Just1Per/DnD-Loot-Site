@@ -1,0 +1,426 @@
+{
+  "Aganazzar's Scorcher": {
+    "area": "30×5-ft line"
+  },
+  "Blade Barrier": {
+    "area": "100×20×5-ft wall or 60-ft-diameter ring"
+  },
+  "Cloud of Daggers|PHB": {
+    "area": "5-ft cube"
+  },
+  "Conjure Animals|XPHB": {
+    "area": "Within 10 ft of spectral pack"
+  },
+  "Conjure Constructs": {
+    "area": "Within 5 ft of spirits"
+  },
+  "Control Water": {
+    "area": "Up to 100-ft cube"
+  },
+  "Cordon of Arrows": {
+    "area": "Within 30 ft of ammunition"
+  },
+  "Dark Star": {
+    "area": "Up to 40-ft-radius sphere"
+  },
+  "Death Armor": {
+    "area": "Within 5 ft of target"
+  },
+  "Earth Tremor": {
+    "area": "Within 10 ft of caster"
+  },
+  "Forcecage": {
+    "area": "20-ft cube cage or 10-ft cube box"
+  },
+  "Guardian of Faith": {
+    "area": "Within 10 ft of guardian",
+    "damage": "20 Radiant; DEX half; guardian ends after dealing 60",
+    "scaling": ""
+  },
+  "Hail of Thorns": {
+    "area": "Within 5 ft of target",
+    "damage": "Extra 1d10 Piercing in burst",
+    "scaling": "+1d10/SL above 1 (maximum 6d10)"
+  },
+  "Ice Knife": {
+    "area": "Within 5 ft of target",
+    "damage": "Hit: 1d10 Piercing; burst: 2d6 Cold",
+    "scaling": "+1d6 Cold/SL above 1"
+  },
+  "Lightning Arrow": {
+    "area": "Within 10 ft of target"
+  },
+  "Melf's Minute Meteors": {
+    "area": "Within 5 ft of each burst"
+  },
+  "Mordenkainen's Private Sanctum": {
+    "area": "Up to 100-ft cube"
+  },
+  "Prismatic Wall": {
+    "area": "90×30-ft wall or 30-ft-diameter sphere"
+  },
+  "Shadow of Moil": {
+    "area": "Within 10 ft of caster"
+  },
+  "Sleep|PHB": {
+    "area": "20-ft radius",
+    "scaling": "Sleep pool: 5d8 HP; +2d8/SL above 1"
+  },
+  "Storm of Vengeance|PHB": {
+    "area": "360-ft-radius storm",
+    "damage": "Round 1: 2d6 Thunder; 2: 1d6 Acid; 3: 10d6 Lightning; 4: 2d6 Bludgeoning; 5–10: 1d6 Cold",
+    "scaling": ""
+  },
+  "Storm of Vengeance|XPHB": {
+    "area": "300-ft-radius storm",
+    "damage": "Turn 1: 2d6 Thunder; 2: 4d6 Acid; 3: 10d6 Lightning; 4: 2d6 Bludgeoning; 5–10: 1d6 Cold",
+    "scaling": ""
+  },
+  "Thunder Step": {
+    "area": "Within 10 ft of departure"
+  },
+  "Thunderclap": {
+    "area": "Within 5 ft of caster"
+  },
+  "Tidal Wave": {
+    "area": "Up to 30×10×10-ft wave"
+  },
+  "Tsunami": {
+    "area": "Up to 300×300×50-ft wall"
+  },
+  "Wall of Fire": {
+    "area": "60×20×1-ft wall or 20-ft-diameter ring; heat 10 ft to one side"
+  },
+  "Wall of Force": {
+    "area": "Ten 10×10-ft panels or 10-ft-radius sphere/hemisphere"
+  },
+  "Wall of Ice": {
+    "area": "Ten 10×10×1-ft panels or 10-ft-radius sphere/hemisphere"
+  },
+  "Wall of Light": {
+    "area": "Up to 60×10×5-ft wall"
+  },
+  "Wall of Sand": {
+    "area": "Up to 30×10×10-ft wall"
+  },
+  "Wall of Stone": {
+    "area": "Ten 10×10-ft panels, 6 in thick; or 10×20-ft panels, 3 in thick"
+  },
+  "Wall of Thorns": {
+    "area": "60×10×5-ft wall or 20-ft-diameter ring, 20 ft high"
+  },
+  "Wall of Water": {
+    "area": "30×10×1-ft wall or 20-ft-diameter ring, 20 ft high"
+  },
+  "Wind Wall": {
+    "area": "Up to 50×15×1-ft wall"
+  },
+  "Fire Storm": {
+    "area": "Up to ten connected 10-ft cubes"
+  },
+  "Lightning Bolt": {
+    "area": "100×5-ft line"
+  },
+  "Gravity Fissure": {
+    "area": "100×5-ft line"
+  },
+  "Gust of Wind": {
+    "area": "60×10-ft line"
+  },
+  "Sunbeam": {
+    "area": "60×5-ft line"
+  },
+  "Tasha's Caustic Brew": {
+    "area": "30×5-ft line"
+  },
+  "Festering Blast": {
+    "area": "60×10-ft line"
+  },
+  "Laeral's Silver Lance": {
+    "area": "120×5-ft line"
+  },
+  "Hunter's Mark|PHB": {
+    "damage": "+1d6 weapon damage/hit",
+    "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
+  },
+  "Hunter's Mark|XPHB": {
+    "damage": "+1d6 Force/attack-roll hit",
+    "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
+  },
+  "Hex": {
+    "damage": "+1d6 Necrotic/attack hit",
+    "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
+  },
+  "Armor of Agathys": {
+    "damage": "5 Cold to melee attacker while its temporary HP remain",
+    "scaling": "+5 Cold and temporary HP/SL above 1"
+  },
+  "Etherealness": {
+    "damage": "If expelled from an occupied space: 2 Force/ft moved",
+    "scaling": ""
+  },
+  "Animate Objects|PHB": {
+    "damage": "Object slam by size: Tiny 1d4+4; Small 1d8+2; Medium 2d6+1; Large 2d10+2; Huge 2d12+4",
+    "scaling": "+2 objects/SL above 5"
+  },
+  "Animate Objects|XPHB": {
+    "damage": "By size, Force slam: Medium/smaller 1d4+3; Large 2d6+3+SC; Huge 2d12+3+SC",
+    "scaling": "Slam +1d4 (Medium/smaller), +1d6 (Large), +1d12 (Huge)/SL above 5"
+  },
+  "Shillelagh|PHB": {
+    "damage": "Weapon die 1d8 + SC",
+    "scaling": ""
+  },
+  "Shillelagh|XPHB": {
+    "damage": "Weapon die 1d8 + SC; Force or normal type",
+    "scaling": "CL 5/11/17: die 1d10/1d12/2d6"
+  },
+  "True Strike|XPHB": {
+    "damage": "Weapon damage using SC; Radiant or normal type",
+    "scaling": "CL 5/11/17: +1d6/+2d6/+3d6 Radiant"
+  },
+  "Toll the Dead": {
+    "damage": "1d8 Necrotic; 1d12 if target is injured",
+    "scaling": "CL 5/11/17: 2/3/4 dice"
+  },
+  "Eldritch Blast": {
+    "damage": "1d10 Force/beam",
+    "scaling": "CL 5/11/17: 2/3/4 beams"
+  },
+  "Booming Blade": {
+    "damage": "Weapon hit; moving 5+ ft triggers 1d8 Thunder",
+    "area": "Melee target within 5 ft",
+    "scaling": "CL 5/11/17: hit +1/2/3d8; movement 2/3/4d8"
+  },
+  "Green-Flame Blade": {
+    "damage": "Weapon hit; second target takes SC Fire",
+    "area": "Second creature within 5 ft of target",
+    "scaling": "CL 5/11/17: hit +1/2/3d8; second target 1/2/3d8+SC"
+  },
+  "Magic Missile": {
+    "damage": "3 darts × (1d4+1 Force)",
+    "scaling": "+1 dart/SL above 1"
+  },
+  "Chaos Bolt": {
+    "damage": "2d8+1d6; damage type by d8 roll",
+    "scaling": "+1d6/SL above 1"
+  },
+  "Chromatic Orb": {
+    "damage": "3d8 of chosen type",
+    "scaling": "+1d8/SL above 1"
+  },
+  "Spiritual Weapon|PHB": {
+    "damage": "1d8+SC Force/hit",
+    "scaling": "+1d8 per 2 SL above 2"
+  },
+  "Spiritual Weapon|XPHB": {
+    "damage": "1d8+SC Force/hit",
+    "scaling": "+1d8/SL above 2"
+  },
+  "Blade of Disaster|TCE": {
+    "damage": "4d12 Force/hit; critical on 18–20 deals 12d12 total",
+    "scaling": ""
+  },
+  "Blade of Disaster|FRHoF": {
+    "damage": "10d6 Force/hit; critical on 18–20",
+    "scaling": ""
+  },
+  "Absorb Elements": {
+    "damage": "+1d6 of triggering type on next melee hit",
+    "scaling": "+1d6/SL above 1"
+  },
+  "Conjure Barrage|PHB": {
+    "damage": "3d8 of ammunition/weapon damage type",
+    "scaling": ""
+  },
+  "Conjure Volley|PHB": {
+    "damage": "8d8 of ammunition/weapon damage type",
+    "scaling": ""
+  },
+  "Create Homunculus": {
+    "damage": "Cost: 2d4 Piercing to caster",
+    "scaling": ""
+  },
+  "Enlarge/Reduce": {
+    "damage": "Weapon hits: +1d4 enlarged / −1d4 reduced",
+    "scaling": ""
+  },
+  "Crown of Stars": {
+    "area": "Light: 30-ft bright +30-ft dim with 4+ motes; otherwise 5-ft dim"
+  },
+  "Cure Wounds|PHB": {
+    "damage": "Heal 1d8+SC HP",
+    "scaling": "+1d8 healing/SL above 1"
+  },
+  "Cure Wounds|XPHB": {
+    "damage": "Heal 2d8+SC HP",
+    "scaling": "+2d8 healing/SL above 1"
+  },
+  "Healing Word|PHB": {
+    "damage": "Heal 1d4+SC HP",
+    "scaling": "+1d4 healing/SL above 1"
+  },
+  "Healing Word|XPHB": {
+    "damage": "Heal 2d4+SC HP",
+    "scaling": "+2d4 healing/SL above 1"
+  },
+  "Spirit Shroud": {
+    "damage": "+1d8 Radiant/Necrotic/Cold per attack hit",
+    "area": "Targets within 10 ft",
+    "scaling": "+1d8 per 2 SL above 3"
+  },
+  "Melf's Acid Arrow": {
+    "damage": "Hit: 4d4 Acid; next turn: 2d4 Acid; miss: half initial",
+    "scaling": "+1d4 to both damage rolls/SL above 2"
+  },
+  "Holy Weapon": {
+    "damage": "+2d8 Radiant/weapon hit; dismissal: 4d8 Radiant",
+    "area": "Dismissal: 30-ft radius"
+  },
+  "Summon Beast": {
+    "damage": "Spirit: 1d8+4+SL Piercing/hit",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Construct": {
+    "damage": "Spirit: 1d8+4+SL Bludgeoning/hit",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Aberration": {
+    "damage": "Slaad: 1d10+3+SL Slashing; other forms: 1d8+3+SL Psychic",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Celestial": {
+    "damage": "Avenger: 2d6+2+SL Radiant; Defender: 1d10+3+SL Radiant",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Elemental|TCE": {
+    "damage": "Spirit: 1d10+4+SL Fire (Fire) or Bludgeoning (others)",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Elemental|XPHB": {
+    "damage": "Spirit: 1d10+4+SL; Earth Bludgeoning, Water Cold, Air Lightning, Fire Fire",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Fey|TCE": {
+    "damage": "Spirit: 1d6+3+SL Piercing +1d6 Force/hit",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Fey|XPHB": {
+    "damage": "Spirit: 2d6+3+SL Force/hit",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Fiend": {
+    "damage": "Demon: 1d12+3+SL Necrotic; Yugoloth: 1d8+3+SL Slashing; Devil: 2d6+3+SL Fire",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Shadowspawn": {
+    "damage": "Spirit: 1d12+3+SL Cold/hit",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Undead": {
+    "damage": "Ghostly: 1d8+3+SL Necrotic; Skeletal: 2d4+3+SL Necrotic; Putrid: 1d6+3+SL Slashing",
+    "scaling": "Spirit attacks: floor(SL/2)"
+  },
+  "Summon Draconic Spirit": {
+    "damage": "Rend: 1d6+4+SL Piercing; breath: 2d6 chosen type",
+    "area": "Breath: 30-ft cone",
+    "scaling": "Spirit: floor(SL/2) Rends + breath"
+  },
+  "Summon Dragon": {
+    "damage": "Rend: 1d6+4+SL Piercing; breath: 2d6 chosen type",
+    "area": "Breath: 30-ft cone",
+    "scaling": "Spirit: floor(SL/2) Rends + breath"
+  },
+  "Acid Splash|PHB": {
+    "area": "1 target, or 2 targets within 5 ft of each other"
+  },
+  "Acid Splash|XPHB": {
+    "area": "5-ft-radius sphere"
+  },
+  "Bones of the Earth": {
+    "area": "6 pillars, each 5-ft diameter × 30-ft high; rubble 10-ft radius"
+  },
+  "Branding Smite": {
+    "area": "Target glows: 5-ft dim light"
+  },
+  "Shining Smite": {
+    "area": "Target glows: 5-ft bright light"
+  },
+  "Conjure Elemental|PHB": {
+    "area": "Summoning space: 10-ft cube"
+  },
+  "Creation": {
+    "area": "Object: up to 5-ft cube",
+    "scaling": "+5 ft to cube side/SL above 5"
+  },
+  "Dancing Lights": {
+    "area": "Each light: 10-ft dim radius"
+  },
+  "Druidcraft": {
+    "area": "Extinguish flames: 5-ft cube"
+  },
+  "Dust Devil": {
+    "area": "5-ft cube; damage within 5 ft of devil"
+  },
+  "Fabricate": {
+    "area": "Material: 10-ft cube; metal/stone/minerals: 5-ft cube"
+  },
+  "Fire Shield": {
+    "area": "Light: 10-ft bright +10-ft dim"
+  },
+  "Flame Blade": {
+    "area": "Light: 10-ft bright +10-ft dim"
+  },
+  "Fount of Moonlight": {
+    "area": "Light: 20-ft bright +20-ft dim"
+  },
+  "Holy Star of Mystra": {
+    "damage": "4d10+SC Force/Radiant per bolt",
+    "area": "Light: 5-ft bright +5-ft dim"
+  },
+  "Immolation": {
+    "area": "Target light: 30-ft bright +30-ft dim"
+  },
+  "Light": {
+    "area": "Light: 20-ft bright +20-ft dim"
+  },
+  "Major Image": {
+    "area": "Image: up to 20-ft cube"
+  },
+  "Minor Illusion": {
+    "area": "Object image: up to 5-ft cube"
+  },
+  "Mordenkainen's Magnificent Mansion": {
+    "area": "Interior: up to 50 contiguous 10-ft cubes"
+  },
+  "Phantasmal Force": {
+    "area": "Illusion: up to 10-ft cube"
+  },
+  "Plant Growth": {
+    "area": "Overgrowth: 100-ft radius; enrichment: half-mile radius"
+  },
+  "Produce Flame|PHB": {
+    "area": "Light: 10-ft bright +10-ft dim"
+  },
+  "Produce Flame|XPHB": {
+    "area": "Light: 20-ft bright +20-ft dim"
+  },
+  "Programmed Illusion": {
+    "area": "Image: up to 30-ft cube"
+  },
+  "Silent Image": {
+    "area": "Image: up to 15-ft cube"
+  },
+  "Spirit Lantern": {
+    "area": "Light: 60-ft bright +60-ft dim"
+  },
+  "Starry Wisp": {
+    "area": "Target glows: 10-ft dim light"
+  },
+  "Teleport|PHB": {
+    "area": "1 object: fits 10-ft cube; or caster +8 creatures"
+  },
+  "Teleportation Circle": {
+    "area": "Portal: 5-ft radius"
+  }
+}

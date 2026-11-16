@@ -1,6 +1,7 @@
 'use strict';
 /* Original short reminders, not copied source entries. Full rules and personal notes stay separate. */
 var CharacterSpellSummaries=(()=>{
+ const EffectData=typeof CharacterSpellEffectData!=='undefined'?CharacterSpellEffectData:require('./character-spell-effect-data');
  const descriptions=Object.fromEntries(`
 Acid Splash|Splash acid over nearby targets.
 Blade Ward|Protect yourself against weapon attacks.
@@ -593,6 +594,7 @@ Vision of Elapsing Eons|An aging illusion deals Psychic damage and can Paralyze 
 Wail of the Banshee|A lethal scream kills low-HP targets or deals Psychic damage and Deafens.
 `.trim().split('\n').map(line=>line.split('|'))));
  const revised={
+  "Hunter's Mark":'Mark prey for extra Force damage on attack-roll hits and easier tracking.',
   'Blade Ward':'Attackers subtract 1d4 from attack rolls against you while the spell lasts.',
   Resistance:'Choose a damage type; reduce that damage by 1d4, at most once per turn.',
   Friends:'A humanoid can be Charmed on a failed WIS save; it later knows it was charmed.',
@@ -628,12 +630,21 @@ Wail of the Banshee|A lethal scream kills low-HP targets or deals Psychic damage
   'Inflict Wounds':'Melee spell attack: deal 3d10 Necrotic damage on a hit.'
  };
  const nameOf=s=>String(s?.name||'').replace(/\s*\[(?:2014|2024)\]\s*$/,'');
- function get(spell){const name=nameOf(spell),edition=spell?.edition||(/\[(2024)\]/.test(spell?.name||'')?'2024':'2014');const variants=edition==='2024'?revised:legacy;return Object.hasOwn(variants,name)?variants[name]:Object.hasOwn(descriptions,name)?descriptions[name]:'';}
+ function facts(spell){
+  const name=nameOf(spell),edition=spell?.edition||(/\[2024\]/.test(spell?.name||'')?'2024':'2014'),id=spell?.id||spell?.catalogId||EffectData.names[edition+':'+name];
+  return Object.hasOwn(EffectData.spells,id||'')?EffectData.spells[id]:{};
+ }
+ function factText(spell){const f=facts(spell);return[f.damage,f.area,f.scaling].filter(Boolean).join('; ');}
+ function get(spell){
+  const name=nameOf(spell),edition=spell?.edition||(/\[2024\]/.test(spell?.name||'')?'2024':'2014'),variants=edition==='2024'?revised:legacy;
+  const text=Object.hasOwn(variants,name)?variants[name]:Object.hasOwn(descriptions,name)?descriptions[name]:'';
+  if(!text)return'';const compact=value=>value.toLowerCase().replace(/[\s-]/g,''),f=facts(spell),parts=[f.damage,f.area,f.scaling].filter(value=>value&&!compact(text).includes(compact(value)));if(!parts.length)return text;const detail=parts.join('; ');return /\d+d\d+/.test(text)?text+' '+detail+'.':detail+'. '+text;
+ }
  function forRow(spell,catalog){const own=String(spell?.shortDescription||'').trim();if(own)return own;const text=get(catalog||spell);if(text)return text;const notes=String(spell?.notes||'').trim().replace(/\s+/g,' ');return notes?notes.length<=130?notes:notes.slice(0,127).replace(/\s+\S*$/,'')+'…':'Personal spell; add a short description.';}
  const schools={Abjuration:'Abj.',Conjuration:'Conj.',Divination:'Div.',Enchantment:'Ench.',Evocation:'Evoc.',Illusion:'Ill.',Necromancy:'Necro.',Transmutation:'Trans.'};
  function compact(key,value){const text=String(value??'');if(key==='school')return Object.hasOwn(schools,text)?schools[text]:text;if(key==='save')return text.replace(/STRENGTH/gi,'STR').replace(/DEXTERITY/gi,'DEX').replace(/CONSTITUTION/gi,'CON').replace(/INTELLIGENCE/gi,'INT').replace(/WISDOM/gi,'WIS').replace(/CHARISMA/gi,'CHA');if(key==='time')return text.split(' — ')[0].replace(/^1 bonus action$/i,'Bonus').replace(/^1 reaction$/i,'React.').replace(/^1 action$/i,'Action').replace(/minutes?/gi,'min').replace(/hours?/gi,'hr');if(['duration','range'].includes(key))return text.replace(/Concentration,\s*/gi,'C: ').replace(/feet/gi,'ft').replace(/minutes?/gi,'min').replace(/hours?/gi,'hr').replace(/instant(?:aneous)?/gi,'Instant').replace(/self/gi,'Self').replace(/touch/gi,'Touch');return text;}
  const levelLabel=level=>!Number(level)?'Cantrips':level===1?'1st-level spells':level===2?'2nd-level spells':level===3?'3rd-level spells':level+'th-level spells';
- return{get,forRow,compact,levelLabel,descriptions,revised,legacy};
+ return{get,forRow,facts,factText,compact,levelLabel,descriptions,revised,legacy};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterSpellSummaries=CharacterSpellSummaries;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterSpellSummaries;

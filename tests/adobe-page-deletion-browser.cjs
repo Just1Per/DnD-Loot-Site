@@ -38,6 +38,9 @@ const P=require('../js/modules/character-adobe-stack-plan');
   await blank.locator('[data-paper-options]').click();await menu.getByRole('menuitem',{name:/Delete this page/}).click();await approve();await blank.waitFor({state:'detached'});
   assert.equal(await page.evaluate(()=>sheetSession.data.adobe.pageLayout.added.some(p=>p.page==='template-blank')),false);
   assert.equal(await page.evaluate(()=>sheetSession.data.adobe.pageLayout.deleted.some(p=>p.page==='template-blank')),true);
+  // Restoring the last removed page must clear the deletion list, rather than merge its old entry back.
+  await open();await manager.locator('[data-pages-tab="add"]').click();await manager.getByRole('button',{name:'Add Blank page again',exact:true}).click();await blank.locator('.paper').waitFor({state:'visible'});assert.equal(await page.evaluate(()=>sheetSession.data.adobe.pageLayout.deleted?.length||0),0);
+  await blank.locator('[data-paper-options]').click();await menu.getByRole('menuitem',{name:/Delete this page/}).click();await approve();await blank.waitFor({state:'detached'});
   // Exact companion/caster/note instances are independent. A hidden page is deletable too.
   await open();assert.equal(await manager.getByRole('switch',{name:'Show Blank page',exact:true}).count(),0);
   await removeButton('Companion · REMOVED_COMPANION_MARKER').click();await approve();await removeButton('Companion · REMOVED_COMPANION_MARKER').waitFor({state:'detached'});

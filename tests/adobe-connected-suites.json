@@ -87,6 +87,7 @@
     "adobe-pinned-legacy-browser.cjs",
     "adobe-pinned-items-browser.cjs",
     "adobe-species-descriptions-browser.cjs",
-    "adobe-page-deletion-browser.cjs"
+    "adobe-page-deletion-browser.cjs",
+    "adobe-additional-spells-browser.cjs"
   ]
 }
