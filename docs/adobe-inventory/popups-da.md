@@ -2,7 +2,7 @@
 
 Genereret med `node scripts/audit-adobe-popups.cjs`. Dette er en statisk kortlægning, ikke et løfte om fuld funktionel paritet. Gentagne IDs er samme popup-familie. Testreferencer betyder, at testen nævner id’et; de er ikke i sig selv et bestået testresultat.
 
-Der er 47 registrerede popup-familier og 29 editor-routes.
+Der er 48 registrerede popup-familier og 29 editor-routes.
 
 ## Popup-familier
 
@@ -10,6 +10,7 @@ Der er 47 registrerede popup-familier og 29 editor-routes.
 | --- | --- | --- | --- | --- |
 | sheetAttackPicker | shared-dialog | Add/edit attack fra Combat | Bevar action-renderer og dens handlers; åbnes også fra bridge. | [character-action-ui.js:6](../../js/modules/character-action-ui.js#L6) |
 | adobeAbilityDialog | adobe-dialog | Ability-/skill-felter eller Special features | Eget draft; bruger fælles session/form-sync. | [character-adobe-ability-ui.js:7](../../js/modules/character-adobe-ability-ui.js#L7) |
+| adobeAdditionalSpellDialog | adobe-dialog | Add other spells ved spell-ark, spell sources og Special features | Eget katalog-/håndskrevet draft; uafhængig additional-kilde bevarer class-grænser og fælles private spell-data. | [character-adobe-additional-spell-ui.js:12](../../js/modules/character-adobe-additional-spell-ui.js#L12) |
 | adobeAttackChoiceMenu | adobe-menu | Attack name-felt | Kan åbne spellvalg og attack row-menu. | [character-adobe-attack-menu.js:15](../../js/modules/character-adobe-attack-menu.js#L15) |
 | adobeBackgroundChoiceDialog | adobe-menu | Baggrundens traits/ideals/bonds/flaws og Background Menu | Forslag og egne tekster; ingen flytning af Standard-panel. | [character-adobe-background-choice-ui.js:16](../../js/modules/character-adobe-background-choice-ui.js#L16) |
 | adobeBackgroundFeatureDialog | adobe-dialog | Background feature → Custom | Eget navn/tekst; bevarer øvrige baggrundsvalg. | [character-adobe-background-feature-ui.js:5](../../js/modules/character-adobe-background-feature-ui.js#L5) |
@@ -23,12 +24,12 @@ Der er 47 registrerede popup-familier og 29 editor-routes.
 | adobeSpellDialog | adobe-dialog | Choose spells, spell-felt/knap, Special features | Native selection draft; bruger casting-engine og fælles spell-rendering. | [character-adobe-spell-ui.js:12](../../js/modules/character-adobe-spell-ui.js#L12) |
 | adobeRaceSpellDialog | adobe-dialog | Generate spell sheet → Race spells | Race-cantrip/ability-valg; fælles session. | [character-adobe-spell-ui.js:82](../../js/modules/character-adobe-spell-ui.js#L82) |
 | adobeSpellSourcesDialog | adobe-dialog | Special features → Generate spell sheet | Viderestiller til class/race/feat-spellvalg. | [character-adobe-spell-ui.js:101](../../js/modules/character-adobe-spell-ui.js#L101) |
-| adobePagesDialog | adobe-dialog | Manage pages / Add pages | Valg af spell-, companion-, notes- og andre sider. | [character-adobe-stack-ui.js:106](../../js/modules/character-adobe-stack-ui.js#L106) |
-| adobePaperZoomMenu | adobe-menu | Forstørrelsesglas på arket | Bruger fortsat intern #adobeZoom-selector; den skjulte kontrol skal bevares indtil afkobling. | [character-adobe-stack-ui.js:162](../../js/modules/character-adobe-stack-ui.js#L162) |
-| adobePageActionsMenu | adobe-menu | Page options ved zoom/print → Hide this page / Manage pages | Skjuler en bestemt side uden at slette data; genopretning via Undo eller sideoversigten. | [character-adobe-stack-ui.js:163](../../js/modules/character-adobe-stack-ui.js#L163) |
+| adobePagesDialog | adobe-dialog | Manage pages / Add pages | Valg af spell-, companion-, notes- og andre sider. | [character-adobe-stack-ui.js:107](../../js/modules/character-adobe-stack-ui.js#L107) |
+| adobePaperZoomMenu | adobe-menu | Forstørrelsesglas på arket | Bruger fortsat intern #adobeZoom-selector; den skjulte kontrol skal bevares indtil afkobling. | [character-adobe-stack-ui.js:163](../../js/modules/character-adobe-stack-ui.js#L163) |
+| adobePageActionsMenu | adobe-menu | Page options ved zoom/print → Hide this page / Manage pages | Skjuler en bestemt side uden at slette data; genopretning via Undo eller sideoversigten. | [character-adobe-stack-ui.js:164](../../js/modules/character-adobe-stack-ui.js#L164) |
 | adobeSpecialFeaturesMenu | adobe-menu | Show extra features | Blander native routes og shared bridges; se routetabel. | [character-adobe-view.js:152](../../js/modules/character-adobe-view.js#L152) |
-| adobeSharedEditor | moves-standard-body | Alle aktive bridge-routes i routetabellen | Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning. | [character-adobe-view.js:216](../../js/modules/character-adobe-view.js#L216) |
-| adobeNotesOptions | adobe-dialog | Notes.Options | Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge. | [character-adobe-view.js:319](../../js/modules/character-adobe-view.js#L319) |
+| adobeSharedEditor | moves-standard-body | Alle aktive bridge-routes i routetabellen | Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning. | [character-adobe-view.js:217](../../js/modules/character-adobe-view.js#L217) |
+| adobeNotesOptions | adobe-dialog | Notes.Options | Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge. | [character-adobe-view.js:320](../../js/modules/character-adobe-view.js#L320) |
 | sheetFeatInformation | shared-dialog | Feat information fra native featvalg | Selvstændig læsning, men modulet indeholder også katalog/resource-renderere. | [character-catalog-ui.js:99](../../js/modules/character-catalog-ui.js#L99) |
 | adobeCompanionEquipmentDialog | adobe-dialog | Companion equipment arrows, transfer destination og companion-card controls | Native carrier/row editor; delt private inventory og carrying-engine. | [character-companion-equipment-ui.js:15](../../js/modules/character-companion-equipment-ui.js#L15) |
 | sheetCompanionHPOptions | shared-dialog | Companion Set Max HP | Egen dialog; afhænger af companion state, ikke en flyttet popup-body. | [character-companion-hp-ui.js:13](../../js/modules/character-companion-hp-ui.js#L13) |
@@ -114,20 +115,20 @@ sharedCommand klikker stadig på kontroller i #characterSheetForm (bl.a. spell p
 | --- | --- |
 | row.descriptor.command | [character-adobe-view.js:113](../../js/modules/character-adobe-view.js#L113) |
 | id | [character-adobe-view.js:151](../../js/modules/character-adobe-view.js#L151) |
-| notes | [character-adobe-view.js:178](../../js/modules/character-adobe-view.js#L178) |
-| companion | [character-adobe-view.js:178](../../js/modules/character-adobe-view.js#L178) |
-| companion | [character-adobe-view.js:178](../../js/modules/character-adobe-view.js#L178) |
-| experience | [character-adobe-view.js:178](../../js/modules/character-adobe-view.js#L178) |
-| story | [character-adobe-view.js:178](../../js/modules/character-adobe-view.js#L178) |
-| feats | [character-adobe-view.js:178](../../js/modules/character-adobe-view.js#L178) |
-| cmd | [character-adobe-view.js:178](../../js/modules/character-adobe-view.js#L178) |
-| conditions | [character-adobe-view.js:220](../../js/modules/character-adobe-view.js#L220) |
-| notes | [character-adobe-view.js:324](../../js/modules/character-adobe-view.js#L324) |
-| spells | [character-adobe-view.js:402](../../js/modules/character-adobe-view.js#L402) |
-| companion | [character-adobe-view.js:407](../../js/modules/character-adobe-view.js#L407) |
-| editorChoice.value | [character-adobe-view.js:408](../../js/modules/character-adobe-view.js#L408) |
-| st.editor | [character-adobe-view.js:418](../../js/modules/character-adobe-view.js#L418) |
-| key | [character-adobe-view.js:443](../../js/modules/character-adobe-view.js#L443) |
+| notes | [character-adobe-view.js:179](../../js/modules/character-adobe-view.js#L179) |
+| companion | [character-adobe-view.js:179](../../js/modules/character-adobe-view.js#L179) |
+| companion | [character-adobe-view.js:179](../../js/modules/character-adobe-view.js#L179) |
+| experience | [character-adobe-view.js:179](../../js/modules/character-adobe-view.js#L179) |
+| story | [character-adobe-view.js:179](../../js/modules/character-adobe-view.js#L179) |
+| feats | [character-adobe-view.js:179](../../js/modules/character-adobe-view.js#L179) |
+| cmd | [character-adobe-view.js:179](../../js/modules/character-adobe-view.js#L179) |
+| conditions | [character-adobe-view.js:221](../../js/modules/character-adobe-view.js#L221) |
+| notes | [character-adobe-view.js:325](../../js/modules/character-adobe-view.js#L325) |
+| spells | [character-adobe-view.js:403](../../js/modules/character-adobe-view.js#L403) |
+| companion | [character-adobe-view.js:408](../../js/modules/character-adobe-view.js#L408) |
+| editorChoice.value | [character-adobe-view.js:409](../../js/modules/character-adobe-view.js#L409) |
+| st.editor | [character-adobe-view.js:419](../../js/modules/character-adobe-view.js#L419) |
+| key | [character-adobe-view.js:449](../../js/modules/character-adobe-view.js#L449) |
 | notes | [character-adventure-log-ui.js:6](../../js/modules/character-adventure-log-ui.js#L6) |
 | itemResources | [character-item-resource-ui.js:49](../../js/modules/character-item-resource-ui.js#L49) |
 | attacks | [character-named-equipment-ui.js:82](../../js/modules/character-named-equipment-ui.js#L82) |

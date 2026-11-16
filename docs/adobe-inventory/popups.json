@@ -28,6 +28,18 @@
       ]
     },
     {
+      "id": "adobeAdditionalSpellDialog",
+      "file": "js/modules/character-adobe-additional-spell-ui.js",
+      "line": 12,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Add other spells ved spell-ark, spell sources og Special features",
+      "notes": "Eget katalog-/håndskrevet draft; uafhængig additional-kilde bevarer class-grænser og fælles private spell-data.",
+      "testReferences": [
+        "adobe-additional-spells-browser.cjs"
+      ]
+    },
+    {
       "id": "adobeAttackChoiceMenu",
       "file": "js/modules/character-adobe-attack-menu.js",
       "line": 15,
@@ -176,6 +188,7 @@
       "entry": "Read spell list ved spell-arkets overskrift",
       "notes": "Selvstændig læseliste med level-grupper, korte beskrivelser og udfoldede fulde noter; gemmer ikke separat spell-data.",
       "testReferences": [
+        "adobe-additional-spells-browser.cjs",
         "adobe-spell-list-browser.cjs"
       ]
     },
@@ -188,6 +201,7 @@
       "entry": "Choose spells, spell-felt/knap, Special features",
       "notes": "Native selection draft; bruger casting-engine og fælles spell-rendering.",
       "testReferences": [
+        "adobe-additional-spells-browser.cjs",
         "adobe-direct-preparation-browser.cjs",
         "adobe-native-spells-browser.cjs",
         "adobe-source-generator-browser.cjs"
@@ -214,6 +228,7 @@
       "entry": "Special features → Generate spell sheet",
       "notes": "Viderestiller til class/race/feat-spellvalg.",
       "testReferences": [
+        "adobe-additional-spells-browser.cjs",
         "adobe-source-generator-browser.cjs",
         "adobe-spell-sources-browser.cjs"
       ]
@@ -221,7 +236,7 @@
     {
       "id": "adobePagesDialog",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 106,
+      "line": 107,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Manage pages / Add pages",
@@ -236,7 +251,7 @@
     {
       "id": "adobePaperZoomMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 162,
+      "line": 163,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Forstørrelsesglas på arket",
@@ -248,12 +263,13 @@
     {
       "id": "adobePageActionsMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 163,
+      "line": 164,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Page options ved zoom/print → Hide this page / Manage pages",
       "notes": "Skjuler en bestemt side uden at slette data; genopretning via Undo eller sideoversigten.",
       "testReferences": [
+        "adobe-additional-spells-browser.cjs",
         "adobe-page-deletion-browser.cjs",
         "adobe-page-layout-browser.cjs"
       ]
@@ -274,7 +290,7 @@
     {
       "id": "adobeSharedEditor",
       "file": "js/modules/character-adobe-view.js",
-      "line": 216,
+      "line": 217,
       "kind": "dialog",
       "category": "moves-standard-body",
       "entry": "Alle aktive bridge-routes i routetabellen",
@@ -312,7 +328,7 @@
     {
       "id": "adobeNotesOptions",
       "file": "js/modules/character-adobe-view.js",
-      "line": 319,
+      "line": 320,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Notes.Options",
@@ -938,85 +954,85 @@
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 178,
+      "line": 179,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 178,
+      "line": 179,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 178,
+      "line": 179,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 178,
+      "line": 179,
       "command": "experience",
       "expression": "'experience'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 178,
+      "line": 179,
       "command": "story",
       "expression": "'story'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 178,
+      "line": 179,
       "command": "feats",
       "expression": "'feats'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 178,
+      "line": 179,
       "command": "dynamic",
       "expression": "cmd"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 220,
+      "line": 221,
       "command": "conditions",
       "expression": "'conditions'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 324,
+      "line": 325,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 402,
+      "line": 403,
       "command": "spells",
       "expression": "'spells'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 407,
+      "line": 408,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 408,
+      "line": 409,
       "command": "dynamic",
       "expression": "editorChoice.value"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 418,
+      "line": 419,
       "command": "dynamic",
       "expression": "st.editor"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 443,
+      "line": 449,
       "command": "dynamic",
       "expression": "key"
     },
@@ -1090,17 +1106,17 @@
   "sharedCommands": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 178,
+      "line": 179,
       "expression": "'[data-combat-recover=\"'+(source.id==='SR'?'short':'long')+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 258,
+      "line": 259,
       "expression": "'[data-generated-prepare=\"'+entry.i+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 407,
+      "line": 408,
       "expression": "'[data-wild-end]'"
     }
   ]

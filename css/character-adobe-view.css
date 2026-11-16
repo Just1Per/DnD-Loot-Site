@@ -70,9 +70,9 @@
 @media(max-width:760px){.adobe-continuous-sheet{scroll-margin-top:calc(var(--adobe-header-offset,144px) + 76px)}}
 
 .adobe-continuous-sheet[data-selected]>.adobe-continuous-heading{background:#eee1c8;box-shadow:inset 3px 0 #6b2b25}
-.adobe-continuous-heading:has([data-stack-spells]){display:flex;align-items:center;justify-content:space-between;gap:12px}
-[data-stack-spells]{flex-shrink:0;min-height:38px;padding:7px 12px;border:1px solid #9d805a;border-radius:5px;background:#fffaf1;color:#5c1d1d;font:13px Arial,sans-serif;cursor:pointer}
-[data-stack-spells]:focus-visible{outline:3px solid #2169a8;outline-offset:2px}
+.adobe-continuous-heading:has([data-stack-spells]){display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+:is([data-stack-spells],[data-stack-spell-list],[data-stack-spell-sources],[data-stack-additional-spells]){flex-shrink:0;min-height:44px;max-width:100%;padding:7px 12px;border:1px solid #9d805a;border-radius:5px;background:#fffaf1;color:#5c1d1d;font:13px Arial,sans-serif;cursor:pointer}
+:is([data-stack-spells],[data-stack-spell-list],[data-stack-spell-sources],[data-stack-additional-spells]):focus-visible{outline:3px solid #2169a8;outline-offset:2px}
 :host([data-adobe-layout="continuous"]) #adobeChooseSpells{display:none!important}
 
 /* One destination per source page. Section links are intentionally absent. */

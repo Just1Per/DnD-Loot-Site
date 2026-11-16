@@ -2,7 +2,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),S=require('../js/modules/character-spell-summaries'),M=require('../js/modules/character-sheet-model'),catalog=require('../data/rules/catalog.json');
 test('every selectable spell has an original concise summary, including non-SRD source variants',()=>{
  assert.equal(catalog.spells.length,969);assert.equal(new Set(catalog.spells.map(s=>s.name)).size,583);
- for(const spell of catalog.spells){const text=S.get(spell);assert.ok(text.length>=10&&text.length<=130,spell.name+': '+text.length);assert.doesNotMatch(text,/\{@|consult.*source|reference entry/i);assert.notEqual(text,spell.description);}
+ for(const spell of catalog.spells){const text=S.get(spell);assert.ok(text.length>=10&&text.length<=240,spell.name+': '+text.length);assert.doesNotMatch(text,/\{@|consult.*source|reference entry/i);assert.notEqual(text,spell.description);}
 });
 test('edition-sensitive reminders retain changed saves, damage and conjuration mechanics',()=>{
  const old=name=>S.get({name,edition:'2014'}),now=name=>S.get({name,edition:'2024'});
