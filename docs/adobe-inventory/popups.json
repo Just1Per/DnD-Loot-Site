@@ -221,13 +221,14 @@
     {
       "id": "adobePagesDialog",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 67,
+      "line": 105,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Manage pages / Add pages",
       "notes": "Valg af spell-, companion-, notes- og andre sider.",
       "testReferences": [
         "adobe-page-choices-browser.cjs",
+        "adobe-page-deletion-browser.cjs",
         "adobe-page-layout-browser.cjs",
         "adobe-paper-controls-browser.cjs"
       ]
@@ -235,7 +236,7 @@
     {
       "id": "adobePaperZoomMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 106,
+      "line": 161,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Forstørrelsesglas på arket",
@@ -247,12 +248,13 @@
     {
       "id": "adobePageActionsMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 107,
+      "line": 162,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Page options ved zoom/print → Hide this page / Manage pages",
       "notes": "Skjuler en bestemt side uden at slette data; genopretning via Undo eller sideoversigten.",
       "testReferences": [
+        "adobe-page-deletion-browser.cjs",
         "adobe-page-layout-browser.cjs"
       ]
     },

@@ -1225,3 +1225,16 @@ dialog.adobe-flyout-host{position:fixed!important;inset:0!important;width:100vw!
 
 #adobeItemContainerDialog>footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
 #adobeItemContainerDialog [data-container-status]{flex:1;min-width:160px;margin:0;font-size:13px}
+
+/* Page deletion sits beside the visibility label, so it never flips the switch. */
+.adobe-page-visibility-item{display:flex;align-items:center;gap:8px;padding-right:10px}
+.adobe-page-visibility-item+.adobe-page-visibility-item{border-top:1px solid #eee4d4}
+.adobe-page-visibility-item .adobe-page-visibility-row{flex:1;min-width:0;gap:12px}
+.adobe-pages-dialog .adobe-page-delete{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex-shrink:0;min-width:44px!important;min-height:44px!important;padding:8px!important;color:#8b302d!important;background:#fffaf7!important;border:1px solid #d8b9b0!important}
+.adobe-pages-dialog .adobe-page-delete:hover:not(:disabled){background:#f8e9e4!important;border-color:#a3463d!important}
+.adobe-pages-dialog .adobe-page-delete:disabled{opacity:.45;cursor:default}
+[data-pages-deleted-section]{padding:0 0 18px;border-bottom:1px solid #ddcdb5;margin-bottom:18px}
+[data-pages-deleted] article{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
+[data-pages-deleted] h4{margin:0;min-width:0;overflow-wrap:anywhere}
+[data-pages-deleted] button{flex-shrink:0;min-height:44px!important}
+@media(max-width:480px){.adobe-page-visibility-item{gap:2px;padding-right:8px}.adobe-page-visibility-item .adobe-page-visibility-row{padding:12px 8px;gap:8px}.adobe-page-delete span{display:none}[data-pages-deleted] article{flex-wrap:wrap}}

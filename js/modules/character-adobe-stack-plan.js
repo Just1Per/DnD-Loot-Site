@@ -18,15 +18,30 @@ var CharacterAdobeStackPlan=(()=>{
  }
  function normalizeLayout(raw){
   const list=(value,max,optional=false)=>{const out=[],seen=new Set();for(const entry of Array.isArray(value)?value.slice(0,max):[]){const plan=cleanPlan(entry);if(!plan||optional&&(!plan.page.startsWith('template-')||(plan.extraPage||0)>29||(plan.spellPage||0)>29)||seen.has(key(plan)))continue;seen.add(key(plan));out.push(plan);}return out;};
-  return{hidden:list(raw?.hidden,400),added:list(raw?.added,40,true),includeHiddenPrint:raw?.includeHiddenPrint===true};
+  const deleted=list(raw?.deleted,400),removed=new Set(deleted.map(key));
+  return{hidden:list(raw?.hidden,400).filter(p=>!removed.has(key(p))),added:list(raw?.added,40,true).filter(p=>!removed.has(key(p))),includeHiddenPrint:raw?.includeHiddenPrint===true,...(deleted.length?{deleted}:{})};
+ }
+ function available(plans,raw){
+  const removed=new Set(normalizeLayout(raw).deleted?.map(key)||[]),editable=plans.filter(p=>!p.resourceNotes&&!p.hitDiceOverflow);
+  // Imported/stale layouts must still leave one editable destination available.
+  if(editable.length&&editable.every(p=>removed.has(key(p))))removed.delete(key(editable[0]));
+  return plans.filter(p=>p.resourceNotes||p.hitDiceOverflow||!removed.has(key(p)));
+ }
+ function remove(raw,plan){
+  const clean=cleanPlan(plan);if(!clean||plan.resourceNotes||plan.hitDiceOverflow)throw Error('Choose an editable sheet page.');
+  const layout=normalizeLayout(raw),deleted=layout.deleted||[],id=key(clean);
+  if(!deleted.some(p=>key(p)===id)){if(deleted.length>=400)throw Error('The removed-page list is full. Add a removed page again before removing another.');deleted.push(clean);}
+  return normalizeLayout({...layout,deleted});
+ }
+ function restore(raw,plan){
+  const clean=cleanPlan(plan);if(!clean)throw Error('Choose an available sheet page.');const id=key(clean),layout=normalizeLayout(raw);
+  return normalizeLayout({...layout,deleted:(layout.deleted||[]).filter(p=>key(p)!==id),hidden:layout.hidden.filter(p=>key(p)!==id)});
  }
  function visible(plans,raw,{printing=false}={}){
-  const layout=normalizeLayout(raw);if(printing&&layout.includeHiddenPrint)return [...plans];
-  const hidden=new Set(layout.hidden.map(key)),editable=plans.filter(p=>!p.resourceNotes&&!p.hitDiceOverflow);
-  // Even a stale or imported layout must leave a destination available.
+  const layout=normalizeLayout(raw),all=available(plans,layout),hidden=new Set(printing&&layout.includeHiddenPrint?[]:layout.hidden.map(key)),editable=all.filter(p=>!p.resourceNotes&&!p.hitDiceOverflow);
   if(editable.length&&!editable.some(p=>!hidden.has(key(p))))hidden.delete(key(editable[0]));
-  const mainVisible=!hidden.has(key({page:'page-1'})),resourceVisible=mainVisible||editable.some(p=>p.page==='template-ASoverflow'&&!hidden.has(key(p)));
-  return plans.filter(p=>p.resourceNotes?!printing||resourceVisible:p.hitDiceOverflow?!printing||mainVisible:!hidden.has(key(p)));
+  const mainVisible=editable.some(p=>p.page==='page-1'&&!hidden.has(key(p))),resourceVisible=mainVisible||editable.some(p=>p.page==='template-ASoverflow'&&!hidden.has(key(p)));
+  return all.filter(p=>p.resourceNotes?!printing||resourceVisible:p.hitDiceOverflow?!printing||mainVisible:!hidden.has(key(p)));
  }
  function merge(plans,extra){const seen=new Set(plans.map(key)),out=[...plans,...extra.filter(plan=>{const id=key(plan);if(seen.has(id))return false;seen.add(id);return true;})];if(out.length>400)throw Error('This character needs more than 400 connected pages.');return out;}
  function create(plans,{titles={},className=id=>id,companions=[]}={}){
@@ -37,6 +52,6 @@ var CharacterAdobeStackPlan=(()=>{
  function shortcuts(pages){const first=id=>pages.find(row=>row.plan.page===id),out=[];const add=(id,label,page,field,button)=>{const target=first(page);if(target)out.push({id,label,key:target.key,field,button});};
   add('character','Character','page-1','PC Name');add('abilities','Abilities','page-1','Str');add('skills','Skills','page-1','Acr');add('attacks','Attacks','page-1','Attack.1.Weapon Selection');add('features','Features','page-2','Class Features');add('inventory','Inventory','page-2','Adventuring Gear Row 1');add('feats','Feats & magic items','page-3','Feat Name 1');add('background','Background','page-4','Character History');add('notes','Notes','page-5','Notes.Left');add('slots','Spell slots','template-SSfront',null,'Image.SpellSlots.Checkboxes.1');add('spells','Spells','template-SSfront','spells.name.1');return out;
  }
- return{key,create,shortcuts,merge,cleanPlan,normalizeLayout,visible};
+ return{key,create,shortcuts,merge,cleanPlan,normalizeLayout,available,remove,restore,visible};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterAdobeStackPlan;
