@@ -1,0 +1,2907 @@
+{
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "scope": "Descriptions for every selectable species. Named options are explained within their parent feature; nested independent spell grants are included separately. This is not an automation audit.",
+  "beforeDefinition": "A named explanation requires the exact source feature heading followed by explanatory text. Paraphrased or differently labeled earlier text can be counted here; these counts do not mean every listed rule was wholly absent.",
+  "totals": {
+    "species": 105,
+    "sourceFeatures": 427,
+    "speciesWithMissingNamedExplanationBefore": 102,
+    "speciesWithCrossRaceReferenceBefore": 3,
+    "missingDescriptionsNow": 0
+  },
+  "species": [
+    {
+      "id": "dragonborn",
+      "name": "Dragonborn",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Dragonborn",
+          "source": "PHB",
+          "page": 32
+        }
+      ],
+      "sourceFeatures": [
+        "Draconic Ancestry",
+        "Breath Weapon",
+        "Damage Resistance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Damage Resistance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "hill-dwarf",
+      "name": "Dwarf — Hill dwarf",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Dwarf",
+          "source": "PHB",
+          "page": 18
+        },
+        {
+          "name": "Hill",
+          "source": "PHB",
+          "page": 20
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Dwarven Resilience",
+        "Dwarven Combat Training",
+        "Tool Proficiency",
+        "Stonecunning",
+        "Dwarven Toughness"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Dwarven Combat Training",
+        "Tool Proficiency"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "high-elf",
+      "name": "Elf — High elf",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "PHB",
+          "page": 21
+        },
+        {
+          "name": "High",
+          "source": "PHB",
+          "page": 23
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Keen Senses",
+        "Fey Ancestry",
+        "Trance",
+        "Elf Weapon Training",
+        "Cantrip",
+        "Extra Language"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Elf Weapon Training",
+        "Cantrip",
+        "Extra Language"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "lightfoot-halfling",
+      "name": "Halfling — Lightfoot",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Halfling",
+          "source": "PHB",
+          "page": 26
+        },
+        {
+          "name": "Lightfoot",
+          "source": "PHB",
+          "page": 28
+        }
+      ],
+      "sourceFeatures": [
+        "Lucky",
+        "Brave",
+        "Halfling Nimbleness",
+        "Naturally Stealthy"
+      ],
+      "missingExplicitExplanationBefore": [],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "human",
+      "name": "Human",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Human",
+          "source": "PHB",
+          "page": 29
+        }
+      ],
+      "sourceFeatures": [],
+      "missingExplicitExplanationBefore": [],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "rock-gnome",
+      "name": "Gnome — Rock gnome",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Gnome",
+          "source": "PHB",
+          "page": 35
+        },
+        {
+          "name": "Rock",
+          "source": "PHB",
+          "page": 37
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Gnome Cunning",
+        "Artificer's Lore",
+        "Tinker",
+        "Clockwork Toy",
+        "Fire Starter",
+        "Music Box"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Artificer's Lore",
+        "Clockwork Toy",
+        "Fire Starter",
+        "Music Box"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "half-elf",
+      "name": "Half-Elf",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Half-Elf",
+          "source": "PHB",
+          "page": 38
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Skill Versatility"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "half-orc",
+      "name": "Half-Orc",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Half-Orc",
+          "source": "PHB",
+          "page": 40
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Menacing",
+        "Relentless Endurance",
+        "Savage Attacks"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "tiefling",
+      "name": "Tiefling",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Tiefling",
+          "source": "PHB",
+          "page": 42
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Hellish Resistance",
+        "Infernal Legacy"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "mountain-dwarf",
+      "name": "Dwarf — Mountain dwarf",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Dwarf",
+          "source": "PHB",
+          "page": 18
+        },
+        {
+          "name": "Mountain",
+          "source": "PHB",
+          "page": 20
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Dwarven Resilience",
+        "Dwarven Combat Training",
+        "Tool Proficiency",
+        "Stonecunning",
+        "Dwarven Armor Training"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Dwarven Combat Training",
+        "Tool Proficiency",
+        "Dwarven Armor Training"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "wood-elf",
+      "name": "Elf — Wood elf",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "PHB",
+          "page": 21
+        },
+        {
+          "name": "Wood",
+          "source": "PHB",
+          "page": 24
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Keen Senses",
+        "Fey Ancestry",
+        "Trance",
+        "Elf Weapon Training",
+        "Fleet of Foot",
+        "Mask of the Wild"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Elf Weapon Training",
+        "Fleet of Foot",
+        "Mask of the Wild"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "drow",
+      "name": "Elf — Drow",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "PHB",
+          "page": 21
+        },
+        {
+          "name": "Drow",
+          "source": "PHB",
+          "page": 24
+        }
+      ],
+      "sourceFeatures": [
+        "Keen Senses",
+        "Fey Ancestry",
+        "Trance",
+        "Superior Darkvision",
+        "Sunlight Sensitivity",
+        "Drow Magic",
+        "Drow Weapon Training"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Superior Darkvision",
+        "Sunlight Sensitivity",
+        "Drow Magic",
+        "Drow Weapon Training"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "forest-gnome",
+      "name": "Gnome — Forest gnome",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Gnome",
+          "source": "PHB",
+          "page": 35
+        },
+        {
+          "name": "Forest",
+          "source": "PHB",
+          "page": 37
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Gnome Cunning",
+        "Natural Illusionist",
+        "Speak with Small Beasts"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Natural Illusionist",
+        "Speak with Small Beasts"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "stout-halfling",
+      "name": "Halfling — Stout",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Halfling",
+          "source": "PHB",
+          "page": 26
+        },
+        {
+          "name": "Stout",
+          "source": "PHB",
+          "page": 28
+        }
+      ],
+      "sourceFeatures": [
+        "Lucky",
+        "Brave",
+        "Halfling Nimbleness",
+        "Stout Resilience"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Stout Resilience"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "variant-human",
+      "name": "Human — Variant",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Human",
+          "source": "PHB",
+          "page": 29
+        },
+        {
+          "name": "Variant",
+          "source": "PHB",
+          "page": 31
+        }
+      ],
+      "sourceFeatures": [
+        "Skills",
+        "Feat"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Skills",
+        "Feat"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "aarakocra-mpmm",
+      "name": "Aarakocra",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Aarakocra",
+          "source": "MPMM",
+          "page": 5
+        }
+      ],
+      "sourceFeatures": [
+        "Flight",
+        "Talons",
+        "Wind Caller"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Flight",
+        "Wind Caller"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "aasimar-mpmm",
+      "name": "Aasimar",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Aasimar",
+          "source": "MPMM",
+          "page": 7
+        }
+      ],
+      "sourceFeatures": [
+        "Celestial Resistance",
+        "Darkvision",
+        "Healing Hands",
+        "Light Bearer",
+        "Celestial Revelation"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Celestial Resistance",
+        "Darkvision",
+        "Healing Hands",
+        "Light Bearer",
+        "Celestial Revelation"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "changeling-mpmm",
+      "name": "Changeling",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Changeling",
+          "source": "MPMM",
+          "page": 10
+        }
+      ],
+      "sourceFeatures": [
+        "Changeling Instincts",
+        "Shapechanger"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Changeling Instincts",
+        "Shapechanger"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "deep-gnome-mpmm",
+      "name": "Deep Gnome",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Deep Gnome",
+          "source": "MPMM",
+          "page": 11
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Gift of the Svirfneblin",
+        "Gnomish Magic Resistance",
+        "Svirfneblin Camouflage"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Gift of the Svirfneblin",
+        "Gnomish Magic Resistance",
+        "Svirfneblin Camouflage"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "duergar-mpmm",
+      "name": "Duergar",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Duergar",
+          "source": "MPMM",
+          "page": 12
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Duergar Magic",
+        "Dwarven Resilience",
+        "Psionic Fortitude"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Duergar Magic",
+        "Dwarven Resilience",
+        "Psionic Fortitude"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "eladrin-mpmm",
+      "name": "Eladrin",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Eladrin",
+          "source": "MPMM",
+          "page": 13
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fey Step",
+        "Keen Senses",
+        "Trance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fey Step",
+        "Keen Senses",
+        "Trance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "fairy-mpmm",
+      "name": "Fairy",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Fairy",
+          "source": "MPMM",
+          "page": 14
+        }
+      ],
+      "sourceFeatures": [
+        "Fairy Magic",
+        "Flight"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Fairy Magic",
+        "Flight"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "firbolg-mpmm",
+      "name": "Firbolg",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Firbolg",
+          "source": "MPMM",
+          "page": 15
+        }
+      ],
+      "sourceFeatures": [
+        "Firbolg Magic",
+        "Hidden Step",
+        "Powerful Build",
+        "Speech of Beast and Leaf"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Firbolg Magic",
+        "Hidden Step",
+        "Powerful Build",
+        "Speech of Beast and Leaf"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "genasi-air-mpmm",
+      "name": "Genasi — Air",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Genasi",
+          "source": "MPMM",
+          "page": 16
+        },
+        {
+          "name": "Air",
+          "source": "MPMM",
+          "page": 16
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Unending Breath",
+        "Lightning Resistance",
+        "Mingle with the Wind"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Unending Breath",
+        "Lightning Resistance",
+        "Mingle with the Wind"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "genasi-earth-mpmm",
+      "name": "Genasi — Earth",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Genasi",
+          "source": "MPMM",
+          "page": 16
+        },
+        {
+          "name": "Earth",
+          "source": "MPMM",
+          "page": 17
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Earth Walk",
+        "Merge with Stone"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Earth Walk",
+        "Merge with Stone"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "genasi-fire-mpmm",
+      "name": "Genasi — Fire",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Genasi",
+          "source": "MPMM",
+          "page": 16
+        },
+        {
+          "name": "Fire",
+          "source": "MPMM",
+          "page": 17
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fire Resistance",
+        "Reach to the Blaze"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fire Resistance",
+        "Reach to the Blaze"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "genasi-water-mpmm",
+      "name": "Genasi — Water",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Genasi",
+          "source": "MPMM",
+          "page": 16
+        },
+        {
+          "name": "Water",
+          "source": "MPMM",
+          "page": 17
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Acid Resistance",
+        "Amphibious",
+        "Call to the Wave"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Acid Resistance",
+        "Amphibious",
+        "Call to the Wave"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "githyanki-mpmm",
+      "name": "Githyanki",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Githyanki",
+          "source": "MPMM",
+          "page": 18
+        }
+      ],
+      "sourceFeatures": [
+        "Astral Knowledge",
+        "Githyanki Psionics",
+        "Psychic Resilience"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Astral Knowledge",
+        "Githyanki Psionics",
+        "Psychic Resilience"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "githzerai-mpmm",
+      "name": "Githzerai",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Githzerai",
+          "source": "MPMM",
+          "page": 19
+        }
+      ],
+      "sourceFeatures": [
+        "Githzerai Psionics",
+        "Mental Discipline",
+        "Psychic Resilience"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Githzerai Psionics",
+        "Mental Discipline",
+        "Psychic Resilience"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "goliath-mpmm",
+      "name": "Goliath",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Goliath",
+          "source": "MPMM",
+          "page": 21
+        }
+      ],
+      "sourceFeatures": [
+        "Little Giant",
+        "Mountain Born",
+        "Stone's Endurance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Little Giant",
+        "Mountain Born",
+        "Stone's Endurance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "harengon-mpmm",
+      "name": "Harengon",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Harengon",
+          "source": "MPMM",
+          "page": 22
+        }
+      ],
+      "sourceFeatures": [
+        "Hare-Trigger",
+        "Leporine Senses",
+        "Lucky Footwork",
+        "Rabbit Hop"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Hare-Trigger",
+        "Leporine Senses",
+        "Lucky Footwork",
+        "Rabbit Hop"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "kenku-mpmm",
+      "name": "Kenku",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Kenku",
+          "source": "MPMM",
+          "page": 24
+        }
+      ],
+      "sourceFeatures": [
+        "Expert Duplication",
+        "Kenku Recall",
+        "Mimicry"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Expert Duplication",
+        "Kenku Recall",
+        "Mimicry"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "locathah",
+      "name": "Locathah",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Locathah",
+          "source": "LR",
+          "page": 24
+        }
+      ],
+      "sourceFeatures": [
+        "Natural Armor",
+        "Observant & Athletic",
+        "Leviathan Will",
+        "Limited Amphibiousness",
+        "Language"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Natural Armor",
+        "Observant & Athletic",
+        "Leviathan Will",
+        "Limited Amphibiousness",
+        "Language"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "owlin",
+      "name": "Owlin",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Owlin",
+          "source": "SCC",
+          "page": 29
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Flight",
+        "Silent Feathers"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Flight",
+        "Silent Feathers"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "satyr-mpmm",
+      "name": "Satyr",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Satyr",
+          "source": "MPMM",
+          "page": 29
+        }
+      ],
+      "sourceFeatures": [
+        "Ram",
+        "Magic Resistance",
+        "Mirthful Leaps",
+        "Reveler"
+      ],
+      "missingExplicitExplanationBefore": [],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "satyr-mot",
+      "name": "Satyr",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Satyr",
+          "source": "MOT",
+          "page": 24
+        }
+      ],
+      "sourceFeatures": [
+        "Fey",
+        "Ram",
+        "Magic Resistance",
+        "Mirthful Leaps",
+        "Reveler"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Fey"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "sea-elf-mpmm",
+      "name": "Sea Elf",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Sea Elf",
+          "source": "MPMM",
+          "page": 30
+        }
+      ],
+      "sourceFeatures": [
+        "Child of the Sea",
+        "Darkvision",
+        "Fey Ancestry",
+        "Friend of the Sea",
+        "Keen Senses",
+        "Trance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Trance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [
+        "Fey Ancestry and Trance use the normal elf rules."
+      ],
+      "status": "described"
+    },
+    {
+      "id": "shadar-kai-mpmm",
+      "name": "Shadar-Kai",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Shadar-Kai",
+          "source": "MPMM",
+          "page": 31
+        }
+      ],
+      "sourceFeatures": [
+        "Blessing of the Raven Queen",
+        "Darkvision",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Necrotic Resistance",
+        "Trance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Necrotic Resistance",
+        "Trance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [
+        "Fey Ancestry and Trance use the normal elf rules."
+      ],
+      "status": "described"
+    },
+    {
+      "id": "tabaxi-mpmm",
+      "name": "Tabaxi",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Tabaxi",
+          "source": "MPMM",
+          "page": 33
+        }
+      ],
+      "sourceFeatures": [
+        "Cat's Claws",
+        "Cat's Talent",
+        "Darkvision",
+        "Feline Agility"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Cat's Claws",
+        "Cat's Talent",
+        "Darkvision",
+        "Feline Agility"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "tortle-mpmm",
+      "name": "Tortle",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Tortle",
+          "source": "MPMM",
+          "page": 34
+        }
+      ],
+      "sourceFeatures": [
+        "Claws",
+        "Hold Breath",
+        "Natural Armor",
+        "Nature's Intuition",
+        "Shell Defense"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Hold Breath",
+        "Natural Armor",
+        "Nature's Intuition",
+        "Shell Defense"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "triton-mpmm",
+      "name": "Triton",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Triton",
+          "source": "MPMM",
+          "page": 35
+        }
+      ],
+      "sourceFeatures": [
+        "Amphibious",
+        "Control Air and Water",
+        "Darkvision",
+        "Emissary of the Sea",
+        "Guardian of the Depths"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Amphibious",
+        "Control Air and Water",
+        "Darkvision",
+        "Emissary of the Sea",
+        "Guardian of the Depths"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "verdan",
+      "name": "Verdan",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Verdan",
+          "source": "AI",
+          "page": 72
+        }
+      ],
+      "sourceFeatures": [
+        "Black Blood Healing",
+        "Limited Telepathy",
+        "Persuasive",
+        "Telepathic Insight",
+        "Language"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Black Blood Healing",
+        "Limited Telepathy",
+        "Persuasive",
+        "Telepathic Insight",
+        "Language"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "bugbear-mpmm",
+      "name": "Bugbear",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Bugbear",
+          "source": "MPMM",
+          "page": 8
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Long-Limbed",
+        "Powerful Build",
+        "Sneaky",
+        "Surprise Attack"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Long-Limbed",
+        "Powerful Build",
+        "Sneaky",
+        "Surprise Attack"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "centaur-mpmm",
+      "name": "Centaur",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Centaur",
+          "source": "MPMM",
+          "page": 9
+        }
+      ],
+      "sourceFeatures": [
+        "Charge",
+        "Equine Build",
+        "Hooves",
+        "Natural Affinity"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Charge",
+        "Equine Build",
+        "Natural Affinity"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "goblin-mpmm",
+      "name": "Goblin",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Goblin",
+          "source": "MPMM",
+          "page": 20
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fury of the Small",
+        "Nimble Escape"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fury of the Small",
+        "Nimble Escape"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "grung",
+      "name": "Grung",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Grung",
+          "source": "OGA",
+          "page": 4
+        }
+      ],
+      "sourceFeatures": [
+        "Arboreal Alertness",
+        "Amphibious",
+        "Poison Immunity",
+        "Poisonous Skin",
+        "Standing Leap",
+        "Water Dependency"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Arboreal Alertness",
+        "Amphibious",
+        "Poison Immunity",
+        "Poisonous Skin",
+        "Standing Leap",
+        "Water Dependency"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "hobgoblin-mpmm",
+      "name": "Hobgoblin",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Hobgoblin",
+          "source": "MPMM",
+          "page": 23
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fey Gift",
+        "Fortune from the Many"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fey Gift",
+        "Fortune from the Many"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "kobold-mpmm",
+      "name": "Kobold",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Kobold",
+          "source": "MPMM",
+          "page": 25
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Draconic Cry",
+        "Kobold Legacy"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Draconic Cry",
+        "Kobold Legacy"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "lizardfolk-mpmm",
+      "name": "Lizardfolk",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Lizardfolk",
+          "source": "MPMM",
+          "page": 26
+        }
+      ],
+      "sourceFeatures": [
+        "Bite",
+        "Hold Breath",
+        "Hungry Jaws",
+        "Natural Armor",
+        "Nature's Intuition"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Bite",
+        "Hold Breath",
+        "Hungry Jaws",
+        "Natural Armor",
+        "Nature's Intuition"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "minotaur-mpmm",
+      "name": "Minotaur",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Minotaur",
+          "source": "MPMM",
+          "page": 27
+        }
+      ],
+      "sourceFeatures": [
+        "Horns",
+        "Goring Rush",
+        "Hammering Horns",
+        "Labyrinthine Recall"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Goring Rush",
+        "Hammering Horns",
+        "Labyrinthine Recall"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "orc-mpmm",
+      "name": "Orc",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Orc",
+          "source": "MPMM",
+          "page": 28
+        }
+      ],
+      "sourceFeatures": [
+        "Adrenaline Rush",
+        "Darkvision",
+        "Powerful Build",
+        "Relentless Endurance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Adrenaline Rush",
+        "Darkvision",
+        "Powerful Build",
+        "Relentless Endurance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "shifter-mpmm",
+      "name": "Shifter",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Shifter",
+          "source": "MPMM",
+          "page": 32
+        }
+      ],
+      "sourceFeatures": [
+        "Bestial Instincts",
+        "Darkvision",
+        "Shifting"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Bestial Instincts",
+        "Darkvision",
+        "Shifting"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "yuan-ti-mpmm",
+      "name": "Yuan-Ti",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Yuan-Ti",
+          "source": "MPMM",
+          "page": 36
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Magic Resistance",
+        "Poison Resilience",
+        "Serpentine Spellcasting"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Magic Resistance",
+        "Poison Resilience",
+        "Serpentine Spellcasting"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "kender",
+      "name": "Kender",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Kender",
+          "source": "DSotDQ",
+          "page": 27
+        }
+      ],
+      "sourceFeatures": [
+        "Fearless",
+        "Kender Curiosity",
+        "Taunt"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Fearless",
+        "Kender Curiosity"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "kalashtar",
+      "name": "Kalashtar",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Kalashtar",
+          "source": "ERLW",
+          "page": 29
+        }
+      ],
+      "sourceFeatures": [
+        "Dual Mind",
+        "Mental Discipline",
+        "Mind Link",
+        "Severed from Dreams"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Dual Mind",
+        "Mental Discipline",
+        "Mind Link",
+        "Severed from Dreams"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "warforged",
+      "name": "Warforged",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Warforged",
+          "source": "ERLW",
+          "page": 35
+        }
+      ],
+      "sourceFeatures": [
+        "Constructed Resilience",
+        "Sentry's Rest",
+        "Integrated Protection",
+        "Specialized Design"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Constructed Resilience",
+        "Sentry's Rest",
+        "Integrated Protection",
+        "Specialized Design"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "dhampir",
+      "name": "Dhampir",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Dhampir",
+          "source": "VRGR",
+          "page": 16
+        }
+      ],
+      "sourceFeatures": [
+        "Ancestral Legacy",
+        "Darkvision",
+        "Deathless Nature",
+        "Spider Climb",
+        "Vampiric Bite"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Ancestral Legacy",
+        "Darkvision",
+        "Deathless Nature",
+        "Spider Climb",
+        "Vampiric Bite"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "hexblood",
+      "name": "Hexblood",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Hexblood",
+          "source": "VRGR",
+          "page": 18
+        }
+      ],
+      "sourceFeatures": [
+        "Ancestral Legacy",
+        "Darkvision",
+        "Eerie Token",
+        "Hex Magic"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Ancestral Legacy",
+        "Darkvision",
+        "Eerie Token",
+        "Hex Magic"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "reborn",
+      "name": "Reborn",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Reborn",
+          "source": "VRGR",
+          "page": 20
+        }
+      ],
+      "sourceFeatures": [
+        "Ancestral Legacy",
+        "Deathless Nature",
+        "Knowledge from a Past Life"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Ancestral Legacy",
+        "Deathless Nature",
+        "Knowledge from a Past Life"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "loxodon",
+      "name": "Loxodon",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Loxodon",
+          "source": "GGR",
+          "page": 17
+        }
+      ],
+      "sourceFeatures": [
+        "Powerful Build",
+        "Loxodon Serenity",
+        "Natural Armor",
+        "Trunk",
+        "Keen Smell"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Powerful Build",
+        "Loxodon Serenity",
+        "Natural Armor",
+        "Keen Smell"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "simic-hybrid",
+      "name": "Simic Hybrid",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Simic Hybrid",
+          "source": "GGR",
+          "page": 20
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Animal Enhancement"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Animal Enhancement"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "vedalken",
+      "name": "Vedalken",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Vedalken",
+          "source": "GGR",
+          "page": 21
+        }
+      ],
+      "sourceFeatures": [
+        "Vedalken Dispassion",
+        "Tireless Precision",
+        "Partially Amphibious"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Vedalken Dispassion",
+        "Tireless Precision",
+        "Partially Amphibious"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "astral-elf",
+      "name": "Astral Elf",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Astral Elf",
+          "source": "AAG",
+          "page": 10
+        }
+      ],
+      "sourceFeatures": [
+        "Astral Fire",
+        "Darkvision",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Starlight Step",
+        "Astral Trance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Astral Fire",
+        "Darkvision",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Starlight Step",
+        "Astral Trance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "autognome",
+      "name": "Autognome",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Autognome",
+          "source": "AAG",
+          "page": 11
+        }
+      ],
+      "sourceFeatures": [
+        "Armored Casing",
+        "Built for Success",
+        "Healing Machine",
+        "Mechanical Nature",
+        "Sentry's Rest",
+        "Specialized Design"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Armored Casing",
+        "Built for Success",
+        "Healing Machine",
+        "Mechanical Nature",
+        "Sentry's Rest",
+        "Specialized Design"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "giff",
+      "name": "Giff",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Giff",
+          "source": "AAG",
+          "page": 12
+        }
+      ],
+      "sourceFeatures": [
+        "Astral Spark",
+        "Firearms Mastery",
+        "Hippo Build"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Astral Spark",
+        "Firearms Mastery",
+        "Hippo Build"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "hadozee",
+      "name": "Hadozee",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Hadozee",
+          "source": "AAG",
+          "page": 13
+        }
+      ],
+      "sourceFeatures": [
+        "Dexterous Feet",
+        "Glide",
+        "Hadozee Dodge"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Dexterous Feet",
+        "Glide",
+        "Hadozee Dodge"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "plasmoid",
+      "name": "Plasmoid",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Plasmoid",
+          "source": "AAG",
+          "page": 14
+        }
+      ],
+      "sourceFeatures": [
+        "Amorphous",
+        "Darkvision",
+        "Hold Breath",
+        "Natural Resilience",
+        "Shape Self"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Amorphous",
+        "Darkvision",
+        "Hold Breath",
+        "Natural Resilience",
+        "Shape Self"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "thri-kreen",
+      "name": "Thri-kreen",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Thri-kreen",
+          "source": "AAG",
+          "page": 15
+        }
+      ],
+      "sourceFeatures": [
+        "Chameleon Carapace",
+        "Darkvision",
+        "Secondary Arms",
+        "Sleepless",
+        "Thri-kreen Telepathy"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Chameleon Carapace",
+        "Darkvision",
+        "Secondary Arms",
+        "Sleepless",
+        "Thri-kreen Telepathy"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "leonin",
+      "name": "Leonin",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Leonin",
+          "source": "MOT",
+          "page": 20
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Claws",
+        "Hunter's Instincts",
+        "Daunting Roar"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Hunter's Instincts",
+        "Daunting Roar"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "custom-lineage",
+      "name": "Custom Lineage",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Custom Lineage",
+          "source": "TCE",
+          "page": 8
+        }
+      ],
+      "sourceFeatures": [
+        "Feat",
+        "Variable Trait"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Feat",
+        "Variable Trait"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "feral-tiefling-scag",
+      "name": "Feral Tiefling",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Tiefling",
+          "source": "PHB",
+          "page": 42
+        },
+        {
+          "name": "Variant; Infernal Legacy",
+          "source": "SCAG",
+          "page": 118
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Hellish Resistance",
+        "Infernal Legacy",
+        "Appearance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Hellish Resistance",
+        "Infernal Legacy",
+        "Appearance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [
+        "Hellish Resistance and Infernal Legacy use the legacy Tiefling rules."
+      ],
+      "status": "described"
+    },
+    {
+      "id": "chromatic-dragonborn-ftd",
+      "name": "Chromatic Dragonborn",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Dragonborn (Chromatic)",
+          "source": "FTD",
+          "page": 10
+        }
+      ],
+      "sourceFeatures": [
+        "Chromatic Ancestry",
+        "Breath Weapon",
+        "Draconic Resistance",
+        "Chromatic Warding"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Chromatic Ancestry",
+        "Breath Weapon",
+        "Draconic Resistance",
+        "Chromatic Warding"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "gem-dragonborn-ftd",
+      "name": "Gem Dragonborn",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Dragonborn (Gem)",
+          "source": "FTD",
+          "page": 11
+        }
+      ],
+      "sourceFeatures": [
+        "Gem Ancestry",
+        "Breath Weapon",
+        "Draconic Resistance",
+        "Psionic Mind",
+        "Gem Flight"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Gem Ancestry",
+        "Breath Weapon",
+        "Draconic Resistance",
+        "Psionic Mind",
+        "Gem Flight"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "metallic-dragonborn-ftd",
+      "name": "Metallic Dragonborn",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Dragonborn (Metallic)",
+          "source": "FTD",
+          "page": 12
+        }
+      ],
+      "sourceFeatures": [
+        "Metallic Ancestry",
+        "Breath Weapon",
+        "Draconic Resistance",
+        "Metallic Breath Weapon"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Metallic Ancestry",
+        "Breath Weapon",
+        "Draconic Resistance",
+        "Metallic Breath Weapon"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "pallid-elf-egw",
+      "name": "Pallid Elf",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "PHB",
+          "page": 21
+        },
+        {
+          "name": "Pallid",
+          "source": "EGW",
+          "page": 21
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Keen Senses",
+        "Fey Ancestry",
+        "Trance",
+        "Incisive Sense",
+        "Blessing of the Moon Weaver"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Keen Senses",
+        "Fey Ancestry",
+        "Trance",
+        "Incisive Sense",
+        "Blessing of the Moon Weaver"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "lotusden-halfling-egw",
+      "name": "Lotusden Halfling",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Halfling",
+          "source": "PHB",
+          "page": 26
+        },
+        {
+          "name": "Lotusden",
+          "source": "EGW",
+          "page": 164
+        }
+      ],
+      "sourceFeatures": [
+        "Lucky",
+        "Brave",
+        "Halfling Nimbleness",
+        "Child of the Wood",
+        "Timberwalk"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Lucky",
+        "Brave",
+        "Halfling Nimbleness",
+        "Child of the Wood",
+        "Timberwalk"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "draconblood-dragonborn-egw",
+      "name": "Draconblood Dragonborn",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Dragonborn",
+          "source": "PHB",
+          "page": 32
+        },
+        {
+          "name": "Draconblood",
+          "source": "EGW",
+          "page": 168
+        }
+      ],
+      "sourceFeatures": [
+        "Breath Weapon",
+        "Darkvision",
+        "Forceful Presence",
+        "Draconic Ancestry"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Breath Weapon",
+        "Darkvision",
+        "Forceful Presence",
+        "Draconic Ancestry"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "ravenite-dragonborn-egw",
+      "name": "Ravenite Dragonborn",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Dragonborn",
+          "source": "PHB",
+          "page": 32
+        },
+        {
+          "name": "Ravenite",
+          "source": "EGW",
+          "page": 168
+        }
+      ],
+      "sourceFeatures": [
+        "Breath Weapon",
+        "Darkvision",
+        "Vengeful Assault",
+        "Draconic Ancestry"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Breath Weapon",
+        "Darkvision",
+        "Vengeful Assault",
+        "Draconic Ancestry"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "orc-of-exandria-egw",
+      "name": "Orc of Exandria",
+      "edition": "2014",
+      "sources": [
+        {
+          "name": "Orc",
+          "source": "EGW",
+          "page": 178
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Aggressive",
+        "Primal Intuition",
+        "Powerful Build"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Aggressive",
+        "Primal Intuition",
+        "Powerful Build"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "changeling-efota",
+      "name": "Changeling",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Changeling",
+          "source": "EFA",
+          "page": 34
+        }
+      ],
+      "sourceFeatures": [
+        "Changeling Instincts",
+        "Shape-Shifter"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Changeling Instincts",
+        "Shape-Shifter"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "kalashtar-efota",
+      "name": "Kalashtar",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Kalashtar",
+          "source": "EFA",
+          "page": 35
+        }
+      ],
+      "sourceFeatures": [
+        "Dual Mind",
+        "Mental Discipline",
+        "Mind Link",
+        "Severed from Dreams"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Dual Mind",
+        "Mental Discipline",
+        "Mind Link",
+        "Severed from Dreams"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "khoravar-efota",
+      "name": "Khoravar",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Khoravar",
+          "source": "EFA",
+          "page": 36
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fey Gift",
+        "Lethargy Resilience",
+        "Skill Versatility"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fey Gift",
+        "Lethargy Resilience",
+        "Skill Versatility"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "shifter-efota",
+      "name": "Shifter",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Shifter",
+          "source": "EFA",
+          "page": 37
+        }
+      ],
+      "sourceFeatures": [
+        "Bestial Instincts",
+        "Darkvision",
+        "Shifting"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Bestial Instincts",
+        "Darkvision",
+        "Shifting"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "warforged-efota",
+      "name": "Warforged",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Warforged",
+          "source": "EFA",
+          "page": 38
+        }
+      ],
+      "sourceFeatures": [
+        "Construct Resilience",
+        "Integrated Protection",
+        "Sentry's Rest",
+        "Specialized Design",
+        "Tireless"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Construct Resilience",
+        "Integrated Protection",
+        "Sentry's Rest",
+        "Specialized Design",
+        "Tireless"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "dhampir-rthw",
+      "name": "Dhampir",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Dhampir",
+          "source": "RHW",
+          "page": 28
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Spider Climb",
+        "Trace of Undeath",
+        "Vampiric Bite"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Spider Climb",
+        "Trace of Undeath",
+        "Vampiric Bite"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "hexblood-rthw",
+      "name": "Hexblood",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Hexblood",
+          "source": "RHW",
+          "page": 29
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Eerie Token",
+        "Hex Magic"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Eerie Token",
+        "Hex Magic"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "lupin-rthw",
+      "name": "Lupin",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Lupin",
+          "source": "RHW",
+          "page": 30
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Feral Pounce",
+        "Howl",
+        "Werewolf Instincts"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Feral Pounce",
+        "Howl",
+        "Werewolf Instincts"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "reborn-rthw",
+      "name": "Reborn",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Reborn",
+          "source": "RHW",
+          "page": 31
+        }
+      ],
+      "sourceFeatures": [
+        "Escaped Death",
+        "Everlasting",
+        "Knowledge from a Past Life",
+        "Strange Endurance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Escaped Death",
+        "Everlasting",
+        "Knowledge from a Past Life",
+        "Strange Endurance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "boggart-lfl",
+      "name": "Boggart",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Boggart",
+          "source": "LFL",
+          "page": 20
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fury of the Small",
+        "Nimble Escape"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fury of the Small",
+        "Nimble Escape"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "faerie-lfl",
+      "name": "Faerie",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Faerie",
+          "source": "LFL",
+          "page": 14
+        }
+      ],
+      "sourceFeatures": [
+        "Fairy Magic",
+        "Flight",
+        "Faerie Lineage"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Fairy Magic",
+        "Flight",
+        "Faerie Lineage"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "flamekin-lfl",
+      "name": "Flamekin",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Flamekin",
+          "source": "LFL",
+          "page": 16
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fire Resistance",
+        "Reach to the Blaze"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fire Resistance",
+        "Reach to the Blaze"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "kithkin-lfl",
+      "name": "Kithkin",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Kithkin",
+          "source": "LFL",
+          "page": 193
+        }
+      ],
+      "sourceFeatures": [
+        "Brave",
+        "Halfling Nimbleness",
+        "Luck",
+        "Naturally Stealthy",
+        "Kithkin Lineage"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Brave",
+        "Halfling Nimbleness",
+        "Luck",
+        "Naturally Stealthy",
+        "Kithkin Lineage"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "lorwyn-changeling-lfl",
+      "name": "Lorwyn Changeling",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Lorwyn Changeling",
+          "source": "LFL",
+          "page": 0
+        }
+      ],
+      "sourceFeatures": [
+        "Shape Self",
+        "Darkvision",
+        "Delightful Imitator",
+        "Unpredictable Movement"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Shape Self",
+        "Darkvision",
+        "Delightful Imitator",
+        "Unpredictable Movement"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "lorwyn-elf-lfl",
+      "name": "Lorwyn-Shadowmoor Elf",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "LFL",
+          "page": 189
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Elven Lineage",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Trance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Elven Lineage",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Trance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "rimekin-lfl",
+      "name": "Rimekin",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Rimekin",
+          "source": "LFL",
+          "page": 0
+        }
+      ],
+      "sourceFeatures": [
+        "Cold Fire Magic",
+        "Cold Resistance",
+        "Darkvision"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Cold Fire Magic",
+        "Cold Resistance",
+        "Darkvision"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "human-2024",
+      "name": "Human",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Human",
+          "source": "XPHB",
+          "page": 194
+        }
+      ],
+      "sourceFeatures": [
+        "Resourceful",
+        "Skillful",
+        "Versatile"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Skillful"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "dragonborn-2024",
+      "name": "Dragonborn",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Dragonborn",
+          "source": "XPHB",
+          "page": 187
+        }
+      ],
+      "sourceFeatures": [
+        "Draconic Ancestry",
+        "Breath Weapon",
+        "Damage Resistance",
+        "Darkvision",
+        "Draconic Flight"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Draconic Ancestry",
+        "Breath Weapon",
+        "Damage Resistance",
+        "Darkvision",
+        "Draconic Flight"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "dwarf-2024",
+      "name": "Dwarf",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Dwarf",
+          "source": "XPHB",
+          "page": 188
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Dwarven Resilience",
+        "Dwarven Toughness",
+        "Stonecunning"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Dwarven Resilience",
+        "Dwarven Toughness",
+        "Stonecunning"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "elf-2024",
+      "name": "Elf",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "XPHB",
+          "page": 189
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Elven Lineage",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Trance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Elven Lineage",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Trance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "gnome-2024",
+      "name": "Gnome",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Gnome",
+          "source": "XPHB",
+          "page": 191
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Gnomish Cunning",
+        "Gnomish Lineage"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Gnomish Cunning",
+        "Gnomish Lineage"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "goliath-2024",
+      "name": "Goliath",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Goliath",
+          "source": "XPHB",
+          "page": 192
+        }
+      ],
+      "sourceFeatures": [
+        "Giant Ancestry",
+        "Large Form",
+        "Powerful Build"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Giant Ancestry",
+        "Large Form",
+        "Powerful Build"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "halfling-2024",
+      "name": "Halfling",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Halfling",
+          "source": "XPHB",
+          "page": 193
+        }
+      ],
+      "sourceFeatures": [
+        "Brave",
+        "Halfling Nimbleness",
+        "Luck",
+        "Naturally Stealthy"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Brave",
+        "Halfling Nimbleness",
+        "Luck",
+        "Naturally Stealthy"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "orc-2024",
+      "name": "Orc",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Orc",
+          "source": "XPHB",
+          "page": 195
+        }
+      ],
+      "sourceFeatures": [
+        "Adrenaline Rush",
+        "Darkvision",
+        "Relentless Endurance"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Adrenaline Rush",
+        "Darkvision",
+        "Relentless Endurance"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "tiefling-2024",
+      "name": "Tiefling",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Tiefling",
+          "source": "XPHB",
+          "page": 197
+        }
+      ],
+      "sourceFeatures": [
+        "Darkvision",
+        "Fiendish Legacy",
+        "Otherworldly Presence"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Darkvision",
+        "Fiendish Legacy",
+        "Otherworldly Presence"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    },
+    {
+      "id": "aasimar-2024",
+      "name": "Aasimar",
+      "edition": "2024",
+      "sources": [
+        {
+          "name": "Aasimar",
+          "source": "XPHB",
+          "page": 186
+        }
+      ],
+      "sourceFeatures": [
+        "Celestial Resistance",
+        "Darkvision",
+        "Healing Hands",
+        "Light Bearer",
+        "Celestial Revelation"
+      ],
+      "missingExplicitExplanationBefore": [
+        "Celestial Resistance",
+        "Darkvision",
+        "Healing Hands",
+        "Light Bearer",
+        "Celestial Revelation"
+      ],
+      "missingExplanationNow": [],
+      "crossRaceReferenceBefore": [],
+      "status": "described"
+    }
+  ]
+}

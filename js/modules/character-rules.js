@@ -194,6 +194,8 @@ var CharacterRules = (() => {
   const Modern = typeof CharacterRules2024 !== 'undefined' ? CharacterRules2024 : require('./character-rules-2024');
   Modern.extend(races);
   (typeof CharacterOriginMechanics!=='undefined'?CharacterOriginMechanics:require('./character-origin-mechanics')).races(races);
+  const SpeciesDescriptions = typeof CharacterSpeciesDescriptions !== 'undefined' ? CharacterSpeciesDescriptions : require('./character-species-descriptions');
+  SpeciesDescriptions.apply(races);
   const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
   const abilityKeys = [
     'str',
@@ -293,6 +295,7 @@ var CharacterRules = (() => {
       traits: [...r.traits],
       spells: [...r.spells || []]
     };
+    const selectedOptions = [];
     for (const [field, choices, min] of [
         [
           'raceFeature',
@@ -309,6 +312,7 @@ var CharacterRules = (() => {
       if (level < min || !choices || !own(choices, key) || field === 'raceFeature2' && key === build.raceFeature)
         continue;
       const option = choices[key];
+      selectedOptions.push(option);
       Object.assign(p, {
         ...option,
         name: r.name,
@@ -322,6 +326,7 @@ var CharacterRules = (() => {
         ]
       });
     }
+    p.traits = SpeciesDescriptions.profile(build.race, p, selectedOptions);
     return p;
   }
   const classes = {

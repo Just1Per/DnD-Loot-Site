@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261115-pinned-items-v87b";
+const ASSET_VERSION = "20261116-species-traits-v88";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -97,6 +97,8 @@ const FEATURE_FILES = [
   "./modules/character-backgrounds.js",
     "./modules/character-background-features.js",
   "./modules/character-rules-2024.js",
+  "./modules/character-species-feature-data.js",
+  "./modules/character-species-descriptions.js",
   "./modules/character-rules.js",
   "./modules/character-race-size-data.js",
   "./modules/character-size-guidance.js",

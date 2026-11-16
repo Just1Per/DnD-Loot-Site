@@ -1,0 +1,2078 @@
+{
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "races": {
+    "dragonborn": {
+      "sources": [
+        {
+          "name": "Dragonborn",
+          "source": "PHB",
+          "page": 32
+        }
+      ],
+      "features": [
+        "Draconic Ancestry",
+        "Breath Weapon",
+        "Damage Resistance"
+      ],
+      "facts": {}
+    },
+    "hill-dwarf": {
+      "sources": [
+        {
+          "name": "Dwarf",
+          "source": "PHB",
+          "page": 18
+        },
+        {
+          "name": "Hill",
+          "source": "PHB",
+          "page": 20
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Dwarven Resilience",
+        "Dwarven Combat Training",
+        "Tool Proficiency",
+        "Stonecunning",
+        "Dwarven Toughness"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "high-elf": {
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "PHB",
+          "page": 21
+        },
+        {
+          "name": "High",
+          "source": "PHB",
+          "page": 23
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Keen Senses",
+        "Fey Ancestry",
+        "Trance",
+        "Elf Weapon Training",
+        "Cantrip",
+        "Extra Language"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "lightfoot-halfling": {
+      "sources": [
+        {
+          "name": "Halfling",
+          "source": "PHB",
+          "page": 26
+        },
+        {
+          "name": "Lightfoot",
+          "source": "PHB",
+          "page": 28
+        }
+      ],
+      "features": [
+        "Lucky",
+        "Brave",
+        "Halfling Nimbleness",
+        "Naturally Stealthy"
+      ],
+      "facts": {}
+    },
+    "human": {
+      "sources": [
+        {
+          "name": "Human",
+          "source": "PHB",
+          "page": 29
+        }
+      ],
+      "features": [],
+      "facts": {}
+    },
+    "rock-gnome": {
+      "sources": [
+        {
+          "name": "Gnome",
+          "source": "PHB",
+          "page": 35
+        },
+        {
+          "name": "Rock",
+          "source": "PHB",
+          "page": 37
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Gnome Cunning",
+        "Artificer's Lore",
+        "Tinker",
+        "Clockwork Toy",
+        "Fire Starter",
+        "Music Box"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "half-elf": {
+      "sources": [
+        {
+          "name": "Half-Elf",
+          "source": "PHB",
+          "page": 38
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Skill Versatility"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "half-orc": {
+      "sources": [
+        {
+          "name": "Half-Orc",
+          "source": "PHB",
+          "page": 40
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Menacing",
+        "Relentless Endurance",
+        "Savage Attacks"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "tiefling": {
+      "sources": [
+        {
+          "name": "Tiefling",
+          "source": "PHB",
+          "page": 42
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Hellish Resistance",
+        "Infernal Legacy"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "mountain-dwarf": {
+      "sources": [
+        {
+          "name": "Dwarf",
+          "source": "PHB",
+          "page": 18
+        },
+        {
+          "name": "Mountain",
+          "source": "PHB",
+          "page": 20
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Dwarven Resilience",
+        "Dwarven Combat Training",
+        "Tool Proficiency",
+        "Stonecunning",
+        "Dwarven Armor Training"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "wood-elf": {
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "PHB",
+          "page": 21
+        },
+        {
+          "name": "Wood",
+          "source": "PHB",
+          "page": 24
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Keen Senses",
+        "Fey Ancestry",
+        "Trance",
+        "Elf Weapon Training",
+        "Fleet of Foot",
+        "Mask of the Wild"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "drow": {
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "PHB",
+          "page": 21
+        },
+        {
+          "name": "Drow",
+          "source": "PHB",
+          "page": 24
+        }
+      ],
+      "features": [
+        "Keen Senses",
+        "Fey Ancestry",
+        "Trance",
+        "Superior Darkvision",
+        "Sunlight Sensitivity",
+        "Drow Magic",
+        "Drow Weapon Training"
+      ],
+      "facts": {
+        "darkvision": 120
+      }
+    },
+    "forest-gnome": {
+      "sources": [
+        {
+          "name": "Gnome",
+          "source": "PHB",
+          "page": 35
+        },
+        {
+          "name": "Forest",
+          "source": "PHB",
+          "page": 37
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Gnome Cunning",
+        "Natural Illusionist",
+        "Speak with Small Beasts"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "stout-halfling": {
+      "sources": [
+        {
+          "name": "Halfling",
+          "source": "PHB",
+          "page": 26
+        },
+        {
+          "name": "Stout",
+          "source": "PHB",
+          "page": 28
+        }
+      ],
+      "features": [
+        "Lucky",
+        "Brave",
+        "Halfling Nimbleness",
+        "Stout Resilience"
+      ],
+      "facts": {}
+    },
+    "variant-human": {
+      "sources": [
+        {
+          "name": "Human",
+          "source": "PHB",
+          "page": 29
+        },
+        {
+          "name": "Variant",
+          "source": "PHB",
+          "page": 31
+        }
+      ],
+      "features": [
+        "Skills",
+        "Feat"
+      ],
+      "facts": {}
+    },
+    "aarakocra-mpmm": {
+      "sources": [
+        {
+          "name": "Aarakocra",
+          "source": "MPMM",
+          "page": 5
+        }
+      ],
+      "features": [
+        "Flight",
+        "Talons",
+        "Wind Caller"
+      ],
+      "facts": {}
+    },
+    "aasimar-mpmm": {
+      "sources": [
+        {
+          "name": "Aasimar",
+          "source": "MPMM",
+          "page": 7
+        }
+      ],
+      "features": [
+        "Celestial Resistance",
+        "Darkvision",
+        "Healing Hands",
+        "Light Bearer",
+        "Celestial Revelation"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "changeling-mpmm": {
+      "sources": [
+        {
+          "name": "Changeling",
+          "source": "MPMM",
+          "page": 10
+        }
+      ],
+      "features": [
+        "Changeling Instincts",
+        "Shapechanger"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "deep-gnome-mpmm": {
+      "sources": [
+        {
+          "name": "Deep Gnome",
+          "source": "MPMM",
+          "page": 11
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Gift of the Svirfneblin",
+        "Gnomish Magic Resistance",
+        "Svirfneblin Camouflage"
+      ],
+      "facts": {
+        "darkvision": 120,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "gnome"
+        ]
+      }
+    },
+    "duergar-mpmm": {
+      "sources": [
+        {
+          "name": "Duergar",
+          "source": "MPMM",
+          "page": 12
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Duergar Magic",
+        "Dwarven Resilience",
+        "Psionic Fortitude"
+      ],
+      "facts": {
+        "darkvision": 120,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "dwarf"
+        ]
+      }
+    },
+    "eladrin-mpmm": {
+      "sources": [
+        {
+          "name": "Eladrin",
+          "source": "MPMM",
+          "page": 13
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fey Step",
+        "Keen Senses",
+        "Trance"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "elf"
+        ]
+      }
+    },
+    "fairy-mpmm": {
+      "sources": [
+        {
+          "name": "Fairy",
+          "source": "MPMM",
+          "page": 14
+        }
+      ],
+      "features": [
+        "Fairy Magic",
+        "Flight"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "firbolg-mpmm": {
+      "sources": [
+        {
+          "name": "Firbolg",
+          "source": "MPMM",
+          "page": 15
+        }
+      ],
+      "features": [
+        "Firbolg Magic",
+        "Hidden Step",
+        "Powerful Build",
+        "Speech of Beast and Leaf"
+      ],
+      "facts": {}
+    },
+    "genasi-air-mpmm": {
+      "sources": [
+        {
+          "name": "Genasi",
+          "source": "MPMM",
+          "page": 16
+        },
+        {
+          "name": "Air",
+          "source": "MPMM",
+          "page": 16
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Unending Breath",
+        "Lightning Resistance",
+        "Mingle with the Wind"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "genasi-earth-mpmm": {
+      "sources": [
+        {
+          "name": "Genasi",
+          "source": "MPMM",
+          "page": 16
+        },
+        {
+          "name": "Earth",
+          "source": "MPMM",
+          "page": 17
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Earth Walk",
+        "Merge with Stone"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "genasi-fire-mpmm": {
+      "sources": [
+        {
+          "name": "Genasi",
+          "source": "MPMM",
+          "page": 16
+        },
+        {
+          "name": "Fire",
+          "source": "MPMM",
+          "page": 17
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fire Resistance",
+        "Reach to the Blaze"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "genasi-water-mpmm": {
+      "sources": [
+        {
+          "name": "Genasi",
+          "source": "MPMM",
+          "page": 16
+        },
+        {
+          "name": "Water",
+          "source": "MPMM",
+          "page": 17
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Acid Resistance",
+        "Amphibious",
+        "Call to the Wave"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "githyanki-mpmm": {
+      "sources": [
+        {
+          "name": "Githyanki",
+          "source": "MPMM",
+          "page": 18
+        }
+      ],
+      "features": [
+        "Astral Knowledge",
+        "Githyanki Psionics",
+        "Psychic Resilience"
+      ],
+      "facts": {}
+    },
+    "githzerai-mpmm": {
+      "sources": [
+        {
+          "name": "Githzerai",
+          "source": "MPMM",
+          "page": 19
+        }
+      ],
+      "features": [
+        "Githzerai Psionics",
+        "Mental Discipline",
+        "Psychic Resilience"
+      ],
+      "facts": {}
+    },
+    "goliath-mpmm": {
+      "sources": [
+        {
+          "name": "Goliath",
+          "source": "MPMM",
+          "page": 21
+        }
+      ],
+      "features": [
+        "Little Giant",
+        "Mountain Born",
+        "Stone's Endurance"
+      ],
+      "facts": {}
+    },
+    "harengon-mpmm": {
+      "sources": [
+        {
+          "name": "Harengon",
+          "source": "MPMM",
+          "page": 22
+        }
+      ],
+      "features": [
+        "Hare-Trigger",
+        "Leporine Senses",
+        "Lucky Footwork",
+        "Rabbit Hop"
+      ],
+      "facts": {}
+    },
+    "kenku-mpmm": {
+      "sources": [
+        {
+          "name": "Kenku",
+          "source": "MPMM",
+          "page": 24
+        }
+      ],
+      "features": [
+        "Expert Duplication",
+        "Kenku Recall",
+        "Mimicry"
+      ],
+      "facts": {}
+    },
+    "locathah": {
+      "sources": [
+        {
+          "name": "Locathah",
+          "source": "LR",
+          "page": 24
+        }
+      ],
+      "features": [
+        "Natural Armor",
+        "Observant & Athletic",
+        "Leviathan Will",
+        "Limited Amphibiousness",
+        "Language"
+      ],
+      "facts": {}
+    },
+    "owlin": {
+      "sources": [
+        {
+          "name": "Owlin",
+          "source": "SCC",
+          "page": 29
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Flight",
+        "Silent Feathers"
+      ],
+      "facts": {
+        "darkvision": 120
+      }
+    },
+    "satyr-mpmm": {
+      "sources": [
+        {
+          "name": "Satyr",
+          "source": "MPMM",
+          "page": 29
+        }
+      ],
+      "features": [
+        "Ram",
+        "Magic Resistance",
+        "Mirthful Leaps",
+        "Reveler"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "satyr-mot": {
+      "sources": [
+        {
+          "name": "Satyr",
+          "source": "MOT",
+          "page": 24
+        }
+      ],
+      "features": [
+        "Fey",
+        "Ram",
+        "Magic Resistance",
+        "Mirthful Leaps",
+        "Reveler"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "sea-elf-mpmm": {
+      "sources": [
+        {
+          "name": "Sea Elf",
+          "source": "MPMM",
+          "page": 30
+        }
+      ],
+      "features": [
+        "Child of the Sea",
+        "Darkvision",
+        "Fey Ancestry",
+        "Friend of the Sea",
+        "Keen Senses",
+        "Trance"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "elf"
+        ]
+      }
+    },
+    "shadar-kai-mpmm": {
+      "sources": [
+        {
+          "name": "Shadar-Kai",
+          "source": "MPMM",
+          "page": 31
+        }
+      ],
+      "features": [
+        "Blessing of the Raven Queen",
+        "Darkvision",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Necrotic Resistance",
+        "Trance"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "elf"
+        ]
+      }
+    },
+    "tabaxi-mpmm": {
+      "sources": [
+        {
+          "name": "Tabaxi",
+          "source": "MPMM",
+          "page": 33
+        }
+      ],
+      "features": [
+        "Cat's Claws",
+        "Cat's Talent",
+        "Darkvision",
+        "Feline Agility"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "tortle-mpmm": {
+      "sources": [
+        {
+          "name": "Tortle",
+          "source": "MPMM",
+          "page": 34
+        }
+      ],
+      "features": [
+        "Claws",
+        "Hold Breath",
+        "Natural Armor",
+        "Nature's Intuition",
+        "Shell Defense"
+      ],
+      "facts": {}
+    },
+    "triton-mpmm": {
+      "sources": [
+        {
+          "name": "Triton",
+          "source": "MPMM",
+          "page": 35
+        }
+      ],
+      "features": [
+        "Amphibious",
+        "Control Air and Water",
+        "Darkvision",
+        "Emissary of the Sea",
+        "Guardian of the Depths"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "verdan": {
+      "sources": [
+        {
+          "name": "Verdan",
+          "source": "AI",
+          "page": 72
+        }
+      ],
+      "features": [
+        "Black Blood Healing",
+        "Limited Telepathy",
+        "Persuasive",
+        "Telepathic Insight",
+        "Language"
+      ],
+      "facts": {}
+    },
+    "bugbear-mpmm": {
+      "sources": [
+        {
+          "name": "Bugbear",
+          "source": "MPMM",
+          "page": 8
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Long-Limbed",
+        "Powerful Build",
+        "Sneaky",
+        "Surprise Attack"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "goblinoid"
+        ]
+      }
+    },
+    "centaur-mpmm": {
+      "sources": [
+        {
+          "name": "Centaur",
+          "source": "MPMM",
+          "page": 9
+        }
+      ],
+      "features": [
+        "Charge",
+        "Equine Build",
+        "Hooves",
+        "Natural Affinity"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "goblin-mpmm": {
+      "sources": [
+        {
+          "name": "Goblin",
+          "source": "MPMM",
+          "page": 20
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fury of the Small",
+        "Nimble Escape"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "goblinoid"
+        ]
+      }
+    },
+    "grung": {
+      "sources": [
+        {
+          "name": "Grung",
+          "source": "OGA",
+          "page": 4
+        }
+      ],
+      "features": [
+        "Arboreal Alertness",
+        "Amphibious",
+        "Poison Immunity",
+        "Poisonous Skin",
+        "Standing Leap",
+        "Water Dependency"
+      ],
+      "facts": {}
+    },
+    "hobgoblin-mpmm": {
+      "sources": [
+        {
+          "name": "Hobgoblin",
+          "source": "MPMM",
+          "page": 23
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fey Gift",
+        "Fortune from the Many"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "goblinoid"
+        ]
+      }
+    },
+    "kobold-mpmm": {
+      "sources": [
+        {
+          "name": "Kobold",
+          "source": "MPMM",
+          "page": 25
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Draconic Cry",
+        "Kobold Legacy"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "lizardfolk-mpmm": {
+      "sources": [
+        {
+          "name": "Lizardfolk",
+          "source": "MPMM",
+          "page": 26
+        }
+      ],
+      "features": [
+        "Bite",
+        "Hold Breath",
+        "Hungry Jaws",
+        "Natural Armor",
+        "Nature's Intuition"
+      ],
+      "facts": {}
+    },
+    "minotaur-mpmm": {
+      "sources": [
+        {
+          "name": "Minotaur",
+          "source": "MPMM",
+          "page": 27
+        }
+      ],
+      "features": [
+        "Horns",
+        "Goring Rush",
+        "Hammering Horns",
+        "Labyrinthine Recall"
+      ],
+      "facts": {}
+    },
+    "orc-mpmm": {
+      "sources": [
+        {
+          "name": "Orc",
+          "source": "MPMM",
+          "page": 28
+        }
+      ],
+      "features": [
+        "Adrenaline Rush",
+        "Darkvision",
+        "Powerful Build",
+        "Relentless Endurance"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "shifter-mpmm": {
+      "sources": [
+        {
+          "name": "Shifter",
+          "source": "MPMM",
+          "page": 32
+        }
+      ],
+      "features": [
+        "Bestial Instincts",
+        "Darkvision",
+        "Shifting"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "yuan-ti-mpmm": {
+      "sources": [
+        {
+          "name": "Yuan-Ti",
+          "source": "MPMM",
+          "page": 36
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Magic Resistance",
+        "Poison Resilience",
+        "Serpentine Spellcasting"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "kender": {
+      "sources": [
+        {
+          "name": "Kender",
+          "source": "DSotDQ",
+          "page": 27
+        }
+      ],
+      "features": [
+        "Fearless",
+        "Kender Curiosity",
+        "Taunt"
+      ],
+      "facts": {}
+    },
+    "kalashtar": {
+      "sources": [
+        {
+          "name": "Kalashtar",
+          "source": "ERLW",
+          "page": 29
+        }
+      ],
+      "features": [
+        "Dual Mind",
+        "Mental Discipline",
+        "Mind Link",
+        "Severed from Dreams"
+      ],
+      "facts": {}
+    },
+    "warforged": {
+      "sources": [
+        {
+          "name": "Warforged",
+          "source": "ERLW",
+          "page": 35
+        }
+      ],
+      "features": [
+        "Constructed Resilience",
+        "Sentry's Rest",
+        "Integrated Protection",
+        "Specialized Design"
+      ],
+      "facts": {}
+    },
+    "dhampir": {
+      "sources": [
+        {
+          "name": "Dhampir",
+          "source": "VRGR",
+          "page": 16
+        }
+      ],
+      "features": [
+        "Ancestral Legacy",
+        "Darkvision",
+        "Deathless Nature",
+        "Spider Climb",
+        "Vampiric Bite"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "hexblood": {
+      "sources": [
+        {
+          "name": "Hexblood",
+          "source": "VRGR",
+          "page": 18
+        }
+      ],
+      "features": [
+        "Ancestral Legacy",
+        "Darkvision",
+        "Eerie Token",
+        "Hex Magic"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "reborn": {
+      "sources": [
+        {
+          "name": "Reborn",
+          "source": "VRGR",
+          "page": 20
+        }
+      ],
+      "features": [
+        "Ancestral Legacy",
+        "Deathless Nature",
+        "Knowledge from a Past Life"
+      ],
+      "facts": {}
+    },
+    "loxodon": {
+      "sources": [
+        {
+          "name": "Loxodon",
+          "source": "GGR",
+          "page": 17
+        }
+      ],
+      "features": [
+        "Powerful Build",
+        "Loxodon Serenity",
+        "Natural Armor",
+        "Trunk",
+        "Keen Smell"
+      ],
+      "facts": {}
+    },
+    "simic-hybrid": {
+      "sources": [
+        {
+          "name": "Simic Hybrid",
+          "source": "GGR",
+          "page": 20
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Animal Enhancement"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "vedalken": {
+      "sources": [
+        {
+          "name": "Vedalken",
+          "source": "GGR",
+          "page": 21
+        }
+      ],
+      "features": [
+        "Vedalken Dispassion",
+        "Tireless Precision",
+        "Partially Amphibious"
+      ],
+      "facts": {}
+    },
+    "astral-elf": {
+      "sources": [
+        {
+          "name": "Astral Elf",
+          "source": "AAG",
+          "page": 10
+        }
+      ],
+      "features": [
+        "Astral Fire",
+        "Darkvision",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Starlight Step",
+        "Astral Trance"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "elf"
+        ]
+      }
+    },
+    "autognome": {
+      "sources": [
+        {
+          "name": "Autognome",
+          "source": "AAG",
+          "page": 11
+        }
+      ],
+      "features": [
+        "Armored Casing",
+        "Built for Success",
+        "Healing Machine",
+        "Mechanical Nature",
+        "Sentry's Rest",
+        "Specialized Design"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "construct"
+        ]
+      }
+    },
+    "giff": {
+      "sources": [
+        {
+          "name": "Giff",
+          "source": "AAG",
+          "page": 12
+        }
+      ],
+      "features": [
+        "Astral Spark",
+        "Firearms Mastery",
+        "Hippo Build"
+      ],
+      "facts": {}
+    },
+    "hadozee": {
+      "sources": [
+        {
+          "name": "Hadozee",
+          "source": "AAG",
+          "page": 13
+        }
+      ],
+      "features": [
+        "Dexterous Feet",
+        "Glide",
+        "Hadozee Dodge"
+      ],
+      "facts": {}
+    },
+    "plasmoid": {
+      "sources": [
+        {
+          "name": "Plasmoid",
+          "source": "AAG",
+          "page": 14
+        }
+      ],
+      "features": [
+        "Amorphous",
+        "Darkvision",
+        "Hold Breath",
+        "Natural Resilience",
+        "Shape Self"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "ooze"
+        ]
+      }
+    },
+    "thri-kreen": {
+      "sources": [
+        {
+          "name": "Thri-kreen",
+          "source": "AAG",
+          "page": 15
+        }
+      ],
+      "features": [
+        "Chameleon Carapace",
+        "Darkvision",
+        "Secondary Arms",
+        "Sleepless",
+        "Thri-kreen Telepathy"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "monstrosity"
+        ]
+      }
+    },
+    "leonin": {
+      "sources": [
+        {
+          "name": "Leonin",
+          "source": "MOT",
+          "page": 20
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Claws",
+        "Hunter's Instincts",
+        "Daunting Roar"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "custom-lineage": {
+      "sources": [
+        {
+          "name": "Custom Lineage",
+          "source": "TCE",
+          "page": 8
+        }
+      ],
+      "features": [
+        "Feat",
+        "Variable Trait"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "feral-tiefling-scag": {
+      "sources": [
+        {
+          "name": "Tiefling",
+          "source": "PHB",
+          "page": 42
+        },
+        {
+          "name": "Variant; Infernal Legacy",
+          "source": "SCAG",
+          "page": 118
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Hellish Resistance",
+        "Infernal Legacy",
+        "Appearance"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "chromatic-dragonborn-ftd": {
+      "sources": [
+        {
+          "name": "Dragonborn (Chromatic)",
+          "source": "FTD",
+          "page": 10
+        }
+      ],
+      "features": [
+        "Chromatic Ancestry",
+        "Breath Weapon",
+        "Draconic Resistance",
+        "Chromatic Warding"
+      ],
+      "facts": {}
+    },
+    "gem-dragonborn-ftd": {
+      "sources": [
+        {
+          "name": "Dragonborn (Gem)",
+          "source": "FTD",
+          "page": 11
+        }
+      ],
+      "features": [
+        "Gem Ancestry",
+        "Breath Weapon",
+        "Draconic Resistance",
+        "Psionic Mind",
+        "Gem Flight"
+      ],
+      "facts": {}
+    },
+    "metallic-dragonborn-ftd": {
+      "sources": [
+        {
+          "name": "Dragonborn (Metallic)",
+          "source": "FTD",
+          "page": 12
+        }
+      ],
+      "features": [
+        "Metallic Ancestry",
+        "Breath Weapon",
+        "Draconic Resistance",
+        "Metallic Breath Weapon"
+      ],
+      "facts": {}
+    },
+    "pallid-elf-egw": {
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "PHB",
+          "page": 21
+        },
+        {
+          "name": "Pallid",
+          "source": "EGW",
+          "page": 21
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Keen Senses",
+        "Fey Ancestry",
+        "Trance",
+        "Incisive Sense",
+        "Blessing of the Moon Weaver"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "lotusden-halfling-egw": {
+      "sources": [
+        {
+          "name": "Halfling",
+          "source": "PHB",
+          "page": 26
+        },
+        {
+          "name": "Lotusden",
+          "source": "EGW",
+          "page": 164
+        }
+      ],
+      "features": [
+        "Lucky",
+        "Brave",
+        "Halfling Nimbleness",
+        "Child of the Wood",
+        "Timberwalk"
+      ],
+      "facts": {}
+    },
+    "draconblood-dragonborn-egw": {
+      "sources": [
+        {
+          "name": "Dragonborn",
+          "source": "PHB",
+          "page": 32
+        },
+        {
+          "name": "Draconblood",
+          "source": "EGW",
+          "page": 168
+        }
+      ],
+      "features": [
+        "Breath Weapon",
+        "Darkvision",
+        "Forceful Presence",
+        "Draconic Ancestry"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "ravenite-dragonborn-egw": {
+      "sources": [
+        {
+          "name": "Dragonborn",
+          "source": "PHB",
+          "page": 32
+        },
+        {
+          "name": "Ravenite",
+          "source": "EGW",
+          "page": 168
+        }
+      ],
+      "features": [
+        "Breath Weapon",
+        "Darkvision",
+        "Vengeful Assault",
+        "Draconic Ancestry"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "orc-of-exandria-egw": {
+      "sources": [
+        {
+          "name": "Orc",
+          "source": "EGW",
+          "page": 178
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Aggressive",
+        "Primal Intuition",
+        "Powerful Build"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "changeling-efota": {
+      "sources": [
+        {
+          "name": "Changeling",
+          "source": "EFA",
+          "page": 34
+        }
+      ],
+      "features": [
+        "Changeling Instincts",
+        "Shape-Shifter"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "kalashtar-efota": {
+      "sources": [
+        {
+          "name": "Kalashtar",
+          "source": "EFA",
+          "page": 35
+        }
+      ],
+      "features": [
+        "Dual Mind",
+        "Mental Discipline",
+        "Mind Link",
+        "Severed from Dreams"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "aberration"
+        ]
+      }
+    },
+    "khoravar-efota": {
+      "sources": [
+        {
+          "name": "Khoravar",
+          "source": "EFA",
+          "page": 36
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fey Gift",
+        "Lethargy Resilience",
+        "Skill Versatility"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "shifter-efota": {
+      "sources": [
+        {
+          "name": "Shifter",
+          "source": "EFA",
+          "page": 37
+        }
+      ],
+      "features": [
+        "Bestial Instincts",
+        "Darkvision",
+        "Shifting"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "warforged-efota": {
+      "sources": [
+        {
+          "name": "Warforged",
+          "source": "EFA",
+          "page": 38
+        }
+      ],
+      "features": [
+        "Construct Resilience",
+        "Integrated Protection",
+        "Sentry's Rest",
+        "Specialized Design",
+        "Tireless"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "construct"
+        ]
+      }
+    },
+    "dhampir-rthw": {
+      "sources": [
+        {
+          "name": "Dhampir",
+          "source": "RHW",
+          "page": 28
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Spider Climb",
+        "Trace of Undeath",
+        "Vampiric Bite"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "hexblood-rthw": {
+      "sources": [
+        {
+          "name": "Hexblood",
+          "source": "RHW",
+          "page": 29
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Eerie Token",
+        "Hex Magic"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "lupin-rthw": {
+      "sources": [
+        {
+          "name": "Lupin",
+          "source": "RHW",
+          "page": 30
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Feral Pounce",
+        "Howl",
+        "Werewolf Instincts"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "reborn-rthw": {
+      "sources": [
+        {
+          "name": "Reborn",
+          "source": "RHW",
+          "page": 31
+        }
+      ],
+      "features": [
+        "Escaped Death",
+        "Everlasting",
+        "Knowledge from a Past Life",
+        "Strange Endurance"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "boggart-lfl": {
+      "sources": [
+        {
+          "name": "Boggart",
+          "source": "LFL",
+          "page": 20
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fey Ancestry",
+        "Fury of the Small",
+        "Nimble Escape"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ],
+        "creatureTypeTags": [
+          "goblinoid"
+        ]
+      }
+    },
+    "faerie-lfl": {
+      "sources": [
+        {
+          "name": "Faerie",
+          "source": "LFL",
+          "page": 14
+        }
+      ],
+      "features": [
+        "Fairy Magic",
+        "Flight",
+        "Faerie Lineage"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "flamekin-lfl": {
+      "sources": [
+        {
+          "name": "Flamekin",
+          "source": "LFL",
+          "page": 16
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fire Resistance",
+        "Reach to the Blaze"
+      ],
+      "facts": {
+        "darkvision": 60
+      }
+    },
+    "kithkin-lfl": {
+      "sources": [
+        {
+          "name": "Kithkin",
+          "source": "LFL",
+          "page": 193
+        }
+      ],
+      "features": [
+        "Brave",
+        "Halfling Nimbleness",
+        "Luck",
+        "Naturally Stealthy",
+        "Kithkin Lineage"
+      ],
+      "facts": {
+        "darkvision": 120,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "lorwyn-changeling-lfl": {
+      "sources": [
+        {
+          "name": "Lorwyn Changeling",
+          "source": "LFL",
+          "page": 0
+        }
+      ],
+      "features": [
+        "Shape Self",
+        "Darkvision",
+        "Delightful Imitator",
+        "Unpredictable Movement"
+      ],
+      "facts": {
+        "darkvision": 120,
+        "creatureTypes": [
+          "fey"
+        ]
+      }
+    },
+    "lorwyn-elf-lfl": {
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "LFL",
+          "page": 189
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Elven Lineage",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Trance"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "rimekin-lfl": {
+      "sources": [
+        {
+          "name": "Rimekin",
+          "source": "LFL",
+          "page": 0
+        }
+      ],
+      "features": [
+        "Cold Fire Magic",
+        "Cold Resistance",
+        "Darkvision"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "human-2024": {
+      "sources": [
+        {
+          "name": "Human",
+          "source": "XPHB",
+          "page": 194
+        }
+      ],
+      "features": [
+        "Resourceful",
+        "Skillful",
+        "Versatile"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "dragonborn-2024": {
+      "sources": [
+        {
+          "name": "Dragonborn",
+          "source": "XPHB",
+          "page": 187
+        }
+      ],
+      "features": [
+        "Draconic Ancestry",
+        "Breath Weapon",
+        "Damage Resistance",
+        "Darkvision",
+        "Draconic Flight"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "dwarf-2024": {
+      "sources": [
+        {
+          "name": "Dwarf",
+          "source": "XPHB",
+          "page": 188
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Dwarven Resilience",
+        "Dwarven Toughness",
+        "Stonecunning"
+      ],
+      "facts": {
+        "darkvision": 120,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "elf-2024": {
+      "sources": [
+        {
+          "name": "Elf",
+          "source": "XPHB",
+          "page": 189
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Elven Lineage",
+        "Fey Ancestry",
+        "Keen Senses",
+        "Trance"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "gnome-2024": {
+      "sources": [
+        {
+          "name": "Gnome",
+          "source": "XPHB",
+          "page": 191
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Gnomish Cunning",
+        "Gnomish Lineage"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "goliath-2024": {
+      "sources": [
+        {
+          "name": "Goliath",
+          "source": "XPHB",
+          "page": 192
+        }
+      ],
+      "features": [
+        "Giant Ancestry",
+        "Large Form",
+        "Powerful Build"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "halfling-2024": {
+      "sources": [
+        {
+          "name": "Halfling",
+          "source": "XPHB",
+          "page": 193
+        }
+      ],
+      "features": [
+        "Brave",
+        "Halfling Nimbleness",
+        "Luck",
+        "Naturally Stealthy"
+      ],
+      "facts": {
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "orc-2024": {
+      "sources": [
+        {
+          "name": "Orc",
+          "source": "XPHB",
+          "page": 195
+        }
+      ],
+      "features": [
+        "Adrenaline Rush",
+        "Darkvision",
+        "Relentless Endurance"
+      ],
+      "facts": {
+        "darkvision": 120,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "tiefling-2024": {
+      "sources": [
+        {
+          "name": "Tiefling",
+          "source": "XPHB",
+          "page": 197
+        }
+      ],
+      "features": [
+        "Darkvision",
+        "Fiendish Legacy",
+        "Otherworldly Presence"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    },
+    "aasimar-2024": {
+      "sources": [
+        {
+          "name": "Aasimar",
+          "source": "XPHB",
+          "page": 186
+        }
+      ],
+      "features": [
+        "Celestial Resistance",
+        "Darkvision",
+        "Healing Hands",
+        "Light Bearer",
+        "Celestial Revelation"
+      ],
+      "facts": {
+        "darkvision": 60,
+        "creatureTypes": [
+          "humanoid"
+        ]
+      }
+    }
+  }
+}
