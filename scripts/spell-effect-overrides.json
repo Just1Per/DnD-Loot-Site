@@ -86,6 +86,7 @@
     "area": "Up to 30×10×10-ft wave"
   },
   "Tsunami": {
+    "damage": "Initial: 6d10 Bludgeoning; next round: 5d10, then -1d10/round",
     "area": "Up to 300×300×50-ft wall"
   },
   "Wall of Fire": {
@@ -366,6 +367,7 @@
     "area": "Material: 10-ft cube; metal/stone/minerals: 5-ft cube"
   },
   "Fire Shield": {
+    "damage": "Retaliation: 2d8 Fire or Cold",
     "area": "Light: 10-ft bright +10-ft dim"
   },
   "Flame Blade": {
@@ -422,5 +424,90 @@
   },
   "Teleportation Circle": {
     "area": "Portal: 5-ft radius"
+  },
+  "Call Lightning": {
+    "damage": "Bolt: 3d10 Lightning; existing storm: +1d10",
+    "area": "Each bolt: 5-ft radius; cloud: 60-ft radius × 10-ft high"
+  },
+  "Flame Strike|PHB": {
+    "damage": "4d6 Fire +4d6 Radiant",
+    "area": "10-ft-radius × 40-ft-high cylinder",
+    "scaling": "+1d6 Fire or Radiant/SL above 5"
+  },
+  "Flame Strike|XPHB": {
+    "damage": "5d6 Fire +5d6 Radiant",
+    "area": "10-ft-radius × 40-ft-high cylinder",
+    "scaling": "+1d6 Fire AND +1d6 Radiant/SL above 5"
+  },
+  "Ice Storm": {
+    "area": "20-ft-radius × 40-ft-high cylinder"
+  },
+  "Moonbeam": {
+    "area": "5-ft-radius × 40-ft-high cylinder"
+  },
+  "Sleet Storm|PHB": {
+    "area": "40-ft-radius × 20-ft-high cylinder"
+  },
+  "Sleet Storm|XPHB": {
+    "area": "20-ft-radius × 40-ft-high cylinder"
+  },
+  "Whirlwind": {
+    "area": "10-ft-radius × 30-ft-high cylinder"
+  },
+  "Bigby's Hand|PHB": {
+    "damage": "Fist: 4d8 Force; crush: 2d6+SC Bludgeoning",
+    "scaling": "+2d8 fist / +2d6 crush per SL above 5"
+  },
+  "Bigby's Hand|XPHB": {
+    "damage": "Fist: 5d8 Force; crush: 4d6+SC Bludgeoning",
+    "scaling": "+2d8 fist / +2d6 crush per SL above 5"
+  },
+  "Conjure Elemental|XPHB": {
+    "damage": "Initial: 8d8; repeat failed save: 4d8; element determines type",
+    "area": "Spirit space or within 5 ft of spirit"
+  },
+  "Delayed Blast Fireball": {
+    "damage": "12d6 Fire; +1d6 per held turn"
+  },
+  "Destructive Wave": {
+    "damage": "5d6 Thunder +5d6 Radiant/Necrotic"
+  },
+  "Hunger of Hadar": {
+    "damage": "Start: 2d6 Cold; end: 2d6 Acid on failed DEX save"
+  },
+  "Spirit Guardians": {
+    "damage": "3d8 Radiant (good/neutral) or Necrotic (evil)"
+  },
+  "Prismatic Spray|PHB": {
+    "damage": "Rolled ray: 10d6 Fire/Acid/Lightning/Poison/Cold, or special effect"
+  },
+  "Prismatic Spray|XPHB": {
+    "damage": "Rolled ray: 12d6 Fire/Acid/Lightning/Poison/Cold, or special effect"
+  },
+  "Prismatic Wall|PHB": {
+    "damage": "Layers 1–5: 10d6 each, Fire/Acid/Lightning/Poison/Cold in order"
+  },
+  "Prismatic Wall|XPHB": {
+    "damage": "Layers 1–5: 12d6 each, Fire/Acid/Lightning/Poison/Cold in order"
+  },
+  "Enervation|XGE": {
+    "damage": "DEX success: 2d8 Necrotic; failure/repeat: 4d8 Necrotic"
+  },
+  "Enervation|AU": {
+    "damage": "Failed save: 6d8 Necrotic; later bonus action: 2d8 Necrotic"
+  },
+  "Vitriolic Sphere": {
+    "damage": "10d4 Acid +5d4 next turn; save: half initial only"
+  },
+  "Weird|XPHB": {
+    "damage": "Initial: 10d10 Psychic, save half; repeat failure: 5d10"
+  },
+  "Witch Bolt|PHB": {
+    "damage": "Initial/repeat: 1d12 Lightning",
+    "scaling": "Initial hit only: +1d12/SL above 1"
+  },
+  "Witch Bolt|XPHB": {
+    "damage": "Initial: 2d12 Lightning; later bonus action: 1d12",
+    "scaling": "Initial hit only: +1d12/SL above 1"
   }
 }

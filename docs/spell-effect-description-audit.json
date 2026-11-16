@@ -911,8 +911,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "4d8 Force; 2d6+SC Bludgeoning/Force",
-        "scaling": "+2d8/SL above 5"
+        "damage": "Fist: 4d8 Force; crush: 2d6+SC Bludgeoning",
+        "scaling": "+2d8 fist / +2d6 crush per SL above 5"
       },
       "missingDamage": false,
       "missingArea": false
@@ -925,8 +925,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "5d8 Force; 4d6+SC Bludgeoning/Force",
-        "scaling": "+2d8/SL above 5"
+        "damage": "Fist: 5d8 Force; crush: 4d6+SC Bludgeoning",
+        "scaling": "+2d8 fist / +2d6 crush per SL above 5"
       },
       "missingDamage": false,
       "missingArea": false
@@ -1258,8 +1258,8 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "3d10 Lightning; 1d10 Lightning",
-        "area": "60-ft radius",
+        "damage": "Bolt: 3d10 Lightning; existing storm: +1d10",
+        "area": "Each bolt: 5-ft radius; cloud: 60-ft radius × 10-ft high",
         "scaling": "+1d10/SL above 3"
       },
       "missingDamage": false,
@@ -1273,8 +1273,8 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "3d10 Lightning; 1d10 Lightning",
-        "area": "60-ft radius",
+        "damage": "Bolt: 3d10 Lightning; existing storm: +1d10",
+        "area": "Each bolt: 5-ft radius; cloud: 60-ft radius × 10-ft high",
         "scaling": "+1d10/SL above 3"
       },
       "missingDamage": false,
@@ -1995,7 +1995,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "8d8 Lightning/Thunder/Fire/Cold; 4d8 Lightning/Thunder/Fire/Cold",
+        "damage": "Initial: 8d8; repeat failed save: 4d8; element determines type",
+        "area": "Spirit space or within 5 ft of spirit",
         "scaling": "+1d8/SL above 5"
       },
       "missingDamage": false,
@@ -2755,7 +2756,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "12d6 Fire; 1d6 Fire",
+        "damage": "12d6 Fire; +1d6 per held turn",
         "area": "20-ft-radius sphere",
         "scaling": "+1d6/SL above 7"
       },
@@ -2770,7 +2771,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "12d6 Fire; 1d6 Fire",
+        "damage": "12d6 Fire; +1d6 per held turn",
         "area": "20-ft-radius sphere",
         "scaling": "+1d6/SL above 7"
       },
@@ -2818,7 +2819,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "5d6 Thunder; 5d6 Radiant",
+        "damage": "5d6 Thunder +5d6 Radiant/Necrotic",
         "area": "30-ft radius"
       },
       "missingDamage": false,
@@ -2832,7 +2833,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "5d6 Thunder; 5d6 Radiant",
+        "damage": "5d6 Thunder +5d6 Radiant/Necrotic",
         "area": "30-ft emanation"
       },
       "missingDamage": false,
@@ -3668,7 +3669,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "2d8 Necrotic; 4d8 Necrotic",
+        "damage": "DEX success: 2d8 Necrotic; failure/repeat: 4d8 Necrotic",
         "scaling": "+1d8/SL above 5"
       },
       "missingDamage": false,
@@ -3682,7 +3683,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "6d8 Necrotic; 2d8 Necrotic"
+        "damage": "Failed save: 6d8 Necrotic; later bonus action: 2d8 Necrotic"
       },
       "missingDamage": false,
       "missingArea": false
@@ -4291,7 +4292,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d8 Fire; 2d8 Cold",
+        "damage": "Retaliation: 2d8 Fire or Cold",
         "area": "Light: 10-ft bright +10-ft dim"
       },
       "missingDamage": false,
@@ -4305,7 +4306,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d8 Fire; 2d8 Cold",
+        "damage": "Retaliation: 2d8 Fire or Cold",
         "area": "Light: 10-ft bright +10-ft dim"
       },
       "missingDamage": false,
@@ -4430,9 +4431,9 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "4d6 Fire; 4d6 Radiant",
-        "area": "10-ft-radius",
-        "scaling": "+1d6/SL above 5"
+        "damage": "4d6 Fire +4d6 Radiant",
+        "area": "10-ft-radius × 40-ft-high cylinder",
+        "scaling": "+1d6 Fire or Radiant/SL above 5"
       },
       "missingDamage": false,
       "missingArea": false
@@ -4445,9 +4446,9 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "5d6 Fire; 5d6 Radiant",
-        "area": "10-ft-radius",
-        "scaling": "+1d6/SL above 5"
+        "damage": "5d6 Fire +5d6 Radiant",
+        "area": "10-ft-radius × 40-ft-high cylinder",
+        "scaling": "+1d6 Fire AND +1d6 Radiant/SL above 5"
       },
       "missingDamage": false,
       "missingArea": false
@@ -5772,7 +5773,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d6 Cold; 2d6 Acid",
+        "damage": "Start: 2d6 Cold; end: 2d6 Acid on failed DEX save",
         "area": "20-ft-radius sphere"
       },
       "missingDamage": false,
@@ -5786,7 +5787,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d6 Cold; 2d6 Acid",
+        "damage": "Start: 2d6 Cold; end: 2d6 Acid on failed DEX save",
         "area": "20-ft-radius sphere",
         "scaling": "+1d6/SL above 3"
       },
@@ -5886,7 +5887,7 @@
       "areaExpected": true,
       "facts": {
         "damage": "2d8 Bludgeoning; 4d6 Cold",
-        "area": "20-ft-radius",
+        "area": "20-ft-radius × 40-ft-high cylinder",
         "scaling": "+1d8/SL above 4"
       },
       "missingDamage": false,
@@ -5901,7 +5902,7 @@
       "areaExpected": true,
       "facts": {
         "damage": "2d10 Bludgeoning; 4d6 Cold",
-        "area": "20-ft-radius",
+        "area": "20-ft-radius × 40-ft-high cylinder",
         "scaling": "+1d10/SL above 4"
       },
       "missingDamage": false,
@@ -7528,7 +7529,7 @@
       "areaExpected": true,
       "facts": {
         "damage": "2d10 Radiant",
-        "area": "5-ft-radius",
+        "area": "5-ft-radius × 40-ft-high cylinder",
         "scaling": "+1d10/SL above 2"
       },
       "missingDamage": false,
@@ -7543,7 +7544,7 @@
       "areaExpected": true,
       "facts": {
         "damage": "2d10 Radiant",
-        "area": "5-ft-radius",
+        "area": "5-ft-radius × 40-ft-high cylinder",
         "scaling": "+1d10/SL above 2"
       },
       "missingDamage": false,
@@ -8304,7 +8305,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "10d6 Fire; 10d6 Acid; 10d6 Lightning; 10d6 Poison; 10d6 Cold",
+        "damage": "Rolled ray: 10d6 Fire/Acid/Lightning/Poison/Cold, or special effect",
         "area": "60-ft cone"
       },
       "missingDamage": false,
@@ -8318,7 +8319,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "12d6 Fire; 12d6 Acid; 12d6 Lightning; 12d6 Poison; 12d6 Cold",
+        "damage": "Rolled ray: 12d6 Fire/Acid/Lightning/Poison/Cold, or special effect",
         "area": "60-ft cone"
       },
       "missingDamage": false,
@@ -8332,7 +8333,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "10d6 Fire; 10d6 Acid; 10d6 Lightning; 10d6 Poison; 10d6 Cold",
+        "damage": "Layers 1–5: 10d6 each, Fire/Acid/Lightning/Poison/Cold in order",
         "area": "90×30-ft wall or 30-ft-diameter sphere"
       },
       "missingDamage": false,
@@ -8346,7 +8347,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "12d6 Fire; 12d6 Acid; 12d6 Lightning; 12d6 Poison; 12d6 Cold",
+        "damage": "Layers 1–5: 12d6 each, Fire/Acid/Lightning/Poison/Cold in order",
         "area": "90×30-ft wall or 30-ft-diameter sphere"
       },
       "missingDamage": false,
@@ -9546,7 +9547,7 @@
       "damageExpected": false,
       "areaExpected": true,
       "facts": {
-        "area": "40-ft radius"
+        "area": "40-ft-radius × 20-ft-high cylinder"
       },
       "missingDamage": false,
       "missingArea": false
@@ -9559,7 +9560,7 @@
       "damageExpected": false,
       "areaExpected": true,
       "facts": {
-        "area": "20-ft-radius cylinder"
+        "area": "20-ft-radius × 40-ft-high cylinder"
       },
       "missingDamage": false,
       "missingArea": false
@@ -9835,7 +9836,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "3d8 Radiant; 3d8 Necrotic",
+        "damage": "3d8 Radiant (good/neutral) or Necrotic (evil)",
         "area": "15-ft radius",
         "scaling": "+1d8/SL above 3"
       },
@@ -9850,7 +9851,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "3d8 Radiant; 3d8 Necrotic",
+        "damage": "3d8 Radiant (good/neutral) or Necrotic (evil)",
         "area": "15-ft emanation",
         "scaling": "+1d8/SL above 3"
       },
@@ -11287,7 +11288,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "6d10 Bludgeoning; 5d10 Bludgeoning",
+        "damage": "Initial: 6d10 Bludgeoning; next round: 5d10, then -1d10/round",
         "area": "Up to 300×300×50-ft wall"
       },
       "missingDamage": false,
@@ -11301,7 +11302,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "6d10 Bludgeoning; 5d10 Bludgeoning",
+        "damage": "Initial: 6d10 Bludgeoning; next round: 5d10, then -1d10/round",
         "area": "Up to 300×300×50-ft wall"
       },
       "missingDamage": false,
@@ -11417,7 +11418,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "10d4 Acid; 5d4 Acid",
+        "damage": "10d4 Acid +5d4 next turn; save: half initial only",
         "area": "20-ft-radius sphere",
         "scaling": "+2d4/SL above 4"
       },
@@ -11432,7 +11433,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "10d4 Acid; 5d4 Acid",
+        "damage": "10d4 Acid +5d4 next turn; save: half initial only",
         "area": "20-ft-radius sphere",
         "scaling": "+2d4/SL above 4"
       },
@@ -11826,7 +11827,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "10d10 Psychic; 5d10 Psychic",
+        "damage": "Initial: 10d10 Psychic, save half; repeat failure: 5d10",
         "area": "30-ft-radius sphere"
       },
       "missingDamage": false,
@@ -11841,7 +11842,7 @@
       "areaExpected": true,
       "facts": {
         "damage": "10d6 Bludgeoning",
-        "area": "10-ft-radius"
+        "area": "10-ft-radius × 30-ft-high cylinder"
       },
       "missingDamage": false,
       "missingArea": false
@@ -11930,8 +11931,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "1d12 Lightning",
-        "scaling": "+1d12/SL above 1"
+        "damage": "Initial/repeat: 1d12 Lightning",
+        "scaling": "Initial hit only: +1d12/SL above 1"
       },
       "missingDamage": false,
       "missingArea": false
@@ -11944,8 +11945,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "2d12 Lightning; 1d12 Lightning",
-        "scaling": "+1d12/SL above 1"
+        "damage": "Initial: 2d12 Lightning; later bonus action: 1d12",
+        "scaling": "Initial hit only: +1d12/SL above 1"
       },
       "missingDamage": false,
       "missingArea": false
