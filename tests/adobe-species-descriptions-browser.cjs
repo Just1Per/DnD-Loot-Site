@@ -5,6 +5,11 @@ const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
   const browser = await chromium.launch({headless:true});
   try {
     const {page, errors} = await require('./adobe-browser-fixture.cjs')(browser, {adobeOnly:true});
+    // Exercise lazy mounts with actual asynchronous template loading.
+    await page.route('**/data/adobe-pages/**', async route => {
+      await new Promise(resolve => setTimeout(resolve, 75));
+      await route.fallback();
+    });
     await page.evaluate(async () => {
       auditSeed('player');
       characters[0].level = 4;
@@ -20,8 +25,11 @@ const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
     const racial = host.locator('[data-continuous-page="page-2"] [data-pdf-field="Racial Traits"]');
     const navigate = async () => {
       const button = host.locator('[data-stack-page]').filter({hasText:/Features & equipment/});
-      if (await button.isVisible()) await button.click();
+      // A race change rebuilds the rail. isVisible() would read that transient
+      // absence as mobile layout; let the appropriate control auto-wait instead.
+      if (page.viewportSize().width > 800) await button.click();
       else await host.locator('[data-stack-jump]').selectOption('sheet:' + await button.getAttribute('data-stack-page'));
+      await host.locator('[data-continuous-page="page-2"]:not([aria-busy="true"]) [data-pdf-field="Racial Traits"]').waitFor({state:'visible'});
     };
     const picker = page.locator('#adobeChoiceDialog');
     // A connected paper exists before its asynchronous mount finishes binding
