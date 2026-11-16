@@ -119,7 +119,7 @@ var CharacterEquipment = (() => {
       r.requiresAttunement=(typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(r.item))||!!r.item.attunement;
       r.magicActive=!r.requiresAttunement;
       if(r.requiresAttunement&&r.choice.attuned){r.magicActive=attunement.active.has(r.entry.id);if(!r.magicActive)warnings.push(r.item.name+': exceeds '+(attunement.limit===3?'three':attunement.limit)+' attunement slots; magic inactive.');}
-      r.active=r.choice.equipped;
+      r.companionCarried=(globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null))?.carrier(data,r.entry.id)>=0;r.active=r.choice.equipped&&!r.companionCarried;
       if(!r.active)continue;
       const kind=r.mechanics.kind;
       if(kind==='armor'){
@@ -187,7 +187,7 @@ var CharacterEquipment = (() => {
     const Martial=globalThis.CharacterMonkMartialArts||(typeof require==='function'?require('./character-monk-martial-arts'):null),martialArts=Martial?.state(data,level,entries);
     for(const r of entries){
       const w=r.profile,m=r.mechanics,ch=r.choice;
-      if(m.kind!=='weapon'||!w)continue;
+      if(m.kind!=='weapon'||!w||r.companionCarried)continue;
       const notes=[];
       let ability=ch.ability==='auto'?(w.props.includes('finesse')?(stats.mods.dex>stats.mods.str?'dex':'str'):w.rangeType==='ranged'?'dex':'str'):ch.ability;
       const Patrons=globalThis.CharacterWarlockSubclasses||(typeof require==='function'?require('./character-warlock-subclasses'):null),patron=Patrons?.derive(data,{level,mods:stats.mods});if(ch.ability==='auto'&&patron?.active&&patron.base==='hexblade'&&patron.pick('hex-weapon')===String(r.entry.id).toLowerCase().replace(/[^a-z0-9]+/g,'-')&&!w.props.includes('twoHanded'))ability='cha';

@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261114-spell-sources-v84";
+const ASSET_VERSION = "20261115-companion-equipment-v85";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -144,6 +144,7 @@ const FEATURE_FILES = [
   "./modules/character-wild-companion.js",
   "./modules/character-druid-conversions.js",
   "./modules/character-cleric-intervention.js",
+  "./modules/character-companion-equipment.js",
   "./modules/character-carrying.js",
   "./modules/character-modifiers.js",
   "./modules/character-sheet-model.js",
@@ -279,6 +280,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
   "./modules/character-paper-gear-catalog.js",
   "./modules/character-paper-gear-catalog-ui.js",
   "./modules/character-paper-gear-ui.js",
+  "./modules/character-companion-equipment-ui.js",
     "./modules/character-named-equipment-ui.js",
     "./modules/character-adobe-fields.js",
     "./modules/character-adobe-print-plan.js",

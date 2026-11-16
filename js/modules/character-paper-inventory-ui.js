@@ -2,7 +2,7 @@
 /* The original footer and copy destinations change paper references, not ownership. */
 var CharacterPaperInventoryUI=(()=>{
  let currentClose=null;
- const physical=(data,loot)=>{const level=CharacterAdobeEngine.level(data,sheetSession?.identity.level||1),attuned=CharacterEquipment.attunementState(data,loot,level).active;return loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:data.personalGear.find(row=>row.id===entry.id)?.location||'',attuned:attuned.has(entry.id)}));};
+ const physical=(data,loot)=>{const level=CharacterAdobeEngine.level(data,sheetSession?.identity.level||1),attuned=CharacterEquipment.attunementState(data,loot,level).active;return CharacterCompanionEquipment.decorate(data,loot.map(entry=>({id:entry.id,name:entry.item?.name||'',quantity:entry.quantity,weight:inventoryUnitWeight(entry.item||{}),location:data.personalGear.find(row=>row.id===entry.id)?.location||'',attuned:attuned.has(entry.id)})));};
  const project=(data,loot=sheetEquipmentLoot())=>CharacterPaperInventory.project(data.adobe.paperInventory,physical(data,loot));
  const editableRows=(data,loot=sheetEquipmentLoot())=>CharacterPaperInventory.gearRows(data.adobe.paperInventory,physical(data,loot));
  function apply(state,message,session=sheetSession){

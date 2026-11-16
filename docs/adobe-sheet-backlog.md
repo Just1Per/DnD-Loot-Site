@@ -186,3 +186,10 @@ Brugerbeslutning 9. november 2026: skjul valget af Standard og åbn altid karakt
 The queued source-generator design is implemented: a visible Generate spell sheet entry, class/race/feat review steps with navigation, Origin of Entry, live source-specific sheets and casting statistics, independent known/book/preparation allowances, and selected/prepared-only/full reachable prepared-class presentation. Display preferences never grant extra spells or change use counters. Expanded subclass lists remain ordinary choices, while unlocked grants are separate. Generated source references and full lists do not duplicate saved spells; direct preparation explicitly saves one eligible reference with normal limits. Existing race/feat choice dialogs remain shared and transactional; unsupported feat mechanics are still reference/manual work. See [scope and tests](adobe-native-spell-picker.md#source-generator-and-printed-references--v84).
 
 The full versioned 5e catalogue/Firebase expansion and numbered parity tasks 3–8 remain separate backlog work. This checkpoint does not mark full PDF parity complete.
+
+
+## Companion equipment and audit refresh — v85
+
+Equipment audit refreshed after the attunement/footer and source-generator deliveries. The original hidden companion equipment layer is restored, with 17 rows and adjacent existing notes. Whole owned stacks move from character gear to companions, between companions and back, with correct physical carrier weight and retained paper annotations. Equipped/worn items must be unequipped before transfer; charges, attunement, quantities, ownership and creature statistics/notes are retained. Companion removal safely returns assigned items. Full/missing/stale destinations refuse atomically. See [scope and validation](adobe-companion-equipment.md).
+
+Point 3 remains open for further magic/base-gear variant families, computed/custom pools/effects and remaining source layout/unit options. Adventure Log (point 4), class-specific companion rules (point 5), action reminders, conditional layouts and final parity audit follow separately.

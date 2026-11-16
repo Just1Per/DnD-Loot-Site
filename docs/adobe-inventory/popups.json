@@ -257,7 +257,7 @@
     {
       "id": "adobeSpecialFeaturesMenu",
       "file": "js/modules/character-adobe-view.js",
-      "line": 151,
+      "line": 152,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Show extra features",
@@ -270,7 +270,7 @@
     {
       "id": "adobeSharedEditor",
       "file": "js/modules/character-adobe-view.js",
-      "line": 215,
+      "line": 216,
       "kind": "dialog",
       "category": "moves-standard-body",
       "entry": "Alle aktive bridge-routes i routetabellen",
@@ -279,6 +279,7 @@
         "adobe-adventure-log-browser.cjs",
         "adobe-armor-choices-browser.cjs",
         "adobe-carrying-browser.cjs",
+        "adobe-companion-equipment-browser.cjs",
         "adobe-continuous-browser.cjs",
         "adobe-direct-preparation-browser.cjs",
         "adobe-editor-dialogs-browser.cjs",
@@ -306,7 +307,7 @@
     {
       "id": "adobeNotesOptions",
       "file": "js/modules/character-adobe-view.js",
-      "line": 313,
+      "line": 319,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Notes.Options",
@@ -328,6 +329,18 @@
         "adobe-native-feats-browser.cjs",
         "adobe-personal-feats-browser.cjs",
         "feats-selected-overview-browser.cjs"
+      ]
+    },
+    {
+      "id": "adobeCompanionEquipmentDialog",
+      "file": "js/modules/character-companion-equipment-ui.js",
+      "line": 15,
+      "kind": "dialog",
+      "category": "adobe-dialog",
+      "entry": "Companion equipment arrows, transfer destination og companion-card controls",
+      "notes": "Native carrier/row editor; delt private inventory og carrying-engine.",
+      "testReferences": [
+        "adobe-companion-equipment-browser.cjs"
       ]
     },
     {
@@ -377,18 +390,21 @@
       "category": "shared-dialog",
       "entry": "Owned item information → Edit eller inventory-bridge",
       "notes": "Selvstændig editor, men gemning opdaterer de fælles inventory-controls.",
-      "testReferences": []
+      "testReferences": [
+        "adobe-companion-equipment-browser.cjs"
+      ]
     },
     {
       "id": "sheetInventoryItemInformation",
       "file": "js/modules/character-inventory-ui.js",
-      "line": 63,
+      "line": 67,
       "kind": "dialog",
       "category": "shared-dialog",
       "entry": "Magic/gear information og item links",
       "notes": "Kan åbne Edit item og ændre backpack/remove via fælles handlers.",
       "testReferences": [
         "adobe-attack-menus-browser.cjs",
+        "adobe-companion-equipment-browser.cjs",
         "adobe-items-browser.cjs",
         "adobe-magic-menu-browser.cjs"
       ]
@@ -496,6 +512,7 @@
       "notes": "Native row-editor, source catalogue og confirmations; delt inventory-engine.",
       "testReferences": [
         "adobe-combat-feats-equipment-browser.cjs",
+        "adobe-companion-equipment-browser.cjs",
         "adobe-gear-catalog-browser.cjs",
         "adobe-gear-combining-browser.cjs",
         "adobe-gear-page-transfers-browser.cjs",
@@ -887,97 +904,97 @@
   "editorCalls": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 112,
+      "line": 113,
       "command": "dynamic",
       "expression": "row.descriptor.command"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 150,
+      "line": 151,
       "command": "dynamic",
       "expression": "id"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 177,
+      "line": 178,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 177,
+      "line": 178,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 177,
+      "line": 178,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 177,
+      "line": 178,
       "command": "experience",
       "expression": "'experience'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 177,
+      "line": 178,
       "command": "story",
       "expression": "'story'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 177,
+      "line": 178,
       "command": "feats",
       "expression": "'feats'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 177,
+      "line": 178,
       "command": "dynamic",
       "expression": "cmd"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 219,
+      "line": 220,
       "command": "conditions",
       "expression": "'conditions'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 318,
+      "line": 324,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 396,
+      "line": 402,
       "command": "spells",
       "expression": "'spells'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 401,
+      "line": 407,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 402,
+      "line": 408,
       "command": "dynamic",
       "expression": "editorChoice.value"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 412,
+      "line": 418,
       "command": "dynamic",
       "expression": "st.editor"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 432,
+      "line": 443,
       "command": "dynamic",
       "expression": "key"
     },
@@ -1051,17 +1068,17 @@
   "sharedCommands": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 177,
+      "line": 178,
       "expression": "'[data-combat-recover=\"'+(source.id==='SR'?'short':'long')+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 257,
+      "line": 258,
       "expression": "'[data-generated-prepare=\"'+entry.i+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 401,
+      "line": 407,
       "expression": "'[data-wild-end]'"
     }
   ]

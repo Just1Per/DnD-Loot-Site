@@ -56,6 +56,16 @@ var CharacterAdobeFields=(()=>{
     if(Object.hasOwn(values,key))return computed(values[key],{kind:key==='Traits'?'textarea':'text',command:'companion',reason:row.active?'Active form from the shared Wild Shape engine.':'Reference only, with merged equipment; no form is assumed and no uses are spent.'});
    }
   }
+  if(id.startsWith('Comp.eqp.')){
+   const c=context.companion,index=context.companionIndex||0,visible=!!c?.equipment?.visible;
+   if(!visible)return computed('',{hidden:true});
+   if(id==='Comp.eqp.LoadSummary'){const w=context.companionEquipmentLoad;return computed(w?'Load '+Number(w.physical.gear.toFixed(3))+(w.physical.unknown?'+?':'')+' / '+w.status.capacity+' lb':'',{fitWidth:true,reason:'Physical carried load / carrying capacity. The original subtotal to the right uses paper annotations.'});}
+   if(id==='Comp.eqp.Display.Weighttxt')return computed('LB');
+   if(id==='Comp.eqp.Notes')return edit('adobe.companions.'+index+'.notes',c.notes,'textarea',8000);
+   if(id==='Comp.eqp.Gear Weight Subtotal'){const w=context.companionEquipmentLoad?.paper;return computed(w?String(Number(w.gear.toFixed(3)))+(w.unknown?' + ?':''):'',{command:'companion',fitWidth:true,reason:'Paper amount × unit weight. Physical carrying load uses owned stock instead.'});}
+   const match=/^Comp\.eqp\.Gear (Row|Amount|Weight) (\d+)$/.exec(id);if(match){const slot=Number(match[2])-1,row=context.companionEquipment?.[slot],part={Row:'name',Amount:'quantity',Weight:'weight'}[match[1]];if(!row)return computed('',{companionGearRow:{companionIndex:index,index:slot},reason:'Use the row arrow to move an owned item here.'});if(row.unavailable)return computed(row[part]??'',{companionGearRow:{companionIndex:index,index:slot},reason:'The owned item is unavailable; its reference is retained.'});return edit('adobe.companions.'+index+'.equipment.rows.'+slot+'.fields.'+part,row[part]??'','text',200,{fitWidth:true,companionGearEdit:{companionIndex:index,index:slot,id:row.id,key:index+':'+row.id,field:part},reason:'Your companion equipment paper field. Stock, physical load and item resources stay unchanged.'});}
+  }
+  if(id==='Cnote.Left'&&context.companion?.equipment?.visible)return computed('',{hidden:true});
   if(id.startsWith('Comp.')||id==='Cnote.Left'){
    const c=context.companion,stats=context.companionStats,index=context.companionIndex||0,prefix='adobe.companions.'+index+'.';if(!c)return computed('',{command:'companion'});
    const bindings={'Comp.Desc.Name':['name','text',120],'Comp.Desc.Height':['height','text',120],'Comp.Desc.Weight':['weight','text',120],'Comp.Desc.Age':['age','text',120],'Comp.Desc.Sex':['gender','text',120],'Comp.Use.Features':['features','textarea',8000],'Comp.Desc.Size':['size','select',undefined], 'Comp.Use.AC':['ac','number',50],'Comp.Use.HP.Max':['hpMax','number',100000],'Comp.Use.HP.Current':['hpCurrent','number',100000],'Comp.Use.HP.Temp':['hpTemp','number',100000],'Comp.Use.Speed':['speed','number',1000],'Comp.Use.Traits':['traits','textarea',8000],'Cnote.Left':['notes','textarea',8000]};

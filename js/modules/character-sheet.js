@@ -52,7 +52,7 @@ function sheetStatus(message, error = false) {
 function closeCharacterSheet(force = false) {
   if(!force&&!SheetNavigation.guard(()=>closeCharacterSheet(true)))return false;
   if(typeof SheetNavigation!=='undefined')SheetNavigation.cancel();
-  globalThis.CharacterPaperGearUI?.destroy();
+  globalThis.CharacterPaperGearUI?.destroy();globalThis.CharacterCompanionEquipmentUI?.destroy();
   globalThis.CharacterPaperMagicUI?.destroy();
   globalThis.CharacterSizeGuidanceUI?.destroy();globalThis.CharacterPersonalFeatUI?.destroy();
   globalThis.CharacterAdobeView?.destroy();
