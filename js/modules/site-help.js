@@ -190,6 +190,12 @@ var SiteHelp=(()=>{
       "Open character sheet"
     ],
     [
+      "AI Lookup · open-book icon",
+      "The small open-book icon beside an item, spell, feat or subclass opens AI Lookup. Review the exact name, edition and sourcebook, then choose Search with Gemini for a brief web-grounded explanation and links. Results are AI-generated, may be wrong and are not official book text; check your sourcebook. Searches are sent to Google, cost API usage and are not saved to campaign records.",
+      "library",
+      "Browse items"
+    ],
+    [
       "Choose class, race and feat spells",
       "Each casting source has its own spell page. Generate spell sheet reviews class, race and feat sources; Choose spells manages a class list within that class’s level and allowance. Wizard spellbook entries and prepared spells are separate. Click a spell’s preparation circle or the picker’s Prepared checkbox where applicable; always-prepared grants stay separate from the allowance. Displaying a full reachable class list does not teach or prepare its spells. Ordinary multiclass slots and Warlock Pact Magic remain separate.",
       "sheet",
