@@ -36,7 +36,8 @@
       "entry": "Add other spells ved spell-ark, spell sources og Special features",
       "notes": "Eget katalog-/håndskrevet draft; uafhængig additional-kilde bevarer class-grænser og fælles private spell-data.",
       "testReferences": [
-        "adobe-additional-spells-browser.cjs"
+        "adobe-additional-spells-browser.cjs",
+        "adobe-ai-lookup-browser.cjs"
       ]
     },
     {
@@ -108,6 +109,7 @@
       "entry": "Level/Class, Class Features Menu, Special features",
       "notes": "Class, edition, subclass, metamagic/styles, training og HP-draft.",
       "testReferences": [
+        "adobe-ai-lookup-browser.cjs",
         "adobe-connected-sheet-browser.cjs",
         "adobe-continuous-browser.cjs",
         "adobe-edition-options-browser.cjs",
@@ -158,6 +160,7 @@
       "entry": "Feat-knapper eller Special features → Feats",
       "notes": "Kan åbne personal feat-editor og feat information.",
       "testReferences": [
+        "adobe-ai-lookup-browser.cjs",
         "adobe-connected-sheet-browser.cjs",
         "adobe-edition-options-browser.cjs",
         "adobe-native-feats-browser.cjs",
@@ -189,6 +192,7 @@
       "notes": "Selvstændig læseliste med level-grupper, korte beskrivelser og udfoldede fulde noter; gemmer ikke separat spell-data.",
       "testReferences": [
         "adobe-additional-spells-browser.cjs",
+        "adobe-ai-lookup-browser.cjs",
         "adobe-spell-list-browser.cjs"
       ]
     },
@@ -202,6 +206,7 @@
       "notes": "Native selection draft; bruger casting-engine og fælles spell-rendering.",
       "testReferences": [
         "adobe-additional-spells-browser.cjs",
+        "adobe-ai-lookup-browser.cjs",
         "adobe-direct-preparation-browser.cjs",
         "adobe-native-spells-browser.cjs",
         "adobe-source-generator-browser.cjs"
@@ -210,7 +215,7 @@
     {
       "id": "adobeRaceSpellDialog",
       "file": "js/modules/character-adobe-spell-ui.js",
-      "line": 82,
+      "line": 83,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Generate spell sheet → Race spells",
@@ -222,7 +227,7 @@
     {
       "id": "adobeSpellSourcesDialog",
       "file": "js/modules/character-adobe-spell-ui.js",
-      "line": 101,
+      "line": 102,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Special features → Generate spell sheet",
@@ -283,6 +288,7 @@
       "entry": "Show extra features",
       "notes": "Blander native routes og shared bridges; se routetabel.",
       "testReferences": [
+        "adobe-ai-lookup-browser.cjs",
         "adobe-modifiers-browser.cjs",
         "adobe-spell-sources-browser.cjs"
       ]
@@ -290,7 +296,7 @@
     {
       "id": "adobeSharedEditor",
       "file": "js/modules/character-adobe-view.js",
-      "line": 217,
+      "line": 218,
       "kind": "dialog",
       "category": "moves-standard-body",
       "entry": "Alle aktive bridge-routes i routetabellen",
@@ -328,7 +334,7 @@
     {
       "id": "adobeNotesOptions",
       "file": "js/modules/character-adobe-view.js",
-      "line": 320,
+      "line": 321,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Notes.Options",
@@ -425,6 +431,7 @@
       "entry": "Magic/gear information og item links",
       "notes": "Kan åbne Edit item og ændre backpack/remove via fælles handlers.",
       "testReferences": [
+        "adobe-ai-lookup-browser.cjs",
         "adobe-attack-menus-browser.cjs",
         "adobe-companion-equipment-browser.cjs",
         "adobe-items-browser.cjs",
@@ -505,6 +512,7 @@
       "entry": "Spell information fra native spellvalg og ark",
       "notes": "Selvstændig læsedialog; må ikke slettes sammen med Overview-modulet.",
       "testReferences": [
+        "adobe-ai-lookup-browser.cjs",
         "adobe-source-generator-browser.cjs",
         "adobe-spell-pages-browser.cjs",
         "cleric-divine-intervention-browser.cjs",
@@ -904,6 +912,11 @@
   ],
   "infrastructure": [
     {
+      "id": "aiLookupDialog",
+      "file": "js/modules/ai-lookup.js",
+      "dependency": "Shared on-demand rules lookup from Adobe paper controls and native spell/feat/subclass/item dialogs; explicit reference metadata, owned-session cancellation and Google fallback. No shared Standard body is moved."
+    },
+    {
       "id": "characterSheetDialog",
       "file": "js/modules/character-sheet.js",
       "dependency": "Outer shell, #characterSheetForm, session/store, ownership and close/save lifecycle."
@@ -954,85 +967,85 @@
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 179,
+      "line": 180,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 179,
+      "line": 180,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 179,
+      "line": 180,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 179,
+      "line": 180,
       "command": "experience",
       "expression": "'experience'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 179,
+      "line": 180,
       "command": "story",
       "expression": "'story'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 179,
+      "line": 180,
       "command": "feats",
       "expression": "'feats'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 179,
+      "line": 180,
       "command": "dynamic",
       "expression": "cmd"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 221,
+      "line": 222,
       "command": "conditions",
       "expression": "'conditions'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 325,
+      "line": 326,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 403,
+      "line": 404,
       "command": "spells",
       "expression": "'spells'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 408,
+      "line": 409,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 409,
+      "line": 410,
       "command": "dynamic",
       "expression": "editorChoice.value"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 419,
+      "line": 420,
       "command": "dynamic",
       "expression": "st.editor"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 449,
+      "line": 450,
       "command": "dynamic",
       "expression": "key"
     },
@@ -1106,17 +1119,17 @@
   "sharedCommands": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 179,
+      "line": 180,
       "expression": "'[data-combat-recover=\"'+(source.id==='SR'?'short':'long')+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 259,
+      "line": 260,
       "expression": "'[data-generated-prepare=\"'+entry.i+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 408,
+      "line": 409,
       "expression": "'[data-wild-end]'"
     }
   ]

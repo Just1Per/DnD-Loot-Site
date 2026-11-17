@@ -3,7 +3,7 @@
 var AiLookup=(()=>{
  const selector='#tab-library .toolbar,#sheet-feats>h3,#sheet-spells>h3,.item-card,[data-spell-info],[data-generated-spell-info],[data-item-information],[data-feat-info],[data-selected-feat-info],[data-build-feat-field],.sheet-subclass-select,.creature-editor-section input[name="title"]';
  const icon='<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18V4.8A1.8 1.8 0 0 1 4.8 3H8a4 4 0 0 1 4 4 4 4 0 0 1 4-4h3.2A1.8 1.8 0 0 1 21 4.8V18h-5a4 4 0 0 0-4 3 4 4 0 0 0-4-3H3Z"/></svg>';
- let dialog=null,focusReturn=null,runSerial=0,lastRequest=0,observer=null,queued=new Set(),queuedFrame=0;
+ let dialog=null,focusReturn=null,runSerial=0,lastRequest=0,observer=null,queued=new Set(),queuedFrame=0,activeOwner=null,activeCurrent=()=>true;
  // Bootstrap removes the dependency bridge once all modules are loaded; keep our reference.
  const lookupDeps=window.__DND_VAULT_DEPS__||{};
  const deps=()=>lookupDeps;
@@ -105,7 +105,7 @@ var AiLookup=(()=>{
   try{const url=new URL(value);return /^https?:$/.test(url.protocol)?url.href:'';}catch(_){return '';}
  }
  function promptFor(context){
-  const labels={spell:'spell',feat:'feat',item:'magic item or equipment',creature:'creature or NPC',subclass:'subclass'};
+  const labels={spell:'spell',feat:'feat',item:'magic item or equipment',creature:'creature or NPC',subclass:'subclass',rule:'character rule or feature'};
   return [
    'You are a source-conscious reference assistant for Dungeons & Dragons fifth edition.',
    'Use Google Search grounding to identify the requested rules entry and distinguish similar names or editions.',
@@ -136,14 +136,14 @@ var AiLookup=(()=>{
   dialog=document.createElement('dialog');dialog.id='aiLookupDialog';dialog.className='ai-lookup-dialog';dialog.setAttribute('aria-labelledby','aiLookupTitle');
   dialog.innerHTML='<header class="ai-lookup-head"><span class="ai-lookup-heading">'+icon+'<span><small>GROUNDED RULES REFERENCE</small><h2 id="aiLookupTitle">AI Lookup</h2></span></span><button type="button" class="ai-lookup-close" aria-label="Close AI Lookup">×</button></header>'+
    '<div class="ai-lookup-content"><p class="ai-lookup-intro">A short, AI-generated explanation of a rules entry. Not official rules text; confirm mechanics in your sourcebook.</p>'+
-   '<div class="ai-lookup-fields"><label>Entry name<input id="aiLookupName" type="text" maxlength="160" autocomplete="off"></label><label>Type<select id="aiLookupKind"><option value="spell">Spell</option><option value="feat">Feat</option><option value="item">Item</option><option value="subclass">Subclass</option><option value="creature">Creature / NPC</option></select></label><label>Edition<select id="aiLookupEdition"><option value="">Not specified</option><option value="2014">2014</option><option value="2024">2024</option></select></label><label>Sourcebook (optional)<input id="aiLookupSource" type="text" maxlength="160"></label></div>'+
+   '<div class="ai-lookup-fields"><label>Entry name<input id="aiLookupName" type="text" maxlength="160" autocomplete="off"></label><label>Type<select id="aiLookupKind"><option value="spell">Spell</option><option value="feat">Feat</option><option value="item">Item</option><option value="subclass">Subclass</option><option value="creature">Creature / NPC</option><option value="rule">Rule / feature</option></select></label><label>Edition<select id="aiLookupEdition"><option value="">Not specified</option><option value="2014">2014</option><option value="2024">2024</option></select></label><label>Sourcebook (optional)<input id="aiLookupSource" type="text" maxlength="160"></label></div>'+
    '<p class="ai-lookup-privacy">Runs only when you press Search with Gemini. The entry name and reference fields are sent to Google. Results are not saved to the campaign database.</p>'+
    '<div id="aiLookupStatus" class="ai-lookup-status" role="status" aria-live="polite"></div><a id="aiLookupBilling" href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" hidden>Manage Gemini API billing ↗</a><div id="aiLookupAnswer" class="ai-lookup-answer" hidden></div><section id="aiLookupSources" class="ai-lookup-sources" hidden><h3>Sources to verify</h3><ul></ul></section><section id="aiLookupSuggestions" class="ai-lookup-suggestions" hidden><h3>Google Search suggestions</h3></section></div>'+
    '<footer class="ai-lookup-actions"><a id="aiLookupGoogle" target="_blank" rel="noopener noreferrer">Search on Google <span aria-hidden="true">↗</span></a><button type="button" id="aiLookupRun" class="btn-primary">Search with Gemini</button></footer>';
   document.body.append(dialog);
   dialog.querySelector('.ai-lookup-close').onclick=()=>dialog.close();
   dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
-  dialog.addEventListener('close',()=>{runSerial++;focusReturn?.isConnected&&focusReturn.focus();});
+  dialog.addEventListener('close',()=>{if(dialog.open)return;runSerial++;activeOwner=null;activeCurrent=()=>true;focusReturn?.isConnected&&focusReturn.focus();});
   for(const id of ['aiLookupName','aiLookupKind','aiLookupEdition','aiLookupSource'])dialog.querySelector('#'+id).addEventListener('input',syncLink);
   dialog.querySelector('#aiLookupRun').addEventListener('click',run);
   return dialog;
@@ -166,8 +166,8 @@ var AiLookup=(()=>{
    if(id==='aiLookupSources')node.querySelector('ul').replaceChildren();
   }
  }
- function open(context,trigger){
-  const d=ensureDialog();if(d.open)d.close();
+ function open(context,trigger,{isCurrent=()=>true,owner=null}={}){
+  if(!isCurrent())return;const d=ensureDialog();++runSerial;if(d.open)d.close();activeOwner=owner;activeCurrent=isCurrent;
   focusReturn=trigger||document.activeElement;
   d.querySelector('#aiLookupName').value=context.name;
   d.querySelector('#aiLookupKind').value=context.kind;
@@ -180,8 +180,8 @@ var AiLookup=(()=>{
  }
  async function run(){
   const d=ensureDialog(),button=d.querySelector('#aiLookupRun');
-  const context=contextFromForm();context.extra=d.dataset.extra||'';
-  if(!context.name){d.querySelector('#aiLookupStatus').textContent='Enter the name of a spell, feat, item or creature.';return;}
+  const context=contextFromForm();context.extra=d.dataset.extra||'';if(!activeCurrent()){close();return;}
+  if(!context.name){d.querySelector('#aiLookupStatus').textContent='Enter the name of the rule or reference to look up.';return;}
   if(typeof deps().lookupAI!=='function'||deps().aiLookupConfigured===false){
    d.querySelector('#aiLookupStatus').textContent='AI Lookup is not configured. Use Search on Google or ask the site owner to complete the Firebase setup.';
    return;
@@ -192,12 +192,12 @@ var AiLookup=(()=>{
   const now=Date.now();if(now-lastRequest<15000){
    d.querySelector('#aiLookupStatus').textContent='Please wait a few seconds between lookups to limit costs.';return;
   }
-  lastRequest=now;const serial=++runSerial;
+  lastRequest=now;const serial=++runSerial,current=activeCurrent,uid=deps().auth.currentUser.uid,validResult=()=>{if(serial!==runSerial||!d.open)return false;if(!current()||deps().auth.currentUser?.uid!==uid){close();return false;}return true;};
   resetOutput();button.disabled=true;button.textContent='Searching…';
   d.querySelector('#aiLookupStatus').textContent='Asking Gemini and checking public web sources…';
   try{
    const result=await deps().lookupAI(promptFor(context));
-   if(serial!==runSerial||!d.open)return;
+   if(!validResult())return;
    const answer=String(result?.text||'').trim().slice(0,2200);
    if(!answer)throw Error('No answer was returned.');
    const meta=result?.metadata||{};
@@ -223,15 +223,25 @@ var AiLookup=(()=>{
    }
    d.querySelector('#aiLookupStatus').textContent=urls.size?'AI-generated overview. Open a source to confirm the details.':'Unverified AI overview: Google provided no linked sources. Confirm everything in the official book.';
   }catch(error){
-   if(serial!==runSerial||!d.open)return;
+   if(!validResult())return;
    console.warn('AI Lookup failed:',error);
    const notice=errorNotice(error);
    d.querySelector('#aiLookupStatus').textContent=notice.message;
    d.querySelector('#aiLookupBilling').hidden=notice.kind!=='billing';
   }finally{
-   if(serial===runSerial&&d.open){button.disabled=false;button.textContent='Search with Gemini';}
+   if(validResult()){button.disabled=false;button.textContent='Search with Gemini';}
   }
  }
+ function reference(kind,row={},ruleEdition=''){
+  return info(kind,String(row.name||'').replace(/\s*\[(2014|2024)\]$/,''),row.book||row.source||'',row.edition||ruleEdition,[kind==='spell'&&row.level!=null?(row.level===0?'Cantrip':'Spell level '+row.level):'',row.page?'Source page '+row.page:''].filter(Boolean).join(' · '));
+ }
+ function button(context,{isCurrent=()=>true,owner=null}={}){
+  const read=()=>typeof context==='function'?context():context,first=read(),b=document.createElement('button');b.type='button';b.className='ai-lookup-icon adobe-ai-lookup';b.dataset.aiLookupControl='';b.innerHTML=icon;b.disabled=!first;
+  const label=first?'AI Lookup'+(first.name?' for '+norm(first.name):''):'AI Lookup — choose an entry first';b.title=label;b.setAttribute('aria-label',label);b.setAttribute('aria-haspopup','dialog');
+  b.onclick=event=>{event.preventDefault();event.stopPropagation();if(!b.isConnected||!isCurrent())return;const value=read();if(value)open(value,b,{isCurrent,owner});};return b;
+ }
+ function close(){++runSerial;activeOwner=null;activeCurrent=()=>true;if(dialog?.isConnected){resetOutput();if(dialog.open)dialog.close();}}
+ function closeForOwner(owner){if(owner&&activeOwner===owner)close();}
  function init(){
   if(observer)return;ensureDialog();
   queue(document.body);
@@ -243,5 +253,5 @@ var AiLookup=(()=>{
  if(typeof document!=='undefined'){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
  }
- return {open,enhance,buildPrompt:promptFor,lookupUrl:googleUrl,errorNotice};
+ return {open,button,reference,close,closeForOwner,enhance,buildPrompt:promptFor,lookupUrl:googleUrl,errorNotice};
 })();

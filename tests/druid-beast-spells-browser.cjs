@@ -260,7 +260,7 @@ const errors = [];
         .innerText(),
       /Costly Material component/,
     );
-    await page.locator("#sheetSpellInformation button").click();
+    await page.getByRole("button", {name: "Close spell information", exact: true}).click();
     const before = await page.evaluate(() =>
       JSON.stringify({
         spells: sheetSession.data.spells,

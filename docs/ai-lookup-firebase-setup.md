@@ -1,8 +1,8 @@
 # Enable AI Lookup (Firebase Gemini)
 
-This PR adds a small open-book icon beside Library items, spells, feats, subclass selectors and creature names. The top Guide explains it. A user can edit the entry name, type, rules edition and sourcebook, then explicitly request a source-grounded overview.
+AI Lookup has a small open-book icon beside Library items and supported rule references. On the current Adobe sheet it is also beside the magnifier/printer controls, under Show extra features → Table tools, and in native spell, feat, subclass and owned-item windows. See [Adobe integration and regression coverage](adobe-ai-lookup.md). The top Guide explains it. A user can edit the entry name, type, rules edition and sourcebook, then explicitly request a source-grounded overview.
 
-**Until the owner completes setup, the Gemini request is disabled and the lookup displays an ordinary Google Search link. All other site functions continue working.**
+The site already has a public reCAPTCHA site key in `js/firebase.js`. The Adobe UI integration reuses this configuration and does not require replacing the key or importing data. If service configuration, model availability or billing prevents a request, the dialog explains the provider error and retains an ordinary Google Search link.
 
 ## Owner setup — exact steps
 
@@ -10,7 +10,7 @@ This PR adds a small open-book icon beside Library items, spells, feats, subclas
 2. Select **Gemini Developer API** and complete the API enablement. Review the Gemini billing, terms, usage quota and Google Search grounding fees. The app uses **gemini-3.8-flash**, configured in js/app.js; verify model availability for your project. Grounding isn't necessarily free.
 3. In https://console.cloud.google.com/ (same project), create a **reCAPTCHA Enterprise score-based Web key**. Register actual hosting domains such as **dnd-loot-site.web.app**, **dnd-loot-site.firebaseapp.com**, and your custom domain if any. Do not add localhost to a production key.
 4. In Firebase Console → **Security → App Check → Apps**, register your Web app (Firebase app ID: **1:345641251366:web:081fe07bc2cc859901ace7**) with **reCAPTCHA Enterprise**, using the same public Web site key. The Firebase AI Logic onboarding flow may enforce App Check automatically; verify legitimate requests are accepted.
-5. In your GitHub repository edit **js/firebase.js**: replace the empty string in **const AI_LOOKUP_RECAPTCHA_SITE_KEY = "";** with your **public reCAPTCHA Enterprise Web site key**. Do not commit a Gemini API secret, any private service credential, or a reCAPTCHA secret. Site keys are public and designed to be embedded in browser scripts.
+5. In your GitHub repository edit **js/firebase.js**: verify that **AI_LOOKUP_RECAPTCHA_SITE_KEY** is the **public reCAPTCHA Enterprise Web site key** registered for this project and its hosting domains. A key is already configured; change it only as part of a deliberate App Check reconfiguration. Do not commit a Gemini API secret, any private service credential, or a reCAPTCHA secret. Site keys are public and designed to be embedded in browser scripts.
 6. Review/merge the PR and deploy Hosting, or deploy the configuration as part of the merge. Sign in, open an item/spell/feat with the little open-book icon, review the parameters, click **Search with Gemini**, and confirm answer, source links and Google Search suggestions work.
 7. Set API/billing quotas and budget alerts in Google Cloud/Firebase before inviting many players. App Check limits abuse but is not a per-user rate limit. The included 15-second client cooldown is only a usability safeguard, not secure enforcement. Hard per-user budgets would require an authenticated server proxy or quota service.
 8. Update your site's privacy notice if necessary: the lookup sends the entry name, edition, type and book reference to Google's AI service only after Search with Gemini is clicked.
