@@ -89,6 +89,7 @@
       "entry": "Søgbare race/background/class/weapon/andre valglister",
       "notes": "Generisk feltpicker; actual field descriptor afgør effekten.",
       "testReferences": [
+        "adobe-ai-lookup-browser.cjs",
         "adobe-armor-choices-browser.cjs",
         "adobe-background-clear-browser.cjs",
         "adobe-dc-ability-controls-browser.cjs",
@@ -914,7 +915,7 @@
     {
       "id": "aiLookupDialog",
       "file": "js/modules/ai-lookup.js",
-      "dependency": "Shared on-demand rules lookup from Adobe paper controls and native spell/feat/subclass/item dialogs; explicit reference metadata, owned-session cancellation and Google fallback. No shared Standard body is moved."
+      "dependency": "Shared on-demand rules lookup from Adobe paper controls and native spell/feat/class/background/subclass/item dialogs; explicit reference metadata, owned-session cancellation and Google fallback. No shared Standard body is moved."
     },
     {
       "id": "characterSheetDialog",

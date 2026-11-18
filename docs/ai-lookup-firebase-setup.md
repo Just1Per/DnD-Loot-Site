@@ -1,6 +1,6 @@
 # Enable AI Lookup (Firebase Gemini)
 
-AI Lookup has a small open-book icon beside Library items and supported rule references. On the current Adobe sheet it is also beside the magnifier/printer controls, under Show extra features → Table tools, and in native spell, feat, subclass and owned-item windows. See [Adobe integration and regression coverage](adobe-ai-lookup.md). The top Guide explains it. A user can edit the entry name, type, rules edition and sourcebook, then explicitly request a source-grounded overview.
+AI Lookup has a small open-book icon beside Library items and supported rule references. On the current Adobe sheet it is also beside the magnifier/printer controls, under Show extra features → Table tools, and in class/background selection and native spell, feat, subclass and owned-item windows. See [Adobe integration and regression coverage](adobe-ai-lookup.md). The top Guide explains it. A user can edit the entry name, type, rules edition and sourcebook, then explicitly request a source-grounded overview.
 
 The site already has a public reCAPTCHA site key in `js/firebase.js`. The Adobe UI integration reuses this configuration and does not require replacing the key or importing data. If service configuration, model availability or billing prevents a request, the dialog explains the provider error and retains an ordinary Google Search link.
 

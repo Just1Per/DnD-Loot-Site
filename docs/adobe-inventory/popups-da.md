@@ -95,7 +95,7 @@ Native branches kommer før editorTargets-opslaget. Deres gamle selectors er der
 
 ## Infrastruktur og overlays
 
-- **aiLookupDialog** (js/modules/ai-lookup.js): Shared on-demand rules lookup from Adobe paper controls and native spell/feat/subclass/item dialogs; explicit reference metadata, owned-session cancellation and Google fallback. No shared Standard body is moved.
+- **aiLookupDialog** (js/modules/ai-lookup.js): Shared on-demand rules lookup from Adobe paper controls and native spell/feat/class/background/subclass/item dialogs; explicit reference metadata, owned-session cancellation and Google fallback. No shared Standard body is moved.
 - **characterSheetDialog** (js/modules/character-sheet.js): Outer shell, #characterSheetForm, session/store, ownership and close/save lifecycle.
 - **siteConfirmationDialog** (js/modules/site-confirmation.js): Shared confirmation/Cancel, isCurrent guards and focus restoration.
 - **CharacterAdobeFlyoutMenu** (js/modules/character-adobe-flyout-menu.js): Generic dynamic flyout factory; concrete IDs listed above.
