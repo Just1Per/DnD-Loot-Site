@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# GitHub Ubuntu runners can prefer the Azure mirror, which has stalled CI jobs.
+# GitHub Ubuntu runners can prefer Azure or regional EC2 mirrors that stall CI jobs.
 # Keep signed Ubuntu repositories and TLS verification; bound all APT retries.
 set -euo pipefail
 apt_root=${1:-/etc/apt}
@@ -12,6 +12,6 @@ Acquire::https::Timeout "20";
 APT
 for source in "$apt_root/apt-mirrors.txt" "$apt_root/sources.list" "$apt_root"/sources.list.d/*.sources "$apt_root"/sources.list.d/*.list; do
   [[ -f "$source" ]] || continue
-  sed -E -i 's#https?://azure\.archive\.ubuntu\.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' "$source"
+  sed -E -i 's#https?://(azure|[a-z0-9.-]+\.ec2)\.archive\.ubuntu\.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' "$source"
 done
-printf '%s\n' 'Ubuntu package downloads use bounded retries and the official archive instead of the Azure mirror.'
+printf '%s\n' 'Ubuntu package downloads use bounded retries and the official archive instead of Azure or regional EC2 mirrors.'

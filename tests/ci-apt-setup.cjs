@@ -3,20 +3,22 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path');
 const {execFileSync}=require('node:child_process');
 const script=path.resolve(__dirname,'../.github/scripts/prepare-browser-apt.sh');
-test('CI setup replaces stalled Ubuntu mirror in mirror lists and source formats, preserves signatures and other repositories, and is repeatable',()=>{
+test('CI setup replaces stalled Azure and regional EC2 Ubuntu mirrors in mirror lists and source formats, preserves signatures and other repositories, and is repeatable',()=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'campaignatlas-apt-'));
  try{
   fs.mkdirSync(path.join(root,'sources.list.d'));
   const files={
-   'apt-mirrors.txt':'http://azure.archive.ubuntu.com/ubuntu priority:1\nhttps://archive.ubuntu.com/ubuntu priority:2\n',
-   'sources.list':'deb http://azure.archive.ubuntu.com/ubuntu noble main\n',
+   'apt-mirrors.txt':'http://us-east-2.ec2.archive.ubuntu.com/ubuntu priority:1\nhttp://azure.archive.ubuntu.com/ubuntu priority:2\nhttps://archive.ubuntu.com/ubuntu priority:3\n',
+   'sources.list':'deb http://azure.archive.ubuntu.com/ubuntu noble main\ndeb https://eu-west-1.ec2.archive.ubuntu.com/ubuntu noble-updates main\n',
    'sources.list.d/ubuntu.sources':'Types: deb\nURIs: mirror+file:/etc/apt/apt-mirrors.txt\nSuites: noble noble-updates\nSigned-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n',
    'sources.list.d/direct.sources':'Types: deb\nURIs: https://azure.archive.ubuntu.com/ubuntu\nSigned-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n',
+   'sources.list.d/regional.sources':'Types: deb\nURIs: http://ap-southeast-2.ec2.archive.ubuntu.com/ubuntu\nSuites: noble noble-updates\nSigned-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n',
+   'sources.list.d/security.list':'deb https://security.ubuntu.com/ubuntu noble-security main\n',
    'sources.list.d/third-party.list':'deb [signed-by=/usr/share/keyrings/vendor.gpg] https://packages.microsoft.com/ubuntu/24.04/prod noble main\n'
   };
   for(const [name,value] of Object.entries(files))fs.writeFileSync(path.join(root,name),value);
   execFileSync('bash',[script,root]);
-  for(const [name,value] of Object.entries(files))assert.equal(fs.readFileSync(path.join(root,name),'utf8'),value.replace(/https?:\/\/azure\.archive\.ubuntu\.com\/ubuntu/g,'https://archive.ubuntu.com/ubuntu'));
+  for(const [name,value] of Object.entries(files))assert.equal(fs.readFileSync(path.join(root,name),'utf8'),value.replace(/https?:\/\/(?:azure|[a-z0-9.-]+\.ec2)\.archive\.ubuntu\.com\/ubuntu/g,'https://archive.ubuntu.com/ubuntu'));
   const config=fs.readFileSync(path.join(root,'apt.conf.d/80campaignatlas-network'),'utf8');
   assert.match(config,/Acquire::Retries "2"/);assert.match(config,/Acquire::http::Timeout "20"/);assert.match(config,/Acquire::https::Timeout "20"/);assert.doesNotMatch(config,/Verify-Peer|AllowUnauthenticated|AllowInsecure/);
   execFileSync('bash',[script,root]);assert.equal(fs.readFileSync(path.join(root,'apt.conf.d/80campaignatlas-network'),'utf8'),config);
