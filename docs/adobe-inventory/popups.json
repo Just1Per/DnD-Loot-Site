@@ -297,7 +297,7 @@
     {
       "id": "adobeSharedEditor",
       "file": "js/modules/character-adobe-view.js",
-      "line": 218,
+      "line": 219,
       "kind": "dialog",
       "category": "moves-standard-body",
       "entry": "Alle aktive bridge-routes i routetabellen",
@@ -335,7 +335,7 @@
     {
       "id": "adobeNotesOptions",
       "file": "js/modules/character-adobe-view.js",
-      "line": 321,
+      "line": 322,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Notes.Options",
@@ -369,6 +369,7 @@
       "notes": "Native carrier/row editor; delt private inventory og carrying-engine.",
       "testReferences": [
         "adobe-companion-equipment-browser.cjs",
+        "adobe-container-locations-browser.cjs",
         "adobe-pinned-items-browser.cjs"
       ]
     },
@@ -435,6 +436,7 @@
         "adobe-ai-lookup-browser.cjs",
         "adobe-attack-menus-browser.cjs",
         "adobe-companion-equipment-browser.cjs",
+        "adobe-container-locations-browser.cjs",
         "adobe-items-browser.cjs",
         "adobe-magic-menu-browser.cjs",
         "adobe-pinned-items-browser.cjs"
@@ -443,12 +445,13 @@
     {
       "id": "adobeItemContainerDialog",
       "file": "js/modules/character-item-containers-ui.js",
-      "line": 6,
+      "line": 18,
       "kind": "dialog",
       "category": "adobe-dialog",
-      "entry": "Owned item information og source equipment row",
-      "notes": "Native explicit container placement; bevar fælles stock, private Adobe-envelope, carrying og companion-transfer helpers.",
+      "entry": "Containers ved equipment/companion heading, Special features, item information og equipment row",
+      "notes": "Native overview, carrier/path/capacity og explicit placement preview; bevar fælles stock, private Adobe-envelope, carrying og companion-transfer helpers.",
       "testReferences": [
+        "adobe-container-locations-browser.cjs",
         "adobe-pinned-items-browser.cjs"
       ]
     },
@@ -558,6 +561,7 @@
       "testReferences": [
         "adobe-combat-feats-equipment-browser.cjs",
         "adobe-companion-equipment-browser.cjs",
+        "adobe-container-locations-browser.cjs",
         "adobe-gear-catalog-browser.cjs",
         "adobe-gear-combining-browser.cjs",
         "adobe-gear-page-transfers-browser.cjs",
@@ -968,85 +972,85 @@
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 180,
+      "line": 181,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 180,
+      "line": 181,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 180,
+      "line": 181,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 180,
+      "line": 181,
       "command": "experience",
       "expression": "'experience'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 180,
+      "line": 181,
       "command": "story",
       "expression": "'story'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 180,
+      "line": 181,
       "command": "feats",
       "expression": "'feats'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 180,
+      "line": 181,
       "command": "dynamic",
       "expression": "cmd"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 222,
+      "line": 223,
       "command": "conditions",
       "expression": "'conditions'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 326,
+      "line": 327,
       "command": "notes",
       "expression": "'notes'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 404,
+      "line": 405,
       "command": "spells",
       "expression": "'spells'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 409,
+      "line": 410,
       "command": "companion",
       "expression": "'companion'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 410,
+      "line": 411,
       "command": "dynamic",
       "expression": "editorChoice.value"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 420,
+      "line": 421,
       "command": "dynamic",
       "expression": "st.editor"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 450,
+      "line": 451,
       "command": "dynamic",
       "expression": "key"
     },
@@ -1120,17 +1124,17 @@
   "sharedCommands": [
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 180,
+      "line": 181,
       "expression": "'[data-combat-recover=\"'+(source.id==='SR'?'short':'long')+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 260,
+      "line": 261,
       "expression": "'[data-generated-prepare=\"'+entry.i+'\"]'"
     },
     {
       "file": "js/modules/character-adobe-view.js",
-      "line": 409,
+      "line": 410,
       "expression": "'[data-wild-end]'"
     }
   ]

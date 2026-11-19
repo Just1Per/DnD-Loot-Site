@@ -22,13 +22,19 @@ var CharacterItemContainers=(()=>{
   }
   return{placements,entries:effective,containers,warnings};
  }
+ function location(data,entries,id,projection=project(data,entries)){
+  const entry=entries.find(row=>row.id===id);if(!entry)return null;
+  const carrierIndex=directCarrier(data,id),carrier=carrierIndex<0?'You':stored(data).companions[carrierIndex]?.name||'Companion '+(carrierIndex+1),path=[carrier];
+  let at=projection.placements[id],seen=new Set();while(at&&!seen.has(at)){seen.add(at);const parent=entries.find(row=>row.id===at);path.splice(1,0,parent?.name||parent?.item?.name||'Container');at=projection.placements[at];}
+  return{id,carrierIndex,carrier,parent:projection.placements[id]||'',path,locationNote:String(entry.location||''),inactive:own(normalize(stored(data).itemContainers),id)&&!projection.placements[id]};
+ }
  function place(data,entries,id,parent){
   if(!valid(id)||parent!==''&&!valid(parent))throw Error('Choose an owned item and an available container.');const owned=new Map(entries.filter(r=>Number(r.quantity)>0).map(r=>[r.id,r]));if(!owned.has(id))throw Error('This owned item is no longer available.');const next=normalize(stored(data).itemContainers);if(parent){if(!own(next,id)&&Object.keys(next).length>=200)throw Error('The character already has 200 container placements.');Object.defineProperty(next,id,{value:parent,enumerable:true,writable:true,configurable:true});}else delete next[id];
   const after=project({...data,adobe:{...stored(data),itemContainers:next}},entries);if(parent&&after.placements[id]!==parent)throw Error('Choose one owned container on the same carrier. Cycles and nested magical containers are not allowed.');return next;
  }
  function descendants(data,entries,id){const placements=project(data,entries).placements;return entries.filter(row=>{let at=placements[row.id],count=0;while(at&&count++<200){if(at===id)return true;at=placements[at];}return false;}).map(r=>r.id);}
  function release(map,id){const next=normalize(map);delete next[id];return next;}
- return{normalize,project,place,descendants,release,directCarrier};
+ return{normalize,project,location,place,descendants,release,directCarrier};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterItemContainers=CharacterItemContainers;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterItemContainers;

@@ -226,3 +226,8 @@ The shared lookup is now directly available from paper controls, Table tools and
 ### Class and background lookup v93
 
 Added class books beside every native class draft and independent class/background books in searchable selection lists. The paper Background picker and shared origins controls use the same path. Opening lookup preserves search, selected options and unapplied multiclass levels; standard classes follow the draft rules edition, Artificer follows the selected Tasha’s/Eberron source edition, and backgrounds retain their own printing metadata. Manual lookup now offers Class and Background types. No automatic requests, provider configuration, character-data changes or migration. See [scope and tests](adobe-ai-lookup.md).
+
+
+### Tydelige beholdere og lokationer — v94
+
+Containers ved equipment- og companion-overskrifterne samt under Sheet choices åbner et søgbart overblik over beholdere, direkte indhold, løse items, kapacitet og den faktiske carrier. Item-, gear-row- og companion-vinduer viser placering som en sti samt en separat Location note. Destinationer forhåndsvises før Apply; søgning og drafts bevares, og ugyldige eller utilgængelige forbindelser forklares. Brugerens eksisterende private placeringer og carrying/transfer-regler genbruges. Se [omfang og test](adobe-container-locations.md). Volumen/compartments og de øvrige inventory-punkter er fortsat særskilt backlog.

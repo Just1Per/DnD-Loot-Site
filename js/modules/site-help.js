@@ -227,7 +227,7 @@ var SiteHelp=(()=>{
     ],
     [
       "Check movement and carried weight",
-      "Movement uses supported species, class, feat, armor and item effects. Type a table-specific movement display, or clear the field to restore automatic text. Double-click it or press Alt+Enter for movement and carrying controls. Editing this text does not grant a new movement mechanic. Weight Carried explains physical gear, coins, containers and companion carriers. + ? indicates unknown weights. The optional 2014 encumbrance rule must match your table. Record conditions explicitly; only supported effects are calculated, so resolve other penalties at the table.",
+      "Movement uses supported species, class, feat, armor and item effects. Type a table-specific movement display, or clear the field to restore automatic text. Double-click it or press Alt+Enter for movement and carrying controls. Editing this text does not grant a new movement mechanic. Weight Carried explains physical gear, coins, containers and companion carriers. Use Containers above Equipment or under Show extra features → Sheet choices to see packed and loose items grouped by carrier. Open an item to preview a container change, then Apply placement and Save sheet. Location notes remain editable labels; they do not assign an actual container. + ? indicates unknown weights. The optional 2014 encumbrance rule must match your table. Record conditions explicitly; only supported effects are calculated, so resolve other penalties at the table.",
       "sheet",
       "Open character sheet"
     ],

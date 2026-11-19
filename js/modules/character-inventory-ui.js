@@ -66,11 +66,12 @@ function openInventoryItemInformation(id){
  document.getElementById('sheetInventoryItemInformation')?.remove();
  const dialog=document.createElement('dialog');dialog.id='sheetInventoryItemInformation';dialog.className='vault-dialog sheet-item-information';dialog.setAttribute('aria-labelledby','sheetItemInformationTitle');
  const item=entry.item,esc=sheetEscape;
- dialog.innerHTML=`<header><h2 id="sheetItemInformationTitle">${esc(item.name)}</h2><button type="button" data-close-item-info aria-label="Close item information">Close</button></header><div class="sheet-rule-text">${esc(item.description||'No description recorded.')}</div><dl>${(item.properties||[]).map(p=>`<dt>${esc(p.title)}</dt><dd>${esc(p.text)}</dd>`).join('')}</dl>${entry.personal?'<div class="sheet-feature-overview-controls"><button type="button" data-edit-info-item>Edit item</button><button type="button" data-store-info-item>Move to backpack</button><button type="button" data-remove-info-item>Remove item</button></div>':''}`;
+ dialog.innerHTML=`<header><h2 id="sheetItemInformationTitle">${esc(item.name)}</h2><button type="button" data-close-item-info aria-label="Close item information">Close</button></header><div class="sheet-rule-text">${esc(item.description||'No description recorded.')}</div><dl>${(item.properties||[]).map(p=>`<dt>${esc(p.title)}</dt><dd>${esc(p.text)}</dd>`).join('')}</dl>${entry.personal?'<div class="sheet-feature-overview-controls"><button type="button" data-edit-info-item>Edit item</button><button type="button" data-store-info-item>Unequip / return to gear</button><button type="button" data-remove-info-item>Remove item</button></div>':''}`;
  document.getElementById('characterSheetDialog').append(dialog);
  const pinned=CharacterPinnedItems.find(item);if(pinned){const facts=document.createElement('section');facts.className='sheet-rule-summary';const lines=['Reference: '+pinned.source+' · '+pinned.edition];if(pinned.charges)lines.push('Charges: '+pinned.charges+' · Recovery: '+(pinned.recharge||'see item'));if(pinned.reqAttune)lines.push('Requires attunement; review any source-specific eligibility.');if(pinned.attachedSpells?.length)lines.push('Item spells: '+pinned.attachedSpells.map(name=>String(name).split('|')[0]).join(', ')+'. Casting costs and restrictions follow the item; these are not learned spells.');facts.textContent=lines.join(' · ');dialog.append(facts);}
  if(globalThis.AiLookup?.button){const session=sheetSession,b=AiLookup.button(AiLookup.reference('item',pinned?{...item,name:pinned.name,source:pinned.source,edition:pinned.edition}:item,session.data.build.edition),{owner:session,isCurrent:()=>characterHPCurrent(session)&&dialog.isConnected&&dialog.open});b.dataset.itemInformationLookup='';dialog.append(b);}
- const placement=document.createElement('button');placement.type='button';placement.textContent='Container placement / contents';placement.dataset.itemContainer='';placement.onclick=()=>{dialog.close();CharacterItemContainersUI.open(id);};dialog.append(placement);
+ const location=CharacterItemContainersUI.summary(id);if(location)dialog.append(location);
+ const placement=document.createElement('button');placement.type='button';placement.textContent='Change container / view contents';placement.dataset.itemContainer='';placement.disabled=!location;if(!location)placement.title='Carry this item before assigning a container.';placement.onclick=()=>{dialog.close();CharacterItemContainersUI.open(id);};dialog.append(placement);
  dialog.querySelector('[data-close-item-info]').onclick=()=>dialog.close();
  dialog.addEventListener('close',()=>dialog.remove());
  dialog.querySelector('[data-edit-info-item]')?.addEventListener('click',()=>{
@@ -82,7 +83,7 @@ function openInventoryItemInformation(id){
   g.inventorySide='right';g.location='Backpack';
   const choice=sheetSession.data.equipmentState.loadout.find(c=>c.id===id);if(choice)choice.equipped=false;
   sheetSession.dirty=true;dialog.close();refreshCharacterSheetInventory();
-  sheetStatus('Item moved to backpack. Save sheet to keep it.');
+  sheetStatus('Item returned to the gear list. Use Change container to assign a container. Save sheet to keep it.');
  });
  dialog.querySelector('[data-remove-info-item]')?.addEventListener('click',()=>{
   readSheetForm();sheetSession.data.personalGear=sheetSession.data.personalGear.filter(g=>g.id!==id);
