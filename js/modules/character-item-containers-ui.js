@@ -4,11 +4,11 @@ var CharacterItemContainersUI=(()=>{
  let dispose=null;const C=CharacterItemContainers;
  const entries=()=>CharacterCompanionEquipment.physical(sheetSession.data,sheetEquipmentLoot());
  const capacity=bag=>bag.used+(bag.capacity===null?' lb · capacity not specified':' / '+bag.capacity+' lb')+(bag.unknown?' + unknown weights':'')+(bag.over?' · OVER CAPACITY':'');
- function summary(id){
+ function summary(id,{note,label='Location note'}={}){
   const location=C.location(sheetSession.data,entries(),id);if(!location)return null;
   const box=document.createElement('div');box.className='inventory-placement-summary';box.dataset.itemPlacement='';
   const title=document.createElement('strong'),path=document.createElement('span');title.textContent=location.parent?'Stored in '+location.path.at(-1):'No container assigned';path.textContent=location.path.join(' → ')+(location.parent?'':' · loose / on this carrier');box.append(title,path);
-  if(location.locationNote){const note=document.createElement('small');note.textContent='Location note: '+location.locationNote;box.append(note);}
+  const text=note??location.locationNote;if(text){const line=document.createElement('small');line.textContent=label+': '+text;box.append(line);}
   if(location.inactive){const warning=document.createElement('small');warning.textContent='The saved container is unavailable. This item currently counts as loose.';box.append(warning);}
   return box;
  }
