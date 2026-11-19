@@ -221,3 +221,8 @@ Implemented following the spell-sheet user test: **Add other spells** supports c
 ### Adobe AI Lookup v92
 
 The shared lookup is now directly available from paper controls, Table tools and native spell, reader, additional-spell, feat, subclass and owned-item information windows. Explicit reference controls replace reliance on legacy body selectors for these paths. Name, source and edition are prefilled without submitting a request or sending personal notes. Owned-session cancellation, keyboard/focus, mobile, fallback/error handling and stale requests are covered by the connected browser regression. See [scope and tests](adobe-ai-lookup.md).
+
+
+### Class and background lookup v93
+
+Added class books beside every native class draft and independent class/background books in searchable selection lists. The paper Background picker and shared origins controls use the same path. Opening lookup preserves search, selected options and unapplied multiclass levels; standard classes follow the draft rules edition, Artificer follows the selected Tasha’s/Eberron source edition, and backgrounds retain their own printing metadata. Manual lookup now offers Class and Background types. No automatic requests, provider configuration, character-data changes or migration. See [scope and tests](adobe-ai-lookup.md).

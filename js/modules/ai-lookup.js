@@ -105,7 +105,7 @@ var AiLookup=(()=>{
   try{const url=new URL(value);return /^https?:$/.test(url.protocol)?url.href:'';}catch(_){return '';}
  }
  function promptFor(context){
-  const labels={spell:'spell',feat:'feat',item:'magic item or equipment',creature:'creature or NPC',subclass:'subclass',rule:'character rule or feature'};
+  const labels={spell:'spell',feat:'feat',item:'magic item or equipment',creature:'creature or NPC',subclass:'subclass',class:'character class',background:'character background',rule:'character rule or feature'};
   return [
    'You are a source-conscious reference assistant for Dungeons & Dragons fifth edition.',
    'Use Google Search grounding to identify the requested rules entry and distinguish similar names or editions.',
@@ -136,7 +136,7 @@ var AiLookup=(()=>{
   dialog=document.createElement('dialog');dialog.id='aiLookupDialog';dialog.className='ai-lookup-dialog';dialog.setAttribute('aria-labelledby','aiLookupTitle');
   dialog.innerHTML='<header class="ai-lookup-head"><span class="ai-lookup-heading">'+icon+'<span><small>GROUNDED RULES REFERENCE</small><h2 id="aiLookupTitle">AI Lookup</h2></span></span><button type="button" class="ai-lookup-close" aria-label="Close AI Lookup">×</button></header>'+
    '<div class="ai-lookup-content"><p class="ai-lookup-intro">A short, AI-generated explanation of a rules entry. Not official rules text; confirm mechanics in your sourcebook.</p>'+
-   '<div class="ai-lookup-fields"><label>Entry name<input id="aiLookupName" type="text" maxlength="160" autocomplete="off"></label><label>Type<select id="aiLookupKind"><option value="spell">Spell</option><option value="feat">Feat</option><option value="item">Item</option><option value="subclass">Subclass</option><option value="creature">Creature / NPC</option><option value="rule">Rule / feature</option></select></label><label>Edition<select id="aiLookupEdition"><option value="">Not specified</option><option value="2014">2014</option><option value="2024">2024</option></select></label><label>Sourcebook (optional)<input id="aiLookupSource" type="text" maxlength="160"></label></div>'+
+   '<div class="ai-lookup-fields"><label>Entry name<input id="aiLookupName" type="text" maxlength="160" autocomplete="off"></label><label>Type<select id="aiLookupKind"><option value="spell">Spell</option><option value="feat">Feat</option><option value="item">Item</option><option value="class">Class</option><option value="subclass">Subclass</option><option value="background">Background</option><option value="creature">Creature / NPC</option><option value="rule">Rule / feature</option></select></label><label>Edition<select id="aiLookupEdition"><option value="">Not specified</option><option value="2014">2014</option><option value="2024">2024</option></select></label><label>Sourcebook (optional)<input id="aiLookupSource" type="text" maxlength="160"></label></div>'+
    '<p class="ai-lookup-privacy">Runs only when you press Search with Gemini. The entry name and reference fields are sent to Google. Results are not saved to the campaign database.</p>'+
    '<div id="aiLookupStatus" class="ai-lookup-status" role="status" aria-live="polite"></div><a id="aiLookupBilling" href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" hidden>Manage Gemini API billing ↗</a><div id="aiLookupAnswer" class="ai-lookup-answer" hidden></div><section id="aiLookupSources" class="ai-lookup-sources" hidden><h3>Sources to verify</h3><ul></ul></section><section id="aiLookupSuggestions" class="ai-lookup-suggestions" hidden><h3>Google Search suggestions</h3></section></div>'+
    '<footer class="ai-lookup-actions"><a id="aiLookupGoogle" target="_blank" rel="noopener noreferrer">Search on Google <span aria-hidden="true">↗</span></a><button type="button" id="aiLookupRun" class="btn-primary">Search with Gemini</button></footer>';
@@ -235,6 +235,11 @@ var AiLookup=(()=>{
  function reference(kind,row={},ruleEdition=''){
   return info(kind,String(row.name||'').replace(/\s*\[(2014|2024)\]$/,''),row.book||row.source||'',row.edition||ruleEdition,[kind==='spell'&&row.level!=null?(row.level===0?'Cantrip':'Spell level '+row.level):'',row.page?'Source page '+row.page:''].filter(Boolean).join(' · '));
  }
+ function classReference(id,data){
+  const row=Object.hasOwn(CharacterRules.classes,id)?CharacterRules.classes[id]:null;if(!row)return null;
+  const source=id==='artificer'?CharacterClassFeatureChoices.artificerSource(data):{source:data.build.edition==='2024'?'XPHB':'PHB',sourceEdition:data.build.edition};
+  return source.source?reference('class',{name:row.name,source:source.source,edition:source.sourceEdition}):null;
+ }
  function button(context,{isCurrent=()=>true,owner=null}={}){
   const read=()=>typeof context==='function'?context():context,first=read(),b=document.createElement('button');b.type='button';b.className='ai-lookup-icon adobe-ai-lookup';b.dataset.aiLookupControl='';b.innerHTML=icon;b.disabled=!first;
   const label=first?'AI Lookup'+(first.name?' for '+norm(first.name):''):'AI Lookup — choose an entry first';b.title=label;b.setAttribute('aria-label',label);b.setAttribute('aria-haspopup','dialog');
@@ -253,5 +258,5 @@ var AiLookup=(()=>{
  if(typeof document!=='undefined'){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
  }
- return {open,button,reference,close,closeForOwner,enhance,buildPrompt:promptFor,lookupUrl:googleUrl,errorNotice};
+ return {open,button,reference,classReference,close,closeForOwner,enhance,buildPrompt:promptFor,lookupUrl:googleUrl,errorNotice};
 })();

@@ -66,3 +66,5 @@
 .adobe-ai-lookup{min-width:44px;min-height:44px;width:44px;height:44px;margin:4px 0}
 .adobe-spell-list-name .adobe-ai-lookup{display:inline-flex;align-items:center;justify-content:center;border:1px solid #a48a5d;border-radius:7px;background:#f8eacb;color:#663829}
 .adobe-lookup-field{display:flex;align-items:flex-end;gap:8px;min-width:0}.adobe-lookup-field>label{flex:1;min-width:0}.adobe-lookup-field>.adobe-ai-lookup{flex-shrink:0}
+
+.adobe-choice-reference{display:flex;align-items:center;gap:8px;min-width:0}.adobe-choice-reference>[data-choice-value]{flex:1;min-width:0}.adobe-choice-reference>.adobe-ai-lookup{flex:0 0 44px}
