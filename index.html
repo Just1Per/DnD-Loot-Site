@@ -17,11 +17,12 @@
   <link rel="stylesheet" href="css/button-theme.css?v=20261010-ui-cleanup-v82">
   <link rel="icon" type="image/png" href="/assets/ui/favicon-48-v1.png">
   <link rel="stylesheet" href="css/character-sheet.css?v=20261026-monk-martial-arts-v1">
-  <link rel="stylesheet" href="css/character-adobe-integration.css?v=20261120-map-image-access-v97" data-character-adobe-integration="true">
+  <link rel="stylesheet" href="css/character-adobe-integration.css?v=20261120-notifications-v98" data-character-adobe-integration="true">
   <link rel="stylesheet" href="css/character-vault-theme.css?v=20261026-monk-martial-arts-v1" data-character-vault-theme="true">
-  <link rel="stylesheet" href="css/character-sheet-print.css?v=20261120-map-image-access-v97">
-  <link rel="stylesheet" href="css/ai-lookup.css?v=20261120-map-image-access-v97">
-  <link rel="stylesheet" href="css/site-help.css?v=20261120-map-image-access-v97">
+  <link rel="stylesheet" href="css/character-sheet-print.css?v=20261120-notifications-v98">
+  <link rel="stylesheet" href="css/ai-lookup.css?v=20261120-notifications-v98">
+  <link rel="stylesheet" href="css/account-notifications.css?v=20261120-notifications-v98">
+  <link rel="stylesheet" href="css/site-help.css?v=20261120-notifications-v98">
   <link rel="stylesheet" href="css/site-identity.css?v=20261010-ui-cleanup-v82">
   <link rel="stylesheet" href="css/campaign-workspace.css?v=20261027-world-editor-navigation-v1">
   <link rel="stylesheet" href="css/campaign-home.css?v=20261016-subclass-warning-v1">
@@ -62,8 +63,18 @@
       <button id="adminTab" type="button" class="toolbar-btn" style="display:none">Admin</button>
       <p id="authStatus" role="status" aria-live="polite"></p>
       <button id="logoutButton" type="button" style="display:none">Logout</button>
+      <button id="accountNotificationsButton" data-no-context-help class="toolbar-btn account-notification-bell" type="button" hidden aria-label="Notifications" aria-haspopup="dialog" aria-controls="accountNotificationsPanel" aria-expanded="false"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><span data-notification-count hidden></span></button>
+      <span id="accountNotificationsAnnouncement" class="sr-only" aria-live="polite"></span>
     </div>
   </header>
+  <dialog id="accountNotificationsPanel" class="account-notifications" data-no-context-help aria-labelledby="accountNotificationsTitle">
+    <header><h2 id="accountNotificationsTitle">Notifications</h2><button type="button" data-notification-close aria-label="Close notifications">×</button></header>
+    <div class="account-notification-toolbar"><div role="group" aria-label="Filter notifications"><button type="button" data-notification-filter="all" aria-pressed="true">All</button><button type="button" data-notification-filter="unread" aria-pressed="false">Unread</button></div><button type="button" data-notification-refresh>Refresh</button></div>
+    <p data-notification-status role="status" aria-live="polite"></p>
+    <ul data-notification-list aria-label="Your notifications"></ul>
+    <p data-notification-limit class="account-notification-limit"></p>
+    <footer><button type="button" data-notification-read-all>Mark all as read</button><button type="button" data-notification-clear-read>Clear read</button></footer>
+  </dialog>
 
   <!-- ══════════════════════════════════════════════════════════════════════
        CAMPAIGN SELECTOR SCREEN
@@ -486,6 +497,6 @@
     <p>© 2026 DKDM — CampaignAtlas’s original website code and interface. Third-party content retains its own licences and rights.</p>
   </footer>
   <script src="js/boot-status.js?v=20261010-ui-cleanup"></script>
-  <script type="module" id="siteAppScript" src="js/app.js?v=20261120-map-image-access-v97"></script>
+  <script type="module" id="siteAppScript" src="js/app.js?v=20261120-notifications-v98"></script>
 </body>
 </html>

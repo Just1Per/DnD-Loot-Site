@@ -162,6 +162,7 @@ var SiteHelpData=(()=>{
   'my loot':'Items owned by your characters in this campaign. Other players cannot view your private looted items; the campaign DM can.',
   'my saved items':'Your character’s item wish list. Saved items are reminders and do not reduce campaign stock or grant ownership.',
   'your campaigns':'Campaigns you belong to. Select one to load its characters, items and campaign role.',
+  'notifications':'The header bell shows pending campaign invitations, saved DM-note updates, DM-assigned loot and DM-application decisions. Open an entry to visit its source. Mark read and Dismiss synchronize with your account; they do not change notes, inventory, invitations or approval decisions.',
   'pending invitations':'Invitations addressed to your account. Accept to join with the invited role, or decline if you do not want to join.',
   'delete campaign':'Ends access for every campaign member. Only the owner or an administrator can do this, at the bottom of campaign Settings. The confirmation lets you cancel; stored records and files remain available for recovery.',
   'campaign settings':'Edit the current campaign’s name, description and default item visibility. Save Settings applies these choices to this campaign. Only the campaign owner or an administrator can delete the campaign, at the bottom of Settings. A confirmation is required; deletion ends member access and retains records for recovery.',

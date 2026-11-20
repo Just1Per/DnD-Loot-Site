@@ -34,7 +34,7 @@ const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42
  async function refreshCampaignData(){items=[...records].filter(([p])=>p.startsWith('campaigns/a/items/')).map(([p,d])=>({...d,id:p.split('/').at(-1)}));}
  function paint(host,rows){const target=document.getElementById(host);target.replaceChildren(...rows.map(row=>createCard(row.item||row,row.item?{inventoryEntry:row}:{})));observePendingImages(target);}
  `});
- for(const name of ['campaign-store','images','library'])await page.addScriptTag({path:root+'/js/modules/'+name+'.js'});
+ for(const name of ['account-notification-events','campaign-store','images','library'])await page.addScriptTag({path:root+'/js/modules/'+name+'.js'});
  await page.addScriptTag({content:'const vaultCall=createCampaignStore(sdk);openItemModal=()=>{};'});
  await page.evaluate(async()=>{
   records.set('items/root-template',{name:'Exact red sword',catalogueStatus:'approved-v1',imageBaseId:'Sword-red-2',artwork:{status:'generated'}});

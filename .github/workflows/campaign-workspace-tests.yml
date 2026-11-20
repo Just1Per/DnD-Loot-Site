@@ -193,6 +193,8 @@ jobs:
         npm --prefix tests run test:character-note-recaps
     - name: Centered native dialogs, spell details and unsaved-draft prompts
       run: npm --prefix tests run test:dialogs
+    - name: Account notifications, read state and private source links
+      run: npm --prefix tests run test:account-notifications
     - name: Root catalogue multi-select and viewport checks
       run: npm --prefix tests run test:root-picker
     - name: Admin catalogue loading, retry and account isolation

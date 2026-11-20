@@ -200,6 +200,7 @@ async function logoutFromSite(){
   if(!PageEditors.guard(logoutFromSite))return;
   if(!SheetNavigation.guard(logoutFromSite))return;
   AppNavigation.clear();
+  AccountNotifications.stop();
   CampaignHome.clear(true);
   CampaignInformation.clear(true);
   CampaignJournal.clear();CampaignMap.clear();
@@ -226,6 +227,7 @@ document.getElementById("logoutButton")?.addEventListener("click",logoutFromSite
 let authStartupGeneration=0;
 onAuthStateChanged(auth, async (firebaseUser) => {
   const generation=++authStartupGeneration;
+  AccountNotifications.stop();
   AdminAccounts.clear();
   ReusableLibrary.clear();
   CharacterWorkspace.clear();
@@ -268,6 +270,8 @@ onAuthStateChanged(auth, async (firebaseUser) => {
         loadMyDMRequest()
       ]);
 
+      if(!current())return;
+      await AccountNotifications.start(firebaseUser);
       if(!current())return;
       await loadDashboardCharacters();
       if(!current())return;
@@ -342,3 +346,4 @@ initFilterListeners();
 initModalListeners();
 
 SiteHelp.init();
+AccountNotifications.init();

@@ -239,6 +239,19 @@ match /users/{userId} {
 
   allow delete: if isAdmin();
 
+  // Account-private read and dismissal state; no source content or role grants.
+  match /notificationState/{sourceId} {
+    function validState(d) {
+      return sourceId.size() <= 1400 && d.keys().hasAll(['read','dismissed','updatedAt'])
+        && d.keys().hasOnly(['read','dismissed','updatedAt'])
+        && d.read is list && d.read.size() <= 200 && d.dismissed is list && d.dismissed.size() <= 200
+        && d.read.join('|').size() <= 160000 && d.dismissed.join('|').size() <= 160000
+        && d.updatedAt is int;
+    }
+    allow get: if isSelf(userId);
+    allow create, update: if isSelf(userId) && validState(request.resource.data);
+  }
+
   // DM-owned creature templates, separate from global SRD and campaign copies.
   match /creatureTemplates/{templateId} {
     function validTemplate(d) {
@@ -891,6 +904,21 @@ match /campaigns/{campaignId} {
         || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/playerChapters/$(recordId)));
     // Archive retains IDs and related records. Hard deletion is intentionally unavailable.
   }
+  function validNotice(d) {
+    return d.keys().hasAll(['kind','sourceId','version','createdAt','actorId','quantity'])
+      && d.keys().hasOnly(['kind','sourceId','version','createdAt','actorId','quantity'])
+      && d.actorId == request.auth.uid && d.createdAt is int && d.createdAt > 0
+      && d.sourceId is string && d.sourceId.size() <= 1500
+      && d.version is int && d.version > 0 && d.quantity is int;
+  }
+  function validNoteNotice(d,noticeId,path,characterId) {
+    let after = getAfter(path).data;
+    let before = exists(path) ? get(path).data.data.get('dmNotes','') : '';
+    return validNotice(d) && d.kind == 'dm-notes' && d.sourceId == characterId && d.quantity == 0
+      && noticeId == 'notes_' + string(d.version) && d.version == after.revision
+      && d.createdAt == after.updatedAt && after.updatedBy == request.auth.uid
+      && after.data.get('dmNotes','') != before;
+  }
   function canReadShot(d) {
     return isCampaignDM(campaignId) || (isActiveMember(campaignId) && (d.createdBy == request.auth.uid || d.data.hostUid == request.auth.uid || request.auth.uid in d.data.participantUids));
   }
@@ -952,6 +980,11 @@ match /campaigns/{campaignId} {
       allow read: if manager() || owns();
       allow create: if (manager() || owns()) && valid(request.resource.data) && request.resource.data.revision == 1 && (manager() || protectedGrant(request.resource.data.data) == [0,0,0,0] && request.resource.data.data.get('dmNotes','') == '');
       allow update: if (manager() || owns()) && valid(request.resource.data) && request.resource.data.revision == resource.data.revision + 1 && (manager() || protectedGrant(request.resource.data.data) == protectedGrant(resource.data.data) && request.resource.data.data.get('dmNotes','') == resource.data.data.get('dmNotes',''));
+    }
+    match /characterNotifications/{characterId}/entries/{noticeId} {
+      function character() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/characters/$(characterId)).data; }
+      allow read: if manager() || (accepted() && character().userId == request.auth.uid && character().active != false);
+      allow create: if manager() && validNoteNotice(request.resource.data,noticeId,/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/characterSheets/$(characterId),characterId);
     }
   }
   match /workspaceSecrets/{secretId} {
@@ -1020,6 +1053,26 @@ match /characters/{charId} {
     && (isCampaignDM(campaignId) || (isActiveMember(campaignId) && resource.data.userId == request.auth.uid));
   allow delete: if isCampaignDM(campaignId)
     || (isActiveMember(campaignId) && resource.data.userId == request.auth.uid);
+}
+match /characterNotifications/{charId}/entries/{noticeId} {
+  function mayRead() {
+    return isCampaignDM(campaignId) || (isActiveMember(campaignId)
+      && get(characterPath(campaignId,charId)).data.userId == request.auth.uid
+      && get(characterPath(campaignId,charId)).data.get('active',true) != false);
+  }
+  function validLoot(d) {
+    let path = /databases/$(database)/documents/campaigns/$(campaignId)/inventory/$(d.sourceId);
+    let after = getAfter(path).data;
+    let previous = exists(path) ? get(path).data.quantity : 0;
+    return validNotice(d) && d.kind == 'loot' && noticeId.matches('^loot_[a-zA-Z0-9-]{1,100}$')
+      && after.characterId == charId && after.userId == get(characterPath(campaignId,charId)).data.userId
+      && d.quantity > 0 && d.quantity == after.quantity - previous
+      && d.version == after.updatedAt && d.createdAt == after.updatedAt;
+  }
+  allow read: if mayRead();
+  allow create: if isCampaignDM(campaignId) && (
+    validNoteNotice(request.resource.data,noticeId,/databases/$(database)/documents/campaigns/$(campaignId)/characterSheets/$(charId),charId)
+    || validLoot(request.resource.data));
 }
 // Private character details are separate from the campaign's shared roster.
 match /characterSheets/{charId} {
