@@ -1,0 +1,9 @@
+# Editable Racial Traits — v96
+
+**Racial Traits** on page two is now an ordinary editable multiline field. Its initial text remains the generated species descriptions and supported senses. Editing changes only this character’s sheet wording; no race choice, numerical effect, proficiency, sense, resource or spell grant is changed. Clearing the field deliberately keeps it blank.
+
+A private `adobe.racialTraitText` map retains separate copies by selected race ID and character rules edition. Changing race/edition displays that choice’s own copy or automatic descriptions; returning restores the previous copy. No catalogue prose is changed. Existing sheets have no overrides and keep their normal generated text. Schema 14 and the existing private grants envelope remain in use; no rule deployment, source import or migration is added for this field.
+
+**Restore racial traits**, shown above page two when an override exists, asks before replacing that choice’s edited text with its generated descriptions. Other race/edition copies remain. Text matching the current automatic value also restores automatic behavior. Save sheet persists edits/restoration; normal private revision conflicts retain the local draft. Copies are bounded to 12,000 characters each, 64 keys and 120,000 characters in total; exhausted storage refuses without partially saving a copy.
+
+The ordinary Adobe field path supports mouse/keyboard, scrolling and printed overflow. A stale field cannot write text into a different race/edition; Escape reloads its current text. Detached/session guards remain shared. Unit checks cover defaults, explicit blank, scoped copies, restoration, atomic bounds and adapter behavior. The existing all-105-species browser regression now also covers editable/empty text, save/reopen, race/edition switching, stale edits, restore/Cancel, mobile/axe, unchanged mechanics and actual PDF text.

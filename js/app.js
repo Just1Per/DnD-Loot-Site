@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261120-dm-notes-v95";
+const ASSET_VERSION = "20261120-racial-trait-text-v96";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -187,6 +187,7 @@ const FEATURE_FILES = [
   "./modules/character-rule-choice-data.js",
   "./modules/character-subclass-planning.js",
   "./modules/character-adobe-stack-plan.js",
+  "./modules/character-racial-trait-text.js",
   "./modules/character-adobe-engine.js",
   "./modules/character-additional-spells.js",
   "./modules/character-spellcasting.js",

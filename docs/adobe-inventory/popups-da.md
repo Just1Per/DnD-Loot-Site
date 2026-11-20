@@ -27,9 +27,9 @@ Der er 48 registrerede popup-familier og 29 editor-routes.
 | adobePagesDialog | adobe-dialog | Manage pages / Add pages | Valg af spell-, companion-, notes- og andre sider. | [character-adobe-stack-ui.js:108](../../js/modules/character-adobe-stack-ui.js#L108) |
 | adobePaperZoomMenu | adobe-menu | Forstørrelsesglas på arket | Bruger fortsat intern #adobeZoom-selector; den skjulte kontrol skal bevares indtil afkobling. | [character-adobe-stack-ui.js:164](../../js/modules/character-adobe-stack-ui.js#L164) |
 | adobePageActionsMenu | adobe-menu | Page options ved zoom/print → Hide this page / Manage pages | Skjuler en bestemt side uden at slette data; genopretning via Undo eller sideoversigten. | [character-adobe-stack-ui.js:165](../../js/modules/character-adobe-stack-ui.js#L165) |
-| adobeSpecialFeaturesMenu | adobe-menu | Show extra features | Blander native routes og shared bridges; se routetabel. | [character-adobe-view.js:152](../../js/modules/character-adobe-view.js#L152) |
-| adobeSharedEditor | moves-standard-body | Alle aktive bridge-routes i routetabellen | Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning. | [character-adobe-view.js:219](../../js/modules/character-adobe-view.js#L219) |
-| adobeNotesOptions | adobe-dialog | Notes.Options | Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge. | [character-adobe-view.js:322](../../js/modules/character-adobe-view.js#L322) |
+| adobeSpecialFeaturesMenu | adobe-menu | Show extra features | Blander native routes og shared bridges; se routetabel. | [character-adobe-view.js:159](../../js/modules/character-adobe-view.js#L159) |
+| adobeSharedEditor | moves-standard-body | Alle aktive bridge-routes i routetabellen | Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning. | [character-adobe-view.js:226](../../js/modules/character-adobe-view.js#L226) |
+| adobeNotesOptions | adobe-dialog | Notes.Options | Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge. | [character-adobe-view.js:329](../../js/modules/character-adobe-view.js#L329) |
 | sheetFeatInformation | shared-dialog | Feat information fra native featvalg | Selvstændig læsning, men modulet indeholder også katalog/resource-renderere. | [character-catalog-ui.js:99](../../js/modules/character-catalog-ui.js#L99) |
 | adobeCompanionEquipmentDialog | adobe-dialog | Companion equipment arrows, transfer destination og companion-card controls | Native carrier/row editor; delt private inventory og carrying-engine. | [character-companion-equipment-ui.js:15](../../js/modules/character-companion-equipment-ui.js#L15) |
 | sheetCompanionHPOptions | shared-dialog | Companion Set Max HP | Egen dialog; afhænger af companion state, ikke en flyttet popup-body. | [character-companion-hp-ui.js:13](../../js/modules/character-companion-hp-ui.js#L13) |
@@ -114,22 +114,22 @@ sharedCommand klikker stadig på kontroller i #characterSheetForm (bl.a. spell p
 
 | Kald | Kode |
 | --- | --- |
-| row.descriptor.command | [character-adobe-view.js:113](../../js/modules/character-adobe-view.js#L113) |
-| id | [character-adobe-view.js:151](../../js/modules/character-adobe-view.js#L151) |
-| notes | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
-| companion | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
-| companion | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
-| experience | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
-| story | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
-| feats | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
-| cmd | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
-| conditions | [character-adobe-view.js:223](../../js/modules/character-adobe-view.js#L223) |
-| notes | [character-adobe-view.js:327](../../js/modules/character-adobe-view.js#L327) |
-| spells | [character-adobe-view.js:405](../../js/modules/character-adobe-view.js#L405) |
-| companion | [character-adobe-view.js:410](../../js/modules/character-adobe-view.js#L410) |
-| editorChoice.value | [character-adobe-view.js:411](../../js/modules/character-adobe-view.js#L411) |
-| st.editor | [character-adobe-view.js:421](../../js/modules/character-adobe-view.js#L421) |
-| key | [character-adobe-view.js:451](../../js/modules/character-adobe-view.js#L451) |
+| row.descriptor.command | [character-adobe-view.js:114](../../js/modules/character-adobe-view.js#L114) |
+| id | [character-adobe-view.js:158](../../js/modules/character-adobe-view.js#L158) |
+| notes | [character-adobe-view.js:188](../../js/modules/character-adobe-view.js#L188) |
+| companion | [character-adobe-view.js:188](../../js/modules/character-adobe-view.js#L188) |
+| companion | [character-adobe-view.js:188](../../js/modules/character-adobe-view.js#L188) |
+| experience | [character-adobe-view.js:188](../../js/modules/character-adobe-view.js#L188) |
+| story | [character-adobe-view.js:188](../../js/modules/character-adobe-view.js#L188) |
+| feats | [character-adobe-view.js:188](../../js/modules/character-adobe-view.js#L188) |
+| cmd | [character-adobe-view.js:188](../../js/modules/character-adobe-view.js#L188) |
+| conditions | [character-adobe-view.js:230](../../js/modules/character-adobe-view.js#L230) |
+| notes | [character-adobe-view.js:334](../../js/modules/character-adobe-view.js#L334) |
+| spells | [character-adobe-view.js:412](../../js/modules/character-adobe-view.js#L412) |
+| companion | [character-adobe-view.js:417](../../js/modules/character-adobe-view.js#L417) |
+| editorChoice.value | [character-adobe-view.js:418](../../js/modules/character-adobe-view.js#L418) |
+| st.editor | [character-adobe-view.js:428](../../js/modules/character-adobe-view.js#L428) |
+| key | [character-adobe-view.js:458](../../js/modules/character-adobe-view.js#L458) |
 | notes | [character-adventure-log-ui.js:6](../../js/modules/character-adventure-log-ui.js#L6) |
 | itemResources | [character-item-resource-ui.js:49](../../js/modules/character-item-resource-ui.js#L49) |
 | attacks | [character-named-equipment-ui.js:82](../../js/modules/character-named-equipment-ui.js#L82) |
