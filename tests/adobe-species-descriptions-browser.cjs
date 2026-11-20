@@ -45,7 +45,7 @@ const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
     assert.match(await racial.inputValue(), /Fey Ancestry:.*advantage.*Charmed/);
     assert.match(await racial.inputValue(), /Trance:.*Four hours.*two temporary weapon or tool proficiencies/);
     assert.doesNotMatch(await racial.inputValue(), /normal elf rules|check the source/i);
-    assert.equal(await racial.getAttribute('readonly'), '');
+    assert.equal(await racial.getAttribute('readonly'), null);
     await page.locator('#sheetSave').click();
     await page.waitForFunction(() => !sheetSession.saving && !sheetSession.dirty);
     await page.evaluate(async () => {closeCharacterSheet(true); await openCharacterSheet('c1');});
@@ -68,6 +68,18 @@ const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
     });
     assert.deepEqual(checks, []);
 
+    // The generated wording is the initial value; private copies never alter mechanics.
+    const automatic=await racial.inputValue(),custom='My custom racial trait wording.\nA reminder agreed with the DM.',mechanics=await page.evaluate(()=>JSON.stringify(CharacterSheetModel.derive(sheetSession.data,4,sheetEquipmentLoot()).effects));
+    await racial.fill(custom);await racial.press('Tab');assert.equal(await racial.inputValue(),custom);assert.equal(await page.evaluate(()=>CharacterRacialTraitText.project(sheetSession.data).custom),true);assert.equal(await page.evaluate(()=>JSON.stringify(CharacterSheetModel.derive(sheetSession.data,4,sheetEquipmentLoot()).effects)),mechanics);
+    await page.locator('#sheetSave').click();await page.waitForFunction(()=>!sheetSession.saving&&!sheetSession.dirty);await page.evaluate(async()=>{closeCharacterSheet(true);await openCharacterSheet('c1')});await navigate();assert.equal(await racial.inputValue(),custom);
+    const change=async(race,edition)=>{await page.evaluate(({race,edition})=>{sheetSession.data.build.race=race;sheetSession.data.build.edition=edition;fillSheetForm();updateSheetCalculations();},{race,edition});await navigate();};
+    await change('half-orc','2014');assert.doesNotMatch(await racial.inputValue(),/My custom racial/);await change('shadar-kai-mpmm','2014');assert.equal(await racial.inputValue(),custom);await change('shadar-kai-mpmm','2024');assert.doesNotMatch(await racial.inputValue(),/My custom racial/);await racial.fill('My 2024 reminder');await racial.press('Tab');await change('shadar-kai-mpmm','2014');assert.equal(await racial.inputValue(),custom);
+    // Uncommitted text cannot cross a race/edition change; Escape repairs the field.
+    await racial.fill('Stale 2014 draft');await page.evaluate(()=>{sheetSession.data.build.edition='2024';fillSheetForm();updateSheetCalculations();});await racial.press('Tab');assert.equal(await racial.getAttribute('aria-invalid'),'true');assert.equal(await page.evaluate(()=>CharacterRacialTraitText.project(sheetSession.data).value),'My 2024 reminder');await racial.press('Escape');await racial.press('Tab');assert.equal(await racial.getAttribute('aria-invalid'),null);await change('shadar-kai-mpmm','2014');assert.equal(await racial.inputValue(),custom);
+    await racial.fill('');await racial.press('Tab');assert.equal(await racial.inputValue(),'');await page.locator('#sheetSave').click();await page.waitForFunction(()=>!sheetSession.saving&&!sheetSession.dirty);await page.evaluate(async()=>{closeCharacterSheet(true);await openCharacterSheet('c1')});await navigate();assert.equal(await racial.inputValue(),'');
+    const restore=host.locator('[data-continuous-page="page-2"] [data-stack-reset-racial]'),confirmation=page.locator('#siteConfirmationDialog');await restore.click();await confirmation.locator('[data-site-cancel]').click();assert.equal(await racial.inputValue(),'');await restore.click();await confirmation.locator('[data-site-confirm]').click();assert.equal(await racial.inputValue(),automatic);assert.equal(await restore.isDisabled(),true);
+    await racial.fill(automatic+'\nCUSTOM RACIAL NOTE FOR PRINT');await racial.press('Tab');
+
     await page.setViewportSize({width:390, height:844});
     await navigate();
     await racial.waitFor({state:'visible'});
@@ -88,6 +100,7 @@ const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
     const pdf = '/tmp/campaignatlas-ui-checks/species-descriptions.pdf';
     await page.pdf({path:pdf, preferCSSPageSize:true, printBackground:true});
     const printed = execFileSync('pdftotext', [pdf, '-'], {encoding:'utf8'}).replace(/\s+/g, ' ');
+    assert.match(printed, /CUSTOM RACIAL NOTE FOR PRINT/);
     assert.match(printed, /Fey Ancestry:.*advantage.*Charmed/);
     assert.match(printed, /Trance:.*two temporary weapon or tool proficiencies.*next long rest/);
     await page.evaluate(() => dispatchEvent(new Event('afterprint')));
@@ -103,6 +116,6 @@ const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
     await navigate();
     assert.doesNotMatch(await racial.inputValue(), /Trance|Fey Ancestry|Raven Queen/);
     assert.deepEqual(errors, []);
-    console.log('PASS native Shadar-kai choice, all 105 paper descriptions, private save/reopen, mobile scrolling/axe, complete real PDF and race-switch cleanup');
+    console.log('PASS native Shadar-kai choice, all 105 paper descriptions, editable/scoped/blank trait copies, reset/Cancel/stale guards, private save/reopen, mobile scrolling/axe, actual PDF and race-switch cleanup');
   } finally { await browser.close(); }
 })().catch(error => {console.error(error); process.exitCode = 1;});

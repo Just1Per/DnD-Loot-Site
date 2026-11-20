@@ -245,7 +245,7 @@ var SiteHelp=(()=>{
     ],
     [
       "Write your background and appearance",
-      "The background feature box follows your selected background: 2014 narrative features and 2024 Origin-feat reminders are different. Use Feature Name or Custom / manual to choose or write its short text. Clearing that box preserves background skills, tools, equipment and feats; choose a feature again to restore the text. Add Features offers editable personality, ideal, bond and flaw suggestions. Background & appearance holds your story, portrait and organization symbol. A lifestyle’s daily cost is a reminder and does not deduct coins.",
+      "The background feature box follows your selected background: 2014 narrative features and 2024 Origin-feat reminders are different. Use Feature Name or Custom / manual to choose or write its short text. Clearing that box preserves background skills, tools, equipment and feats; choose a feature again to restore the text. Add Features offers editable personality, ideal, bond and flaw suggestions. Racial Traits on page two starts with the generated descriptions and can be edited directly. Your wording is kept separately for each race and rule edition, including a deliberately empty box. Restore racial traits above that page restores the automatic text after confirmation. These edits change wording, not proficiencies, senses, speed, spells or other mechanics. Background & appearance holds your story, portrait and organization symbol. A lifestyle’s daily cost is a reminder and does not deduct coins.",
       "sheet",
       "Open character sheet"
     ],

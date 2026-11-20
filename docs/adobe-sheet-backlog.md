@@ -236,3 +236,8 @@ Containers ved equipment- og companion-overskrifterne samt under Sheet choices �
 ### Private DM-noter på character sheet — v95
 
 Et panel til højre viser DM-noter, som gemmes med karakterens normale Save sheet. På mobil ligger det som en sammenklappelig sektion over siderne. Kun DM (eller godkendt adventure-host) kan skrive; den tilknyttede spiller kan læse, mens andre spillere og uvedkommende afvises af de private sheet-regler. Noterne er adskilt fra spillerens egen journal og fra udskriften. Revisioner, igangværende gemninger, skift af karakter/konto og genåbning er testet. Se [omfang, adgang og rules-deployment](character-dm-notes.md). Dette afslutter ikke Adventure Log-backloggen.
+
+
+### Redigerbart Racial Traits-felt — v96
+
+Racial Traits på side to er nu et redigerbart tekstfelt med de genererede beskrivelser som udgangspunkt. Egne tekster og bevidst tomme felter gemmes særskilt pr. race og regeludgave. Restore racial traits over siden gendanner den automatiske tekst efter bekræftelse. Racens faktiske mekanikker og katalogbeskrivelser bevares. Se [omfang og tests](adobe-racial-trait-text.md).
