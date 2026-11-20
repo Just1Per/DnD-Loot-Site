@@ -20,5 +20,6 @@ var CharacterDMNotesUI=(()=>{
   save.onclick=async()=>{if(current!==state||!live(state)||!mayWrite(session)||session.saving)return;const result=await saveCharacterSheet();if(result===false&&current===state&&live(state))status.textContent=document.getElementById('sheetStatus')?.textContent||'Could not save. Your notes are still here.';};refresh();
  }
  function destroy(root){if(!current||root&&current.root!==root)return;current.media.removeEventListener('change',current.resize);current.input.oninput=null;current.save.onclick=null;current.input.value='';current.panel.remove();current=null;}
- return{install,refresh,destroy};
+ function focus(){const state=current;if(!live(state)||state.panel.hidden)return false;state.panel.querySelector('details').open=true;state.input.scrollIntoView({block:'nearest'});state.input.focus();return true;}
+ return{install,refresh,destroy,focus};
 })();

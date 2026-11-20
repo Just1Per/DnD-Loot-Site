@@ -241,3 +241,8 @@ Et panel til højre viser DM-noter, som gemmes med karakterens normale Save shee
 ### Redigerbart Racial Traits-felt — v96
 
 Racial Traits på side to er nu et redigerbart tekstfelt med de genererede beskrivelser som udgangspunkt. Egne tekster og bevidst tomme felter gemmes særskilt pr. race og regeludgave. Restore racial traits over siden gendanner den automatiske tekst efter bekræftelse. Racens faktiske mekanikker og katalogbeskrivelser bevares. Se [omfang og tests](adobe-racial-trait-text.md).
+
+
+### Notifikationer i kontohovedet — v98
+
+Klokken samler gemte DM-noteændringer, DM-tildelt/overført loot, kampagneinvitationer og globale DM-ansøgninger/godkendelser. Læsestatus og skjulte notifikationer følger kontoen; private hændelser følger karakterens aktuelle ejer og kampagnens/adventurets adgang. Links bevarer normale advarsler om ugemte ændringer. Se [omfang, test og Firestore-udgivelse](account-notifications.md). Notifikationer om offentliggjort Journal/kort-indhold og et egentligt DM-beskedsystem er separate opfølgende backlogpunkter.

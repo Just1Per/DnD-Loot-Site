@@ -1,5 +1,6 @@
 /* Browser Firestore operations. Security is enforced by firestore.rules, not this UI. */
 function createCampaignStore(sdk) {
+  const notices=typeof AccountNotificationEvents!=='undefined'?AccountNotificationEvents:require('./account-notification-events');
   const {db, doc, collection, getDocs, query, where, limit, orderBy, startAfter, documentId, runTransaction, writeBatch, increment} = sdk;
   const uid = () => sdk.auth.currentUser?.uid;
   const fail = message => {
@@ -223,8 +224,9 @@ function createCampaignStore(sdk) {
           tx.set(ir, record);
         else
           tx.delete(ir);
-        if (targetRef)
-          tx.set(targetRef, {
+        if(d.action==='assign')notices.put(sdk,tx,{campaignId:cid,characterId,recipient:c.data().userId,kind:'loot',sourceId:invId(characterId,itemId),version:record.updatedAt,createdAt:record.updatedAt,quantity:q});
+        if (targetRef){
+          const targetRecord={
             ...old,
             item: item || old.item,
             characterId: d.targetCharacterId,
@@ -232,7 +234,10 @@ function createCampaignStore(sdk) {
             quantity: num((target?.quantity || 0) + q),
             receivedAt: target?.receivedAt || Date.now(),
             updatedAt: Date.now()
-          });
+          };
+          tx.set(targetRef,targetRecord);
+          notices.put(sdk,tx,{campaignId:cid,characterId:d.targetCharacterId,recipient:targetChar.userId,kind:'loot',sourceId:invId(d.targetCharacterId,itemId),version:targetRecord.updatedAt,createdAt:targetRecord.updatedAt,quantity:q});
+        }
         if (adding || d.action === 'unloot')
           tx.update(sr, {
             claimed: increment(adding ? q : -q),

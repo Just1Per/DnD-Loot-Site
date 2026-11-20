@@ -303,6 +303,7 @@
       "entry": "Alle aktive bridge-routes i routetabellen",
       "notes": "Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning.",
       "testReferences": [
+        "account-notifications-browser.cjs",
         "adobe-adventure-log-browser.cjs",
         "adobe-armor-choices-browser.cjs",
         "adobe-carrying-browser.cjs",

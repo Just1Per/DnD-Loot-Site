@@ -1,5 +1,6 @@
 /* Private per-character document, with optimistic concurrency checks. */
 function createCharacterSheetStore(sdk) {
+  const notices=typeof AccountNotificationEvents!=='undefined'?AccountNotificationEvents:require('./account-notification-events');
   const {db, doc, getDoc, runTransaction, auth} = sdk;
   const path = (campaignId, characterId, adventureId) => adventureId ? doc(db, 'campaigns', campaignId, 'oneShots', adventureId, 'characterSheets', characterId) : doc(db, 'campaigns', campaignId, 'characterSheets', characterId);
   // Fresh nested objects per sheet prevent companion/page defaults being shared across characters.
@@ -54,14 +55,16 @@ function createCharacterSheetStore(sdk) {
         if (String(character.data()[key] ?? '') !== String(previousIdentity[key] ?? ''))
           throw Error('Character details changed while this sheet was open. Export your edits, then reopen the sheet.');
       const next = revision + 1;
+      const stamp=Date.now();
       tx.set(sheetRef, {
         schemaVersion: 14,
         revision: next,
         data: persistedData(data),
-        updatedAt: Date.now(),
+        updatedAt: stamp,
         updatedBy: actor
       });
       tx.update(characterRef, identity);
+      if((sheet.data()?.data?.dmNotes||'')!==(data.dmNotes||''))notices.put(sdk,tx,{campaignId,characterId,adventureId,recipient:character.data().userId,kind:'dm-notes',sourceId:characterId,version:next,createdAt:stamp});
       return next;
     });
   }

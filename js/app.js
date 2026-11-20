@@ -50,9 +50,10 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   setDoc, updateDoc, deleteDoc, query, where, limit, writeBatch, runTransaction, increment, orderBy, startAfter, documentId, onSnapshot,
   ref, getDownloadURL, uploadBytes, getBlob,
   lookupAI, aiLookupConfigured,
+  notificationsAvailable:()=>window.AccountNotifications?.enabled===true,
 });
 
-const ASSET_VERSION = "20261120-map-image-access-v97";
+const ASSET_VERSION = "20261120-notifications-v98";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -86,6 +87,7 @@ const FEATURE_FILES = [
   "./modules/character-magic-armor.js",
   "./modules/character-magic-item-data.js",
   "./modules/character-magic-items.js",
+  "./modules/account-notification-events.js",
   "./modules/campaign-store.js",
   "./modules/core.js",
   "./modules/character-legacy-options.js",
@@ -227,6 +229,8 @@ const FEATURE_FILES = [
   "./modules/dm-workspace-shell.js",
   "./modules/character-workspace.js",
   "./modules/page-editors.js",
+  "./modules/account-notification-feed.js",
+  "./modules/account-notifications.js",
   "./modules/ui-auth.js"
 ];
 
