@@ -16,7 +16,7 @@ const {createCampaignMapMedia}=require('../js/modules/campaign-map-media'),{crea
   const media=Object.fromEntries(Object.keys(contexts).map(uid=>[uid,createCampaignMapMedia(deps(uid))]));
   const map=(uid,mapId='main')=>createCampaignMapStore(deps(uid),{mapId});
   const original='campaign-maps/a/original',overview='campaign-maps/a/overview',picture='campaign-map-place-images/a/town/original',secret='campaign-map-place-images/a/secret/original';
-  const blob=new Blob([new Uint8Array(512*1024+17).fill(71)],{type:'image/png'}),small=new Blob(['map image bytes'],{type:'image/webp'});
+  const blob=new Blob([new Uint8Array(3*1024*1024+17).fill(71)],{type:'image/png'}),small=new Blob(['map image bytes'],{type:'image/webp'});
   const ref=async(uid,path,mapId='main')=>media[uid].reference('a',mapId,path);
   const prepare=async(path,mapId='main',bytes=small)=>media.dm.ensure({campaignId:'a',mapId,path,blob:bytes});
   const canLoad=async(uid,path,mapId='main')=>media[uid].load({campaignId:'a',mapId,path});
@@ -27,7 +27,7 @@ const {createCampaignMapMedia}=require('../js/modules/campaign-map-media'),{crea
    for(const uid of ['player','outsider','revoked','admin','anonymous']){await assertFails(sdk.getDoc((await ref(uid,original)).ref));await assertFails(sdk.getDoc((await ref(uid,original)).chunk(0)));}
    await assertSucceeds(sdk.getDoc((await ref('owner',original)).ref));await assertFails(sdk.getDocs(sdk.collection(contexts.player.firestore(),'campaigns/a/campaignMapMedia/main/assets')));
    for(const uid of ['player','outsider','revoked','admin'])await assertFails(media[uid].ensure({campaignId:'a',path:'campaign-maps/a/'+uid,blob:small}));
-   assert.equal((await sdk.getDoc(bound.ref)).data().parts,2);
+   assert.equal((await sdk.getDoc(bound.ref)).data().parts,7);
   });
   let publication;
   await check('Published originals, overviews and exact pin pictures load without Storage, even when Storage always denies the player',async()=>{

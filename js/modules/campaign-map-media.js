@@ -57,15 +57,15 @@ function createCampaignMapMedia(sdk) {
    }
    tx.set(bound.ref,copy);return false;
   });check();if(ready)return;
-  // Six bounded chunks keep each batch comfortably below Firestore's 10 MiB limit.
-  for(let start=0;start<copy.parts;start+=6) {
+  // Four chunks fit both the 4 MiB emulator transport and Firestore's 10 MiB limit.
+  for(let start=0;start<copy.parts;start+=4) {
    check();await sdk.runTransaction(sdk.db,async tx=>{
     const previous=await tx.get(bound.ref);check();
     const value=validate(previous.data(),path,bound);
     if(value.sha256!==copy.sha256)throw error('conflict','The map image copy changed. Refresh before repairing it.');
     if(value.ready)return;
-    for(let i=start;i<Math.min(start+6,copy.parts);i++)tx.set(bound.chunk(i),{data:encode(bytes.subarray(i*partSize,Math.min((i+1)*partSize,bytes.length)))});
-   });check();onProgress(Math.min(start+6,copy.parts),copy.parts);
+    for(let i=start;i<Math.min(start+4,copy.parts);i++)tx.set(bound.chunk(i),{data:encode(bytes.subarray(i*partSize,Math.min((i+1)*partSize,bytes.length)))});
+   });check();onProgress(Math.min(start+4,copy.parts),copy.parts);
   }
   check();await sdk.runTransaction(sdk.db,async tx=>{const previous=await tx.get(bound.ref);check();if(validate(previous.data(),path,bound).sha256!==copy.sha256)throw error('conflict','The map image copy changed. Refresh before repairing it.');tx.set(bound.ref,{...copy,ready:true});});check();
  }
