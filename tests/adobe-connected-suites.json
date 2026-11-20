@@ -2,6 +2,7 @@
   "description": "Connected Adobe browser suites in their established sequential order. CI uses disjoint shards; local default runs all suites.",
   "suites": [
     "adobe-only-browser.cjs",
+    "adobe-dm-notes-browser.cjs",
     "adobe-mithral-reference-browser.cjs",
     "adobe-size-guidance-browser.cjs",
     "adobe-personal-feats-browser.cjs",

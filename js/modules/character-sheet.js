@@ -137,6 +137,7 @@ async function openCharacterSheet(characterId, context = {}) {
       dirty: false,
       saving: false
     };
+    sheetSession.savedDmNotes=sheetSession.data.dmNotes;
     if (!stored.revision) {
       sheetSession.data.build.scoreMode = 'base';
       sheetSession.data.build.edition = CampaignRules.editions().includes('2024')?'2024':'2014';
@@ -507,6 +508,7 @@ async function saveCharacterSheet({reportValidation=true}={}) {
       data
     });
   s.saving = true;
+  globalThis.CharacterDMNotesUI?.refresh();
   document.getElementById('sheetSave').disabled = true;
   sheetStatus('Saving\u2026');
   try {
@@ -523,6 +525,7 @@ async function saveCharacterSheet({reportValidation=true}={}) {
     if (sheetSession !== s || activeCampaign?.id !== s.campaignId || (s.uid&&auth.currentUser?.uid!==s.uid))
       return;
     s.revision = revision;
+    s.savedDmNotes=data.dmNotes;
     s.character = {
       ...s.character,
       ...identity
@@ -549,6 +552,7 @@ async function saveCharacterSheet({reportValidation=true}={}) {
     return false;
   } finally {
     s.saving = false;
+    globalThis.CharacterDMNotesUI?.refresh();
     if (sheetSession === s)
       document.getElementById('sheetSave').disabled = false;
   }
