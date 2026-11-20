@@ -28,8 +28,8 @@ Der er 48 registrerede popup-familier og 29 editor-routes.
 | adobePaperZoomMenu | adobe-menu | Forstørrelsesglas på arket | Bruger fortsat intern #adobeZoom-selector; den skjulte kontrol skal bevares indtil afkobling. | [character-adobe-stack-ui.js:163](../../js/modules/character-adobe-stack-ui.js#L163) |
 | adobePageActionsMenu | adobe-menu | Page options ved zoom/print → Hide this page / Manage pages | Skjuler en bestemt side uden at slette data; genopretning via Undo eller sideoversigten. | [character-adobe-stack-ui.js:164](../../js/modules/character-adobe-stack-ui.js#L164) |
 | adobeSpecialFeaturesMenu | adobe-menu | Show extra features | Blander native routes og shared bridges; se routetabel. | [character-adobe-view.js:152](../../js/modules/character-adobe-view.js#L152) |
-| adobeSharedEditor | moves-standard-body | Alle aktive bridge-routes i routetabellen | Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning. | [character-adobe-view.js:218](../../js/modules/character-adobe-view.js#L218) |
-| adobeNotesOptions | adobe-dialog | Notes.Options | Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge. | [character-adobe-view.js:321](../../js/modules/character-adobe-view.js#L321) |
+| adobeSharedEditor | moves-standard-body | Alle aktive bridge-routes i routetabellen | Flytter hele .sheet-body og #sheetSave; skjuler andre sektioner og gendanner dem ved lukning. | [character-adobe-view.js:219](../../js/modules/character-adobe-view.js#L219) |
+| adobeNotesOptions | adobe-dialog | Notes.Options | Linjer/fortsættelse er egne controls; Open journal åbner notes-bridge. | [character-adobe-view.js:322](../../js/modules/character-adobe-view.js#L322) |
 | sheetFeatInformation | shared-dialog | Feat information fra native featvalg | Selvstændig læsning, men modulet indeholder også katalog/resource-renderere. | [character-catalog-ui.js:99](../../js/modules/character-catalog-ui.js#L99) |
 | adobeCompanionEquipmentDialog | adobe-dialog | Companion equipment arrows, transfer destination og companion-card controls | Native carrier/row editor; delt private inventory og carrying-engine. | [character-companion-equipment-ui.js:15](../../js/modules/character-companion-equipment-ui.js#L15) |
 | sheetCompanionHPOptions | shared-dialog | Companion Set Max HP | Egen dialog; afhænger af companion state, ikke en flyttet popup-body. | [character-companion-hp-ui.js:13](../../js/modules/character-companion-hp-ui.js#L13) |
@@ -37,7 +37,7 @@ Der er 48 registrerede popup-familier og 29 editor-routes.
 | sheetHitPointOptions | shared-dialog | Set Max HP → avanceret/manual og hp-route | To visninger af samme dialog-id; automatisk/manual/one-shot. | [character-hit-point-ui.js:34](../../js/modules/character-hit-point-ui.js#L34) |
 | sheetPersonalGearEditor | shared-dialog | Owned item information → Edit eller inventory-bridge | Selvstændig editor, men gemning opdaterer de fælles inventory-controls. | [character-inventory-ui.js:35](../../js/modules/character-inventory-ui.js#L35) |
 | sheetInventoryItemInformation | shared-dialog | Magic/gear information og item links | Kan åbne Edit item og ændre backpack/remove via fælles handlers. | [character-inventory-ui.js:67](../../js/modules/character-inventory-ui.js#L67) |
-| adobeItemContainerDialog | adobe-dialog | Owned item information og source equipment row | Native explicit container placement; bevar fælles stock, private Adobe-envelope, carrying og companion-transfer helpers. | [character-item-containers-ui.js:6](../../js/modules/character-item-containers-ui.js#L6) |
+| adobeItemContainerDialog | adobe-dialog | Containers ved equipment/companion heading, Special features, item information og equipment row | Native overview, carrier/path/capacity og explicit placement preview; bevar fælles stock, private Adobe-envelope, carrying og companion-transfer helpers. | [character-item-containers-ui.js:18](../../js/modules/character-item-containers-ui.js#L18) |
 | sheetItemResourceRecovery | shared-dialog | Dawn/item resource recovery | Åbnes fra resource-bridge; modulet renderer #sheetItemResources. | [character-item-resource-ui.js:53](../../js/modules/character-item-resource-ui.js#L53) |
 | sheetModifierDialog | shared-dialog | Bonusfelter, Ctrl/Meta/Shift-click, Modifiers | Egen form; afhænger af shared modifier-render/update hooks. | [character-modifier-ui.js:25](../../js/modules/character-modifier-ui.js#L25) |
 | sheetSkillOptions | shared-dialog | SkillsClick | Egen popup til rækkefølge/training; åbner native skills-editor. | [character-modifier-ui.js:46](../../js/modules/character-modifier-ui.js#L46) |
@@ -116,20 +116,20 @@ sharedCommand klikker stadig på kontroller i #characterSheetForm (bl.a. spell p
 | --- | --- |
 | row.descriptor.command | [character-adobe-view.js:113](../../js/modules/character-adobe-view.js#L113) |
 | id | [character-adobe-view.js:151](../../js/modules/character-adobe-view.js#L151) |
-| notes | [character-adobe-view.js:180](../../js/modules/character-adobe-view.js#L180) |
-| companion | [character-adobe-view.js:180](../../js/modules/character-adobe-view.js#L180) |
-| companion | [character-adobe-view.js:180](../../js/modules/character-adobe-view.js#L180) |
-| experience | [character-adobe-view.js:180](../../js/modules/character-adobe-view.js#L180) |
-| story | [character-adobe-view.js:180](../../js/modules/character-adobe-view.js#L180) |
-| feats | [character-adobe-view.js:180](../../js/modules/character-adobe-view.js#L180) |
-| cmd | [character-adobe-view.js:180](../../js/modules/character-adobe-view.js#L180) |
-| conditions | [character-adobe-view.js:222](../../js/modules/character-adobe-view.js#L222) |
-| notes | [character-adobe-view.js:326](../../js/modules/character-adobe-view.js#L326) |
-| spells | [character-adobe-view.js:404](../../js/modules/character-adobe-view.js#L404) |
-| companion | [character-adobe-view.js:409](../../js/modules/character-adobe-view.js#L409) |
-| editorChoice.value | [character-adobe-view.js:410](../../js/modules/character-adobe-view.js#L410) |
-| st.editor | [character-adobe-view.js:420](../../js/modules/character-adobe-view.js#L420) |
-| key | [character-adobe-view.js:450](../../js/modules/character-adobe-view.js#L450) |
+| notes | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
+| companion | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
+| companion | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
+| experience | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
+| story | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
+| feats | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
+| cmd | [character-adobe-view.js:181](../../js/modules/character-adobe-view.js#L181) |
+| conditions | [character-adobe-view.js:223](../../js/modules/character-adobe-view.js#L223) |
+| notes | [character-adobe-view.js:327](../../js/modules/character-adobe-view.js#L327) |
+| spells | [character-adobe-view.js:405](../../js/modules/character-adobe-view.js#L405) |
+| companion | [character-adobe-view.js:410](../../js/modules/character-adobe-view.js#L410) |
+| editorChoice.value | [character-adobe-view.js:411](../../js/modules/character-adobe-view.js#L411) |
+| st.editor | [character-adobe-view.js:421](../../js/modules/character-adobe-view.js#L421) |
+| key | [character-adobe-view.js:451](../../js/modules/character-adobe-view.js#L451) |
 | notes | [character-adventure-log-ui.js:6](../../js/modules/character-adventure-log-ui.js#L6) |
 | itemResources | [character-item-resource-ui.js:49](../../js/modules/character-item-resource-ui.js#L49) |
 | attacks | [character-named-equipment-ui.js:82](../../js/modules/character-named-equipment-ui.js#L82) |

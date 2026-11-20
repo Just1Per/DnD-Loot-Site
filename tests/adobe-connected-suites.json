@@ -86,6 +86,7 @@
     "adobe-pinned-origins-browser.cjs",
     "adobe-pinned-legacy-browser.cjs",
     "adobe-pinned-items-browser.cjs",
+    "adobe-container-locations-browser.cjs",
     "adobe-species-descriptions-browser.cjs",
     "adobe-page-deletion-browser.cjs",
     "adobe-additional-spells-browser.cjs",

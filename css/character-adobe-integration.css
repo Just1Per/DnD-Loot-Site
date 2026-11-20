@@ -1256,3 +1256,26 @@ dialog.adobe-flyout-host{position:fixed!important;inset:0!important;width:100vw!
 .adobe-additional-detail{border:1px solid #dcc7a4;padding:12px;margin-top:12px;border-radius:8px}.adobe-additional-detail dd{margin:0 0 8px}.adobe-additional-detail dt{font-weight:700}
 .adobe-additional-spell-dialog>[data-extra-message]{margin:0;padding:0 22px;color:#8b302d}.adobe-additional-spell-dialog>footer{border-top:1px solid #ddcdb5;align-items:center}.adobe-additional-spell-dialog>footer span{flex:1;font-size:12px}
 @media(max-width:680px){.adobe-additional-columns{grid-template-columns:minmax(0,1fr)}.adobe-additional-selected{border-left:0;border-top:1px solid #e0d1bc;padding:12px 0 0}.adobe-additional-spell-dialog>header,.adobe-additional-spell-dialog>footer{padding:14px}.adobe-additional-body{padding:0 14px 14px}.adobe-additional-spell-dialog>footer{flex-wrap:wrap}.adobe-additional-spell-dialog>footer span{flex-basis:100%}.adobe-additional-results{max-height:35vh}}
+
+/* Readable owned locations complement the original paper rows. */
+.inventory-placement-summary{display:grid;gap:3px;padding:10px 12px;margin:10px 0;border-left:3px solid #9a773e;border-radius:4px;background:#f6eedf;color:#352b23;font-size:14px;overflow-wrap:anywhere}
+.inventory-placement-summary small{font-size:12px;color:#61503d}
+.inventory-container-dialog .adobe-gear-body{grid-template-columns:1fr}
+.inventory-container-search,.inventory-container-nav{padding:12px 20px}.inventory-container-search p{margin-top:0}
+.inventory-container-search label,.inventory-container-dialog label{display:grid;gap:6px;font-weight:600}
+.inventory-container-dialog input,.inventory-container-dialog select{max-width:100%;min-width:0;box-sizing:border-box}
+.inventory-container-dialog select{width:100%}.inventory-container-dialog button{min-height:44px;overflow-wrap:anywhere}
+.inventory-container-nav{padding-bottom:0}
+.inventory-carrier-group{display:grid;gap:12px;min-width:0}.inventory-carrier-group>h3{margin:0}
+.inventory-container-card{padding:14px;border:1px solid #d7c5a2;border-radius:8px;background:#fffdf8;min-width:0;overflow-wrap:anywhere}
+.inventory-container-card>header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}.inventory-container-card h3,.inventory-container-card h4{margin:0}.inventory-container-card p{margin:6px 0;font-size:13px}.inventory-container-card meter{width:100%;height:12px;accent-color:#81632e}
+.inventory-container-items{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:5px}
+.inventory-container-items button{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;padding:9px 10px;background:#f8f3e9;border:1px solid #dfd1bb;border-radius:5px;box-sizing:border-box;color:#352b23}
+.inventory-container-items button>span:first-child{min-width:0}.inventory-container-items button>span:last-child{flex-shrink:0}.inventory-container-items small{display:block;margin-top:3px;font-size:12px;color:#61503d;font-weight:400}
+.inventory-placement-preview{padding:10px;border-radius:5px;background:#f2f1e8;overflow-wrap:anywhere}.inventory-capacity-warning{color:#8a231b;background:#fcebe6}
+.inventory-container-dialog :is(button,input,select):focus-visible{outline:2px solid #2469a4;outline-offset:2px}
+@media(max-width:480px){.inventory-container-search,.inventory-container-nav{padding-left:12px;padding-right:12px}.inventory-container-card{padding:10px}}
+.inventory-container-dialog .adobe-gear-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:16px}
+.inventory-container-dialog .adobe-gear-head h2{font-size:22px}
+.inventory-container-dialog .adobe-gear-head>button{min-width:56px;flex:none;padding:8px 12px}
+.adobe-gear-head .inventory-placement-summary span{font:inherit;letter-spacing:normal;color:inherit}

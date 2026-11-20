@@ -1,7 +1,7 @@
 'use strict';
 /* Alternate rendering of the current session. No SDK, storage or second engine. */
 var CharacterAdobeView=(()=>{
- const VERSION='20261118-origin-lookup-v93',assets=new Map(),sessions=new WeakMap();let current=null;
+ const VERSION='20261119-container-locations-v94b',assets=new Map(),sessions=new WeakMap();let current=null;
  const SPELL_CAPACITY={front:55,more:70};let fieldMeasure=null;try{fieldMeasure=document.createElement('canvas').getContext?.('2d')||null;}catch{}
  const xpAdditionError=()=>document.getElementById('sheetXPAmount')?.getAttribute('aria-invalid')==='true'?document.getElementById('sheetXPAddStatus')?.textContent||'Correct the unapplied XP amount.':'';
  const option=(text,value)=>Object.assign(document.createElement('option'),{textContent:text,value});
@@ -161,6 +161,7 @@ var CharacterAdobeView=(()=>{
     editor('feats','Feats','Choose catalogue or private custom feats.'),
     {id:'additional-spells',label:'Add other spells',detail:'Choose spells outside a class list or write a spell.',closeBefore:true,select:()=>CharacterAdobeAdditionalSpellUI.open()},
     {id:'equipment',label:'Equipment',detail:'Choose starting equipment, packs and personal gear.',closeBefore:true,select:()=>CharacterAdobeEquipmentUI.open()},
+    {id:'containers',label:'Containers & item locations',detail:'See packed and loose items, capacity and carriers.',closeBefore:true,select:()=>CharacterItemContainersUI.open()},
     editor('attacks','Attacks & actions','Manage attacks and action references.'),
     editor('resources','Combat & resources','Review uses, rests and feature resources.')
    ]},

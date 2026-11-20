@@ -7,3 +7,6 @@
 .site-confirmation-dialog button.btn-primary{background:#732424!important;color:#f5e6c8!important;border-color:#732424!important}
 .site-confirmation-dialog button:focus-visible{outline:3px solid #732424;outline-offset:3px}
 @media(max-width:580px){.site-confirmation-dialog{padding:20px}.site-confirmation-actions>button{flex:1 1 auto}}
+
+/* Keep hit targets fixed when the shared primary-button hover style applies. */
+.site-confirmation-dialog button,.site-confirmation-dialog button:hover,.site-confirmation-dialog button:active{transform:none}

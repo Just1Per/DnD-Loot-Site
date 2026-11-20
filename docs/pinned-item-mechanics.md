@@ -23,3 +23,7 @@ Moving a container to a companion includes every placed descendant stack. Full d
 Placement is a bounded map in the existing private Adobe envelope. No Firestore/Storage rule, production migration, catalogue publication or new dependency is needed. Session/source guards and sheet disposal close stale controls. UI and tests cover explicit Apply/Cancel, load/capacity, individual and bundle transfers, private save/reopen, mobile/axe, item counters and actual PDF.
 
 The companion integration also retains the returned container map on card removal. Valid shared AC input is recorded before blur so an intervening calculation cannot discard the draft; the existing companion browser flow forces that refresh and verifies persistence.
+
+## Readable locations — v94
+
+The existing placement model now also has a searchable Containers overview, explicit carrier/nested paths, separate location notes, capacity meters and destination previews. Equipment headings and item/row/companion windows expose it directly. See [scope and tests](adobe-container-locations.md). This is a presentation and discoverability improvement; source volume/compartment limits remain manual.
