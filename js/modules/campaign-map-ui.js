@@ -1,6 +1,6 @@
 'use strict';
 var CampaignMap=(()=>{
- const sdk=window.__DND_VAULT_DEPS__,store=createCampaignMapStore(sdk),worldStore=createCampaignInformationStore(sdk);
+ const sdk=window.__DND_VAULT_DEPS__,store=createCampaignMapStore(sdk),worldStore=createCampaignInformationStore(sdk),media=createCampaignMapMedia(sdk);
  const escape=value=>escapeHtml(String(value??''));
  let session=null,nextMapId=null;
  const mapImageRequests=new WeakMap();
@@ -12,7 +12,7 @@ var CampaignMap=(()=>{
  const displayed=s=>working(s)?s.draft:s.map;
  const places=s=>working(s)?s.draft?.pins||[]:s.pins;
  function status(s,message){if(!current(s))return;s.message=message;const host=s.root.querySelector('[data-map-status]');if(host)host.textContent=message;}
- function revoke(s){for(const url of s.urls.values())URL.revokeObjectURL(url);s.urls.clear();}
+ function revoke(s){s.imageEpoch=(s.imageEpoch||0)+1;s.pendingImages.clear();s.failedPreviews.clear();for(const url of s.urls.values())URL.revokeObjectURL(url);s.urls.clear();}
  function clear(){if(session){session.stops.forEach(stop=>stop());session.pinStop?.();revoke(session);}session=null;for(const id of ['tab-campaign-map','tab-dm-map'])document.getElementById(id)?.replaceChildren();}
  function guard(action){const s=session;if(!s)return true;if(!current(s)){clear();return true;}if(s.busy)return false;if(!dirty(s))return true;if(s.leaving)return false;s.leaving=true;
   SiteConfirmation.ask({title:'Leave without saving your map draft?',paragraphs:['Published places stay unchanged. Unsaved edits in this window will be discarded.'],confirmLabel:'Discard changes',cancelLabel:'Keep editing'}).then(yes=>{if(!current(s))return;s.leaving=false;if(yes){s.mapDirty=false;s.pinDirty=false;s.pinEditor=null;action();}});return false;
@@ -64,20 +64,21 @@ var CampaignMap=(()=>{
    ${mapNavigation(s)}<header class="map-heading"><div><p class="journal-eyebrow">${escape(activeCampaign.name)} / ${s.mode==='dm'?'DM WORKSPACE · MAPS':'JOURNAL'}</p><h2 id="campaignMapTitle">${escape(map?.title||'Campaign map')}</h2><p>${s.preview?'Player preview · last published map':edit?'DM workspace · private draft':'Discover the places your party has uncovered.'}</p></div>
    <div class="journal-actions">${dm?`<button type="button" data-map-preview ${s.busy||!s.ready?'disabled':''}>${s.preview?'Back to DM draft':'Preview as player'}</button>${!s.preview?`<button type="button" class="btn-primary" data-map-publish ${s.busy||!s.ready||(s.pinDirty&&!s.drawing)?'disabled':''}>Publish changes</button>`:''}`:s.mode!=='dm'&&manager?'<button type="button" data-map-edit>Manage map</button>':''}<button type="button" data-map-refresh ${s.busy?'disabled':''}>Refresh</button></div></header>
    <p role="status" aria-live="polite" data-map-status>${escape(s.message)}</p>
-   ${edit?`<section class="map-settings" aria-label="Private map draft"><label><span>Map name</span><input data-map-title maxlength="160" value="${escape(s.draft.title)}" ${s.busy?'disabled':''}></label><label><span>${s.draft.imagePath?'Replace map image':'Upload a map'}</span><input data-map-file type="file" accept="image/png,image/jpeg,image/webp" ${s.busy?'disabled':''}></label><p class="map-hint">PNG, JPEG or WebP · up to 50 MB.</p><details class="map-upload-notes"><summary>Image quality and replacing maps</summary><p class="map-hint">The original image is preserved. A fast overview loads first when available; zoom in for original detail. Replacing an image keeps this map’s places; check their positions before publishing. Players keep seeing its last published version.</p></details><button type="button" data-map-save ${s.busy||(s.pinDirty&&!s.drawing)?'disabled':''}>Save private draft</button></section>`:''}
+   ${edit?`<section class="map-settings" aria-label="Private map draft"><label><span>Map name</span><input data-map-title maxlength="160" value="${escape(s.draft.title)}" ${s.busy?'disabled':''}></label><label><span>${s.draft.imagePath?'Replace map image':'Upload a map'}</span><input data-map-file type="file" accept="image/png,image/jpeg,image/webp" ${s.busy?'disabled':''}></label><p class="map-hint">PNG, JPEG or WebP · up to 50 MB.</p><details class="map-upload-notes"><summary>Image quality and replacing maps</summary><p class="map-hint">The original image is preserved. A fast overview loads first when available; zoom in for original detail. Replacing an image keeps this map’s places; check their positions before publishing. Players keep seeing its last published version.</p></details><button type="button" data-map-save ${s.busy||(s.pinDirty&&!s.drawing)?'disabled':''}>Save private draft</button>${s.draft.imagePath||s.map?.imagePath?` <button type="button" data-map-repair ${s.busy?'disabled':''}>Repair image access</button><p class="map-hint">Repairs existing map and place pictures without changing their quality, places or publication.</p>`:''}</section>`:''}
    <div class="map-layout"><div><div class="map-canvas ${s.placing||s.drawing?'map-placing':''} ${s.drawing?'map-drawing':''}" data-map-canvas tabindex="0" aria-label="Campaign map. Drag to pan when zoomed, or use the arrow keys.">
    <div class="map-scene" data-map-scene>${map?.imagePath?`<img data-map-image alt="${escape(map.title)}">${regionLayer(s,pins)}${pathLayer(s,pins)}${pins.map(pin=>`<button type="button" class="map-pin map-style-${store.markerStyles.indexOf(pin.markerStyle||'City')} ${pin.type==='Region'?'map-pin-region':''} ${pathType(pin.type)?'map-pin-path map-pin-path-'+pin.type.toLowerCase():''} ${edit&&!pin.revealed?'map-pin-private':''}" data-map-pin="${escape(pin.id)}" style="left:clamp(24px,${pin.x}%,calc(100% - 24px));top:clamp(24px,${pin.y}%,calc(100% - 24px))" aria-label="${escape(pin.name||'New place')}${edit&&!pin.revealed?' (DM only)':''}" aria-pressed="${pin.id===s.selected}"><span aria-hidden="true">${pathType(pin.type)?(pin.type==='Road'?'━':'⇢'):pin.type==='Region'?'◇':icons[pin.markerStyle||'City']||'●'}</span> ${escape(pin.name||'New place')}</button>`).join('')}`:`<div class="map-empty"><h3>${s.ready?'Your world starts here':'Loading map…'}</h3><p>${s.draftUnavailable?'Map setup is unavailable. Check the access message above, then select Refresh.':s.mode==='dm'?'Upload a map above to start preparing places.':'Your DM has not published a map yet.'}</p></div>`}</div>
    ${map?.imagePath?'<div class="map-legend" aria-hidden="true">● Location · ▣ City · ♜ Castle · ▲ Landmark · ✦ Interest · ◇ Region · ━ Road · ┄ Party route</div><div class="map-zoom"><button type="button" data-map-zoom="out" aria-label="Zoom out">−</button><button type="button" data-map-zoom="in" aria-label="Zoom in">+</button><button type="button" data-map-reset>Reset view</button></div>':''}<div class="map-hover" data-map-hover hidden></div></div>
    ${edit&&s.draft.imagePath?`<div class="journal-actions map-add"><button type="button" data-map-add ${s.busy?'disabled':''}>+ Add a place</button>${form&&form.type==='City'?'<button type="button" data-map-move>Move this pin</button>':''}<button type="button" data-map-add-region>Add a region area</button><button type="button" data-map-add-path="Road">Draw a road</button><button type="button" data-map-add-path="Travelled">Mark party route</button></div>`:''}
-   ${map?.previewPath?'<p class="map-hint" data-map-quality role="status">Loading map…</p>':''}<p class="map-hint">Hover or focus a pin for a quick look. Click or tap to read more.</p><div class="map-places" role="group" aria-label="Places on this map">${pins.map(pin=>`<button type="button" data-map-place="${escape(pin.id)}" aria-pressed="${pin.id===s.selected}">${escape(pin.name||'New place')}${edit&&!pin.revealed?' · DM only':''}</button>`).join('')}</div></div>
+   ${map?.imagePath?'<p class="map-hint" data-map-quality role="status">Loading map…</p>':''}<p class="map-hint">Hover or focus a pin for a quick look. Click or tap to read more.</p><div class="map-places" role="group" aria-label="Places on this map">${pins.map(pin=>`<button type="button" data-map-place="${escape(pin.id)}" aria-pressed="${pin.id===s.selected}">${escape(pin.name||'New place')}${edit&&!pin.revealed?' · DM only':''}</button>`).join('')}</div></div>
    <aside class="map-place-panel" aria-label="Place details">${form?pinForm(s,form):selected?`<div class="map-hint">${escape(pathType(selected.type)?typeLabel(selected.type):selected.type==='Region'?'Region':selected.markerStyle||'City')}</div><h3 data-place-heading tabindex="-1">${escape(selected.name)}</h3>${pictureMarkup(selected)}<div class="map-prose">${escape(selected.description||'No description added yet.')}</div>${world?'<button type="button" data-map-more>See more in World Builder →</button>':selected.worldEntryId?'<p class="map-hint">The linked World entry is not currently shared.</p>':''}${edit?`<div class="journal-actions"><button type="button" data-pin-edit>${pathType(selected.type)?'Edit '+typeLabel(selected.type).toLowerCase():'Edit place'}</button><button type="button" data-pin-delete>${pathType(selected.type)?'Remove '+typeLabel(selected.type).toLowerCase():'Remove place'}</button></div>`:''}`:'<div class="map-hint">YOUR NEXT DISCOVERY</div><h3>Every place has a story</h3><p>Choose a city or region on the map to read what your party knows about it.</p>'}</aside></div></section>`;
   s.root.querySelector('[data-map-refresh]').onclick=()=>render(s.mode,s.mapId,s.preview);
   bindMapNavigation(s);
   s.root.querySelector('[data-map-edit]')?.addEventListener('click',()=>{nextMapId={mapId:s.mapId,campaignId:s.campaignId,uid:s.uid};showTab('dm-map');});
-  s.root.querySelector('[data-map-preview]')?.addEventListener('click',()=>{if(!editable(s)||s.busy)return;if(s.pinDirty){status(s,'Save or cancel your place before switching views.');return;}s.preview=!s.preview;if(!s.preview)s.editing=true;s.selected=null;paint(s);});
+  s.root.querySelector('[data-map-preview]')?.addEventListener('click',()=>{if(!editable(s)||s.busy)return;if(s.pinDirty){status(s,'Save or cancel your place before switching views.');return;}s.preview=!s.preview;revoke(s);if(!s.preview)s.editing=true;s.selected=null;paint(s);});
   s.root.querySelector('[data-map-title]')?.addEventListener('input',event=>{s.draft.title=event.target.value;changed(s);});
   s.root.querySelector('[data-map-file]')?.addEventListener('change',event=>upload(s,event.target.files?.[0]));
   s.root.querySelector('[data-map-save]')?.addEventListener('click',()=>saveDraft(s));
+  s.root.querySelector('[data-map-repair]')?.addEventListener('click',()=>repairImages(s));
   s.root.querySelector('[data-map-publish]')?.addEventListener('click',()=>publish(s));
   s.root.querySelectorAll('[data-map-pin],[data-map-place],[data-map-region],[data-map-path]').forEach(button=>{const id=button.dataset.mapPin||button.dataset.mapPlace||button.dataset.mapRegion||button.dataset.mapPath;button.onclick=event=>{if((button.dataset.mapRegion||button.dataset.mapPath)&&(s.drawing||s.placing))return;event.stopPropagation();choosePin(s,id);};if(button.dataset.mapPin){button.onpointerenter=()=>hover(s,pins.find(pin=>pin.id===id));button.onfocus=()=>hover(s,pins.find(pin=>pin.id===id));}});
   s.root.querySelector('[data-map-add]')?.addEventListener('click',()=>{if(!editable(s)||s.busy)return;if(s.pinDirty){status(s,'Save or cancel your current place first.');return;}if(s.draft.pins.length>=100){status(s,'This map has reached its 100-place limit.');return;}s.placing=true;paint(s);status(s,'Click a spot on the map, or choose Place at centre.');});
@@ -200,9 +201,31 @@ var CampaignMap=(()=>{
   s.root.querySelector('[data-route-remove]')?.addEventListener('click',()=>{if(!editable(s)||s.busy)return;if(s.pinEditor.boundary.length<=2){status(s,'A route needs two points. Redraw it or remove the whole route instead.');return;}const points=s.pinEditor.boundary.filter((_,i)=>i!==s.editCorner);try{store.path(points);s.pinEditor.boundary=points;s.pinDirty=true;paint(s);}catch(error){status(s,error.message);}});
  }
  function hover(s,pin){if(!allowed(s)||!pin)return;const host=s.root.querySelector('[data-map-hover]');host.innerHTML=`${pictureMarkup(pin,'map-hover-picture')}<strong>${escape(pin.name)}</strong><p>${escape(pin.description.slice(0,130))}${pin.description.length>130?'…':''}</p><small>Click or tap the pin to read more.</small>`;host.hidden=false;loadPictures(s);}
- async function cachedImage(s,path,limit=50*1024*1024){if(s.urls.has(path))return s.urls.get(path);if(s.pendingImages.has(path))return s.pendingImages.get(path);const pending=(async()=>{try{const blob=await sdk.getBlob(sdk.ref(sdk.storage,path),limit);if(!allowed(s))return null;const url=URL.createObjectURL(blob);s.urls.set(path,url);return url;}catch(error){if(limit===512*1024)s.failedPreviews.add(path);throw error;}finally{s.pendingImages.delete(path);}})();s.pendingImages.set(path,pending);return pending;}
+ function imageProblem(error) {
+  if(error?.code==='permission-denied')return 'Firebase denied image access. Ask the DM to check the current Firestore rules and use Repair image access in Manage map.';
+  if(error?.code==='storage/unauthorized')return 'Firebase denied the original image. Check campaign DM access, Storage rules and Storage cross-service permissions.';
+  if(error?.code==='unauthenticated')return 'Sign in again, then reopen the map.';
+  if(error?.code?.startsWith('map-media/'))return error.message;
+  return 'Check your connection, then refresh to try again.';
+ }
+ async function cachedImage(s,path,limit=50*1024*1024){
+  if(s.urls.has(path))return s.urls.get(path);if(s.pendingImages.has(path))return s.pendingImages.get(path);
+  const epoch=s.imageEpoch||0,active=()=>allowed(s)&&(s.imageEpoch||0)===epoch;
+  const pending=(async()=>{try{
+   let blob;
+   try{blob=await media.load({campaignId:s.campaignId,mapId:s.mapId,path,limit,isCurrent:active});}
+   catch(error){
+    // The DM can still see an older private original before repairing it.
+    // Player preview exercises the published copy without that DM fallback.
+    if(!active()||!canManageCampaign()||s.preview)throw error;
+    blob=await sdk.getBlob(sdk.ref(sdk.storage,path),limit);
+   }
+   if(!active())return null;const url=URL.createObjectURL(blob);s.urls.set(path,url);return url;
+  }catch(error){if(active()&&limit===512*1024)s.failedPreviews.add(path);throw error;}finally{if(s.pendingImages.get(path)===pending)s.pendingImages.delete(path);}})();
+  s.pendingImages.set(path,pending);return pending;
+ }
  function loadPictures(s){const map=displayed(s),img=s.root.querySelector('[data-map-image]');if(img&&map?.imagePath)attachMapImage(s,img,map);s.root.querySelectorAll('[data-place-picture]').forEach(node=>attachImage(s,node,node.dataset.placePicture));}
- async function attachImage(s,node,path){try{const url=await cachedImage(s,path);if(allowed(s)&&node.isConnected&&url)node.src=url;}catch{if(allowed(s)&&node.isConnected){node.replaceWith(Object.assign(document.createElement('p'),{textContent:'Image unavailable. Refresh to retry.'}));}}}
+ async function attachImage(s,node,path){try{const url=await cachedImage(s,path);if(allowed(s)&&node.isConnected&&url)node.src=url;}catch(error){if(allowed(s)&&node.isConnected){node.replaceWith(Object.assign(document.createElement('p'),{textContent:'Image unavailable. '+imageProblem(error)}));}}}
  function quality(s,message){const node=s.root.querySelector('[data-map-quality]');if(allowed(s)&&node)node.textContent=message;}
  async function attachMapImage(s,node,map){
   const prefix=s.store.imagePrefix(s.campaignId),candidate=map.previewPath;
@@ -212,16 +235,16 @@ var CampaignMap=(()=>{
   const request={path};mapImageRequests.set(node,request);
   const valid=()=>allowed(s)&&node.isConnected&&mapImageRequests.get(node)===request;
   quality(s,overview?'Loading map overview…':'Loading original detail…');
-  function failed(){
+  function failed(error){
    if(!valid())return;node.onerror=null;node.onload=null;
    if(overview){s.failedPreviews.add(preview);attachMapImage(s,node,map);}
-   else {const fallback=preview&&s.urls.get(preview);if(fallback)node.src=fallback;quality(s,'Original detail could not load. Refresh to try again.');if(!node.src)node.replaceWith(Object.assign(document.createElement('p'),{textContent:'Image unavailable. Refresh to retry.'}));}
+   else {const fallback=preview&&s.urls.get(preview);if(fallback)node.src=fallback;quality(s,'Original detail could not load. '+imageProblem(error));if(!node.src)node.replaceWith(Object.assign(document.createElement('p'),{textContent:'Image unavailable. '+imageProblem(error)}));}
   }
   try{
    const url=await cachedImage(s,path,overview?512*1024:50*1024*1024);
    if(!valid()||!url)return;
    node.decoding='async';node.onerror=failed;node.onload=()=>{if(valid())quality(s,overview?'Map overview · zoom in for original detail.':'Original map detail.');};node.src=url;
-  }catch{failed();}
+  }catch(error){failed(error);}
  }
  function bindCanvas(s){const canvas=s.root.querySelector('[data-map-canvas]'),scene=s.root.querySelector('[data-map-scene]');const transform=()=>{const limitX=(s.zoom-1)*scene.offsetWidth/2,limitY=(s.zoom-1)*scene.offsetHeight/2;s.panX=Math.max(-limitX,Math.min(limitX,s.panX));s.panY=Math.max(-limitY,Math.min(limitY,s.panY));canvas.classList.toggle('map-zoomed',s.zoom>1);scene.style.transform=`translate(${s.panX}px,${s.panY}px) scale(${s.zoom})`;};transform();
   s.root.querySelectorAll('[data-map-zoom]').forEach(button=>button.onclick=()=>{s.zoom=Math.max(1,Math.min(3,s.zoom+(button.dataset.mapZoom==='in'?.25:-.25)));if(s.zoom===1)s.panX=s.panY=0;transform();loadPictures(s);});
@@ -263,13 +286,35 @@ var CampaignMap=(()=>{
    const path=picture?s.store.picturePrefix(s.campaignId,s.pinEditor.id)+crypto.randomUUID():s.store.imagePrefix(s.campaignId)+crypto.randomUUID();
    status(s,picture?'Uploading private place picture…':'Uploading private map…');
    await sdk.uploadBytes(sdk.ref(sdk.storage,path),file,{contentType:file.type});if(!editable(s))return;
+   status(s,'Preparing private image access…');
+   await media.ensure({campaignId:s.campaignId,mapId:s.mapId,path,blob:file,isCurrent:()=>editable(s)});if(!editable(s))return;
    let previewPath=null;
-   if(preview){const destination=s.store.imagePrefix(s.campaignId)+crypto.randomUUID();try{await sdk.uploadBytes(sdk.ref(sdk.storage,destination),preview,{contentType:preview.type});previewPath=destination;}catch{/* Fall back to the unchanged original. */}}
+   if(preview){const destination=s.store.imagePrefix(s.campaignId)+crypto.randomUUID();try{await sdk.uploadBytes(sdk.ref(sdk.storage,destination),preview,{contentType:preview.type});if(!editable(s))return;await media.ensure({campaignId:s.campaignId,mapId:s.mapId,path:destination,blob:preview,isCurrent:()=>editable(s)});previewPath=destination;}catch{/* Fall back to the unchanged original. */}}
    if(!editable(s))return;
    if(picture){s.pinEditor.picturePath=path;s.pinEditor.pictureAlt=s.pinEditor.name||'Place illustration';s.pinDirty=true;}
    else{s.draft.imagePath=path;if(previewPath)s.draft.previewPath=previewPath;else delete s.draft.previewPath;changed(s);}
    status(s,'Image uploaded privately. Players see it only after publishing.');
   }catch(error){if(current(s))status(s,'Could not upload: '+error.message);}
+  finally{s.busy=false;if(allowed(s))paint(s);}
+ }
+
+ function mediaPaths(map,pins=map?.pins||[]) {
+  return [...new Set([map?.imagePath,map?.previewPath,...pins.map(pin=>pin.picturePath)].filter(Boolean))];
+ }
+ async function prepareImages(s,paths) {
+  for(let i=0;i<paths.length;i++) {
+   if(!editable(s))throw Error('Campaign access changed.');
+   status(s,'Preparing image access '+(i+1)+' of '+paths.length+'…');
+   await media.ensure({campaignId:s.campaignId,mapId:s.mapId,path:paths[i],isCurrent:()=>editable(s),
+    onProgress:(done,total)=>status(s,'Preparing image access '+(i+1)+' of '+paths.length+' · '+Math.round(done/total*100)+'%')});
+  }
+ }
+ async function repairImages(s) {
+  if(!editable(s)||s.busy)return;
+  const paths=[...new Set([...mediaPaths(s.map,s.pins),...mediaPaths(s.draft)])];
+  if(!paths.length)return;s.busy=true;paint(s);
+  try{await prepareImages(s,paths);if(editable(s)){revoke(s);s.failedPreviews.clear();status(s,'Image access repaired. Players can refresh this map. Your draft and publication are unchanged.');}}
+  catch(error){if(allowed(s))status(s,'Image access could not be repaired. '+imageProblem(error)+' [code: '+(error.code||'unknown')+']');}
   finally{s.busy=false;if(allowed(s))paint(s);}
  }
 
@@ -281,6 +326,7 @@ var CampaignMap=(()=>{
   s.busy=true;paint(s);status(s,'Saving and publishing the revealed places…');
   try{
    if(s.mapDirty||!s.draft.revision){if(!await persistDraft(s))return;}
+   stage='preparing-image-access';await prepareImages(s,mediaPaths(s.draft,s.draft.pins.filter(pin=>pin.revealed)));if(!editable(s))return;
    stage='writing-publication';
    const result=await s.store.publish({campaignId:s.campaignId,draftRevision:s.draft.revision,isCurrent:()=>editable(s)});
    if(!editable(s))return;published=true;s.map=result.map;s.draft=result.draft;s.pins=result.pins;s.mapDirty=false;
@@ -289,7 +335,7 @@ var CampaignMap=(()=>{
    if(allowed(s))status(s,'Map published. Players can see '+result.pins.length+' revealed places. Hidden places remain private.');
   }catch(error){if(allowed(s)){
    const phase=error.mapPublishStage||stage,denied=error?.code==='permission-denied',expired=error?.code==='unauthenticated';
-   const steps={'saving-private-draft':'saving the private draft','reading-private-draft':'reading the saved private draft','reading-published-map':'reading the existing publication','checking-world-links':'checking linked World posts','writing-publication':'writing the map publication','loading-published-places':'loading the published places'};
+   const steps={'preparing-image-access':'preparing protected image access','saving-private-draft':'saving the private draft','reading-private-draft':'reading the saved private draft','reading-published-map':'reading the existing publication','checking-world-links':'checking linked World posts','writing-publication':'writing the map publication','loading-published-places':'loading the published places'};
    const context=' [step: '+phase+'; code: '+(error.code||'unknown')+'; map: '+s.mapId+']';
    status(s,(published?'Map published, but its places could not be reloaded. Use Refresh to reload; you do not need to publish again. ': 'Map was not published. Your private draft is kept. ')+(expired?'Your sign-in expired. Sign in again, then reopen this map.':denied?'Firebase denied '+steps[phase]+'. Ask the campaign owner to check campaign DM access and the current Firestore map rules.':'Failed while '+steps[phase]+': '+error.message)+context);
   }}finally{s.busy=false;if(allowed(s))paint(s);}

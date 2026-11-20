@@ -1,5 +1,7 @@
 # Campaign image uploads — Firebase Storage permissions and CORS
 
+**20 November 2026 player image fix:** authenticated player reads now use protected exact-byte Firestore copies to avoid Storage’s cross-service lookup limit. Existing maps need **Repair image access** after the updated Firestore rules and frontend are released. See [cause, deployment, repair and limits](campaign-map-image-access.md).
+
 World Building uploads files to `campaign-world-images/{campaignId}/{entryId}/{imageId}`.
 If uploads fail with `storage/unauthorized`, the **published Firebase Storage rules**
 probably do not yet contain that path. This is separate from Firestore security

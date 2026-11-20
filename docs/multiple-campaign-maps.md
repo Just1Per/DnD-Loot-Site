@@ -1,5 +1,7 @@
 # Multiple campaign maps
 
+**20 November 2026 player image fix:** authenticated player reads now use protected exact-byte Firestore copies to avoid Storage’s cross-service lookup limit. Existing maps need **Repair image access** after the updated Firestore rules and frontend are released. See [cause, deployment, repair and limits](campaign-map-image-access.md).
+
 Journal → **Maps** shows the names of published campaign maps across the top. Opening the area selects the designated main map. Players can switch maps and read each map's own published places and regions. Unpublished draft names, images and places stay out of the player view and the DM's player preview.
 
 In DM Workspace → **Maps**, use **Add map**, enter its name, upload its image and save a private draft or publish. Each map has a separate draft and publication. **Organise maps** stays collapsed by default. Move earlier/later works with keyboard and touch; dragging any map name also changes order. **Make main map** selects one published map to open first. Organisation changes save immediately and do not republish map content or alter pin revisions. The interface supports up to 50 maps in its order list.
