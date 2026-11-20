@@ -57,7 +57,7 @@ function createAccountNotificationFeed(sdk,{changed=()=>{},failed=()=>{}}={}){
    };
    for(const [field,op] of [['createdBy','=='],['data.hostUid','=='],['data.participantUids','array-contains']])watch(shots,query(collection(db,'campaigns',id,'oneShots'),where(field,op,s.uid)),snap=>{parts.set(field,rows(snap));updateShots();},'Adventure notifications');
   };
-  watch(n,doc(db,'campaigns',id),snap=>{if(!snap.exists()||snap.data().deletedAt){for(const ch of n.children.values())stopNode(ch);n.children.clear();started=false;return;}c.data=snap.data();refresh();},'Campaign notification access');
+  watch(n,doc(db,'campaigns',id),snap=>{if(!snap.exists()||snap.data().deletedAt){c.data={};for(const ch of n.children.values())stopNode(ch);n.children.clear();started=false;return;}c.data=snap.data();refresh();},'Campaign notification access');
   watch(n,doc(db,'campaigns',id,'members',s.uid),snap=>{c.member=snap.data();refresh();},'Campaign membership');return n;
  }
  async function start({uid,email=''}){

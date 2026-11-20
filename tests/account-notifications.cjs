@@ -41,6 +41,9 @@ test('Membership/ownership changes and account switching remove stale content an
  f.docs.get('campaigns/a/characters/c1').userId='other';f.emit();await f.flush();assert.ok(feed.all().every(r=>!r.characterId));
  f.docs.get('campaigns/a/characters/c1').userId='player';f.emit();await f.flush();assert.ok(feed.all().some(r=>r.characterId==='c1'));
  f.docs.get('campaigns/a/members/player').status='inactive';f.emit();await f.flush();assert.ok(feed.all().every(r=>!r.characterId));
+ f.docs.get('campaigns/a/members/player').status='active';f.emit();await f.flush();assert.ok(feed.all().some(r=>r.characterId));
+ f.docs.get('campaigns/a').deletedAt=100;f.emit();await f.flush();assert.ok(feed.all().every(r=>!r.characterId),'A late active membership snapshot cannot restore a deleted campaign');
+ f.docs.delete('campaigns/a');f.emit();await f.flush();assert.ok(feed.all().every(r=>!r.characterId));
  const late=f.watchers.find(w=>JSON.stringify(w.ref).includes('characterNotifications/c1'));f.sdk.auth.currentUser={uid:'other'};feed.stop();late.next({docs:[{id:'secret',data:()=>({kind:'dm-notes',createdAt:100,actorId:'dm'})}]});assert.deepEqual(feed.all(),[]);assert.equal(feed.available,false);
 });
 test('Adventure sheets with reused character IDs have separate sources and lose notifications when participation ends',async()=>{
