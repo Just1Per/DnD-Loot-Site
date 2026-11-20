@@ -231,3 +231,8 @@ Added class books beside every native class draft and independent class/backgrou
 ### Tydelige beholdere og lokationer — v94
 
 Containers ved equipment- og companion-overskrifterne samt under Sheet choices åbner et søgbart overblik over beholdere, direkte indhold, løse items, kapacitet og den faktiske carrier. Item-, gear-row- og companion-vinduer viser placering som en sti samt en separat Location note. Destinationer forhåndsvises før Apply; søgning og drafts bevares, og ugyldige eller utilgængelige forbindelser forklares. Brugerens eksisterende private placeringer og carrying/transfer-regler genbruges. Se [omfang og test](adobe-container-locations.md). Volumen/compartments og de øvrige inventory-punkter er fortsat særskilt backlog.
+
+
+### Private DM-noter på character sheet — v95
+
+Et panel til højre viser DM-noter, som gemmes med karakterens normale Save sheet. På mobil ligger det som en sammenklappelig sektion over siderne. Kun DM (eller godkendt adventure-host) kan skrive; den tilknyttede spiller kan læse, mens andre spillere og uvedkommende afvises af de private sheet-regler. Noterne er adskilt fra spillerens egen journal og fra udskriften. Revisioner, igangværende gemninger, skift af karakter/konto og genåbning er testet. Se [omfang, adgang og rules-deployment](character-dm-notes.md). Dette afslutter ikke Adventure Log-backloggen.

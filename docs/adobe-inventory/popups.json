@@ -242,7 +242,7 @@
     {
       "id": "adobePagesDialog",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 107,
+      "line": 108,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Manage pages / Add pages",
@@ -257,7 +257,7 @@
     {
       "id": "adobePaperZoomMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 163,
+      "line": 164,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Forstørrelsesglas på arket",
@@ -269,7 +269,7 @@
     {
       "id": "adobePageActionsMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 164,
+      "line": 165,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Page options ved zoom/print → Hide this page / Manage pages",
@@ -682,7 +682,7 @@
     {
       "id": "sheetPrintDialog",
       "file": "js/modules/character-sheet.js",
-      "line": 641,
+      "line": 645,
       "kind": "dialog",
       "category": "standard-only",
       "entry": "Standard print fallback",

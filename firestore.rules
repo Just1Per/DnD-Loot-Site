@@ -894,10 +894,10 @@ match /campaigns/{campaignId} {
     match /characterSheets/{characterId} {
       function owns() { return accepted() && get(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/characters/$(characterId)).data.userId == request.auth.uid; }
       function protectedGrant(data) { let grant=data.get('rulesChoices',{}).get('grants',{}).get('__dm',{});return [grant.get('bonusFeats',0),grant.get('bonusAsis',0),grant.get('usedAsis',0),data.get('advancement',{}).get('asiSpent',0)]; }
-      function valid(d) { return d.keys().hasOnly(['schemaVersion','revision','data','updatedAt','updatedBy']) && d.schemaVersion is int && d.schemaVersion >= 1 && d.schemaVersion <= 100 && d.revision is int && d.data is map && d.updatedBy == request.auth.uid && d.updatedAt is int && exists(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/characters/$(characterId)); }
+      function valid(d) { return d.keys().hasOnly(['schemaVersion','revision','data','updatedAt','updatedBy']) && d.schemaVersion is int && d.schemaVersion >= 1 && d.schemaVersion <= 100 && d.revision is int && d.data is map && d.data.get('dmNotes','') is string && d.data.get('dmNotes','').size() <= 6000 && d.updatedBy == request.auth.uid && d.updatedAt is int && exists(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(shotId)/characters/$(characterId)); }
       allow read: if manager() || owns();
-      allow create: if (manager() || owns()) && valid(request.resource.data) && request.resource.data.revision == 1 && (manager() || protectedGrant(request.resource.data.data) == [0,0,0,0]);
-      allow update: if (manager() || owns()) && valid(request.resource.data) && request.resource.data.revision == resource.data.revision + 1 && (manager() || protectedGrant(request.resource.data.data) == protectedGrant(resource.data.data));
+      allow create: if (manager() || owns()) && valid(request.resource.data) && request.resource.data.revision == 1 && (manager() || protectedGrant(request.resource.data.data) == [0,0,0,0] && request.resource.data.data.get('dmNotes','') == '');
+      allow update: if (manager() || owns()) && valid(request.resource.data) && request.resource.data.revision == resource.data.revision + 1 && (manager() || protectedGrant(request.resource.data.data) == protectedGrant(resource.data.data) && request.resource.data.data.get('dmNotes','') == resource.data.data.get('dmNotes',''));
     }
   }
   match /workspaceSecrets/{secretId} {
@@ -994,20 +994,23 @@ match /characterSheets/{charId} {
       && d.revision > 0
       && d.updatedBy == request.auth.uid
       && d.updatedAt is int
-      && d.data is map;
+      && d.data is map
+      && d.data.get('dmNotes','') is string
+      && d.data.get('dmNotes','').size() <= 6000;
   }
   allow get: if mayUseSheet();
   allow list: if false;
   allow create: if mayUseSheet() && validSheet() && request.resource.data.revision == 1
-    && (isCampaignDM(campaignId) || protectedAdvancement(request.resource.data.data) == [0,0,0,0]);
+    && (isCampaignDM(campaignId) || protectedAdvancement(request.resource.data.data) == [0,0,0,0] && request.resource.data.data.get('dmNotes','') == '');
   allow update: if mayUseSheet() && validSheet()
     && request.resource.data.schemaVersion >= resource.data.schemaVersion
     && request.resource.data.revision == resource.data.revision + 1
-    && (isCampaignDM(campaignId) || protectedAdvancement(request.resource.data.data) == protectedAdvancement(resource.data.data));
+    && (isCampaignDM(campaignId) || protectedAdvancement(request.resource.data.data) == protectedAdvancement(resource.data.data) && request.resource.data.data.get('dmNotes','') == resource.data.data.get('dmNotes',''));
   allow delete: if isCampaignDM(campaignId)
     || (isActiveMember(campaignId)
       && exists(characterPath(campaignId, charId))
-      && get(characterPath(campaignId, charId)).data.userId == request.auth.uid);
+      && get(characterPath(campaignId, charId)).data.userId == request.auth.uid
+      && resource.data.data.get('dmNotes','') == '');
 }
 match /saves/{saveId} {
   allow read: if isCampaignDM(campaignId)

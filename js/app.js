@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261119-container-locations-v94b";
+const ASSET_VERSION = "20261120-dm-notes-v95";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -321,6 +321,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-adobe-spell-list-ui.js",
     "./modules/character-paper-weight-ui.js",
     "./modules/character-adobe-choice-ui.js",
+    "./modules/character-dm-notes-ui.js",
     "./modules/character-adobe-stack-ui.js",
     "./modules/character-adobe-view.js",
     "./modules/character-creature-ui.js",

@@ -263,7 +263,7 @@ var SiteHelp=(()=>{
     ],
     [
       "Keep notes and an Adventure Log",
-      "Notes keeps private character entries; More notes opens further columns and Notes options controls writing lines without clearing text. Adventure Log tracks session rewards, spending and balances over six-entry pages. Its row arrows edit, move, copy, clear or remove records; review confirmation before changing them. Log calculations remain separate from actual character XP, coins and loot. Save sheet keeps both the notes and the log.",
+      "Notes keeps private character entries; More notes opens further columns and Notes options controls writing lines without clearing text. Adventure Log tracks session rewards, spending and balances over six-entry pages. Its row arrows edit, move, copy, clear or remove records; review confirmation before changing them. Log calculations remain separate from actual character XP, coins and loot. Save sheet keeps both the notes and the log. DM notes is a separate panel on the right on wide screens and a collapsible section above the sheets on mobile. Only your campaign DM (or approved adventure host) can write there; the assigned player can read the saved notes. The DM uses Save sheet to keep changes. These notes remain private to the DM and that player and are not added to the printed paper.",
       "sheet",
       "Open character sheet"
     ],

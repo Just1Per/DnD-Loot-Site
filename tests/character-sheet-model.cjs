@@ -21,3 +21,6 @@ test('point buy prices nonlinear base scores and flags invalid or over-budget ar
 });
 
 test('explicit inventory column survives save normalization while legacy rows and invalid columns remain unchanged',()=>{const data=M.normalize({personalGear:[{id:'bow',name:'Shortbow',location:'Backpack',inventorySide:'right'},{id:'sword',name:'Sword',inventorySide:'left'},{id:'legacy',name:'Legacy'},{id:'bad',name:'Invalid',inventorySide:'forged'}]});assert.equal(M.normalize(JSON.parse(JSON.stringify(data))).personalGear[0].inventorySide,'right');assert.equal(data.personalGear[1].inventorySide,'left');assert.equal(Object.hasOwn(data.personalGear[2],'inventorySide'),false);assert.equal(Object.hasOwn(data.personalGear[3],'inventorySide'),false);});
+test('DM notes are plain bounded private text and old sheets normalize without migration',()=>{
+ assert.equal(M.normalize({}).dmNotes,'');assert.equal(M.normalize({dmNotes:{text:'forged'}}).dmNotes,'');const data=M.normalize({dmNotes:'Øjne og løfter\n<script>plain text</script>'});assert.equal(data.dmNotes,'Øjne og løfter\n<script>plain text</script>');assert.deepEqual(M.normalize(data),data);assert.equal(M.normalize({dmNotes:'x'.repeat(6001)}).dmNotes.length,6000);
+});

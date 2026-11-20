@@ -157,6 +157,7 @@ var CharacterSheetModel = (() => {
       slots: [],
       attacks: [],
       spells: [],
+      dmNotes: typeof raw.dmNotes==='string'?raw.dmNotes.slice(0,6000):'',
       inspiration: !!raw.inspiration,
       spellAbility: abilities[raw.spellAbility] ? raw.spellAbility : 'int'
     };
