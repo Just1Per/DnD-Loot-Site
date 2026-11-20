@@ -52,7 +52,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   lookupAI, aiLookupConfigured,
 });
 
-const ASSET_VERSION = "20261120-racial-trait-text-v96";
+const ASSET_VERSION = "20261120-map-image-access-v97";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -73,6 +73,7 @@ const FEATURE_FILES = [
   "./modules/chapter-notes-store.js",
   "./modules/campaign-journal-store.js",
   "./modules/campaign-map-store.js",
+  "./modules/campaign-map-media.js",
   "./modules/campaign-one-shots-store.js",
   "./modules/campaign-creatures.js",
   "./modules/personal-creature-library.js",

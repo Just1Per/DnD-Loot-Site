@@ -1,5 +1,7 @@
 # Map overview loading
 
+**20 November 2026 player image fix:** authenticated player reads now use protected exact-byte Firestore copies to avoid Storage’s cross-service lookup limit. Existing maps need **Repair image access** after the updated Firestore rules and frontend are released. See [cause, deployment, repair and limits](campaign-map-image-access.md).
+
 New map uploads can include a small WebP overview. Journal opens the overview at normal zoom and loads the unchanged original on zoom-in. Reset returns to the overview; both files are reused only within that open map session. Pins and region geometry continue to use percentage coordinates and the original image path.
 
 ## Files and publication

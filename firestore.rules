@@ -634,6 +634,60 @@ match /campaigns/{campaignId} {
     allow update: if isCampaignDM(campaignId) && validPreferences(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
   }
 
+  // Exact map image bytes use Firestore so live campaign, member, map and pin
+  // checks fit the rules budget. No Storage tokens or public copies are issued.
+  match /campaignMapMedia/{mapId}/assets/{assetId} {
+    function scoped(d) {
+      return validMapKey(mapId) && assetId.matches('^[a-f0-9]{64}$')
+        && ((d.kind == 'map' && d.pinId == '' && mapImageFor(mapId,d.path))
+          || (d.kind == 'place' && d.pinId.matches('^[A-Za-z0-9_-]{1,128}$')
+            && d.path.matches('^campaign-map-place-images/' + campaignId + '/' + (mapId == 'main' ? '' : mapId + '/') + d.pinId + '/[A-Za-z0-9_-]{1,100}$')));
+    }
+    function validCopy(d) {
+      return d.keys().hasAll(['path','kind','pinId','contentType','size','parts','sha256','ready'])
+        && d.keys().hasOnly(['path','kind','pinId','contentType','size','parts','sha256','ready'])
+        && d.path is string && d.kind is string && d.pinId is string && scoped(d)
+        && d.contentType in ['image/png','image/jpeg','image/webp']
+        && d.size is int && d.size > 0 && d.size <= 50 * 1024 * 1024
+        && (d.kind != 'place' || d.size < 5 * 1024 * 1024)
+        && d.parts is int && d.parts > 0 && d.parts <= 100
+        && (d.parts - 1) * 524288 < d.size && d.size <= d.parts * 524288
+        && d.sha256 is string && d.sha256.matches('^[a-f0-9]{64}$') && d.ready is bool;
+    }
+    function published(d) {
+      let mapPath = /databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId);
+      let pinPath = /databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)/pins/$(d.pinId);
+      let map = get(mapPath).data;
+      return exists(mapPath) && (d.kind == 'map'
+        ? (d.path == map.imagePath || ('previewPath' in map && d.path == map.previewPath))
+        : (exists(pinPath) && get(pinPath).data.picturePath == d.path
+          && get(pinPath).data.publishedRevision == map.revision));
+    }
+    function canRead(d) {
+      return scoped(d) && (isCampaignDM(campaignId)
+        || (isActiveMember(campaignId) && d.ready && published(d)));
+    }
+    allow get: if validMapKey(mapId) && (isCampaignDM(campaignId) || (resource != null && canRead(resource.data)));
+    allow create: if isCampaignDM(campaignId) && validCopy(request.resource.data) && request.resource.data.ready == false;
+    allow update: if isCampaignDM(campaignId) && validCopy(request.resource.data)
+      && (request.resource.data == resource.data || (resource.data.ready == false
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ready']) && request.resource.data.ready == true));
+    match /mapImageChunks/{chunkId} {
+      function manifest() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMapMedia/$(mapId)/assets/$(assetId)).data; }
+      function validPart(d,copy) {
+        let size = int(chunkId) == copy.parts - 1 ? copy.size - int(chunkId) * 524288 : 524288;
+        return chunkId.matches('^(0|[1-9][0-9]?)$') && int(chunkId) < copy.parts
+          && d.keys().hasAll(['data']) && d.keys().hasOnly(['data'])
+          && d.data is string && d.data.size() > 0 && d.data.size() <= 699052
+          && d.data.size() % 4 == 0 && d.data.matches('^[A-Za-z0-9+/]+={0,2}$')
+          && d.data.size() / 4 * 3 - (d.data.matches('.*==$') ? 2 : d.data.matches('.*=$') ? 1 : 0) == size;
+      }
+      allow get: if canRead(manifest()) && manifest().ready;
+      allow create, update: if isCampaignDM(campaignId) && validPart(request.resource.data,manifest())
+        && (manifest().ready == false || (resource != null && request.resource.data == resource.data));
+    }
+  }
+
   match /campaignMapDrafts/{mapId} {
     function validDraft(d) {
       return validMapKey(mapId) && d.keys().hasAll(['title','imagePath','pins','sourceRevision','revision','updatedBy','updatedAt'])
