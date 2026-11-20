@@ -2,6 +2,8 @@ const fs=require('fs'),vm=require('vm'),path=require('path'),{webcrypto}=require
 const {parseHTML}=require('linkedom');
 const {window}=parseHTML(fs.readFileSync(path.join(__dirname,'../index.html'),'utf8'));const {document}=window;
 const sandbox={TextEncoder,fetch:async()=>({ok:true,json:async()=>JSON.parse(fs.readFileSync(path.join(__dirname,'../data/rules/catalog.json'),'utf8'))}),document,console,URLSearchParams,URL,Map,Set,Promise,setTimeout,clearTimeout,requestAnimationFrame:callback=>setTimeout(()=>callback(Date.now()),0),cancelAnimationFrame:clearTimeout,queueMicrotask,structuredClone,crypto:webcrypto,Event:window.Event,MutationObserver:window.MutationObserver,AbortController,IntersectionObserver:class{observe(){}unobserve(){}disconnect(){}},location:{search:''},navigator:{},Image:class{},localStorage:{getItem:()=>null,setItem:()=>{}},window:null};sandbox.window=sandbox;sandbox.addEventListener=window.addEventListener.bind(window);sandbox.removeEventListener=window.removeEventListener.bind(window);sandbox.dispatchEvent=window.dispatchEvent.bind(window);sandbox.print=()=>{};
+// LinkeDOM has no viewport/media-query engine; rendered browser tests cover resize.
+sandbox.matchMedia=query=>({media:query,matches:false,addEventListener(){},removeEventListener(){}});
 // LinkeDOM has no constraint-validation implementation. Model the constraints
 // exercised by these tests; browser checks remain the authority for native behavior.
 Object.defineProperty(window.HTMLInputElement.prototype,'checked',{get(){return this.hasAttribute('checked')},set(value){this.toggleAttribute('checked',!!value)}});

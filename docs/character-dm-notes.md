@@ -26,4 +26,4 @@ The assistant does not merge or deploy live rules. Review and publish the curren
 
 - Model regression: legacy/empty notes, plain text, type/length bounds and idempotence.
 - Emulator regression in `character-dm-notes-rules.cjs`: actual store save/read, DM/owner/player rights, unrelated players/admins/outsiders, creation/update/omission/deletion forgery, ordinary player saves, stale revisions, approved one-shot hosts, ownership/hosting/membership revocation and public-roster exclusion. It runs in `test:rules` with the existing sheet permission suite.
-- Connected browser regression: right-side layout, explicit save/reopen, player read-only state with editable personal journal, approved host/player scope, unchanged character resources, print exclusion, failed/in-flight drafts, detached controls, character/account isolation, mobile keyboard and axe.
+- Connected browser regression: right-side layout, explicit save/reopen, player read-only state with editable personal journal, approved host/player scope, unchanged character resources, actual PDF exclusion, failed/in-flight drafts, detached controls, character/account isolation, mobile keyboard and axe.

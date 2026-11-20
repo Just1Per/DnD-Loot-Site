@@ -19,6 +19,6 @@ var CharacterDMNotesUI=(()=>{
   input.oninput=()=>{if(current!==state||!live(state)||!mayWrite(session)){refresh();return;}session.data.dmNotes=input.value.slice(0,6000);session.dirty=true;sheetStatus('Unsaved DM notes. Save sheet to keep them.');refresh();};
   save.onclick=async()=>{if(current!==state||!live(state)||!mayWrite(session)||session.saving)return;const result=await saveCharacterSheet();if(result===false&&current===state&&live(state))status.textContent=document.getElementById('sheetStatus')?.textContent||'Could not save. Your notes are still here.';};refresh();
  }
- function destroy(root){if(!current||root&&current.root!==root)return;current.media.removeEventListener('change',current.resize);current.panel.remove();current=null;}
+ function destroy(root){if(!current||root&&current.root!==root)return;current.media.removeEventListener('change',current.resize);current.input.oninput=null;current.save.onclick=null;current.input.value='';current.panel.remove();current=null;}
  return{install,refresh,destroy};
 })();
