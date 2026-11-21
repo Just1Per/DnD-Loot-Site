@@ -5,6 +5,15 @@ match /databases/{database}/documents {
 // -----------------------------------------------------------------------
 // GLOBAL HELPERS
 // -----------------------------------------------------------------------
+// Email jobs and quota reservations are written only by the Admin SDK.
+// Browser roles, including global admins, cannot read recipients or enqueue mail.
+match /emailDeliveries/{deliveryId} {
+  allow read, write: if false;
+}
+match /emailRateLimits/{bucketId} {
+  allow read, write: if false;
+}
+
 function signedIn() {
   return request.auth != null;
 }

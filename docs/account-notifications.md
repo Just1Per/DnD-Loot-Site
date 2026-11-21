@@ -29,6 +29,8 @@ Publish this PR's **Firestore rules** before releasing the frontend:
 
 Then merge/release and reload the website for both DM and player accounts. No Storage rules, indexes, Cloud Functions, production migration, public image URLs, browser push permission or third-party notification service is needed. No production rules deployment or live data mutation is performed by preparing this PR.
 
+This applies to the in-app bell. The separate [invitation email backend](invitation-email-setup.md) is disabled by default and has its own manual Functions/provider activation. Only new campaign invitations can send email after activation; the bell's DM notes, loot and application sources are not wired to email.
+
 The frontend probes its own read-state path before enabling transactional event creation. With older rules, existing character, loot, invitation and approval actions continue using their existing paths; the panel reports unavailable synchronization and offers Refresh. Upgraded clients start generating note/loot notifications after the new rules are available. Refresh/reload after publishing rules enables that capability.
 
 ## Regression coverage

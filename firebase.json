@@ -1,4 +1,10 @@
 {
+  "functions": [{
+    "source": "functions/email",
+    "codebase": "email",
+    "runtime": "nodejs22",
+    "ignore": ["node_modules", ".git", "*.log", ".env*", ".secret*", "test/**"]
+  }],
   "hosting": {
     "public": ".",
     "ignore": [

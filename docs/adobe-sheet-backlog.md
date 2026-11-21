@@ -1,5 +1,7 @@
 # Adobe sheet parity backlog
 
+Invitation email checkpoint (21 November 2026): a separate disabled-by-default Firebase Functions codebase supports new invitation emails through a reusable private queue/template/transport layer. See [activation, limits and tests](invitation-email-setup.md). Broader DM/loot/campaign-change email categories and email preference controls remain deferred at the user's request; merging alone does not activate sending.
+
 Agreed with the user on 30 October 2026. Keep this work in PR #250. No assistant merge, live/rules deployment or production migration. A finished numbered point does not mean the entire PDF is complete. The [function ledger](adobe-inventory/web-bindings.md) records source actions individually.
 
 1. **Original modifier and field-option menus — implemented; verification is recorded in PR #250.**
