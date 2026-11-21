@@ -1,0 +1,44 @@
+name: Invitation email backend
+on:
+  pull_request:
+    paths:
+      - 'functions/email/**'
+      - 'firebase.json'
+      - 'firestore.rules'
+      - 'tests/invitation-email-rules.cjs'
+      - '.github/workflows/invitation-email-tests.yml'
+permissions:
+  contents: read
+concurrency:
+  group: invitation-email-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  email:
+    name: Invitation queue, transport and private outbox
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            functions/email/package-lock.json
+            tests/dependencies/emulator/package-lock.json
+      - name: Install isolated backend dependencies
+        run: npm ci --prefix functions/email --ignore-scripts --no-audit --no-fund
+      - name: Templates, transport, retries, duplicate protection and deployment wiring
+        run: npm --prefix functions/email test
+      - name: Install emulator dependencies
+        run: node scripts/test-profiles.cjs install emulator
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/firebase/emulators
+          key: email-firestore-emulator-${{ runner.os }}-${{ hashFiles('tests/dependencies/emulator/package-lock.json') }}
+      - name: Real Firestore transactions and private queue permissions
+        run: node scripts/test-profiles.cjs run emulator -- node tests/dependencies/emulator/node_modules/firebase-tools/lib/bin/firebase.js emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json "node tests/invitation-email-rules.cjs"
