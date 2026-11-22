@@ -111,7 +111,15 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  }
  await page.setViewportSize({width:1440,height:1000});
  await page.evaluate(()=>{activeCampaign.frontPage={...testSheetDocs['campaigns/a'].frontPage,layout:'grimoire'};CampaignHome.render();});
- await page.emulateMedia({media:'print'});assert.equal(await article().locator('h2').evaluate(node=>getComputedStyle(node).color),'rgb(92, 29, 29)');await page.emulateMedia({media:'screen'});
+ // Future screen preferences must not recolour printed campaign pages.
+ await page.evaluate(()=>document.documentElement.style.setProperty('--theme-heading','#164735'));
+ assert.equal(await article().locator('.campaign-book-title').evaluate(node=>getComputedStyle(node).backgroundColor),'rgb(22, 71, 53)');
+ await page.emulateMedia({media:'print'});
+ assert.equal(await article().locator('h2').evaluate(node=>getComputedStyle(node).color),'rgb(17, 17, 17)');
+ assert.equal(await article().locator('.campaign-book-title').evaluate(node=>getComputedStyle(node).backgroundColor),'rgb(255, 255, 255)');
+ await page.emulateMedia({media:'screen'});
+ assert.equal(await article().locator('.campaign-book-title').evaluate(node=>getComputedStyle(node).backgroundColor),'rgb(22, 71, 53)');
+ await page.evaluate(()=>document.documentElement.style.removeProperty('--theme-heading'));
  for(const id of ['classic','chronicle','atlas','grimoire']){
   await page.evaluate(()=>{const saved=structuredClone(testSheetDocs['campaigns/a'].frontPage);seed('dm');activeCampaign.frontPage=saved;showMainApp();});
   const before=await page.evaluate(()=>structuredClone(testSheetDocs['campaigns/a'].frontPage));
