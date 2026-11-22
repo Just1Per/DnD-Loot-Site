@@ -5,7 +5,7 @@
   gap: 16px;
   margin: 18px 0;
   padding: 18px 20px;
-  border: 1px solid #c8b89a;
+  border: 1px solid var(--theme-border-soft);
   border-radius: 12px;
   background: #fffaf0;
   color: #2e251b;

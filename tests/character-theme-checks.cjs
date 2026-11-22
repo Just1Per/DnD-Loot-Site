@@ -2,12 +2,25 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const root=path.resolve(__dirname,'..');
 const css=fs.readFileSync(path.join(root,'css/character-vault-theme.css'),'utf8');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const tokenCss=fs.readFileSync(path.join(root,'css/theme-tokens.css'),'utf8');
+const paletteNames=new Set([...tokenCss.matchAll(/(--theme-[\w-]+)\s*:/g)].map(match=>match[1]));
+for(const file of fs.readdirSync(path.join(root,'css')).filter(name=>name.endsWith('.css'))){
+  const source=fs.readFileSync(path.join(root,'css',file),'utf8');
+  for(const [,name]of source.matchAll(/var\((--theme-[\w-]+)/g))assert.ok(paletteNames.has(name),file+' references an undefined palette token: '+name);
+}
+
+for(const page of ['index.html','404.html','rules-attribution.html']){
+  const markup=fs.readFileSync(path.join(root,page),'utf8');
+  const palette=markup.indexOf('css/theme-tokens.css');
+  const component=markup.search(/css\/(?:style|site-identity)\.css/);
+  assert.ok(palette>=0&&palette<component,page+' loads the shared palette before component styles');
+}
 
 for(const token of [
-  '--vault-burgundy:#5c1d1d',
-  '--vault-gold:#d4af37',
-  '--vault-border:#8a7355',
-  '--vault-paper:#fdfbf7',
+  '--vault-burgundy:var(--theme-heading)',
+  '--vault-gold:var(--theme-accent)',
+  '--vault-border:var(--theme-border)',
+  '--vault-paper:var(--theme-paper)',
   'linear-gradient(180deg,var(--vault-brown),var(--vault-brown-soft))'
 ]) assert.ok(css.includes(token),'Missing Vault theme token: '+token);
 

@@ -24,7 +24,8 @@
         "adobe-connected-sheet-browser.cjs",
         "adobe-dc-ability-controls-browser.cjs",
         "adobe-native-abilities-browser.cjs",
-        "adobe-only-browser.cjs"
+        "adobe-only-browser.cjs",
+        "site-palette-browser.cjs"
       ]
     },
     {
@@ -98,7 +99,8 @@
         "adobe-inline-character-choices-browser.cjs",
         "adobe-magic-variant-browser.cjs",
         "adobe-page-choices-browser.cjs",
-        "adobe-species-descriptions-browser.cjs"
+        "adobe-species-descriptions-browser.cjs",
+        "site-palette-browser.cjs"
       ]
     },
     {
@@ -125,7 +127,8 @@
         "adobe-native-classes-browser.cjs",
         "adobe-page-choices-browser.cjs",
         "adobe-pinned-legacy-browser.cjs",
-        "adobe-xp-browser.cjs"
+        "adobe-xp-browser.cjs",
+        "site-palette-browser.cjs"
       ]
     },
     {
@@ -166,7 +169,8 @@
         "adobe-edition-options-browser.cjs",
         "adobe-native-feats-browser.cjs",
         "adobe-personal-feats-browser.cjs",
-        "adobe-player-feats-browser.cjs"
+        "adobe-player-feats-browser.cjs",
+        "site-palette-browser.cjs"
       ]
     },
     {
@@ -194,7 +198,8 @@
       "testReferences": [
         "adobe-additional-spells-browser.cjs",
         "adobe-ai-lookup-browser.cjs",
-        "adobe-spell-list-browser.cjs"
+        "adobe-spell-list-browser.cjs",
+        "site-palette-browser.cjs"
       ]
     },
     {
@@ -210,7 +215,8 @@
         "adobe-ai-lookup-browser.cjs",
         "adobe-direct-preparation-browser.cjs",
         "adobe-native-spells-browser.cjs",
-        "adobe-source-generator-browser.cjs"
+        "adobe-source-generator-browser.cjs",
+        "site-palette-browser.cjs"
       ]
     },
     {
@@ -242,7 +248,7 @@
     {
       "id": "adobePagesDialog",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 108,
+      "line": 109,
       "kind": "dialog",
       "category": "adobe-dialog",
       "entry": "Manage pages / Add pages",
@@ -257,19 +263,20 @@
     {
       "id": "adobePaperZoomMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 164,
+      "line": 165,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Forstørrelsesglas på arket",
       "notes": "Bruger fortsat intern #adobeZoom-selector; den skjulte kontrol skal bevares indtil afkobling.",
       "testReferences": [
-        "adobe-paper-controls-browser.cjs"
+        "adobe-paper-controls-browser.cjs",
+        "site-palette-browser.cjs"
       ]
     },
     {
       "id": "adobePageActionsMenu",
       "file": "js/modules/character-adobe-stack-ui.js",
-      "line": 165,
+      "line": 166,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Page options ved zoom/print → Hide this page / Manage pages",
@@ -330,7 +337,8 @@
         "adobe-satyr-movement-browser.cjs",
         "adobe-slot-labels-browser.cjs",
         "adobe-spell-pages-browser.cjs",
-        "adobe-tool-check-browser.cjs"
+        "adobe-tool-check-browser.cjs",
+        "site-palette-browser.cjs"
       ]
     },
     {

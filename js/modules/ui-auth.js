@@ -162,22 +162,35 @@ document.getElementById("loginButton")?.addEventListener("click", async ()=>{
   try { document.getElementById('authStatus').textContent='Opening Google sign-in…';await signInWithPopup(auth, provider); } catch(e) {document.getElementById('authStatus').textContent='Could not sign in. '+e.message;}
 });
 
-document.getElementById("emailLoginButton")?.addEventListener("click", async ()=>{
+function readEmailCredentials(){
+  const email=document.getElementById('emailInput'),password=document.getElementById('passwordInput'),status=document.getElementById('authStatus');
+  email.required=true;password.required=true;
+  if(!email.checkValidity()){status.textContent='Enter a valid email address.';email.reportValidity();email.focus();return null;}
+  if(!password.checkValidity()){status.textContent='Enter your password.';password.reportValidity();password.focus();return null;}
+  return {email:email.value.trim(),password:password.value};
+}
+
+document.getElementById("loginControls")?.addEventListener("submit", async event=>{
+  event.preventDefault();
+  const credentials=readEmailCredentials();if(!credentials)return;
+  document.getElementById('authStatus').textContent='Signing in…';
   try {
     await signInWithEmailAndPassword(
       auth,
-      document.getElementById("emailInput").value,
-      document.getElementById("passwordInput").value
+      credentials.email,
+      credentials.password
     );
   } catch(e) { document.getElementById('authStatus').textContent='Could not sign in. '+e.message; }
 });
 
 document.getElementById("registerButton")?.addEventListener("click", async ()=>{
+  const credentials=readEmailCredentials();if(!credentials)return;
+  document.getElementById('authStatus').textContent='Creating account…';
   try {
     await createUserWithEmailAndPassword(
       auth,
-      document.getElementById("emailInput").value,
-      document.getElementById("passwordInput").value
+      credentials.email,
+      credentials.password
     );
     document.getElementById('authStatus').textContent='Account created. Pending campaign invitations will appear on your dashboard.';
   } catch(e) { document.getElementById('authStatus').textContent='Could not create account. '+e.message; }
@@ -189,7 +202,7 @@ document.getElementById('resetPasswordButton')?.addEventListener('click',async()
   email.required=true;
   if(!email.checkValidity()){status.textContent='Enter your email address to request a password reset.';email.reportValidity();email.focus();return;}
   button.disabled=true;status.textContent='Requesting password reset…';
-  try { await sendPasswordResetEmail(auth,email.value.trim());status.textContent='If this email has a password account, reset instructions have been sent. Check your inbox, then return to Login.'; }
+  try { await sendPasswordResetEmail(auth,email.value.trim());status.textContent='If this email has a password account, reset instructions have been sent. Check your inbox, then sign in here.'; }
   catch(error){status.textContent=error.code==='auth/too-many-requests'?'Too many requests. Please try again later.':'Could not request a reset. Check your connection and try again.';}
   finally {button.disabled=false;}
 });

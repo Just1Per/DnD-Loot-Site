@@ -1,24 +1,24 @@
 .dm-workspace-shell{display:grid;grid-template-columns:190px minmax(0,1fr);gap:24px;align-items:start;margin-top:20px}
 .dm-workspace-shell[hidden]{display:none!important}
-.dm-workspace-sidebar{display:flex;flex-direction:column;gap:8px;background:#f4efe6;border:3px double #8a7355;border-radius:10px;padding:16px;position:sticky;top:16px;min-width:0}
-.dm-workspace-sidebar h2{font:700 1rem Cinzel,Georgia,serif;color:#5c1d1d;margin:0 0 10px}
-.dm-workspace-sidebar button{display:block!important;white-space:normal;text-align:left;background:#fdfbf7;border:1px solid #c8b89a;border-radius:5px;color:#5c1d1d;padding:10px;font:700 .75rem/1.5 Cinzel,Georgia,serif;cursor:pointer;overflow-wrap:anywhere}
-.dm-workspace-sidebar button[aria-current=page]{border-color:#9b1d1d;box-shadow:inset 3px 0 #9b1d1d;background:#eee1cc}
-.dm-workspace-sidebar button:focus-visible{outline:2px solid #9b1d1d;outline-offset:3px}
+.dm-workspace-sidebar{display:flex;flex-direction:column;gap:8px;background:var(--theme-paper-soft);border:3px double var(--theme-border);border-radius:10px;padding:16px;position:sticky;top:16px;min-width:0}
+.dm-workspace-sidebar h2{font:700 1rem Cinzel,Georgia,serif;color:var(--theme-heading);margin:0 0 10px}
+.dm-workspace-sidebar button{display:block!important;white-space:normal;text-align:left;background:var(--theme-paper);border:1px solid var(--theme-border-soft);border-radius:5px;color:var(--theme-heading);padding:10px;font:700 .75rem/1.5 Cinzel,Georgia,serif;cursor:pointer;overflow-wrap:anywhere}
+.dm-workspace-sidebar button[aria-current=page]{border-color:var(--theme-primary);box-shadow:inset 3px 0 var(--theme-primary);background:#eee1cc}
+.dm-workspace-sidebar button:focus-visible{outline:2px solid var(--theme-primary);outline-offset:3px}
 .dm-workspace-body,.dm-workspace-body>.tab-content{min-width:0}
 .dm-overview-preparation{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;min-width:0}
-.dm-workspace-summary-label{font:.85rem/1.5 Georgia,serif;color:#66584a}
+.dm-workspace-summary-label{font:.85rem/1.5 Georgia,serif;color:var(--theme-muted)}
 .dm-recent-work-list{display:flex;flex-direction:column;gap:8px}
-.dm-recent-work-list button{background:#fdfbf7;color:#5c1d1d;border:1px solid #c8b89a;border-radius:5px;padding:10px;text-align:left;white-space:normal;overflow-wrap:anywhere;cursor:pointer}
+.dm-recent-work-list button{background:var(--theme-paper);color:var(--theme-heading);border:1px solid var(--theme-border-soft);border-radius:5px;padding:10px;text-align:left;white-space:normal;overflow-wrap:anywhere;cursor:pointer}
 .dm-recent-work-list strong,.dm-recent-work-list span{display:block}
-.dm-recent-work-list span{font:.8rem/1.5 Georgia,serif;margin-top:4px;color:#66584a}
+.dm-recent-work-list span{font:.8rem/1.5 Georgia,serif;margin-top:4px;color:var(--theme-muted)}
 .dm-legacy-adventures{grid-column:1/-1;min-width:0}
-.dm-legacy-adventures>summary{font:700 .85rem/1.5 Cinzel,Georgia,serif;color:#66584a;cursor:pointer;padding:10px}
+.dm-legacy-adventures>summary{font:700 .85rem/1.5 Cinzel,Georgia,serif;color:var(--theme-muted);cursor:pointer;padding:10px}
 .dm-legacy-adventures .dm-tool-card{margin:10px 0}
 .chapter-editor-with-reference{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
 .chapter-editor-with-reference:has([data-chapter-reference-panel]:not([hidden])){grid-template-columns:minmax(0,1fr) minmax(240px,.75fr)}
 .chapter-editor-main,.chapter-reference-panel{min-width:0}
-.chapter-reference-panel{position:sticky;top:16px;background:#efe7d9;border:1px solid #c8b89a;border-left:4px solid #a78946;border-radius:6px;padding:16px;margin-top:18px}
+.chapter-reference-panel{position:sticky;top:16px;background:#efe7d9;border:1px solid var(--theme-border-soft);border-left:4px solid #a78946;border-radius:6px;padding:16px;margin-top:18px}
 .chapter-reference-panel h3{font:700 1.1rem/1.4 Cinzel,Georgia,serif;overflow-wrap:anywhere}
 .chapter-reference-panel h4{font:700 .9rem/1.5 Georgia,serif;margin-bottom:6px}
 .chapter-reference-panel .workspace-actions{margin-top:0}
@@ -30,7 +30,7 @@
 @media(max-width:760px){
  .dm-workspace-sidebar{display:block;padding:12px}
  .dm-workspace-sidebar>h2,.dm-workspace-sidebar>button{display:none!important}
- .dm-workspace-mobile-nav{display:flex;flex-direction:column;gap:6px;font:700 .8rem/1.4 Georgia,serif;color:#5c1d1d}
- .dm-workspace-mobile-nav select{display:block;width:100%;min-width:0;min-height:44px;border:1px solid #a78b64;border-radius:5px;background:#fdfbf7;color:#5c1d1d;padding:8px;font:inherit}
- .dm-workspace-mobile-nav select:focus-visible{outline:2px solid #9b1d1d;outline-offset:3px}
+ .dm-workspace-mobile-nav{display:flex;flex-direction:column;gap:6px;font:700 .8rem/1.4 Georgia,serif;color:var(--theme-heading)}
+ .dm-workspace-mobile-nav select{display:block;width:100%;min-width:0;min-height:44px;border:1px solid #a78b64;border-radius:5px;background:var(--theme-paper);color:var(--theme-heading);padding:8px;font:inherit}
+ .dm-workspace-mobile-nav select:focus-visible{outline:2px solid var(--theme-primary);outline-offset:3px}
 }

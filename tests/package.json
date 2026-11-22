@@ -132,7 +132,8 @@
     "deps:all": "node ../scripts/test-profiles.cjs install core browser emulator hosting",
     "with": "node ../scripts/test-profiles.cjs run",
     "test:map-media": "node campaign-map-media-browser.cjs",
-    "test:account-notifications": "node account-notifications-browser.cjs"
+    "test:account-notifications": "node account-notifications-browser.cjs",
+    "test:ui-palette": "node site-palette-browser.cjs"
   },
   "name": "campaignatlas-tests",
   "version": "0.0.0",

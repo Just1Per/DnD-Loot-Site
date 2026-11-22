@@ -7,21 +7,21 @@
 #sheetAttackPicker,
 #characterSheetPage,
 #tab-character-sheet {
-  --vault-burgundy:#5c1d1d;
-  --vault-burgundy-bright:#9b1d1d;
-  --vault-burgundy-dark:#651313;
-  --vault-brown:#2b1a0e;
-  --vault-brown-soft:#3d2610;
-  --vault-gold:#d4af37;
-  --vault-gold-deep:#c79c32;
-  --vault-paper:#fdfbf7;
-  --vault-paper-soft:#f4efe6;
-  --vault-parchment:#e9dfcf;
-  --vault-border:#8a7355;
-  --vault-border-soft:#c8b89a;
-  --vault-ink:#342d26;
-  --vault-muted:#756654;
-  --vault-cream:#f5e6c8;
+  --vault-burgundy:var(--theme-heading);
+  --vault-burgundy-bright:var(--theme-primary);
+  --vault-burgundy-dark:var(--theme-primary-hover);
+  --vault-brown:var(--theme-header);
+  --vault-brown-soft:var(--theme-header-end);
+  --vault-gold:var(--theme-accent);
+  --vault-gold-deep:var(--theme-accent-deep);
+  --vault-paper:var(--theme-paper);
+  --vault-paper-soft:var(--theme-paper-soft);
+  --vault-parchment:var(--theme-parchment);
+  --vault-border:var(--theme-border);
+  --vault-border-soft:var(--theme-border-soft);
+  --vault-ink:var(--theme-ink);
+  --vault-muted:var(--theme-muted);
+  --vault-cream:var(--theme-on-primary);
   --vault-danger:#8b2d2d;
   --sheet-ink:var(--vault-ink);
   --sheet-muted:var(--vault-muted);
@@ -34,7 +34,7 @@
 #characterSheetPage .character-sheet,
 #characterSheetDialog.character-sheet {
   background:
-    radial-gradient(circle at 12% 0%,rgba(212,175,55,.08),transparent 28rem),
+    radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--theme-accent) 8%,transparent),transparent 28rem),
     linear-gradient(180deg,var(--vault-paper),#fbf6ed);
   color:var(--vault-ink);
   border:3px double var(--vault-border);
@@ -54,7 +54,7 @@
   scrollbar-color:var(--vault-border-soft) var(--vault-paper-soft);
 }
 .character-sheet ::selection {
-  background:rgba(212,175,55,.28);
+  background:color-mix(in srgb,var(--theme-accent) 28%,transparent);
   color:var(--vault-burgundy);
 }
 
@@ -211,7 +211,7 @@
 .sheet-character-chooser select:focus {
   outline:none;
   border-color:var(--vault-gold-deep);
-  box-shadow:0 0 0 3px rgba(212,175,55,.18),inset 0 1px 2px rgba(43,26,14,.05);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--theme-accent) 18%,transparent),inset 0 1px 2px rgba(43,26,14,.05);
 }
 #characterSheetPage select,
 #characterSheetDialog select,
@@ -238,7 +238,7 @@
 .character-sheet .sheet-derived-field :is(input,select) {
   background:#efe7d9!important;
   border-color:#d3c4aa!important;
-  color:#756654!important;
+  color:var(--theme-muted)!important;
 }
 #characterSheetPage :is(input[type="checkbox"],input[type="radio"]),
 #characterSheetDialog :is(input[type="checkbox"],input[type="radio"]) {
@@ -250,7 +250,7 @@
 #characterSheetDialog button {
   border:1px solid var(--action-border,var(--vault-gold-deep));
   border-radius:6px;
-  background:var(--action-bg,rgba(212,175,55,.12));
+  background:var(--action-bg,color-mix(in srgb,var(--theme-accent) 12%,transparent));
   color:var(--action-text-strong,var(--vault-burgundy));
   font-family:"Cinzel",Georgia,serif;
   font-size:.7rem;
@@ -261,7 +261,7 @@
 }
 #characterSheetPage button:hover:not(:disabled),
 #characterSheetDialog button:hover:not(:disabled) {
-  background:var(--action-bg-hover,rgba(212,175,55,.22));
+  background:var(--action-bg-hover,color-mix(in srgb,var(--theme-accent) 22%,transparent));
   border-color:var(--vault-gold-deep);
   color:var(--vault-burgundy);
   transform:translateY(-1px);
@@ -270,7 +270,7 @@
 #characterSheetPage button:active:not(:disabled),
 #characterSheetDialog button:active:not(:disabled) {
   transform:translateY(0) scale(.98);
-  background:var(--action-bg-active,rgba(212,175,55,.30));
+  background:var(--action-bg-active,color-mix(in srgb,var(--theme-accent) 30%,transparent));
 }
 #characterSheetPage button:disabled,
 #characterSheetDialog button:disabled {
@@ -301,14 +301,14 @@
 #characterSheetPage .sheet-header .sheet-actions button:not(.btn-primary),
 #characterSheetDialog .sheet-header .sheet-actions button:not(.btn-primary),
 #characterSheetDialog .sheet-header>button {
-  background:rgba(212,175,55,.14);
+  background:color-mix(in srgb,var(--theme-accent) 14%,transparent);
   border:1px solid var(--vault-gold);
   color:var(--vault-cream);
 }
 #characterSheetPage .sheet-header .sheet-actions button:not(.btn-primary):hover:not(:disabled),
 #characterSheetDialog .sheet-header .sheet-actions button:not(.btn-primary):hover:not(:disabled),
 #characterSheetDialog .sheet-header>button:hover:not(:disabled) {
-  background:rgba(212,175,55,.28);
+  background:color-mix(in srgb,var(--theme-accent) 28%,transparent);
   color:#fff6df;
   box-shadow:0 3px 9px rgba(0,0,0,.20);
 }
@@ -330,24 +330,24 @@
 /* + Page is a secondary Vault action even though the legacy layer used !important. */
 #characterSheetPage .sheet-add-page-button,
 #characterSheetDialog .sheet-add-page-button {
-  background:var(--action-bg,rgba(212,175,55,.12))!important;
+  background:var(--action-bg,color-mix(in srgb,var(--theme-accent) 12%,transparent))!important;
   border:1px dashed var(--vault-gold-deep)!important;
   color:var(--vault-burgundy)!important;
 }
 #characterSheetPage .sheet-add-page-button:hover,
 #characterSheetDialog .sheet-add-page-button:hover {
-  background:var(--action-bg-hover,rgba(212,175,55,.22))!important;
+  background:var(--action-bg-hover,color-mix(in srgb,var(--theme-accent) 22%,transparent))!important;
 }
 #characterSheetPage .sheet-info-button,
 #characterSheetDialog .sheet-info-button {
   border:1px solid var(--vault-gold-deep)!important;
-  background:rgba(212,175,55,.13)!important;
+  background:color-mix(in srgb,var(--theme-accent) 13%,transparent)!important;
   color:var(--vault-burgundy)!important;
   box-shadow:none!important;
 }
 #characterSheetPage .sheet-info-button:hover,
 #characterSheetDialog .sheet-info-button:hover {
-  background:rgba(212,175,55,.28)!important;
+  background:color-mix(in srgb,var(--theme-accent) 28%,transparent)!important;
   transform:scale(1.06)!important;
 }
 
@@ -446,7 +446,7 @@
   border:2px solid var(--vault-border);
   border-radius:14px 5px;
   background:linear-gradient(115deg,#fffdf8,#f0e1c9);
-  box-shadow:inset 0 4px 0 rgba(212,175,55,.40);
+  box-shadow:inset 0 4px 0 color-mix(in srgb,var(--theme-accent) 40%,transparent);
 }
 #characterSheetPage .sheet-summary-identity h3,
 #characterSheetDialog .sheet-summary-identity h3 {
@@ -534,7 +534,7 @@
   border-bottom:1px solid #dfd3bf;
 }
 .character-sheet :is(.sheet-spell-table,.sheet-gear-table,.sheet-inventory-table,.sheet-summary-box table) tbody tr:hover {
-  background:rgba(212,175,55,.07);
+  background:color-mix(in srgb,var(--theme-accent) 7%,transparent);
 }
 .character-sheet .sheet-spell-table td small,
 .character-sheet .sheet-inventory-table small {
@@ -612,7 +612,7 @@
   border-radius:12px;
   background:linear-gradient(115deg,#eadbc2,#fffdf8 48%,#f4ead9);
   color:var(--vault-ink);
-  box-shadow:inset 0 4px 0 rgba(212,175,55,.28);
+  box-shadow:inset 0 4px 0 color-mix(in srgb,var(--theme-accent) 28%,transparent);
 }
 .character-sheet .sheet-defense-emblem svg {
   fill:#fffaf0;
@@ -774,7 +774,7 @@
   background:#fffaf0;
 }
 .character-sheet .sheet-rules-grid>section {
-  box-shadow:inset 0 3px 0 rgba(212,175,55,.38);
+  box-shadow:inset 0 3px 0 color-mix(in srgb,var(--theme-accent) 38%,transparent);
 }
 .character-sheet .sheet-rules-grid h4 {
   color:var(--vault-burgundy);
@@ -809,7 +809,7 @@
 .character-sheet .sheet-page-manager-head button,
 .character-sheet .sheet-spell-information header button,
 .character-sheet .sheet-attack-picker>header button {
-  background:rgba(212,175,55,.16);
+  background:color-mix(in srgb,var(--theme-accent) 16%,transparent);
   border-color:var(--vault-gold);
   color:var(--vault-cream);
 }
@@ -835,20 +835,20 @@
 .sheet-character-chooser {
   margin:14px 0 18px;
   padding:14px 16px;
-  border:3px double var(--vault-border,#8a7355);
+  border:3px double var(--vault-border,var(--theme-border));
   border-radius:10px;
-  background:linear-gradient(180deg,#eee2cf,#e7d8bd);
+  background:linear-gradient(180deg,#eee2cf,var(--theme-canvas-end));
   box-shadow:0 4px 10px rgba(43,26,14,.08);
 }
 .sheet-character-chooser label {
-  color:#5c1d1d;
+  color:var(--theme-heading);
   font-family:"Cinzel",Georgia,serif;
   font-size:.75rem;
   letter-spacing:.04em;
   text-transform:uppercase;
 }
 .sheet-character-chooser span {
-  color:#756654;
+  color:var(--theme-muted);
 }
 
 /* Empty state */
@@ -863,7 +863,7 @@
 #characterSheetPage :is(button,input,select,textarea):focus-visible,
 #characterSheetDialog :is(button,input,select,textarea):focus-visible,
 .sheet-character-chooser select:focus-visible {
-  outline:3px solid rgba(212,175,55,.55);
+  outline:3px solid color-mix(in srgb,var(--theme-accent) 55%,transparent);
   outline-offset:2px;
 }
 
@@ -1114,7 +1114,7 @@
 /* Revision 26: compact overview-style multi-companion combat cards. */
 .character-sheet .sheet-companion-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
 .character-sheet .sheet-companion-card{min-width:0;border:1px solid var(--vault-border);border-radius:12px;background:linear-gradient(180deg,#fffdf9,#f4eadb);box-shadow:0 3px 10px rgba(43,26,14,.07);overflow:hidden;}
-.character-sheet .sheet-companion-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:linear-gradient(135deg,#5c1d1d,#71302b);color:#fff8e8;border-bottom:2px solid var(--vault-gold);}
+.character-sheet .sheet-companion-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:linear-gradient(135deg,var(--theme-heading),#71302b);color:#fff8e8;border-bottom:2px solid var(--vault-gold);}
 .character-sheet .sheet-companion-card-head h4{margin:1px 0;color:#fff8e8;font:700 16px/1.2 Georgia,serif;}
 .character-sheet .sheet-companion-card-head small{color:#eadfc9;}
 .character-sheet .sheet-companion-card-head .sheet-eyebrow{color:var(--vault-gold);font-size:9px;}
@@ -1180,7 +1180,7 @@
   border:2px solid var(--vault-border)!important;
   border-radius:14px 5px!important;
   background:linear-gradient(145deg,#fffdf8,#f0e1c9)!important;
-  box-shadow:0 5px 16px rgba(43,26,14,.10),inset 0 3px 0 rgba(212,175,55,.45)!important;
+  box-shadow:0 5px 16px rgba(43,26,14,.10),inset 0 3px 0 color-mix(in srgb,var(--theme-accent) 45%,transparent)!important;
   overflow:hidden;
 }
 #characterSheetDialog .sheet-companion-card:hover{
@@ -1207,7 +1207,7 @@
 }
 #characterSheetDialog .sheet-companion-remove{
   border-color:var(--vault-gold)!important;
-  background:rgba(212,175,55,.12)!important;
+  background:color-mix(in srgb,var(--theme-accent) 12%,transparent)!important;
   color:var(--vault-cream)!important;
 }
 #characterSheetDialog .sheet-companion-picker{
@@ -1350,7 +1350,7 @@
   border:1px solid var(--vault-border-soft);
   border-radius:10px;
   background:linear-gradient(180deg,#fffdf6 0%,#fff8e9 100%);
-  box-shadow:0 4px 12px rgba(67,38,20,.08), inset 0 3px 0 rgba(212,175,55,.32);
+  box-shadow:0 4px 12px rgba(67,38,20,.08), inset 0 3px 0 color-mix(in srgb,var(--theme-accent) 32%,transparent);
   padding:14px 16px;
 }
 .character-sheet #sheet-rules .sheet-rules-feature h4,
@@ -1401,13 +1401,13 @@
   vertical-align:top;
 }
 .character-sheet #sheet-rules .sheet-rules-table tbody tr:nth-child(even){
-  background:rgba(212,175,55,.075);
+  background:color-mix(in srgb,var(--theme-accent) 7.5%,transparent);
 }
 .character-sheet #sheet-rules .sheet-rules-tip{
   margin:9px 0 0;
   padding:9px 11px;
-  border-left:3px solid var(--vault-gold,#d4af37);
-  background:rgba(212,175,55,.08);
+  border-left:3px solid var(--vault-gold,var(--theme-accent));
+  background:color-mix(in srgb,var(--theme-accent) 8%,transparent);
   border-radius:0 6px 6px 0;
   font-size:.88rem;
 }
@@ -1548,7 +1548,7 @@
 ):focus{
   outline:none!important;
   border-color:var(--vault-gold-deep)!important;
-  box-shadow:0 0 0 3px rgba(212,175,55,.18),inset 0 1px 2px rgba(43,26,14,.05)!important;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--theme-accent) 18%,transparent),inset 0 1px 2px rgba(43,26,14,.05)!important;
 }
 #characterSheetDialog :is(.sheet-field,.sheet-companion-vitals label,.sheet-spell-generator-filters label){
   color:var(--vault-muted);
@@ -1626,7 +1626,7 @@
   color:var(--vault-ink);
 }
 #characterSheetDialog :is(.sheet-spell-table,.sheet-gear-table,.sheet-inventory-table,.sheet-summary-box table,.sheet-rules-table) tbody tr:hover{
-  background:rgba(212,175,55,.07)!important;
+  background:color-mix(in srgb,var(--theme-accent) 7%,transparent)!important;
 }
 #characterSheetDialog :is(.sheet-spell-table-wrap,.sheet-summary-table-wrap,.sheet-rules-table-wrap){
   border:1px solid var(--vault-border-soft);
@@ -1637,7 +1637,7 @@
 #characterSheetDialog #sheet-rules .sheet-rules-feature,
 #characterSheetDialog #sheet-rules .sheet-rules-table-card{
   background:var(--sheet-card-bg);
-  box-shadow:var(--sheet-card-shadow),inset 0 3px 0 rgba(212,175,55,.32);
+  box-shadow:var(--sheet-card-shadow),inset 0 3px 0 color-mix(in srgb,var(--theme-accent) 32%,transparent);
 }
 #characterSheetDialog .sheet-companion-columns textarea{
   min-height:92px!important;
@@ -1802,14 +1802,14 @@
   user-select:none;
   color:var(--vault-ink);
   background:
-    linear-gradient(90deg,rgba(212,175,55,.11),transparent 34%),
+    linear-gradient(90deg,color-mix(in srgb,var(--theme-accent) 11%,transparent),transparent 34%),
     linear-gradient(180deg,#fffdf9,#f2e6d4);
   transition:background .16s,border-color .16s;
 }
 .character-sheet .sheet-progression-details>summary::-webkit-details-marker{display:none}
 .character-sheet .sheet-progression-details>summary:hover{
   background:
-    linear-gradient(90deg,rgba(212,175,55,.18),transparent 38%),
+    linear-gradient(90deg,color-mix(in srgb,var(--theme-accent) 18%,transparent),transparent 38%),
     linear-gradient(180deg,#fffefa,#f0e1cb);
 }
 .character-sheet .sheet-progression-summary-main{
@@ -2314,8 +2314,8 @@
 /* The attack picker is appended to body, so it needs its own Vault styles. */
 #sheetAttackPicker{
   box-sizing:border-box;width:min(780px,calc(100vw - 32px));max-height:90vh;
-  padding:18px 20px;border:1px solid var(--vault-border,#8a7355);border-radius:8px;
-  background:var(--vault-paper,#faf6ec);color:var(--vault-ink,#2b1a0e);font:13px/1.5 Georgia,serif;
+  padding:18px 20px;border:1px solid var(--vault-border,var(--theme-border));border-radius:8px;
+  background:var(--vault-paper,#faf6ec);color:var(--vault-ink,var(--theme-header));font:13px/1.5 Georgia,serif;
   box-shadow:0 12px 36px #2b1a0e33;
 }
 #sheetAttackPicker::backdrop{background:rgba(28,18,12,.6)}
@@ -2333,7 +2333,7 @@
   background:#f1e5d3;color:var(--vault-burgundy);font:700 12px/1.35 Georgia,serif;cursor:pointer;
 }
 #sheetAttackPicker button:is(:hover,:focus-visible){background:#e8d6b9;border-color:var(--vault-gold);outline:1px solid var(--vault-gold)}
-#sheetAttackPicker #attackConfirm{background:var(--vault-burgundy,#5c1d1d);color:#fff8e9;border-color:var(--vault-gold,#d4af37)}
+#sheetAttackPicker #attackConfirm{background:var(--vault-burgundy,var(--theme-heading));color:#fff8e9;border-color:var(--vault-gold,var(--theme-accent))}
 #sheetAttackPicker #attackConfirm:disabled{opacity:.5;cursor:not-allowed}
 #sheetAttackPicker #attackPreview{padding:10px 0;margin-top:14px;border:0;border-block:1px solid var(--vault-border-soft);border-radius:0;background:transparent;box-shadow:none}
 #sheetAttackPicker .sheet-help{color:var(--vault-muted);font-size:11px}
@@ -2414,7 +2414,7 @@
 .sheet-portrait-preview img{width:100%;height:100%;object-fit:cover}
 #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-identity:has(.sheet-overview-portrait){grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 88px;align-items:center}
 .sheet-overview-portrait{width:82px;height:82px;object-fit:cover;object-position:center;border-radius:50%;border:2px solid var(--vault-gold);padding:3px;background:var(--vault-paper);box-sizing:border-box}
-#sheetPageManager .sheet-page-manager-head [data-close-page-manager]{display:grid!important;place-items:center!important;flex:0 0 36px!important;width:36px!important;height:36px!important;min-width:36px!important;padding:0!important;overflow:visible!important;opacity:1!important;visibility:visible!important;color:#fff8e8!important;font:700 25px/1 Arial,sans-serif!important;background:#5c1d1d!important;border:1px solid #d4af37!important;border-radius:4px!important;position:static!important}
+#sheetPageManager .sheet-page-manager-head [data-close-page-manager]{display:grid!important;place-items:center!important;flex:0 0 36px!important;width:36px!important;height:36px!important;min-width:36px!important;padding:0!important;overflow:visible!important;opacity:1!important;visibility:visible!important;color:#fff8e8!important;font:700 25px/1 Arial,sans-serif!important;background:var(--theme-heading)!important;border:1px solid var(--theme-accent)!important;border-radius:4px!important;position:static!important}
 .sheet-journal-toolbar{display:flex;align-items:end;justify-content:space-between;gap:12px}
 .sheet-journal-share-actions{flex-wrap:wrap;justify-content:flex-start}
 .sheet-journal-toolbar label{flex:1;max-width:400px}
@@ -2426,11 +2426,11 @@
 #characterSheetDialog .sheet-journal-list button[aria-current=true]{border-left:3px solid var(--vault-gold);background:#f2e6d4}
 .sheet-journal-list small{font-size:10px;font-weight:400}
 #characterSheetDialog .sheet-journal-editor textarea{width:100%;min-height:360px;line-height:1.5}
-.dm-advancement-dialog{width:min(650px,calc(100vw - 32px));box-sizing:border-box;background:#faf6ec;color:#2b1a0e;border:1px solid #8a7355;border-radius:8px;padding:18px}
+.dm-advancement-dialog{width:min(650px,calc(100vw - 32px));box-sizing:border-box;background:#faf6ec;color:var(--theme-header);border:1px solid var(--theme-border);border-radius:8px;padding:18px}
 .dm-advancement-dialog header{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.dm-advancement-dialog h2{font:700 18px Cinzel,Georgia,serif;color:#5c1d1d}
+.dm-advancement-dialog h2{font:700 18px Cinzel,Georgia,serif;color:var(--theme-heading)}
 .dm-advancement-dialog .sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
-.dm-advancement-dialog input{padding:8px;border:1px solid #8a7355;border-radius:4px}
+.dm-advancement-dialog input{padding:8px;border:1px solid var(--theme-border);border-radius:4px}
 @media(max-width:700px){.sheet-journal-layout{grid-template-columns:minmax(0,1fr)}.sheet-journal-list{max-height:180px}#characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-identity:has(.sheet-overview-portrait){grid-template-columns:minmax(0,1fr) 72px}.sheet-summary-identity:has(.sheet-overview-portrait)>dl{grid-row:2;grid-column:1/-1}.sheet-overview-portrait{width:68px;height:68px;grid-column:2;grid-row:1}}
 @media print{body:has(#characterSheetDialog) #characterSheetPage #characterSheetDialog #sheet-overview .sheet-summary-identity:has(.sheet-overview-portrait){grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) 65px!important}.sheet-overview-portrait{width:60px;height:60px;grid-row:auto;grid-column:auto}.sheet-summary-identity:has(.sheet-overview-portrait)>dl{grid-row:auto;grid-column:auto}.sheet-journal-toolbar,.sheet-journal-categories,.sheet-journal-list{display:none!important}.sheet-journal-layout{display:block}.sheet-portrait-editor input,.sheet-portrait-editor button{display:none!important}}
 
@@ -2443,7 +2443,7 @@
 #characterSheetDialog .sheet-active-gear-actions button{font-size:11px;min-height:28px;padding:4px 8px;white-space:nowrap}
 #characterSheetDialog .sheet-active-gear-actions button[aria-pressed=true]{background:var(--vault-burgundy);color:#fff8ed}
 #characterSheetDialog .sheet-active-gear-actions .sheet-info-button{border-radius:50%;width:28px;min-width:28px;padding:0;font:italic 700 15px Georgia,serif}
-#sheetInventoryItemInformation{width:min(620px,calc(100vw - 32px));max-height:80vh;box-sizing:border-box;padding:20px;background:var(--vault-paper,#fdfbf7);color:var(--vault-ink,#342d26);border:1px solid var(--vault-border,#8a7355);border-radius:8px;overflow:auto}
+#sheetInventoryItemInformation{width:min(620px,calc(100vw - 32px));max-height:80vh;box-sizing:border-box;padding:20px;background:var(--vault-paper,var(--theme-paper));color:var(--vault-ink,var(--theme-ink));border:1px solid var(--vault-border,var(--theme-border));border-radius:8px;overflow:auto}
 #sheetInventoryItemInformation header{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:14px}
 #sheetInventoryItemInformation h2{font-size:20px;margin:0;overflow-wrap:anywhere}
 #sheetInventoryItemInformation .sheet-rule-text{white-space:pre-wrap;line-height:1.5;overflow-wrap:anywhere}
@@ -2473,7 +2473,7 @@
 }
 
 /* Campaign rule controls reuse the compact sheet palette and field rhythm. */
-.sheet-fix-target { outline:3px solid #d4af37 !important; outline-offset:4px; scroll-margin:5rem; }
+.sheet-fix-target { outline:3px solid var(--theme-accent) !important; outline-offset:4px; scroll-margin:5rem; }
 #dmToolsPanel .admin-char-btns { max-width:100%; flex-shrink:1; }
 
 /* Native disclosure retains keyboard access and keeps creature skill lists compact. */

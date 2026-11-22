@@ -1,28 +1,28 @@
 /* Shared journal overview and notebook reading, scoped away from character sheets. */
-.campaign-journal{max-width:none;width:100%;margin:24px auto 48px;padding:30px;background:var(--ui-paper,#fffdf7);color:var(--ui-ink,#342d26);border:1px solid var(--ui-border-soft,#c9b99c);border-radius:10px;font:16px/1.65 Georgia,serif}
-.campaign-journal :is(h2,h3,h4){color:var(--ui-heading,#5c1d1d);line-height:1.3;overflow-wrap:anywhere}
+.campaign-journal{max-width:none;width:100%;margin:24px auto 48px;padding:30px;background:var(--ui-paper,#fffdf7);color:var(--ui-ink,var(--theme-ink));border:1px solid var(--ui-border-soft,#c9b99c);border-radius:10px;font:16px/1.65 Georgia,serif}
+.campaign-journal :is(h2,h3,h4){color:var(--ui-heading,var(--theme-heading));line-height:1.3;overflow-wrap:anywhere}
 .campaign-journal h2{font-size:clamp(2rem,5vw,3rem);margin:8px 0 12px}
 .campaign-journal h3{font-size:1.35rem;margin:10px 0}
 .campaign-journal h4{font-size:1.1rem;margin-bottom:12px}
-.journal-eyebrow{font:700 .73rem/1.6 Georgia,serif;letter-spacing:.1em;text-transform:uppercase;color:var(--ui-heading,#5c1d1d)}
+.journal-eyebrow{font:700 .73rem/1.6 Georgia,serif;letter-spacing:.1em;text-transform:uppercase;color:var(--ui-heading,var(--theme-heading))}
 .journal-hero{padding-bottom:24px;border-bottom:1px solid var(--ui-border-soft,#c9b99c)}
 .journal-hero>p:not(.journal-eyebrow){max-width:690px;color:var(--ui-muted,#685a48)}
 .journal-toolbar,.journal-actions,.journal-filters,.journal-reader-heading{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .journal-toolbar{justify-content:space-between;margin-top:24px}
 .journal-search{display:flex;gap:12px;align-items:end;margin-top:20px}
 .journal-search label{flex:1;max-width:520px}
-.campaign-journal label{display:grid;gap:6px;color:var(--ui-heading,#5c1d1d);font-size:1rem;font-weight:600;min-width:0}
-.campaign-journal :is(input,textarea){box-sizing:border-box;width:100%;max-width:100%;min-width:0;border:1px solid var(--ui-border,#8a7355);border-radius:5px;padding:10px;background:var(--ui-paper,#fffdf7);color:var(--ui-ink,#342d26);font:16px/1.6 Georgia,serif}
+.campaign-journal label{display:grid;gap:6px;color:var(--ui-heading,var(--theme-heading));font-size:1rem;font-weight:600;min-width:0}
+.campaign-journal :is(input,textarea){box-sizing:border-box;width:100%;max-width:100%;min-width:0;border:1px solid var(--ui-border,var(--theme-border));border-radius:5px;padding:10px;background:var(--ui-paper,#fffdf7);color:var(--ui-ink,var(--theme-ink));font:16px/1.6 Georgia,serif}
 .campaign-journal textarea{resize:vertical}
 #mainApp #tab-campaign-journal .campaign-journal button:not(.vault-help-badge){min-height:44px;padding:9px 14px;font-size:14px!important;font-family:Georgia,serif;white-space:normal;overflow-wrap:anywhere;max-width:100%}
-#mainApp #tab-campaign-journal .campaign-journal [data-journal-filter][aria-pressed=true]{background:var(--ui-heading,#5c1d1d)!important;color:var(--ui-cream,#f5e6c8)!important}
-.campaign-journal :is(button,input,textarea):focus-visible{outline:3px solid var(--ui-heading,#5c1d1d);outline-offset:3px}
+#mainApp #tab-campaign-journal .campaign-journal [data-journal-filter][aria-pressed=true]{background:var(--ui-heading,var(--theme-heading))!important;color:var(--ui-cream,var(--theme-on-primary))!important}
+.campaign-journal :is(button,input,textarea):focus-visible{outline:3px solid var(--ui-heading,var(--theme-heading));outline-offset:3px}
 .journal-status{margin:16px 0;color:var(--ui-muted,#685a48);overflow-wrap:anywhere}
 .journal-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;margin-top:24px}
 .journal-feed,.journal-sidebar{display:grid;align-content:start;gap:18px;min-width:0}
 .journal-card{padding:22px;border:1px solid var(--ui-border-soft,#c9b99c);border-radius:8px;min-width:0;overflow-wrap:anywhere}
 .journal-card p{margin:12px 0}
-.journal-feature{border-left:4px solid var(--ui-heading,#5c1d1d);background:linear-gradient(120deg,#f4eddf,var(--ui-paper,#fffdf7))}
+.journal-feature{border-left:4px solid var(--ui-heading,var(--theme-heading));background:linear-gradient(120deg,#f4eddf,var(--ui-paper,#fffdf7))}
 .journal-soft{background:var(--ui-paper-soft,#f3ecdf)}
 .journal-tag{display:inline-block;padding:3px 8px;background:#eee6d6;color:#5c4435;border-radius:4px;font:12px/1.5 Georgia,serif}
 .journal-player{background:#e6eee4;color:#354d32}
@@ -36,7 +36,7 @@
 .journal-notebook{display:grid;grid-template-columns:230px minmax(0,1fr);margin-top:22px;border:1px solid var(--ui-border-soft,#c9b99c);border-radius:8px;overflow:hidden}
 .journal-index{padding:18px;background:var(--ui-paper-soft,#f3ecdf);border-right:1px solid var(--ui-border-soft,#c9b99c);display:flex;flex-direction:column;gap:10px;min-width:0}
 .journal-index button{text-align:left}
-#mainApp #tab-campaign-journal .campaign-journal .journal-index [aria-current=page]{background:var(--ui-heading,#5c1d1d)!important;color:var(--ui-cream,#f5e6c8)!important}
+#mainApp #tab-campaign-journal .campaign-journal .journal-index [aria-current=page]{background:var(--ui-heading,var(--theme-heading))!important;color:var(--ui-cream,var(--theme-on-primary))!important}
 .journal-leaf{padding:30px;min-width:0;overflow-wrap:anywhere;background:repeating-linear-gradient(var(--ui-paper,#fffdf7),var(--ui-paper,#fffdf7) 31px,#dbcdb245 32px)}
 .journal-leaf h3{font-size:1.8rem;margin:18px 0 12px}
 .journal-prose{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9;margin:22px 0}
@@ -59,18 +59,18 @@
 .journal-feed{grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr))}
 .journal-sidebar{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
 .journal-editor form>details{margin:22px 0;border-block:1px solid var(--ui-border-soft,#c9b99c);padding:14px 0}
-.journal-editor summary{cursor:pointer;min-height:44px;color:var(--ui-heading,#5c1d1d)}
-.journal-editor select{padding:10px;min-height:44px;background:var(--ui-paper,#fdfbf7);border:1px solid var(--ui-border,#8a7355);border-radius:5px;font:inherit;color:var(--ui-ink,#342d26);max-width:100%}
+.journal-editor summary{cursor:pointer;min-height:44px;color:var(--ui-heading,var(--theme-heading))}
+.journal-editor select{padding:10px;min-height:44px;background:var(--ui-paper,var(--theme-paper));border:1px solid var(--ui-border,var(--theme-border));border-radius:5px;font:inherit;color:var(--ui-ink,var(--theme-ink));max-width:100%}
 .journal-leaf>.journal-actions{margin-top:22px}
 
-#mainApp #campaignSectionNavigation [data-section-group=journal] .tab[aria-current=page]{background:var(--ui-heading,#5c1d1d)!important;color:var(--ui-cream,#f5e6c8)!important;border-color:var(--ui-heading,#5c1d1d)!important}
+#mainApp #campaignSectionNavigation [data-section-group=journal] .tab[aria-current=page]{background:var(--ui-heading,var(--theme-heading))!important;color:var(--ui-cream,var(--theme-on-primary))!important;border-color:var(--ui-heading,var(--theme-heading))!important}
 .campaign-journal [data-journal-reference-status]:empty{display:none}
 
 /* Recap readers keep navigation available without crowding the story. */
 .campaign-journal [hidden]{display:none!important}
 .journal-notebook{display:flex;flex-direction:column;border:0;border-radius:0;gap:24px;max-width:850px;margin:24px auto}
 .journal-index{order:2;display:block;padding:14px 0;background:transparent;border:0;border-top:1px solid var(--ui-border-soft,#c9b99c)}
-.journal-index>summary{cursor:pointer;min-height:44px;line-height:1.6;color:var(--ui-heading,#5c1d1d)}
+.journal-index>summary{cursor:pointer;min-height:44px;line-height:1.6;color:var(--ui-heading,var(--theme-heading))}
 .journal-index nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 .journal-leaf{padding:20px 24px 36px;background:var(--ui-paper,#fffdf7)}
 .journal-leaf h3{font:normal clamp(2rem,5vw,3.4rem)/1.15 Georgia,serif;letter-spacing:-.025em;margin:20px 0}

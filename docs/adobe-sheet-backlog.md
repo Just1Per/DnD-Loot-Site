@@ -1,5 +1,7 @@
 # Adobe sheet parity backlog
 
+UI review checkpoint (22 November 2026): shared screen colour tokens now cover the main site, dialogs and Adobe controls; QA-only classic/forest/ocean palettes exercise populated level-4 characters, responsive layouts, contrast and neutral printing. Mobile sign-in fields and sidebar-number contrast are improved. See [review, evidence and scope](ui-review-2026-11-22.md). Follow-ups: a complete mobile entry/reflow design for undersized Fit-width PDF targets; then a player colour-preference UI with contrast validation, preview/reset and account persistence. These remain separate from source mechanics/PDF parity work below.
+
 Invitation email checkpoint (21 November 2026): a separate disabled-by-default Firebase Functions codebase supports new invitation emails through a reusable private queue/template/transport layer. See [activation, limits and tests](invitation-email-setup.md). Broader DM/loot/campaign-change email categories and email preference controls remain deferred at the user's request; merging alone does not activate sending.
 
 Agreed with the user on 30 October 2026. Keep this work in PR #250. No assistant merge, live/rules deployment or production migration. A finished numbered point does not mean the entire PDF is complete. The [function ledger](adobe-inventory/web-bindings.md) records source actions individually.
