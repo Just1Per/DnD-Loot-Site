@@ -8,10 +8,10 @@
     "implementedSubclassAdapters": 186,
     "missingSubclassAdapters": 0,
     "feats": 302,
-    "featStructuredRecords": 102,
-    "featSpellPackages": 65,
-    "featSpellChoicePackages": 26,
-    "featSpellPackagesToReview": 17,
+    "featStructuredRecords": 106,
+    "featSpellPackages": 69,
+    "featSpellChoicePackages": 27,
+    "featSpellPackagesToReview": 13,
     "featExpandedListAdapters": 12,
     "featExpandedListsToReview": 0,
     "spells": 969,
@@ -1170,14 +1170,23 @@
       "edition": "2024",
       "source": "ABH",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "fog cloud",
+          "unlock": 4,
+          "freeUses": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "spellReview": null
     },
     {
       "id": "Feat-sato-21fcbb47e98e8c8a",
@@ -3689,14 +3698,31 @@
       "edition": "2014",
       "source": "SatO",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "misty step",
+          "unlock": 4,
+          "freeUses": 1,
+          "recovery": [
+            "long"
+          ]
+        },
+        {
+          "name": "tongues",
+          "unlock": 4,
+          "freeUses": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "spellReview": null
     },
     {
       "id": "Feat-tce-4b2b7bb4b6c625d7",
@@ -5049,14 +5075,23 @@
       "edition": "2024",
       "source": "ABH",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "charm person",
+          "unlock": 4,
+          "freeUses": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "spellReview": null
     },
     {
       "id": "Feat-xphb-97ef0e226e5f3288",
@@ -5124,14 +5159,23 @@
       "edition": "2024",
       "source": "ABH",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "spider climb",
+          "unlock": 4,
+          "freeUses": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "spellChoiceGroups": 1,
+      "spellReview": null
     },
     {
       "id": "Feat-abh-5bf71dddb7d8f437",

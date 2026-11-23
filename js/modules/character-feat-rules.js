@@ -177,6 +177,7 @@ var CharacterFeatRules = (() => {
       if(def.name==='Defense'&&def.edition==='2024'){if(c.armored)acBonus=1;automated.push('AC +1 while confirmed wearing Light/Medium/Heavy armor (entered AC must exclude this bonus)');}
       if(def.name==='Boon of Truesight'&&def.edition==='2024'){effects.traits.push('Boon of Truesight: Truesight 60 ft.');automated.push('Truesight 60 ft');}
     }
+    for(const report of reports){const facts=spellPackage(report.def,report.choice);if(facts?.inheritFeat&&!abilityKeys.includes(dependentSpellAbility(facts,reports)))report.spellWarnings=['Complete '+facts.inheritFeat.name+(facts.inheritFeat.package?' ('+facts.inheritFeat.package+')':'')+' and its casting-ability choice first.'];}
     effects.speed+=speedBonus;
     if(athleteClimb)effects.climb=Math.max(effects.climb,effects.speed);
     effects.proficiencies=[...new Set(effects.proficiencies)];effects.skills=[...new Set(effects.skills)];effects.saves=[...new Set(effects.saves)];
@@ -185,6 +186,11 @@ var CharacterFeatRules = (() => {
   }
   function magicInitiateMatches(data,classId){const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null);return C.grants(data).filter(grant=>grant.edition==='2024').map(grant=>C.validateGrant(grant,data.rulesChoices?.grants?.[grant.key],data)).filter(result=>!result.errors.length&&result.classId===classId);}
   function spellPackage(def,c=choice()){const facts=mechanicFacts(def);return facts.spells||facts.spellPackages?.[c.spellPackage]||null;}
+  function dependentSpellAbility(facts,reports){
+    const required=facts?.inheritFeat;if(!required)return null;
+    const matches=reports.filter(report=>report.eligible&&!report.warnings.length&&report.def.source===required.source&&report.def.name===required.name&&(!required.package||spellPackage(report.def,report.choice)?.name===required.package));if(matches.length!==1)return null;
+    const parent=matches[0],ability=spellPackage(parent.def,parent.choice)?.ability;if(ability?.choose&&!ability.choose.includes(parent.choice.castingAbility))return null;return typeof ability==='string'?(ability==='inherit'?parent.choice.abilities[0]:ability):parent.choice.castingAbility;
+  }
   function spellChoices(def,c=choice(),level=1,data={}) {
     const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null),catalogue=C?.data?.spells||[],schools={a:'Abjuration',c:'Conjuration',d:'Divination',e:'Enchantment',v:'Evocation',i:'Illusion',n:'Necromancy',t:'Transmutation'};let offset=0;
     return (spellPackage(def,c)?.choices||[]).map(grant=>{
@@ -217,8 +223,9 @@ var CharacterFeatRules = (() => {
       const c=report.choice,facts=spellPackage(report.def,c);if(!facts||!report.eligible||report.warnings.length)return[];
       if(facts.requiresKnownCantrip&&!c.confirmed)return[];
       let ability=typeof facts.ability==='string'?(facts.ability==='inherit'?c.abilities[0]:facts.ability):c.castingAbility;
+      if(facts.inheritFeat)ability=dependentSpellAbility(facts,reports);
       if(facts.magicInitiateClass){const matches=magicInitiateMatches(data,facts.magicInitiateClass);if(matches.length!==1)return[];ability=matches[0].ability;}
-      if(!abilityKeys.includes(ability))return[];
+      if(!abilityKeys.includes(ability)||facts.ability?.choose&&!facts.ability.choose.includes(ability))return[];
       const selected=spellChoices(report.def,c,level,data).flatMap(group=>{const picks=c.spellIds.slice(group.start,group.start+group.count).map((id,index)=>({id,index})),chosen=picks.filter(pick=>pick.id);if(new Set(chosen.map(pick=>pick.id)).size!==chosen.length||!group.pool.countFrom&&(chosen.length!==group.count||chosen.some(pick=>!group.options.some(spell=>spell.id===pick.id))))return[];return chosen.flatMap(({id,index})=>{const spell=group.options.find(spell=>spell.id===id);return spell?[{...group,active:!group.activation||c.spellActive[group.start+index]===true,ref:spell.name+'|'+spell.source}]:[];});});
       const copied=facts.copyBook?bookOptions(report.def,c,level).filter(spell=>c.bookSpells.includes(spell.id)).map(spell=>({ref:spell.name+'|'+spell.source,unlock:1,usage:'Copied ritual; ritual-only casting requires your ritual book and 10 extra minutes'})):[];
       return [...facts.grants,...selected,...copied].filter(grant=>grant.unlock<=level&&(includeInactive||!grant.activation||grant.active)).flatMap(grant=>{

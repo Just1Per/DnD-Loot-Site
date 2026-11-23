@@ -244,6 +244,111 @@
         ],
         "instructions": "Choose runes equal to half Proficiency Bonus, rounded down. At Long Rest, inscribe each known rune on a touched eligible nonmagical object. Mark a rune available only while its inscribed object is on your person; otherwise its spell is inactive. Change known runes only when gaining a level. Comprehend Languages has a separate daily use."
       }
+    },
+    "ABH|Cloying Mists": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [
+          {
+            "ref": "fog cloud|xphb",
+            "unlock": 4,
+            "usage": "Always prepared; one free casting per Long Rest; appropriate slots may also be used",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [],
+        "instructions": "Whenever you cast Fog Cloud, extinguish nonmagical flames in its sphere. Creatures other than you and your allies have Speed reduced by 5 ft while inside; resolve occupants and movement at the table."
+      }
+    },
+    "ABH|Treacherous Allure": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [
+          {
+            "ref": "charm person|xphb",
+            "unlock": 4,
+            "usage": "Always prepared; one free casting per Long Rest; appropriate slots may also be used",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [],
+        "instructions": "You have Advantage on attack rolls against Charmed creatures. Confirm the target condition before rolling; no permanent attack bonus is added."
+      }
+    },
+    "ABH|Vampire Touched": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [
+          {
+            "ref": "spider climb|xphb",
+            "unlock": 4,
+            "usage": "Always prepared; the free casting is self-only and recovers on Long Rest. Ordinary slot casting keeps its usual targeting",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [
+          {
+            "pool": {
+              "count": 1,
+              "levels": [
+                1
+              ],
+              "schools": [
+                "e",
+                "i"
+              ]
+            },
+            "unlock": 4,
+            "usage": "Always prepared; one free casting per Long Rest; appropriate slots may also be used",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "instructions": "Choose one level-1 Enchantment or Illusion spell. It and Spider Climb use the ability increased by this feat and have separate daily uses. The self-only restriction applies to the free Spider Climb casting."
+      }
+    },
+    "SatO|Outlands Envoy": {
+      "spells": {
+        "ability": "dependency",
+        "inheritFeat": {
+          "source": "SatO",
+          "name": "Scion of the Outer Planes",
+          "package": "The Outlands"
+        },
+        "grants": [
+          {
+            "ref": "misty step",
+            "unlock": 4,
+            "usage": "One free casting per Long Rest; appropriate slots may also be used",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          },
+          {
+            "ref": "tongues",
+            "unlock": 4,
+            "usage": "Cast Tongues through this feat without material components, using its once-per-Long-Rest free use or an appropriate spell slot",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [],
+        "instructions": "Uses the casting ability already selected for Scion of the Outer Planes (The Outlands), regardless of this feat's ability increase. Complete that Scion package first. Each spell has its own Long Rest use."
+      }
     }
   }
 }

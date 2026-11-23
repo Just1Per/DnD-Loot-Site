@@ -2,6 +2,8 @@
 /* Short combat cues, keyed to the selected feat's own source. No source prose or automatic trigger resolution. */
 var CharacterFeatCombat=(()=>{
  const cues={
+  'Treacherous Allure':{ABH:['attack','Advantage on attack rolls against Charmed creatures. Confirm the target condition; no permanent hit bonus.']},
+  'Cloying Mists':{ABH:['none','Fog Cloud extinguishes nonmagical flames in its sphere. Creatures other than you and your allies have Speed −5 ft while inside; resolve occupants at the table.']},
   'Martial Adept':{PHB:['weapon','Chosen maneuvers share one d6 superiority die per Short or Long Rest. Spend it only on an eligible maneuver; save DC is 8 + PB + STR or DEX.']},
   'Fighting Initiate':{TCE:['weapon','Apply your selected Fighter Fighting Style only when its weapon and attack conditions hold.']},
   'Revenant Blade':{ERLW:['weapon','A double-bladed scimitar can use Finesse; +1 AC while wielding it with both hands. Its special extra attack still costs a Bonus Action.']},
