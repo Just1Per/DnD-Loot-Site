@@ -22,6 +22,8 @@ The campaign document's optional `appearance` map contains `schemaVersion: 1`, a
 
 `css/theme-tokens.css` remains the palette API. `campaign-appearance.js` derives screen tokens, and `campaign-appearance-ui.js` applies them only during campaign viewing. The browser theme-colour metadata follows the campaign header and resets on exit. The print token overrides take precedence over inline screen preferences, preserving neutral print colours.
 
+The appearance controller captures its Firebase SDK reference and creates its store during ordered initialization. The bootstrap deletes `window.__DND_VAULT_DEPS__` afterwards; event handlers and campaign listeners must use the captured reference. The browser regression removes that bridge before exercising saves, campaign changes and live member updates, matching the deployed lifecycle.
+
 ## Regression checks
 
 - `tests/campaign-appearance.cjs`: legacy/default handling, strict colour inputs, 1,000 colour combinations, permission checks, isolated writes, revision conflicts and account changes during transactions.

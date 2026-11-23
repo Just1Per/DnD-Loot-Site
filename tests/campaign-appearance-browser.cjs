@@ -10,13 +10,17 @@ const out='/tmp/campaignatlas-ui-checks/campaign-appearance';fs.mkdirSync(out,{r
   for(const character of characters)testSheetDocs['campaigns/a/characters/'+character.id]={...character,active:true};
   window.appearanceWrites=[];const sdk=__DND_VAULT_DEPS__,original=sdk.runTransaction;
   sdk.runTransaction=async(_,fn)=>{if(window.failAppearanceSave)throw Error('Simulated permission denial');if(window.pauseAppearanceSave)await new Promise(resolve=>window.finishAppearanceSave=resolve);return original(_,tx=>fn({...tx,update:(path,data)=>{appearanceWrites.push({path,data});tx.update(path,data);}}));};
+  // Production removes this temporary bridge after ordered module initialization.
+  delete window.__DND_VAULT_DEPS__;
+  CampaignAppearanceUI.clear();CampaignAppearanceUI.sync();
   showTab('dm-settings');
  });
+ assert.equal(await page.evaluate(()=>window.__DND_VAULT_DEPS__),undefined,'startup dependency bridge stays removed');
  const dialog=()=>page.locator('#campaignAppearanceDialog');
  const edit=()=>page.locator('[data-edit-campaign-appearance]').click();
  const choose=name=>dialog().locator('[name=preset]').selectOption(name);
  const preview=()=>dialog().locator('[data-appearance-preview]').click();
- const save=async()=>{await dialog().locator('button[type=submit]').click();await dialog().waitFor({state:'detached'});};
+ const save=async()=>{await dialog().locator('button[type=submit]').click();await page.waitForFunction(()=>!document.getElementById('campaignAppearanceDialog')||document.querySelector('#campaignAppearanceDialog [role=alert]'));assert.deepEqual(await dialog().locator('[role=alert]').allTextContents(),[],'Appearance saves after startup cleanup');await dialog().waitFor({state:'detached'});};
  const cancel=()=>dialog().locator('[data-appearance-cancel]').click();
  const token=name=>page.evaluate(name=>getComputedStyle(document.documentElement).getPropertyValue('--theme-'+name).trim(),name);
  const check=async(name,scope='body')=>{
