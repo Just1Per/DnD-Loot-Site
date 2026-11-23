@@ -8,10 +8,12 @@
     "implementedSubclassAdapters": 186,
     "missingSubclassAdapters": 0,
     "feats": 302,
-    "featStructuredRecords": 89,
-    "featSpellPackages": 51,
-    "featSpellChoicePackages": 15,
-    "featSpellPackagesToReview": 31,
+    "featStructuredRecords": 99,
+    "featSpellPackages": 62,
+    "featSpellChoicePackages": 23,
+    "featSpellPackagesToReview": 20,
+    "featExpandedListAdapters": 12,
+    "featExpandedListsToReview": 0,
     "spells": 969,
     "spellDamageFacts": 394,
     "spellAreaFacts": 335,
@@ -40,6 +42,8 @@
         "expertise"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -50,6 +54,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 2,
       "spellReview": null
     },
@@ -60,6 +66,8 @@
       "source": "ERLW",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 2,
       "spellReview": null
     },
@@ -70,6 +78,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -80,6 +90,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -90,6 +102,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -100,6 +114,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -110,6 +126,8 @@
       "source": "DSotDQ",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -120,6 +138,8 @@
       "source": "DSotDQ",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -130,6 +150,8 @@
       "source": "DSotDQ",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -140,6 +162,8 @@
       "source": "SatO",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -150,6 +174,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -160,6 +186,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -177,6 +205,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -194,6 +224,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -211,6 +243,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -228,6 +262,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -245,6 +281,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -262,6 +300,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -272,6 +312,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -282,6 +324,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -292,6 +336,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -304,6 +350,8 @@
         "toolProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 2,
       "spellReview": null
     },
@@ -314,6 +362,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -324,6 +374,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -334,6 +386,8 @@
       "source": "SatO",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -344,6 +398,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -356,6 +412,8 @@
         "senses"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -366,6 +424,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -376,6 +436,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -388,6 +450,8 @@
         "immune"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -398,6 +462,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -408,6 +474,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -418,6 +486,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -428,6 +498,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -438,6 +510,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -448,6 +522,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -460,6 +536,8 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -470,6 +548,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -480,6 +560,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -490,6 +572,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -500,6 +584,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -510,6 +596,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -520,6 +608,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -530,6 +620,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -540,6 +632,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -550,6 +644,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -560,6 +656,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -573,6 +671,8 @@
         "conditionImmune"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -583,6 +683,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -593,6 +695,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -603,8 +707,24 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [
+        "Mark of Handling",
+        "Mark of Storm",
+        "Mark of Making",
+        "Mark of Hospitality",
+        "Mark of Warding",
+        "Mark of Sentinel",
+        "Mark of Passage",
+        "Mark of Shadow",
+        "Mark of Healing",
+        "Mark of Scribing",
+        "Mark of Finding",
+        "Mark of Detection",
+        "Sorcerer Spell"
+      ],
+      "spellChoiceGroups": 1,
+      "spellReview": null
     },
     {
       "id": "Feat-xphb-efece98bddbbdbff",
@@ -616,6 +736,8 @@
         "expertise"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -626,6 +748,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -636,6 +760,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -650,6 +776,8 @@
         "expertise"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -660,6 +788,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -672,6 +802,8 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -682,6 +814,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -692,6 +826,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -704,6 +840,8 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -716,6 +854,8 @@
         "senses"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -726,6 +866,8 @@
       "source": "XGE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -736,6 +878,8 @@
       "source": "BMT",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -746,6 +890,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -756,6 +902,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -768,6 +916,8 @@
         "toolProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -780,6 +930,8 @@
         "toolProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -799,6 +951,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -809,6 +963,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -819,6 +975,8 @@
       "source": "SatO",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -829,8 +987,13 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [
+        "Ray of Frost",
+        "Wizard cantrip"
+      ],
+      "spellChoiceGroups": 1,
+      "spellReview": null
     },
     {
       "id": "Feat-au-74d67f497ff6e703",
@@ -839,6 +1002,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -851,6 +1016,8 @@
         "toolProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -861,6 +1028,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -871,6 +1040,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -881,6 +1052,8 @@
       "source": "TCE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -891,6 +1064,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -903,6 +1078,8 @@
         "languageProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -913,6 +1090,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -923,6 +1102,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -933,6 +1114,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -943,6 +1126,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -953,6 +1138,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -963,8 +1150,14 @@
       "source": "DSotDQ",
       "structuredFacts": [],
       "fixedSpells": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [
+        "Evil",
+        "Good",
+        "Neutral"
+      ],
+      "spellChoiceGroups": 6,
+      "spellReview": null
     },
     {
       "id": "Feat-xge-4a30bda44607ebad",
@@ -973,6 +1166,8 @@
       "source": "XGE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -983,6 +1178,8 @@
       "source": "XGE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -995,6 +1192,8 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1028,6 +1227,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1038,6 +1239,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -1048,6 +1251,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1058,6 +1263,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1068,6 +1275,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1078,6 +1287,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1088,6 +1299,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1098,6 +1311,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1108,6 +1323,8 @@
       "source": "XGE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1122,6 +1339,8 @@
         "expertise"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1132,6 +1351,8 @@
       "source": "TCE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1142,6 +1363,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1152,6 +1375,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1162,6 +1387,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1172,6 +1399,8 @@
       "source": "XGE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1184,6 +1413,8 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1193,9 +1424,18 @@
       "edition": "2024",
       "source": "FRHoF",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "speak with animals",
+          "unlock": 1,
+          "freeUses": 0,
+          "recovery": []
+        }
+      ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "spellReview": null
     },
     {
       "id": "Feat-au-370725c4501bdfbc",
@@ -1204,6 +1444,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -1223,6 +1465,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1233,6 +1477,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -1243,6 +1489,8 @@
       "source": "XGE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1253,6 +1501,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1272,6 +1522,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1294,6 +1546,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1313,6 +1567,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -1332,6 +1588,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -1342,6 +1600,8 @@
       "source": "TCE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1352,6 +1612,8 @@
       "source": "XGE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1364,6 +1626,8 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1389,6 +1653,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1399,6 +1665,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1409,6 +1677,8 @@
       "source": "FTD",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1419,6 +1689,8 @@
       "source": "FTD",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1438,6 +1710,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1448,6 +1722,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1458,6 +1734,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1468,6 +1746,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1478,6 +1758,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1488,6 +1770,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1498,6 +1782,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1508,6 +1794,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1518,6 +1806,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1528,6 +1818,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1538,6 +1830,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1548,6 +1842,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1558,6 +1854,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1568,6 +1866,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1578,6 +1878,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1588,6 +1890,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1598,6 +1902,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1608,6 +1914,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1618,6 +1926,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1628,6 +1938,8 @@
       "source": "BGG",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1638,6 +1950,8 @@
       "source": "TCE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1651,6 +1965,8 @@
         "languageProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1661,6 +1977,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1671,6 +1989,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1681,6 +2001,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1691,6 +2013,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1701,6 +2025,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1711,6 +2037,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1721,6 +2049,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1731,6 +2061,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -1743,6 +2075,8 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1753,8 +2087,14 @@
       "source": "DSotDQ",
       "structuredFacts": [],
       "fixedSpells": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [
+        "Nuitari",
+        "Lunitari",
+        "Solinari"
+      ],
+      "spellChoiceGroups": 6,
+      "spellReview": null
     },
     {
       "id": "Feat-phb-db9c5d8bef6ba2bd",
@@ -1763,6 +2103,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1773,6 +2115,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1783,6 +2127,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1793,6 +2139,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1805,6 +2153,8 @@
         "skillProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1817,6 +2167,8 @@
         "bonusSenses"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1827,6 +2179,8 @@
       "source": "DSotDQ",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1837,6 +2191,8 @@
       "source": "DSotDQ",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1847,6 +2203,8 @@
       "source": "DSotDQ",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1857,8 +2215,13 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [
+        "Light",
+        "Cleric Cantrip"
+      ],
+      "spellChoiceGroups": 1,
+      "spellReview": null
     },
     {
       "id": "Feat-phb-e73913d861bbcba3",
@@ -1867,6 +2230,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1877,6 +2242,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1889,6 +2256,8 @@
         "languageProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1906,6 +2275,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1916,6 +2287,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1926,6 +2299,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1936,6 +2311,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1946,6 +2323,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1956,6 +2335,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1966,6 +2347,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1976,6 +2359,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1986,8 +2371,14 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [
+        "Cleric Spells",
+        "Druid Spells",
+        "Wizard Spells"
+      ],
+      "spellChoiceGroups": 6,
+      "spellReview": null
     },
     {
       "id": "Feat-phb-8b98d333e66159be",
@@ -1996,6 +2387,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2006,6 +2399,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2033,6 +2428,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2060,6 +2463,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2069,9 +2480,34 @@
       "edition": "2024",
       "source": "EFA",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "animal friendship",
+          "unlock": 1,
+          "freeUses": 1,
+          "recovery": [
+            "long"
+          ]
+        },
+        {
+          "name": "speak with animals",
+          "unlock": 1,
+          "freeUses": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "spellReview": null
     },
     {
       "id": "Feat-efa-22a4602fe063b5d4",
@@ -2097,6 +2533,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2132,6 +2576,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2157,6 +2609,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2176,6 +2636,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2209,6 +2677,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2228,6 +2704,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2253,6 +2737,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2280,6 +2772,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2315,6 +2815,14 @@
           ]
         }
       ],
+      "expandedSpellLevels": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2325,6 +2833,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2335,6 +2845,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2345,6 +2857,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2355,6 +2869,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2365,6 +2881,8 @@
       "source": "TCE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2375,6 +2893,8 @@
       "source": "RHW",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2385,6 +2905,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2395,6 +2917,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2405,6 +2929,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2415,6 +2941,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2425,6 +2953,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2437,6 +2967,8 @@
         "toolProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2447,6 +2979,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2457,6 +2991,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -2467,6 +3003,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2479,6 +3017,8 @@
         "skillProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2489,6 +3029,8 @@
       "source": "XGE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2499,6 +3041,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2509,6 +3053,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2519,6 +3065,8 @@
       "source": "SatO",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -2529,6 +3077,8 @@
       "source": "TCE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2539,6 +3089,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2549,6 +3101,8 @@
       "source": "SatO",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2561,6 +3115,8 @@
         "toolProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2573,6 +3129,8 @@
         "toolProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2583,6 +3141,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2593,6 +3153,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2605,6 +3167,8 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2615,6 +3179,8 @@
       "source": "EFA",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2630,6 +3196,8 @@
         "expertise"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2640,6 +3208,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2650,6 +3220,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2662,6 +3234,8 @@
         "skillProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2672,6 +3246,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2682,6 +3258,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2692,6 +3270,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2702,6 +3282,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2712,6 +3294,8 @@
       "source": "ERLW",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2722,6 +3306,8 @@
       "source": "SatO",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2732,6 +3318,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -2742,6 +3330,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -2752,6 +3342,8 @@
       "source": "BGG",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -2762,6 +3354,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2772,6 +3366,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2784,8 +3380,16 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [
+        "Chaotic Outer Plane",
+        "Evil Outer Plane",
+        "Good Outer Plane",
+        "Lawful Outer Plane",
+        "The Outlands"
+      ],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "spellReview": null
     },
     {
       "id": "Feat-xge-7acfc0f37de408e6",
@@ -2794,6 +3398,8 @@
       "source": "XGE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2813,6 +3419,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2823,6 +3431,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2833,6 +3443,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2852,6 +3464,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -2871,6 +3485,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -2890,6 +3506,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2900,6 +3518,8 @@
       "source": "RHW",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2910,6 +3530,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2920,6 +3542,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2930,6 +3554,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2940,6 +3566,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2953,6 +3581,8 @@
         "expertise"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2966,6 +3596,8 @@
         "expertise"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2976,6 +3608,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2986,6 +3620,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2996,6 +3632,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3008,6 +3646,8 @@
         "senses"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3018,6 +3658,8 @@
       "source": "TCE",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3028,6 +3670,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3038,6 +3682,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3048,6 +3694,8 @@
       "source": "BGG",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3058,6 +3706,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3070,6 +3720,8 @@
         "resist"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3080,8 +3732,17 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [
+        "Bard Spells",
+        "Cleric Spells",
+        "Druid Spells",
+        "Sorcerer Spells",
+        "Warlock Spells",
+        "Wizard Spells"
+      ],
+      "spellChoiceGroups": 6,
+      "spellReview": null
     },
     {
       "id": "Feat-xphb-f6256010aa3aa98b",
@@ -3090,6 +3751,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3100,6 +3763,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3110,6 +3775,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3127,6 +3794,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3139,6 +3808,8 @@
         "skillProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3149,6 +3820,8 @@
       "source": "DSotDQ",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3159,6 +3832,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3169,6 +3844,8 @@
       "source": "BGG",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3179,8 +3856,26 @@
       "source": "SCC",
       "structuredFacts": [],
       "fixedSpells": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [
+        "Lorehold 1",
+        "Lorehold 2",
+        "Lorehold 3",
+        "Prismari 1",
+        "Prismari 2",
+        "Prismari 3",
+        "Quandrix 1",
+        "Quandrix 2",
+        "Quandrix 3",
+        "Silverquill 1",
+        "Silverquill 2",
+        "Silverquill 3",
+        "Witherbloom 1",
+        "Witherbloom 2",
+        "Witherbloom 3"
+      ],
+      "spellChoiceGroups": 15,
+      "spellReview": null
     },
     {
       "id": "Feat-scc-4df69aa11bea4be7",
@@ -3189,6 +3884,8 @@
       "source": "SCC",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -3199,6 +3896,8 @@
       "source": "RHW",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3240,6 +3939,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3253,6 +3954,8 @@
         "languageProficiencies"
       ],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3263,6 +3966,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3273,6 +3978,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3290,6 +3997,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3307,6 +4016,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3326,6 +4037,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3345,6 +4058,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3355,6 +4070,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3365,6 +4082,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3382,6 +4101,8 @@
           "recovery": []
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3392,6 +4113,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3402,6 +4125,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3412,6 +4137,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -3422,6 +4149,8 @@
       "source": "AU",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3432,6 +4161,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -3442,6 +4173,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3452,6 +4185,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3462,6 +4197,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3472,6 +4209,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3482,6 +4221,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -3492,6 +4233,8 @@
       "source": "ABH",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3502,6 +4245,8 @@
       "source": "BGG",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3512,6 +4257,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3522,6 +4269,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3541,6 +4290,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3568,6 +4319,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3578,6 +4331,8 @@
       "source": "PHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3588,6 +4343,8 @@
       "source": "XPHB",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3615,6 +4372,8 @@
           ]
         }
       ],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -3625,6 +4384,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3635,6 +4396,8 @@
       "source": "FRHoF",
       "structuredFacts": [],
       "fixedSpells": [],
+      "expandedSpellLevels": [],
+      "alternativeSpellPackages": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     }

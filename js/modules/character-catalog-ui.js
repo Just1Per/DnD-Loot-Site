@@ -339,7 +339,7 @@ function updateSheetCatalogGrants() {
       else if(field.startsWith('training'))c.training[Number(field.slice(-1))]=value;
       else if(field.startsWith('spellPick'))c.spellIds[Number(field.slice(-1))]=value;
       else if(field.startsWith('damageType'))c.damageTypes[Number(field.slice(-1))]=value;
-      else c[field]=field==='option'?Number(value):value;
+      else c[field]=['option','spellPackage'].includes(field)?Number(value):value;
       catalogChanged();
     });
     article.querySelectorAll('[data-feat-use]').forEach(button=>button.onclick=()=>changeFeatUse(key,button.dataset.featUse==='use'?1:-1));
@@ -399,8 +399,12 @@ function renderFeatEffectControls(report,level,data=sheetSession.data) {
   if(def.name==='Boon of Skill'&&def.source==='XPHB')html+=select('Expertise','expertise',[['','Choose skill'],...Object.entries(CharacterSheetModel.skills).map(([k,[label]])=>[k,label])],c.expertise);
   if(def.name==='Observant'&&def.edition==='2024')html+=select('Proficiency / expertise','training0',[['','Choose skill'],...skills.filter(([key])=>['skill:insight','skill:investigation','skill:perception'].includes(key))],c.training[0]);
   if(def.name==='Defense'&&def.edition==='2024')html+=`<label class="sheet-check"><input type="checkbox" data-feat-choice="armored" ${c.armored?'checked':''}> Wearing Light/Medium/Heavy armor; my entered AC excludes this +1</label>`;
-  for(const group of CharacterFeatRules.spellChoices(def))for(let index=0;index<group.count;index++)html+=select('Feat spell '+(group.start+index+1)+(group.unlock>1?' (character level '+group.unlock+')':''),'spellPick'+(group.start+index),[['','Choose spell'],...group.options.map(spell=>[spell.id,spell.name+' · '+spell.school+' · '+spell.source])],c.spellIds[group.start+index]);
-  const featCasting=CharacterFeatRules.mechanicFacts(def).spells?.ability?.choose;if(featCasting)html+=select('Feat spellcasting ability','castingAbility',[['','Choose ability'],...featCasting.map(a=>[a,CharacterSheetModel.abilities[a]])],c.castingAbility);
+  const packages=CharacterFeatRules.mechanicFacts(def).spellPackages||[];
+  if(packages.length)html+=select('Feat spell package','spellPackage',[[-1,'Choose one package'],...packages.map((row,index)=>[index,row.name+(row.grants.length?' · '+row.grants.map(grant=>grant.ref.split(/[|#]/)[0]).join(', '):'')])],c.spellPackage);
+  if(def.source==='EFA'&&def.name==='Boon of Siberys')html+='<p class="sheet-help">Select one spell. Dragonmark labels are suggestions; you do not need to have that mark. The free casting recovers on Short or Long Rest.</p>';
+  const selectedPackage=CharacterFeatRules.spellPackage(def,c);if(selectedPackage?.resistance)html+='<p class="sheet-help">Selected plane resistance: '+esc(selectedPackage.resistance)+'. The cantrip and resistance belong to the same plane.</p>';if(selectedPackage?.requiresKnownCantrip)html+='<label class="sheet-check"><input type="checkbox" data-feat-choice="confirmed" '+(c.confirmed?'checked':'')+'>I already know '+esc(selectedPackage.requiresKnownCantrip)+' and may choose its replacement cantrip.</label>';
+  for(const group of CharacterFeatRules.spellChoices(def,c))for(let index=0;index<group.count;index++)html+=(!group.options.length?'<p class="sheet-help">No spells match this package in the available edition and campaign sources. Choose another package or review campaign availability.</p>':'')+select('Feat spell '+(group.start+index+1)+(group.unlock>1?' (character level '+group.unlock+')':''),'spellPick'+(group.start+index),[['','Choose spell'],...group.options.map(spell=>[spell.id,spell.name+' · '+spell.school+' · '+spell.source])],c.spellIds[group.start+index]);
+  const featCasting=CharacterFeatRules.spellPackage(def,c)?.ability?.choose;if(featCasting)html+=select('Feat spellcasting ability','castingAbility',[['','Choose ability'],...featCasting.map(a=>[a,CharacterSheetModel.abilities[a]])],c.castingAbility);
   for(const group of CharacterFeatRules.resistanceChoices(def))for(let index=0;index<group.count;index++)html+=select('Damage resistance '+(index+1),'damageType'+index,[['','Choose resistance'],...group.from.map(type=>[type,type[0].toUpperCase()+type.slice(1)])],c.damageTypes[index]);
   html+='</div><p><strong>Automated sheet effects:</strong> '+esc(automated.join('; ')||(def.name==='Magic Initiate'?'Spell choices and free use below':'None applied yet'))+'.</p>';
   if(warnings.length)html+='<p role="status" class="sheet-error">'+esc(warnings.join(' '))+'</p>';

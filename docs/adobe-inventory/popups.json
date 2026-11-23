@@ -217,6 +217,7 @@
         "adobe-direct-preparation-browser.cjs",
         "adobe-native-spells-browser.cjs",
         "adobe-source-generator-browser.cjs",
+        "rule-automation-browser.cjs",
         "site-palette-browser.cjs"
       ]
     },

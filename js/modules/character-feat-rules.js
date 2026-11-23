@@ -5,12 +5,12 @@ var CharacterFeatRules = (() => {
   const Mechanics=typeof CharacterFeatMechanicsData!=='undefined'?CharacterFeatMechanicsData:require('./character-feat-mechanics-data');
   const damageTypes=['acid','cold','fire','force','lightning','necrotic','poison','psychic','radiant','thunder','bludgeoning','piercing','slashing'];
   const mechanicFacts=def=>def&&!def.personal?Mechanics.records[def.source+'|'+def.name]||{}:{};
-  const resistanceChoices=def=>(mechanicFacts(def).resist||[]).filter(row=>row&&typeof row==='object'&&row.choose?.from?.every(type=>damageTypes.includes(type))).map(row=>({from:row.choose.from,count:Math.min(2,row.choose.count||1)}));
+  const resistanceChoices=def=>(mechanicFacts(def).spellPackages?.some(row=>row.resistance)?[]:mechanicFacts(def).resist||[]).filter(row=>row&&typeof row==='object'&&row.choose?.from?.every(type=>damageTypes.includes(type))).map(row=>({from:row.choose.from,count:Math.min(2,row.choose.count||1)}));
   function definition(data,id){const personal=Personal.definition(data,id),base=Object.hasOwn(definitions,id)?definitions[id]:null;return personal||(typeof CampaignRules==='undefined'?base:CampaignRules.definition(id,base));}
   const abilityKeys=['str','dex','con','int','wis','cha'];
   function choice(raw={}) {
     const safe=v=>typeof v==='string'?v.slice(0,100):'';
-    return {option:Number.isInteger(raw.option)&&raw.option>=0&&raw.option<2?raw.option:0,abilities:[0,1].map(i=>abilityKeys.includes(raw.abilities?.[i])?raw.abilities[i]:''),training:[0,1,2].map(i=>safe(raw.training?.[i])),damageTypes:[0,1].map(i=>damageTypes.includes(raw.damageTypes?.[i])?raw.damageTypes[i]:''),castingAbility:abilityKeys.includes(raw.castingAbility)?raw.castingAbility:'',spellIds:Array.from({length:8},(_,i)=>safe(raw.spellIds?.[i])),expertise:safe(raw.expertise),confirmed:raw.confirmed===true,armored:raw.armored===true,used:Math.max(0,Math.min(99,Math.trunc(Number(raw.used)||0))),...(raw.ignorePrerequisites===true?{ignorePrerequisites:true}:{})};
+    return {option:Number.isInteger(raw.option)&&raw.option>=0&&raw.option<2?raw.option:0,abilities:[0,1].map(i=>abilityKeys.includes(raw.abilities?.[i])?raw.abilities[i]:''),training:[0,1,2].map(i=>safe(raw.training?.[i])),damageTypes:[0,1].map(i=>damageTypes.includes(raw.damageTypes?.[i])?raw.damageTypes[i]:''),spellPackage:Number.isInteger(raw.spellPackage)&&raw.spellPackage>=0&&raw.spellPackage<20?raw.spellPackage:-1,castingAbility:abilityKeys.includes(raw.castingAbility)?raw.castingAbility:'',spellIds:Array.from({length:8},(_,i)=>safe(raw.spellIds?.[i])),expertise:safe(raw.expertise),confirmed:raw.confirmed===true,armored:raw.armored===true,used:Math.max(0,Math.min(99,Math.trunc(Number(raw.used)||0))),...(raw.ignorePrerequisites===true?{ignorePrerequisites:true}:{})};
   }
   function entries(data,level) {
     const seen={};const result=(data.rulesChoices?.feats||[]).map(id=>{seen[id]=(seen[id]||0)+1;return {id,key:id+(seen[id]>1?'--'+seen[id]:'')};});
@@ -97,12 +97,13 @@ var CharacterFeatRules = (() => {
         for(const type of def.armorTraining)effects.proficiencies.push({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[type]);
         automated.push('Armor training: '+def.armorTraining.map(type=>({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[type])).join(', '));
       }
-      const facts=mechanicFacts(def),capitalize=value=>value[0].toUpperCase()+value.slice(1);
+      const facts=mechanicFacts(def),selectedPackage=spellPackage(def,c),capitalize=value=>value[0].toUpperCase()+value.slice(1);
       if(!warnings.length){
         const canonical=value=>String(value).toLowerCase().replace(/[^a-z0-9]/g,''),fixedTraining=(field,pool)=>facts[field]?.length===1?Object.entries(facts[field][0]).filter(([,value])=>value===true).flatMap(([name])=>{const match=pool.find(value=>canonical(value)===canonical(name));return match?[match]:[]}):[];
         for(const [field,target,pool]of [['skillProficiencies','skills',skillNames],['toolProficiencies','proficiencies',tools],['languageProficiencies','languages',R.languages]]){const grants=fixedTraining(field,pool);if(grants.length){effects[target].push(...grants);automated.push('Fixed '+field+': '+grants.join(', '));}}
         const fixedExpertise=fixedTraining('expertise',skillNames);if(fixedExpertise.length){expertise.push(...fixedExpertise);effects.skills.push(...fixedExpertise);automated.push('Expertise: '+fixedExpertise.join(', '));}
         const fixed=(facts.resist||[]).filter(value=>typeof value==='string'&&damageTypes.includes(value));
+        if(selectedPackage?.resistance)fixed.push(selectedPackage.resistance);
         for(const group of resistanceChoices(def)){
           const picks=c.damageTypes.slice(0,group.count);
           if(picks.some(value=>!group.from.includes(value))||new Set(picks).size!==group.count)warnings.push('Choose '+group.count+' distinct permitted damage resistance'+(group.count===1?'':'s')+'.');
@@ -114,8 +115,11 @@ var CharacterFeatRules = (() => {
         for(const sense of facts.senses||[])for(const [name,value]of Object.entries(sense))if(['darkvision','blindsight','truesight','tremorsense'].includes(name)&&Number.isFinite(value)&&value>0){effects[name]=Math.max(effects[name]||0,value);automated.push(name+' '+value+' ft');}
         for(const sense of facts.bonusSenses||[])if(Number.isFinite(sense.darkvision)&&sense.darkvision>0){effects.featDarkvisionBonus=(effects.featDarkvisionBonus||0)+sense.darkvision;automated.push('Darkvision range +'+sense.darkvision+' ft');}
       }
-      if(facts.spells?.ability?.choose&&!facts.spells.ability.choose.includes(c.castingAbility))report.spellWarnings=['Choose a casting ability for the granted feat spells.'];
-      if(facts.spells)automated.push('Fixed feat spell references and independent free-casting counters');
+      if(facts.spellPackages?.length&&!selectedPackage)report.spellWarnings=['Choose one feat spell package.'];
+      if(selectedPackage?.requiresKnownCantrip&&!c.confirmed)report.spellWarnings=['Confirm that you already know '+selectedPackage.requiresKnownCantrip+' before choosing its replacement cantrip.'];
+      if(selectedPackage?.ability?.choose&&!selectedPackage.ability.choose.includes(c.castingAbility))report.spellWarnings=['Choose a casting ability for the granted feat spells.'];
+      if(selectedPackage?.magicInitiateClass&&!magicInitiateMatches(data,selectedPackage.magicInitiateClass).length)report.spellWarnings=['Complete a 2024 Magic Initiate choice using this package’s class list first; both feats share that casting ability.'];
+      if(selectedPackage)automated.push('Fixed feat spell references and independent free-casting counters');
       const core=def.source==='PHB'||def.source==='XPHB'||def.source==='TCE';
       if(!core)continue;
       if(def.name==='Alert') {if(def.edition==='2024')effects.initiativeProficiency=true;effects.initiativeBonus=def.edition==='2014'?(effects.initiativeBonus||0)+5:Math.max(effects.initiativeBonus||0,pb);automated.push('Initiative');}
@@ -179,26 +183,44 @@ var CharacterFeatRules = (() => {
     for(const r of reports)for(const message of [...r.warnings,...(r.guidance||[])])effects.warnings.push(r.def.name+': '+message);
     return {reports,expertise,acBonus,rangedBonus,passiveBonus,speedBonus};
   }
-  function spellChoices(def) {
+  function magicInitiateMatches(data,classId){const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null);return C.grants(data).filter(grant=>grant.edition==='2024').map(grant=>C.validateGrant(grant,data.rulesChoices?.grants?.[grant.key],data)).filter(result=>!result.errors.length&&result.classId===classId);}
+  function spellPackage(def,c=choice()){const facts=mechanicFacts(def);return facts.spells||facts.spellPackages?.[c.spellPackage]||null;}
+  function spellChoices(def,c=choice()) {
     const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null),catalogue=C?.data?.spells||[],schools={a:'Abjuration',c:'Conjuration',d:'Divination',e:'Enchantment',v:'Evocation',i:'Illusion',n:'Necromancy',t:'Transmutation'};let offset=0;
-    return (mechanicFacts(def).spells?.choices||[]).map(grant=>{
+    return (spellPackage(def,c)?.choices||[]).map(grant=>{
       const p=grant.pool,count=Math.max(1,Math.min(8,p.count||1)),start=offset;offset+=count;
       const options=catalogue.filter(spell=>spell.edition===def.edition&&(!p.levels||p.levels.includes(spell.level))&&(!p.classes||p.classes.some(id=>(spell.classesByEdition?.[def.edition]||spell.classes||[]).includes(id)))&&(!p.schools||p.schools.some(id=>schools[id]===spell.school))&&(!p.ritual||spell.ritual)&&(!p.attack||spell.combat?.attack)&&(!p.names||p.names.some(name=>name.split('|')[0].replace(/#.*$/,'').toLowerCase()===spell.name.toLowerCase())));
       return{...grant,start,count,options};
     }).filter(group=>group.start+group.count<=8);
   }
+  function expandedSpells(data,{level=1,reports}={}){
+    if(!data?.build||!entries(data,level).some(entry=>mechanicFacts(definition(data,entry.id)).expandedSpells?.length))return[];
+    const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null),catalogue=C?.data?.spells||[];
+    if(!reports){const R=typeof CharacterRules!=='undefined'?CharacterRules:require('./character-rules'),M=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null);reports=apply(data,level,R.evaluate(data,level,Object.keys(M.skills)),{...data.abilities},Object.keys(M.skills),R.tools).reports;}
+    return reports.filter(report=>report.eligible&&!report.warnings.length&&report.def.edition===data.build.edition).flatMap(report=>(mechanicFacts(report.def).expandedSpells||[]).flatMap(row=>row.spells.flatMap(ref=>{const [name,source='phb']=ref.split('|'),spell=catalogue.find(spell=>spell.name.toLowerCase()===name.toLowerCase()&&spell.source.toLowerCase()===source.toLowerCase());return spell?[{...spell,expandedBy:report.def.name}]:[];})));
+  }
   function spellGrants(data,{level=1,reports}={}) {
     const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null),catalogue=C?.data?.spells||[];
     if(!reports){const R=typeof CharacterRules!=='undefined'?CharacterRules:require('./character-rules'),M=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null);reports=apply(data,level,R.evaluate(data,level,Object.keys(M.skills)),{...data.abilities},Object.keys(M.skills),R.tools).reports;}
     return reports.flatMap(report=>{
-      const facts=mechanicFacts(report.def).spells,c=report.choice;if(!facts||!report.eligible||report.warnings.length)return[];
-      const ability=typeof facts.ability==='string'?(facts.ability==='inherit'?c.abilities[0]:facts.ability):c.castingAbility;if(!abilityKeys.includes(ability))return[];
-      const selected=spellChoices(report.def).flatMap(group=>{const ids=c.spellIds.slice(group.start,group.start+group.count);if(new Set(ids).size!==group.count||ids.some(id=>!group.options.some(spell=>spell.id===id)))return[];return ids.map(id=>{const spell=group.options.find(spell=>spell.id===id);return{...group,ref:spell.name+'|'+spell.source};});});
+      const c=report.choice,facts=spellPackage(report.def,c);if(!facts||!report.eligible||report.warnings.length)return[];
+      if(facts.requiresKnownCantrip&&!c.confirmed)return[];
+      let ability=typeof facts.ability==='string'?(facts.ability==='inherit'?c.abilities[0]:facts.ability):c.castingAbility;
+      if(facts.magicInitiateClass){const matches=magicInitiateMatches(data,facts.magicInitiateClass);if(matches.length!==1)return[];ability=matches[0].ability;}
+      if(!abilityKeys.includes(ability))return[];
+      const selected=spellChoices(report.def,c).flatMap(group=>{const ids=c.spellIds.slice(group.start,group.start+group.count);if(new Set(ids).size!==group.count||ids.some(id=>!group.options.some(spell=>spell.id===id)))return[];return ids.map(id=>{const spell=group.options.find(spell=>spell.id===id);return{...group,ref:spell.name+'|'+spell.source};});});
       return [...facts.grants,...selected].filter(grant=>grant.unlock<=level).flatMap(grant=>{
         const [name,source='phb']=grant.ref.replace(/#.*$/,'').split('|'),spell=catalogue.find(row=>row.name.toLowerCase()===name.toLowerCase()&&row.source.toLowerCase()===source.toLowerCase());
         if(!spell)return[];
         const token=report.key.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,45),id='feat-spell-'+token+'-'+spell.id.slice(-16),key='feat:'+token+':'+spell.id.slice(-16)+'-used';
         const notes={
+          'FRHoF|Emerald Enclave Fledgling':'Speak with Animals is always prepared. An eligible ritual casting lasts 8 hours; this feat grants no separate free-casting pool.',
+          'EFA|Boon of Siberys':'The free casting needs no spell components. Select one spell when gaining this feat; suggested dragonmarks do not restrict the choice.',
+          'SatO|Scion of the Outer Planes':'This cantrip needs no material components. The selected plane also determines resistance.',
+          'DSotDQ|Divinely Favored':'Select the spell package matching your alignment; you may use a holy symbol as a spellcasting focus for spells using this feat’s casting ability.',
+          'DSotDQ|Initiate of High Sorcery':'The selected moon determines the two available level-1 spell choices.',
+          'AU|Magic Connoisseur':'This package must match your selected 2024 Magic Initiate list and casting ability. Replace a chosen spell only when gaining a level.',
+          'SCC|Strixhaven Initiate':'Choose the package for your college and two selected cantrips; it grants one free level-1 casting per Long Rest.',
           'MTF|Svirfneblin Magic':'Nondetection is self-only and needs no material component.',
           'RHW|Second Skin':'Free Alter Self needs no components or Concentration; resolve forced transformations at the table.',
           'FRHoF|Enclave Magic':'The free Beast Sense casting needs no Concentration.',
@@ -259,6 +281,6 @@ var CharacterFeatRules = (() => {
     else {if(data.rulesChoices.feats.length>=30)throw Error('Maximum 30 additional feats.');data.rulesChoices.feats.push(feat.id);const count=data.rulesChoices.feats.filter(id=>id===feat.id).length;if(count>1)key+='--'+count;}
     data.rulesChoices.effects[key]=choice({...data.rulesChoices.effects[key],ignorePrerequisites:true});return key;
   }
-  return {definitions,definition,choice,entries,trainingOptions,resistanceChoices,mechanicFacts,spellChoices,spellGrants,spellResources,apply,resource,setUsed,reset,remove,addManual};
+  return {definitions,definition,choice,entries,trainingOptions,resistanceChoices,mechanicFacts,spellPackage,spellChoices,expandedSpells,spellGrants,spellResources,apply,resource,setUsed,reset,remove,addManual};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterFeatRules;

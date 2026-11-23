@@ -24,8 +24,8 @@ var CharacterMagicItems=(()=>{
   const passiveStats=new Set(['ring of protection','cloak of protection','robe of stars','staff of power','stone of good luck','netherese ring of protection']);
   const passiveImmunities=new Set(['efreeti chain','matalotok','periapt of proof against poison','ring of winter']);
   function classes(data,level=1){
-    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},rows=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],out={};let left=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
-    for(const row of rows){const amount=Math.min(left,Math.max(0,Math.trunc(Number(row.level)||0)));left-=amount;if(amount&&typeof row.classId==='string')out[row.classId]=(out[row.classId]||0)+amount;}return out;
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},rows=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],out={},seen=new Set();let left=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
+    for(const row of rows){const amount=Math.min(left,Math.max(0,Math.trunc(Number(row.level)||0)));left-=amount;if(amount&&typeof row.classId==='string'&&!seen.has(row.classId)){out[row.classId]=amount;seen.add(row.classId);}}return out;
   }
   function eligibility(data,fact,effects,level){
     if(!fact?.reqAttuneTags?.length)return true;
