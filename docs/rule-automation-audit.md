@@ -13,10 +13,11 @@ Source revision: `b9061583536101068b3a59d27e886d1fa664e366`. This inventory dist
 | Feats with filtered spell choices | 23 |
 | Other feat spell grants requiring review | 20 |
 | Feat expanded class-list adapters | 12 |
+| Supplement spell class-list corrections | 122 |
 | Spells with numeric damage facts | 394 |
 | Spells with numeric area facts | 335 |
-| Spells with action damage formulas | 203 |
-| Damage references still requiring manual resolution | 184 |
+| Spells with action damage formulas | 241 |
+| Damage references still requiring manual resolution | 146 |
 | Pinned item facts | 1253 |
 | Base items | 230 |
 | Generic item templates, including inherited templates | 230 |

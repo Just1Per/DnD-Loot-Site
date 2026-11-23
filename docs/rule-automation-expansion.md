@@ -28,13 +28,25 @@ Protection and luck items apply their reviewed save/check bonuses to ability sav
 
 ## Spell actions
 
+A reviewed numeric override set now fills 38 further missing action formulas, bringing the catalogue to 241 computed damage references. It covers direct spells such as Catapult, Arms of Hadar, Frost Fingers, Snowball Swarm, gravity spells and Psychic Lance. Crown of Stars and Minute Meteors scale their projectile counts while retaining per-projectile damage. Remaining projectile uses are tracked explicitly at the table.
+
+Ice Storm and Flame Strike now show both damage types and their edition-specific slot scaling. Contact Other Plane displays the caster’s fixed DC 15 Intelligence save; Synaptic Static’s concentration penalty no longer creates a second Constitution save in the spell’s primary-save field. Damage/area short descriptions retain these distinctions.
+
+The pinned class-source lookup stores some original supplement lists under `classVariant`. The catalogue now includes those class memberships only when the spell’s own source defines them: 122 spell records are corrected. For example, 2014 Ice Knife and Synaptic Static return to their real class lists. Unrelated optional expansions, such as Tasha’s additions to a PHB spell, are not imported through this rule; campaign edition filters are retained. [Provenance ledger](spell-class-list-audit.json). `build-rules-catalog.py --spells-only` regenerates spell/catalogue outputs without replacing independently maintained feat references.
+
+Compound damage now retains each component’s real type. A type-specific bonus, such as Cold Elemental Affinity, applies to the matching component; a general one-roll bonus appears only once with an instruction to assign its component. Unresolved damage-type choices wait for that choice before applying type-dependent bonuses. Explicit Psychic conversion and Rimekin’s Cold conversion are resolved before eligibility for elemental bonuses.
+
+The paper uses separate compact dice/type fields and short save labels, while keeping full human-readable source details in the attack information. Spell-attack proficiency circles are marked correctly. Manual hit/DC/dice/damage adjustments update the compact fields too; the browser checks actual text fit and an exported PDF.
+
+Saved class spell actions are checked against the current class level, source list and edition. Losing a class/feat/list grant disables the action without deleting its saved spell. Explicit Additional spells and unassigned legacy references remain available through their intended manual source. Access is calculated once per action pass and shared with granted-spell resolution.
+
 Ice Knife shows its separate piercing hit and Cold explosion, with the explosion's own upcasting, save DC and target-area reminder. Flame Blade uses the correct edition-specific scaling and the revised spellcasting damage modifier. Chromatic Orb and Chaos Bolt retain their damage-type choice instructions and slot scaling. Available area facts appear beside action notes. A reference never spends a slot, chooses targets or applies damage to another character.
 
 ## Coverage and remaining work
 
 [The reproducible audit](rule-automation-audit.md) inventories all 105 selectable species, 302 feats, 969 spells and 186 subclasses. All 186 subclass adapters exist. Their retained `partial-mechanics` status describes explicit table decisions and is now accompanied by a separate implementation status/reason.
 
-This delivery does not close all rule automation. The JSON identifies 20 other feat spell-grant groups for review, 184 damage references without an action formula, and item metadata whose conditional scope has no reviewed automatic adapter. These are distinct from missing source descriptions or missing subclass adapters. Next work should review remaining source-dependent spell packages, individual compound or weapon-dependent spell formulas, and explicit spell/item activation and duration controls. Keep conditional powers tied to deliberate controls rather than granting permanent buffs.
+This delivery does not close all rule automation. The JSON identifies 20 other feat spell-grant groups for review, 146 damage references without an action formula, and item metadata whose conditional scope has no reviewed automatic adapter. These are distinct from missing source descriptions or missing subclass adapters. Next work should review remaining source-dependent spell packages, individual compound or weapon-dependent spell formulas, and explicit spell/item activation and duration controls. Keep conditional powers tied to deliberate controls rather than granting permanent buffs.
 
 ## Validation
 

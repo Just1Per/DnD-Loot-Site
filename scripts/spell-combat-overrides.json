@@ -1,0 +1,491 @@
+{
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "scope": "Reviewed numeric/action facts and our own concise instructions. Source entries are excluded.",
+  "spells": {
+    "Abi-Dalzim's Horrid Wilting": {
+      "default": {
+        "damage": "12d8",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Resolve creature-type exceptions and affected plants at the table."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Aganazzar's Scorcher": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "fire"
+        ],
+        "addAbility": false,
+        "upcast": "1d8"
+      }
+    },
+    "Arms of Hadar": {
+      "default": {
+        "damage": "2d6",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "A failed Strength save also prevents Reactions until the target\u2019s next turn."
+        ]
+      }
+    },
+    "Catapult": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "Choose a loose eligible object; resolve the first collision and object damage. Higher slots also increase the permitted object weight."
+        ]
+      }
+    },
+    "Cloud of Daggers": {
+      "default": {
+        "damage": "4d4",
+        "types": [
+          "slashing"
+        ],
+        "addAbility": false,
+        "upcast": "2d4",
+        "notes": [
+          "Damage is per qualifying area event; resolve entry/turn timing and Concentration using the selected edition."
+        ]
+      }
+    },
+    "Conjure Barrage": {
+      "bySource": {
+        "XPHB": {
+          "damage": "5d8",
+          "types": [
+            "force"
+          ],
+          "addAbility": false,
+          "upcast": "1d8"
+        }
+      }
+    },
+    "Conjure Volley": {
+      "bySource": {
+        "XPHB": {
+          "damage": "8d8",
+          "types": [
+            "force"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true
+        }
+      }
+    },
+    "Crown of Stars": {
+      "default": {
+        "damage": "4d12",
+        "types": [
+          "radiant"
+        ],
+        "addAbility": false,
+        "projectiles": {
+          "base": 7,
+          "increment": 2,
+          "above": 7,
+          "unit": "motes"
+        },
+        "notes": [
+          "Damage is per expended mote and spell attack; a Bonus Action expends one mote."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Dark Star": {
+      "default": {
+        "damage": "8d10",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Resolve start/entry damage, movement, visibility, sound and spell restrictions within the active area."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Dawn": {
+      "default": {
+        "damage": "4d10",
+        "types": [
+          "radiant"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Resolve start/end positioning, Concentration and the light column\u2019s movement explicitly."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Dissonant Whispers": {
+      "default": {
+        "damage": "3d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "On a failed save, resolve the target\u2019s eligible Reaction movement; a successful save deals half damage."
+        ]
+      }
+    },
+    "Dust Devil": {
+      "default": {
+        "damage": "1d8",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "At an eligible creature\u2019s turn end within 5 ft, resolve the Strength save and the failed-save push; successful saves take half damage."
+        ]
+      }
+    },
+    "Earth Tremor": {
+      "default": {
+        "damage": "1d6",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "On a failed save, an affected creature is also Prone; resolve difficult terrain at the table."
+        ]
+      }
+    },
+    "Erupting Earth": {
+      "default": {
+        "damage": "3d12",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "upcast": "1d12",
+        "notes": [
+          "Resolve affected creatures and the resulting difficult terrain."
+        ]
+      }
+    },
+    "Frost Fingers": {
+      "default": {
+        "damage": "2d8",
+        "types": [
+          "cold"
+        ],
+        "addAbility": false,
+        "upcast": "1d8"
+      }
+    },
+    "Gravity Fissure": {
+      "default": {
+        "damage": "8d8",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "Resolve creatures in/near the line and any failed-save pull."
+        ]
+      }
+    },
+    "Gravity Sinkhole": {
+      "default": {
+        "damage": "5d10",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "upcast": "1d10",
+        "notes": [
+          "Resolve the affected sphere and failed-save pull toward its center."
+        ]
+      }
+    },
+    "Tidal Wave": {
+      "default": {
+        "damage": "4d8",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "notes": [
+          "A failed save also knocks the creature Prone; resolve the wave and extinguished flames."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Snilloc's Snowball Swarm": {
+      "default": {
+        "damage": "3d6",
+        "types": [
+          "cold"
+        ],
+        "addAbility": false,
+        "upcast": "1d6"
+      }
+    },
+    "Thunder Step": {
+      "default": {
+        "damage": "3d10",
+        "types": [
+          "thunder"
+        ],
+        "addAbility": false,
+        "upcast": "1d10",
+        "notes": [
+          "Resolve the departure area, the teleport destination and any willing passenger."
+        ]
+      }
+    },
+    "Synaptic Static": {
+      "default": {
+        "damage": "8d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "save": "INTELLIGENCE",
+        "notes": [
+          "The initial damage and later recovery use Intelligence saves. The d6 penalty to concentration checks is not an additional Constitution save against this spell."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Psychic Scream": {
+      "default": {
+        "damage": "14d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Choose up to ten eligible creatures; resolve immunity, failed-save Stunned condition and repeat saves."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Raulothim's Psychic Lance": {
+      "default": {
+        "damage": "7d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "Resolve named/unseen-target eligibility and the failed-save Incapacitated condition."
+        ]
+      }
+    },
+    "Rime's Binding Ice": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "cold"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "A failed save also restricts Speed until the ice is broken or removed."
+        ]
+      }
+    },
+    "Negative Energy Flood": {
+      "default": {
+        "damage": "5d12",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "For a living target, resolve the Constitution save and any resulting Zombie. An Undead target instead gains temporary HP equal to half a 5d12 roll."
+        ],
+        "noDamageUpcast": true
+      },
+      "bySource": {
+        "AU": {
+          "damage": "3d10 + 25",
+          "upcast": "1d10",
+          "notes": [
+            "A non-Undead target makes the Constitution save. An Undead target instead gains 3d10 temporary HP; resolve any resulting controlled Zombie at the table."
+          ]
+        }
+      }
+    },
+    "Steel Wind Strike": {
+      "default": {
+        "damage": "6d10",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Damage is per successful melee spell attack against a chosen creature; choose up to five different eligible creatures and resolve the final teleport."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Tasha's Mind Whip": {
+      "default": {
+        "damage": "3d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Higher slots add one target per slot above 2, not more damage per target. Resolve the failed-save action restrictions."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Mind Spike": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "Resolve the failed-save tracking effect and edition-specific Concentration/duration rules."
+        ]
+      }
+    },
+    "Pulse Wave": {
+      "default": {
+        "damage": "6d6",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "Choose pull or push for the cone; the failed-save displacement increases 5 ft per slot above 3."
+        ]
+      }
+    },
+    "Wither and Bloom": {
+      "default": {
+        "damage": "2d6",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "Resolve chosen damage recipients separately from one ally\u2019s voluntary Hit Die healing; higher slots also allow one additional healing die per slot above 2."
+        ]
+      }
+    },
+    "Melf's Minute Meteors": {
+      "default": {
+        "damage": "2d6",
+        "types": [
+          "fire"
+        ],
+        "addAbility": false,
+        "projectiles": {
+          "base": 6,
+          "increment": 2,
+          "above": 3,
+          "unit": "meteors"
+        },
+        "notes": [
+          "Damage is per meteor explosion. Expend one or two meteors on the initial casting or an eligible later Bonus Action; resolve each 5-ft burst and save."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Contact Other Plane": {
+      "default": {
+        "damage": "6d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "fixedSelfSave": {
+          "ability": "INTELLIGENCE",
+          "dc": 15
+        },
+        "notes": [
+          "This is the caster\u2019s own DC 15 Intelligence save. Damage applies only on failure; resolve the edition-specific mental effect and recovery."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Ice Storm": {
+      "default": {
+        "damage": "2d8",
+        "types": [
+          "bludgeoning",
+          "cold"
+        ],
+        "addAbility": false,
+        "part2Damage": "4d6",
+        "part2Type": "cold",
+        "upcast": "1d8",
+        "notes": [
+          "One Dexterity save governs both damage types. Higher slots increase only the Bludgeoning dice."
+        ],
+        "primaryType": "bludgeoning"
+      },
+      "bySource": {
+        "XPHB": {
+          "damage": "2d10",
+          "upcast": "1d10"
+        }
+      }
+    },
+    "Flame Strike": {
+      "default": {
+        "damage": "4d6",
+        "types": [
+          "fire",
+          "radiant"
+        ],
+        "addAbility": false,
+        "part2Damage": "4d6",
+        "part2Type": "radiant",
+        "choiceUpcast": "1d6",
+        "notes": [
+          "One Dexterity save governs both damage types. In 2014, choose Fire or Radiant for the extra slot dice."
+        ],
+        "upcast": null,
+        "noDamageUpcast": true,
+        "primaryType": "fire"
+      },
+      "bySource": {
+        "XPHB": {
+          "damage": "5d6",
+          "part2Damage": "5d6",
+          "upcast": "1d6",
+          "part2Upcast": "1d6",
+          "choiceUpcast": null,
+          "notes": [
+            "One Dexterity save governs both damage types. Each higher slot increases both Fire and Radiant dice."
+          ]
+        }
+      }
+    }
+  }
+}

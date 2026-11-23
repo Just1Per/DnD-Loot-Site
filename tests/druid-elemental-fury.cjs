@@ -125,6 +125,7 @@ test("Druid and Warlock copies of the same cantrip retain separate bonuses and r
   d.spells.push(row("Starry Wisp", "warlock"));
   choose(d, "potent-spellcasting");
   const warlock = d.adobe.classLevels[1];
+  assert.equal(C.set(d, warlock, "eldritch-invocations", 1, "pact-of-the-tome"), true);
   assert.equal(
     C.set(d, warlock, "eldritch-invocations", 0, "agonizing-blast"),
     true,
@@ -283,6 +284,7 @@ test("overlapping level-20 Druid and Warlock range modifiers coexist without com
   d.spells.push(row("Starry Wisp", "warlock"));
   choose(d, "potent-spellcasting");
   const w = d.adobe.classLevels[1];
+  assert.equal(C.set(d, w, "eldritch-invocations", 1, "pact-of-the-tome"), true);
   C.set(d, w, "eldritch-invocations", 0, "eldritch-spear");
   assert.equal(
     C.setCantripInvocation(

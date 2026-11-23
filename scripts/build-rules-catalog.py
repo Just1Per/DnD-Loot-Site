@@ -4,7 +4,7 @@ import argparse, concurrent.futures, hashlib, json, pathlib, re, urllib.request
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 INDEX_REV = 'b9061583536101068b3a59d27e886d1fa664e366'
 SRD_REV = '0acbf263c74caf8ad080af7a16d86d3700a1ac8f'
-p = argparse.ArgumentParser(); p.add_argument('--cache', type=pathlib.Path, default=ROOT / 'scripts/.source-cache'); args = p.parse_args(); args.cache.mkdir(parents=True, exist_ok=True)
+p = argparse.ArgumentParser(); p.add_argument('--cache', type=pathlib.Path, default=ROOT / 'scripts/.source-cache'); p.add_argument('--spells-only',action='store_true',help='Update catalogue/manifest without overwriting independently maintained feat reference outputs'); args = p.parse_args(); args.cache.mkdir(parents=True, exist_ok=True)
 def fetch(name, url):
     path = args.cache / name
     if not path.exists():
@@ -51,14 +51,25 @@ def basic(row, kind):
         if kind=='Spell' and f.get('higher_level'): out['description']+='\n\nAt higher levels: '+clean(f['higher_level'])
         out['license']='CC-BY-4.0 / SRD '+('5.2.1' if edition=='2024' else '5.1')
     return out
+reviewed_combat=json.loads((ROOT/'scripts/spell-combat-overrides.json').read_text());assert reviewed_combat['revision']==INDEX_REV
 schools={'A':'Abjuration','C':'Conjuration','D':'Divination','E':'Enchantment','V':'Evocation','I':'Illusion','N':'Necromancy','T':'Transmutation'}
-spells=[]
+spells=[];class_list_records=[]
 for source in sources:
     for row in source.get('spell',[]):
         if row.get('_copy'): raise ValueError('Resolve inherited spell metadata explicitly: '+row['name'])
-        out=basic(row,'Spell'); source=row['source']; cl=lookup.get(source.lower(),{}).get(row['name'].lower(),{}).get('class',{})
+        out=basic(row,'Spell'); source=row['source']; spell_sources=lookup.get(source.lower(),{}).get(row['name'].lower(),{});cl=spell_sources.get('class',{})
         by={'2014':set(),'2024':set()}
         for book, names in cl.items(): by[ed(book)].update(n.lower() for n in names)
+        # Supplement spell lists are recorded as variants in the pinned lookup.
+        # Accept a class only when this spell's own source defines the addition;
+        # unrelated optional expansions (for example TCE additions to PHB spells)
+        # must not silently widen the original class list.
+        additions=[]
+        for book,names in spell_sources.get('classVariant',{}).items():
+            for name,meta in names.items():
+                if source in meta.get('definedInSources',[]) and name.lower() not in by[ed(book)]:
+                    by[ed(book)].add(name.lower());additions.append({'classId':name.lower(),'edition':ed(book),'definedInSource':source})
+        if additions:class_list_records.append({'id':out['id'],'name':row['name'],'source':source,'additions':additions})
         out.update(level=row['level'],school=schools.get(row['school'],row['school']),classesByEdition={k:sorted(v) for k,v in by.items()})
         out['classes']=sorted(by['2014']|by['2024'])
         out['casting']='; '.join(str(t.get('number',1))+' '+t.get('unit','')+(' — '+clean(t['condition']) if t.get('condition') else '') for t in row.get('time',[]))
@@ -73,12 +84,18 @@ for source in sources:
         # short targeting notes only; never infer a whole spell from its first die.
         if name := row['name']:
             if name=='Ice Knife':
-                combat.update(damage='1d10',types=['piercing'],secondaryDamage='2d6',secondaryUpcast='1d6',secondaryType='cold',secondarySave='Dexterity',secondaryArea='target and creatures within 5 ft; hit or miss; no damage on a successful save')
+                combat.update(damage='1d10',types=['piercing','cold'],primaryType='piercing',secondaryDamage='2d6',secondaryUpcast='1d6',secondaryType='cold',secondarySave='Dexterity',secondaryArea='target and creatures within 5 ft; hit or miss; no damage on a successful save')
                 combat.pop('upcast',None)
             elif name=='Flame Blade':combat.update(damage='3d6',upcast='1d6',step=2 if out['edition']=='2014' else 1,addAbility=out['edition']=='2024')
             elif name=='Chromatic Orb':combat.update(damage='3d8',upcast='1d8',typeChoice=True)
             elif name=='Chaos Bolt':combat.update(damage='2d8 + 1d6',upcast='1d6',typeChoice=True)
+        reviewed=reviewed_combat['spells'].get(row['name'],{})
+        for key,value in {**reviewed.get('default',{}),**reviewed.get('bySource',{}).get(source,{})}.items():
+            if value is None:combat.pop(key,None)
+            else:combat[key]=value
         out['save']=', '.join(v.upper() for v in row.get('savingThrow',[]))
+        if 'save' in combat:out['save']=combat['save']
+        if combat.get('fixedSelfSave'):out['save']='Self '+combat['fixedSelfSave']['ability']+' DC '+str(combat['fixedSelfSave']['dc'])
         out['ritual']=bool(row.get('meta',{}).get('ritual')); spells.append(out)
 featrows=[]
 for row in feats:
@@ -97,6 +114,8 @@ body=json.dumps(catalog,ensure_ascii=False,separators=(',',':'))+'\n'
 manifest={'format':1,'metadataVersion':3,'release':hashlib.sha256(body.encode()).hexdigest(),'spells':len(spells),'feats':len(featrows),'spellSources':index,'counts':{edn:{'spells':sum(s['edition']==edn for s in spells),'feats':sum(f['edition']==edn for f in featrows),'fullSpellTexts':sum(s['edition']==edn and s['licensedText'] for s in spells)} for edn in ('2014','2024')}}
 (ROOT/'data/rules/manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(json.dumps(manifest,indent=2))
+(ROOT/'docs/spell-class-list-audit.json').write_text(json.dumps({'revision':INDEX_REV,'lookupSha256':hashlib.sha256((args.cache/'gendata-spell-source-lookup.json').read_bytes()).hexdigest(),'basis':'Only classVariant additions defined by the spell’s own source; unrelated optional class-list expansions are excluded.','records':class_list_records},indent=2)+'\n')
+if args.spells_only:raise SystemExit(0)
 # Mechanical facts only; no arbitrary entry text or executable expressions.
 mechanics={}
 for row in feats:
