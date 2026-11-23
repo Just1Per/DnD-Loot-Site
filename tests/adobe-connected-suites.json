@@ -95,6 +95,7 @@
     "adobe-ai-lookup-browser.cjs",
     "rule-automation-browser.cjs",
     "feat-ritual-rune-browser.cjs",
-    "feat-source-spells-browser.cjs"
+    "feat-source-spells-browser.cjs",
+    "feat-school-spells-browser.cjs"
   ]
 }

@@ -378,7 +378,7 @@ function updateSheetCatalogGrants() {
 }
 function renderFeatEffectControls(report,level,data=sheetSession.data) {
   const {def,choice:c,automated}=report,warnings=[...report.warnings,...(report.spellWarnings||[])],esc=sheetEscape;
-  const select=(label,field,rows,value)=>`<label class="sheet-field">${esc(label)}<select data-feat-choice="${field}">${rows.map(([key,text])=>`<option value="${esc(key)}" ${String(key)===String(value)?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
+  const select=(label,field,rows,value)=>`<label class="sheet-field">${esc(label)}<select data-feat-choice="${field}" aria-label="${esc(label)}">${rows.map(([key,text])=>`<option value="${esc(key)}" ${String(key)===String(value)?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
   if(report.managedOrigin&&def.name==='Skilled'){const field=report.key==='origin-human'?'humanFeatChoices':'backgroundFeatChoices',values=data.build[field]||[];return '<p class="sheet-help">Selected training: '+values.map(value=>esc(value.startsWith('skill:')?CharacterSheetModel.skills[value.slice(6)]?.[0]||value:value.replace(/^tool:/,''))).filter(Boolean).join(' · ')+'</p>'+(warnings.length?'<p class="sheet-error">'+warnings.map(esc).join(' ')+'</p>':'')+'<button type="button" data-open-granted-training="'+field+'">Change granted training below</button>'; }
   let html='<div class="sheet-grid">';
   const prereqs=featReference(characterFindFeat(report.id,data)||def)?.requirements||[];
@@ -415,7 +415,7 @@ function renderFeatEffectControls(report,level,data=sheetSession.data) {
   }
   if(selectedPackage?.copyBook)html+='<details class="sheet-editor-box" data-feat-book><summary>Copied rituals in my book · '+c.bookSpells.length+'/40</summary><p class="sheet-help">Record rituals copied from a written source after resolving time and cost. This list follows your selected class and current copying level limit; it does not spend coins.</p>'+CharacterFeatRules.bookOptions(def,c,level).map(spell=>'<label class="sheet-check"><input type="checkbox" data-feat-choice="bookSpell" value="'+esc(spell.id)+'" '+(c.bookSpells.includes(spell.id)?'checked':'')+'> '+esc(spell.name)+' · level '+spell.level+' · '+esc(spell.source)+'</label>').join('')+'</details>';
 
-  const featCasting=CharacterFeatRules.spellPackage(def,c)?.ability?.choose;if(featCasting)html+=select('Feat spellcasting ability','castingAbility',[['','Choose ability'],...featCasting.map(a=>[a,CharacterSheetModel.abilities[a]])],c.castingAbility);
+  const featCasting=CharacterFeatRules.spellPackage(def,c)?.ability?.choose;if(featCasting)html+=select(selectedPackage?.ability?.review?'Spellcasting ability · agree with your DM':'Feat spellcasting ability','castingAbility',[['','Choose ability'],...featCasting.map(a=>[a,CharacterSheetModel.abilities[a]])],c.castingAbility);
   for(const group of CharacterFeatRules.resistanceChoices(def))for(let index=0;index<group.count;index++)html+=select('Damage resistance '+(index+1),'damageType'+index,[['','Choose resistance'],...group.from.map(type=>[type,type[0].toUpperCase()+type.slice(1)])],c.damageTypes[index]);
   html+='</div><p><strong>Automated sheet effects:</strong> '+esc(automated.join('; ')||(def.name==='Magic Initiate'?'Spell choices and free use below':'None applied yet'))+'.</p>';
   if(warnings.length)html+='<p role="status" class="sheet-error">'+esc(warnings.join(' '))+'</p>';

@@ -191,6 +191,10 @@ var CharacterFeatRules = (() => {
     const matches=reports.filter(report=>report.eligible&&!report.warnings.length&&report.def.source===required.source&&report.def.name===required.name&&(!required.package||spellPackage(report.def,report.choice)?.name===required.package));if(matches.length!==1)return null;
     const parent=matches[0],ability=spellPackage(parent.def,parent.choice)?.ability;if(ability?.choose&&!ability.choose.includes(parent.choice.castingAbility))return null;return typeof ability==='string'?(ability==='inherit'?parent.choice.abilities[0]:ability):parent.choice.castingAbility;
   }
+  function spellSlotReach(data,level=1){
+    const S=globalThis.CharacterSpellcasting||(typeof require==='function'?require('./character-spellcasting'):null),P=globalThis.CharacterProgression||(typeof require==='function'?require('./character-progression'):null),profiles=S.profiles(data,level,data.abilities).filter(profile=>!['innate','none'].includes(profile.mode)&&profile.maxSpellLevel>0),ids=new Set(profiles.map(profile=>profile.classId)),entries=S.classEntries(data,level).filter(entry=>ids.has(entry.classId)),slots=P.spellSlots(entries,data.build?.edition);
+    return Math.max(0,...profiles.map(profile=>profile.maxSpellLevel),...slots.flatMap((count,index)=>count?[index+1]:[]));
+  }
   function spellChoices(def,c=choice(),level=1,data={}) {
     const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null),catalogue=C?.data?.spells||[],schools={a:'Abjuration',c:'Conjuration',d:'Divination',e:'Enchantment',v:'Evocation',i:'Illusion',n:'Necromancy',t:'Transmutation'};let offset=0;
     return (spellPackage(def,c)?.choices||[]).map(grant=>{
@@ -228,7 +232,8 @@ var CharacterFeatRules = (() => {
       if(!abilityKeys.includes(ability)||facts.ability?.choose&&!facts.ability.choose.includes(ability))return[];
       const selected=spellChoices(report.def,c,level,data).flatMap(group=>{const picks=c.spellIds.slice(group.start,group.start+group.count).map((id,index)=>({id,index})),chosen=picks.filter(pick=>pick.id);if(new Set(chosen.map(pick=>pick.id)).size!==chosen.length||!group.pool.countFrom&&(chosen.length!==group.count||chosen.some(pick=>!group.options.some(spell=>spell.id===pick.id))))return[];return chosen.flatMap(({id,index})=>{const spell=group.options.find(spell=>spell.id===id);return spell?[{...group,active:!group.activation||c.spellActive[group.start+index]===true,ref:spell.name+'|'+spell.source}]:[];});});
       const copied=facts.copyBook?bookOptions(report.def,c,level).filter(spell=>c.bookSpells.includes(spell.id)).map(spell=>({ref:spell.name+'|'+spell.source,unlock:1,usage:'Copied ritual; ritual-only casting requires your ritual book and 10 extra minutes'})):[];
-      return [...facts.grants,...selected,...copied].filter(grant=>grant.unlock<=level&&(includeInactive||!grant.activation||grant.active)).flatMap(grant=>{
+      const slotReach=facts.grants.some(grant=>grant.slotLevel)?spellSlotReach(data,level):0;
+      return [...facts.grants,...selected,...copied].filter(grant=>(!grant.slotLevel||grant.slotLevel<=slotReach)&&grant.unlock<=level&&(includeInactive||!grant.activation||grant.active)).flatMap(grant=>{
         const [name,source='phb']=grant.ref.replace(/#.*$/,'').split('|'),spell=catalogue.find(row=>row.name.toLowerCase()===name.toLowerCase()&&row.source.toLowerCase()===source.toLowerCase());
         if(!spell)return[];
         const token=report.key.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,45),id='feat-spell-'+token+'-'+spell.id.slice(-16),key='feat:'+token+':'+spell.id.slice(-16)+'-used';
@@ -302,6 +307,6 @@ var CharacterFeatRules = (() => {
     else {if(data.rulesChoices.feats.length>=30)throw Error('Maximum 30 additional feats.');data.rulesChoices.feats.push(feat.id);const count=data.rulesChoices.feats.filter(id=>id===feat.id).length;if(count>1)key+='--'+count;}
     data.rulesChoices.effects[key]=choice({...data.rulesChoices.effects[key],ignorePrerequisites:true});return key;
   }
-  return {definitions,definition,choice,entries,trainingOptions,resistanceChoices,mechanicFacts,spellPackage,spellChoices,bookOptions,expandedSpells,spellGrants,spellResources,apply,resource,setUsed,reset,remove,addManual};
+  return {definitions,definition,choice,entries,trainingOptions,resistanceChoices,mechanicFacts,spellPackage,spellChoices,spellSlotReach,bookOptions,expandedSpells,spellGrants,spellResources,apply,resource,setUsed,reset,remove,addManual};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterFeatRules;

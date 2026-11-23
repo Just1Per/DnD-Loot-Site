@@ -349,6 +349,411 @@
         "choices": [],
         "instructions": "Uses the casting ability already selected for Scion of the Outer Planes (The Outlands), regardless of this feat's ability increase. Complete that Scion package first. Each spell has its own Long Rest use."
       }
+    },
+    "AU|Abjuration Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "shield|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "lesser restoration|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "protection from energy|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "banishment|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "mass cure wounds|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. After an Abjuration spell cast with a slot, choose yourself or one visible creature within 30 ft to receive temporary HP equal to twice the spent slot level. Apply temporary HP to the chosen creature explicitly; they do not stack."
+      }
+    },
+    "AU|Conjuration Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "entangle|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "misty step|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "conjure animals|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "dimension door|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "conjure elemental|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. While concentrating on a Conjuration spell, add the modifier of the ability increased by this feat to Constitution saves made to maintain that Concentration. Other Constitution saves are unchanged."
+      }
+    },
+    "AU|Divination Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "detect evil and good|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "mind spike|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "clairvoyance|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "divination|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "scrying|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. Prescient Intervention: Reaction when a visible creature within 60 ft makes a D20 Test; choose Advantage or Disadvantage on that roll. One use per Long Rest. Casting a Divination spell with a slot also restores this use; use Undo only after that event or to correct a recorded use.",
+        "auxResources": [
+          {
+            "id": "prescient-intervention",
+            "name": "Prescient Intervention",
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "description": "Prescient Intervention: Reaction when a visible creature within 60 ft makes a D20 Test; choose Advantage or Disadvantage on that roll. One use per Long Rest. Casting a Divination spell with a slot also restores this use; use Undo only after that event or to correct a recorded use.",
+            "useLabel": "Use reaction",
+            "undoLabel": "Regain after Divination slot cast / undo"
+          }
+        ]
+      }
+    },
+    "AU|Enchantment Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "dissonant whispers|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "enthrall|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "hold person|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "dominate beast|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "modify memory|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. Enchantment spells cast with a slot need no verbal, somatic or ordinary material components. Costly or consumed materials are still required."
+      }
+    },
+    "AU|Evocation Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "chromatic orb|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "shatter|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "fireball|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "vitriolic sphere|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "wall of force|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. Once per turn after casting a damaging Evocation spell, you may spend up to two unspent Hit Dice. Roll them and add their total to one damage roll. Record the Hit Dice spent explicitly; no fixed damage bonus is added."
+      }
+    },
+    "AU|Illusion Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "silent image|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "phantasmal force|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "major image|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "hallucinatory terrain|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "seeming|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. Illusion spells cast with a slot need no verbal, somatic or ordinary material components; costly or consumed materials remain required. Investigation checks to discern your spell illusions have Disadvantage."
+      }
+    },
+    "AU|Necromancy Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "inflict wounds|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "ray of enfeeblement|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "vampiric touch|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "blight|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "raise dead|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. After a Necromancy spell cast with a slot, you may spend up to two unspent Hit Dice. Roll them and heal yourself by their total plus the spent slot level. Record dice spending and healing explicitly."
+      }
+    },
+    "AU|Transmutation Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "jump|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "spider climb|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "slow|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "polymorph|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "animate objects|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. On your turn after casting a Transmutation spell with a slot, Speed increases by five times the spent slot level, in feet, until the end of that turn. Apply the temporary movement only for that turn."
+      }
     }
   }
 }

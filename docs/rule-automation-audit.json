@@ -8,10 +8,10 @@
     "implementedSubclassAdapters": 186,
     "missingSubclassAdapters": 0,
     "feats": 302,
-    "featStructuredRecords": 106,
-    "featSpellPackages": 69,
+    "featStructuredRecords": 114,
+    "featSpellPackages": 77,
     "featSpellChoicePackages": 27,
-    "featSpellPackagesToReview": 13,
+    "featSpellPackagesToReview": 5,
     "featExpandedListAdapters": 12,
     "featExpandedListsToReview": 0,
     "spells": 969,
@@ -29,6 +29,7 @@
   "tableResolution": [
     "Targets, recipient HP, positioning, auras, reactions and encounter time.",
     "Concentration, activated spell buffs, conditional damage, curse state and conditional item powers.",
+    "School Adept casting abilities require an explicit player/DM choice; conditional school triggers, Hit Dice, recipient temporary HP/healing and temporary speed are resolved explicitly.",
     "Source prerequisites without a represented character choice; unknown requirements do not activate new item bonuses."
   ],
   "feats": [
@@ -102,14 +103,51 @@
       "edition": "2024",
       "source": "AU",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "shield",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 1
+        },
+        {
+          "name": "lesser restoration",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 2
+        },
+        {
+          "name": "protection from energy",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 3
+        },
+        {
+          "name": "banishment",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 4
+        },
+        {
+          "name": "mass cure wounds",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 5
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-phb-50c9c4aeb40b5b20",
@@ -1227,14 +1265,51 @@
       "edition": "2024",
       "source": "AU",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "entangle",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 1
+        },
+        {
+          "name": "misty step",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 2
+        },
+        {
+          "name": "conjure animals",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 3
+        },
+        {
+          "name": "dimension door",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 4
+        },
+        {
+          "name": "conjure elemental",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 5
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-xphb-d0c44fb1d2ae69db",
@@ -1396,14 +1471,59 @@
       "edition": "2024",
       "source": "AU",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "detect evil and good",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 1
+        },
+        {
+          "name": "mind spike",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 2
+        },
+        {
+          "name": "clairvoyance",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 3
+        },
+        {
+          "name": "divination",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 4
+        },
+        {
+          "name": "scrying",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 5
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
-      "auxiliarySpellResources": [],
+      "auxiliarySpellResources": [
+        {
+          "name": "Prescient Intervention",
+          "max": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-dsotdq-12ff0909b0a03ec5",
@@ -1768,14 +1888,51 @@
       "edition": "2024",
       "source": "AU",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "dissonant whispers",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 1
+        },
+        {
+          "name": "enthrall",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 2
+        },
+        {
+          "name": "hold person",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 3
+        },
+        {
+          "name": "dominate beast",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 4
+        },
+        {
+          "name": "modify memory",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 5
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-frhof-de995db8b44c73d5",
@@ -1807,14 +1964,51 @@
       "edition": "2024",
       "source": "AU",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "chromatic orb",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 1
+        },
+        {
+          "name": "shatter",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 2
+        },
+        {
+          "name": "fireball",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 3
+        },
+        {
+          "name": "vitriolic sphere",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 4
+        },
+        {
+          "name": "wall of force",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 5
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-xge-a9014c290b8ac9be",
@@ -2520,14 +2714,51 @@
       "edition": "2024",
       "source": "AU",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "silent image",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 1
+        },
+        {
+          "name": "phantasmal force",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 2
+        },
+        {
+          "name": "major image",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 3
+        },
+        {
+          "name": "hallucinatory terrain",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 4
+        },
+        {
+          "name": "seeming",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 5
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-xge-618a4bdb05115c56",
@@ -3606,14 +3837,51 @@
       "edition": "2024",
       "source": "AU",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "inflict wounds",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 1
+        },
+        {
+          "name": "ray of enfeeblement",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 2
+        },
+        {
+          "name": "vampiric touch",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 3
+        },
+        {
+          "name": "blight",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 4
+        },
+        {
+          "name": "raise dead",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 5
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-phb-fd8de02ab9c707dd",
@@ -5045,14 +5313,51 @@
       "edition": "2024",
       "source": "AU",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "jump",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 1
+        },
+        {
+          "name": "spider climb",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 2
+        },
+        {
+          "name": "slow",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 3
+        },
+        {
+          "name": "polymorph",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 4
+        },
+        {
+          "name": "animate objects",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": [],
+          "slotLevel": 5
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-au-b92cb337747b23ef",
