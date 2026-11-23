@@ -176,6 +176,8 @@ jobs:
         mkdir -p /tmp/campaignatlas-ui-checks
         set -o pipefail
         npm --prefix tests run test:ui-palette 2>&1 | tee /tmp/campaignatlas-ui-checks/palette-review.log
+    - name: DM campaign appearance, live member palettes and preview isolation
+      run: npm --prefix tests run test:campaign-appearance
     - name: Upload review screenshots, PDF, copy and measured results
       if: always()
       uses: actions/upload-artifact@v4
@@ -384,6 +386,8 @@ jobs:
       run: npm --prefix tests run test:item-removal-rules
     - name: Campaign home permissions and revision conflicts
       run: npm --prefix tests run test:campaign-home-rules
+    - name: Campaign appearance permissions, validation and revision conflicts
+      run: npm --prefix tests run test:campaign-appearance-rules
     - name: Visual NPC/world cards and DM-managed campaign map
       run: npm --prefix tests run test:campaign-map-rules
     - name: Shared party journal, notebook reader and private recap permissions

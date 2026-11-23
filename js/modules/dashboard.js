@@ -221,6 +221,7 @@ function characterDisplayName(char, usersById = null) {
 // ─── CAMPAIGN SELECTOR ────────────────────────────────────────────────────────
 
 function showCampaignSelector() {
+  CampaignAppearanceUI.clear();
   hideAllScreens();
   const screen = document.getElementById("campaignSelectorScreen");
   if (screen) screen.style.display = "flex";
@@ -243,6 +244,7 @@ async function enterCampaign(campaign) {
      closeItemModal();
   closeCharacterSheet(true); CharacterWorkspace.clear(); PageEditors.clear(); closeVaultAction(); closeRootPicker();
   const generation = ++campaignLoadGeneration;
+  CampaignAppearanceUI.clear();
   hideAllScreens();
   try {
     const [fresh, membership] = await Promise.all([
@@ -281,6 +283,7 @@ async function leaveCampaign() {
   if (!closeCharacterSheet()) return;
   AppNavigation.dashboard();
   CampaignRules.stop();
+  CampaignAppearanceUI.clear();
   ++campaignLoadGeneration;
   items = []; inventory = []; campaignSupply = {};
   magicItemLibraryLoaded = false; magicItemLibraryLoading = false;
@@ -318,6 +321,7 @@ function hideAllScreens() {
 }
 
 function showMainApp() {
+  CampaignAppearanceUI.sync();
   hideAllScreens();
 
   const main = document.getElementById("mainApp");

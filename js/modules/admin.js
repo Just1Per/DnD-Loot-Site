@@ -356,6 +356,7 @@ function openAdminView() {
   if(!SheetNavigation.guard(openAdminView))return;
   if(typeof CampaignInformation!=='undefined'&&!CampaignInformation.beforeNavigate('admin'))return;
   adminReturnTab = typeof AppShell!=="undefined" ? AppShell.route : document.querySelector(".tabs .tab.active")?.dataset.tab || "library";
+  CampaignAppearanceUI.clear();
   hideAllScreens();
   document.getElementById('siteScreenTitle').textContent='Admin · CampaignAtlas';
   document.getElementById("tab-admin").style.display = "block";

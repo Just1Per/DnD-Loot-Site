@@ -214,6 +214,7 @@ async function logoutFromSite(){
   if(!SheetNavigation.guard(logoutFromSite))return;
   AppNavigation.clear();
   AccountNotifications.stop();
+  CampaignAppearanceUI.clear();
   CampaignHome.clear(true);
   CampaignInformation.clear(true);
   CampaignJournal.clear();CampaignMap.clear();
@@ -240,6 +241,7 @@ document.getElementById("logoutButton")?.addEventListener("click",logoutFromSite
 let authStartupGeneration=0;
 onAuthStateChanged(auth, async (firebaseUser) => {
   const generation=++authStartupGeneration;
+  CampaignAppearanceUI.clear();
   AccountNotifications.stop();
   AdminAccounts.clear();
   ReusableLibrary.clear();

@@ -173,6 +173,7 @@ function campaignEntryRuntime(){
     PageEditors:{guard:()=>true,clear:noop},SheetNavigation:{guard:()=>true},CharacterWorkspace:{clear:noop},
     closeItemModal:noop,closeCharacterSheet:noop,closeVaultAction:noop,closeRootPicker:noop,
     CampaignRules:{load:async()=>loads.push('rules'),watch:noop},canManageCampaign:()=>false,
+    CampaignAppearanceUI:{clear:noop},
     loadCharacters:async()=>loads.push('characters'),loadSaves:async()=>loads.push('saves'),loadCampaignInventory:async()=>loads.push('inventory'),
     document:{getElementById:()=>({})},showMainApp:noop,populateOwnerFilter:noop,renderMagicItemLoadPrompt:noop,
     hideAllScreens:noop,showCampaignSelector:noop,AppNavigation:{clear:noop},alert:message=>alerts.push(message),

@@ -11,8 +11,10 @@
   --theme-accent-ink:#7d6608;
   --theme-canvas:#f3e8d2;
   --theme-canvas-end:#e7d8bd;
+  --theme-canvas-ink:#342d26;
   --theme-header:#2b1a0e;
   --theme-header-end:#3d2610;
+  --theme-header-accent:#d4af37;
   --theme-on-primary:#f5e6c8;
   --theme-paper:#fdfbf7;
   --theme-paper-soft:#f4efe6;
@@ -36,8 +38,10 @@
     --theme-accent-ink:#111!important;
     --theme-canvas:#fff!important;
     --theme-canvas-end:#fff!important;
+    --theme-canvas-ink:#111!important;
     --theme-header:#fff!important;
     --theme-header-end:#fff!important;
+    --theme-header-accent:#111!important;
     --theme-on-primary:#fff!important;
     --theme-paper:#fff!important;
     --theme-paper-soft:#fff!important;

@@ -1,5 +1,7 @@
 # Campaign experience backlog
 
+Campaign appearance (23 November 2026): prepared in PR #284. Owners/active DMs can preview and save three shared campaign colours with Classic/Ocean/Forest/Horror presets. Members receive saved changes live; account/dashboard transitions reset the palette. Light content panels and neutral character printing are intentional. Publish the accompanying Firestore rules with the release. See [campaign-appearance.md](campaign-appearance.md).
+
 This is the proposed delivery order for the campaign experience. Each delivery should have its own reviewable PR. Preserve saved records, existing character behavior and the parchment/burgundy/gold styling. Merge and production deployment require the project owner's approval.
 
 | Priority | Delivery | Status | Acceptance criteria |
