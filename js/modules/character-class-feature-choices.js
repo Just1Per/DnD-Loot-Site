@@ -832,11 +832,11 @@ var CharacterClassFeatureChoices=(()=>{
     for(const row of classResources(data,{...context,level:total}))if((row.id.startsWith('invocation-')||row.id.startsWith('feat-spell-'))&&row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
     // Daily spell ledgers recover even when their feat, rune or species is currently unavailable.
     if(event==='long')for(const [key,values]of Object.entries(choices))if(/^(?:feat:[a-z0-9-]{1,45}:(?:[A-Za-z0-9-]{1,16}|aux-[a-z0-9-]{1,24})-used|origin:[a-z0-9:-]+-used)$/.test(key)&&/^\d{1,3}$/.test(values[0]||''))updates[key]=['0'];
-    // Inscribed runes fade at Long Rest; the player confirms each new inscription explicitly.
+    // Inscribed runes and imbued cards expire at Long Rest; the player confirms new preparation explicitly.
     if(event==='long'){
       const feats=globalThis.CharacterFeatRules||(typeof require==='function'?require('./character-feat-rules'):null);
       const selected=new Map((feats?.entries(data,total)||[]).map(entry=>[entry.key,entry.id]));
-      for(const [key,value]of Object.entries(data.rulesChoices?.effects||{})){const def=feats?.definitions[selected.get(key)||key.replace(/--\d+$/,'')];if(def?.source==='BGG'&&def.name==='Rune Shaper')value.spellActive=Array(8).fill(false);}
+      for(const [key,value]of Object.entries(data.rulesChoices?.effects||{})){const def=feats?.definitions[selected.get(key)||key.replace(/--\d+$/,'')];if(def?.source==='BGG'&&def.name==='Rune Shaper'||def?.source==='BMT'&&def.name==='Cartomancer')value.spellActive=Array(8).fill(false);}
     }
     const paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);for(const row of paths?.derive(data,{level:total,mods:context.mods||{}}).resources||[])if(row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
     const monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),hasMonk=entries.length?monkLevels(data,total)>=2:data.build?.classId==='monk';

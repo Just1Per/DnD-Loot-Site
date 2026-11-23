@@ -8,10 +8,10 @@
     "implementedSubclassAdapters": 186,
     "missingSubclassAdapters": 0,
     "feats": 302,
-    "featStructuredRecords": 114,
-    "featSpellPackages": 77,
-    "featSpellChoicePackages": 27,
-    "featSpellPackagesToReview": 5,
+    "featStructuredRecords": 118,
+    "featSpellPackages": 81,
+    "featSpellChoicePackages": 29,
+    "featSpellPackagesToReview": 1,
     "featExpandedListAdapters": 12,
     "featExpandedListsToReview": 0,
     "spells": 969,
@@ -29,7 +29,7 @@
   "tableResolution": [
     "Targets, recipient HP, positioning, auras, reactions and encounter time.",
     "Concentration, activated spell buffs, conditional damage, curse state and conditional item powers.",
-    "School Adept casting abilities require an explicit player/DM choice; conditional school triggers, Hit Dice, recipient temporary HP/healing and temporary speed are resolved explicitly.",
+    "Spell-grant abilities omitted by the pinned feature require an explicit player/DM choice. Conditional school triggers, Hit Dice, temporary HP/healing, card preparation/expiry and mascot positions/daily actions are resolved explicitly.",
     "Source prerequisites without a represented character choice; unknown requirements do not activate new item bonuses."
   ],
   "feats": [
@@ -822,12 +822,22 @@
       "structuredFacts": [],
       "fixedSpells": [],
       "expandedSpellLevels": [],
-      "alternativeSpellPackages": [],
+      "alternativeSpellPackages": [
+        "Abjuration",
+        "Conjuration",
+        "Divination",
+        "Enchantment",
+        "Evocation",
+        "Illusion",
+        "Necromancy",
+        "Transmutation"
+      ],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "spellChoiceGroups": 16,
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-abh-0978211ea972445a",
@@ -883,14 +893,24 @@
       "edition": "2024",
       "source": "FRHoF",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "otto's irresistible dance",
+          "unlock": 19,
+          "freeUses": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-efa-4b2a48b7a558af63",
@@ -1105,14 +1125,24 @@
       "edition": "2014",
       "source": "BMT",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "prestidigitation",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": []
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
       "auxiliarySpellResources": [],
       "ritualBookClasses": [],
-      "activatedSpellChoices": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "activatedSpellChoices": [
+        "prepared-card"
+      ],
+      "spellChoiceGroups": 1,
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-phb-38102b4b8d453fba",
@@ -5015,14 +5045,30 @@
       "edition": "2014",
       "source": "SCC",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "find familiar",
+          "unlock": 4,
+          "freeUses": 0,
+          "recovery": []
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
-      "auxiliarySpellResources": [],
+      "auxiliarySpellResources": [
+        {
+          "name": "Mascot Teleport Swap",
+          "max": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "castingAbilityPolicy": "Explicit character choice after player/DM review; the pinned feat does not specify an ability.",
+      "spellReview": null
     },
     {
       "id": "Feat-rhw-7a01ac37408614bc",

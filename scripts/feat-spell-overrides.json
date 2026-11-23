@@ -754,6 +754,620 @@
         "choices": [],
         "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. On your turn after casting a Transmutation spell with a slot, Speed increases by five times the spent slot level, in feet, until the end of that turn. Apply the temporary movement only for that turn."
       }
+    },
+    "FRHoF|Boon of Revelry": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "otto's irresistible dance|xphb",
+            "unlock": 19,
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "usage": "Always prepared; one free casting per Long Rest, or use an appropriate slot. Cast through this feat without spell components; damage cannot break its Concentration."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the casting ability agreed with your DM for this feat. Other ways to lose Concentration still apply. A creature Charmed by this spell after failing its save cannot cast spells with verbal components; it sings if able. Resolve the target and condition at the table."
+      }
+    },
+    "BMT|Cartomancer": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true,
+          "label": "Prestidigitation ability \u00b7 agree with your DM"
+        },
+        "grants": [
+          {
+            "ref": "prestidigitation#c",
+            "unlock": 4,
+            "usage": "At will; stage-magic effects may conceal verbal and somatic components as ordinary conversation and card handling"
+          }
+        ],
+        "choices": [
+          {
+            "pool": {
+              "count": 1,
+              "levels": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "classesFromCharacter": true,
+              "maxSlot": true,
+              "actionTime": true,
+              "chooseClass": true,
+              "classEdition": true
+            },
+            "unlock": 4,
+            "activation": "prepared-card",
+            "activationLabel": "This card was imbued at my last Long Rest and is still within its 8-hour duration",
+            "label": "Hidden Ace spell",
+            "usage": "Hidden Ace: prepare at Long Rest; lasts 8 hours. A Bonus Action casts the card spell and consumes the card. Resolve spell components and any spell-slot cost with your DM; this counter does not waive them.",
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "trackingOnly": true,
+            "unit": "cards",
+            "useLabel": "Use imbued card",
+            "undoLabel": "Undo card use",
+            "hideWhenSpent": true,
+            "sharedPool": "hidden-ace"
+          }
+        ],
+        "instructions": "A card deck can be your spellcasting focus. Hidden Ace must be on an actual class spell list, have a 1-action casting time and be a level for which you have slots. Class learning/preparation reach does not restrict this card choice. Confirm preparation and the 8-hour duration explicitly; Long Rest clears that confirmation. The source does not explicitly waive a spell-slot cost. Choose the spellcasting ability agreed with your DM. Hidden Ace uses the selected class's actual casting ability and class spell bonuses; the separate reviewed ability applies only to Prestidigitation."
+      }
+    },
+    "SCC|Strixhaven Mascot": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "requiredFeat": {
+          "source": "SCC",
+          "name": "Strixhaven Initiate",
+          "requirePackage": true
+        },
+        "mascots": {
+          "Lorehold": "Spirit Statue Mascot",
+          "Prismari": "Art Elemental Mascot",
+          "Quandrix": "Fractal Mascot",
+          "Silverquill": "Inkling Mascot",
+          "Witherbloom": "Pest Mascot"
+        },
+        "grants": [
+          {
+            "ref": "find familiar",
+            "unlock": 4,
+            "usage": "Ritual only; add 10 minutes and provide the normal components. Choose the mascot for your selected Strixhaven college; this ritual has no daily casting limit."
+          }
+        ],
+        "choices": [],
+        "auxResources": [
+          {
+            "id": "mascot-swap",
+            "name": "Mascot Teleport Swap",
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "description": "Action: swap places with your mascot familiar within 60 ft. A destination too small causes failure and still wastes the use. After the free daily use, pay a level-2-or-higher slot explicitly for each further swap; leave this free-use counter spent. Replacing one of your Attack-action attacks lets the mascot attack with its Reaction.",
+            "useLabel": "Use free teleport swap"
+          }
+        ],
+        "instructions": "Complete Strixhaven Initiate and its college first. Find Familiar is a ritual, with no extra free pool; choose the ritual casting ability agreed with your DM. Keep the companion's own HP and reaction. Teleport positions, distance and destination size are resolved at the table; a further swap requires an explicitly spent level-2-or-higher slot."
+      }
+    },
+    "AU|Boon of Magic School Mastery": {
+      "spellPackages": [
+        {
+          "name": "Abjuration",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "a"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "a"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Abjuration. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Conjuration",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "c"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "c"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Conjuration. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Divination",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "d"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "d"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Divination. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Enchantment",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "e"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "e"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Enchantment. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Evocation",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "v"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "v"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Evocation. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Illusion",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "i"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "i"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Illusion. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Necromancy",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "n"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "n"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Necromancy. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Transmutation",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "t"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "t"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Transmutation. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        }
+      ]
     }
   }
 }

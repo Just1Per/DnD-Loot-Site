@@ -439,6 +439,7 @@ function updateSheetCalculations() {
   const validation = renderCharacterOverview(d);
   updateCharacterPortrait();
   updateCharacterPlayUI(d);
+  globalThis.renderCompanionCreaturePickers?.(d);
   updateInventoryTotals(d);
   renderInventoryDefense(d);
   if (typeof renderFeatCombatResources === 'function') renderFeatCombatResources(d);

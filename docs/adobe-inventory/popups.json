@@ -173,6 +173,7 @@
         "feat-ritual-rune-browser.cjs",
         "feat-school-spells-browser.cjs",
         "feat-source-spells-browser.cjs",
+        "feat-special-spells-browser.cjs",
         "rule-automation-browser.cjs",
         "site-palette-browser.cjs"
       ]
@@ -343,6 +344,7 @@
         "adobe-slot-labels-browser.cjs",
         "adobe-spell-pages-browser.cjs",
         "adobe-tool-check-browser.cjs",
+        "feat-special-spells-browser.cjs",
         "site-palette-browser.cjs"
       ]
     },
@@ -696,7 +698,7 @@
     {
       "id": "sheetPrintDialog",
       "file": "js/modules/character-sheet.js",
-      "line": 645,
+      "line": 646,
       "kind": "dialog",
       "category": "standard-only",
       "entry": "Standard print fallback",

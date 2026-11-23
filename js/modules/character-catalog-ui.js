@@ -340,8 +340,9 @@ function updateSheetCatalogGrants() {
       if(field.startsWith('ability'))c.abilities[Number(field.slice(-1))]=value;
       else if(field.startsWith('training'))c.training[Number(field.slice(-1))]=value;
       else if(field==='bookSpell')c.bookSpells=value?[...new Set([...(c.bookSpells||[]),input.value])].slice(0,40):(c.bookSpells||[]).filter(id=>id!==input.value);
+      else if(field.startsWith('spellClass')){const slot=Number(field.slice(-1));c.spellClasses[slot]=value;c.spellIds[slot]='';c.spellActive[slot]=false;}
       else if(field.startsWith('spellActive'))c.spellActive[Number(field.slice(-1))]=value;
-      else if(field.startsWith('spellPick'))c.spellIds[Number(field.slice(-1))]=value;
+      else if(field.startsWith('spellPick')){const slot=Number(field.slice(-1));c.spellIds[slot]=value;c.spellActive[slot]=false;}
       else if(field.startsWith('damageType'))c.damageTypes[Number(field.slice(-1))]=value;
       else c[field]=['option','spellPackage'].includes(field)?Number(value):value;
       catalogChanged();
@@ -410,12 +411,13 @@ function renderFeatEffectControls(report,level,data=sheetSession.data) {
   if(selectedPackage?.instructions)html+='<p class="sheet-help">'+esc(selectedPackage.instructions)+'</p>';
   for(const group of CharacterFeatRules.spellChoices(def,c,level,data))for(let index=0;index<group.count;index++){
     const slot=group.start+index;
-    html+=(!group.options.length?'<p class="sheet-help">No spells match this package in the available edition and campaign sources. Choose another package or review campaign availability.</p>':'')+select('Feat spell '+(slot+1)+(group.unlock>1?' (character level '+group.unlock+')':''),'spellPick'+slot,[['','Choose spell'],...group.options.map(spell=>[spell.id,spell.name+' · '+spell.school+' · '+spell.source])],c.spellIds[slot]);
-    if(group.activation)html+='<label class="sheet-check"><input type="checkbox" data-feat-choice="spellActive'+slot+'" '+(c.spellActive[slot]?'checked':'')+'>Rune '+(slot+1)+' is inscribed on an object I am wearing or carrying</label>';
+    if(group.castingClasses)html+=select('Hidden Ace casting class','spellClass'+slot,[['','Choose casting class'],...group.castingClasses.map(profile=>[profile.classId,profile.name+' · '+CharacterSheetModel.abilities[profile.ability]])],c.spellClasses[slot]);
+    html+=(!group.options.length?'<p class="sheet-help">No spells match this package in the available edition and campaign sources. Choose another package or review campaign availability.</p>':'')+select((group.label||'Feat spell '+(slot+1))+(group.unlock>1?' (character level '+group.unlock+')':''),'spellPick'+slot,[['','Choose spell'],...group.options.map(spell=>[spell.id,spell.name+' · '+spell.school+' · '+spell.source])],c.spellIds[slot]);
+    if(group.activation)html+='<label class="sheet-check"><input type="checkbox" data-feat-choice="spellActive'+slot+'" '+(c.spellActive[slot]?'checked':'')+'>'+esc(group.activationLabel||'Rune '+(slot+1)+' is inscribed on an object I am wearing or carrying')+'</label>';
   }
   if(selectedPackage?.copyBook)html+='<details class="sheet-editor-box" data-feat-book><summary>Copied rituals in my book · '+c.bookSpells.length+'/40</summary><p class="sheet-help">Record rituals copied from a written source after resolving time and cost. This list follows your selected class and current copying level limit; it does not spend coins.</p>'+CharacterFeatRules.bookOptions(def,c,level).map(spell=>'<label class="sheet-check"><input type="checkbox" data-feat-choice="bookSpell" value="'+esc(spell.id)+'" '+(c.bookSpells.includes(spell.id)?'checked':'')+'> '+esc(spell.name)+' · level '+spell.level+' · '+esc(spell.source)+'</label>').join('')+'</details>';
 
-  const featCasting=CharacterFeatRules.spellPackage(def,c)?.ability?.choose;if(featCasting)html+=select(selectedPackage?.ability?.review?'Spellcasting ability · agree with your DM':'Feat spellcasting ability','castingAbility',[['','Choose ability'],...featCasting.map(a=>[a,CharacterSheetModel.abilities[a]])],c.castingAbility);
+  const featCasting=CharacterFeatRules.spellPackage(def,c)?.ability?.choose;if(featCasting)html+=select(selectedPackage?.ability?.label|| (selectedPackage?.ability?.review?'Spellcasting ability · agree with your DM':'Feat spellcasting ability'),'castingAbility',[['','Choose ability'],...featCasting.map(a=>[a,CharacterSheetModel.abilities[a]])],c.castingAbility);
   for(const group of CharacterFeatRules.resistanceChoices(def))for(let index=0;index<group.count;index++)html+=select('Damage resistance '+(index+1),'damageType'+index,[['','Choose resistance'],...group.from.map(type=>[type,type[0].toUpperCase()+type.slice(1)])],c.damageTypes[index]);
   html+='</div><p><strong>Automated sheet effects:</strong> '+esc(automated.join('; ')||(def.name==='Magic Initiate'?'Spell choices and free use below':'None applied yet'))+'.</p>';
   if(warnings.length)html+='<p role="status" class="sheet-error">'+esc(warnings.join(' '))+'</p>';
