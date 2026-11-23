@@ -2,11 +2,15 @@
 var CharacterFeatRules = (() => {
   const definitions=typeof CharacterFeatData!=='undefined'?CharacterFeatData:require('./character-feat-data');
   const Personal=typeof CharacterPersonalFeats!=='undefined'?CharacterPersonalFeats:require('./character-personal-feats');
+  const Mechanics=typeof CharacterFeatMechanicsData!=='undefined'?CharacterFeatMechanicsData:require('./character-feat-mechanics-data');
+  const damageTypes=['acid','cold','fire','force','lightning','necrotic','poison','psychic','radiant','thunder','bludgeoning','piercing','slashing'];
+  const mechanicFacts=def=>def&&!def.personal?Mechanics.records[def.source+'|'+def.name]||{}:{};
+  const resistanceChoices=def=>(mechanicFacts(def).resist||[]).filter(row=>row&&typeof row==='object'&&row.choose?.from?.every(type=>damageTypes.includes(type))).map(row=>({from:row.choose.from,count:Math.min(2,row.choose.count||1)}));
   function definition(data,id){const personal=Personal.definition(data,id),base=Object.hasOwn(definitions,id)?definitions[id]:null;return personal||(typeof CampaignRules==='undefined'?base:CampaignRules.definition(id,base));}
   const abilityKeys=['str','dex','con','int','wis','cha'];
   function choice(raw={}) {
     const safe=v=>typeof v==='string'?v.slice(0,100):'';
-    return {option:Number.isInteger(raw.option)&&raw.option>=0&&raw.option<2?raw.option:0,abilities:[0,1].map(i=>abilityKeys.includes(raw.abilities?.[i])?raw.abilities[i]:''),training:[0,1,2].map(i=>safe(raw.training?.[i])),expertise:safe(raw.expertise),confirmed:raw.confirmed===true,armored:raw.armored===true,used:Math.max(0,Math.min(99,Math.trunc(Number(raw.used)||0))),...(raw.ignorePrerequisites===true?{ignorePrerequisites:true}:{})};
+    return {option:Number.isInteger(raw.option)&&raw.option>=0&&raw.option<2?raw.option:0,abilities:[0,1].map(i=>abilityKeys.includes(raw.abilities?.[i])?raw.abilities[i]:''),training:[0,1,2].map(i=>safe(raw.training?.[i])),damageTypes:[0,1].map(i=>damageTypes.includes(raw.damageTypes?.[i])?raw.damageTypes[i]:''),castingAbility:abilityKeys.includes(raw.castingAbility)?raw.castingAbility:'',spellIds:Array.from({length:8},(_,i)=>safe(raw.spellIds?.[i])),expertise:safe(raw.expertise),confirmed:raw.confirmed===true,armored:raw.armored===true,used:Math.max(0,Math.min(99,Math.trunc(Number(raw.used)||0))),...(raw.ignorePrerequisites===true?{ignorePrerequisites:true}:{})};
   }
   function entries(data,level) {
     const seen={};const result=(data.rulesChoices?.feats||[]).map(id=>{seen[id]=(seen[id]||0)+1;return {id,key:id+(seen[id]>1?'--'+seen[id]:'')};});
@@ -93,6 +97,25 @@ var CharacterFeatRules = (() => {
         for(const type of def.armorTraining)effects.proficiencies.push({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[type]);
         automated.push('Armor training: '+def.armorTraining.map(type=>({light:'Light armor',medium:'Medium armor',heavy:'Heavy armor',shield:'Shields'}[type])).join(', '));
       }
+      const facts=mechanicFacts(def),capitalize=value=>value[0].toUpperCase()+value.slice(1);
+      if(!warnings.length){
+        const canonical=value=>String(value).toLowerCase().replace(/[^a-z0-9]/g,''),fixedTraining=(field,pool)=>facts[field]?.length===1?Object.entries(facts[field][0]).filter(([,value])=>value===true).flatMap(([name])=>{const match=pool.find(value=>canonical(value)===canonical(name));return match?[match]:[]}):[];
+        for(const [field,target,pool]of [['skillProficiencies','skills',skillNames],['toolProficiencies','proficiencies',tools],['languageProficiencies','languages',R.languages]]){const grants=fixedTraining(field,pool);if(grants.length){effects[target].push(...grants);automated.push('Fixed '+field+': '+grants.join(', '));}}
+        const fixedExpertise=fixedTraining('expertise',skillNames);if(fixedExpertise.length){expertise.push(...fixedExpertise);effects.skills.push(...fixedExpertise);automated.push('Expertise: '+fixedExpertise.join(', '));}
+        const fixed=(facts.resist||[]).filter(value=>typeof value==='string'&&damageTypes.includes(value));
+        for(const group of resistanceChoices(def)){
+          const picks=c.damageTypes.slice(0,group.count);
+          if(picks.some(value=>!group.from.includes(value))||new Set(picks).size!==group.count)warnings.push('Choose '+group.count+' distinct permitted damage resistance'+(group.count===1?'':'s')+'.');
+          else fixed.push(...picks);
+        }
+        if(fixed.length){effects.resistances=[...new Set([...effects.resistances,...fixed.map(capitalize)])];automated.push('Damage resistance: '+fixed.map(capitalize).join(', '));}
+        const immunities=[...(facts.immune||[]).filter(value=>typeof value==='string'&&damageTypes.includes(value)).map(value=>capitalize(value)+' damage'),...(facts.conditionImmune||[]).filter(value=>typeof value==='string').map(capitalize)];
+        if(immunities.length){effects.immunities=[...new Set([...(effects.immunities||[]),...immunities])];automated.push('Immunity: '+immunities.join(', '));}
+        for(const sense of facts.senses||[])for(const [name,value]of Object.entries(sense))if(['darkvision','blindsight','truesight','tremorsense'].includes(name)&&Number.isFinite(value)&&value>0){effects[name]=Math.max(effects[name]||0,value);automated.push(name+' '+value+' ft');}
+        for(const sense of facts.bonusSenses||[])if(Number.isFinite(sense.darkvision)&&sense.darkvision>0){effects.featDarkvisionBonus=(effects.featDarkvisionBonus||0)+sense.darkvision;automated.push('Darkvision range +'+sense.darkvision+' ft');}
+      }
+      if(facts.spells?.ability?.choose&&!facts.spells.ability.choose.includes(c.castingAbility))report.spellWarnings=['Choose a casting ability for the granted feat spells.'];
+      if(facts.spells)automated.push('Fixed feat spell references and independent free-casting counters');
       const core=def.source==='PHB'||def.source==='XPHB'||def.source==='TCE';
       if(!core)continue;
       if(def.name==='Alert') {if(def.edition==='2024')effects.initiativeProficiency=true;effects.initiativeBonus=def.edition==='2014'?(effects.initiativeBonus||0)+5:Math.max(effects.initiativeBonus||0,pb);automated.push('Initiative');}
@@ -156,6 +179,47 @@ var CharacterFeatRules = (() => {
     for(const r of reports)for(const message of [...r.warnings,...(r.guidance||[])])effects.warnings.push(r.def.name+': '+message);
     return {reports,expertise,acBonus,rangedBonus,passiveBonus,speedBonus};
   }
+  function spellChoices(def) {
+    const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null),catalogue=C?.data?.spells||[],schools={a:'Abjuration',c:'Conjuration',d:'Divination',e:'Enchantment',v:'Evocation',i:'Illusion',n:'Necromancy',t:'Transmutation'};let offset=0;
+    return (mechanicFacts(def).spells?.choices||[]).map(grant=>{
+      const p=grant.pool,count=Math.max(1,Math.min(8,p.count||1)),start=offset;offset+=count;
+      const options=catalogue.filter(spell=>spell.edition===def.edition&&(!p.levels||p.levels.includes(spell.level))&&(!p.classes||p.classes.some(id=>(spell.classesByEdition?.[def.edition]||spell.classes||[]).includes(id)))&&(!p.schools||p.schools.some(id=>schools[id]===spell.school))&&(!p.ritual||spell.ritual)&&(!p.attack||spell.combat?.attack)&&(!p.names||p.names.some(name=>name.split('|')[0].replace(/#.*$/,'').toLowerCase()===spell.name.toLowerCase())));
+      return{...grant,start,count,options};
+    }).filter(group=>group.start+group.count<=8);
+  }
+  function spellGrants(data,{level=1,reports}={}) {
+    const C=globalThis.CharacterCatalog||(typeof require==='function'?require('./character-catalog'):null),catalogue=C?.data?.spells||[];
+    if(!reports){const R=typeof CharacterRules!=='undefined'?CharacterRules:require('./character-rules'),M=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null);reports=apply(data,level,R.evaluate(data,level,Object.keys(M.skills)),{...data.abilities},Object.keys(M.skills),R.tools).reports;}
+    return reports.flatMap(report=>{
+      const facts=mechanicFacts(report.def).spells,c=report.choice;if(!facts||!report.eligible||report.warnings.length)return[];
+      const ability=typeof facts.ability==='string'?(facts.ability==='inherit'?c.abilities[0]:facts.ability):c.castingAbility;if(!abilityKeys.includes(ability))return[];
+      const selected=spellChoices(report.def).flatMap(group=>{const ids=c.spellIds.slice(group.start,group.start+group.count);if(new Set(ids).size!==group.count||ids.some(id=>!group.options.some(spell=>spell.id===id)))return[];return ids.map(id=>{const spell=group.options.find(spell=>spell.id===id);return{...group,ref:spell.name+'|'+spell.source};});});
+      return [...facts.grants,...selected].filter(grant=>grant.unlock<=level).flatMap(grant=>{
+        const [name,source='phb']=grant.ref.replace(/#.*$/,'').split('|'),spell=catalogue.find(row=>row.name.toLowerCase()===name.toLowerCase()&&row.source.toLowerCase()===source.toLowerCase());
+        if(!spell)return[];
+        const token=report.key.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,45),id='feat-spell-'+token+'-'+spell.id.slice(-16),key='feat:'+token+':'+spell.id.slice(-16)+'-used';
+        const notes={
+          'MTF|Svirfneblin Magic':'Nondetection is self-only and needs no material component.',
+          'RHW|Second Skin':'Free Alter Self needs no components or Concentration; resolve forced transformations at the table.',
+          'FRHoF|Enclave Magic':'The free Beast Sense casting needs no Concentration.',
+          'LFL|Child of the Sun':'Damage cannot break Concentration on the free Faerie Fire casting.',
+          'AU|Familiar Friend':'The free Find Familiar casting needs no material components.',
+          'RHW|Gathered Whispers':'Message needs no material components; the free Augury casting needs no components.',
+          'RHW|Living Shadow':'Mage Hand needs no spell components.',
+          'RHW|Touch of Death':'Chill Touch needs no spell components.',
+          'TCE|Telepathic':'The free Detect Thoughts casting needs no components.',
+          'XPHB|Telepathic':'The free Detect Thoughts casting needs no components.',
+          'TCE|Telekinetic':'Mage Hand needs no verbal or somatic components; resolve its invisible hand and any existing-cantrip range extension at the table.',
+          'XPHB|Telekinetic':'Mage Hand needs no verbal or somatic components, may be invisible, and gains 30 ft of range and allowed distance.'
+        }[report.def.source+'|'+report.def.name]||'';
+        return[{...grant,spell,ability,id,key,token:'feat-'+token,source:report.def.name+' · '+report.def.source,usage:(grant.resets?.includes('short')?'Once per Short or Long Rest':grant.usage)+(notes?'; '+notes:'')}];
+      });
+    });
+  }
+  function spellResources(data,context={}) {
+    const stored=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices||{};
+    return spellGrants(data,context).filter(grant=>grant.max).map(grant=>{const raw=stored[grant.key]?.[0],used=/^\d{1,3}$/.test(raw||'')?Number(raw):0;return{id:grant.id,key:grant.key,name:grant.source+' · '+grant.spell.name,source:grant.source,className:'Feat',level:context.level||1,useLabel:'Use free casting',undoLabel:'Undo free casting',max:grant.max,used,remaining:Math.max(0,grant.max-used),resets:grant.resets,recovery:grant.resets.includes('short')?'Short or Long Rest':'Long Rest',unit:'free castings',description:grant.usage+'; '+grant.ability.toUpperCase()+'. Casting and targeting remain explicit; the counter does not spend a spell slot.'};});
+  }
   function resource(def,level=1) {
     if(!def||def.personal)return null;
     if(def?.name==='Lucky'&&['PHB','XPHB'].includes(def.source))return {label:'Luck points',max:def.edition==='2014'?3:Math.ceil(Math.max(1,Math.min(20,Number(level)||1))/4)+1,resets:['long']};
@@ -195,6 +259,6 @@ var CharacterFeatRules = (() => {
     else {if(data.rulesChoices.feats.length>=30)throw Error('Maximum 30 additional feats.');data.rulesChoices.feats.push(feat.id);const count=data.rulesChoices.feats.filter(id=>id===feat.id).length;if(count>1)key+='--'+count;}
     data.rulesChoices.effects[key]=choice({...data.rulesChoices.effects[key],ignorePrerequisites:true});return key;
   }
-  return {definitions,definition,choice,entries,trainingOptions,apply,resource,setUsed,reset,remove,addManual};
+  return {definitions,definition,choice,entries,trainingOptions,resistanceChoices,mechanicFacts,spellChoices,spellGrants,spellResources,apply,resource,setUsed,reset,remove,addManual};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterFeatRules;

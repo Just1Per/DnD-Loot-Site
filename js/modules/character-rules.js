@@ -182,6 +182,11 @@ var CharacterRules = (() => {
         'Infernal'
       ],
       resistances: ['Fire'],
+      spells: [
+        {name:'Thaumaturgy',level:1,ability:'cha',usage:'at will'},
+        {name:'Hellish Rebuke',level:3,ability:'cha',usage:'once per long rest; 2nd-level casting'},
+        {name:'Darkness',level:5,ability:'cha',usage:'once per long rest'}
+      ],
       traits: [
         'Hellish Resistance: resistance to fire damage.',
         'Infernal Legacy: Charisma governs your racial spells. At level 3, Hellish Rebuke is cast at 2nd level once per long rest; at level 5, Darkness once per long rest.'
@@ -1255,7 +1260,7 @@ var CharacterRules = (() => {
         dice: lvl >= 16 ? 5 : lvl >= 11 ? 4 : lvl >= 6 ? 3 : 2
       };
     }
-    if (b.race === 'tiefling') {
+    if (b.race === 'tiefling'&&!r?.spells?.length) {
       result.innate.push('Thaumaturgy \u2014 at will; Charisma');
       if (lvl >= 3)
         result.innate.push('Hellish Rebuke \u2014 2nd-level casting, once per long rest; Charisma');

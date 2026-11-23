@@ -22,12 +22,12 @@ var CharacterOriginMechanics=(()=>{
   for(const r of Object.values(rows)){
    if(!r.partial)continue;const f=facts.races[source(r.book)+'|'+(aliases[norm(r.name)]||norm(r.name))];if(!f)continue;
    if(Array.isArray(f.resist)&&f.resist.every(x=>typeof x==='string'))r.resistances=f.resist.map(x=>x[0].toUpperCase()+x.slice(1));
-   // These two source-reviewed subraces have fixed Wisdom spell grants and long-rest recovery.
-   if(['pallid','lotusden'].includes(aliases[norm(r.name)])){
+   // Fixed cantrips and explicit daily grants are safe; alternative packages and choices stay separate.
+   if(['pallid','lotusden'].includes(aliases[norm(r.name)])||!r.spells?.length&&f.additionalSpells?.length===1){
     const spells=[];for(const group of f.additionalSpells||[])for(const [kind,levels]of Object.entries(group))if(['known','innate'].includes(kind))for(const [level,picks]of Object.entries(levels)){
-     const add=(names,usage)=>{for(const id of names)if(typeof id==='string')spells.push({name:id.split(/[|#]/)[0].replace(/\b\w/g,c=>c.toUpperCase()),level:Number(level),ability:group.ability,usage});};
-     if(Array.isArray(picks))add(picks,'at will');else for(const [count,names]of Object.entries(picks.daily||{}))add(names,count+' per long rest');
-    }r.spells=spells;r.traits=r.traits.filter(t=>!/source-specific spell details remain manual/.test(t));
+     const add=(names,usage,cantripsOnly=false)=>{for(const id of names)if(typeof id==='string'&&(!cantripsOnly||/#c$/.test(id))&&Number.isInteger(Number(level))&&Number(level)>=1)spells.push({name:id.split(/[|#]/)[0].replace(/\b\w/g,c=>c.toUpperCase()),level:Number(level),ability:typeof group.ability==='string'?group.ability:'choice',usage});};
+     if(Array.isArray(picks))add(picks,'at will',true);else for(const [count,names]of Object.entries(picks.daily||{}))if(/^\d+$/.test(count))add(names,count+' per long rest');
+    }if(spells.length){r.spells=spells;r.traits=r.traits.filter(t=>!/source-specific spell details remain manual/.test(t));}
    }
   }
   const ancestry={chromatic:{black:'Acid',blue:'Lightning',green:'Poison',red:'Fire',white:'Cold'},gem:{amethyst:'Force',crystal:'Radiant',emerald:'Psychic',sapphire:'Thunder',topaz:'Necrotic'},metallic:{brass:'Fire',bronze:'Lightning',copper:'Acid',gold:'Fire',silver:'Cold'}};
@@ -35,7 +35,7 @@ var CharacterOriginMechanics=(()=>{
  }
  function resources(data,level){
   const R=globalThis.CharacterRules||(typeof require==='function'?require('./character-rules'):null),profile=R?.profile(data.build,level),stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};
-  return(profile?.spells||[]).filter(s=>s.level<=level&&/^1 per long rest$/.test(s.usage)).map(s=>{const id='origin-'+norm(s.name),key='origin:'+data.build.race+':'+norm(s.name)+'-used',raw=stored.classFeatureChoices?.[key]?.[0],used=/^\d+$/.test(raw||'')?Math.min(10000,Number(raw)):0;return{id,key,name:s.name,source:profile.name,className:profile.name,max:1,used,remaining:Math.max(0,1-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',useLabel:'Use racial spell',undoLabel:'Undo use',description:s.ability.toUpperCase()+' racial spell · free casting; spell slots are separate.'};});
+  return(profile?.spells||[]).filter(s=>s.level<=level&&/^(?:once|[1-9]\d?) per long rest(?:;|$)/i.test(s.usage)).map(s=>{const id='origin-'+norm(s.name),key='origin:'+data.build.race+':'+norm(s.name)+'-used',raw=stored.classFeatureChoices?.[key]?.[0],used=/^\d+$/.test(raw||'')?Math.min(10000,Number(raw)):0,max=/^once/i.test(s.usage)?1:Number(s.usage.match(/^\d+/)[0]),ability=s.ability==='choice'?data.build.raceAbility:s.ability;return{id,key,name:s.name,source:profile.name,className:profile.name,max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',useLabel:'Use racial spell',undoLabel:'Undo use',description:(ability?ability.toUpperCase():'Choose casting ability')+' racial spell · free casting; spell slots are separate.'};});
  }
  return{background,toolOptions,languageOptions,races,resources};
 })();

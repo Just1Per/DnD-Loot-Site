@@ -13,6 +13,35 @@ var CharacterMagicItems=(()=>{
   const knownNames=new Set((reference.names||[]).map(clean));
   const rules=new Map(Object.entries(reference.automation||{}).map(([name,rule])=>[clean(name),rule]));
   const resistanceTypes=['acid','cold','fire','force','lightning','necrotic','poison','psychic','radiant','thunder'];
+  // Holding/wearing uses the explicit Equipped control. Spell scope is independent of attunement class.
+  const castingFamilies={
+    'all purpose tool':['artificer'], 'arcane grimoire':['wizard'], 'bloodwell vial':['sorcerer'],
+    'moon sickle':['druid','ranger'], 'rhythm maker s drum':['bard'], 'rod of the pact keeper':['warlock'],
+    'amulet of the devout':null, 'fate dealer s deck':null, 'wand of the war mage':null,
+    'reveler s concertina':['bard'], 'robe of the archmagi':null, 'staff of power':null, 'staff of the magi':null,
+    'staff of the woodlands':null, 'skyblinder staff':null, 'staff of the ivory claw':null, 'voyager staff':null
+  };
+  const passiveStats=new Set(['ring of protection','cloak of protection','robe of stars','staff of power','stone of good luck','netherese ring of protection']);
+  const passiveImmunities=new Set(['efreeti chain','matalotok','periapt of proof against poison','ring of winter']);
+  function classes(data,level=1){
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},rows=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],out={};let left=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
+    for(const row of rows){const amount=Math.min(left,Math.max(0,Math.trunc(Number(row.level)||0)));left-=amount;if(amount&&typeof row.classId==='string')out[row.classId]=(out[row.classId]||0)+amount;}return out;
+  }
+  function eligibility(data,fact,effects,level){
+    if(!fact?.reqAttuneTags?.length)return true;
+    const selected=classes(data,level),C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);
+    if((selected.artificer||0)>=14&&C?.artificerSource(data).id==='tce')return true;
+    const caster=Object.entries(selected).some(([id,n])=>['bard','cleric','druid','sorcerer','warlock','wizard','artificer'].includes(id)||['paladin','ranger'].includes(id)&&n>=(data.build?.edition==='2024'?1:2)||['fighter','rogue'].includes(id)&&n>=3&&((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels||[]).some(row=>row.classId===id&&/eldritch-knight|arcane-trickster/.test(row.subclassId||'')))||!!effects.innate?.length||effects.featSpellcasting===true||!!data.spells?.length;
+    return fact.reqAttuneTags.some(group=>Object.entries(group).every(([key,value])=>key==='class'?!!selected[String(value).split('|')[0].toLowerCase()]:key==='spellcasting'?value===true&&caster:false));
+  }
+  function automationCoverage(fact={}){
+    const family=Pinned.key(fact.spellBonusFamily||fact.name).replace(/^[123] /,'');
+    return{spellScope:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],passiveSaveChecks:passiveStats.has(family),passiveImmunities:passiveImmunities.has(family)};
+  }
+  function spellBonuses(effects={},classId=''){
+    const all=effects.itemSpellBonuses||{},global=all.global||{},specific=all[classId]||{};
+    return {attack:(global.attack||0)+(specific.attack||0),dc:(global.dc||0)+(specific.dc||0)};
+  }
 
   function variantRule(name){
     const key=clean(name);
@@ -87,7 +116,19 @@ var CharacterMagicItems=(()=>{
       const itemKey=clean(row.item.name);
       if(seen.has(itemKey))continue;
       seen.add(itemKey);
-      const changed=[],abilityChanges=[];const fact=Pinned.find(row.item);if(/^[123] wand of the war mage$/.test(Pinned.key(row.item.name))&&Number(fact?.bonusSpellAttack)>0){const value=Number(fact.bonusSpellAttack);effects.itemSpellAttackBonus=Math.max(effects.itemSpellAttackBonus||0,value);changed.push('spell attack +'+value+' (highest War Mage wand only)');}
+      const changed=[],abilityChanges=[],fact=Pinned.find(row.item),eligible=eligibility(data,fact,effects,level);
+      if(fact&&eligible){
+        const family=Pinned.key(fact.spellBonusFamily||row.item.name).replace(/^[123] /,''),attack=Number(fact.bonusSpellAttack)||0,dc=Number(fact.bonusSpellSaveDc)||0;
+        if(Object.hasOwn(castingFamilies,family)&&(attack||dc)){
+          const targets=castingFamilies[family]||['global'];effects.itemSpellSources||={};
+          const previous=effects.itemSpellSources[family]||{attack:0,dc:0};effects.itemSpellSources[family]={attack:Math.max(previous.attack,attack),dc:Math.max(previous.dc,dc),targets};
+          changed.push('spell attack '+(attack>=0?'+':'')+attack+' · spell DC '+(dc>=0?'+':'')+dc+' · '+(targets.includes('global')?'all spell sources':targets.join('/')+' spells only'));
+        }
+        if(passiveStats.has(family))for(const [field,target]of [['bonusSavingThrow','itemSavingThrowBonus'],['bonusAbilityCheck','itemAbilityCheckBonus']]){const value=family==='netherese ring of protection'&&field==='bonusSavingThrow'?1:Number(fact[field]);if(Number.isSafeInteger(value)&&Math.abs(value)<=10&&value){effects[target]=(effects[target]||0)+value;changed.push((field==='bonusSavingThrow'?'saving throws ':'ability checks ')+(value>=0?'+':'')+value);}}
+        if(family==='netherese ring of protection')warnings.push('Netherese Ring of Protection: the +4 applies only to avoiding dropping or being disarmed of an item in the ring hand; resolve that check at the table.');
+        if(family==='stone of ill luck')warnings.push('Stone of Ill Luck: the DM resolves its apparent luck bonus and concealed curse penalties; no unconditional save/check adjustment is applied.');
+        if(passiveImmunities.has(family))for(const value of (fact.immune||[]).filter(value=>typeof value==='string'&&resistanceTypes.includes(value))){effects.immunities||=[];addUnique(effects.immunities,value[0].toUpperCase()+value.slice(1)+' damage');changed.push('immunity: '+value+' damage');}
+      }else if(fact&&(fact.bonusSpellAttack||fact.bonusSpellSaveDc||fact.bonusSavingThrow||fact.bonusAbilityCheck))warnings.push(row.item.name+': source requirements are not met or need table review; additional spell/save/check bonuses are inactive.');
       if(rule.abilityBonus)for(const [ability,bonus] of Object.entries(rule.abilityBonus)){
         if(!(ability in scores))continue;
         const before=scores[ability],next=before>20?before:Math.min(20,before+Number(bonus||0));
@@ -120,6 +161,8 @@ var CharacterMagicItems=(()=>{
     }
     const overAttuned=active.filter(row=>row.needsAttunement&&row.choice.attuned&&!row.magicActive);
     for(const row of overAttuned)warnings.push(row.item.name+': exceeds '+(E.attunementLimit(data,level)===3?'three':E.attunementLimit(data,level))+' attunement slots; Adobe magic-item effects are inactive.');
+    effects.itemSpellBonuses={};for(const source of Object.values(effects.itemSpellSources||{}))for(const target of source.targets){const entry=effects.itemSpellBonuses[target]||={attack:0,dc:0};entry.attack+=source.attack;entry.dc+=source.dc;}
+    const primary=spellBonuses(effects,data.build?.classId);effects.itemSpellAttackBonus=primary.attack;effects.itemSpellDCBonus=primary.dc;
     return {active,reports,warnings};
   }
   function augmentGear(data,gear,magic){
@@ -144,7 +187,7 @@ var CharacterMagicItems=(()=>{
 
   // The host installs the bridge; a plain Node metadata import must not mutate another model.
   if(typeof CharacterEquipment!=='undefined')E.infer=infer;
-  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear};
+  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear,spellBonuses,automationCoverage};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterMagicItems=CharacterMagicItems;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterMagicItems;

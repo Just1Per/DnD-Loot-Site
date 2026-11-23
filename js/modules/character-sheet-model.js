@@ -9,7 +9,7 @@ var CharacterSheetModel = (() => {
   const Feats=typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules');
   const ItemChoices=typeof CharacterMagicItemChoices!=='undefined'?CharacterMagicItemChoices:require('./character-magic-item-choices');
   const Equipment=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
-  const Magic=typeof CharacterMagicItems!=='undefined'?CharacterMagicItems:null;
+  const Magic=typeof CharacterMagicItems!=='undefined'?CharacterMagicItems:typeof require==='function'?require('./character-magic-items'):null;
   const abilities = {
     str: 'Strength',
     dex: 'Dexterity',
@@ -304,6 +304,7 @@ var CharacterSheetModel = (() => {
     classExpertise.skills=[...new Set([...classExpertise.skills,...domainTraining.expertise,...fighterTraining.expertise,...subclassTraining.flatMap(r=>r.expertise||[])])];
     const weaponTraining=ClassChoices.weaponTraining(d,{level,effects,feats});
     effects.proficiencies=[...new Set([...effects.proficiencies,...weaponTraining.proficiencies])];
+    effects.featSpellcasting=Feats.spellGrants(d,{level,reports:feats.reports}).length>0||Catalog.grants(d).some(grant=>{const key=grant.key==='human'?'origin-human':grant.key==='background'?'origin-background':grant.key,report=feats.reports.find(row=>row.key===key);return report?.eligible&&!report.warnings.length&&!Catalog.validateGrant(grant,d.rulesChoices.grants[grant.key],d).errors.length;});
     const baseWalkingSpeed=Number(effects.speed)||0;
     const magicItems=Magic?Magic.apply(d,scores,effects,loot,level):{active:[],reports:[],warnings:[]};
     if(d.build.scoreMode==='base')effects.hpBonus+=Math.max(1,Math.min(20,Number(level)||1))*(mod(scores.con)-mod(originCon));
@@ -311,7 +312,7 @@ var CharacterSheetModel = (() => {
     const saveAll=bonus('save.all'),skillAll=bonus('skill.all');
     for (const key of Object.keys(abilities)) {
       mods[key] = mod(scores[key]);
-      saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + bonus('save.'+key,d.saves[key].bonus)+saveAll + artificerFeatures.saveBonus;
+      saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + bonus('save.'+key,d.saves[key].bonus)+saveAll + artificerFeatures.saveBonus+(effects.itemSavingThrowBonus||0);
     }
     const Aura=globalThis.CharacterPaladinAuras||(typeof require==='function'?require('./character-paladin-auras'):null),paladinAuras=Aura.derive(d,{level,mods});for(const key of Object.keys(saves))saves[key]+=paladinAuras.bonus;
     classOrders.skillBonuses={};for(const report of classOrders.reports){report.bonus=report.skills.length?Math.max(1,mods.wis):0;for(const key of report.skills)classOrders.skillBonuses[key]=(classOrders.skillBonuses[key]||0)+report.bonus;}
@@ -319,7 +320,7 @@ var CharacterSheetModel = (() => {
     const PathSkills=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);effects.skills=[...new Set([...effects.skills,...PathSkills.derive(d,{level,mods}).skills])];
     for (const [key, [, ability]] of Object.entries(skills)){
       const rank=Math.max(d.skills[key].rank,effects.skills.includes(key)?1:0,feats.expertise.includes(key)?2:0,classExpertise.skills.includes(key)?2:0);
-      checks[key]=mods[ability]+Math.max(Math.floor(pb*rank),rank>=1?0:Check.untrained(pb,effects,ability,'skill'))+bonus('skill.'+key,d.skills[key].bonus)+skillAll+(classOrders.skillBonuses[key]||0);
+      checks[key]=mods[ability]+Math.max(Math.floor(pb*rank),rank>=1?0:Check.untrained(pb,effects,ability,'skill'))+bonus('skill.'+key,d.skills[key].bonus)+skillAll+(classOrders.skillBonuses[key]||0)+(effects.itemAbilityCheckBonus||0);
     }
     const toolTraining=ClassChoices.toolTraining(d,{level,effects,mods,classExpertise});
     const rangerFeatures=ClassChoices.rangerFeatures(d,{level,mods});
@@ -383,10 +384,10 @@ var CharacterSheetModel = (() => {
       classAbilityFeatures,
       classOrders,
       saveTraining,
-      deathSaveBonus:(saveTraining.deathSaveProficiency?pb:0)+artificerFeatures.saveBonus+paladinAuras.bonus,
+      deathSaveBonus:(saveTraining.deathSaveProficiency?pb:0)+artificerFeatures.saveBonus+paladinAuras.bonus+(effects.itemSavingThrowBonus||0),
       invocationEffects,
       cantripInvocations:ClassChoices.cantripInvocations(d,{level,mods}),
-      classResources:ClassChoices.classResources(d,{level,mods,attunedCount:artificerFeatures.attuned}),
+      classResources:ClassChoices.classResources(d,{level,mods,featReports:feats.reports,attunedCount:artificerFeatures.attuned}),
       classExpertise,
       weaponTraining,
       feats,
@@ -397,20 +398,20 @@ var CharacterSheetModel = (() => {
       mods,
       saves,
       skills: checks,
-      initiative: mods.dex + bonus('initiative',d.initiativeBonus) + (effects.initiativeBonus || 0) + (!effects.initiativeProficiency?Check.untrained(pb,effects,'dex','initiative'):0),
+      initiative: mods.dex + bonus('initiative',d.initiativeBonus) + (effects.initiativeBonus || 0) + (!effects.initiativeProficiency?Check.untrained(pb,effects,'dex','initiative'):0)+(effects.itemAbilityCheckBonus||0),
       passive: 10 + checks.perception + bonus('passive',d.passiveBonus) + feats.passiveBonus,
       spellAttack: mods[d.spellAbility] + pb + bonus('spell.attack',d.spellAttackBonus)+(effects.itemSpellAttackBonus||0),
-      spellDC: 8 + mods[d.spellAbility] + pb + bonus('dc.primary',d.spellDCBonus),
+      spellDC: 8 + mods[d.spellAbility] + pb + bonus('dc.primary',d.spellDCBonus)+(effects.itemSpellDCBonus||0),
       attacks: d.attacks.map(a => mods[a.ability] + (a.proficient ? pb : 0) + a.bonus + (a.rangedWeapon ? feats.rangedBonus : 0))
     };
     result.magicItems=magicItems;
     const Carry=globalThis.CharacterCarrying||(typeof require==='function'?require('./character-carrying'):null);
     result.carrying=Carry.limits(data,{scores,effects});
     if(barbarianSubclass.carryMultiplier)for(const key of ['capacity','pushDragLift'])result.carrying[key]*=barbarianSubclass.carryMultiplier;
-    result.gear=Equipment.derive(d,result,loot,level);
+    result.gear=Equipment.derive(d,result,loot,level,Magic?.infer);
     if(Magic)result.gear=Magic.augmentGear(d,result.gear,magicItems);
     const acModifiers={magic:bonus('ac.magic'),misc1:bonus('ac.misc1'),misc2:bonus('ac.misc2')},extraAC=acModifiers.magic+acModifiers.misc1+acModifiers.misc2;result.gear.adjustment+=extraAC;result.gear.ac+=extraAC;result.ac=result.gear.ac;
-    result.modifiers={ac:acModifiers,expressions:Override?Override.normalize(modifierExpressions):{},report:modifierReport,allSkills:skillAll,allSaves:saveAll,spellAttackBonus:bonus('spell.attack',d.spellAttackBonus)+(effects.itemSpellAttackBonus||0),spellDCBonus:bonus('dc.primary',d.spellDCBonus)};
+    result.modifiers={ac:acModifiers,expressions:Override?Override.normalize(modifierExpressions):{},report:modifierReport,allSkills:skillAll,allSaves:saveAll,spellAttackBonus:bonus('spell.attack',d.spellAttackBonus)+(effects.itemSpellAttackBonus||0),spellDCBonus:bonus('dc.primary',d.spellDCBonus)+(effects.itemSpellDCBonus||0)};
     const ItemResources=globalThis.CharacterItemResources||(typeof require==='function'?require('./character-item-resources'):null);
     result.itemResources=ItemResources?ItemResources.project(data,result.gear):[];
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
@@ -438,6 +439,7 @@ var CharacterSheetModel = (() => {
     result.movement=Carry.movement(data,{limits:result.carrying,weight:result.weight,scores,effects,gear:result.gear,magicItems});
     Object.assign(effects,result.movement.speeds);
     if(Override)Override.dice({...d,adobe:data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}},result);
+    if(effects.featDarkvisionBonus)effects.darkvision=(effects.darkvision||0)+effects.featDarkvisionBonus;
     return result;
   }
   function damage(data, amount) {

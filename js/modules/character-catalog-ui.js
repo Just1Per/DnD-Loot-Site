@@ -337,6 +337,8 @@ function updateSheetCatalogGrants() {
       const field=input.dataset.featChoice, value=input.type==='checkbox'?input.checked:input.value;
       if(field.startsWith('ability'))c.abilities[Number(field.slice(-1))]=value;
       else if(field.startsWith('training'))c.training[Number(field.slice(-1))]=value;
+      else if(field.startsWith('spellPick'))c.spellIds[Number(field.slice(-1))]=value;
+      else if(field.startsWith('damageType'))c.damageTypes[Number(field.slice(-1))]=value;
       else c[field]=field==='option'?Number(value):value;
       catalogChanged();
     });
@@ -371,7 +373,7 @@ function updateSheetCatalogGrants() {
   });
 }
 function renderFeatEffectControls(report,level,data=sheetSession.data) {
-  const {def,choice:c,warnings,automated}=report,esc=sheetEscape;
+  const {def,choice:c,automated}=report,warnings=[...report.warnings,...(report.spellWarnings||[])],esc=sheetEscape;
   const select=(label,field,rows,value)=>`<label class="sheet-field">${esc(label)}<select data-feat-choice="${field}">${rows.map(([key,text])=>`<option value="${esc(key)}" ${String(key)===String(value)?'selected':''}>${esc(text)}</option>`).join('')}</select></label>`;
   if(report.managedOrigin&&def.name==='Skilled'){const field=report.key==='origin-human'?'humanFeatChoices':'backgroundFeatChoices',values=data.build[field]||[];return '<p class="sheet-help">Selected training: '+values.map(value=>esc(value.startsWith('skill:')?CharacterSheetModel.skills[value.slice(6)]?.[0]||value:value.replace(/^tool:/,''))).filter(Boolean).join(' · ')+'</p>'+(warnings.length?'<p class="sheet-error">'+warnings.map(esc).join(' ')+'</p>':'')+'<button type="button" data-open-granted-training="'+field+'">Change granted training below</button>'; }
   let html='<div class="sheet-grid">';
@@ -397,6 +399,9 @@ function renderFeatEffectControls(report,level,data=sheetSession.data) {
   if(def.name==='Boon of Skill'&&def.source==='XPHB')html+=select('Expertise','expertise',[['','Choose skill'],...Object.entries(CharacterSheetModel.skills).map(([k,[label]])=>[k,label])],c.expertise);
   if(def.name==='Observant'&&def.edition==='2024')html+=select('Proficiency / expertise','training0',[['','Choose skill'],...skills.filter(([key])=>['skill:insight','skill:investigation','skill:perception'].includes(key))],c.training[0]);
   if(def.name==='Defense'&&def.edition==='2024')html+=`<label class="sheet-check"><input type="checkbox" data-feat-choice="armored" ${c.armored?'checked':''}> Wearing Light/Medium/Heavy armor; my entered AC excludes this +1</label>`;
+  for(const group of CharacterFeatRules.spellChoices(def))for(let index=0;index<group.count;index++)html+=select('Feat spell '+(group.start+index+1)+(group.unlock>1?' (character level '+group.unlock+')':''),'spellPick'+(group.start+index),[['','Choose spell'],...group.options.map(spell=>[spell.id,spell.name+' · '+spell.school+' · '+spell.source])],c.spellIds[group.start+index]);
+  const featCasting=CharacterFeatRules.mechanicFacts(def).spells?.ability?.choose;if(featCasting)html+=select('Feat spellcasting ability','castingAbility',[['','Choose ability'],...featCasting.map(a=>[a,CharacterSheetModel.abilities[a]])],c.castingAbility);
+  for(const group of CharacterFeatRules.resistanceChoices(def))for(let index=0;index<group.count;index++)html+=select('Damage resistance '+(index+1),'damageType'+index,[['','Choose resistance'],...group.from.map(type=>[type,type[0].toUpperCase()+type.slice(1)])],c.damageTypes[index]);
   html+='</div><p><strong>Automated sheet effects:</strong> '+esc(automated.join('; ')||(def.name==='Magic Initiate'?'Spell choices and free use below':'None applied yet'))+'.</p>';
   if(warnings.length)html+='<p role="status" class="sheet-error">'+esc(warnings.join(' '))+'</p>';
   const resource=CharacterFeatRules.resource(def,level);

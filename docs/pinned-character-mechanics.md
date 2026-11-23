@@ -2,6 +2,8 @@
 
 Source: `5etools-v1`, revision `b9061583536101068b3a59d27e886d1fa664e366`. `scripts/build-origin-mechanics.py` emits structured facts, source identities and numeric prerequisites only; source prose and Acrobat code are excluded.
 
+Latest follow-up: [rule automation expansion](rule-automation-expansion.md), including all declared racial daily-spell counters, fixed/choice feat spells, defenses/senses and scoped item spell/save/check bonuses. [The current audit](rule-automation-audit.md) records remaining work separately from the 186 implemented subclass adapters.
+
 ## Origins
 
 Source-matched expanded backgrounds now expose supported fixed/choice tool and language facts through the shared builder and Adobe origins popup. Restricted additional skill choices have actual selectors and validate against the background pool; duplicate, stale and out-of-pool selections remain inert. Alternative complete proficiency packages that cannot be represented independently remain manual rather than granting their combined benefits. The existing equipment preview/add flow remains explicit; no items or coins are added merely by changing a background.

@@ -53,7 +53,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   notificationsAvailable:()=>window.AccountNotifications?.enabled===true,
 });
 
-const ASSET_VERSION = "20261123-appearance-sdk-v101";
+const ASSET_VERSION = "20261123-rule-automation-v102";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -116,6 +116,7 @@ const FEATURE_FILES = [
   "./modules/character-feat-data.js",
   "./modules/character-feat-reference.js",
   "./modules/character-personal-feats.js",
+  "./modules/character-feat-mechanics-data.js",
   "./modules/character-feat-rules.js",
   "./modules/character-spell-effect-data.js",
   "./modules/character-spell-summaries.js",

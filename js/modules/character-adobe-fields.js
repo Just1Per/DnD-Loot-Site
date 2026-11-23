@@ -152,7 +152,7 @@ var CharacterAdobeFields=(()=>{
   if(id==='Initiative bonus')return computed(sign(d.initiative));
   if(id==='Passive Perception')return computed(d.passive);
   if(id==='Speed')return edit('adobe.movementText',data.adobe?.movementText||(d.effects.speed||0)+' ft','text',80,{command:'carrying',fitWidth:true,movementText:true,reason:(d.movement?.detail||'Walking speed from the shared character calculations.')+' Type a sheet override; clear the field to restore automatic speed. Double-click or press Alt+Enter for movement and carrying controls.'});
-  if(id==='Vision')return computed([d.effects.darkvision?'Darkvision '+d.effects.darkvision+' ft':'',...(d.effects.specialSenses||[]).map(s=>s.name+': '+s.detail)].filter(Boolean).join('\n'),{kind:'textarea'});
+  if(id==='Vision')return computed([...['darkvision','blindsight','truesight','tremorsense'].filter(key=>d.effects[key]).map(key=>key[0].toUpperCase()+key.slice(1)+' '+d.effects[key]+' ft'),...(d.effects.specialSenses||[]).map(s=>s.name+': '+s.detail)].filter(Boolean).join('\n'),{kind:'textarea'});
   if(id==='Saving Throw advantages / disadvantages')return computed([data.conditions,...(d.saveTraining?.reports||[]).map(r=>r.detail)].filter(Boolean).join('\n'),{kind:'textarea',command:'conditions'});
   if(id==='Spell save DC 1')return computed(d.spellDC);
   if(id==='Spell DC 1 Mod'||id==='Spell DC 1 Mod #2')return edit('spellAbility',data.spellAbility,'select',undefined,{requiredChoice:true,options:Object.entries(abilities).map(([name,value])=>({value,label:abilityNames[value]}))});

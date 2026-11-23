@@ -179,7 +179,7 @@ var SiteHelp=(()=>{
     ],
     [
       "Choose and configure feats",
-      "On Feats, magic items & extra gear, use a feat row or double-click its name to open the chooser. Selected feats identify their origin, edition and source. Complete ability, training and spell choices, including Magic Initiate. Level and prerequisite messages guide your selection; the DM controls campaign availability. Supported effects and attack/reaction reminders appear on the sheet, including Savage Attacker and Sentinel. Create custom feat keeps a private definition on this character; its text alone does not create automatic mechanics.",
+      "On Feats, magic items & extra gear, use a feat row or double-click its name to open the chooser. Selected feats identify their origin, edition and source. Complete ability, training, damage-resistance and spell choices. Supported feat spells have their own casting ability and free-use counters; Fey Touched and similar choices use a source-filtered spell list. Free-use counters do not spend spell slots. Level and prerequisite messages guide your selection; the DM controls campaign availability. Supported effects and attack/reaction reminders appear on the sheet, including Savage Attacker and Sentinel. Create custom feat keeps a private definition on this character; its text alone does not create automatic mechanics.",
       "sheet",
       "Open character sheet"
     ],
@@ -233,7 +233,7 @@ var SiteHelp=(()=>{
     ],
     [
       "Use attacks, reactions and limited features",
-      "Click an attack name to choose eligible spells, weapons or special attacks. Additional catalogue spells can also be attack references; handwritten effects need manual attack details. Each casting source keeps its own ability. An attack reference does not spend a slot or ammunition. Check Limited Features and reaction reminders before rolling: conditional extra damage, Savage Attacker rerolls and Sentinel reactions must be applied when their trigger occurs. Use the relevant resource, charge, rest and turn controls; Save sheet retains counters. Undo corrects an accidental spend.",
+      "Click an attack name to choose eligible spells, weapons or special attacks. Additional catalogue spells can also be attack references; handwritten effects need manual attack details. Each casting source keeps its own ability. Supported worn/attuned spell items modify only their permitted classes; general spell bonuses apply to all eligible sources. Ice Knife shows its separate hit and explosion damage; area reminders still require you to choose affected creatures. An attack reference does not spend a slot or ammunition. Check Limited Features and reaction reminders before rolling: conditional extra damage, Savage Attacker rerolls and Sentinel reactions must be applied when their trigger occurs. Use the relevant resource, charge, rest and turn controls; Save sheet retains counters. Undo corrects an accidental spend.",
       "sheet",
       "Open character sheet"
     ],

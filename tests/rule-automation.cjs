@@ -1,0 +1,142 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const M=require('../js/modules/character-sheet-model'),R=require('../js/modules/character-rules'),F=require('../js/modules/character-class-feature-choices');
+const character=build=>M.normalize({hpMax:20,abilities:{str:14,dex:14,con:14,int:16,wis:14,cha:18},build:{classId:'fighter',scoreMode:'base',edition:'2014',...build}});
+test('racial once-per-long-rest spells all receive independent counters at their actual unlock levels',()=>{
+ let checked=0;
+ for(const [race,row]of Object.entries(R.races))for(const [feature,options]of [['raceFeature',row.optionChoices||{}]])for(const option of [null,...Object.keys(options)]){
+  const d=character({race,edition:row.edition||'2014',raceAbility:'cha',...(option?{[feature]:option}:{})});
+  for(const level of [1,2,3,4,5,20]){
+   const profile=R.profile(d.build,level),resources=F.classResources(d,{level,mods:{cha:4}}).filter(r=>r.id.startsWith('origin-'));
+   const expected=(profile?.spells||[]).filter(s=>s.level<=level&&/^(?:once|[1-9]\d?) per long rest(?:;|$)/i.test(s.usage));
+   assert.equal(resources.length,expected.length,race+' '+option+' '+level);
+   for(const spell of expected){const resource=resources.find(r=>r.name===spell.name);assert.ok(resource,spell.name);assert.equal(resource.remaining,1);assert.deepEqual(resource.resets,['long']);assert.ok(!resource.description.includes('CHOICE'));checked++;}
+  }
+ }
+ assert.ok(checked>100,'exercise ordinary species as well as selected legacies');
+});
+test('Drow, revised Tiefling and expanded racial spells spend without using slots and retain separate source ledgers',()=>{
+ const d=character({race:'drow'});d.slots[0]={max:4,used:2};let row=F.classResources(d,{level:5}).find(r=>r.name==='Faerie Fire');assert.ok(row);
+ const slots=structuredClone(d.slots);assert.equal(F.changeClassResource(d,row.id,1,{level:5}),true);assert.equal(F.classResources(d,{level:5}).find(r=>r.id===row.id).remaining,0);assert.equal(F.changeClassResource(d,row.id,1,{level:5}),false);
+ F.resetClassResources(d,'short',{level:5});assert.equal(F.classResources(d,{level:5}).find(r=>r.id===row.id).remaining,0);assert.deepEqual(d.slots,slots);
+ d.build.race='fairy-mpmm';d.build.raceAbility='wis';row=F.classResources(d,{level:5}).find(r=>r.name==='Faerie Fire');assert.equal(row.remaining,1);assert.match(row.description,/WIS/);
+ d.build.race='drow';assert.equal(F.classResources(JSON.parse(JSON.stringify(d)),{level:5}).find(r=>r.name==='Faerie Fire').remaining,0);F.resetClassResources(d,'long',{level:5});assert.equal(F.classResources(d,{level:5}).find(r=>r.name==='Faerie Fire').remaining,1);
+ d.build={...d.build,edition:'2024',race:'tiefling-2024',raceFeature:'infernal',raceAbility:'cha'};assert.equal(F.classResources(d,{level:3}).filter(r=>r.id.startsWith('origin-')).length,1);assert.equal(F.classResources(d,{level:5}).filter(r=>r.id.startsWith('origin-')).length,2);
+ d.build.edition='2014';assert.equal(F.classResources(d,{level:5}).filter(r=>r.id.startsWith('origin-')).length,0);
+});
+test('Flamekin and Rimekin fixed source spell grants appear without granting source choices or extra free cantrips',()=>{
+ for(const [race,cantrip,spell]of [['flamekin-lfl','Produce Flame','Burning Hands'],['rimekin-lfl','Ray Of Frost','Ice Knife']]){
+  const d=character({edition:'2024',race,raceAbility:'int'});assert.ok(R.profile(d.build,1).spells.some(s=>s.name===cantrip));assert.ok(!R.evaluate(d,1).innate.some(s=>s.startsWith(spell+' —')));assert.equal(F.classResources(d,{level:1}).filter(r=>r.id.startsWith('origin-')).length,0);assert.ok(F.classResources(d,{level:3}).some(r=>r.name===spell));
+ }
+});
+const Feats=require('../js/modules/character-feat-rules'),FeatFacts=require('../js/modules/character-feat-mechanics-data');
+const featId=(name,source)=>Object.keys(Feats.definitions).find(id=>Feats.definitions[id].name===name&&Feats.definitions[id].source===source);
+function withFeat(name,source,choice={},build={}){const id=featId(name,source);assert.ok(id,name);const d=character({edition:Feats.definitions[id].edition,...build});d.rulesChoices.feats=[id];const option=Feats.definitions[id].ability[0];d.rulesChoices.effects[id]=Feats.choice({abilities:option?.choose?.from?.slice(0,option.choose.count||1)||[],...choice});return {d,id};}
+test('fixed structured feat defenses and senses apply from the selected source and disappear on removal',()=>{
+ let count=0;
+ for(const [key,facts]of Object.entries(FeatFacts.records).filter(([,facts])=>['resist','immune','conditionImmune','senses','bonusSenses'].some(key=>facts[key]))){
+  const [source,name]=key.split('|'),{d}=withFeat(name,source),r=M.derive(d,20);
+  for(const type of (facts.resist||[]).filter(v=>typeof v==='string'))assert.ok(r.effects.resistances.includes(type[0].toUpperCase()+type.slice(1)),key);
+  for(const type of (facts.immune||[]).filter(v=>typeof v==='string'))assert.ok(r.effects.immunities.includes(type[0].toUpperCase()+type.slice(1)+' damage'),key);
+  for(const type of (facts.conditionImmune||[]).filter(v=>typeof v==='string'))assert.ok(r.effects.immunities.includes(type[0].toUpperCase()+type.slice(1)),key);
+  for(const sense of facts.senses||[])for(const [kind,value]of Object.entries(sense))assert.ok(r.effects[kind]>=value,key);
+  const before=JSON.stringify(d);M.derive(d,20);assert.equal(JSON.stringify(d),before);d.rulesChoices.feats=[];assert.equal(M.derive(d,20).feats.reports.length,0);count++;
+ }
+ assert.equal(count,19);
+});
+test('damage resistance choices reject duplicates and out-of-pool types, preserve save state and require eligible levels',()=>{
+ const {d,id}=withFeat('Boon of Energy Resistance','XPHB',{damageTypes:['cold','fire']});
+ assert.deepEqual(M.derive(d,20).effects.resistances,['Cold','Fire']);assert.deepEqual(M.derive(d,18).effects.resistances,[]);
+ d.rulesChoices.effects[id].damageTypes=['cold','cold'];assert.deepEqual(M.derive(d,20).effects.resistances,[]);assert.match(M.derive(d,20).feats.reports[0].warnings.join(' '),/distinct/);
+ d.rulesChoices.effects[id].damageTypes=['force','fire'];assert.deepEqual(M.derive(d,20).effects.resistances,[]);
+ d.rulesChoices.effects[id].damageTypes=['lightning','psychic'];const restored=M.normalize(JSON.parse(JSON.stringify(d)));assert.deepEqual(M.derive(restored,20).effects.resistances,['Lightning','Psychic']);
+ const legacy=withFeat('Infernal Constitution','XGE').d;assert.deepEqual(M.derive(legacy,4).effects.resistances,['Cold','Poison']);
+});
+test('bonus Darkvision extends the final class/species range instead of replacing it or modifying other creatures',()=>{
+ const {d}=withFeat('Keenness of the Stone Giant','BGG',{}, {race:'drow'});assert.equal(M.derive(d,4).effects.darkvision,180);
+ d.build.race='';assert.equal(M.derive(d,4).effects.darkvision,60);d.adobe={classLevels:[{classId:'sorcerer',subclassId:'shadow-magic',level:5}]};d.build.classId='sorcerer';assert.equal(M.derive(d,5).effects.darkvision,180);
+});
+const Casting=require('../js/modules/character-spellcasting');
+const loot=(id,name,edition='2014')=>({id,quantity:1,item:{name,edition}});
+test('class spell items affect only their own casting source while Devout and War Mage bonuses apply globally',()=>{
+ const d=character({classId:'wizard'});d.adobe={classLevels:[{classId:'wizard',level:3},{classId:'cleric',level:1}]};d.equipmentState.loadout=[{id:'book',equipped:true,attuned:true},{id:'symbol',equipped:true,attuned:true},{id:'wand',equipped:true,attuned:true}];
+ const all=[loot('book','+2 Arcane Grimoire'),loot('symbol','+1 Amulet of the Devout'),loot('wand','+1 Wand of the War Mage')],base=M.derive(d,4,[]),active=M.derive(d,4,all);
+ for(const classId of ['wizard','cleric','race']){const p={classId,ability:'int'},before=Casting.castingStats(p,base,d),after=Casting.castingStats(p,active,d);assert.equal(after.attack-before.attack,classId==='wizard'?4:2,classId);assert.equal(after.dc-before.dc,classId==='wizard'?3:1,classId);}
+ d.equipmentState.loadout[0].attuned=false;assert.equal(Casting.castingStats({classId:'wizard',ability:'int'},M.derive(d,4,all),d).dc-Casting.castingStats({classId:'wizard',ability:'int'},base,d).dc,1);
+});
+test('item spell families do not stack variant bonuses and class eligibility uses the actual allocated class levels',()=>{
+ const d=character({classId:'wizard'});d.adobe={classLevels:[{classId:'wizard',level:1},{classId:'fighter',level:3}]};const all=[loot('book','+2 Arcane Grimoire'),loot('other','+1 Arcane Grimoire')];d.equipmentState.loadout=all.map(row=>({id:row.id,equipped:true,attuned:true}));
+ const base=M.derive(d,4,[]),active=M.derive(d,4,all);assert.equal(active.spellAttack-base.spellAttack,2);assert.equal(active.spellDC-base.spellDC,2);
+ d.adobe.classLevels=[{classId:'fighter',level:4},{classId:'wizard',level:1}];assert.equal(M.derive(d,4,all).spellAttack,M.derive(d,4,[]).spellAttack,'unallocated Wizard row cannot qualify');
+ assert.equal(Casting.castingStats({classId:'fighter',ability:'int'},active,d).dc,Casting.castingStats({classId:'fighter',ability:'int'},base,d).dc);
+});
+test('protection and luck items modify all saves, death saves, skill/tool checks, initiative and passive checks once',()=>{
+ const d=character({classId:'fighter'}),all=[loot('ring','Ring of Protection'),loot('cloak','Cloak of Protection'),loot('luck','Stone of Good Luck')];d.equipmentState.loadout=all.map(row=>({id:row.id,equipped:true,attuned:true}));
+ const before=M.derive(d,4,[]),after=M.derive(d,4,all);for(const ability of Object.keys(M.abilities))assert.equal(after.saves[ability]-before.saves[ability],3,ability);assert.equal(after.deathSaveBonus-before.deathSaveBonus,3);assert.equal(after.skills.arcana-before.skills.arcana,1);assert.equal(after.initiative-before.initiative,1);assert.equal(after.passive-before.passive,1);assert.equal(after.gear.ac-before.gear.ac,2);
+ const Tool=require('../js/modules/character-tool-checks');assert.equal(Tool.project({name:'Custom check (Int)'},after).total-Tool.project({name:'Custom check (Int)'},before).total,1);
+ all.push({...all[0],id:'duplicate'});d.equipmentState.loadout.push({id:'duplicate',equipped:true,attuned:true});assert.equal(M.derive(d,4,all).saves.dex,after.saves.dex);
+ d.equipmentState.loadout[2].equipped=false;assert.equal(M.derive(d,4,all).skills.arcana,before.skills.arcana);
+});
+test('inactive conditional item metadata never grants permanent immunity or aura saving throw bonuses',()=>{
+ const d=character({classId:'wizard'}),all=[loot('tattoo','Ghost Step Tattoo'),loot('rod','Rod of Alertness'),loot('ring','Ring of Fire Elemental Command')];d.equipmentState.loadout=all.map(row=>({id:row.id,equipped:true,attuned:true}));const base=M.derive(d,4,[]),r=M.derive(d,4,all);assert.deepEqual(r.effects.immunities,base.effects.immunities);assert.deepEqual(r.saves,base.saves);
+});
+const Catalog=require('../js/modules/character-catalog'),Access=require('../js/modules/character-attack-access');Catalog.set(require('../data/rules/catalog.json'));
+test('every exported fixed feat spell has its own source, casting ability, unlock and recovery without teaching class spells',()=>{
+ let count=0;for(const [key,facts]of Object.entries(FeatFacts.records).filter(([,facts])=>facts.spells)){
+  const [source,name]=key.split('|'),{d}=withFeat(name,source,{castingAbility:'wis',damageTypes:['cold']});
+  for(const level of [1,3,4,20]){const r=M.derive(d,level),report=r.feats.reports[0],grants=Feats.spellGrants(d,{level,reports:r.feats.reports}),expected=report.eligible&&!report.warnings.length?facts.spells.grants.filter(g=>g.unlock<=level):[];assert.equal(grants.length,expected.length,key+' '+level);assert.equal(r.classResources.filter(r=>r.id.startsWith('feat-spell-')).length,expected.filter(g=>g.max).length,key);for(const grant of grants){assert.ok(Access.spells(d,level,r).some(row=>row.ref===grant.spell.id+'::'+grant.token));assert.notEqual(grant.ability,'inherit');count++;}}
+  assert.equal(d.spells.length,0);
+ }assert.ok(count>100);
+});
+test('Fey Teleportation, Fey Touched and Telepathic have independent uses and declared recovery, including removal/reopen',()=>{
+ const {d,id}=withFeat('Fey Teleportation','XGE'),telepathic=featId('Telepathic','TCE');d.rulesChoices.feats.push(telepathic);d.rulesChoices.effects[telepathic]=Feats.choice({abilities:['wis']});d.adobe={classLevels:[{classId:'fighter',level:4}]};
+ let rows=M.derive(d,4).classResources.filter(r=>r.id.startsWith('feat-spell-'));assert.equal(rows.length,2);for(const row of rows){assert.equal(F.changeClassResource(d,row.id,1,{level:4}),true);assert.equal(F.changeClassResource(d,row.id,1,{level:4}),false);}
+ F.resetClassResources(d,'short',{level:4});rows=M.derive(d,4).classResources.filter(r=>r.id.startsWith('feat-spell-'));assert.equal(rows.find(r=>r.name.includes('Misty Step')).remaining,1);assert.equal(rows.find(r=>r.name.includes('Detect Thoughts')).remaining,0);
+ const saved=JSON.parse(JSON.stringify(d));assert.equal(M.derive(saved,4).classResources.find(r=>r.name.includes('Detect Thoughts')).remaining,0);F.resetClassResources(saved,'long',{level:4});assert.equal(M.derive(saved,4).classResources.find(r=>r.name.includes('Detect Thoughts')).remaining,1);saved.rulesChoices.feats=[telepathic];assert.equal(M.derive(saved,4).classResources.some(r=>r.name.includes('Misty Step')),false);assert.ok(id);
+});
+test('fixed feat spells retain explicit ability choices and restrictions without granting alternate school/list spells',()=>{
+ const {d,id}=withFeat('Fey-Touched','XPHB',{abilities:['wis']});let grants=Access.spells(d,4,M.derive(d,4));assert.deepEqual(grants.map(r=>r.spell.name),['Misty Step']);assert.equal(grants[0].ability,'wis');
+ d.rulesChoices.effects[id].abilities=['str'];assert.equal(Access.spells(d,4,M.derive(d,4)).length,0);
+ const sh=withFeat('Svirfneblin Magic','MTF');grants=Access.spells(sh.d,4,M.derive(sh.d,4));assert.match(grants.find(r=>r.spell.name==='Nondetection').usage,/self-only/);
+ const dynamic=withFeat('Child of the Sun','LFL',{castingAbility:''});assert.equal(Access.spells(dynamic.d,4,M.derive(dynamic.d,4)).length,0);dynamic.d.rulesChoices.effects[dynamic.id].castingAbility='cha';assert.equal(Access.spells(dynamic.d,4,M.derive(dynamic.d,4))[0].ability,'cha');
+});
+test('racial qualified names resolve to catalogue spells and preserve source restrictions and racial-only damage overrides',()=>{
+ const d=character({race:'svirfneblin-deep-gnome',classId:'fighter'});const candidates=Object.keys(R.races).filter(id=>R.races[id].spells?.some(s=>s.name.startsWith('Nondetection')));assert.ok(candidates.length);d.build.race=candidates[0];d.build.raceAbility='int';let r=M.derive(d,5),grant=Access.spells(d,5,r).find(r=>r.spell.name==='Nondetection');assert.ok(grant);assert.match(grant.usage,/material/i);
+ d.build={...d.build,race:'tiefling',edition:'2014'};r=M.derive(d,3);grant=Access.spells(d,3,r).find(r=>r.spell.name==='Hellish Rebuke');assert.equal(grant.slot,2);d.actions=[{kind:'granted-spell',ref:grant.ref}];assert.match(M.derive(d,3).actions[0].damage,/3d10/);
+ d.build={...d.build,race:'rimekin-lfl',raceAbility:'int',edition:'2024'};r=M.derive(d,5);grant=Access.spells(d,5,r).find(r=>r.spell.name==='Flame Blade');d.actions=[{kind:'granted-spell',ref:grant.ref}];const before=JSON.stringify(Catalog.data),cold=M.derive(d,5).actions[0];assert.match(cold.damage,/3d6 \+ 3 cold/i);assert.doesNotMatch(cold.damage,/fire/i);assert.equal(JSON.stringify(Catalog.data),before);
+});
+test('compound spell damage, area and edition upcasting keep separate damage instances and source modifiers',()=>{
+ for(const edition of ['2014','2024']){const d=character({classId:'wizard',edition});d.spellAbility='int';const spell=Catalog.data.spells.find(s=>s.name==='Ice Knife'&&s.edition===edition);d.spells=[{...Catalog.spellRow(spell),classId:'wizard'}];d.actions=[{kind:'spell',ref:spell.id+'::wizard',slot:4}];const r=M.derive(d,7).actions[0];assert.match(r.damage,/1d10 piercing; explosion 5d6 cold \(Dexterity DC 14\)/);assert.match(r.notes.join(' '),/hit or miss/);assert.match(r.notes.join(' '),/5 ft/);
+ const flame=Catalog.data.spells.find(s=>s.name==='Flame Blade'&&s.edition===edition);d.spells=[{...Catalog.spellRow(flame),classId:'wizard'}];d.actions=[{kind:'spell',ref:flame.id+'::wizard',slot:5}];assert.equal(M.derive(d,9).actions[0].damage,edition==='2014'?'4d6 fire':'6d6 + 3 fire');
+ }
+ const d=character({classId:'sorcerer'}),spell=Catalog.data.spells.find(s=>s.name==='Chaos Bolt');d.spells=[{...Catalog.spellRow(spell),classId:'sorcerer'}];d.actions=[{kind:'spell',ref:spell.id+'::sorcerer',slot:3}];const row=M.derive(d,5).actions[0];assert.match(row.damage,/2d8 \+ 3d6/);assert.match(row.notes.join(' '),/rolled d8/);
+});
+test('copied item facts resolve all mechanical parent chains, explicit overrides, edition and inherited variants without shipping entries',()=>{
+ const D=require('../js/modules/character-pinned-item-data'),P=require('../js/modules/character-pinned-items'),find=(name,source)=>D.items.find(r=>r.name===name&&r.source===source);
+ assert.equal(D.variants.length,230);assert.equal(find('Charred Wand of Magic Missiles','WDH').charges,7);assert.equal(find('Charred Wand of Magic Missiles','WDH').recharge,'dawn');assert.equal(find('Jewel of Three Prayers (Exalted)','CRCotN').charges,7);assert.equal(find('Jewel of Three Prayers (Exalted)','CRCotN').bonusAc,'+3');assert.equal(find('Vigilant Rod of the Honed Mind','AU').edition,'2024');
+ const choices=P.options({name:'All-Seeing Blade of the Guardian',edition:'2024'});assert.ok(choices.length);assert.ok(choices.every(c=>c.facts.resist.includes('fire')&&c.baseName==='Greatsword'));
+ const prohibited=new Set(['entries','entriesHigherLevel','_copy','_mod','description']);function inspect(value){if(!value||typeof value!=='object')return;for(const [key,row]of Object.entries(value)){assert.ok(!prohibited.has(key),key);inspect(row);}}inspect(D);
+});
+test('fixed feat proficiencies and expertise include their own source training, without granting alternative packages',()=>{
+ for(const [name,source,skills,expertise,tools,languages]of [
+  ['Aberrant Anatomy','RHW',['perception'],['perception'],[],[]],['Boon of Terror','FRHoF',['intimidation'],['intimidation'],[],[]],['Chef','TCE',[],[],['Cook’s utensils'],[]],['Poisoner','XPHB',[],[],['Poisoner’s kit'],[]],['Fey Teleportation','XGE',[],[],[],['Sylvan']],['Harper Agent','FRHoF',[],[],[],["Thieves' Cant"]]
+ ]){const {d}=withFeat(name,source),r=M.derive(d,20);for(const skill of skills)assert.ok(r.effects.skills.includes(skill),name);for(const skill of expertise)assert.ok(r.feats.expertise.includes(skill),name);for(const tool of tools)assert.ok(r.effects.proficiencies.includes(tool),name);for(const language of languages)assert.ok(r.effects.languages.includes(language),name);d.rulesChoices.feats=[];const cleared=M.derive(d,20);for(const skill of expertise)assert.ok(!cleared.feats.expertise.includes(skill));}
+});
+test('special protection and cursed luck metadata cannot become unconditional +4 or concealed curse modifiers',()=>{
+ const d=character({classId:'fighter'}),all=[loot('netherese','Netherese Ring of Protection'),loot('cursed','Stone of Ill Luck')];d.equipmentState.loadout=all.map(row=>({id:row.id,equipped:true,attuned:true}));const before=M.derive(d,4,[]),after=M.derive(d,4,all);assert.equal(after.saves.dex-before.saves.dex,1);assert.equal(after.skills.arcana,before.skills.arcana);assert.match(after.magicItems.warnings.join(' '),/\+4 applies only/);assert.match(after.magicItems.warnings.join(' '),/concealed curse/);
+});
+test('source feat spell choices enforce school, list, edition and distinct cantrips and grant each free casting independently',()=>{
+ const {d,id}=withFeat('Fey-Touched','XPHB',{abilities:['wis']}),pool=Feats.spellChoices(Feats.definitions[id])[0],command=pool.options.find(s=>s.name==='Command');assert.ok(command);assert.ok(pool.options.every(s=>s.edition==='2024'&&s.level===1&&['Divination','Enchantment'].includes(s.school)));d.rulesChoices.effects[id].spellIds[0]=command.id;let r=M.derive(d,4);assert.deepEqual(Access.spells(d,4,r).map(r=>r.spell.name),['Command','Misty Step']);assert.equal(r.classResources.filter(r=>r.id.startsWith('feat-spell-')).length,2);d.rulesChoices.effects[id].spellIds[0]=Catalog.data.spells.find(s=>s.name==='Fireball'&&s.edition==='2024').id;assert.deepEqual(Access.spells(d,4,M.derive(d,4)).map(r=>r.spell.name),['Misty Step']);
+ const blessed=withFeat('Blessed Warrior','XPHB');const choices=Feats.spellChoices(Feats.definitions[blessed.id])[0];assert.equal(choices.count,2);assert.ok(choices.options.every(s=>s.level===0&&s.classesByEdition['2024'].includes('cleric')));blessed.d.rulesChoices.effects[blessed.id].spellIds=[choices.options[0].id,choices.options[0].id];assert.equal(Access.spells(blessed.d,4,M.derive(blessed.d,4)).length,0);blessed.d.rulesChoices.effects[blessed.id].spellIds[1]=choices.options[1].id;assert.equal(Access.spells(blessed.d,4,M.derive(blessed.d,4)).length,2);
+ const aberrant=withFeat('Aberrant Dragonmark','ERLW');const groups=Feats.spellChoices(Feats.definitions[aberrant.id]);assert.equal(groups.length,2);for(const group of groups)aberrant.d.rulesChoices.effects[aberrant.id].spellIds[group.start]=group.options[0].id;r=M.derive(aberrant.d,4);const resource=r.classResources.find(r=>r.id.startsWith('feat-spell-'));assert.deepEqual(resource.resets,['short','long']);assert.ok(Access.spells(aberrant.d,4,r).every(r=>r.ability==='con'));
+});
+test('valid feat-only spellcasters qualify for general spellcaster items and inherited casting families retain their scope',()=>{
+ const {d}=withFeat('Fey Touched','TCE',{abilities:['wis']});d.build.classId='fighter';const all=[loot('wand','+1 Wand of the War Mage')];d.equipmentState.loadout=[{id:'wand',equipped:true,attuned:true}];const before=M.derive(d,4,[]),active=M.derive(d,4,all);assert.equal(active.spellAttack-before.spellAttack,1);d.rulesChoices.feats=[];assert.equal(M.derive(d,4,all).spellAttack,M.derive(d,4,[]).spellAttack);
+ const w=character({edition:'2024',classId:'warlock'}),source=[loot('rod','Vigilant Rod of the Honed Mind','2024')];w.equipmentState.loadout=[{id:'rod',equipped:true,attuned:true}];const base=M.derive(w,4,[]),bonus=M.derive(w,4,source);assert.equal(Casting.castingStats({classId:'warlock',ability:'cha'},bonus,w).dc-Casting.castingStats({classId:'warlock',ability:'cha'},base,w).dc,1);assert.equal(Casting.castingStats({classId:'wizard',ability:'int'},bonus,w).dc,Casting.castingStats({classId:'wizard',ability:'int'},base,w).dc);
+});
+test('a racial or feat casting of a spell also learned by a class cannot inherit that class item bonus',()=>{
+ const d=character({classId:'wizard',race:'high-elf',cantrip:'Fire Bolt'}),spell=Catalog.data.spells.find(s=>s.name==='Fire Bolt'&&s.edition==='2014');d.spellAbility='int';d.spells=[{...Catalog.spellRow(spell),classId:'wizard'}];const grant=Access.spells(d,4,M.derive(d,4)).find(row=>row.source.startsWith('Race'));assert.ok(grant);d.actions=[{kind:'spell',ref:spell.id+'::wizard'},{kind:'granted-spell',ref:grant.ref}];const all=[loot('book','+2 Arcane Grimoire')];d.equipmentState.loadout=[{id:'book',equipped:true,attuned:true}];const base=M.derive(d,4,[]),bonus=M.derive(d,4,all);assert.equal(Number(bonus.actions[0].hit)-Number(base.actions[0].hit),2);assert.equal(bonus.actions[1].hit,base.actions[1].hit);
+});
+test('a full private choice ledger refuses a new free-spell spend without changing or silently losing state',()=>{
+ const {d}=withFeat('Fey Touched','TCE',{abilities:['wis']});d.adobe={classLevels:[{classId:'fighter',level:4}],classFeatureChoices:Object.fromEntries(Array.from({length:100},(_,i)=>['kept:'+i,['0']]))};const row=M.derive(d,4).classResources.find(r=>r.id.startsWith('feat-spell-')),before=JSON.stringify(d);assert.ok(row);assert.equal(F.changeClassResource(d,row.id,1,{level:4}),false);assert.equal(JSON.stringify(d),before);
+});

@@ -69,6 +69,15 @@ for source in sources:
         combat=out.setdefault('combat',{});combat['attack']=bool(row.get('spellAttack')) or combat.get('attack',False);combat['types']=row.get('damageInflict',[])
         scale=row.get('scalingLevelDice')
         if isinstance(scale,dict) and row.get('damageInflict') and (row.get('spellAttack') or row.get('savingThrow')):combat['scaling']=scale.get('scaling',{})
+        # Reviewed compound/edition-specific formulas. Numeric facts and our own
+        # short targeting notes only; never infer a whole spell from its first die.
+        if name := row['name']:
+            if name=='Ice Knife':
+                combat.update(damage='1d10',types=['piercing'],secondaryDamage='2d6',secondaryUpcast='1d6',secondaryType='cold',secondarySave='Dexterity',secondaryArea='target and creatures within 5 ft; hit or miss; no damage on a successful save')
+                combat.pop('upcast',None)
+            elif name=='Flame Blade':combat.update(damage='3d6',upcast='1d6',step=2 if out['edition']=='2014' else 1,addAbility=out['edition']=='2024')
+            elif name=='Chromatic Orb':combat.update(damage='3d8',upcast='1d8',typeChoice=True)
+            elif name=='Chaos Bolt':combat.update(damage='2d8 + 1d6',upcast='1d6',typeChoice=True)
         out['save']=', '.join(v.upper() for v in row.get('savingThrow',[]))
         out['ritual']=bool(row.get('meta',{}).get('ritual')); spells.append(out)
 featrows=[]
