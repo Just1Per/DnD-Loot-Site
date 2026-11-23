@@ -4,12 +4,12 @@
 */
 
 :root {
-  --action-bg: rgba(212, 175, 55, 0.12);
-  --action-bg-hover: rgba(212, 175, 55, 0.22);
-  --action-bg-active: rgba(212, 175, 55, 0.30);
-  --action-border: #c79c32;
-  --action-text: #7d6608;
-  --action-text-strong: #5c1d1d;
+  --action-bg: color-mix(in srgb,var(--theme-accent) 12%,transparent);
+  --action-bg-hover: color-mix(in srgb,var(--theme-accent) 22%,transparent);
+  --action-bg-active: color-mix(in srgb,var(--theme-accent) 30%,transparent);
+  --action-border: var(--theme-accent-deep);
+  --action-text: var(--theme-accent-ink);
+  --action-text-strong: var(--theme-heading);
   --action-danger: #8b2d2d;
   --action-danger-bg: rgba(139, 45, 45, 0.08);
   --action-danger-hover: rgba(139, 45, 45, 0.15);
@@ -82,7 +82,7 @@
   background: var(--action-bg-active) !important;
   border-color: #a97f22 !important;
   color: var(--action-text-strong) !important;
-  box-shadow: inset 0 0 0 1px rgba(212,175,55,0.18);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb,var(--theme-accent) 18%,transparent);
 }
 
 /* Hidden remains neutral/muted rather than grey */

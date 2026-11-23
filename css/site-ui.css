@@ -1,10 +1,10 @@
 /* Shared site components. Character Overview retains its current visual rules. */
 :root {
-  --ui-paper:#fdfbf7; --ui-paper-soft:#f4efe6; --ui-parchment:#e9dfcf;
-  --ui-ink:#342d26; --ui-muted:#655744; --ui-heading:#5c1d1d;
-  --ui-primary:#9b1d1d; --ui-primary-hover:#651313; --ui-cream:#f5e6c8;
-  --ui-gold:#d4af37; --ui-accent-text:#7d6608; --ui-border:#8a7355;
-  --ui-border-soft:#c8b89a; --ui-danger:#8b2d2d; --ui-success:#3f642e;
+  --ui-paper:var(--theme-paper); --ui-paper-soft:var(--theme-paper-soft); --ui-parchment:var(--theme-parchment);
+  --ui-ink:var(--theme-ink); --ui-muted:var(--theme-muted); --ui-heading:var(--theme-heading);
+  --ui-primary:var(--theme-primary); --ui-primary-hover:var(--theme-primary-hover); --ui-cream:var(--theme-on-primary);
+  --ui-gold:var(--theme-accent); --ui-accent-text:var(--theme-accent-ink); --ui-border:var(--theme-border);
+  --ui-border-soft:var(--theme-border-soft); --ui-danger:#8b2d2d; --ui-success:#3f642e;
 }
 .site-skip-link{position:fixed;top:8px;left:8px;z-index:100001;transform:translateY(-150%);padding:10px 16px;background:var(--ui-paper);color:var(--ui-heading);border:2px solid var(--ui-heading)}
 .site-skip-link:focus{transform:none}
@@ -84,3 +84,7 @@ button.vault-help-badge.vault-help-badge:not(#sheet-overview button),
  body.printing-character-sheet>#siteMain>:not(#mainApp){display:none!important}
  body.printing-character-sheet #mainApp{display:block!important}
 }
+
+/* Readable mobile sign-in fields avoid small-text zoom and cramped tap areas. */
+@media(max-width:650px){.login-controls input{min-height:44px;width:190px;min-width:0;font-size:16px}}
+.login-controls input:focus-visible{outline:2px solid var(--theme-accent);outline-offset:2px}

@@ -88,7 +88,8 @@ const errors=[];
  await page.locator('[data-journal-read="recap:global-player"]').click();await page.locator('[data-journal-moderate]').click();await page.locator('[data-journal-field=body]').fill('Corrected by a DM; still the player’s recap.');await page.locator('[data-journal-form] button[type=submit]').click();await page.waitForSelector('#journalEntryTitle');check('DM moderation preserves the player recap group',await page.locator('.journal-leaf > .journal-tag').textContent()==='Player recap · Shared with the campaign');
  await page.locator('[data-journal-back]').click();
  const beforeRoleUpdate=await page.evaluate(()=>JSON.stringify(testSheetDocs));
- await page.evaluate(()=>{journalWatchers.find(w=>w.active&&w.path==='campaigns/a').next({data:()=>({ownerId:'dm'})});journalWatchers.find(w=>w.active&&w.path==='campaigns/a/members').next({docs:[['dm','player'],['player','player'],['assistant-dm','player'],['global-dm-player','player']].map(([id,role])=>({id,data:()=>({role,status:'active'})}))});});
+ // Campaign metadata has several document subscribers; membership is a collection snapshot.
+ await page.evaluate(()=>{for(const watcher of journalWatchers.filter(w=>w.active&&w.path==='campaigns/a'))watcher.next({exists:()=>true,data:()=>({ownerId:'dm'})});journalWatchers.find(w=>w.active&&w.path==='campaigns/a/members').next({docs:[['dm','player'],['player','player'],['assistant-dm','player'],['global-dm-player','player']].map(([id,role])=>({id,data:()=>({role,status:'active'})}))});});
  check('Membership updates regroup old recaps, while campaign ownership retains DM grouping',await page.locator('.journal-feed').textContent().then(t=>t.includes('Mountain DM recap')&&!t.includes('A fresh DM recap')));
  check('Regrouping performs no writes or recap migration',await page.evaluate(()=>JSON.stringify(testSheetDocs))===beforeRoleUpdate);
  for(const role of ['player','dm']){

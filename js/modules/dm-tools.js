@@ -495,6 +495,7 @@ function renderDMTools() {
   document.getElementById("dmInviteMember")?.addEventListener("click", () => openUserModal());
   document.getElementById("dmOpenLibrary")?.addEventListener("click", () => showTab("library"));
   AppShell.organizeDMTools();
+  CampaignAppearanceUI.mountSettings();
   CampaignDeletion.mountSettings();
   if(typeof DMWorkspaceShell!=="undefined")DMWorkspaceShell.organizeDMTools();
 }

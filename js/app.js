@@ -53,7 +53,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   notificationsAvailable:()=>window.AccountNotifications?.enabled===true,
 });
 
-const ASSET_VERSION = "20261120-notifications-v98";
+const ASSET_VERSION = "20261123-campaign-appearance-v100";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -89,6 +89,8 @@ const FEATURE_FILES = [
   "./modules/character-magic-items.js",
   "./modules/account-notification-events.js",
   "./modules/campaign-store.js",
+  "./modules/campaign-appearance.js",
+  "./modules/campaign-appearance-store.js",
   "./modules/core.js",
   "./modules/character-legacy-options.js",
   "./modules/character-origin-facts.js",
@@ -226,6 +228,7 @@ const FEATURE_FILES = [
   "./modules/sheet-navigation.js",
   "./modules/navigation-state.js",
   "./modules/app-shell.js",
+  "./modules/campaign-appearance-ui.js",
   "./modules/dm-workspace-shell.js",
   "./modules/character-workspace.js",
   "./modules/page-editors.js",

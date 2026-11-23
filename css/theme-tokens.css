@@ -1,0 +1,54 @@
+/* CampaignAtlas screen palette. Future account preferences should override these
+   semantic tokens on <html>, using a complete contrast-tested palette. The PDF
+   artwork, rarity colours and success/error states keep their own meanings. */
+:root {
+  color-scheme:light;
+  --theme-primary:#9b1d1d;
+  --theme-primary-hover:#651313;
+  --theme-heading:#5c1d1d;
+  --theme-accent:#d4af37;
+  --theme-accent-deep:#c79c32;
+  --theme-accent-ink:#7d6608;
+  --theme-canvas:#f3e8d2;
+  --theme-canvas-end:#e7d8bd;
+  --theme-canvas-ink:#342d26;
+  --theme-header:#2b1a0e;
+  --theme-header-end:#3d2610;
+  --theme-header-accent:#d4af37;
+  --theme-on-primary:#f5e6c8;
+  --theme-paper:#fdfbf7;
+  --theme-paper-soft:#f4efe6;
+  --theme-parchment:#e9dfcf;
+  --theme-border:#8a7355;
+  --theme-border-soft:#c8b89a;
+  --theme-ink:#342d26;
+  --theme-muted:#655744;
+  --theme-focus:#2469a4;
+}
+
+/* Printed character data remains neutral even when a future preference is set
+   as an inline root custom property. Source paper imagery is never recoloured. */
+@media print {
+  :root {
+    --theme-primary:#111!important;
+    --theme-primary-hover:#111!important;
+    --theme-heading:#111!important;
+    --theme-accent:#444!important;
+    --theme-accent-deep:#444!important;
+    --theme-accent-ink:#111!important;
+    --theme-canvas:#fff!important;
+    --theme-canvas-end:#fff!important;
+    --theme-canvas-ink:#111!important;
+    --theme-header:#fff!important;
+    --theme-header-end:#fff!important;
+    --theme-header-accent:#111!important;
+    --theme-on-primary:#fff!important;
+    --theme-paper:#fff!important;
+    --theme-paper-soft:#fff!important;
+    --theme-parchment:#fff!important;
+    --theme-border:#444!important;
+    --theme-border-soft:#777!important;
+    --theme-ink:#111!important;
+    --theme-muted:#333!important;
+  }
+}

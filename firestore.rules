@@ -407,14 +407,30 @@ match /campaigns/{campaignId} {
       && page.revision is int && page.revision > 0;
   }
 
+  function validAppearance(appearance) {
+    return appearance is map
+      && appearance.keys().hasAll(['schemaVersion','preset','primary','background','accent','revision'])
+      && appearance.keys().hasOnly(['schemaVersion','preset','primary','background','accent','revision'])
+      && appearance.schemaVersion == 1
+      && appearance.preset in ['classic','ocean','forest','horror','custom']
+      && appearance.primary is string && appearance.primary.matches('^#[0-9a-fA-F]{6}$')
+      && appearance.background is string && appearance.background.matches('^#[0-9a-fA-F]{6}$')
+      && appearance.accent is string && appearance.accent.matches('^#[0-9a-fA-F]{6}$')
+      && appearance.revision is int && appearance.revision > 0;
+  }
+
   allow create: if canCreateCampaigns() && !('deletedAt' in request.resource.data) && !('deletedBy' in request.resource.data)
     && request.resource.data.ownerId == request.auth.uid
     && request.resource.data.dmId == request.auth.uid
-    && request.resource.data.name is string;
+    && request.resource.data.name is string
+    && (!('appearance' in request.resource.data) || (validAppearance(request.resource.data.appearance) && request.resource.data.appearance.revision == 1));
 
   // Campaign DMs can edit normal campaign settings, but cannot transfer
   allow update: if isCampaignDM(campaignId)
-    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["name", "description", "defaultItemVisible", "updatedAt", "inventoryVersion", "inventoryMigratedAt", "allowedEditions", "frontPage"])
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["name", "description", "defaultItemVisible", "updatedAt", "inventoryVersion", "inventoryMigratedAt", "allowedEditions", "frontPage", "appearance"])
+    && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['appearance'])
+      || (validAppearance(request.resource.data.appearance)
+        && request.resource.data.appearance.revision == (('appearance' in resource.data) ? resource.data.appearance.revision + 1 : 1)))
     && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['frontPage'])
       || (validFrontPage(request.resource.data.frontPage)
         && request.resource.data.frontPage.revision == (('frontPage' in resource.data) ? resource.data.frontPage.revision + 1 : 1)))

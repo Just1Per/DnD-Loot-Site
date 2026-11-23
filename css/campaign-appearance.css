@@ -1,0 +1,29 @@
+/* Light content surfaces remain readable against any campaign canvas colour. */
+@media screen {
+ :root[data-campaign-appearance] body{color:var(--theme-canvas-ink)}
+ :root[data-campaign-appearance] #mainApp .tab-content{background:var(--theme-paper-soft);color:var(--theme-ink);margin:16px 12px;border-radius:8px;padding-top:20px}
+ :root[data-campaign-appearance] .site-header{color:var(--theme-on-primary)}
+ :root[data-campaign-appearance] .site-header :is(.site-title,.site-brand-subtitle,#userDisplay,#adminTab){color:var(--theme-header-accent)}
+ :root[data-campaign-appearance] .site-footer,:root[data-campaign-appearance] .site-footer :is(h2,a){color:var(--theme-canvas-ink)}
+}
+.campaign-appearance-dialog{width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 32px);margin:auto;padding:24px;background:var(--theme-paper);color:var(--theme-ink);border:2px solid var(--theme-border);border-radius:10px;overflow:auto;font:16px/1.6 Georgia,serif}
+.campaign-appearance-dialog::backdrop{background:#111b}
+#campaignSettingsPanel>.dm-tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.campaign-appearance-dialog h2{font:700 1.4rem/1.4 Cinzel,Georgia,serif;color:var(--theme-heading)}
+.campaign-appearance-dialog p{margin:12px 0;overflow-wrap:anywhere}
+.campaign-appearance-dialog fieldset{min-width:0;border:1px solid var(--theme-border-soft);padding:12px;margin:16px 0}
+.campaign-appearance-dialog legend{padding:0 6px;font-weight:700}
+.campaign-colour-row{display:grid;grid-template-columns:minmax(110px,1fr) 50px minmax(100px,130px);align-items:center;gap:10px;margin:10px 0}
+.campaign-appearance-dialog :is(input,select,button){min-height:44px;min-width:0;max-width:100%;border:1px solid var(--theme-border);border-radius:5px;background:var(--theme-paper);color:var(--theme-ink);padding:8px;font:inherit}
+.campaign-appearance-dialog select{width:100%}
+.campaign-appearance-dialog input[type=color]{width:50px;padding:4px;cursor:pointer}
+.campaign-appearance-dialog :is(input,select,button):focus-visible{outline:3px solid var(--theme-focus);outline-offset:3px}
+.campaign-appearance-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;margin-top:18px}
+.campaign-appearance-actions button{cursor:pointer;color:var(--theme-heading)}
+.campaign-appearance-actions .btn-primary{background:var(--theme-primary);color:var(--theme-on-primary);border-color:var(--theme-primary)}
+.campaign-appearance-actions .btn-primary:hover{background:var(--theme-primary-hover)}
+.campaign-appearance-dialog [role=alert]{color:#8b2525;font-weight:bold}
+.campaign-appearance-dialog :disabled{opacity:.65;cursor:wait}
+@media(max-width:360px){.campaign-appearance-dialog{padding:16px}.campaign-colour-row{grid-template-columns:50px minmax(0,1fr)}.campaign-colour-row label{grid-column:1/-1}.campaign-appearance-actions button{flex:1 1 40%}}
+@media(max-width:700px){#campaignSettingsPanel>.dm-tools-grid{grid-template-columns:minmax(0,1fr)}}
+@media print{.campaign-appearance-dialog{display:none!important}}

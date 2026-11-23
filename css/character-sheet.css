@@ -1,6 +1,6 @@
 .character-sheet {
-  --sheet-ink:#342d26;
-  --sheet-muted:#756654;
+  --sheet-ink:var(--theme-ink);
+  --sheet-muted:var(--theme-muted);
   --sheet-border:#d8c9ae;
   --sheet-paper:#fffcf5;
   box-sizing:border-box;
@@ -57,13 +57,13 @@
   color:#e3d4c2;
   font-size:13px
 }
-.sheet-leave-dialog{box-sizing:border-box;width:min(520px,calc(100vw - 32px));padding:24px;border:3px double #8a7355;border-radius:10px;background:#fdfbf7;color:#473b30}
+.sheet-leave-dialog{box-sizing:border-box;width:min(520px,calc(100vw - 32px));padding:24px;border:3px double var(--theme-border);border-radius:10px;background:var(--theme-paper);color:#473b30}
 .sheet-leave-dialog::backdrop{background:rgba(28,18,10,.48)}
-.sheet-leave-dialog h2{font:700 1.3rem Cinzel,Georgia,serif;color:#5c1d1d;margin:0 0 16px}
+.sheet-leave-dialog h2{font:700 1.3rem Cinzel,Georgia,serif;color:var(--theme-heading);margin:0 0 16px}
 .sheet-leave-dialog p{line-height:1.6;overflow-wrap:anywhere}
 .sheet-leave-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .sheet-leave-actions button{min-height:44px}
-.sheet-leave-dialog :focus-visible{outline:3px solid #732424;outline-offset:3px}
+.sheet-leave-dialog :focus-visible{outline:3px solid var(--theme-heading);outline-offset:3px}
 .sheet-actions {
   display:flex;
   flex-wrap:wrap;
@@ -119,7 +119,7 @@
 }
 .sheet-tabs button[aria-selected=true] {
   background:#fffdf7;
-  color:#632d21;
+  color:var(--theme-heading);
   border-color:#cbb182;
   box-shadow:0 2px 4px #4a301017
 }
@@ -238,7 +238,7 @@
   gap:10px;
   align-items:center;
   padding:10px 0;
-  border-bottom:1px solid #e9dfcf
+  border-bottom:1px solid var(--theme-parchment)
 }
 .sheet-check-row>strong {
   font-size:12px
@@ -802,14 +802,14 @@
 }
 .sheet-print-dialog-card>header h2{
   margin:3px 0 5px;
-  color:#5c1d1d;
+  color:var(--theme-heading);
   font:700 22px/1.2 Cinzel,Georgia,serif;
 }
 .sheet-print-dialog-card>header p{margin:0;color:#6d5e50;font-size:12px}
 .sheet-print-dialog-card>header>[data-print-close]{
   width:34px;height:34px;min-width:34px;padding:0;
   border:1px solid #bba98e;border-radius:8px;
-  background:#fffaf0;color:#5c1d1d;font-size:20px;line-height:1;
+  background:#fffaf0;color:var(--theme-heading);font-size:20px;line-height:1;
 }
 .sheet-print-dialog-tools{
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;
@@ -820,7 +820,7 @@
 .sheet-print-dialog-tools button{
   min-height:32px;padding:6px 10px;
   border:1px solid #c8b79e;border-radius:7px;
-  background:#fffaf0;color:#5c1d1d;font-weight:700;
+  background:#fffaf0;color:var(--theme-heading);font-weight:700;
 }
 .sheet-print-dialog-tools span{margin-left:auto;color:#766657;font-size:11px;font-weight:700}
 .sheet-print-page-grid{
@@ -846,10 +846,10 @@
 .sheet-print-page-option:hover{border-color:#a98d60;background:#fff8eb}
 .sheet-print-page-option:has(input:checked){
   border-color:#8b6b35;
-  box-shadow:inset 3px 0 0 #d4af37;
+  box-shadow:inset 3px 0 0 var(--theme-accent);
   background:#fff8e7;
 }
-.sheet-print-page-option input{width:18px;height:18px;accent-color:#5c1d1d}
+.sheet-print-page-option input{width:18px;height:18px;accent-color:var(--theme-heading)}
 .sheet-print-page-option span{display:grid;gap:2px}
 .sheet-print-page-option strong{color:#4e261f;font:700 12px/1.25 Cinzel,Georgia,serif}
 .sheet-print-page-option small{color:#857363;font-size:10px}

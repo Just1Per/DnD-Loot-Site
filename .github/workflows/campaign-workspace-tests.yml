@@ -149,6 +149,43 @@ jobs:
         retention-days: 14
         path: /tmp/campaignatlas-ui-checks
         if-no-files-found: ignore
+  palette:
+    name: Filled characters and colour palettes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: tests/dependencies/browser/package-lock.json
+    - name: Install browser dependencies
+      run: node scripts/test-profiles.cjs install browser
+    - name: Prepare bounded Ubuntu package downloads
+      timeout-minutes: 1
+      run: sudo bash .github/scripts/prepare-browser-apt.sh
+    - name: Install Chromium
+      timeout-minutes: 6
+      run: node scripts/test-profiles.cjs run browser -- playwright install --with-deps chromium
+    - name: Install PDF text verification
+      timeout-minutes: 3
+      run: sudo apt-get install -y poppler-utils
+    - name: Filled sheets, palette contrast, mobile controls and neutral printing
+      run: |
+        mkdir -p /tmp/campaignatlas-ui-checks
+        set -o pipefail
+        npm --prefix tests run test:ui-palette 2>&1 | tee /tmp/campaignatlas-ui-checks/palette-review.log
+    - name: DM campaign appearance, live member palettes and preview isolation
+      run: npm --prefix tests run test:campaign-appearance
+    - name: Upload review screenshots, PDF, copy and measured results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: campaignatlas-ui-palette-review
+        retention-days: 14
+        path: /tmp/campaignatlas-ui-checks
+        if-no-files-found: ignore
   browser:
     name: Browser and navigation
     # Playwright 1.51.1 supports Ubuntu 24.04; ubuntu-latest has advanced to 26.04.
@@ -349,6 +386,8 @@ jobs:
       run: npm --prefix tests run test:item-removal-rules
     - name: Campaign home permissions and revision conflicts
       run: npm --prefix tests run test:campaign-home-rules
+    - name: Campaign appearance permissions, validation and revision conflicts
+      run: npm --prefix tests run test:campaign-appearance-rules
     - name: Visual NPC/world cards and DM-managed campaign map
       run: npm --prefix tests run test:campaign-map-rules
     - name: Shared party journal, notebook reader and private recap permissions
@@ -386,6 +425,7 @@ jobs:
     - permissions
     - adobe
     - packaging
+    - palette
     if: always()
     timeout-minutes: 2
     steps:
@@ -396,9 +436,10 @@ jobs:
         PERMISSION_RESULT: ${{ needs.permissions.result }}
         ADOBE_RESULT: ${{ needs.adobe.result }}
         PACKAGING_RESULT: ${{ needs.packaging.result }}
+        PALETTE_RESULT: ${{ needs.palette.result }}
       run: |
-        if [[ "$ENGINE_RESULT" != success || "$BROWSER_RESULT" != success || "$PERMISSION_RESULT" != success || "$ADOBE_RESULT" != success || "$PACKAGING_RESULT" != success ]]; then
-          echo "::error::Regression groups: engines=$ENGINE_RESULT, browser=$BROWSER_RESULT, permissions=$PERMISSION_RESULT, adobe=$ADOBE_RESULT, packaging=$PACKAGING_RESULT"
+        if [[ "$ENGINE_RESULT" != success || "$BROWSER_RESULT" != success || "$PERMISSION_RESULT" != success || "$ADOBE_RESULT" != success || "$PACKAGING_RESULT" != success || "$PALETTE_RESULT" != success ]]; then
+          echo "::error::Regression groups: engines=$ENGINE_RESULT, browser=$BROWSER_RESULT, permissions=$PERMISSION_RESULT, adobe=$ADOBE_RESULT, packaging=$PACKAGING_RESULT, palette=$PALETTE_RESULT"
           exit 1
         fi
-        echo "All engine, browser, Adobe shard, permission and Hosting boundary checks passed."
+        echo "All engine, browser, Adobe shard, permission, Hosting boundary and palette checks passed."
