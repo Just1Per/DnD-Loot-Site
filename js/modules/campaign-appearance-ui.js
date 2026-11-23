@@ -1,6 +1,8 @@
 'use strict';
 /* Campaign-wide presentation only. Preview never saves or dirties a character. */
 var CampaignAppearanceUI=(()=>{
+ // Capture dependencies during ordered startup; the temporary bridge is removed afterwards.
+ const sdk=globalThis.__DND_VAULT_DEPS__,store=createCampaignAppearanceStore(sdk);
  let subscription=null,key='',generation=0,editor=null;
  const previous=new Map();let metadata=null;
  const actor=()=>auth.currentUser?.uid;
@@ -38,7 +40,7 @@ var CampaignAppearanceUI=(()=>{
   const campaign=activeCampaign,uid=actor(),next=campaign&&uid?uid+':'+campaign.id:'';
   if(next===key){if(editor&&!canManageCampaign())close(false);return;}
   clear();if(!next)return;
-  key=next;apply(campaign.appearance);const token=generation,sdk=globalThis.__DND_VAULT_DEPS__;
+  key=next;apply(campaign.appearance);const token=generation;
   if(sdk?.onSnapshot)subscription=sdk.onSnapshot(sdk.doc(sdk.db,'campaigns',campaign.id),snapshot=>{
    if(token!==generation||key!==next||actor()!==uid||activeCampaign?.id!==campaign.id)return;
    if(!snapshot.exists()||snapshot.data().deletedAt){clear();return;}
@@ -90,7 +92,7 @@ var CampaignAppearanceUI=(()=>{
    event.preventDefault();if(s.busy||!valid()||!form.reportValidity())return;
    const input=draft();s.busy=true;form.setAttribute('aria-busy','true');for(const control of form.elements)control.disabled=true;status('Saving campaign appearance…');
    try{
-    const saved=await createCampaignAppearanceStore(globalThis.__DND_VAULT_DEPS__).save(s.campaignId,input);
+    const saved=await store.save(s.campaignId,input);
     if(!valid())return;receive(s.campaignId,s.uid,saved);close();mountSettings();
    }catch(error){if(valid())status('Could not save appearance. Your choices are still here. '+error.message,true);}
    finally{if(editor===s){s.busy=false;form.removeAttribute('aria-busy');for(const control of form.elements)control.disabled=false;}}
