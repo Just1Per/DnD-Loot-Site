@@ -93,6 +93,7 @@
     "adobe-additional-spells-browser.cjs",
     "adobe-player-guide-browser.cjs",
     "adobe-ai-lookup-browser.cjs",
-    "rule-automation-browser.cjs"
+    "rule-automation-browser.cjs",
+    "feat-ritual-rune-browser.cjs"
   ]
 }

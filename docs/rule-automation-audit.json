@@ -8,10 +8,10 @@
     "implementedSubclassAdapters": 186,
     "missingSubclassAdapters": 0,
     "feats": 302,
-    "featStructuredRecords": 99,
-    "featSpellPackages": 62,
-    "featSpellChoicePackages": 23,
-    "featSpellPackagesToReview": 20,
+    "featStructuredRecords": 102,
+    "featSpellPackages": 65,
+    "featSpellChoicePackages": 26,
+    "featSpellPackagesToReview": 17,
     "featExpandedListAdapters": 12,
     "featExpandedListsToReview": 0,
     "spells": 969,
@@ -45,6 +45,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -57,6 +60,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 2,
       "spellReview": null
     },
@@ -69,6 +75,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 2,
       "spellReview": null
     },
@@ -81,6 +90,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -93,6 +105,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -105,6 +120,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -117,6 +135,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -129,6 +150,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -141,6 +165,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -153,6 +180,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -165,6 +195,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -177,6 +210,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -189,6 +225,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -208,6 +247,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -227,6 +269,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -246,6 +291,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -265,6 +313,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -284,6 +335,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -303,6 +357,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -315,6 +372,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -327,6 +387,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -339,6 +402,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -353,6 +419,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 2,
       "spellReview": null
     },
@@ -365,6 +434,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -377,6 +449,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -389,6 +464,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -401,6 +479,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -415,6 +496,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -427,6 +511,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -439,6 +526,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -453,6 +543,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -465,6 +558,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -477,6 +573,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -489,6 +588,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -501,6 +603,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -513,6 +618,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -525,6 +633,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -539,6 +650,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -551,6 +665,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -563,6 +680,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -575,6 +695,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -587,6 +710,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -599,6 +725,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -611,6 +740,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -623,6 +755,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -635,6 +770,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -647,6 +785,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -659,6 +800,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -674,6 +818,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -686,6 +833,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -698,6 +848,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -724,6 +877,9 @@
         "Mark of Detection",
         "Sorcerer Spell"
       ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -739,6 +895,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -751,6 +910,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -763,6 +925,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -779,6 +944,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -791,6 +959,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -805,6 +976,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -817,6 +991,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -829,6 +1006,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -843,6 +1023,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -857,6 +1040,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -869,6 +1055,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -881,6 +1070,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -893,6 +1085,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -905,6 +1100,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -919,6 +1117,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -933,6 +1134,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -954,6 +1158,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -966,6 +1173,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -978,6 +1188,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -993,6 +1206,9 @@
         "Ray of Frost",
         "Wizard cantrip"
       ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -1005,6 +1221,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -1019,6 +1238,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1031,6 +1253,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1043,6 +1268,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1055,6 +1283,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1067,6 +1298,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1081,6 +1315,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1093,6 +1330,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1105,6 +1345,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1117,6 +1360,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1129,6 +1375,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1141,6 +1390,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -1157,6 +1409,9 @@
         "Good",
         "Neutral"
       ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 6,
       "spellReview": null
     },
@@ -1169,6 +1424,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1181,6 +1439,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1195,6 +1456,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1230,6 +1494,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1242,6 +1509,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -1254,6 +1524,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1266,6 +1539,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1278,6 +1554,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1290,6 +1569,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1302,6 +1584,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1314,6 +1599,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1326,6 +1614,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1342,6 +1633,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1354,6 +1648,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1366,6 +1663,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1378,6 +1678,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1390,6 +1693,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1402,6 +1708,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1416,6 +1725,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1435,6 +1747,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1447,6 +1762,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -1468,6 +1786,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1480,6 +1801,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -1492,6 +1816,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1504,6 +1831,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1525,6 +1855,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1549,6 +1882,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1570,6 +1906,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -1591,6 +1930,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -1603,6 +1945,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1615,6 +1960,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1629,6 +1977,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1656,6 +2007,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1668,6 +2022,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1680,6 +2037,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1692,6 +2052,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1713,6 +2076,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1725,6 +2091,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1737,6 +2106,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1749,6 +2121,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1761,6 +2136,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1773,6 +2151,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1785,6 +2166,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1797,6 +2181,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1809,6 +2196,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1821,6 +2211,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1833,6 +2226,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1845,6 +2241,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1857,6 +2256,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1869,6 +2271,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1881,6 +2286,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1893,6 +2301,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1905,6 +2316,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1917,6 +2331,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1929,6 +2346,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1941,6 +2361,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1953,6 +2376,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1968,6 +2394,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1980,6 +2409,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -1992,6 +2424,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2004,6 +2439,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2016,6 +2454,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2028,6 +2469,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2040,6 +2484,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2052,6 +2499,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2064,6 +2514,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -2078,6 +2531,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2094,6 +2550,9 @@
         "Lunitari",
         "Solinari"
       ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 6,
       "spellReview": null
     },
@@ -2106,6 +2565,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2118,6 +2580,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2130,6 +2595,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2142,6 +2610,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2156,6 +2627,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2170,6 +2644,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2182,6 +2659,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2194,6 +2674,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2206,6 +2689,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2221,6 +2707,9 @@
         "Light",
         "Cleric Cantrip"
       ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -2233,6 +2722,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2245,6 +2737,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2259,6 +2754,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2278,6 +2776,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2290,6 +2791,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2302,6 +2806,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2314,6 +2821,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2326,6 +2836,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2338,6 +2851,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2350,6 +2866,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2362,6 +2881,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2378,6 +2900,9 @@
         "Druid Spells",
         "Wizard Spells"
       ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 6,
       "spellReview": null
     },
@@ -2390,6 +2915,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2402,6 +2930,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2437,6 +2968,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2472,6 +3006,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2507,6 +3044,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2542,6 +3082,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2585,6 +3128,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2618,6 +3164,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2645,6 +3194,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2686,6 +3238,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2713,6 +3268,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2746,6 +3304,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2781,6 +3342,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2824,6 +3388,9 @@
         5
       ],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2836,6 +3403,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2848,6 +3418,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2860,6 +3433,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2872,6 +3448,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2884,6 +3463,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2896,6 +3478,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2908,6 +3493,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2920,6 +3508,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2932,6 +3523,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2944,6 +3538,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2956,6 +3553,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2970,6 +3570,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2982,6 +3585,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -2994,6 +3600,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -3006,6 +3615,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3020,6 +3632,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3032,6 +3647,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3044,6 +3662,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3056,6 +3677,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3068,6 +3692,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -3080,6 +3707,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3092,6 +3722,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3104,6 +3737,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3118,6 +3754,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3132,6 +3771,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3144,6 +3786,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3156,6 +3801,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3170,6 +3818,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3182,6 +3833,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3199,6 +3853,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3211,6 +3868,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3223,6 +3883,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3237,6 +3900,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3249,6 +3915,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3261,6 +3930,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3273,6 +3945,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3285,6 +3960,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3297,6 +3975,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3309,6 +3990,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3320,9 +4004,26 @@
       "structuredFacts": [],
       "fixedSpells": [],
       "expandedSpellLevels": [],
-      "alternativeSpellPackages": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "alternativeSpellPackages": [
+        "Bard ritual book",
+        "Cleric ritual book",
+        "Druid ritual book",
+        "Sorcerer ritual book",
+        "Warlock ritual book",
+        "Wizard ritual book"
+      ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [
+        "bard",
+        "cleric",
+        "druid",
+        "sorcerer",
+        "warlock",
+        "wizard"
+      ],
+      "activatedSpellChoices": [],
+      "spellChoiceGroups": 6,
+      "spellReview": null
     },
     {
       "id": "Feat-xphb-3a984990710d753c",
@@ -3333,8 +4034,19 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "auxiliarySpellResources": [
+        {
+          "name": "Quick Ritual",
+          "max": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
+      "spellChoiceGroups": 1,
+      "spellReview": null
     },
     {
       "id": "Feat-bgg-579637759ab952fc",
@@ -3342,11 +4054,25 @@
       "edition": "2014",
       "source": "BGG",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "comprehend languages",
+          "unlock": 1,
+          "freeUses": 1,
+          "recovery": [
+            "long"
+          ]
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
-      "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [
+        "inscribed-carried"
+      ],
+      "spellChoiceGroups": 1,
+      "spellReview": null
     },
     {
       "id": "Feat-phb-0c1c86b019f3f8e0",
@@ -3357,6 +4083,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3369,6 +4098,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3389,6 +4121,9 @@
         "Lawful Outer Plane",
         "The Outlands"
       ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3401,6 +4136,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3422,6 +4160,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3434,6 +4175,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3446,6 +4190,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3467,6 +4214,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -3488,6 +4238,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -3509,6 +4262,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3521,6 +4277,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3533,6 +4292,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3545,6 +4307,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3557,6 +4322,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3569,6 +4337,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3584,6 +4355,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3599,6 +4373,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3611,6 +4388,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3623,6 +4403,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3635,6 +4418,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3649,6 +4435,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3661,6 +4450,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3673,6 +4465,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3685,6 +4480,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3697,6 +4495,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3709,6 +4510,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3723,6 +4527,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3742,6 +4549,9 @@
         "Warlock Spells",
         "Wizard Spells"
       ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 6,
       "spellReview": null
     },
@@ -3754,6 +4564,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3766,6 +4579,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3778,6 +4594,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3797,6 +4616,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3811,6 +4633,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3823,6 +4648,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3835,6 +4663,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3847,6 +4678,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3875,6 +4709,9 @@
         "Witherbloom 2",
         "Witherbloom 3"
       ],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 15,
       "spellReview": null
     },
@@ -3887,6 +4724,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -3899,6 +4739,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3942,6 +4785,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3957,6 +4803,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3969,6 +4818,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -3981,6 +4833,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4000,6 +4855,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4019,6 +4877,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4040,6 +4901,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4061,6 +4925,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4073,6 +4940,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4085,6 +4955,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4104,6 +4977,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4116,6 +4992,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4128,6 +5007,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4140,6 +5022,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -4152,6 +5037,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4164,6 +5052,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -4176,6 +5067,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4188,6 +5082,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4200,6 +5097,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4212,6 +5112,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4224,6 +5127,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
     },
@@ -4236,6 +5142,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4248,6 +5157,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4260,6 +5172,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4272,6 +5187,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4293,6 +5211,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4322,6 +5243,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4334,6 +5258,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4346,6 +5273,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4375,6 +5305,9 @@
       ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 1,
       "spellReview": null
     },
@@ -4387,6 +5320,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     },
@@ -4399,6 +5335,9 @@
       "fixedSpells": [],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
+      "auxiliarySpellResources": [],
+      "ritualBookClasses": [],
+      "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
       "spellReview": null
     }

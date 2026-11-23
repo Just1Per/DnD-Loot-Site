@@ -78,6 +78,12 @@ for feat in json.loads(source.read_text())['feat']:
  if len(packages)==1 and packages[0].get('expanded'):
   facts['expandedSpells']=[{'slotLevel':int(gate[1:]),'spells':names} for gate,names in packages[0]['expanded'].items() if gate.startswith('s') and gate[1:].isdigit() and isinstance(names,list) and all(isinstance(name,str) for name in names)]
  if facts:rows[feat['source']+'|'+feat['name']]=facts
+authored=json.loads((ROOT/'scripts/feat-spell-overrides.json').read_text())
+if authored['revision']!=json.loads((ROOT/'data/rules/sources/5etools-v1.json').read_text())['revision']:raise ValueError('Feat spell override revision mismatch')
+source_ids={feat['source']+'|'+feat['name'] for feat in json.loads(source.read_text())['feat']}
+for identity,patch in authored['feats'].items():
+ if identity not in source_ids:raise ValueError('Unknown feat override: '+identity)
+ rows.setdefault(identity,{}).update(patch)
 result={'revision':json.loads((ROOT/'data/rules/sources/5etools-v1.json').read_text())['revision'],'sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'records':rows}
 text="'use strict';\n/* Generated structured feat facts: scripts/build-feat-mechanics.py. No source prose. */\nvar CharacterFeatMechanicsData="+json.dumps(result,separators=(',',':'),ensure_ascii=False)+";\nif(typeof module!=='undefined'&&module.exports)module.exports=CharacterFeatMechanicsData;\n"
 (ROOT/'js/modules/character-feat-mechanics-data.js').write_text(text)

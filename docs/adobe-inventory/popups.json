@@ -170,6 +170,7 @@
         "adobe-native-feats-browser.cjs",
         "adobe-personal-feats-browser.cjs",
         "adobe-player-feats-browser.cjs",
+        "feat-ritual-rune-browser.cjs",
         "rule-automation-browser.cjs",
         "site-palette-browser.cjs"
       ]

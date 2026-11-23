@@ -1,0 +1,249 @@
+{
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "scope": "Reviewed structured feat spell facts and our own concise instructions. No source entries.",
+  "feats": {
+    "PHB|Ritual Caster": {
+      "spellPackages": [
+        {
+          "name": "Bard ritual book",
+          "ability": "cha",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "bard"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "bard",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Cleric ritual book",
+          "ability": "wis",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "cleric"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "cleric",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Druid ritual book",
+          "ability": "wis",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "druid"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "druid",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Sorcerer ritual book",
+          "ability": "cha",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "sorcerer"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "sorcerer",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Warlock ritual book",
+          "ability": "cha",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "warlock"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "warlock",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Wizard ritual book",
+          "ability": "int",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "wizard"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "wizard",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        }
+      ]
+    },
+    "XPHB|Ritual Caster": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [],
+        "choices": [
+          {
+            "pool": {
+              "countFrom": "proficiency",
+              "levels": [
+                1
+              ],
+              "ritual": true
+            },
+            "unlock": 4,
+            "usage": "Always prepared; cast as a ritual or use an appropriate spell slot"
+          }
+        ],
+        "auxResources": [
+          {
+            "id": "quick-ritual",
+            "name": "Quick Ritual",
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "description": "Choose one prepared ritual spell and cast it using its normal casting time, without a slot or the extra ritual time. This counter records the use; it does not cast the spell."
+          }
+        ],
+        "instructions": "The number of selected level-1 rituals follows Proficiency Bonus. They are always prepared and use the ability increased by this feat. Quick Ritual recovers on Long Rest; ordinary ritual casting has no use pool."
+      }
+    },
+    "BGG|Rune Shaper": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "int",
+            "wis",
+            "cha"
+          ]
+        },
+        "grants": [
+          {
+            "ref": "comprehend languages",
+            "unlock": 1,
+            "usage": "Once per Long Rest; may also use an appropriate spell slot",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [
+          {
+            "pool": {
+              "countFrom": "half-proficiency",
+              "names": [
+                "fog cloud",
+                "inflict wounds",
+                "chromatic orb",
+                "disguise self",
+                "burning hands",
+                "speak with animals",
+                "armor of agathys",
+                "goodberry",
+                "longstrider",
+                "command",
+                "entangle",
+                "sanctuary",
+                "thunderwave"
+              ]
+            },
+            "unlock": 1,
+            "activation": "inscribed-carried",
+            "usage": "Invoke this known rune once per Long Rest without a slot or material components; its marked object must be worn or carried. Spell slots may also be used while the rune is available.",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "instructions": "Choose runes equal to half Proficiency Bonus, rounded down. At Long Rest, inscribe each known rune on a touched eligible nonmagical object. Mark a rune available only while its inscribed object is on your person; otherwise its spell is inactive. Change known runes only when gaining a level. Comprehend Languages has a separate daily use."
+      }
+    }
+  }
+}
