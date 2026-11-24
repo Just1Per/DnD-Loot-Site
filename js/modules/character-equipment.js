@@ -103,9 +103,9 @@ var CharacterEquipment = (() => {
   }
   function attunementState(data,loot=[],level){
     loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
-    const limit=attunementLimit(data,level),owned=new Map(loot.filter(row=>row&&Number(row.quantity)>0).map(row=>[row.id,row])),ids=[];
-    for(const choice of choices(data?.equipmentState).loadout){const item=owned.get(choice.id)?.item;if(!item||!choice.attuned)continue;const needs=(typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(item))||!!item.attunement;if(needs)ids.push(choice.id);}
-    return{limit,count:ids.length,active:new Set(ids.slice(0,limit))};
+    const limit=attunementLimit(data,level),owned=new Map(loot.filter(row=>row&&Number(row.quantity)>0).map(row=>[row.id,row])),ids=[],ineligible=new Map(),Magic=globalThis.CharacterMagicItems;
+    for(const choice of choices(data?.equipmentState).loadout){const item=owned.get(choice.id)?.item;if(!item||!choice.attuned)continue;const needs=Magic?.requiresAttunement(item)||!!item.attunement;if(!needs)continue;const requirement=Magic?.attunementClassRequirement?.(data,item,level);if(requirement&&!requirement.eligible)ineligible.set(choice.id,requirement.message);else ids.push(choice.id);}
+    return{limit,count:ids.length,active:new Set(ids.slice(0,limit)),ineligible};
   }
   function derive(data,stats,loot=[],level,inferItem=CharacterEquipment.infer) {
     loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
@@ -118,7 +118,7 @@ var CharacterEquipment = (() => {
       r.profile=profile(r.mechanics,data.build.edition);
       r.requiresAttunement=(typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(r.item))||!!r.item.attunement;
       r.magicActive=!r.requiresAttunement;
-      if(r.requiresAttunement&&r.choice.attuned){r.magicActive=attunement.active.has(r.entry.id);if(!r.magicActive)warnings.push(r.item.name+': exceeds '+(attunement.limit===3?'three':attunement.limit)+' attunement slots; magic inactive.');}
+      if(r.requiresAttunement&&r.choice.attuned){r.magicActive=attunement.active.has(r.entry.id);if(!r.magicActive)warnings.push(r.item.name+': '+(attunement.ineligible.get(r.entry.id)||'exceeds '+(attunement.limit===3?'three':attunement.limit)+' attunement slots; magic inactive.'));}
       r.companionCarried=(globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null))?.carrier(data,r.entry.id)>=0;r.active=r.choice.equipped&&!r.companionCarried;
       if(!r.active)continue;
       const kind=r.mechanics.kind;

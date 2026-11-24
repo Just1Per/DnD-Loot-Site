@@ -104,8 +104,28 @@ var CharacterMagicItems=(()=>{
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},rows=stored.classLevels?.length?stored.classLevels:[{classId:data.build?.classId,level}],out={},seen=new Set();let left=Math.max(1,Math.min(20,Math.trunc(Number(level)||1)));
     for(const row of rows){const amount=Math.min(left,Math.max(0,Math.trunc(Number(row.level)||0)));left-=amount;if(amount&&typeof row.classId==='string'&&!seen.has(row.classId)){out[row.classId]=amount;seen.add(row.classId);}}return out;
   }
+  // Only complete class-only prerequisite alternatives are enforced here. Other
+  // source requirements retain their separate, explicitly bounded adapters.
+  function attunementClasses(fact){
+    const tags=fact?.reqAttuneTags,known=new Set(['artificer','bard','cleric','druid','monk','paladin','ranger','sorcerer','warlock','wizard']);
+    if(!fact?.reqAttune||!tags?.length||!tags.every(group=>Object.keys(group).length===1&&typeof group.class==='string'&&known.has(group.class.split('|')[0].toLowerCase())))return null;
+    return [...new Set(tags.map(group=>group.class.split('|')[0].toLowerCase()))];
+  }
+  function attunementClassRequirement(data,item,level=20){
+    const required=attunementClasses(Pinned.find(item));if(!required)return null;
+    const Engine=globalThis.CharacterAdobeEngine,stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},live={...data,adobe:stored};
+    level=Engine?.level?Engine.level(live,level):level;
+    const context=Engine?.classLevels?{...data,adobe:{...stored,classLevels:Engine.classLevels(live,level)}}:data,selected=classes(context,level),C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);
+    if(selected.artificer&&!C?.artificerSource(context).eligible)delete selected.artificer;
+    let exception='';
+    if((selected.artificer||0)>=14&&C?.artificerSource(data).id==='tce')exception='Magic Item Savant';
+    if(!exception&&(selected.rogue||0)>=13){const RS=globalThis.CharacterRogueSubclasses||(typeof require==='function'?require('./character-rogue-subclasses'):null),rogue=RS?.derive(context,{level});if(rogue?.active&&rogue.id==='thief'&&rogue.level>=13)exception='Use Magic Device (2014 Thief)';}
+    const eligible=required.some(id=>selected[id]>0)||!!exception,names=required.map(id=>id[0].toUpperCase()+id.slice(1)).join(' / ');
+    return{eligible,classes:required,exception,message:'Class attunement requirement: '+names+'. '+(eligible?(exception?'Met through '+exception+'.':'Met by your allocated class levels.'):'No qualifying allocated class level; magical benefits are inactive.')};
+  }
   function eligibility(data,fact,effects,level){
     if(fact&&!prerequisiteConfirmed(data,{pinnedItemFacts:fact}))return false;
+    const classRequirement=fact&&attunementClassRequirement(data,{pinnedItemFacts:fact},level);if(classRequirement)return classRequirement.eligible;
     if(!fact?.reqAttuneTags?.length)return true;
     const selected=classes(data,level),C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);
     if((selected.artificer||0)>=14&&C?.artificerSource(data).id==='tce')return true;
@@ -116,7 +136,7 @@ var CharacterMagicItems=(()=>{
     const family=Pinned.key(fact.spellBonusFamily||fact.name).replace(/^[123] /,'');
     const policy=namedPolicy(fact);
     const passive=passivePolicy(fact);
-    return{...abilityCoverage(fact),spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.ac?{armorClassBonus:passive.ac}:{}),...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)||!!defensePolicy(fact),...(defensePolicy(fact)?{immunityScope:{types:fact.immune,equipped:true,attunement:true},itemUseScope:{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false}}:{})};
+    return{...abilityCoverage(fact),...(attunementClasses(fact)?{attunementClassScope:{classes:attunementClasses(fact),exceptions:['Magic Item Savant (TCE Artificer 14)','Use Magic Device (PHB Thief 13)'],otherRequirements:'Separate source-specific review'}}:{}),spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.ac?{armorClassBonus:passive.ac}:{}),...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)||!!defensePolicy(fact),...(defensePolicy(fact)?{immunityScope:{types:fact.immune,equipped:true,attunement:true},itemUseScope:{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false}}:{})};
   }
   function spellBonuses(effects={},classId='',ability=''){
     const all=effects.itemSpellBonuses||{},global=all.global||{},specific=all[classId]||{},byAbility=effects.itemSpellAbilityBonuses?.[ability]||{};
@@ -265,8 +285,8 @@ var CharacterMagicItems=(()=>{
       }
       if(changed.length||hasAbilityFloor)reports.push(report);
     }
-    const overAttuned=active.filter(row=>row.needsAttunement&&row.choice.attuned&&!row.magicActive);
-    for(const row of overAttuned)warnings.push(row.item.name+': exceeds '+(E.attunementLimit(data,level)===3?'three':E.attunementLimit(data,level))+' attunement slots; Adobe magic-item effects are inactive.');
+    const overAttuned=active.filter(row=>row.needsAttunement&&row.choice.attuned&&!row.magicActive),attunement=E.attunementState(data,loot,level);
+    for(const row of overAttuned){const blocked=attunement.ineligible.get(row.entry.id);if(blocked){warnings.push(row.item.name+': '+blocked);continue;}warnings.push(row.item.name+': exceeds '+(E.attunementLimit(data,level)===3?'three':E.attunementLimit(data,level))+' attunement slots; Adobe magic-item effects are inactive.');}
     applyScopedPassives(data,effects,loot,level,reports,warnings);
     // An item that sets a score has no effect when the score without it is higher.
     // Resolve ordinary increases first, then the highest active floor per ability.
@@ -299,7 +319,7 @@ var CharacterMagicItems=(()=>{
 
   // The host installs the bridge; a plain Node metadata import must not mutate another model.
   if(typeof CharacterEquipment!=='undefined')E.infer=infer;
-  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear,spellBonuses,automationCoverage,prerequisite,prerequisiteConfirmed,setPrerequisite,orbitControl,setOrbiting,instructions};
+  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear,spellBonuses,automationCoverage,prerequisite,prerequisiteConfirmed,setPrerequisite,orbitControl,setOrbiting,attunementClassRequirement,instructions};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterMagicItems=CharacterMagicItems;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterMagicItems;

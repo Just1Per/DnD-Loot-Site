@@ -26,6 +26,8 @@
     "spellHealingFormulas": 14,
     "manualDamageReferences": 100,
     "itemFacts": 1278,
+    "itemClassRequirementFacts": 136,
+    "itemClassRequirementAdapters": 133,
     "itemAbilityFacts": 75,
     "itemAbilityAdapters": 32,
     "itemBases": 230,
@@ -16663,6 +16665,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16676,6 +16679,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16689,6 +16693,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": true,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16702,6 +16707,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": true,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16715,6 +16721,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16728,6 +16735,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": true,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16741,6 +16749,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16754,6 +16763,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16767,6 +16777,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": true,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16780,6 +16791,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16810,6 +16822,7 @@
         "saveDC": 17,
         "concentration": false
       },
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -16822,6 +16835,16 @@
       "name": "Blackstaff",
       "source": "WDH",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
@@ -16830,6 +16853,7 @@
       },
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
@@ -16843,6 +16867,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16856,6 +16881,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16869,6 +16895,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16882,6 +16909,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16895,6 +16923,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16908,6 +16937,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16927,6 +16957,7 @@
         "attunement": true
       },
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16946,6 +16977,7 @@
         "attunement": true
       },
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16965,6 +16997,7 @@
         "attunement": true
       },
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16984,6 +17017,7 @@
         "attunement": true
       },
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -16997,6 +17031,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17010,6 +17045,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17023,6 +17059,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17036,6 +17073,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17049,6 +17087,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17062,6 +17101,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17075,6 +17115,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17088,6 +17129,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17101,6 +17143,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17111,11 +17154,24 @@
       "name": "Staff of Power",
       "source": "DMG",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
@@ -17126,11 +17182,24 @@
       "name": "Staff of Power",
       "source": "XDMG",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
@@ -17151,6 +17220,7 @@
         "alignment": "G"
       },
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17164,6 +17234,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17177,6 +17248,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17190,6 +17262,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17203,6 +17276,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17216,6 +17290,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17236,6 +17311,7 @@
         "armorClassBonus": 2
       },
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -17248,11 +17324,22 @@
       "name": "+1 All-Purpose Tool",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "artificer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "artificer"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17263,11 +17350,23 @@
       "name": "+1 Amulet of the Devout",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17278,11 +17377,22 @@
       "name": "+1 Arcane Grimoire",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "wizard"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17293,11 +17403,22 @@
       "name": "+1 Bloodwell Vial",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "sorcerer"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17308,11 +17429,23 @@
       "name": "+1 Fate Dealer's Deck",
       "source": "BMT",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17323,12 +17456,24 @@
       "name": "+1 Moon Sickle",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "ranger"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "druid",
         "ranger"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17339,11 +17484,22 @@
       "name": "+1 Rhythm-Maker's Drum",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "bard"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17354,11 +17510,22 @@
       "name": "+1 Rod of the Pact Keeper",
       "source": "DMG",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "warlock"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17369,11 +17536,22 @@
       "name": "+1 Rod of the Pact Keeper",
       "source": "XDMG",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "warlock"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17389,6 +17567,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17404,6 +17583,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17414,11 +17594,22 @@
       "name": "+2 All-Purpose Tool",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "artificer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "artificer"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17429,11 +17620,23 @@
       "name": "+2 Amulet of the Devout",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17444,11 +17647,22 @@
       "name": "+2 Arcane Grimoire",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "wizard"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17459,11 +17673,22 @@
       "name": "+2 Bloodwell Vial",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "sorcerer"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17474,11 +17699,23 @@
       "name": "+2 Fate Dealer's Deck",
       "source": "BMT",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17489,12 +17726,24 @@
       "name": "+2 Moon Sickle",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "ranger"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "druid",
         "ranger"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17505,11 +17754,22 @@
       "name": "+2 Rhythm-Maker's Drum",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "bard"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17520,11 +17780,22 @@
       "name": "+2 Rod of the Pact Keeper",
       "source": "DMG",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "warlock"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17535,11 +17806,22 @@
       "name": "+2 Rod of the Pact Keeper",
       "source": "XDMG",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "warlock"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17555,6 +17837,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17570,6 +17853,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17580,11 +17864,22 @@
       "name": "+3 All-Purpose Tool",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "artificer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "artificer"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17595,11 +17890,23 @@
       "name": "+3 Amulet of the Devout",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17610,11 +17917,22 @@
       "name": "+3 Arcane Grimoire",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "wizard"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17625,11 +17943,22 @@
       "name": "+3 Bloodwell Vial",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "sorcerer"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17640,11 +17969,23 @@
       "name": "+3 Fate Dealer's Deck",
       "source": "BMT",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17655,12 +17996,24 @@
       "name": "+3 Moon Sickle",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "ranger"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "druid",
         "ranger"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17671,11 +18024,22 @@
       "name": "+3 Rhythm-Maker's Drum",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "bard"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17686,11 +18050,22 @@
       "name": "+3 Rod of the Pact Keeper",
       "source": "DMG",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "warlock"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17701,11 +18076,22 @@
       "name": "+3 Rod of the Pact Keeper",
       "source": "XDMG",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "warlock"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17721,6 +18107,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17736,6 +18123,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17746,6 +18134,16 @@
       "name": "Blackstaff",
       "source": "WDH",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
@@ -17754,6 +18152,7 @@
       },
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
@@ -17769,6 +18168,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17784,6 +18184,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17794,11 +18195,24 @@
       "name": "Jester's Mask",
       "source": "BMT",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "sorcerer",
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "ability:cha"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17814,6 +18228,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17824,11 +18239,22 @@
       "name": "Psionic Rod of the Honed Mind",
       "source": "AU",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "warlock"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17844,6 +18270,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17854,11 +18281,22 @@
       "name": "Reveler's Concertina",
       "source": "TCE",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "bard"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17869,11 +18307,24 @@
       "name": "Robe of Thayan Arcana",
       "source": "AUD",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17884,11 +18335,24 @@
       "name": "Robe of the Archmagi",
       "source": "DMG",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17899,11 +18363,24 @@
       "name": "Robe of the Archmagi",
       "source": "XDMG",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17919,6 +18396,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": true,
       "abilityMetadata": {
         "str": 4
@@ -17937,6 +18415,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17947,11 +18426,24 @@
       "name": "Staff of Power",
       "source": "DMG",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
@@ -17962,11 +18454,24 @@
       "name": "Staff of Power",
       "source": "XDMG",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
@@ -17982,6 +18487,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -17992,11 +18498,24 @@
       "name": "Staff of the Magi",
       "source": "DMG",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18007,11 +18526,24 @@
       "name": "Staff of the Magi",
       "source": "XDMG",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18022,11 +18554,22 @@
       "name": "Staff of the Woodlands",
       "source": "DMG",
       "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18037,11 +18580,22 @@
       "name": "Staff of the Woodlands",
       "source": "XDMG",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "druid"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18064,6 +18618,7 @@
       },
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18074,11 +18629,23 @@
       "name": "Talisman of Pure Good",
       "source": "XDMG",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "global"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18101,6 +18668,7 @@
       },
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18116,6 +18684,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18126,11 +18695,22 @@
       "name": "Tranquil Rod of the Honed Mind",
       "source": "AU",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "warlock"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18141,11 +18721,22 @@
       "name": "Vigilant Rod of the Honed Mind",
       "source": "AU",
       "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      },
       "spellScope": [
         "warlock"
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": true,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
@@ -18161,11 +18752,2132 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
       "chargeMetadata": true
+    }
+  ],
+  "itemAttunementClasses": [
+    {
+      "name": "+1 All-Purpose Tool",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "artificer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+1 Amulet of the Devout",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+1 Arcane Grimoire",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+1 Bloodwell Vial",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+1 Dragonhide Belt",
+      "source": "FTD",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "monk"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+1 Fate Dealer's Deck",
+      "source": "BMT",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+1 Moon Sickle",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "ranger"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+1 Rhythm-Maker's Drum",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+1 Rod of the Pact Keeper",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+1 Rod of the Pact Keeper",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 All-Purpose Tool",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "artificer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 Amulet of the Devout",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 Arcane Grimoire",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 Bloodwell Vial",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 Dragonhide Belt",
+      "source": "FTD",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "monk"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 Fate Dealer's Deck",
+      "source": "BMT",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 Moon Sickle",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "ranger"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 Rhythm-Maker's Drum",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 Rod of the Pact Keeper",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+2 Rod of the Pact Keeper",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 All-Purpose Tool",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "artificer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 Amulet of the Devout",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 Arcane Grimoire",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 Bloodwell Vial",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 Dragonhide Belt",
+      "source": "FTD",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "monk"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 Fate Dealer's Deck",
+      "source": "BMT",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 Moon Sickle",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "ranger"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 Rhythm-Maker's Drum",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 Rod of the Pact Keeper",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "+3 Rod of the Pact Keeper",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Alchemical Compendium",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Astral Shard",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Astromancy Archive",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Atlas of Endless Horizons",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Bell Branch",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Blackstaff",
+      "source": "WDH",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Cauldron of Rebirth",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Cauldron of Rebirth",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Crystalline Chronicle",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Dark Shard Amulet",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Dark Shard Amulet",
+      "source": "XGE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Devotee's Censer",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Diamond Staff",
+      "source": "AU",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Duplicitous Manuscript",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Elemental Essence Shard",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Elemental Essence Shard (Air)",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Elemental Essence Shard (Earth)",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Elemental Essence Shard (Fire)",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Elemental Essence Shard (Water)",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Fane-Eater",
+      "source": "BGDIA",
+      "edition": "2014",
+      "review": "Combined requirements need separate source review; class-only alternatives are not inferred from them."
+    },
+    {
+      "name": "Far Realm Shard",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Feywild Shard",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Fulminating Treatise",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Gauntlets of Rage",
+      "source": "CoA",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Grimoire Infinitus (Awakened)",
+      "source": "EGW",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Grimoire Infinitus (Dormant)",
+      "source": "EGW",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Grimoire Infinitus (Exalted)",
+      "source": "EGW",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Guardian Emblem",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Hat of Many Spells",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Hat of Wizardry",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Hat of Wizardry",
+      "source": "XGE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Heart Weaver's Primer",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Helm of Disjunction",
+      "source": "HAT-LMI",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Holy Symbol of Ravenkind",
+      "source": "CoS",
+      "edition": "2014",
+      "review": "Combined requirements need separate source review; class-only alternatives are not inferred from them."
+    },
+    {
+      "name": "Horn of Beckoning Death",
+      "source": "HAT-LMI",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Anstruth Harp",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Anstruth Harp",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Canaith Mandolin",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Canaith Mandolin",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Cli Lyre",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Cli Lyre",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Doss Lute",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Doss Lute",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Fochlucan Bandore",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Fochlucan Bandore",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Mac-Fuirmidh Cittern",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Mac-Fuirmidh Cittern",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Ollamh Harp",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Instrument of the Bards, Ollamh Harp",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Jakarion's Staff of Frost",
+      "source": "CoS",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Jester's Mask",
+      "source": "BMT",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "sorcerer",
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Libram of Souls and Flesh",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Lyre of Building",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Mizzium Apparatus",
+      "source": "GGR",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Nature's Mantle",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "ranger"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Nature's Mantle",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "ranger"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Necklace of Prayer Beads",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "druid",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Necklace of Prayer Beads",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "druid",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Nepenthe",
+      "source": "VRGR",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Orb of Sorcery",
+      "source": "AU",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Orcsplitter",
+      "source": "PotA",
+      "edition": "2014",
+      "review": "Combined requirements need separate source review; class-only alternatives are not inferred from them."
+    },
+    {
+      "name": "Outer Essence Shard",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Outer Essence Shard (Chaotic)",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Outer Essence Shard (Evil)",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Outer Essence Shard (Good)",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Outer Essence Shard (Lawful)",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Planecaller's Codex",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Protective Verses",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Psionic Rod of the Honed Mind",
+      "source": "AU",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Reveler's Concertina",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Robe of Thayan Arcana",
+      "source": "AUD",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Robe of the Archmagi",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Robe of the Archmagi",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Rod of Resurrection",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "druid",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Scarlet Spellbook",
+      "source": "AUD",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Shadowfell Shard",
+      "source": "TCE",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Spider Staff",
+      "source": "PaBTSO",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Charming",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "cleric",
+          "druid",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Charming",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "cleric",
+          "druid",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Defense",
+      "source": "PaBTSO",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Dunamancy",
+      "source": "EGW",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Fire",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Fire",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Frost",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Frost",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "druid",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Healing",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "cleric",
+          "druid"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Healing",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "cleric",
+          "druid"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Power",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Power",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Swarming Insects",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "cleric",
+          "druid",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Swarming Insects",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "bard",
+          "cleric",
+          "druid",
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of the Adder",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "druid",
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of the Forgotten One",
+      "source": "ToA",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of the Magi",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of the Magi",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "sorcerer",
+          "warlock",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of the Python",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "druid",
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of the Woodlands",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "druid"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of the Woodlands",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "druid"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Withering",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "druid",
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Staff of Withering",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "druid",
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Sun Staff",
+      "source": "BMT",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "druid",
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Talisman of Pure Good",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "cleric",
+          "paladin"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Tome of the Stilled Tongue",
+      "source": "DMG",
+      "edition": "2014",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Tome of the Stilled Tongue",
+      "source": "XDMG",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "wizard"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Tranquil Rod of the Honed Mind",
+      "source": "AU",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
+    },
+    {
+      "name": "Vigilant Rod of the Honed Mind",
+      "source": "AU",
+      "edition": "2024",
+      "attunementClassScope": {
+        "classes": [
+          "warlock"
+        ],
+        "exceptions": [
+          "Magic Item Savant (TCE Artificer 14)",
+          "Use Magic Device (PHB Thief 13)"
+        ],
+        "otherRequirements": "Separate source-specific review"
+      }
     }
   ],
   "itemAbilities": [
@@ -19471,6 +22183,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -19484,6 +22197,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -19497,6 +22211,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19510,6 +22225,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19523,6 +22239,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19536,6 +22253,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19549,6 +22267,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19562,6 +22281,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -19575,6 +22295,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -19588,6 +22309,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -19601,6 +22323,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19614,6 +22337,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19627,6 +22351,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19640,6 +22365,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
@@ -19653,6 +22379,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19666,6 +22393,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -19679,6 +22407,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasClassRequirement": false,
       "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
