@@ -2,6 +2,12 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const M=require('../js/modules/character-sheet-model'),R=require('../js/modules/character-rules'),F=require('../js/modules/character-class-feature-choices');
 const character=build=>M.normalize({hpMax:20,abilities:{str:14,dex:14,con:14,int:16,wis:14,cha:18},build:{classId:'fighter',scoreMode:'base',edition:'2014',...build}});
+test('subclass healing and survival clear death saves only when HP is regained, preserve temporary HP and keep source costs',()=>{
+ for(const [classId,id,edition,level,action,options]of [['monk','long-death','2014',11,'mastery-death',{points:1}],['paladin','ancients','2014',15,'sentinel',{}],['paladin','ancients-2024','2024',15,'sentinel',{}],['warlock','celestial-patron-2024','2024',10,'healing-light',{points:1,roll:4,self:true}]]){
+  const d=character({classId,edition}),Sub=require('../js/modules/character-'+classId+'-subclasses');d.hpMax=120;d.hpCurrent=0;d.hpTemp=7;d.deathSuccess=2;d.deathFailure=2;d.adobe={classLevels:[{classId,subclassId:id,level}]};const before=M.derive(d,level).classResources.map(row=>[row.id,row.used]),result=Sub.use(d,action,{level,mods:{wis:2,cha:4},...options});assert.ok(result,id);assert.ok(d.hpCurrent>0,id);assert.equal(d.deathSuccess,0,id);assert.equal(d.deathFailure,0,id);assert.equal(d.hpTemp,7,id);assert.notDeepEqual(M.derive(d,level).classResources.map(row=>[row.id,row.used]),before,id+' still pays its source resource');
+ }
+ const d=character({classId:'monk'}),Monk=require('../js/modules/character-monk-subclasses');d.adobe={classLevels:[{classId:'monk',subclassId:'open-hand',level:6}]};d.hpMax=20;d.hpCurrent=30;assert.ok(Monk.use(d,'wholeness',{level:6}));assert.equal(d.hpCurrent,30,'a healing feature cannot damage a manually over-maximum character');
+});
 test('racial once-per-long-rest spells all receive independent counters at their actual unlock levels',()=>{
  let checked=0;
  for(const [race,row]of Object.entries(R.races))for(const [feature,options]of [['raceFeature',row.optionChoices||{}]])for(const option of [null,...Object.keys(options)]){

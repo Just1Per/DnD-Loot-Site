@@ -459,12 +459,18 @@ var CharacterSheetModel = (() => {
     if(d.hpCurrent===0){const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);Paths.endDivineForm(d,{level:20});}
     return d;
   }
-  function heal(data, amount, level = 1) {
+  function restoreHP(data, amount, maximum) {
+    const current=number(data.hpCurrent,0,0),cap=number(maximum,current,0),next=Math.max(current,Math.min(cap,current+number(amount,0,0)));
+    data.hpCurrent=next;
+    if(next>current){data.deathSuccess=0;data.deathFailure=0;}
+    return next-current;
+  }
+  function heal(data, amount, level = 1, loot = []) {
     const d = normalize(data);
     if(d.hpCurrent===0)(globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.end(d);
     if(d.hpCurrent===0)(globalThis.CharacterSpeciesForms||(typeof require==='function'?require('./character-species-forms'):null))?.onZeroHP(d);
     if(d.hpCurrent===0){const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);Paths.endDivineForm(d,{level});}
-    d.hpCurrent = Math.min(derive(d, level).hpMax, d.hpCurrent + number(amount, 0, 0));
+    restoreHP(d,amount,derive(data,level,loot).hpMax);
     return d;
   }
   return {
@@ -480,7 +486,8 @@ var CharacterSheetModel = (() => {
     pointBuyPresets,
     signed,
     damage,
-    heal
+    heal,
+    restoreHP
   };
 })();
 if (typeof module !== 'undefined' && module.exports)
