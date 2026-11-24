@@ -433,8 +433,11 @@ function changeFeatUse(key,delta) {
   if(Number.isInteger(delta)&&CharacterFeatRules.setUsed(sheetSession.data,key,used+delta,{level:sheetSession.identity.level,reports:stats.feats.reports}))catalogChanged();
 }
 function renderFeatCombatResources(stats) {
-  let host=document.getElementById('sheetFeatResources');
-  if(!host){host=document.createElement('section');host.id='sheetFeatResources';host.className='sheet-resource-panel';document.getElementById('sheet-combat').appendChild(host);}
+  let root=document.getElementById('sheetFeatResources');
+  if(!root){root=document.createElement('section');root.id='sheetFeatResources';root.className='sheet-resource-panel';document.getElementById('sheet-combat').appendChild(root);}
+  // Independent activation controls retain their DOM while ordinary counters redraw.
+  let host=root.querySelector('[data-feature-resource-controls]');
+  if(!host){host=document.createElement('div');host.dataset.featureResourceControls='';root.append(host);}
   const mistyFocus=['confirm','activate','end'].find(key=>document.activeElement?.hasAttribute('data-misty-'+key))||'';
   const rows=stats.feats.reports.map(report=>({report,resource:CharacterFeatRules.resource(report.def,sheetSession.identity.level)})).filter(x=>x.resource);
   const classRows=stats.classResources||[],recovery=new Set([...classRows.flatMap(row=>row.resets),...rows.flatMap(row=>row.resource.resets)]);
@@ -543,5 +546,6 @@ function renderFeatCombatResources(stats) {
   host.querySelectorAll('[data-combat-feat]').forEach(button=>button.onclick=()=>changeFeatUse(button.dataset.combatFeat,Number(button.dataset.delta)));
   host.querySelectorAll('[data-combat-recover]').forEach(button=>button.onclick=()=>{readSheetForm();const previousHP=sheetSession.data.hpCurrent;const current=CharacterSheetModel.derive(sheetSession.data,sheetSession.identity.level,typeof sheetEquipmentLoot==='function'?sheetEquipmentLoot():[]);const hadFamiliar=globalThis.CharacterWildCompanion?.state(sheetSession.data).alive;CharacterFeatRules.reset(sheetSession.data,button.dataset.combatRecover,{level:sheetSession.identity.level,mods:current.mods,classResources:current.classResources,loot:typeof sheetEquipmentLoot==='function'?sheetEquipmentLoot():[]});if(sheetSession.data.hpCurrent!==previousHP)globalThis.CharacterFeatFormsUI?.syncVitals(sheetSession.data);catalogChanged('Feature uses reset.'+(hadFamiliar&&!globalThis.CharacterWildCompanion?.state(sheetSession.data).alive?' Wild Companion expired after Long Rest.':'')+(sheetSession.data.hpCurrent!==previousHP?' Active features updated HP to '+sheetSession.data.hpCurrent+'. Spell slots are unchanged.':' HP and spell slots are unchanged.')+' Save to keep this change.');(host.querySelector('[data-combat-recover="'+button.dataset.combatRecover+'"]')||host.querySelector('#sheetSpeciesForms input:not(:disabled),#sheetSpeciesForms button:not(:disabled)'))?.focus({preventScroll:true});});
   globalThis.CharacterFeatFormsUI?.render(host,stats,{focused:mistyFocus});
-  globalThis.CharacterSpeciesFormsUI?.render(host,stats);
+  globalThis.CharacterSpeciesFormsUI?.render(root,stats);
+  root.hidden=host.hidden&&!root.querySelector('#sheetSpeciesForms');
 }
