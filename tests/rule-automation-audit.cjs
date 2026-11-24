@@ -56,3 +56,7 @@ test('Healing Hands audit records deliberate self-healing separately from other-
 test('investiture and void phases separate HP damage, saves, action ranges and the source’s full save metadata',()=>{
  const report=audit(),catalog=require('../data/rules/catalog.json'),get=name=>report.spells.find(s=>s.name===name&&s.edition==='2014');assert.deepEqual(get('Investiture of Flame').effectChoices.map(e=>e.id),['aura','line']);assert.deepEqual(get('Ravenous Void').effectChoices.map(e=>e.id),['pull','sphere']);assert.equal(get('Whirlwind').actionSave,'DEXTERITY');assert.equal(catalog.spells.find(s=>s.name==='Whirlwind').save,'DEXTERITY, STRENGTH');assert.equal(get('Draconic Transformation').actionRange,'60-ft cone');assert.equal(get('Shadow of Moil').actionRange,'10 ft');
 });
+
+test('Wrought-Iron Tower’s passive AC/save scope is carried and attuned, with activated powers still explicit',()=>{
+ const report=audit(),row=report.itemSaveCheckBonuses.find(r=>r.name==='Wrought-Iron Tower');assert.deepEqual(row.saveCheckScope,{saves:'all',checks:false,carried:true,attunement:true,armorClassBonus:2});assert.equal(report.itemBonusReview.some(r=>r.name===row.name),false);assert.equal(report.summary.itemSaveCheckBonusAdapters,18);
+});

@@ -31,7 +31,7 @@
     "itemImmunityFacts": 11,
     "itemImmunityAdapters": 5,
     "itemSaveCheckBonusFacts": 29,
-    "itemSaveCheckBonusAdapters": 17,
+    "itemSaveCheckBonusAdapters": 18,
     "itemSpellBonusFacts": 60,
     "itemSpellBonusAdapters": 60
   },
@@ -17186,7 +17186,14 @@
       "source": "CoA",
       "edition": "2014",
       "spellScope": [],
-      "passiveSaveChecks": false,
+      "passiveSaveChecks": true,
+      "saveCheckScope": {
+        "saves": "all",
+        "checks": false,
+        "carried": true,
+        "attunement": true,
+        "armorClassBonus": 2
+      },
       "passiveImmunities": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
@@ -18260,18 +18267,6 @@
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
       "chargeMetadata": false
-    },
-    {
-      "name": "Wrought-Iron Tower",
-      "source": "CoA",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": false,
-      "hasSaveCheckBonus": true,
-      "hasImmunity": false,
-      "chargeMetadata": true
     }
   ]
 }

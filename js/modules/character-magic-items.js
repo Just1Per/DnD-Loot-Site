@@ -28,6 +28,7 @@ var CharacterMagicItems=(()=>{
   };
   const defensePolicy=fact=>fact&&namedDefenses[fact.source+'|'+Pinned.key(fact.name)];
   const scopedPassives={
+    'CoA|wrought iron tower':{saves:'all',carried:true,ac:2,note:'While attuned and carried: +2 AC and +2 to all saves, including death saves; holding/Equipped is not required. It remains a +3 warhammer. Charges: 10, fully restored at dawn. On an attack, spend charges for +2 Fire damage each on a hit; misses still spend them. After staff damage, a Bonus Action and 1 charge can replace that damage with your total AC. Rulership costs 3 charges: visible chosen creatures within 120 ft, DC 18 Wisdom or Charmed for 8 hours; harm by your side or a contrary command ends that charm. Retain the inherited dawn limit; a successful save also grants 24-hour immunity. Searing Smite costs 1 charge at spell level 6, Fire or Acid, no Concentration and a one-minute duration. Resolve target vulnerability conversion, extra 3d6 Fire against Good creatures, charge spending and recipient HP at the table. The DM assigns two minor beneficial artifact properties and handles the Dis-specific powers and destruction.'},
     'IMR|ioun stone of vitality':{saves:'death',note:'Equipped means the attuned stone is orbiting your head. Only death saves gain +1; stowing the stone ends this benefit.'},
     'LLK|ioun stone self preservation':{saves:'int',note:'Equipped means the attuned stone is orbiting your head. Only Intelligence saves gain +1; stowing the stone ends this benefit.'},
     'CoS|statuette of saint markovia':{saves:'all',alignment:'G',carried:true,note:'A Good-aligned bearer gains +1 to all saves, including death saves. Carrying is enough; no attunement or Equipped selection is needed. A companion carrying it does not benefit its owner.'},
@@ -91,7 +92,7 @@ var CharacterMagicItems=(()=>{
     const family=Pinned.key(fact.spellBonusFamily||fact.name).replace(/^[123] /,'');
     const policy=namedPolicy(fact);
     const passive=passivePolicy(fact);
-    return{spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)||!!defensePolicy(fact),...(defensePolicy(fact)?{immunityScope:{types:fact.immune,equipped:true,attunement:true},itemUseScope:{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false}}:{})};
+    return{spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.ac?{armorClassBonus:passive.ac}:{}),...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)||!!defensePolicy(fact),...(defensePolicy(fact)?{immunityScope:{types:fact.immune,equipped:true,attunement:true},itemUseScope:{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false}}:{})};
   }
   function spellBonuses(effects={},classId='',ability=''){
     const all=effects.itemSpellBonuses||{},global=all.global||{},specific=all[classId]||{},byAbility=effects.itemSpellAbilityBonuses?.[ability]||{};
@@ -125,7 +126,7 @@ var CharacterMagicItems=(()=>{
     if(prerequisite(item)?.key==='item:wdh:blackstaff-heir')return {...E.normalize({kind:'weapon',base:'quarterstaff',attackBonus:2,damageBonus:2}),inferred:true,source:'Reviewed pinned item facts'};
     if(defensePolicy(Pinned.find(item)))return {...E.normalize({kind:'shield',base:'shield',edition:'2014'}),inferred:true,source:'Reviewed pinned shield facts'};
     const rule=info(item).rule;
-    const f=Pinned.find(item);if(f?.baseItem){const base=priorInfer({name:f.baseItem.split('|')[0]});if(base.kind!=='none')return{...base,edition:f.edition,attackBonus:Number(f.bonusWeapon||f.bonusWeaponAttack)||base.attackBonus,damageBonus:Number(f.bonusWeapon||f.bonusWeaponDamage)||base.damageBonus,acBonus:Number(f.bonusAc)||base.acBonus};}
+    const f=Pinned.find(item);if(f?.baseItem){const base=priorInfer({name:f.baseItem.split('|')[0]});if(base.kind!=='none')return{...base,edition:f.edition,attackBonus:Number(f.bonusWeapon||f.bonusWeaponAttack)||base.attackBonus,damageBonus:Number(f.bonusWeapon||f.bonusWeaponDamage)||base.damageBonus,acBonus:passivePolicy(f)?.ac?0:Number(f.bonusAc)||base.acBonus};}
     if(rule?.weapon){
       const w=rule.weapon;
       return {...E.normalize({
@@ -180,7 +181,8 @@ var CharacterMagicItems=(()=>{
       else if(policy.saves==='death')effects.itemDeathSaveBonus=(effects.itemDeathSaveBonus||0)+value;
       else {effects.itemAbilitySaveBonuses||={};effects.itemAbilitySaveBonuses[policy.saves]=(effects.itemAbilitySaveBonuses[policy.saves]||0)+value;}
       if(policy.checks)effects.itemAbilityCheckBonus=(effects.itemAbilityCheckBonus||0)+policy.checks;
-      reports.push({name:fact.name,effects:[(value>=0?'+':'')+value+' '+(policy.saves==='all'?'all saves':policy.saves==='death'?'death saves only':policy.saves.toUpperCase()+' saves only'),...(policy.checks?['+'+policy.checks+' ability checks']:[])],abilityChanges:[]});
+      if(policy.ac){effects.itemPassiveAC||=[];effects.itemPassiveAC.push({name:fact.name,value:policy.ac});}
+      reports.push({name:fact.name,effects:[(value>=0?'+':'')+value+' '+(policy.saves==='all'?'all saves':policy.saves==='death'?'death saves only':policy.saves.toUpperCase()+' saves only'),...(policy.checks?['+'+policy.checks+' ability checks']:[]),...(policy.ac?['+'+policy.ac+' AC']:[])],abilityChanges:[]});
     }
   }
   function apply(data,scores,effects,loot=[],level){
@@ -243,11 +245,12 @@ var CharacterMagicItems=(()=>{
     applyScopedPassives(data,effects,loot,level,reports,warnings);
     effects.itemSpellBonuses={};effects.itemSpellAbilityBonuses={};for(const source of Object.values(effects.itemSpellSources||{})){const entries=source.ability?[effects.itemSpellAbilityBonuses[source.ability]||={attack:0,dc:0}]:source.targets.map(target=>effects.itemSpellBonuses[target]||={attack:0,dc:0});for(const entry of entries){entry.attack+=source.attack;entry.dc+=source.dc;}}
     const primary=spellBonuses(effects,data.build?.classId,data.spellAbility);effects.itemSpellAttackBonus=primary.attack;effects.itemSpellDCBonus=primary.dc;
-    return {active,reports,warnings};
+    return {active,reports,warnings,...(effects.itemPassiveAC?.length?{passiveAC:effects.itemPassiveAC}:{})};
   }
   function augmentGear(data,gear,magic){
     if(!gear||!magic)return gear;
     const result={...gear,sources:[...(gear.sources||[])],warnings:[...(gear.warnings||[])]};
+    for(const source of magic.passiveAC||[]){if(result.sources.some(row=>clean(row.name)===clean(source.name)))continue;result.bonus=Number(result.bonus||0)+source.value;result.ac+=source.value;result.sources.push({...source});}
     for(const row of magic.active||[]){
       if(row.magicActive&&row.eligible&&prerequisite(row.item)?.key==='item:wdh:blackstaff-heir'&&!result.sources.some(source=>clean(source.name)===clean(row.item.name))){result.bonus+=2;result.ac+=2;result.sources.push({name:row.item.name,value:2});}
       const conditional=row.meta.rule?.conditionalAC;
