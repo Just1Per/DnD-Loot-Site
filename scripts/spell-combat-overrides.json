@@ -1850,7 +1850,8 @@
                 "noDamageUpcast": true,
                 "notes": [
                   "Initial Wisdom save for one target: failure causes Frightened while the spell lasts. This initial event deals no damage. Resolve fear, target eligibility and Concentration at the table."
-                ]
+                ],
+                "types": []
               }
             },
             {
@@ -1886,7 +1887,8 @@
                 "noDamageUpcast": true,
                 "notes": [
                   "Initial Wisdom save for creatures in a 30-ft-radius sphere: failure causes Frightened while the spell lasts. This initial event deals no damage. Resolve fear, target eligibility and Concentration at the table."
-                ]
+                ],
+                "types": []
               }
             },
             {
@@ -2290,6 +2292,191 @@
           },
           "notes": [
             "Self only; temporary HP lasts until depleted or Long Rest. Choose an existing or new temporary-HP pool; never add the pools together. Resolve replacement at the table."
+          ]
+        }
+      }
+    },
+    "Sickening Radiance": {
+      "bySource": {
+        "XGE": {
+          "damage": "4d10",
+          "attack": false,
+          "types": [
+            "radiant"
+          ],
+          "noDamageUpcast": true,
+          "notes": [
+            "Damage event: a creature moves into the 30-ft-radius light for the first time on a turn or starts its turn there. Constitution save: success prevents damage, Exhaustion and the glow; failure also adds one Exhaustion level and a 5-ft glow preventing Invisibility benefits. Only the glow and Exhaustion caused by this spell end with it. Track recipients and Concentration at the table."
+          ]
+        }
+      }
+    },
+    "Ravenous Void": {
+      "bySource": {
+        "EGW": {
+          "attack": false,
+          "types": [
+            "force"
+          ],
+          "noDamageUpcast": true,
+          "notes": [
+            "The damaging sphere has a 20-ft radius; pull distance is measured within 100 ft of the sphere, not its center. Resolve difficult terrain, objects, Concentration and annihilation of a creature reduced to 0 HP by this spell with the DM."
+          ],
+          "effects": [
+            {
+              "id": "pull",
+              "label": "Turn-start pull save",
+              "shortLabel": "Pull",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "Creature starts its turn within 100 ft of the sphere: Strength save; failure pulls it toward the sphere’s center into an eligible unoccupied space. The pull itself deals no damage. A separate sphere damage event may qualify."
+                ]
+              }
+            },
+            {
+              "id": "sphere",
+              "label": "Enter or start in the sphere",
+              "shortLabel": "Sphere",
+              "combat": {
+                "damage": "5d10",
+                "types": [
+                  "force"
+                ],
+                "save": "",
+                "automatic": true,
+                "checkDC": "Action: Strength check to free yourself or a reachable creature from the sphere’s restraint",
+                "notes": [
+                  "Automatic damage on first entering the sphere on a turn or starting a turn inside it; no damage save. The creature is Restrained while inside; a later qualifying entry or turn-start event can restrain it again after an escape. Track each qualifying event and recipient separately."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Whirlwind": {
+      "bySource": {
+        "XGE": {
+          "damage": "10d6",
+          "attack": false,
+          "types": [
+            "bludgeoning"
+          ],
+          "noDamageUpcast": true,
+          "checkDC": "Action escape: Strength or Dexterity check",
+          "notes": [
+            "Damage event: first time on a turn that the creature enters the 10-ft-radius, 30-ft-high whirlwind or it enters that creature’s space, including creation. Dexterity save: half damage on success. A Large or smaller creature failing that save then makes a Strength save against the same DC or is Restrained. Restrained targets rise 5 ft on their turn starts; resolve movement, escape hurl distance and falling separately."
+          ],
+          "actionSave": "DEXTERITY"
+        }
+      }
+    },
+    "Draconic Transformation": {
+      "bySource": {
+        "FTD": {
+          "damage": "6d8",
+          "attack": false,
+          "types": [
+            "force"
+          ],
+          "noDamageUpcast": true,
+          "actionRange": "60-ft cone",
+          "notes": [
+            "Breath event on casting or as a Bonus Action on later turns while the transformation lasts. Dexterity save: half damage on success. Track the active spell, Concentration, its separate 60-ft flight and 30-ft Blindsight; choosing this damage reference does not activate those benefits."
+          ]
+        }
+      }
+    },
+    "Investiture of Flame": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "types": [
+            "fire"
+          ],
+          "noDamageUpcast": true,
+          "notes": [
+            "Use these events only while the investiture is active. Track Concentration and the spell’s Fire immunity, Cold resistance and light separately."
+          ],
+          "effects": [
+            {
+              "id": "aura",
+              "label": "Creature’s nearby movement or turn end",
+              "shortLabel": "Aura",
+              "combat": {
+                "damage": "1d10",
+                "save": "",
+                "automatic": true,
+                "actionRange": "5 ft",
+                "notes": [
+                  "A creature itself moves within 5 ft of you for the first time on a turn or ends its turn there: automatic Fire damage. Moving your own aura over a stationary creature is not this movement trigger. No damage save."
+                ]
+              }
+            },
+            {
+              "id": "line",
+              "label": "Action: line of fire",
+              "shortLabel": "Line",
+              "combat": {
+                "damage": "4d8",
+                "actionRange": "15-ft line",
+                "notes": [
+                  "Action: a 15-ft-long, 5-ft-wide line from you. Dexterity save: half damage on success. Resolve the chosen direction and recipients at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Investiture of Ice": {
+      "bySource": {
+        "XGE": {
+          "damage": "4d6",
+          "attack": false,
+          "types": [
+            "cold"
+          ],
+          "noDamageUpcast": true,
+          "actionRange": "15-ft cone",
+          "notes": [
+            "Action while the spell is active: Constitution save; half damage on success. Only failure halves the target’s Speed until your next turn starts. Track Concentration, Cold immunity, Fire resistance and the moving 10-ft icy terrain separately; your ice/snow terrain exception applies only as stated by the spell."
+          ]
+        }
+      }
+    },
+    "Investiture of Wind": {
+      "bySource": {
+        "XGE": {
+          "damage": "2d10",
+          "attack": false,
+          "types": [
+            "bludgeoning"
+          ],
+          "noDamageUpcast": true,
+          "actionRange": "60 ft",
+          "notes": [
+            "Action while the spell is active: place a 15-ft cube centered on a visible point within 60 ft. Constitution save: half damage on success. Only a failed save by a Large or smaller creature permits a push up to 10 ft from the cube’s center. Track Concentration, 60-ft flight/falling and Disadvantage against you from ranged weapon attacks separately."
+          ]
+        }
+      }
+    },
+    "Shadow of Moil": {
+      "bySource": {
+        "XGE": {
+          "damage": "2d8",
+          "attack": false,
+          "types": [
+            "necrotic"
+          ],
+          "save": "",
+          "automatic": true,
+          "noDamageUpcast": true,
+          "actionRange": "10 ft",
+          "notes": [
+            "Retaliation event only while the spell is active: a creature within 10 ft hits you with an attack. Automatic damage to that attacker; no Reaction, spell attack roll or damage save. Track each qualifying hit, Concentration, Radiant resistance, obscurement and nearby light separately."
           ]
         }
       }

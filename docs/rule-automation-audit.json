@@ -22,9 +22,9 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 335,
-    "spellActionFormulas": 260,
+    "spellActionFormulas": 268,
     "spellHealingFormulas": 14,
-    "manualDamageReferences": 108,
+    "manualDamageReferences": 100,
     "itemFacts": 1253,
     "itemBases": 230,
     "itemVariants": 230,
@@ -9269,9 +9269,10 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "60-ft cone",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-da4d9d385293589c",
@@ -11717,9 +11718,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "aura",
+          "label": "Creature’s nearby movement or turn end"
+        },
+        {
+          "id": "line",
+          "label": "Action: line of fire"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-b9963ba416a271d5",
@@ -11727,9 +11738,10 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "15-ft cone",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-101d9b3fbb04aac9",
@@ -11747,9 +11759,10 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "60 ft",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-f6579668e31fda08",
@@ -13786,9 +13799,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "pull",
+          "label": "Turn-start pull save"
+        },
+        {
+          "id": "sphere",
+          "label": "Enter or start in the sphere"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-24cac981f45d9877",
@@ -14271,9 +14294,10 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "10 ft",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-cd70c516a00eb103",
@@ -14421,9 +14445,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-e6c18fdbe59783df",
@@ -16372,9 +16396,11 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "DEXTERITY",
+      "checkDC": "Action escape: Strength or Dexterity check",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-3967efeb0c08e745",
