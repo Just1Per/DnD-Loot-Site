@@ -8,10 +8,10 @@
     "implementedSubclassAdapters": 186,
     "missingSubclassAdapters": 0,
     "feats": 302,
-    "featStructuredRecords": 118,
-    "featSpellPackages": 81,
+    "featStructuredRecords": 119,
+    "featSpellPackages": 82,
     "featSpellChoicePackages": 29,
-    "featSpellPackagesToReview": 1,
+    "featSpellPackagesToReview": 0,
     "featExpandedListAdapters": 12,
     "featExpandedListsToReview": 0,
     "spells": 969,
@@ -845,14 +845,32 @@
       "edition": "2024",
       "source": "ABH",
       "structuredFacts": [],
-      "fixedSpells": [],
+      "fixedSpells": [
+        {
+          "name": "gaseous form",
+          "unlock": 19,
+          "freeUses": 0,
+          "recovery": [],
+          "referenceOnly": true
+        }
+      ],
       "expandedSpellLevels": [],
       "alternativeSpellPackages": [],
-      "auxiliarySpellResources": [],
+      "auxiliarySpellResources": [
+        {
+          "name": "Misty Escape",
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "unlock": 19,
+          "managedActivation": true
+        }
+      ],
       "ritualBookClasses": [],
       "activatedSpellChoices": [],
       "spellChoiceGroups": 0,
-      "spellReview": "Review alternative packages, class-dependent grants or unrepresented spell choices."
+      "spellReview": null
     },
     {
       "id": "Feat-frhof-484321ecce9195ea",

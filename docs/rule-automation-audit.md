@@ -8,10 +8,10 @@ Source revision: `b9061583536101068b3a59d27e886d1fa664e366`. This inventory dist
 | Subclass adapters | 186 |
 | Missing subclass adapters | 0 |
 | Selectable feats | 302 |
-| Feats with additional exported mechanics | 118 |
-| Feats with fixed/choice spell adapters | 81 |
+| Feats with additional exported mechanics | 119 |
+| Feats with fixed/choice spell adapters | 82 |
 | Feats with filtered spell choices | 29 |
-| Other feat spell grants requiring review | 1 |
+| Other feat spell grants requiring review | 0 |
 | Feat expanded class-list adapters | 12 |
 | Supplement spell class-list corrections | 122 |
 | Spells with numeric damage facts | 394 |
@@ -29,7 +29,7 @@ All 186 subclasses have an adapter. `partial-mechanics` still denotes table-reso
 
 ## Remaining review
 
-- Alternative feat spell packages, expanded class lists, and choices outside the bounded adapter: Boon of Misty Escape (ABH).
+- Alternative feat spell packages, expanded class lists, and choices outside the bounded adapter: All spell-grant groups identified by this inventory have an adapter, including dedicated conditional transformations.
 - Expanded spell tables add class-list choices rather than free prepared spells: Mark of Detection (EFA); Mark of Finding (EFA); Mark of Handling (EFA); Mark of Healing (EFA); Mark of Hospitality (EFA); Mark of Making (EFA); Mark of Passage (EFA); Mark of Scribing (EFA); Mark of Sentinel (EFA); Mark of Shadow (EFA); Mark of Storm (EFA); Mark of Warding (EFA). They extend actual Spellcasting/Pact Magic class lists, retain each class’s learning/preparation limits and spell-level reach, and grant no free preparation; fixed free-casting grants are audited separately.
 - Damage without an action formula remains a readable reference; weapon-dependent, multi-stage and conditional formulas must be reviewed individually. Numeric display facts alone do not establish a safe unconditional damage formula.
 - Item bonus/immunity records without reviewed scope remain manual: see `itemBonusReview` in the JSON. Metadata may describe an activated aura or conditional power. Netherese Ring of Protection applies its general +1; its +4 disarm protection stays conditional. Stone of Ill Luck stays with the DM.

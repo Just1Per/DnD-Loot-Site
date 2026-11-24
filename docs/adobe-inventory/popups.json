@@ -344,6 +344,7 @@
         "adobe-slot-labels-browser.cjs",
         "adobe-spell-pages-browser.cjs",
         "adobe-tool-check-browser.cjs",
+        "feat-misty-escape-browser.cjs",
         "feat-special-spells-browser.cjs",
         "site-palette-browser.cjs"
       ]
@@ -698,7 +699,7 @@
     {
       "id": "sheetPrintDialog",
       "file": "js/modules/character-sheet.js",
-      "line": 646,
+      "line": 647,
       "kind": "dialog",
       "category": "standard-only",
       "entry": "Standard print fallback",

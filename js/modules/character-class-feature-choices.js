@@ -796,6 +796,7 @@ var CharacterClassFeatureChoices=(()=>{
      if(pact?.valid.includes('pact-of-the-talisman')){const key=groupKey(edition,'warlock','pact-talisman-used'),max=Math.ceil(level/4)+1,used=spent(key);rows.push({id:'invocation-pact-talisman',key,name:'Pact of the Talisman',source:'2014 Warlock',className:'Warlock',max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',description:'Its wearer adds 1d4 to a failed ability check.'});}
      if(fightingStyleState(data,{level}).rows.some(row=>row.option.id==='superior-technique')){const key=groupKey(edition,'fighter','superior-technique-used'),used=spent(key);rows.push({id:'invocation-superior-technique',key,name:'Superior Technique',source:'2014 Fighting Style',className:'Fighter',max:1,used,remaining:Math.max(0,1-used),resets:['short','long'],recovery:'Short or Long Rest recovery',unit:'dice',description:'One additional superiority die: d6, or your existing superiority die size. Apply the chosen maneuver at the table.'});}
     }
+    const featForm=globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null);if(featForm?.state(data,{level,reports:featReports}).active)return rows.map(row=>row.spellCasting||row.id.startsWith('origin-')?{...row,useDisabled:true}:row);
     return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
@@ -818,7 +819,7 @@ var CharacterClassFeatureChoices=(()=>{
     data.adobe=next;return true;
   }
   function setClassResourceUsed(data,id,value,context){
-    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.unlimited||resource.managedSlots||resource.managedWildShape||!Number.isInteger(value)||value<0||value>resource.max&&value>=resource.used||(resource.channelEffects||resource.managedActivation||resource.useDisabled)&&value>resource.used)return false;
+    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.manualCounterLocked||resource.unlimited||resource.managedSlots||resource.managedWildShape||!Number.isInteger(value)||value<0||value>resource.max&&value>=resource.used||(resource.channelEffects||resource.managedActivation||resource.useDisabled)&&value>resource.used)return false;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices={...normalize(stored.classFeatureChoices),[resource.key]:[String(value)]};if(Object.keys(choices).length>100)return false;data.adobe={...stored,classFeatureChoices:choices};return true;
   }
   function changeClassResource(data,id,delta,context){
@@ -875,6 +876,7 @@ var CharacterClassFeatureChoices=(()=>{
     const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null);rage?.onRest(data,event,{level:total});
     const companion=globalThis.CharacterWildCompanion||(typeof require==='function'?require('./character-wild-companion'):null);companion?.onRest(data,event);
     const conversions=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);conversions?.onRest(data,event);
+    (globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.onEvent(data,event,{...context,level:total});
     const intervention=globalThis.CharacterClericIntervention||(typeof require==='function'?require('./character-cleric-intervention'):null);intervention?.onRest(data,event);
   }
   function saveTraining(data,{level=1}={}){

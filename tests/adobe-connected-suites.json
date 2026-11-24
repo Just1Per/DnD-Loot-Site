@@ -97,6 +97,7 @@
     "feat-ritual-rune-browser.cjs",
     "feat-source-spells-browser.cjs",
     "feat-school-spells-browser.cjs",
-    "feat-special-spells-browser.cjs"
+    "feat-special-spells-browser.cjs",
+    "feat-misty-escape-browser.cjs"
   ]
 }

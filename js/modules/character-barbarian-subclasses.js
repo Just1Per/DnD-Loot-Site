@@ -142,7 +142,7 @@ var CharacterBarbarianSubclasses=(()=>{
     const choices={...c.choices,[c.stateKey]:[c.id||'base'],[c.key('first-hit-used')]:['0'],[c.key('divine-form')]:[]};if(!row.unlimited)choices[row.key]=[String(row.used+1)];
     for(const pool of derive(d,opts).resources)if(pool.resets.includes('rage'))choices[pool.key]=['0'];
     if(Object.keys(choices).length>100)return false;
-    d.adobe={...store(d),classFeatureChoices:choices};if(c.active&&c.id==='world-tree-2024')d.hpTemp=Math.max(Number(d.hpTemp)||0,c.level);return true;
+    d.adobe={...store(d),classFeatureChoices:choices};(globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.end(d);if(c.active&&c.id==='world-tree-2024')d.hpTemp=Math.max(Number(d.hpTemp)||0,c.level);return true;
   }
   function endRage(d,opts={}){
     const c=context(d,opts);if(!c.raging)return false;

@@ -187,7 +187,8 @@
             "resets": [
               "long"
             ],
-            "description": "Choose one prepared ritual spell and cast it using its normal casting time, without a slot or the extra ritual time. This counter records the use; it does not cast the spell."
+            "description": "Choose one prepared ritual spell and cast it using its normal casting time, without a slot or the extra ritual time. This counter records the use; it does not cast the spell.",
+            "spellCasting": true
           }
         ],
         "instructions": "The number of selected level-1 rituals follows Proficiency Bonus. They are always prepared and use the ability increased by this feat. Quick Ritual recovers on Long Rest; ordinary ritual casting has no use pool."
@@ -1368,6 +1369,36 @@
           "instructions": "Mastered school: Transmutation. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
         }
       ]
+    },
+    "ABH|Boon of Misty Escape": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [
+          {
+            "ref": "gaseous form|xphb",
+            "unlock": 19,
+            "referenceOnly": true,
+            "usage": "Conditional feat transformation only; use the dedicated Misty Escape controls after a nonfatal drop to 0 HP. This is not a normal free-casting grant."
+          }
+        ],
+        "choices": [],
+        "auxResources": [
+          {
+            "id": "misty-escape",
+            "name": "Misty Escape",
+            "unlock": 19,
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "managedActivation": true,
+            "manualCounterLocked": true,
+            "counterFailClosed": true,
+            "description": "Confirm a nonfatal drop to 0 HP in Misty Escape controls. Activation sets HP to 1 and starts a self-only Gaseous Form with flight 20 ft and 10 HP regeneration on your own turns. Concentration and duration end explicitly; one use per Long Rest."
+          }
+        ],
+        "instructions": "Use the dedicated Misty Escape controls, not ordinary spell casting. The trigger requires damage reducing you to 0 HP without killing you outright. Remain at 1 HP and cast Gaseous Form on yourself without an action or slot. Flight is 20 ft; heal 10 HP at the start of your turns. Concentration and the 1-hour duration still apply."
+      }
     }
   }
 }

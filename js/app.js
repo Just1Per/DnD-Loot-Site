@@ -53,7 +53,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   notificationsAvailable:()=>window.AccountNotifications?.enabled===true,
 });
 
-const ASSET_VERSION = "20261123-rule-automation-v108";
+const ASSET_VERSION = "20261124-rule-automation-v109";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -118,6 +118,7 @@ const FEATURE_FILES = [
   "./modules/character-personal-feats.js",
   "./modules/character-feat-mechanics-data.js",
   "./modules/character-feat-rules.js",
+  "./modules/character-feat-forms.js",
   "./modules/character-spell-effect-data.js",
   "./modules/character-spell-summaries.js",
   "./modules/character-catalog.js",
@@ -327,6 +328,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-size-guidance-ui.js",
     "./modules/character-personal-feat-ui.js",
     "./modules/character-adobe-feat-ui.js",
+    "./modules/character-feat-forms-ui.js",
     "./modules/character-adobe-spell-ui.js",
     "./modules/character-adobe-additional-spell-ui.js",
     "./modules/character-adobe-spell-list-ui.js",

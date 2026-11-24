@@ -2,6 +2,7 @@
 /* Short combat cues, keyed to the selected feat's own source. No source prose or automatic trigger resolution. */
 var CharacterFeatCombat=(()=>{
  const cues={
+  'Boon of Misty Escape':{ABH:['none','After a nonfatal drop to 0 HP, use Misty Escape controls to remain at 1 HP and cast Gaseous Form on yourself without an action or slot. Flight 20 ft; heal 10 HP on your own turns. Normal components, Concentration and the 1-hour duration still apply. One use per Long Rest.']},
   'Boon of Revelry':{FRHoF:["spellName:Otto's Irresistible Dance","No spell components; damage cannot break Concentration. While Charmed after failing this spell's save, the target cannot cast spells with verbal components and sings if able. Other Concentration endings still apply."]},
   'Cartomancer':{BMT:['none','Hidden Ace: imbue one eligible class spell at Long Rest; its card lasts 8 hours. Use a Bonus Action to cast and consume the card. Record any agreed slot cost separately; card tracking never waives it.']},
   'Strixhaven Mascot':{SCC:['none','Replace one Attack-action attack to let your college mascot attack with its Reaction. Action: swap places within 60 ft; an invalid small destination wastes the use. One free swap per Long Rest, then pay a level-2+ slot explicitly.']},

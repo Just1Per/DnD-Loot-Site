@@ -13,6 +13,7 @@ var CharacterActions = (()=>{
  function resolve(raw,data,level,stats,loot=[],spells=[],context={}){
   const a=normalize([raw])[0],row={name:a.name||a.ref||a.kind,hit:'—',damage:'—',range:'—',notes:[],available:true,ability:''};
   const unavailable=reason=>({...row,available:false,notes:[reason]});
+  const Forms=globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null);if(Forms?.state(data,{level,reports:stats.feats?.reports}).active)return unavailable('Misty Escape: attacks and spellcasting are unavailable while in Gaseous Form.');
   if(a.kind==='weapon'&&a.ref.startsWith('artificer-')){const Sub=globalThis.CharacterArtificerSubclasses||(typeof require==='function'?require('./character-artificer-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('warlock-')){const Sub=globalThis.CharacterWarlockSubclasses||(typeof require==='function'?require('./character-warlock-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('rogue-')){const Sub=globalThis.CharacterRogueSubclasses||(typeof require==='function'?require('./character-rogue-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}

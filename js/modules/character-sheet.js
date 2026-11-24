@@ -425,6 +425,7 @@ function readSheetForm() {
     level: Number(data.identity.level)
   };
   s.data = CharacterSheetModel.normalize(data);
+  globalThis.CharacterFeatForms?.endInvalid(s.data,{level:s.identity.level});
   renderCharacterJournal();
 }
 function updateSheetCalculations() {

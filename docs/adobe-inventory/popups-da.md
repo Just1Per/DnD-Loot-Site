@@ -54,7 +54,7 @@ Der er 48 registrerede popup-familier og 29 editor-routes.
 | adobeWeightDialog | adobe-dialog | Weight Carried-knappen eller weight-route | Native draft; gammel editorTargets selector er skygget af native route. | [character-paper-weight-ui.js:10](../../js/modules/character-paper-weight-ui.js#L10) |
 | personalFeatDialog | adobe-dialog | Native Feats → Create/Edit personal feat | Egen draft og delete-confirmation; private save/data. | [character-personal-feat-ui.js:8](../../js/modules/character-personal-feat-ui.js#L8) |
 | sheetRestRecovery | shared-dialog | Heal/Comp.Heal og shared rest-controls | Selvstændigt HP/Hit Dice-preview; ikke en komplet reset af alle feature pools. | [character-rest-recovery-ui.js:8](../../js/modules/character-rest-recovery-ui.js#L8) |
-| sheetPrintDialog | standard-only | Standard print fallback | Adobe print interceptes og bruger printConnected/preparePrint; behold fælles print-hooks under udfasning. | [character-sheet.js:646](../../js/modules/character-sheet.js#L646) |
+| sheetPrintDialog | standard-only | Standard print fallback | Adobe print interceptes og bruger printConnected/preparePrint; behold fælles print-hooks under udfasning. | [character-sheet.js:647](../../js/modules/character-sheet.js#L647) |
 | sheetSpellGenerator | nested-standard-dialog | Spell Slots/shared spell-controls → Generate | Legacy generator kan nås inde i spellSlots-bridge; native Choose spells erstatter ikke alle nested controls. | [character-spellcasting-ui.js:61](../../js/modules/character-spellcasting-ui.js#L61) |
 
 ## Samtlige editor-routes

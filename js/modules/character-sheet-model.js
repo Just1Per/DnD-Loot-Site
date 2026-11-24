@@ -441,6 +441,7 @@ var CharacterSheetModel = (() => {
     Object.assign(effects,result.movement.speeds);
     if(Override)Override.dice({...d,adobe:data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}},result);
     if(effects.featDarkvisionBonus)effects.darkvision=(effects.darkvision||0)+effects.featDarkvisionBonus;
+    (globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.apply(data,result,{level});
     return result;
   }
   function damage(data, amount) {
@@ -448,11 +449,13 @@ var CharacterSheetModel = (() => {
     const absorbed = Math.min(n, d.hpTemp);
     d.hpTemp -= absorbed;
     d.hpCurrent = Math.max(0, d.hpCurrent - (n - absorbed));
+    if(d.hpCurrent===0)(globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.end(d);
     if(d.hpCurrent===0){const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);Paths.endDivineForm(d,{level:20});}
     return d;
   }
   function heal(data, amount, level = 1) {
     const d = normalize(data);
+    if(d.hpCurrent===0)(globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.end(d);
     if(d.hpCurrent===0){const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);Paths.endDivineForm(d,{level});}
     d.hpCurrent = Math.min(derive(d, level).hpMax, d.hpCurrent + number(amount, 0, 0));
     return d;

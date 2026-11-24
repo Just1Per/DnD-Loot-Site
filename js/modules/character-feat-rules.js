@@ -276,9 +276,9 @@ var CharacterFeatRules = (() => {
   }
   function spellResources(data,context={}) {
     const stored=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices||{},reports=featureReports(data,context);
-    const grants=spellGrants(data,{...context,reports,includeInactive:true}).filter(grant=>grant.max).map(grant=>({id:grant.id,key:grant.key,name:grant.source+' · '+grant.spell.name,source:grant.source,max:grant.max,resets:grant.resets,useDisabled:!!grant.activation&&!grant.active,useLabel:grant.useLabel||'Use free casting',undoLabel:grant.undoLabel||'Undo free casting',unit:grant.unit||'free castings',description:grant.usage+'; '+grant.ability.toUpperCase()+'. Casting and targeting remain explicit; the counter does not spend a spell slot.'}));
-    const auxiliary=reports.filter(report=>report.eligible&&!report.warnings.length).flatMap(report=>{const selected=spellPackage(report.def,report.choice),token=report.key.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,45);return(selected?.requiredFeat&&!featDependency(selected,reports)?[]:selected?.auxResources||[]).map(row=>({...row,id:'feat-spell-'+token+'-'+row.id,key:'feat:'+token+':aux-'+row.id+'-used',source:report.def.name+' · '+report.def.source}));});
-    return[...grants,...auxiliary].map(grant=>{const raw=stored[grant.key]?.[0],used=/^\d{1,3}$/.test(raw||'')?Number(raw):0;return{...grant,name:grant.name+(grant.useDisabled?' (inactive)':''),className:'Feat',level:context.level||1,useLabel:grant.useLabel||'Use feature',undoLabel:grant.undoLabel||'Undo use',used,remaining:Math.max(0,grant.max-used),recovery:grant.resets.includes('short')?'Short or Long Rest':'Long Rest',unit:grant.unit||'uses'};});
+    const grants=spellGrants(data,{...context,reports,includeInactive:true}).filter(grant=>grant.max).map(grant=>({id:grant.id,key:grant.key,name:grant.source+' · '+grant.spell.name,source:grant.source,max:grant.max,resets:grant.resets,spellCasting:true,useDisabled:!!grant.activation&&!grant.active,useLabel:grant.useLabel||'Use free casting',undoLabel:grant.undoLabel||'Undo free casting',unit:grant.unit||'free castings',description:grant.usage+'; '+grant.ability.toUpperCase()+'. Casting and targeting remain explicit; the counter does not spend a spell slot.'}));
+    const auxiliary=reports.filter(report=>report.eligible&&!report.warnings.length).flatMap(report=>{const selected=spellPackage(report.def,report.choice),token=report.key.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,45);return(selected?.requiredFeat&&!featDependency(selected,reports)?[]:selected?.auxResources||[]).filter(row=>!row.unlock||row.unlock<=(context.level||1)).map(row=>({...row,id:'feat-spell-'+token+'-'+row.id,key:'feat:'+token+':aux-'+row.id+'-used',source:report.def.name+' · '+report.def.source}));});
+    return[...grants,...auxiliary].map(grant=>{const raw=stored[grant.key]?.[0],used=/^\d{1,3}$/.test(raw||'')?Number(raw):grant.counterFailClosed&&raw!==undefined?grant.max:0;return{...grant,name:grant.name+(grant.useDisabled?' (inactive)':''),className:'Feat',level:context.level||1,useLabel:grant.useLabel||'Use feature',undoLabel:grant.undoLabel||'Undo use',used,remaining:Math.max(0,grant.max-used),recovery:grant.resets.includes('short')?'Short or Long Rest':'Long Rest',unit:grant.unit||'uses'};});
   }
   function resource(def,level=1) {
     if(!def||def.personal)return null;
@@ -300,6 +300,7 @@ var CharacterFeatRules = (() => {
   function remove(data,key) {
     const before=entries(data).filter(e=>!e.origin),index=before.findIndex(e=>e.key===key);
     if(index<0)return;
+    const removed=definitions[before[index].id];if(removed?.source==='ABH'&&removed.name==='Boon of Misty Escape')(globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.end(data,{ownerKey:before[index].key});
     const oldEffects={...data.rulesChoices.effects},oldGrants={...data.rulesChoices.grants};
     for(const e of before){delete data.rulesChoices.effects[e.key];delete data.rulesChoices.grants[e.key];}
     data.rulesChoices.feats.splice(index,1);before.splice(index,1);
@@ -319,6 +320,6 @@ var CharacterFeatRules = (() => {
     else {if(data.rulesChoices.feats.length>=30)throw Error('Maximum 30 additional feats.');data.rulesChoices.feats.push(feat.id);const count=data.rulesChoices.feats.filter(id=>id===feat.id).length;if(count>1)key+='--'+count;}
     data.rulesChoices.effects[key]=choice({...data.rulesChoices.effects[key],ignorePrerequisites:true});return key;
   }
-  return {definitions,definition,choice,entries,trainingOptions,resistanceChoices,mechanicFacts,spellPackage,spellChoices,spellSlotReach,mascotForm,bookOptions,expandedSpells,spellGrants,spellResources,apply,resource,setUsed,reset,remove,addManual};
+  return {reports:featureReports,definitions,definition,choice,entries,trainingOptions,resistanceChoices,mechanicFacts,spellPackage,spellChoices,spellSlotReach,mascotForm,bookOptions,expandedSpells,spellGrants,spellResources,apply,resource,setUsed,reset,remove,addManual};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterFeatRules;
