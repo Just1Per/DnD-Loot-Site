@@ -21,8 +21,8 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 394,
     "spellAreaFacts": 335,
-    "spellActionFormulas": 257,
-    "manualDamageReferences": 130,
+    "spellActionFormulas": 265,
+    "manualDamageReferences": 122,
     "itemFacts": 1253,
     "itemBases": 230,
     "itemVariants": 230,
@@ -7430,9 +7430,15 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "crush",
+          "label": "Crushed against an obstacle"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-tce-84be7b4fc468a25b",
@@ -8130,9 +8136,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-99015e59eb03e345",
@@ -8730,9 +8736,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "radiant",
+          "label": "Thunder + Radiant"
+        },
+        {
+          "id": "necrotic",
+          "label": "Thunder + Necrotic"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-d6fc0c1633d70cc8",
@@ -8740,9 +8756,19 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "radiant",
+          "label": "Thunder + Radiant"
+        },
+        {
+          "id": "necrotic",
+          "label": "Thunder + Necrotic"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-fa760506481769ce",
@@ -9410,9 +9436,23 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial-failed",
+          "label": "Initial · failed Dexterity save"
+        },
+        {
+          "id": "initial-success",
+          "label": "Initial · successful Dexterity save"
+        },
+        {
+          "id": "ongoing",
+          "label": "Ongoing · Action"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-au-9ef904df773dc963",
@@ -9420,9 +9460,19 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Initial damage"
+        },
+        {
+          "id": "ongoing",
+          "label": "Ongoing · Bonus Action"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-caa68ccc90adc291",
@@ -9920,9 +9970,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "fire",
+          "label": "Warm shield · retaliation"
+        },
+        {
+          "id": "cold",
+          "label": "Chill shield · retaliation"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-8888a8e2d22c716b",
@@ -9931,6 +9991,16 @@
       "hasDamageFacts": true,
       "hasAreaFacts": true,
       "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "fire",
+          "label": "Warm shield · retaliation"
+        },
+        {
+          "id": "cold",
+          "label": "Chill shield · retaliation"
+        }
+      ],
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -11288,9 +11358,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Initial damage"
+        },
+        {
+          "id": "ongoing",
+          "label": "Burning · target turn end"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-egw-2939ca019f5ec6ec",

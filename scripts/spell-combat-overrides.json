@@ -54,6 +54,42 @@
         ]
       }
     },
+    "Bones of the Earth": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "bludgeoning"
+          ],
+          "upcast": null,
+          "noDamageUpcast": true,
+          "projectiles": {
+            "base": 6,
+            "increment": 2,
+            "above": 6,
+            "unit": "stone pillars"
+          },
+          "notes": [
+            "This damage occurs only when a rising pillar crushes a creature against a ceiling or other obstacle; it is not the initial Dexterity save to avoid being lifted.",
+            "A crushed creature is Restrained; its Action can make a Strength or Dexterity check against the spell’s save DC to escape, then move or fall off. Resolve positions, pillar HP and difficult terrain at the table.",
+            "Each higher slot adds two pillars, not damage per crush."
+          ],
+          "effects": [
+            {
+              "id": "crush",
+              "label": "Crushed against an obstacle",
+              "shortLabel": "Crush",
+              "combat": {
+                "damage": "6d6",
+                "save": "",
+                "automatic": true
+              }
+            }
+          ]
+        }
+      }
+    },
     "Catapult": {
       "default": {
         "damage": "3d8",
@@ -115,6 +151,20 @@
           ],
           "addAbility": false,
           "noDamageUpcast": true
+        },
+        "PHB": {
+          "damage": "8d8",
+          "attack": false,
+          "types": [
+            "bludgeoning",
+            "piercing",
+            "slashing"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "Use the nonmagical weapon or ammunition component’s one damage type. The 40-ft-radius, 20-ft-high cylinder affects every creature; successful Dexterity saves take half. Higher slots add no damage."
+          ]
         }
       }
     },
@@ -220,6 +270,94 @@
         "noDamageUpcast": true
       }
     },
+    "Destructive Wave": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "upcast": null,
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose affected creatures within 30 ft. One Constitution save governs both components; failure also makes the target Prone, success halves both components without Prone. Higher slots add no damage."
+          ],
+          "effects": [
+            {
+              "id": "radiant",
+              "label": "Thunder + Radiant",
+              "shortLabel": "Radiant",
+              "combat": {
+                "damage": "5d6",
+                "types": [
+                  "thunder",
+                  "radiant"
+                ],
+                "primaryType": "thunder",
+                "part2Damage": "5d6",
+                "part2Type": "radiant"
+              }
+            },
+            {
+              "id": "necrotic",
+              "label": "Thunder + Necrotic",
+              "shortLabel": "Necrotic",
+              "combat": {
+                "damage": "5d6",
+                "types": [
+                  "thunder",
+                  "necrotic"
+                ],
+                "primaryType": "thunder",
+                "part2Damage": "5d6",
+                "part2Type": "necrotic"
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "upcast": null,
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose affected creatures within 30 ft. One Constitution save governs both components; failure also makes the target Prone, success halves both components without Prone. Higher slots add no damage."
+          ],
+          "effects": [
+            {
+              "id": "radiant",
+              "label": "Thunder + Radiant",
+              "shortLabel": "Radiant",
+              "combat": {
+                "damage": "5d6",
+                "types": [
+                  "thunder",
+                  "radiant"
+                ],
+                "primaryType": "thunder",
+                "part2Damage": "5d6",
+                "part2Type": "radiant"
+              }
+            },
+            {
+              "id": "necrotic",
+              "label": "Thunder + Necrotic",
+              "shortLabel": "Necrotic",
+              "combat": {
+                "damage": "5d6",
+                "types": [
+                  "thunder",
+                  "necrotic"
+                ],
+                "primaryType": "thunder",
+                "part2Damage": "5d6",
+                "part2Type": "necrotic"
+              }
+            }
+          ]
+        }
+      }
+    },
     "Dissonant Whispers": {
       "default": {
         "damage": "3d6",
@@ -295,6 +433,106 @@
         ]
       }
     },
+    "Enervation": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "necrotic"
+          ],
+          "upcast": null,
+          "noDamageUpcast": true,
+          "notes": [
+            "Heal the caster for half the Necrotic damage actually taken by the target; account for defenses and rounding at the table. This reference changes neither HP nor spell slots.",
+            "Keep Concentration and range; Total Cover ends the spell."
+          ],
+          "effects": [
+            {
+              "id": "initial-failed",
+              "label": "Initial · failed Dexterity save",
+              "shortLabel": "Initial fail",
+              "combat": {
+                "damage": "4d8",
+                "upcast": "1d8",
+                "notes": [
+                  "Failed initial Dexterity save: use this full damage and establish the drain."
+                ]
+              }
+            },
+            {
+              "id": "initial-success",
+              "label": "Initial · successful Dexterity save",
+              "shortLabel": "Initial pass",
+              "combat": {
+                "damage": "2d8",
+                "upcast": "1d8",
+                "notes": [
+                  "Successful initial Dexterity save: use this damage without halving it again; the spell ends."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Ongoing · Action",
+              "shortLabel": "Action",
+              "combat": {
+                "damage": "4d8",
+                "upcast": "1d8",
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "After the failed initial save, spend your Action on each own turn for automatic damage. Using that Action for anything else ends this spell."
+                ]
+              }
+            }
+          ]
+        },
+        "AU": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "necrotic"
+          ],
+          "upcast": null,
+          "noDamageUpcast": true,
+          "notes": [
+            "Heal the caster for half the Necrotic damage actually taken by the target; account for defenses and rounding at the table. This reference changes neither HP nor spell slots.",
+            "Keep Concentration and range; Total Cover ends the spell."
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial damage",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "6d8",
+                "upcast": "1d8",
+                "notes": [
+                  "Initial Dexterity save: success halves the damage and ends the spell; failure establishes the drain."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Ongoing · Bonus Action",
+              "shortLabel": "Bonus",
+              "combat": {
+                "damage": "2d8",
+                "upcast": null,
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "After the failed initial save, use a Bonus Action on a subsequent own turn. This automatic 2d8 does not increase with the slot level."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "Erupting Earth": {
       "default": {
         "damage": "3d12",
@@ -306,6 +544,94 @@
         "notes": [
           "Resolve affected creatures and the resulting difficult terrain."
         ]
+      }
+    },
+    "Fire Shield": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "save": "",
+          "upcast": null,
+          "automatic": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Retaliation only when an attacker within 5 ft hits you with a melee attack. There is no additional attack roll or save. This reference does not activate the shield, grant its resistance, or apply damage."
+          ],
+          "effects": [
+            {
+              "id": "fire",
+              "label": "Warm shield · retaliation",
+              "shortLabel": "Warm",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "fire"
+                ],
+                "notes": [
+                  "While the spell lasts, resolve Cold resistance and its 10-ft bright / 10-ft additional dim light separately."
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Chill shield · retaliation",
+              "shortLabel": "Chill",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "cold"
+                ],
+                "notes": [
+                  "While the spell lasts, resolve Fire resistance and its 10-ft bright / 10-ft additional dim light separately."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "save": "",
+          "upcast": null,
+          "automatic": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Retaliation only when an attacker within 5 ft hits you with a melee attack roll. There is no additional attack roll or save. This reference does not activate the shield, grant its resistance, or apply damage."
+          ],
+          "effects": [
+            {
+              "id": "fire",
+              "label": "Warm shield · retaliation",
+              "shortLabel": "Warm",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "fire"
+                ],
+                "notes": [
+                  "While the spell lasts, resolve Cold resistance and its 10-ft bright / 10-ft additional dim light separately."
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Chill shield · retaliation",
+              "shortLabel": "Chill",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "cold"
+                ],
+                "notes": [
+                  "While the spell lasts, resolve Fire resistance and its 10-ft bright / 10-ft additional dim light separately."
+                ]
+              }
+            }
+          ]
+        }
       }
     },
     "Flame Strike": {
@@ -529,6 +855,44 @@
         "XPHB": {
           "damage": "2d10",
           "upcast": "1d10"
+        }
+      }
+    },
+    "Immolation": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "fire"
+          ],
+          "upcast": null,
+          "noDamageUpcast": true,
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial damage",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "8d6",
+                "notes": [
+                  "Initial Dexterity save: half damage on success, with no ongoing burning. Failure starts the burning effect; resolve Concentration and light at the table."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Burning · target turn end",
+              "shortLabel": "Burning",
+              "combat": {
+                "damage": "4d6",
+                "notes": [
+                  "Only at the burning target’s turn end: failed Dexterity save deals this damage; success deals no damage and ends the spell. Do not halve this ongoing damage on a success."
+                ]
+              }
+            }
+          ]
         }
       }
     },
