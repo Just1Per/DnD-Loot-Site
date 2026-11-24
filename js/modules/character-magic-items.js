@@ -186,14 +186,14 @@ var CharacterMagicItems=(()=>{
     }
   }
   function apply(data,scores,effects,loot=[],level){
-    const active=activeEntries(data,loot,level),reports=[],warnings=[],seen=new Set();
+    const active=activeEntries(data,loot,level),reports=[],warnings=[],seen=new Set(),abilityFloors=new Map();
     for(const row of active){
       const rule=row.meta.rule;
       if(!rule||!row.magicActive)continue;
       const itemKey=clean(row.item.name);
       if(seen.has(itemKey))continue;
       seen.add(itemKey);
-      const changed=[],abilityChanges=[],fact=Pinned.find(row.item),eligible=eligibility(data,fact,effects,level);row.eligible=eligible;
+      const changed=[],abilityChanges=[],report={name:row.item.name,effects:changed,abilityChanges},fact=Pinned.find(row.item),eligible=eligibility(data,fact,effects,level);row.eligible=eligible;let hasAbilityFloor=false;
       if(fact&&eligible){
         const family=Pinned.key(fact.spellBonusFamily||row.item.name).replace(/^[123] /,''),attack=Number(fact.bonusSpellAttack)||0,dc=Number(fact.bonusSpellSaveDc)||0;
         const policy=castingPolicy(fact,data,level);
@@ -217,8 +217,8 @@ var CharacterMagicItems=(()=>{
       }
       if(rule.abilityOverride)for(const [ability,value] of Object.entries(rule.abilityOverride)){
         if(!(ability in scores))continue;
-        const before=scores[ability],next=Math.max(before,Number(value)||before);
-        if(next!==before){scores[ability]=next;abilityChanges.push({ability,before,after:next});changed.push(`${ability.toUpperCase()} ${before}→${next}`);}
+        const floor=Number(value);if(!Number.isFinite(floor)||floor<=0)continue;
+        hasAbilityFloor=true;if(!abilityFloors.has(ability)||floor>abilityFloors.get(ability).value)abilityFloors.set(ability,{value:floor,report});
       }
       for(const resistance of rule.resistances||[]){addUnique(effects.resistances,resistance);changed.push(`resistance: ${resistance}`);}
       if(rule.darkvision){
@@ -238,14 +238,17 @@ var CharacterMagicItems=(()=>{
         const before=Number(effects.climb||0),value=Number(effects.speed||0);
         effects.climb=Math.max(before,value);if(effects.climb!==before)changed.push(`climb speed ${effects.climb} ft`);
       }
-      if(changed.length)reports.push({name:row.item.name,effects:changed,abilityChanges});
+      if(changed.length||hasAbilityFloor)reports.push(report);
     }
     const overAttuned=active.filter(row=>row.needsAttunement&&row.choice.attuned&&!row.magicActive);
     for(const row of overAttuned)warnings.push(row.item.name+': exceeds '+(E.attunementLimit(data,level)===3?'three':E.attunementLimit(data,level))+' attunement slots; Adobe magic-item effects are inactive.');
     applyScopedPassives(data,effects,loot,level,reports,warnings);
+    // An item that sets a score has no effect when the score without it is higher.
+    // Resolve ordinary increases first, then the highest active floor per ability.
+    for(const [ability,{value,report}]of abilityFloors){const before=scores[ability];if(before>=value)continue;scores[ability]=value;report.abilityChanges.push({ability,before,after:value});report.effects.push(`${ability.toUpperCase()} ${before}→${value}`);}
     effects.itemSpellBonuses={};effects.itemSpellAbilityBonuses={};for(const source of Object.values(effects.itemSpellSources||{})){const entries=source.ability?[effects.itemSpellAbilityBonuses[source.ability]||={attack:0,dc:0}]:source.targets.map(target=>effects.itemSpellBonuses[target]||={attack:0,dc:0});for(const entry of entries){entry.attack+=source.attack;entry.dc+=source.dc;}}
     const primary=spellBonuses(effects,data.build?.classId,data.spellAbility);effects.itemSpellAttackBonus=primary.attack;effects.itemSpellDCBonus=primary.dc;
-    return {active,reports,warnings,...(effects.itemPassiveAC?.length?{passiveAC:effects.itemPassiveAC}:{})};
+    return {active,reports:reports.filter(row=>row.effects.length||row.abilityChanges.length),warnings,...(effects.itemPassiveAC?.length?{passiveAC:effects.itemPassiveAC}:{})};
   }
   function augmentGear(data,gear,magic){
     if(!gear||!magic)return gear;
