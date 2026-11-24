@@ -25,8 +25,10 @@ var CharacterClericBlessedStrikesUI = (() => {
       actor = sheetSession;
     scope = actor;
     const feature = stats?.clericBlessedStrikes,
-      host = document.getElementById("sheetFeatResources");
+      root = document.getElementById("sheetFeatResources"),
+      host = root?.querySelector("[data-feature-resource-controls]") || root;
     if (!actor || !feature?.available || !host) return result;
+    root.hidden = false;
     host.hidden = false;
     const section = document.createElement("section");
     section.className = "sheet-blessed-strikes";

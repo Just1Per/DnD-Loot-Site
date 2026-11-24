@@ -218,6 +218,9 @@ const errors = [];
       .locator('[data-choice-group="blessed-strikes"]')
       .selectOption("potent-spellcasting");
     await page.evaluate(() => selectSheetTab("combat"));
+    await page.evaluate(() => { for (let i=0;i<3;i++) updateSheetCalculations(); });
+    assert.equal(await page.locator("[data-cleric-blessed-strikes]").count(), 1,
+      "repeated resource updates retain exactly one current Blessed Strikes section");
     assert.match(
       await page.locator("[data-cleric-blessed-strikes]").innerText(),
       /\+3 damage/,

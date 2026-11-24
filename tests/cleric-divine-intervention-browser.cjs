@@ -205,6 +205,9 @@ const errors = [];
       selectSheetTab("combat");
     });
     const box = page.locator("[data-cleric-intervention]");
+    await page.evaluate(() => { for (let i=0;i<3;i++) updateSheetCalculations(); });
+    assert.equal(await box.count(), 1,
+      "repeated resource updates retain exactly one current Divine Intervention section");
     await page.evaluate(() => SiteHelp.refresh());
     await box.locator('button[aria-label="Help: Divine Intervention"]').click();
     assert.match(
