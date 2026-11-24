@@ -30,3 +30,18 @@ test('Satyr sources retain their own Ram dice, Fey type, training and 35 ft spee
  }
  const d=base();d.build.race='satyr-mpmm';d.build.classId='monk';assert.equal(run({kind:'unarmed'},d,11).damage,'1d10 + 4 bludgeoning');
 });
+
+test('source attack metadata removes false attack rolls without stripping actual spell attacks',()=>{
+ for(const name of ['Bane','Bestow Curse','Bless','Blur','Dispel Evil and Good','Faerie Fire','Foresight','Heat Metal','Hex','Holy Aura',"Hunter's Mark",'Invisibility','Magic Circle','Magic Weapon','Mirror Image','Mislead',"Otto's Irresistible Dance",'Phantasmal Killer','Protection from Evil and Good','Ray of Enfeeblement','Sanctuary','Shining Smite','Vicious Mockery']){
+  const s=C.rawData.spells.find(s=>s.name===name&&s.source==='XPHB');assert.equal(s.combat.attack,false,name);const d=base();d.spells=[{...C.spellRow(s),classId:'additional'}];const row=run({kind:'spell',ref:s.id+'::additional'},d);assert.equal(row.available,true,name);assert.equal(!!row.proficient,false,name);assert.doesNotMatch(row.hit,/^[+-]\d+$/,name);
+ }
+ for(const name of ['Fire Bolt','Ray of Sickness','Thorn Whip'])for(const edition of ['2014','2024']){const s=C.rawData.spells.find(s=>s.name===name&&s.edition===edition);assert.equal(s.combat.attack,true,name+' '+edition);}
+});
+test('Bless and Bane scale recipients rather than HP damage and retain their own save behavior',()=>{
+ for(const edition of ['2014','2024'])for(const name of ['Bane','Bless']){
+  const d=base();d.build.edition=edition;const s=C.rawData.spells.find(s=>s.name===name&&s.edition===edition);d.spells=[{...C.spellRow(s),classId:'additional'}];d.spellAbility='int';for(const slot of [1,3,9]){const before=JSON.stringify(d),row=run({kind:'spell',ref:s.id+'::additional',slot},d);assert.equal(row.damage,'See spell effect');assert.equal(row.damageDice,undefined);assert.equal(row.proficient,false);assert.equal(row.hit,name==='Bane'?'CHARISMA DC 14':'Effect');assert.match(row.notes.join(' '),new RegExp('Up to '+(slot+2)+' targets'));assert.match(row.notes.join(' '),/1d4/);assert.doesNotMatch(row.notes.join(' '),/Damage or weapon-dependent|Upcast effects are not automated/);const prior=JSON.parse(before);prior.actions=d.actions;assert.deepEqual(d,prior,'the reference never spends resources or changes HP');}
+ }
+});
+test('Ray of Enfeeblement keeps the legacy attack and revised save, with neither reducing die shown as damage',()=>{
+ for(const edition of ['2014','2024']){const d=base();d.build.edition=edition;d.spellAbility='int';const s=C.rawData.spells.find(s=>s.name==='Ray of Enfeeblement'&&s.edition===edition);d.spells=[{...C.spellRow(s),classId:'additional'}];const row=run({kind:'spell',ref:s.id+'::additional',slot:9},d);assert.equal(row.damage,'See spell effect');assert.equal(row.damageDice,undefined);assert.equal(row.proficient,edition==='2014');assert.equal(row.hit,edition==='2014'?'+6':'CONSTITUTION DC 14');assert.match(row.notes.join(' '),edition==='2014'?/halve.*Strength-based weapon attacks/:/subtract 1d8.*damage rolls/);assert.doesNotMatch(row.notes.join(' '),/Damage or weapon-dependent/);}
+});

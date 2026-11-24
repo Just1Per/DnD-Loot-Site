@@ -1637,6 +1637,63 @@
           "Resolve chosen damage recipients separately from one ally’s voluntary Hit Die healing; higher slots also allow one additional healing die per slot above 2."
         ]
       }
+    },
+    "Bane": {
+      "default": {
+        "damage": null,
+        "upcast": null,
+        "scaling": null,
+        "addAbility": false,
+        "nonDamage": true,
+        "targets": {
+          "base": 3,
+          "increment": 1,
+          "above": 1
+        },
+        "notes": [
+          "Failed Charisma save: subtract 1d4 from the target’s attack rolls and saving throws while this spell lasts. This die is a penalty, not HP damage. Resolve targets and Concentration at the table."
+        ]
+      }
+    },
+    "Bless": {
+      "default": {
+        "damage": null,
+        "upcast": null,
+        "scaling": null,
+        "addAbility": false,
+        "nonDamage": true,
+        "targets": {
+          "base": 3,
+          "increment": 1,
+          "above": 1
+        },
+        "notes": [
+          "Add 1d4 to each affected target’s attack rolls and saving throws while this spell lasts. This die is a bonus, not HP damage. Resolve targets and Concentration at the table."
+        ]
+      }
+    },
+    "Ray of Enfeeblement": {
+      "default": {
+        "damage": null,
+        "upcast": null,
+        "scaling": null,
+        "addAbility": false,
+        "nonDamage": true,
+        "noDamageUpcast": true
+      },
+      "bySource": {
+        "PHB": {
+          "checkDC": "End-of-target-turn Constitution saving throw to end the spell",
+          "notes": [
+            "On a spell-attack hit, halve the target’s damage from Strength-based weapon attacks while the spell lasts. This spell deals no HP damage. Resolve the affected target and Concentration at the table."
+          ]
+        },
+        "XPHB": {
+          "notes": [
+            "Successful Constitution save: Disadvantage on the target’s next attack roll before your next turn starts. Failed save: Disadvantage on Strength-based D20 Tests and subtract 1d8 from all of the target’s damage rolls; repeat the save at each turn’s end to end the spell. The 1d8 reduces damage and never deals HP damage. Resolve the target and Concentration at the table."
+          ]
+        }
+      }
     }
   }
 }

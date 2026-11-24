@@ -19,9 +19,9 @@
     "featExpandedListsToReview": 0,
     "spells": 969,
     "supplementClassListCorrections": 122,
-    "spellDamageFacts": 394,
+    "spellDamageFacts": 393,
     "spellAreaFacts": 335,
-    "spellActionFormulas": 271,
+    "spellActionFormulas": 268,
     "manualDamageReferences": 116,
     "itemFacts": 1253,
     "itemBases": 230,
@@ -7105,6 +7105,12 @@
       "hasDamageFacts": false,
       "hasAreaFacts": false,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "targetScaling": {
+        "base": 3,
+        "increment": 1,
+        "above": 1
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -7114,7 +7120,13 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "targetScaling": {
+        "base": 3,
+        "increment": 1,
+        "above": 1
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -7355,6 +7367,12 @@
       "hasDamageFacts": false,
       "hasAreaFacts": false,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "targetScaling": {
+        "base": 3,
+        "increment": 1,
+        "above": 1
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -7364,7 +7382,13 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "targetScaling": {
+        "base": 3,
+        "increment": 1,
+        "above": 1
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -13650,16 +13674,19 @@
       "hasDamageFacts": false,
       "hasAreaFacts": false,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
+      "checkDC": "End-of-target-turn Constitution saving throw to end the spell",
       "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-24cac981f45d9877",
       "name": "Ray of Enfeeblement",
       "edition": "2024",
-      "hasDamageFacts": true,
+      "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },

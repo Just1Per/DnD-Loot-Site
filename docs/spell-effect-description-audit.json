@@ -3,7 +3,7 @@
   "scope": "Display-only damage, area and scaling reminders; structured metadata plus original concise overrides. Not a spell rules engine.",
   "totals": {
     "spells": 969,
-    "damageExpected": 369,
+    "damageExpected": 368,
     "areaExpected": 324,
     "missingDamage": 0,
     "missingArea": 0
@@ -8656,11 +8656,9 @@
       "name": "Ray of Enfeeblement",
       "source": "XPHB",
       "edition": "2024",
-      "damageExpected": true,
+      "damageExpected": false,
       "areaExpected": false,
-      "facts": {
-        "damage": "1d8"
-      },
+      "facts": {},
       "missingDamage": false,
       "missingArea": false
     },

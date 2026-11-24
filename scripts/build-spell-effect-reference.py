@@ -52,12 +52,14 @@ def build():
     catalog=json.loads((ROOT/'data/rules/catalog.json').read_text());source={(s['name'],s['source']):s for f in (ROOT/'scripts/.source-cache/5etools-v1/spells').glob('spells-*.json') for s in json.loads(f.read_text()).get('spell',[])}
     authored=overrides();rows={};audit=[]
     for spell in catalog['spells']:
-        raw=source[(spell['name'],spell['source'])];facts=extract(raw);numeric_damage=bool(facts['damage'])
+        raw=source[(spell['name'],spell['source'])];facts=extract(raw)
+        if spell.get('combat',{}).get('nonDamage'):facts['damage']='';facts['scaling']=''
+        numeric_damage=bool(facts['damage'])
         for key in [spell['name'],spell['name']+'|'+spell['source']]:facts.update(authored.get(key,{}))
         for value in facts.values():
             if not isinstance(value,str) or '{@' in value or len(value)>300:raise ValueError('Invalid concise display fact: '+spell['name'])
         rows[spell['id']]={k:v for k,v in facts.items() if v}
-        damage_expected=numeric_damage or bool(raw.get('damageInflict')) or bool(re.search(r'\{@damage ',str(raw.get('entries',[]))))
+        damage_expected=not spell.get('combat',{}).get('nonDamage') and (numeric_damage or bool(raw.get('damageInflict')) or bool(re.search(r'\{@damage ',str(raw.get('entries',[])))))
         area_expected=bool(has_geometry(raw)) or bool(set(raw.get('areaTags',[]))&GEOMETRY) or raw['range']['type'] not in ['point','special']
         audit.append({'id':spell['id'],'name':spell['name'],'source':spell['source'],'edition':spell['edition'],'damageExpected':damage_expected,'areaExpected':area_expected,'facts':rows[spell['id']],'missingDamage':damage_expected and not facts['damage'],'missingArea':area_expected and not facts['area']})
     return catalog,rows,audit

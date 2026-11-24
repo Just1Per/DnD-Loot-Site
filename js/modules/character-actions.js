@@ -88,10 +88,11 @@ var CharacterActions = (()=>{
    const notes=['Base effect shown. Resolve conditions, riders and resource use from the spell.'];
    notes.push(...(Array.isArray(c.notes)?c.notes:[]));
    if(c.projectiles)notes.push('Creates '+(c.projectiles.base+c.projectiles.increment*Math.max(0,slot-c.projectiles.above))+' '+c.projectiles.unit+'; track remaining projectiles explicitly.');
+   if(c.targets)notes.push('Up to '+(c.targets.base+c.targets.increment*Math.max(0,slot-c.targets.above))+' targets; choose eligible recipients at the table.');
    if(beast?.relevant)notes.push(beast.label+': '+beast.detail);
    if(ambiguous)notes.push('Known from multiple classes: edit this action and choose its casting class.');
-   if(slot>spell.level&&!c.upcast&&!c.secondaryUpcast&&!c.choiceUpcast&&!c.projectiles&&!c.noDamageUpcast&&!['Scorching Ray','Magic Missile'].includes(spell.name))notes.push('Upcast effects are not automated for this spell.');
-   if(!damage)notes.push('Damage or weapon-dependent effect needs manual resolution; see spell information.');
+   if(slot>spell.level&&!c.upcast&&!c.secondaryUpcast&&!c.choiceUpcast&&!c.projectiles&&!c.targets&&!c.noDamageUpcast&&!['Scorching Ray','Magic Missile'].includes(spell.name))notes.push('Upcast effects are not automated for this spell.');
+   if(!damage)notes.push(c.nonDamage?'No HP damage; apply the listed effect at the table.':'Damage or weapon-dependent effect needs manual resolution; see spell information.');
    if(damage&&c.addAbility)damage=add(damage,mod);
    if(invocation?.damageBonus!==undefined){if(damage)damage=add(damage,invocation.damageBonus);notes.push(invocation.damageSource+': '+sign(invocation.damageBonus)+' to this cantrip’s damage rolls.');}
    if(spell.level===0&&source.classId==='cleric'&&invocation?.sourceClass==='cleric'&&stats.clericBlessedStrikes?.vitalityAvailable)notes.push('Improved Blessed Strikes: after dealing damage to a creature, grant '+stats.clericBlessedStrikes.amount+' temporary HP to yourself or another creature within 60 ft. Resolve the trigger in Combat.');
