@@ -25,7 +25,9 @@
     "spellActionFormulas": 268,
     "spellHealingFormulas": 14,
     "manualDamageReferences": 100,
-    "itemFacts": 1253,
+    "itemFacts": 1278,
+    "itemAbilityFacts": 75,
+    "itemAbilityAdapters": 32,
     "itemBases": 230,
     "itemVariants": 230,
     "itemImmunityFacts": 11,
@@ -16661,6 +16663,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16673,6 +16676,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16685,6 +16689,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": true,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16697,6 +16702,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": true,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16709,6 +16715,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16721,6 +16728,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": true,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16733,6 +16741,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16745,6 +16754,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16757,6 +16767,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": true,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16769,6 +16780,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16798,6 +16810,7 @@
         "saveDC": 17,
         "concentration": false
       },
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -16817,6 +16830,7 @@
       },
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16829,6 +16843,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16841,6 +16856,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16853,6 +16869,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16865,6 +16882,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16877,6 +16895,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16889,6 +16908,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16907,6 +16927,7 @@
         "attunement": true
       },
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16925,6 +16946,7 @@
         "attunement": true
       },
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16943,6 +16965,7 @@
         "attunement": true
       },
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16961,6 +16984,7 @@
         "attunement": true
       },
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16973,6 +16997,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16985,6 +17010,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -16997,6 +17023,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17009,6 +17036,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17021,6 +17049,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17033,6 +17062,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17045,6 +17075,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17057,6 +17088,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17069,6 +17101,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17083,6 +17116,7 @@
       ],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17097,6 +17131,7 @@
       ],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17116,6 +17151,7 @@
         "alignment": "G"
       },
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17128,6 +17164,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17140,6 +17177,7 @@
       "spellScope": [],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17152,6 +17190,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17164,6 +17203,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17176,6 +17216,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17195,6 +17236,7 @@
         "armorClassBonus": 2
       },
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17211,6 +17253,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17225,6 +17268,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17239,6 +17283,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17253,6 +17298,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17267,6 +17313,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17282,6 +17329,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17296,6 +17344,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17310,6 +17359,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17324,6 +17374,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17338,6 +17389,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17352,6 +17404,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17366,6 +17419,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17380,6 +17434,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17394,6 +17449,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17408,6 +17464,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17422,6 +17479,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17437,6 +17495,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17451,6 +17510,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17465,6 +17525,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17479,6 +17540,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17493,6 +17555,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17507,6 +17570,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17521,6 +17585,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17535,6 +17600,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17549,6 +17615,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17563,6 +17630,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17577,6 +17645,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17592,6 +17661,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17606,6 +17676,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17620,6 +17691,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17634,6 +17706,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17648,6 +17721,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17662,6 +17736,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17679,6 +17754,7 @@
       },
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17693,6 +17769,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17707,6 +17784,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17721,6 +17799,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17735,6 +17814,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17749,6 +17829,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17763,6 +17844,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17777,6 +17859,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17791,6 +17874,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17805,6 +17889,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17819,6 +17904,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17833,6 +17919,10 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": true,
+      "abilityMetadata": {
+        "str": 4
+      },
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17847,6 +17937,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17861,6 +17952,7 @@
       ],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17875,6 +17967,7 @@
       ],
       "passiveSaveChecks": true,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -17889,6 +17982,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17903,6 +17997,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17917,6 +18012,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17931,6 +18027,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17945,6 +18042,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17966,6 +18064,7 @@
       },
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -17980,6 +18079,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -18001,6 +18101,7 @@
       },
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -18015,6 +18116,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -18029,6 +18131,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -18043,6 +18146,7 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
@@ -18057,10 +18161,1306 @@
       ],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": true,
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
       "chargeMetadata": true
+    }
+  ],
+  "itemAbilities": [
+    {
+      "name": "Amulet of Health",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "con": 19
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "con": 19
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Amulet of Health",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "con": 19
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "con": 19
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Cloud Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 27
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 27
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Cloud Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 27
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 27
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Dwarvenkind",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "con": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "con": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Dwarvenkind",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "con": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "con": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Fire Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 25
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 25
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Fire Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 25
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 25
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Frost Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 23
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 23
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Frost Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 23
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 23
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Hill Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 21
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 21
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Hill Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 21
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 21
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Stone Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 23
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 23
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Stone Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 23
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 23
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Storm Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 29
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 29
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Belt of Storm Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 29
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 29
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Book of Exalted Deeds",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "wis": 2
+      }
+    },
+    {
+      "name": "Book of Exalted Deeds",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "wis": 2
+      }
+    },
+    {
+      "name": "Book of Vile Darkness",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "choose": [
+          {
+            "from": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "count": 1,
+            "amount": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "Book of Vile Darkness",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "choose": [
+          {
+            "from": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "count": 1,
+            "amount": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "Book of Vile Darkness (Variant)",
+      "source": "KftGV",
+      "edition": "2014",
+      "abilityMetadata": {
+        "choose": [
+          {
+            "from": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "count": 1,
+            "amount": 2
+          }
+        ]
+      },
+      "metadataInherited": true
+    },
+    {
+      "name": "Deck of Many Things",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "from": [
+          "str",
+          "dex",
+          "con",
+          "int",
+          "wis",
+          "cha"
+        ],
+        "count": 1,
+        "amount": 2
+      }
+    },
+    {
+      "name": "Deck of Many Things",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "from": [
+          "str",
+          "dex",
+          "con",
+          "int",
+          "wis",
+          "cha"
+        ],
+        "count": 1,
+        "amount": 2
+      }
+    },
+    {
+      "name": "Deck of Several Things",
+      "source": "LLK",
+      "edition": "2014",
+      "abilityMetadata": {
+        "choose": [
+          {
+            "from": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "count": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "Gauntlets of Ogre Power",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 19
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 19
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Gauntlets of Ogre Power",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 19
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "str": 19
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Gloves of Soul Catching",
+      "source": "CM",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "con": 20
+        }
+      }
+    },
+    {
+      "name": "Hammer of Thunderbolts",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "str": 4
+      }
+    },
+    {
+      "name": "Hand of Vecna",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 20
+        }
+      }
+    },
+    {
+      "name": "Hand of Vecna",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 20
+        }
+      }
+    },
+    {
+      "name": "Headband of Intellect",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "int": 19
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "int": 19
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Headband of Intellect",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "int": 19
+        }
+      },
+      "abilityScope": {
+        "mode": "minimum",
+        "scores": {
+          "int": 19
+        },
+        "equipped": true,
+        "attunement": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Agility",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "dex": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "dex": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Agility",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "dex": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "dex": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Fortitude",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "con": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "con": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Fortitude",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "con": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "con": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Insight",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "wis": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "wis": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Insight",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "wis": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "wis": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Intellect",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "int": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "int": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Intellect",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "int": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "int": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Leadership",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "cha": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "cha": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Leadership",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "cha": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "cha": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "str": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "str": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Ioun Stone, Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "str": 2
+      },
+      "abilityScope": {
+        "mode": "increase",
+        "scores": {
+          "str": 2
+        },
+        "maximum": 20,
+        "equipped": true,
+        "attunement": true,
+        "orbit": true
+      }
+    },
+    {
+      "name": "Manual of Bodily Health",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "con": 2
+      }
+    },
+    {
+      "name": "Manual of Bodily Health",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "con": 2
+      }
+    },
+    {
+      "name": "Manual of Gainful Exercise",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "str": 2
+      }
+    },
+    {
+      "name": "Manual of Gainful Exercise",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "str": 2
+      }
+    },
+    {
+      "name": "Manual of Quickness of Action",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "dex": 2
+      }
+    },
+    {
+      "name": "Manual of Quickness of Action",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "dex": 2
+      }
+    },
+    {
+      "name": "Orb of the Veil",
+      "source": "EGW",
+      "edition": "2014",
+      "abilityMetadata": {
+        "wis": 2
+      }
+    },
+    {
+      "name": "Potion of Cloud Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 27
+        }
+      }
+    },
+    {
+      "name": "Potion of Cloud Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 27
+        }
+      }
+    },
+    {
+      "name": "Potion of Fire Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 25
+        }
+      }
+    },
+    {
+      "name": "Potion of Fire Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 25
+        }
+      }
+    },
+    {
+      "name": "Potion of Frost Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 23
+        }
+      }
+    },
+    {
+      "name": "Potion of Frost Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 23
+        }
+      }
+    },
+    {
+      "name": "Potion of Hill Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 21
+        }
+      }
+    },
+    {
+      "name": "Potion of Hill Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 21
+        }
+      }
+    },
+    {
+      "name": "Potion of Stone Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 23
+        }
+      }
+    },
+    {
+      "name": "Potion of Stone Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 23
+        }
+      }
+    },
+    {
+      "name": "Potion of Storm Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 29
+        }
+      }
+    },
+    {
+      "name": "Potion of Storm Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "static": {
+          "str": 29
+        }
+      }
+    },
+    {
+      "name": "Powered Armor",
+      "source": "LLK",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 18
+        }
+      }
+    },
+    {
+      "name": "Shard of Xeluan",
+      "source": "KftGV",
+      "edition": "2014",
+      "abilityMetadata": {
+        "str": 4
+      }
+    },
+    {
+      "name": "Stormgirdle (Awakened)",
+      "source": "EGW",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 21
+        }
+      },
+      "metadataInherited": true
+    },
+    {
+      "name": "Stormgirdle (Dormant)",
+      "source": "EGW",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 21
+        }
+      }
+    },
+    {
+      "name": "Stormgirdle (Exalted)",
+      "source": "EGW",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "str": 21
+        }
+      },
+      "metadataInherited": true
+    },
+    {
+      "name": "Sword of Zariel",
+      "source": "BGDIA",
+      "edition": "2014",
+      "abilityMetadata": {
+        "static": {
+          "cha": 20
+        }
+      }
+    },
+    {
+      "name": "Tome of Clear Thought",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "int": 2
+      }
+    },
+    {
+      "name": "Tome of Clear Thought",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "int": 2
+      }
+    },
+    {
+      "name": "Tome of Leadership and Influence",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "cha": 2
+      }
+    },
+    {
+      "name": "Tome of Leadership and Influence",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "cha": 2
+      }
+    },
+    {
+      "name": "Tome of Understanding",
+      "source": "DMG",
+      "edition": "2014",
+      "abilityMetadata": {
+        "wis": 2
+      }
+    },
+    {
+      "name": "Tome of Understanding",
+      "source": "XDMG",
+      "edition": "2024",
+      "abilityMetadata": {
+        "wis": 2
+      }
+    }
+  ],
+  "itemAbilityReview": [
+    {
+      "name": "Book of Exalted Deeds",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Book of Exalted Deeds",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Book of Vile Darkness",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Book of Vile Darkness",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Book of Vile Darkness (Variant)",
+      "source": "KftGV",
+      "edition": "2014",
+      "metadataInherited": true,
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Deck of Many Things",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Deck of Many Things",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Deck of Several Things",
+      "source": "LLK",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Gloves of Soul Catching",
+      "source": "CM",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Hammer of Thunderbolts",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Hand of Vecna",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Hand of Vecna",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Manual of Bodily Health",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Manual of Bodily Health",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Manual of Gainful Exercise",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Manual of Gainful Exercise",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Manual of Quickness of Action",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Manual of Quickness of Action",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Orb of the Veil",
+      "source": "EGW",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Cloud Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Cloud Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Fire Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Fire Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Frost Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Frost Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Hill Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Hill Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Stone Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Stone Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Storm Giant Strength",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Potion of Storm Giant Strength",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Powered Armor",
+      "source": "LLK",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Shard of Xeluan",
+      "source": "KftGV",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Stormgirdle (Awakened)",
+      "source": "EGW",
+      "edition": "2014",
+      "metadataInherited": true,
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Stormgirdle (Dormant)",
+      "source": "EGW",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Stormgirdle (Exalted)",
+      "source": "EGW",
+      "edition": "2014",
+      "metadataInherited": true,
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Sword of Zariel",
+      "source": "BGDIA",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Tome of Clear Thought",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Tome of Clear Thought",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Tome of Leadership and Influence",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Tome of Leadership and Influence",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Tome of Understanding",
+      "source": "DMG",
+      "edition": "2014",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
+    },
+    {
+      "name": "Tome of Understanding",
+      "source": "XDMG",
+      "edition": "2024",
+      "review": "Activation, reading, attachment and source-specific limits need individual review before applying ability metadata."
     }
   ],
   "itemBonusReview": [
@@ -18071,6 +19471,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -18083,6 +19484,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -18095,6 +19497,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18107,6 +19510,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18119,6 +19523,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18131,6 +19536,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18143,6 +19549,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18155,6 +19562,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -18167,6 +19575,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -18179,6 +19588,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -18191,6 +19601,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18203,6 +19614,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18215,6 +19627,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18227,6 +19640,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
@@ -18239,6 +19653,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18251,6 +19666,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
@@ -18263,6 +19679,7 @@
       "spellScope": [],
       "passiveSaveChecks": false,
       "passiveImmunities": false,
+      "hasAbilityFacts": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
       "hasImmunity": false,

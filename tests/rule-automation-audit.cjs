@@ -60,3 +60,7 @@ test('investiture and void phases separate HP damage, saves, action ranges and t
 test('Wrought-Iron Tower’s passive AC/save scope is carried and attuned, with activated powers still explicit',()=>{
  const report=audit(),row=report.itemSaveCheckBonuses.find(r=>r.name==='Wrought-Iron Tower');assert.deepEqual(row.saveCheckScope,{saves:'all',checks:false,carried:true,attunement:true,armorClassBonus:2});assert.equal(report.itemBonusReview.some(r=>r.name===row.name),false);assert.equal(report.summary.itemSaveCheckBonusAdapters,18);
 });
+
+test('ability metadata inventory distinguishes reviewed orbit/wear scopes from books, potions and inherited facts',()=>{
+ const report=audit();assert.equal(report.summary.itemFacts,1278);assert.equal(report.summary.itemAbilityFacts,75);assert.equal(report.summary.itemAbilityAdapters,32);assert.equal(report.itemAbilityReview.length,43);assert.equal(report.itemAbilities.filter(row=>row.abilityScope?.orbit).length,12);for(const name of ['Tome of Clear Thought','Potion of Fire Giant Strength','Shard of Xeluan'])assert.ok(report.itemAbilityReview.some(row=>row.name===name),name);const inherited=report.itemAbilities.find(row=>row.name==='Stormgirdle (Awakened)');assert.equal(inherited.metadataInherited,true);assert.equal(inherited.abilityScope,undefined,'a copied numeric field is not a reviewed source limit');
+});

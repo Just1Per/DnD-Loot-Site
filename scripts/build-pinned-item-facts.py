@@ -5,7 +5,16 @@ ROOT=pathlib.Path(__file__).resolve().parents[1];CACHE=ROOT/'scripts/.source-cac
 def read(f):return json.loads((CACHE/f).read_text())
 def edition(row):return '2024' if row.get('edition')=='one' or row.get('source') in ['XPHB','XDMG','EFA','RHW','FRHoF','LFL','AU'] else '2014'
 def identity(row):return hashlib.sha256((row.get('source','')+'|'+row['name']).encode()).hexdigest()[:16]
-keys=['rarity','name','source','spellBonusFamily','weight','value','charges','recharge','rechargeAmount','reqAttune','reqAttuneTags','attachedSpells','containerCapacity','bonusAc','bonusWeapon','bonusWeaponAttack','bonusWeaponDamage','bonusSpellAttack','bonusSpellSaveDc','bonusSavingThrow','bonusAbilityCheck','resist','immune','conditionImmune','baseItem','weaponCategory','dmg1','dmg2','dmgType','property','range','ac','armor','weapon','type','sword','axe','arrow','bolt','polearm','crossbow','spear','bow','net','scfType','bulletFirearm','cellEnergy']
+keys=['rarity','name','source','spellBonusFamily','weight','value','charges','recharge','rechargeAmount','reqAttune','reqAttuneTags','attachedSpells','containerCapacity','bonusAc','bonusWeapon','bonusWeaponAttack','bonusWeaponDamage','bonusSpellAttack','bonusSpellSaveDc','bonusSavingThrow','bonusAbilityCheck','ability','resist','immune','conditionImmune','baseItem','weaponCategory','dmg1','dmg2','dmgType','property','range','ac','armor','weapon','type','sword','axe','arrow','bolt','polearm','crossbow','spear','bow','net','scfType','bulletFirearm','cellEnergy']
+def validate_ability(value):
+ # Only bounded numeric ability facts and enum choices; never source expressions.
+ if isinstance(value,dict):
+  assert set(value)<=set(['str','dex','con','int','wis','cha','static','choose','from','amount','count','max'])
+  for child in value.values():validate_ability(child)
+ elif isinstance(value,list):
+  for child in value:validate_ability(child)
+ elif isinstance(value,str):assert value in ['str','dex','con','int','wis','cha']
+ else:assert isinstance(value,int) and not isinstance(value,bool) and -30<=value<=30
 # Resolve only exported facts. Entry/prose modifications are deliberately never loaded
 # into the inheritance result. Unknown modifications to exported facts fail the build.
 extra=['namePrefix','nameSuffix','nameRemove','requires','excludes','edition','propertyAdd']
@@ -50,8 +59,9 @@ raw_items=read('items.json')['item'];raw_bases=read('items-base.json')['baseitem
 items=[]
 for raw in raw_items:
  row=resolve_item(raw)
- if not any(k in row for k in ['charges','recharge','reqAttune','containerCapacity','bonusAc','bonusWeapon','bonusSpellAttack','bonusSpellSaveDc','bonusSavingThrow','bonusAbilityCheck','resist','attachedSpells']):continue
- items.append({**{k:v for k,v in row.items() if k in keys and not(k=='reqAttune' and isinstance(v,str))},'reqAttune':bool(row.get('reqAttune')),'edition':edition(row)})
+ if not any(k in row for k in ['charges','recharge','reqAttune','containerCapacity','bonusAc','bonusWeapon','bonusSpellAttack','bonusSpellSaveDc','bonusSavingThrow','bonusAbilityCheck','resist','attachedSpells']) and not row.get('ability'):continue
+ if row.get('ability'):validate_ability(row['ability'])
+ items.append({**{k:v for k,v in row.items() if k in keys and not(k=='reqAttune' and isinstance(v,str))},'reqAttune':bool(row.get('reqAttune')),'edition':edition(row),**({'abilityInherited':True} if row.get('ability') and raw.get('_copy') and 'ability' not in raw else {})})
 bases=[{**{k:v for k,v in row.items() if k in keys},'edition':edition(row),'id':identity(row)} for row in map(resolve_item,raw_bases)]
 variants=[]
 raw_variants=read('magicvariants.json')['magicvariant'];resolve_variant=resolver(raw_variants)
@@ -61,5 +71,6 @@ for raw in raw_variants:
  v={**{k:v for k,v in inherited.items() if k in keys+['namePrefix','nameSuffix','nameRemove','rarity']},'name':row['name'],'requires':row.get('requires',[]),'excludes':row.get('excludes',{}),'reqAttune':bool(inherited.get('reqAttune'))}
  # Requirement matching uses only factual scalar/list equality; no filters/expressions execute.
  v['edition']=edition({**row,**v});v['id']=identity(v);variants.append(v)
+ if v.get('ability'):validate_ability(v['ability'])
 out={'revision':json.loads((ROOT/'data/rules/sources/5etools-v1.json').read_text())['revision'],'items':items,'bases':bases,'variants':variants,'hashes':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [CACHE/'items.json',CACHE/'items-base.json',CACHE/'magicvariants.json']}}
 text="'use strict';\n/* Generated structured item facts; scripts/build-pinned-item-facts.py. No source prose. */\nvar CharacterPinnedItemData="+json.dumps(out,separators=(',',':'),ensure_ascii=False)+";\nif(typeof module!=='undefined'&&module.exports)module.exports=CharacterPinnedItemData;\n";(ROOT/'js/modules/character-pinned-item-data.js').write_text(text);print(json.dumps({'items':len(items),'bases':len(bases),'variants':len(variants),'bytes':len(text)}))

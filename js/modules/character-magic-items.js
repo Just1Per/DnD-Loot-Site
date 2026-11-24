@@ -13,6 +13,19 @@ var CharacterMagicItems=(()=>{
   const knownNames=new Set((reference.names||[]).map(clean));
   const rules=new Map(Object.entries(reference.automation||{}).map(([name,rule])=>[clean(name),rule]));
   const resistanceTypes=['acid','cold','fire','force','lightning','necrotic','poison','psychic','radiant','thunder'];
+  const abilityStones={'ioun stone agility':'dex','ioun stone fortitude':'con','ioun stone insight':'wis','ioun stone intellect':'int','ioun stone leadership':'cha','ioun stone strength':'str'};
+  function stoneAbility(fact){
+    if(!fact||!['DMG','XDMG'].includes(fact.source)||fact.abilityInherited)return null;
+    const ability=abilityStones[Pinned.key(fact.name)];return ability&&fact.reqAttune&&Object.keys(fact.ability||{}).length===1&&fact.ability[ability]===2?{ability,amount:2,maximum:20}:null;
+  }
+  function abilityCoverage(fact){
+    if(!fact?.ability||fact.abilityInherited||!['DMG','XDMG'].includes(fact.source))return{};
+    const stone=stoneAbility(fact);if(stone)return{abilityScope:{mode:'increase',scores:{[stone.ability]:stone.amount},maximum:stone.maximum,equipped:true,attunement:true,orbit:true}};
+    const rule=variantRule(fact.name),same=(a,b)=>a&&b&&Object.keys(a).length===Object.keys(b).length&&Object.keys(a).every(key=>a[key]===b[key]);
+    if(same(rule?.abilityOverride,fact.ability.static))return{abilityScope:{mode:'minimum',scores:rule.abilityOverride,equipped:true,attunement:true}};
+    if(same(rule?.abilityBonus,fact.ability))return{abilityScope:{mode:'increase',scores:rule.abilityBonus,maximum:20,equipped:true,attunement:true}};
+    return{};
+  }
   // Holding/wearing uses the explicit Equipped control. Spell scope is independent of attunement class.
   const castingFamilies={
     'all purpose tool':['artificer'], 'arcane grimoire':['wizard'], 'bloodwell vial':['sorcerer'],
@@ -49,7 +62,7 @@ var CharacterMagicItems=(()=>{
     'XDMG|talisman of ultimate evil':{note:'The bonus has no class or alignment restriction. Resolve non-Fiend/Undead touch damage and Ultimate End at the table: Magic action, 120 ft, DC 20 Dexterity, Celestial Disadvantage, 4d6 Psychic on a success; spend 1 of 6 nonrecovering charges and destroy the item after its last charge.'}
   };
   const namedPolicy=fact=>namedCasting[fact.source+'|'+Pinned.key(fact.name)];
-  const instructions=item=>{const fact=Pinned.find(item);return fact?passivePolicy(fact)?.note||namedPolicy(fact)?.note||defensePolicy(fact)?.note||'':'';};
+  const instructions=item=>{const fact=Pinned.find(item),stone=stoneAbility(fact);return fact?passivePolicy(fact)?.note||namedPolicy(fact)?.note||defensePolicy(fact)?.note||(stone?'Equipped means this attuned stone is orbiting your head. While orbiting, '+stone.ability.toUpperCase()+' increases by 2, to a maximum of 20; a higher score is preserved. Stowing it ends this benefit. Resolve throwing, seizing and damage to the stone at the table.':''):'';};
   const prerequisite=item=>{const fact=Pinned.find(item);return fact?namedPolicy(fact)?.prerequisite||null:null;};
   function prerequisiteConfirmed(data,item){
     const rule=prerequisite(item);if(!rule)return true;
@@ -62,6 +75,17 @@ var CharacterMagicItems=(()=>{
     const Shared=globalThis.CharacterSubclassMechanics||(typeof require==='function'?require('./character-subclass-mechanics'):null);
     if(!Shared?.save(data,{[rule.key]:confirmed?['confirmed']:[]}))throw Error('Character choices are full. Remove an unused choice before recording item approval.');
     return true;
+  }
+  function orbitControl(item){const fact=Pinned.find(item);return fact&&(stoneAbility(fact)||Pinned.key(fact.name).startsWith('ioun stone ')&&passivePolicy(fact))?{key:fact.source+'|'+Pinned.key(fact.name),label:'The stone is orbiting my head'}:null;}
+  function setOrbiting(data,loot,id,orbiting,{expectedKey,level=1}={}){
+    const entry=(loot||[]).find(row=>row?.id===id&&Number.isFinite(Number(row.quantity))&&Number(row.quantity)>0),control=entry&&orbitControl(entry.item);
+    if(!control||expectedKey!==undefined&&control.key!==expectedKey||typeof orbiting!=='boolean')throw Error('This stone changed or is no longer carried. Reopen its information.');
+    const Companion=globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null);
+    if(Companion?.carrier(data,id)>=0)throw Error('A companion carries this stone. Return it to your character before recording its orbit.');
+    const Engine=globalThis.CharacterAdobeEngine,levelData=data.adobe?data:{...data,adobe:data.rulesChoices?.grants?.__adobe?.data||{}},actualLevel=Math.max(1,Math.min(20,Math.trunc(Number(Engine?.level?Engine.level(levelData,level):level)||1)));
+    if(orbiting&&!E.attunementState(data,loot,actualLevel).active.has(id))throw Error('Attune the stone within your current limit before recording its orbit.');
+    const state=E.choices(data.equipmentState),choice=state.loadout.find(row=>row.id===id);if(!choice)return !orbiting;
+    data.equipmentState={...data.equipmentState,loadout:state.loadout.map(row=>row.id===id?{...row,equipped:orbiting}:row)};return true;
   }
   function alignment(value){
     const key=clean(value),values={'lawful good':'G','neutral good':'G','chaotic good':'G',lg:'G',ng:'G',cg:'G',good:'G','lawful evil':'E','neutral evil':'E','chaotic evil':'E',le:'E',ne:'E',ce:'E',evil:'E'};
@@ -92,7 +116,7 @@ var CharacterMagicItems=(()=>{
     const family=Pinned.key(fact.spellBonusFamily||fact.name).replace(/^[123] /,'');
     const policy=namedPolicy(fact);
     const passive=passivePolicy(fact);
-    return{spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.ac?{armorClassBonus:passive.ac}:{}),...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)||!!defensePolicy(fact),...(defensePolicy(fact)?{immunityScope:{types:fact.immune,equipped:true,attunement:true},itemUseScope:{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false}}:{})};
+    return{...abilityCoverage(fact),spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.ac?{armorClassBonus:passive.ac}:{}),...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)||!!defensePolicy(fact),...(defensePolicy(fact)?{immunityScope:{types:fact.immune,equipped:true,attunement:true},itemUseScope:{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false}}:{})};
   }
   function spellBonuses(effects={},classId='',ability=''){
     const all=effects.itemSpellBonuses||{},global=all.global||{},specific=all[classId]||{},byAbility=effects.itemSpellAbilityBonuses?.[ability]||{};
@@ -111,7 +135,8 @@ var CharacterMagicItems=(()=>{
   function info(itemOrName){
     const name=typeof itemOrName==='string'?itemOrName:itemOrName?.name;
     const key=clean(name),f=typeof itemOrName==='object'?Pinned.find(itemOrName):null,structured=f?{attunement:!!f.reqAttune,resistances:(f.resist||[]).filter(x=>typeof x==='string').map(x=>x[0].toUpperCase()+x.slice(1)),acBonus:Number(f.bonusAc)||0}:null,rule=variantRule(name)||structured;
-    return {key,known:knownNames.has(key)||!!variantRule(name)||!!f&&!!f.rarity&&!['none','unknown'].includes(f.rarity),rule,attunement:!!rule?.attunement};
+    const stone=stoneAbility(f),effective=stone?{...(rule||{}),attunement:true,abilityBonus:{...(rule?.abilityBonus||{}),[stone.ability]:stone.amount}}:rule;
+    return {key,known:knownNames.has(key)||!!variantRule(name)||!!f&&!!f.rarity&&!['none','unknown'].includes(f.rarity),rule:effective,attunement:!!effective?.attunement};
   }
   function attunementMetadata(value){return value===true||value===1||typeof value==='string'&&/^(?:true\b|yes\b|required\b|requires? attunement(?:\b|$)|by (?:a|an|the)\b|\(requires? attunement\b)/i.test(value.trim());}
   function isMagical(item={}){
@@ -274,7 +299,7 @@ var CharacterMagicItems=(()=>{
 
   // The host installs the bridge; a plain Node metadata import must not mutate another model.
   if(typeof CharacterEquipment!=='undefined')E.infer=infer;
-  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear,spellBonuses,automationCoverage,prerequisite,prerequisiteConfirmed,setPrerequisite,instructions};
+  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear,spellBonuses,automationCoverage,prerequisite,prerequisiteConfirmed,setPrerequisite,orbitControl,setOrbiting,instructions};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterMagicItems=CharacterMagicItems;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterMagicItems;
