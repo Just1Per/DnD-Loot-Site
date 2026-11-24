@@ -22,3 +22,7 @@ test('spell areas and conditional dice distinguish bolts, clouds, damage choices
 test('non-damaging roll modifiers and damage reduction cannot reappear as spell-sheet damage facts',()=>{
  for(const edition of ['2014','2024'])for(const name of ['Bless','Bane','Ray of Enfeeblement']){assert.equal(facts(name,edition).damage,undefined);const row=audit.spells.find(r=>r.id===source(name,edition).id);assert.equal(row.damageExpected,false);assert.equal(row.missingDamage,false);}
 });
+
+test('Control Weather preserves its five-mile area instead of silently converting miles to feet',()=>{
+ assert.equal(facts('Control Weather').area,'5-mile radius');assert.equal(facts('Control Weather','2024').area,'5-mile-radius sphere');
+});

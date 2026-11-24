@@ -87,6 +87,7 @@ var CharacterActions = (()=>{
    if(spell.name==='Magic Missile'){count=3+Math.max(0,slot-1);unit='dart';}
    const notes=['Base effect shown. Resolve conditions, riders and resource use from the spell.'];
    notes.push(...(Array.isArray(c.notes)?c.notes:[]));
+   let healingReference='';if(c.healing){const h=c.healing,extra=Math.max(0,slot-spell.level);healingReference=increase(h.dice,h.upcast,extra);if(h.flatUpcast)healingReference=add(healingReference,h.flatUpcast*extra);if(h.addAbility)healingReference=add(healingReference,mod);notes.push((h.temporary?'Temporary HP reference':'Base healing reference')+': '+healingReference+' HP. Resolve recipient limits and applicable feature/item modifiers at the table.');}
    if(c.projectiles)notes.push('Creates '+(c.projectiles.base+c.projectiles.increment*Math.max(0,slot-c.projectiles.above))+' '+c.projectiles.unit+'; track remaining projectiles explicitly.');
    if(c.targets)notes.push('Up to '+(c.targets.base+c.targets.increment*Math.max(0,slot-c.targets.above))+' targets; choose eligible recipients at the table.');
    if(beast?.relevant)notes.push(beast.label+': '+beast.detail);
@@ -127,7 +128,7 @@ var CharacterActions = (()=>{
    const saveName=c.save??spell.save,paperHit=c.fixedSelfSave?'DC'+c.fixedSelfSave.dc:c.attack?sign(casting.attack):saveName?(saveName.split(',').length===1?saveName.slice(0,3):'DC')+casting.dc:c.automatic?'Auto':'Effect';
    const paperDamageType=c.fixedSelfSave?'Self '+compactType(primaryType):c.typeChoice&&!changedType&&!context.damageType?'Choice':damageType.split(' / ').length>2?'Variable':damageType.split(' / ').map(compactType).join('/');
    if(c.part2Damage||c.secondaryDamage||unit||c.fixedSelfSave)notes.unshift('Damage reference: '+damage+'.');
-   return {...row,damageDice:damageDice?damageDice.replace(/\s*\+\s*/g,'+'):undefined,damageType,paperDamageType,paperHit,paperName,proficient:!!c.attack,name:(a.name||spell.name)+(effect?' · '+effect.label:'')+' · '+spell.edition+(sourceLabel?' · '+sourceLabel:'')+(slot?' (level '+slot+')':''),ability,hit:c.fixedSelfSave?'Self '+c.fixedSelfSave.ability+' DC '+c.fixedSelfSave.dc:c.attack?sign(casting.attack):saveName?saveName+' DC '+casting.dc:c.automatic?'Automatic · no attack roll or save':'Effect',damage:damage||'See spell effect',range:c.actionRange||invocation?.range||CFC.cantripRange(spell,level),notes};
+   return {...row,...(healingReference?{healingReference,temporaryHPReference:!!c.healing.temporary}:{}),damageDice:damageDice?damageDice.replace(/\s*\+\s*/g,'+'):undefined,damageType,paperDamageType,paperHit,paperName,proficient:!!c.attack,name:(a.name||spell.name)+(effect?' · '+effect.label:'')+' · '+spell.edition+(sourceLabel?' · '+sourceLabel:'')+(slot?' (level '+slot+')':''),ability,hit:c.fixedSelfSave?'Self '+c.fixedSelfSave.ability+' DC '+c.fixedSelfSave.dc:c.attack?sign(casting.attack):saveName?saveName+' DC '+casting.dc:c.automatic?'Automatic · no attack roll or save':'Effect',damage:damage||'See spell effect',range:c.actionRange||invocation?.range||CFC.cantripRange(spell,level),notes};
   }
   if(a.kind==='grapple'||a.kind==='shove'){
    const modern=data.build.edition==='2024',martial=stats.gear?.martialArts,ability=modern&&martial?.active&&stats.mods.dex>stats.mods.str?'dex':'str',dc=8+stats.pb+stats.mods[ability],grapple=a.kind==='grapple';

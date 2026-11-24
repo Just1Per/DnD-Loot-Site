@@ -1906,6 +1906,393 @@
           ]
         }
       }
+    },
+    "Blink": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "At each of your turn ends, roll 1d6: 4–6 shifts you to the Ethereal Plane. Return at your next turn’s start or spell end to an eligible space within 10 ft of departure. Track position and planar interactions at the table."
+          ]
+        }
+      }
+    },
+    "Confusion": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Failed Wisdom save: no Bonus Actions or Reactions; roll 1d10 each turn start for behavior. The die selects behavior, not HP damage. Repeat the save each turn end to end the effect on that target. Upcasting adds 5 ft of radius per slot above 4; resolve behavior and targets at the table."
+          ]
+        }
+      }
+    },
+    "Control Weather": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Outdoors only; adjust weather stages within 5 miles. Each change takes 1d4 × 10 minutes; the die measures time, not HP damage. The spell ends if you go indoors. Weather effects remain with the DM."
+          ]
+        }
+      }
+    },
+    "Freedom of Movement": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "A willing touched target ignores difficult terrain and magical Speed reduction, Paralysis and Restraint; its Swim Speed equals its Speed. Spending 5 ft of movement escapes nonmagical restraints. Higher slots add one target per level above 4. Resolve movement at the table."
+          ]
+        }
+      }
+    },
+    "Guidance": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose one skill for a willing touched creature. While the spell lasts, add 1d4 to ability checks using that skill. This is not an attack/save bonus or HP damage; track Concentration and the chosen skill at the table."
+          ]
+        }
+      }
+    },
+    "Heroes' Feast": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "After one hour eating, up to 12 participants gain Poison resistance and immunity to Frightened and Poisoned for 24 hours. Increase each participant’s HP maximum by 2d10 and grant the same HP amount. Track the maximum increase and its expiry separately."
+          ]
+        }
+      }
+    },
+    "Reincarnate": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "For an eligible Humanoid dead no more than 10 days, use the 1d10 result or the DM’s choice for a new species. Resolve return, new species choices and replacement of old species traits at the table; this die is not HP damage."
+          ]
+        }
+      }
+    },
+    "Resistance": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose Acid, Bludgeoning, Cold, Fire, Lightning, Necrotic, Piercing, Poison, Radiant, Slashing or Thunder. The touched willing creature reduces damage of that type by 1d4, at most once per turn. This reduction is not damage dealt; track Concentration and the trigger separately."
+          ]
+        }
+      }
+    },
+    "Time Stop": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Roll 1d4 + 1 for your consecutive turns. End early if an action/effect affects another creature or its worn/carried objects, or if you move more than 1,000 ft from the casting point. The roll counts turns, not HP damage."
+          ]
+        }
+      }
+    },
+    "Cure Wounds": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "1d8",
+            "addAbility": true,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d8",
+            "addAbility": true,
+            "upcast": "2d8"
+          },
+          "notes": [
+            "Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Healing Word": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "1d4",
+            "addAbility": true,
+            "upcast": "1d4"
+          },
+          "notes": [
+            "No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d4",
+            "addAbility": true,
+            "upcast": "2d4"
+          },
+          "notes": [
+            "Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Mass Cure Wounds": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "3d8",
+            "addAbility": true,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "Up to six eligible creatures. No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "5d8",
+            "addAbility": true,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "Up to six eligible creatures. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Mass Healing Word": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "1d4",
+            "addAbility": true,
+            "upcast": "1d4"
+          },
+          "notes": [
+            "Up to six eligible creatures. No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d4",
+            "addAbility": true,
+            "upcast": "1d4"
+          },
+          "notes": [
+            "Up to six eligible creatures. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Prayer of Healing": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d8",
+            "addAbility": true,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "Up to six visible creatures; no automatic Short Rest is granted. No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d8",
+            "addAbility": false,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "Up to five creatures remaining in range throughout casting also gain Short Rest benefits; each recipient needs a Long Rest before benefiting again. No spellcasting modifier is added. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Regenerate": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "4d8 + 15",
+            "addAbility": false
+          },
+          "notes": [
+            "Initial healing only; for the duration, the recipient also regains 1 HP at each own turn start. Track severed-limb restoration and duration separately. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "4d8 + 15",
+            "addAbility": false
+          },
+          "notes": [
+            "Initial healing only; for the duration, the recipient also regains 1 HP at each own turn start. Track severed-limb restoration and duration separately. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "False Life": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "1d4 + 4",
+            "addAbility": false,
+            "temporary": true,
+            "flatUpcast": 5
+          },
+          "notes": [
+            "Self only; temporary HP lasts for the legacy spell duration. Choose an existing or new temporary-HP pool; never add the pools together. Resolve replacement at the table."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d4 + 4",
+            "addAbility": false,
+            "temporary": true,
+            "flatUpcast": 5
+          },
+          "notes": [
+            "Self only; temporary HP lasts until depleted or Long Rest. Choose an existing or new temporary-HP pool; never add the pools together. Resolve replacement at the table."
+          ]
+        }
+      }
     }
   }
 }

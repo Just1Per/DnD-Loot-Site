@@ -33,7 +33,9 @@ def extract(row):
     scaling=row.get('scalingLevelDice');cantrip=isinstance(scaling,dict) and bool(scaling.get('scaling'))
     if cantrip and damage:damage=damage[:1]  # multiple base/5/11/17 tokens describe the same scaled effect
     area='';shape=row['range']['type'];distance=row['range'].get('distance',{})
-    if shape not in ['point','special'] and isinstance(distance.get('amount'),int):area=str(distance['amount'])+'-ft '+shape
+    if shape not in ['point','special'] and isinstance(distance.get('amount'),int):
+        unit={'feet':'ft','miles':'mile'}.get(distance.get('type'))
+        if unit:area=str(distance['amount'])+'-'+unit+('-radius sphere' if unit=='mile' and shape=='sphere' else ' '+shape)
     if not area:
         for pattern in SHAPES:
             found=re.search(pattern,text,re.I)

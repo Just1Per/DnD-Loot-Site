@@ -53,7 +53,7 @@ def basic(row, kind):
     return out
 reviewed_combat=json.loads((ROOT/'scripts/spell-combat-overrides.json').read_text());assert reviewed_combat['revision']==INDEX_REV
 schools={'A':'Abjuration','C':'Conjuration','D':'Divination','E':'Enchantment','V':'Evocation','I':'Illusion','N':'Necromancy','T':'Transmutation'}
-spells=[];class_list_records=[];attack_roll_records=[]
+spells=[];class_list_records=[];attack_roll_records=[];non_damage_roll_records=[]
 for source in sources:
     for row in source.get('spell',[]):
         if row.get('_copy'): raise ValueError('Resolve inherited spell metadata explicitly: '+row['name'])
@@ -82,6 +82,11 @@ for source in sources:
             attack_roll_records.append({'id':out['id'],'name':row['name'],'source':source,'edition':out['edition'],'importedAttack':bool(combat.get('attack')),'sourceAttack':bool(row.get('spellAttack'))})
         # Mentions of attack rolls in licensed text do not make this a spell attack.
         combat['attack']=bool(row.get('spellAttack'));combat['types']=row.get('damageInflict',[])
+        if combat.get('damage') and not row.get('damageInflict'):
+            non_damage_roll_records.append({'id':out['id'],'name':row['name'],'source':source,'edition':out['edition'],'importedFormula':combat['damage']})
+            # Imported dice may represent healing, elapsed time or a roll table.
+            # Source-specific reviewed damage formulas are applied below.
+            for key in ('damage','upcast','scaling','addAbility'):combat.pop(key,None)
         scale=row.get('scalingLevelDice')
         if isinstance(scale,dict) and row.get('damageInflict') and (row.get('spellAttack') or row.get('savingThrow')):combat['scaling']=scale.get('scaling',{})
         # Reviewed compound/edition-specific formulas. Numeric facts and our own
@@ -125,6 +130,7 @@ loader.write_text(loader_text)
 print(json.dumps(manifest,indent=2))
 (ROOT/'docs/spell-class-list-audit.json').write_text(json.dumps({'revision':INDEX_REV,'lookupSha256':hashlib.sha256((args.cache/'gendata-spell-source-lookup.json').read_bytes()).hexdigest(),'basis':'Only classVariant additions defined by the spell’s own source; unrelated optional class-list expansions are excluded.','records':class_list_records},indent=2)+'\n')
 (ROOT/'docs/spell-attack-roll-audit.json').write_text(json.dumps({'revision':INDEX_REV,'basis':'Pinned spellAttack metadata is authoritative; an attack mentioned in an effect is not necessarily a spell attack. Reviewed event overrides remain separate.','records':attack_roll_records},indent=2)+'\n')
+(ROOT/'docs/spell-non-damage-roll-audit.json').write_text(json.dumps({'revision':INDEX_REV,'basis':'Discard imported damage formulas when pinned damageInflict is absent; reviewed source-specific overrides remain separate. Dice alone do not establish HP damage.','records':non_damage_roll_records},indent=2)+'\n')
 if args.spells_only:raise SystemExit(0)
 # Mechanical facts only; no arbitrary entry text or executable expressions.
 mechanics={}

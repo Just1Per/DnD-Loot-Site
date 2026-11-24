@@ -21,7 +21,8 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 335,
-    "spellActionFormulas": 276,
+    "spellActionFormulas": 260,
+    "spellHealingFormulas": 14,
     "manualDamageReferences": 108,
     "itemFacts": 1253,
     "itemBases": 230,
@@ -7468,7 +7469,8 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -8064,7 +8066,8 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": true,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -8364,7 +8367,8 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": true,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -8595,6 +8599,12 @@
       "hasDamageFacts": true,
       "hasAreaFacts": false,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "1d8",
+        "addAbility": true,
+        "upcast": "1d8"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -8604,7 +8614,13 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "2d8",
+        "addAbility": true,
+        "upcast": "2d8"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -9805,6 +9821,13 @@
       "hasDamageFacts": false,
       "hasAreaFacts": false,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "1d4 + 4",
+        "addAbility": false,
+        "temporary": true,
+        "flatUpcast": 5
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -9814,7 +9837,14 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "2d4 + 4",
+        "addAbility": false,
+        "temporary": true,
+        "flatUpcast": 5
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -10384,7 +10414,8 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -10892,7 +10923,8 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -11086,6 +11118,12 @@
       "hasDamageFacts": true,
       "hasAreaFacts": false,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "1d4",
+        "addAbility": true,
+        "upcast": "1d4"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -11095,7 +11133,13 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "2d4",
+        "addAbility": true,
+        "upcast": "2d4"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -11155,7 +11199,8 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": true,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -12315,6 +12360,12 @@
       "hasDamageFacts": false,
       "hasAreaFacts": true,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "3d8",
+        "addAbility": true,
+        "upcast": "1d8"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -12324,7 +12375,13 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": true,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "5d8",
+        "addAbility": true,
+        "upcast": "1d8"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -12355,6 +12412,12 @@
       "hasDamageFacts": false,
       "hasAreaFacts": false,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "1d4",
+        "addAbility": true,
+        "upcast": "1d4"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -12364,7 +12427,13 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "2d4",
+        "addAbility": true,
+        "upcast": "1d4"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -13367,6 +13436,12 @@
       "hasDamageFacts": false,
       "hasAreaFacts": false,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "2d8",
+        "addAbility": true,
+        "upcast": "1d8"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -13376,7 +13451,13 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "2d8",
+        "addAbility": false,
+        "upcast": "1d8"
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -13770,6 +13851,11 @@
       "hasDamageFacts": false,
       "hasAreaFacts": false,
       "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "4d8 + 15",
+        "addAbility": false
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -13779,7 +13865,12 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
+      "healingFormula": {
+        "dice": "4d8 + 15",
+        "addAbility": false
+      },
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -13799,7 +13890,8 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -13839,7 +13931,8 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -15599,7 +15692,8 @@
       "edition": "2024",
       "hasDamageFacts": false,
       "hasAreaFacts": false,
-      "actionDamageFormula": true,
+      "actionDamageFormula": false,
+      "nonDamageEffect": true,
       "compoundDamage": false,
       "manualDamageReference": false
     },

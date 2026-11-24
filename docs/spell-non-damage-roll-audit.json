@@ -1,0 +1,139 @@
+{
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "basis": "Discard imported damage formulas when pinned damageInflict is absent; reviewed source-specific overrides remain separate. Dice alone do not establish HP damage.",
+  "records": [
+    {
+      "id": "Spell-xphb-0fd441bf0e65724c",
+      "name": "Bane",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d4"
+    },
+    {
+      "id": "Spell-xphb-d2ba2144f6cd7505",
+      "name": "Bless",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d4"
+    },
+    {
+      "id": "Spell-xphb-e14a51fded1fb9b4",
+      "name": "Blink",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d6"
+    },
+    {
+      "id": "Spell-xphb-32c870923fced538",
+      "name": "Confusion",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d10"
+    },
+    {
+      "id": "Spell-xphb-17b0659bd0ceb44c",
+      "name": "Control Weather",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d4"
+    },
+    {
+      "id": "Spell-xphb-7d2576d8d1d34299",
+      "name": "Cure Wounds",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "2d8"
+    },
+    {
+      "id": "Spell-xphb-52999fff9183738a",
+      "name": "False Life",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "2d4 + 4"
+    },
+    {
+      "id": "Spell-xphb-1aa8b3f334f83e48",
+      "name": "Freedom of Movement",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "10d6"
+    },
+    {
+      "id": "Spell-xphb-f8aac527f9c928fc",
+      "name": "Guidance",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d4"
+    },
+    {
+      "id": "Spell-xphb-2825e6b7e8880a89",
+      "name": "Healing Word",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "2d4"
+    },
+    {
+      "id": "Spell-xphb-51e09c600861f60e",
+      "name": "Heroes' Feast",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "2d10"
+    },
+    {
+      "id": "Spell-xphb-54e0e4633f0ef346",
+      "name": "Mass Cure Wounds",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "5d8"
+    },
+    {
+      "id": "Spell-xphb-1499488827d3f920",
+      "name": "Mass Healing Word",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "2d4"
+    },
+    {
+      "id": "Spell-xphb-ac8174f0a227554a",
+      "name": "Prayer of Healing",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "2d8"
+    },
+    {
+      "id": "Spell-xphb-24cac981f45d9877",
+      "name": "Ray of Enfeeblement",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d8"
+    },
+    {
+      "id": "Spell-xphb-459ba967bb5a71d6",
+      "name": "Regenerate",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "4d8 + 15"
+    },
+    {
+      "id": "Spell-xphb-1e57f2a37dda96de",
+      "name": "Reincarnate",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d10"
+    },
+    {
+      "id": "Spell-xphb-be970d090a9b0a23",
+      "name": "Resistance",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d4"
+    },
+    {
+      "id": "Spell-xphb-0486c8623c593c1e",
+      "name": "Time Stop",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedFormula": "1d4 + 1"
+    }
+  ]
+}

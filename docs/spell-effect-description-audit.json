@@ -2252,7 +2252,7 @@
       "damageExpected": false,
       "areaExpected": true,
       "facts": {
-        "area": "5-ft radius"
+        "area": "5-mile radius"
       },
       "missingDamage": false,
       "missingArea": false
@@ -2265,7 +2265,7 @@
       "damageExpected": false,
       "areaExpected": true,
       "facts": {
-        "area": "5-ft sphere"
+        "area": "5-mile-radius sphere"
       },
       "missingDamage": false,
       "missingArea": false
