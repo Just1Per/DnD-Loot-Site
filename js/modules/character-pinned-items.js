@@ -2,8 +2,9 @@
 var CharacterPinnedItems=(()=>{
  const D=typeof CharacterPinnedItemData!=='undefined'?CharacterPinnedItemData:require('./character-pinned-item-data'),key=s=>String(s||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9]+/g,' ').trim(),index=new Map(),byVariant=new Map(D.variants.map(r=>[r.id,r])),byBase=new Map(D.bases.map(r=>[r.id,r])),familyCache=new Map(),baseCache=new Map();let familiesReady=false;
  const edition=item=>item?.edition==='2024'||['XPHB','XDMG','EFA','RHW','FRHoF','LFL','AU'].includes(item?.source)?'2024':'2014';
- for(const row of D.items){const k=row.edition+'|'+key(row.name);if(!index.has(k)||['PHB','DMG','XPHB','XDMG'].includes(row.source))index.set(k,row);}
- function find(item={}){return item.pinnedItemFacts||index.get(edition(item)+'|'+key(item.name));}
+ const sourceIndex=new Map(),sources=new Set(D.items.map(row=>row.source));
+ for(const row of D.items){const k=row.edition+'|'+key(row.name);sourceIndex.set(row.source+'|'+key(row.name),row);if(!index.has(k)||['PHB','DMG','XPHB','XDMG'].includes(row.source))index.set(k,row);}
+ function find(item={}){return item.pinnedItemFacts||(sources.has(item.source)?sourceIndex.get(item.source+'|'+key(item.name)):index.get(edition(item)+'|'+key(item.name)));}
  function matches(base,condition){return Object.entries(condition||{}).every(([k,v])=>Array.isArray(v)?v.some(x=>Array.isArray(base[k])?base[k].includes(x):base[k]===x):Array.isArray(base[k])?base[k].includes(v):base[k]===v);}
  const produced=(v,b)=>String(v.namePrefix||'')+b.name.replace(v.nameRemove||'\u0000','')+String(v.nameSuffix||'');
  function allowedBases(v){if(baseCache.has(v.id))return baseCache.get(v.id);const rows=D.bases.filter(b=>b.edition===v.edition&&v.requires.some(c=>matches(b,c))&&!(Object.keys(v.excludes||{}).length&&Object.entries(v.excludes).some(([k,val])=>matches(b,{[k]:val}))));baseCache.set(v.id,rows);return rows;}

@@ -260,6 +260,9 @@ var CharacterSheetModel = (() => {
     if(Array.isArray(assigned))d.adobe={classLevels:assigned.filter(entry=>entry&&typeof entry.classId==='string').slice(0,8).map(entry=>({classId:entry.classId,level:number(entry.level,1,1,20),subclassId:String(entry.subclassId||'')})),classFeatureChoices:ClassChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
     else if((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)d.adobe={classFeatureChoices:ClassChoices.normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices)};
     const backgroundFeatures=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).backgroundFeatures;if(backgroundFeatures)d.adobe={...d.adobe,backgroundFeatures};
+    // Item effects must follow the physical bearer, including in the standalone engine.
+    const companions=(data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).companions;
+    if(Array.isArray(companions)){const Carriers=globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null);d.adobe={...d.adobe,companions:companions.slice(0,12).map(row=>({equipment:Carriers.normalize(row?.equipment)}))};}
     const PersonalFeats=globalThis.CharacterPersonalFeats||(typeof require==='function'?require('./character-personal-feats'):null),personalFeats=PersonalFeats?.records(data)||{};if(Object.keys(personalFeats).length)d.adobe={...d.adobe,personalFeats};
     const effects = Rules.evaluate(d, level, Object.keys(skills));
     const languageTraining=(globalThis.CharacterLanguages||(typeof require==='function'?require('./character-languages'):null))?.apply(effects,d,{level});
@@ -313,7 +316,7 @@ var CharacterSheetModel = (() => {
     const saveAll=bonus('save.all'),skillAll=bonus('skill.all');
     for (const key of Object.keys(abilities)) {
       mods[key] = mod(scores[key]);
-      saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + bonus('save.'+key,d.saves[key].bonus)+saveAll + artificerFeatures.saveBonus+(effects.itemSavingThrowBonus||0);
+      saves[key] = mods[key] + (d.saves[key].proficient || effects.saves.includes(key) ? pb : 0) + bonus('save.'+key,d.saves[key].bonus)+saveAll + artificerFeatures.saveBonus+(effects.itemSavingThrowBonus||0)+(effects.itemAbilitySaveBonuses?.[key]||0);
     }
     const Aura=globalThis.CharacterPaladinAuras||(typeof require==='function'?require('./character-paladin-auras'):null),paladinAuras=Aura.derive(d,{level,mods});for(const key of Object.keys(saves))saves[key]+=paladinAuras.bonus;
     classOrders.skillBonuses={};for(const report of classOrders.reports){report.bonus=report.skills.length?Math.max(1,mods.wis):0;for(const key of report.skills)classOrders.skillBonuses[key]=(classOrders.skillBonuses[key]||0)+report.bonus;}
@@ -385,7 +388,7 @@ var CharacterSheetModel = (() => {
       classAbilityFeatures,
       classOrders,
       saveTraining,
-      deathSaveBonus:(saveTraining.deathSaveProficiency?pb:0)+artificerFeatures.saveBonus+paladinAuras.bonus+(effects.itemSavingThrowBonus||0),
+      deathSaveBonus:(saveTraining.deathSaveProficiency?pb:0)+artificerFeatures.saveBonus+paladinAuras.bonus+(effects.itemSavingThrowBonus||0)+(effects.itemDeathSaveBonus||0),
       invocationEffects,
       cantripInvocations:ClassChoices.cantripInvocations(d,{level,mods}),
       classResources:ClassChoices.classResources(d,{level,mods,featReports:feats.reports,attunedCount:artificerFeatures.attuned}),

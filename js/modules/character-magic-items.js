@@ -23,6 +23,14 @@ var CharacterMagicItems=(()=>{
   };
   const passiveStats=new Set(['ring of protection','cloak of protection','robe of stars','staff of power','stone of good luck','netherese ring of protection','blackstaff']);
   const passiveImmunities=new Set(['efreeti chain','matalotok','periapt of proof against poison','ring of winter']);
+  const scopedPassives={
+    'IMR|ioun stone of vitality':{saves:'death',note:'Equipped means the attuned stone is orbiting your head. Only death saves gain +1; stowing the stone ends this benefit.'},
+    'LLK|ioun stone self preservation':{saves:'int',note:'Equipped means the attuned stone is orbiting your head. Only Intelligence saves gain +1; stowing the stone ends this benefit.'},
+    'CoS|statuette of saint markovia':{saves:'all',alignment:'G',carried:true,note:'A Good-aligned bearer gains +1 to all saves, including death saves. Carrying is enough; no attunement or Equipped selection is needed. A companion carrying it does not benefit its owner.'},
+    'VRGR|harkon s bite':{saves:'all',checks:1,note:'While worn and attuned, gain +1 to saves and ability checks. The DM tracks the source’s werewolf curse, which is not removed by unequipping; Remove Curse or Harkon removing the necklace can release its attunement curse.'},
+    'RHW|harkon s bite':{saves:'all',checks:1,note:'Humanoid attunement or an eligible Magic Item Savant exception is required. While worn and attuned, gain +1 to saves and ability checks. Its curse persists until Harkon Lukas dies; the DM controls the full-moon werewolf transformation. Unequipping does not remove the curse.'}
+  };
+  const passivePolicy=fact=>fact&&scopedPassives[fact.source+'|'+Pinned.key(fact.name)];
   // Reviewed named records are source-bound: the two talisman editions have different requirements.
   const namedCasting={
     'WDH|blackstaff':{prerequisite:{key:'item:wdh:blackstaff-heir',label:'The DM confirms I am the rightful Blackstaff heir and its non-weapon powers are functioning.',note:'Keep this unchecked if the staff rejects its owner or loses its non-weapon powers after using its last charge. Wizard eligibility or a valid Magic Item Savant exception, holding and attunement are still required.'},note:'The active staff gives +2 AC, saves and spell attacks while held. Its quarterstaff is +2; use charges explicitly. Dawn restores 2d8 + 4 charges. Last-charge outcomes, sentience, Enchantment checks, statue commands and other triggered powers are table decisions.'},
@@ -36,6 +44,7 @@ var CharacterMagicItems=(()=>{
     'XDMG|talisman of ultimate evil':{note:'The bonus has no class or alignment restriction. Resolve non-Fiend/Undead touch damage and Ultimate End at the table: Magic action, 120 ft, DC 20 Dexterity, Celestial Disadvantage, 4d6 Psychic on a success; spend 1 of 6 nonrecovering charges and destroy the item after its last charge.'}
   };
   const namedPolicy=fact=>namedCasting[fact.source+'|'+Pinned.key(fact.name)];
+  const instructions=item=>{const fact=Pinned.find(item);return fact?passivePolicy(fact)?.note||namedPolicy(fact)?.note||'':'';};
   const prerequisite=item=>{const fact=Pinned.find(item);return fact?namedPolicy(fact)?.prerequisite||null:null;};
   function prerequisiteConfirmed(data,item){
     const rule=prerequisite(item);if(!rule)return true;
@@ -72,12 +81,13 @@ var CharacterMagicItems=(()=>{
     const selected=classes(data,level),C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);
     if((selected.artificer||0)>=14&&C?.artificerSource(data).id==='tce')return true;
     const caster=Object.entries(selected).some(([id,n])=>['bard','cleric','druid','sorcerer','warlock','wizard','artificer'].includes(id)||['paladin','ranger'].includes(id)&&n>=(data.build?.edition==='2024'?1:2)||['fighter','rogue'].includes(id)&&n>=3&&((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classLevels||[]).some(row=>row.classId===id&&/eldritch-knight|arcane-trickster/.test(row.subclassId||'')))||!!effects.innate?.length||effects.featSpellcasting===true||!!data.spells?.length;
-    return fact.reqAttuneTags.some(group=>Object.entries(group).every(([key,value])=>key==='class'?!!selected[String(value).split('|')[0].toLowerCase()]:key==='spellcasting'?value===true&&caster:key==='alignment'&&namedPolicy(fact)?.alignment?Array.isArray(value)&&value.length===1&&value[0]===alignment(data.alignment):false));
+    return fact.reqAttuneTags.some(group=>Object.entries(group).every(([key,value])=>key==='class'?!!selected[String(value).split('|')[0].toLowerCase()]:key==='spellcasting'?value===true&&caster:key==='creatureType'?clean((globalThis.CharacterRules||(typeof require==='function'?require('./character-rules'):null))?.profile(data.build,level)?.creatureType)===clean(value):key==='alignment'&&namedPolicy(fact)?.alignment?Array.isArray(value)&&value.length===1&&value[0]===alignment(data.alignment):false));
   }
   function automationCoverage(fact={}){
     const family=Pinned.key(fact.spellBonusFamily||fact.name).replace(/^[123] /,'');
     const policy=namedPolicy(fact);
-    return{spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family),passiveImmunities:passiveImmunities.has(family)};
+    const passive=passivePolicy(fact);
+    return{spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)};
   }
   function spellBonuses(effects={},classId='',ability=''){
     const all=effects.itemSpellBonuses||{},global=all.global||{},specific=all[classId]||{},byAbility=effects.itemSpellAbilityBonuses?.[ability]||{};
@@ -150,6 +160,24 @@ var CharacterMagicItems=(()=>{
     if(!key||list.some(v=>clean(v)===key))return;
     list.push(value);
   }
+  function applyScopedPassives(data,effects,loot,level,reports,warnings){
+    const attunement=E.attunementState(data,loot,level),seen=new Set(),owned=new Set(),carrier=globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null);
+    for(const entry of ItemChoices.project(loot,data.equipmentState?.loadout)){
+      if(!entry?.id||owned.has(entry.id)||!(Number(entry.quantity)>0))continue;owned.add(entry.id);
+      const fact=Pinned.find(entry.item),policy=passivePolicy(fact),choice=data.equipmentState?.loadout?.find(row=>row.id===entry.id);
+      if(!policy||carrier?.carrier(data,entry.id)>=0||!policy.carried&&!choice?.equipped||fact.reqAttune&&!attunement.active.has(entry.id))continue;
+      const family=Pinned.key(fact.name);if(seen.has(family))continue;
+      effects.traits||=[];addUnique(effects.traits,fact.name+' · '+policy.note);
+      if(!eligibility(data,fact,effects,level)||policy.alignment&&alignment(data.alignment)!==policy.alignment){warnings.push(fact.name+': the bearer does not meet its represented type or alignment requirement; save/check bonuses are inactive.');continue;}
+      const value=Number(fact.bonusSavingThrow);if(!Number.isSafeInteger(value)||Math.abs(value)>10)continue;
+      seen.add(family);
+      if(policy.saves==='all')effects.itemSavingThrowBonus=(effects.itemSavingThrowBonus||0)+value;
+      else if(policy.saves==='death')effects.itemDeathSaveBonus=(effects.itemDeathSaveBonus||0)+value;
+      else {effects.itemAbilitySaveBonuses||={};effects.itemAbilitySaveBonuses[policy.saves]=(effects.itemAbilitySaveBonuses[policy.saves]||0)+value;}
+      if(policy.checks)effects.itemAbilityCheckBonus=(effects.itemAbilityCheckBonus||0)+policy.checks;
+      reports.push({name:fact.name,effects:[(value>=0?'+':'')+value+' '+(policy.saves==='all'?'all saves':policy.saves==='death'?'death saves only':policy.saves.toUpperCase()+' saves only'),...(policy.checks?['+'+policy.checks+' ability checks']:[])],abilityChanges:[]});
+    }
+  }
   function apply(data,scores,effects,loot=[],level){
     const active=activeEntries(data,loot,level),reports=[],warnings=[],seen=new Set();
     for(const row of active){
@@ -206,6 +234,7 @@ var CharacterMagicItems=(()=>{
     }
     const overAttuned=active.filter(row=>row.needsAttunement&&row.choice.attuned&&!row.magicActive);
     for(const row of overAttuned)warnings.push(row.item.name+': exceeds '+(E.attunementLimit(data,level)===3?'three':E.attunementLimit(data,level))+' attunement slots; Adobe magic-item effects are inactive.');
+    applyScopedPassives(data,effects,loot,level,reports,warnings);
     effects.itemSpellBonuses={};effects.itemSpellAbilityBonuses={};for(const source of Object.values(effects.itemSpellSources||{})){const entries=source.ability?[effects.itemSpellAbilityBonuses[source.ability]||={attack:0,dc:0}]:source.targets.map(target=>effects.itemSpellBonuses[target]||={attack:0,dc:0});for(const entry of entries){entry.attack+=source.attack;entry.dc+=source.dc;}}
     const primary=spellBonuses(effects,data.build?.classId,data.spellAbility);effects.itemSpellAttackBonus=primary.attack;effects.itemSpellDCBonus=primary.dc;
     return {active,reports,warnings};
@@ -233,7 +262,7 @@ var CharacterMagicItems=(()=>{
 
   // The host installs the bridge; a plain Node metadata import must not mutate another model.
   if(typeof CharacterEquipment!=='undefined')E.infer=infer;
-  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear,spellBonuses,automationCoverage,prerequisite,prerequisiteConfirmed,setPrerequisite};
+  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear,spellBonuses,automationCoverage,prerequisite,prerequisiteConfirmed,setPrerequisite,instructions};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterMagicItems=CharacterMagicItems;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterMagicItems;

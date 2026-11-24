@@ -26,6 +26,8 @@
     "itemFacts": 1253,
     "itemBases": 230,
     "itemVariants": 230,
+    "itemSaveCheckBonusFacts": 29,
+    "itemSaveCheckBonusAdapters": 17,
     "itemSpellBonusFacts": 60,
     "itemSpellBonusAdapters": 60
   },
@@ -16251,6 +16253,396 @@
       "manualDamageReference": false
     }
   ],
+  "itemSaveCheckBonuses": [
+    {
+      "name": "Blackstaff",
+      "source": "WDH",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "spellRequirements": {
+        "explicitApproval": "item:wdh:blackstaff-heir"
+      },
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Chronolometer",
+      "source": "AI",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Cloak of Protection",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Cloak of Protection",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Deck of Wonder",
+      "source": "BMT",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Dimensional Loop",
+      "source": "AI",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Far Gear",
+      "source": "AI",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Harkon's Bite",
+      "source": "RHW",
+      "edition": "2024",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "saveCheckScope": {
+        "saves": "all",
+        "checks": true,
+        "carried": false,
+        "attunement": true
+      },
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Harkon's Bite",
+      "source": "VRGR",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "saveCheckScope": {
+        "saves": "all",
+        "checks": true,
+        "carried": false,
+        "attunement": true
+      },
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Ioun Stone of Vitality",
+      "source": "IMR",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "saveCheckScope": {
+        "saves": "death",
+        "checks": false,
+        "carried": false,
+        "attunement": true
+      },
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Ioun Stone, Self-Preservation",
+      "source": "LLK",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "saveCheckScope": {
+        "saves": "int",
+        "checks": false,
+        "carried": false,
+        "attunement": true
+      },
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Leather Golem Armor",
+      "source": "LLK",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Netherese Ring of Protection",
+      "source": "PaBTSO",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Ring of Protection",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Ring of Protection",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Robe of Stars",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Robe of Stars",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Rod of Alertness",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Rod of Alertness",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Rotor of Return",
+      "source": "AI",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Staff of Power",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Staff of Power",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Statuette of Saint Markovia",
+      "source": "CoS",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "saveCheckScope": {
+        "saves": "all",
+        "checks": false,
+        "carried": true,
+        "attunement": false,
+        "alignment": "G"
+      },
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Stone of Good Luck",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Stone of Good Luck",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Stone of Ill Luck",
+      "source": "TftYP",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Timepiece of Travel",
+      "source": "AI",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Wheel of Stars",
+      "source": "AI",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Wrought-Iron Tower",
+      "source": "CoA",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    }
+  ],
   "itemSpellBonuses": [
     {
       "name": "+1 All-Purpose Tool",
@@ -17187,54 +17579,6 @@
       "chargeMetadata": false
     },
     {
-      "name": "Harkon's Bite",
-      "source": "RHW",
-      "edition": "2024",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": false,
-      "hasSaveCheckBonus": true,
-      "hasImmunity": false,
-      "chargeMetadata": false
-    },
-    {
-      "name": "Harkon's Bite",
-      "source": "VRGR",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": false,
-      "hasSaveCheckBonus": true,
-      "hasImmunity": false,
-      "chargeMetadata": false
-    },
-    {
-      "name": "Ioun Stone of Vitality",
-      "source": "IMR",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": false,
-      "hasSaveCheckBonus": true,
-      "hasImmunity": false,
-      "chargeMetadata": false
-    },
-    {
-      "name": "Ioun Stone, Self-Preservation",
-      "source": "LLK",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": false,
-      "hasSaveCheckBonus": true,
-      "hasImmunity": false,
-      "chargeMetadata": false
-    },
-    {
       "name": "Leather Golem Armor",
       "source": "LLK",
       "edition": "2014",
@@ -17340,18 +17684,6 @@
       "hasSpellBonus": false,
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
-      "chargeMetadata": false
-    },
-    {
-      "name": "Statuette of Saint Markovia",
-      "source": "CoS",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": false,
-      "hasSaveCheckBonus": true,
-      "hasImmunity": false,
       "chargeMetadata": false
     },
     {

@@ -462,7 +462,8 @@
         "adobe-items-browser.cjs",
         "adobe-magic-menu-browser.cjs",
         "adobe-pinned-items-browser.cjs",
-        "item-conditional-automation-browser.cjs"
+        "item-conditional-automation-browser.cjs",
+        "item-scoped-passives-browser.cjs"
       ]
     },
     {
@@ -648,7 +649,8 @@
         "adobe-magic-menu-browser.cjs",
         "adobe-magic-variant-browser.cjs",
         "adobe-pinned-items-browser.cjs",
-        "item-conditional-automation-browser.cjs"
+        "item-conditional-automation-browser.cjs",
+        "item-scoped-passives-browser.cjs"
       ]
     },
     {
