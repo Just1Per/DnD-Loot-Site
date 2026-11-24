@@ -95,7 +95,7 @@
           "resets": [
             "long"
           ],
-          "detail": "{healingAction}. Touch one creature and restore {pb}d4 HP after rolling. Apply the result to that recipient separately; no spell slot is used."
+          "detail": "{healingAction}. Touch one creature and roll {pb}d4 HP. Use the Healing Hands controls to record the roll and spend one use. Self applies healing up to your current HP maximum; resolve another recipient’s HP at the table."
         },
         {
           "id": "revelation",
@@ -120,7 +120,7 @@
           "resets": [
             "long"
           ],
-          "detail": "{healingAction}. Touch one creature and restore {pb}d4 HP after rolling. Apply the result to that recipient separately; no spell slot is used."
+          "detail": "{healingAction}. Touch one creature and roll {pb}d4 HP. Use the Healing Hands controls to record the roll and spend one use. Self applies healing up to your current HP maximum; resolve another recipient’s HP at the table."
         },
         {
           "id": "revelation",

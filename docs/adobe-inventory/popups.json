@@ -352,6 +352,7 @@
         "item-scoped-passives-browser.cjs",
         "site-palette-browser.cjs",
         "species-forms-browser.cjs",
+        "species-healing-browser.cjs",
         "species-resources-browser.cjs"
       ]
     },

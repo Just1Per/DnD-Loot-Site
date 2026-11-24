@@ -103,6 +103,7 @@
     "item-scoped-passives-browser.cjs",
     "spell-effect-choices-browser.cjs",
     "species-resources-browser.cjs",
-    "species-forms-browser.cjs"
+    "species-forms-browser.cjs",
+    "species-healing-browser.cjs"
   ]
 }
