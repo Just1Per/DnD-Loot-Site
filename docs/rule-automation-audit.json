@@ -26,6 +26,8 @@
     "itemFacts": 1253,
     "itemBases": 230,
     "itemVariants": 230,
+    "itemImmunityFacts": 11,
+    "itemImmunityAdapters": 5,
     "itemSaveCheckBonusFacts": 29,
     "itemSaveCheckBonusAdapters": 17,
     "itemSpellBonusFacts": 60,
@@ -16333,6 +16335,157 @@
       "manualDamageReference": false
     }
   ],
+  "itemImmunities": [
+    {
+      "name": "Axe of the Dwarvish Lords",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Axe of the Dwarvish Lords",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Efreeti Chain",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": true,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Matalotok",
+      "source": "BGDIA",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": true,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Nightbringer",
+      "source": "MCV2DC",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Periapt of Proof against Poison",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": true,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Ring of Elemental Command (Fire)",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Ring of Fire Elemental Command",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Ring of Winter",
+      "source": "ToA",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": true,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Shield of the Blazing Dreadnought",
+      "source": "BGG",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Shield of the Uven Rune",
+      "source": "WDMM",
+      "edition": "2014",
+      "spellScope": [],
+      "passiveSaveChecks": false,
+      "passiveImmunities": true,
+      "immunityScope": {
+        "types": [
+          "cold"
+        ],
+        "equipped": true,
+        "attunement": true
+      },
+      "itemUseScope": {
+        "max": 1,
+        "recovery": [
+          "short",
+          "long"
+        ],
+        "spell": "Bane",
+        "saveDC": 17,
+        "concentration": false
+      },
+      "hasSpellBonus": false,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": true,
+      "chargeMetadata": false
+    }
+  ],
   "itemSaveCheckBonuses": [
     {
       "name": "Blackstaff",
@@ -17745,18 +17898,6 @@
     {
       "name": "Shield of the Blazing Dreadnought",
       "source": "BGG",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": false,
-      "hasSaveCheckBonus": false,
-      "hasImmunity": true,
-      "chargeMetadata": false
-    },
-    {
-      "name": "Shield of the Uven Rune",
-      "source": "WDMM",
       "edition": "2014",
       "spellScope": [],
       "passiveSaveChecks": false,

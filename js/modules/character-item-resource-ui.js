@@ -4,7 +4,7 @@ var CharacterItemResourceUI=(()=>{
  const R=CharacterItemResources;
  const current=(session,panel)=>characterPaperCombatCurrent(session)&&(!panel||panel.isConnected);
  const eventName=event=>({dawn:'Dawn',dusk:'Dusk',midnight:'Midnight',short:'Short Rest',long:'Long Rest'})[event];
- const eligible=(row,event)=>row.initialized&&row.used>0&&row.definition.recharge?.event===event&&row.definition.recharge.mode!=='none';
+ const eligible=(row,event)=>row.initialized&&row.used>0&&R.recovers(row.definition,event)&&row.definition.recharge.mode!=='none';
  function ensure(){
   const parent=document.getElementById('sheet-combat');if(!parent||!sheetSession)return null;
   let panel=document.getElementById('sheetItemResources');if(panel)return panel;

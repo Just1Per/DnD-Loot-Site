@@ -45,7 +45,7 @@ var CharacterItemResources=(()=>{
   if(!['dawn','dusk','midnight','short','long'].includes(event)||!plan||typeof plan!=='object'||Array.isArray(plan)||!Object.keys(plan).length)throw Error('Choose items to recover after the stated event.');
   const updates=[];
   for(const [id,value]of Object.entries(plan)){
-   const row=current(data,gear,id,ref),rule=row.definition.recharge;if(!row.initialized||rule?.event!==event||rule.mode==='none')throw Error('Only initialized items with this recovery event can be restored.');
+   const row=current(data,gear,id,ref),rule=row.definition.recharge;if(!row.initialized||!recovers(row.definition,event)||rule.mode==='none')throw Error('Only initialized items with this recovery event can be restored.');
    let regained;
    if(rule.mode==='all'){if(value!==null)throw Error('Full recovery uses the listed maximum.');regained=row.max*row.scale;}
    else if(rule.mode==='fixed'){if(value!==null)throw Error('Fixed recovery uses the listed amount.');regained=rule.amount*row.scale;}
@@ -58,6 +58,7 @@ var CharacterItemResources=(()=>{
   let next=state(data);for(const [row,usedTicks]of updates)next={...next,[row.id]:{reference:row.reference,usedTicks}};return next;
  }
  function forget(data,id){if(!validId(id))throw Error('Choose an existing item counter.');const next=state(data);delete next[id];return next;}
- return{normalize,state,definitions,project,initialize,setUsed,change,recover,forget,key};
+ const recovers=(definition,event)=>definition.recharge?.event===event||definition.recharge?.events?.includes(event)===true;
+ return{normalize,state,definitions,project,initialize,setUsed,change,recover,forget,key,recovers};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterItemResources;

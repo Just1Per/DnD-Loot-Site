@@ -23,6 +23,10 @@ var CharacterMagicItems=(()=>{
   };
   const passiveStats=new Set(['ring of protection','cloak of protection','robe of stars','staff of power','stone of good luck','netherese ring of protection','blackstaff']);
   const passiveImmunities=new Set(['efreeti chain','matalotok','periapt of proof against poison','ring of winter']);
+  const namedDefenses={
+    'WDMM|shield of the uven rune':{note:'While held and attuned: immunity to Cold damage. Deadly Rebuke spends your Reaction after a melee hit against you to deal 3d6 Necrotic to the attacker, without a save. Bane has one use per Short or Long Rest: Action, fixed DC 17, 1 minute, no Concentration or spell slot. Track its use in Item uses & charges. The eight-hour rune transfer destroys this shield and creates a separately configured weapon; it does not give this shield a +1 weapon bonus.'}
+  };
+  const defensePolicy=fact=>fact&&namedDefenses[fact.source+'|'+Pinned.key(fact.name)];
   const scopedPassives={
     'IMR|ioun stone of vitality':{saves:'death',note:'Equipped means the attuned stone is orbiting your head. Only death saves gain +1; stowing the stone ends this benefit.'},
     'LLK|ioun stone self preservation':{saves:'int',note:'Equipped means the attuned stone is orbiting your head. Only Intelligence saves gain +1; stowing the stone ends this benefit.'},
@@ -44,7 +48,7 @@ var CharacterMagicItems=(()=>{
     'XDMG|talisman of ultimate evil':{note:'The bonus has no class or alignment restriction. Resolve non-Fiend/Undead touch damage and Ultimate End at the table: Magic action, 120 ft, DC 20 Dexterity, Celestial Disadvantage, 4d6 Psychic on a success; spend 1 of 6 nonrecovering charges and destroy the item after its last charge.'}
   };
   const namedPolicy=fact=>namedCasting[fact.source+'|'+Pinned.key(fact.name)];
-  const instructions=item=>{const fact=Pinned.find(item);return fact?passivePolicy(fact)?.note||namedPolicy(fact)?.note||'':'';};
+  const instructions=item=>{const fact=Pinned.find(item);return fact?passivePolicy(fact)?.note||namedPolicy(fact)?.note||defensePolicy(fact)?.note||'':'';};
   const prerequisite=item=>{const fact=Pinned.find(item);return fact?namedPolicy(fact)?.prerequisite||null:null;};
   function prerequisiteConfirmed(data,item){
     const rule=prerequisite(item);if(!rule)return true;
@@ -87,7 +91,7 @@ var CharacterMagicItems=(()=>{
     const family=Pinned.key(fact.spellBonusFamily||fact.name).replace(/^[123] /,'');
     const policy=namedPolicy(fact);
     const passive=passivePolicy(fact);
-    return{spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)};
+    return{spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)||!!defensePolicy(fact),...(defensePolicy(fact)?{immunityScope:{types:fact.immune,equipped:true,attunement:true},itemUseScope:{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false}}:{})};
   }
   function spellBonuses(effects={},classId='',ability=''){
     const all=effects.itemSpellBonuses||{},global=all.global||{},specific=all[classId]||{},byAbility=effects.itemSpellAbilityBonuses?.[ability]||{};
@@ -119,6 +123,7 @@ var CharacterMagicItems=(()=>{
   function infer(item={}){
     if(item?.mechanics)return priorInfer(item);
     if(prerequisite(item)?.key==='item:wdh:blackstaff-heir')return {...E.normalize({kind:'weapon',base:'quarterstaff',attackBonus:2,damageBonus:2}),inferred:true,source:'Reviewed pinned item facts'};
+    if(defensePolicy(Pinned.find(item)))return {...E.normalize({kind:'shield',base:'shield',edition:'2014'}),inferred:true,source:'Reviewed pinned shield facts'};
     const rule=info(item).rule;
     const f=Pinned.find(item);if(f?.baseItem){const base=priorInfer({name:f.baseItem.split('|')[0]});if(base.kind!=='none')return{...base,edition:f.edition,attackBonus:Number(f.bonusWeapon||f.bonusWeaponAttack)||base.attackBonus,damageBonus:Number(f.bonusWeapon||f.bonusWeaponDamage)||base.damageBonus,acBonus:Number(f.bonusAc)||base.acBonus};}
     if(rule?.weapon){
@@ -199,9 +204,10 @@ var CharacterMagicItems=(()=>{
         if(passiveStats.has(family))for(const [field,target]of [['bonusSavingThrow','itemSavingThrowBonus'],['bonusAbilityCheck','itemAbilityCheckBonus']]){const value=family==='netherese ring of protection'&&field==='bonusSavingThrow'?1:Number(fact[field]);if(Number.isSafeInteger(value)&&Math.abs(value)<=10&&value){effects[target]=(effects[target]||0)+value;changed.push((field==='bonusSavingThrow'?'saving throws ':'ability checks ')+(value>=0?'+':'')+value);}}
         if(family==='netherese ring of protection')warnings.push('Netherese Ring of Protection: the +4 applies only to avoiding dropping or being disarmed of an item in the ring hand; resolve that check at the table.');
         if(family==='stone of ill luck')warnings.push('Stone of Ill Luck: the DM resolves its apparent luck bonus and concealed curse penalties; no unconditional save/check adjustment is applied.');
-        if(passiveImmunities.has(family))for(const value of (fact.immune||[]).filter(value=>typeof value==='string'&&resistanceTypes.includes(value))){effects.immunities||=[];addUnique(effects.immunities,value[0].toUpperCase()+value.slice(1)+' damage');changed.push('immunity: '+value+' damage');}
+        if(passiveImmunities.has(family)||defensePolicy(fact))for(const value of (fact.immune||[]).filter(value=>typeof value==='string'&&resistanceTypes.includes(value))){effects.immunities||=[];addUnique(effects.immunities,value[0].toUpperCase()+value.slice(1)+' damage');changed.push('immunity: '+value+' damage');}
       }else if(fact&&(fact.bonusSpellAttack||fact.bonusSpellSaveDc||fact.bonusSavingThrow||fact.bonusAbilityCheck))warnings.push(row.item.name+': source requirements are not met or need table review; additional spell/save/check bonuses are inactive.');
       if(fact&&namedPolicy(fact)?.note){effects.traits||=[];addUnique(effects.traits,row.item.name+' · '+namedPolicy(fact).note);}
+      if(fact&&defensePolicy(fact)?.note){effects.traits||=[];addUnique(effects.traits,row.item.name+' · '+defensePolicy(fact).note);}
       if(rule.abilityBonus)for(const [ability,bonus] of Object.entries(rule.abilityBonus)){
         if(!(ability in scores))continue;
         const before=scores[ability],next=before>20?before:Math.min(20,before+Number(bonus||0));

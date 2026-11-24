@@ -349,6 +349,7 @@
         "adobe-tool-check-browser.cjs",
         "feat-misty-escape-browser.cjs",
         "feat-special-spells-browser.cjs",
+        "item-scoped-passives-browser.cjs",
         "site-palette-browser.cjs",
         "species-forms-browser.cjs",
         "species-resources-browser.cjs"
@@ -489,7 +490,8 @@
       "notes": "Åbnes fra resource-bridge; modulet renderer #sheetItemResources.",
       "testReferences": [
         "adobe-item-resources-browser.cjs",
-        "adobe-pinned-items-browser.cjs"
+        "adobe-pinned-items-browser.cjs",
+        "item-scoped-passives-browser.cjs"
       ]
     },
     {
