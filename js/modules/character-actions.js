@@ -80,7 +80,7 @@ var CharacterActions = (()=>{
    const mark=CFC.huntersMarkEffect(data,spell,{level,classId:owner,features:stats.rangerFeatures,slot});
    if(mark)return {...row,name:spell.name+' · '+spell.edition+(owner?' · '+(classAbilities[owner]?owner[0].toUpperCase()+owner.slice(1):owner):'')+(slot?' (level '+slot+')':''),ability,hit:'No attack roll',damage:mark.damage,range:spell.range,notes:[mark.detail,'Bonus Action · '+mark.duration+'. Resolve marked target and eligible hits at the table.',...mark.notes,...(beast?.relevant?[beast.label+': '+beast.detail]:[])]};
    let damage=spell.level===0?diceAt(c.scaling,level,c.damage||''):c.damage||'';
-   if(slot>spell.level&&c.upcast)damage=increase(damage,c.upcast,Math.floor((slot-spell.level)/(c.step||1)));
+   if(slot>spell.level&&c.upcast)damage=increase(damage,c.upcast,Math.floor((Math.min(slot,Number.isInteger(c.upcastCeiling)?Math.max(spell.level,c.upcastCeiling):9)-spell.level)/(c.step||1)));
    let count=1,unit='';
    if(spell.name==='Eldritch Blast'){count=level>=17?4:level>=11?3:level>=5?2:1;unit='beam';}
    if(spell.name==='Scorching Ray'){count=3+Math.max(0,slot-2);unit='ray';}
@@ -99,6 +99,8 @@ var CharacterActions = (()=>{
    if(invocation?.range)notes.push(invocation.rangeSource+': range '+invocation.range+'.');
    const Casting=globalThis.CharacterSpellcasting||(typeof require==='function'?require('./character-spellcasting'):null),casting=Casting?Casting.castingStats({classId:owner,ability},stats,data):{attack:mod+stats.pb+data.spellAttackBonus,dc:8+stats.pb+mod+data.spellDCBonus};
    if(c.riderSave)notes.push('After a hit: '+c.riderSave+' DC '+casting.dc+' for the conditional rider; the damage still uses the spell attack roll.');
+   if(c.setupSave)notes.push('Setup saving throw: '+c.setupSave+' DC '+casting.dc+'. This is not a repeated save against the displayed damage event.');
+   if(c.checkDC)notes.push(c.checkDC+': DC '+casting.dc+'.');
    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null),modules=Runtime.modules(),effectsFor=types=>modules.flatMap(r=>r.module.spellEffect?.(data,{...spell,combat:{...c,types}},stats,{level,owner})||[]);
    const unresolvedType=c.typeChoice||!c.part2Damage&&!c.secondaryDamage&&(c.types||[]).length>1;
    let actualTypes=context.damageType?[context.damageType]:unresolvedType?[]:c.types||[],spellEffects=effectsFor(actualTypes);const changedType=spellEffects.find(effect=>effect.damageType)?.damageType;
@@ -124,7 +126,7 @@ var CharacterActions = (()=>{
    const saveName=c.save??spell.save,paperHit=c.fixedSelfSave?'DC'+c.fixedSelfSave.dc:c.attack?sign(casting.attack):saveName?(saveName.split(',').length===1?saveName.slice(0,3):'DC')+casting.dc:c.automatic?'Auto':'Effect';
    const paperDamageType=c.fixedSelfSave?'Self '+compactType(primaryType):c.typeChoice&&!changedType&&!context.damageType?'Choice':damageType.split(' / ').length>2?'Variable':damageType.split(' / ').map(compactType).join('/');
    if(c.part2Damage||c.secondaryDamage||unit||c.fixedSelfSave)notes.unshift('Damage reference: '+damage+'.');
-   return {...row,damageDice:damageDice?damageDice.replace(/\s*\+\s*/g,'+'):undefined,damageType,paperDamageType,paperHit,paperName,proficient:!!c.attack,name:(a.name||spell.name)+(effect?' · '+effect.label:'')+' · '+spell.edition+(sourceLabel?' · '+sourceLabel:'')+(slot?' (level '+slot+')':''),ability,hit:c.fixedSelfSave?'Self '+c.fixedSelfSave.ability+' DC '+c.fixedSelfSave.dc:c.attack?sign(casting.attack):saveName?saveName+' DC '+casting.dc:c.automatic?'Automatic · no attack roll or save':'Effect',damage:damage||'See spell effect',range:invocation?.range||CFC.cantripRange(spell,level),notes};
+   return {...row,damageDice:damageDice?damageDice.replace(/\s*\+\s*/g,'+'):undefined,damageType,paperDamageType,paperHit,paperName,proficient:!!c.attack,name:(a.name||spell.name)+(effect?' · '+effect.label:'')+' · '+spell.edition+(sourceLabel?' · '+sourceLabel:'')+(slot?' (level '+slot+')':''),ability,hit:c.fixedSelfSave?'Self '+c.fixedSelfSave.ability+' DC '+c.fixedSelfSave.dc:c.attack?sign(casting.attack):saveName?saveName+' DC '+casting.dc:c.automatic?'Automatic · no attack roll or save':'Effect',damage:damage||'See spell effect',range:c.actionRange||invocation?.range||CFC.cantripRange(spell,level),notes};
   }
   if(a.kind==='grapple'||a.kind==='shove'){
    const modern=data.build.edition==='2024',martial=stats.gear?.martialArts,ability=modern&&martial?.active&&stats.mods.dex>stats.mods.str?'dex':'str',dc=8+stats.pb+stats.mods[ability],grapple=a.kind==='grapple';

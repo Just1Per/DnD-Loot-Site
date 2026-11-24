@@ -526,5 +526,15 @@
   },
   "Contact Other Plane": {
     "damage": "Self on failed DC 15 INT save: 6d6 Psychic"
+  },
+  "Hail of Thorns|XPHB": {
+    "scaling": "+1d10/SL above 1; no 6d10 ceiling"
+  },
+  "Glyph of Warding": {
+    "damage": "Explosive rune: 5d8 Acid/Cold/Fire/Lightning/Thunder (choose)"
+  },
+  "Jallarzi's Storm of Radiance": {
+    "area": "10-ft-radius, 40-ft-high cylinder",
+    "scaling": "Each component +1d10/SL above 5"
   }
 }

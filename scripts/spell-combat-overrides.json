@@ -533,6 +533,72 @@
         }
       }
     },
+    "Ensnaring Strike": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "piercing"
+          ],
+          "upcast": null,
+          "setupSave": "STRENGTH",
+          "checkDC": "Escape Strength check",
+          "notes": [
+            "A weapon hit triggers the initial Strength save; Large or larger targets have Advantage. Success prevents the restraint/drain. Keep Concentration and resolve the weapon’s damage separately.",
+            "Legacy Bonus Action casting primes the next weapon hit."
+          ],
+          "effects": [
+            {
+              "id": "ongoing",
+              "label": "Restrained target · turn start",
+              "shortLabel": "Vines",
+              "combat": {
+                "damage": "1d6",
+                "upcast": "1d6",
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "Only at the vine-Restrained target’s turn start: deal this automatic damage, with no new save. The target or an eligible helper can spend an Action on the listed escape check; success ends the spell."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "piercing"
+          ],
+          "upcast": null,
+          "setupSave": "STRENGTH",
+          "checkDC": "Escape Strength (Athletics) check",
+          "notes": [
+            "A weapon hit triggers the initial Strength save; Large or larger targets have Advantage. Success prevents the restraint/drain. Keep Concentration and resolve the weapon’s damage separately.",
+            "Revised Bonus Action casting occurs immediately after the weapon hit."
+          ],
+          "effects": [
+            {
+              "id": "ongoing",
+              "label": "Restrained target · turn start",
+              "shortLabel": "Vines",
+              "combat": {
+                "damage": "1d6",
+                "upcast": "1d6",
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "Only at the vine-Restrained target’s turn start: deal this automatic damage, with no new save. The target or an eligible helper can spend an Action on the listed escape check; success ends the spell."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
     "Erupting Earth": {
       "default": {
         "damage": "3d12",
@@ -675,6 +741,176 @@
         "upcast": "1d8"
       }
     },
+    "Glyph of Warding": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "upcast": null,
+          "actionRange": "20-ft-radius sphere",
+          "notes": [
+            "Explosive rune only: choose the damage type when inscribing the glyph; keep this reference on that type. Each affected creature makes a Dexterity save for half damage.",
+            "Resolve the configured trigger once; moving the inscribed surface/object more than 10 ft breaks the glyph. A stored-spell glyph uses its stored spell separately, not this explosion."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Explosive rune · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Explosive rune · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Explosive rune · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Explosive rune · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Explosive rune · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "upcast": null,
+          "actionRange": "20-ft-radius sphere",
+          "notes": [
+            "Explosive rune only: choose the damage type when inscribing the glyph; keep this reference on that type. Each affected creature makes a Dexterity save for half damage.",
+            "Resolve the configured trigger once; moving the inscribed surface/object more than 10 ft breaks the glyph. A stored-spell glyph uses its stored spell separately, not this explosion."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Explosive rune · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Explosive rune · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Explosive rune · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Explosive rune · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Explosive rune · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Grasping Vine": {
+      "bySource": {
+        "XPHB": {
+          "damage": "4d8",
+          "attack": true,
+          "addAbility": false,
+          "types": [
+            "bludgeoning"
+          ],
+          "noDamageUpcast": true,
+          "upcast": null,
+          "actionRange": "30 ft from vine",
+          "checkDC": "Grapple escape",
+          "notes": [
+            "The initial attack and later Bonus Action attacks originate from the vine, not the caster. On a hit, pull the target up to 30 ft toward the vine; Huge or smaller targets are also Grappled.",
+            "One grappled target at base level; each higher slot allows one more grappled target, without increasing damage per hit. Track vine location, held targets and Concentration at the table."
+          ]
+        }
+      }
+    },
     "Gravity Fissure": {
       "default": {
         "damage": "8d8",
@@ -699,6 +935,39 @@
         "notes": [
           "Resolve the affected sphere and failed-save pull toward its center."
         ]
+      }
+    },
+    "Hail of Thorns": {
+      "bySource": {
+        "PHB": {
+          "damage": "1d10",
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "piercing"
+          ],
+          "upcast": "1d10",
+          "upcastCeiling": 6,
+          "actionRange": "5-ft burst at hit target",
+          "notes": [
+            "This is the separate burst after an eligible ranged-weapon hit. The hit target and each creature within 5 ft make Dexterity saves; success halves the burst. Keep the weapon hit’s own damage separate.",
+            "Cast with a Bonus Action before a later hit; maintain Concentration until that hit. Damage stops at 6d10 even with slots above level 6."
+          ]
+        },
+        "XPHB": {
+          "damage": "1d10",
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "piercing"
+          ],
+          "upcast": "1d10",
+          "actionRange": "5-ft burst at hit target",
+          "notes": [
+            "This is the separate burst after an eligible ranged-weapon hit. The hit target and each creature within 5 ft make Dexterity saves; success halves the burst. Keep the weapon hit’s own damage separate.",
+            "Cast with a Bonus Action immediately after the hit; this edition has no Concentration or 6d10 damage ceiling."
+          ]
+        }
       }
     },
     "Hunger of Hadar": {
@@ -892,6 +1161,28 @@
                 ]
               }
             }
+          ]
+        }
+      }
+    },
+    "Jallarzi's Storm of Radiance": {
+      "bySource": {
+        "XPHB": {
+          "damage": "2d10",
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "radiant",
+            "thunder"
+          ],
+          "primaryType": "radiant",
+          "part2Damage": "2d10",
+          "part2Type": "thunder",
+          "upcast": "1d10",
+          "part2Upcast": "1d10",
+          "notes": [
+            "One Constitution save covers both damage components; success halves each. Resolve the initial area event, first entry on a turn, or turn end, at most once per creature per turn.",
+            "The 10-ft-radius, 40-ft-high cylinder also Blinds/Deafens occupants and prevents Verbal spellcasting. Positions, eligible events and Concentration remain at the table."
           ]
         }
       }

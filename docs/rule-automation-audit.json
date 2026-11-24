@@ -21,8 +21,8 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 394,
     "spellAreaFacts": 335,
-    "spellActionFormulas": 265,
-    "manualDamageReferences": 122,
+    "spellActionFormulas": 271,
+    "manualDamageReferences": 116,
     "itemFacts": 1253,
     "itemBases": 230,
     "itemVariants": 230,
@@ -9522,9 +9522,17 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "ongoing",
+          "label": "Restrained target · turn start"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "setupSave": "STRENGTH",
+      "checkDC": "Escape Strength check",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-92ebad63673cfddc",
@@ -9533,7 +9541,15 @@
       "hasDamageFacts": true,
       "hasAreaFacts": false,
       "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "ongoing",
+          "label": "Restrained target · turn start"
+        }
+      ],
       "compoundDamage": false,
+      "setupSave": "STRENGTH",
+      "checkDC": "Escape Strength (Athletics) check",
       "manualDamageReference": false
     },
     {
@@ -10543,7 +10559,30 @@
       "hasDamageFacts": true,
       "hasAreaFacts": true,
       "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "acid",
+          "label": "Explosive rune · Acid"
+        },
+        {
+          "id": "cold",
+          "label": "Explosive rune · Cold"
+        },
+        {
+          "id": "fire",
+          "label": "Explosive rune · Fire"
+        },
+        {
+          "id": "lightning",
+          "label": "Explosive rune · Lightning"
+        },
+        {
+          "id": "thunder",
+          "label": "Explosive rune · Thunder"
+        }
+      ],
       "compoundDamage": false,
+      "actionRange": "20-ft-radius sphere",
       "manualDamageReference": false
     },
     {
@@ -10552,9 +10591,32 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "acid",
+          "label": "Explosive rune · Acid"
+        },
+        {
+          "id": "cold",
+          "label": "Explosive rune · Cold"
+        },
+        {
+          "id": "fire",
+          "label": "Explosive rune · Fire"
+        },
+        {
+          "id": "lightning",
+          "label": "Explosive rune · Lightning"
+        },
+        {
+          "id": "thunder",
+          "label": "Explosive rune · Thunder"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "20-ft-radius sphere",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-ed179655d8f1e07c",
@@ -10592,9 +10654,11 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "30 ft from vine",
+      "checkDC": "Grapple escape",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-au-ff0d5ee713d3c36a",
@@ -10822,9 +10886,11 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "damageUpcastCeiling": 6,
+      "actionRange": "5-ft burst at hit target",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-d4454379f86c3de7",
@@ -10832,9 +10898,10 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "5-ft burst at hit target",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-abfe82c77b8e8610",
@@ -11610,9 +11677,9 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-ai-106bf32034ad2890",
