@@ -16,3 +16,7 @@ test('all item spell-bonus records retain reviewed scope and the talisman and Bl
 test('conditional spell formulas are counted as reviewed choices without treating unknown target conditions as direct damage',()=>{
  const report=audit();assert.equal(report.summary.spellActionFormulas,257);assert.equal(report.summary.manualDamageReferences,130);for(const name of ['Toll the Dead','Witch Bolt','Hunger of Hadar']){const rows=report.spells.filter(row=>row.name===name);assert.equal(rows.length,2);for(const row of rows){assert.equal(row.actionDamageFormula,true);assert.equal(row.manualDamageReference,false);assert.ok(row.effectChoices.length>=2);}}
 });
+test('non-spell species counters retain source identities, unlocks, rest rules and their counter-only automation scope',()=>{
+ const report=audit();assert.equal(report.summary.speciesWithResourceAdapters,22);assert.equal(report.summary.speciesResourceCounters,34);assert.equal(report.speciesResources.length,22);for(const species of report.speciesResources){assert.match(species.automation,/Temporary form benefits, targets and recipient HP/);for(const resource of species.resources){assert.equal(resource.reference.feature,resource.name);assert.ok(resource.minimumCharacterLevel>=1);}}
+ const rush=id=>report.speciesResources.find(row=>row.id===id).resources.find(row=>row.id==='rush');assert.deepEqual(rush('orc-2024').recovery,['short','long']);assert.deepEqual(rush('orc-mpmm').recovery,['long']);assert.equal(report.speciesResources.find(row=>row.id==='goblin-mpmm').resources[0].oncePerTurn,true);
+});

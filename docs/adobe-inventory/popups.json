@@ -349,7 +349,8 @@
         "adobe-tool-check-browser.cjs",
         "feat-misty-escape-browser.cjs",
         "feat-special-spells-browser.cjs",
-        "site-palette-browser.cjs"
+        "site-palette-browser.cjs",
+        "species-resources-browser.cjs"
       ]
     },
     {

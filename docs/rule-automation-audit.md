@@ -5,6 +5,8 @@ Source revision: `b9061583536101068b3a59d27e886d1fa664e366`. This inventory dist
 | Inventory | Count |
 | --- | ---: |
 | Species | 105 |
+| Species with reviewed non-spell resource adapters | 22 |
+| Reviewed non-spell species counters | 34 |
 | Subclass adapters | 186 |
 | Missing subclass adapters | 0 |
 | Selectable feats | 302 |

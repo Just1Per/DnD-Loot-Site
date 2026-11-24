@@ -786,7 +786,7 @@ var CharacterClassFeatureChoices=(()=>{
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);rows.push(...(domains?.derive(data,{level,mods}).resources||[]));
     const circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);rows.push(...(circles?.derive(data,{level,mods}).resources||[]));
     const archetypes=globalThis.CharacterFighterSubclasses||(typeof require==='function'?require('./character-fighter-subclasses'):null);rows.push(...(archetypes?.derive(data,{level,mods}).resources||[]));
-    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);rows.push(...(Runtime?.derive(data,{level,mods}).flatMap(r=>r.resources)||[]));rows.push(...(typeof CharacterOriginMechanics!=='undefined'?CharacterOriginMechanics:require('./character-origin-mechanics')).resources(data,level));rows.push(...(typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules')).spellResources(data,{level,reports:featReports}));
+    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);rows.push(...(Runtime?.derive(data,{level,mods}).flatMap(r=>r.resources)||[]));rows.push(...(typeof CharacterOriginMechanics!=='undefined'?CharacterOriginMechanics:require('./character-origin-mechanics')).resources(data,level));rows.push(...(globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null)).resources(data,{level,mods}));rows.push(...(typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules')).spellResources(data,{level,reports:featReports}));
     if(edition==='2014'){
       const actual=actualClassLevel(data,'warlock',level),entry={classId:'warlock',level:actual},active=status({...data,adobe:data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}},entry,edition).find(g=>g.id==='eldritch-invocations');
       for(const id of active?.valid||[]){const rule=Legacy.resources[id];if(!rule)continue;const key=groupKey(edition,'warlock',id+'-used'),used=spent(key),max=rule.pb?Math.ceil(level/4)+1:1;rows.push({id:'invocation-'+id,key,name:active.options.find(o=>o.id===id).name,source:'2014 Warlock invocation',className:'Warlock',max,used,remaining:Math.max(0,max-used),resets:rule.rest==='short'?['short','long']:['long'],recovery:rule.rest==='short'?'Short or Long Rest recovery':'Long Rest recovery',unit:'uses',useLabel:'Use feature',undoLabel:'Undo use',description:Legacy.details[id]});}
@@ -820,6 +820,7 @@ var CharacterClassFeatureChoices=(()=>{
   }
   function setClassResourceUsed(data,id,value,context){
     const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.manualCounterLocked||resource.unlimited||resource.managedSlots||resource.managedWildShape||!Number.isInteger(value)||value<0||value>resource.max&&value>=resource.used||(resource.channelEffects||resource.managedActivation||resource.useDisabled)&&value>resource.used)return false;
+    if(resource.speciesResource)return(globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null)).setUsed(data,resource.id,value,context);
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices={...normalize(stored.classFeatureChoices),[resource.key]:[String(value)]};if(Object.keys(choices).length>100)return false;data.adobe={...stored,classFeatureChoices:choices};return true;
   }
   function changeClassResource(data,id,delta,context){
@@ -867,6 +868,7 @@ var CharacterClassFeatureChoices=(()=>{
       }
     }
     if(Object.keys(updates).length)data.adobe={...stored,classFeatureChoices:{...choices,...updates}};
+    (globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null))?.onEvent(data,event);
     paths?.onEvent(data,event,{level:total});
     const colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null);colleges?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);domains?.onEvent(data,event,{level:total,mods:context.mods||{}});
@@ -994,7 +996,9 @@ var CharacterClassFeatureChoices=(()=>{
   function normalize(raw={}){
     const out={};
     if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
+    const Species=globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null);
     for(const [key,value] of Object.entries(raw).slice(0,100)){
+      if(Species?.invalidChoice(key,value)){out[key]=['invalid'];continue;}
       if(!/^[a-z0-9:-]{1,120}$/i.test(key)||!Array.isArray(value))continue;
       out[key]=value.slice(0,20).map(v=>safe(v));
     }

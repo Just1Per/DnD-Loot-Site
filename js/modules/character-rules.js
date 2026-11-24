@@ -1158,7 +1158,7 @@ var CharacterRules = (() => {
         result.warnings.push('Choose your racial feature.');
       if (base.secondOptionChoices && lvl >= (base.secondOptionLevel || 1) && (!own(base.secondOptionChoices, b.raceFeature2) || b.raceFeature2 === b.raceFeature))
         result.warnings.push('Choose a different second racial feature.');
-      if (r.spellChoice || r.spells?.some(s => s.ability === 'choice') || r.cantripPool) {
+      if (r.featureAbilityChoice || r.spellChoice || r.spells?.some(s => s.ability === 'choice') || r.cantripPool) {
         if (!b.raceAbility)
           result.warnings.push('Choose Intelligence, Wisdom or Charisma for racial magic / feature DC.');
         result.raceAbility = b.raceAbility;

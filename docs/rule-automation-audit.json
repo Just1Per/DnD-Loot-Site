@@ -4,6 +4,8 @@
   "scope": "Facts and explicit sheet adapters, not a combat simulator or a certification that every source feature is automatic.",
   "summary": {
     "species": 105,
+    "speciesWithResourceAdapters": 22,
+    "speciesResourceCounters": 34,
     "subclasses": 186,
     "implementedSubclassAdapters": 186,
     "missingSubclassAdapters": 0,
@@ -31,6 +33,706 @@
     "Concentration, activated spell buffs, conditional damage, curse state and conditional item powers.",
     "Spell-grant abilities omitted by the pinned feature require an explicit player/DM choice. Conditional school triggers, Hit Dice, temporary HP/healing, card preparation/expiry and mascot positions/daily actions are resolved explicitly.",
     "Source prerequisites without a represented character choice; unknown requirements do not activate new item bonuses."
+  ],
+  "speciesResources": [
+    {
+      "id": "dragonborn",
+      "name": "Dragonborn",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "breath",
+          "name": "Breath Weapon",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "short",
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn",
+            "source": "PHB",
+            "feature": "Breath Weapon",
+            "page": 32
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "draconblood-dragonborn-egw",
+      "name": "Draconblood Dragonborn",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "breath",
+          "name": "Breath Weapon",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "short",
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn",
+            "source": "PHB",
+            "feature": "Breath Weapon",
+            "page": 32
+          }
+        },
+        {
+          "id": "presence",
+          "name": "Forceful Presence",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "short",
+            "long"
+          ],
+          "reference": {
+            "name": "Draconblood",
+            "source": "EGW",
+            "feature": "Forceful Presence",
+            "page": 168
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "ravenite-dragonborn-egw",
+      "name": "Ravenite Dragonborn",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "breath",
+          "name": "Breath Weapon",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "short",
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn",
+            "source": "PHB",
+            "feature": "Breath Weapon",
+            "page": 32
+          }
+        },
+        {
+          "id": "vengeance",
+          "name": "Vengeful Assault",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "short",
+            "long"
+          ],
+          "reference": {
+            "name": "Ravenite",
+            "source": "EGW",
+            "feature": "Vengeful Assault",
+            "page": 168
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "half-orc",
+      "name": "Half-Orc",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "endurance",
+          "name": "Relentless Endurance",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Half-Orc",
+            "source": "PHB",
+            "feature": "Relentless Endurance",
+            "page": 40
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "aasimar-mpmm",
+      "name": "Aasimar",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "healing-hands",
+          "name": "Healing Hands",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Aasimar",
+            "source": "MPMM",
+            "feature": "Healing Hands",
+            "page": 7
+          }
+        },
+        {
+          "id": "revelation",
+          "name": "Celestial Revelation",
+          "minimumCharacterLevel": 3,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Aasimar",
+            "source": "MPMM",
+            "feature": "Celestial Revelation",
+            "page": 7
+          },
+          "requiresOption": true
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "aasimar-2024",
+      "name": "Aasimar",
+      "edition": "2024",
+      "resources": [
+        {
+          "id": "healing-hands",
+          "name": "Healing Hands",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Aasimar",
+            "source": "XPHB",
+            "feature": "Healing Hands",
+            "page": 186
+          }
+        },
+        {
+          "id": "revelation",
+          "name": "Celestial Revelation",
+          "minimumCharacterLevel": 3,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Aasimar",
+            "source": "XPHB",
+            "feature": "Celestial Revelation",
+            "page": 186
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "shadar-kai-mpmm",
+      "name": "Shadar-Kai",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "raven-queen",
+          "name": "Blessing of the Raven Queen",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Shadar-Kai",
+            "source": "MPMM",
+            "feature": "Blessing of the Raven Queen",
+            "page": 31
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "eladrin-mpmm",
+      "name": "Eladrin",
+      "edition": "2014",
+      "abilityChoice": true,
+      "resources": [
+        {
+          "id": "fey-step",
+          "name": "Fey Step",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Eladrin",
+            "source": "MPMM",
+            "feature": "Fey Step",
+            "page": 13
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "goliath-mpmm",
+      "name": "Goliath",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "stone-endurance",
+          "name": "Stone's Endurance",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Goliath",
+            "source": "MPMM",
+            "feature": "Stone's Endurance",
+            "page": 21
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "goliath-2024",
+      "name": "Goliath",
+      "edition": "2024",
+      "resources": [
+        {
+          "id": "giant-ancestry",
+          "name": "Giant Ancestry",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Goliath",
+            "source": "XPHB",
+            "feature": "Giant Ancestry",
+            "page": 192
+          },
+          "requiresOption": true
+        },
+        {
+          "id": "large-form",
+          "name": "Large Form",
+          "minimumCharacterLevel": 5,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Goliath",
+            "source": "XPHB",
+            "feature": "Large Form",
+            "page": 192
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "orc-mpmm",
+      "name": "Orc",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "rush",
+          "name": "Adrenaline Rush",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Orc",
+            "source": "MPMM",
+            "feature": "Adrenaline Rush",
+            "page": 28
+          }
+        },
+        {
+          "id": "endurance",
+          "name": "Relentless Endurance",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Orc",
+            "source": "MPMM",
+            "feature": "Relentless Endurance",
+            "page": 28
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "orc-2024",
+      "name": "Orc",
+      "edition": "2024",
+      "resources": [
+        {
+          "id": "rush",
+          "name": "Adrenaline Rush",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "short",
+            "long"
+          ],
+          "reference": {
+            "name": "Orc",
+            "source": "XPHB",
+            "feature": "Adrenaline Rush",
+            "page": 195
+          }
+        },
+        {
+          "id": "endurance",
+          "name": "Relentless Endurance",
+          "minimumCharacterLevel": 1,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Orc",
+            "source": "XPHB",
+            "feature": "Relentless Endurance",
+            "page": 195
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "dwarf-2024",
+      "name": "Dwarf",
+      "edition": "2024",
+      "resources": [
+        {
+          "id": "stonecunning",
+          "name": "Stonecunning",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Dwarf",
+            "source": "XPHB",
+            "feature": "Stonecunning",
+            "page": 188
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "dragonborn-2024",
+      "name": "Dragonborn",
+      "edition": "2024",
+      "resources": [
+        {
+          "id": "breath",
+          "name": "Breath Weapon",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn",
+            "source": "XPHB",
+            "feature": "Breath Weapon",
+            "page": 187
+          }
+        },
+        {
+          "id": "flight",
+          "name": "Draconic Flight",
+          "minimumCharacterLevel": 5,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn",
+            "source": "XPHB",
+            "feature": "Draconic Flight",
+            "page": 187
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "chromatic-dragonborn-ftd",
+      "name": "Chromatic Dragonborn",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "breath",
+          "name": "Breath Weapon",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn (Chromatic)",
+            "source": "FTD",
+            "feature": "Breath Weapon",
+            "page": 10
+          }
+        },
+        {
+          "id": "warding",
+          "name": "Chromatic Warding",
+          "minimumCharacterLevel": 5,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn (Chromatic)",
+            "source": "FTD",
+            "feature": "Chromatic Warding",
+            "page": 10
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "gem-dragonborn-ftd",
+      "name": "Gem Dragonborn",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "breath",
+          "name": "Breath Weapon",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn (Gem)",
+            "source": "FTD",
+            "feature": "Breath Weapon",
+            "page": 11
+          }
+        },
+        {
+          "id": "flight",
+          "name": "Gem Flight",
+          "minimumCharacterLevel": 5,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn (Gem)",
+            "source": "FTD",
+            "feature": "Gem Flight",
+            "page": 11
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "metallic-dragonborn-ftd",
+      "name": "Metallic Dragonborn",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "breath",
+          "name": "Breath Weapon",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn (Metallic)",
+            "source": "FTD",
+            "feature": "Breath Weapon",
+            "page": 12
+          }
+        },
+        {
+          "id": "metallic-breath",
+          "name": "Metallic Breath Weapon",
+          "minimumCharacterLevel": 5,
+          "max": 1,
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Dragonborn (Metallic)",
+            "source": "FTD",
+            "feature": "Metallic Breath Weapon",
+            "page": 12
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "harengon-mpmm",
+      "name": "Harengon",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "rabbit-hop",
+          "name": "Rabbit Hop",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Harengon",
+            "source": "MPMM",
+            "feature": "Rabbit Hop",
+            "page": 22
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "hobgoblin-mpmm",
+      "name": "Hobgoblin",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "fey-gift",
+          "name": "Fey Gift",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Hobgoblin",
+            "source": "MPMM",
+            "feature": "Fey Gift",
+            "page": 23
+          }
+        },
+        {
+          "id": "fortune",
+          "name": "Fortune from the Many",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Hobgoblin",
+            "source": "MPMM",
+            "feature": "Fortune from the Many",
+            "page": 23
+          }
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "goblin-mpmm",
+      "name": "Goblin",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "fury",
+          "name": "Fury of the Small",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Goblin",
+            "source": "MPMM",
+            "feature": "Fury of the Small",
+            "page": 20
+          },
+          "oncePerTurn": true
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "shifter-mpmm",
+      "name": "Shifter",
+      "edition": "2014",
+      "resources": [
+        {
+          "id": "shifting",
+          "name": "Shifting",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Shifter",
+            "source": "MPMM",
+            "feature": "Shifting",
+            "page": 32
+          },
+          "requiresOption": true
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    },
+    {
+      "id": "shifter-efota",
+      "name": "Shifter",
+      "edition": "2024",
+      "resources": [
+        {
+          "id": "shifting",
+          "name": "Shifting",
+          "minimumCharacterLevel": 1,
+          "max": "pb",
+          "recovery": [
+            "long"
+          ],
+          "reference": {
+            "name": "Shifter",
+            "source": "EFA",
+            "feature": "Shifting",
+            "page": 37
+          },
+          "requiresOption": true
+        }
+      ],
+      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+    }
   ],
   "feats": [
     {

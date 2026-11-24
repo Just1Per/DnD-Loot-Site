@@ -1027,7 +1027,7 @@ function updateSheetBuildSummary(derived) {
       t
     ]), b.raceTools[i], 'Choose proficiency');
   }
-  show('build.raceAbility', race?.spellChoice || race?.cantripPool || race?.spells?.some(spell => spell.ability === 'choice'));
+  show('build.raceAbility', race?.featureAbilityChoice || race?.spellChoice || race?.cantripPool || race?.spells?.some(spell => spell.ability === 'choice'));
   show('build.raceCantrip', race?.cantripPool);
   setOptions('build.raceCantrip', (race?.cantripPool === 'sorcerer' ? [
     ...R.cantrips,

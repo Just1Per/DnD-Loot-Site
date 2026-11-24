@@ -19,7 +19,8 @@ var CharacterOriginMechanics=(()=>{
  function languageOptions(row,index,languages){const choices=row?.languageChoices?.[index];return!choices||choices.some(x=>['any','anyStandard','other'].includes(x))?languages:languages.filter(lang=>choices.some(x=>norm(x)===norm(lang)));}
  function races(rows){
   const aliases={'pallidelf':'pallid','lotusdenhalfling':'lotusden','chromaticdragonborn':'dragonbornchromatic','gemdragonborn':'dragonborngem','metallicdragonborn':'dragonbornmetallic'};
-  for(const r of Object.values(rows)){
+  for(const [id,r] of Object.entries(rows)){
+   const Species=globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null);if(Species?.definitions[id]?.abilityChoice)r.featureAbilityChoice=true;if(Species?.definitions[id]?.featureOptions&&!r.optionChoices)r.optionChoices=Species.definitions[id].featureOptions;
    if(!r.partial)continue;const f=facts.races[source(r.book)+'|'+(aliases[norm(r.name)]||norm(r.name))];if(!f)continue;
    if(Array.isArray(f.resist)&&f.resist.every(x=>typeof x==='string'))r.resistances=f.resist.map(x=>x[0].toUpperCase()+x.slice(1));
    // Fixed cantrips and explicit daily grants are safe; alternative packages and choices stay separate.

@@ -53,7 +53,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   notificationsAvailable:()=>window.AccountNotifications?.enabled===true,
 });
 
-const ASSET_VERSION = "20261124-rule-automation-v111";
+const ASSET_VERSION = "20261124-rule-automation-v112";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -93,6 +93,8 @@ const FEATURE_FILES = [
   "./modules/campaign-appearance-store.js",
   "./modules/core.js",
   "./modules/character-legacy-options.js",
+  "./modules/character-species-resource-data.js",
+  "./modules/character-species-resources.js",
   "./modules/character-origin-facts.js",
   "./modules/character-origin-mechanics.js",
   "./modules/character-race-catalog.js",
