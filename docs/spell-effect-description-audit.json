@@ -1002,7 +1002,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "10d6 Force/hit; critical on 18–20"
+        "damage": "10d6 Force/hit; critical on 18–20 deals 20d6 total"
       },
       "missingDamage": false,
       "missingArea": false
@@ -5940,8 +5940,8 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "7d6 Acid/Cold/Fire/Lightning/Necrotic/Poison",
-        "area": "60-ft cone"
+        "damage": "Breath 7d6 of chosen type; initial fear deals no HP damage",
+        "area": "60-ft cone from illusion"
       },
       "missingDamage": false,
       "missingArea": false
@@ -5954,8 +5954,8 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "6d6 Acid",
-        "area": "60-ft cone"
+        "damage": "Breath 6d6 of chosen type; initial fear deals no HP damage",
+        "area": "60-ft cone from illusion"
       },
       "missingDamage": false,
       "missingArea": false
@@ -10089,9 +10089,9 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d6 Bludgeoning; 4d6 Lightning",
-        "area": "20-ft-radius sphere",
-        "scaling": "+1d6/SL above 4"
+        "damage": "Wind 2d6 Bludgeoning; bolt 4d6 Lightning/hit",
+        "area": "20-ft-radius sphere; bolt within 60 ft of its center",
+        "scaling": "+1d6 to either event/SL above 4"
       },
       "missingDamage": false,
       "missingArea": false

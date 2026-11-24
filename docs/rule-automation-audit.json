@@ -22,9 +22,9 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 335,
-    "spellActionFormulas": 268,
+    "spellActionFormulas": 274,
     "spellHealingFormulas": 14,
-    "manualDamageReferences": 100,
+    "manualDamageReferences": 94,
     "itemFacts": 1278,
     "itemClassRequirementFacts": 136,
     "itemClassRequirementAdapters": 133,
@@ -7370,9 +7370,20 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Ordinary hit"
+        },
+        {
+          "id": "critical",
+          "label": "Confirmed critical hit"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "5 ft from blade",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-frhof-85954ea7bf40a800",
@@ -7380,9 +7391,20 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Ordinary hit"
+        },
+        {
+          "id": "critical",
+          "label": "Confirmed critical hit"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "5 ft from blade",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-d2ba2144f6cd7505",
@@ -11522,9 +11544,40 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "fear",
+          "label": "Creation · frighten enemies"
+        },
+        {
+          "id": "breath-acid",
+          "label": "Breath · Acid"
+        },
+        {
+          "id": "breath-cold",
+          "label": "Breath · Cold"
+        },
+        {
+          "id": "breath-fire",
+          "label": "Breath · Fire"
+        },
+        {
+          "id": "breath-lightning",
+          "label": "Breath · Lightning"
+        },
+        {
+          "id": "breath-necrotic",
+          "label": "Breath · Necrotic"
+        },
+        {
+          "id": "breath-poison",
+          "label": "Breath · Poison"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "checkDC": "Action: Intelligence (Investigation) check to recognize the illusion",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-au-f4c9a9c02dfd9677",
@@ -11532,9 +11585,40 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "fear",
+          "label": "Creation · frighten enemies"
+        },
+        {
+          "id": "breath-acid",
+          "label": "Breath · Acid"
+        },
+        {
+          "id": "breath-cold",
+          "label": "Breath · Cold"
+        },
+        {
+          "id": "breath-fire",
+          "label": "Breath · Fire"
+        },
+        {
+          "id": "breath-lightning",
+          "label": "Breath · Lightning"
+        },
+        {
+          "id": "breath-necrotic",
+          "label": "Breath · Necrotic"
+        },
+        {
+          "id": "breath-poison",
+          "label": "Breath · Poison"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "checkDC": "Study action: Intelligence (Investigation) check to recognize the illusion",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-4fc8f192b11f48e5",
@@ -14999,9 +15083,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "wind",
+          "label": "Wind · creation or turn end"
+        },
+        {
+          "id": "bolt",
+          "label": "Bonus Action · Lightning bolt"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-a422bf26c6c76fac",
@@ -15960,9 +16054,36 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Wall appears"
+        },
+        {
+          "id": "wave-1",
+          "label": "Later wave · 5d10"
+        },
+        {
+          "id": "wave-2",
+          "label": "Later wave · 4d10"
+        },
+        {
+          "id": "wave-3",
+          "label": "Later wave · 3d10"
+        },
+        {
+          "id": "wave-4",
+          "label": "Later wave · 2d10"
+        },
+        {
+          "id": "wave-5",
+          "label": "Later wave · 1d10"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "checkDC": "Strength (Athletics) check to swim within the wall",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-c07bb1ea023e7901",
@@ -15971,7 +16092,34 @@
       "hasDamageFacts": true,
       "hasAreaFacts": true,
       "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Wall appears"
+        },
+        {
+          "id": "wave-1",
+          "label": "Later wave · 5d10"
+        },
+        {
+          "id": "wave-2",
+          "label": "Later wave · 4d10"
+        },
+        {
+          "id": "wave-3",
+          "label": "Later wave · 3d10"
+        },
+        {
+          "id": "wave-4",
+          "label": "Later wave · 2d10"
+        },
+        {
+          "id": "wave-5",
+          "label": "Later wave · 1d10"
+        }
+      ],
       "compoundDamage": false,
+      "checkDC": "Strength (Athletics) check to swim within the wall",
       "manualDamageReference": false
     },
     {

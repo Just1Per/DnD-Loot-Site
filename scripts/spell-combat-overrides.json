@@ -2480,6 +2480,561 @@
           ]
         }
       }
+    },
+    "Tsunami": {
+      "bySource": {
+        "PHB": {
+          "attack": false,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "bludgeoning"
+          ],
+          "checkDC": "Strength (Athletics) check to swim within the wall",
+          "notes": [
+            "After the casting completes, use the creation event once. Later caster-turn advances move the wall and its occupants 50 ft away; reduce its height by 50 ft and the following wave’s damage by 1d10 after each advance. End when its height reaches 0. Track the chosen height, recipients, once-per-round damage and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Wall appears",
+              "shortLabel": "Creation",
+              "combat": {
+                "damage": "6d10",
+                "notes": [
+                  "Creatures in the new wall make a Strength save; success halves damage. The Huge-or-smaller limit applies to later moving-wave events, not this creation event."
+                ]
+              }
+            },
+            {
+              "id": "wave-1",
+              "label": "Later wave · 5d10",
+              "shortLabel": "Wave 1",
+              "combat": {
+                "damage": "5d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-2",
+              "label": "Later wave · 4d10",
+              "shortLabel": "Wave 2",
+              "combat": {
+                "damage": "4d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-3",
+              "label": "Later wave · 3d10",
+              "shortLabel": "Wave 3",
+              "combat": {
+                "damage": "3d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-4",
+              "label": "Later wave · 2d10",
+              "shortLabel": "Wave 4",
+              "combat": {
+                "damage": "2d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-5",
+              "label": "Later wave · 1d10",
+              "shortLabel": "Wave 5",
+              "combat": {
+                "damage": "1d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "attack": false,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "bludgeoning"
+          ],
+          "checkDC": "Strength (Athletics) check to swim within the wall",
+          "notes": [
+            "After the casting completes, use the creation event once. Later caster-turn advances move the wall and its occupants 50 ft away; reduce its height by 50 ft and the following wave’s damage by 1d10 after each advance. End when its height reaches 0. Track the chosen height, recipients, once-per-round damage and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Wall appears",
+              "shortLabel": "Creation",
+              "combat": {
+                "damage": "6d10",
+                "notes": [
+                  "Creatures in the new wall make a Strength save; success halves damage. The Huge-or-smaller limit applies to later moving-wave events, not this creation event."
+                ]
+              }
+            },
+            {
+              "id": "wave-1",
+              "label": "Later wave · 5d10",
+              "shortLabel": "Wave 1",
+              "combat": {
+                "damage": "5d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-2",
+              "label": "Later wave · 4d10",
+              "shortLabel": "Wave 2",
+              "combat": {
+                "damage": "4d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-3",
+              "label": "Later wave · 3d10",
+              "shortLabel": "Wave 3",
+              "combat": {
+                "damage": "3d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-4",
+              "label": "Later wave · 2d10",
+              "shortLabel": "Wave 4",
+              "combat": {
+                "damage": "2d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-5",
+              "label": "Later wave · 1d10",
+              "shortLabel": "Wave 5",
+              "combat": {
+                "damage": "1d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Blade of Disaster": {
+      "bySource": {
+        "TCE": {
+          "attack": true,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "force"
+          ],
+          "actionRange": "5 ft from blade",
+          "notes": [
+            "Casting creates the blade within 60 ft and permits up to two independent melee spell attacks. Later turns: Bonus Action, move the blade up to 30 ft, then up to two attacks. Damage is per hit; the two attacks are not one doubled damage roll. A d20 result of 18–20 is a critical hit. The blade passes through barriers. Track positioning and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Ordinary hit",
+              "shortLabel": "Hit",
+              "combat": {
+                "damage": "4d12"
+              }
+            },
+            {
+              "id": "critical",
+              "label": "Confirmed critical hit",
+              "shortLabel": "Critical",
+              "combat": {
+                "damage": "12d12",
+                "notes": [
+                  "Choose only after a critical hit is confirmed. This source replaces the normal doubled dice with 12d12 total Force damage."
+                ]
+              }
+            }
+          ]
+        },
+        "FRHoF": {
+          "attack": true,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "force"
+          ],
+          "actionRange": "5 ft from blade",
+          "notes": [
+            "Casting creates the blade within 60 ft and permits up to two independent melee spell attacks. Later turns: Bonus Action, move the blade up to 60 ft, then up to two attacks. Damage is per hit; the two attacks are not one doubled damage roll. A d20 result of 18–20 is a critical hit. The blade passes through barriers. Track positioning and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Ordinary hit",
+              "shortLabel": "Hit",
+              "combat": {
+                "damage": "10d6"
+              }
+            },
+            {
+              "id": "critical",
+              "label": "Confirmed critical hit",
+              "shortLabel": "Critical",
+              "combat": {
+                "damage": "20d6",
+                "notes": [
+                  "Choose only after a critical hit is confirmed. This source uses ordinary critical dice: 10d6 becomes 20d6 Force damage."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Storm Sphere": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "damage": null,
+          "upcast": "1d6",
+          "addAbility": false,
+          "noDamageUpcast": false,
+          "notes": [
+            "The 20-ft-radius sphere is difficult terrain. Creatures within 30 ft have Disadvantage on Wisdom (Perception) checks made to listen. Resolve its position, recipients and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "wind",
+              "label": "Wind · creation or turn end",
+              "shortLabel": "Wind",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "bludgeoning"
+                ],
+                "attack": false,
+                "actionSave": "STRENGTH",
+                "notes": [
+                  "A creature in the sphere when it appears or ending its turn there makes a Strength save; success prevents this damage."
+                ]
+              }
+            },
+            {
+              "id": "bolt",
+              "label": "Bonus Action · Lightning bolt",
+              "shortLabel": "Bolt",
+              "combat": {
+                "damage": "4d6",
+                "types": [
+                  "lightning"
+                ],
+                "attack": true,
+                "actionSave": "",
+                "actionRange": "60 ft from sphere center",
+                "notes": [
+                  "Bonus Action on each of your turns: one ranged spell attack against a creature within 60 ft of the sphere’s center. Advantage only if that target is inside the sphere. The wind save does not apply to this bolt."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Illusory Dragon": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "acid",
+            "cold",
+            "fire",
+            "lightning",
+            "necrotic",
+            "poison"
+          ],
+          "checkDC": "Action: Intelligence (Investigation) check to recognize the illusion",
+          "notes": [
+            "Create a Huge illusion within 120 ft. A Bonus Action can move it up to 60 ft and produce one 60-ft cone from its space. Choose its breath type when created and retain that type for this casting. Recognizing it grants Advantage against its breath. The illusion’s defenses do not become your own; handle recipients, movement and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "fear",
+              "label": "Creation · frighten enemies",
+              "shortLabel": "Fear",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Visible enemies save when the illusion appears; failure frightens them for the spell’s duration. An affected creature ending its turn without line of sight to the illusion can repeat the Wisdom save to end its fear. This event deals no HP damage."
+                ]
+              }
+            },
+            {
+              "id": "breath-acid",
+              "label": "Breath · Acid",
+              "shortLabel": "Acid breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "acid"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-cold",
+              "label": "Breath · Cold",
+              "shortLabel": "Cold breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "cold"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-fire",
+              "label": "Breath · Fire",
+              "shortLabel": "Fire breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "fire"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-lightning",
+              "label": "Breath · Lightning",
+              "shortLabel": "Lightning breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "lightning"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-necrotic",
+              "label": "Breath · Necrotic",
+              "shortLabel": "Necrotic breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "necrotic"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-poison",
+              "label": "Breath · Poison",
+              "shortLabel": "Poison breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "poison"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            }
+          ]
+        },
+        "AU": {
+          "attack": false,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "acid",
+            "cold",
+            "fire",
+            "lightning",
+            "necrotic",
+            "poison"
+          ],
+          "checkDC": "Study action: Intelligence (Investigation) check to recognize the illusion",
+          "notes": [
+            "Create a Huge illusion within 120 ft. A Bonus Action can move it up to 60 ft and produce one 60-ft cone from its space. Choose its breath type when created and retain that type for this casting. Recognizing it grants Advantage against its breath and saves to end its Frightened condition. The illusion’s defenses do not become your own; handle recipients, movement and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "fear",
+              "label": "Creation · frighten enemies",
+              "shortLabel": "Fear",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Visible enemies save when the illusion appears; failure frightens them for the spell’s duration and makes them drop held objects. An affected creature ending its turn without line of sight to the illusion can repeat the Wisdom save to end its fear. This event deals no HP damage."
+                ]
+              }
+            },
+            {
+              "id": "breath-acid",
+              "label": "Breath · Acid",
+              "shortLabel": "Acid breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "acid"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-cold",
+              "label": "Breath · Cold",
+              "shortLabel": "Cold breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "cold"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-fire",
+              "label": "Breath · Fire",
+              "shortLabel": "Fire breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "fire"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-lightning",
+              "label": "Breath · Lightning",
+              "shortLabel": "Lightning breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "lightning"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-necrotic",
+              "label": "Breath · Necrotic",
+              "shortLabel": "Necrotic breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "necrotic"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-poison",
+              "label": "Breath · Poison",
+              "shortLabel": "Poison breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "poison"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            }
+          ]
+        }
+      }
     }
   }
 }

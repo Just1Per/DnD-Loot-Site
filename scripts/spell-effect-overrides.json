@@ -224,7 +224,7 @@
     "scaling": ""
   },
   "Blade of Disaster|FRHoF": {
-    "damage": "10d6 Force/hit; critical on 18–20",
+    "damage": "10d6 Force/hit; critical on 18–20 deals 20d6 total",
     "scaling": ""
   },
   "Absorb Elements": {
@@ -536,5 +536,20 @@
   "Jallarzi's Storm of Radiance": {
     "area": "10-ft-radius, 40-ft-high cylinder",
     "scaling": "Each component +1d10/SL above 5"
+  },
+  "Storm Sphere|XGE": {
+    "damage": "Wind 2d6 Bludgeoning; bolt 4d6 Lightning/hit",
+    "scaling": "+1d6 to either event/SL above 4",
+    "area": "20-ft-radius sphere; bolt within 60 ft of its center"
+  },
+  "Illusory Dragon|XGE": {
+    "damage": "Breath 7d6 of chosen type; initial fear deals no HP damage",
+    "area": "60-ft cone from illusion",
+    "scaling": ""
+  },
+  "Illusory Dragon|AU": {
+    "damage": "Breath 6d6 of chosen type; initial fear deals no HP damage",
+    "area": "60-ft cone from illusion",
+    "scaling": ""
   }
 }
