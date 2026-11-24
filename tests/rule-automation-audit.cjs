@@ -13,3 +13,6 @@ test('all item spell-bonus records retain reviewed scope and the talisman and Bl
  assert.deepEqual(report.itemSpellBonuses.find(row=>row.name==="Jester's Mask").spellScope,['ability:cha']);const talismans=report.itemSpellBonuses.filter(row=>row.name.startsWith('Talisman of '));assert.equal(talismans.length,4);for(const row of talismans){if(row.source==='DMG')assert.deepEqual(row.spellRequirements.classes,['cleric','paladin']);else assert.equal(row.spellRequirements,undefined);}
  assert.equal(report.itemSpellBonuses.find(row=>row.name==='Blackstaff').spellRequirements.explicitApproval,'item:wdh:blackstaff-heir');assert.equal(report.itemBonusReview.some(row=>row.hasSpellBonus&&!row.spellScope.length),false);assert.ok(report.itemBonusReview.some(row=>row.hasImmunity&&!row.passiveImmunities));
 });
+test('conditional spell formulas are counted as reviewed choices without treating unknown target conditions as direct damage',()=>{
+ const report=audit();assert.equal(report.summary.spellActionFormulas,257);assert.equal(report.summary.manualDamageReferences,130);for(const name of ['Toll the Dead','Witch Bolt','Hunger of Hadar']){const rows=report.spells.filter(row=>row.name===name);assert.equal(rows.length,2);for(const row of rows){assert.equal(row.actionDamageFormula,true);assert.equal(row.manualDamageReference,false);assert.ok(row.effectChoices.length>=2);}}
+});

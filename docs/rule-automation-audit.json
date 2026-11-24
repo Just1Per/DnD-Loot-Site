@@ -18,8 +18,8 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 394,
     "spellAreaFacts": 335,
-    "spellActionFormulas": 241,
-    "manualDamageReferences": 146,
+    "spellActionFormulas": 257,
+    "manualDamageReferences": 130,
     "itemFacts": 1253,
     "itemBases": 230,
     "itemVariants": 230,
@@ -5992,9 +5992,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-a6234cdcfcfe0db3",
@@ -7282,9 +7282,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-b6421fbec39227be",
@@ -7572,9 +7572,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-bdcb43033f2dff38",
@@ -7582,9 +7582,9 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-c9e37f953b7a6dfe",
@@ -8412,9 +8412,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-da4d9d385293589c",
@@ -10362,9 +10362,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "start-none",
+          "label": "Start of target turn · Cold"
+        },
+        {
+          "id": "end-none",
+          "label": "End of target turn · Acid"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-957e1f892f35dce3",
@@ -10372,9 +10382,27 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "start-cold",
+          "label": "Start of target turn · Cold · extra dice to Cold"
+        },
+        {
+          "id": "end-cold",
+          "label": "End of target turn · Acid · extra dice to Cold"
+        },
+        {
+          "id": "start-acid",
+          "label": "Start of target turn · Cold · extra dice to Acid"
+        },
+        {
+          "id": "end-acid",
+          "label": "End of target turn · Acid · extra dice to Acid"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-700ff9749cf91cd8",
@@ -11232,9 +11260,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-cb819b301f8cf823",
@@ -12092,9 +12120,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-f7ad8c2af4c7c94a",
@@ -12732,9 +12760,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-2a3584039796f879",
@@ -13732,9 +13760,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-6b2f2feb98386ccf",
@@ -14262,9 +14290,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-9dbcf870d0e9f14b",
@@ -14612,9 +14640,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "full-health",
+          "label": "Target at full HP"
+        },
+        {
+          "id": "wounded",
+          "label": "Target is missing HP"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-72688013fcf7f2d6",
@@ -14622,9 +14660,19 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "full-health",
+          "label": "Target at full HP"
+        },
+        {
+          "id": "wounded",
+          "label": "Target is missing HP"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-614fe60cf7325008",
@@ -15282,9 +15330,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Initial ranged spell attack"
+        },
+        {
+          "id": "ongoing",
+          "label": "Ongoing automatic damage"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-8b4f12aa14854821",
@@ -15292,9 +15350,19 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Initial ranged spell attack"
+        },
+        {
+          "id": "ongoing",
+          "label": "Ongoing automatic damage"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-scc-8ae59c393653bc7f",

@@ -25,6 +25,22 @@
         "upcast": "1d8"
       }
     },
+    "Antagonize": {
+      "bySource": {
+        "BMT": {
+          "damage": "4d4",
+          "attack": false,
+          "types": [
+            "psychic"
+          ],
+          "addAbility": false,
+          "upcast": "1d4",
+          "notes": [
+            "Successful Wisdom save halves damage only. On failure, resolve the forced melee Reaction; if impossible, the next attack before your next turn has Disadvantage."
+          ]
+        }
+      }
+    },
     "Arms of Hadar": {
       "default": {
         "damage": "2d6",
@@ -34,7 +50,7 @@
         "addAbility": false,
         "upcast": "1d6",
         "notes": [
-          "A failed Strength save also prevents Reactions until the target\u2019s next turn."
+          "A failed Strength save also prevents Reactions until the target’s next turn."
         ]
       }
     },
@@ -73,6 +89,20 @@
           ],
           "addAbility": false,
           "upcast": "1d8"
+        },
+        "PHB": {
+          "damage": "3d8",
+          "types": [
+            "bludgeoning",
+            "piercing",
+            "slashing"
+          ],
+          "attack": false,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "Use the damage type of the nonmagical weapon or ammunition component, not three damage types. Resolve the 60 ft cone; a successful Dexterity save halves damage."
+          ]
         }
       }
     },
@@ -85,6 +115,63 @@
           ],
           "addAbility": false,
           "noDamageUpcast": true
+        }
+      }
+    },
+    "Contact Other Plane": {
+      "default": {
+        "damage": "6d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "fixedSelfSave": {
+          "ability": "INTELLIGENCE",
+          "dc": 15
+        },
+        "notes": [
+          "This is the caster’s own DC 15 Intelligence save. Damage applies only on failure; resolve the edition-specific mental effect and recovery."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Cordon of Arrows": {
+      "bySource": {
+        "PHB": {
+          "damage": "1d6",
+          "attack": false,
+          "types": [
+            "piercing"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "projectiles": {
+            "base": 4,
+            "increment": 2,
+            "above": 2,
+            "unit": "planted ammunition pieces"
+          },
+          "notes": [
+            "Damage is per triggered piece; higher slots add ammunition, not damage per hit. A successful Dexterity save avoids damage. Resolve the 30 ft trigger, ignored creatures and remaining planted ammunition at the table."
+          ]
+        },
+        "XPHB": {
+          "damage": "2d4",
+          "attack": false,
+          "types": [
+            "piercing"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "projectiles": {
+            "base": 4,
+            "increment": 2,
+            "above": 2,
+            "unit": "planted ammunition pieces"
+          },
+          "notes": [
+            "Damage is per triggered piece; higher slots add ammunition, not damage per hit. A successful Dexterity save avoids damage. Resolve the 30 ft trigger, ignored creatures and remaining planted ammunition at the table."
+          ]
         }
       }
     },
@@ -128,7 +215,7 @@
         ],
         "addAbility": false,
         "notes": [
-          "Resolve start/end positioning, Concentration and the light column\u2019s movement explicitly."
+          "Resolve start/end positioning, Concentration and the light column’s movement explicitly."
         ],
         "noDamageUpcast": true
       }
@@ -142,8 +229,44 @@
         "addAbility": false,
         "upcast": "1d6",
         "notes": [
-          "On a failed save, resolve the target\u2019s eligible Reaction movement; a successful save deals half damage."
+          "On a failed save, resolve the target’s eligible Reaction movement; a successful save deals half damage."
         ]
+      }
+    },
+    "Dragon's Breath": {
+      "bySource": {
+        "XGE": {
+          "damage": "3d6",
+          "attack": false,
+          "types": [
+            "acid",
+            "cold",
+            "fire",
+            "lightning",
+            "poison"
+          ],
+          "addAbility": false,
+          "upcast": "1d6",
+          "notes": [
+            "Damage is per exhalation, not on casting. Choose the damage type on casting; the willing recipient uses an Action for each 15 ft cone. A successful Dexterity save halves damage. Keep Concentration and recipient actions separate."
+          ]
+        },
+        "XPHB": {
+          "damage": "3d6",
+          "attack": false,
+          "types": [
+            "acid",
+            "cold",
+            "fire",
+            "lightning",
+            "poison"
+          ],
+          "addAbility": false,
+          "upcast": "1d6",
+          "notes": [
+            "Damage is per exhalation, not on casting. Choose the damage type on casting; the willing recipient uses a Magic action for each 15 ft cone. A successful Dexterity save halves damage. Keep Concentration and recipient actions separate."
+          ]
+        }
       }
     },
     "Dust Devil": {
@@ -155,7 +278,7 @@
         "addAbility": false,
         "upcast": "1d8",
         "notes": [
-          "At an eligible creature\u2019s turn end within 5 ft, resolve the Strength save and the failed-save push; successful saves take half damage."
+          "At an eligible creature’s turn end within 5 ft, resolve the Strength save and the failed-save push; successful saves take half damage."
         ]
       }
     },
@@ -183,6 +306,37 @@
         "notes": [
           "Resolve affected creatures and the resulting difficult terrain."
         ]
+      }
+    },
+    "Flame Strike": {
+      "default": {
+        "damage": "4d6",
+        "types": [
+          "fire",
+          "radiant"
+        ],
+        "addAbility": false,
+        "part2Damage": "4d6",
+        "part2Type": "radiant",
+        "choiceUpcast": "1d6",
+        "notes": [
+          "One Dexterity save governs both damage types. In 2014, choose Fire or Radiant for the extra slot dice."
+        ],
+        "upcast": null,
+        "noDamageUpcast": true,
+        "primaryType": "fire"
+      },
+      "bySource": {
+        "XPHB": {
+          "damage": "5d6",
+          "part2Damage": "5d6",
+          "upcast": "1d6",
+          "part2Upcast": "1d6",
+          "choiceUpcast": null,
+          "notes": [
+            "One Dexterity save governs both damage types. Each higher slot increases both Fire and Radiant dice."
+          ]
+        }
       }
     },
     "Frost Fingers": {
@@ -221,216 +375,138 @@
         ]
       }
     },
-    "Tidal Wave": {
-      "default": {
-        "damage": "4d8",
-        "types": [
-          "bludgeoning"
-        ],
-        "addAbility": false,
-        "notes": [
-          "A failed save also knocks the creature Prone; resolve the wave and extinguished flames."
-        ],
-        "noDamageUpcast": true
-      }
-    },
-    "Snilloc's Snowball Swarm": {
-      "default": {
-        "damage": "3d6",
-        "types": [
-          "cold"
-        ],
-        "addAbility": false,
-        "upcast": "1d6"
-      }
-    },
-    "Thunder Step": {
-      "default": {
-        "damage": "3d10",
-        "types": [
-          "thunder"
-        ],
-        "addAbility": false,
-        "upcast": "1d10",
-        "notes": [
-          "Resolve the departure area, the teleport destination and any willing passenger."
-        ]
-      }
-    },
-    "Synaptic Static": {
-      "default": {
-        "damage": "8d6",
-        "types": [
-          "psychic"
-        ],
-        "addAbility": false,
-        "save": "INTELLIGENCE",
-        "notes": [
-          "The initial damage and later recovery use Intelligence saves. The d6 penalty to concentration checks is not an additional Constitution save against this spell."
-        ],
-        "noDamageUpcast": true
-      }
-    },
-    "Psychic Scream": {
-      "default": {
-        "damage": "14d6",
-        "types": [
-          "psychic"
-        ],
-        "addAbility": false,
-        "notes": [
-          "Choose up to ten eligible creatures; resolve immunity, failed-save Stunned condition and repeat saves."
-        ],
-        "noDamageUpcast": true
-      }
-    },
-    "Raulothim's Psychic Lance": {
-      "default": {
-        "damage": "7d6",
-        "types": [
-          "psychic"
-        ],
-        "addAbility": false,
-        "upcast": "1d6",
-        "notes": [
-          "Resolve named/unseen-target eligibility and the failed-save Incapacitated condition."
-        ]
-      }
-    },
-    "Rime's Binding Ice": {
-      "default": {
-        "damage": "3d8",
-        "types": [
-          "cold"
-        ],
-        "addAbility": false,
-        "upcast": "1d8",
-        "notes": [
-          "A failed save also restricts Speed until the ice is broken or removed."
-        ]
-      }
-    },
-    "Negative Energy Flood": {
-      "default": {
-        "damage": "5d12",
-        "types": [
-          "necrotic"
-        ],
-        "addAbility": false,
-        "notes": [
-          "For a living target, resolve the Constitution save and any resulting Zombie. An Undead target instead gains temporary HP equal to half a 5d12 roll."
-        ],
-        "noDamageUpcast": true
-      },
+    "Hunger of Hadar": {
       "bySource": {
-        "AU": {
-          "damage": "3d10 + 25",
-          "upcast": "1d10",
-          "notes": [
-            "A non-Undead target makes the Constitution save. An Undead target instead gains 3d10 temporary HP; resolve any resulting controlled Zombie at the table."
+        "PHB": {
+          "addAbility": false,
+          "effects": [
+            {
+              "id": "start-none",
+              "label": "Start of target turn · Cold",
+              "shortLabel": "Start Cold",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "cold"
+                ],
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Legacy slot upcasting does not increase either damage component."
+                ]
+              }
+            },
+            {
+              "id": "end-none",
+              "label": "End of target turn · Acid",
+              "shortLabel": "End Acid",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "acid"
+                ],
+                "attack": false,
+                "automatic": false,
+                "save": "DEXTERITY",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Legacy slot upcasting does not increase either damage component."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "addAbility": false,
+          "effects": [
+            {
+              "id": "start-cold",
+              "label": "Start of target turn · Cold · extra dice to Cold",
+              "shortLabel": "Start Cold",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "cold"
+                ],
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": "1d6",
+                "noDamageUpcast": false,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Assign extra slot dice to Cold for this casting; the other damage component stays at 2d6. Keep that allocation consistent across both event references."
+                ]
+              }
+            },
+            {
+              "id": "end-cold",
+              "label": "End of target turn · Acid · extra dice to Cold",
+              "shortLabel": "End Acid",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "acid"
+                ],
+                "attack": false,
+                "automatic": false,
+                "save": "DEXTERITY",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Assign extra slot dice to Cold for this casting; the other damage component stays at 2d6. Keep that allocation consistent across both event references."
+                ]
+              }
+            },
+            {
+              "id": "start-acid",
+              "label": "Start of target turn · Cold · extra dice to Acid",
+              "shortLabel": "Start Cold",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "cold"
+                ],
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Assign extra slot dice to Acid for this casting; the other damage component stays at 2d6. Keep that allocation consistent across both event references."
+                ]
+              }
+            },
+            {
+              "id": "end-acid",
+              "label": "End of target turn · Acid · extra dice to Acid",
+              "shortLabel": "End Acid",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "acid"
+                ],
+                "attack": false,
+                "automatic": false,
+                "save": "DEXTERITY",
+                "upcast": "1d6",
+                "noDamageUpcast": false,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Assign extra slot dice to Acid for this casting; the other damage component stays at 2d6. Keep that allocation consistent across both event references."
+                ]
+              }
+            }
           ]
         }
-      }
-    },
-    "Steel Wind Strike": {
-      "default": {
-        "damage": "6d10",
-        "types": [
-          "force"
-        ],
-        "addAbility": false,
-        "notes": [
-          "Damage is per successful melee spell attack against a chosen creature; choose up to five different eligible creatures and resolve the final teleport."
-        ],
-        "noDamageUpcast": true
-      }
-    },
-    "Tasha's Mind Whip": {
-      "default": {
-        "damage": "3d6",
-        "types": [
-          "psychic"
-        ],
-        "addAbility": false,
-        "notes": [
-          "Higher slots add one target per slot above 2, not more damage per target. Resolve the failed-save action restrictions."
-        ],
-        "noDamageUpcast": true
-      }
-    },
-    "Mind Spike": {
-      "default": {
-        "damage": "3d8",
-        "types": [
-          "psychic"
-        ],
-        "addAbility": false,
-        "upcast": "1d8",
-        "notes": [
-          "Resolve the failed-save tracking effect and edition-specific Concentration/duration rules."
-        ]
-      }
-    },
-    "Pulse Wave": {
-      "default": {
-        "damage": "6d6",
-        "types": [
-          "force"
-        ],
-        "addAbility": false,
-        "upcast": "1d6",
-        "notes": [
-          "Choose pull or push for the cone; the failed-save displacement increases 5 ft per slot above 3."
-        ]
-      }
-    },
-    "Wither and Bloom": {
-      "default": {
-        "damage": "2d6",
-        "types": [
-          "necrotic"
-        ],
-        "addAbility": false,
-        "upcast": "1d6",
-        "notes": [
-          "Resolve chosen damage recipients separately from one ally\u2019s voluntary Hit Die healing; higher slots also allow one additional healing die per slot above 2."
-        ]
-      }
-    },
-    "Melf's Minute Meteors": {
-      "default": {
-        "damage": "2d6",
-        "types": [
-          "fire"
-        ],
-        "addAbility": false,
-        "projectiles": {
-          "base": 6,
-          "increment": 2,
-          "above": 3,
-          "unit": "meteors"
-        },
-        "notes": [
-          "Damage is per meteor explosion. Expend one or two meteors on the initial casting or an eligible later Bonus Action; resolve each 5-ft burst and save."
-        ],
-        "noDamageUpcast": true
-      }
-    },
-    "Contact Other Plane": {
-      "default": {
-        "damage": "6d6",
-        "types": [
-          "psychic"
-        ],
-        "addAbility": false,
-        "fixedSelfSave": {
-          "ability": "INTELLIGENCE",
-          "dc": 15
-        },
-        "notes": [
-          "This is the caster\u2019s own DC 15 Intelligence save. Damage applies only on failure; resolve the edition-specific mental effect and recovery."
-        ],
-        "noDamageUpcast": true
       }
     },
     "Ice Storm": {
@@ -456,35 +532,455 @@
         }
       }
     },
-    "Flame Strike": {
-      "default": {
-        "damage": "4d6",
-        "types": [
-          "fire",
-          "radiant"
-        ],
-        "addAbility": false,
-        "part2Damage": "4d6",
-        "part2Type": "radiant",
-        "choiceUpcast": "1d6",
-        "notes": [
-          "One Dexterity save governs both damage types. In 2014, choose Fire or Radiant for the extra slot dice."
-        ],
-        "upcast": null,
-        "noDamageUpcast": true,
-        "primaryType": "fire"
-      },
+    "Magic Missile": {
       "bySource": {
-        "XPHB": {
-          "damage": "5d6",
-          "part2Damage": "5d6",
-          "upcast": "1d6",
-          "part2Upcast": "1d6",
-          "choiceUpcast": null,
+        "PHB": {
+          "damage": "1d4 + 1",
+          "attack": false,
+          "automatic": true,
+          "save": "",
+          "types": [
+            "force"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
           "notes": [
-            "One Dexterity save governs both damage types. Each higher slot increases both Fire and Radiant dice."
+            "Each dart hits automatically. Choose targets and resolve Shield or other spell defenses; this reference does not spend slots."
+          ]
+        },
+        "XPHB": {
+          "automatic": true,
+          "save": "",
+          "notes": [
+            "Each dart hits automatically. Choose targets and resolve Shield or other spell defenses; this reference does not spend slots."
           ]
         }
+      }
+    },
+    "Melf's Minute Meteors": {
+      "default": {
+        "damage": "2d6",
+        "types": [
+          "fire"
+        ],
+        "addAbility": false,
+        "projectiles": {
+          "base": 6,
+          "increment": 2,
+          "above": 3,
+          "unit": "meteors"
+        },
+        "notes": [
+          "Damage is per meteor explosion. Expend one or two meteors on the initial casting or an eligible later Bonus Action; resolve each 5-ft burst and save."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Mind Spike": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "Resolve the failed-save tracking effect and edition-specific Concentration/duration rules."
+        ]
+      }
+    },
+    "Negative Energy Flood": {
+      "default": {
+        "damage": "5d12",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "For a living target, resolve the Constitution save and any resulting Zombie. An Undead target instead gains temporary HP equal to half a 5d12 roll."
+        ],
+        "noDamageUpcast": true
+      },
+      "bySource": {
+        "AU": {
+          "damage": "3d10 + 25",
+          "upcast": "1d10",
+          "notes": [
+            "A non-Undead target makes the Constitution save. An Undead target instead gains 3d10 temporary HP; resolve any resulting controlled Zombie at the table."
+          ]
+        }
+      }
+    },
+    "Phantasmal Force": {
+      "bySource": {
+        "PHB": {
+          "damage": "1d6",
+          "attack": false,
+          "types": [
+            "psychic"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "The initial Intelligence save establishes the illusion; damage is conditional on each caster turn, not an immediate hit. Use only a believable hazard within its area or 5 ft. Constructs and Undead are unaffected; an Investigation action can end it."
+          ]
+        }
+      }
+    },
+    "Psychic Scream": {
+      "default": {
+        "damage": "14d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Choose up to ten eligible creatures; resolve immunity, failed-save Stunned condition and repeat saves."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Pulse Wave": {
+      "default": {
+        "damage": "6d6",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "Choose pull or push for the cone; the failed-save displacement increases 5 ft per slot above 3."
+        ]
+      }
+    },
+    "Raulothim's Psychic Lance": {
+      "default": {
+        "damage": "7d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "Resolve named/unseen-target eligibility and the failed-save Incapacitated condition."
+        ]
+      }
+    },
+    "Ray of Sickness": {
+      "bySource": {
+        "PHB": {
+          "damage": "2d8",
+          "attack": true,
+          "types": [
+            "poison"
+          ],
+          "addAbility": false,
+          "upcast": "1d8",
+          "riderSave": "CONSTITUTION",
+          "notes": [
+            "The hit deals damage. Only after a hit, resolve the Constitution rider save; failure adds Poisoned until the end of your next turn."
+          ]
+        }
+      }
+    },
+    "Rime's Binding Ice": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "cold"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "A failed save also restricts Speed until the ice is broken or removed."
+        ]
+      }
+    },
+    "Snilloc's Snowball Swarm": {
+      "default": {
+        "damage": "3d6",
+        "types": [
+          "cold"
+        ],
+        "addAbility": false,
+        "upcast": "1d6"
+      }
+    },
+    "Spray of Cards": {
+      "bySource": {
+        "BMT": {
+          "damage": "2d10",
+          "attack": false,
+          "types": [
+            "force"
+          ],
+          "addAbility": false,
+          "upcast": "1d10",
+          "notes": [
+            "Resolve the 15 ft cone. A failed Dexterity save also Blinds until the end of the target’s next turn; success halves damage without Blinding."
+          ]
+        }
+      }
+    },
+    "Steel Wind Strike": {
+      "default": {
+        "damage": "6d10",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Damage is per successful melee spell attack against a chosen creature; choose up to five different eligible creatures and resolve the final teleport."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Synaptic Static": {
+      "default": {
+        "damage": "8d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "save": "INTELLIGENCE",
+        "notes": [
+          "The initial damage and later recovery use Intelligence saves. The d6 penalty to concentration checks is not an additional Constitution save against this spell."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Tasha's Caustic Brew": {
+      "bySource": {
+        "TCE": {
+          "damage": "2d4",
+          "attack": false,
+          "types": [
+            "acid"
+          ],
+          "addAbility": false,
+          "upcast": "2d4",
+          "notes": [
+            "The initial Dexterity save determines acid coating. Damage occurs at the start of each coated creature’s turn, not immediately and without another save. An Action can remove coating; track Concentration and each affected creature."
+          ]
+        }
+      }
+    },
+    "Tasha's Mind Whip": {
+      "default": {
+        "damage": "3d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Higher slots add one target per slot above 2, not more damage per target. Resolve the failed-save action restrictions."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Thunder Step": {
+      "default": {
+        "damage": "3d10",
+        "types": [
+          "thunder"
+        ],
+        "addAbility": false,
+        "upcast": "1d10",
+        "notes": [
+          "Resolve the departure area, the teleport destination and any willing passenger."
+        ]
+      }
+    },
+    "Tidal Wave": {
+      "default": {
+        "damage": "4d8",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "notes": [
+          "A failed save also knocks the creature Prone; resolve the wave and extinguished flames."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Toll the Dead": {
+      "bySource": {
+        "XGE": {
+          "addAbility": false,
+          "attack": false,
+          "types": [
+            "necrotic"
+          ],
+          "effects": [
+            {
+              "id": "full-health",
+              "label": "Target at full HP",
+              "shortLabel": "Full HP",
+              "combat": {
+                "scaling": {
+                  "1": "1d8",
+                  "5": "2d8",
+                  "11": "3d8",
+                  "17": "4d8"
+                },
+                "notes": [
+                  "Use d8s only when the target has no missing HP. A successful Wisdom save avoids damage."
+                ]
+              }
+            },
+            {
+              "id": "wounded",
+              "label": "Target is missing HP",
+              "shortLabel": "Wounded",
+              "combat": {
+                "scaling": {
+                  "1": "1d12",
+                  "5": "2d12",
+                  "11": "3d12",
+                  "17": "4d12"
+                },
+                "notes": [
+                  "Use d12s only when the target is missing HP. Recheck that condition for every casting; a successful Wisdom save avoids damage."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "addAbility": false,
+          "attack": false,
+          "types": [
+            "necrotic"
+          ],
+          "effects": [
+            {
+              "id": "full-health",
+              "label": "Target at full HP",
+              "shortLabel": "Full HP",
+              "combat": {
+                "scaling": {
+                  "1": "1d8",
+                  "5": "2d8",
+                  "11": "3d8",
+                  "17": "4d8"
+                },
+                "notes": [
+                  "Use d8s only when the target has no missing HP. A successful Wisdom save avoids damage."
+                ]
+              }
+            },
+            {
+              "id": "wounded",
+              "label": "Target is missing HP",
+              "shortLabel": "Wounded",
+              "combat": {
+                "scaling": {
+                  "1": "1d12",
+                  "5": "2d12",
+                  "11": "3d12",
+                  "17": "4d12"
+                },
+                "notes": [
+                  "Use d12s only when the target is missing HP. Recheck that condition for every casting; a successful Wisdom save avoids damage."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Witch Bolt": {
+      "bySource": {
+        "PHB": {
+          "addAbility": false,
+          "types": [
+            "lightning"
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial ranged spell attack",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "1d12",
+                "attack": true,
+                "upcast": "1d12",
+                "notes": [
+                  "Only the initial hit scales with slot level. Establish and maintain Concentration; range and Total Cover can end the spell."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Ongoing automatic damage",
+              "shortLabel": "Ongoing",
+              "combat": {
+                "damage": "1d12",
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Requires a successful initial hit. On your later turns spend your Action for this automatic 1d12; doing something else with that Action ends the spell. Stay within 30 ft without Total Cover.",
+                  "Higher slots never increase this ongoing die."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "addAbility": false,
+          "types": [
+            "lightning"
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial ranged spell attack",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "2d12",
+                "attack": true,
+                "upcast": "1d12",
+                "notes": [
+                  "Only the initial hit scales with slot level. Establish and maintain Concentration; range and Total Cover can end the spell."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Ongoing automatic damage",
+              "shortLabel": "Ongoing",
+              "combat": {
+                "damage": "1d12",
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "On your later turns spend a Bonus Action for this automatic 1d12, even if the initial attack missed. Stay within 60 ft without Total Cover.",
+                  "Higher slots never increase this ongoing die."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Wither and Bloom": {
+      "default": {
+        "damage": "2d6",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "Resolve chosen damage recipients separately from one ally’s voluntary Hit Die healing; higher slots also allow one additional healing die per slot above 2."
+        ]
       }
     }
   }

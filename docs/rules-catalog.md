@@ -99,3 +99,5 @@ node scripts/test-profiles.cjs run browser -- node tests/adobe-player-guide-brow
 ```
 
 The browser test requires the profile’s Playwright Chromium and axe dependencies. It verifies guide shortcuts, keyboard behavior, draft preservation, the public source link, attribution links/anchors, responsive width and accessibility. CI also covers character save/reopen, campaign permissions and the connected Adobe workflows. The guide/source-page update itself performs no catalogue or character writes.
+
+The generated catalogue release is pinned in `character-catalog.js`. The loader reads Firestore parts only for that exact release; otherwise it loads and checksum-verifies the matching bundled JSON. Its hash also versions the request URL. A database import is optional for these bundled mechanics updates. Rebuild with `python3 scripts/build-rules-catalog.py --spells-only` to update the catalogue, manifest and loader pin together.

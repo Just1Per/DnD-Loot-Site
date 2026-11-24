@@ -99,6 +99,7 @@
     "feat-school-spells-browser.cjs",
     "feat-special-spells-browser.cjs",
     "feat-misty-escape-browser.cjs",
-    "item-conditional-automation-browser.cjs"
+    "item-conditional-automation-browser.cjs",
+    "spell-effect-choices-browser.cjs"
   ]
 }

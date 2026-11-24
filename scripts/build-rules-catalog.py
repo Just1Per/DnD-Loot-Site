@@ -113,6 +113,11 @@ body=json.dumps(catalog,ensure_ascii=False,separators=(',',':'))+'\n'
 (ROOT/'data/rules/catalog.json').write_text(body)
 manifest={'format':1,'metadataVersion':3,'release':hashlib.sha256(body.encode()).hexdigest(),'spells':len(spells),'feats':len(featrows),'spellSources':index,'counts':{edn:{'spells':sum(s['edition']==edn for s in spells),'feats':sum(f['edition']==edn for f in featrows),'fullSpellTexts':sum(s['edition']==edn and s['licensedText'] for s in spells)} for edn in ('2014','2024')}}
 (ROOT/'data/rules/manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+loader=ROOT/'js/modules/character-catalog.js'
+loader_text=loader.read_text()
+loader_text,replaced=re.subn(r"const bundledRelease='[a-f0-9]{64}';", "const bundledRelease='"+manifest['release']+"';",loader_text)
+assert replaced==1,'Missing unique catalogue release pin'
+loader.write_text(loader_text)
 print(json.dumps(manifest,indent=2))
 (ROOT/'docs/spell-class-list-audit.json').write_text(json.dumps({'revision':INDEX_REV,'lookupSha256':hashlib.sha256((args.cache/'gendata-spell-source-lookup.json').read_bytes()).hexdigest(),'basis':'Only classVariant additions defined by the spell’s own source; unrelated optional class-list expansions are excluded.','records':class_list_records},indent=2)+'\n')
 if args.spells_only:raise SystemExit(0)
