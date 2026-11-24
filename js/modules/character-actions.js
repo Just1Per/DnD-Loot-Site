@@ -144,7 +144,7 @@ var CharacterActions = (()=>{
   const unarmedType=unarmed?(stats.monkCombat?.astral?'force':stats.monkCombat?.damageType||'bludgeoning'):'bludgeoning';
   return {...row,name:a.name||(unarmed?'Unarmed strike':'Improvised weapon'),ability,hit:sign(mod+(proficient?stats.pb:0)),damage:damageDie==='1'?Math.max(0,1+mod)+' bludgeoning':add(damageDie,mod)+(unarmed?' '+unarmedType:' (DM chooses type)'),range:!unarmed&&a.mode==='thrown'?'20/60 ft':(5+(stats.fighterCombat?.reachBonus||0)+(unarmed?stats.monkCombat?.reach||0:0))+' ft',notes};
  }
- function derive(data,level,stats,loot,spells){const context={};return normalize(data.actions).map(a=>resolve(a,data,level,stats,loot,spells,context));}
+ function derive(data,level,stats,loot,spells){const context={},form=stats.speciesForm;return normalize(data.actions).map(a=>{const row=resolve(a,data,level,stats,loot,spells,context);if(form?.active&&form.effect==='revelation'&&row.available&&!['grapple','shove'].includes(a.kind)&&/\d/.test(row.damage||''))row.notes.push('Celestial Revelation · '+form.formName+': optionally add '+form.rider.amount+' '+form.rider.type+' to one target already damaged by an attack or spell, once on each of your own turns. '+(form.rider.used?'Extra damage already recorded for this turn.':'Record the qualifying extra damage in Celestial Revelation controls.')+' This is not added to every hit.');return row;});}
  return {spellReference,normalize,resolve,derive};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterActions;

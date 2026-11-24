@@ -6,7 +6,7 @@
     "species": 105,
     "speciesWithResourceAdapters": 22,
     "speciesResourceCounters": 34,
-    "speciesActivatedEffects": 6,
+    "speciesActivatedEffects": 8,
     "subclasses": 186,
     "implementedSubclassAdapters": 186,
     "missingSubclassAdapters": 0,
@@ -201,7 +201,28 @@
             "feature": "Celestial Revelation",
             "page": 7
           },
-          "requiresOption": true
+          "requiresOption": true,
+          "activation": {
+            "effect": "revelation",
+            "duration": "1 minute",
+            "endsOnShortRest": true,
+            "choices": [
+              {
+                "id": "soul",
+                "name": "Radiant Soul"
+              },
+              {
+                "id": "consumption",
+                "name": "Radiant Consumption"
+              },
+              {
+                "id": "shroud",
+                "name": "Necrotic Shroud"
+              }
+            ],
+            "choicePolicy": "origin-choice",
+            "ownTurnDamageCounter": true
+          }
         }
       ],
       "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
@@ -239,6 +260,27 @@
             "source": "XPHB",
             "feature": "Celestial Revelation",
             "page": 186
+          },
+          "activation": {
+            "effect": "revelation",
+            "duration": "1 minute",
+            "endsOnShortRest": true,
+            "choices": [
+              {
+                "id": "wings",
+                "name": "Heavenly Wings"
+              },
+              {
+                "id": "radiance",
+                "name": "Inner Radiance"
+              },
+              {
+                "id": "shroud",
+                "name": "Necrotic Shroud"
+              }
+            ],
+            "choicePolicy": "select-at-activation",
+            "ownTurnDamageCounter": true
           }
         }
       ],

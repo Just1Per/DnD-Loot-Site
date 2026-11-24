@@ -5,6 +5,7 @@ var CharacterSpeciesResources=(()=>{
  const definitions=D.species,stored=data=>data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},key=(race,id)=>'species:'+race+':'+id+'-used';
  const choiceKey=(race,id)=>'species:'+race+':'+id+'-turn';
  const counterKeys=new Set(),turnKeys=new Set();for(const [race,row]of Object.entries(definitions))for(const feature of row.resources){counterKeys.add(key(race,feature.id));if(feature.oncePerTurn)turnKeys.add(choiceKey(race,feature.id));}
+ for(const race of ['aasimar-mpmm','aasimar-2024'])turnKeys.add('species:'+race+':revelation-rider-turn');
  function invalidChoice(key,value){if(!counterKeys.has(key)&&!turnKeys.has(key))return false;return !Array.isArray(value)||value.length>1||value.length===1&&(typeof value[0]!=='string'||!(turnKeys.has(key)?/^[01]$/:/^\d{1,4}$/).test(value[0]));}
  function resources(data,{level=1,mods={}}={}){
   const R=globalThis.CharacterRules||(typeof require==='function'?require('./character-rules'):null),race=data.build?.race,profile=R?.profile(data.build,level),definition=definitions[race];if(!profile||!definition)return[];
