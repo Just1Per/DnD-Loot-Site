@@ -4,10 +4,12 @@ var CharacterSpeciesResources=(()=>{
  const D=typeof CharacterSpeciesResourceData!=='undefined'?CharacterSpeciesResourceData:require('./character-species-resource-data');
  const definitions=D.species,stored=data=>data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},key=(race,id)=>'species:'+race+':'+id+'-used';
  const choiceKey=(race,id)=>'species:'+race+':'+id+'-turn';
+ function effectiveLevel(data,level=1){const Engine=globalThis.CharacterAdobeEngine,actual=Engine?.level?Engine.level(data.adobe?data:{...data,adobe:stored(data)},level):level;return Math.max(1,Math.min(20,Math.trunc(Number(actual)||1)));}
  const counterKeys=new Set(),turnKeys=new Set();for(const [race,row]of Object.entries(definitions))for(const feature of row.resources){counterKeys.add(key(race,feature.id));if(feature.oncePerTurn)turnKeys.add(choiceKey(race,feature.id));}
  for(const race of ['aasimar-mpmm','aasimar-2024'])turnKeys.add('species:'+race+':revelation-rider-turn');
  function invalidChoice(key,value){if(!counterKeys.has(key)&&!turnKeys.has(key))return false;return !Array.isArray(value)||value.length>1||value.length===1&&(typeof value[0]!=='string'||!(turnKeys.has(key)?/^[01]$/:/^\d{1,4}$/).test(value[0]));}
  function resources(data,{level=1,mods={}}={}){
+  level=effectiveLevel(data,level);
   const R=globalThis.CharacterRules||(typeof require==='function'?require('./character-rules'):null),race=data.build?.race,profile=R?.profile(data.build,level),definition=definitions[race];if(!profile||!definition)return[];
   const total=Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),Modifiers=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),pb=Modifiers?Modifiers.proficiency(data,Math.ceil(total/4)+1):Math.ceil(total/4)+1,con=Math.max(-5,Math.min(10,Math.trunc(Number(mods.con)||0))),ability=data.build.raceAbility,choices=stored(data).classFeatureChoices||{},option=Object.hasOwn(profile.optionChoices||{},data.build.raceFeature)?profile.optionChoices[data.build.raceFeature]:null,validAbility=['int','wis','cha'].includes(ability);
   const values={pb,twicePB:2*pb,hop:5*pb,conDC:8+pb+con,conSign:(con<0?'−':'+')+' '+Math.abs(con),legacyBreath:(total>=16?5:total>=11?4:total>=6?3:2)+'d6',modernBreath:(total>=17?4:total>=11?3:total>=5?2:1)+'d10',healingAction:profile.edition==='2024'?'Magic action':'Action',featureDC:validAbility?8+pb+(Number(mods[ability])||0):'8 + '+pb+' + your chosen INT/WIS/CHA modifier',breathShape:race==='chromatic-dragonborn-ftd'?'30 ft line, 5 ft wide; Dexterity save':race==='dragonborn-2024'?'15 ft cone or 30 ft line, 5 ft wide; Dexterity save':'15 ft cone; Dexterity save'};
@@ -32,7 +34,7 @@ var CharacterSpeciesResources=(()=>{
   return(globalThis.CharacterSubclassMechanics||(typeof require==='function'?require('./character-subclass-mechanics'):null)).save(data,updates);
  }
  function newTurn(data,id,context={}){const row=resources(data,context).find(row=>row.id===id);if(!row?.turnKey)return false;return(globalThis.CharacterSubclassMechanics||(typeof require==='function'?require('./character-subclass-mechanics'):null)).save(data,{[row.turnKey]:[]});}
- return{definitions,resources,setUsed,onEvent,newTurn,invalidChoice};
+ return{definitions,resources,setUsed,onEvent,newTurn,invalidChoice,effectiveLevel};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterSpeciesResources=CharacterSpeciesResources;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterSpeciesResources;

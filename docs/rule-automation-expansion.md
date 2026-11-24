@@ -20,6 +20,8 @@ The two Aasimar Celestial Revelation sources now have dedicated activation choic
 
 The active rider appears in Limited Features and attack notes. Confirm your own turn and a qualifying attack/spell damage event, then Record extra damage once. Start my turn clears only this turn allowance, leaving the active transformation and daily use intact. Correction changes the record, never applied target damage. Malformed turn records fail closed through normalization until the actual own-turn reset, and full-ledger activation/spending is atomic. Brief-form rest expiry, source separation, private saving and the distinction from Fury of the Small’s other-creature-turn limit remain enforced. There are now eight temporary species effect adapters; the 34 base species counters are counted separately from the two active Revelation turn counters.
 
+Species counters and activation gates also use the Adobe engine’s effective XP-based level. A stale saved identity level cannot hide unlocked flight/Revelation, reduce PB-based uses or erase an active Revelation when starting a turn. Lowering XP below an unlock ends the ineligible form without restoring its spent use, and raising XP again cannot revive its old flag. Milestone/manual mode still follows the supplied character level, independently of the recorded XP.
+
 ## Feats
 
 New structured facts cover fixed training/expertise, resistance, damage/condition immunity and senses. Damage-resistance choices have bounded selectors, reject duplicates and remain inactive until valid. Bonus Darkvision extends the final species/class range. Only fixed facts from an unambiguous proficiency package are applied; source alternatives are not combined.

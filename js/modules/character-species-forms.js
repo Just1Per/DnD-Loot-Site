@@ -19,6 +19,7 @@ var CharacterSpeciesForms=(()=>{
  function consciousAtZero(data,level){if(Number(data.hpCurrent)>0)return false;const context=(globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null))?.context(data,{level});return !!context?.active&&context.id==='zealot'&&context.edition==='2014'&&context.level>=14&&context.raging;}
  const supported=(race,id,level=1)=>!!definitions[race+':'+id]&&Number(level)>=definitions[race+':'+id].level;
  function state(data,{level=1,mods={}}={}){
+  level=species().effectiveLevel(data,level);
   const race=data.build?.race,definition=Object.entries(definitions).find(([key])=>key.startsWith(race+':'));
   if(!definition)return {available:false,active:false,canActivate:false};
   const [identity,def]=definition,id=identity.slice(race.length+1),resource=species().resources(data,{level,mods}).find(row=>row.featureId===id),key=activeKey(race,id),ledger=stored(data).classFeatureChoices||{},flag=ledger[key];
@@ -31,6 +32,7 @@ var CharacterSpeciesForms=(()=>{
   return{available,active,rawActive,key,race,id,resource,def,incapacitated,dead,ancestry,onStone,option,formName:def.revelations?.[option]?.name||'',...(def.revelations?{rider:{key:riderKey,valid,used,amount:pb,type:def.revelations[option]?.type||''},revelationDC:8+pb+(Number(mods.cha)||0)}:{}),canActivate:available&&resource.counterValid&&resource.remaining>0&&!resource.useDisabled&&!incapacitated&&!dead&&(def.effect!=='warding'||!!ancestry)};
  }
  function activate(data,{level=1,mods={},confirmed=false,onStone=false,revelation=''}={}){
+  level=species().effectiveLevel(data,level);
   const s=state(data,{level,mods});if(!s.canActivate||confirmed!==true||s.def.effect==='stone'&&onStone!==true)return false;
   let option='';if(s.def.revelations){option=s.def.originChoice?data.build.raceFeature:revelation;if(!Object.hasOwn(s.def.revelations,option)||s.def.originChoice&&revelation&&revelation!==option)return false;}
   const updates={[s.resource.key]:[String(s.resource.used+1)],[s.key]:s.def.effect==='raven'&&level<3?[]:s.def.effect==='warding'?['active',data.build.raceFeature]:s.def.revelations?['active',option]:['active']};if(s.def.effect==='stone')updates[stoneKey]=['stone'];if(s.def.revelations)updates[s.rider.key]=[];return shared().save(data,updates);
