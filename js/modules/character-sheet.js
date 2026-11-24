@@ -426,12 +426,14 @@ function readSheetForm() {
   };
   s.data = CharacterSheetModel.normalize(data);
   globalThis.CharacterFeatForms?.endInvalid(s.data,{level:s.identity.level});
+  globalThis.CharacterSpeciesForms?.endInvalid(s.data,{level:s.identity.level});
   renderCharacterJournal();
 }
 function updateSheetCalculations() {
   const s = sheetSession;
   if (!s)
     return;
+  globalThis.CharacterSpeciesForms?.endInvalid(s.data,{level:s.identity?.level||s.character.level||1});
   const d = CharacterSheetModel.derive(s.data, s.identity?.level || s.character.level || 1, sheetEquipmentLoot());
   renderEquipmentCalculations(d);
   renderAttackActionSummary(d);

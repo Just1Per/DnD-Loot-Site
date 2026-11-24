@@ -417,15 +417,17 @@ var CharacterSheetModel = (() => {
     result.itemResources=ItemResources?ItemResources.project(data,result.gear):[];
     const Movement=globalThis.CharacterClassMovement||(typeof require==='function'?require('./character-class-movement'):null);
     result.classMovement=Movement.apply(d,{level,effects,gear:result.gear,baseSpeed:baseWalkingSpeed,magicItems});
+    (globalThis.CharacterSpeciesForms||(typeof require==='function'?require('./character-species-forms'):null))?.applyMovement(data,result,{level});
     for(const speed of barbarianSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
     for(const speed of druidSubclass.speeds)effects[speed.type]=Math.max(effects[speed.type]||0,speed.walking?effects.speed:speed.speed);
     Runtime.apply(d,result,{level});
-    result.fighterCombat=Archetypes.apply(d,result,{level});if(result.fighterCombat.size)result.carrying=Carry.limits(data,{scores,effects});
+    result.fighterCombat=Archetypes.apply(d,result,{level});if(result.fighterCombat.size){result.carrying=Carry.limits(data,{scores,effects});if(barbarianSubclass.carryMultiplier)for(const key of ['capacity','pushDragLift'])result.carrying[key]*=barbarianSubclass.carryMultiplier;}
     result.druidCombat=Circles.apply(d,result,{level});
     result.clericCombat=Domains.apply(d,result,{level});
     result.bardCombat=Colleges.apply(d,result,{level});
     result.barbarianCombat=Paths.apply(d,result,{level});
-    if(result.barbarianCombat.size)result.carrying=Carry.limits(data,{scores,effects});
+    if(result.barbarianCombat.size){result.carrying=Carry.limits(data,{scores,effects});if(barbarianSubclass.carryMultiplier)for(const key of ['capacity','pushDragLift'])result.carrying[key]*=barbarianSubclass.carryMultiplier;}
+    (globalThis.CharacterSpeciesForms||(typeof require==='function'?require('./character-species-forms'):null))?.apply(data,result,{level});
     result.actions=Actions.derive(d,level,result,loot,Catalog.data?.spells||[]);
     if(Override){result.gear.attacks=result.gear.attacks.map(row=>Override.attack(row,'attack:gear:'+row.id,modifierExpressions,{mods,pb},level));result.manualAttacks=d.attacks.map((row,i)=>Override.attack({...row,hit:result.attacks[i]},'attack:attack:'+row.id,modifierExpressions,{mods,pb},level));result.attacks=result.manualAttacks.map((row,i)=>row.attack??result.attacks[i]);result.actions=result.actions.map((row,i)=>Override.attack(row,'attack:attack:'+d.actions[i]?.id,modifierExpressions,{mods,pb},level));}
 
@@ -450,12 +452,14 @@ var CharacterSheetModel = (() => {
     d.hpTemp -= absorbed;
     d.hpCurrent = Math.max(0, d.hpCurrent - (n - absorbed));
     if(d.hpCurrent===0)(globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.end(d);
+    if(d.hpCurrent===0)(globalThis.CharacterSpeciesForms||(typeof require==='function'?require('./character-species-forms'):null))?.onZeroHP(d);
     if(d.hpCurrent===0){const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);Paths.endDivineForm(d,{level:20});}
     return d;
   }
   function heal(data, amount, level = 1) {
     const d = normalize(data);
     if(d.hpCurrent===0)(globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.end(d);
+    if(d.hpCurrent===0)(globalThis.CharacterSpeciesForms||(typeof require==='function'?require('./character-species-forms'):null))?.onZeroHP(d);
     if(d.hpCurrent===0){const Paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);Paths.endDivineForm(d,{level});}
     d.hpCurrent = Math.min(derive(d, level).hpMax, d.hpCurrent + number(amount, 0, 0));
     return d;

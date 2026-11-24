@@ -350,6 +350,7 @@
         "feat-misty-escape-browser.cjs",
         "feat-special-spells-browser.cjs",
         "site-palette-browser.cjs",
+        "species-forms-browser.cjs",
         "species-resources-browser.cjs"
       ]
     },
@@ -705,7 +706,7 @@
     {
       "id": "sheetPrintDialog",
       "file": "js/modules/character-sheet.js",
-      "line": 647,
+      "line": 649,
       "kind": "dialog",
       "category": "standard-only",
       "entry": "Standard print fallback",

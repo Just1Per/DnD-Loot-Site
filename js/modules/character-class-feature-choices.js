@@ -869,6 +869,7 @@ var CharacterClassFeatureChoices=(()=>{
     }
     if(Object.keys(updates).length)data.adobe={...stored,classFeatureChoices:{...choices,...updates}};
     (globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null))?.onEvent(data,event);
+    (globalThis.CharacterSpeciesForms||(typeof require==='function'?require('./character-species-forms'):null))?.onEvent(data,event,{level:total,mods:context.mods||{}});
     paths?.onEvent(data,event,{level:total});
     const colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null);colleges?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);domains?.onEvent(data,event,{level:total,mods:context.mods||{}});

@@ -6,6 +6,7 @@
     "species": 105,
     "speciesWithResourceAdapters": 22,
     "speciesResourceCounters": 34,
+    "speciesActivatedEffects": 6,
     "subclasses": 186,
     "implementedSubclassAdapters": 186,
     "missingSubclassAdapters": 0,
@@ -57,7 +58,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "draconblood-dragonborn-egw",
@@ -97,7 +98,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "ravenite-dragonborn-egw",
@@ -137,7 +138,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "half-orc",
@@ -160,7 +161,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "aasimar-mpmm",
@@ -199,7 +200,7 @@
           "requiresOption": true
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "aasimar-2024",
@@ -237,7 +238,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "shadar-kai-mpmm",
@@ -257,10 +258,16 @@
             "source": "MPMM",
             "feature": "Blessing of the Raven Queen",
             "page": 31
+          },
+          "activation": {
+            "effect": "raven",
+            "duration": "Until the start of your next turn",
+            "endsOnShortRest": true,
+            "resistanceMinimumLevel": 3
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "eladrin-mpmm",
@@ -284,7 +291,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "goliath-mpmm",
@@ -307,7 +314,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "goliath-2024",
@@ -343,10 +350,15 @@
             "source": "XPHB",
             "feature": "Large Form",
             "page": 192
+          },
+          "activation": {
+            "effect": "large",
+            "duration": "10 minutes",
+            "endsOnShortRest": true
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "orc-mpmm",
@@ -384,7 +396,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "orc-2024",
@@ -423,7 +435,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "dwarf-2024",
@@ -443,10 +455,15 @@
             "source": "XPHB",
             "feature": "Stonecunning",
             "page": 188
+          },
+          "activation": {
+            "effect": "stone",
+            "duration": "10 minutes",
+            "endsOnShortRest": true
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "dragonborn-2024",
@@ -481,10 +498,16 @@
             "source": "XPHB",
             "feature": "Draconic Flight",
             "page": 187
+          },
+          "activation": {
+            "effect": "flight",
+            "duration": "10 minutes",
+            "endsOnShortRest": true,
+            "endsIncapacitated": true
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "chromatic-dragonborn-ftd",
@@ -519,10 +542,16 @@
             "source": "FTD",
             "feature": "Chromatic Warding",
             "page": 10
+          },
+          "activation": {
+            "effect": "warding",
+            "duration": "1 minute",
+            "endsOnShortRest": true,
+            "boundToAncestry": true
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "gem-dragonborn-ftd",
@@ -557,10 +586,15 @@
             "source": "FTD",
             "feature": "Gem Flight",
             "page": 11
+          },
+          "activation": {
+            "effect": "flight",
+            "duration": "1 minute",
+            "endsOnShortRest": true
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "metallic-dragonborn-ftd",
@@ -598,7 +632,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "harengon-mpmm",
@@ -621,7 +655,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "hobgoblin-mpmm",
@@ -659,7 +693,7 @@
           }
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "goblin-mpmm",
@@ -683,7 +717,7 @@
           "oncePerTurn": true
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "shifter-mpmm",
@@ -707,7 +741,7 @@
           "requiresOption": true
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     },
     {
       "id": "shifter-efota",
@@ -731,7 +765,7 @@
           "requiresOption": true
         }
       ],
-      "automation": "Bounded resource counters and source-specific instructions. Temporary form benefits, targets and recipient HP are separate table actions."
+      "automation": "Bounded resource counters and source-specific instructions. Activation records identify supported temporary self-effects; other temporary form benefits, targets and recipient HP remain separate table actions."
     }
   ],
   "feats": [

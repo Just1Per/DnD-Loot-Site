@@ -101,6 +101,7 @@
     "feat-misty-escape-browser.cjs",
     "item-conditional-automation-browser.cjs",
     "spell-effect-choices-browser.cjs",
-    "species-resources-browser.cjs"
+    "species-resources-browser.cjs",
+    "species-forms-browser.cjs"
   ]
 }
