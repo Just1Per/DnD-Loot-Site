@@ -70,6 +70,53 @@ test('item spell families do not stack variant bonuses and class eligibility use
  d.adobe.classLevels=[{classId:'fighter',level:4},{classId:'wizard',level:1}];assert.equal(M.derive(d,4,all).spellAttack,M.derive(d,4,[]).spellAttack,'unallocated Wizard row cannot qualify');
  assert.equal(Casting.castingStats({classId:'fighter',ability:'int'},active,d).dc,Casting.castingStats({classId:'fighter',ability:'int'},base,d).dc);
 });
+test('Jester’s Mask follows the actual spellcasting ability across class, species, feat and manual profiles',()=>{
+ const d=character({classId:'bard'});d.spellAbility='int';d.adobe={classLevels:[{classId:'bard',level:1},{classId:'wizard',level:3}]};d.equipmentState.loadout=[{id:'mask',equipped:true,attuned:true}];const all=[loot('mask',"Jester's Mask")],before=M.derive(d,4,[]),after=M.derive(d,4,all);
+ assert.equal(after.spellAttack,before.spellAttack,'the primary INT field gains no CHA bonus');assert.equal(after.spellDC,before.spellDC);
+ for(const [classId,ability]of [['bard','cha'],['wizard','int'],['race','cha'],['race','wis'],['feat-example','cha'],['additional','con']]){const profile={classId,ability},a=Casting.castingStats(profile,before,d),b=Casting.castingStats(profile,after,d);assert.equal(b.attack-a.attack,ability==='cha'?3:0,classId+' '+ability);assert.equal(b.dc-a.dc,ability==='cha'?3:0);}
+ d.spellAbility='cha';assert.equal(M.derive(d,4,all).spellAttack-M.derive(d,4,[]).spellAttack,3);
+ d.adobe.classLevels=[{classId:'wizard',level:4},{classId:'bard',level:1}];assert.equal(Casting.castingStats({classId:'race',ability:'cha'},M.derive(d,4,all),d).attack,Casting.castingStats({classId:'race',ability:'cha'},M.derive(d,4,[]),d).attack,'unallocated Bard row cannot satisfy attunement');
+});
+test('legacy talisman spell bonuses require the item’s alignment and an actual Cleric or Paladin level',()=>{
+ for(const [name,valid,wrong]of [['Talisman of Pure Good',['LG','Neutral Good','chaotic good'],'evil'],['Talisman of Ultimate Evil',['LE','Neutral Evil','chaotic evil'],'good']]){
+  const d=character({classId:'cleric'});d.adobe={classLevels:[{classId:'cleric',level:1},{classId:'wizard',level:3}]};d.equipmentState.loadout=[{id:'symbol',equipped:true,attuned:true}];const all=[loot('symbol',name)];
+  for(const value of valid){d.alignment=value;const a=M.derive(d,4,[]),b=M.derive(d,4,all);for(const profile of [{classId:'cleric',ability:'wis'},{classId:'wizard',ability:'int'},{classId:'race',ability:'cha'}]){assert.equal(Casting.castingStats(profile,b,d).attack-Casting.castingStats(profile,a,d).attack,2);assert.equal(Casting.castingStats(profile,b,d).dc,Casting.castingStats(profile,a,d).dc);}}
+  for(const value of ['',wrong,'true neutral','not '+valid[0],'good / evil','unconfirmed good']){d.alignment=value;assert.equal(M.derive(d,4,all).spellAttack,M.derive(d,4,[]).spellAttack,value);}
+  d.alignment=valid[0];d.adobe.classLevels=[{classId:'wizard',level:4},{classId:'cleric',level:1}];assert.equal(M.derive(d,4,all).spellAttack,M.derive(d,4,[]).spellAttack,'no allocated divine class');
+  d.build.classId='artificer';d.adobe.classLevels=[{classId:'artificer',level:14}];assert.equal(M.derive(d,14,all).spellAttack,M.derive(d,14,[]).spellAttack,'legacy Savant bypasses attunement, not the separate bonus condition');
+  d.adobe.classLevels=[{classId:'artificer',level:14},{classId:'paladin',level:1}];assert.equal(M.derive(d,15,all).spellAttack-M.derive(d,15,[]).spellAttack,2);
+ }
+});
+test('revised talismans retain their own class requirements without importing legacy alignment restrictions',()=>{
+ for(const name of ['Talisman of Pure Good','Talisman of Ultimate Evil']){
+  const d=character({classId:'wizard',edition:'2024'});d.adobe={classLevels:[{classId:'wizard',level:4}]};d.alignment=name.endsWith('Good')?'chaotic evil':'lawful good';d.equipmentState.loadout=[{id:'symbol',equipped:true,attuned:true}];const all=[loot('symbol',name,'2024')];
+  assert.equal(M.derive(d,4,all).spellAttack-M.derive(d,4,[]).spellAttack,name.endsWith('Good')?0:2);
+  d.adobe.classLevels=[{classId:'paladin',level:1},{classId:'wizard',level:3}];assert.equal(M.derive(d,4,all).spellAttack-M.derive(d,4,[]).spellAttack,2);assert.equal(M.derive(d,4,all).spellDC,M.derive(d,4,[]).spellDC);
+  d.equipmentState.loadout[0].attuned=false;assert.equal(M.derive(d,4,all).spellAttack,M.derive(d,4,[]).spellAttack);
+ }
+});
+test('reviewed named general spell items apply their own numbers and leave conditional damage or curses as reminders',()=>{
+ for(const [name,attack,dc,reminder]of [['Radiance',1,0,/half cover/],['Robe of Thayan Arcana',1,1,/damage die showing 1 as 2/],['Shard of Xeluan',1,0,/unequipping does not remove the curse/]]){
+  const d=character({classId:'wizard'});d.equipmentState.loadout=[{id:'item',equipped:true,attuned:true}];const all=[loot('item',name)],before=JSON.stringify(d),a=M.derive(d,4,[]),b=M.derive(d,4,all);
+  for(const classId of ['wizard','race','additional']){const profile={classId,ability:'int'};assert.equal(Casting.castingStats(profile,b,d).attack-Casting.castingStats(profile,a,d).attack,attack);assert.equal(Casting.castingStats(profile,b,d).dc-Casting.castingStats(profile,a,d).dc,dc);}
+  assert.match(b.effects.traits.join(' '),reminder);assert.deepEqual(b.scores,a.scores);assert.equal(JSON.stringify(d),before);
+  d.equipmentState.loadout[0].equipped=false;assert.equal(M.derive(d,4,all).spellAttack,M.derive(d,4,[]).spellAttack);d.equipmentState.loadout[0].equipped=true;assert.equal(M.derive(d,4,[]).spellAttack,a.spellAttack,'ownership is required');
+ }
+});
+test('Blackstaff needs explicit current story approval as well as eligibility, holding and attunement for its non-weapon bonuses',()=>{
+ const Magic=require('../js/modules/character-magic-items'),d=character({classId:'wizard'}),all=[loot('staff','Blackstaff')];d.equipmentState.acMode='equipment';d.equipmentState.loadout=[{id:'staff',equipped:true,attuned:true}];d.adobe={classLevels:[{classId:'wizard',level:4}]};const base=M.derive(d,4,[]),inactive=M.derive(d,4,all);
+ assert.equal(inactive.ac,base.ac);assert.equal(inactive.spellAttack,base.spellAttack);assert.equal(inactive.saves.dex,base.saves.dex);assert.match(inactive.magicItems.warnings.join(' '),/requirements/);assert.equal(Magic.setPrerequisite(d,all,'staff',true),true);
+ let active=M.derive(d,4,all);assert.equal(active.ac-base.ac,2);assert.equal(active.spellAttack-base.spellAttack,2);assert.equal(active.spellDC,base.spellDC);for(const key of Object.keys(M.abilities))assert.equal(active.saves[key]-base.saves[key],2);assert.equal(active.deathSaveBonus-base.deathSaveBonus,2);assert.equal(active.gear.attacks.find(row=>row.name==='Blackstaff').attack-M.derive({...d,equipmentState:{...d.equipmentState,loadout:[{id:'staff',equipped:true,attuned:false}]}},4,all).gear.attacks.find(row=>row.name==='Blackstaff').attack,2);
+ assert.equal(Magic.prerequisiteConfirmed(JSON.parse(JSON.stringify(d)),all[0].item),true);
+ Magic.setPrerequisite(d,all,'staff',false);assert.equal(M.derive(d,4,all).ac,base.ac);Magic.setPrerequisite(d,all,'staff',true);
+ for(const field of ['equipped','attuned']){d.equipmentState.loadout[0][field]=false;assert.equal(M.derive(d,4,all).spellAttack,base.spellAttack);assert.equal(M.derive(d,4,all).ac,base.ac);d.equipmentState.loadout[0][field]=true;}
+ d.adobe.classLevels=[{classId:'fighter',level:4},{classId:'wizard',level:1}];assert.equal(M.derive(d,4,all).spellAttack,M.derive(d,4,[]).spellAttack);assert.equal(M.derive(d,4,all).ac,M.derive(d,4,[]).ac);
+});
+test('item approval cannot be manufactured by malformed state or a failed/full choice write',()=>{
+ const Magic=require('../js/modules/character-magic-items'),d=character({classId:'wizard'}),all=[loot('staff','Blackstaff')],key=Magic.prerequisite(all[0].item).key;d.equipmentState.loadout=[{id:'staff',equipped:true,attuned:true}];
+ for(const value of [true,'confirmed',null,{},['confirmed','extra']]){d.adobe={classFeatureChoices:{[key]:value}};assert.equal(Magic.prerequisiteConfirmed(d,all[0].item),false);assert.equal(M.derive(d,4,all).ac,M.derive(d,4,[]).ac);}
+ d.adobe={classFeatureChoices:Object.fromEntries(Array.from({length:100},(_,i)=>['retained:'+i,['1']]))};let before=JSON.stringify(d);assert.throws(()=>Magic.setPrerequisite(d,all,'staff',true),/full/);assert.equal(JSON.stringify(d),before);assert.throws(()=>Magic.setPrerequisite(d,[],'staff',true),/available/);assert.throws(()=>Magic.setPrerequisite(d,all,'staff','true'),/explicitly/);assert.equal(JSON.stringify(d),before);
+});
 test('protection and luck items modify all saves, death saves, skill/tool checks, initiative and passive checks once',()=>{
  const d=character({classId:'fighter'}),all=[loot('ring','Ring of Protection'),loot('cloak','Cloak of Protection'),loot('luck','Stone of Good Luck')];d.equipmentState.loadout=all.map(row=>({id:row.id,equipped:true,attuned:true}));
  const before=M.derive(d,4,[]),after=M.derive(d,4,all);for(const ability of Object.keys(M.abilities))assert.equal(after.saves[ability]-before.saves[ability],3,ability);assert.equal(after.deathSaveBonus-before.deathSaveBonus,3);assert.equal(after.skills.arcana-before.skills.arcana,1);assert.equal(after.initiative-before.initiative,1);assert.equal(after.passive-before.passive,1);assert.equal(after.gear.ac-before.gear.ac,2);

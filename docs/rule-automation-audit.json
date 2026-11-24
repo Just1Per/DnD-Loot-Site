@@ -24,7 +24,7 @@
     "itemBases": 230,
     "itemVariants": 230,
     "itemSpellBonusFacts": 60,
-    "itemSpellBonusAdapters": 51
+    "itemSpellBonusAdapters": 60
   },
   "tableResolution": [
     "Targets, recipient HP, positioning, auras, reactions and encounter time.",
@@ -15447,6 +15447,868 @@
       "manualDamageReference": false
     }
   ],
+  "itemSpellBonuses": [
+    {
+      "name": "+1 All-Purpose Tool",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "artificer"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Amulet of the Devout",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Arcane Grimoire",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "wizard"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Bloodwell Vial",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "sorcerer"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Fate Dealer's Deck",
+      "source": "BMT",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Moon Sickle",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "druid",
+        "ranger"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Rhythm-Maker's Drum",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "bard"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Rod of the Pact Keeper",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "warlock"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Rod of the Pact Keeper",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "warlock"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Wand of the War Mage",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+1 Wand of the War Mage",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 All-Purpose Tool",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "artificer"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Amulet of the Devout",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Arcane Grimoire",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "wizard"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Bloodwell Vial",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "sorcerer"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Fate Dealer's Deck",
+      "source": "BMT",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Moon Sickle",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "druid",
+        "ranger"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Rhythm-Maker's Drum",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "bard"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Rod of the Pact Keeper",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "warlock"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Rod of the Pact Keeper",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "warlock"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Wand of the War Mage",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+2 Wand of the War Mage",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 All-Purpose Tool",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "artificer"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Amulet of the Devout",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Arcane Grimoire",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "wizard"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Bloodwell Vial",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "sorcerer"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Fate Dealer's Deck",
+      "source": "BMT",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Moon Sickle",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "druid",
+        "ranger"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Rhythm-Maker's Drum",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "bard"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Rod of the Pact Keeper",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "warlock"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Rod of the Pact Keeper",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "warlock"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Wand of the War Mage",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "+3 Wand of the War Mage",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Blackstaff",
+      "source": "WDH",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "spellRequirements": {
+        "explicitApproval": "item:wdh:blackstaff-heir"
+      },
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Crusading Wand of Celestial Prowess",
+      "source": "AU",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Heliacal Wand of Celestial Prowess",
+      "source": "AU",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Jester's Mask",
+      "source": "BMT",
+      "edition": "2014",
+      "spellScope": [
+        "ability:cha"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Lunar Wand of Celestial Prowess",
+      "source": "AU",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Psionic Rod of the Honed Mind",
+      "source": "AU",
+      "edition": "2024",
+      "spellScope": [
+        "warlock"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Radiance",
+      "source": "CM",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Reveler's Concertina",
+      "source": "TCE",
+      "edition": "2014",
+      "spellScope": [
+        "bard"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Robe of Thayan Arcana",
+      "source": "AUD",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Robe of the Archmagi",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Robe of the Archmagi",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Shard of Xeluan",
+      "source": "KftGV",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Skyblinder Staff",
+      "source": "GGR",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Staff of Power",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Staff of Power",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": true,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": true,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Staff of the Ivory Claw",
+      "source": "EGW",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Staff of the Magi",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Staff of the Magi",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Staff of the Woodlands",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Staff of the Woodlands",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Talisman of Pure Good",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "spellRequirements": {
+        "alignment": "G",
+        "classes": [
+          "cleric",
+          "paladin"
+        ]
+      },
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Talisman of Pure Good",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Talisman of Ultimate Evil",
+      "source": "DMG",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "spellRequirements": {
+        "alignment": "E",
+        "classes": [
+          "cleric",
+          "paladin"
+        ]
+      },
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Talisman of Ultimate Evil",
+      "source": "XDMG",
+      "edition": "2024",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    },
+    {
+      "name": "Tranquil Rod of the Honed Mind",
+      "source": "AU",
+      "edition": "2024",
+      "spellScope": [
+        "warlock"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Vigilant Rod of the Honed Mind",
+      "source": "AU",
+      "edition": "2024",
+      "spellScope": [
+        "warlock"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": false
+    },
+    {
+      "name": "Voyager Staff",
+      "source": "GGR",
+      "edition": "2014",
+      "spellScope": [
+        "global"
+      ],
+      "passiveSaveChecks": false,
+      "passiveImmunities": false,
+      "hasSpellBonus": true,
+      "hasSaveCheckBonus": false,
+      "hasImmunity": false,
+      "chargeMetadata": true
+    }
+  ],
   "itemBonusReview": [
     {
       "name": "Axe of the Dwarvish Lords",
@@ -15471,18 +16333,6 @@
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
       "chargeMetadata": false
-    },
-    {
-      "name": "Blackstaff",
-      "source": "WDH",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": true,
-      "hasSaveCheckBonus": true,
-      "hasImmunity": false,
-      "chargeMetadata": true
     },
     {
       "name": "Chronolometer",
@@ -15581,18 +16431,6 @@
       "chargeMetadata": false
     },
     {
-      "name": "Jester's Mask",
-      "source": "BMT",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": true,
-      "hasSaveCheckBonus": false,
-      "hasImmunity": false,
-      "chargeMetadata": false
-    },
-    {
       "name": "Leather Golem Armor",
       "source": "LLK",
       "edition": "2014",
@@ -15617,18 +16455,6 @@
       "chargeMetadata": true
     },
     {
-      "name": "Radiance",
-      "source": "CM",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": true,
-      "hasSaveCheckBonus": false,
-      "hasImmunity": false,
-      "chargeMetadata": false
-    },
-    {
       "name": "Ring of Elemental Command (Fire)",
       "source": "XDMG",
       "edition": "2024",
@@ -15651,18 +16477,6 @@
       "hasSaveCheckBonus": false,
       "hasImmunity": true,
       "chargeMetadata": true
-    },
-    {
-      "name": "Robe of Thayan Arcana",
-      "source": "AUD",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": true,
-      "hasSaveCheckBonus": false,
-      "hasImmunity": false,
-      "chargeMetadata": false
     },
     {
       "name": "Rod of Alertness",
@@ -15697,18 +16511,6 @@
       "passiveImmunities": false,
       "hasSpellBonus": false,
       "hasSaveCheckBonus": true,
-      "hasImmunity": false,
-      "chargeMetadata": false
-    },
-    {
-      "name": "Shard of Xeluan",
-      "source": "KftGV",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": true,
-      "hasSaveCheckBonus": false,
       "hasImmunity": false,
       "chargeMetadata": false
     },
@@ -15759,54 +16561,6 @@
       "hasSaveCheckBonus": true,
       "hasImmunity": false,
       "chargeMetadata": false
-    },
-    {
-      "name": "Talisman of Pure Good",
-      "source": "DMG",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": true,
-      "hasSaveCheckBonus": false,
-      "hasImmunity": false,
-      "chargeMetadata": true
-    },
-    {
-      "name": "Talisman of Pure Good",
-      "source": "XDMG",
-      "edition": "2024",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": true,
-      "hasSaveCheckBonus": false,
-      "hasImmunity": false,
-      "chargeMetadata": true
-    },
-    {
-      "name": "Talisman of Ultimate Evil",
-      "source": "DMG",
-      "edition": "2014",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": true,
-      "hasSaveCheckBonus": false,
-      "hasImmunity": false,
-      "chargeMetadata": true
-    },
-    {
-      "name": "Talisman of Ultimate Evil",
-      "source": "XDMG",
-      "edition": "2024",
-      "spellScope": [],
-      "passiveSaveChecks": false,
-      "passiveImmunities": false,
-      "hasSpellBonus": true,
-      "hasSaveCheckBonus": false,
-      "hasImmunity": false,
-      "chargeMetadata": true
     },
     {
       "name": "Timepiece of Travel",

@@ -456,7 +456,8 @@
         "adobe-container-locations-browser.cjs",
         "adobe-items-browser.cjs",
         "adobe-magic-menu-browser.cjs",
-        "adobe-pinned-items-browser.cjs"
+        "adobe-pinned-items-browser.cjs",
+        "item-conditional-automation-browser.cjs"
       ]
     },
     {
@@ -641,7 +642,8 @@
         "adobe-items-browser.cjs",
         "adobe-magic-menu-browser.cjs",
         "adobe-magic-variant-browser.cjs",
-        "adobe-pinned-items-browser.cjs"
+        "adobe-pinned-items-browser.cjs",
+        "item-conditional-automation-browser.cjs"
       ]
     },
     {

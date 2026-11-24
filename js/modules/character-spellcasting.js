@@ -229,7 +229,7 @@ var CharacterSpellcasting=(()=>{
   }
   function castingStats(p,derived,adjustments={}){
     const modifier=Number(derived?.mods?.[p?.ability]||0),pb=Number(derived?.pb||0),caster=p?.castingClassId||p?.classId;
-    const Magic=globalThis.CharacterMagicItems||(typeof require==='function'?require('./character-magic-items'):null),item=Magic?.spellBonuses(derived?.effects,caster??adjustments.build?.classId??'')||{attack:0,dc:0};
+    const Magic=globalThis.CharacterMagicItems||(typeof require==='function'?require('./character-magic-items'):null),item=Magic?.spellBonuses(derived?.effects,caster??adjustments.build?.classId??'',p?.ability)||{attack:0,dc:0};
     const M=globalThis.CharacterModifiers||(typeof require==='function'?require('./character-modifiers'):null),expressions=derived?.modifiers?.expressions||{},attackBonus=derived?.modifiers?.spellAttackBonus!==undefined?derived.modifiers.spellAttackBonus-(derived?.effects?.itemSpellAttackBonus||0)+item.attack:(Number(adjustments.spellAttackBonus)||0)+item.attack,dcBonus=derived?.modifiers?.spellDCBonus!==undefined?derived.modifiers.spellDCBonus-(derived?.effects?.itemSpellDCBonus||0)+item.dc:(Number(adjustments.spellDCBonus)||0)+item.dc,secondary=Number(adjustments.secondaryDCBonus)||0;
     return {ability:p?.ability||'',modifier,attack:(derived?.proficiencyDice?0:pb)+modifier+attackBonus+(caster&&M?M.value(expressions,'spell:'+caster+':attack',0,derived):0),dc:8+pb+modifier+dcBonus+secondary+(caster&&M?M.value(expressions,'spell:'+caster+':dc',0,derived):0)};
   }
