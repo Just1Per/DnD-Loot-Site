@@ -1694,6 +1694,218 @@
           ]
         }
       }
+    },
+    "Maddening Darkness": {
+      "bySource": {
+        "XGE": {
+          "damage": "8d8",
+          "types": [
+            "psychic"
+          ],
+          "attack": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "Damage event: a creature starts its turn inside the 60-ft-radius darkness. Wisdom save: half damage on success. Resolve magical darkness, Concentration and affected creatures at the table."
+          ]
+        }
+      }
+    },
+    "Maelstrom": {
+      "bySource": {
+        "XGE": {
+          "damage": "6d6",
+          "types": [
+            "bludgeoning"
+          ],
+          "attack": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "Damage event: a creature starts its turn in the 30-ft-radius water. Failed Strength save: damage and pull 10 ft toward the center; success: no damage or pull. Place only on ground or water; track difficult terrain, positions and Concentration at the table."
+          ]
+        }
+      }
+    },
+    "Magnify Gravity": {
+      "bySource": {
+        "EGW": {
+          "damage": "2d8",
+          "upcast": "1d8",
+          "types": [
+            "force"
+          ],
+          "attack": false,
+          "checkDC": "Strength check to pick up or move an unattended object in the sphere before your next turn starts",
+          "notes": [
+            "On casting: creatures in a 10-ft-radius sphere make a Constitution save; success halves damage. Only a failed save halves Speed until the end of that target’s next turn. Resolve target Speed and object movement at the table."
+          ]
+        }
+      }
+    },
+    "Time Ravage": {
+      "bySource": {
+        "EGW": {
+          "damage": "10d12",
+          "types": [
+            "necrotic"
+          ],
+          "attack": false,
+          "notes": [
+            "Constitution save: half damage on success. Only a failed save causes rapid aging, halved walking Speed and Disadvantage on attacks, ability checks and saves; the target has 30 days before death by old age. Wish or 9th-level Greater Restoration can reverse the aging effects. Resolve target state at the table."
+          ]
+        }
+      }
+    },
+    "Maximilian's Earthen Grasp": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "noDamageUpcast": true,
+          "actionRange": "5 ft from hand",
+          "checkDC": "Escape Strength check using the restrained target’s Action",
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial grasp",
+              "shortLabel": "Grasp",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "bludgeoning"
+                ],
+                "notes": [
+                  "Initial grasp or Action to reach for a new target: Strength save; failure deals damage and restrains, success deals no damage. Place the Medium hand in a visible unoccupied 5-ft ground space within casting range. Moving it or choosing another target releases the previous target."
+                ]
+              }
+            },
+            {
+              "id": "crush",
+              "label": "Crush restrained target",
+              "shortLabel": "Crush",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "bludgeoning"
+                ],
+                "notes": [
+                  "Action while the hand already restrains this target: Strength save; success halves the crushing damage. Resolve the target, restraint and Concentration at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Vitriolic Sphere": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial acid explosion",
+              "shortLabel": "Explosion",
+              "combat": {
+                "damage": "10d4",
+                "upcast": "2d4",
+                "types": [
+                  "acid"
+                ],
+                "notes": [
+                  "Initial 20-ft-radius explosion: Dexterity save; success halves this damage and prevents the later damage. A failed save schedules the separate acid damage at the end of that target’s next turn."
+                ]
+              }
+            },
+            {
+              "id": "delayed",
+              "label": "Delayed acid after failed initial save",
+              "shortLabel": "Delayed",
+              "combat": {
+                "damage": "5d4",
+                "types": [
+                  "acid"
+                ],
+                "save": "",
+                "automatic": true,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Only after failing the initial save: automatic damage at the end of that target’s next turn, with no additional save. These dice never increase with slot level. Resolve each recipient separately."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Phantasmal Killer": {
+      "bySource": {
+        "PHB": {
+          "attack": false,
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial fear save",
+              "shortLabel": "Fear",
+              "combat": {
+                "nonDamage": true,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Initial Wisdom save for one target: failure causes Frightened while the spell lasts. This initial event deals no damage. Resolve fear, target eligibility and Concentration at the table."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Frightened target’s end-of-turn save",
+              "shortLabel": "Turn end",
+              "combat": {
+                "damage": "4d10",
+                "types": [
+                  "psychic"
+                ],
+                "upcast": "1d10",
+                "notes": [
+                  "Only a target still Frightened by this spell makes this Wisdom save at the end of its turn. Failure deals the displayed damage; success deals no damage and ends the spell for that target. This is separate from the initial fear save."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Weird": {
+      "bySource": {
+        "PHB": {
+          "attack": false,
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial fear save",
+              "shortLabel": "Fear",
+              "combat": {
+                "nonDamage": true,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Initial Wisdom save for creatures in a 30-ft-radius sphere: failure causes Frightened while the spell lasts. This initial event deals no damage. Resolve fear, target eligibility and Concentration at the table."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Frightened target’s end-of-turn save",
+              "shortLabel": "Turn end",
+              "combat": {
+                "damage": "4d10",
+                "types": [
+                  "psychic"
+                ],
+                "notes": [
+                  "Only a target still Frightened by this spell makes this Wisdom save at the end of its turn. Failure deals the displayed damage; success deals no damage and ends the spell for that target. This is separate from the initial fear save."
+                ]
+              }
+            }
+          ]
+        }
+      }
     }
   }
 }

@@ -19,8 +19,8 @@ Source revision: `b9061583536101068b3a59d27e886d1fa664e366`. This inventory dist
 | Supplement spell class-list corrections | 122 |
 | Spells with numeric damage facts | 393 |
 | Spells with numeric area facts | 335 |
-| Spells with action damage formulas | 268 |
-| Damage references still requiring manual resolution | 116 |
+| Spells with action damage formulas | 276 |
+| Damage references still requiring manual resolution | 108 |
 | Pinned item facts | 1253 |
 | Base items | 230 |
 | Generic item templates, including inherited templates | 230 |

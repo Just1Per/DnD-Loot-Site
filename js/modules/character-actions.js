@@ -79,8 +79,8 @@ var CharacterActions = (()=>{
    const beast=(globalThis.CharacterDruidSpellcasting||(typeof require==='function'?require('./character-druid-spellcasting'):null))?.assess(data,spell,{level,classId:owner});
    const mark=CFC.huntersMarkEffect(data,spell,{level,classId:owner,features:stats.rangerFeatures,slot});
    if(mark)return {...row,name:spell.name+' · '+spell.edition+(owner?' · '+(classAbilities[owner]?owner[0].toUpperCase()+owner.slice(1):owner):'')+(slot?' (level '+slot+')':''),ability,hit:'No attack roll',damage:mark.damage,range:spell.range,notes:[mark.detail,'Bonus Action · '+mark.duration+'. Resolve marked target and eligible hits at the table.',...mark.notes,...(beast?.relevant?[beast.label+': '+beast.detail]:[])]};
-   let damage=spell.level===0?diceAt(c.scaling,level,c.damage||''):c.damage||'';
-   if(slot>spell.level&&c.upcast)damage=increase(damage,c.upcast,Math.floor((Math.min(slot,Number.isInteger(c.upcastCeiling)?Math.max(spell.level,c.upcastCeiling):9)-spell.level)/(c.step||1)));
+   let damage=c.nonDamage?'':spell.level===0?diceAt(c.scaling,level,c.damage||''):c.damage||'';
+   if(!c.nonDamage&&slot>spell.level&&c.upcast)damage=increase(damage,c.upcast,Math.floor((Math.min(slot,Number.isInteger(c.upcastCeiling)?Math.max(spell.level,c.upcastCeiling):9)-spell.level)/(c.step||1)));
    let count=1,unit='';
    if(spell.name==='Eldritch Blast'){count=level>=17?4:level>=11?3:level>=5?2:1;unit='beam';}
    if(spell.name==='Scorching Ray'){count=3+Math.max(0,slot-2);unit='ray';}

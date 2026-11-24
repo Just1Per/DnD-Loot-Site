@@ -21,8 +21,8 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 335,
-    "spellActionFormulas": 268,
-    "manualDamageReferences": 116,
+    "spellActionFormulas": 276,
+    "manualDamageReferences": 108,
     "itemFacts": 1253,
     "itemBases": 230,
     "itemVariants": 230,
@@ -12113,9 +12113,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-ca4ea50c3d07f61a",
@@ -12123,9 +12123,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-d7e4aae7b261bd64",
@@ -12283,9 +12283,10 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "checkDC": "Strength check to pick up or move an unattended object in the sphere before your next turn starts",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-c8ef6f71e1f8ec7e",
@@ -12403,9 +12404,21 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Initial grasp"
+        },
+        {
+          "id": "crush",
+          "label": "Crush restrained target"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "5 ft from hand",
+      "checkDC": "Escape Strength check using the restrained target’s Action",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-0d0e43874f1d4aa9",
@@ -13093,9 +13106,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Initial fear save"
+        },
+        {
+          "id": "ongoing",
+          "label": "Frightened target’s end-of-turn save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-6522f5f2cb773783",
@@ -15556,9 +15579,9 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-0486c8623c593c1e",
@@ -15896,9 +15919,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Initial acid explosion"
+        },
+        {
+          "id": "delayed",
+          "label": "Delayed acid after failed initial save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-d9e789815361260e",
@@ -16196,9 +16229,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Initial fear save"
+        },
+        {
+          "id": "ongoing",
+          "label": "Frightened target’s end-of-turn save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-0728c355c79c3a08",
