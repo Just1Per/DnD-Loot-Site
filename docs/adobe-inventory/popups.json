@@ -467,7 +467,8 @@
         "adobe-magic-menu-browser.cjs",
         "adobe-pinned-items-browser.cjs",
         "item-conditional-automation-browser.cjs",
-        "item-scoped-passives-browser.cjs"
+        "item-scoped-passives-browser.cjs",
+        "magic-throwing-weapons-browser.cjs"
       ]
     },
     {
@@ -494,7 +495,8 @@
       "testReferences": [
         "adobe-item-resources-browser.cjs",
         "adobe-pinned-items-browser.cjs",
-        "item-scoped-passives-browser.cjs"
+        "item-scoped-passives-browser.cjs",
+        "magic-throwing-weapons-browser.cjs"
       ]
     },
     {
@@ -669,7 +671,8 @@
       "testReferences": [
         "adobe-combat-feats-equipment-browser.cjs",
         "adobe-feature-counters-browser.cjs",
-        "adobe-resource-menus-browser.cjs"
+        "adobe-resource-menus-browser.cjs",
+        "magic-throwing-weapons-browser.cjs"
       ]
     },
     {

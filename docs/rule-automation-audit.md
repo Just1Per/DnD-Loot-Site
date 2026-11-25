@@ -25,6 +25,8 @@ Source revision: `b9061583536101068b3a59d27e886d1fa664e366`. This inventory dist
 | Damage references still requiring manual resolution | 86 |
 | Pinned item facts | 1278 |
 | Reviewed magic throwing-weapon profiles | 5 |
+| Items with independent reviewed power counters | 2 |
+| Independent item power counters | 4 |
 | Item race prerequisite records with reviewed attunement gates | 7 |
 | Item class prerequisite records with reviewed attunement gates | 133 |
 | Items with structured ability metadata | 75 |
@@ -48,6 +50,7 @@ All 186 subclasses have an adapter. `partial-mechanics` still denotes table-reso
 - Item class-only attunement requirements apply to all represented magic benefits, with actual allocated class levels and the legacy Thief/Artificer exceptions; combined class/race/alignment and other prerequisites retain separate review. See `itemAttunementClasses` in the JSON.
 - Item ability metadata without a reviewed scope remains manual, including reading, consumables, attachment and inherited metadata needing its own source check: see `itemAbilityReview` in the JSON. Numerical ability metadata alone is not an activation or a permanent award.
 - Item bonus/immunity records without reviewed scope remain manual: see `itemBonusReview` in the JSON. Metadata may describe an activated aura or conditional power. Netherese Ring of Protection applies its general +1; its +4 disarm protection stays conditional. Stone of Ill Luck stays with the DM.
+- Whelm (DMG/XDMG) has independent once-per-dawn Shock Wave and shared divination counters. Declare current remaining uses first. Counter edits record uses; they do not cast, confirm attunement/holding, apply Stunned or activate other weapon powers.
 - Source training alternatives and unrepresented prerequisites remain guided table decisions.
 
 - Targets, recipient HP, positioning, auras, reactions and encounter time.

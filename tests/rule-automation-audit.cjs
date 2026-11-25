@@ -88,3 +88,8 @@ test('race prerequisite audit records seven reviewed scopes, five remaining sour
 test('reviewed throwing audit separates source-specific ranges, typed dice and actual target choices',()=>{
  const report=audit();assert.equal(report.summary.itemThrowingAdapters,5);assert.equal(report.itemThrowingWeapons.length,5);const modern=report.itemThrowingWeapons.find(row=>row.name==='Whelm'&&row.source==='XDMG').throwingScope,legacy=report.itemThrowingWeapons.find(row=>row.name==='Whelm'&&row.source==='DMG').throwingScope;assert.deepEqual(modern,{range:'60/180',type:'force',targets:{other:1,giant:4,construct:4,elemental:4},attunement:true,requiresTargetChoice:true,extraDice:'ranged hits only'});assert.equal(legacy.range,'20/60');assert.equal(legacy.type,'bludgeoning');assert.deepEqual(legacy.targets,{other:1,giant:2});
 });
+
+
+test('independent Whelm power audit distinguishes counters from activated powers and keeps both source DCs',()=>{
+ const report=audit();assert.equal(report.summary.itemPowerResourceAdapters,2);assert.equal(report.summary.itemPowerResourceCounters,4);for(const [source,dc]of [['DMG',15],['XDMG',20]]){const row=report.itemPowerResources.find(row=>row.source===source);assert.equal(row.name,'Whelm');assert.deepEqual(row.pools.map(p=>p.power),['shock','spells']);for(const pool of row.pools){assert.equal(pool.max,1);assert.equal(pool.recovery,'Dawn');assert.equal(pool.recordOnly,true);assert.equal(pool.requiresAttunement,true);}assert.match(row.pools[0].reminder,new RegExp('DC '+dc+' CON'));assert.match(row.pools[1].reminder,/One shared use for Detect Evil and Good or Locate Object/);}
+});

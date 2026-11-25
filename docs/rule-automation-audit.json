@@ -26,6 +26,8 @@
     "spellHealingFormulas": 16,
     "manualDamageReferences": 86,
     "itemFacts": 1278,
+    "itemPowerResourceAdapters": 2,
+    "itemPowerResourceCounters": 4,
     "itemThrowingAdapters": 5,
     "itemRaceRequirementFacts": 12,
     "itemRaceRequirementAdapters": 7,
@@ -17020,6 +17022,62 @@
       "actionDamageFormula": false,
       "compoundDamage": false,
       "manualDamageReference": false
+    }
+  ],
+  "itemPowerResources": [
+    {
+      "name": "Whelm",
+      "source": "DMG",
+      "edition": "2014",
+      "pools": [
+        {
+          "power": "shock",
+          "name": "Shock Wave",
+          "max": 1,
+          "unit": "uses",
+          "recovery": "Dawn",
+          "requiresAttunement": true,
+          "recordOnly": true,
+          "reminder": "Action · chosen grounded creatures within 60 ft of impact · DC 15 CON or Stunned for 1 minute; repeat at turn end. Requires the held, attuned weapon. Recording a use does not apply target conditions."
+        },
+        {
+          "power": "spells",
+          "name": "Divination spells",
+          "max": 1,
+          "unit": "uses",
+          "recovery": "Dawn",
+          "requiresAttunement": true,
+          "recordOnly": true,
+          "reminder": "One shared use for Detect Evil and Good or Locate Object; the source spell’s casting time and Concentration still apply. Attune and hold the weapon to use its powers. Recording a use does not cast, spend a spell slot or learn a spell."
+        }
+      ]
+    },
+    {
+      "name": "Whelm",
+      "source": "XDMG",
+      "edition": "2024",
+      "pools": [
+        {
+          "power": "shock",
+          "name": "Shock Wave",
+          "max": 1,
+          "unit": "uses",
+          "recovery": "Dawn",
+          "requiresAttunement": true,
+          "recordOnly": true,
+          "reminder": "Magic action · chosen grounded creatures within 60 ft of impact · DC 20 CON or Stunned for 1 minute; repeat at turn end. Requires the held, attuned weapon. Recording a use does not apply target conditions."
+        },
+        {
+          "power": "spells",
+          "name": "Divination spells",
+          "max": 1,
+          "unit": "uses",
+          "recovery": "Dawn",
+          "requiresAttunement": true,
+          "recordOnly": true,
+          "reminder": "One shared use for Detect Evil and Good or Locate Object; the source spell’s casting time and Concentration still apply. Attune and hold the weapon to use its powers. Recording a use does not cast, spend a spell slot or learn a spell."
+        }
+      ]
     }
   ],
   "itemImmunities": [
