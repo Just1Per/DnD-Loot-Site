@@ -53,7 +53,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   notificationsAvailable:()=>window.AccountNotifications?.enabled===true,
 });
 
-const ASSET_VERSION = "20261123-appearance-sdk-v101";
+const ASSET_VERSION = "20261125-map-management-v102";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -75,6 +75,7 @@ const FEATURE_FILES = [
   "./modules/campaign-journal-store.js",
   "./modules/campaign-map-store.js",
   "./modules/campaign-map-media.js",
+  "./modules/campaign-map-transfer.js",
   "./modules/campaign-one-shots-store.js",
   "./modules/campaign-creatures.js",
   "./modules/personal-creature-library.js",
