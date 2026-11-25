@@ -748,7 +748,7 @@ var CharacterClassFeatureChoices=(()=>{
     const duration=slot>=5?'Concentration, up to 24 hours':slot>=3?'Concentration, up to 8 hours':'Concentration, up to 1 hour';
     return{die,damage,duration,detail:'Hunter’s Mark deals '+damage+' against the marked target. Casting the spell makes no attack roll.',notes};
   }
-  function classResources(data,{level=1,mods={},attunedCount=0}={}){
+  function classResources(data,{level=1,mods={},featReports,attunedCount=0}={}){
     const choices=normalize((data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}).classFeatureChoices),spent=key=>{const raw=choices[key]?.[0];return /^\d{1,3}$/.test(raw||'')?Number(raw):0;},rows=[];
     const artificer=artificerFeatures(data,{level,attunedCount}),actual=artificer.level,source=artificer.source;
     if(artificer.active&&actual>=7){const key=source.id==='efa'?groupKey('2024','artificer','flash-of-genius-uses'):flashKey,used=spent(key),modifier=Math.max(-5,Math.min(10,Math.trunc(Number(mods.int)||0))),bonus=source.id==='efa'?Math.max(1,modifier):modifier,max=Math.max(1,modifier),short=artificer.flashShortRecovery;rows.push({id:'artificer-flash-of-genius',key,name:'Flash of Genius',source:source.label,className:'Artificer',level:actual,bonus,max,used,remaining:Math.max(0,max-used),resets:short?['short','long']:['long'],recovery:short==='all'?'Short or Long Rest recovery':short?'Short Rest: regain 1 use · Long Rest: all uses':'Long Rest recovery',shortRecovery:short,unit:'uses',useLabel:'Use reaction',undoLabel:'Undo use',description:'Reaction · 30 ft · '+(source.id==='efa'?'After you or a creature you can see fails an ability check or saving throw, add your Intelligence modifier (minimum +1).':'Add your Intelligence modifier to one ability check or saving throw made by you or a creature you can see.')+' Resolve the chosen roll at the table.'});}
@@ -786,7 +786,7 @@ var CharacterClassFeatureChoices=(()=>{
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);rows.push(...(domains?.derive(data,{level,mods}).resources||[]));
     const circles=globalThis.CharacterDruidSubclasses||(typeof require==='function'?require('./character-druid-subclasses'):null);rows.push(...(circles?.derive(data,{level,mods}).resources||[]));
     const archetypes=globalThis.CharacterFighterSubclasses||(typeof require==='function'?require('./character-fighter-subclasses'):null);rows.push(...(archetypes?.derive(data,{level,mods}).resources||[]));
-    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);rows.push(...(Runtime?.derive(data,{level,mods}).flatMap(r=>r.resources)||[]));rows.push(...(typeof CharacterOriginMechanics!=='undefined'?CharacterOriginMechanics:require('./character-origin-mechanics')).resources(data,level));
+    const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null);rows.push(...(Runtime?.derive(data,{level,mods}).flatMap(r=>r.resources)||[]));rows.push(...(typeof CharacterOriginMechanics!=='undefined'?CharacterOriginMechanics:require('./character-origin-mechanics')).resources(data,level));rows.push(...(globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null)).resources(data,{level,mods}));rows.push(...(globalThis.CharacterSpeciesForms||(typeof require==='function'?require('./character-species-forms'):null)).resources(data,{level,mods}));rows.push(...(typeof CharacterFeatRules!=='undefined'?CharacterFeatRules:require('./character-feat-rules')).spellResources(data,{level,reports:featReports}));
     if(edition==='2014'){
       const actual=actualClassLevel(data,'warlock',level),entry={classId:'warlock',level:actual},active=status({...data,adobe:data.adobe||data.rulesChoices?.grants?.__adobe?.data||{}},entry,edition).find(g=>g.id==='eldritch-invocations');
       for(const id of active?.valid||[]){const rule=Legacy.resources[id];if(!rule)continue;const key=groupKey(edition,'warlock',id+'-used'),used=spent(key),max=rule.pb?Math.ceil(level/4)+1:1;rows.push({id:'invocation-'+id,key,name:active.options.find(o=>o.id===id).name,source:'2014 Warlock invocation',className:'Warlock',max,used,remaining:Math.max(0,max-used),resets:rule.rest==='short'?['short','long']:['long'],recovery:rule.rest==='short'?'Short or Long Rest recovery':'Long Rest recovery',unit:'uses',useLabel:'Use feature',undoLabel:'Undo use',description:Legacy.details[id]});}
@@ -796,6 +796,7 @@ var CharacterClassFeatureChoices=(()=>{
      if(pact?.valid.includes('pact-of-the-talisman')){const key=groupKey(edition,'warlock','pact-talisman-used'),max=Math.ceil(level/4)+1,used=spent(key);rows.push({id:'invocation-pact-talisman',key,name:'Pact of the Talisman',source:'2014 Warlock',className:'Warlock',max,used,remaining:Math.max(0,max-used),resets:['long'],recovery:'Long Rest recovery',unit:'uses',description:'Its wearer adds 1d4 to a failed ability check.'});}
      if(fightingStyleState(data,{level}).rows.some(row=>row.option.id==='superior-technique')){const key=groupKey(edition,'fighter','superior-technique-used'),used=spent(key);rows.push({id:'invocation-superior-technique',key,name:'Superior Technique',source:'2014 Fighting Style',className:'Fighter',max:1,used,remaining:Math.max(0,1-used),resets:['short','long'],recovery:'Short or Long Rest recovery',unit:'dice',description:'One additional superiority die: d6, or your existing superiority die size. Apply the chosen maneuver at the table.'});}
     }
+    const featForm=globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null);if(featForm?.state(data,{level,reports:featReports}).active)return rows.map(row=>row.spellCasting||row.id.startsWith('origin-')?{...row,useDisabled:true}:row);
     return rows;
   }
   function useChannelDivinity(data,id,effectId,context={}){
@@ -818,8 +819,9 @@ var CharacterClassFeatureChoices=(()=>{
     data.adobe=next;return true;
   }
   function setClassResourceUsed(data,id,value,context){
-    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.unlimited||resource.managedSlots||resource.managedWildShape||!Number.isInteger(value)||value<0||value>resource.max&&value>=resource.used||(resource.channelEffects||resource.managedActivation)&&value>resource.used)return false;
-    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{};data.adobe={...stored,classFeatureChoices:{...normalize(stored.classFeatureChoices),[resource.key]:[String(value)]}};return true;
+    const resource=classResources(data,context).find(row=>row.id===id);if(!resource||resource.manualCounterLocked||resource.unlimited||resource.managedSlots||resource.managedWildShape||!Number.isInteger(value)||value<0||value>resource.max&&value>=resource.used||(resource.channelEffects||resource.managedActivation||resource.useDisabled)&&value>resource.used)return false;
+    if(resource.speciesResource)return(globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null)).setUsed(data,resource.id,value,context);
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices={...normalize(stored.classFeatureChoices),[resource.key]:[String(value)]};if(Object.keys(choices).length>100)return false;data.adobe={...stored,classFeatureChoices:choices};return true;
   }
   function changeClassResource(data,id,delta,context){
     const resource=classResources(data,context).find(row=>row.id===id);if(!resource||!Number.isInteger(delta)||delta===0||Math.abs(delta)>100||!resource.variableCost&&![1,-1].includes(delta)||delta>0&&(delta>resource.remaining||resource.maxSpend&&delta>resource.maxSpend)||delta<0&&-delta>resource.used)return false;
@@ -829,7 +831,15 @@ var CharacterClassFeatureChoices=(()=>{
     if(!['short','long','initiative','turn'].includes(event))return;
     const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},choices=normalize(stored.classFeatureChoices),edition=data.build?.edition==='2024'?'2024':'2014',entries=stored.classLevels||[],total=Number(context.level)||(entries.length?Math.min(20,entries.reduce((sum,entry)=>sum+Math.max(0,Number(entry.level)||0),0)):1),rest=event==='short'||event==='long',updates={};
     for(const row of (typeof CharacterOriginMechanics!=='undefined'?CharacterOriginMechanics:require('./character-origin-mechanics')).resources(data,total))if(row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
-    for(const row of classResources(data,{...context,level:total}))if(row.id.startsWith('invocation-')&&row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
+    for(const row of classResources(data,{...context,level:total}))if((row.id.startsWith('invocation-')||row.id.startsWith('feat-spell-'))&&row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
+    // Daily spell ledgers recover even when their feat, rune or species is currently unavailable.
+    if(event==='long')for(const [key,values]of Object.entries(choices))if(/^(?:feat:[a-z0-9-]{1,45}:(?:[A-Za-z0-9-]{1,16}|aux-[a-z0-9-]{1,24})-used|origin:[a-z0-9:-]+-used)$/.test(key)&&/^\d{1,3}$/.test(values[0]||''))updates[key]=['0'];
+    // Inscribed runes and imbued cards expire at Long Rest; the player confirms new preparation explicitly.
+    if(event==='long'){
+      const feats=globalThis.CharacterFeatRules||(typeof require==='function'?require('./character-feat-rules'):null);
+      const selected=new Map((feats?.entries(data,total)||[]).map(entry=>[entry.key,entry.id]));
+      for(const [key,value]of Object.entries(data.rulesChoices?.effects||{})){const def=feats?.definitions[selected.get(key)||key.replace(/--\d+$/,'')];if(def?.source==='BGG'&&def.name==='Rune Shaper'||def?.source==='BMT'&&def.name==='Cartomancer')value.spellActive=Array(8).fill(false);}
+    }
     const paths=globalThis.CharacterBarbarianSubclasses||(typeof require==='function'?require('./character-barbarian-subclasses'):null);for(const row of paths?.derive(data,{level:total,mods:context.mods||{}}).resources||[])if(row.resets.includes(event)&&choices[row.key])updates[row.key]=['0'];
     const monkKey=groupKey(edition,'monk',edition==='2024'?'focus-points-spent':'ki-points-spent'),hasMonk=entries.length?monkLevels(data,total)>=2:data.build?.classId==='monk';
     const source=artificerSource(data),artificer=artificerLevels(data,total),currentFlashKey=source.id==='efa'?groupKey('2024','artificer','flash-of-genius-uses'):flashKey;
@@ -858,6 +868,8 @@ var CharacterClassFeatureChoices=(()=>{
       }
     }
     if(Object.keys(updates).length)data.adobe={...stored,classFeatureChoices:{...choices,...updates}};
+    (globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null))?.onEvent(data,event);
+    (globalThis.CharacterSpeciesForms||(typeof require==='function'?require('./character-species-forms'):null))?.onEvent(data,event,{level:total,mods:context.mods||{}});
     paths?.onEvent(data,event,{level:total});
     const colleges=globalThis.CharacterBardSubclasses||(typeof require==='function'?require('./character-bard-subclasses'):null);colleges?.onEvent(data,event,{level:total,mods:context.mods||{}});
     const domains=globalThis.CharacterClericSubclasses||(typeof require==='function'?require('./character-cleric-subclasses'):null);domains?.onEvent(data,event,{level:total,mods:context.mods||{}});
@@ -867,6 +879,7 @@ var CharacterClassFeatureChoices=(()=>{
     const rage=globalThis.CharacterBarbarianRage||(typeof require==='function'?require('./character-barbarian-rage'):null);rage?.onRest(data,event,{level:total});
     const companion=globalThis.CharacterWildCompanion||(typeof require==='function'?require('./character-wild-companion'):null);companion?.onRest(data,event);
     const conversions=globalThis.CharacterDruidConversions||(typeof require==='function'?require('./character-druid-conversions'):null);conversions?.onRest(data,event);
+    (globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null))?.onEvent(data,event,{...context,level:total});
     const intervention=globalThis.CharacterClericIntervention||(typeof require==='function'?require('./character-cleric-intervention'):null);intervention?.onRest(data,event);
   }
   function saveTraining(data,{level=1}={}){
@@ -984,7 +997,9 @@ var CharacterClassFeatureChoices=(()=>{
   function normalize(raw={}){
     const out={};
     if(!raw||typeof raw!=='object'||Array.isArray(raw))return out;
+    const Species=globalThis.CharacterSpeciesResources||(typeof require==='function'?require('./character-species-resources'):null);
     for(const [key,value] of Object.entries(raw).slice(0,100)){
+      if(Species?.invalidChoice(key,value)){out[key]=['invalid'];continue;}
       if(!/^[a-z0-9:-]{1,120}$/i.test(key)||!Array.isArray(value))continue;
       out[key]=value.slice(0,20).map(v=>safe(v));
     }

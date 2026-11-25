@@ -1,0 +1,222 @@
+{
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "basis": "Pinned spellAttack metadata is authoritative; an attack mentioned in an effect is not necessarily a spell attack. Reviewed event overrides remain separate.",
+  "records": [
+    {
+      "id": "Spell-phb-f55d2705ebcead1e",
+      "name": "Inflict Wounds",
+      "source": "PHB",
+      "edition": "2014",
+      "importedAttack": false,
+      "sourceAttack": true
+    },
+    {
+      "id": "Spell-xphb-0fd441bf0e65724c",
+      "name": "Bane",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-d32c06a1283e7420",
+      "name": "Bestow Curse",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-367f4dbdc32ec330",
+      "name": "Bigby's Hand",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": false,
+      "sourceAttack": true
+    },
+    {
+      "id": "Spell-xphb-d2ba2144f6cd7505",
+      "name": "Bless",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-e42932b7a79c40e4",
+      "name": "Blur",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-0f69b0d91e87dafa",
+      "name": "Dispel Evil and Good",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-a65b5b6b8e0f21f9",
+      "name": "Faerie Fire",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-8888a8e2d22c716b",
+      "name": "Fire Shield",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-e42b0ace41dec9ba",
+      "name": "Foresight",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-57a5588539b1595b",
+      "name": "Heat Metal",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-128df13c1e54ffaa",
+      "name": "Hex",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-aec0c287b096b451",
+      "name": "Holy Aura",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-700ff9749cf91cd8",
+      "name": "Hunter's Mark",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-f6579668e31fda08",
+      "name": "Invisibility",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-38edb49321c75a4c",
+      "name": "Magic Circle",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-6eee28a0a99bc2e8",
+      "name": "Magic Weapon",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-9cfdd97c7bba431e",
+      "name": "Mirror Image",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-a54754cf13316d47",
+      "name": "Mislead",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-2d94985d2887597b",
+      "name": "Otto's Irresistible Dance",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-6522f5f2cb773783",
+      "name": "Phantasmal Killer",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-6051b076ca50f4c7",
+      "name": "Protection from Evil and Good",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-24cac981f45d9877",
+      "name": "Ray of Enfeeblement",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-c8a30c5e0666aad2",
+      "name": "Sanctuary",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-a01ae6bc436dc0f8",
+      "name": "Shining Smite",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    },
+    {
+      "id": "Spell-xphb-152d5d0c1a63c487",
+      "name": "Spiritual Weapon",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": false,
+      "sourceAttack": true
+    },
+    {
+      "id": "Spell-xphb-e4e2742a0c2fdfb8",
+      "name": "Vicious Mockery",
+      "source": "XPHB",
+      "edition": "2024",
+      "importedAttack": true,
+      "sourceAttack": false
+    }
+  ]
+}

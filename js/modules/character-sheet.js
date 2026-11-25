@@ -425,12 +425,15 @@ function readSheetForm() {
     level: Number(data.identity.level)
   };
   s.data = CharacterSheetModel.normalize(data);
+  globalThis.CharacterFeatForms?.endInvalid(s.data,{level:s.identity.level});
+  globalThis.CharacterSpeciesForms?.endInvalid(s.data,{level:s.identity.level});
   renderCharacterJournal();
 }
 function updateSheetCalculations() {
   const s = sheetSession;
   if (!s)
     return;
+  globalThis.CharacterSpeciesForms?.endInvalid(s.data,{level:s.identity?.level||s.character.level||1});
   const d = CharacterSheetModel.derive(s.data, s.identity?.level || s.character.level || 1, sheetEquipmentLoot());
   renderEquipmentCalculations(d);
   renderAttackActionSummary(d);
@@ -439,6 +442,7 @@ function updateSheetCalculations() {
   const validation = renderCharacterOverview(d);
   updateCharacterPortrait();
   updateCharacterPlayUI(d);
+  globalThis.renderCompanionCreaturePickers?.(d);
   updateInventoryTotals(d);
   renderInventoryDefense(d);
   if (typeof renderFeatCombatResources === 'function') renderFeatCombatResources(d);
@@ -1025,7 +1029,7 @@ function updateSheetBuildSummary(derived) {
       t
     ]), b.raceTools[i], 'Choose proficiency');
   }
-  show('build.raceAbility', race?.spellChoice || race?.cantripPool || race?.spells?.some(spell => spell.ability === 'choice'));
+  show('build.raceAbility', race?.featureAbilityChoice || race?.spellChoice || race?.cantripPool || race?.spells?.some(spell => spell.ability === 'choice'));
   show('build.raceCantrip', race?.cantripPool);
   setOptions('build.raceCantrip', (race?.cantripPool === 'sorcerer' ? [
     ...R.cantrips,

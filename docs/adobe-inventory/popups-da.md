@@ -11,7 +11,7 @@ Der er 48 registrerede popup-familier og 29 editor-routes.
 | sheetAttackPicker | shared-dialog | Add/edit attack fra Combat | Bevar action-renderer og dens handlers; åbnes også fra bridge. | [character-action-ui.js:6](../../js/modules/character-action-ui.js#L6) |
 | adobeAbilityDialog | adobe-dialog | Ability-/skill-felter eller Special features | Eget draft; bruger fælles session/form-sync. | [character-adobe-ability-ui.js:7](../../js/modules/character-adobe-ability-ui.js#L7) |
 | adobeAdditionalSpellDialog | adobe-dialog | Add other spells ved spell-ark, spell sources og Special features | Eget katalog-/håndskrevet draft; uafhængig additional-kilde bevarer class-grænser og fælles private spell-data. | [character-adobe-additional-spell-ui.js:12](../../js/modules/character-adobe-additional-spell-ui.js#L12) |
-| adobeAttackChoiceMenu | adobe-menu | Attack name-felt | Kan åbne spellvalg og attack row-menu. | [character-adobe-attack-menu.js:15](../../js/modules/character-adobe-attack-menu.js#L15) |
+| adobeAttackChoiceMenu | adobe-menu | Attack name-felt | Kan åbne spellvalg og attack row-menu. | [character-adobe-attack-menu.js:19](../../js/modules/character-adobe-attack-menu.js#L19) |
 | adobeBackgroundChoiceDialog | adobe-menu | Baggrundens traits/ideals/bonds/flaws og Background Menu | Forslag og egne tekster; ingen flytning af Standard-panel. | [character-adobe-background-choice-ui.js:16](../../js/modules/character-adobe-background-choice-ui.js#L16) |
 | adobeBackgroundFeatureDialog | adobe-dialog | Background feature → Custom | Eget navn/tekst; bevarer øvrige baggrundsvalg. | [character-adobe-background-feature-ui.js:5](../../js/modules/character-adobe-background-feature-ui.js#L5) |
 | adobeChoiceDialog | adobe-dialog | Søgbare race/background/class/weapon/andre valglister | Generisk feltpicker; actual field descriptor afgør effekten. | [character-adobe-choice-ui.js:24](../../js/modules/character-adobe-choice-ui.js#L24) |
@@ -54,7 +54,7 @@ Der er 48 registrerede popup-familier og 29 editor-routes.
 | adobeWeightDialog | adobe-dialog | Weight Carried-knappen eller weight-route | Native draft; gammel editorTargets selector er skygget af native route. | [character-paper-weight-ui.js:10](../../js/modules/character-paper-weight-ui.js#L10) |
 | personalFeatDialog | adobe-dialog | Native Feats → Create/Edit personal feat | Egen draft og delete-confirmation; private save/data. | [character-personal-feat-ui.js:8](../../js/modules/character-personal-feat-ui.js#L8) |
 | sheetRestRecovery | shared-dialog | Heal/Comp.Heal og shared rest-controls | Selvstændigt HP/Hit Dice-preview; ikke en komplet reset af alle feature pools. | [character-rest-recovery-ui.js:8](../../js/modules/character-rest-recovery-ui.js#L8) |
-| sheetPrintDialog | standard-only | Standard print fallback | Adobe print interceptes og bruger printConnected/preparePrint; behold fælles print-hooks under udfasning. | [character-sheet.js:645](../../js/modules/character-sheet.js#L645) |
+| sheetPrintDialog | standard-only | Standard print fallback | Adobe print interceptes og bruger printConnected/preparePrint; behold fælles print-hooks under udfasning. | [character-sheet.js:649](../../js/modules/character-sheet.js#L649) |
 | sheetSpellGenerator | nested-standard-dialog | Spell Slots/shared spell-controls → Generate | Legacy generator kan nås inde i spellSlots-bridge; native Choose spells erstatter ikke alle nested controls. | [character-spellcasting-ui.js:61](../../js/modules/character-spellcasting-ui.js#L61) |
 
 ## Samtlige editor-routes

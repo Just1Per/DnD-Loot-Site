@@ -1,0 +1,1404 @@
+{
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "scope": "Reviewed structured feat spell facts and our own concise instructions. No source entries.",
+  "feats": {
+    "PHB|Ritual Caster": {
+      "spellPackages": [
+        {
+          "name": "Bard ritual book",
+          "ability": "cha",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "bard"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "bard",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Cleric ritual book",
+          "ability": "wis",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "cleric"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "cleric",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Druid ritual book",
+          "ability": "wis",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "druid"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "druid",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Sorcerer ritual book",
+          "ability": "cha",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "sorcerer"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "sorcerer",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Warlock ritual book",
+          "ability": "cha",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "warlock"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "warlock",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        },
+        {
+          "name": "Wizard ritual book",
+          "ability": "int",
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 2,
+                "levels": [
+                  1
+                ],
+                "classes": [
+                  "wizard"
+                ],
+                "ritual": true
+              },
+              "unlock": 1,
+              "usage": "Ritual only; hold your ritual book and add 10 minutes"
+            }
+          ],
+          "copyBook": {
+            "classId": "wizard",
+            "maxSpells": 40
+          },
+          "instructions": "The initial two spells must be level-1 rituals from the selected list. Record additional written rituals after resolving copying: 2 hours and 50 gp per spell level. Copied spells must match this list and ritual tag; the copying level limit is half character level, rounded up. This control spends no coins and grants no ordinary slot casting."
+        }
+      ]
+    },
+    "XPHB|Ritual Caster": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [],
+        "choices": [
+          {
+            "pool": {
+              "countFrom": "proficiency",
+              "levels": [
+                1
+              ],
+              "ritual": true
+            },
+            "unlock": 4,
+            "usage": "Always prepared; cast as a ritual or use an appropriate spell slot"
+          }
+        ],
+        "auxResources": [
+          {
+            "id": "quick-ritual",
+            "name": "Quick Ritual",
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "description": "Choose one prepared ritual spell and cast it using its normal casting time, without a slot or the extra ritual time. This counter records the use; it does not cast the spell.",
+            "spellCasting": true
+          }
+        ],
+        "instructions": "The number of selected level-1 rituals follows Proficiency Bonus. They are always prepared and use the ability increased by this feat. Quick Ritual recovers on Long Rest; ordinary ritual casting has no use pool."
+      }
+    },
+    "BGG|Rune Shaper": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "int",
+            "wis",
+            "cha"
+          ]
+        },
+        "grants": [
+          {
+            "ref": "comprehend languages",
+            "unlock": 1,
+            "usage": "Once per Long Rest; may also use an appropriate spell slot",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [
+          {
+            "pool": {
+              "countFrom": "half-proficiency",
+              "names": [
+                "fog cloud",
+                "inflict wounds",
+                "chromatic orb",
+                "disguise self",
+                "burning hands",
+                "speak with animals",
+                "armor of agathys",
+                "goodberry",
+                "longstrider",
+                "command",
+                "entangle",
+                "sanctuary",
+                "thunderwave"
+              ]
+            },
+            "unlock": 1,
+            "activation": "inscribed-carried",
+            "usage": "Invoke this known rune once per Long Rest without a slot or material components; its marked object must be worn or carried. Spell slots may also be used while the rune is available.",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "instructions": "Choose runes equal to half Proficiency Bonus, rounded down. At Long Rest, inscribe each known rune on a touched eligible nonmagical object. Mark a rune available only while its inscribed object is on your person; otherwise its spell is inactive. Change known runes only when gaining a level. Comprehend Languages has a separate daily use."
+      }
+    },
+    "ABH|Cloying Mists": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [
+          {
+            "ref": "fog cloud|xphb",
+            "unlock": 4,
+            "usage": "Always prepared; one free casting per Long Rest; appropriate slots may also be used",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [],
+        "instructions": "Whenever you cast Fog Cloud, extinguish nonmagical flames in its sphere. Creatures other than you and your allies have Speed reduced by 5 ft while inside; resolve occupants and movement at the table."
+      }
+    },
+    "ABH|Treacherous Allure": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [
+          {
+            "ref": "charm person|xphb",
+            "unlock": 4,
+            "usage": "Always prepared; one free casting per Long Rest; appropriate slots may also be used",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [],
+        "instructions": "You have Advantage on attack rolls against Charmed creatures. Confirm the target condition before rolling; no permanent attack bonus is added."
+      }
+    },
+    "ABH|Vampire Touched": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [
+          {
+            "ref": "spider climb|xphb",
+            "unlock": 4,
+            "usage": "Always prepared; the free casting is self-only and recovers on Long Rest. Ordinary slot casting keeps its usual targeting",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [
+          {
+            "pool": {
+              "count": 1,
+              "levels": [
+                1
+              ],
+              "schools": [
+                "e",
+                "i"
+              ]
+            },
+            "unlock": 4,
+            "usage": "Always prepared; one free casting per Long Rest; appropriate slots may also be used",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "instructions": "Choose one level-1 Enchantment or Illusion spell. It and Spider Climb use the ability increased by this feat and have separate daily uses. The self-only restriction applies to the free Spider Climb casting."
+      }
+    },
+    "SatO|Outlands Envoy": {
+      "spells": {
+        "ability": "dependency",
+        "inheritFeat": {
+          "source": "SatO",
+          "name": "Scion of the Outer Planes",
+          "package": "The Outlands"
+        },
+        "grants": [
+          {
+            "ref": "misty step",
+            "unlock": 4,
+            "usage": "One free casting per Long Rest; appropriate slots may also be used",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          },
+          {
+            "ref": "tongues",
+            "unlock": 4,
+            "usage": "Cast Tongues through this feat without material components, using its once-per-Long-Rest free use or an appropriate spell slot",
+            "max": 1,
+            "resets": [
+              "long"
+            ]
+          }
+        ],
+        "choices": [],
+        "instructions": "Uses the casting ability already selected for Scion of the Outer Planes (The Outlands), regardless of this feat's ability increase. Complete that Scion package first. Each spell has its own Long Rest use."
+      }
+    },
+    "AU|Abjuration Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "shield|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "lesser restoration|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "protection from energy|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "banishment|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "mass cure wounds|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. After an Abjuration spell cast with a slot, choose yourself or one visible creature within 30 ft to receive temporary HP equal to twice the spent slot level. Apply temporary HP to the chosen creature explicitly; they do not stack."
+      }
+    },
+    "AU|Conjuration Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "entangle|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "misty step|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "conjure animals|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "dimension door|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "conjure elemental|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. While concentrating on a Conjuration spell, add the modifier of the ability increased by this feat to Constitution saves made to maintain that Concentration. Other Constitution saves are unchanged."
+      }
+    },
+    "AU|Divination Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "detect evil and good|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "mind spike|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "clairvoyance|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "divination|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "scrying|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. Prescient Intervention: Reaction when a visible creature within 60 ft makes a D20 Test; choose Advantage or Disadvantage on that roll. One use per Long Rest. Casting a Divination spell with a slot also restores this use; use Undo only after that event or to correct a recorded use.",
+        "auxResources": [
+          {
+            "id": "prescient-intervention",
+            "name": "Prescient Intervention",
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "description": "Prescient Intervention: Reaction when a visible creature within 60 ft makes a D20 Test; choose Advantage or Disadvantage on that roll. One use per Long Rest. Casting a Divination spell with a slot also restores this use; use Undo only after that event or to correct a recorded use.",
+            "useLabel": "Use reaction",
+            "undoLabel": "Regain after Divination slot cast / undo"
+          }
+        ]
+      }
+    },
+    "AU|Enchantment Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "dissonant whispers|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "enthrall|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "hold person|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "dominate beast|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "modify memory|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. Enchantment spells cast with a slot need no verbal, somatic or ordinary material components. Costly or consumed materials are still required."
+      }
+    },
+    "AU|Evocation Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "chromatic orb|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "shatter|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "fireball|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "vitriolic sphere|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "wall of force|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. Once per turn after casting a damaging Evocation spell, you may spend up to two unspent Hit Dice. Roll them and add their total to one damage roll. Record the Hit Dice spent explicitly; no fixed damage bonus is added."
+      }
+    },
+    "AU|Illusion Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "silent image|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "phantasmal force|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "major image|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "hallucinatory terrain|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "seeming|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. Illusion spells cast with a slot need no verbal, somatic or ordinary material components; costly or consumed materials remain required. Investigation checks to discern your spell illusions have Disadvantage."
+      }
+    },
+    "AU|Necromancy Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "inflict wounds|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "ray of enfeeblement|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "vampiric touch|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "blight|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "raise dead|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. After a Necromancy spell cast with a slot, you may spend up to two unspent Hit Dice. Roll them and heal yourself by their total plus the spent slot level. Record dice spending and healing explicitly."
+      }
+    },
+    "AU|Transmutation Adept": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "jump|xphb",
+            "unlock": 4,
+            "slotLevel": 1,
+            "usage": "Always prepared after reaching spell-slot level 1. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "spider climb|xphb",
+            "unlock": 4,
+            "slotLevel": 2,
+            "usage": "Always prepared after reaching spell-slot level 2. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "slow|xphb",
+            "unlock": 4,
+            "slotLevel": 3,
+            "usage": "Always prepared after reaching spell-slot level 3. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "polymorph|xphb",
+            "unlock": 4,
+            "slotLevel": 4,
+            "usage": "Always prepared after reaching spell-slot level 4. Casting uses an appropriate spell slot; this feat gives no free casting."
+          },
+          {
+            "ref": "animate objects|xphb",
+            "unlock": 4,
+            "slotLevel": 5,
+            "usage": "Always prepared after reaching spell-slot level 5. Casting uses an appropriate spell slot; this feat gives no free casting."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the spellcasting ability agreed with your DM for these additional spells; this is separate from the feat ability increase. Spell unlocks follow actual ordinary and Pact Magic slot levels, including multiclass slots. On your turn after casting a Transmutation spell with a slot, Speed increases by five times the spent slot level, in feet, until the end of that turn. Apply the temporary movement only for that turn."
+      }
+    },
+    "FRHoF|Boon of Revelry": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "grants": [
+          {
+            "ref": "otto's irresistible dance|xphb",
+            "unlock": 19,
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "usage": "Always prepared; one free casting per Long Rest, or use an appropriate slot. Cast through this feat without spell components; damage cannot break its Concentration."
+          }
+        ],
+        "choices": [],
+        "instructions": "Choose the casting ability agreed with your DM for this feat. Other ways to lose Concentration still apply. A creature Charmed by this spell after failing its save cannot cast spells with verbal components; it sings if able. Resolve the target and condition at the table."
+      }
+    },
+    "BMT|Cartomancer": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true,
+          "label": "Prestidigitation ability \u00b7 agree with your DM"
+        },
+        "grants": [
+          {
+            "ref": "prestidigitation#c",
+            "unlock": 4,
+            "usage": "At will; stage-magic effects may conceal verbal and somatic components as ordinary conversation and card handling"
+          }
+        ],
+        "choices": [
+          {
+            "pool": {
+              "count": 1,
+              "levels": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "classesFromCharacter": true,
+              "maxSlot": true,
+              "actionTime": true,
+              "chooseClass": true,
+              "classEdition": true
+            },
+            "unlock": 4,
+            "activation": "prepared-card",
+            "activationLabel": "This card was imbued at my last Long Rest and is still within its 8-hour duration",
+            "label": "Hidden Ace spell",
+            "usage": "Hidden Ace: prepare at Long Rest; lasts 8 hours. A Bonus Action casts the card spell and consumes the card. Resolve spell components and any spell-slot cost with your DM; this counter does not waive them.",
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "trackingOnly": true,
+            "unit": "cards",
+            "useLabel": "Use imbued card",
+            "undoLabel": "Undo card use",
+            "hideWhenSpent": true,
+            "sharedPool": "hidden-ace"
+          }
+        ],
+        "instructions": "A card deck can be your spellcasting focus. Hidden Ace must be on an actual class spell list, have a 1-action casting time and be a level for which you have slots. Class learning/preparation reach does not restrict this card choice. Confirm preparation and the 8-hour duration explicitly; Long Rest clears that confirmation. The source does not explicitly waive a spell-slot cost. Choose the spellcasting ability agreed with your DM. Hidden Ace uses the selected class's actual casting ability and class spell bonuses; the separate reviewed ability applies only to Prestidigitation."
+      }
+    },
+    "SCC|Strixhaven Mascot": {
+      "spells": {
+        "ability": {
+          "choose": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+          ],
+          "review": true
+        },
+        "requiredFeat": {
+          "source": "SCC",
+          "name": "Strixhaven Initiate",
+          "requirePackage": true
+        },
+        "mascots": {
+          "Lorehold": "Spirit Statue Mascot",
+          "Prismari": "Art Elemental Mascot",
+          "Quandrix": "Fractal Mascot",
+          "Silverquill": "Inkling Mascot",
+          "Witherbloom": "Pest Mascot"
+        },
+        "grants": [
+          {
+            "ref": "find familiar",
+            "unlock": 4,
+            "usage": "Ritual only; add 10 minutes and provide the normal components. Choose the mascot for your selected Strixhaven college; this ritual has no daily casting limit."
+          }
+        ],
+        "choices": [],
+        "auxResources": [
+          {
+            "id": "mascot-swap",
+            "name": "Mascot Teleport Swap",
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "description": "Action: swap places with your mascot familiar within 60 ft. A destination too small causes failure and still wastes the use. After the free daily use, pay a level-2-or-higher slot explicitly for each further swap; leave this free-use counter spent. Replacing one of your Attack-action attacks lets the mascot attack with its Reaction.",
+            "useLabel": "Use free teleport swap"
+          }
+        ],
+        "instructions": "Complete Strixhaven Initiate and its college first. Find Familiar is a ritual, with no extra free pool; choose the ritual casting ability agreed with your DM. Keep the companion's own HP and reaction. Teleport positions, distance and destination size are resolved at the table; a further swap requires an explicitly spent level-2-or-higher slot."
+      }
+    },
+    "AU|Boon of Magic School Mastery": {
+      "spellPackages": [
+        {
+          "name": "Abjuration",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "a"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "a"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Abjuration. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Conjuration",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "c"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "c"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Conjuration. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Divination",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "d"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "d"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Divination. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Enchantment",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "e"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "e"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Enchantment. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Evocation",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "v"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "v"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Evocation. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Illusion",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "i"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "i"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Illusion. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Necromancy",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "n"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "n"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Necromancy. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        },
+        {
+          "name": "Transmutation",
+          "ability": {
+            "choose": [
+              "str",
+              "dex",
+              "con",
+              "int",
+              "wis",
+              "cha"
+            ],
+            "review": true
+          },
+          "grants": [],
+          "choices": [
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  1
+                ],
+                "schools": [
+                  "t"
+                ],
+                "classesFromCharacter": true
+              },
+              "unlock": 19,
+              "label": "Rote Casting spell",
+              "usage": "Rote Casting: always prepared; cast at level 1 at will without a slot or spell components. Appropriate spell slots may also be used."
+            },
+            {
+              "pool": {
+                "count": 1,
+                "levels": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ],
+                "schools": [
+                  "t"
+                ]
+              },
+              "unlock": 19,
+              "label": "Signature Arcanum spell",
+              "usage": "Signature Arcanum: always prepared; one free casting per Long Rest, or use an appropriate slot.",
+              "max": 1,
+              "resets": [
+                "long"
+              ],
+              "sharedPool": "signature-arcanum"
+            }
+          ],
+          "instructions": "Mastered school: Transmutation. Rote Casting must be a level-1 spell from an actual class spell list; Signature Arcanum may be any spell of this school up to level 7. Choose the casting ability agreed with your DM. Repeating this feat requires a different school each time."
+        }
+      ]
+    },
+    "ABH|Boon of Misty Escape": {
+      "spells": {
+        "ability": "inherit",
+        "grants": [
+          {
+            "ref": "gaseous form|xphb",
+            "unlock": 19,
+            "referenceOnly": true,
+            "usage": "Conditional feat transformation only; use the dedicated Misty Escape controls after a nonfatal drop to 0 HP. This is not a normal free-casting grant."
+          }
+        ],
+        "choices": [],
+        "auxResources": [
+          {
+            "id": "misty-escape",
+            "name": "Misty Escape",
+            "unlock": 19,
+            "max": 1,
+            "resets": [
+              "long"
+            ],
+            "managedActivation": true,
+            "manualCounterLocked": true,
+            "counterFailClosed": true,
+            "description": "Confirm a nonfatal drop to 0 HP in Misty Escape controls. Activation sets HP to 1 and starts a self-only Gaseous Form with flight 20 ft and 10 HP regeneration on your own turns. Concentration and duration end explicitly; one use per Long Rest."
+          }
+        ],
+        "instructions": "Use the dedicated Misty Escape controls, not ordinary spell casting. The trigger requires damage reducing you to 0 HP without killing you outright. Remain at 1 HP and cast Gaseous Form on yourself without an action or slot. Flight is 20 ft; heal 10 HP at the start of your turns. Concentration and the 1-hour duration still apply."
+      }
+    }
+  }
+}

@@ -53,7 +53,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   notificationsAvailable:()=>window.AccountNotifications?.enabled===true,
 });
 
-const ASSET_VERSION = "20261123-appearance-sdk-v101";
+const ASSET_VERSION = "20261125-rule-automation-v140";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -93,6 +93,10 @@ const FEATURE_FILES = [
   "./modules/campaign-appearance-store.js",
   "./modules/core.js",
   "./modules/character-legacy-options.js",
+  "./modules/character-species-resource-data.js",
+  "./modules/character-species-resources.js",
+  "./modules/character-species-forms.js",
+  "./modules/character-species-healing.js",
   "./modules/character-origin-facts.js",
   "./modules/character-origin-mechanics.js",
   "./modules/character-race-catalog.js",
@@ -116,7 +120,9 @@ const FEATURE_FILES = [
   "./modules/character-feat-data.js",
   "./modules/character-feat-reference.js",
   "./modules/character-personal-feats.js",
+  "./modules/character-feat-mechanics-data.js",
   "./modules/character-feat-rules.js",
+  "./modules/character-feat-forms.js",
   "./modules/character-spell-effect-data.js",
   "./modules/character-spell-summaries.js",
   "./modules/character-catalog.js",
@@ -282,6 +288,7 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-creature-data-2.js",
     "./modules/character-creature-data-3.js",
     "./modules/character-creature-data-4.js",
+    "./modules/character-mascot-data.js",
     "./modules/character-adobe-builder-ui.js",
     "./modules/character-hit-point-ui.js",
     "./modules/character-companion-rules.js",
@@ -325,6 +332,9 @@ window.CampaignOptionalFeatures=createOptionalFeatureLoader({
     "./modules/character-size-guidance-ui.js",
     "./modules/character-personal-feat-ui.js",
     "./modules/character-adobe-feat-ui.js",
+    "./modules/character-feat-forms-ui.js",
+    "./modules/character-species-forms-ui.js",
+    "./modules/character-species-healing-ui.js",
     "./modules/character-adobe-spell-ui.js",
     "./modules/character-adobe-additional-spell-ui.js",
     "./modules/character-adobe-spell-list-ui.js",

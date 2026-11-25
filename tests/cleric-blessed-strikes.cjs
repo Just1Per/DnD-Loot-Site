@@ -53,7 +53,7 @@ const effect = (d, name, level = 14, classId = "cleric") =>
   );
 const action = (d, name, level = 14, classId = "cleric") =>
   A.resolve(
-    { kind: "spell", ref: spell(name).id + "::" + classId },
+    { kind: "spell", ref: spell(name).id + "::" + classId, ...(name === "Toll the Dead" ? { effect: "wounded" } : {}) },
     d,
     level,
     M.derive(d, level),
@@ -117,6 +117,7 @@ test("check dice, non-damaging cantrips and weapon enchantments do not gain dama
   ])
     assert.equal(effect(d, name), null);
   assert.equal(effect(d, "Toll the Dead").damageBonus, 3);
+  assert.equal(action(d, "Toll the Dead").damage, "3d12 + 3 necrotic");
   assert.match(
     action(d, "Toll the Dead").notes.join(" "),
     /Potent Spellcasting.*\+3/,

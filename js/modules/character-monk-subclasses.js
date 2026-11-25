@@ -56,12 +56,12 @@ var CharacterMonkSubclasses=(()=>{
   }
   return out;
  }
- function use(d,id,{level=1,mods={},roll=0,points=null,self=false}={}){
+ function use(d,id,{level=1,mods={},roll=0,points=null,self=false,loot=[]}={}){
   const r=derive(d,{level,mods}),a=r.actions.find(a=>a.id===id);if(!a)return null;const C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null),pools=C.classResources(d,{level,mods}),pool=pools.find(p=>p.id===a.pool),secondary=pools.find(p=>p.id===a.secondary);let cost=a.variable===undefined?a.cost:Number(points??a.cost),source=pool;
   if(!Number.isInteger(cost)||cost<a.cost||cost>(a.variable??a.cost)||a.once&&r.used(id+'-turn')||a.secondary&&!secondary?.remaining)return null;if(a.faces&&(!Number.isInteger(roll)||roll<(a.dice||1)||roll>a.faces*(a.dice||1)))return null;
   if(cost&&(!source||source.remaining<cost)){if(a.alternative&&pool?.remaining===0){source=pools.find(p=>p.id==='monk-points');cost=a.alternative;}else return null;}if(cost&&source?.remaining<cost)return null;
   const updates={};if(cost)updates[source.key]=[String(source.used+cost)];if(secondary)updates[secondary.key]=[String(secondary.used+1)];if(a.once)updates[r.key(id+'-turn')]=['1'];if(a.active)updates[r.key(a.active+'-active')]=['active'];if(id==='sharpen')updates[r.key('sharpen-bonus')]=[String(cost)];if(!R.save(d,updates))return null;
-  const amount=Math.max(a.min??-99,(a.faces?roll:0)+(a.add||0));if(a.tempHP)d.hpTemp=Math.max(Number(d.hpTemp)||0,a.tempHP);if(a.selfHeal||a.heal&&self){const M=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null);d.hpCurrent=Math.min(M.derive(d,level).hpMax,Math.max(0,Number(d.hpCurrent)||0)+Math.max(0,amount));}if(a.survive&&d.hpCurrent===0)d.hpCurrent=1;return{amount,spent:cost,detail:a.detail,dc:r.dc};
+  const amount=Math.max(a.min??-99,(a.faces?roll:0)+(a.add||0));if(a.tempHP)d.hpTemp=Math.max(Number(d.hpTemp)||0,a.tempHP);if(a.selfHeal||a.heal&&self){const M=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null);M.restoreHP(d,amount,M.derive(d,level,loot).hpMax);}if(a.survive&&d.hpCurrent===0){const M=globalThis.CharacterSheetModel||(typeof require==='function'?require('./character-sheet-model'):null);M.restoreHP(d,1,M.derive(d,level,loot).hpMax);}return{amount,spent:cost,detail:a.detail,dc:r.dc};
  }
  const activeNames=['attunement','stride','cloak','arms','visage','awakened','wings','wyrm','drunken','fangs','parry','shot','sharpen'];
  function end(d,key,opts={}){const r=derive(d,opts);return r.active&&activeNames.includes(key)&&!!r.pick(key+'-active')&&R.save(d,{[r.key(key+'-active')]:[]});}

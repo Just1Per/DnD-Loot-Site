@@ -29,8 +29,10 @@ var CharacterClericInterventionUI = (() => {
       level: stats.progression?.targetLevel || actor.identity.level,
     };
     const state = I.status(actor.data, context),
-      host = document.getElementById("sheetFeatResources");
+      root = document.getElementById("sheetFeatResources"),
+      host = root?.querySelector("[data-feature-resource-controls]") || root;
     if (!state.available || !host) return result;
+    root.hidden = false;
     host.hidden = false;
     const section = document.createElement("section");
     section.className = "sheet-intervention";

@@ -1,0 +1,4936 @@
+{
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "scope": "Reviewed numeric/action facts and our own concise instructions. Source entries are excluded.",
+  "spells": {
+    "Abi-Dalzim's Horrid Wilting": {
+      "default": {
+        "damage": "12d8",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Resolve creature-type exceptions and affected plants at the table."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Aganazzar's Scorcher": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "fire"
+        ],
+        "addAbility": false,
+        "upcast": "1d8"
+      }
+    },
+    "Antagonize": {
+      "bySource": {
+        "BMT": {
+          "damage": "4d4",
+          "attack": false,
+          "types": [
+            "psychic"
+          ],
+          "addAbility": false,
+          "upcast": "1d4",
+          "notes": [
+            "Successful Wisdom save halves damage only. On failure, resolve the forced melee Reaction; if impossible, the next attack before your next turn has Disadvantage."
+          ]
+        }
+      }
+    },
+    "Arms of Hadar": {
+      "default": {
+        "damage": "2d6",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "A failed Strength save also prevents Reactions until the target’s next turn."
+        ]
+      }
+    },
+    "Bones of the Earth": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "bludgeoning"
+          ],
+          "upcast": null,
+          "noDamageUpcast": true,
+          "projectiles": {
+            "base": 6,
+            "increment": 2,
+            "above": 6,
+            "unit": "stone pillars"
+          },
+          "notes": [
+            "This damage occurs only when a rising pillar crushes a creature against a ceiling or other obstacle; it is not the initial Dexterity save to avoid being lifted.",
+            "A crushed creature is Restrained; its Action can make a Strength or Dexterity check against the spell’s save DC to escape, then move or fall off. Resolve positions, pillar HP and difficult terrain at the table.",
+            "Each higher slot adds two pillars, not damage per crush."
+          ],
+          "effects": [
+            {
+              "id": "crush",
+              "label": "Crushed against an obstacle",
+              "shortLabel": "Crush",
+              "combat": {
+                "damage": "6d6",
+                "save": "",
+                "automatic": true
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Catapult": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "Choose a loose eligible object; resolve the first collision and object damage. Higher slots also increase the permitted object weight."
+        ]
+      }
+    },
+    "Cloud of Daggers": {
+      "default": {
+        "damage": "4d4",
+        "types": [
+          "slashing"
+        ],
+        "addAbility": false,
+        "upcast": "2d4",
+        "notes": [
+          "Damage is per qualifying area event; resolve entry/turn timing and Concentration using the selected edition."
+        ]
+      }
+    },
+    "Conjure Barrage": {
+      "bySource": {
+        "XPHB": {
+          "damage": "5d8",
+          "types": [
+            "force"
+          ],
+          "addAbility": false,
+          "upcast": "1d8"
+        },
+        "PHB": {
+          "damage": "3d8",
+          "types": [
+            "bludgeoning",
+            "piercing",
+            "slashing"
+          ],
+          "attack": false,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "Use the damage type of the nonmagical weapon or ammunition component, not three damage types. Resolve the 60 ft cone; a successful Dexterity save halves damage."
+          ]
+        }
+      }
+    },
+    "Conjure Volley": {
+      "bySource": {
+        "XPHB": {
+          "damage": "8d8",
+          "types": [
+            "force"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true
+        },
+        "PHB": {
+          "damage": "8d8",
+          "attack": false,
+          "types": [
+            "bludgeoning",
+            "piercing",
+            "slashing"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "Use the nonmagical weapon or ammunition component’s one damage type. The 40-ft-radius, 20-ft-high cylinder affects every creature; successful Dexterity saves take half. Higher slots add no damage."
+          ]
+        }
+      }
+    },
+    "Contact Other Plane": {
+      "default": {
+        "damage": "6d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "fixedSelfSave": {
+          "ability": "INTELLIGENCE",
+          "dc": 15
+        },
+        "notes": [
+          "This is the caster’s own DC 15 Intelligence save. Damage applies only on failure; resolve the edition-specific mental effect and recovery."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Cordon of Arrows": {
+      "bySource": {
+        "PHB": {
+          "damage": "1d6",
+          "attack": false,
+          "types": [
+            "piercing"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "projectiles": {
+            "base": 4,
+            "increment": 2,
+            "above": 2,
+            "unit": "planted ammunition pieces"
+          },
+          "notes": [
+            "Damage is per triggered piece; higher slots add ammunition, not damage per hit. A successful Dexterity save avoids damage. Resolve the 30 ft trigger, ignored creatures and remaining planted ammunition at the table."
+          ]
+        },
+        "XPHB": {
+          "damage": "2d4",
+          "attack": false,
+          "types": [
+            "piercing"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "projectiles": {
+            "base": 4,
+            "increment": 2,
+            "above": 2,
+            "unit": "planted ammunition pieces"
+          },
+          "notes": [
+            "Damage is per triggered piece; higher slots add ammunition, not damage per hit. A successful Dexterity save avoids damage. Resolve the 30 ft trigger, ignored creatures and remaining planted ammunition at the table."
+          ]
+        }
+      }
+    },
+    "Crown of Stars": {
+      "default": {
+        "damage": "4d12",
+        "types": [
+          "radiant"
+        ],
+        "addAbility": false,
+        "projectiles": {
+          "base": 7,
+          "increment": 2,
+          "above": 7,
+          "unit": "motes"
+        },
+        "notes": [
+          "Damage is per expended mote and spell attack; a Bonus Action expends one mote."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Dark Star": {
+      "default": {
+        "damage": "8d10",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Resolve start/entry damage, movement, visibility, sound and spell restrictions within the active area."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Dawn": {
+      "default": {
+        "damage": "4d10",
+        "types": [
+          "radiant"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Resolve start/end positioning, Concentration and the light column’s movement explicitly."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Destructive Wave": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "upcast": null,
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose affected creatures within 30 ft. One Constitution save governs both components; failure also makes the target Prone, success halves both components without Prone. Higher slots add no damage."
+          ],
+          "effects": [
+            {
+              "id": "radiant",
+              "label": "Thunder + Radiant",
+              "shortLabel": "Radiant",
+              "combat": {
+                "damage": "5d6",
+                "types": [
+                  "thunder",
+                  "radiant"
+                ],
+                "primaryType": "thunder",
+                "part2Damage": "5d6",
+                "part2Type": "radiant"
+              }
+            },
+            {
+              "id": "necrotic",
+              "label": "Thunder + Necrotic",
+              "shortLabel": "Necrotic",
+              "combat": {
+                "damage": "5d6",
+                "types": [
+                  "thunder",
+                  "necrotic"
+                ],
+                "primaryType": "thunder",
+                "part2Damage": "5d6",
+                "part2Type": "necrotic"
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "upcast": null,
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose affected creatures within 30 ft. One Constitution save governs both components; failure also makes the target Prone, success halves both components without Prone. Higher slots add no damage."
+          ],
+          "effects": [
+            {
+              "id": "radiant",
+              "label": "Thunder + Radiant",
+              "shortLabel": "Radiant",
+              "combat": {
+                "damage": "5d6",
+                "types": [
+                  "thunder",
+                  "radiant"
+                ],
+                "primaryType": "thunder",
+                "part2Damage": "5d6",
+                "part2Type": "radiant"
+              }
+            },
+            {
+              "id": "necrotic",
+              "label": "Thunder + Necrotic",
+              "shortLabel": "Necrotic",
+              "combat": {
+                "damage": "5d6",
+                "types": [
+                  "thunder",
+                  "necrotic"
+                ],
+                "primaryType": "thunder",
+                "part2Damage": "5d6",
+                "part2Type": "necrotic"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Dissonant Whispers": {
+      "default": {
+        "damage": "3d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "On a failed save, resolve the target’s eligible Reaction movement; a successful save deals half damage."
+        ]
+      }
+    },
+    "Dragon's Breath": {
+      "bySource": {
+        "XGE": {
+          "damage": "3d6",
+          "attack": false,
+          "types": [
+            "acid",
+            "cold",
+            "fire",
+            "lightning",
+            "poison"
+          ],
+          "addAbility": false,
+          "upcast": "1d6",
+          "notes": [
+            "Damage is per exhalation, not on casting. Choose the damage type on casting; the willing recipient uses an Action for each 15 ft cone. A successful Dexterity save halves damage. Keep Concentration and recipient actions separate."
+          ]
+        },
+        "XPHB": {
+          "damage": "3d6",
+          "attack": false,
+          "types": [
+            "acid",
+            "cold",
+            "fire",
+            "lightning",
+            "poison"
+          ],
+          "addAbility": false,
+          "upcast": "1d6",
+          "notes": [
+            "Damage is per exhalation, not on casting. Choose the damage type on casting; the willing recipient uses a Magic action for each 15 ft cone. A successful Dexterity save halves damage. Keep Concentration and recipient actions separate."
+          ]
+        }
+      }
+    },
+    "Dust Devil": {
+      "default": {
+        "damage": "1d8",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "At an eligible creature’s turn end within 5 ft, resolve the Strength save and the failed-save push; successful saves take half damage."
+        ]
+      }
+    },
+    "Earth Tremor": {
+      "default": {
+        "damage": "1d6",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "On a failed save, an affected creature is also Prone; resolve difficult terrain at the table."
+        ]
+      }
+    },
+    "Enervation": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "necrotic"
+          ],
+          "upcast": null,
+          "noDamageUpcast": true,
+          "notes": [
+            "Heal the caster for half the Necrotic damage actually taken by the target; account for defenses and rounding at the table. This reference changes neither HP nor spell slots.",
+            "Keep Concentration and range; Total Cover ends the spell."
+          ],
+          "effects": [
+            {
+              "id": "initial-failed",
+              "label": "Initial · failed Dexterity save",
+              "shortLabel": "Initial fail",
+              "combat": {
+                "damage": "4d8",
+                "upcast": "1d8",
+                "notes": [
+                  "Failed initial Dexterity save: use this full damage and establish the drain."
+                ]
+              }
+            },
+            {
+              "id": "initial-success",
+              "label": "Initial · successful Dexterity save",
+              "shortLabel": "Initial pass",
+              "combat": {
+                "damage": "2d8",
+                "upcast": "1d8",
+                "notes": [
+                  "Successful initial Dexterity save: use this damage without halving it again; the spell ends."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Ongoing · Action",
+              "shortLabel": "Action",
+              "combat": {
+                "damage": "4d8",
+                "upcast": "1d8",
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "After the failed initial save, spend your Action on each own turn for automatic damage. Using that Action for anything else ends this spell."
+                ]
+              }
+            }
+          ]
+        },
+        "AU": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "necrotic"
+          ],
+          "upcast": null,
+          "noDamageUpcast": true,
+          "notes": [
+            "Heal the caster for half the Necrotic damage actually taken by the target; account for defenses and rounding at the table. This reference changes neither HP nor spell slots.",
+            "Keep Concentration and range; Total Cover ends the spell."
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial damage",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "6d8",
+                "upcast": "1d8",
+                "notes": [
+                  "Initial Dexterity save: success halves the damage and ends the spell; failure establishes the drain."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Ongoing · Bonus Action",
+              "shortLabel": "Bonus",
+              "combat": {
+                "damage": "2d8",
+                "upcast": null,
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "After the failed initial save, use a Bonus Action on a subsequent own turn. This automatic 2d8 does not increase with the slot level."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Ensnaring Strike": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "piercing"
+          ],
+          "upcast": null,
+          "setupSave": "STRENGTH",
+          "checkDC": "Escape Strength check",
+          "notes": [
+            "A weapon hit triggers the initial Strength save; Large or larger targets have Advantage. Success prevents the restraint/drain. Keep Concentration and resolve the weapon’s damage separately.",
+            "Legacy Bonus Action casting primes the next weapon hit."
+          ],
+          "effects": [
+            {
+              "id": "ongoing",
+              "label": "Restrained target · turn start",
+              "shortLabel": "Vines",
+              "combat": {
+                "damage": "1d6",
+                "upcast": "1d6",
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "Only at the vine-Restrained target’s turn start: deal this automatic damage, with no new save. The target or an eligible helper can spend an Action on the listed escape check; success ends the spell."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "piercing"
+          ],
+          "upcast": null,
+          "setupSave": "STRENGTH",
+          "checkDC": "Escape Strength (Athletics) check",
+          "notes": [
+            "A weapon hit triggers the initial Strength save; Large or larger targets have Advantage. Success prevents the restraint/drain. Keep Concentration and resolve the weapon’s damage separately.",
+            "Revised Bonus Action casting occurs immediately after the weapon hit."
+          ],
+          "effects": [
+            {
+              "id": "ongoing",
+              "label": "Restrained target · turn start",
+              "shortLabel": "Vines",
+              "combat": {
+                "damage": "1d6",
+                "upcast": "1d6",
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "Only at the vine-Restrained target’s turn start: deal this automatic damage, with no new save. The target or an eligible helper can spend an Action on the listed escape check; success ends the spell."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Erupting Earth": {
+      "default": {
+        "damage": "3d12",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "upcast": "1d12",
+        "notes": [
+          "Resolve affected creatures and the resulting difficult terrain."
+        ]
+      }
+    },
+    "Fire Shield": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "save": "",
+          "upcast": null,
+          "automatic": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Retaliation only when an attacker within 5 ft hits you with a melee attack. There is no additional attack roll or save. This reference does not activate the shield, grant its resistance, or apply damage."
+          ],
+          "effects": [
+            {
+              "id": "fire",
+              "label": "Warm shield · retaliation",
+              "shortLabel": "Warm",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "fire"
+                ],
+                "notes": [
+                  "While the spell lasts, resolve Cold resistance and its 10-ft bright / 10-ft additional dim light separately."
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Chill shield · retaliation",
+              "shortLabel": "Chill",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "cold"
+                ],
+                "notes": [
+                  "While the spell lasts, resolve Fire resistance and its 10-ft bright / 10-ft additional dim light separately."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "save": "",
+          "upcast": null,
+          "automatic": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Retaliation only when an attacker within 5 ft hits you with a melee attack roll. There is no additional attack roll or save. This reference does not activate the shield, grant its resistance, or apply damage."
+          ],
+          "effects": [
+            {
+              "id": "fire",
+              "label": "Warm shield · retaliation",
+              "shortLabel": "Warm",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "fire"
+                ],
+                "notes": [
+                  "While the spell lasts, resolve Cold resistance and its 10-ft bright / 10-ft additional dim light separately."
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Chill shield · retaliation",
+              "shortLabel": "Chill",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "cold"
+                ],
+                "notes": [
+                  "While the spell lasts, resolve Fire resistance and its 10-ft bright / 10-ft additional dim light separately."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Flame Strike": {
+      "default": {
+        "damage": "4d6",
+        "types": [
+          "fire",
+          "radiant"
+        ],
+        "addAbility": false,
+        "part2Damage": "4d6",
+        "part2Type": "radiant",
+        "choiceUpcast": "1d6",
+        "notes": [
+          "One Dexterity save governs both damage types. In 2014, choose Fire or Radiant for the extra slot dice."
+        ],
+        "upcast": null,
+        "noDamageUpcast": true,
+        "primaryType": "fire"
+      },
+      "bySource": {
+        "XPHB": {
+          "damage": "5d6",
+          "part2Damage": "5d6",
+          "upcast": "1d6",
+          "part2Upcast": "1d6",
+          "choiceUpcast": null,
+          "notes": [
+            "One Dexterity save governs both damage types. Each higher slot increases both Fire and Radiant dice."
+          ]
+        }
+      }
+    },
+    "Frost Fingers": {
+      "default": {
+        "damage": "2d8",
+        "types": [
+          "cold"
+        ],
+        "addAbility": false,
+        "upcast": "1d8"
+      }
+    },
+    "Glyph of Warding": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "upcast": null,
+          "actionRange": "20-ft-radius sphere",
+          "notes": [
+            "Explosive rune only: choose the damage type when inscribing the glyph; keep this reference on that type. Each affected creature makes a Dexterity save for half damage.",
+            "Resolve the configured trigger once; moving the inscribed surface/object more than 10 ft breaks the glyph. A stored-spell glyph uses its stored spell separately, not this explosion."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Explosive rune · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Explosive rune · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Explosive rune · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Explosive rune · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Explosive rune · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "upcast": null,
+          "actionRange": "20-ft-radius sphere",
+          "notes": [
+            "Explosive rune only: choose the damage type when inscribing the glyph; keep this reference on that type. Each affected creature makes a Dexterity save for half damage.",
+            "Resolve the configured trigger once; moving the inscribed surface/object more than 10 ft breaks the glyph. A stored-spell glyph uses its stored spell separately, not this explosion."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Explosive rune · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Explosive rune · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Explosive rune · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Explosive rune · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Explosive rune · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "5d8",
+                "upcast": "1d8",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Grasping Vine": {
+      "bySource": {
+        "XPHB": {
+          "damage": "4d8",
+          "attack": true,
+          "addAbility": false,
+          "types": [
+            "bludgeoning"
+          ],
+          "noDamageUpcast": true,
+          "upcast": null,
+          "actionRange": "30 ft from vine",
+          "checkDC": "Grapple escape",
+          "notes": [
+            "The initial attack and later Bonus Action attacks originate from the vine, not the caster. On a hit, pull the target up to 30 ft toward the vine; Huge or smaller targets are also Grappled.",
+            "One grappled target at base level; each higher slot allows one more grappled target, without increasing damage per hit. Track vine location, held targets and Concentration at the table."
+          ]
+        }
+      }
+    },
+    "Gravity Fissure": {
+      "default": {
+        "damage": "8d8",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "Resolve creatures in/near the line and any failed-save pull."
+        ]
+      }
+    },
+    "Gravity Sinkhole": {
+      "default": {
+        "damage": "5d10",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "upcast": "1d10",
+        "notes": [
+          "Resolve the affected sphere and failed-save pull toward its center."
+        ]
+      }
+    },
+    "Hail of Thorns": {
+      "bySource": {
+        "PHB": {
+          "damage": "1d10",
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "piercing"
+          ],
+          "upcast": "1d10",
+          "upcastCeiling": 6,
+          "actionRange": "5-ft burst at hit target",
+          "notes": [
+            "This is the separate burst after an eligible ranged-weapon hit. The hit target and each creature within 5 ft make Dexterity saves; success halves the burst. Keep the weapon hit’s own damage separate.",
+            "Cast with a Bonus Action before a later hit; maintain Concentration until that hit. Damage stops at 6d10 even with slots above level 6."
+          ]
+        },
+        "XPHB": {
+          "damage": "1d10",
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "piercing"
+          ],
+          "upcast": "1d10",
+          "actionRange": "5-ft burst at hit target",
+          "notes": [
+            "This is the separate burst after an eligible ranged-weapon hit. The hit target and each creature within 5 ft make Dexterity saves; success halves the burst. Keep the weapon hit’s own damage separate.",
+            "Cast with a Bonus Action immediately after the hit; this edition has no Concentration or 6d10 damage ceiling."
+          ]
+        }
+      }
+    },
+    "Hunger of Hadar": {
+      "bySource": {
+        "PHB": {
+          "addAbility": false,
+          "effects": [
+            {
+              "id": "start-none",
+              "label": "Start of target turn · Cold",
+              "shortLabel": "Start Cold",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "cold"
+                ],
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Legacy slot upcasting does not increase either damage component."
+                ]
+              }
+            },
+            {
+              "id": "end-none",
+              "label": "End of target turn · Acid",
+              "shortLabel": "End Acid",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "acid"
+                ],
+                "attack": false,
+                "automatic": false,
+                "save": "DEXTERITY",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Legacy slot upcasting does not increase either damage component."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "addAbility": false,
+          "effects": [
+            {
+              "id": "start-cold",
+              "label": "Start of target turn · Cold · extra dice to Cold",
+              "shortLabel": "Start Cold",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "cold"
+                ],
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": "1d6",
+                "noDamageUpcast": false,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Assign extra slot dice to Cold for this casting; the other damage component stays at 2d6. Keep that allocation consistent across both event references."
+                ]
+              }
+            },
+            {
+              "id": "end-cold",
+              "label": "End of target turn · Acid · extra dice to Cold",
+              "shortLabel": "End Acid",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "acid"
+                ],
+                "attack": false,
+                "automatic": false,
+                "save": "DEXTERITY",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Assign extra slot dice to Cold for this casting; the other damage component stays at 2d6. Keep that allocation consistent across both event references."
+                ]
+              }
+            },
+            {
+              "id": "start-acid",
+              "label": "Start of target turn · Cold · extra dice to Acid",
+              "shortLabel": "Start Cold",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "cold"
+                ],
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Assign extra slot dice to Acid for this casting; the other damage component stays at 2d6. Keep that allocation consistent across both event references."
+                ]
+              }
+            },
+            {
+              "id": "end-acid",
+              "label": "End of target turn · Acid · extra dice to Acid",
+              "shortLabel": "End Acid",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "acid"
+                ],
+                "attack": false,
+                "automatic": false,
+                "save": "DEXTERITY",
+                "upcast": "1d6",
+                "noDamageUpcast": false,
+                "notes": [
+                  "Resolve only this target-turn event; entry itself causes no damage. Track Concentration and affected creatures.",
+                  "Assign extra slot dice to Acid for this casting; the other damage component stays at 2d6. Keep that allocation consistent across both event references."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Ice Storm": {
+      "default": {
+        "damage": "2d8",
+        "types": [
+          "bludgeoning",
+          "cold"
+        ],
+        "addAbility": false,
+        "part2Damage": "4d6",
+        "part2Type": "cold",
+        "upcast": "1d8",
+        "notes": [
+          "One Dexterity save governs both damage types. Higher slots increase only the Bludgeoning dice."
+        ],
+        "primaryType": "bludgeoning"
+      },
+      "bySource": {
+        "XPHB": {
+          "damage": "2d10",
+          "upcast": "1d10"
+        }
+      }
+    },
+    "Immolation": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "fire"
+          ],
+          "upcast": null,
+          "noDamageUpcast": true,
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial damage",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "8d6",
+                "notes": [
+                  "Initial Dexterity save: half damage on success, with no ongoing burning. Failure starts the burning effect; resolve Concentration and light at the table."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Burning · target turn end",
+              "shortLabel": "Burning",
+              "combat": {
+                "damage": "4d6",
+                "notes": [
+                  "Only at the burning target’s turn end: failed Dexterity save deals this damage; success deals no damage and ends the spell. Do not halve this ongoing damage on a success."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Jallarzi's Storm of Radiance": {
+      "bySource": {
+        "XPHB": {
+          "damage": "2d10",
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "radiant",
+            "thunder"
+          ],
+          "primaryType": "radiant",
+          "part2Damage": "2d10",
+          "part2Type": "thunder",
+          "upcast": "1d10",
+          "part2Upcast": "1d10",
+          "notes": [
+            "One Constitution save covers both damage components; success halves each. Resolve the initial area event, first entry on a turn, or turn end, at most once per creature per turn.",
+            "The 10-ft-radius, 40-ft-high cylinder also Blinds/Deafens occupants and prevents Verbal spellcasting. Positions, eligible events and Concentration remain at the table."
+          ]
+        }
+      }
+    },
+    "Magic Missile": {
+      "bySource": {
+        "PHB": {
+          "damage": "1d4 + 1",
+          "attack": false,
+          "automatic": true,
+          "save": "",
+          "types": [
+            "force"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "Each dart hits automatically. Choose targets and resolve Shield or other spell defenses; this reference does not spend slots."
+          ]
+        },
+        "XPHB": {
+          "automatic": true,
+          "save": "",
+          "notes": [
+            "Each dart hits automatically. Choose targets and resolve Shield or other spell defenses; this reference does not spend slots."
+          ]
+        }
+      }
+    },
+    "Melf's Minute Meteors": {
+      "default": {
+        "damage": "2d6",
+        "types": [
+          "fire"
+        ],
+        "addAbility": false,
+        "projectiles": {
+          "base": 6,
+          "increment": 2,
+          "above": 3,
+          "unit": "meteors"
+        },
+        "notes": [
+          "Damage is per meteor explosion. Expend one or two meteors on the initial casting or an eligible later Bonus Action; resolve each 5-ft burst and save."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Mind Spike": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "Resolve the failed-save tracking effect and edition-specific Concentration/duration rules."
+        ]
+      }
+    },
+    "Negative Energy Flood": {
+      "default": {
+        "damage": "5d12",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "For a living target, resolve the Constitution save and any resulting Zombie. An Undead target instead gains temporary HP equal to half a 5d12 roll."
+        ],
+        "noDamageUpcast": true
+      },
+      "bySource": {
+        "AU": {
+          "damage": "3d10 + 25",
+          "upcast": "1d10",
+          "notes": [
+            "A non-Undead target makes the Constitution save. An Undead target instead gains 3d10 temporary HP; resolve any resulting controlled Zombie at the table."
+          ]
+        }
+      }
+    },
+    "Phantasmal Force": {
+      "bySource": {
+        "PHB": {
+          "damage": "1d6",
+          "attack": false,
+          "types": [
+            "psychic"
+          ],
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "The initial Intelligence save establishes the illusion; damage is conditional on each caster turn, not an immediate hit. Use only a believable hazard within its area or 5 ft. Constructs and Undead are unaffected; an Investigation action can end it."
+          ]
+        }
+      }
+    },
+    "Psychic Scream": {
+      "default": {
+        "damage": "14d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Choose up to ten eligible creatures; resolve immunity, failed-save Stunned condition and repeat saves."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Pulse Wave": {
+      "default": {
+        "damage": "6d6",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "Choose pull or push for the cone; the failed-save displacement increases 5 ft per slot above 3."
+        ]
+      }
+    },
+    "Raulothim's Psychic Lance": {
+      "default": {
+        "damage": "7d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "Resolve named/unseen-target eligibility and the failed-save Incapacitated condition."
+        ]
+      }
+    },
+    "Ray of Sickness": {
+      "bySource": {
+        "PHB": {
+          "damage": "2d8",
+          "attack": true,
+          "types": [
+            "poison"
+          ],
+          "addAbility": false,
+          "upcast": "1d8",
+          "riderSave": "CONSTITUTION",
+          "notes": [
+            "The hit deals damage. Only after a hit, resolve the Constitution rider save; failure adds Poisoned until the end of your next turn."
+          ]
+        }
+      }
+    },
+    "Rime's Binding Ice": {
+      "default": {
+        "damage": "3d8",
+        "types": [
+          "cold"
+        ],
+        "addAbility": false,
+        "upcast": "1d8",
+        "notes": [
+          "A failed save also restricts Speed until the ice is broken or removed."
+        ]
+      }
+    },
+    "Snilloc's Snowball Swarm": {
+      "default": {
+        "damage": "3d6",
+        "types": [
+          "cold"
+        ],
+        "addAbility": false,
+        "upcast": "1d6"
+      }
+    },
+    "Spray of Cards": {
+      "bySource": {
+        "BMT": {
+          "damage": "2d10",
+          "attack": false,
+          "types": [
+            "force"
+          ],
+          "addAbility": false,
+          "upcast": "1d10",
+          "notes": [
+            "Resolve the 15 ft cone. A failed Dexterity save also Blinds until the end of the target’s next turn; success halves damage without Blinding."
+          ]
+        }
+      }
+    },
+    "Steel Wind Strike": {
+      "default": {
+        "damage": "6d10",
+        "types": [
+          "force"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Damage is per successful melee spell attack against a chosen creature; choose up to five different eligible creatures and resolve the final teleport."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Synaptic Static": {
+      "default": {
+        "damage": "8d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "save": "INTELLIGENCE",
+        "notes": [
+          "The initial damage and later recovery use Intelligence saves. The d6 penalty to concentration checks is not an additional Constitution save against this spell."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Tasha's Caustic Brew": {
+      "bySource": {
+        "TCE": {
+          "damage": "2d4",
+          "attack": false,
+          "types": [
+            "acid"
+          ],
+          "addAbility": false,
+          "upcast": "2d4",
+          "notes": [
+            "The initial Dexterity save determines acid coating. Damage occurs at the start of each coated creature’s turn, not immediately and without another save. An Action can remove coating; track Concentration and each affected creature."
+          ]
+        }
+      }
+    },
+    "Tasha's Mind Whip": {
+      "default": {
+        "damage": "3d6",
+        "types": [
+          "psychic"
+        ],
+        "addAbility": false,
+        "notes": [
+          "Higher slots add one target per slot above 2, not more damage per target. Resolve the failed-save action restrictions."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Thunder Step": {
+      "default": {
+        "damage": "3d10",
+        "types": [
+          "thunder"
+        ],
+        "addAbility": false,
+        "upcast": "1d10",
+        "notes": [
+          "Resolve the departure area, the teleport destination and any willing passenger."
+        ]
+      }
+    },
+    "Tidal Wave": {
+      "default": {
+        "damage": "4d8",
+        "types": [
+          "bludgeoning"
+        ],
+        "addAbility": false,
+        "notes": [
+          "A failed save also knocks the creature Prone; resolve the wave and extinguished flames."
+        ],
+        "noDamageUpcast": true
+      }
+    },
+    "Toll the Dead": {
+      "bySource": {
+        "XGE": {
+          "addAbility": false,
+          "attack": false,
+          "types": [
+            "necrotic"
+          ],
+          "effects": [
+            {
+              "id": "full-health",
+              "label": "Target at full HP",
+              "shortLabel": "Full HP",
+              "combat": {
+                "scaling": {
+                  "1": "1d8",
+                  "5": "2d8",
+                  "11": "3d8",
+                  "17": "4d8"
+                },
+                "notes": [
+                  "Use d8s only when the target has no missing HP. A successful Wisdom save avoids damage."
+                ]
+              }
+            },
+            {
+              "id": "wounded",
+              "label": "Target is missing HP",
+              "shortLabel": "Wounded",
+              "combat": {
+                "scaling": {
+                  "1": "1d12",
+                  "5": "2d12",
+                  "11": "3d12",
+                  "17": "4d12"
+                },
+                "notes": [
+                  "Use d12s only when the target is missing HP. Recheck that condition for every casting; a successful Wisdom save avoids damage."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "addAbility": false,
+          "attack": false,
+          "types": [
+            "necrotic"
+          ],
+          "effects": [
+            {
+              "id": "full-health",
+              "label": "Target at full HP",
+              "shortLabel": "Full HP",
+              "combat": {
+                "scaling": {
+                  "1": "1d8",
+                  "5": "2d8",
+                  "11": "3d8",
+                  "17": "4d8"
+                },
+                "notes": [
+                  "Use d8s only when the target has no missing HP. A successful Wisdom save avoids damage."
+                ]
+              }
+            },
+            {
+              "id": "wounded",
+              "label": "Target is missing HP",
+              "shortLabel": "Wounded",
+              "combat": {
+                "scaling": {
+                  "1": "1d12",
+                  "5": "2d12",
+                  "11": "3d12",
+                  "17": "4d12"
+                },
+                "notes": [
+                  "Use d12s only when the target is missing HP. Recheck that condition for every casting; a successful Wisdom save avoids damage."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Witch Bolt": {
+      "bySource": {
+        "PHB": {
+          "addAbility": false,
+          "types": [
+            "lightning"
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial ranged spell attack",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "1d12",
+                "attack": true,
+                "upcast": "1d12",
+                "notes": [
+                  "Only the initial hit scales with slot level. Establish and maintain Concentration; range and Total Cover can end the spell."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Ongoing automatic damage",
+              "shortLabel": "Ongoing",
+              "combat": {
+                "damage": "1d12",
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Requires a successful initial hit. On your later turns spend your Action for this automatic 1d12; doing something else with that Action ends the spell. Stay within 30 ft without Total Cover.",
+                  "Higher slots never increase this ongoing die."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "addAbility": false,
+          "types": [
+            "lightning"
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial ranged spell attack",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "2d12",
+                "attack": true,
+                "upcast": "1d12",
+                "notes": [
+                  "Only the initial hit scales with slot level. Establish and maintain Concentration; range and Total Cover can end the spell."
+                ]
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Ongoing automatic damage",
+              "shortLabel": "Ongoing",
+              "combat": {
+                "damage": "1d12",
+                "attack": false,
+                "automatic": true,
+                "save": "",
+                "upcast": null,
+                "noDamageUpcast": true,
+                "notes": [
+                  "On your later turns spend a Bonus Action for this automatic 1d12, even if the initial attack missed. Stay within 60 ft without Total Cover.",
+                  "Higher slots never increase this ongoing die."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Wither and Bloom": {
+      "default": {
+        "damage": "2d6",
+        "types": [
+          "necrotic"
+        ],
+        "addAbility": false,
+        "upcast": "1d6",
+        "notes": [
+          "Resolve chosen damage recipients separately from one ally’s voluntary Hit Die healing; higher slots also allow one additional healing die per slot above 2."
+        ]
+      }
+    },
+    "Bane": {
+      "default": {
+        "damage": null,
+        "upcast": null,
+        "scaling": null,
+        "addAbility": false,
+        "nonDamage": true,
+        "targets": {
+          "base": 3,
+          "increment": 1,
+          "above": 1
+        },
+        "notes": [
+          "Failed Charisma save: subtract 1d4 from the target’s attack rolls and saving throws while this spell lasts. This die is a penalty, not HP damage. Resolve targets and Concentration at the table."
+        ]
+      }
+    },
+    "Bless": {
+      "default": {
+        "damage": null,
+        "upcast": null,
+        "scaling": null,
+        "addAbility": false,
+        "nonDamage": true,
+        "targets": {
+          "base": 3,
+          "increment": 1,
+          "above": 1
+        },
+        "notes": [
+          "Add 1d4 to each affected target’s attack rolls and saving throws while this spell lasts. This die is a bonus, not HP damage. Resolve targets and Concentration at the table."
+        ]
+      }
+    },
+    "Ray of Enfeeblement": {
+      "default": {
+        "damage": null,
+        "upcast": null,
+        "scaling": null,
+        "addAbility": false,
+        "nonDamage": true,
+        "noDamageUpcast": true
+      },
+      "bySource": {
+        "PHB": {
+          "checkDC": "End-of-target-turn Constitution saving throw to end the spell",
+          "notes": [
+            "On a spell-attack hit, halve the target’s damage from Strength-based weapon attacks while the spell lasts. This spell deals no HP damage. Resolve the affected target and Concentration at the table."
+          ]
+        },
+        "XPHB": {
+          "notes": [
+            "Successful Constitution save: Disadvantage on the target’s next attack roll before your next turn starts. Failed save: Disadvantage on Strength-based D20 Tests and subtract 1d8 from all of the target’s damage rolls; repeat the save at each turn’s end to end the spell. The 1d8 reduces damage and never deals HP damage. Resolve the target and Concentration at the table."
+          ]
+        }
+      }
+    },
+    "Maddening Darkness": {
+      "bySource": {
+        "XGE": {
+          "damage": "8d8",
+          "types": [
+            "psychic"
+          ],
+          "attack": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "Damage event: a creature starts its turn inside the 60-ft-radius darkness. Wisdom save: half damage on success. Resolve magical darkness, Concentration and affected creatures at the table."
+          ]
+        }
+      }
+    },
+    "Maelstrom": {
+      "bySource": {
+        "XGE": {
+          "damage": "6d6",
+          "types": [
+            "bludgeoning"
+          ],
+          "attack": false,
+          "noDamageUpcast": true,
+          "notes": [
+            "Damage event: a creature starts its turn in the 30-ft-radius water. Failed Strength save: damage and pull 10 ft toward the center; success: no damage or pull. Place only on ground or water; track difficult terrain, positions and Concentration at the table."
+          ]
+        }
+      }
+    },
+    "Magnify Gravity": {
+      "bySource": {
+        "EGW": {
+          "damage": "2d8",
+          "upcast": "1d8",
+          "types": [
+            "force"
+          ],
+          "attack": false,
+          "checkDC": "Strength check to pick up or move an unattended object in the sphere before your next turn starts",
+          "notes": [
+            "On casting: creatures in a 10-ft-radius sphere make a Constitution save; success halves damage. Only a failed save halves Speed until the end of that target’s next turn. Resolve target Speed and object movement at the table."
+          ]
+        }
+      }
+    },
+    "Time Ravage": {
+      "bySource": {
+        "EGW": {
+          "damage": "10d12",
+          "types": [
+            "necrotic"
+          ],
+          "attack": false,
+          "notes": [
+            "Constitution save: half damage on success. Only a failed save causes rapid aging, halved walking Speed and Disadvantage on attacks, ability checks and saves; the target has 30 days before death by old age. Wish or 9th-level Greater Restoration can reverse the aging effects. Resolve target state at the table."
+          ]
+        }
+      }
+    },
+    "Maximilian's Earthen Grasp": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "noDamageUpcast": true,
+          "actionRange": "5 ft from hand",
+          "checkDC": "Escape Strength check using the restrained target’s Action",
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial grasp",
+              "shortLabel": "Grasp",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "bludgeoning"
+                ],
+                "notes": [
+                  "Initial grasp or Action to reach for a new target: Strength save; failure deals damage and restrains, success deals no damage. Place the Medium hand in a visible unoccupied 5-ft ground space within casting range. Moving it or choosing another target releases the previous target."
+                ]
+              }
+            },
+            {
+              "id": "crush",
+              "label": "Crush restrained target",
+              "shortLabel": "Crush",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "bludgeoning"
+                ],
+                "notes": [
+                  "Action while the hand already restrains this target: Strength save; success halves the crushing damage. Resolve the target, restraint and Concentration at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Vitriolic Sphere": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial acid explosion",
+              "shortLabel": "Explosion",
+              "combat": {
+                "damage": "10d4",
+                "upcast": "2d4",
+                "types": [
+                  "acid"
+                ],
+                "notes": [
+                  "Initial 20-ft-radius explosion: Dexterity save; success halves this damage and prevents the later damage. A failed save schedules the separate acid damage at the end of that target’s next turn."
+                ]
+              }
+            },
+            {
+              "id": "delayed",
+              "label": "Delayed acid after failed initial save",
+              "shortLabel": "Delayed",
+              "combat": {
+                "damage": "5d4",
+                "types": [
+                  "acid"
+                ],
+                "save": "",
+                "automatic": true,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Only after failing the initial save: automatic damage at the end of that target’s next turn, with no additional save. These dice never increase with slot level. Resolve each recipient separately."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Phantasmal Killer": {
+      "bySource": {
+        "PHB": {
+          "attack": false,
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial fear save",
+              "shortLabel": "Fear",
+              "combat": {
+                "nonDamage": true,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Initial Wisdom save for one target: failure causes Frightened while the spell lasts. This initial event deals no damage. Resolve fear, target eligibility and Concentration at the table."
+                ],
+                "types": []
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Frightened target’s end-of-turn save",
+              "shortLabel": "Turn end",
+              "combat": {
+                "damage": "4d10",
+                "types": [
+                  "psychic"
+                ],
+                "upcast": "1d10",
+                "notes": [
+                  "Only a target still Frightened by this spell makes this Wisdom save at the end of its turn. Failure deals the displayed damage; success deals no damage and ends the spell for that target. This is separate from the initial fear save."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Weird": {
+      "bySource": {
+        "PHB": {
+          "attack": false,
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial fear save",
+              "shortLabel": "Fear",
+              "combat": {
+                "nonDamage": true,
+                "noDamageUpcast": true,
+                "notes": [
+                  "Initial Wisdom save for creatures in a 30-ft-radius sphere: failure causes Frightened while the spell lasts. This initial event deals no damage. Resolve fear, target eligibility and Concentration at the table."
+                ],
+                "types": []
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Frightened target’s end-of-turn save",
+              "shortLabel": "Turn end",
+              "combat": {
+                "damage": "4d10",
+                "types": [
+                  "psychic"
+                ],
+                "notes": [
+                  "Only a target still Frightened by this spell makes this Wisdom save at the end of its turn. Failure deals the displayed damage; success deals no damage and ends the spell for that target. This is separate from the initial fear save."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Blink": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "At each of your turn ends, roll 1d6: 4–6 shifts you to the Ethereal Plane. Return at your next turn’s start or spell end to an eligible space within 10 ft of departure. Track position and planar interactions at the table."
+          ]
+        }
+      }
+    },
+    "Confusion": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Failed Wisdom save: no Bonus Actions or Reactions; roll 1d10 each turn start for behavior. The die selects behavior, not HP damage. Repeat the save each turn end to end the effect on that target. Upcasting adds 5 ft of radius per slot above 4; resolve behavior and targets at the table."
+          ]
+        }
+      }
+    },
+    "Control Weather": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Outdoors only; adjust weather stages within 5 miles. Each change takes 1d4 × 10 minutes; the die measures time, not HP damage. The spell ends if you go indoors. Weather effects remain with the DM."
+          ]
+        }
+      }
+    },
+    "Freedom of Movement": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "A willing touched target ignores difficult terrain and magical Speed reduction, Paralysis and Restraint; its Swim Speed equals its Speed. Spending 5 ft of movement escapes nonmagical restraints. Higher slots add one target per level above 4. Resolve movement at the table."
+          ]
+        }
+      }
+    },
+    "Guidance": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose one skill for a willing touched creature. While the spell lasts, add 1d4 to ability checks using that skill. This is not an attack/save bonus or HP damage; track Concentration and the chosen skill at the table."
+          ]
+        }
+      }
+    },
+    "Heroes' Feast": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "After one hour eating, up to 12 participants gain Poison resistance and immunity to Frightened and Poisoned for 24 hours. Increase each participant’s HP maximum by 2d10 and grant the same HP amount. Track the maximum increase and its expiry separately."
+          ]
+        }
+      }
+    },
+    "Reincarnate": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "For an eligible Humanoid dead no more than 10 days, use the 1d10 result or the DM’s choice for a new species. Resolve return, new species choices and replacement of old species traits at the table; this die is not HP damage."
+          ]
+        }
+      }
+    },
+    "Resistance": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose Acid, Bludgeoning, Cold, Fire, Lightning, Necrotic, Piercing, Poison, Radiant, Slashing or Thunder. The touched willing creature reduces damage of that type by 1d4, at most once per turn. This reduction is not damage dealt; track Concentration and the trigger separately."
+          ]
+        }
+      }
+    },
+    "Time Stop": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "notes": [
+            "Roll 1d4 + 1 for your consecutive turns. End early if an action/effect affects another creature or its worn/carried objects, or if you move more than 1,000 ft from the casting point. The roll counts turns, not HP damage."
+          ]
+        }
+      }
+    },
+    "Cure Wounds": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "1d8",
+            "addAbility": true,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d8",
+            "addAbility": true,
+            "upcast": "2d8"
+          },
+          "notes": [
+            "Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Healing Word": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "1d4",
+            "addAbility": true,
+            "upcast": "1d4"
+          },
+          "notes": [
+            "No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d4",
+            "addAbility": true,
+            "upcast": "2d4"
+          },
+          "notes": [
+            "Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Mass Cure Wounds": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "3d8",
+            "addAbility": true,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "Up to six eligible creatures. No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "5d8",
+            "addAbility": true,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "Up to six eligible creatures. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Mass Healing Word": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "1d4",
+            "addAbility": true,
+            "upcast": "1d4"
+          },
+          "notes": [
+            "Up to six eligible creatures. No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d4",
+            "addAbility": true,
+            "upcast": "1d4"
+          },
+          "notes": [
+            "Up to six eligible creatures. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Prayer of Healing": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d8",
+            "addAbility": true,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "Up to six visible creatures; no automatic Short Rest is granted. No effect on Undead or Constructs. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d8",
+            "addAbility": false,
+            "upcast": "1d8"
+          },
+          "notes": [
+            "Up to five creatures remaining in range throughout casting also gain Short Rest benefits; each recipient needs a Long Rest before benefiting again. No spellcasting modifier is added. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "Regenerate": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "4d8 + 15",
+            "addAbility": false
+          },
+          "notes": [
+            "Initial healing only; for the duration, the recipient also regains 1 HP at each own turn start. Track severed-limb restoration and duration separately. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "4d8 + 15",
+            "addAbility": false
+          },
+          "notes": [
+            "Initial healing only; for the duration, the recipient also regains 1 HP at each own turn start. Track severed-limb restoration and duration separately. Resolve each recipient and feature/item healing modifiers at the table; the reference never changes recipient HP or spends a slot."
+          ]
+        }
+      }
+    },
+    "False Life": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "1d4 + 4",
+            "addAbility": false,
+            "temporary": true,
+            "flatUpcast": 5
+          },
+          "notes": [
+            "Self only; temporary HP lasts for the legacy spell duration. Choose an existing or new temporary-HP pool; never add the pools together. Resolve replacement at the table."
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "addAbility": false,
+          "nonDamage": true,
+          "noDamageUpcast": true,
+          "healing": {
+            "dice": "2d4 + 4",
+            "addAbility": false,
+            "temporary": true,
+            "flatUpcast": 5
+          },
+          "notes": [
+            "Self only; temporary HP lasts until depleted or Long Rest. Choose an existing or new temporary-HP pool; never add the pools together. Resolve replacement at the table."
+          ]
+        }
+      }
+    },
+    "Sickening Radiance": {
+      "bySource": {
+        "XGE": {
+          "damage": "4d10",
+          "attack": false,
+          "types": [
+            "radiant"
+          ],
+          "noDamageUpcast": true,
+          "notes": [
+            "Damage event: a creature moves into the 30-ft-radius light for the first time on a turn or starts its turn there. Constitution save: success prevents damage, Exhaustion and the glow; failure also adds one Exhaustion level and a 5-ft glow preventing Invisibility benefits. Only the glow and Exhaustion caused by this spell end with it. Track recipients and Concentration at the table."
+          ]
+        }
+      }
+    },
+    "Ravenous Void": {
+      "bySource": {
+        "EGW": {
+          "attack": false,
+          "types": [
+            "force"
+          ],
+          "noDamageUpcast": true,
+          "notes": [
+            "The damaging sphere has a 20-ft radius; pull distance is measured within 100 ft of the sphere, not its center. Resolve difficult terrain, objects, Concentration and annihilation of a creature reduced to 0 HP by this spell with the DM."
+          ],
+          "effects": [
+            {
+              "id": "pull",
+              "label": "Turn-start pull save",
+              "shortLabel": "Pull",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "Creature starts its turn within 100 ft of the sphere: Strength save; failure pulls it toward the sphere’s center into an eligible unoccupied space. The pull itself deals no damage. A separate sphere damage event may qualify."
+                ]
+              }
+            },
+            {
+              "id": "sphere",
+              "label": "Enter or start in the sphere",
+              "shortLabel": "Sphere",
+              "combat": {
+                "damage": "5d10",
+                "types": [
+                  "force"
+                ],
+                "save": "",
+                "automatic": true,
+                "checkDC": "Action: Strength check to free yourself or a reachable creature from the sphere’s restraint",
+                "notes": [
+                  "Automatic damage on first entering the sphere on a turn or starting a turn inside it; no damage save. The creature is Restrained while inside; a later qualifying entry or turn-start event can restrain it again after an escape. Track each qualifying event and recipient separately."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Whirlwind": {
+      "bySource": {
+        "XGE": {
+          "damage": "10d6",
+          "attack": false,
+          "types": [
+            "bludgeoning"
+          ],
+          "noDamageUpcast": true,
+          "checkDC": "Action escape: Strength or Dexterity check",
+          "notes": [
+            "Damage event: first time on a turn that the creature enters the 10-ft-radius, 30-ft-high whirlwind or it enters that creature’s space, including creation. Dexterity save: half damage on success. A Large or smaller creature failing that save then makes a Strength save against the same DC or is Restrained. Restrained targets rise 5 ft on their turn starts; resolve movement, escape hurl distance and falling separately."
+          ],
+          "actionSave": "DEXTERITY"
+        }
+      }
+    },
+    "Draconic Transformation": {
+      "bySource": {
+        "FTD": {
+          "damage": "6d8",
+          "attack": false,
+          "types": [
+            "force"
+          ],
+          "noDamageUpcast": true,
+          "actionRange": "60-ft cone",
+          "notes": [
+            "Breath event on casting or as a Bonus Action on later turns while the transformation lasts. Dexterity save: half damage on success. Track the active spell, Concentration, its separate 60-ft flight and 30-ft Blindsight; choosing this damage reference does not activate those benefits."
+          ]
+        }
+      }
+    },
+    "Investiture of Flame": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "types": [
+            "fire"
+          ],
+          "noDamageUpcast": true,
+          "notes": [
+            "Use these events only while the investiture is active. Track Concentration and the spell’s Fire immunity, Cold resistance and light separately."
+          ],
+          "effects": [
+            {
+              "id": "aura",
+              "label": "Creature’s nearby movement or turn end",
+              "shortLabel": "Aura",
+              "combat": {
+                "damage": "1d10",
+                "save": "",
+                "automatic": true,
+                "actionRange": "5 ft",
+                "notes": [
+                  "A creature itself moves within 5 ft of you for the first time on a turn or ends its turn there: automatic Fire damage. Moving your own aura over a stationary creature is not this movement trigger. No damage save."
+                ]
+              }
+            },
+            {
+              "id": "line",
+              "label": "Action: line of fire",
+              "shortLabel": "Line",
+              "combat": {
+                "damage": "4d8",
+                "actionRange": "15-ft line",
+                "notes": [
+                  "Action: a 15-ft-long, 5-ft-wide line from you. Dexterity save: half damage on success. Resolve the chosen direction and recipients at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Investiture of Ice": {
+      "bySource": {
+        "XGE": {
+          "damage": "4d6",
+          "attack": false,
+          "types": [
+            "cold"
+          ],
+          "noDamageUpcast": true,
+          "actionRange": "15-ft cone",
+          "notes": [
+            "Action while the spell is active: Constitution save; half damage on success. Only failure halves the target’s Speed until your next turn starts. Track Concentration, Cold immunity, Fire resistance and the moving 10-ft icy terrain separately; your ice/snow terrain exception applies only as stated by the spell."
+          ]
+        }
+      }
+    },
+    "Investiture of Wind": {
+      "bySource": {
+        "XGE": {
+          "damage": "2d10",
+          "attack": false,
+          "types": [
+            "bludgeoning"
+          ],
+          "noDamageUpcast": true,
+          "actionRange": "60 ft",
+          "notes": [
+            "Action while the spell is active: place a 15-ft cube centered on a visible point within 60 ft. Constitution save: half damage on success. Only a failed save by a Large or smaller creature permits a push up to 10 ft from the cube’s center. Track Concentration, 60-ft flight/falling and Disadvantage against you from ranged weapon attacks separately."
+          ]
+        }
+      }
+    },
+    "Shadow of Moil": {
+      "bySource": {
+        "XGE": {
+          "damage": "2d8",
+          "attack": false,
+          "types": [
+            "necrotic"
+          ],
+          "save": "",
+          "automatic": true,
+          "noDamageUpcast": true,
+          "actionRange": "10 ft",
+          "notes": [
+            "Retaliation event only while the spell is active: a creature within 10 ft hits you with an attack. Automatic damage to that attacker; no Reaction, spell attack roll or damage save. Track each qualifying hit, Concentration, Radiant resistance, obscurement and nearby light separately."
+          ]
+        }
+      }
+    },
+    "Tsunami": {
+      "bySource": {
+        "PHB": {
+          "attack": false,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "bludgeoning"
+          ],
+          "checkDC": "Strength (Athletics) check to swim within the wall",
+          "notes": [
+            "After the casting completes, use the creation event once. Later caster-turn advances move the wall and its occupants 50 ft away; reduce its height by 50 ft and the following wave’s damage by 1d10 after each advance. End when its height reaches 0. Track the chosen height, recipients, once-per-round damage and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Wall appears",
+              "shortLabel": "Creation",
+              "combat": {
+                "damage": "6d10",
+                "notes": [
+                  "Creatures in the new wall make a Strength save; success halves damage. The Huge-or-smaller limit applies to later moving-wave events, not this creation event."
+                ]
+              }
+            },
+            {
+              "id": "wave-1",
+              "label": "Later wave · 5d10",
+              "shortLabel": "Wave 1",
+              "combat": {
+                "damage": "5d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-2",
+              "label": "Later wave · 4d10",
+              "shortLabel": "Wave 2",
+              "combat": {
+                "damage": "4d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-3",
+              "label": "Later wave · 3d10",
+              "shortLabel": "Wave 3",
+              "combat": {
+                "damage": "3d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-4",
+              "label": "Later wave · 2d10",
+              "shortLabel": "Wave 4",
+              "combat": {
+                "damage": "2d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-5",
+              "label": "Later wave · 1d10",
+              "shortLabel": "Wave 5",
+              "combat": {
+                "damage": "1d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "attack": false,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "bludgeoning"
+          ],
+          "checkDC": "Strength (Athletics) check to swim within the wall",
+          "notes": [
+            "After the casting completes, use the creation event once. Later caster-turn advances move the wall and its occupants 50 ft away; reduce its height by 50 ft and the following wave’s damage by 1d10 after each advance. End when its height reaches 0. Track the chosen height, recipients, once-per-round damage and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Wall appears",
+              "shortLabel": "Creation",
+              "combat": {
+                "damage": "6d10",
+                "notes": [
+                  "Creatures in the new wall make a Strength save; success halves damage. The Huge-or-smaller limit applies to later moving-wave events, not this creation event."
+                ]
+              }
+            },
+            {
+              "id": "wave-1",
+              "label": "Later wave · 5d10",
+              "shortLabel": "Wave 1",
+              "combat": {
+                "damage": "5d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-2",
+              "label": "Later wave · 4d10",
+              "shortLabel": "Wave 2",
+              "combat": {
+                "damage": "4d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-3",
+              "label": "Later wave · 3d10",
+              "shortLabel": "Wave 3",
+              "combat": {
+                "damage": "3d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-4",
+              "label": "Later wave · 2d10",
+              "shortLabel": "Wave 4",
+              "combat": {
+                "damage": "2d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            },
+            {
+              "id": "wave-5",
+              "label": "Later wave · 1d10",
+              "shortLabel": "Wave 5",
+              "combat": {
+                "damage": "1d10",
+                "notes": [
+                  "When a later advance contains or enters a Huge or smaller creature’s space: Strength save; success prevents this wave damage. Each creature can take moving-wave damage only once per round. Use this damage stage only while the wall still exists."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Blade of Disaster": {
+      "bySource": {
+        "TCE": {
+          "attack": true,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "force"
+          ],
+          "actionRange": "5 ft from blade",
+          "notes": [
+            "Casting creates the blade within 60 ft and permits up to two independent melee spell attacks. Later turns: Bonus Action, move the blade up to 30 ft, then up to two attacks. Damage is per hit; the two attacks are not one doubled damage roll. A d20 result of 18–20 is a critical hit. The blade passes through barriers. Track positioning and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Ordinary hit",
+              "shortLabel": "Hit",
+              "combat": {
+                "damage": "4d12"
+              }
+            },
+            {
+              "id": "critical",
+              "label": "Confirmed critical hit",
+              "shortLabel": "Critical",
+              "combat": {
+                "damage": "12d12",
+                "notes": [
+                  "Choose only after a critical hit is confirmed. This source replaces the normal doubled dice with 12d12 total Force damage."
+                ]
+              }
+            }
+          ]
+        },
+        "FRHoF": {
+          "attack": true,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "force"
+          ],
+          "actionRange": "5 ft from blade",
+          "notes": [
+            "Casting creates the blade within 60 ft and permits up to two independent melee spell attacks. Later turns: Bonus Action, move the blade up to 60 ft, then up to two attacks. Damage is per hit; the two attacks are not one doubled damage roll. A d20 result of 18–20 is a critical hit. The blade passes through barriers. Track positioning and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Ordinary hit",
+              "shortLabel": "Hit",
+              "combat": {
+                "damage": "10d6"
+              }
+            },
+            {
+              "id": "critical",
+              "label": "Confirmed critical hit",
+              "shortLabel": "Critical",
+              "combat": {
+                "damage": "20d6",
+                "notes": [
+                  "Choose only after a critical hit is confirmed. This source uses ordinary critical dice: 10d6 becomes 20d6 Force damage."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Storm Sphere": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "damage": null,
+          "upcast": "1d6",
+          "addAbility": false,
+          "noDamageUpcast": false,
+          "notes": [
+            "The 20-ft-radius sphere is difficult terrain. Creatures within 30 ft have Disadvantage on Wisdom (Perception) checks made to listen. Resolve its position, recipients and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "wind",
+              "label": "Wind · creation or turn end",
+              "shortLabel": "Wind",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "bludgeoning"
+                ],
+                "attack": false,
+                "actionSave": "STRENGTH",
+                "notes": [
+                  "A creature in the sphere when it appears or ending its turn there makes a Strength save; success prevents this damage."
+                ]
+              }
+            },
+            {
+              "id": "bolt",
+              "label": "Bonus Action · Lightning bolt",
+              "shortLabel": "Bolt",
+              "combat": {
+                "damage": "4d6",
+                "types": [
+                  "lightning"
+                ],
+                "attack": true,
+                "actionSave": "",
+                "actionRange": "60 ft from sphere center",
+                "notes": [
+                  "Bonus Action on each of your turns: one ranged spell attack against a creature within 60 ft of the sphere’s center. Advantage only if that target is inside the sphere. The wind save does not apply to this bolt."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Illusory Dragon": {
+      "bySource": {
+        "XGE": {
+          "attack": false,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "acid",
+            "cold",
+            "fire",
+            "lightning",
+            "necrotic",
+            "poison"
+          ],
+          "checkDC": "Action: Intelligence (Investigation) check to recognize the illusion",
+          "notes": [
+            "Create a Huge illusion within 120 ft. A Bonus Action can move it up to 60 ft and produce one 60-ft cone from its space. Choose its breath type when created and retain that type for this casting. Recognizing it grants Advantage against its breath. The illusion’s defenses do not become your own; handle recipients, movement and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "fear",
+              "label": "Creation · frighten enemies",
+              "shortLabel": "Fear",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Visible enemies save when the illusion appears; failure frightens them for the spell’s duration. An affected creature ending its turn without line of sight to the illusion can repeat the Wisdom save to end its fear. This event deals no HP damage."
+                ]
+              }
+            },
+            {
+              "id": "breath-acid",
+              "label": "Breath · Acid",
+              "shortLabel": "Acid breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "acid"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-cold",
+              "label": "Breath · Cold",
+              "shortLabel": "Cold breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "cold"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-fire",
+              "label": "Breath · Fire",
+              "shortLabel": "Fire breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "fire"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-lightning",
+              "label": "Breath · Lightning",
+              "shortLabel": "Lightning breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "lightning"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-necrotic",
+              "label": "Breath · Necrotic",
+              "shortLabel": "Necrotic breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "necrotic"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-poison",
+              "label": "Breath · Poison",
+              "shortLabel": "Poison breath",
+              "combat": {
+                "damage": "7d6",
+                "types": [
+                  "poison"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            }
+          ]
+        },
+        "AU": {
+          "attack": false,
+          "damage": null,
+          "upcast": null,
+          "addAbility": false,
+          "noDamageUpcast": true,
+          "types": [
+            "acid",
+            "cold",
+            "fire",
+            "lightning",
+            "necrotic",
+            "poison"
+          ],
+          "checkDC": "Study action: Intelligence (Investigation) check to recognize the illusion",
+          "notes": [
+            "Create a Huge illusion within 120 ft. A Bonus Action can move it up to 60 ft and produce one 60-ft cone from its space. Choose its breath type when created and retain that type for this casting. Recognizing it grants Advantage against its breath and saves to end its Frightened condition. The illusion’s defenses do not become your own; handle recipients, movement and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "fear",
+              "label": "Creation · frighten enemies",
+              "shortLabel": "Fear",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Visible enemies save when the illusion appears; failure frightens them for the spell’s duration and makes them drop held objects. An affected creature ending its turn without line of sight to the illusion can repeat the Wisdom save to end its fear. This event deals no HP damage."
+                ]
+              }
+            },
+            {
+              "id": "breath-acid",
+              "label": "Breath · Acid",
+              "shortLabel": "Acid breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "acid"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-cold",
+              "label": "Breath · Cold",
+              "shortLabel": "Cold breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "cold"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-fire",
+              "label": "Breath · Fire",
+              "shortLabel": "Fire breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "fire"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-lightning",
+              "label": "Breath · Lightning",
+              "shortLabel": "Lightning breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "lightning"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-necrotic",
+              "label": "Breath · Necrotic",
+              "shortLabel": "Necrotic breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "necrotic"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            },
+            {
+              "id": "breath-poison",
+              "label": "Breath · Poison",
+              "shortLabel": "Poison breath",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "poison"
+                ],
+                "actionSave": "INTELLIGENCE",
+                "actionRange": "60-ft cone from illusion",
+                "notes": [
+                  "Bonus Action breath: Intelligence save, half damage on success. Use only the type chosen when this illusion was created."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Armor of Agathys": {
+      "bySource": {
+        "PHB": {
+          "damage": "5",
+          "attack": false,
+          "addAbility": false,
+          "upcast": "5",
+          "types": [
+            "cold"
+          ],
+          "save": "",
+          "automatic": true,
+          "actionRange": "Melee attacker",
+          "healing": {
+            "dice": "5",
+            "temporary": true,
+            "flatUpcast": 5
+          },
+          "notes": [
+            "Retaliation only after a creature hits you with a melee attack while this casting still qualifies. No Reaction, damage roll or damage save. Only the temporary HP from this casting qualify; replacing that pool with another source does not preserve its retaliation. The spell lasts up to one hour. Track the casting, temporary-HP provenance and recipient damage at the table. Selecting this reference does not grant temporary HP."
+          ]
+        },
+        "XPHB": {
+          "damage": "5",
+          "attack": false,
+          "addAbility": false,
+          "upcast": "5",
+          "types": [
+            "cold"
+          ],
+          "save": "",
+          "automatic": true,
+          "actionRange": "Melee attacker",
+          "healing": {
+            "dice": "5",
+            "temporary": true,
+            "flatUpcast": 5
+          },
+          "notes": [
+            "Retaliation only after a creature hits you with a melee attack roll while this casting still qualifies. No Reaction, damage roll or damage save. This source ends early when you have no temporary HP. A replacement pool can sustain it only if the spell never ended; later gaining temporary HP does not restart it. The spell lasts up to one hour. Track the casting, temporary-HP provenance and recipient damage at the table. Selecting this reference does not grant temporary HP."
+          ]
+        }
+      }
+    },
+    "Magic Stone": {
+      "bySource": {
+        "XGE": {
+          "damage": "1d6",
+          "scaling": null,
+          "attack": true,
+          "addAbility": true,
+          "types": [
+            "bludgeoning"
+          ],
+          "noDamageUpcast": true,
+          "actionRange": "60 ft if thrown",
+          "notes": [
+            "Enchant one to three pebbles for one minute; an affected pebble ends after its attack, hit or miss. Casting again ends the old pebbles. This reference is your own ranged spell attack, using your casting ability for attack and damage, without cantrip damage scaling. Another thrower uses your casting ability modifier and their own attack eligibility; resolve the transfer at the table. A sling uses its own range and applicable properties; the 60-ft thrown range does not replace the sling’s range. No inventory pebble or attack is spent automatically."
+          ]
+        }
+      }
+    },
+    "Mental Prison": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "psychic"
+          ],
+          "noDamageUpcast": true,
+          "notes": [
+            "A target immune to Charmed automatically succeeds on the initial save. On a failed save it is Restrained and cannot see or hear beyond the illusion. Resolve target conditions and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial save · full damage either way",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "5d10",
+                "notes": [
+                  "Intelligence save: 5d10 Psychic damage on either success or failure, not half on success. Success ends the spell; only failure creates the prison."
+                ]
+              }
+            },
+            {
+              "id": "breach",
+              "label": "Confirmed prison breach",
+              "shortLabel": "Breach",
+              "combat": {
+                "damage": "10d10",
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "Only after the initial save failed: moving the target out, a melee attack through the illusion, or reaching any body part through it triggers 10d10 Psychic damage and ends the spell. No additional saving throw. Confirm the trigger at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Control Water": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose water in up to a 100-ft cube within 300 ft; maintain Concentration. An Action on your turn can repeat or change the effect. Track water, vehicles, object outcomes and recipients at the table."
+          ],
+          "effects": [
+            {
+              "id": "flood",
+              "label": "Flood · no creature damage formula",
+              "shortLabel": "Flood",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Raise standing water by up to 20 ft, or create a 20-ft wave in a large body. The wave carries Huge or smaller vehicles and has a 25% capsizing chance for them; repeat the wave at the start of your next turn while this effect remains. No automatic creature damage."
+                ]
+              }
+            },
+            {
+              "id": "part",
+              "label": "Part water · trench",
+              "shortLabel": "Part",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Open a trench through the chosen area. When this effect ends, water returns over the following round."
+                ]
+              }
+            },
+            {
+              "id": "redirect",
+              "label": "Redirect flow",
+              "shortLabel": "Flow",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Direct flow within the area, including over obstacles; beyond it, water resumes its natural flow."
+                ]
+              }
+            },
+            {
+              "id": "whirlpool",
+              "label": "Whirlpool · creature damage",
+              "shortLabel": "Vortex",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "bludgeoning"
+                ],
+                "actionSave": "STRENGTH",
+                "checkDC": "Strength (Athletics) check to swim away",
+                "notes": [
+                  "Requires water at least 50 ft square and 25 ft deep. The vortex is 25 ft high, 5 ft wide at its base and up to 50 ft wide at its top. Creatures and objects in water within 25 ft are pulled 10 ft toward it. A creature first entering on a turn or starting its turn inside makes a Strength save; success halves damage. Failure also catches it; escaping once caught costs an Action and its Athletics check has Disadvantage. Object damage is a separate event."
+                ]
+              }
+            },
+            {
+              "id": "object",
+              "label": "Whirlpool · object damage",
+              "shortLabel": "Object",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "bludgeoning"
+                ],
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "An object takes 2d8 Bludgeoning on its first entry each turn, and each round it remains in the vortex. No creature save; resolve object damage rules at the table."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose water in up to a 100-ft cube within 300 ft; maintain Concentration. On later turns, a Magic action can repeat or change the effect. Track water, vehicles, object outcomes and recipients at the table."
+          ],
+          "effects": [
+            {
+              "id": "flood",
+              "label": "Flood · no creature damage formula",
+              "shortLabel": "Flood",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Raise standing water by up to 20 ft, or create a 20-ft wave in a large body. The wave carries Huge or smaller vehicles and has a 25% capsizing chance for them; repeat the wave at the start of your next turn while this effect remains. No automatic creature damage."
+                ]
+              }
+            },
+            {
+              "id": "part",
+              "label": "Part water · trench",
+              "shortLabel": "Part",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Open a trench through the chosen area. When this effect ends, water returns over the following round."
+                ]
+              }
+            },
+            {
+              "id": "redirect",
+              "label": "Redirect flow",
+              "shortLabel": "Flow",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Direct flow within the area, including over obstacles; beyond it, water resumes its natural flow."
+                ]
+              }
+            },
+            {
+              "id": "whirlpool",
+              "label": "Whirlpool · creature damage",
+              "shortLabel": "Vortex",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "bludgeoning"
+                ],
+                "actionSave": "STRENGTH",
+                "checkDC": "Strength (Athletics) check to swim away",
+                "notes": [
+                  "Requires water at least 50 ft square and 25 ft deep. The vortex is 25 ft high, 5 ft wide at its base and up to 50 ft wide at its top. Creatures in water within 25 ft are pulled 10 ft toward it. A creature first entering on a turn or ending its turn inside makes a Strength save; success halves damage. Swimming away requires an Action and a successful Athletics check; this source does not impose the legacy caught condition or its Disadvantage."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Absorb Elements": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "save": "",
+          "automatic": true,
+          "actionRange": "Melee hit",
+          "upcast": "1d6",
+          "notes": [
+            "Reaction casting requires taking Acid, Cold, Fire, Lightning or Thunder damage. The actual casting grants Resistance to that triggering type until the start of your next turn. Only your first melee-attack hit on that next turn adds the chosen damage, then the spell ends; other melee hits and earlier or later turns do not qualify. Match the stored type to the actual trigger. Selecting this reference does not cast, spend a Reaction/slot or grant Resistance."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Next-turn melee hit · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Next-turn melee hit · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Next-turn melee hit · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Next-turn melee hit · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Next-turn melee hit · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Bestow Curse": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "attack": false,
+          "addAbility": false,
+          "setupSave": "WISDOM",
+          "types": [],
+          "noDamageUpcast": true,
+          "durationBySlot": {
+            "3": "Concentration, up to 1 minute",
+            "4": "Concentration, up to 10 minutes",
+            "5": "8 hours; no Concentration",
+            "7": "24 hours; no Concentration",
+            "9": "Until dispelled; no Concentration"
+          },
+          "notes": [
+            "Touch one creature and choose one curse when casting. An initial Wisdom save prevents the curse on success. Only a failed save enables its chosen effect. Remove Curse ends it; track the recipient and actual casting at the table. The nature choices do not add several curses from one casting."
+          ],
+          "effects": [
+            {
+              "id": "ability-str",
+              "label": "Strength checks and saves",
+              "shortLabel": "Strength",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Strength ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-dex",
+              "label": "Dexterity checks and saves",
+              "shortLabel": "Dexterity",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Dexterity ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-con",
+              "label": "Constitution checks and saves",
+              "shortLabel": "Constitution",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Constitution ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-int",
+              "label": "Intelligence checks and saves",
+              "shortLabel": "Intelligence",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Intelligence ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-wis",
+              "label": "Wisdom checks and saves",
+              "shortLabel": "Wisdom",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Wisdom ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-cha",
+              "label": "Charisma checks and saves",
+              "shortLabel": "Charisma",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Charisma ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "attacks",
+              "label": "Attacks against you",
+              "shortLabel": "Attacks",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on attack rolls against you; attacks against other creatures are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "action-loss",
+              "label": "Turn-start save · Action loss",
+              "shortLabel": "Action loss",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "WISDOM",
+                "notes": [
+                  "After a failed initial save, the target makes a Wisdom save at the start of each of its turns. Failure wastes its Action doing nothing. Success permits its Action this turn; it does not end the curse."
+                ]
+              }
+            },
+            {
+              "id": "damage",
+              "label": "Confirmed curse · extra damage",
+              "shortLabel": "Extra damage",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "necrotic"
+                ],
+                "automatic": true,
+                "actionRange": "Cursed target",
+                "notes": [
+                  "After a failed initial save and choosing this curse: your attacks and spells deal an extra 1d8 Necrotic to that target. This is only the extra damage, not a separate attack or the initial curse’s damage. Slot level changes duration, not this d8. Resolve separate damage events with the DM."
+                ]
+              }
+            },
+            {
+              "id": "custom",
+              "label": "DM-approved alternative curse",
+              "shortLabel": "Custom",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "The DM chooses and adjudicates a comparable alternative. Record its actual terms in your notes; this option supplies no automatic target effect or damage."
+                ]
+              }
+            }
+          ],
+          "actionSave": ""
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "attack": false,
+          "addAbility": false,
+          "setupSave": "WISDOM",
+          "types": [],
+          "noDamageUpcast": true,
+          "durationBySlot": {
+            "3": "Concentration, up to 1 minute",
+            "4": "Concentration, up to 10 minutes",
+            "5": "8 hours; no Concentration",
+            "7": "24 hours; no Concentration",
+            "9": "Until dispelled; no Concentration"
+          },
+          "notes": [
+            "Touch one creature and choose one curse when casting. An initial Wisdom save prevents the curse on success. Only a failed save enables its chosen effect. Remove Curse ends it; track the recipient and actual casting at the table. The nature choices do not add several curses from one casting."
+          ],
+          "effects": [
+            {
+              "id": "ability-str",
+              "label": "Strength checks and saves",
+              "shortLabel": "Strength",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Strength ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-dex",
+              "label": "Dexterity checks and saves",
+              "shortLabel": "Dexterity",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Dexterity ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-con",
+              "label": "Constitution checks and saves",
+              "shortLabel": "Constitution",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Constitution ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-int",
+              "label": "Intelligence checks and saves",
+              "shortLabel": "Intelligence",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Intelligence ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-wis",
+              "label": "Wisdom checks and saves",
+              "shortLabel": "Wisdom",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Wisdom ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-cha",
+              "label": "Charisma checks and saves",
+              "shortLabel": "Charisma",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Charisma ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "attacks",
+              "label": "Attacks against you",
+              "shortLabel": "Attacks",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on attack rolls against you; attacks against other creatures are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "dodge",
+              "label": "Combat turn-start save · forced Dodge",
+              "shortLabel": "Dodge",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "WISDOM",
+                "notes": [
+                  "After a failed initial save, a combat turn-start Wisdom save can force the target to take the Dodge action on that turn. A successful save does not end the curse. This is not the legacy wasted-Action effect; other actions follow the normal Dodge rules."
+                ]
+              }
+            },
+            {
+              "id": "damage",
+              "label": "Confirmed curse · extra damage",
+              "shortLabel": "Extra damage",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "necrotic"
+                ],
+                "automatic": true,
+                "actionRange": "Cursed target",
+                "notes": [
+                  "After a failed initial save and choosing this curse, damage you deal with an attack roll or a spell causes the target to take an extra 1d8 Necrotic. Confirm that you actually dealt the triggering damage. This is only the extra damage; slot level changes duration, not this d8."
+                ]
+              }
+            }
+          ],
+          "actionSave": ""
+        }
+      }
+    },
+    "Elemental Bane": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "setupSave": "CONSTITUTION",
+          "automatic": true,
+          "actionRange": "Affected target",
+          "types": [],
+          "noDamageUpcast": true,
+          "targets": {
+            "base": 1,
+            "increment": 1,
+            "above": 4
+          },
+          "notes": [
+            "On casting, choose one visible creature within 90 ft and one damage type. Extra targets from higher slots must be within 30 ft of each other. A failed Constitution save removes only Resistance to the chosen type, not Immunity. Each affected target taking that type’s damage for the first time each turn takes this extra 2d6 of that type; damage need not come from you. Maintain Concentration up to one minute. Casting itself deals none of this damage. Track targets, triggering damage and each target’s turn limit at the table."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Confirmed trigger · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Confirmed trigger · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Confirmed trigger · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Confirmed trigger · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Confirmed trigger · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ],
+          "actionSave": ""
+        }
+      }
+    },
+    "Crusader's Mantle": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "30-ft aura",
+          "notes": [
+            "You and nonhostile creatures must be inside your moving 30-ft-radius aura. Only a weapon-attack hit adds this rider; this source does not add it to an ordinary Unarmed Strike. This is only the extra damage; resolve the original attack separately. Slot level never increases this die. Confirm actual casting and Concentration, aura occupancy and the attacker’s own modifiers at the table; selecting a reference does not activate an aura."
+          ],
+          "effects": [
+            {
+              "id": "weapon-hit",
+              "label": "Weapon hit · extra damage",
+              "shortLabel": "Weapon rider",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "radiant"
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "30-ft Emanation",
+          "notes": [
+            "You and allies must be inside your 30-ft Emanation. A qualifying weapon or Unarmed Strike hit adds this rider. This is only the extra damage; resolve the original attack separately. Slot level never increases this die. Confirm actual casting and Concentration, aura occupancy and the attacker’s own modifiers at the table; selecting a reference does not activate an aura."
+          ],
+          "effects": [
+            {
+              "id": "weapon-hit",
+              "label": "Weapon hit · extra damage",
+              "shortLabel": "Weapon rider",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "radiant"
+                ]
+              }
+            },
+            {
+              "id": "unarmed-hit",
+              "label": "Unarmed Strike hit · extra damage",
+              "shortLabel": "Unarmed rider",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "radiant"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Holy Weapon": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "notes": [
+            "Touch a weapon when casting; Concentration lasts up to 1 hour. While active it counts as magical and emits bright light 30 ft plus another 30 ft of dim light. A reference does not enchant inventory, activate light, cast, dismiss the spell, spend a Bonus Action or change target conditions. Neither damage event increases with slot level."
+          ],
+          "effects": [
+            {
+              "id": "weapon-hit",
+              "label": "Enchanted weapon hit · extra damage",
+              "shortLabel": "Weapon rider",
+              "combat": {
+                "damage": "2d8",
+                "actionRange": "Weapon hit",
+                "notes": [
+                  "Only a hit from a weapon attack using this actual enchanted weapon adds the rider. Resolve the original weapon attack, its range and the attacker’s own modifiers separately; it is not another spell attack or a separate saving throw."
+                ]
+              }
+            },
+            {
+              "id": "dismissal",
+              "label": "Dismiss spell · radiance burst",
+              "shortLabel": "Dismiss burst",
+              "combat": {
+                "damage": "4d8",
+                "actionSave": "CONSTITUTION",
+                "automatic": false,
+                "actionRange": "30 ft from weapon",
+                "notes": [
+                  "On your turn, spend a Bonus Action to dismiss the spell. Choose creatures you can see within 30 ft of the weapon, not necessarily of you. Each makes a CON save: success halves damage; failure also causes Blinded for 1 minute. Repeat CON at each affected creature’s turn end to end its Blinded condition. Confirm the actual dismissal and remove the weapon’s former benefits at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Spirit Shroud": {
+      "bySource": {
+        "TCE": {
+          "damage": null,
+          "upcast": "1d8",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "actionRange": "10 ft from you",
+          "step": 2,
+          "notes": [
+            "Bonus Action casting; Concentration up to 1 minute. Choose Radiant, Necrotic or Cold when casting and retain that choice. Extra damage applies to your attack hit only when the creature is within 10 ft of you; a distant hit or a different attacker does not qualify. Only the rider is shown: resolve the original attack separately. A creature taking this damage cannot regain HP until the start of your next turn. Type, proximity, actual casting/Concentration and target effects remain table checks; a reference does not activate the spell."
+          ],
+          "effects": [
+            {
+              "id": "radiant",
+              "label": "Attack hit · Radiant",
+              "shortLabel": "Radiant",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "radiant"
+                ]
+              }
+            },
+            {
+              "id": "necrotic",
+              "label": "Attack hit · Necrotic",
+              "shortLabel": "Necrotic",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "necrotic"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Attack hit · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "speed",
+              "label": "Visible creature starts turn · speed reduction",
+              "shortLabel": "Speed −10",
+              "combat": {
+                "damage": null,
+                "upcast": null,
+                "types": [],
+                "nonDamage": true,
+                "automatic": false,
+                "notes": [
+                  "Choose a creature you can see that starts its turn within 10 ft of you. Its speed is reduced by 10 ft until the start of your next turn. This trigger requires neither a hit nor the extra-damage roll. Resolve affected movement at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Ashardalon's Stride": {
+      "bySource": {
+        "FTD": {
+          "damage": null,
+          "upcast": "1d6",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "fire"
+          ],
+          "actionRange": "Within 5 ft while moving",
+          "movementBySlot": {
+            "base": 20,
+            "increment": 5,
+            "above": 3
+          },
+          "notes": [
+            "Bonus Action casting; Concentration up to 1 minute. While the spell lasts, your speed increases and your movement does not provoke Opportunity Attacks. Selecting either reference does not cast, activate a speed bonus, move you or spend resources."
+          ],
+          "effects": [
+            {
+              "id": "trail",
+              "label": "Move near creature or unattended object · heat trail",
+              "shortLabel": "Heat trail",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Only when you move within 5 ft of a creature or an object that is not worn or carried. The eligible creature or object takes the displayed Fire damage without an attack roll or saving throw, at most once during any one turn. This is per turn, not per round; moving past the same target repeatedly in a turn adds no damage. Resolve actual positions, target eligibility and HP at the table."
+                ]
+              }
+            },
+            {
+              "id": "movement",
+              "label": "Active stride · movement benefits",
+              "shortLabel": "Movement",
+              "combat": {
+                "damage": null,
+                "upcast": null,
+                "types": [],
+                "nonDamage": true,
+                "automatic": false,
+                "actionRange": "Self"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Divine Favor": {
+      "bySource": {
+        "PHB": {
+          "damage": "1d4",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "Your weapon hit",
+          "notes": [
+            "Bonus Action casting; Concentration up to 1 minute. Only your qualifying weapon hit gains this extra Radiant damage. It does not grant another attack or add the rider to an ordinary Unarmed Strike. Resolve the original attack separately; slot level never increases this die. Selecting a reference does not cast, activate the benefit, spend slots or change weapon damage."
+          ]
+        },
+        "XPHB": {
+          "damage": "1d4",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "Your weapon hit",
+          "notes": [
+            "Bonus Action casting; 1 minute, no Concentration. Only your qualifying weapon hit gains this extra Radiant damage. It does not grant another attack or add the rider to an ordinary Unarmed Strike. Resolve the original attack separately; slot level never increases this die. Selecting a reference does not cast, activate the benefit, spend slots or change weapon damage."
+          ]
+        }
+      }
+    },
+    "Elemental Weapon": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": "1d4",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "step": 2,
+          "upcastCeiling": 7,
+          "weaponAttackBonusBySlot": {
+            "3": 1,
+            "5": 2,
+            "7": 3
+          },
+          "actionRange": "Enchanted weapon hit",
+          "notes": [
+            "Action casting, touch one nonmagical weapon; Concentration up to 1 hour. The weapon becomes magical and gains the slot’s attack-roll bonus plus this extra damage on a hit. Choose Acid, Cold, Fire, Lightning or Thunder when casting and retain that choice. The attack bonus is not a flat damage bonus; slots 7–9 remain +3 and 3d4. Resolve the original weapon attack and the attacker’s modifiers separately. A reference does not enchant equipment, cast, activate a bonus or spend resources."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Weapon hit · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Weapon hit · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Weapon hit · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Weapon hit · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Weapon hit · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": "1d4",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "step": 2,
+          "upcastCeiling": 7,
+          "weaponAttackBonusBySlot": {
+            "3": 1,
+            "5": 2,
+            "7": 3
+          },
+          "actionRange": "Enchanted weapon hit",
+          "notes": [
+            "Action casting, touch one nonmagical weapon; Concentration up to 1 hour. The weapon becomes magical and gains the slot’s attack-roll bonus plus this extra damage on a hit. Choose Acid, Cold, Fire, Lightning or Thunder when casting and retain that choice. The attack bonus is not a flat damage bonus; slots 7–9 remain +3 and 3d4. Resolve the original weapon attack and the attacker’s modifiers separately. A reference does not enchant equipment, cast, activate a bonus or spend resources."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Weapon hit · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Weapon hit · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Weapon hit · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Weapon hit · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Weapon hit · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Flame Arrows": {
+      "bySource": {
+        "XGE": {
+          "damage": "1d6",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "fire"
+          ],
+          "actionRange": "Quiver ammunition hit",
+          "ammunitionBySlot": {
+            "base": 12,
+            "increment": 2,
+            "above": 3
+          },
+          "notes": [
+            "Action casting, touch a quiver with arrows or bolts; Concentration up to 1 hour. A ranged weapon hit using ammunition drawn from this quiver adds the displayed Fire damage. A miss adds none. Each piece loses this magic after a hit or miss, and drawing the slot’s full allowance ends the spell. Higher slots increase affected ammunition, not the 1d6 damage. Resolve the actual weapon attack, draws, target HP and Concentration at the table; a reference creates no ammunition, changes no stock and does not cast or spend slots."
+          ]
+        }
+      }
+    },
+    "Zephyr Strike": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "force"
+          ],
+          "notes": [
+            "Bonus Action casting; Concentration up to 1 minute. While the spell lasts, your movement does not provoke Opportunity Attacks. Once before it ends, choose one weapon attack roll on your own turn and give it Advantage. Only that attack can gain the extra Force damage on a hit. This is once per casting, not once per turn. Selecting a reference does not cast, spend resources or activate either movement benefit."
+          ],
+          "effects": [
+            {
+              "id": "boosted-hit",
+              "label": "Chosen Advantage weapon attack hits · extra damage",
+              "shortLabel": "Chosen hit",
+              "combat": {
+                "damage": "1d8",
+                "actionRange": "Chosen weapon hit",
+                "notes": [
+                  "Resolve the original weapon attack and its range separately. A miss adds no extra damage but still triggers the short walking-speed benefit. Slot level does not increase this die."
+                ]
+              }
+            },
+            {
+              "id": "movement",
+              "label": "Chosen attack hits or misses · walking speed",
+              "shortLabel": "Walk +30",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "automatic": false,
+                "actionRange": "Self",
+                "notes": [
+                  "After the one chosen attack, whether it hits or misses, your walking speed increases by 30 ft until the end of that turn. This short benefit does not last for the whole spell. Resolve the actual turn and movement at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Wall of Light": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "upcast": "1d8",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "Wall area",
+          "notes": [
+            "Concentration up to 10 minutes. The wall can be up to 60 × 10 × 5 ft; it blocks sight but allows creatures and objects through. Light extends 120 ft bright plus another 120 ft dim. Select the actual event; references do not cast, create a wall, track its length or apply target damage/conditions."
+          ],
+          "effects": [
+            {
+              "id": "creation",
+              "label": "Wall appears · creature in area",
+              "shortLabel": "Creation",
+              "combat": {
+                "damage": "4d8",
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Only when the wall appears: success halves damage and prevents Blinded; failure causes Blinded for 1 minute. Repeat CON at the end of each blinded creature’s turn, ending that condition on success."
+                ]
+              }
+            },
+            {
+              "id": "turn-end",
+              "label": "Creature ends turn in wall",
+              "shortLabel": "Turn end",
+              "combat": {
+                "damage": "4d8",
+                "automatic": true,
+                "notes": [
+                  "A creature ending its turn in the wall takes this damage without another saving throw or attack roll. This event does not add the initial Blinded effect."
+                ]
+              }
+            },
+            {
+              "id": "beam",
+              "label": "Action · beam from wall",
+              "shortLabel": "Beam",
+              "combat": {
+                "damage": "4d8",
+                "attack": true,
+                "actionRange": "60 ft from wall",
+                "notes": [
+                  "Action: one creature you can see within 60 ft of the wall, using a ranged spell attack. Hit deals the displayed damage. Hit or miss shortens the wall by 10 ft; length 0 ends the spell. Confirm actual remaining wall length before this action."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Wrath of Nature": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "actionRange": "60-ft cube",
+          "notes": [
+            "Concentration up to 1 minute. Select a visible point for the cube and resolve only natural features actually present there. No reference creates trees, rocks or ground cover, starts Concentration, spends actions or changes target conditions/HP. Damage does not increase with slot level."
+          ],
+          "effects": [
+            {
+              "id": "terrain",
+              "label": "Grasses and undergrowth · enemy terrain",
+              "shortLabel": "Terrain",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "Grass/undergrowth-covered ground in the cube is Difficult Terrain for your enemies. Other ground and friendly creatures are not covered by this effect."
+                ]
+              }
+            },
+            {
+              "id": "trees",
+              "label": "Start of your turn · tree branches",
+              "shortLabel": "Trees",
+              "combat": {
+                "damage": "4d6",
+                "types": [
+                  "slashing"
+                ],
+                "actionSave": "DEXTERITY",
+                "actionRange": "Enemies within 10 ft of a tree in cube",
+                "notes": [
+                  "At the start of each of your turns, enemies within 10 ft of any tree in the cube make DEX saves. Success prevents all this damage; failure takes the displayed Slashing damage."
+                ]
+              }
+            },
+            {
+              "id": "roots",
+              "label": "End of your turn · roots and vines",
+              "shortLabel": "Roots",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "STRENGTH",
+                "checkDC": "STR (Athletics) escape check",
+                "notes": [
+                  "At each own-turn end, choose one grounded creature in the cube. Failed STR save causes Restrained until the spell ends. The target can spend an Action on the listed Athletics check to end Restrained on itself."
+                ]
+              }
+            },
+            {
+              "id": "rock",
+              "label": "Bonus Action · loose rock attack",
+              "shortLabel": "Rock",
+              "combat": {
+                "damage": "3d8",
+                "types": [
+                  "bludgeoning"
+                ],
+                "attack": true,
+                "riderSave": "STRENGTH",
+                "actionRange": "Visible creature in cube",
+                "notes": [
+                  "On your turn, a Bonus Action launches one loose rock in the cube at a visible creature in the cube. Use a ranged spell attack. On a hit the displayed Bludgeoning damage is nonmagical; the hit creature also makes a STR save or falls Prone. A miss deals none and forces no rider save."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Symbol": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "actionRange": "60-ft sphere from glyph",
+          "checkDC": "INT (Investigation) check to find glyph",
+          "notes": [
+            "Choose the glyph’s trigger and effect when casting; an object moved more than 10 ft from the casting position breaks its glyph without triggering. A surface glyph covers at most a 10-ft-diameter area. Once triggered, its 60-ft-radius sphere lasts 10 minutes. It affects creatures present at activation, first entering on a turn, or ending a turn there. Resolve the legacy entry and turn-end events as written; do not borrow the revised once-per-turn limit. Slot level does not increase damage. A reference does not inscribe/trigger a glyph, pay costs, make choices again, or apply target conditions."
+          ],
+          "effects": [
+            {
+              "id": "death",
+              "label": "Death",
+              "shortLabel": "Death",
+              "combat": {
+                "damage": "10d10",
+                "types": [
+                  "necrotic"
+                ],
+                "nonDamage": false,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: 10d10 Necrotic; success halves damage."
+                ]
+              }
+            },
+            {
+              "id": "discord",
+              "label": "Discord",
+              "shortLabel": "Discord",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: for 1 minute, meaningful communication is impossible and attack rolls/ability checks have Disadvantage."
+                ]
+              }
+            },
+            {
+              "id": "fear",
+              "label": "Fear",
+              "shortLabel": "Fear",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Frightened for 1 minute; move at least 30 ft from the glyph each turn if able. The frightened target also drops held objects."
+                ]
+              }
+            },
+            {
+              "id": "hopelessness",
+              "label": "Hopelessness",
+              "shortLabel": "Hopelessness",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "CHARISMA",
+                "notes": [
+                  "Failed save: for 1 minute, the target cannot attack or target creatures with harmful abilities, spells or magic."
+                ]
+              }
+            },
+            {
+              "id": "insanity",
+              "label": "Insanity",
+              "shortLabel": "Insanity",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "INTELLIGENCE",
+                "notes": [
+                  "Failed save: for 1 minute, no actions, comprehension or reading; speech is gibberish and the DM handles erratic movement."
+                ]
+              }
+            },
+            {
+              "id": "pain",
+              "label": "Pain",
+              "shortLabel": "Pain",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: Incapacitated for 1 minute."
+                ]
+              }
+            },
+            {
+              "id": "sleep",
+              "label": "Sleep",
+              "shortLabel": "Sleep",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Unconscious for 10 minutes; damage or an Action spent shaking/slapping the target wakes it."
+                ]
+              }
+            },
+            {
+              "id": "stunning",
+              "label": "Stunning",
+              "shortLabel": "Stunning",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Stunned for 1 minute."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "actionRange": "60-ft sphere from glyph",
+          "checkDC": "WIS (Perception) check to notice glyph",
+          "notes": [
+            "Choose the glyph’s trigger and effect when casting; an object moved more than 10 ft from the casting position breaks its glyph without triggering. The glyph covers at most a 10-ft-diameter area. Once triggered, its 60-ft-radius sphere lasts 10 minutes. It affects creatures present at activation, first entering on a turn, or ending a turn there. Each creature is targeted only once per turn. Slot level does not increase damage. A reference does not inscribe/trigger a glyph, pay costs, make choices again, or apply target conditions."
+          ],
+          "effects": [
+            {
+              "id": "death",
+              "label": "Death",
+              "shortLabel": "Death",
+              "combat": {
+                "damage": "10d10",
+                "types": [
+                  "necrotic"
+                ],
+                "nonDamage": false,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: 10d10 Necrotic; success halves damage."
+                ]
+              }
+            },
+            {
+              "id": "discord",
+              "label": "Discord",
+              "shortLabel": "Discord",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: for 1 minute, meaningful communication is impossible and attack rolls/ability checks have Disadvantage."
+                ]
+              }
+            },
+            {
+              "id": "fear",
+              "label": "Fear",
+              "shortLabel": "Fear",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Frightened for 1 minute; move at least 30 ft from the glyph each turn if able."
+                ]
+              }
+            },
+            {
+              "id": "pain",
+              "label": "Pain",
+              "shortLabel": "Pain",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: Incapacitated for 1 minute."
+                ]
+              }
+            },
+            {
+              "id": "sleep",
+              "label": "Sleep",
+              "shortLabel": "Sleep",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Unconscious for 10 minutes; damage or an Action spent shaking/slapping the target wakes it."
+                ]
+              }
+            },
+            {
+              "id": "stunning",
+              "label": "Stunning",
+              "shortLabel": "Stunning",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Stunned for 1 minute."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Reality Break": {
+      "bySource": {
+        "EGW": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "setupSave": "WISDOM",
+          "notes": [
+            "Concentration up to 1 minute. The initial WIS save prevents the spell on success; failure prevents Reactions and requires a d10 roll at each target turn start. Select the result actually rolled; never choose a preferred result instead. The target repeats WIS at each turn end to end the whole spell. No damage occurs just from the initial failed save. A reference does not roll the table, teleport the target, apply conditions or spend resources. Slot level never increases damage."
+          ],
+          "effects": [
+            {
+              "id": "setup",
+              "label": "Initial WIS save · no damage",
+              "shortLabel": "Setup",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "automatic": false,
+                "actionSave": "WISDOM",
+                "actionRange": "60 ft"
+              }
+            },
+            {
+              "id": "vision",
+              "label": "Rolled 1–2 · Vision of the Far Realm",
+              "shortLabel": "d10 1–2",
+              "combat": {
+                "damage": "6d12",
+                "types": [
+                  "psychic"
+                ],
+                "notes": [
+                  "Automatic damage for this rolled result; no additional damage save. Stunned lasts until the end of this turn."
+                ]
+              }
+            },
+            {
+              "id": "rift",
+              "label": "Rolled 3–5 · Rending Rift",
+              "shortLabel": "d10 3–5",
+              "combat": {
+                "damage": "8d12",
+                "types": [
+                  "force"
+                ],
+                "automatic": false,
+                "actionSave": "DEXTERITY",
+                "notes": [
+                  "This rolled result requires its separate DEX save; success halves the displayed Force damage."
+                ]
+              }
+            },
+            {
+              "id": "wormhole",
+              "label": "Rolled 6–8 · Wormhole",
+              "shortLabel": "d10 6–8",
+              "combat": {
+                "damage": "10d12",
+                "types": [
+                  "force"
+                ],
+                "notes": [
+                  "Automatic damage; no additional save. Teleport the target with its worn/carried equipment up to 30 ft to a visible unoccupied space you choose, then apply Prone. Resolve the actual destination at the table."
+                ]
+              }
+            },
+            {
+              "id": "chill",
+              "label": "Rolled 9–10 · Chill of the Dark Void",
+              "shortLabel": "d10 9–10",
+              "combat": {
+                "damage": "10d12",
+                "types": [
+                  "cold"
+                ],
+                "notes": [
+                  "Automatic damage; no additional save. Blinded lasts until the end of this turn."
+                ]
+              }
+            }
+          ],
+          "actionRange": "Afflicted creature"
+        }
+      }
+    },
+    "Hex": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "types": [
+            "necrotic"
+          ],
+          "noDamageUpcast": true,
+          "durationBySlot": {
+            "1": "Concentration, up to 1 hour",
+            "3": "Concentration, up to 8 hours",
+            "5": "Concentration, up to 24 hours"
+          },
+          "actionRange": "Hit against cursed target",
+          "notes": [
+            "Bonus Action casting; choose one visible creature within 90 ft and one ability. Only your attack hit against that actual cursed target adds 1d6 Necrotic. Resolve the original attack separately; neither slot level nor character level increases this die. The selected ability’s checks have Disadvantage; its saves and attack rolls do not inherit that penalty. If the target reaches 0 HP, a Bonus Action on a later turn can transfer the curse. Remove Curse cast on this target ends this spell. Choosing a reference does not cast, establish Concentration, curse a target, spend slots or add a penalty to your own sheet."
+          ],
+          "effects": [
+            {
+              "id": "str",
+              "label": "STR checks cursed · attack hit rider",
+              "shortLabel": "STR checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s STR ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "dex",
+              "label": "DEX checks cursed · attack hit rider",
+              "shortLabel": "DEX checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s DEX ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "con",
+              "label": "CON checks cursed · attack hit rider",
+              "shortLabel": "CON checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s CON ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "int",
+              "label": "INT checks cursed · attack hit rider",
+              "shortLabel": "INT checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s INT ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "wis",
+              "label": "WIS checks cursed · attack hit rider",
+              "shortLabel": "WIS checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s WIS ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "cha",
+              "label": "CHA checks cursed · attack hit rider",
+              "shortLabel": "CHA checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s CHA ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "types": [
+            "necrotic"
+          ],
+          "noDamageUpcast": true,
+          "durationBySlot": {
+            "1": "Concentration, up to 1 hour",
+            "2": "Concentration, up to 4 hours",
+            "3": "Concentration, up to 8 hours",
+            "5": "Concentration, up to 24 hours"
+          },
+          "actionRange": "Hit against cursed target",
+          "notes": [
+            "Bonus Action casting; choose one visible creature within 90 ft and one ability. Only your attack-roll hit against that actual cursed target adds 1d6 Necrotic. Resolve the original attack separately; neither slot level nor character level increases this die. The selected ability’s checks have Disadvantage; its saves and attack rolls do not inherit that penalty. If the target reaches 0 HP, a Bonus Action on a later turn can transfer the curse. Choosing a reference does not cast, establish Concentration, curse a target, spend slots or add a penalty to your own sheet."
+          ],
+          "effects": [
+            {
+              "id": "str",
+              "label": "STR checks cursed · attack hit rider",
+              "shortLabel": "STR checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s STR ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "dex",
+              "label": "DEX checks cursed · attack hit rider",
+              "shortLabel": "DEX checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s DEX ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "con",
+              "label": "CON checks cursed · attack hit rider",
+              "shortLabel": "CON checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s CON ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "int",
+              "label": "INT checks cursed · attack hit rider",
+              "shortLabel": "INT checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s INT ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "wis",
+              "label": "WIS checks cursed · attack hit rider",
+              "shortLabel": "WIS checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s WIS ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "cha",
+              "label": "CHA checks cursed · attack hit rider",
+              "shortLabel": "CHA checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s CHA ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Hunter's Mark": {
+      "bySource": {
+        "PHB": {
+          "specialAction": "hunters-mark"
+        },
+        "XPHB": {
+          "specialAction": "hunters-mark"
+        }
+      }
+    }
+  }
+}

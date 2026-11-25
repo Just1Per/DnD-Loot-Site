@@ -4,6 +4,8 @@ The class-by-class source review covers all 186 selectable subclasses and 1,365 
 
 Both audit generators now report 186 concrete adapters and zero reference-only subclasses. `partial-mechanics` remains the status for adapters that require table resolution of targets, aura membership, positioning, reactions, recipients and explicit durations. It is not a claim that all encounter events are simulated. Class-specific mechanics documents record these boundaries, including companion current HP and armor infusion/replication allocation.
 
+The 23 November [rule automation audit](rule-automation-audit.md) adds separate `implementedAdapters` / `missingAdapters` counts and a per-subclass implementation/reason, while retaining the existing `partial-mechanics` status. All 186 adapters remain present; table decisions are not counted as missing adapters.
+
 Validated on 9 November 2026:
 
 - Complete latest Node suite: 1,010 tests passed.

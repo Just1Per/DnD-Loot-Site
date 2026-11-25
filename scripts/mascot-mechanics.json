@@ -1,0 +1,152 @@
+{
+  "Art Elemental Mascot": {
+    "college": "Prismari",
+    "attacks": [
+      {
+        "n": "Joyful Flare",
+        "a": 2,
+        "d": [
+          2,
+          4,
+          "fire"
+        ],
+        "r": "Melee (5 ft)"
+      },
+      {
+        "n": "Melancholic Bolt",
+        "a": 2,
+        "d": [
+          2,
+          4,
+          "cold"
+        ],
+        "r": "Ranged (30 ft)"
+      }
+    ],
+    "traits": [
+      {
+        "name": "Death Burst",
+        "description": "On death: creatures within 5 ft make CON DC 11 or become Blinded for 1 minute; repeat the save at the end of each affected turn."
+      }
+    ],
+    "features": [
+      {
+        "name": "Captivating Artistry \u00b7 1/day",
+        "description": "Action: one visible creature within 30 ft makes CHA DC 12 or becomes Charmed for 1 minute; repeat at the end of its turns. Record the daily use."
+      }
+    ]
+  },
+  "Fractal Mascot": {
+    "college": "Quandrix",
+    "attacks": [
+      {
+        "n": "Quantum Strike",
+        "a": 1,
+        "d": [
+          1,
+          4,
+          "force"
+        ],
+        "r": "Melee (5 ft)",
+        "description": "Medium or larger: use 2d4 + 1 Force instead.",
+        "mediumDice": 2
+      }
+    ],
+    "traits": [
+      {
+        "name": "Relative Density",
+        "description": "Move through creatures and objects as difficult terrain. Ending its turn inside an object deals 1d10 Force to the mascot."
+      }
+    ],
+    "features": [
+      {
+        "name": "Augment / Diminish",
+        "description": "Bonus Action: change size by one category, up to Huge or down to 1 ft tall. Medium or larger grants Advantage on STR checks/saves; Tiny grants Advantage on attacks and DEX checks/saves. Record the size; Quantum Strike uses 2d4 + 1 at Medium or larger."
+      }
+    ]
+  },
+  "Inkling Mascot": {
+    "college": "Silverquill",
+    "attacks": [
+      {
+        "n": "Blot",
+        "a": 2,
+        "d": [
+          1,
+          4,
+          "psychic"
+        ],
+        "r": "Melee (5 ft)"
+      }
+    ],
+    "traits": [
+      {
+        "name": "Amorphous",
+        "description": "Pass through openings as narrow as 1 inch without squeezing."
+      }
+    ],
+    "features": [
+      {
+        "name": "Ink Spray \u00b7 1/day",
+        "description": "Action: one creature within 15 ft makes CON DC 12 or becomes Blinded until the end of the mascot's next turn. Record the daily use."
+      },
+      {
+        "name": "Shadow Stealth",
+        "description": "In dim light or darkness, Hide as a Bonus Action."
+      }
+    ]
+  },
+  "Pest Mascot": {
+    "college": "Witherbloom",
+    "attacks": [
+      {
+        "n": "Bite",
+        "a": 2,
+        "d": [
+          1,
+          4,
+          "piercing"
+        ],
+        "r": "Melee (5 ft)"
+      }
+    ],
+    "traits": [
+      {
+        "name": "Regeneration",
+        "description": "At the start of its turn, heal 5 HP if it has at least 1 HP. Fire damage suppresses this at the start of its next turn; record that exception."
+      },
+      {
+        "name": "Spiny Hide",
+        "description": "At the start of its turn, deal 1d4 Piercing to each creature it grapples or that grapples it."
+      }
+    ],
+    "features": []
+  },
+  "Spirit Statue Mascot": {
+    "college": "Lorehold",
+    "attacks": [
+      {
+        "n": "Slam",
+        "a": 1,
+        "d": [
+          1,
+          6,
+          "bludgeoning"
+        ],
+        "r": "Melee (5 ft)"
+      }
+    ],
+    "traits": [
+      {
+        "name": "Death Burst",
+        "description": "At 0 HP: creatures within 5 ft make CON DC 12 or take 1d6 Radiant."
+      }
+    ],
+    "features": [
+      {
+        "name": "Counsel of the Past \u00b7 2/day",
+        "description": "Action: touch a creature. Once within 10 minutes it may add 1d4 to an ability check immediately after its d20 roll. Record each daily use."
+      }
+    ]
+  }
+}

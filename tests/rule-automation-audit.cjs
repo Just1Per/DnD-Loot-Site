@@ -1,0 +1,115 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{audit,markdown}=require('../scripts/audit-rule-automation.cjs'),root=path.resolve(__dirname,'..');
+test('rule automation inventory is reproducible from shipped metadata and distinguishes facts, adapters and table decisions',()=>{
+ const report=audit();assert.deepEqual(report,require('../docs/rule-automation-audit.json'));assert.equal(markdown(report),fs.readFileSync(root+'/docs/rule-automation-audit.md','utf8'));assert.equal(report.summary.subclasses,186);assert.equal(report.summary.missingSubclassAdapters,0);assert.equal(report.summary.feats,302);assert.equal(report.summary.spells,969);assert.equal(report.summary.itemVariants,230);assert.equal(new Set(report.feats.map(row=>row.id)).size,302);assert.equal(new Set(report.spells.map(row=>row.id)).size,969);assert.ok(report.summary.featSpellChoicePackages>=15);assert.ok(report.summary.manualDamageReferences>0);assert.ok(report.itemBonusReview.some(row=>row.name==='Rod of Alertness'));assert.equal(report.summary.featSpellPackagesToReview,0);assert.equal(report.feats.some(row=>row.spellReview),false);const misty=report.feats.find(row=>row.source==='ABH'&&row.name==='Boon of Misty Escape');assert.equal(misty.fixedSpells[0].referenceOnly,true);assert.equal(misty.auxiliarySpellResources[0].managedActivation,true);assert.match(report.scope,/not a combat simulator/);
+ function inspect(value){if(!value||typeof value!=='object')return;for(const [key,next]of Object.entries(value)){assert.ok(!['entries','entriesHigherLevel','_copy','_mod'].includes(key));inspect(next);}}inspect(report);
+});
+test('supplement class-list corrections retain own-book provenance and cannot import unrelated optional class expansions',()=>{
+ const proof=require('../docs/spell-class-list-audit.json'),catalog=require('../data/rules/catalog.json');assert.equal(proof.revision,catalog.indexRevision);assert.match(proof.lookupSha256,/^[a-f0-9]{64}$/);assert.equal(proof.records.length,122);for(const row of proof.records){const spell=catalog.spells.find(s=>s.id===row.id);assert.ok(spell,row.id);assert.equal(spell.source,row.source);for(const addition of row.additions){assert.equal(addition.definedInSource,row.source);assert.ok(spell.classesByEdition[addition.edition].includes(addition.classId));}}
+ for(const name of ['Ice Knife','Synaptic Static'])assert.ok(catalog.spells.find(s=>s.name===name&&s.source==='XGE').classesByEdition['2014'].includes('wizard'));const aid=catalog.spells.find(s=>s.name==='Aid'&&s.source==='PHB');assert.deepEqual(aid.classesByEdition['2014'],['artificer','cleric','paladin']);
+});
+test('all item spell-bonus records retain reviewed scope and the talisman and Blackstaff conditions in the audit',()=>{
+ const report=audit();assert.equal(report.summary.itemSpellBonusFacts,60);assert.equal(report.summary.itemSpellBonusAdapters,60);assert.equal(report.itemSpellBonuses.length,60);assert.ok(report.itemSpellBonuses.every(row=>row.spellScope.length));
+ assert.deepEqual(report.itemSpellBonuses.find(row=>row.name==="Jester's Mask").spellScope,['ability:cha']);const talismans=report.itemSpellBonuses.filter(row=>row.name.startsWith('Talisman of '));assert.equal(talismans.length,4);for(const row of talismans){if(row.source==='DMG')assert.deepEqual(row.spellRequirements.classes,['cleric','paladin']);else assert.equal(row.spellRequirements,undefined);}
+ assert.equal(report.itemSpellBonuses.find(row=>row.name==='Blackstaff').spellRequirements.explicitApproval,'item:wdh:blackstaff-heir');assert.equal(report.itemBonusReview.some(row=>row.hasSpellBonus&&!row.spellScope.length),false);assert.ok(report.itemBonusReview.some(row=>row.hasImmunity&&!row.passiveImmunities));
+});
+test('conditional spell formulas are counted as reviewed choices without treating unknown target conditions as direct damage',()=>{
+ const report=audit();assert.equal(report.summary.spellActionFormulas,299);assert.equal(report.summary.manualDamageReferences,69);for(const name of ['Toll the Dead','Witch Bolt','Hunger of Hadar']){const rows=report.spells.filter(row=>row.name===name);assert.equal(rows.length,2);for(const row of rows){assert.equal(row.actionDamageFormula,true);assert.equal(row.manualDamageReference,false);assert.ok(row.effectChoices.length>=2);}}
+});
+test('spell event audit preserves the legacy Hail ceiling, chosen glyph type and revised vine event range',()=>{
+ const report=audit(),hail=report.spells.filter(row=>row.name==='Hail of Thorns');assert.equal(hail.find(row=>row.edition==='2014').damageUpcastCeiling,6);assert.equal(hail.find(row=>row.edition==='2024').damageUpcastCeiling,undefined);for(const glyph of report.spells.filter(row=>row.name==='Glyph of Warding'))assert.deepEqual(glyph.effectChoices.map(row=>row.id),['acid','cold','fire','lightning','thunder']);const vines=report.spells.filter(row=>row.name==='Grasping Vine');assert.equal(vines.find(row=>row.edition==='2024').actionRange,'30 ft from vine');assert.equal(vines.find(row=>row.edition==='2014').actionDamageFormula,false);for(const ensnaring of report.spells.filter(row=>row.name==='Ensnaring Strike'))assert.equal(ensnaring.setupSave,'STRENGTH');
+});
+test('save/check item audit retains exact reviewed targets and bearer requirements instead of calling every save bonus global',()=>{
+ const report=audit();assert.equal(report.summary.itemSaveCheckBonusFacts,29);assert.equal(report.summary.itemSaveCheckBonusAdapters,report.itemSaveCheckBonuses.filter(row=>row.passiveSaveChecks).length);assert.ok(report.summary.itemSaveCheckBonusAdapters>=15);
+ const get=name=>report.itemSaveCheckBonuses.find(row=>row.name===name);assert.equal(get('Ioun Stone of Vitality').saveCheckScope.saves,'death');assert.equal(get('Ioun Stone, Self-Preservation').saveCheckScope.saves,'int');assert.deepEqual(get('Statuette of Saint Markovia').saveCheckScope,{saves:'all',checks:false,carried:true,attunement:false,alignment:'G'});assert.equal(report.itemSaveCheckBonuses.filter(row=>row.name==="Harkon's Bite").length,2);for(const name of ['Ioun Stone of Vitality','Ioun Stone, Self-Preservation','Statuette of Saint Markovia',"Harkon's Bite"])assert.equal(report.itemBonusReview.some(row=>row.name===name),false,name);assert.ok(report.itemBonusReview.some(row=>row.name==='Leather Golem Armor'));
+});
+test('reviewed Uven immunity and Bane recovery remain source-bound and auditable without automating its destructive transfer',()=>{
+ const report=audit(),shield=report.itemImmunities.find(row=>row.name==='Shield of the Uven Rune');assert.equal(shield.source,'WDMM');assert.deepEqual(shield.immunityScope,{types:['cold'],equipped:true,attunement:true});assert.deepEqual(shield.itemUseScope,{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false});assert.equal(report.itemBonusReview.some(row=>row.name===shield.name),false);assert.equal(report.summary.itemImmunityAdapters,report.itemImmunities.filter(row=>row.passiveImmunities).length);assert.ok(report.itemBonusReview.some(row=>row.name==='Shield of the Blazing Dreadnought'));
+});
+test('non-spell species counters retain source identities, unlocks, rest rules and their explicit automation scope',()=>{
+ const report=audit();assert.equal(report.summary.speciesWithResourceAdapters,22);assert.equal(report.summary.speciesResourceCounters,34);assert.equal(report.speciesResources.length,22);for(const species of report.speciesResources){assert.match(species.automation,/temporary form benefits, targets and other-recipient HP/);for(const resource of species.resources){assert.equal(resource.reference.feature,resource.name);assert.ok(resource.minimumCharacterLevel>=1);}}
+ const rush=id=>report.speciesResources.find(row=>row.id===id).resources.find(row=>row.id==='rush');assert.deepEqual(rush('orc-2024').recovery,['short','long']);assert.deepEqual(rush('orc-mpmm').recovery,['long']);assert.equal(report.speciesResources.find(row=>row.id==='goblin-mpmm').resources[0].oncePerTurn,true);
+});
+test('temporary species activation audit identifies duration, condition and ancestry boundaries independently of resource counts',()=>{
+ const report=audit();assert.equal(report.summary.speciesActivatedEffects,8);const activations=report.speciesResources.flatMap(row=>row.resources).filter(row=>row.activation);assert.equal(activations.length,8);assert.ok(activations.every(row=>row.activation.endsOnShortRest));assert.equal(activations.find(row=>row.id==='raven-queen').activation.resistanceMinimumLevel,3);assert.equal(activations.find(row=>row.id==='warding').activation.boundToAncestry,true);assert.equal(report.speciesResources.find(row=>row.id==='dragonborn-2024').resources.find(row=>row.id==='flight').activation.endsIncapacitated,true);assert.equal(report.speciesResources.find(row=>row.id==='gem-dragonborn-ftd').resources.find(row=>row.id==='flight').activation.endsIncapacitated,undefined);
+});
+test('Revelation audit distinguishes the fixed legacy Origin form from per-activation revised choices and own-turn damage tracking',()=>{
+ const report=audit(),get=id=>report.speciesResources.find(row=>row.id===id).resources.find(row=>row.id==='revelation').activation,old=get('aasimar-mpmm'),modern=get('aasimar-2024');assert.equal(old.choicePolicy,'origin-choice');assert.equal(modern.choicePolicy,'select-at-activation');assert.deepEqual(old.choices.map(row=>row.id),['soul','consumption','shroud']);assert.deepEqual(modern.choices.map(row=>row.id),['wings','radiance','shroud']);assert.equal(old.ownTurnDamageCounter,true);assert.equal(modern.ownTurnDamageCounter,true);assert.equal(report.summary.speciesResourceCounters,34);
+});
+
+test('attack-roll provenance and non-damage effects distinguish target rolls from caster attacks',()=>{
+ const proof=require('../docs/spell-attack-roll-audit.json'),catalog=require('../data/rules/catalog.json'),report=audit();assert.equal(proof.revision,catalog.indexRevision);assert.equal(proof.records.filter(row=>row.importedAttack&&!row.sourceAttack).length,24);assert.equal(new Set(proof.records.map(row=>row.id)).size,proof.records.length);
+ for(const row of proof.records.filter(row=>!row.sourceAttack)){const spell=catalog.spells.find(s=>s.id===row.id);assert.equal(spell.combat.attack,false,row.name);}
+ for(const name of ['Bane','Bless','Ray of Enfeeblement'])for(const row of report.spells.filter(s=>s.name===name)){assert.equal(row.nonDamageEffect,true);assert.equal(row.actionDamageFormula,false);assert.equal(row.manualDamageReference,false);}
+});
+
+test('non-damage import audit removes time, healing and roll-table dice while retaining reviewed weapon-spell damage',()=>{
+ const proof=require('../docs/spell-non-damage-roll-audit.json'),catalog=require('../data/rules/catalog.json'),report=audit();assert.equal(proof.revision,catalog.indexRevision);assert.equal(proof.records.length,19);assert.equal(new Set(proof.records.map(r=>r.id)).size,19);assert.equal(report.summary.spellHealingFormulas,16);
+ for(const row of proof.records){const spell=catalog.spells.find(s=>s.id===row.id);assert.ok(spell.combat.nonDamage,row.name);assert.equal(spell.combat.damage,undefined,row.name);assert.equal(report.spells.find(s=>s.id===row.id).actionDamageFormula,false);}
+ for(const name of ['Conjure Barrage','Conjure Volley'])assert.ok(catalog.spells.find(s=>s.name===name&&s.source==='PHB').combat.damage,'reviewed source overrides still supply real weapon-type damage');
+});
+
+test('Healing Hands audit records deliberate self-healing separately from other-recipient HP and temporary forms',()=>{
+ const report=audit();assert.equal(report.summary.speciesHealingActivations,2);assert.equal(report.summary.speciesActivatedEffects,8);for(const [race,source,action]of [['aasimar-mpmm','MPMM','Action'],['aasimar-2024','XPHB','Magic action']]){const row=report.speciesResources.find(r=>r.id===race).resources.find(r=>r.id==='healing-hands');assert.deepEqual(row.healingActivation,{dice:'PBd4',selfHP:true,otherRecipient:'table',legacyWildShape:'active Beast HP only',revisedWildShape:'species trait unavailable',source,action});assert.deepEqual(row.recovery,['long']);}
+});
+
+test('investiture and void phases separate HP damage, saves, action ranges and the source’s full save metadata',()=>{
+ const report=audit(),catalog=require('../data/rules/catalog.json'),get=name=>report.spells.find(s=>s.name===name&&s.edition==='2014');assert.deepEqual(get('Investiture of Flame').effectChoices.map(e=>e.id),['aura','line']);assert.deepEqual(get('Ravenous Void').effectChoices.map(e=>e.id),['pull','sphere']);assert.equal(get('Whirlwind').actionSave,'DEXTERITY');assert.equal(catalog.spells.find(s=>s.name==='Whirlwind').save,'DEXTERITY, STRENGTH');assert.equal(get('Draconic Transformation').actionRange,'60-ft cone');assert.equal(get('Shadow of Moil').actionRange,'10 ft');
+});
+
+test('Wrought-Iron Tower’s passive AC/save scope is carried and attuned, with activated powers still explicit',()=>{
+ const report=audit(),row=report.itemSaveCheckBonuses.find(r=>r.name==='Wrought-Iron Tower');assert.deepEqual(row.saveCheckScope,{saves:'all',checks:false,carried:true,attunement:true,armorClassBonus:2});assert.equal(report.itemBonusReview.some(r=>r.name===row.name),false);assert.equal(report.summary.itemSaveCheckBonusAdapters,18);
+});
+
+test('ability metadata inventory distinguishes reviewed orbit/wear scopes from books, potions and inherited facts',()=>{
+ const report=audit();assert.equal(report.summary.itemFacts,1278);assert.equal(report.summary.itemAbilityFacts,75);assert.equal(report.summary.itemAbilityAdapters,32);assert.equal(report.itemAbilityReview.length,43);assert.equal(report.itemAbilities.filter(row=>row.abilityScope?.orbit).length,12);for(const name of ['Tome of Clear Thought','Potion of Fire Giant Strength','Shard of Xeluan'])assert.ok(report.itemAbilityReview.some(row=>row.name===name),name);const inherited=report.itemAbilities.find(row=>row.name==='Stormgirdle (Awakened)');assert.equal(inherited.metadataInherited,true);assert.equal(inherited.abilityScope,undefined,'a copied numeric field is not a reviewed source limit');
+});
+
+test('item class prerequisite audit separates complete class alternatives from combined requirements',()=>{
+ const report=audit();assert.equal(report.summary.itemClassRequirementFacts,136);assert.equal(report.summary.itemClassRequirementAdapters,133);assert.equal(report.itemAttunementClasses.length,136);assert.equal(report.itemAttunementClasses.filter(row=>row.review).length,3);for(const source of ['DMG','XDMG']){const row=report.itemAttunementClasses.find(row=>row.name==='Staff of Power'&&row.source===source);assert.deepEqual(row.attunementClassScope.classes,['sorcerer','warlock','wizard']);assert.match(row.attunementClassScope.exceptions.join(' '),/TCE Artificer 14.*PHB Thief 13/);}assert.ok(report.itemAttunementClasses.find(row=>row.name==='Orcsplitter').review);
+});
+
+test('storm, blade, wave and illusion audit retains every supported source and explicit event choice',()=>{
+ const report=audit();for(const [name,sources,choices]of [['Tsunami',['PHB','XPHB'],6],['Blade of Disaster',['TCE','FRHoF'],2],['Storm Sphere',['XGE'],2],['Illusory Dragon',['XGE','AU'],7]]){const rows=report.spells.filter(row=>row.name===name);assert.equal(rows.length,sources.length);for(const row of rows){assert.equal(row.actionDamageFormula,true);assert.equal(row.manualDamageReference,false);assert.equal(row.effectChoices.length,choices);}}
+});
+
+test('Agathys, pebble, prison and water audits distinguish fixed retaliation, spell attacks, automatic events and source-specific water modes',()=>{
+ const report=audit(),catalog=require('../data/rules/catalog.json');for(const source of ['PHB','XPHB']){const row=catalog.spells.find(s=>s.name==='Armor of Agathys'&&s.source===source);assert.equal(row.combat.damage,'5');assert.equal(row.combat.upcast,'5');assert.equal(row.combat.automatic,true);assert.equal(row.combat.healing.temporary,true);const water=report.spells.find(s=>s.id===catalog.spells.find(s=>s.name==='Control Water'&&s.source===source).id);assert.equal(water.effectChoices.length,source==='PHB'?5:4);}const stone=catalog.spells.find(s=>s.name==='Magic Stone');assert.equal(stone.combat.addAbility,true);assert.equal(stone.combat.scaling,undefined);assert.equal(report.spells.find(s=>s.name==='Mental Prison').effectChoices.length,2);
+});
+
+test('curse and stored-element audit preserves explicit choices and the actual slot-duration thresholds',()=>{
+ const report=audit(),catalog=require('../data/rules/catalog.json');for(const source of ['PHB','XPHB']){const spell=catalog.spells.find(s=>s.name==='Bestow Curse'&&s.source===source),row=report.spells.find(s=>s.id===spell.id);assert.equal(spell.save,'WISDOM','the full spell retains its initial save');assert.deepEqual(row.durationBySlot,{'3':'Concentration, up to 1 minute','4':'Concentration, up to 10 minutes','5':'8 hours; no Concentration','7':'24 hours; no Concentration','9':'Until dispelled; no Concentration'});assert.equal(row.effectChoices.length,source==='PHB'?10:9);}for(const name of ['Absorb Elements','Elemental Bane'])assert.equal(report.spells.find(s=>s.name===name).effectChoices.length,5);assert.deepEqual(report.spells.find(s=>s.name==='Elemental Bane').targetScaling,{base:1,increment:1,above:4});assert.equal(catalog.spells.find(s=>s.name==='Elemental Bane').save,'CONSTITUTION');
+});
+
+test('race prerequisite audit records seven reviewed scopes, five remaining source reviews and only revised belt alternatives',()=>{
+ const report=audit();assert.equal(report.summary.itemRaceRequirementFacts,12);assert.equal(report.summary.itemRaceRequirementAdapters,7);assert.equal(report.itemAttunementRaces.filter(row=>row.review).length,5);for(const name of ['Dwarven Thrower','Whelm']){const rows=report.itemAttunementRaces.filter(row=>row.name===name);assert.equal(rows.find(row=>row.source==='DMG').attunementRaceScope.dependency,undefined);assert.equal(rows.find(row=>row.source==='XDMG').attunementRaceScope.dependency,'belt-of-dwarvenkind');}const elf=report.itemAttunementRaces.find(row=>row.name==='Elven Thrower').attunementRaceScope;assert.equal(elf.species.length,10);assert.ok(elf.species.includes('shadar-kai-mpmm'));assert.equal(elf.species.includes('half-elf'),false);assert.deepEqual(report.itemAttunementRaces.find(row=>row.name==='Docent').attunementRaceScope.species,['warforged','warforged-efota']);
+});
+
+test('reviewed throwing audit separates source-specific ranges, typed dice and actual target choices',()=>{
+ const report=audit();assert.equal(report.summary.itemThrowingAdapters,5);assert.equal(report.itemThrowingWeapons.length,5);const modern=report.itemThrowingWeapons.find(row=>row.name==='Whelm'&&row.source==='XDMG').throwingScope,legacy=report.itemThrowingWeapons.find(row=>row.name==='Whelm'&&row.source==='DMG').throwingScope;assert.deepEqual(modern,{range:'60/180',type:'force',targets:{other:1,giant:4,construct:4,elemental:4},attunement:true,requiresTargetChoice:true,extraDice:'ranged hits only'});assert.equal(legacy.range,'20/60');assert.equal(legacy.type,'bludgeoning');assert.deepEqual(legacy.targets,{other:1,giant:2});
+});
+
+
+test('independent Whelm power audit distinguishes counters from activated powers and keeps both source DCs',()=>{
+ const report=audit();assert.equal(report.summary.itemPowerResourceAdapters,2);assert.equal(report.summary.itemPowerResourceCounters,4);for(const [source,dc]of [['DMG',15],['XDMG',20]]){const row=report.itemPowerResources.find(row=>row.source===source);assert.equal(row.name,'Whelm');assert.deepEqual(row.pools.map(p=>p.power),['shock','spells']);for(const pool of row.pools){assert.equal(pool.max,1);assert.equal(pool.recovery,'Dawn');assert.equal(pool.recordOnly,true);assert.equal(pool.requiresAttunement,true);}assert.match(row.pools[0].reminder,new RegExp('DC '+dc+' CON'));assert.match(row.pools[1].reminder,/One shared use for Detect Evil and Good or Locate Object/);}
+});
+
+
+test('aura rider audit retains source-specific event choices and independently scaled Stride movement',()=>{
+ const report=audit();for(const [name,count]of [["Crusader's Mantle",2],['Holy Weapon',1],['Spirit Shroud',1],["Ashardalon's Stride",1]]){const rows=report.spells.filter(s=>s.name===name);assert.equal(rows.length,count);assert.ok(rows.every(s=>s.actionDamageFormula&&!s.manualDamageReference));}const mantle=report.spells.filter(s=>s.name==="Crusader's Mantle");assert.deepEqual(mantle.find(s=>s.edition==='2014').effectChoices.map(e=>e.id),['weapon-hit']);assert.deepEqual(mantle.find(s=>s.edition==='2024').effectChoices.map(e=>e.id),['weapon-hit','unarmed-hit']);assert.deepEqual(report.spells.find(s=>s.name==="Ashardalon's Stride").movementBySlot,{base:20,increment:5,above:3});
+});
+
+
+test('weapon enchantment audit retains capped attack bonus bands and ammunition allowances separately from damage',()=>{
+ const report=audit();for(const s of report.spells.filter(s=>s.name==='Elemental Weapon')){assert.deepEqual(s.weaponAttackBonusBySlot,{'3':1,'5':2,'7':3});assert.equal(s.damageUpcastCeiling,7);assert.equal(s.effectChoices.length,5);assert.equal(s.manualDamageReference,false);}assert.deepEqual(report.spells.find(s=>s.name==='Flame Arrows').ammunitionBySlot,{base:12,increment:2,above:3});assert.deepEqual(report.spells.find(s=>s.name==='Zephyr Strike').effectChoices.map(e=>e.id),['boosted-hit','movement']);assert.equal(report.spells.filter(s=>s.name==='Divine Favor'&&s.actionDamageFormula).length,2);
+});
+
+
+test('hazard event audit retains source glyph choices, own-turn environment phases and rolled-reality outcomes',()=>{
+ const report=audit();for(const [name,count]of [['Wall of Light',3],['Wrath of Nature',4],['Reality Break',5]]){const row=report.spells.find(s=>s.name===name);assert.equal(row.effectChoices.length,count);assert.equal(row.actionDamageFormula,true);assert.equal(row.manualDamageReference,false);}const symbols=report.spells.filter(s=>s.name==='Symbol');assert.equal(symbols.find(s=>s.edition==='2014').effectChoices.length,8);assert.equal(symbols.find(s=>s.edition==='2024').effectChoices.length,6);assert.equal(report.spells.find(s=>s.name==='Reality Break').setupSave,'WISDOM');
+});
+
+
+test('Hex duration audit retains the revised level-2 breakpoint and identifies the live Hunter’s Mark adapter',()=>{
+ const report=audit();for(const s of report.spells.filter(s=>s.name==='Hex')){assert.equal(s.effectChoices.length,6);assert.equal(s.durationBySlot['2'],s.edition==='2024'?'Concentration, up to 4 hours':undefined);assert.equal(s.actionDamageFormula,true);assert.equal(s.manualDamageReference,false);}for(const s of report.spells.filter(s=>s.name==="Hunter's Mark")){assert.equal(s.specialActionAdapter,'hunters-mark');assert.equal(s.actionDamageFormula,true);assert.equal(s.manualDamageReference,false);}
+});

@@ -92,6 +92,21 @@
     "adobe-page-deletion-browser.cjs",
     "adobe-additional-spells-browser.cjs",
     "adobe-player-guide-browser.cjs",
-    "adobe-ai-lookup-browser.cjs"
+    "adobe-ai-lookup-browser.cjs",
+    "rule-automation-browser.cjs",
+    "feat-ritual-rune-browser.cjs",
+    "feat-source-spells-browser.cjs",
+    "feat-school-spells-browser.cjs",
+    "feat-special-spells-browser.cjs",
+    "feat-misty-escape-browser.cjs",
+    "item-conditional-automation-browser.cjs",
+    "item-scoped-passives-browser.cjs",
+    "spell-effect-choices-browser.cjs",
+    "species-resources-browser.cjs",
+    "species-forms-browser.cjs",
+    "species-healing-browser.cjs",
+    "magic-throwing-weapons-browser.cjs",
+    "spell-aura-riders-browser.cjs",
+    "spell-hazards-browser.cjs"
   ]
 }

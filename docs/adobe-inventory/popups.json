@@ -10,7 +10,12 @@
       "category": "shared-dialog",
       "entry": "Add/edit attack fra Combat",
       "notes": "Bevar action-renderer og dens handlers; åbnes også fra bridge.",
-      "testReferences": []
+      "testReferences": [
+        "magic-throwing-weapons-browser.cjs",
+        "spell-aura-riders-browser.cjs",
+        "spell-effect-choices-browser.cjs",
+        "spell-hazards-browser.cjs"
+      ]
     },
     {
       "id": "adobeAbilityDialog",
@@ -44,7 +49,7 @@
     {
       "id": "adobeAttackChoiceMenu",
       "file": "js/modules/character-adobe-attack-menu.js",
-      "line": 15,
+      "line": 19,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Attack name-felt",
@@ -53,7 +58,11 @@
         "adobe-attack-access-browser.cjs",
         "adobe-attack-choice-flyout-browser.cjs",
         "adobe-connected-sheet-browser.cjs",
-        "adobe-feat-reactions-browser.cjs"
+        "adobe-feat-reactions-browser.cjs",
+        "magic-throwing-weapons-browser.cjs",
+        "spell-aura-riders-browser.cjs",
+        "spell-effect-choices-browser.cjs",
+        "spell-hazards-browser.cjs"
       ]
     },
     {
@@ -170,6 +179,11 @@
         "adobe-native-feats-browser.cjs",
         "adobe-personal-feats-browser.cjs",
         "adobe-player-feats-browser.cjs",
+        "feat-ritual-rune-browser.cjs",
+        "feat-school-spells-browser.cjs",
+        "feat-source-spells-browser.cjs",
+        "feat-special-spells-browser.cjs",
+        "rule-automation-browser.cjs",
         "site-palette-browser.cjs"
       ]
     },
@@ -216,6 +230,7 @@
         "adobe-direct-preparation-browser.cjs",
         "adobe-native-spells-browser.cjs",
         "adobe-source-generator-browser.cjs",
+        "rule-automation-browser.cjs",
         "site-palette-browser.cjs"
       ]
     },
@@ -338,7 +353,13 @@
         "adobe-slot-labels-browser.cjs",
         "adobe-spell-pages-browser.cjs",
         "adobe-tool-check-browser.cjs",
-        "site-palette-browser.cjs"
+        "feat-misty-escape-browser.cjs",
+        "feat-special-spells-browser.cjs",
+        "item-scoped-passives-browser.cjs",
+        "site-palette-browser.cjs",
+        "species-forms-browser.cjs",
+        "species-healing-browser.cjs",
+        "species-resources-browser.cjs"
       ]
     },
     {
@@ -448,7 +469,10 @@
         "adobe-container-locations-browser.cjs",
         "adobe-items-browser.cjs",
         "adobe-magic-menu-browser.cjs",
-        "adobe-pinned-items-browser.cjs"
+        "adobe-pinned-items-browser.cjs",
+        "item-conditional-automation-browser.cjs",
+        "item-scoped-passives-browser.cjs",
+        "magic-throwing-weapons-browser.cjs"
       ]
     },
     {
@@ -474,7 +498,9 @@
       "notes": "Åbnes fra resource-bridge; modulet renderer #sheetItemResources.",
       "testReferences": [
         "adobe-item-resources-browser.cjs",
-        "adobe-pinned-items-browser.cjs"
+        "adobe-pinned-items-browser.cjs",
+        "item-scoped-passives-browser.cjs",
+        "magic-throwing-weapons-browser.cjs"
       ]
     },
     {
@@ -633,7 +659,9 @@
         "adobe-items-browser.cjs",
         "adobe-magic-menu-browser.cjs",
         "adobe-magic-variant-browser.cjs",
-        "adobe-pinned-items-browser.cjs"
+        "adobe-pinned-items-browser.cjs",
+        "item-conditional-automation-browser.cjs",
+        "item-scoped-passives-browser.cjs"
       ]
     },
     {
@@ -647,7 +675,8 @@
       "testReferences": [
         "adobe-combat-feats-equipment-browser.cjs",
         "adobe-feature-counters-browser.cjs",
-        "adobe-resource-menus-browser.cjs"
+        "adobe-resource-menus-browser.cjs",
+        "magic-throwing-weapons-browser.cjs"
       ]
     },
     {
@@ -691,7 +720,7 @@
     {
       "id": "sheetPrintDialog",
       "file": "js/modules/character-sheet.js",
-      "line": 645,
+      "line": 649,
       "kind": "dialog",
       "category": "standard-only",
       "entry": "Standard print fallback",

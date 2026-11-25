@@ -188,15 +188,15 @@ var CharacterRaceCatalog = (() => {
       optionChoices: {
         shroud: {
           name: 'Necrotic Shroud',
-          traits: ['Revelation: bonus action, 1 minute, once per long rest. Non-allies within 10 ft who see you make CHA save (8 + PB + CHA) or fear you until your next turn ends. Once each turn, add PB necrotic damage to one attack/spell target.']
+          traits: ['Revelation: bonus action, 1 minute, once per long rest. Non-allies within 10 ft who see you make CHA save (8 + PB + CHA) or fear you until your next turn ends. Once on each of your own turns, add PB necrotic damage to one attack/spell target.']
         },
         consumption: {
           name: 'Radiant Consumption',
-          traits: ['Revelation: bonus action, 1 minute, once per long rest. Emit light; creatures within 10 ft take PB radiant at the end of your turns. Once each turn, add PB radiant damage to one attack/spell target.']
+          traits: ['Revelation: bonus action, 1 minute, once per long rest. Emit light; creatures within 10 ft take PB radiant at the end of your turns. Once on each of your own turns, add PB radiant damage to one attack/spell target.']
         },
         soul: {
           name: 'Radiant Soul',
-          traits: ['Revelation: bonus action, 1 minute, once per long rest. Fly at walking speed; once each turn, add PB radiant damage to one attack/spell target.']
+          traits: ['Revelation: bonus action, 1 minute, once per long rest. Fly at walking speed; once on each of your own turns, add PB radiant damage to one attack/spell target.']
         }
       }
     });

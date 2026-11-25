@@ -1,0 +1,3901 @@
+{
+  "revision": "b9061583536101068b3a59d27e886d1fa664e366",
+  "lookupSha256": "14ce167675a2ccebd37a95a11761387ab2625fe64c02776200a65c06ae830e19",
+  "basis": "Only classVariant additions defined by the spell\u2019s own source; unrelated optional class-list expansions are excluded.",
+  "records": [
+    {
+      "id": "Spell-bmt-199152a0e2081965",
+      "name": "Antagonize",
+      "source": "BMT",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        }
+      ]
+    },
+    {
+      "id": "Spell-bmt-b6ec51bf0795aaa3",
+      "name": "Spirit of Death",
+      "source": "BMT",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        }
+      ]
+    },
+    {
+      "id": "Spell-bmt-30118e05b6a467d2",
+      "name": "Spray of Cards",
+      "source": "BMT",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "BMT"
+        }
+      ]
+    },
+    {
+      "id": "Spell-ftd-bd9ff3208d709d26",
+      "name": "Ashardalon's Stride",
+      "source": "FTD",
+      "additions": [
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        }
+      ]
+    },
+    {
+      "id": "Spell-ftd-31ba7f883f6cce88",
+      "name": "Draconic Transformation",
+      "source": "FTD",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        }
+      ]
+    },
+    {
+      "id": "Spell-ftd-2fc5ab9794e95f46",
+      "name": "Fizban's Platinum Shield",
+      "source": "FTD",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        }
+      ]
+    },
+    {
+      "id": "Spell-ftd-ce4d18e4d295cbab",
+      "name": "Nathair's Mischief",
+      "source": "FTD",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        }
+      ]
+    },
+    {
+      "id": "Spell-ftd-ce43f0ba503662c1",
+      "name": "Raulothim's Psychic Lance",
+      "source": "FTD",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        }
+      ]
+    },
+    {
+      "id": "Spell-ftd-f1602210f9f1232b",
+      "name": "Rime's Binding Ice",
+      "source": "FTD",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "FTD"
+        }
+      ]
+    },
+    {
+      "id": "Spell-ftd-788d3d209ad930d6",
+      "name": "Summon Draconic Spirit",
+      "source": "FTD",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "FTD"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-85954ea7bf40a800",
+      "name": "Blade of Disaster",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-ad54d00304eb903f",
+      "name": "Dream of the Blue Veil",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-c27588769e148dcd",
+      "name": "Intellect Fortress",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-c20bfe209978221c",
+      "name": "Mind Sliver",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-0fd7cd66b83473e0",
+      "name": "Spirit Shroud",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "cleric",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "paladin",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "cleric",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "paladin",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-71dc57881a4795d9",
+      "name": "Summon Aberration",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-3d285c1ab2acd854",
+      "name": "Summon Beast",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-f68d2144c8e85d37",
+      "name": "Summon Celestial",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "cleric",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "paladin",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-3c41db0ede62887b",
+      "name": "Summon Construct",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-0176307e4b4d2870",
+      "name": "Summon Elemental",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-207a5b601768cc41",
+      "name": "Summon Fey",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-cc60857a5b110a2e",
+      "name": "Summon Fiend",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-79be6904f7b14ac3",
+      "name": "Summon Shadowspawn",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-b0dffbce48bd43db",
+      "name": "Summon Undead",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-10c09d38548651ff",
+      "name": "Tasha's Caustic Brew",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-9c71a3a99c464bf7",
+      "name": "Tasha's Mind Whip",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-tce-d44b5cbac40b2513",
+      "name": "Tasha's Otherworldly Guise",
+      "source": "TCE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "TCE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-fe2fae219f3f6b65",
+      "name": "Abi-Dalzim's Horrid Wilting",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-90d14ef87d74b897",
+      "name": "Absorb Elements",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-d67fbe00400769b7",
+      "name": "Aganazzar's Scorcher",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-5a917887a784ea36",
+      "name": "Beast Bond",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-ace3973e9bc96aba",
+      "name": "Bones of the Earth",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-c9f0c8f5075ef685",
+      "name": "Catapult",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-e32fcc5db33462b7",
+      "name": "Catnap",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-ac36ac3635b0a45b",
+      "name": "Cause Fear",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-0b3a7b8b9dcb165c",
+      "name": "Ceremony",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "cleric",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "paladin",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "cleric",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "paladin",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-8f313bd62dacf646",
+      "name": "Chaos Bolt",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-e3eaa954d6297d69",
+      "name": "Charm Monster",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-d4b47a2cbe9246d3",
+      "name": "Control Flames",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-5165ac712e5e9c8b",
+      "name": "Control Winds",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-0d757aba23dd9cff",
+      "name": "Create Bonfire",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-7d49b894f9be3a6c",
+      "name": "Create Homunculus",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-d08b9b081404ebbf",
+      "name": "Crown of Stars",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-20117b8cb05969a9",
+      "name": "Danse Macabre",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-8326e09ce4e90a41",
+      "name": "Dawn",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "cleric",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "cleric",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-da4d9d385293589c",
+      "name": "Dragon's Breath",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-43201de5b9360586",
+      "name": "Druid Grove",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-2a3072ca73ce655e",
+      "name": "Dust Devil",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-5ad95441ae69946d",
+      "name": "Earth Tremor",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-a0bbb1c300bc111a",
+      "name": "Earthbind",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-6c84552ceb105077",
+      "name": "Elemental Bane",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-23ac325504c26e33",
+      "name": "Enemies Abound",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-9ef904df773dc963",
+      "name": "Enervation",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-d6ce9d77c2741250",
+      "name": "Erupting Earth",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-01e6e8a51a021605",
+      "name": "Far Step",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-760c8e60b789e799",
+      "name": "Find Greater Steed",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "paladin",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "paladin",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-8d1c00e6595c3941",
+      "name": "Flame Arrows",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-1ddb9d47febe71a9",
+      "name": "Frostbite",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-c22237058990fb49",
+      "name": "Guardian of Nature",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-c3282cafeab243dc",
+      "name": "Gust",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-2dc464d292b7834c",
+      "name": "Healing Spirit",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-86b0d3d11ed63928",
+      "name": "Holy Weapon",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "cleric",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "paladin",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "cleric",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "paladin",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-988392a0adfa6055",
+      "name": "Ice Knife",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-f4c9a9c02dfd9677",
+      "name": "Illusory Dragon",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-6ae1ae75b193a3eb",
+      "name": "Immolation",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-621817dd6763b2ac",
+      "name": "Infernal Calling",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-80e41e005f88203c",
+      "name": "Infestation",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-5c671507d7afa8be",
+      "name": "Investiture of Flame",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-b9963ba416a271d5",
+      "name": "Investiture of Ice",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-101d9b3fbb04aac9",
+      "name": "Investiture of Stone",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-53cf5cb69eda1ce7",
+      "name": "Investiture of Wind",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-30433244dc72d9e6",
+      "name": "Invulnerability",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-b8e1847e2529be23",
+      "name": "Life Transference",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "cleric",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "cleric",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-157481ff811622de",
+      "name": "Maddening Darkness",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-ca4ea50c3d07f61a",
+      "name": "Maelstrom",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-a22fb5dd91717d69",
+      "name": "Magic Stone",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-d70fb946a4a64d70",
+      "name": "Mass Polymorph",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-b6af998188bf42a4",
+      "name": "Maximilian's Earthen Grasp",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-a3b2334b601abb08",
+      "name": "Melf's Minute Meteors",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-905fe16a2ebde64c",
+      "name": "Mental Prison",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-145bc49ff0df440a",
+      "name": "Mighty Fortress",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-276dec1ec41567f7",
+      "name": "Mind Spike",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-6e956ee563dadf9f",
+      "name": "Mold Earth",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-b4784713d9ce1d38",
+      "name": "Negative Energy Flood",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-be6849181cb4572c",
+      "name": "Power Word Pain",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-b117ac64c0412ba5",
+      "name": "Primal Savagery",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-9d98029a62d3e3bf",
+      "name": "Primordial Ward",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-69a182e89b2cd0ca",
+      "name": "Psychic Scream",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-fc187450c7c4a150",
+      "name": "Pyrotechnics",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-e1f92433f754e9f1",
+      "name": "Scatter",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-ceeeebecdb4cb9aa",
+      "name": "Shadow Blade",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-c579fcce98de2aad",
+      "name": "Shadow of Moil",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-cd70c516a00eb103",
+      "name": "Shape Water",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-c8315c4b7b6f476d",
+      "name": "Sickening Radiance",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-e81992b6626fb454",
+      "name": "Skill Empowerment",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-4c2860d2713500c3",
+      "name": "Skywrite",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-4ef396f332bea419",
+      "name": "Snare",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-77c36fd4b328d3b9",
+      "name": "Snilloc's Snowball Swarm",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-23a868d0a535ed5b",
+      "name": "Soul Cage",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-8493ed8fe03063d0",
+      "name": "Steel Wind Strike",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-abcf5a2ffb6baf4f",
+      "name": "Storm Sphere",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-ed1b3151ebd91b1b",
+      "name": "Summon Greater Demon",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-f7388515ab0afa84",
+      "name": "Summon Lesser Demons",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-47856f82ad8c2ed7",
+      "name": "Synaptic Static",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-ce19c39d40b5a33b",
+      "name": "Temple of the Gods",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "cleric",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "cleric",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-07ba2ee24080eba4",
+      "name": "Tenser's Transformation",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-d14e9932e0e619e9",
+      "name": "Thunder Step",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-4f1d65b75c0d4ec0",
+      "name": "Thunderclap",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-d67b2f57cd9984f4",
+      "name": "Tidal Wave",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-0adfd21b34f87131",
+      "name": "Tiny Servant",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-72688013fcf7f2d6",
+      "name": "Toll the Dead",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "cleric",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-d23d786f45c8c325",
+      "name": "Transmute Rock",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "artificer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-d9e789815361260e",
+      "name": "Vitriolic Sphere",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-54a16f01676536c3",
+      "name": "Wall of Light",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "warlock",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-60090a6bb34d8ef7",
+      "name": "Wall of Sand",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-f7814e4136dcb419",
+      "name": "Wall of Water",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-86f9f07146bfadec",
+      "name": "Warding Wind",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "bard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "bard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-73aba38e19896115",
+      "name": "Watery Sphere",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-f2105a2700a8b17f",
+      "name": "Whirlwind",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "sorcerer",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "wizard",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-b509e339eb6c9636",
+      "name": "Word of Radiance",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "cleric",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-0964d2b97763a75f",
+      "name": "Wrath of Nature",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "druid",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "druid",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    },
+    {
+      "id": "Spell-xge-cdd665d59339398b",
+      "name": "Zephyr Strike",
+      "source": "XGE",
+      "additions": [
+        {
+          "classId": "ranger",
+          "edition": "2014",
+          "definedInSource": "XGE"
+        },
+        {
+          "classId": "ranger",
+          "edition": "2024",
+          "definedInSource": "XGE"
+        }
+      ]
+    }
+  ]
+}
