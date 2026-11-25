@@ -726,7 +726,7 @@
     {
       "id": "sheetPrintDialog",
       "file": "js/modules/character-sheet.js",
-      "line": 649,
+      "line": 659,
       "kind": "dialog",
       "category": "standard-only",
       "entry": "Standard print fallback",
