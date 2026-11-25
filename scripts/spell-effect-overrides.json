@@ -614,5 +614,57 @@
   },
   "Kinetic Jaunt": {
     "damage": "End turn in another creature's space: 1d8 Force to self"
+  },
+  "Banishing Smite|PHB": {
+    "damage": "Hit only: +5d10 Force",
+    "scaling": ""
+  },
+  "Banishing Smite|XPHB": {
+    "damage": "Hit only: +5d10 Force",
+    "scaling": ""
+  },
+  "Blinding Smite|PHB": {
+    "damage": "Hit only: +3d8 Radiant",
+    "scaling": ""
+  },
+  "Blinding Smite|XPHB": {
+    "damage": "Hit only: +3d8 Radiant",
+    "scaling": "+1d8/SL"
+  },
+  "Staggering Smite|PHB": {
+    "damage": "Hit only: +4d6 Psychic",
+    "scaling": ""
+  },
+  "Staggering Smite|XPHB": {
+    "damage": "Hit only: +4d6 Psychic",
+    "scaling": "+1d6/SL"
+  },
+  "Thunderous Smite|PHB": {
+    "damage": "Hit only: +2d6 Thunder",
+    "scaling": ""
+  },
+  "Thunderous Smite|XPHB": {
+    "damage": "Hit only: +2d6 Thunder",
+    "scaling": "+1d6/SL"
+  },
+  "Wrathful Smite|PHB": {
+    "damage": "Hit only: +1d6 Psychic",
+    "scaling": ""
+  },
+  "Wrathful Smite|XPHB": {
+    "damage": "Hit only: +1d6 Necrotic",
+    "scaling": "+1d6/SL"
+  },
+  "Branding Smite|PHB": {
+    "damage": "Hit only: +2d6 Radiant",
+    "scaling": "+1d6/SL"
+  },
+  "Searing Smite|PHB": {
+    "damage": "Hit only: +1d6 Fire; ongoing fixed 1d6 Fire on failed start-turn CON save",
+    "scaling": "+1d6/SL to hit only"
+  },
+  "Searing Smite|XPHB": {
+    "damage": "Hit only: +1d6 Fire; ongoing slot-scaled Fire before CON save",
+    "scaling": "+1d6/SL to both events"
   }
 }

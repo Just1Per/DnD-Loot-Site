@@ -5352,6 +5352,718 @@
           ]
         }
       }
+    },
+    "Banishing Smite": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "force"
+          ],
+          "save": "",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action before the qualifying hit; Concentration up to 1 minute.",
+            "The next weapon attack hit against a creature qualifies, including a ranged weapon attack. The target must be a creature.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition.",
+            "The extra 5d10 Force never increases with slot level. Banishment requires the actual post-attack HP threshold; no target HP is inferred."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "5d10",
+                "upcast": null,
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "Banishment · check actual remaining HP",
+              "shortLabel": "Banishment",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "",
+                "automatic": true,
+                "checkDC": null,
+                "notes": [
+                  "After the actual hit leaves the target at 50 HP or fewer, banish it without a save. A non-native target returns to its home plane; a native target occupies a harmless demiplane, Incapacitated until the spell ends. Returning targets use the former or nearest free space."
+                ],
+                "types": []
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "force"
+          ],
+          "save": "CHARISMA",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action immediately after the qualifying hit; do not borrow the legacy pre-cast timing.",
+            "The triggering hit must use a Melee weapon or an Unarmed Strike. The target must be a creature.",
+            "Concentration up to 1 minute; ending it returns the banished target.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition.",
+            "The extra 5d10 Force never increases with slot level. Banishment requires the actual post-attack HP threshold; no target HP is inferred."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "5d10",
+                "upcast": null,
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "Banishment · check actual remaining HP",
+              "shortLabel": "Banishment",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "CHARISMA",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "After the actual hit leaves the target at 50 HP or fewer, a failed Charisma save sends it to a harmless demiplane for the spell’s remaining duration. It is Incapacitated there and returns when the spell ends."
+                ],
+                "types": []
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Blinding Smite": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "radiant"
+          ],
+          "save": "CONSTITUTION",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action before the qualifying hit; Concentration up to 1 minute.",
+            "The triggering hit must be a melee weapon attack. The target must be a creature.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "3d8",
+                "upcast": null,
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "Blindness · initial / turn-end save",
+              "shortLabel": "Blindness",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "CONSTITUTION",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "After the hit, a failed Constitution save Blinds the target. Repeat that save at each target turn end to end the blindness; manage the spell’s remaining duration and Concentration."
+                ],
+                "types": []
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "radiant"
+          ],
+          "save": "CONSTITUTION",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action immediately after the qualifying hit; do not borrow the legacy pre-cast timing.",
+            "The triggering hit must use a Melee weapon or an Unarmed Strike. The target must be a creature.",
+            "No Concentration; the source’s condition lasts for its stated duration.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "3d8",
+                "upcast": "1d8",
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "Blindness · turn-end save",
+              "shortLabel": "Blindness",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "CONSTITUTION",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "The qualifying hit Blinds automatically. At each target turn end, a Constitution save ends this spell on success; maximum duration is 1 minute."
+                ],
+                "types": []
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Staggering Smite": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "psychic"
+          ],
+          "save": "WISDOM",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action before the qualifying hit; Concentration up to 1 minute.",
+            "The triggering hit must be a melee weapon attack. The target must be a creature.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "4d6",
+                "upcast": null,
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "After hit · Wisdom save",
+              "shortLabel": "After hit",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "A failed Wisdom save gives Disadvantage on the target’s attacks and ability checks and prevents Reactions until the end of its next turn. This is not Stunned."
+                ],
+                "types": []
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "psychic"
+          ],
+          "save": "WISDOM",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action immediately after the qualifying hit; do not borrow the legacy pre-cast timing.",
+            "The triggering hit must use a Melee weapon or an Unarmed Strike. The target must be a creature.",
+            "No Concentration; the source’s condition lasts for its stated duration.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "4d6",
+                "upcast": "1d6",
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "After hit · Wisdom save",
+              "shortLabel": "After hit",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "A failed Wisdom save Stuns the target until the end of the caster’s next turn."
+                ],
+                "types": []
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Thunderous Smite": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "thunder"
+          ],
+          "save": "STRENGTH",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action before the qualifying hit; Concentration up to 1 minute.",
+            "The triggering hit must be a melee weapon attack.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "2d6",
+                "upcast": null,
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "Creature rider · Strength save",
+              "shortLabel": "Creature rider",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "STRENGTH",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "Only a creature makes this save. Failure pushes it 10 ft away and makes it Prone; success prevents those riders, not the already-dealt hit damage. The thunder can be heard within 300 ft; this is not an area-damage attack."
+                ],
+                "types": []
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "thunder"
+          ],
+          "save": "STRENGTH",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action immediately after the qualifying hit; do not borrow the legacy pre-cast timing.",
+            "The triggering hit must use a Melee weapon or an Unarmed Strike.",
+            "No Concentration; the source’s condition lasts for its stated duration.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "2d6",
+                "upcast": "1d6",
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "Creature rider · Strength save",
+              "shortLabel": "Creature rider",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "STRENGTH",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "Only a creature makes this save. Failure pushes it 10 ft away and makes it Prone; success prevents those riders, not the already-dealt hit damage. The thunder can be heard within 300 ft; this is not an area-damage attack."
+                ],
+                "types": []
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Wrathful Smite": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "psychic"
+          ],
+          "save": "WISDOM",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action before the qualifying hit; Concentration up to 1 minute.",
+            "The triggering hit must be a melee weapon attack.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "1d6",
+                "upcast": null,
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "Fear · initial Wisdom save",
+              "shortLabel": "Fear",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "A creature’s failed initial Wisdom save makes it Frightened of the caster. Afterward it must use an Action for a Wisdom ability check against the caster’s spell DC to end the spell. That escape is a check, not another save."
+                ],
+                "types": []
+              }
+            },
+            {
+              "id": "escape",
+              "label": "Fear · Action Wisdom check",
+              "shortLabel": "Fear",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "",
+                "automatic": false,
+                "checkDC": "Action Wisdom escape check",
+                "notes": [
+                  "Use only while this legacy spell is active. A successful Wisdom check ends the spell; do not substitute a saving throw or a revised turn-end save."
+                ],
+                "types": []
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "necrotic"
+          ],
+          "save": "WISDOM",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action immediately after the qualifying hit; do not borrow the legacy pre-cast timing.",
+            "The triggering hit must use a Melee weapon or an Unarmed Strike. The target must be a creature.",
+            "No Concentration; the source’s condition lasts for its stated duration.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "1d6",
+                "upcast": "1d6",
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "rider",
+              "label": "Fear · initial / turn-end save",
+              "shortLabel": "Fear",
+              "combat": {
+                "damage": "",
+                "upcast": null,
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "A failed initial Wisdom save Frightens the target until the spell ends. Repeat the save at each target turn end to end the spell on success; maximum duration is 1 minute."
+                ],
+                "types": []
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Branding Smite": {
+      "bySource": {
+        "PHB": {
+          "damage": "2d6",
+          "upcast": "1d6",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "radiant"
+          ],
+          "save": "",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action before the qualifying hit; Concentration up to 1 minute.",
+            "The next weapon attack hit against a creature qualifies, including a ranged attack. Its target sheds dim light within 5 ft and cannot become Invisible while the spell remains active; an already Invisible target becomes visible.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition."
+          ]
+        }
+      }
+    },
+    "Searing Smite": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "fire"
+          ],
+          "save": "CONSTITUTION",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action before the qualifying hit; Concentration up to 1 minute.",
+            "The next melee weapon attack hit triggers this spell.",
+            "The hit damage has no saving throw.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition.",
+            "An Action by the target or a creature within 5 ft can extinguish the flames; another actual dousing effect also ends the spell."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "1d6",
+                "upcast": "1d6",
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Burning · target turn start",
+              "shortLabel": "Burning",
+              "combat": {
+                "damage": "1d6",
+                "upcast": null,
+                "nonDamage": false,
+                "actionSave": "CONSTITUTION",
+                "automatic": false,
+                "checkDC": null,
+                "notes": [
+                  "Make the Constitution save first: failure takes fixed 1d6 Fire; success ends the spell with no damage. Higher slots increase only the initial hit rider."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "step": null,
+          "types": [
+            "fire"
+          ],
+          "save": "CONSTITUTION",
+          "actionRange": "Triggering hit",
+          "notes": [
+            "Bonus Action immediately after the qualifying hit; do not borrow the legacy pre-cast timing.",
+            "The triggering hit uses a Melee weapon or an Unarmed Strike.",
+            "The hit damage has no saving throw.",
+            "Hit-rider damage belongs only to the actual qualifying hit; later events use their separate references. Resolve its original attack roll and base damage separately. A reference does not cast, spend a Bonus Action/slot, establish Concentration, damage a target or apply a condition.",
+            "No Concentration; duration up to 1 minute. The burning damage happens before the turn-start Constitution save, including when that save succeeds."
+          ],
+          "effects": [
+            {
+              "id": "hit",
+              "label": "Hit rider",
+              "shortLabel": "Hit rider",
+              "combat": {
+                "damage": "1d6",
+                "upcast": "1d6",
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true
+              }
+            },
+            {
+              "id": "ongoing",
+              "label": "Burning · target turn start",
+              "shortLabel": "Burning",
+              "combat": {
+                "damage": "1d6",
+                "upcast": "1d6",
+                "nonDamage": false,
+                "actionSave": "",
+                "automatic": true,
+                "checkDC": "After damage, Constitution save to end burning",
+                "notes": [
+                  "Deal damage first, then make the Constitution save. Success ends the spell after this damage; failure continues it. Both hit and ongoing dice scale with the slot."
+                ]
+              }
+            }
+          ]
+        }
+      }
     }
   }
 }
