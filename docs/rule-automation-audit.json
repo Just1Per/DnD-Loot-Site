@@ -22,9 +22,9 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 337,
-    "spellActionFormulas": 292,
+    "spellActionFormulas": 297,
     "spellHealingFormulas": 16,
-    "manualDamageReferences": 76,
+    "manualDamageReferences": 71,
     "itemFacts": 1278,
     "itemPowerResourceAdapters": 2,
     "itemPowerResourceCounters": 4,
@@ -14308,9 +14308,34 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "setup",
+          "label": "Initial WIS save · no damage"
+        },
+        {
+          "id": "vision",
+          "label": "Rolled 1–2 · Vision of the Far Realm"
+        },
+        {
+          "id": "rift",
+          "label": "Rolled 3–5 · Rending Rift"
+        },
+        {
+          "id": "wormhole",
+          "label": "Rolled 6–8 · Wormhole"
+        },
+        {
+          "id": "chill",
+          "label": "Rolled 9–10 · Chill of the Dark Void"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Afflicted creature",
+      "actionSave": "",
+      "setupSave": "WISDOM",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-459ba967bb5a71d6",
@@ -15811,9 +15836,46 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "death",
+          "label": "Death"
+        },
+        {
+          "id": "discord",
+          "label": "Discord"
+        },
+        {
+          "id": "fear",
+          "label": "Fear"
+        },
+        {
+          "id": "hopelessness",
+          "label": "Hopelessness"
+        },
+        {
+          "id": "insanity",
+          "label": "Insanity"
+        },
+        {
+          "id": "pain",
+          "label": "Pain"
+        },
+        {
+          "id": "sleep",
+          "label": "Sleep"
+        },
+        {
+          "id": "stunning",
+          "label": "Stunning"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "60-ft sphere from glyph",
+      "actionSave": "",
+      "checkDC": "INT (Investigation) check to find glyph",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-b76a7ca153c24671",
@@ -15821,9 +15883,38 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "death",
+          "label": "Death"
+        },
+        {
+          "id": "discord",
+          "label": "Discord"
+        },
+        {
+          "id": "fear",
+          "label": "Fear"
+        },
+        {
+          "id": "pain",
+          "label": "Pain"
+        },
+        {
+          "id": "sleep",
+          "label": "Sleep"
+        },
+        {
+          "id": "stunning",
+          "label": "Stunning"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "60-ft sphere from glyph",
+      "actionSave": "",
+      "checkDC": "WIS (Perception) check to notice glyph",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-47856f82ad8c2ed7",
@@ -16676,9 +16767,25 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "creation",
+          "label": "Wall appears · creature in area"
+        },
+        {
+          "id": "turn-end",
+          "label": "Creature ends turn in wall"
+        },
+        {
+          "id": "beam",
+          "label": "Action · beam from wall"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Wall area",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-60090a6bb34d8ef7",
@@ -17078,9 +17185,29 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "terrain",
+          "label": "Grasses and undergrowth · enemy terrain"
+        },
+        {
+          "id": "trees",
+          "label": "Start of your turn · tree branches"
+        },
+        {
+          "id": "roots",
+          "label": "End of your turn · roots and vines"
+        },
+        {
+          "id": "rock",
+          "label": "Bonus Action · loose rock attack"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "60-ft cube",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-b0f8cdfcf8fc9c01",

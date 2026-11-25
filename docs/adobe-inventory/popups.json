@@ -13,7 +13,8 @@
       "testReferences": [
         "magic-throwing-weapons-browser.cjs",
         "spell-aura-riders-browser.cjs",
-        "spell-effect-choices-browser.cjs"
+        "spell-effect-choices-browser.cjs",
+        "spell-hazards-browser.cjs"
       ]
     },
     {
@@ -60,7 +61,8 @@
         "adobe-feat-reactions-browser.cjs",
         "magic-throwing-weapons-browser.cjs",
         "spell-aura-riders-browser.cjs",
-        "spell-effect-choices-browser.cjs"
+        "spell-effect-choices-browser.cjs",
+        "spell-hazards-browser.cjs"
       ]
     },
     {

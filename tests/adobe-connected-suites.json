@@ -106,6 +106,7 @@
     "species-forms-browser.cjs",
     "species-healing-browser.cjs",
     "magic-throwing-weapons-browser.cjs",
-    "spell-aura-riders-browser.cjs"
+    "spell-aura-riders-browser.cjs",
+    "spell-hazards-browser.cjs"
   ]
 }

@@ -4259,6 +4259,483 @@
           ]
         }
       }
+    },
+    "Wall of Light": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "upcast": "1d8",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "Wall area",
+          "notes": [
+            "Concentration up to 10 minutes. The wall can be up to 60 × 10 × 5 ft; it blocks sight but allows creatures and objects through. Light extends 120 ft bright plus another 120 ft dim. Select the actual event; references do not cast, create a wall, track its length or apply target damage/conditions."
+          ],
+          "effects": [
+            {
+              "id": "creation",
+              "label": "Wall appears · creature in area",
+              "shortLabel": "Creation",
+              "combat": {
+                "damage": "4d8",
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Only when the wall appears: success halves damage and prevents Blinded; failure causes Blinded for 1 minute. Repeat CON at the end of each blinded creature’s turn, ending that condition on success."
+                ]
+              }
+            },
+            {
+              "id": "turn-end",
+              "label": "Creature ends turn in wall",
+              "shortLabel": "Turn end",
+              "combat": {
+                "damage": "4d8",
+                "automatic": true,
+                "notes": [
+                  "A creature ending its turn in the wall takes this damage without another saving throw or attack roll. This event does not add the initial Blinded effect."
+                ]
+              }
+            },
+            {
+              "id": "beam",
+              "label": "Action · beam from wall",
+              "shortLabel": "Beam",
+              "combat": {
+                "damage": "4d8",
+                "attack": true,
+                "actionRange": "60 ft from wall",
+                "notes": [
+                  "Action: one creature you can see within 60 ft of the wall, using a ranged spell attack. Hit deals the displayed damage. Hit or miss shortens the wall by 10 ft; length 0 ends the spell. Confirm actual remaining wall length before this action."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Wrath of Nature": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "actionRange": "60-ft cube",
+          "notes": [
+            "Concentration up to 1 minute. Select a visible point for the cube and resolve only natural features actually present there. No reference creates trees, rocks or ground cover, starts Concentration, spends actions or changes target conditions/HP. Damage does not increase with slot level."
+          ],
+          "effects": [
+            {
+              "id": "terrain",
+              "label": "Grasses and undergrowth · enemy terrain",
+              "shortLabel": "Terrain",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "Grass/undergrowth-covered ground in the cube is Difficult Terrain for your enemies. Other ground and friendly creatures are not covered by this effect."
+                ]
+              }
+            },
+            {
+              "id": "trees",
+              "label": "Start of your turn · tree branches",
+              "shortLabel": "Trees",
+              "combat": {
+                "damage": "4d6",
+                "types": [
+                  "slashing"
+                ],
+                "actionSave": "DEXTERITY",
+                "actionRange": "Enemies within 10 ft of a tree in cube",
+                "notes": [
+                  "At the start of each of your turns, enemies within 10 ft of any tree in the cube make DEX saves. Success prevents all this damage; failure takes the displayed Slashing damage."
+                ]
+              }
+            },
+            {
+              "id": "roots",
+              "label": "End of your turn · roots and vines",
+              "shortLabel": "Roots",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "STRENGTH",
+                "checkDC": "STR (Athletics) escape check",
+                "notes": [
+                  "At each own-turn end, choose one grounded creature in the cube. Failed STR save causes Restrained until the spell ends. The target can spend an Action on the listed Athletics check to end Restrained on itself."
+                ]
+              }
+            },
+            {
+              "id": "rock",
+              "label": "Bonus Action · loose rock attack",
+              "shortLabel": "Rock",
+              "combat": {
+                "damage": "3d8",
+                "types": [
+                  "bludgeoning"
+                ],
+                "attack": true,
+                "riderSave": "STRENGTH",
+                "actionRange": "Visible creature in cube",
+                "notes": [
+                  "On your turn, a Bonus Action launches one loose rock in the cube at a visible creature in the cube. Use a ranged spell attack. On a hit the displayed Bludgeoning damage is nonmagical; the hit creature also makes a STR save or falls Prone. A miss deals none and forces no rider save."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Symbol": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "actionRange": "60-ft sphere from glyph",
+          "checkDC": "INT (Investigation) check to find glyph",
+          "notes": [
+            "Choose the glyph’s trigger and effect when casting; an object moved more than 10 ft from the casting position breaks its glyph without triggering. A surface glyph covers at most a 10-ft-diameter area. Once triggered, its 60-ft-radius sphere lasts 10 minutes. It affects creatures present at activation, first entering on a turn, or ending a turn there. Resolve the legacy entry and turn-end events as written; do not borrow the revised once-per-turn limit. Slot level does not increase damage. A reference does not inscribe/trigger a glyph, pay costs, make choices again, or apply target conditions."
+          ],
+          "effects": [
+            {
+              "id": "death",
+              "label": "Death",
+              "shortLabel": "Death",
+              "combat": {
+                "damage": "10d10",
+                "types": [
+                  "necrotic"
+                ],
+                "nonDamage": false,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: 10d10 Necrotic; success halves damage."
+                ]
+              }
+            },
+            {
+              "id": "discord",
+              "label": "Discord",
+              "shortLabel": "Discord",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: for 1 minute, meaningful communication is impossible and attack rolls/ability checks have Disadvantage."
+                ]
+              }
+            },
+            {
+              "id": "fear",
+              "label": "Fear",
+              "shortLabel": "Fear",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Frightened for 1 minute; move at least 30 ft from the glyph each turn if able. The frightened target also drops held objects."
+                ]
+              }
+            },
+            {
+              "id": "hopelessness",
+              "label": "Hopelessness",
+              "shortLabel": "Hopelessness",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "CHARISMA",
+                "notes": [
+                  "Failed save: for 1 minute, the target cannot attack or target creatures with harmful abilities, spells or magic."
+                ]
+              }
+            },
+            {
+              "id": "insanity",
+              "label": "Insanity",
+              "shortLabel": "Insanity",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "INTELLIGENCE",
+                "notes": [
+                  "Failed save: for 1 minute, no actions, comprehension or reading; speech is gibberish and the DM handles erratic movement."
+                ]
+              }
+            },
+            {
+              "id": "pain",
+              "label": "Pain",
+              "shortLabel": "Pain",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: Incapacitated for 1 minute."
+                ]
+              }
+            },
+            {
+              "id": "sleep",
+              "label": "Sleep",
+              "shortLabel": "Sleep",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Unconscious for 10 minutes; damage or an Action spent shaking/slapping the target wakes it."
+                ]
+              }
+            },
+            {
+              "id": "stunning",
+              "label": "Stunning",
+              "shortLabel": "Stunning",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Stunned for 1 minute."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "actionRange": "60-ft sphere from glyph",
+          "checkDC": "WIS (Perception) check to notice glyph",
+          "notes": [
+            "Choose the glyph’s trigger and effect when casting; an object moved more than 10 ft from the casting position breaks its glyph without triggering. The glyph covers at most a 10-ft-diameter area. Once triggered, its 60-ft-radius sphere lasts 10 minutes. It affects creatures present at activation, first entering on a turn, or ending a turn there. Each creature is targeted only once per turn. Slot level does not increase damage. A reference does not inscribe/trigger a glyph, pay costs, make choices again, or apply target conditions."
+          ],
+          "effects": [
+            {
+              "id": "death",
+              "label": "Death",
+              "shortLabel": "Death",
+              "combat": {
+                "damage": "10d10",
+                "types": [
+                  "necrotic"
+                ],
+                "nonDamage": false,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: 10d10 Necrotic; success halves damage."
+                ]
+              }
+            },
+            {
+              "id": "discord",
+              "label": "Discord",
+              "shortLabel": "Discord",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: for 1 minute, meaningful communication is impossible and attack rolls/ability checks have Disadvantage."
+                ]
+              }
+            },
+            {
+              "id": "fear",
+              "label": "Fear",
+              "shortLabel": "Fear",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Frightened for 1 minute; move at least 30 ft from the glyph each turn if able."
+                ]
+              }
+            },
+            {
+              "id": "pain",
+              "label": "Pain",
+              "shortLabel": "Pain",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "CONSTITUTION",
+                "notes": [
+                  "Failed save: Incapacitated for 1 minute."
+                ]
+              }
+            },
+            {
+              "id": "sleep",
+              "label": "Sleep",
+              "shortLabel": "Sleep",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Unconscious for 10 minutes; damage or an Action spent shaking/slapping the target wakes it."
+                ]
+              }
+            },
+            {
+              "id": "stunning",
+              "label": "Stunning",
+              "shortLabel": "Stunning",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "actionSave": "WISDOM",
+                "notes": [
+                  "Failed save: Stunned for 1 minute."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Reality Break": {
+      "bySource": {
+        "EGW": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "setupSave": "WISDOM",
+          "notes": [
+            "Concentration up to 1 minute. The initial WIS save prevents the spell on success; failure prevents Reactions and requires a d10 roll at each target turn start. Select the result actually rolled; never choose a preferred result instead. The target repeats WIS at each turn end to end the whole spell. No damage occurs just from the initial failed save. A reference does not roll the table, teleport the target, apply conditions or spend resources. Slot level never increases damage."
+          ],
+          "effects": [
+            {
+              "id": "setup",
+              "label": "Initial WIS save · no damage",
+              "shortLabel": "Setup",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "automatic": false,
+                "actionSave": "WISDOM",
+                "actionRange": "60 ft"
+              }
+            },
+            {
+              "id": "vision",
+              "label": "Rolled 1–2 · Vision of the Far Realm",
+              "shortLabel": "d10 1–2",
+              "combat": {
+                "damage": "6d12",
+                "types": [
+                  "psychic"
+                ],
+                "notes": [
+                  "Automatic damage for this rolled result; no additional damage save. Stunned lasts until the end of this turn."
+                ]
+              }
+            },
+            {
+              "id": "rift",
+              "label": "Rolled 3–5 · Rending Rift",
+              "shortLabel": "d10 3–5",
+              "combat": {
+                "damage": "8d12",
+                "types": [
+                  "force"
+                ],
+                "automatic": false,
+                "actionSave": "DEXTERITY",
+                "notes": [
+                  "This rolled result requires its separate DEX save; success halves the displayed Force damage."
+                ]
+              }
+            },
+            {
+              "id": "wormhole",
+              "label": "Rolled 6–8 · Wormhole",
+              "shortLabel": "d10 6–8",
+              "combat": {
+                "damage": "10d12",
+                "types": [
+                  "force"
+                ],
+                "notes": [
+                  "Automatic damage; no additional save. Teleport the target with its worn/carried equipment up to 30 ft to a visible unoccupied space you choose, then apply Prone. Resolve the actual destination at the table."
+                ]
+              }
+            },
+            {
+              "id": "chill",
+              "label": "Rolled 9–10 · Chill of the Dark Void",
+              "shortLabel": "d10 9–10",
+              "combat": {
+                "damage": "10d12",
+                "types": [
+                  "cold"
+                ],
+                "notes": [
+                  "Automatic damage; no additional save. Blinded lasts until the end of this turn."
+                ]
+              }
+            }
+          ],
+          "actionRange": "Afflicted creature"
+        }
+      }
     }
   }
 }
