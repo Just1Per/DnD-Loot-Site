@@ -11,6 +11,7 @@
       "entry": "Add/edit attack fra Combat",
       "notes": "Bevar action-renderer og dens handlers; åbnes også fra bridge.",
       "testReferences": [
+        "magic-throwing-weapons-browser.cjs",
         "spell-effect-choices-browser.cjs"
       ]
     },
@@ -46,7 +47,7 @@
     {
       "id": "adobeAttackChoiceMenu",
       "file": "js/modules/character-adobe-attack-menu.js",
-      "line": 15,
+      "line": 19,
       "kind": "flyout",
       "category": "adobe-menu",
       "entry": "Attack name-felt",
@@ -56,6 +57,7 @@
         "adobe-attack-choice-flyout-browser.cjs",
         "adobe-connected-sheet-browser.cjs",
         "adobe-feat-reactions-browser.cjs",
+        "magic-throwing-weapons-browser.cjs",
         "spell-effect-choices-browser.cjs"
       ]
     },
