@@ -111,21 +111,44 @@ var CharacterMagicItems=(()=>{
     if(!fact?.reqAttune||!tags?.length||!tags.every(group=>Object.keys(group).length===1&&typeof group.class==='string'&&known.has(group.class.split('|')[0].toLowerCase())))return null;
     return [...new Set(tags.map(group=>group.class.split('|')[0].toLowerCase()))];
   }
-  function attunementClassRequirement(data,item,level=20){
-    const required=attunementClasses(Pinned.find(item));if(!required)return null;
-    const Engine=globalThis.CharacterAdobeEngine,stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},live={...data,adobe:stored};
-    level=Engine?.level?Engine.level(live,level):level;
-    const context=Engine?.classLevels?{...data,adobe:{...stored,classLevels:Engine.classLevels(live,level)}}:data,selected=classes(context,level),C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);
+  function attunementContext(data,level){
+    const resolved=E.attunementContext(data,level),context=resolved.data,selected=classes(context,resolved.level),C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);level=resolved.level;
     if(selected.artificer&&!C?.artificerSource(context).eligible)delete selected.artificer;
     let exception='';
     if((selected.artificer||0)>=14&&C?.artificerSource(data).id==='tce')exception='Magic Item Savant';
     if(!exception&&(selected.rogue||0)>=13){const RS=globalThis.CharacterRogueSubclasses||(typeof require==='function'?require('./character-rogue-subclasses'):null),rogue=RS?.derive(context,{level});if(rogue?.active&&rogue.id==='thief'&&rogue.level>=13)exception='Use Magic Device (2014 Thief)';}
+    return{level,context,selected,exception};
+  }
+  function attunementClassRequirement(data,item,level){
+    const required=attunementClasses(Pinned.find(item));if(!required)return null;
+    const {selected,exception}=attunementContext(data,level);
     const eligible=required.some(id=>selected[id]>0)||!!exception,names=required.map(id=>id[0].toUpperCase()+id.slice(1)).join(' / ');
     return{eligible,classes:required,exception,message:'Class attunement requirement: '+names+'. '+(eligible?(exception?'Met through '+exception+'.':'Met by your allocated class levels.'):'No qualifying allocated class level; magical benefits are inactive.')};
   }
-  function eligibility(data,fact,effects,level){
+  const raceFamilies={
+    dwarf:['hill-dwarf','mountain-dwarf','duergar-mpmm','dwarf-2024'],
+    elf:['high-elf','wood-elf','drow','eladrin-mpmm','sea-elf-mpmm','shadar-kai-mpmm','astral-elf','pallid-elf-egw','lorwyn-elf-lfl','elf-2024'],
+    warforged:['warforged','warforged-efota']
+  };
+  function attunementRaces(fact){
+    const tags=fact?.reqAttuneTags;if(!fact?.reqAttune||!tags?.length||!tags.every(group=>Object.keys(group).length===1&&typeof group.race==='string'&&Object.hasOwn(raceFamilies,group.race.split('|')[0].toLowerCase())))return null;
+    const races=[...new Set(tags.map(group=>group.race.split('|')[0].toLowerCase()))],belt=fact.source==='XDMG'&&['dwarven thrower','whelm'].includes(Pinned.key(fact.name));return{races,...(belt?{dependency:'belt-of-dwarvenkind'}:{})};
+  }
+  function attunementRaceRequirement(data,item,level){
+    const scope=attunementRaces(Pinned.find(item));if(!scope)return null;
+    const {exception}=attunementContext(data,level),Rules=globalThis.CharacterRules||(typeof require==='function'?require('./character-rules'):null),race=data.build?.race,profile=Rules?.races[race],valid=profile&&(profile.edition||'2014')===(data.build?.edition||'2014'),eligible=!!exception||!!valid&&scope.races.some(family=>raceFamilies[family].includes(race)),names=scope.races.map(name=>name[0].toUpperCase()+name.slice(1)).join(' / ');
+    return{...scope,eligible,exception,message:'Race attunement requirement: '+names+(scope.dependency?' or a bearer currently attuned to a Belt of Dwarvenkind':'')+'. '+(eligible?(exception?'Met through '+exception+'.':'Met by your selected species.'):scope.dependency?'A qualifying active belt attunement is required for this bearer.':'No qualifying selected species; magical benefits are inactive.')};
+  }
+  function isAttunementDependency(item,dependency){const fact=Pinned.find(item);return dependency==='belt-of-dwarvenkind'&&!!fact&&['DMG','XDMG'].includes(fact.source)&&Pinned.key(fact.name)==='belt of dwarvenkind'&&fact.reqAttune===true;}
+  function attunementRequirement(data,item,level,loot=[]){
+    const classRequirement=attunementClassRequirement(data,item,level);if(classRequirement)return classRequirement;
+    const race=attunementRaceRequirement(data,item,level);if(!race||race.eligible||!race.dependency)return race;
+    const state=E.attunementState(data,loot,level),owned=new Map(ItemChoices.project(loot,data.equipmentState?.loadout).filter(row=>row&&Number(row.quantity)>0).map(row=>[row.id,row])),valid=[...state.active].some(id=>isAttunementDependency(owned.get(id)?.item,race.dependency));
+    return valid?{...race,eligible:true,exception:'Belt of Dwarvenkind',message:'Race attunement requirement: met through an active Belt of Dwarvenkind attunement. The belt and this item each use their own slot; wearing the belt is not required for this prerequisite.'}:race;
+  }
+  function eligibility(data,fact,effects,level,loot=[]){
     if(fact&&!prerequisiteConfirmed(data,{pinnedItemFacts:fact}))return false;
-    const classRequirement=fact&&attunementClassRequirement(data,{pinnedItemFacts:fact},level);if(classRequirement)return classRequirement.eligible;
+    const requirement=fact&&attunementRequirement(data,{pinnedItemFacts:fact},level,loot);if(requirement)return requirement.eligible;
     if(!fact?.reqAttuneTags?.length)return true;
     const selected=classes(data,level),C=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);
     if((selected.artificer||0)>=14&&C?.artificerSource(data).id==='tce')return true;
@@ -136,7 +159,7 @@ var CharacterMagicItems=(()=>{
     const family=Pinned.key(fact.spellBonusFamily||fact.name).replace(/^[123] /,'');
     const policy=namedPolicy(fact);
     const passive=passivePolicy(fact);
-    return{...abilityCoverage(fact),...(attunementClasses(fact)?{attunementClassScope:{classes:attunementClasses(fact),exceptions:['Magic Item Savant (TCE Artificer 14)','Use Magic Device (PHB Thief 13)'],otherRequirements:'Separate source-specific review'}}:{}),spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.ac?{armorClassBonus:passive.ac}:{}),...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)||!!defensePolicy(fact),...(defensePolicy(fact)?{immunityScope:{types:fact.immune,equipped:true,attunement:true},itemUseScope:{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false}}:{})};
+    return{...abilityCoverage(fact),...(attunementRaces(fact)?{attunementRaceScope:{...attunementRaces(fact),species:attunementRaces(fact).races.flatMap(family=>raceFamilies[family]),exceptions:['Magic Item Savant (TCE Artificer 14)','Use Magic Device (PHB Thief 13)'],otherRequirements:'Attachment, active powers and story conditions need separate review'}}:{}),...(attunementClasses(fact)?{attunementClassScope:{classes:attunementClasses(fact),exceptions:['Magic Item Savant (TCE Artificer 14)','Use Magic Device (PHB Thief 13)'],otherRequirements:'Separate source-specific review'}}:{}),spellScope:policy?[policy.ability?'ability:'+policy.ability:'global']:Object.hasOwn(castingFamilies,family)?castingFamilies[family]||['global']:[],...(policy?.alignment||policy?.prerequisite?{spellRequirements:{...(policy.alignment?{alignment:policy.alignment,classes:policy.classes}:{}),...(policy.prerequisite?{explicitApproval:policy.prerequisite.key}:{})}}:{}),passiveSaveChecks:passiveStats.has(family)||!!passive,...(passive?{saveCheckScope:{saves:passive.saves,checks:!!passive.checks,carried:!!passive.carried,attunement:!!fact.reqAttune,...(passive.ac?{armorClassBonus:passive.ac}:{}),...(passive.alignment?{alignment:passive.alignment}:{})}}:{}),passiveImmunities:passiveImmunities.has(family)||!!defensePolicy(fact),...(defensePolicy(fact)?{immunityScope:{types:fact.immune,equipped:true,attunement:true},itemUseScope:{max:1,recovery:['short','long'],spell:'Bane',saveDC:17,concentration:false}}:{})};
   }
   function spellBonuses(effects={},classId='',ability=''){
     const all=effects.itemSpellBonuses||{},global=all.global||{},specific=all[classId]||{},byAbility=effects.itemSpellAbilityBonuses?.[ability]||{};
@@ -219,7 +242,7 @@ var CharacterMagicItems=(()=>{
       if(!policy||carrier?.carrier(data,entry.id)>=0||!policy.carried&&!choice?.equipped||fact.reqAttune&&!attunement.active.has(entry.id))continue;
       const family=Pinned.key(fact.name);if(seen.has(family))continue;
       effects.traits||=[];addUnique(effects.traits,fact.name+' · '+policy.note);
-      if(!eligibility(data,fact,effects,level)||policy.alignment&&alignment(data.alignment)!==policy.alignment){warnings.push(fact.name+': the bearer does not meet its represented type or alignment requirement; save/check bonuses are inactive.');continue;}
+      if(!eligibility(data,fact,effects,level,loot)||policy.alignment&&alignment(data.alignment)!==policy.alignment){warnings.push(fact.name+': the bearer does not meet its represented type or alignment requirement; save/check bonuses are inactive.');continue;}
       const value=Number(fact.bonusSavingThrow);if(!Number.isSafeInteger(value)||Math.abs(value)>10)continue;
       seen.add(family);
       if(policy.saves==='all')effects.itemSavingThrowBonus=(effects.itemSavingThrowBonus||0)+value;
@@ -238,7 +261,7 @@ var CharacterMagicItems=(()=>{
       const itemKey=clean(row.item.name);
       if(seen.has(itemKey))continue;
       seen.add(itemKey);
-      const changed=[],abilityChanges=[],report={name:row.item.name,effects:changed,abilityChanges},fact=Pinned.find(row.item),eligible=eligibility(data,fact,effects,level);row.eligible=eligible;let hasAbilityFloor=false;
+      const changed=[],abilityChanges=[],report={name:row.item.name,effects:changed,abilityChanges},fact=Pinned.find(row.item),eligible=eligibility(data,fact,effects,level,loot);row.eligible=eligible;let hasAbilityFloor=false;
       if(fact&&eligible){
         const family=Pinned.key(fact.spellBonusFamily||row.item.name).replace(/^[123] /,''),attack=Number(fact.bonusSpellAttack)||0,dc=Number(fact.bonusSpellSaveDc)||0;
         const policy=castingPolicy(fact,data,level);
@@ -319,7 +342,7 @@ var CharacterMagicItems=(()=>{
 
   // The host installs the bridge; a plain Node metadata import must not mutate another model.
   if(typeof CharacterEquipment!=='undefined')E.infer=infer;
-  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear,spellBonuses,automationCoverage,prerequisite,prerequisiteConfirmed,setPrerequisite,orbitControl,setOrbiting,attunementClassRequirement,instructions};
+  return {reference,info,isMagical,requiresAttunement,infer,apply,augmentGear,spellBonuses,automationCoverage,prerequisite,prerequisiteConfirmed,setPrerequisite,orbitControl,setOrbiting,attunementClassRequirement,attunementRaceRequirement,attunementRequirement,isAttunementDependency,instructions};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterMagicItems=CharacterMagicItems;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterMagicItems;

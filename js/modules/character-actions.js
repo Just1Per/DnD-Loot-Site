@@ -27,13 +27,15 @@ var CharacterActions = (()=>{
    const item=a.kind==='loot'?loot.find(e=>e.id===a.ref&&e.quantity>0):null;
    if(a.kind==='loot'&&!item)return unavailable('This item is no longer in this character’s inventory.');
    if(a.kind==='weapon'&&!Object.hasOwn(E.weapons,a.ref))return unavailable('Unknown weapon.');
-   const entry=item||{id:'action-reference',quantity:1,item:{name:E.weapons[a.ref].name}},m=E.infer(entry.item),profile=E.profile(m,data.build.edition);
+   const Magic=globalThis.CharacterMagicItems||(typeof require==='function'?require('./character-magic-items'):null),infer=Magic?.infer||E.infer;
+   const entry=item||{id:'action-reference',quantity:1,item:{name:E.weapons[a.ref].name}},m=infer(entry.item),profile=E.profile(m,data.build.edition);
    if(m.kind!=='weapon')return resolve({...a,kind:'improvised',name:entry.item.name},data,level,stats,loot,spells);
    if(a.mode==='twoHanded'&&!profile?.versatile&&!profile?.props.includes('twoHanded'))return unavailable('This weapon has no two-handed damage mode.');
    if(a.mode==='thrown'&&!profile?.props.includes('thrown'))return unavailable('No thrown property: use an improvised attack instead.');
    const loadout=E.choices(data.equipmentState).loadout,existing=loadout.find(c=>c.id===entry.id);
-   const temp={...data,equipmentState:{...data.equipmentState,loadout:[...loadout.filter(c=>c.id!==entry.id),{...existing,id:entry.id,equipped:!!existing?.equipped,attuned:!!existing?.attuned,ability:a.ability==='auto'?(existing?.ability||'auto'):a.ability,proficiency:existing?.proficiency||'auto',mode:a.mode}]}};
-   const result=E.derive(temp,stats,item?loot:[...loot,entry],level).attacks.find(r=>r.id===entry.id);
+   const attackChoice={...existing,id:entry.id,equipped:!!existing?.equipped,attuned:!!existing?.attuned,ability:a.ability==='auto'?(existing?.ability||'auto'):a.ability,proficiency:existing?.proficiency||'auto',mode:a.mode};
+   const temp={...data,equipmentState:{...data.equipmentState,loadout:existing?loadout.map(choice=>choice.id===entry.id?attackChoice:choice):[...loadout,attackChoice]}};
+   const result=E.derive(temp,stats,item?loot:[...loot,entry],level,infer).attacks.find(r=>r.id===entry.id);
    if(!result)return unavailable('This item needs weapon mechanics configured by the DM.');
    if(item&&stats.clericCombat?.forgeWeapon===item.id){result.attack++;result.damage+=' + 1';result.notes.push('Blessing of the Forge: +1 attack/damage; counts as magical.');}
    const out={...row,proficient:result.proficient,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,damageDice:result.damageDice,damageType:result.damageType,range:result.range,ability:result.ability,notes:result.notes};

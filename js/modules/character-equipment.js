@@ -94,18 +94,43 @@ var CharacterEquipment = (() => {
     const entries=profs.map(p=>p.toLowerCase());
     return entries.some(p=>p===w.name.toLowerCase()||p===w.name.toLowerCase()+'s'||p===w.group+' weapons'||p==='martial ranged weapons'&&w.group==='martial'&&w.rangeType==='ranged'||p==='melee martial weapons without heavy or two-handed'&&w.group==='martial'&&w.rangeType==='melee'&&!w.props.includes('heavy')&&!w.props.includes('twoHanded')||w.group==='martial'&&((p==='martial weapons with the light property'&&w.props.includes('light'))||(p==='martial weapons with the finesse or light property'&&(w.props.includes('light')||w.props.includes('finesse')))));
   }
+  function attunementContext(data={},level){
+    data=data&&typeof data==='object'?data:{};
+    const stored=data.adobe||data.rulesChoices?.grants?.__adobe?.data||{},Engine=globalThis.CharacterAdobeEngine,live={...data,adobe:stored},assigned=stored.classLevels;
+    const fallback=level===undefined?(assigned?.length?assigned.reduce((sum,row)=>sum+Math.max(0,Math.min(20,Math.trunc(Number(row.level)||0))),0):1):level;
+    const target=Math.max(1,Math.min(20,Math.trunc(Number(Engine?.level?Engine.level(live,fallback):fallback)||1)));
+    return{level:target,data:Engine?.classLevels?{...data,adobe:{...stored,classLevels:Engine.classLevels(live,target)}}:data};
+  }
   function attunementLimit(data,level){
+    ({data,level}=attunementContext(data,level));
     const stored=data?.adobe||data?.rulesChoices?.grants?.__adobe?.data||{},entries=stored.classLevels?.length?stored.classLevels:[{classId:data?.build?.classId,level:level||1}];
-    let remaining=level===undefined?20:Math.max(1,Math.min(20,Math.trunc(Number(level)||1))),artificer=0;
+    let remaining=level,artificer=0;
     const seen=new Set();for(const entry of entries){const actual=Math.min(remaining,Math.max(0,Math.trunc(Number(entry.level)||0)));remaining-=actual;if(!seen.has(entry.classId)&&entry.classId==='artificer')artificer=actual;seen.add(entry.classId);}
-    const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);if(artificer&&!choices?.artificerSource(data).eligible)artificer=0;const RS=globalThis.CharacterRogueSubclasses||(typeof require==='function'?require('./character-rogue-subclasses'):null),rogue=RS?.derive(data,{level:level===undefined?20:level}),thief=rogue?.active&&rogue.id==='thief-2024'&&rogue.level>=13;
+    const choices=globalThis.CharacterClassFeatureChoices||(typeof require==='function'?require('./character-class-feature-choices'):null);if(artificer&&!choices?.artificerSource(data).eligible)artificer=0;const RS=globalThis.CharacterRogueSubclasses||(typeof require==='function'?require('./character-rogue-subclasses'):null),rogue=RS?.derive(data,{level}),thief=rogue?.active&&rogue.id==='thief-2024'&&rogue.level>=13;
     return Math.max(thief?4:3,artificer>=18?6:artificer>=14?5:artificer>=10?4:3);
   }
   function attunementState(data,loot=[],level){
+    ({data,level}=attunementContext(data,level));
     loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
-    const limit=attunementLimit(data,level),owned=new Map(loot.filter(row=>row&&Number(row.quantity)>0).map(row=>[row.id,row])),ids=[],ineligible=new Map(),Magic=globalThis.CharacterMagicItems;
-    for(const choice of choices(data?.equipmentState).loadout){const item=owned.get(choice.id)?.item;if(!item||!choice.attuned)continue;const needs=Magic?.requiresAttunement(item)||!!item.attunement;if(!needs)continue;const requirement=Magic?.attunementClassRequirement?.(data,item,level);if(requirement&&!requirement.eligible)ineligible.set(choice.id,requirement.message);else ids.push(choice.id);}
-    return{limit,count:ids.length,active:new Set(ids.slice(0,limit)),ineligible};
+    const limit=attunementLimit(data,level),owned=new Map(loot.filter(row=>row&&Number(row.quantity)>0).map(row=>[row.id,row])),candidates=[],ineligible=new Map(),Magic=globalThis.CharacterMagicItems;
+    for(const choice of choices(data?.equipmentState).loadout){
+      const item=owned.get(choice.id)?.item;if(!item||!choice.attuned)continue;
+      if(!Magic?.requiresAttunement(item)&&!item.attunement)continue;
+      const requirement=Magic?.attunementClassRequirement?.(data,item,level)||Magic?.attunementRaceRequirement?.(data,item,level);
+      if(requirement&&!requirement.eligible&&!requirement.dependency){ineligible.set(choice.id,requirement.message);continue;}
+      candidates.push({id:choice.id,item,requirement,dependency:requirement&&!requirement.eligible?requirement.dependency:null});
+    }
+    const dependencies=row=>candidates.filter(other=>!other.dependency&&Magic?.isAttunementDependency?.(other.item,row.dependency));
+    const eligible=candidates.filter(row=>{if(!row.dependency||dependencies(row).length)return true;ineligible.set(row.id,row.requirement.message);return false;}),active=new Set();
+    // Keep earlier selections where feasible, reserving the prerequisite belt's
+    // own slot when a dependent item comes first. No circular activation passes.
+    for(const row of eligible){
+      if(active.has(row.id))continue;
+      const options=row.dependency?dependencies(row):[],dependency=options.find(other=>active.has(other.id))||options[0],needed=1+(dependency&&!active.has(dependency.id)?1:0);
+      if(active.size+needed>limit)continue;
+      active.add(row.id);if(dependency)active.add(dependency.id);
+    }
+    return{limit,count:eligible.length,active:new Set(eligible.filter(row=>active.has(row.id)).map(row=>row.id)),ineligible};
   }
   function derive(data,stats,loot=[],level,inferItem=CharacterEquipment.infer) {
     loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
@@ -236,6 +261,6 @@ var CharacterEquipment = (() => {
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
     return {entries,attacks,martialArts,unarmoredDefenseNote,warnings,attuned,attunementLimit:attunement.limit,base,baseParts,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};
   }
-  return {attunementLimit,attunementState,weapons,armor,normalize,infer,parseName,profile,choices,trained,armorTrained,derive};
+  return {attunementContext,attunementLimit,attunementState,weapons,armor,normalize,infer,parseName,profile,choices,trained,armorTrained,derive};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterEquipment;

@@ -30,7 +30,7 @@ function setSheetEquipmentChoice(id,key,value){
  if(key==='equipped'&&value&&CharacterCompanionEquipment.carrier(s.data,id)>=0){refreshCharacterSheetInventory();return sheetStatus('Move this item back from its companion before equipping it.',true);}
  if(key==='attuned'&&value){
   if(!CharacterMagicItems.requiresAttunement(entry.item))return;
-  const requirement=CharacterMagicItems.attunementClassRequirement(s.data,entry.item,CharacterAdobeEngine.level(s.data,s.identity.level));
+  const requirement=CharacterMagicItems.attunementRequirement(s.data,entry.item,CharacterAdobeEngine.level(s.data,s.identity.level),owned);
   if(requirement&&!requirement.eligible){refreshCharacterSheetInventory();return sheetStatus(requirement.message,true);}
  }
  const state=s.data.equipmentState,m=CharacterEquipment.infer(entry.item);let choice=state.loadout.find(v=>v.id===id);
