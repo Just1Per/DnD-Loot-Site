@@ -666,5 +666,41 @@
   "Searing Smite|XPHB": {
     "damage": "Hit only: +1d6 Fire; ongoing slot-scaled Fire before CON save",
     "scaling": "+1d6/SL to both events"
+  },
+  "Backlash|FRHoF": {
+    "damage": "Retaliation: 4d6 Force (CON half); incoming damage reduction: 4d6+SC",
+    "scaling": "+1d6/SL to each; SC adds only to reduction"
+  },
+  "Cacophonic Shield|FRHoF": {
+    "damage": "Eligible creature event: 3d6 Thunder (CON half)",
+    "scaling": "+1d6/SL above 3"
+  },
+  "Death Armor|FRHoF": {
+    "damage": "Once per turn: 2d4 Necrotic to qualifying adjacent attacker",
+    "scaling": ""
+  },
+  "Conjure Celestial|XPHB": {
+    "damage": "Searing: 6d12 Radiant (DEX half); healing: 4d12+SC HP",
+    "scaling": "+1d12/SL above 7 to each light"
+  },
+  "Conjure Constructs|FRHoF": {
+    "damage": "Force mode: 3d6 Force (DEX half); ward mode: 1d6+SC temporary HP",
+    "scaling": "+1d6/SL above 3 to each mode"
+  },
+  "Fount of Moonlight|XPHB": {
+    "damage": "Your melee hit: +2d6 Radiant; Reaction blindness deals no damage",
+    "scaling": ""
+  },
+  "Guardian of Faith|PHB": {
+    "damage": "20 Radiant (DEX half); guardian vanishes at 60 total dealt",
+    "scaling": ""
+  },
+  "Guardian of Faith|XPHB": {
+    "damage": "20 Radiant (DEX half); guardian vanishes at 60 total dealt",
+    "scaling": ""
+  },
+  "Yolande's Regal Presence|XPHB": {
+    "damage": "Eligible creature event: 4d6 Psychic (WIS half)",
+    "scaling": ""
   }
 }

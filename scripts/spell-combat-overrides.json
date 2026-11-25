@@ -6064,6 +6064,361 @@
           ]
         }
       }
+    },
+    "Backlash": {
+      "bySource": {
+        "FRHoF": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "save": "CONSTITUTION",
+          "actionSave": "",
+          "effects": [
+            {
+              "id": "reduce",
+              "label": "Reduce triggering damage",
+              "shortLabel": "Reduce triggering damage",
+              "combat": {
+                "damage": "",
+                "nonDamage": true,
+                "types": [],
+                "automatic": true,
+                "reduction": {
+                  "dice": "4d6",
+                  "upcast": "1d6",
+                  "addAbility": true
+                },
+                "notes": [
+                  "Reduce the actual triggering damage only; this is neither damage dealt nor HP restored."
+                ]
+              }
+            },
+            {
+              "id": "retaliate",
+              "label": "Eligible damaging creature · retaliation",
+              "shortLabel": "Eligible damaging creature",
+              "combat": {
+                "damage": "4d6",
+                "upcast": "1d6",
+                "types": [
+                  "force"
+                ],
+                "actionSave": "CONSTITUTION",
+                "actionRange": "60 ft"
+              }
+            }
+          ],
+          "notes": [
+            "Reaction casting requires actually taking damage. Damage reduction uses the chosen casting ability; the conditional retaliation does not add that modifier.",
+            "Only a creature within the spell’s 60-ft range that caused the triggering damage may be targeted by retaliation. A successful Constitution save halves that Force damage.",
+            "Reference only: do not cast, spend actions/slots, activate auras/defenses, move anything, assign target damage/healing or change conditions automatically."
+          ]
+        }
+      }
+    },
+    "Cacophonic Shield": {
+      "bySource": {
+        "FRHoF": {
+          "damage": "3d6",
+          "upcast": "1d6",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "thunder"
+          ],
+          "actionSave": "CONSTITUTION",
+          "actionRange": "10-ft Emanation",
+          "notes": [
+            "Concentration up to 10 minutes; 10-ft Emanation from the caster. Resolve an eligible space-entry event or a creature’s turn end, at most once per creature per turn. Creatures designated when actually casting are unaffected.",
+            "Constitution success halves damage only. Failure also Deafens until the caster’s next turn starts. While the actual spell is active, its caster resists Thunder and ranged attacks against the caster have Disadvantage; viewing this reference grants neither defense.",
+            "Reference only: do not cast, spend actions/slots, activate auras/defenses, move anything, assign target damage/healing or change conditions automatically."
+          ]
+        }
+      }
+    },
+    "Death Armor": {
+      "bySource": {
+        "FRHoF": {
+          "damage": "2d4",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "necrotic"
+          ],
+          "save": "",
+          "actionSave": "",
+          "actionRange": "5 ft from warded target",
+          "notes": [
+            "The touched creature, not automatically the caster, is warded for 1 hour and has Advantage on Death Saving Throws. No Concentration is required.",
+            "At most once per turn, a creature within 5 ft of the warded target that hits it with a melee attack roll takes this automatic Necrotic damage. No spell attack, save, upcasting increment or extra Reaction is added. Track the actual trigger and turn limit at the table.",
+            "Reference only: do not cast, spend actions/slots, activate auras/defenses, move anything, assign target damage/healing or change conditions automatically."
+          ]
+        }
+      }
+    },
+    "Conjure Celestial": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "save": "DEXTERITY",
+          "actionSave": "",
+          "notes": [
+            "Concentration up to 10 minutes. Place the 10-ft-radius, 40-ft-high pillar within 90 ft; choose a light separately for each eligible creature you can see.",
+            "Resolve the initial casting and actual pillar/creature entry or creature turn end; each creature is affected at most once per turn. With your own-turn movement, the pillar may also move up to 30 ft. Positions and visibility stay table decisions.",
+            "Reference only: do not cast, spend actions/slots, activate auras/defenses, move anything, assign target damage/healing or change conditions automatically."
+          ],
+          "effects": [
+            {
+              "id": "sear",
+              "label": "Searing Light · damage",
+              "shortLabel": "Searing Light",
+              "combat": {
+                "damage": "6d12",
+                "upcast": "1d12",
+                "types": [
+                  "radiant"
+                ],
+                "actionSave": "DEXTERITY",
+                "actionRange": "10-ft-radius pillar",
+                "notes": [
+                  "Dexterity success halves this Radiant damage. This mode does not heal."
+                ]
+              }
+            },
+            {
+              "id": "heal",
+              "label": "Healing Light · restore HP",
+              "shortLabel": "Healing Light",
+              "combat": {
+                "damage": "",
+                "nonDamage": true,
+                "types": [],
+                "automatic": true,
+                "healing": {
+                  "dice": "4d12",
+                  "upcast": "1d12",
+                  "addAbility": true
+                },
+                "actionRange": "10-ft-radius pillar",
+                "notes": [
+                  "Healing Light restores this base rolled HP plus the casting modifier. Do not treat it as Radiant damage, a save or temporary HP; resolve any additional healing feature modifiers separately."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Conjure Constructs": {
+      "bySource": {
+        "FRHoF": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "save": "DEXTERITY",
+          "actionSave": "",
+          "effects": [
+            {
+              "id": "force",
+              "label": "Clockwork Force · damage",
+              "shortLabel": "Clockwork Force",
+              "combat": {
+                "damage": "3d6",
+                "upcast": "1d6",
+                "types": [
+                  "force"
+                ],
+                "actionSave": "DEXTERITY",
+                "actionRange": "5 ft from spirits",
+                "notes": [
+                  "Dexterity success halves this Force damage."
+                ]
+              }
+            },
+            {
+              "id": "ward",
+              "label": "Orderly Ward · temporary HP",
+              "shortLabel": "Orderly Ward",
+              "combat": {
+                "damage": "",
+                "nonDamage": true,
+                "types": [],
+                "automatic": true,
+                "healing": {
+                  "dice": "1d6",
+                  "upcast": "1d6",
+                  "addAbility": true,
+                  "temporary": true
+                },
+                "actionRange": "5 ft from spirits",
+                "notes": [
+                  "These are temporary HP, not healing or damage. The recipient chooses whether to keep an existing temporary-HP pool; never add the pools together."
+                ]
+              }
+            }
+          ],
+          "notes": [
+            "Concentration up to 10 minutes. Place the Medium spirit group in a visible unoccupied space within 60 ft. On casting and with a Magic action on later turns, choose one visible creature or object within 5 ft of the spirits.",
+            "Choose one mode for that target. With your own-turn movement, the spirits may also move up to 30 ft to a visible unoccupied space; they are not independent combatants with borrowed attacks.",
+            "Reference only: do not cast, spend actions/slots, activate auras/defenses, move anything, assign target damage/healing or change conditions automatically."
+          ]
+        }
+      }
+    },
+    "Fount of Moonlight": {
+      "bySource": {
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "save": "CONSTITUTION",
+          "actionSave": "",
+          "effects": [
+            {
+              "id": "melee-hit",
+              "label": "Your melee attack hit · extra damage",
+              "shortLabel": "Your melee attack hit",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "radiant"
+                ],
+                "automatic": true,
+                "actionRange": "Your melee attack hit",
+                "notes": [
+                  "Any qualifying melee attack hit can add this Radiant rider, including a melee spell attack; a ranged attack does not qualify merely because its target is adjacent. Resolve the original attack and its own damage separately."
+                ]
+              }
+            },
+            {
+              "id": "blind",
+              "label": "After taking damage · Reaction",
+              "shortLabel": "After taking damage",
+              "combat": {
+                "damage": "",
+                "nonDamage": true,
+                "types": [],
+                "automatic": false,
+                "actionSave": "CONSTITUTION",
+                "actionRange": "60 ft",
+                "notes": [
+                  "Immediately after taking damage from a creature you can see within 60 ft, a Reaction can force its Constitution save. Failure Blinds it until your next turn ends. This Reaction deals no HP damage."
+                ]
+              }
+            }
+          ],
+          "notes": [
+            "Concentration up to 10 minutes. The caster emits bright light 20 ft plus 20 ft of dim light and resists Radiant while the actual spell is active.",
+            "Neither event scales with a higher slot. A reference never grants the resistance or adds the rider to unrelated attacks.",
+            "Reference only: do not cast, spend actions/slots, activate auras/defenses, move anything, assign target damage/healing or change conditions automatically."
+          ]
+        }
+      }
+    },
+    "Guardian of Faith": {
+      "bySource": {
+        "PHB": {
+          "damage": "20",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "save": "DEXTERITY",
+          "actionSave": "DEXTERITY",
+          "actionRange": "10 ft from guardian",
+          "notes": [
+            "Place the Large hovering guardian in a visible unoccupied space within 30 ft; it lasts up to 8 hours without Concentration. Track actual total Radiant damage dealt; it vanishes at 60 total damage.",
+            "Only an enemy entering within 10 ft for the first time on a turn qualifies; the legacy source does not add a start-turn trigger.",
+            "Dexterity success halves the fixed 20 damage. Higher slots add no damage. Do not invent a spell attack, independent companion turn or automatic damage when the guardian is placed.",
+            "Reference only: do not cast, spend actions/slots, activate auras/defenses, move anything, assign target damage/healing or change conditions automatically."
+          ]
+        },
+        "XPHB": {
+          "damage": "20",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "save": "DEXTERITY",
+          "actionSave": "DEXTERITY",
+          "actionRange": "10 ft from guardian",
+          "notes": [
+            "Place the Large hovering guardian in a visible unoccupied space within 30 ft; it lasts up to 8 hours without Concentration. Track actual total Radiant damage dealt; it vanishes at 60 total damage.",
+            "This revised guardian is invulnerable. That property belongs to the guardian and grants no immunity to the caster.",
+            "Only an enemy entering within 10 ft for the first time on a turn qualifies or starting its turn there.",
+            "Dexterity success halves the fixed 20 damage. Higher slots add no damage. Do not invent a spell attack, independent companion turn or automatic damage when the guardian is placed.",
+            "Reference only: do not cast, spend actions/slots, activate auras/defenses, move anything, assign target damage/healing or change conditions automatically."
+          ]
+        }
+      }
+    },
+    "Yolande's Regal Presence": {
+      "bySource": {
+        "XPHB": {
+          "damage": "4d6",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "automatic": false,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "psychic"
+          ],
+          "save": "WISDOM",
+          "actionSave": "WISDOM",
+          "actionRange": "10-ft Emanation",
+          "notes": [
+            "Concentration up to 1 minute; a 10-ft Emanation moves with the caster. Choose a visible creature at an actual space-entry event or its turn end, at most once per creature per turn.",
+            "Wisdom success halves damage only. Failure also makes the creature Prone and allows a push of up to 10 ft away. Neither rider applies automatically or on a successful save; higher slots never increase the fixed dice.",
+            "Reference only: do not cast, spend actions/slots, activate auras/defenses, move anything, assign target damage/healing or change conditions automatically."
+          ]
+        }
+      }
     }
   }
 }

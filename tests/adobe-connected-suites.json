@@ -110,6 +110,7 @@
     "spell-hazards-browser.cjs",
     "spell-movement-hazards-browser.cjs",
     "spell-grant-choices-browser.cjs",
-    "spell-smite-riders-browser.cjs"
+    "spell-smite-riders-browser.cjs",
+    "spell-reactive-effects-browser.cjs"
   ]
 }

@@ -22,9 +22,10 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 337,
-    "spellActionFormulas": 316,
-    "spellHealingFormulas": 16,
-    "manualDamageReferences": 52,
+    "spellActionFormulas": 324,
+    "spellHealingFormulas": 18,
+    "spellDamageReductionFormulas": 1,
+    "manualDamageReferences": 44,
     "itemFacts": 1278,
     "itemPowerResourceAdapters": 2,
     "itemPowerResourceCounters": 4,
@@ -7175,9 +7176,25 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "reduce",
+          "label": "Reduce triggering damage",
+          "damageReductionFormula": {
+            "dice": "4d6",
+            "upcast": "1d6",
+            "addAbility": true
+          }
+        },
+        {
+          "id": "retaliate",
+          "label": "Eligible damaging creature · retaliation"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-0fd441bf0e65724c",
@@ -7816,9 +7833,11 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "10-ft Emanation",
+      "actionSave": "CONSTITUTION",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-7b13bea05490d01f",
@@ -8377,9 +8396,25 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "sear",
+          "label": "Searing Light · damage"
+        },
+        {
+          "id": "heal",
+          "label": "Healing Light · restore HP",
+          "healingFormula": {
+            "dice": "4d12",
+            "upcast": "1d12",
+            "addAbility": true
+          }
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-frhof-382cff212b4521cb",
@@ -8387,9 +8422,26 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "force",
+          "label": "Clockwork Force · damage"
+        },
+        {
+          "id": "ward",
+          "label": "Orderly Ward · temporary HP",
+          "healingFormula": {
+            "dice": "1d6",
+            "upcast": "1d6",
+            "addAbility": true,
+            "temporary": true
+          }
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-9147381d97e1a985",
@@ -9050,9 +9102,11 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "5 ft from warded target",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-3360a985ce28e2c3",
@@ -10818,9 +10872,20 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "melee-hit",
+          "label": "Your melee attack hit · extra damage"
+        },
+        {
+          "id": "blind",
+          "label": "After taking damage · Reaction"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-au-3e1f7b358cea6c1c",
@@ -11299,6 +11364,8 @@
       "hasAreaFacts": true,
       "actionDamageFormula": true,
       "compoundDamage": false,
+      "actionRange": "10 ft from guardian",
+      "actionSave": "DEXTERITY",
       "manualDamageReference": false
     },
     {
@@ -11307,9 +11374,11 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "10 ft from guardian",
+      "actionSave": "DEXTERITY",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-c22237058990fb49",
@@ -17574,9 +17643,11 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "10-ft Emanation",
+      "actionSave": "WISDOM",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-cdd665d59339398b",
