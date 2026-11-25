@@ -701,8 +701,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "4d6 Force",
-        "scaling": "+1d6/SL above 4"
+        "damage": "Retaliation: 4d6 Force (CON half); incoming damage reduction: 4d6+SC",
+        "scaling": "+1d6/SL to each; SC adds only to reduction"
       },
       "missingDamage": false,
       "missingArea": false
@@ -737,7 +737,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "5d10 Force"
+        "damage": "Hit only: +5d10 Force"
       },
       "missingDamage": false,
       "missingArea": false
@@ -750,7 +750,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "5d10 Force"
+        "damage": "Hit only: +5d10 Force"
       },
       "missingDamage": false,
       "missingArea": false
@@ -1068,7 +1068,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "3d8 Radiant"
+        "damage": "Hit only: +3d8 Radiant"
       },
       "missingDamage": false,
       "missingArea": false
@@ -1081,8 +1081,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "3d8 Radiant",
-        "scaling": "+1d8/SL above 3"
+        "damage": "Hit only: +3d8 Radiant",
+        "scaling": "+1d8/SL"
       },
       "missingDamage": false,
       "missingArea": false
@@ -1201,9 +1201,9 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d6 Radiant",
+        "damage": "Hit only: +2d6 Radiant",
         "area": "Target glows: 5-ft dim light",
-        "scaling": "+1d6/SL above 2"
+        "scaling": "+1d6/SL"
       },
       "missingDamage": false,
       "missingArea": false
@@ -1246,7 +1246,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "3d6 Thunder",
+        "damage": "Eligible creature event: 3d6 Thunder (CON half)",
         "area": "10-ft emanation",
         "scaling": "+1d6/SL above 3"
       },
@@ -1955,9 +1955,9 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "6d12 Radiant",
+        "damage": "Searing: 6d12 Radiant (DEX half); healing: 4d12+SC HP",
         "area": "10-ft-radius",
-        "scaling": "+1d12/SL above 7"
+        "scaling": "+1d12/SL above 7 to each light"
       },
       "missingDamage": false,
       "missingArea": false
@@ -1970,9 +1970,9 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "3d6 Force",
+        "damage": "Force mode: 3d6 Force (DEX half); ward mode: 1d6+SC temporary HP",
         "area": "Within 5 ft of spirits",
-        "scaling": "+1d6/SL above 3"
+        "scaling": "+1d6/SL above 3 to each mode"
       },
       "missingDamage": false,
       "missingArea": false
@@ -2726,7 +2726,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d4 Necrotic",
+        "damage": "Once per turn: 2d4 Necrotic to qualifying adjacent attacker",
         "area": "Within 5 ft of target"
       },
       "missingDamage": false,
@@ -4664,7 +4664,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d6 Radiant",
+        "damage": "Your melee hit: +2d6 Radiant; Reaction blindness deals no damage",
         "area": "Light: 20-ft bright +20-ft dim"
       },
       "missingDamage": false,
@@ -5188,7 +5188,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "20 Radiant; DEX half; guardian ends after dealing 60",
+        "damage": "20 Radiant (DEX half); guardian vanishes at 60 total dealt",
         "area": "Within 10 ft of guardian"
       },
       "missingDamage": false,
@@ -5202,7 +5202,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "20 Radiant; DEX half; guardian ends after dealing 60",
+        "damage": "20 Radiant (DEX half); guardian vanishes at 60 total dealt",
         "area": "Within 10 ft of guardian"
       },
       "missingDamage": false,
@@ -9075,8 +9075,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "1d6 Fire",
-        "scaling": "+1d6/SL above 1"
+        "damage": "Hit only: +1d6 Fire; ongoing fixed 1d6 Fire on failed start-turn CON save",
+        "scaling": "+1d6/SL to hit only"
       },
       "missingDamage": false,
       "missingArea": false
@@ -9089,8 +9089,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "1d6 Fire",
-        "scaling": "+1d6/SL above 1"
+        "damage": "Hit only: +1d6 Fire; ongoing slot-scaled Fire before CON save",
+        "scaling": "+1d6/SL to both events"
       },
       "missingDamage": false,
       "missingArea": false
@@ -9958,7 +9958,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "4d6 Psychic"
+        "damage": "Hit only: +4d6 Psychic"
       },
       "missingDamage": false,
       "missingArea": false
@@ -9971,8 +9971,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "4d6 Psychic",
-        "scaling": "+1d6/SL above 4"
+        "damage": "Hit only: +4d6 Psychic",
+        "scaling": "+1d6/SL"
       },
       "missingDamage": false,
       "missingArea": false
@@ -10968,7 +10968,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "2d6 Thunder"
+        "damage": "Hit only: +2d6 Thunder"
       },
       "missingDamage": false,
       "missingArea": false
@@ -10981,8 +10981,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "2d6 Thunder",
-        "scaling": "+1d6/SL above 1"
+        "damage": "Hit only: +2d6 Thunder",
+        "scaling": "+1d6/SL"
       },
       "missingDamage": false,
       "missingArea": false
@@ -12061,7 +12061,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "1d6 Psychic"
+        "damage": "Hit only: +1d6 Psychic"
       },
       "missingDamage": false,
       "missingArea": false
@@ -12074,8 +12074,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "1d6 Necrotic",
-        "scaling": "+1d6/SL above 1"
+        "damage": "Hit only: +1d6 Necrotic",
+        "scaling": "+1d6/SL"
       },
       "missingDamage": false,
       "missingArea": false
@@ -12099,7 +12099,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "4d6 Psychic",
+        "damage": "Eligible creature event: 4d6 Psychic (WIS half)",
         "area": "10-ft emanation"
       },
       "missingDamage": false,

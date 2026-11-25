@@ -15,7 +15,9 @@
         "spell-aura-riders-browser.cjs",
         "spell-effect-choices-browser.cjs",
         "spell-hazards-browser.cjs",
-        "spell-movement-hazards-browser.cjs"
+        "spell-movement-hazards-browser.cjs",
+        "spell-reactive-effects-browser.cjs",
+        "spell-smite-riders-browser.cjs"
       ]
     },
     {
@@ -64,7 +66,9 @@
         "spell-aura-riders-browser.cjs",
         "spell-effect-choices-browser.cjs",
         "spell-hazards-browser.cjs",
-        "spell-movement-hazards-browser.cjs"
+        "spell-movement-hazards-browser.cjs",
+        "spell-reactive-effects-browser.cjs",
+        "spell-smite-riders-browser.cjs"
       ]
     },
     {

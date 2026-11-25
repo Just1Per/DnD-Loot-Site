@@ -22,9 +22,10 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 337,
-    "spellActionFormulas": 304,
-    "spellHealingFormulas": 16,
-    "manualDamageReferences": 64,
+    "spellActionFormulas": 324,
+    "spellHealingFormulas": 18,
+    "spellDamageReductionFormulas": 1,
+    "manualDamageReferences": 44,
     "itemFacts": 1278,
     "itemPowerResourceAdapters": 2,
     "itemPowerResourceCounters": 4,
@@ -7175,9 +7176,25 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "reduce",
+          "label": "Reduce triggering damage",
+          "damageReductionFormula": {
+            "dice": "4d6",
+            "upcast": "1d6",
+            "addAbility": true
+          }
+        },
+        {
+          "id": "retaliate",
+          "label": "Eligible damaging creature · retaliation"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-0fd441bf0e65724c",
@@ -7217,9 +7234,21 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "Banishment · check actual remaining HP"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-6bac95c6afd50a08",
@@ -7227,9 +7256,21 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "Banishment · check actual remaining HP"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-709e4618131623ff",
@@ -7619,9 +7660,21 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "Blindness · initial / turn-end save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-92d3f8f135d24d31",
@@ -7629,9 +7682,21 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "Blindness · turn-end save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-7e7699842fd6d07d",
@@ -7736,9 +7801,11 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-73294c7b765f4193",
@@ -7766,9 +7833,11 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "10-ft Emanation",
+      "actionSave": "CONSTITUTION",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-7b13bea05490d01f",
@@ -8327,9 +8396,25 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "sear",
+          "label": "Searing Light · damage"
+        },
+        {
+          "id": "heal",
+          "label": "Healing Light · restore HP",
+          "healingFormula": {
+            "dice": "4d12",
+            "upcast": "1d12",
+            "addAbility": true
+          }
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-frhof-382cff212b4521cb",
@@ -8337,9 +8422,26 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "force",
+          "label": "Clockwork Force · damage"
+        },
+        {
+          "id": "ward",
+          "label": "Orderly Ward · temporary HP",
+          "healingFormula": {
+            "dice": "1d6",
+            "upcast": "1d6",
+            "addAbility": true,
+            "temporary": true
+          }
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-9147381d97e1a985",
@@ -9000,9 +9102,11 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "5 ft from warded target",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-3360a985ce28e2c3",
@@ -10768,9 +10872,20 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "melee-hit",
+          "label": "Your melee attack hit · extra damage"
+        },
+        {
+          "id": "blind",
+          "label": "After taking damage · Reaction"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-au-3e1f7b358cea6c1c",
@@ -11249,6 +11364,8 @@
       "hasAreaFacts": true,
       "actionDamageFormula": true,
       "compoundDamage": false,
+      "actionRange": "10 ft from guardian",
+      "actionSave": "DEXTERITY",
       "manualDamageReference": false
     },
     {
@@ -11257,9 +11374,11 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "10 ft from guardian",
+      "actionSave": "DEXTERITY",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-c22237058990fb49",
@@ -14766,9 +14885,21 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "ongoing",
+          "label": "Burning · target turn start"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-34dfe4644e4e3969",
@@ -14777,7 +14908,19 @@
       "hasDamageFacts": true,
       "hasAreaFacts": false,
       "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "ongoing",
+          "label": "Burning · target turn start"
+        }
+      ],
       "compoundDamage": false,
+      "actionRange": "Triggering hit",
+      "actionSave": "",
       "manualDamageReference": false
     },
     {
@@ -15487,9 +15630,21 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "After hit · Wisdom save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-6b2f2feb98386ccf",
@@ -15497,9 +15652,21 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "After hit · Wisdom save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-09cf2cd2b9b0e794",
@@ -16343,9 +16510,21 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "Creature rider · Strength save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-34263783a3268a35",
@@ -16353,9 +16532,21 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "Creature rider · Strength save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-6260f005b3f23533",
@@ -17394,9 +17585,25 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "Fear · initial Wisdom save"
+        },
+        {
+          "id": "escape",
+          "label": "Fear · Action Wisdom check"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-b0f8cdfcf8fc9c01",
@@ -17404,9 +17611,21 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "hit",
+          "label": "Hit rider"
+        },
+        {
+          "id": "rider",
+          "label": "Fear · initial / turn-end save"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Triggering hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-egw-c1618d2d41cb1ff9",
@@ -17424,9 +17643,11 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "10-ft Emanation",
+      "actionSave": "WISDOM",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xge-cdd665d59339398b",
