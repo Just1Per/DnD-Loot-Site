@@ -167,7 +167,7 @@ var SiteHelp=(()=>{
     ],
     [
       "Set abilities and training",
-      "Click an ability score to open Ability scores & skills. Enter base rolls or choose Point buy with its 27-point budget; origin and feat increases are added separately. Preview a suggested spread and swap scores if useful. Review class skills, Expertise, Weapon Mastery, tools and languages in the relevant training popup. Armor and weapon proficiency bubbles open their training choices. Apply updates the draft; Cancel discards popup changes.",
+      "Click an ability score to open Ability scores & skills. Enter base rolls or choose Point buy with its 27-point budget. Starting ability bonuses are in this same window: 2014 uses the selected race’s fixed or selectable increases; 2024 uses the selected background’s allowed abilities, with +2/+1 or +1/+1/+1. Choose different abilities for each bonus and review the effective totals, capped at 20 for starting increases. Final totals mode keeps existing entered totals without adding origin bonuses twice; choose Base values only when your entered scores and maximum HP exclude bonuses. Preview a suggested spread and swap scores if useful. Review class skills, Expertise, Weapon Mastery, tools and languages in the relevant training popup. Armor and weapon proficiency bubbles open their training choices. Apply updates the draft; Cancel discards popup changes.",
       "sheet",
       "Open character sheet"
     ],

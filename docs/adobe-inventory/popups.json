@@ -33,6 +33,7 @@
         "adobe-dc-ability-controls-browser.cjs",
         "adobe-native-abilities-browser.cjs",
         "adobe-only-browser.cjs",
+        "adobe-origin-ability-bonuses-browser.cjs",
         "site-palette-browser.cjs"
       ]
     },

@@ -28,6 +28,13 @@ def choices(groups):
 out={}
 for original in rows:
  row=resolve(original);fact={'source':row['source'],'name':row['name'],'page':row.get('page',0)}
+ # Export only the two reviewed starting-ability patterns, never source entries.
+ ability=row.get('ability',[])
+ if ability:
+  weighted=[group.get('choose',{}).get('weighted',{}) for group in ability]
+  if len(weighted)==2 and [group.get('weights') for group in weighted]==[[2,1],[1,1,1]] and weighted[0].get('from')==weighted[1].get('from') and len(set(weighted[0].get('from',[])))==3 and all(key in ['str','dex','con','int','wis','cha'] for key in weighted[0]['from']):
+   fact['abilities']=weighted[0]['from']
+  else:raise ValueError('Review background starting abilities: '+row['source']+' '+row['name'])
  for source,dest in [('toolProficiencies','tools'),('languageProficiencies','languages')]:
   fixed,options=choices(row.get(source))
   if fixed is not None:fact[dest]={'fixed':fixed,'choices':options}

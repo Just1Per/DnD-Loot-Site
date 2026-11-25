@@ -20,6 +20,7 @@
     "adobe-inline-character-choices-browser.cjs",
     "adobe-native-classes-browser.cjs",
     "adobe-native-abilities-browser.cjs",
+    "adobe-origin-ability-bonuses-browser.cjs",
     "adobe-native-feats-browser.cjs",
     "adobe-native-spells-browser.cjs",
     "adobe-direct-preparation-browser.cjs",

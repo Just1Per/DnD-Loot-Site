@@ -42,6 +42,41 @@ keep their edition; absent edition data means 2014. Previously manual sheets kee
 Final totals and are not guessed from free text. Choose the correct score mode
 before automating an existing character.
 
+## Starting ability bonuses on the Adobe sheet
+
+Click any first-page ability score to open **Ability scores & skills**. Its
+**Starting ability bonuses** section uses the current edition and origin profile:
+
+- **2014:** display fixed racial increases and choose any source-defined variable
+  increases. Half-Elf retains its two non-Charisma choices; Variant Human,
+  Warforged, Simic Hybrid, Custom Lineage and flexible lineages use their actual
+  allowance and exclusions. Flexible lineages offer +2/+1 or +1/+1/+1.
+- **2024:** choose +2/+1 or +1/+1/+1 within the background’s three allowed
+  abilities. All 57 selectable 2024 backgrounds have pinned ability pools, including
+  the 41 Forgotten Realms, Eberron, Ravenloft and Lorwyn supplement entries. Legacy/custom backgrounds use the existing unrestricted ability
+  adaptation. Racial increases never stack with background increases.
+
+Selections must be distinct and permitted before applying automatic scores.
+Changing an origin makes incompatible saved choices inactive until replaced.
+Each score previews its starting increase, effective total and modifier; a
+starting increase cannot raise it above 20. Feat, class and item effects still
+use the shared calculation pipeline. Origins apply once per character, including
+multiclass characters, and never overwrite the six entered scores.
+
+**Scores and maximum HP** exposes the existing shared Base/Final totals mode.
+Existing final-total characters stay in that mode; starting choices are reference
+only until the player explicitly selects Base values. Switching mode does not
+convert entered scores or maximum HP: enter values before bonuses when converting
+an existing sheet and review maximum HP in Combat. Point buy always uses Base
+mode. Apply updates the sheet draft; Cancel discards the entire popup draft.
+Save sheet persists the selected choices. Current HP, temporary HP, inventory,
+coins, used resources and class allocation are preserved.
+
+Pinned-source review also corrected the five EGW profiles: Pallid Elf and Lotusden
+Halfling use DEX +2 / WIS +1; Draconblood Dragonborn uses INT +2 / CHA +1; Ravenite
+Dragonborn and Orc of Exandria use STR +2 / CON +1. These replace the previously
+incorrect generic flexible package. No source rule prose is stored.
+
 ## Choices and editions
 
 The race/species dropdown contains 79 entries: ten 2024 core species and 69

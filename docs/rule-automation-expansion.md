@@ -2,6 +2,19 @@
 
 Source: locally pinned 5etools revision `b9061583536101068b3a59d27e886d1fa664e366`. Generators export names, source identity, bounded choices and mechanical facts. Full rule entries and copied source prose are excluded.
 
+## Starting ability bonuses
+
+The native Adobe ability popup now exposes race increases under 2014 rules and
+background increases under 2024 rules, including distinct restricted choices,
++2/+1 versus +1/+1/+1, fixed racial increases and per-score cap previews. It reuses
+existing saved fields and the shared calculation engine. Explicit Base/Final
+mode selection preserves imported final totals without double additions. Five
+EGW race profiles now use their source-defined fixed ability increases instead
+of the generic flexible package. See [ability setup](character-rules-engine.md#starting-ability-bonuses-on-the-adobe-sheet)
+for behavior and conversion guidance. Regression tests cover every selectable
+2014 race, all 57 selectable 2024 background pools, source/edition changes, multiclass,
+actual native controls, private save/reopen, Cancel, mobile and accessibility.
+
 ## Species and free casting
 
 Every unlocked racial spell whose declared usage is once per Long Rest now has an independent use/undo counter and Long Rest recovery. Spending does not consume a spell slot. Character-level gates, chosen casting ability and source identity remain separate from class level and class resources. Qualified spell names such as Nondetection (no material component) resolve to the catalogue while preserving the restriction in the action notes. Legacy Tiefling Hellish Rebuke retains its second-level free casting. Flamekin and Rimekin gain their fixed source cantrips and level-3/5 spells; only the Rimekin racial Flame Blade deals Cold damage.
