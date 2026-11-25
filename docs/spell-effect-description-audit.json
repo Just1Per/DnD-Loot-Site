@@ -2961,7 +2961,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "4d6 Force"
+        "damage": "Occupied arrival only: 4d6 Force to each traveler"
       },
       "missingDamage": false,
       "missingArea": false
@@ -2974,7 +2974,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "4d6 Force"
+        "damage": "Occupied arrival only: 4d6 Force to each traveler"
       },
       "missingDamage": false,
       "missingArea": false
@@ -6358,7 +6358,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "1d8 Force"
+        "damage": "End turn in another creature's space: 1d8 Force to self"
       },
       "missingDamage": false,
       "missingArea": false
@@ -7135,7 +7135,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "6d6 Bludgeoning"
+        "damage": "Self expulsion: partial 6d6 Bludgeoning; destroyed/transmuted stone: 50 Bludgeoning"
       },
       "missingDamage": false,
       "missingArea": false
@@ -7148,7 +7148,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "6d6 Force"
+        "damage": "Self expulsion: partial 6d6 Force; destroyed/transmuted stone: 50 Force"
       },
       "missingDamage": false,
       "missingArea": false
@@ -11148,7 +11148,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "4d8 Bludgeoning",
+        "damage": "Falling ceiling mud only: 4d8 Bludgeoning; ground modes deal no HP damage",
         "area": "40-ft cube"
       },
       "missingDamage": false,
@@ -11794,7 +11794,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d4 Fire",
+        "damage": "Start turn in burning webs: 2d4 Fire",
         "area": "20-ft cube"
       },
       "missingDamage": false,
@@ -11808,7 +11808,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d4 Fire",
+        "damage": "Start turn in burning webs: 2d4 Fire",
         "area": "20-ft cube"
       },
       "missingDamage": false,

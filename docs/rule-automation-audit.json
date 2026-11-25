@@ -22,9 +22,9 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 337,
-    "spellActionFormulas": 299,
+    "spellActionFormulas": 304,
     "spellHealingFormulas": 16,
-    "manualDamageReferences": 69,
+    "manualDamageReferences": 64,
     "itemFacts": 1278,
     "itemPowerResourceAdapters": 2,
     "itemPowerResourceCounters": 4,
@@ -9210,9 +9210,20 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "teleport",
+          "label": "Successful teleport · no damage"
+        },
+        {
+          "id": "occupied",
+          "label": "Occupied arrival · teleport fails"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-b4db85ba2c38279b",
@@ -9221,7 +9232,18 @@
       "hasDamageFacts": true,
       "hasAreaFacts": false,
       "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "teleport",
+          "label": "Successful teleport · no damage"
+        },
+        {
+          "id": "occupied",
+          "label": "Occupied arrival · teleport fails"
+        }
+      ],
       "compoundDamage": false,
+      "actionSave": "",
       "manualDamageReference": false
     },
     {
@@ -12354,9 +12376,21 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "movement",
+          "label": "Active movement benefits · no damage"
+        },
+        {
+          "id": "shunted",
+          "label": "End turn in another creature’s space · self damage",
+          "selfDamageReference": true
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-392245974134021a",
@@ -13032,9 +13066,23 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "partial",
+          "label": "Partial destruction or no longer fits · self damage",
+          "selfDamageReference": true
+        },
+        {
+          "id": "destroyed",
+          "label": "Stone destroyed or transmuted · self damage",
+          "selfDamageReference": true
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Self",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-cd4d12ad9319e5b5",
@@ -13043,7 +13091,21 @@
       "hasDamageFacts": true,
       "hasAreaFacts": false,
       "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "partial",
+          "label": "Partial destruction or no longer fits · self damage",
+          "selfDamageReference": true
+        },
+        {
+          "id": "destroyed",
+          "label": "Stone destroyed or transmuted · self damage",
+          "selfDamageReference": true
+        }
+      ],
       "compoundDamage": false,
+      "actionRange": "Self",
+      "actionSave": "",
       "manualDamageReference": false
     },
     {
@@ -16442,9 +16504,25 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "mud",
+          "label": "Rock to mud · sinking restraint"
+        },
+        {
+          "id": "ceiling",
+          "label": "Rock ceiling to mud · falling damage"
+        },
+        {
+          "id": "rock",
+          "label": "Mud to rock · entrapment"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "40-ft cube",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-67a4fad2317c2b32",
@@ -17032,9 +17110,25 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "restrain",
+          "label": "Webs · restraint saving throw"
+        },
+        {
+          "id": "escape",
+          "label": "Action · escape web restraint"
+        },
+        {
+          "id": "burning",
+          "label": "Start turn in burning webs · Fire"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Web area",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-4b5e57f6eb2f42b9",
@@ -17043,7 +17137,23 @@
       "hasDamageFacts": true,
       "hasAreaFacts": true,
       "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "restrain",
+          "label": "Webs · restraint saving throw"
+        },
+        {
+          "id": "escape",
+          "label": "Action · escape web restraint"
+        },
+        {
+          "id": "burning",
+          "label": "Start turn in burning webs · Fire"
+        }
+      ],
       "compoundDamage": false,
+      "actionRange": "Web area",
+      "actionSave": "",
       "manualDamageReference": false
     },
     {

@@ -4931,6 +4931,427 @@
           "specialAction": "hunters-mark"
         }
       }
+    },
+    "Web": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "actionRange": "Web area",
+          "notes": [
+            "Concentration up to 1 hour; webs fill a 20-ft cube and create Difficult Terrain/light obscurement. Webs need anchoring or a supporting surface, otherwise they collapse at the start of your next turn; surface-layered webs are 5 ft deep. Actual placement, burning, conditions and time remain table decisions. A reference does not cast or ignite webs."
+          ],
+          "effects": [
+            {
+              "id": "restrain",
+              "label": "Webs · restraint saving throw",
+              "shortLabel": "Restrain",
+              "combat": {
+                "nonDamage": true,
+                "actionSave": "DEXTERITY",
+                "notes": [
+                  "Starting a turn in webs, or entering them during the creature’s own turn, triggers a DEX save; failure causes Restrained while it remains or until escape. Do not borrow the revised first-entry-on-any-turn trigger."
+                ]
+              }
+            },
+            {
+              "id": "escape",
+              "label": "Action · escape web restraint",
+              "shortLabel": "Escape",
+              "combat": {
+                "nonDamage": true,
+                "checkDC": "STR escape check",
+                "notes": [
+                  "Spend an Action for the listed check to end this web restraint on yourself. It is not a saving throw. The legacy source asks for a Strength check, not specifically Athletics."
+                ]
+              }
+            },
+            {
+              "id": "burning",
+              "label": "Start turn in burning webs · Fire",
+              "shortLabel": "Burning",
+              "combat": {
+                "damage": "2d4",
+                "types": [
+                  "fire"
+                ],
+                "automatic": true,
+                "notes": [
+                  "A 5-ft cube exposed to fire burns away in 1 round. A creature starting its turn in that fire takes the displayed damage without a saving throw. Entering or ending a turn there does not itself trigger this fire damage. Damage never scales with slots."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "actionRange": "Web area",
+          "notes": [
+            "Concentration up to 1 hour; webs fill a 20-ft cube and create Difficult Terrain/light obscurement. Webs need anchoring or a supporting surface, otherwise they collapse at the start of your next turn; surface-layered webs are 5 ft deep. Actual placement, burning, conditions and time remain table decisions. A reference does not cast or ignite webs."
+          ],
+          "effects": [
+            {
+              "id": "restrain",
+              "label": "Webs · restraint saving throw",
+              "shortLabel": "Restrain",
+              "combat": {
+                "nonDamage": true,
+                "actionSave": "DEXTERITY",
+                "notes": [
+                  "First entry into webs on a turn, or starting a turn there, triggers a DEX save; failure causes Restrained while in the webs or until escape."
+                ]
+              }
+            },
+            {
+              "id": "escape",
+              "label": "Action · escape web restraint",
+              "shortLabel": "Escape",
+              "combat": {
+                "nonDamage": true,
+                "checkDC": "STR (Athletics) escape check",
+                "notes": [
+                  "Spend an Action for the listed check to end this web restraint on yourself. It is not a saving throw."
+                ]
+              }
+            },
+            {
+              "id": "burning",
+              "label": "Start turn in burning webs · Fire",
+              "shortLabel": "Burning",
+              "combat": {
+                "damage": "2d4",
+                "types": [
+                  "fire"
+                ],
+                "automatic": true,
+                "notes": [
+                  "A 5-ft cube exposed to fire burns away in 1 round. A creature starting its turn in that fire takes the displayed damage without a saving throw. Entering or ending a turn there does not itself trigger this fire damage. Damage never scales with slots."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Meld into Stone": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "actionRange": "Self",
+          "notes": [
+            "Touch stone large enough for you and your equipment. While merged, you cannot see outside and hearing-based WIS (Perception) has Disadvantage. You can cast self-targeted spells and otherwise cannot move except to leave at your entry point. Use your movement to leave at the entry point, ending the spell. Minor stone damage causes no damage to you. Expulsion places you Prone in the nearest unoccupied space to your entry. These are self-damage references only; they do not reduce your HP or activate/expel a form. No slot damage scaling."
+          ],
+          "effects": [
+            {
+              "id": "partial",
+              "label": "Partial destruction or no longer fits · self damage",
+              "shortLabel": "Partial",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "bludgeoning"
+                ],
+                "automatic": true,
+                "selfDamage": true
+              }
+            },
+            {
+              "id": "destroyed",
+              "label": "Stone destroyed or transmuted · self damage",
+              "shortLabel": "Destroyed",
+              "combat": {
+                "damage": "50",
+                "types": [
+                  "bludgeoning"
+                ],
+                "automatic": true,
+                "selfDamage": true,
+                "notes": [
+                  "Complete destruction or conversion into another substance causes this fixed amount, not a damage roll."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "actionRange": "Self",
+          "notes": [
+            "Touch stone large enough for you and your equipment. While merged, you cannot see outside and hearing-based WIS (Perception) has Disadvantage. You can cast self-targeted spells and otherwise cannot move except to leave at your entry point. Leaving spends 5 ft of movement and ends the spell. Minor stone damage causes no damage to you. Expulsion places you Prone in the nearest unoccupied space to your entry. These are self-damage references only; they do not reduce your HP or activate/expel a form. No slot damage scaling."
+          ],
+          "effects": [
+            {
+              "id": "partial",
+              "label": "Partial destruction or no longer fits · self damage",
+              "shortLabel": "Partial",
+              "combat": {
+                "damage": "6d6",
+                "types": [
+                  "force"
+                ],
+                "automatic": true,
+                "selfDamage": true
+              }
+            },
+            {
+              "id": "destroyed",
+              "label": "Stone destroyed or transmuted · self damage",
+              "shortLabel": "Destroyed",
+              "combat": {
+                "damage": "50",
+                "types": [
+                  "force"
+                ],
+                "automatic": true,
+                "selfDamage": true,
+                "notes": [
+                  "Complete destruction or conversion into another substance causes this fixed amount, not a damage roll."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Dimension Door": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose a destination within 500 ft. A willing creature within 5 ft can accompany you only if it is your size or smaller; carried loads must remain within capacity. Arrival fails if the intended place is already occupied by an object or creature. Select actual success or failure. A reference does not teleport, spend a slot, move another creature or reduce either traveler’s HP."
+          ],
+          "effects": [
+            {
+              "id": "teleport",
+              "label": "Successful teleport · no damage",
+              "shortLabel": "Teleport",
+              "combat": {
+                "nonDamage": true,
+                "actionRange": "500 ft",
+                "notes": [
+                  "Resolve actual destinations and any companion’s consent at the table. Successful teleportation deals none of the failed-arrival damage."
+                ]
+              }
+            },
+            {
+              "id": "occupied",
+              "label": "Occupied arrival · teleport fails",
+              "shortLabel": "Failed arrival",
+              "combat": {
+                "damage": "4d6",
+                "types": [
+                  "force"
+                ],
+                "automatic": true,
+                "actionRange": "Each traveler",
+                "notes": [
+                  "Only after the stated occupied-arrival failure: you and the accompanying creature each take the displayed Force damage and do not teleport. No attack roll, save or higher-slot damage increase."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose a destination within 500 ft. A willing creature within 5 ft can accompany you, arriving within 5 ft of your destination. No relative-size limit is specified in this source. Arrival fails if either space contains a creature or is completely filled by objects. Select actual success or failure. A reference does not teleport, spend a slot, move another creature or reduce either traveler’s HP."
+          ],
+          "effects": [
+            {
+              "id": "teleport",
+              "label": "Successful teleport · no damage",
+              "shortLabel": "Teleport",
+              "combat": {
+                "nonDamage": true,
+                "actionRange": "500 ft",
+                "notes": [
+                  "Resolve actual destinations and any companion’s consent at the table. Successful teleportation deals none of the failed-arrival damage."
+                ]
+              }
+            },
+            {
+              "id": "occupied",
+              "label": "Occupied arrival · teleport fails",
+              "shortLabel": "Failed arrival",
+              "combat": {
+                "damage": "4d6",
+                "types": [
+                  "force"
+                ],
+                "automatic": true,
+                "actionRange": "Each traveler",
+                "notes": [
+                  "Only after the stated occupied-arrival failure: you and the accompanying creature each take the displayed Force damage and do not teleport. No attack roll, save or higher-slot damage increase."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Transmute Rock": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "actionRange": "40-ft cube",
+          "notes": [
+            "Choose visible nonmagical rock/mud within casting range. Select the actual transformation or falling-ceiling event; no slot damage scaling. References do not alter terrain, damage targets, grant the caster the rock’s defenses or spend resources."
+          ],
+          "effects": [
+            {
+              "id": "mud",
+              "label": "Rock to mud · sinking restraint",
+              "shortLabel": "Mud",
+              "combat": {
+                "nonDamage": true,
+                "actionSave": "STRENGTH",
+                "notes": [
+                  "Each foot through the mud costs 4 ft of movement. Grounded creatures in it when cast, first moving into it on a turn, or ending a turn there make STR saves or are Restrained. The restrained creature can spend an Action to pull free; no escape check is required."
+                ]
+              }
+            },
+            {
+              "id": "ceiling",
+              "label": "Rock ceiling to mud · falling damage",
+              "shortLabel": "Falling mud",
+              "combat": {
+                "damage": "4d8",
+                "types": [
+                  "bludgeoning"
+                ],
+                "actionSave": "DEXTERITY",
+                "notes": [
+                  "Only creatures under the ceiling when its mud falls make this DEX save. Success halves the displayed Bludgeoning damage. Do not apply this damage to ordinary ground mud or mud-to-rock restraint."
+                ]
+              }
+            },
+            {
+              "id": "rock",
+              "label": "Mud to rock · entrapment",
+              "shortLabel": "Rock",
+              "combat": {
+                "nonDamage": true,
+                "actionSave": "DEXTERITY",
+                "notes": [
+                  "Nonmagical mud/quicksand no deeper than 10 ft becomes soft stone. A creature in it saves DEX: success moves it safely to an unoccupied surface space, failure causes Restrained by the rock. It or another creature within reach may spend an Action to break the rock using a fixed DC 20 STR check, or deal damage to the rock: AC 15, 25 HP, immune to Poison/Psychic. The escape check is not your spell save DC."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Kinetic Jaunt": {
+      "bySource": {
+        "SCC": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": false,
+          "nonDamage": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "notes": [
+            "Bonus Action casting; Concentration up to 1 minute. Resolve actual movement and duration at the table; selecting a reference does not activate a movement benefit, move you, spend resources or damage another creature. No slot damage scaling."
+          ],
+          "effects": [
+            {
+              "id": "movement",
+              "label": "Active movement benefits · no damage",
+              "shortLabel": "Movement",
+              "combat": {
+                "nonDamage": true,
+                "actionRange": "Self",
+                "notes": [
+                  "Walking speed +10 ft, no Opportunity Attacks, and other creatures’ spaces can be traversed without being Difficult Terrain. A reference does not apply these bonuses automatically."
+                ]
+              }
+            },
+            {
+              "id": "shunted",
+              "label": "End turn in another creature’s space · self damage",
+              "shortLabel": "Shunted",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "force"
+                ],
+                "automatic": true,
+                "selfDamage": true,
+                "actionRange": "Self",
+                "notes": [
+                  "Only if you end your turn in another creature’s space: move back to your last unoccupied space and take the displayed Force damage, without a save or attack roll. The other creature takes no damage. This is a self-damage reference and does not reduce your HP."
+                ]
+              }
+            }
+          ]
+        }
+      }
     }
   }
 }

@@ -197,7 +197,7 @@ var SiteHelp=(()=>{
     ],
     [
       "Choose class, race and feat spells",
-      "Each casting source has its own spell page. Generate spell sheet reviews class, race and feat sources; Choose spells manages a class list within that class’s level and allowance. Wizard spellbook entries and prepared spells are separate. Click a spell’s preparation circle or the picker’s Prepared checkbox where applicable; always-prepared grants stay separate from the allowance. Displaying a full reachable class list does not teach or prepare its spells. Ordinary multiclass slots and Warlock Pact Magic remain separate.",
+      "Each casting source has its own spell page. Generate spell sheet reviews class, race and feat sources; Choose spells manages a class list within that class’s level and allowance. Wizard spellbook entries and prepared spells are separate. Click a spell’s preparation circle or the picker’s Prepared checkbox where applicable; always-prepared grants stay separate from the allowance. Displaying a full reachable class list does not teach or prepare its spells. Ordinary multiclass slots and Warlock Pact Magic remain separate. In Generate spell sheet → Race spells, complete the casting-ability choice for fixed racial magic such as Githyanki Mage Hand. Feat spells lists selected feats even while their choices are incomplete; Review opens that feat’s options directly. A background such as 2024 Haunted One first needs its permitted feat choice; Living Shadow then grants Mage Hand after its casting ability is chosen. Fixed grants do not consume class selections. Apply changes the draft; Save sheet keeps it.",
       "sheet",
       "Open character sheet"
     ],
