@@ -14,7 +14,7 @@ test('all item spell-bonus records retain reviewed scope and the talisman and Bl
  assert.equal(report.itemSpellBonuses.find(row=>row.name==='Blackstaff').spellRequirements.explicitApproval,'item:wdh:blackstaff-heir');assert.equal(report.itemBonusReview.some(row=>row.hasSpellBonus&&!row.spellScope.length),false);assert.ok(report.itemBonusReview.some(row=>row.hasImmunity&&!row.passiveImmunities));
 });
 test('conditional spell formulas are counted as reviewed choices without treating unknown target conditions as direct damage',()=>{
- const report=audit();assert.equal(report.summary.spellActionFormulas,299);assert.equal(report.summary.manualDamageReferences,69);for(const name of ['Toll the Dead','Witch Bolt','Hunger of Hadar']){const rows=report.spells.filter(row=>row.name===name);assert.equal(rows.length,2);for(const row of rows){assert.equal(row.actionDamageFormula,true);assert.equal(row.manualDamageReference,false);assert.ok(row.effectChoices.length>=2);}}
+ const report=audit();assert.equal(report.summary.spellActionFormulas,304);assert.equal(report.summary.manualDamageReferences,64);for(const name of ['Toll the Dead','Witch Bolt','Hunger of Hadar']){const rows=report.spells.filter(row=>row.name===name);assert.equal(rows.length,2);for(const row of rows){assert.equal(row.actionDamageFormula,true);assert.equal(row.manualDamageReference,false);assert.ok(row.effectChoices.length>=2);}}
 });
 test('spell event audit preserves the legacy Hail ceiling, chosen glyph type and revised vine event range',()=>{
  const report=audit(),hail=report.spells.filter(row=>row.name==='Hail of Thorns');assert.equal(hail.find(row=>row.edition==='2014').damageUpcastCeiling,6);assert.equal(hail.find(row=>row.edition==='2024').damageUpcastCeiling,undefined);for(const glyph of report.spells.filter(row=>row.name==='Glyph of Warding'))assert.deepEqual(glyph.effectChoices.map(row=>row.id),['acid','cold','fire','lightning','thunder']);const vines=report.spells.filter(row=>row.name==='Grasping Vine');assert.equal(vines.find(row=>row.edition==='2024').actionRange,'30 ft from vine');assert.equal(vines.find(row=>row.edition==='2014').actionDamageFormula,false);for(const ensnaring of report.spells.filter(row=>row.name==='Ensnaring Strike'))assert.equal(ensnaring.setupSave,'STRENGTH');
@@ -112,4 +112,9 @@ test('hazard event audit retains source glyph choices, own-turn environment phas
 
 test('Hex duration audit retains the revised level-2 breakpoint and identifies the live Hunter’s Mark adapter',()=>{
  const report=audit();for(const s of report.spells.filter(s=>s.name==='Hex')){assert.equal(s.effectChoices.length,6);assert.equal(s.durationBySlot['2'],s.edition==='2024'?'Concentration, up to 4 hours':undefined);assert.equal(s.actionDamageFormula,true);assert.equal(s.manualDamageReference,false);}for(const s of report.spells.filter(s=>s.name==="Hunter's Mark")){assert.equal(s.specialActionAdapter,'hunters-mark');assert.equal(s.actionDamageFormula,true);assert.equal(s.manualDamageReference,false);}
+});
+
+
+test('movement hazard audit labels self-damage choices and preserves restraint/escape phases separately from damage',()=>{
+ const report=audit();for(const name of ['Web','Dimension Door','Meld into Stone'])assert.equal(report.spells.filter(s=>s.name===name&&s.actionDamageFormula&&!s.manualDamageReference).length,2);for(const s of report.spells.filter(s=>s.name==='Meld into Stone'))assert.equal(s.effectChoices.filter(e=>e.selfDamageReference).length,2);const jaunt=report.spells.find(s=>s.name==='Kinetic Jaunt');assert.deepEqual(jaunt.effectChoices.filter(e=>e.selfDamageReference).map(e=>e.id),['shunted']);assert.deepEqual(report.spells.find(s=>s.name==='Transmute Rock').effectChoices.map(e=>e.id),['mud','ceiling','rock']);
 });

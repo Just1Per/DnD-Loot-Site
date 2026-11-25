@@ -14,7 +14,8 @@
         "magic-throwing-weapons-browser.cjs",
         "spell-aura-riders-browser.cjs",
         "spell-effect-choices-browser.cjs",
-        "spell-hazards-browser.cjs"
+        "spell-hazards-browser.cjs",
+        "spell-movement-hazards-browser.cjs"
       ]
     },
     {
@@ -62,7 +63,8 @@
         "magic-throwing-weapons-browser.cjs",
         "spell-aura-riders-browser.cjs",
         "spell-effect-choices-browser.cjs",
-        "spell-hazards-browser.cjs"
+        "spell-hazards-browser.cjs",
+        "spell-movement-hazards-browser.cjs"
       ]
     },
     {
@@ -184,7 +186,8 @@
         "feat-source-spells-browser.cjs",
         "feat-special-spells-browser.cjs",
         "rule-automation-browser.cjs",
-        "site-palette-browser.cjs"
+        "site-palette-browser.cjs",
+        "spell-grant-choices-browser.cjs"
       ]
     },
     {
@@ -231,7 +234,8 @@
         "adobe-native-spells-browser.cjs",
         "adobe-source-generator-browser.cjs",
         "rule-automation-browser.cjs",
-        "site-palette-browser.cjs"
+        "site-palette-browser.cjs",
+        "spell-grant-choices-browser.cjs"
       ]
     },
     {
@@ -243,7 +247,8 @@
       "entry": "Generate spell sheet → Race spells",
       "notes": "Race-cantrip/ability-valg; fælles session.",
       "testReferences": [
-        "adobe-spell-sources-browser.cjs"
+        "adobe-spell-sources-browser.cjs",
+        "spell-grant-choices-browser.cjs"
       ]
     },
     {
@@ -257,7 +262,8 @@
       "testReferences": [
         "adobe-additional-spells-browser.cjs",
         "adobe-source-generator-browser.cjs",
-        "adobe-spell-sources-browser.cjs"
+        "adobe-spell-sources-browser.cjs",
+        "spell-grant-choices-browser.cjs"
       ]
     },
     {
@@ -720,7 +726,7 @@
     {
       "id": "sheetPrintDialog",
       "file": "js/modules/character-sheet.js",
-      "line": 649,
+      "line": 659,
       "kind": "dialog",
       "category": "standard-only",
       "entry": "Standard print fallback",

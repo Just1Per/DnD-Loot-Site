@@ -596,5 +596,23 @@
   "Hex|XPHB": {
     "damage": "+1d6 Necrotic/your attack-roll hit on cursed target",
     "scaling": "SL 2: 4 hr; SL 3–4: 8 hr; SL 5+: 24 hr; Concentration"
+  },
+  "Dimension Door": {
+    "damage": "Occupied arrival only: 4d6 Force to each traveler"
+  },
+  "Meld into Stone|PHB": {
+    "damage": "Self expulsion: partial 6d6 Bludgeoning; destroyed/transmuted stone: 50 Bludgeoning"
+  },
+  "Meld into Stone|XPHB": {
+    "damage": "Self expulsion: partial 6d6 Force; destroyed/transmuted stone: 50 Force"
+  },
+  "Web": {
+    "damage": "Start turn in burning webs: 2d4 Fire"
+  },
+  "Transmute Rock": {
+    "damage": "Falling ceiling mud only: 4d8 Bludgeoning; ground modes deal no HP damage"
+  },
+  "Kinetic Jaunt": {
+    "damage": "End turn in another creature's space: 1d8 Force to self"
   }
 }

@@ -313,6 +313,11 @@ const errors = [];
       await page.locator('[data-combat-recover="short"]').count(),
       0,
     );
+    const pendingUndo=await undo.elementHandle();
+    const unchangedRage=await page.evaluate(()=>JSON.stringify(sheetSession.data.adobe.classFeatureChoices));
+    await page.evaluate(()=>updateSheetCalculations());
+    assert.equal(await pendingUndo.evaluate(node=>node.isConnected),true,'an unchanged calculation must keep a pending resource click attached');
+    assert.equal(await page.evaluate(()=>JSON.stringify(sheetSession.data.adobe.classFeatureChoices)),unchangedRage);
     await undo.click();
     assert.equal(await pool.textContent(), "2 / 2");
     await page.evaluate(() => {

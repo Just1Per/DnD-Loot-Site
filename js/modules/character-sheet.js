@@ -445,7 +445,17 @@ function updateSheetCalculations() {
   globalThis.renderCompanionCreaturePickers?.(d);
   updateInventoryTotals(d);
   renderInventoryDefense(d);
-  if (typeof renderFeatCombatResources === 'function') renderFeatCombatResources(d);
+  if (typeof renderFeatCombatResources === 'function') {
+    // Preserve pending Use/Undo clicks through identical calculations. Wrap the
+    // complete renderer so class-specific decorators are also applied only once.
+    const controls=document.querySelector('#sheetFeatResources [data-feature-resource-controls]');
+    const view=JSON.stringify([s.data,s.identity,d,sheetEquipmentLoot(),auth.currentUser?.uid,activeCampaign?.id]);
+    if(controls?.__resourceView?.session!==s||controls.__resourceView.signature!==view){
+      renderFeatCombatResources(d);
+      const rendered=document.querySelector('#sheetFeatResources [data-feature-resource-controls]');
+      if(rendered)rendered.__resourceView={session:s,signature:view};
+    }
+  }
   if (typeof updateSheetCatalogGrants === 'function') updateSheetCatalogGrants();
   document.querySelectorAll('#characterSheetDialog [data-derived]').forEach(el => {
     const path = el.dataset.derived, value = path.split('.').reduce((v, key) => v?.[key], d);
