@@ -438,6 +438,10 @@ function renderFeatCombatResources(stats) {
   // Independent activation controls retain their DOM while ordinary counters redraw.
   let host=root.querySelector('[data-feature-resource-controls]');
   if(!host){host=document.createElement('div');host.dataset.featureResourceControls='';root.append(host);}
+  // An identical refresh must not detach a Use/Undo control between pointer events.
+  // Keep the full input context: real resource, class, source, equipment and HP changes still redraw.
+  const view=JSON.stringify([sheetSession.data,sheetSession.identity,stats,sheetEquipmentLoot(),auth.currentUser?.uid,activeCampaign?.id]);
+  if(host.__resourceView?.session===sheetSession&&host.__resourceView.signature===view)return;
   const mistyFocus=['confirm','activate','end'].find(key=>document.activeElement?.hasAttribute('data-misty-'+key))||'';
   const rows=stats.feats.reports.map(report=>({report,resource:CharacterFeatRules.resource(report.def,sheetSession.identity.level)})).filter(x=>x.resource);
   const classRows=stats.classResources||[],recovery=new Set([...classRows.flatMap(row=>row.resets),...rows.flatMap(row=>row.resource.resets)]);
@@ -549,4 +553,5 @@ function renderFeatCombatResources(stats) {
   globalThis.CharacterSpeciesFormsUI?.render(root,stats);
   globalThis.CharacterSpeciesHealingUI?.render(root,stats);
   root.hidden=host.hidden&&!root.querySelector('#sheetSpeciesForms,#sheetSpeciesHealing');
+  host.__resourceView={session:sheetSession,signature:view};
 }
