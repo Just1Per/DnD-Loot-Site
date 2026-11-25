@@ -33,7 +33,7 @@ test('Satyr sources retain their own Ram dice, Fey type, training and 35 ft spee
 
 test('source attack metadata removes false attack rolls without stripping actual spell attacks',()=>{
  for(const name of ['Bane','Bestow Curse','Bless','Blur','Dispel Evil and Good','Faerie Fire','Foresight','Heat Metal','Hex','Holy Aura',"Hunter's Mark",'Invisibility','Magic Circle','Magic Weapon','Mirror Image','Mislead',"Otto's Irresistible Dance",'Phantasmal Killer','Protection from Evil and Good','Ray of Enfeeblement','Sanctuary','Shining Smite','Vicious Mockery']){
-  const s=C.rawData.spells.find(s=>s.name===name&&s.source==='XPHB');assert.equal(s.combat.attack,false,name);const d=base();d.spells=[{...C.spellRow(s),classId:'additional'}];const row=run({kind:'spell',ref:s.id+'::additional'},d);assert.equal(row.available,true,name);assert.equal(!!row.proficient,false,name);assert.doesNotMatch(row.hit,/^[+-]\d+$/,name);
+  const s=C.rawData.spells.find(s=>s.name===name&&s.source==='XPHB');assert.equal(s.combat.attack,false,name);const d=base();d.spells=[{...C.spellRow(s),classId:'additional'}];if(s.combat.effects?.length)assert.equal(run({kind:'spell',ref:s.id+'::additional'},d).available,false,name+' requires its actual event');for(const effect of s.combat.effects||[null]){const row=run({kind:'spell',ref:s.id+'::additional',...(effect?{effect:effect.id}:{})},d);assert.equal(row.available,true,name);assert.equal(!!row.proficient,false,name);assert.doesNotMatch(row.hit,/^[+-]\d+$/,name);}
  }
  for(const name of ['Fire Bolt','Ray of Sickness','Thorn Whip'])for(const edition of ['2014','2024']){const s=C.rawData.spells.find(s=>s.name===name&&s.edition===edition);assert.equal(s.combat.attack,true,name+' '+edition);}
 });

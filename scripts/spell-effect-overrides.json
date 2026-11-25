@@ -565,5 +565,17 @@
   "Mental Prison|XGE": {
     "damage": "Initial 5d10 Psychic on either save result; breach 10d10",
     "scaling": ""
+  },
+  "Bestow Curse|PHB": {
+    "damage": "Chosen damage curse only: +1d8 Necrotic to your attack/spell damage",
+    "scaling": "SL 4: 10 min; 5–6: 8 hr; 7–8: 24 hr; 9: until dispelled; no Concentration at SL 5+"
+  },
+  "Bestow Curse|XPHB": {
+    "damage": "Chosen damage curse: +1d8 Necrotic after your attack-roll/spell damage",
+    "scaling": "SL 4: 10 min; 5–6: 8 hr; 7–8: 24 hr; 9: until dispelled; no Concentration at SL 5+"
+  },
+  "Elemental Bane|XGE": {
+    "damage": "+2d6 of chosen type per target’s first matching damage/turn",
+    "scaling": "+1 target/SL above 4; no extra damage dice"
   }
 }

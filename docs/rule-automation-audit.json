@@ -22,9 +22,9 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 336,
-    "spellActionFormulas": 279,
+    "spellActionFormulas": 282,
     "spellHealingFormulas": 16,
-    "manualDamageReferences": 89,
+    "manualDamageReferences": 86,
     "itemFacts": 1278,
     "itemClassRequirementFacts": 136,
     "itemClassRequirementAdapters": 133,
@@ -6578,9 +6578,32 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "acid",
+          "label": "Next-turn melee hit · Acid"
+        },
+        {
+          "id": "cold",
+          "label": "Next-turn melee hit · Cold"
+        },
+        {
+          "id": "fire",
+          "label": "Next-turn melee hit · Fire"
+        },
+        {
+          "id": "lightning",
+          "label": "Next-turn melee hit · Lightning"
+        },
+        {
+          "id": "thunder",
+          "label": "Next-turn melee hit · Thunder"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Melee hit",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-3d7f3aef9001f647",
@@ -7302,9 +7325,60 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "durationBySlot": {
+        "3": "Concentration, up to 1 minute",
+        "4": "Concentration, up to 10 minutes",
+        "5": "8 hours; no Concentration",
+        "7": "24 hours; no Concentration",
+        "9": "Until dispelled; no Concentration"
+      },
+      "effectChoices": [
+        {
+          "id": "ability-str",
+          "label": "Strength checks and saves"
+        },
+        {
+          "id": "ability-dex",
+          "label": "Dexterity checks and saves"
+        },
+        {
+          "id": "ability-con",
+          "label": "Constitution checks and saves"
+        },
+        {
+          "id": "ability-int",
+          "label": "Intelligence checks and saves"
+        },
+        {
+          "id": "ability-wis",
+          "label": "Wisdom checks and saves"
+        },
+        {
+          "id": "ability-cha",
+          "label": "Charisma checks and saves"
+        },
+        {
+          "id": "attacks",
+          "label": "Attacks against you"
+        },
+        {
+          "id": "action-loss",
+          "label": "Turn-start save · Action loss"
+        },
+        {
+          "id": "damage",
+          "label": "Confirmed curse · extra damage"
+        },
+        {
+          "id": "custom",
+          "label": "DM-approved alternative curse"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "setupSave": "WISDOM",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-d32c06a1283e7420",
@@ -7313,7 +7387,54 @@
       "hasDamageFacts": true,
       "hasAreaFacts": false,
       "actionDamageFormula": true,
+      "durationBySlot": {
+        "3": "Concentration, up to 1 minute",
+        "4": "Concentration, up to 10 minutes",
+        "5": "8 hours; no Concentration",
+        "7": "24 hours; no Concentration",
+        "9": "Until dispelled; no Concentration"
+      },
+      "effectChoices": [
+        {
+          "id": "ability-str",
+          "label": "Strength checks and saves"
+        },
+        {
+          "id": "ability-dex",
+          "label": "Dexterity checks and saves"
+        },
+        {
+          "id": "ability-con",
+          "label": "Constitution checks and saves"
+        },
+        {
+          "id": "ability-int",
+          "label": "Intelligence checks and saves"
+        },
+        {
+          "id": "ability-wis",
+          "label": "Wisdom checks and saves"
+        },
+        {
+          "id": "ability-cha",
+          "label": "Charisma checks and saves"
+        },
+        {
+          "id": "attacks",
+          "label": "Attacks against you"
+        },
+        {
+          "id": "dodge",
+          "label": "Combat turn-start save · forced Dodge"
+        },
+        {
+          "id": "damage",
+          "label": "Confirmed curse · extra damage"
+        }
+      ],
       "compoundDamage": false,
+      "actionSave": "",
+      "setupSave": "WISDOM",
       "manualDamageReference": false
     },
     {
@@ -9538,9 +9659,39 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "targetScaling": {
+        "base": 1,
+        "increment": 1,
+        "above": 4
+      },
+      "effectChoices": [
+        {
+          "id": "acid",
+          "label": "Confirmed trigger · Acid"
+        },
+        {
+          "id": "cold",
+          "label": "Confirmed trigger · Cold"
+        },
+        {
+          "id": "fire",
+          "label": "Confirmed trigger · Fire"
+        },
+        {
+          "id": "lightning",
+          "label": "Confirmed trigger · Lightning"
+        },
+        {
+          "id": "thunder",
+          "label": "Confirmed trigger · Thunder"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Affected target",
+      "actionSave": "",
+      "setupSave": "CONSTITUTION",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-72d7eb7021d37236",

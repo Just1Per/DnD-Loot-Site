@@ -20,9 +20,9 @@ Source revision: `b9061583536101068b3a59d27e886d1fa664e366`. This inventory dist
 | Supplement spell class-list corrections | 122 |
 | Spells with numeric damage facts | 393 |
 | Spells with numeric area facts | 336 |
-| Spells with action damage formulas | 279 |
+| Spells with action damage formulas | 282 |
 | Reviewed healing / temporary HP references | 16 |
-| Damage references still requiring manual resolution | 89 |
+| Damage references still requiring manual resolution | 86 |
 | Pinned item facts | 1278 |
 | Item class prerequisite records with reviewed attunement gates | 133 |
 | Items with structured ability metadata | 75 |

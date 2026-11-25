@@ -3289,6 +3289,445 @@
           ]
         }
       }
+    },
+    "Absorb Elements": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "save": "",
+          "automatic": true,
+          "actionRange": "Melee hit",
+          "upcast": "1d6",
+          "notes": [
+            "Reaction casting requires taking Acid, Cold, Fire, Lightning or Thunder damage. The actual casting grants Resistance to that triggering type until the start of your next turn. Only your first melee-attack hit on that next turn adds the chosen damage, then the spell ends; other melee hits and earlier or later turns do not qualify. Match the stored type to the actual trigger. Selecting this reference does not cast, spend a Reaction/slot or grant Resistance."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Next-turn melee hit · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Next-turn melee hit · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Next-turn melee hit · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Next-turn melee hit · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Next-turn melee hit · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "1d6",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Bestow Curse": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "attack": false,
+          "addAbility": false,
+          "setupSave": "WISDOM",
+          "types": [],
+          "noDamageUpcast": true,
+          "durationBySlot": {
+            "3": "Concentration, up to 1 minute",
+            "4": "Concentration, up to 10 minutes",
+            "5": "8 hours; no Concentration",
+            "7": "24 hours; no Concentration",
+            "9": "Until dispelled; no Concentration"
+          },
+          "notes": [
+            "Touch one creature and choose one curse when casting. An initial Wisdom save prevents the curse on success. Only a failed save enables its chosen effect. Remove Curse ends it; track the recipient and actual casting at the table. The nature choices do not add several curses from one casting."
+          ],
+          "effects": [
+            {
+              "id": "ability-str",
+              "label": "Strength checks and saves",
+              "shortLabel": "Strength",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Strength ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-dex",
+              "label": "Dexterity checks and saves",
+              "shortLabel": "Dexterity",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Dexterity ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-con",
+              "label": "Constitution checks and saves",
+              "shortLabel": "Constitution",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Constitution ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-int",
+              "label": "Intelligence checks and saves",
+              "shortLabel": "Intelligence",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Intelligence ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-wis",
+              "label": "Wisdom checks and saves",
+              "shortLabel": "Wisdom",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Wisdom ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-cha",
+              "label": "Charisma checks and saves",
+              "shortLabel": "Charisma",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Charisma ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "attacks",
+              "label": "Attacks against you",
+              "shortLabel": "Attacks",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on attack rolls against you; attacks against other creatures are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "action-loss",
+              "label": "Turn-start save · Action loss",
+              "shortLabel": "Action loss",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "WISDOM",
+                "notes": [
+                  "After a failed initial save, the target makes a Wisdom save at the start of each of its turns. Failure wastes its Action doing nothing. Success permits its Action this turn; it does not end the curse."
+                ]
+              }
+            },
+            {
+              "id": "damage",
+              "label": "Confirmed curse · extra damage",
+              "shortLabel": "Extra damage",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "necrotic"
+                ],
+                "automatic": true,
+                "actionRange": "Cursed target",
+                "notes": [
+                  "After a failed initial save and choosing this curse: your attacks and spells deal an extra 1d8 Necrotic to that target. This is only the extra damage, not a separate attack or the initial curse’s damage. Slot level changes duration, not this d8. Resolve separate damage events with the DM."
+                ]
+              }
+            },
+            {
+              "id": "custom",
+              "label": "DM-approved alternative curse",
+              "shortLabel": "Custom",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "The DM chooses and adjudicates a comparable alternative. Record its actual terms in your notes; this option supplies no automatic target effect or damage."
+                ]
+              }
+            }
+          ],
+          "actionSave": ""
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "attack": false,
+          "addAbility": false,
+          "setupSave": "WISDOM",
+          "types": [],
+          "noDamageUpcast": true,
+          "durationBySlot": {
+            "3": "Concentration, up to 1 minute",
+            "4": "Concentration, up to 10 minutes",
+            "5": "8 hours; no Concentration",
+            "7": "24 hours; no Concentration",
+            "9": "Until dispelled; no Concentration"
+          },
+          "notes": [
+            "Touch one creature and choose one curse when casting. An initial Wisdom save prevents the curse on success. Only a failed save enables its chosen effect. Remove Curse ends it; track the recipient and actual casting at the table. The nature choices do not add several curses from one casting."
+          ],
+          "effects": [
+            {
+              "id": "ability-str",
+              "label": "Strength checks and saves",
+              "shortLabel": "Strength",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Strength ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-dex",
+              "label": "Dexterity checks and saves",
+              "shortLabel": "Dexterity",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Dexterity ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-con",
+              "label": "Constitution checks and saves",
+              "shortLabel": "Constitution",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Constitution ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-int",
+              "label": "Intelligence checks and saves",
+              "shortLabel": "Intelligence",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Intelligence ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-wis",
+              "label": "Wisdom checks and saves",
+              "shortLabel": "Wisdom",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Wisdom ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "ability-cha",
+              "label": "Charisma checks and saves",
+              "shortLabel": "Charisma",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on Charisma ability checks and saving throws. Other abilities are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "attacks",
+              "label": "Attacks against you",
+              "shortLabel": "Attacks",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "notes": [
+                  "After a failed initial save, the cursed target has Disadvantage on attack rolls against you; attacks against other creatures are unchanged."
+                ]
+              }
+            },
+            {
+              "id": "dodge",
+              "label": "Combat turn-start save · forced Dodge",
+              "shortLabel": "Dodge",
+              "combat": {
+                "nonDamage": true,
+                "types": [],
+                "actionSave": "WISDOM",
+                "notes": [
+                  "After a failed initial save, a combat turn-start Wisdom save can force the target to take the Dodge action on that turn. A successful save does not end the curse. This is not the legacy wasted-Action effect; other actions follow the normal Dodge rules."
+                ]
+              }
+            },
+            {
+              "id": "damage",
+              "label": "Confirmed curse · extra damage",
+              "shortLabel": "Extra damage",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "necrotic"
+                ],
+                "automatic": true,
+                "actionRange": "Cursed target",
+                "notes": [
+                  "After a failed initial save and choosing this curse, damage you deal with an attack roll or a spell causes the target to take an extra 1d8 Necrotic. Confirm that you actually dealt the triggering damage. This is only the extra damage; slot level changes duration, not this d8."
+                ]
+              }
+            }
+          ],
+          "actionSave": ""
+        }
+      }
+    },
+    "Elemental Bane": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "setupSave": "CONSTITUTION",
+          "automatic": true,
+          "actionRange": "Affected target",
+          "types": [],
+          "noDamageUpcast": true,
+          "targets": {
+            "base": 1,
+            "increment": 1,
+            "above": 4
+          },
+          "notes": [
+            "On casting, choose one visible creature within 90 ft and one damage type. Extra targets from higher slots must be within 30 ft of each other. A failed Constitution save removes only Resistance to the chosen type, not Immunity. Each affected target taking that type’s damage for the first time each turn takes this extra 2d6 of that type; damage need not come from you. Maintain Concentration up to one minute. Casting itself deals none of this damage. Track targets, triggering damage and each target’s turn limit at the table."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Confirmed trigger · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Confirmed trigger · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Confirmed trigger · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Confirmed trigger · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Confirmed trigger · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "2d6",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ],
+          "actionSave": ""
+        }
+      }
     }
   }
 }
