@@ -28,17 +28,21 @@ var CharacterActions = (()=>{
    if(a.kind==='loot'&&!item)return unavailable('This item is no longer in this character’s inventory.');
    if(a.kind==='weapon'&&!Object.hasOwn(E.weapons,a.ref))return unavailable('Unknown weapon.');
    const Magic=globalThis.CharacterMagicItems||(typeof require==='function'?require('./character-magic-items'):null),infer=Magic?.infer||E.infer;
-   const entry=item||{id:'action-reference',quantity:1,item:{name:E.weapons[a.ref].name}},m=infer(entry.item),profile=E.profile(m,data.build.edition);
+   const entry=item||{id:'action-reference',quantity:1,item:{name:E.weapons[a.ref].name}},m=infer(entry.item),magicActive=!Magic?.requiresAttunement(entry.item)||E.attunementState(data,loot,level).active.has(entry.id),profile=E.profile(m,data.build.edition,magicActive);
    if(m.kind!=='weapon')return resolve({...a,kind:'improvised',name:entry.item.name},data,level,stats,loot,spells);
    if(a.mode==='twoHanded'&&!profile?.versatile&&!profile?.props.includes('twoHanded'))return unavailable('This weapon has no two-handed damage mode.');
-   if(a.mode==='thrown'&&!profile?.props.includes('thrown'))return unavailable('No thrown property: use an improvised attack instead.');
+   if(a.mode==='thrown'&&!profile?.props.includes('thrown'))return unavailable(m.magicWeaponProfile?'This weapon’s magical Thrown property requires its current attunement and prerequisites.':'No thrown property: use an improvised attack instead.');
+   const effects=Magic?.attackEffects?.(entry.item,a.mode,magicActive)||[],target=effects.find(effect=>effect.id===a.effect);
+   if(effects.length&&!target)return unavailable('Choose this thrown attack’s actual target type before using its extra damage.');
+   if(a.effect&&!target)return unavailable('This saved target condition is unavailable for the item’s current source, mode or attunement. Your reference is retained.');
    const loadout=E.choices(data.equipmentState).loadout,existing=loadout.find(c=>c.id===entry.id);
    const attackChoice={...existing,id:entry.id,equipped:!!existing?.equipped,attuned:!!existing?.attuned,ability:a.ability==='auto'?(existing?.ability||'auto'):a.ability,proficiency:existing?.proficiency||'auto',mode:a.mode};
    const temp={...data,equipmentState:{...data.equipmentState,loadout:existing?loadout.map(choice=>choice.id===entry.id?attackChoice:choice):[...loadout,attackChoice]}};
-   const result=E.derive(temp,stats,item?loot:[...loot,entry],level,infer).attacks.find(r=>r.id===entry.id);
+   const result=E.derive(temp,stats,item?loot:[...loot,entry],level,infer,{id:entry.id,effect:a.effect}).attacks.find(r=>r.id===entry.id);
    if(!result)return unavailable('This item needs weapon mechanics configured by the DM.');
    if(item&&stats.clericCombat?.forgeWeapon===item.id){result.attack++;result.damage+=' + 1';result.notes.push('Blessing of the Forge: +1 attack/damage; counts as magical.');}
-   const out={...row,proficient:result.proficient,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,damageDice:result.damageDice,damageType:result.damageType,range:result.range,ability:result.ability,notes:result.notes};
+   const out={...row,proficient:result.proficient,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':'')+(target?' · vs '+target.label:''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,damageDice:result.damageDice,damageType:result.damageType,range:result.range,ability:result.ability,notes:result.notes};
+   if(result.thrownDamage){out.damageDice=result.damageDice.replace(/\s*\+\s*/g,'+');out.paperDamageType=result.damageType.split(' / ').map(type=>({bludgeoning:'Blud',piercing:'Pierc'}[type]||type[0].toUpperCase()+type.slice(1))).join('/');out.notes.push('Damage reference: '+result.damage+'.','Use the selected target’s actual creature type, not size, ancestry or appearance.');}
    if(m.base==='net'&&result.edition==='2024'){out.hit='DEX DC '+(8+stats.pb+stats.mods.dex);out.ability='dex';out.damage='Restrained; no damage';out.notes.push('Large or smaller target; an attack replacement.');}
    if(stats.fighterCombat?.critical<20){out.criticalRange=stats.fighterCombat.critical;out.notes.push('Weapon critical on '+stats.fighterCombat.critical+'–20.');}
    if(stats.fighterCombat?.reachBonus&&profile.rangeType==='melee'&&a.mode!=='thrown')out.range=(parseInt(out.range,10)+stats.fighterCombat.reachBonus)+' ft';

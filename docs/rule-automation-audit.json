@@ -26,6 +26,7 @@
     "spellHealingFormulas": 16,
     "manualDamageReferences": 86,
     "itemFacts": 1278,
+    "itemThrowingAdapters": 5,
     "itemRaceRequirementFacts": 12,
     "itemRaceRequirementAdapters": 7,
     "itemClassRequirementFacts": 136,
@@ -19222,6 +19223,90 @@
       "hasSaveCheckBonus": false,
       "hasImmunity": false,
       "chargeMetadata": true
+    }
+  ],
+  "itemThrowingWeapons": [
+    {
+      "name": "Dwarven Thrower",
+      "source": "DMG",
+      "edition": "2014",
+      "throwingScope": {
+        "range": "20/60",
+        "type": "bludgeoning",
+        "targets": {
+          "other": 1,
+          "giant": 2
+        },
+        "attunement": true,
+        "requiresTargetChoice": true,
+        "extraDice": "ranged hits only"
+      }
+    },
+    {
+      "name": "Dwarven Thrower",
+      "source": "XDMG",
+      "edition": "2024",
+      "throwingScope": {
+        "range": "20/60",
+        "type": "force",
+        "targets": {
+          "other": 1,
+          "giant": 2
+        },
+        "attunement": true,
+        "requiresTargetChoice": true,
+        "extraDice": "ranged hits only"
+      }
+    },
+    {
+      "name": "Elven Thrower",
+      "source": "BGG",
+      "edition": "2014",
+      "throwingScope": {
+        "range": "20/60",
+        "type": "piercing",
+        "targets": {
+          "other": 1,
+          "giant": 2
+        },
+        "attunement": true,
+        "requiresTargetChoice": true,
+        "extraDice": "ranged hits only"
+      }
+    },
+    {
+      "name": "Whelm",
+      "source": "DMG",
+      "edition": "2014",
+      "throwingScope": {
+        "range": "20/60",
+        "type": "bludgeoning",
+        "targets": {
+          "other": 1,
+          "giant": 2
+        },
+        "attunement": true,
+        "requiresTargetChoice": true,
+        "extraDice": "ranged hits only"
+      }
+    },
+    {
+      "name": "Whelm",
+      "source": "XDMG",
+      "edition": "2024",
+      "throwingScope": {
+        "range": "60/180",
+        "type": "force",
+        "targets": {
+          "other": 1,
+          "giant": 4,
+          "construct": 4,
+          "elemental": 4
+        },
+        "attunement": true,
+        "requiresTargetChoice": true,
+        "extraDice": "ranged hits only"
+      }
     }
   ],
   "itemAttunementRaces": [

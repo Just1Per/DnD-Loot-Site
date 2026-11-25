@@ -69,7 +69,7 @@ var CharacterEquipment = (() => {
     name=name.replace(/ armour$| armor$/,'').trim();const id=key(name),kind=Object.hasOwn(weapons,id)?'weapon':Object.hasOwn(armor,id)?'armor':name==='shield'?'shield':'none';
     return{kind,base:kind==='shield'?'':kind==='none'?'':id,bonus:kind==='none'?0:bonus,key:kind==='none'?'':kind+':'+id+':'+bonus};
   }
-  function profile(m,edition) {
+  function profile(m,edition,magicActive=true) {
     const e=m.edition==='character'?edition:m.edition;
     if(m.kind==='armor')return armor[m.base]||null;
     if(m.kind!=='weapon'||!weapons[m.base])return null;
@@ -81,6 +81,7 @@ var CharacterEquipment = (() => {
       if(m.base==='war-pick')w.versatile='';
     }else if(m.base==='net'){w.rangeType='gear';w.damage='';w.props=['special'];w.range='15';}
     w.damage=m.damage||w.damage;w.damageType=m.damageType||w.damageType;
+    if(magicActive&&m.magicWeaponProfile){w.props=[...new Set([...w.props,'thrown'])];w.range=m.magicWeaponProfile.range;}
     return {...w,edition:e};
   }
   function choices(raw={}) {
@@ -132,7 +133,7 @@ var CharacterEquipment = (() => {
     }
     return{limit,count:eligible.length,active:new Set(eligible.filter(row=>active.has(row.id)).map(row=>row.id)),ineligible};
   }
-  function derive(data,stats,loot=[],level,inferItem=CharacterEquipment.infer) {
+  function derive(data,stats,loot=[],level,inferItem=CharacterEquipment.infer,attackContext={}) {
     loot=ItemChoices.project(loot,data?.equipmentState?.loadout);
     const c=choices(data.equipmentState),warnings=[],sources=[],attacks=[],seen=new Set(),names=new Set();
     const owned=loot.filter(e=>e&&Number(e.quantity)>0&&typeof e.id==='string'&&!seen.has(e.id)&&seen.add(e.id));
@@ -140,10 +141,10 @@ var CharacterEquipment = (() => {
     const attunement=attunementState(data,owned,level);let armorEntry=null,shieldEntry=null,attuned=attunement.count,bonus=0;
     // Only owned items can consume an attunement slot. Quantity never multiplies bonuses.
     for(const r of entries){
-      r.profile=profile(r.mechanics,data.build.edition);
       r.requiresAttunement=(typeof CharacterMagicItems!=='undefined'&&CharacterMagicItems.requiresAttunement(r.item))||!!r.item.attunement;
       r.magicActive=!r.requiresAttunement;
       if(r.requiresAttunement&&r.choice.attuned){r.magicActive=attunement.active.has(r.entry.id);if(!r.magicActive)warnings.push(r.item.name+': '+(attunement.ineligible.get(r.entry.id)||'exceeds '+(attunement.limit===3?'three':attunement.limit)+' attunement slots; magic inactive.'));}
+      r.profile=profile(r.mechanics,data.build.edition,r.magicActive);
       r.companionCarried=(globalThis.CharacterCompanionEquipment||(typeof require==='function'?require('./character-companion-equipment'):null))?.carrier(data,r.entry.id)>=0;r.active=r.choice.equipped&&!r.companionCarried;
       if(!r.active)continue;
       const kind=r.mechanics.kind;
@@ -233,6 +234,13 @@ var CharacterEquipment = (() => {
       const damageBonus=thrownStyle+victory+hate+sharpen+extra+(r.magicActive?m.damageBonus:0);
       const ordinaryDie=useVersatile?w.versatile:w.damage,damageDie=monkWeapon?Martial.dice(ordinaryDie,martialArts.die):ordinaryDie;if(monkWeapon&&w.damage)notes.push(Martial.note(martialArts,damageDie));
       let damage=w.damage?`${damageDie}${damageBonus?' '+(damageBonus<0?'−':'+')+' '+Math.abs(damageBonus):''} ${w.damageType}${r.magicActive&&m.extraDamage?' + '+m.extraDamage:''}`:'Special action — resolve manually';
+      let thrownDamage=null;
+      if(isThrown&&r.magicActive&&m.magicWeaponProfile){
+        const policy=m.magicWeaponProfile,target=attackContext.id===r.entry.id?attackContext.effect:'',dice=Object.hasOwn(policy.targets,target)?policy.targets[target]:0;
+        if(dice){thrownDamage={dice:dice+'d8',type:policy.type,target};damage+=' + '+thrownDamage.dice+' '+thrownDamage.type;}
+        else notes.push('Choose the actual target type in an attack reference for this weapon’s additional thrown-hit damage.');
+        notes.push('Returning weapon: resolve its return after the attack; '+policy.range+' range.');
+      }
       if(victory)notes.push('Song of Victory: +'+victory+' melee weapon damage while active.');
       if(sacred)notes.push('Sacred Weapon: +'+sacred+' attack; '+(oath.modern?'may use Radiant damage.':'counts as magical.'));if(hate)notes.push('Aura of Hate: +'+hate+' melee weapon damage.');
       if(sharpen)notes.push('Sharpen the Blade: +'+sharpen+' attack and damage while active.');if(isKensei&&ks.level>=6)notes.push('Kensei weapon counts as magical.');if(isKensei&&w.rangeType==='ranged'&&ks.pick('shot-active')==='active'){damage+=' + 1d4 '+w.damageType;notes.push('Kensei’s Shot: extra1d4 included on each hit this turn.');}
@@ -244,7 +252,7 @@ var CharacterEquipment = (() => {
       if(offhand)notes.push('Extra Light-weapon attack: confirm eligibility; positive ability damage omitted.');
       if(m.base==='net')notes.push(w.edition==='2024'?'2024 Net uses an action/attack replacement and a save; no weapon attack roll.':'2014 Net special attack restrictions apply.');
       if(w.mastery){const mastery=stats.weaponTraining?.masteries.find(v=>v.base===m.base);notes.push(mastery?'Mastery: '+w.mastery+' · unlocked ('+mastery.source+'); resolve the effect at the table.':'Mastery: '+w.mastery+' · not selected. Choose eligible Weapon Mastery on Abilities & Skills.');}
-      attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,damageType:w.damageType||'',range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
+      attacks.push({id:r.entry.id,name:r.item.name,equipped:r.active,ability,proficient,attack:w.rangeType==='gear'?null:attack,damage,damageType:w.damageType||'',...(thrownDamage?{thrownDamage}:{}),range:isThrown||w.rangeType!=='melee'?w.range:(w.props.includes('reach')?'10':'5')+' ft',properties:w.props.join(', '),notes:[...notes,m.notes].filter(Boolean),edition:w.edition});
     }
     const styles=typeof CharacterClassFeatureChoices==='undefined'?[]:CharacterClassFeatureChoices.styles(data,level);
     for(const attack of attacks){
@@ -256,7 +264,7 @@ var CharacterEquipment = (() => {
       if((styles.some(s=>s.name==='Two-Weapon Fighting')||crossbow&&crossbowFeat?.def.source==='XPHB')&&entry.choice.mode==='offhand'&&profile.props.includes('light')&&stats.mods[attack.ability]>0){attack.notes=attack.notes.map(note=>note.replace('positive ability damage omitted.',(styles.some(s=>s.name==='Two-Weapon Fighting')?'Fighting Style':'Crossbow Expert')+' adds your ability modifier to damage.'));attack.damage=attack.damage.replace(/^(\d+d\d+)(?: ([+−]) (\d+))?/,(_,dice,sign,n)=>dice+' + '+((sign==='−'?-1:1)*Number(n||0)+stats.mods[attack.ability]));}
     }
     // Format the separate paper damage cell only after all common style effects.
-    for(const attack of attacks)attack.damageDice=attack.damageType?attack.damage.replace(' '+attack.damageType,''):attack.damage;
+    for(const attack of attacks){attack.damageDice=attack.damageType?attack.damage.replace(' '+attack.damageType,''):attack.damage;if(attack.thrownDamage){attack.damageDice=attack.damageDice.replace(' '+attack.thrownDamage.type,'');attack.damageType=[...new Set([attack.damageType,attack.thrownDamage.type])].join(' / ');}}
     // Defense follows the owned armor actually worn, independent of the manual feat reminder.
     const defense=armorEntry&&(stats.feats.reports.some(r=>r.def.name==='Defense'&&r.automated?.length)||styles.some(s=>s.name==='Defense'))?1:0;
     return {entries,attacks,martialArts,unarmoredDefenseNote,warnings,attuned,attunementLimit:attunement.limit,base,baseParts,baseLabel,shield,bonus,defense,adjustment:0,sources,ac:base+shield+bonus+defense};

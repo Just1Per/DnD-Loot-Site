@@ -24,6 +24,7 @@ Source revision: `b9061583536101068b3a59d27e886d1fa664e366`. This inventory dist
 | Reviewed healing / temporary HP references | 16 |
 | Damage references still requiring manual resolution | 86 |
 | Pinned item facts | 1278 |
+| Reviewed magic throwing-weapon profiles | 5 |
 | Item race prerequisite records with reviewed attunement gates | 7 |
 | Item class prerequisite records with reviewed attunement gates | 133 |
 | Items with structured ability metadata | 75 |
