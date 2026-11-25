@@ -204,6 +204,8 @@ const errors = [];
         cards: sheetSession.data.adobe.companions,
       }),
     );
+    await page.evaluate(()=>{updateSheetCalculations();updateSheetCalculations();});
+    assert.equal(await page.locator('[data-druid-resurgence]').count(),1,'identical refreshes must not duplicate class-specific resource controls');
     await page.locator("[data-druid-resurgence] > summary").click();
     assert.equal(
       await page.locator("[data-resurgence-regain]").isDisabled(),
