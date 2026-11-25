@@ -87,7 +87,12 @@ const palettes={
   await field('Cha').click();dialog=page.locator('#adobeAbilityDialog');await dialog.locator('[data-ability-method]').selectOption('manual');
   const scores=edition==='2014'?{str:8,dex:14,con:14,int:12,wis:10,cha:16}:{str:16,dex:14,con:14,int:10,wis:12,cha:8};
   for(const [ability,score]of Object.entries(scores))await dialog.locator('[data-ability-path="abilities.'+ability+'"]').fill(String(score));
+  if(edition==='2024'){
+   assert.equal(await dialog.locator('[data-ability-apply]').isDisabled(),true,'The new character must choose its Soldier background increases');
+   await dialog.locator('[data-ability-origin="0"]').selectOption('str');await dialog.locator('[data-ability-origin="1"]').selectOption('con');
+  }
   await inspect('abilities-'+edition,'#adobeAbilityDialog');await dialog.locator('[data-ability-apply]').click();
+  assert.equal(await field('Str').inputValue(),edition==='2014'?'9':'18','Starting increases apply once before feat choices');
   await visit('page-3');await host.locator('[data-continuous-page="page-3"] [data-pdf-field="Feat Name 1"]').dblclick();dialog=page.locator('#adobeFeatDialog');
   if(edition==='2024')await dialog.locator('[data-native-feat-origin="humanOriginFeat"]').selectOption('Alert');
   for(const featName of edition==='2014'?['Tough']:['Ability Score Improvement','Defense']){
