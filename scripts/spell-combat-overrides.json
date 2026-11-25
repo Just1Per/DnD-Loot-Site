@@ -3035,6 +3035,260 @@
           ]
         }
       }
+    },
+    "Armor of Agathys": {
+      "bySource": {
+        "PHB": {
+          "damage": "5",
+          "attack": false,
+          "addAbility": false,
+          "upcast": "5",
+          "types": [
+            "cold"
+          ],
+          "save": "",
+          "automatic": true,
+          "actionRange": "Melee attacker",
+          "healing": {
+            "dice": "5",
+            "temporary": true,
+            "flatUpcast": 5
+          },
+          "notes": [
+            "Retaliation only after a creature hits you with a melee attack while this casting still qualifies. No Reaction, damage roll or damage save. Only the temporary HP from this casting qualify; replacing that pool with another source does not preserve its retaliation. The spell lasts up to one hour. Track the casting, temporary-HP provenance and recipient damage at the table. Selecting this reference does not grant temporary HP."
+          ]
+        },
+        "XPHB": {
+          "damage": "5",
+          "attack": false,
+          "addAbility": false,
+          "upcast": "5",
+          "types": [
+            "cold"
+          ],
+          "save": "",
+          "automatic": true,
+          "actionRange": "Melee attacker",
+          "healing": {
+            "dice": "5",
+            "temporary": true,
+            "flatUpcast": 5
+          },
+          "notes": [
+            "Retaliation only after a creature hits you with a melee attack roll while this casting still qualifies. No Reaction, damage roll or damage save. This source ends early when you have no temporary HP. A replacement pool can sustain it only if the spell never ended; later gaining temporary HP does not restart it. The spell lasts up to one hour. Track the casting, temporary-HP provenance and recipient damage at the table. Selecting this reference does not grant temporary HP."
+          ]
+        }
+      }
+    },
+    "Magic Stone": {
+      "bySource": {
+        "XGE": {
+          "damage": "1d6",
+          "scaling": null,
+          "attack": true,
+          "addAbility": true,
+          "types": [
+            "bludgeoning"
+          ],
+          "noDamageUpcast": true,
+          "actionRange": "60 ft if thrown",
+          "notes": [
+            "Enchant one to three pebbles for one minute; an affected pebble ends after its attack, hit or miss. Casting again ends the old pebbles. This reference is your own ranged spell attack, using your casting ability for attack and damage, without cantrip damage scaling. Another thrower uses your casting ability modifier and their own attack eligibility; resolve the transfer at the table. A sling uses its own range and applicable properties; the 60-ft thrown range does not replace the sling’s range. No inventory pebble or attack is spent automatically."
+          ]
+        }
+      }
+    },
+    "Mental Prison": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [
+            "psychic"
+          ],
+          "noDamageUpcast": true,
+          "notes": [
+            "A target immune to Charmed automatically succeeds on the initial save. On a failed save it is Restrained and cannot see or hear beyond the illusion. Resolve target conditions and Concentration at the table."
+          ],
+          "effects": [
+            {
+              "id": "initial",
+              "label": "Initial save · full damage either way",
+              "shortLabel": "Initial",
+              "combat": {
+                "damage": "5d10",
+                "notes": [
+                  "Intelligence save: 5d10 Psychic damage on either success or failure, not half on success. Success ends the spell; only failure creates the prison."
+                ]
+              }
+            },
+            {
+              "id": "breach",
+              "label": "Confirmed prison breach",
+              "shortLabel": "Breach",
+              "combat": {
+                "damage": "10d10",
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "Only after the initial save failed: moving the target out, a melee attack through the illusion, or reaching any body part through it triggers 10d10 Psychic damage and ends the spell. No additional saving throw. Confirm the trigger at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Control Water": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose water in up to a 100-ft cube within 300 ft; maintain Concentration. An Action on your turn can repeat or change the effect. Track water, vehicles, object outcomes and recipients at the table."
+          ],
+          "effects": [
+            {
+              "id": "flood",
+              "label": "Flood · no creature damage formula",
+              "shortLabel": "Flood",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Raise standing water by up to 20 ft, or create a 20-ft wave in a large body. The wave carries Huge or smaller vehicles and has a 25% capsizing chance for them; repeat the wave at the start of your next turn while this effect remains. No automatic creature damage."
+                ]
+              }
+            },
+            {
+              "id": "part",
+              "label": "Part water · trench",
+              "shortLabel": "Part",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Open a trench through the chosen area. When this effect ends, water returns over the following round."
+                ]
+              }
+            },
+            {
+              "id": "redirect",
+              "label": "Redirect flow",
+              "shortLabel": "Flow",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Direct flow within the area, including over obstacles; beyond it, water resumes its natural flow."
+                ]
+              }
+            },
+            {
+              "id": "whirlpool",
+              "label": "Whirlpool · creature damage",
+              "shortLabel": "Vortex",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "bludgeoning"
+                ],
+                "actionSave": "STRENGTH",
+                "checkDC": "Strength (Athletics) check to swim away",
+                "notes": [
+                  "Requires water at least 50 ft square and 25 ft deep. The vortex is 25 ft high, 5 ft wide at its base and up to 50 ft wide at its top. Creatures and objects in water within 25 ft are pulled 10 ft toward it. A creature first entering on a turn or starting its turn inside makes a Strength save; success halves damage. Failure also catches it; escaping once caught costs an Action and its Athletics check has Disadvantage. Object damage is a separate event."
+                ]
+              }
+            },
+            {
+              "id": "object",
+              "label": "Whirlpool · object damage",
+              "shortLabel": "Object",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "bludgeoning"
+                ],
+                "save": "",
+                "automatic": true,
+                "notes": [
+                  "An object takes 2d8 Bludgeoning on its first entry each turn, and each round it remains in the vortex. No creature save; resolve object damage rules at the table."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "attack": false,
+          "addAbility": false,
+          "types": [],
+          "noDamageUpcast": true,
+          "notes": [
+            "Choose water in up to a 100-ft cube within 300 ft; maintain Concentration. On later turns, a Magic action can repeat or change the effect. Track water, vehicles, object outcomes and recipients at the table."
+          ],
+          "effects": [
+            {
+              "id": "flood",
+              "label": "Flood · no creature damage formula",
+              "shortLabel": "Flood",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Raise standing water by up to 20 ft, or create a 20-ft wave in a large body. The wave carries Huge or smaller vehicles and has a 25% capsizing chance for them; repeat the wave at the start of your next turn while this effect remains. No automatic creature damage."
+                ]
+              }
+            },
+            {
+              "id": "part",
+              "label": "Part water · trench",
+              "shortLabel": "Part",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Open a trench through the chosen area. When this effect ends, water returns over the following round."
+                ]
+              }
+            },
+            {
+              "id": "redirect",
+              "label": "Redirect flow",
+              "shortLabel": "Flow",
+              "combat": {
+                "nonDamage": true,
+                "save": "",
+                "notes": [
+                  "Direct flow within the area, including over obstacles; beyond it, water resumes its natural flow."
+                ]
+              }
+            },
+            {
+              "id": "whirlpool",
+              "label": "Whirlpool · creature damage",
+              "shortLabel": "Vortex",
+              "combat": {
+                "damage": "2d8",
+                "types": [
+                  "bludgeoning"
+                ],
+                "actionSave": "STRENGTH",
+                "checkDC": "Strength (Athletics) check to swim away",
+                "notes": [
+                  "Requires water at least 50 ft square and 25 ft deep. The vortex is 25 ft high, 5 ft wide at its base and up to 50 ft wide at its top. Creatures in water within 25 ft are pulled 10 ft toward it. A creature first entering on a turn or ending its turn inside makes a Strength save; success halves damage. Swimming away requires an Action and a successful Athletics check; this source does not impose the legacy caught condition or its Disadvantage."
+                ]
+              }
+            }
+          ]
+        }
+      }
     }
   }
 }

@@ -15,7 +15,8 @@
     "area": "Within 5 ft of spirits"
   },
   "Control Water": {
-    "area": "Up to 100-ft cube"
+    "area": "Up to 100-ft cube",
+    "damage": "Whirlpool 2d8 Bludgeoning; other modes have no creature damage formula"
   },
   "Cordon of Arrows": {
     "area": "Within 30 ft of ammunition"
@@ -152,10 +153,6 @@
   "Hex": {
     "damage": "+1d6 Necrotic/attack hit",
     "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
-  },
-  "Armor of Agathys": {
-    "damage": "5 Cold to melee attacker while its temporary HP remain",
-    "scaling": "+5 Cold and temporary HP/SL above 1"
   },
   "Etherealness": {
     "damage": "If expelled from an occupied space: 2 Force/ft moved",
@@ -550,6 +547,23 @@
   "Illusory Dragon|AU": {
     "damage": "Breath 6d6 of chosen type; initial fear deals no HP damage",
     "area": "60-ft cone from illusion",
+    "scaling": ""
+  },
+  "Armor of Agathys|PHB": {
+    "damage": "5 Cold per qualifying melee hit; this casting’s temporary HP required",
+    "scaling": "+5 Cold and temporary HP/SL above 1"
+  },
+  "Armor of Agathys|XPHB": {
+    "damage": "5 Cold per qualifying melee hit; spell ends when no temporary HP remain",
+    "scaling": "+5 Cold and temporary HP/SL above 1"
+  },
+  "Magic Stone|XGE": {
+    "damage": "1d6+SC Bludgeoning per pebble hit",
+    "area": "1–3 pebbles; throw 60 ft or use a sling",
+    "scaling": ""
+  },
+  "Mental Prison|XGE": {
+    "damage": "Initial 5d10 Psychic on either save result; breach 10d10",
     "scaling": ""
   }
 }

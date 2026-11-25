@@ -6,7 +6,8 @@ var CharacterActions = (()=>{
  const add=(dice,n)=>dice+(n?' '+(n<0?'−':'+')+' '+Math.abs(n):'');
  function diceAt(scales,level,fallback){const keys=Object.keys(scales||{}).map(Number).filter(k=>k<=level).sort((a,b)=>b-a);return keys.length?scales[keys[0]]:fallback;}
  function increase(base,extra,times){
-  if(!times)return base;const term=/^(\d+)d(\d+)$/,inc=term.exec(extra||''),parts=String(base).split(/\s*\+\s*/);if(!inc||!parts.every(part=>term.test(part)||/^\d+$/.test(part)))return base;
+  if(!times)return base;const term=/^(\d+)d(\d+)$/,inc=term.exec(extra||''),flat=/^\d{1,4}$/.test(String(extra)),parts=String(base).split(/\s*\+\s*/);if((!inc&&!flat)||!parts.every(part=>term.test(part)||/^\d+$/.test(part)))return base;
+  if(flat){const amount=Number(extra)*times,at=parts.findIndex(part=>/^\d+$/.test(part));if(at>=0)parts[at]=String(Number(parts[at])+amount);else parts.push(String(amount));return parts.join(' + ');}
   const at=parts.findIndex(part=>term.exec(part)?.[2]===inc[2]);if(at>=0){const old=term.exec(parts[at]);parts[at]=`${Number(old[1])+Number(inc[1])*times}d${inc[2]}`;}else parts.push(`${Number(inc[1])*times}d${inc[2]}`);return parts.join(' + ');
  }
  function spellReference(ref){const value=text(ref),match=/^(.*)::([a-z0-9-]{1,60})$/.exec(value);return{spellId:match?match[1]:value,classId:match?match[2]:''};}
@@ -111,8 +112,10 @@ var CharacterActions = (()=>{
    let second=c.part2Damage?increase(c.part2Damage,c.part2Upcast,Math.max(0,slot-spell.level)):c.secondaryDamage?increase(c.secondaryDamage,c.secondaryUpcast,Math.max(0,slot-spell.level)):'';
    for(const effect of spellEffects){
     const extra=effect.extraDice,hasBonus=Number.isFinite(effect.bonus)&&effect.bonus!==0;
+    const rolled=value=>/\d+d\d+/i.test(String(value));
+    if(effect.requiresRoll&&!rolled(damage)&&!rolled(second)){notes.push(effect.name+': this effect has no damage roll, so its roll bonus does not apply.');continue;}
     if(damage&&(hasBonus||extra)){
-     if(compound){const matches=effect.appliesToTypes?[primaryType,secondType].map(type=>effect.appliesToTypes.includes(type)):[];if(matches.filter(Boolean).length===1){if(matches[0])damage=extra?damage+' + '+extra:add(damage,effect.bonus);else second=extra?second+' + '+extra:add(second,effect.bonus);}else shared.push(effect);}
+     if(compound){const matches=[primaryType,secondType].map((type,index)=>(!effect.appliesToTypes||effect.appliesToTypes.includes(type))&&(!effect.requiresRoll||rolled(index?second:damage)));if(matches.filter(Boolean).length===1){if(matches[0])damage=extra?damage+' + '+extra:add(damage,effect.bonus);else second=extra?second+' + '+extra:add(second,effect.bonus);}else if(matches.some(Boolean))shared.push(effect);}
      else if(count===1){if(hasBonus)damage=add(damage,effect.bonus);if(extra)damage+=' + '+extra;}else shared.push(effect);
     }
     notes.push(effect.detail||(effect.damageType?effect.name+': damage becomes '+effect.damageType+'.':effect.name+': '+sign(effect.bonus||0)+' to '+effect.scope+'.'));

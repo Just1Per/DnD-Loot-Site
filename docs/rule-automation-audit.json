@@ -21,10 +21,10 @@
     "spells": 969,
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
-    "spellAreaFacts": 335,
-    "spellActionFormulas": 274,
-    "spellHealingFormulas": 14,
-    "manualDamageReferences": 94,
+    "spellAreaFacts": 336,
+    "spellActionFormulas": 279,
+    "spellHealingFormulas": 16,
+    "manualDamageReferences": 89,
     "itemFacts": 1278,
     "itemClassRequirementFacts": 136,
     "itemClassRequirementAdapters": 133,
@@ -6938,9 +6938,15 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "healingFormula": {
+        "dice": "5",
+        "temporary": true,
+        "flatUpcast": 5
+      },
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Melee attacker",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-fba2df4ef7690e03",
@@ -6948,9 +6954,15 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "healingFormula": {
+        "dice": "5",
+        "temporary": true,
+        "flatUpcast": 5
+      },
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Melee attacker",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-891f6ce743f858f4",
@@ -8383,6 +8395,28 @@
       "hasDamageFacts": true,
       "hasAreaFacts": true,
       "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "flood",
+          "label": "Flood · no creature damage formula"
+        },
+        {
+          "id": "part",
+          "label": "Part water · trench"
+        },
+        {
+          "id": "redirect",
+          "label": "Redirect flow"
+        },
+        {
+          "id": "whirlpool",
+          "label": "Whirlpool · creature damage"
+        },
+        {
+          "id": "object",
+          "label": "Whirlpool · object damage"
+        }
+      ],
       "compoundDamage": false,
       "manualDamageReference": false
     },
@@ -8392,9 +8426,27 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "flood",
+          "label": "Flood · no creature damage formula"
+        },
+        {
+          "id": "part",
+          "label": "Part water · trench"
+        },
+        {
+          "id": "redirect",
+          "label": "Redirect flow"
+        },
+        {
+          "id": "whirlpool",
+          "label": "Whirlpool · creature damage"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-17b0659bd0ceb44c",
@@ -12417,10 +12469,11 @@
       "name": "Magic Stone",
       "edition": "2014",
       "hasDamageFacts": true,
-      "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "hasAreaFacts": true,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "60 ft if thrown",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-6eee28a0a99bc2e8",
@@ -12705,9 +12758,19 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "initial",
+          "label": "Initial save · full damage either way"
+        },
+        {
+          "id": "breach",
+          "label": "Confirmed prison breach"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-ab530a13e4591498",

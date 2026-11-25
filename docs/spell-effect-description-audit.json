@@ -471,7 +471,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "5 Cold to melee attacker while its temporary HP remain",
+        "damage": "5 Cold per qualifying melee hit; this casting’s temporary HP required",
         "scaling": "+5 Cold and temporary HP/SL above 1"
       },
       "missingDamage": false,
@@ -485,7 +485,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "5 Cold to melee attacker while its temporary HP remain",
+        "damage": "5 Cold per qualifying melee hit; spell ends when no temporary HP remain",
         "scaling": "+5 Cold and temporary HP/SL above 1"
       },
       "missingDamage": false,
@@ -2224,7 +2224,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d8 Bludgeoning",
+        "damage": "Whirlpool 2d8 Bludgeoning; other modes have no creature damage formula",
         "area": "Up to 100-ft cube"
       },
       "missingDamage": false,
@@ -2238,7 +2238,7 @@
       "damageExpected": true,
       "areaExpected": true,
       "facts": {
-        "damage": "2d8 Bludgeoning",
+        "damage": "Whirlpool 2d8 Bludgeoning; other modes have no creature damage formula",
         "area": "Up to 100-ft cube"
       },
       "missingDamage": false,
@@ -6914,7 +6914,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "1d6+SC Bludgeoning"
+        "damage": "1d6+SC Bludgeoning per pebble hit",
+        "area": "1–3 pebbles; throw 60 ft or use a sling"
       },
       "missingDamage": false,
       "missingArea": false
@@ -7219,7 +7220,7 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "5d10 Psychic; 10d10 Psychic"
+        "damage": "Initial 5d10 Psychic on either save result; breach 10d10"
       },
       "missingDamage": false,
       "missingArea": false
