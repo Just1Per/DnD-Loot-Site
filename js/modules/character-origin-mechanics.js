@@ -7,6 +7,7 @@ var CharacterOriginMechanics=(()=>{
   if(!row||!row.partial)return row;if(cache.has(row))return cache.get(row);
   const name=row.name.replace(/ \(City Watch variant\)$/,'').replace(/^House Agent \((.*?)\)$/,'House Agent ($1)'),key=source(row.source)+'|'+norm(name),f=facts.backgrounds[key];if(!f)return row;
   const out={...row,page:row.page||f.page,originFacts:key};
+  if(row.edition==='2024'&&f.abilities)out.abilities=[...f.abilities];
   if(f.tools){out.fixedTools=f.tools.fixed;out.toolChoices=f.tools.choices.map(from=>from.length===1&&/^any/.test(from[0])?from[0]:{from});}
   if(f.languages){out.fixedLanguages=f.languages.fixed;out.languageChoices=f.languages.choices;out.languages=f.languages.choices.length;}
   cache.set(row,out);return out;

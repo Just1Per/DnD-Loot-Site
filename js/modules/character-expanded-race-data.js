@@ -78,11 +78,11 @@
     });
 
     // Explorer's Guide to Wildemount setting variants.
-    add('pallid-elf-egw','Pallid Elf','2014','EGW','Setting specific',{darkvision:60,skills:['insight','investigation'],traits:['Elf ancestry with Incisive Sense and lunar magic; source-specific spell details remain manual.'],partial:true});
-    add('lotusden-halfling-egw','Lotusden Halfling','2014','EGW','Setting specific',{size:'Small',traits:['Halfling Luck, Brave and Nimbleness plus Child of the Wood magic; source-specific spell details remain manual.'],partial:true});
-    add('draconblood-dragonborn-egw','Draconblood Dragonborn','2014','EGW','Setting specific',{traits:['Dragonborn ancestry with Forceful Presence; breath ancestry details remain manual.'],partial:true});
-    add('ravenite-dragonborn-egw','Ravenite Dragonborn','2014','EGW','Setting specific',{darkvision:60,traits:['Dragonborn ancestry with Vengeful Assault; breath ancestry details remain manual.'],partial:true});
-    add('orc-of-exandria-egw','Orc of Exandria','2014','EGW','Setting specific',{carryingSizeSteps:1,darkvision:60,traits:['Aggressive, Powerful Build and Primal Intuition; conditional details remain manual.'],partial:true});
+    add('pallid-elf-egw','Pallid Elf','2014','EGW','Setting specific',{asi:{dex:2,wis:1},flexible:false,darkvision:60,skills:['insight','investigation'],traits:['Elf ancestry with Incisive Sense and lunar magic; source-specific spell details remain manual.'],partial:true});
+    add('lotusden-halfling-egw','Lotusden Halfling','2014','EGW','Setting specific',{asi:{dex:2,wis:1},flexible:false,size:'Small',traits:['Halfling Luck, Brave and Nimbleness plus Child of the Wood magic; source-specific spell details remain manual.'],partial:true});
+    add('draconblood-dragonborn-egw','Draconblood Dragonborn','2014','EGW','Setting specific',{asi:{int:2,cha:1},flexible:false,traits:['Dragonborn ancestry with Forceful Presence; breath ancestry details remain manual.'],partial:true});
+    add('ravenite-dragonborn-egw','Ravenite Dragonborn','2014','EGW','Setting specific',{asi:{str:2,con:1},flexible:false,darkvision:60,traits:['Dragonborn ancestry with Vengeful Assault; breath ancestry details remain manual.'],partial:true});
+    add('orc-of-exandria-egw','Orc of Exandria','2014','EGW','Setting specific',{asi:{str:2,con:1},flexible:false,carryingSizeSteps:1,darkvision:60,traits:['Aggressive, Powerful Build and Primal Intuition; conditional details remain manual.'],partial:true});
 
     // Current Eberron options.
     add('changeling-efota','Changeling','2024','EFOTA','2024',{creatureType:'Fey',sizeChoice:true,traits:['Changeling Instincts and Shape-Shifter; Charisma checks benefit while shape-shifted.'],partial:true});
