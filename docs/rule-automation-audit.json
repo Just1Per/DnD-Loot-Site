@@ -21,10 +21,10 @@
     "spells": 969,
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
-    "spellAreaFacts": 336,
-    "spellActionFormulas": 282,
+    "spellAreaFacts": 337,
+    "spellActionFormulas": 287,
     "spellHealingFormulas": 16,
-    "manualDamageReferences": 86,
+    "manualDamageReferences": 81,
     "itemFacts": 1278,
     "itemPowerResourceAdapters": 2,
     "itemPowerResourceCounters": 4,
@@ -7017,10 +7017,27 @@
       "name": "Ashardalon's Stride",
       "edition": "2014",
       "hasDamageFacts": true,
-      "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "hasAreaFacts": true,
+      "actionDamageFormula": true,
+      "movementBySlot": {
+        "base": 20,
+        "increment": 5,
+        "above": 3
+      },
+      "effectChoices": [
+        {
+          "id": "trail",
+          "label": "Move near creature or unattended object · heat trail"
+        },
+        {
+          "id": "movement",
+          "label": "Active stride · movement benefits"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Within 5 ft while moving",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-a8a8c3b30b50b59a",
@@ -8801,9 +8818,17 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "weapon-hit",
+          "label": "Weapon hit · extra damage"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "30-ft aura",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-f6278973222f6342",
@@ -8811,9 +8836,21 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "weapon-hit",
+          "label": "Weapon hit · extra damage"
+        },
+        {
+          "id": "unarmed-hit",
+          "label": "Unarmed Strike hit · extra damage"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "30-ft Emanation",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-7d2576d8d1d34299",
@@ -11584,9 +11621,20 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "weapon-hit",
+          "label": "Enchanted weapon hit · extra damage"
+        },
+        {
+          "id": "dismissal",
+          "label": "Dismiss spell · radiance burst"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-efa-4beaed9b2c3af36c",
@@ -15142,9 +15190,29 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": true,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "radiant",
+          "label": "Attack hit · Radiant"
+        },
+        {
+          "id": "necrotic",
+          "label": "Attack hit · Necrotic"
+        },
+        {
+          "id": "cold",
+          "label": "Attack hit · Cold"
+        },
+        {
+          "id": "speed",
+          "label": "Visible creature starts turn · speed reduction"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "10 ft from you",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-bmt-b6ec51bf0795aaa3",

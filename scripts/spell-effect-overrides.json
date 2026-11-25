@@ -577,5 +577,20 @@
   "Elemental Bane|XGE": {
     "damage": "+2d6 of chosen type per target’s first matching damage/turn",
     "scaling": "+1 target/SL above 4; no extra damage dice"
+  },
+  "Crusader's Mantle|PHB": {
+    "damage": "+1d4 Radiant/weapon-attack hit",
+    "area": "30-ft-radius aura; you and nonhostile creatures",
+    "scaling": "No extra damage from higher slots"
+  },
+  "Crusader's Mantle|XPHB": {
+    "damage": "+1d4 Radiant/weapon or Unarmed Strike hit",
+    "area": "30-ft Emanation; you and allies",
+    "scaling": "No extra damage from higher slots"
+  },
+  "Ashardalon's Stride": {
+    "damage": "1d6 Fire; each eligible target once/turn",
+    "area": "Within 5 ft during your movement",
+    "scaling": "+1d6 damage and +5 ft speed/SL above 3; base speed +20 ft"
   }
 }

@@ -94,6 +94,7 @@ var CharacterActions = (()=>{
    if(spell.name==='Magic Missile'){count=3+Math.max(0,slot-1);unit='dart';}
    const notes=['Base effect shown. Resolve conditions, riders and resource use from the spell.'];
    notes.push(...(Array.isArray(c.notes)?c.notes:[]));
+   if(c.movementBySlot){const movement=c.movementBySlot;notes.push('This slot’s speed increase: +'+(movement.base+movement.increment*Math.max(0,slot-movement.above))+' ft. Apply only while the spell is active.');}
    if(c.durationBySlot){const duration=diceAt(c.durationBySlot,slot,'');if(duration)notes.push('This slot’s duration: '+duration+'. Manage actual casting and Concentration at the table.');}
    let healingReference='';if(c.healing){const h=c.healing,extra=Math.max(0,slot-spell.level);healingReference=increase(h.dice,h.upcast,extra);if(h.flatUpcast)healingReference=add(healingReference,h.flatUpcast*extra);if(h.addAbility)healingReference=add(healingReference,mod);notes.push((h.temporary?'Temporary HP reference':'Base healing reference')+': '+healingReference+' HP. Resolve recipient limits and applicable feature/item modifiers at the table.');}
    if(c.projectiles)notes.push('Creates '+(c.projectiles.base+c.projectiles.increment*Math.max(0,slot-c.projectiles.above))+' '+c.projectiles.unit+'; track remaining projectiles explicitly.');

@@ -19,10 +19,10 @@ Source revision: `b9061583536101068b3a59d27e886d1fa664e366`. This inventory dist
 | Feat expanded class-list adapters | 12 |
 | Supplement spell class-list corrections | 122 |
 | Spells with numeric damage facts | 393 |
-| Spells with numeric area facts | 336 |
-| Spells with action damage formulas | 282 |
+| Spells with numeric area facts | 337 |
+| Spells with action damage formulas | 287 |
 | Reviewed healing / temporary HP references | 16 |
-| Damage references still requiring manual resolution | 86 |
+| Damage references still requiring manual resolution | 81 |
 | Pinned item facts | 1278 |
 | Reviewed magic throwing-weapon profiles | 5 |
 | Items with independent reviewed power counters | 2 |

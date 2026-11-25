@@ -12,6 +12,7 @@
       "notes": "Bevar action-renderer og dens handlers; åbnes også fra bridge.",
       "testReferences": [
         "magic-throwing-weapons-browser.cjs",
+        "spell-aura-riders-browser.cjs",
         "spell-effect-choices-browser.cjs"
       ]
     },
@@ -58,6 +59,7 @@
         "adobe-connected-sheet-browser.cjs",
         "adobe-feat-reactions-browser.cjs",
         "magic-throwing-weapons-browser.cjs",
+        "spell-aura-riders-browser.cjs",
         "spell-effect-choices-browser.cjs"
       ]
     },

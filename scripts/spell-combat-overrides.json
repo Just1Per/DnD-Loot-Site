@@ -3728,6 +3728,256 @@
           "actionSave": ""
         }
       }
+    },
+    "Crusader's Mantle": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "30-ft aura",
+          "notes": [
+            "You and nonhostile creatures must be inside your moving 30-ft-radius aura. Only a weapon-attack hit adds this rider; this source does not add it to an ordinary Unarmed Strike. This is only the extra damage; resolve the original attack separately. Slot level never increases this die. Confirm actual casting and Concentration, aura occupancy and the attacker’s own modifiers at the table; selecting a reference does not activate an aura."
+          ],
+          "effects": [
+            {
+              "id": "weapon-hit",
+              "label": "Weapon hit · extra damage",
+              "shortLabel": "Weapon rider",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "radiant"
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "30-ft Emanation",
+          "notes": [
+            "You and allies must be inside your 30-ft Emanation. A qualifying weapon or Unarmed Strike hit adds this rider. This is only the extra damage; resolve the original attack separately. Slot level never increases this die. Confirm actual casting and Concentration, aura occupancy and the attacker’s own modifiers at the table; selecting a reference does not activate an aura."
+          ],
+          "effects": [
+            {
+              "id": "weapon-hit",
+              "label": "Weapon hit · extra damage",
+              "shortLabel": "Weapon rider",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "radiant"
+                ]
+              }
+            },
+            {
+              "id": "unarmed-hit",
+              "label": "Unarmed Strike hit · extra damage",
+              "shortLabel": "Unarmed rider",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "radiant"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Holy Weapon": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "notes": [
+            "Touch a weapon when casting; Concentration lasts up to 1 hour. While active it counts as magical and emits bright light 30 ft plus another 30 ft of dim light. A reference does not enchant inventory, activate light, cast, dismiss the spell, spend a Bonus Action or change target conditions. Neither damage event increases with slot level."
+          ],
+          "effects": [
+            {
+              "id": "weapon-hit",
+              "label": "Enchanted weapon hit · extra damage",
+              "shortLabel": "Weapon rider",
+              "combat": {
+                "damage": "2d8",
+                "actionRange": "Weapon hit",
+                "notes": [
+                  "Only a hit from a weapon attack using this actual enchanted weapon adds the rider. Resolve the original weapon attack, its range and the attacker’s own modifiers separately; it is not another spell attack or a separate saving throw."
+                ]
+              }
+            },
+            {
+              "id": "dismissal",
+              "label": "Dismiss spell · radiance burst",
+              "shortLabel": "Dismiss burst",
+              "combat": {
+                "damage": "4d8",
+                "actionSave": "CONSTITUTION",
+                "automatic": false,
+                "actionRange": "30 ft from weapon",
+                "notes": [
+                  "On your turn, spend a Bonus Action to dismiss the spell. Choose creatures you can see within 30 ft of the weapon, not necessarily of you. Each makes a CON save: success halves damage; failure also causes Blinded for 1 minute. Repeat CON at each affected creature’s turn end to end its Blinded condition. Confirm the actual dismissal and remove the weapon’s former benefits at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Spirit Shroud": {
+      "bySource": {
+        "TCE": {
+          "damage": null,
+          "upcast": "1d8",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "actionRange": "10 ft from you",
+          "step": 2,
+          "notes": [
+            "Bonus Action casting; Concentration up to 1 minute. Choose Radiant, Necrotic or Cold when casting and retain that choice. Extra damage applies to your attack hit only when the creature is within 10 ft of you; a distant hit or a different attacker does not qualify. Only the rider is shown: resolve the original attack separately. A creature taking this damage cannot regain HP until the start of your next turn. Type, proximity, actual casting/Concentration and target effects remain table checks; a reference does not activate the spell."
+          ],
+          "effects": [
+            {
+              "id": "radiant",
+              "label": "Attack hit · Radiant",
+              "shortLabel": "Radiant",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "radiant"
+                ]
+              }
+            },
+            {
+              "id": "necrotic",
+              "label": "Attack hit · Necrotic",
+              "shortLabel": "Necrotic",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "necrotic"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Attack hit · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "1d8",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "speed",
+              "label": "Visible creature starts turn · speed reduction",
+              "shortLabel": "Speed −10",
+              "combat": {
+                "damage": null,
+                "upcast": null,
+                "types": [],
+                "nonDamage": true,
+                "automatic": false,
+                "notes": [
+                  "Choose a creature you can see that starts its turn within 10 ft of you. Its speed is reduced by 10 ft until the start of your next turn. This trigger requires neither a hit nor the extra-damage roll. Resolve affected movement at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Ashardalon's Stride": {
+      "bySource": {
+        "FTD": {
+          "damage": null,
+          "upcast": "1d6",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "fire"
+          ],
+          "actionRange": "Within 5 ft while moving",
+          "movementBySlot": {
+            "base": 20,
+            "increment": 5,
+            "above": 3
+          },
+          "notes": [
+            "Bonus Action casting; Concentration up to 1 minute. While the spell lasts, your speed increases and your movement does not provoke Opportunity Attacks. Selecting either reference does not cast, activate a speed bonus, move you or spend resources."
+          ],
+          "effects": [
+            {
+              "id": "trail",
+              "label": "Move near creature or unattended object · heat trail",
+              "shortLabel": "Heat trail",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Only when you move within 5 ft of a creature or an object that is not worn or carried. The eligible creature or object takes the displayed Fire damage without an attack roll or saving throw, at most once during any one turn. This is per turn, not per round; moving past the same target repeatedly in a turn adds no damage. Resolve actual positions, target eligibility and HP at the table."
+                ]
+              }
+            },
+            {
+              "id": "movement",
+              "label": "Active stride · movement benefits",
+              "shortLabel": "Movement",
+              "combat": {
+                "damage": null,
+                "upcast": null,
+                "types": [],
+                "nonDamage": true,
+                "automatic": false,
+                "actionRange": "Self"
+              }
+            }
+          ]
+        }
+      }
     }
   }
 }
