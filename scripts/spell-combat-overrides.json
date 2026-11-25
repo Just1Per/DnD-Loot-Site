@@ -3978,6 +3978,287 @@
           ]
         }
       }
+    },
+    "Divine Favor": {
+      "bySource": {
+        "PHB": {
+          "damage": "1d4",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "Your weapon hit",
+          "notes": [
+            "Bonus Action casting; Concentration up to 1 minute. Only your qualifying weapon hit gains this extra Radiant damage. It does not grant another attack or add the rider to an ordinary Unarmed Strike. Resolve the original attack separately; slot level never increases this die. Selecting a reference does not cast, activate the benefit, spend slots or change weapon damage."
+          ]
+        },
+        "XPHB": {
+          "damage": "1d4",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "radiant"
+          ],
+          "actionRange": "Your weapon hit",
+          "notes": [
+            "Bonus Action casting; 1 minute, no Concentration. Only your qualifying weapon hit gains this extra Radiant damage. It does not grant another attack or add the rider to an ordinary Unarmed Strike. Resolve the original attack separately; slot level never increases this die. Selecting a reference does not cast, activate the benefit, spend slots or change weapon damage."
+          ]
+        }
+      }
+    },
+    "Elemental Weapon": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": "1d4",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "step": 2,
+          "upcastCeiling": 7,
+          "weaponAttackBonusBySlot": {
+            "3": 1,
+            "5": 2,
+            "7": 3
+          },
+          "actionRange": "Enchanted weapon hit",
+          "notes": [
+            "Action casting, touch one nonmagical weapon; Concentration up to 1 hour. The weapon becomes magical and gains the slot’s attack-roll bonus plus this extra damage on a hit. Choose Acid, Cold, Fire, Lightning or Thunder when casting and retain that choice. The attack bonus is not a flat damage bonus; slots 7–9 remain +3 and 3d4. Resolve the original weapon attack and the attacker’s modifiers separately. A reference does not enchant equipment, cast, activate a bonus or spend resources."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Weapon hit · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Weapon hit · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Weapon hit · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Weapon hit · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Weapon hit · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": "1d4",
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [],
+          "step": 2,
+          "upcastCeiling": 7,
+          "weaponAttackBonusBySlot": {
+            "3": 1,
+            "5": 2,
+            "7": 3
+          },
+          "actionRange": "Enchanted weapon hit",
+          "notes": [
+            "Action casting, touch one nonmagical weapon; Concentration up to 1 hour. The weapon becomes magical and gains the slot’s attack-roll bonus plus this extra damage on a hit. Choose Acid, Cold, Fire, Lightning or Thunder when casting and retain that choice. The attack bonus is not a flat damage bonus; slots 7–9 remain +3 and 3d4. Resolve the original weapon attack and the attacker’s modifiers separately. A reference does not enchant equipment, cast, activate a bonus or spend resources."
+          ],
+          "effects": [
+            {
+              "id": "acid",
+              "label": "Weapon hit · Acid",
+              "shortLabel": "Acid",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "acid"
+                ]
+              }
+            },
+            {
+              "id": "cold",
+              "label": "Weapon hit · Cold",
+              "shortLabel": "Cold",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "cold"
+                ]
+              }
+            },
+            {
+              "id": "fire",
+              "label": "Weapon hit · Fire",
+              "shortLabel": "Fire",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "fire"
+                ]
+              }
+            },
+            {
+              "id": "lightning",
+              "label": "Weapon hit · Lightning",
+              "shortLabel": "Lightning",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "lightning"
+                ]
+              }
+            },
+            {
+              "id": "thunder",
+              "label": "Weapon hit · Thunder",
+              "shortLabel": "Thunder",
+              "combat": {
+                "damage": "1d4",
+                "types": [
+                  "thunder"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Flame Arrows": {
+      "bySource": {
+        "XGE": {
+          "damage": "1d6",
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "fire"
+          ],
+          "actionRange": "Quiver ammunition hit",
+          "ammunitionBySlot": {
+            "base": 12,
+            "increment": 2,
+            "above": 3
+          },
+          "notes": [
+            "Action casting, touch a quiver with arrows or bolts; Concentration up to 1 hour. A ranged weapon hit using ammunition drawn from this quiver adds the displayed Fire damage. A miss adds none. Each piece loses this magic after a hit or miss, and drawing the slot’s full allowance ends the spell. Higher slots increase affected ammunition, not the 1d6 damage. Resolve the actual weapon attack, draws, target HP and Concentration at the table; a reference creates no ammunition, changes no stock and does not cast or spend slots."
+          ]
+        }
+      }
+    },
+    "Zephyr Strike": {
+      "bySource": {
+        "XGE": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "nonDamage": false,
+          "noDamageUpcast": true,
+          "types": [
+            "force"
+          ],
+          "notes": [
+            "Bonus Action casting; Concentration up to 1 minute. While the spell lasts, your movement does not provoke Opportunity Attacks. Once before it ends, choose one weapon attack roll on your own turn and give it Advantage. Only that attack can gain the extra Force damage on a hit. This is once per casting, not once per turn. Selecting a reference does not cast, spend resources or activate either movement benefit."
+          ],
+          "effects": [
+            {
+              "id": "boosted-hit",
+              "label": "Chosen Advantage weapon attack hits · extra damage",
+              "shortLabel": "Chosen hit",
+              "combat": {
+                "damage": "1d8",
+                "actionRange": "Chosen weapon hit",
+                "notes": [
+                  "Resolve the original weapon attack and its range separately. A miss adds no extra damage but still triggers the short walking-speed benefit. Slot level does not increase this die."
+                ]
+              }
+            },
+            {
+              "id": "movement",
+              "label": "Chosen attack hits or misses · walking speed",
+              "shortLabel": "Walk +30",
+              "combat": {
+                "damage": null,
+                "types": [],
+                "nonDamage": true,
+                "automatic": false,
+                "actionRange": "Self",
+                "notes": [
+                  "After the one chosen attack, whether it hits or misses, your walking speed increases by 30 ft until the end of that turn. This short benefit does not last for the whole spell. Resolve the actual turn and movement at the table."
+                ]
+              }
+            }
+          ]
+        }
+      }
     }
   }
 }

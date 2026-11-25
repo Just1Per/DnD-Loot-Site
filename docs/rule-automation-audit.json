@@ -22,9 +22,9 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 337,
-    "spellActionFormulas": 287,
+    "spellActionFormulas": 292,
     "spellHealingFormulas": 16,
-    "manualDamageReferences": 81,
+    "manualDamageReferences": 76,
     "itemFacts": 1278,
     "itemPowerResourceAdapters": 2,
     "itemPowerResourceCounters": 4,
@@ -9390,9 +9390,11 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Your weapon hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-22bd679a61861dc5",
@@ -9402,6 +9404,8 @@
       "hasAreaFacts": false,
       "actionDamageFormula": true,
       "compoundDamage": false,
+      "actionRange": "Your weapon hit",
+      "actionSave": "",
       "manualDamageReference": false
     },
     {
@@ -9741,9 +9745,39 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "weaponAttackBonusBySlot": {
+        "3": 1,
+        "5": 2,
+        "7": 3
+      },
+      "effectChoices": [
+        {
+          "id": "acid",
+          "label": "Weapon hit · Acid"
+        },
+        {
+          "id": "cold",
+          "label": "Weapon hit · Cold"
+        },
+        {
+          "id": "fire",
+          "label": "Weapon hit · Fire"
+        },
+        {
+          "id": "lightning",
+          "label": "Weapon hit · Lightning"
+        },
+        {
+          "id": "thunder",
+          "label": "Weapon hit · Thunder"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "damageUpcastCeiling": 7,
+      "actionRange": "Enchanted weapon hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-72d7eb7021d37236",
@@ -9751,9 +9785,39 @@
       "edition": "2024",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "weaponAttackBonusBySlot": {
+        "3": 1,
+        "5": 2,
+        "7": 3
+      },
+      "effectChoices": [
+        {
+          "id": "acid",
+          "label": "Weapon hit · Acid"
+        },
+        {
+          "id": "cold",
+          "label": "Weapon hit · Cold"
+        },
+        {
+          "id": "fire",
+          "label": "Weapon hit · Fire"
+        },
+        {
+          "id": "lightning",
+          "label": "Weapon hit · Lightning"
+        },
+        {
+          "id": "thunder",
+          "label": "Weapon hit · Thunder"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "damageUpcastCeiling": 7,
+      "actionRange": "Enchanted weapon hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-2607c867c2962548",
@@ -10465,9 +10529,16 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "ammunitionBySlot": {
+        "base": 12,
+        "increment": 2,
+        "above": 3
+      },
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Quiver ammunition hit",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-phb-0ae6404444f0eacd",
@@ -17057,9 +17128,20 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "effectChoices": [
+        {
+          "id": "boosted-hit",
+          "label": "Chosen Advantage weapon attack hits · extra damage"
+        },
+        {
+          "id": "movement",
+          "label": "Chosen attack hits or misses · walking speed"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-au-4db79cfc2ed1dc51",

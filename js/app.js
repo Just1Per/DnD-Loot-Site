@@ -53,7 +53,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   notificationsAvailable:()=>window.AccountNotifications?.enabled===true,
 });
 
-const ASSET_VERSION = "20261125-rule-automation-v137";
+const ASSET_VERSION = "20261125-rule-automation-v138";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
