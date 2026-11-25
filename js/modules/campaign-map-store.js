@@ -14,13 +14,13 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
  function image(cid,path){const prefix=imagePrefix(cid);if(typeof path!=='string'||!path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(path.slice(prefix.length)))throw Error('Choose an image belonging to this campaign map.');return path;}
 
  const check=(uid,isCurrent)=>{if(auth.currentUser?.uid!==uid||!isCurrent())throw Error('Campaign access changed. Reopen the map.');};
- async function load(cid){actor();const snapshot=await getDoc(mapRef(cid));return snapshot.exists()?snapshot.data():null;}
+ async function load(cid,{includeDeleted=false}={}){actor();const snapshot=await getDoc(mapRef(cid));return snapshot.exists()&&(includeDeleted||!snapshot.data().deletedAt)?snapshot.data():null;}
  async function listPins(cid,imagePath){actor();return rows(await getDocs(pinsQuery(cid,typeof imagePath==='object'?imagePath:image(cid,imagePath))));}
- function watchMap(cid,next,error){return typeof sdk.onSnapshot==='function'?sdk.onSnapshot(mapRef(cid),snapshot=>next(snapshot.exists()?snapshot.data():null),error):()=>{};}
+ function watchMap(cid,next,error){return typeof sdk.onSnapshot==='function'?sdk.onSnapshot(mapRef(cid),snapshot=>next(snapshot.exists()&&!snapshot.data().deletedAt?snapshot.data():null),error):()=>{};}
  function watchPins(cid,imagePath,next,error){return typeof sdk.onSnapshot==='function'?sdk.onSnapshot(pinsQuery(cid,imagePath),snapshot=>next(rows(snapshot)),error):()=>{};}
  async function saveMap({campaignId,title,imagePath,revision,isCurrent=()=>true}){
   const uid=actor();if(typeof title!=='string'||!title.trim()||title.length>160)throw Error('Give the map a name (up to 160 characters).');image(campaignId,imagePath);
-  return runTransaction(db,async tx=>{const ref=mapRef(campaignId),old=await tx.get(ref);check(uid,isCurrent);if((old.data()?.revision||0)!==revision)throw Error('The map changed in another window. Copy your changes and reload before saving.');const next={title:title.trim(),imagePath,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;});
+  return runTransaction(db,async tx=>{const ref=mapRef(campaignId),old=await tx.get(ref);check(uid,isCurrent);if(old.data()?.deletedAt)throw Error('This map was deleted. Choose another map.');if((old.data()?.revision||0)!==revision)throw Error('The map changed in another window. Copy your changes and reload before saving.');const next={title:title.trim(),imagePath,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;});
  }
  async function savePin({campaignId,id:pid,input,revision,isCurrent=()=>true}){
   const uid=actor();if(typeof input.name!=='string'||!input.name.trim()||input.name.length>100||typeof input.description!=='string'||input.description.length>2000)throw Error('Add a place name (up to 100 characters) and a description up to 2,000 characters.');
@@ -114,10 +114,12 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
   const preview=input.previewPath===undefined||input.previewPath===''?{}:{previewPath:image(cid,input.previewPath)};
   return {title:input.title.trim(),imagePath:input.imagePath,pins,...preview};
  }
- async function saveDraft({campaignId,input,revision,sourceRevision,isCurrent=()=>true}){
+ async function saveDraft({campaignId,input,revision,sourceRevision,sourceGuard,isCurrent=()=>true}){
   const uid=actor(),normalized=normalizeDraft(campaignId,input);
   return runTransaction(db,async tx=>{
    const ref=draftRef(campaignId),previous=await tx.get(ref),map=await tx.get(mapRef(campaignId));check(uid,isCurrent);
+   if(map.data()?.deletedAt)throw Error('This map was deleted. Choose another map.');
+   if(sourceGuard){if(!/^[A-Za-z0-9_-]{1,100}$/.test(sourceGuard.mapId||'')||sourceGuard.mapId===mapId||![sourceGuard.mapRevision,sourceGuard.draftRevision].every(n=>Number.isInteger(n)&&n>=0))throw Error('Invalid source map.');const sourceMap=await tx.get(doc(db,'campaigns',id(campaignId),'campaignMaps',sourceGuard.mapId)),sourceDraft=await tx.get(doc(db,'campaigns',id(campaignId),'campaignMapDrafts',sourceGuard.mapId));check(uid,isCurrent);if(sourceMap.data()?.deletedAt||(sourceMap.data()?.revision||0)!==sourceGuard.mapRevision||(sourceDraft.data()?.revision||0)!==sourceGuard.draftRevision)throw Error('The source map changed or was deleted. Refresh before copying again.');}
    if((previous.data()?.revision||0)!==revision)throw Error('The DM draft changed in another window. Copy your changes and refresh.');
    if((map.data()?.revision||0)!==sourceRevision)throw Error('Another DM published a map. Copy your changes and refresh before saving.');
    const next={...normalized,sourceRevision,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;
@@ -126,7 +128,7 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
  async function publish({campaignId,draftRevision,isCurrent=()=>true}){
   const uid=actor();let stage='reading-private-draft';try{return await runTransaction(db,async tx=>{
    stage='reading-private-draft';const ref=draftRef(campaignId),draft=await tx.get(ref),destination=mapRef(campaignId);
-   stage='reading-published-map';const previous=await tx.get(destination);
+   stage='reading-published-map';const previous=await tx.get(destination);if(previous.data()?.deletedAt)throw Error('This map was deleted. Choose another map.');
    if(!draft.exists()||draft.data().revision!==draftRevision)throw Error('The saved DM draft changed. Refresh before publishing.');
    const source=draft.data(),normalized=normalizeDraft(campaignId,source),oldRevision=previous.data()?.revision||0;
    if(source.sourceRevision!==oldRevision)throw Error('The published map changed. Refresh before publishing.');
@@ -141,13 +143,26 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
   });}catch(error){error.mapPublishStage=stage;throw error;}
  }
  const preferencesRef=cid=>doc(db,'campaigns',id(cid),'mapPreferences','main');
- async function listMaps(cid,{drafts=false}={}){actor();return rows(await getDocs(collection(db,'campaigns',id(cid),drafts?'campaignMapDrafts':'campaignMaps')));}
+ async function listMaps(cid,{drafts=false,includeDeleted=false}={}){actor();return rows(await getDocs(collection(db,'campaigns',id(cid),drafts?'campaignMapDrafts':'campaignMaps'))).filter(row=>includeDeleted||!row.deletedAt);}
  async function loadPreferences(cid){actor();const snapshot=await getDoc(preferencesRef(cid));return snapshot.exists()?snapshot.data():{order:[],mainMapId:'',revision:0};}
  async function savePreferences({campaignId,order,mainMapId,revision,isCurrent=()=>true}){
   const uid=actor();if(!Array.isArray(order)||order.length>50||new Set(order).size!==order.length||order.some(key=>typeof key!=='string'||!/^[A-Za-z0-9_-]{1,100}$/.test(key)))throw Error('Map order must contain up to 50 different map identifiers.');
   if(typeof mainMapId!=='string'||mainMapId&&!/^[A-Za-z0-9_-]{1,100}$/.test(mainMapId))throw Error('Choose a published main map.');
-  return runTransaction(db,async tx=>{const ref=preferencesRef(campaignId),old=await tx.get(ref),main=mainMapId?await tx.get(doc(db,'campaigns',id(campaignId),'campaignMaps',mainMapId)):null;check(uid,isCurrent);if((old.data()?.revision||0)!==revision)throw Error('Map order changed in another window. Refresh before organising maps.');if(mainMapId&&!main?.exists())throw Error('Publish a map before making it the main map.');const next={order:[...order],mainMapId,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;});
+  return runTransaction(db,async tx=>{const ref=preferencesRef(campaignId),old=await tx.get(ref),main=mainMapId?await tx.get(doc(db,'campaigns',id(campaignId),'campaignMaps',mainMapId)):null;check(uid,isCurrent);if((old.data()?.revision||0)!==revision)throw Error('Map order changed in another window. Refresh before organising maps.');if(mainMapId&&(!main?.exists()||main.data()?.deletedAt))throw Error('Publish a map before making it the main map.');const next={order:[...order],mainMapId,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;});
  }
- return {mapId,imagePrefix,picturePrefix,listMaps,loadPreferences,savePreferences,load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,path,isPath,markerStyles,maxRegionCorners,encodeBoundary,decodeBoundary,regionStyle,boundaryCrossing};
+ async function remove({campaignId,mapRevision,draftRevision,preferencesRevision,isCurrent=()=>true}){
+  const uid=actor();if(![mapRevision,draftRevision,preferencesRevision].every(n=>Number.isInteger(n)&&n>=0))throw Error('Invalid map revision.');
+  return runTransaction(db,async tx=>{
+   const target=mapRef(campaignId),draftTarget=draftRef(campaignId),preferencesTarget=preferencesRef(campaignId),map=await tx.get(target),draft=await tx.get(draftTarget),preferences=await tx.get(preferencesTarget);check(uid,isCurrent);
+   if(map.data()?.deletedAt||!map.exists()&&!draft.exists())throw Error('This map was already deleted. Refresh the map list.');
+   if((map.data()?.revision||0)!==mapRevision||(draft.data()?.revision||0)!==draftRevision||(preferences.data()?.revision||0)!==preferencesRevision)throw Error('The map, draft or order changed. Refresh before deleting.');
+   const now=Date.now();
+   // Keep only a monotonic retirement record: old pin revisions must never revive.
+   tx.set(target,{deletedAt:now,deletedBy:uid,revision:mapRevision+1,updatedAt:now});tx.delete(draftTarget);
+   if(preferences.exists()){const old=preferences.data();tx.set(preferencesTarget,{...old,order:old.order.filter(value=>value!==mapId),mainMapId:old.mainMapId===mapId?'':old.mainMapId,revision:old.revision+1,updatedBy:uid,updatedAt:now});}
+   return {mapId,deleted:true};
+  });
+ }
+ return {mapId,imagePrefix,picturePrefix,listMaps,loadPreferences,savePreferences,remove,load,listPins,watchMap,watchPins,saveMap,savePin,removePin,loadDraft,normalizeDraft,saveDraft,publish,boundary,path,isPath,markerStyles,maxRegionCorners,encodeBoundary,decodeBoundary,regionStyle,boundaryCrossing};
 }
 if(typeof module!=='undefined')module.exports={createCampaignMapStore};

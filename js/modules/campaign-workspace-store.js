@@ -69,6 +69,18 @@ function createCampaignWorkspaceStore(sdk) {
       return {...next, id, privateNotes};
     });
   }
-  return {list, load, save, normalize, collections};
+  async function remove({campaignId,kind,id,revision,isCurrent=()=>true}) {
+    const uid=actor();if(!Object.hasOwn(collections,kind)||!Number.isInteger(revision)||revision<1)throw Error('Choose a saved campaign entry.');
+    return runTransaction(db,async tx=>{
+      const target=recordRef(campaignId,kind,id),record=await tx.get(target);
+      if(auth.currentUser?.uid!==uid||!isCurrent())throw Error('Campaign access changed. Reopen the entry.');
+      if(!record.exists()||record.data().revision!==revision)throw Error('This entry changed or was deleted. Refresh before deleting.');
+      const publication={world:'playerInformation',creature:'playerNPCs',chapter:'playerChapters'}[kind];
+      tx.delete(target);tx.delete(secretRef(campaignId,kind,id));
+      if(publication){tx.delete(doc(db,'campaigns',campaignId,publication,id));for(const group of kind==='chapter'?['playerIllustrations']:['playerIllustrations','playerIllustrationThumbnails'])tx.delete(doc(db,'campaigns',campaignId,group,kind,'entries',id));}
+      return {id,deleted:true};
+    });
+  }
+  return {list, load, save, remove, normalize, collections};
 }
 if (typeof module !== 'undefined') module.exports = {createCampaignWorkspaceStore};

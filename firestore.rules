@@ -664,7 +664,7 @@ match /campaigns/{campaignId} {
       return preferencesId == 'main' && d.keys().hasAll(['order','mainMapId','revision','updatedBy','updatedAt'])
         && d.keys().hasOnly(['order','mainMapId','revision','updatedBy','updatedAt'])
         && validMapOrder(d.order) && d.mainMapId is string
-        && (d.mainMapId == '' || (validMapKey(d.mainMapId) && existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(d.mainMapId))))
+        && (d.mainMapId == '' || (validMapKey(d.mainMapId) && existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(d.mainMapId)) && !('deletedAt' in getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(d.mainMapId)).data)))
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
     }
     allow read: if preferencesId == 'main' && (isCampaignOwner(campaignId) || isActiveMember(campaignId));
@@ -696,7 +696,7 @@ match /campaigns/{campaignId} {
       let mapPath = /databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId);
       let pinPath = /databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)/pins/$(d.pinId);
       let map = get(mapPath).data;
-      return exists(mapPath) && (d.kind == 'map'
+      return exists(mapPath) && !('deletedAt' in map) && (d.kind == 'map'
         ? (d.path == map.imagePath || ('previewPath' in map && d.path == map.previewPath))
         : (exists(pinPath) && get(pinPath).data.picturePath == d.path
           && get(pinPath).data.publishedRevision == map.revision));
@@ -737,9 +737,10 @@ match /campaigns/{campaignId} {
         && d.sourceRevision is int && d.sourceRevision >= 0
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
     }
+    allow delete: if validMapKey(mapId) && isCampaignDM(campaignId);
     allow read: if isCampaignDM(campaignId);
-    allow create: if isCampaignDM(campaignId) && validDraft(request.resource.data) && request.resource.data.revision == 1;
-    allow update: if isCampaignDM(campaignId) && validDraft(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
+    allow create: if isCampaignDM(campaignId) && validDraft(request.resource.data) && (!exists(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)) || !('deletedAt' in get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data)) && request.resource.data.revision == 1;
+    allow update: if isCampaignDM(campaignId) && validDraft(request.resource.data) && (!exists(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)) || !('deletedAt' in get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data)) && request.resource.data.revision == resource.data.revision + 1;
   }
 
   match /campaignMaps/{mapId} {
@@ -752,9 +753,15 @@ match /campaigns/{campaignId} {
         && (!('previewPath' in d) || (mapImageFor(mapId,d.previewPath)))
         && d.revision is int && d.revision > 0 && d.updatedAt is int && d.updatedBy == request.auth.uid;
     }
+    function retirement(d) {
+      return validMapKey(mapId) && d.keys().hasAll(['deletedAt','deletedBy','revision','updatedAt']) && d.keys().hasOnly(['deletedAt','deletedBy','revision','updatedAt'])
+        && d.deletedAt is int && d.deletedAt > 0 && d.deletedBy == request.auth.uid && d.updatedAt is int && d.revision is int;
+    }
     allow read: if mapMember();
-    allow create: if isCampaignDM(campaignId) && validMap(request.resource.data) && request.resource.data.revision == 1;
-    allow update: if isCampaignDM(campaignId) && validMap(request.resource.data) && (!('schemaVersion' in resource.data) || request.resource.data.schemaVersion == 2) && request.resource.data.revision == resource.data.revision + 1;
+    allow create: if isCampaignDM(campaignId) && ((validMap(request.resource.data) && request.resource.data.revision == 1) || (retirement(request.resource.data) && request.resource.data.revision == 1 && exists(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMapDrafts/$(mapId)) && !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMapDrafts/$(mapId))));
+    allow update: if isCampaignDM(campaignId) && !('deletedAt' in resource.data) && request.resource.data.revision == resource.data.revision + 1
+      && ((validMap(request.resource.data) && (!('schemaVersion' in resource.data) || request.resource.data.schemaVersion == 2))
+        || (retirement(request.resource.data) && !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMapDrafts/$(mapId))));
     match /pins/{pinId} {
       function currentImage() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data.imagePath; }
       function validPin(d) {
@@ -769,7 +776,7 @@ match /campaigns/{campaignId} {
       function publishedMap() { return get(/databases/$(database)/documents/campaigns/$(campaignId)/campaignMaps/$(mapId)).data; }
       function livePin() {
         let map = publishedMap();
-        return 'schemaVersion' in map ? resource.data.publishedRevision == map.revision : resource.data.imagePath == map.imagePath;
+        return !('deletedAt' in map) && ('schemaVersion' in map ? resource.data.publishedRevision == map.revision : resource.data.imagePath == map.imagePath);
       }
       function validRegionPoint(point) {
         return point is map && point.keys().hasAll(['x','y']) && point.keys().hasOnly(['x','y'])
@@ -852,6 +859,7 @@ match /campaigns/{campaignId} {
   match /journalDrafts/{uid}/entries/{entryId} {
     function ownDraft() { return journalMember() && request.auth.uid == uid; }
     function validDraft(d) { return validRecap(d) && d.authorId == request.auth.uid && d.keys().hasOnly(['title','body','authorName','characterName','remember','nextTime','sessionDate','sessionNumber','authorId','revision','updatedAt']); }
+    allow delete: if ownDraft() && isCampaignDM(campaignId) && !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/journalRecaps/$(entryId));
     allow read: if ownDraft();
     allow create: if ownDraft() && validDraft(request.resource.data) && request.resource.data.revision == 1;
     allow update: if ownDraft() && validDraft(request.resource.data) && request.resource.data.revision == resource.data.revision + 1;
@@ -927,7 +935,10 @@ match /campaigns/{campaignId} {
         || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/playerNPCs/$(recordId)))
       && (workspace != 'chapters' || (request.resource.data.archived == false && 'status' in request.resource.data.data && request.resource.data.data.status == 'Completed')
         || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/playerChapters/$(recordId)));
-    // Archive retains IDs and related records. Hard deletion is intentionally unavailable.
+    // Delete the publication and private note atomically with the source entry.
+    allow delete: if supported() && isCampaignDM(campaignId)
+      && !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/workspaceSecrets/$(kind() + '-' + recordId))
+      && (!(workspace in ['worldEntries','creatures','chapters']) || !existsAfter(/databases/$(database)/documents/campaigns/$(campaignId)/$(workspace == 'worldEntries' ? 'playerInformation' : workspace == 'creatures' ? 'playerNPCs' : 'playerChapters')/$(recordId)));
   }
   function validNotice(d) {
     return d.keys().hasAll(['kind','sourceId','version','createdAt','actorId','quantity'])
@@ -970,6 +981,7 @@ match /campaigns/{campaignId} {
       && (isCampaignDM(campaignId) || (request.resource.data.data.approved == resource.data.data.approved && request.resource.data.data.hostUid == resource.data.data.hostUid && request.resource.data.data.participantUids == resource.data.data.participantUids && (request.resource.data.data.targetLevel == resource.data.data.targetLevel && request.resource.data.data.rosterMode == resource.data.data.rosterMode || !resource.data.data.approved && resource.data.createdBy == request.auth.uid) && request.resource.data.data.get('links',[]) == resource.data.data.get('links',[])));
     match /encounters/{encounterId} {
       allow read: if manager();
+      allow delete: if isCampaignDM(campaignId);
       allow create: if manager() && validWorkspace(request.resource.data, 'encounter') && request.resource.data.revision == 1 && request.resource.data.createdBy == request.auth.uid;
       allow update: if manager() && validWorkspace(request.resource.data, 'encounter') && request.resource.data.revision == resource.data.revision + 1 && request.resource.data.createdBy == resource.data.createdBy && request.resource.data.createdAt == resource.data.createdAt;
     }
@@ -1013,6 +1025,7 @@ match /campaigns/{campaignId} {
     }
   }
   match /workspaceSecrets/{secretId} {
+    allow delete: if isCampaignDM(campaignId);
     allow read: if isCampaignDM(campaignId) || (resource.data.kind == 'oneShot' && canPrepShot(get(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(resource.data.recordId)).data));
     allow create, update: if (isCampaignDM(campaignId) || (request.resource.data.kind == 'oneShot' && canPrepShot(getAfter(/databases/$(database)/documents/campaigns/$(campaignId)/oneShots/$(request.resource.data.recordId)).data)))
       && request.resource.data.keys().hasOnly(['kind','recordId','notes','updatedBy','updatedAt'])

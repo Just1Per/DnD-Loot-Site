@@ -64,6 +64,13 @@ function createCampaignJournalStore(sdk) {
       tx.delete(ref);
     });
   }
+  async function removeDraft({campaignId,id,revision,publishedRevision=0,isCurrent=()=>true}){
+    const uid=actor();if(!Number.isInteger(revision)||revision<1||!Number.isInteger(publishedRevision)||publishedRevision<0)throw Error('Choose a saved recap.');
+    return runTransaction(db,async tx=>{const target=draftRef(campaignId,uid,id),shared=sharedRef(campaignId,id),saved=await tx.get(target),published=await tx.get(shared);check(uid,isCurrent);
+      if(!saved.exists()||saved.data().authorId!==uid||saved.data().revision!==revision||(published.data()?.revision||0)!==publishedRevision||published.exists()&&published.data().authorId!==uid)throw Error('The saved or shared recap changed. Refresh before deleting.');
+      tx.delete(target);if(published.exists())tx.delete(shared);return {id,deleted:true};
+    });
+  }
   // Only the shared copy is changed. Firestore verifies campaign DM membership.
   async function moderate({campaignId,id,input,publishedRevision,isCurrent=()=>true}){
     const uid=actor();return runTransaction(db,async tx=>{
@@ -78,6 +85,6 @@ function createCampaignJournalStore(sdk) {
       if(!previous.exists()||previous.data().revision!==publishedRevision)throw Error('The shared recap changed. Refresh before removing it.');tx.delete(ref);
     });
   }
-  return {list,watch,listAuthorGroups,watchAuthorGroups,normalize,save,publish,unpublish,moderate,removeShared};
+  return {list,watch,listAuthorGroups,watchAuthorGroups,normalize,save,publish,unpublish,moderate,removeShared,removeDraft};
 }
 if(typeof module!=='undefined')module.exports={createCampaignJournalStore};

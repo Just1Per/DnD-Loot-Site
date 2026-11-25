@@ -1,6 +1,6 @@
 'use strict';
 var CampaignMap=(()=>{
- const sdk=window.__DND_VAULT_DEPS__,store=createCampaignMapStore(sdk),worldStore=createCampaignInformationStore(sdk),media=createCampaignMapMedia(sdk);
+ const sdk=window.__DND_VAULT_DEPS__,store=createCampaignMapStore(sdk),worldStore=createCampaignInformationStore(sdk),media=createCampaignMapMedia(sdk),transfer=createCampaignMapTransfer(sdk);
  const escape=value=>escapeHtml(String(value??''));
  let session=null,nextMapId=null;
  const mapImageRequests=new WeakMap();
@@ -13,7 +13,7 @@ var CampaignMap=(()=>{
  const places=s=>working(s)?s.draft?.pins||[]:s.pins;
  function status(s,message){if(!current(s))return;s.message=message;const host=s.root.querySelector('[data-map-status]');if(host)host.textContent=message;}
  function revoke(s){s.imageEpoch=(s.imageEpoch||0)+1;s.pendingImages.clear();s.failedPreviews.clear();for(const url of s.urls.values())URL.revokeObjectURL(url);s.urls.clear();}
- function clear(){if(session){session.stops.forEach(stop=>stop());session.pinStop?.();revoke(session);}session=null;for(const id of ['tab-campaign-map','tab-dm-map'])document.getElementById(id)?.replaceChildren();}
+ function clear(){document.getElementById('campaignMapCopyDialog')?.remove();if(session){session.stops.forEach(stop=>stop());session.pinStop?.();revoke(session);}session=null;for(const id of ['tab-campaign-map','tab-dm-map'])document.getElementById(id)?.replaceChildren();}
  function guard(action){const s=session;if(!s)return true;if(!current(s)){clear();return true;}if(s.busy)return false;if(!dirty(s))return true;if(s.leaving)return false;s.leaving=true;
   SiteConfirmation.ask({title:'Leave without saving your map draft?',paragraphs:['Published places stay unchanged. Unsaved edits in this window will be discarded.'],confirmLabel:'Discard changes',cancelLabel:'Keep editing'}).then(yes=>{if(!current(s))return;s.leaving=false;if(yes){s.mapDirty=false;s.pinDirty=false;s.pinEditor=null;action();}});return false;
  }
@@ -33,7 +33,7 @@ var CampaignMap=(()=>{
  function mapNavigation(s){
   const visible=s.preview?s.maps.filter(row=>row.published):s.maps,dm=editable(s)&&!s.preview,main=mainMapId(s),index=visible.findIndex(row=>row.id===s.mapId),row=visible[index];
   if(!s.maps.length&&!dm)return '';
-  return `<div class="map-selector"><div class="map-selector-head"><nav class="map-tabs" aria-label="Campaign maps">${visible.map(row=>`<button type="button" data-select-map="${escape(row.id)}" aria-current="${row.id===s.mapId?'page':'false'}" title="${escape(row.title)}" ${s.busy?'disabled':''} ${dm?'draggable="true"':''}>${escape(row.title)}${row.id===main?' <span>· Main map</span>':!row.published?' <span>· Private draft</span>':''}</button>`).join('')}</nav>${dm?`<button type="button" data-map-new ${s.busy||!s.ready||s.maps.length>=50?'disabled':''}>+ Add map</button>`:''}</div>${dm&&s.maps.length?`<details class="map-organise" ${s.organising?'open':''}><summary>Organise maps</summary><p>Move this map earlier or later in the row, or drag any map name. Players only see published maps. The main map opens first when entering Maps.</p><div class="journal-actions"><button type="button" data-map-earlier ${s.busy||index<=0?'disabled':''}>Move earlier</button><button type="button" data-map-later ${s.busy||index<0||index===s.maps.length-1?'disabled':''}>Move later</button><button type="button" data-map-main ${s.busy||!row?.published||row.id===main?'disabled':''}>${row?.id===main?'Main map':'Make main map'}</button></div>${row&&!row.published?'<p class="map-hint">Publish this map before making it the main map.</p>':''}</details>`:''}</div>`;
+  return `<div class="map-selector"><div class="map-selector-head"><nav class="map-tabs" aria-label="Campaign maps">${visible.map(row=>`<button type="button" data-select-map="${escape(row.id)}" aria-current="${row.id===s.mapId?'page':'false'}" title="${escape(row.title)}" ${s.busy?'disabled':''} ${dm?'draggable="true"':''}>${escape(row.title)}${row.id===main?' <span>· Main map</span>':!row.published?' <span>· Private draft</span>':''}</button>`).join('')}</nav>${dm?`<button type="button" data-map-new ${s.busy||!s.ready||s.maps.length>=50?'disabled':''}>+ Add map</button>`:''}</div>${dm&&s.maps.length?`<details class="map-organise" ${s.organising?'open':''}><summary>Organise maps</summary><p>Move this map earlier or later in the row, or drag any map name. Players only see published maps. The main map opens first when entering Maps.</p><div class="journal-actions"><button type="button" data-map-earlier ${s.busy||index<=0?'disabled':''}>Move earlier</button><button type="button" data-map-later ${s.busy||index<0||index===s.maps.length-1?'disabled':''}>Move later</button><button type="button" data-map-main ${s.busy||!row?.published||row.id===main?'disabled':''}>${row?.id===main?'Main map':'Make main map'}</button></div>${row&&!row.published?'<p class="map-hint">Publish this map before making it the main map.</p>':''}<div class="journal-actions"><button type="button" data-map-copy ${s.busy||!s.ready||s.pinDirty||!s.draft?.pins.length?'disabled':''}>Copy places…</button><button type="button" data-map-clone ${s.busy||!s.ready||s.pinDirty||!s.draft?.imagePath||s.maps.length>=50?'disabled':''}>Clone map…</button><button type="button" data-map-delete ${s.busy||!s.ready||!s.map?.revision&&!s.draft?.revision?'disabled':''}>Delete map</button></div></details>`:''}</div>`;
  }
  async function organiseMaps(s,{moveTo=null,main=false,mapId=s.mapId}={}){
   if(!editable(s)||s.busy||!s.ready)return;const from=s.maps.findIndex(row=>row.id===mapId),order=s.maps.map(row=>row.id);
@@ -50,10 +50,41 @@ var CampaignMap=(()=>{
   if(nav&&selected){const bounds=nav.getBoundingClientRect(),button=selected.getBoundingClientRect();if(button.right>bounds.right)nav.scrollLeft+=button.right-bounds.right;else if(button.left<bounds.left)nav.scrollLeft-=bounds.left-button.left;}
   s.root.querySelectorAll('[data-select-map]').forEach(button=>{button.onclick=()=>{if(button.dataset.selectMap!==s.mapId)render(s.mode,button.dataset.selectMap,s.preview)};button.ondragstart=event=>{if(!editable(s)||s.busy){event.preventDefault();return;}event.dataTransfer.setData('text/plain',button.dataset.selectMap);};button.ondragover=event=>{if(editable(s)&&!s.busy)event.preventDefault();};button.ondrop=event=>{if(!editable(s)||s.busy)return;event.preventDefault();const source=event.dataTransfer.getData('text/plain'),target=s.maps.findIndex(row=>row.id===button.dataset.selectMap);organiseMaps(s,{moveTo:target,mapId:source});};});
   s.root.querySelector('[data-map-new]')?.addEventListener('click',()=>{if(editable(s)&&!s.busy&&s.ready&&s.maps.length<50)render('dm',crypto.randomUUID())});
+  s.root.querySelector('[data-map-copy]')?.addEventListener('click',()=>copyDialog(s,false));
+  s.root.querySelector('[data-map-clone]')?.addEventListener('click',()=>copyDialog(s,true));
+  s.root.querySelector('[data-map-delete]')?.addEventListener('click',()=>deleteMap(s));
   const index=s.maps.findIndex(row=>row.id===s.mapId);
   s.root.querySelector('[data-map-earlier]')?.addEventListener('click',()=>organiseMaps(s,{moveTo:index-1}));
   s.root.querySelector('[data-map-later]')?.addEventListener('click',()=>organiseMaps(s,{moveTo:index+1}));
   s.root.querySelector('[data-map-main]')?.addEventListener('click',()=>organiseMaps(s,{main:true}));
+ }
+ async function deleteMap(s){
+  if(!editable(s)||s.busy||!s.ready||!s.map?.revision&&!s.draft?.revision)return;
+  const signature=JSON.stringify({draft:s.draft,map:s.map,preferences:s.preferences}),valid=()=>editable(s)&&!s.busy&&JSON.stringify({draft:s.draft,map:s.map,preferences:s.preferences})===signature;
+  if(!await SiteConfirmation.ask({title:'Delete “'+(s.draft?.title||s.map?.title)+'”?',confirmLabel:'Delete map',isCurrent:valid,paragraphs:['This removes the map and its private draft from the campaign. Players lose access to its places and pictures.','Other maps and linked World entries are kept. Uploaded originals stay private.',dirty(s)?'Unsaved changes to this map will also be discarded.':'']} )||!valid())return;
+  s.busy=true;paint(s);
+  try{await s.store.remove({campaignId:s.campaignId,mapRevision:s.map?.revision||0,draftRevision:s.draft?.revision||0,preferencesRevision:s.preferences.revision,isCurrent:()=>editable(s)});if(!editable(s))return;s.mapDirty=s.pinDirty=false;s.busy=false;await render('dm');}
+  catch(error){if(allowed(s))status(s,'Could not delete map: '+error.message);}
+  finally{s.busy=false;if(allowed(s))paint(s);}
+ }
+ function copyDialog(s,clone){
+  if(!editable(s)||s.busy||!s.ready||s.pinDirty||!s.draft?.imagePath||clone&&s.maps.length>=50)return;
+  document.getElementById('campaignMapCopyDialog')?.remove();const dialog=document.createElement('dialog');dialog.id='campaignMapCopyDialog';dialog.className='vault-dialog map-copy-dialog';dialog.setAttribute('aria-labelledby','mapCopyTitle');const opener=document.activeElement,signature=JSON.stringify({draft:s.draft,map:s.map}),source=structuredClone(s.draft),sourceRevision=s.map?.revision||0;
+  const valid=()=>editable(s)&&dialog.isConnected&&JSON.stringify({draft:s.draft,map:s.map})===signature,targets=s.maps.filter(row=>row.id!==s.mapId);
+  const close=()=>{if(s.busy)return;if(dialog.open)dialog.close();dialog.remove();if(opener?.isConnected)opener.focus();};
+  dialog.innerHTML='<h2 id="mapCopyTitle">'+(clone?'Clone map':'Copy places to another map')+'</h2><p>The result is a private draft. Copied places start hidden until you reveal and publish them. Positions use percentages; review them on the destination map.</p><form data-map-copy-form><div class="map-copy-fields">'+(clone?'<label>New map name<input data-copy-title maxlength="160" required value="'+escape((source.title+' (copy)').slice(0,160))+'"></label><label>Replacement background (optional)<input data-copy-background type="file" accept="image/png,image/jpeg,image/webp"></label><p>Leave blank to copy the original background. If it cannot load, choose a replacement here or copy places into an existing map instead.</p>':'<label>Destination map<select data-copy-destination required><option value="">Choose a map</option>'+targets.map(row=>'<option value="'+escape(row.id)+'">'+escape(row.title)+'</option>').join('')+'</select></label>')+'<label><input data-copy-pictures type="checkbox" checked> Include place pictures</label><p>Turn this off to rescue text and positions when a picture cannot be read.</p><fieldset><legend>Places, regions and routes</legend><div class="journal-actions"><button type="button" data-copy-all>Select all</button><button type="button" data-copy-none>Select none</button></div><div class="map-copy-places">'+source.pins.map(pin=>'<label><input type="checkbox" data-copy-pin value="'+escape(pin.id)+'" checked> '+escape(pin.name)+' · '+escape(typeLabel(pin.type))+'</label>').join('')+(source.pins.length?'':'<p>No places; only the map image will be copied.</p>')+'</div></fieldset></div><p data-copy-status role="status"></p><div class="journal-actions"><button type="submit" data-copy-apply class="btn-primary">'+(clone?'Create private copy':'Copy selected places')+'</button><button type="button" data-copy-cancel>Cancel</button></div></form>';
+  const form=dialog.querySelector('form'),message=dialog.querySelector('[data-copy-status]'),apply=dialog.querySelector('[data-copy-apply]');
+  const refresh=()=>{const count=dialog.querySelectorAll('[data-copy-pin]:checked').length;apply.textContent=clone?'Create private copy':('Copy '+count+' place'+(count===1?'':'s'));apply.disabled=!clone&&(!count||!dialog.querySelector('[data-copy-destination]').value);};
+  for(const command of ['all','none'])dialog.querySelector('[data-copy-'+command+']').onclick=()=>{if(s.busy)return;dialog.querySelectorAll('[data-copy-pin]').forEach(node=>node.checked=command==='all');refresh();};form.onchange=refresh;
+  dialog.querySelector('[data-copy-cancel]').onclick=close;dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
+  form.onsubmit=async event=>{event.preventDefault();if(!valid()||s.busy||!form.reportValidity())return;const selectedIds=[...dialog.querySelectorAll('[data-copy-pin]:checked')].map(node=>node.value),destinationMapId=clone?crypto.randomUUID():dialog.querySelector('[data-copy-destination]').value;
+   s.busy=true;form.querySelectorAll('input,select,button').forEach(node=>node.disabled=true);message.textContent='Preparing the private copy…';
+   try{const result=await transfer.copy({campaignId:s.campaignId,sourceMapId:s.mapId,source,sourceMapRevision:sourceRevision,destinationMapId,selectedIds,clone,title:clone?dialog.querySelector('[data-copy-title]').value:'',includePictures:dialog.querySelector('[data-copy-pictures]').checked,replacement:dialog.querySelector('[data-copy-background]')?.files?.[0],preparePreview:async file=>{const bitmap=await createImageBitmap(file);try{return await createMapPreview(bitmap,file.size);}finally{bitmap.close();}},isCurrent:valid,onProgress:(done,total)=>{if(valid())message.textContent=total?'Preparing images '+done+' of '+total+'…':'Saving places…';}});if(!valid())return;
+    s.busy=false;close();if(clone)s.maps.push({id:result.mapId,title:result.draft.title,published:false});status(s,'Private copy saved with '+result.count+' hidden places. Open the destination to review and publish.');await render('dm',result.mapId);
+   }catch(error){if(valid())message.textContent='Could not copy: '+error.message+' Your source and destination records are unchanged. For an unreadable picture, turn off Include place pictures; for an unreadable background, choose a replacement.';}
+   finally{s.busy=false;if(valid()){form.querySelectorAll('input,select,button').forEach(node=>node.disabled=false);refresh();}}
+  };
+  document.body.append(dialog);refresh();dialog.showModal();dialog.querySelector('input,select,button')?.focus();
  }
  function paint(s){
   if(!allowed(s))return;
@@ -225,7 +256,14 @@ var CampaignMap=(()=>{
   s.pendingImages.set(path,pending);return pending;
  }
  function loadPictures(s){const map=displayed(s),img=s.root.querySelector('[data-map-image]');if(img&&map?.imagePath)attachMapImage(s,img,map);s.root.querySelectorAll('[data-place-picture]').forEach(node=>attachImage(s,node,node.dataset.placePicture));}
- async function attachImage(s,node,path){try{const url=await cachedImage(s,path);if(allowed(s)&&node.isConnected&&url)node.src=url;}catch(error){if(allowed(s)&&node.isConnected){node.replaceWith(Object.assign(document.createElement('p'),{textContent:'Image unavailable. '+imageProblem(error)}));}}}
+ async function attachImage(s,node,path){
+  try{const url=await cachedImage(s,path);if(allowed(s)&&node.isConnected&&url)node.src=url;}
+  catch(error){if(!allowed(s)||!node.isConnected)return;
+   const box=document.createElement('div'),text=document.createElement('p'),retry=document.createElement('button');box.className='map-picture-error';box.setAttribute('role','status');text.textContent='This picture could not be loaded. Your place description is still available.';retry.type='button';retry.textContent='Try picture again';retry.onclick=()=>{if(!allowed(s)||!box.isConnected)return;const image=node.cloneNode(false);image.removeAttribute('src');box.replaceWith(image);attachImage(s,image,path);};box.append(text,retry);
+   if(canManageCampaign()&&!s.preview){const repair=document.createElement('button'),details=document.createElement('details'),summary=document.createElement('summary'),reason=document.createElement('p');repair.type='button';repair.textContent='Repair this picture';repair.onclick=()=>{if(box.isConnected)repairImages(s,[path]);};summary.textContent='Image details';reason.textContent=imageProblem(error);details.append(summary,reason);box.append(repair,details);}
+   else{const help=document.createElement('p');help.textContent='If retrying does not help, ask your DM to repair this picture’s image access.';box.append(help);}node.replaceWith(box);
+  }
+ }
  function quality(s,message){const node=s.root.querySelector('[data-map-quality]');if(allowed(s)&&node)node.textContent=message;}
  async function attachMapImage(s,node,map){
   const prefix=s.store.imagePrefix(s.campaignId),candidate=map.previewPath;
@@ -301,19 +339,24 @@ var CampaignMap=(()=>{
  function mediaPaths(map,pins=map?.pins||[]) {
   return [...new Set([map?.imagePath,map?.previewPath,...pins.map(pin=>pin.picturePath)].filter(Boolean))];
  }
- async function prepareImages(s,paths) {
-  for(let i=0;i<paths.length;i++) {
-   if(!editable(s))throw Error('Campaign access changed.');
-   status(s,'Preparing image access '+(i+1)+' of '+paths.length+'…');
-   await media.ensure({campaignId:s.campaignId,mapId:s.mapId,path:paths[i],isCurrent:()=>editable(s),
-    onProgress:(done,total)=>status(s,'Preparing image access '+(i+1)+' of '+paths.length+' · '+Math.round(done/total*100)+'%')});
-  }
+ function imageLabel(s,path){
+  const pin=[...(s.draft?.pins||[]),...(s.pins||[])].find(pin=>pin.picturePath===path);return pin?'Picture for “'+pin.name+'”':path===s.draft?.previewPath||path===s.map?.previewPath?'Map overview':'Map image';
  }
- async function repairImages(s) {
+ async function prepareImages(s,paths,{keepGoing=false}={}) {
+  const failures=[];let prepared=0;
+  for(let i=0;i<paths.length;i++) {
+   if(!editable(s))throw Error('Campaign access changed.');const label=imageLabel(s,paths[i]);
+   status(s,'Preparing image access '+(i+1)+' of '+paths.length+' · '+label+'…');
+   try{await media.ensure({campaignId:s.campaignId,mapId:s.mapId,path:paths[i],isCurrent:()=>editable(s),onProgress:(done,total)=>status(s,'Preparing image access '+(i+1)+' of '+paths.length+' · '+label+' · '+Math.round(done/total*100)+'%')});prepared++;}
+   catch(error){if(!editable(s))throw error;error.message=label+': '+error.message;if(!keepGoing||!['map-media/invalid','storage/object-not-found','storage/max-download-size-exceeded'].includes(error.code))throw error;failures.push({label,message:error.message,code:error.code});}
+  }
+  return {prepared,total:paths.length,failures};
+ }
+ async function repairImages(s,requestedPaths=null) {
   if(!editable(s)||s.busy)return;
-  const paths=[...new Set([...mediaPaths(s.map,s.pins),...mediaPaths(s.draft)])];
+  const paths=requestedPaths||[...new Set([...mediaPaths(s.map,s.pins),...mediaPaths(s.draft)])];
   if(!paths.length)return;s.busy=true;paint(s);
-  try{await prepareImages(s,paths);if(editable(s)){revoke(s);s.failedPreviews.clear();status(s,'Image access repaired. Players can refresh this map. Your draft and publication are unchanged.');}}
+  try{const result=await prepareImages(s,paths,{keepGoing:true});if(editable(s)){revoke(s);s.failedPreviews.clear();status(s,result.failures.length?'Prepared '+result.prepared+' of '+result.total+' images. Could not repair '+result.failures.map(row=>row.message+' [code: '+row.code+']').join('; ')+'. Edit the named place or map to replace that image. The other repaired images are ready for players.':'Image access repaired. Players can refresh this map. Your draft and publication are unchanged.');}}
   catch(error){if(allowed(s))status(s,'Image access could not be repaired. '+imageProblem(error)+' [code: '+(error.code||'unknown')+']');}
   finally{s.busy=false;if(allowed(s))paint(s);}
  }
@@ -358,12 +401,13 @@ var CampaignMap=(()=>{
   const s={campaignId:activeCampaign.id,uid:auth.currentUser.uid,mode,route:mode==='dm'?'dm-map':'campaign-map',root:document.getElementById(mode==='dm'?'tab-dm-map':'tab-campaign-map'),mapId:'main',store:createCampaignMapStore(sdk),maps:[],preferences:{order:[],mainMapId:'',revision:0},map:null,pins:[],draft:null,pinEditor:null,mapDirty:false,pinDirty:false,busy:false,ready:false,editing:mode==='dm',preview:preview&&mode==='dm',placing:false,denied:false,selected:null,worlds:[],stops:[],pinStop:null,urls:new Map(),pendingImages:new Map(),failedPreviews:new Set(),zoom:1,panX:0,panY:0,message:'Loading campaign maps…'};session=s;paint(s);
   try{
    s.loadStage='the map list';
-   const [published,preferences,drafts]=await Promise.all([store.listMaps(s.campaignId),store.loadPreferences(s.campaignId),mode==='dm'?store.listMaps(s.campaignId,{drafts:true}):Promise.resolve([])]);
+   const [publishedRaw,preferences,drafts]=await Promise.all([store.listMaps(s.campaignId,{includeDeleted:true}),store.loadPreferences(s.campaignId),mode==='dm'?store.listMaps(s.campaignId,{drafts:true}):Promise.resolve([])]);
    if(!allowed(s))return;s.preferences=preferences;
+   const retired=new Set(publishedRaw.filter(row=>row.deletedAt).map(row=>row.id)),published=publishedRaw.filter(row=>!row.deletedAt);
    const all=new Map(published.map(row=>[row.id,{id:row.id,title:row.title,published:true}]));
    for(const row of drafts)if(!all.has(row.id))all.set(row.id,{id:row.id,title:row.title,published:false});
    s.maps=[...all.values()];sortMaps(s);
-   const selected=requestedMapId&&/^[A-Za-z0-9_-]{1,100}$/.test(requestedMapId)&&(mode==='dm'||published.some(row=>row.id===requestedMapId))?requestedMapId:mainMapId(s)||s.maps[0]?.id||'main';
+   const selected=requestedMapId&&!retired.has(requestedMapId)&&/^[A-Za-z0-9_-]{1,100}$/.test(requestedMapId)&&(mode==='dm'||published.some(row=>row.id===requestedMapId))?requestedMapId:mainMapId(s)||s.maps[0]?.id||(mode==='dm'&&retired.has('main')?crypto.randomUUID():'main');
    s.mapId=selected;s.store=createCampaignMapStore(sdk,{mapId:selected});
    const newMap=mode==='dm'&&!!requestedMapId&&!all.has(selected);
    if(newMap){if(s.maps.length>=50)throw Error('This campaign already has 50 maps. Choose an existing map.');s.maps.push({id:selected,title:'New map',published:false});}

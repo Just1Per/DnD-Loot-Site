@@ -17,6 +17,7 @@ function createCampaignOneShotStore(sdk){
   return {
    async list(){uid();const result=await getDocs(collection(db,...root));return result.docs.map(row=>({...row.data(),id:row.id}));},
    async load(_,kind,id){uid();const row=await getDoc(doc(db,...root,valid(id)));if(!row.exists())throw Error('Encounter not found.');const record={...row.data(),id};record.privateNotes=record.data.runNotes||'';return record;},
+   async remove({id,revision,isCurrent=()=>true}){const actor=uid();if(!Number.isInteger(revision)||revision<1)throw Error('Choose a saved encounter.');return runTransaction(db,async tx=>{const target=doc(db,...root,valid(id)),shot=await tx.get(doc(db,...base(campaignId,shotId))),record=await tx.get(target);if(auth.currentUser?.uid!==actor||!isCurrent())throw Error('Campaign access changed.');if(!shot.exists()||!record.exists()||record.data().revision!==revision)throw Error('The adventure or encounter changed. Refresh before deleting.');tx.delete(target);return {id,deleted:true};});},
    async save({id,revision,input}){const actor=uid(),fields=normalizer.normalize('encounter',input);return runTransaction(db,async tx=>{
     const target=doc(db,...root,valid(id)),snapshot=await tx.get(target),old=snapshot.data();
     if((old?.revision||0)!==revision)throw Error('Encounter changed in another window. Reload after copying your draft.');

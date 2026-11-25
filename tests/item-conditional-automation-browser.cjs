@@ -7,7 +7,7 @@ const assert=require('node:assert/strict'),{chromium}=require(process.env.PLAYWR
   const d=sheetSession.data;Object.assign(d.build,{edition:'2014',race:'human',classId:'bard',scoreMode:'base'});d.spellAbility='int';d.adobe.classLevels=[{classId:'bard',level:3},{classId:'wizard',level:1}];d.equipmentState.acMode='equipment';
   items=[{id:'staff',name:'Blackstaff',source:'WDH',edition:'2014',attunement:true,properties:[]},{id:'mask',name:"Jester's Mask",source:'BMT',edition:'2014',attunement:true,properties:[]}];inventory=items.map(item=>({id:item.id,itemId:item.id,characterId:'c1',userId:'player',quantity:1}));d.equipmentState.loadout=inventory.map(row=>({id:row.id,equipped:true,attuned:true}));
   d.spells=[['Fire Bolt','wizard'],['Vicious Mockery','bard']].map(([name,classId])=>({...CharacterCatalog.spellRow(CharacterCatalog.data.spells.find(s=>s.name===name&&s.edition==='2014')),classId}));d.actions=d.spells.map(s=>({kind:'spell',ref:s.catalogId+'::'+s.classId}));
-  
+
   window.itemStats=()=>{const r=CharacterSheetModel.derive(sheetSession.data,4,sheetEquipmentLoot());return{ac:r.ac,save:r.saves.dex,hit:r.actions[0].hit,dc:r.actions[1].hit,primary:r.spellAttack};};renderCharacterSheet();window.beforeItemApproval=itemStats();window.itemKept=JSON.stringify({items,inventory,hp:d.hpCurrent,slots:d.slots,coins:d.coins});
  });
  const host=page.locator('#sheetAdobeView'),paper=host.locator('[data-continuous-page="page-3"]'),menu=page.locator('#sheetPaperMagicMenu'),info=page.locator('#sheetInventoryItemInformation');

@@ -34,3 +34,15 @@ A 50 MiB original uses 100 chunks, one manifest, and about 66.7 MiB of additiona
 - `tests/campaign-map-media-rules.cjs`: actual Firestore permissions for private preparation, published original/overview/pin access even when the supplied Storage reader always refuses, schema/size/MIME/chunk bounds, immutable completion, map isolation, replacements, hidden pins, membership revocation and deletion.
 - `tests/campaign-map-media-browser.cjs`: existing main/named map repair, failure feedback, no source reupload, unchanged draft/publication records, working player/DM display with Storage denied, place pictures, zoom and mobile layout.
 - `tests/map-preview-loading-browser.cjs`: unchanged original hash and dimensions, bounded overview, copy-only player requests, original on zoom, cache/fallback/race cleanup and mobile/WCAG. Existing map, named-map, region and route suites remain enabled.
+
+## Legacy file types and partial repair — 25 November 2026
+
+The DM can see an old Storage original even while players and player preview cannot: those views deliberately require its protected image copy. A repair that stops at “4 of 13” with `map-media/invalid` and “Choose a PNG, JPEG or WebP” is failing image validation, rather than proving a missing Firestore permission.
+
+Older valid images may have an empty, nonstandard or `application/octet-stream` Storage content type. Repair now recognizes PNG, JPEG and WebP binary headers in that case and writes the correct MIME type on the protected copy. Original bytes, checksum, dimensions, quality and Storage metadata are unchanged. Unsupported formats, empty files and files exceeding the existing size bounds remain errors. Diagnostics name the map image/overview or the affected place picture, its reported type and byte size.
+
+Repair continues past individual invalid, missing or oversized images and reports how many succeeded. One broken picture no longer prevents the remaining images being prepared. Replace the specifically named picture through Edit place when its actual format/size is unsupported. Permission/session failures still stop repair. Publishing still refuses incomplete image preparation, preserving the existing publication.
+
+A failed pin image now gets a separate retry box and a DM-only Repair this picture action/details. The place name and description stay readable and are never replaced in saved data by an image error. A player receives a short retry/help message rather than Firestore configuration instructions.
+
+No broader image permissions are needed for MIME normalization. The new DM content deletion controls have separate accompanying Firestore rules, described in [campaign content management](campaign-content-management.md).

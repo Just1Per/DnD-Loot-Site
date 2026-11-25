@@ -38,13 +38,24 @@ function createCampaignMapMedia(sdk) {
  function encode(bytes) {
   let text='';for(let i=0;i<bytes.length;i+=8192)text+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(text);
  }
+ async function normalizeImageBlob(blob,{place=false}={}) {
+  const size=Number(blob?.size),reported=typeof blob?.type==='string'?blob.type:'',limit=place?'under 5 MB':'up to 50 MB';
+  if(!Number.isFinite(size)||size<1||size>maxSize||place&&size>=5*1024*1024)throw error('invalid','Image size '+(Number.isFinite(size)?size+' bytes':'unknown')+' is outside the size limit ('+limit+').');
+  if(types.includes(reported))return blob;
+  // Older Storage objects may have no content type or application/octet-stream.
+  // Detect only the three supported binary formats; preserve every source byte.
+  const head=new Uint8Array(await blob.slice(0,12).arrayBuffer()),at=(...values)=>values.every((value,index)=>head[index]===value);
+  const detected=at(137,80,78,71,13,10,26,10)?'image/png':at(255,216,255)?'image/jpeg':at(82,73,70,70)&&head[8]===87&&head[9]===69&&head[10]===66&&head[11]===80?'image/webp':'';
+  if(!detected)throw error('invalid','Unsupported image type '+(reported||'(missing)')+' ('+size+' bytes). Use PNG, JPEG or WebP within the size limit ('+limit+').');
+  return new Blob([blob],{type:detected});
+ }
  async function ensure({campaignId,mapId='main',path,blob,isCurrent=()=>true,onProgress=()=>{}}) {
   const check=guard(isCurrent),bound=await reference(campaignId,mapId,path);check();
   const snapshot=await sdk.getDoc(bound.ref);check();
   if(snapshot.exists()&&validate(snapshot.data(),path,bound).ready)return;
   if(!blob)blob=await sdk.getBlob(sdk.ref(sdk.storage,path),bound.kind==='place'?5*1024*1024:maxSize);
   check();
-  if(!types.includes(blob.type)||blob.size<1||blob.size>maxSize||(bound.kind==='place'&&blob.size>=5*1024*1024))throw error('invalid','Choose a PNG, JPEG or WebP within the map image size limit.');
+  blob=await normalizeImageBlob(blob,{place:bound.kind==='place'});check();
   const bytes=new Uint8Array(await blob.arrayBuffer());check();
   const sha256=await hash(bytes);check();
   const copy={path,kind:bound.kind,pinId:bound.pinId,contentType:blob.type,size:bytes.length,parts:Math.ceil(bytes.length/partSize),sha256,ready:false};
@@ -90,6 +101,6 @@ function createCampaignMapMedia(sdk) {
   if(digest!==copy.sha256)throw error('invalid','The map image copy differs from its checksum. Ask the DM to repair image access.');
   return blob;
  }
- return {scope,reference,ensure,load,partSize,maxSize};
+ return {scope,reference,normalizeImageBlob,ensure,load,partSize,maxSize};
 }
 if(typeof module!=='undefined')module.exports={createCampaignMapMedia};

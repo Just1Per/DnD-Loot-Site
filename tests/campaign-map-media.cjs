@@ -41,3 +41,13 @@ test('Missing, invalid, truncated and checksum-mismatched copies fail explicitly
  docs.delete(bound.chunk(0));await assert.rejects(media.load({campaignId:'a',path}),/incomplete/);
  for(const bad of [new Blob([],{type:'image/png'}),new Blob(['x'],{type:'text/plain'}),new Blob([new Uint8Array(5*1024*1024)],{type:'image/png'})])await assert.rejects(media.ensure({campaignId:'a',path:'campaign-map-place-images/a/town/bad',blob:bad}),/size limit/);
 });
+
+test('Legacy binary image headers recover missing, octet-stream and nonstandard MIME metadata without changing bytes or originals',async()=>{
+ for(const [bytes,type]of [[new Uint8Array([137,80,78,71,13,10,26,10,0,0,0,0]),'image/png'],[new Uint8Array([255,216,255,224,0,16]),'image/jpeg'],new Uint8Array([82,73,70,70,4,0,0,0,87,69,66,80])].map(row=>Array.isArray(row)?row:[row,'image/webp']))for(const declared of ['','application/octet-stream','image/jpg']){
+  const {media,sdk}=fixture(),path='campaign-map-place-images/a/town/legacy',original=new Blob([bytes],{type:declared});sdk.getBlob=async()=>original;await media.ensure({campaignId:'a',path});const repaired=await media.load({campaignId:'a',path});assert.equal(repaired.type,type);assert.deepEqual(new Uint8Array(await repaired.arrayBuffer()),bytes);assert.equal(original.type,declared,'original metadata is never rewritten');
+ }
+});
+test('Unsupported legacy pictures report actual type/size while keeping private byte and authentication bounds',async()=>{
+ const {media,sdk,docs}=fixture();for(const blob of [new Blob(['<svg/>'],{type:'image/svg+xml'}),new Blob(['not a supported image'],{type:'application/octet-stream'})]){await assert.rejects(media.normalizeImageBlob(blob,{place:true}),error=>/Unsupported image type/.test(error.message)&&error.message.includes(blob.type)&&error.message.includes(blob.size+' bytes'));}assert.equal(docs.size,0);
+ const png=new Blob([new Uint8Array([137,80,78,71,13,10,26,10])],{type:''});const slice=png.slice.bind(png);png.slice=(...args)=>{sdk.auth.currentUser={uid:'other'};return slice(...args);};await assert.rejects(media.ensure({campaignId:'a',path:'campaign-maps/a/context',blob:png}),/access changed/);assert.equal(docs.size,0);
+});

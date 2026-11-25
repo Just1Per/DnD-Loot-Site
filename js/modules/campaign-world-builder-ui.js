@@ -199,5 +199,6 @@ var WorldPostLayouts=(()=>{
   s.worldKnown.add(s.record.id);if(published)s.worldPublications.set(s.record.id,published);else s.worldPublications.delete(s.record.id);
   W.renderList();
  };
+ config.onDeleted=(s,record)=>{s.worldPublications?.delete(record.id);s.worldKnown?.delete(record.id);worldPane(s,false);};
  config.onClear=s=>{++s.worldSharingRequest;s.worldUnsubscribe?.();};
 })();
