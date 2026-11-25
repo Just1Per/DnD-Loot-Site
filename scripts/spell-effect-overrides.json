@@ -150,10 +150,6 @@
     "damage": "+1d6 Force/attack-roll hit",
     "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
   },
-  "Hex": {
-    "damage": "+1d6 Necrotic/attack hit",
-    "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
-  },
   "Etherealness": {
     "damage": "If expelled from an occupied space: 2 Force/ft moved",
     "scaling": ""
@@ -592,5 +588,13 @@
     "damage": "1d6 Fire; each eligible target once/turn",
     "area": "Within 5 ft during your movement",
     "scaling": "+1d6 damage and +5 ft speed/SL above 3; base speed +20 ft"
+  },
+  "Hex|PHB": {
+    "damage": "+1d6 Necrotic/your attack hit on cursed target",
+    "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr; Concentration"
+  },
+  "Hex|XPHB": {
+    "damage": "+1d6 Necrotic/your attack-roll hit on cursed target",
+    "scaling": "SL 2: 4 hr; SL 3–4: 8 hr; SL 5+: 24 hr; Concentration"
   }
 }

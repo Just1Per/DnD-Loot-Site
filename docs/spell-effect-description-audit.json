@@ -5633,8 +5633,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "+1d6 Necrotic/attack hit",
-        "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
+        "damage": "+1d6 Necrotic/your attack hit on cursed target",
+        "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr; Concentration"
       },
       "missingDamage": false,
       "missingArea": false
@@ -5647,8 +5647,8 @@
       "damageExpected": true,
       "areaExpected": false,
       "facts": {
-        "damage": "+1d6 Necrotic/attack hit",
-        "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
+        "damage": "+1d6 Necrotic/your attack-roll hit on cursed target",
+        "scaling": "SL 2: 4 hr; SL 3–4: 8 hr; SL 5+: 24 hr; Concentration"
       },
       "missingDamage": false,
       "missingArea": false

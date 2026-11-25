@@ -22,9 +22,9 @@
     "supplementClassListCorrections": 122,
     "spellDamageFacts": 393,
     "spellAreaFacts": 337,
-    "spellActionFormulas": 297,
+    "spellActionFormulas": 299,
     "spellHealingFormulas": 16,
-    "manualDamageReferences": 71,
+    "manualDamageReferences": 69,
     "itemFacts": 1278,
     "itemPowerResourceAdapters": 2,
     "itemPowerResourceCounters": 4,
@@ -11592,9 +11592,42 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "durationBySlot": {
+        "1": "Concentration, up to 1 hour",
+        "3": "Concentration, up to 8 hours",
+        "5": "Concentration, up to 24 hours"
+      },
+      "effectChoices": [
+        {
+          "id": "str",
+          "label": "STR checks cursed · attack hit rider"
+        },
+        {
+          "id": "dex",
+          "label": "DEX checks cursed · attack hit rider"
+        },
+        {
+          "id": "con",
+          "label": "CON checks cursed · attack hit rider"
+        },
+        {
+          "id": "int",
+          "label": "INT checks cursed · attack hit rider"
+        },
+        {
+          "id": "wis",
+          "label": "WIS checks cursed · attack hit rider"
+        },
+        {
+          "id": "cha",
+          "label": "CHA checks cursed · attack hit rider"
+        }
+      ],
       "compoundDamage": false,
-      "manualDamageReference": true
+      "actionRange": "Hit against cursed target",
+      "actionSave": "",
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-128df13c1e54ffaa",
@@ -11603,7 +11636,41 @@
       "hasDamageFacts": true,
       "hasAreaFacts": false,
       "actionDamageFormula": true,
+      "durationBySlot": {
+        "1": "Concentration, up to 1 hour",
+        "2": "Concentration, up to 4 hours",
+        "3": "Concentration, up to 8 hours",
+        "5": "Concentration, up to 24 hours"
+      },
+      "effectChoices": [
+        {
+          "id": "str",
+          "label": "STR checks cursed · attack hit rider"
+        },
+        {
+          "id": "dex",
+          "label": "DEX checks cursed · attack hit rider"
+        },
+        {
+          "id": "con",
+          "label": "CON checks cursed · attack hit rider"
+        },
+        {
+          "id": "int",
+          "label": "INT checks cursed · attack hit rider"
+        },
+        {
+          "id": "wis",
+          "label": "WIS checks cursed · attack hit rider"
+        },
+        {
+          "id": "cha",
+          "label": "CHA checks cursed · attack hit rider"
+        }
+      ],
       "compoundDamage": false,
+      "actionRange": "Hit against cursed target",
+      "actionSave": "",
       "manualDamageReference": false
     },
     {
@@ -11771,9 +11838,10 @@
       "edition": "2014",
       "hasDamageFacts": true,
       "hasAreaFacts": false,
-      "actionDamageFormula": false,
+      "actionDamageFormula": true,
+      "specialActionAdapter": "hunters-mark",
       "compoundDamage": false,
-      "manualDamageReference": true
+      "manualDamageReference": false
     },
     {
       "id": "Spell-xphb-700ff9749cf91cd8",
@@ -11782,6 +11850,7 @@
       "hasDamageFacts": true,
       "hasAreaFacts": false,
       "actionDamageFormula": true,
+      "specialActionAdapter": "hunters-mark",
       "compoundDamage": false,
       "manualDamageReference": false
     },

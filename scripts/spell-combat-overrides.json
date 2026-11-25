@@ -4736,6 +4736,201 @@
           "actionRange": "Afflicted creature"
         }
       }
+    },
+    "Hex": {
+      "bySource": {
+        "PHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "types": [
+            "necrotic"
+          ],
+          "noDamageUpcast": true,
+          "durationBySlot": {
+            "1": "Concentration, up to 1 hour",
+            "3": "Concentration, up to 8 hours",
+            "5": "Concentration, up to 24 hours"
+          },
+          "actionRange": "Hit against cursed target",
+          "notes": [
+            "Bonus Action casting; choose one visible creature within 90 ft and one ability. Only your attack hit against that actual cursed target adds 1d6 Necrotic. Resolve the original attack separately; neither slot level nor character level increases this die. The selected ability’s checks have Disadvantage; its saves and attack rolls do not inherit that penalty. If the target reaches 0 HP, a Bonus Action on a later turn can transfer the curse. Remove Curse cast on this target ends this spell. Choosing a reference does not cast, establish Concentration, curse a target, spend slots or add a penalty to your own sheet."
+          ],
+          "effects": [
+            {
+              "id": "str",
+              "label": "STR checks cursed · attack hit rider",
+              "shortLabel": "STR checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s STR ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "dex",
+              "label": "DEX checks cursed · attack hit rider",
+              "shortLabel": "DEX checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s DEX ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "con",
+              "label": "CON checks cursed · attack hit rider",
+              "shortLabel": "CON checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s CON ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "int",
+              "label": "INT checks cursed · attack hit rider",
+              "shortLabel": "INT checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s INT ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "wis",
+              "label": "WIS checks cursed · attack hit rider",
+              "shortLabel": "WIS checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s WIS ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "cha",
+              "label": "CHA checks cursed · attack hit rider",
+              "shortLabel": "CHA checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s CHA ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            }
+          ]
+        },
+        "XPHB": {
+          "damage": null,
+          "upcast": null,
+          "scaling": null,
+          "attack": false,
+          "addAbility": false,
+          "actionSave": "",
+          "automatic": true,
+          "types": [
+            "necrotic"
+          ],
+          "noDamageUpcast": true,
+          "durationBySlot": {
+            "1": "Concentration, up to 1 hour",
+            "2": "Concentration, up to 4 hours",
+            "3": "Concentration, up to 8 hours",
+            "5": "Concentration, up to 24 hours"
+          },
+          "actionRange": "Hit against cursed target",
+          "notes": [
+            "Bonus Action casting; choose one visible creature within 90 ft and one ability. Only your attack-roll hit against that actual cursed target adds 1d6 Necrotic. Resolve the original attack separately; neither slot level nor character level increases this die. The selected ability’s checks have Disadvantage; its saves and attack rolls do not inherit that penalty. If the target reaches 0 HP, a Bonus Action on a later turn can transfer the curse. Choosing a reference does not cast, establish Concentration, curse a target, spend slots or add a penalty to your own sheet."
+          ],
+          "effects": [
+            {
+              "id": "str",
+              "label": "STR checks cursed · attack hit rider",
+              "shortLabel": "STR checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s STR ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "dex",
+              "label": "DEX checks cursed · attack hit rider",
+              "shortLabel": "DEX checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s DEX ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "con",
+              "label": "CON checks cursed · attack hit rider",
+              "shortLabel": "CON checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s CON ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "int",
+              "label": "INT checks cursed · attack hit rider",
+              "shortLabel": "INT checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s INT ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "wis",
+              "label": "WIS checks cursed · attack hit rider",
+              "shortLabel": "WIS checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s WIS ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            },
+            {
+              "id": "cha",
+              "label": "CHA checks cursed · attack hit rider",
+              "shortLabel": "CHA checks",
+              "combat": {
+                "damage": "1d6",
+                "notes": [
+                  "Chosen when casting: Disadvantage on the target’s CHA ability checks only. This is not a saving-throw penalty."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Hunter's Mark": {
+      "bySource": {
+        "PHB": {
+          "specialAction": "hunters-mark"
+        },
+        "XPHB": {
+          "specialAction": "hunters-mark"
+        }
+      }
     }
   }
 }
