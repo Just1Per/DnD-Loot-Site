@@ -28,12 +28,16 @@ function setSheetEquipmentChoice(id,key,value){
  readSheetForm();const s=sheetSession,owned=sheetEquipmentLoot(),entry=owned.find(e=>e.id===id)||personalGearEntries(true).find(e=>e.id===id);if(!entry)return;
  if(['equipped','attuned'].includes(key)&&value&&!owned.some(e=>e.id===id))return sheetStatus('Carry this item before wearing or attuning it.',true);
  if(key==='equipped'&&value&&CharacterCompanionEquipment.carrier(s.data,id)>=0){refreshCharacterSheetInventory();return sheetStatus('Move this item back from its companion before equipping it.',true);}
+ if(key==='attuned'&&value){
+  if(!CharacterMagicItems.requiresAttunement(entry.item))return;
+  const requirement=CharacterMagicItems.attunementRequirement(s.data,entry.item,CharacterAdobeEngine.level(s.data,s.identity.level),owned);
+  if(requirement&&!requirement.eligible){refreshCharacterSheetInventory();return sheetStatus(requirement.message,true);}
+ }
  const state=s.data.equipmentState,m=CharacterEquipment.infer(entry.item);let choice=state.loadout.find(v=>v.id===id);
  if(!choice){if(state.loadout.length>=200)return sheetStatus('Equipment selection limit reached.',true);choice=CharacterEquipment.choices({loadout:[{id}]}).loadout[0];state.loadout.push(choice);}
  if(key==='attuned'&&value&&!choice.attuned){
-  if(!CharacterMagicItems.requiresAttunement(entry.item))return;
-  const count=state.loadout.filter(v=>v.attuned&&owned.some(e=>e.id===v.id&&CharacterMagicItems.requiresAttunement(e.item))).length;
-  const limit=CharacterEquipment.attunementLimit(s.data,s.identity.level);
+  const level=CharacterAdobeEngine.level(s.data,s.identity.level);
+  const {count,limit}=CharacterEquipment.attunementState(s.data,owned,level);
   if(count>=limit){refreshCharacterSheetInventory();return sheetStatus('You already have '+(limit===3?'three':limit)+' attuned items. End one attunement first.',true);}
  }
  choice[key]=value;

@@ -18,8 +18,8 @@ var CharacterToolChecks=(()=>{
   const expertise=context.effects?.runeToolExpertise&&(proficient||recognized&&row.rank>=1)||training?.expertise||(context.classExpertise?.tools||[]).some(tool=>same(tool.name));
   const automaticRank=expertise?2:proficient?1:0,rank=Math.max(row.rank,automaticRank),pb=Number(context.pb)||0;
   const half=!rank?untrained(pb,context.effects,ability):0;
-  const contribution=rank?pb*rank:half,modifier=ability?(Number(context.mods?.[ability])||0)+(Number(context.effects?.abilityCheckBonuses?.[ability])||0):null;
-  return {...row,toolName,ability,automaticRank,rank,manualRank:row.rank,contribution,modifier,total:ability?modifier+contribution+row.bonus:null,trainingLabel:rank===2?'Expertise':rank===1?'Proficient':half?'Half proficiency':'Untrained'};
+  const contribution=rank?pb*rank:half,modifier=ability?(Number(context.mods?.[ability])||0)+(Number(context.effects?.abilityCheckBonuses?.[ability])||0)+(Number(context.effects?.itemAbilityCheckBonus)||0):null;
+  return {...row,toolName,ability,...(ability&&context.effects?.checkAdvantages?.includes(ability)?{advantageGranted:true}:{}),automaticRank,rank,manualRank:row.rank,contribution,modifier,total:ability?modifier+contribution+row.bonus:null,trainingLabel:rank===2?'Expertise':rank===1?'Proficient':half?'Half proficiency':'Untrained'};
  }
  function edit(raw,field,value,context={}){
   const out=normalize(raw),current=project(out,context);
@@ -34,7 +34,7 @@ var CharacterToolChecks=(()=>{
   return out;
  }
  const signed=n=>(n>=0?'+':'')+n;
- function describe(row){return row.name+' — '+(row.ability?row.ability.toUpperCase()+' '+signed(row.modifier):'Choose an ability')+' · '+row.trainingLabel+' '+signed(row.contribution)+(row.bonus?' · adjustment '+signed(row.bonus):'')+' · '+(row.total===null?'No check total until an ability is chosen':'Check bonus '+signed(row.total));}
+ function describe(row){return row.name+' — '+(row.ability?row.ability.toUpperCase()+' '+signed(row.modifier):'Choose an ability')+' · '+row.trainingLabel+' '+signed(row.contribution)+(row.bonus?' · adjustment '+signed(row.bonus):'')+' · '+(row.total===null?'No check total until an ability is chosen':'Check bonus '+signed(row.total))+(row.advantageGranted?' · Advantage granted; resolve any Disadvantage at the table':'');}
  return {abilities,normalize,project,untrained,edit,describe};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterToolChecks;

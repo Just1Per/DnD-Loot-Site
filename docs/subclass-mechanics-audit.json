@@ -1,6 +1,7 @@
 {
   "format": 1,
-  "generatedAt": "2026-11-09T07:39:17.888Z",
+  "generatedAt": "2026-11-23T11:59:59.109Z",
+  "statusPolicy": "partial-mechanics includes implemented adapters requiring table decisions; it is not an unimplemented-feature count.",
   "summary": {
     "total": 186,
     "partialMechanics": 186,
@@ -58,7 +59,9 @@
         "total": 18,
         "partialMechanics": 18
       }
-    }
+    },
+    "implementedAdapters": 186,
+    "missingAdapters": 0
   },
   "subclasses": [
     {
@@ -91,6 +94,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -123,6 +129,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -155,6 +164,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -187,6 +199,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -219,6 +234,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -251,6 +269,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -283,6 +304,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -315,6 +339,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -347,6 +374,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -379,6 +409,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -411,6 +444,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -443,6 +479,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -475,6 +514,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -507,6 +549,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -539,6 +584,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -571,6 +619,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -603,6 +654,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -635,6 +689,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -667,6 +724,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -699,6 +759,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -731,6 +794,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -763,6 +829,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -795,6 +864,9 @@
         "Targets, aura membership, reaction timing and duration remain table decisions.",
         "Ally events and externally applied temporary HP are resolved using the feature instructions; the sheet does not observe another character’s state."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -826,6 +898,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -857,6 +932,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -888,6 +966,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -919,6 +1000,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -950,6 +1034,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -981,6 +1068,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1012,6 +1102,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1043,6 +1136,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1074,6 +1170,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1105,6 +1204,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1136,6 +1238,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1167,6 +1272,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1198,6 +1306,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1229,6 +1340,9 @@
         "Targets, recipient Inspiration dice, spell focus eligibility and reaction timing remain table decisions.",
         "Companion command turns and external ally effects are described but not applied to another character automatically."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1263,6 +1377,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1297,6 +1414,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1331,6 +1451,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1365,6 +1488,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1399,6 +1525,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1433,6 +1562,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1467,6 +1599,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1500,6 +1635,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1531,6 +1669,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1565,6 +1706,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1596,6 +1740,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1630,6 +1777,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1664,6 +1814,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1698,6 +1851,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1732,6 +1888,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1766,6 +1925,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1797,6 +1959,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1831,6 +1996,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1865,6 +2033,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1896,6 +2067,9 @@
         "Target saves, aura membership, ally reactions and recipient HP/conditions remain explicit table decisions.",
         "Duration controls must be ended at the table-specified time; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1929,6 +2103,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1962,6 +2139,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -1995,6 +2175,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2031,6 +2214,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2063,6 +2249,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2096,6 +2285,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2128,6 +2320,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2160,6 +2355,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2193,6 +2391,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2225,6 +2426,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2258,6 +2462,9 @@
         "Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.",
         "Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2291,6 +2498,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2324,6 +2534,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2357,6 +2570,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2390,6 +2606,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2423,6 +2642,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2456,6 +2678,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2489,6 +2714,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2522,6 +2750,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2555,6 +2786,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2588,6 +2822,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2621,6 +2858,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2654,6 +2894,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2687,6 +2930,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2720,6 +2966,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2753,6 +3002,9 @@
         "Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.",
         "End active rune and turn effects with the duration controls; there is no encounter clock."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2785,6 +3037,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2817,6 +3072,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2849,6 +3107,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2881,6 +3142,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2913,6 +3177,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2945,6 +3212,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -2977,6 +3247,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3009,6 +3282,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3041,6 +3317,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3073,6 +3352,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3105,6 +3387,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3137,6 +3422,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3169,6 +3457,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3201,6 +3492,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3233,6 +3527,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3270,6 +3567,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3302,6 +3602,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3334,6 +3637,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3366,6 +3672,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3398,6 +3707,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3430,6 +3742,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3462,6 +3777,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3494,6 +3812,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3526,6 +3847,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3558,6 +3882,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3590,6 +3917,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3622,6 +3952,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3654,6 +3987,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3686,6 +4022,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3718,6 +4057,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3750,6 +4092,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3782,6 +4127,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3814,6 +4162,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3846,6 +4197,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3878,6 +4232,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3910,6 +4267,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3942,6 +4302,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -3974,6 +4337,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4006,6 +4372,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4038,6 +4407,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4070,6 +4442,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4102,6 +4477,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4134,6 +4512,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4166,6 +4547,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4198,6 +4582,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4230,6 +4617,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4262,6 +4652,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4294,6 +4687,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4326,6 +4722,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4358,6 +4757,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4390,6 +4792,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4422,6 +4827,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4454,6 +4862,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4486,6 +4897,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4518,6 +4932,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4550,6 +4967,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4582,6 +5002,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4615,6 +5038,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4647,6 +5073,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4679,6 +5108,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4712,6 +5144,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4745,6 +5180,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4777,6 +5215,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4809,6 +5250,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4842,6 +5286,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4875,6 +5322,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4907,6 +5357,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4939,6 +5392,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -4972,6 +5428,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5005,6 +5464,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5037,6 +5499,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5069,6 +5534,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5101,6 +5569,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5133,6 +5604,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5165,6 +5639,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5198,6 +5675,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5231,6 +5711,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5264,6 +5747,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5296,6 +5782,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5329,6 +5818,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5362,6 +5854,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5395,6 +5890,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5427,6 +5925,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5460,6 +5961,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5492,6 +5996,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5524,6 +6031,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5556,6 +6066,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5589,6 +6102,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5622,6 +6138,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5654,6 +6173,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5686,6 +6208,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5719,6 +6244,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5751,6 +6279,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5784,6 +6315,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5817,6 +6351,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5850,6 +6387,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5883,6 +6423,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5916,6 +6459,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5948,6 +6494,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -5981,6 +6530,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -6014,6 +6566,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -6047,6 +6602,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     },
     {
@@ -6080,6 +6638,9 @@
         "Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.",
         "Explicit activation/end controls apply self effects; no encounter clock is inferred."
       ],
+      "implementation": "adapter",
+      "tableResolutionRequired": true,
+      "statusReason": "Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.",
       "status": "partial-mechanics"
     }
   ]

@@ -15,7 +15,8 @@
     "area": "Within 5 ft of spirits"
   },
   "Control Water": {
-    "area": "Up to 100-ft cube"
+    "area": "Up to 100-ft cube",
+    "damage": "Whirlpool 2d8 Bludgeoning; other modes have no creature damage formula"
   },
   "Cordon of Arrows": {
     "area": "Within 30 ft of ammunition"
@@ -51,7 +52,8 @@
     "area": "Within 10 ft of target"
   },
   "Melf's Minute Meteors": {
-    "area": "Within 5 ft of each burst"
+    "area": "Within 5 ft of each burst",
+    "scaling": "+2 meteors/SL above 3"
   },
   "Mordenkainen's Private Sanctum": {
     "area": "Up to 100-ft cube"
@@ -148,14 +150,6 @@
     "damage": "+1d6 Force/attack-roll hit",
     "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
   },
-  "Hex": {
-    "damage": "+1d6 Necrotic/attack hit",
-    "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr"
-  },
-  "Armor of Agathys": {
-    "damage": "5 Cold to melee attacker while its temporary HP remain",
-    "scaling": "+5 Cold and temporary HP/SL above 1"
-  },
   "Etherealness": {
     "damage": "If expelled from an occupied space: 2 Force/ft moved",
     "scaling": ""
@@ -223,7 +217,7 @@
     "scaling": ""
   },
   "Blade of Disaster|FRHoF": {
-    "damage": "10d6 Force/hit; critical on 18–20",
+    "damage": "10d6 Force/hit; critical on 18–20 deals 20d6 total",
     "scaling": ""
   },
   "Absorb Elements": {
@@ -247,7 +241,8 @@
     "scaling": ""
   },
   "Crown of Stars": {
-    "area": "Light: 30-ft bright +30-ft dim with 4+ motes; otherwise 5-ft dim"
+    "area": "Light: 30-ft bright +30-ft dim with 4+ motes; otherwise 5-ft dim",
+    "scaling": "+2 motes/SL above 7"
   },
   "Cure Wounds|PHB": {
     "damage": "Heal 1d8+SC HP",
@@ -509,5 +504,97 @@
   "Witch Bolt|XPHB": {
     "damage": "Initial: 2d12 Lightning; later bonus action: 1d12",
     "scaling": "Initial hit only: +1d12/SL above 1"
+  },
+  "Frost Fingers": {
+    "scaling": "+1d8/SL above 1"
+  },
+  "Ice Storm|PHB": {
+    "scaling": "+1d8 Bludgeoning/SL above 4"
+  },
+  "Ice Storm|XPHB": {
+    "scaling": "+1d10 Bludgeoning/SL above 4"
+  },
+  "Negative Energy Flood|AU": {
+    "scaling": "+1d10/SL above 5"
+  },
+  "Contact Other Plane": {
+    "damage": "Self on failed DC 15 INT save: 6d6 Psychic"
+  },
+  "Hail of Thorns|XPHB": {
+    "scaling": "+1d10/SL above 1; no 6d10 ceiling"
+  },
+  "Glyph of Warding": {
+    "damage": "Explosive rune: 5d8 Acid/Cold/Fire/Lightning/Thunder (choose)"
+  },
+  "Jallarzi's Storm of Radiance": {
+    "area": "10-ft-radius, 40-ft-high cylinder",
+    "scaling": "Each component +1d10/SL above 5"
+  },
+  "Storm Sphere|XGE": {
+    "damage": "Wind 2d6 Bludgeoning; bolt 4d6 Lightning/hit",
+    "scaling": "+1d6 to either event/SL above 4",
+    "area": "20-ft-radius sphere; bolt within 60 ft of its center"
+  },
+  "Illusory Dragon|XGE": {
+    "damage": "Breath 7d6 of chosen type; initial fear deals no HP damage",
+    "area": "60-ft cone from illusion",
+    "scaling": ""
+  },
+  "Illusory Dragon|AU": {
+    "damage": "Breath 6d6 of chosen type; initial fear deals no HP damage",
+    "area": "60-ft cone from illusion",
+    "scaling": ""
+  },
+  "Armor of Agathys|PHB": {
+    "damage": "5 Cold per qualifying melee hit; this casting’s temporary HP required",
+    "scaling": "+5 Cold and temporary HP/SL above 1"
+  },
+  "Armor of Agathys|XPHB": {
+    "damage": "5 Cold per qualifying melee hit; spell ends when no temporary HP remain",
+    "scaling": "+5 Cold and temporary HP/SL above 1"
+  },
+  "Magic Stone|XGE": {
+    "damage": "1d6+SC Bludgeoning per pebble hit",
+    "area": "1–3 pebbles; throw 60 ft or use a sling",
+    "scaling": ""
+  },
+  "Mental Prison|XGE": {
+    "damage": "Initial 5d10 Psychic on either save result; breach 10d10",
+    "scaling": ""
+  },
+  "Bestow Curse|PHB": {
+    "damage": "Chosen damage curse only: +1d8 Necrotic to your attack/spell damage",
+    "scaling": "SL 4: 10 min; 5–6: 8 hr; 7–8: 24 hr; 9: until dispelled; no Concentration at SL 5+"
+  },
+  "Bestow Curse|XPHB": {
+    "damage": "Chosen damage curse: +1d8 Necrotic after your attack-roll/spell damage",
+    "scaling": "SL 4: 10 min; 5–6: 8 hr; 7–8: 24 hr; 9: until dispelled; no Concentration at SL 5+"
+  },
+  "Elemental Bane|XGE": {
+    "damage": "+2d6 of chosen type per target’s first matching damage/turn",
+    "scaling": "+1 target/SL above 4; no extra damage dice"
+  },
+  "Crusader's Mantle|PHB": {
+    "damage": "+1d4 Radiant/weapon-attack hit",
+    "area": "30-ft-radius aura; you and nonhostile creatures",
+    "scaling": "No extra damage from higher slots"
+  },
+  "Crusader's Mantle|XPHB": {
+    "damage": "+1d4 Radiant/weapon or Unarmed Strike hit",
+    "area": "30-ft Emanation; you and allies",
+    "scaling": "No extra damage from higher slots"
+  },
+  "Ashardalon's Stride": {
+    "damage": "1d6 Fire; each eligible target once/turn",
+    "area": "Within 5 ft during your movement",
+    "scaling": "+1d6 damage and +5 ft speed/SL above 3; base speed +20 ft"
+  },
+  "Hex|PHB": {
+    "damage": "+1d6 Necrotic/your attack hit on cursed target",
+    "scaling": "SL 3–4: 8 hr; SL 5+: 24 hr; Concentration"
+  },
+  "Hex|XPHB": {
+    "damage": "+1d6 Necrotic/your attack-roll hit on cursed target",
+    "scaling": "SL 2: 4 hr; SL 3–4: 8 hr; SL 5+: 24 hr; Concentration"
   }
 }

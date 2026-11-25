@@ -1,12 +1,13 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
-const root=path.resolve(__dirname,'..'),errors=[];
+const root=path.resolve(__dirname,'..'),errors=[],mainNavigations=[];
 const app=fs.readFileSync(root+'/js/app.js','utf8');
 const mandatory=JSON.parse(app.match(/const FEATURE_FILES = (\[[\s\S]*?\]);/)[1]);
 assert.ok(!mandatory.includes('./modules/character-sheet-print.js'),'Print must not load/preload at startup');
 const loader=app.slice(app.indexOf('/** Load one shared-scope'),app.indexOf('// Preload downloads')).replaceAll('import.meta.url',JSON.stringify('https://fixture.example.test/js/app.js'));
 async function boot(browser){
  const page=await browser.newPage({viewport:{width:1440,height:1000}});page.setDefaultTimeout(7000);
+ const navigations=[];mainNavigations.push(navigations);page.on('framenavigated',frame=>{if(frame===page.mainFrame())navigations.push(frame.url());});
  page.on('pageerror',error=>errors.push(error.message));
  let html=fs.readFileSync(path.join(root,'index.html'),'utf8').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'').replace(/<link\b[^>]*href="([^"]*)"[^>]*>/gi,(tag,href)=>href.startsWith('css/')?'<style data-audit-file="'+href.split('?')[0]+'">'+fs.readFileSync(path.join(root,href.split('?')[0]),'utf8')+'\n/*# sourceURL='+href.split('?')[0]+' */</style>':tag);
  await page.route('https://fixture.example.test/**',route=>{const rel=new URL(route.request().url()).pathname.slice(1),file=path.join(root,rel);return route.fulfill(rel&&fs.existsSync(file)&&fs.statSync(file).isFile()?{path:file}:{contentType:'text/html',body:html})});await page.goto('https://fixture.example.test/',{waitUntil:'domcontentloaded'});
@@ -30,7 +31,11 @@ async function boot(browser){
  await page.evaluate(()=>openCharacterSheet('c1'));assert.match(await page.locator('#sheetStatus').textContent(),/Character tools could not load/);
  assert.equal(requests,1);assert.equal(await page.evaluate(()=>sheetSession),null);
  assert.equal(await page.locator('script[data-dnd-vault-module="./modules/character-sheet-print.js"]').count(),0);
- fail=false;await page.evaluate(()=>openCharacterSheet('c1'));await page.waitForSelector('#characterSheetForm');assert.equal(requests,2);
+ fail=false;await page.evaluate(()=>{window.printRetryOpening=openCharacterSheet('c1')});
+ // Observe the completed retry instead of keeping one evaluation pending through
+ // the remaining deferred-script execution. A real document navigation still fails below.
+ await page.waitForFunction(()=>sheetSession?.characterId==='c1'&&!!document.getElementById('characterSheetForm'));
+ await page.evaluate(()=>printRetryOpening);assert.equal(requests,2);
  const writes=await page.evaluate(()=>testWrites.length);await page.evaluate(()=>prepareSheetPrint());
  assert.ok(await page.locator('.sheet-paper-page').count()>0);assert.equal(await page.evaluate(()=>testWrites.length),writes);
  await page.evaluate(()=>{clearSheetPrintSelection();closeCharacterSheet(true);return openCharacterSheet('c1')});assert.equal(requests,2,'Reopening must reuse the loaded public code');
@@ -49,5 +54,6 @@ async function boot(browser){
   await delayed.evaluate(change=>{if(change==='account')auth.currentUser={uid:'other'};else if(change==='campaign')activeCampaign={id:'b'};else closeCharacterSheet(true)},change);
   resume();await delayed.evaluate(()=>openingSheet);assert.equal(await delayed.evaluate(()=>sheetSession),null);assert.equal(await delayed.locator('#characterSheetForm').count(),0);await delayed.close();
  }
- assert.deepEqual(errors,[]);console.log('PASS Print excluded from initial features; real deferred script, failure/retry, print output without writes, reuse, concurrent opens and late account/campaign/closed-sheet protection');
+ for(const navigations of mainNavigations)assert.deepEqual(navigations,['https://fixture.example.test/'],'deferred loading and retry must not replace the document');
+ assert.deepEqual(errors,[]);console.log('PASS Print excluded from initial features; real deferred script, failure/retry without document navigation, print output without writes, reuse, concurrent opens and late account/campaign/closed-sheet protection');
  }finally{await browser.close()}})().catch(error=>{console.error(error);process.exitCode=1});

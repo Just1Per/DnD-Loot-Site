@@ -29,9 +29,13 @@ const rows=coverage.subclasses.map(row=>({
   ...(druidIds.has(row.id)?{sourceReview:{revision:'b9061583536101068b3a59d27e886d1fa664e366',path:'class/class-druid.json',levels:row.edition==='2024'?'3–20':'2–20'},limitations:['Recipient effects, summon stat blocks/commands, visibility, lighting and durations remain table decisions.','Symbiotic temporary-HP replacement and other externally applied temporary HP require the explicit form/end controls.']}:{}),
   ...(fighterIds.has(row.id)?{sourceReview:{revision:'b9061583536101068b3a59d27e886d1fa664e366',path:'class/class-fighter.json + optionalfeatures.json',levels:'3–20'},limitations:['Targets, echo positions, maneuver attack eligibility and ally reactions remain table decisions.','End active rune and turn effects with the duration controls; there is no encounter clock.']}:{}),
   ...(later.has(row.id)?{sourceReview:{revision:'b9061583536101068b3a59d27e886d1fa664e366',path:'class/class-'+later.get(row.id)+'.json',levels:row.minimumLevel+'–20'},limitations:['Target state, timing, positioning, ally effects and duration boundaries require the concise feature instructions.','Explicit activation/end controls apply self effects; no encounter clock is inferred.']}:{}),
+  implementation:implemented.has(row.id)?'adapter':'reference-only',
+  tableResolutionRequired:implemented.has(row.id),
+  statusReason:implemented.has(row.id)?'Implemented adapter; targeting, timing, recipients and explicit durations require table resolution.':'No mechanics adapter.',
   status:implemented.has(row.id)?'partial-mechanics':'reference-only'
 }));
 const summary={total:rows.length,partialMechanics:rows.filter(row=>row.status==='partial-mechanics').length,referenceOnly:rows.filter(row=>row.status==='reference-only').length,byClass:Object.fromEntries([...new Set(rows.map(row=>row.classId))].map(classId=>[classId,{total:rows.filter(row=>row.classId===classId).length,partialMechanics:rows.filter(row=>row.classId===classId&&row.status==='partial-mechanics').length}]))};
-const output={format:1,generatedAt:new Date().toISOString(),summary,subclasses:rows};
+summary.implementedAdapters=rows.filter(row=>row.implementation==='adapter').length;summary.missingAdapters=rows.filter(row=>row.implementation!=='adapter').length;
+const output={format:1,generatedAt:new Date().toISOString(),statusPolicy:'partial-mechanics includes implemented adapters requiring table decisions; it is not an unimplemented-feature count.',summary,subclasses:rows};
 fs.writeFileSync(path.join(root,'docs/subclass-mechanics-audit.json'),JSON.stringify(output,null,2)+'\n');
 console.log(JSON.stringify(summary));

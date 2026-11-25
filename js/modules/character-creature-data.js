@@ -1,12 +1,13 @@
 'use strict';
 /* Adobe/MPMB base creature mechanics used by Companion/Familiar/Wild Shape pages. */
 var CharacterCreatureData = (() => {
-  const rows=[];
+  const rows=[],supplements=[];
   const byId=new Map(),byName=new Map();
   function add(batch){for(const row of batch||[]){if(!row?.id||byId.has(row.id))continue;rows.push(row);byId.set(row.id,row);const name=String(row.name||'').trim().toLowerCase();if(name&&!byName.has(name))byName.set(name,row)}}
+  function addSupplement(batch){for(const row of batch||[]){if(!row?.id||byId.has(row.id))continue;supplements.push(row);byId.set(row.id,row);byName.set(String(row.name||'').trim().toLowerCase(),row);}}
   const find=id=>byId.get(id)||byName.get(String(id||'').trim().toLowerCase())||null;
   const search=(query='')=>{const q=String(query).trim().toLowerCase();return q?rows.filter(row=>row.name.toLowerCase().includes(q)||String(row.type||'').toLowerCase().includes(q)):rows.slice()};
-  return {rows,add,find,search};
+  return {rows,supplements,add,addSupplement,find,search};
 })();
 if(typeof globalThis!=='undefined')globalThis.CharacterCreatureData=CharacterCreatureData;
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterCreatureData;

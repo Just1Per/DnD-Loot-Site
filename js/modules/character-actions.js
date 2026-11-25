@@ -2,14 +2,19 @@
 var CharacterActions = (()=>{
  const E=typeof CharacterEquipment!=='undefined'?CharacterEquipment:require('./character-equipment');
  const ab=['str','dex','con','int','wis','cha'],text=v=>String(v||'').slice(0,200),sign=n=>(n>=0?'+':'')+n;
- function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({...(typeof r?.id==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)?{id:r.id}:{}),kind:['loot','weapon','spell','racial','improvised','unarmed','grapple','shove','granted-spell'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name)}));}
+ function normalize(rows){return (Array.isArray(rows)?rows:[]).slice(0,60).map(r=>({...(typeof r?.id==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(r.id)?{id:r.id}:{}),kind:['loot','weapon','spell','racial','improvised','unarmed','grapple','shove','granted-spell'].includes(r?.kind)?r.kind:'improvised',ref:text(r?.ref),mode:['twoHanded','thrown','offhand','mounted'].includes(r?.mode)?r.mode:'normal',ability:ab.includes(r?.ability)?r.ability:'auto',slot:Math.max(0,Math.min(9,Math.trunc(Number(r?.slot)||0))),name:text(r?.name),...(typeof r?.effect==='string'&&/^[a-z0-9-]{1,60}$/.test(r.effect)?{effect:r.effect}:{})}));}
  const add=(dice,n)=>dice+(n?' '+(n<0?'−':'+')+' '+Math.abs(n):'');
  function diceAt(scales,level,fallback){const keys=Object.keys(scales||{}).map(Number).filter(k=>k<=level).sort((a,b)=>b-a);return keys.length?scales[keys[0]]:fallback;}
- function increase(base,extra,times){const a=/^(\d+)d(\d+)$/.exec(base),b=/^(\d+)d(\d+)$/.exec(extra||'');return a&&b&&a[2]===b[2]?`${Number(a[1])+Number(b[1])*times}d${a[2]}`:base;}
+ function increase(base,extra,times){
+  if(!times)return base;const term=/^(\d+)d(\d+)$/,inc=term.exec(extra||''),flat=/^\d{1,4}$/.test(String(extra)),parts=String(base).split(/\s*\+\s*/);if((!inc&&!flat)||!parts.every(part=>term.test(part)||/^\d+$/.test(part)))return base;
+  if(flat){const amount=Number(extra)*times,at=parts.findIndex(part=>/^\d+$/.test(part));if(at>=0)parts[at]=String(Number(parts[at])+amount);else parts.push(String(amount));return parts.join(' + ');}
+  const at=parts.findIndex(part=>term.exec(part)?.[2]===inc[2]);if(at>=0){const old=term.exec(parts[at]);parts[at]=`${Number(old[1])+Number(inc[1])*times}d${inc[2]}`;}else parts.push(`${Number(inc[1])*times}d${inc[2]}`);return parts.join(' + ');
+ }
  function spellReference(ref){const value=text(ref),match=/^(.*)::([a-z0-9-]{1,60})$/.exec(value);return{spellId:match?match[1]:value,classId:match?match[2]:''};}
- function resolve(raw,data,level,stats,loot=[],spells=[]){
+ function resolve(raw,data,level,stats,loot=[],spells=[],context={}){
   const a=normalize([raw])[0],row={name:a.name||a.ref||a.kind,hit:'—',damage:'—',range:'—',notes:[],available:true,ability:''};
   const unavailable=reason=>({...row,available:false,notes:[reason]});
+  const Forms=globalThis.CharacterFeatForms||(typeof require==='function'?require('./character-feat-forms'):null);if(Forms?.state(data,{level,reports:stats.feats?.reports}).active)return unavailable('Misty Escape: attacks and spellcasting are unavailable while in Gaseous Form.');
   if(a.kind==='weapon'&&a.ref.startsWith('artificer-')){const Sub=globalThis.CharacterArtificerSubclasses||(typeof require==='function'?require('./character-artificer-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('warlock-')){const Sub=globalThis.CharacterWarlockSubclasses||(typeof require==='function'?require('./character-warlock-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
   if(a.kind==='weapon'&&a.ref.startsWith('rogue-')){const Sub=globalThis.CharacterRogueSubclasses||(typeof require==='function'?require('./character-rogue-subclasses'):null);return Sub.resolveAttack(a.ref,data,stats,{level});}
@@ -22,16 +27,22 @@ var CharacterActions = (()=>{
    const item=a.kind==='loot'?loot.find(e=>e.id===a.ref&&e.quantity>0):null;
    if(a.kind==='loot'&&!item)return unavailable('This item is no longer in this character’s inventory.');
    if(a.kind==='weapon'&&!Object.hasOwn(E.weapons,a.ref))return unavailable('Unknown weapon.');
-   const entry=item||{id:'action-reference',quantity:1,item:{name:E.weapons[a.ref].name}},m=E.infer(entry.item),profile=E.profile(m,data.build.edition);
+   const Magic=globalThis.CharacterMagicItems||(typeof require==='function'?require('./character-magic-items'):null),infer=Magic?.infer||E.infer;
+   const entry=item||{id:'action-reference',quantity:1,item:{name:E.weapons[a.ref].name}},m=infer(entry.item),magicActive=!Magic?.requiresAttunement(entry.item)||E.attunementState(data,loot,level).active.has(entry.id),profile=E.profile(m,data.build.edition,magicActive);
    if(m.kind!=='weapon')return resolve({...a,kind:'improvised',name:entry.item.name},data,level,stats,loot,spells);
    if(a.mode==='twoHanded'&&!profile?.versatile&&!profile?.props.includes('twoHanded'))return unavailable('This weapon has no two-handed damage mode.');
-   if(a.mode==='thrown'&&!profile?.props.includes('thrown'))return unavailable('No thrown property: use an improvised attack instead.');
+   if(a.mode==='thrown'&&!profile?.props.includes('thrown'))return unavailable(m.magicWeaponProfile?'This weapon’s magical Thrown property requires its current attunement and prerequisites.':'No thrown property: use an improvised attack instead.');
+   const effects=Magic?.attackEffects?.(entry.item,a.mode,magicActive)||[],target=effects.find(effect=>effect.id===a.effect);
+   if(effects.length&&!target)return unavailable('Choose this thrown attack’s actual target type before using its extra damage.');
+   if(a.effect&&!target)return unavailable('This saved target condition is unavailable for the item’s current source, mode or attunement. Your reference is retained.');
    const loadout=E.choices(data.equipmentState).loadout,existing=loadout.find(c=>c.id===entry.id);
-   const temp={...data,equipmentState:{...data.equipmentState,loadout:[...loadout.filter(c=>c.id!==entry.id),{...existing,id:entry.id,equipped:!!existing?.equipped,attuned:!!existing?.attuned,ability:a.ability==='auto'?(existing?.ability||'auto'):a.ability,proficiency:existing?.proficiency||'auto',mode:a.mode}]}};
-   const result=E.derive(temp,stats,item?loot:[...loot,entry],level).attacks.find(r=>r.id===entry.id);
+   const attackChoice={...existing,id:entry.id,equipped:!!existing?.equipped,attuned:!!existing?.attuned,ability:a.ability==='auto'?(existing?.ability||'auto'):a.ability,proficiency:existing?.proficiency||'auto',mode:a.mode};
+   const temp={...data,equipmentState:{...data.equipmentState,loadout:existing?loadout.map(choice=>choice.id===entry.id?attackChoice:choice):[...loadout,attackChoice]}};
+   const result=E.derive(temp,stats,item?loot:[...loot,entry],level,infer,{id:entry.id,effect:a.effect}).attacks.find(r=>r.id===entry.id);
    if(!result)return unavailable('This item needs weapon mechanics configured by the DM.');
    if(item&&stats.clericCombat?.forgeWeapon===item.id){result.attack++;result.damage+=' + 1';result.notes.push('Blessing of the Forge: +1 attack/damage; counts as magical.');}
-   const out={...row,proficient:result.proficient,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,damageDice:result.damageDice,damageType:result.damageType,range:result.range,ability:result.ability,notes:result.notes};
+   const out={...row,proficient:result.proficient,name:entry.item.name+(a.mode==='twoHanded'?' (two hands)':a.mode==='thrown'?' (thrown)':a.mode==='offhand'?' (extra attack)':'')+(target?' · vs '+target.label:''),hit:result.attack===null?'—':sign(result.attack),damage:result.damage,damageDice:result.damageDice,damageType:result.damageType,range:result.range,ability:result.ability,notes:result.notes};
+   if(result.thrownDamage){out.damageDice=result.damageDice.replace(/\s*\+\s*/g,'+');out.paperDamageType=result.damageType.split(' / ').map(type=>({bludgeoning:'Blud',piercing:'Pierc'}[type]||type[0].toUpperCase()+type.slice(1))).join('/');out.notes.push('Damage reference: '+result.damage+'.','Use the selected target’s actual creature type, not size, ancestry or appearance.');}
    if(m.base==='net'&&result.edition==='2024'){out.hit='DEX DC '+(8+stats.pb+stats.mods.dex);out.ability='dex';out.damage='Restrained; no damage';out.notes.push('Large or smaller target; an attack replacement.');}
    if(stats.fighterCombat?.critical<20){out.criticalRange=stats.fighterCombat.critical;out.notes.push('Weapon critical on '+stats.fighterCombat.critical+'–20.');}
    if(stats.fighterCombat?.reachBonus&&profile.rangeType==='melee'&&a.mode!=='thrown')out.range=(parseInt(out.range,10)+stats.fighterCombat.reachBonus)+' ft';
@@ -51,11 +62,11 @@ var CharacterActions = (()=>{
    return {...row,name:'Breath weapon',hit:breath.save.toUpperCase()+' DC '+(8+stats.pb+stats.mods.con),damage:`${breath.dice}d${breath.die||6} ${breath.type}`,range:breath.area,ability:'con',notes:[breath.usage||'Action; once per short or long rest.','Successful save: half damage. Track uses separately.']};
   }
   if(a.kind==='granted-spell'){
-   const Access=globalThis.CharacterAttackAccess||(typeof require==='function'?require('./character-attack-access'):null),grant=Access?.spells(data,level,stats,{catalogue:spells}).find(row=>row.kind==='granted-spell'&&row.ref===a.ref);
+   const Access=globalThis.CharacterAttackAccess||(typeof require==='function'?require('./character-attack-access'):null),grant=(context.spellAccess||=Access?.spells(data,level,stats,{catalogue:spells})||[]).find(row=>row.kind==='granted-spell'&&row.ref===a.ref);
    if(!grant)return unavailable('This spell is no longer granted by the current class, race or feat choices.');
-   const ref=grant.spell.id+(grant.classId?'::'+grant.classId:''),copy={...data,spells:[{catalogId:grant.spell.id,classId:grant.classId},...data.spells]};
-   const resolved=resolve({...a,kind:'spell',ref,ability:grant.ability,slot:Math.max(grant.slot,a.slot)},copy,level,stats,loot,spells);
-   return {...resolved,notes:[grant.source,...resolved.notes]};
+   const castingSource=grant.classId||grant.ref.split('::')[1]||'additional',ref=grant.spell.id+'::'+castingSource,copy={...data,spells:[{catalogId:grant.spell.id,classId:castingSource},...data.spells]};
+   const resolved=resolve({...a,kind:'spell',ref,ability:grant.ability,slot:Math.max(grant.slot,a.slot)},copy,level,stats,loot,spells,{...context,grantedSource:grant,...(grant.damageType?{damageType:grant.damageType}:{})});
+   return {...resolved,...(grant.damageType?{damage:resolved.damage.replace(/\bfire\b/gi,grant.damageType),damageType:grant.damageType,paperDamageType:grant.damageType}:{}),notes:[grant.source,...(grant.usage?[grant.usage]:[]),...(grant.damageType?['This racial casting deals '+grant.damageType+' damage.']:[]),...resolved.notes]};
   }
   if(a.kind==='spell'){
    const source=spellReference(a.ref),spell=spells.find(s=>s.id===source.spellId);if(!spell)return unavailable('Spell catalogue unavailable.');
@@ -63,31 +74,74 @@ var CharacterActions = (()=>{
    if(!selected)return unavailable('This spellcasting source is no longer selected in your spellbook.');
    const classes=[...new Set(known.map(row=>row.classId).filter(Boolean))],ambiguous=!source.classId&&classes.length>1;
    const CFC=typeof CharacterClassFeatureChoices!=='undefined'?CharacterClassFeatureChoices:require('./character-class-feature-choices'),invocation=CFC.cantripModifier(data,stats.cantripInvocations,spell.id,source.classId||(!ambiguous?selected.classId:''));
-   const classAbilities={artificer:'int',bard:'cha',cleric:'wis',druid:'wis',fighter:'int',paladin:'cha',ranger:'wis',rogue:'int',sorcerer:'cha',warlock:'cha',wizard:'int'},owner=source.classId||(!ambiguous?(selected.classId||classes[0]||''):'')||(invocation?.sourceClass||''),ability=a.ability==='auto'?(classAbilities[owner]||data.spellAbility):a.ability,mod=stats.mods[ability],c=spell.combat||{},slot=spell.level?Math.max(spell.level,a.slot):0;
+   const classAbilities={artificer:'int',bard:'cha',cleric:'wis',druid:'wis',fighter:'int',paladin:'cha',ranger:'wis',rogue:'int',sorcerer:'cha',warlock:'cha',wizard:'int'},owner=source.classId||(!ambiguous?(selected.classId||classes[0]||''):'')||(invocation?.sourceClass||''),ability=a.ability==='auto'?(classAbilities[owner]||data.spellAbility):a.ability,mod=stats.mods[ability],baseCombat=spell.combat||{},effect=baseCombat.effects?.find(row=>row.id===a.effect),slot=spell.level?Math.max(spell.level,a.slot):0;
+   if(baseCombat.effects?.length&&!effect)return unavailable('Choose this spell’s effect or target condition in attack choices before using its damage formula. Your saved reference is retained.');
+   if(a.effect&&!effect)return unavailable('This saved spell effect is not available for the selected source. Choose an effect again.');
+   const c=effect?{...baseCombat,...effect.combat,notes:[...(baseCombat.notes||[]),...(effect.combat.notes||[])]}:baseCombat;
+   const sourceLabel=context.grantedSource?.source||(owner==='additional'?'Additional spells':owner?owner.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'');
+   const paperSource=context.grantedSource&&!Object.hasOwn(classAbilities,owner)?(context.grantedSource.ref.endsWith('::race')?'Race':context.grantedSource.source.split('·')[0].trim().slice(0,24)):({wizard:'Wiz',sorcerer:'Sor',warlock:'Wlk',druid:'Dru',cleric:'Clr',artificer:'Art',bard:'Bard',paladin:'Pal',ranger:'Rgr',fighter:'Ftr',rogue:'Rog',additional:'Extra'}[owner]||'');
+   const paperName=(a.name||spell.name+(paperSource?' ['+paperSource+']':'')+(spell.edition!==data.build.edition?' '+spell.edition:'')+(slot?' (SL'+slot+')':''))+(effect?' ['+(effect.shortLabel||effect.label)+']':'');
+   if(!context.grantedSource&&selected.classId&&(Object.hasOwn(classAbilities,selected.classId)||selected.classId==='additional')){const Access=globalThis.CharacterAttackAccess||(typeof require==='function'?require('./character-attack-access'):null),available=context.spellAccess||=Access?.spells(data,level,stats,{catalogue:spells})||[];if(!available.some(row=>row.spell.id===spell.id&&row.classId===selected.classId))return unavailable('This casting source no longer grants access at its current class level, edition or spell-list choices. Your saved spell is retained.');}
    if(owner==='wizard'){const Traditions=globalThis.CharacterWizardSubclasses||(typeof require==='function'?require('./character-wizard-subclasses'):null);if(Traditions.derive(data,{level}).blockedSpellIds?.includes(spell.id))return unavailable('One with the Word: this spell remains lost until its Long Rest countdown ends.');}
    const beast=(globalThis.CharacterDruidSpellcasting||(typeof require==='function'?require('./character-druid-spellcasting'):null))?.assess(data,spell,{level,classId:owner});
    const mark=CFC.huntersMarkEffect(data,spell,{level,classId:owner,features:stats.rangerFeatures,slot});
-   if(mark)return {...row,name:spell.name+' · '+spell.edition+(owner?' · '+(classAbilities[owner]?owner[0].toUpperCase()+owner.slice(1):owner):'')+(slot?' (level '+slot+')':''),ability,hit:'No attack roll',damage:mark.damage,range:spell.range,notes:[mark.detail,'Bonus Action · '+mark.duration+'. Resolve marked target and eligible hits at the table.',...mark.notes,...(beast?.relevant?[beast.label+': '+beast.detail]:[])]};
-   let damage=spell.level===0?diceAt(c.scaling,level,c.damage||''):c.damage||'';
-   if(slot>spell.level&&c.upcast)damage=increase(damage,c.upcast,Math.floor((slot-spell.level)/(c.step||1)));
+   if(mark)return {...row,damageDice:mark.die,damageType:spell.edition==='2024'?'force':'',paperDamageType:spell.edition==='2024'?'Force':'Weapon',paperHit:'Auto',paperName,proficient:false,name:spell.name+' · '+spell.edition+(owner?' · '+(classAbilities[owner]?owner[0].toUpperCase()+owner.slice(1):owner):'')+(slot?' (level '+slot+')':''),ability,hit:'No attack roll',damage:mark.damage,range:spell.range,notes:[mark.detail,'Bonus Action · '+mark.duration+'. Resolve marked target and eligible hits at the table.','Advantage on WIS (Perception/Survival) checks to find this marked creature only. After it reaches 0 HP, a Bonus Action '+(spell.edition==='2024'?'can move the mark to a new visible creature in range.':'on a subsequent own turn can mark a new creature.')+' A reference does not cast, mark, spend a slot/free use or change target HP.',...(spell.edition==='2014'?['The extra damage uses the original weapon’s damage type.']:[]),...mark.notes,...(beast?.relevant?[beast.label+': '+beast.detail]:[])]};
+   let damage=c.nonDamage?'':spell.level===0?diceAt(c.scaling,level,c.damage||''):c.damage||'';
+   if(!c.nonDamage&&slot>spell.level&&c.upcast)damage=increase(damage,c.upcast,Math.floor((Math.min(slot,Number.isInteger(c.upcastCeiling)?Math.max(spell.level,c.upcastCeiling):9)-spell.level)/(c.step||1)));
    let count=1,unit='';
    if(spell.name==='Eldritch Blast'){count=level>=17?4:level>=11?3:level>=5?2:1;unit='beam';}
    if(spell.name==='Scorching Ray'){count=3+Math.max(0,slot-2);unit='ray';}
    if(spell.name==='Magic Missile'){count=3+Math.max(0,slot-1);unit='dart';}
    const notes=['Base effect shown. Resolve conditions, riders and resource use from the spell.'];
+   notes.push(...(Array.isArray(c.notes)?c.notes:[]));
+   if(c.weaponAttackBonusBySlot)notes.push('This slot’s enchanted-weapon attack-roll bonus: +'+diceAt(c.weaponAttackBonusBySlot,slot,0)+'. Apply to that weapon’s actual attack, not to damage or the caster’s spell attacks.');
+   if(c.ammunitionBySlot){const ammo=c.ammunitionBySlot;notes.push('This slot affects up to '+(ammo.base+ammo.increment*Math.max(0,slot-ammo.above))+' arrows or bolts drawn from the affected quiver. Track actual draws; it creates no ammunition.');}
+   if(c.movementBySlot){const movement=c.movementBySlot;notes.push('This slot’s speed increase: +'+(movement.base+movement.increment*Math.max(0,slot-movement.above))+' ft. Apply only while the spell is active.');}
+   if(c.durationBySlot){const duration=diceAt(c.durationBySlot,slot,'');if(duration)notes.push('This slot’s duration: '+duration+'. Manage actual casting and Concentration at the table.');}
+   let healingReference='';if(c.healing){const h=c.healing,extra=Math.max(0,slot-spell.level);healingReference=increase(h.dice,h.upcast,extra);if(h.flatUpcast)healingReference=add(healingReference,h.flatUpcast*extra);if(h.addAbility)healingReference=add(healingReference,mod);notes.push((h.temporary?'Temporary HP reference':'Base healing reference')+': '+healingReference+' HP. Resolve recipient limits and applicable feature/item modifiers at the table.');}
+   if(c.projectiles)notes.push('Creates '+(c.projectiles.base+c.projectiles.increment*Math.max(0,slot-c.projectiles.above))+' '+c.projectiles.unit+'; track remaining projectiles explicitly.');
+   if(c.targets)notes.push('Up to '+(c.targets.base+c.targets.increment*Math.max(0,slot-c.targets.above))+' targets; choose eligible recipients at the table.');
    if(beast?.relevant)notes.push(beast.label+': '+beast.detail);
    if(ambiguous)notes.push('Known from multiple classes: edit this action and choose its casting class.');
-   if(slot>spell.level&&!c.upcast&&!['Scorching Ray','Magic Missile'].includes(spell.name))notes.push('Upcast effects are not automated for this spell.');
-   if(!damage)notes.push('Damage or weapon-dependent effect needs manual resolution; see spell information.');
+   if(slot>spell.level&&!c.upcast&&!c.secondaryUpcast&&!c.choiceUpcast&&!c.projectiles&&!c.targets&&!c.noDamageUpcast&&!['Scorching Ray','Magic Missile'].includes(spell.name))notes.push('Upcast effects are not automated for this spell.');
+   if(!damage)notes.push(c.nonDamage?'No HP damage; apply the listed effect at the table.':'Damage or weapon-dependent effect needs manual resolution; see spell information.');
    if(damage&&c.addAbility)damage=add(damage,mod);
    if(invocation?.damageBonus!==undefined){if(damage)damage=add(damage,invocation.damageBonus);notes.push(invocation.damageSource+': '+sign(invocation.damageBonus)+' to this cantrip’s damage rolls.');}
    if(spell.level===0&&source.classId==='cleric'&&invocation?.sourceClass==='cleric'&&stats.clericBlessedStrikes?.vitalityAvailable)notes.push('Improved Blessed Strikes: after dealing damage to a creature, grant '+stats.clericBlessedStrikes.amount+' temporary HP to yourself or another creature within 60 ft. Resolve the trigger in Combat.');
    if(source.classId==='warlock'&&spell.name==='Eldritch Blast')for(const report of stats.invocationEffects?.reports||[])if(['grasp-of-hadar','lance-of-lethargy'].includes(report.id))notes.push(report.name+': '+report.detail);
    if(invocation?.range)notes.push(invocation.rangeSource+': range '+invocation.range+'.');
    const Casting=globalThis.CharacterSpellcasting||(typeof require==='function'?require('./character-spellcasting'):null),casting=Casting?Casting.castingStats({classId:owner,ability},stats,data):{attack:mod+stats.pb+data.spellAttackBonus,dc:8+stats.pb+mod+data.spellDCBonus};
-   const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null),spellEffects=Runtime.modules().flatMap(r=>r.module.spellEffect?.(data,spell,stats,{level,owner})||[]);for(const effect of spellEffects){if(damage&&count===1&&Number.isFinite(effect.bonus))damage=add(damage,effect.bonus);if(damage&&count===1&&effect.extraDice)damage+=' + '+effect.extraDice;notes.push(effect.detail||effect.name+': '+sign(effect.bonus)+' to '+effect.scope+'.');}
-   const types=spellEffects.find(e=>e.damageType)?.damageType||(c.types||[]).join(' / ');if(damage)damage+=(types?' '+types:'')+(unit?` per ${unit} × ${count}`:'');if(damage&&count>1)for(const effect of spellEffects)if(effect.bonus)damage+=' '+sign(effect.bonus)+' once per spell';else if(effect.extraDice)damage+=' + '+effect.extraDice+' once per spell';
-   return {...row,name:spell.name+' · '+spell.edition+(source.classId?' · '+source.classId.replace(/(^|-)([a-z])/g,(_,separator,letter)=>(separator?' ':'')+letter.toUpperCase()):'')+(slot?' (level '+slot+')':''),ability,hit:c.attack?sign(casting.attack):spell.save?spell.save+' DC '+casting.dc:'Effect',damage:damage||'See spell effect',range:invocation?.range||CFC.cantripRange(spell,level),notes};
+   if(c.riderSave)notes.push('After a hit: '+c.riderSave+' DC '+casting.dc+' for the conditional rider; the damage still uses the spell attack roll.');
+   if(c.setupSave)notes.push('Setup saving throw: '+c.setupSave+' DC '+casting.dc+'. This is not a repeated save against the displayed damage event.');
+   if(c.checkDC)notes.push(c.checkDC+': DC '+casting.dc+'.');
+   const Runtime=globalThis.CharacterSubclassRuntime||(typeof require==='function'?require('./character-subclass-runtime'):null),modules=Runtime.modules(),effectsFor=types=>modules.flatMap(r=>r.module.spellEffect?.(data,{...spell,combat:{...c,types}},stats,{level,owner})||[]);
+   const unresolvedType=c.typeChoice||!c.part2Damage&&!c.secondaryDamage&&(c.types||[]).length>1;
+   let actualTypes=context.damageType?[context.damageType]:unresolvedType?[]:c.types||[],spellEffects=effectsFor(actualTypes);const changedType=spellEffects.find(effect=>effect.damageType)?.damageType;
+   if(changedType){actualTypes=[changedType];spellEffects=effectsFor(actualTypes);}
+   const primaryType=changedType||context.damageType||c.primaryType||(c.types||[]).join(' / '),secondType=changedType||context.damageType||c.part2Type||c.secondaryType,compound=!!(c.part2Damage||c.secondaryDamage),shared=[];
+   let second=c.part2Damage?increase(c.part2Damage,c.part2Upcast,Math.max(0,slot-spell.level)):c.secondaryDamage?increase(c.secondaryDamage,c.secondaryUpcast,Math.max(0,slot-spell.level)):'';
+   for(const effect of spellEffects){
+    const extra=effect.extraDice,hasBonus=Number.isFinite(effect.bonus)&&effect.bonus!==0;
+    const rolled=value=>/\d+d\d+/i.test(String(value));
+    if(effect.requiresRoll&&!rolled(damage)&&!rolled(second)){notes.push(effect.name+': this effect has no damage roll, so its roll bonus does not apply.');continue;}
+    if(damage&&(hasBonus||extra)){
+     if(compound){const matches=[primaryType,secondType].map((type,index)=>(!effect.appliesToTypes||effect.appliesToTypes.includes(type))&&(!effect.requiresRoll||rolled(index?second:damage)));if(matches.filter(Boolean).length===1){if(matches[0])damage=extra?damage+' + '+extra:add(damage,effect.bonus);else second=extra?second+' + '+extra:add(second,effect.bonus);}else if(matches.some(Boolean))shared.push(effect);}
+     else if(count===1){if(hasBonus)damage=add(damage,effect.bonus);if(extra)damage+=' + '+extra;}else shared.push(effect);
+    }
+    notes.push(effect.detail||(effect.damageType?effect.name+': damage becomes '+effect.damageType+'.':effect.name+': '+sign(effect.bonus||0)+' to '+effect.scope+'.'));
+   }
+   if(c.typeChoice)notes.push((spell.name==='Chaos Bolt'?'Choose the damage type from a rolled d8; resolve matching-dice leaps and repeat targets at the table.':'Choose one damage type for this casting; resolve any edition-specific leaps at the table.')+' Apply type-dependent bonuses only after resolving that choice.');
+   if(unresolvedType&&!c.typeChoice&&!changedType&&!context.damageType)notes.push('Resolve the damage type/components before applying any type-dependent bonuses.');
+   const Summaries=globalThis.CharacterSpellSummaries||(typeof require==='function'?require('./character-spell-summaries'):null),area=Summaries?.facts(spell)?.area;if(area)notes.push('Area: '+area+'. Resolve affected creatures at the table.');
+   const compactType=type=>({bludgeoning:'Blud',piercing:'Pierc',slashing:'Slash',radiant:'Rad',lightning:'Lightn',necrotic:'Necro'}[type]||String(type||'').replace(/^./,c=>c.toUpperCase()));
+   let damageDice=damage,damageType=primaryType;if(damage)damage+=(primaryType?' '+primaryType:'')+(unit?` per ${unit} × ${count}`:'');
+   if(c.part2Damage){damageDice+=' + '+second;damageType=[...new Set([primaryType,secondType])].join(' / ');damage+=' + '+second+' '+secondType;if(c.choiceUpcast&&slot>spell.level){const choice=increase('0d6',c.choiceUpcast,slot-spell.level);damageDice+=' + '+choice;damage+=' + '+choice+' (fire or radiant; choose)';}}
+   if(c.secondaryDamage){damageDice+='; '+second;damageType=[...new Set([primaryType,secondType])].join(' / ');damage+='; explosion '+second+' '+secondType+' ('+c.secondarySave+' DC '+casting.dc+')';notes.push('Explosion: '+second+' '+secondType+'; '+c.secondarySave+' DC '+casting.dc+'; '+c.secondaryArea+'.');}
+   for(const effect of shared){const value=effect.extraDice?' + '+effect.extraDice:' '+sign(effect.bonus);damage+=value+' once'+(unit?' per spell':'');if(compound){damageDice+=effect.extraDice?' + '+effect.extraDice:' '+sign(effect.bonus);notes.push(effect.name+': assign this bonus to one eligible damage component; it is not repeated for each type.');}}
+   const saveName=c.actionSave??c.save??spell.save,paperHit=c.fixedSelfSave?'DC'+c.fixedSelfSave.dc:c.attack?sign(casting.attack):saveName?(saveName.split(',').length===1?saveName.slice(0,3):'DC')+casting.dc:c.automatic?'Auto':'Effect';
+   const paperDamageType=c.fixedSelfSave?'Self '+compactType(primaryType):c.typeChoice&&!changedType&&!context.damageType?'Choice':damageType.split(' / ').length>2?'Variable':damageType.split(' / ').map(compactType).join('/');
+   if(c.part2Damage||c.secondaryDamage||unit||c.fixedSelfSave)notes.unshift('Damage reference: '+damage+'.');
+   return {...row,...(healingReference?{healingReference,temporaryHPReference:!!c.healing.temporary}:{}),damageDice:damageDice?damageDice.replace(/\s*\+\s*/g,'+'):undefined,damageType,paperDamageType,paperHit,paperName,proficient:!!c.attack,name:(a.name||spell.name)+(effect?' · '+effect.label:'')+' · '+spell.edition+(sourceLabel?' · '+sourceLabel:'')+(slot?' (level '+slot+')':''),ability,hit:c.fixedSelfSave?'Self '+c.fixedSelfSave.ability+' DC '+c.fixedSelfSave.dc:c.attack?sign(casting.attack):saveName?saveName+' DC '+casting.dc:c.automatic?'Automatic · no attack roll or save':'Effect',damage:damage||'See spell effect',range:c.actionRange||invocation?.range||CFC.cantripRange(spell,level),notes};
   }
   if(a.kind==='grapple'||a.kind==='shove'){
    const modern=data.build.edition==='2024',martial=stats.gear?.martialArts,ability=modern&&martial?.active&&stats.mods.dex>stats.mods.str?'dex':'str',dc=8+stats.pb+stats.mods[ability],grapple=a.kind==='grapple';
@@ -105,7 +159,7 @@ var CharacterActions = (()=>{
   const unarmedType=unarmed?(stats.monkCombat?.astral?'force':stats.monkCombat?.damageType||'bludgeoning'):'bludgeoning';
   return {...row,name:a.name||(unarmed?'Unarmed strike':'Improvised weapon'),ability,hit:sign(mod+(proficient?stats.pb:0)),damage:damageDie==='1'?Math.max(0,1+mod)+' bludgeoning':add(damageDie,mod)+(unarmed?' '+unarmedType:' (DM chooses type)'),range:!unarmed&&a.mode==='thrown'?'20/60 ft':(5+(stats.fighterCombat?.reachBonus||0)+(unarmed?stats.monkCombat?.reach||0:0))+' ft',notes};
  }
- function derive(data,level,stats,loot,spells){return normalize(data.actions).map(a=>resolve(a,data,level,stats,loot,spells));}
+ function derive(data,level,stats,loot,spells){const context={},form=stats.speciesForm;return normalize(data.actions).map(a=>{const row=resolve(a,data,level,stats,loot,spells,context);if(form?.active&&form.effect==='revelation'&&row.available&&!['grapple','shove'].includes(a.kind)&&/\d/.test(row.damage||''))row.notes.push('Celestial Revelation · '+form.formName+': optionally add '+form.rider.amount+' '+form.rider.type+' to one target already damaged by an attack or spell, once on each of your own turns. '+(form.rider.used?'Extra damage already recorded for this turn.':'Record the qualifying extra damage in Celestial Revelation controls.')+' This is not added to every hit.');return row;});}
  return {spellReference,normalize,resolve,derive};
 })();
 if(typeof module!=='undefined'&&module.exports)module.exports=CharacterActions;
