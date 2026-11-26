@@ -227,5 +227,18 @@ try{await env.clearFirestore();await env.clearStorage();await env.withSecurityRu
   }
   const control=sdk.writeBatch(db);control.set(mapRef,{...map,revision:map.revision+1});control.set(pinRef,{...pin,publishedRevision:map.revision+1,revision:map.revision+1});await assertSucceeds(control.commit());
  });
+ await check('Stale saved drafts recover only through an explicit revision-checked DM save and a separate publication',async()=>{
+  await env.withSecurityRulesDisabled(async c=>{const db=c.firestore();await sdk.setDoc(sdk.doc(db,'campaigns/recovery'),{ownerId:'owner'});for(const uid of ['dm','player'])await sdk.setDoc(sdk.doc(db,'campaigns/recovery/members/'+uid),{role:uid==='dm'?'dm':'player',status:'active'});});
+  for(const mid of ['main','aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee']){
+   const db=contexts.dm.firestore(),factory=uid=>createCampaignMapStore({...sdk,db:contexts[uid].firestore(),auth:{currentUser:{uid}}},{mapId:mid}),dm=factory('dm'),imagePath=dm.imagePrefix('recovery')+'image',pin={id:'town',name:'Harbour',description:'Keep draft text',x:20,y:30,type:'City',revealed:true,picturePath:'',pictureAlt:'',worldEntryId:''};
+   const draft=await dm.saveDraft({campaignId:'recovery',input:{title:'Private coast',imagePath,pins:[pin,{...pin,id:'secret',name:'HIDDEN CAMP',revealed:false}]},revision:0,sourceRevision:0}),first=await dm.publish({campaignId:'recovery',draftRevision:draft.revision}),mapRef=sdk.doc(db,'campaigns/recovery/campaignMaps/'+mid),pinRef=sdk.doc(db,'campaigns/recovery/campaignMaps/'+mid+'/pins/town'),oldPin=(await sdk.getDoc(pinRef)).data();
+   // A permitted publication update can leave the separate saved draft behind.
+   const batch=sdk.writeBatch(db);batch.set(mapRef,{...first.map,title:'New published coast',revision:2});batch.set(pinRef,{...oldPin,description:'New published text',revision:2,publishedRevision:2});await assertSucceeds(batch.commit());
+   const old=await dm.loadDraft('recovery');await assert.rejects(dm.publish({campaignId:'recovery',draftRevision:old.revision}),error=>error.code==='map-publication/conflict');assert.deepEqual(await dm.loadDraft('recovery'),old);
+   for(const uid of ['player','outsider','revoked','admin'])await assertFails(factory(uid).saveDraft({campaignId:'recovery',input:old,revision:old.revision,sourceRevision:2}));
+   const kept=await assertSucceeds(dm.saveDraft({campaignId:'recovery',input:old,revision:old.revision,sourceRevision:2}));assert.equal(kept.sourceRevision,2);assert.deepEqual(kept.pins,old.pins);assert.equal((await factory('player').load('recovery')).title,'New published coast');assert.equal((await factory('player').listPins('recovery',await factory('player').load('recovery')))[0].description,'New published text');await assertFails(factory('player').loadDraft('recovery'));
+   await assert.rejects(dm.saveDraft({campaignId:'recovery',input:old,revision:old.revision,sourceRevision:2}),/draft changed/);const published=await dm.publish({campaignId:'recovery',draftRevision:kept.revision});assert.equal(published.map.revision,3);assert.equal(published.map.title,'Private coast');assert.equal(published.draft.pins.some(p=>p.id==='secret'),true);assert.equal(published.pins.some(p=>p.id==='secret'),false);
+  }
+ });
  console.log('SUCCESS',count,'map Firestore/Storage permission checks');
 }finally{await env.cleanup();}})().catch(e=>{console.error(e);process.exitCode=1});

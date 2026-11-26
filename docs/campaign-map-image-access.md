@@ -62,3 +62,16 @@ Older maps without a `schemaVersion` bind published pins to the map's `imagePath
 The repair operation now verifies finalized copies rather than trusting `ready: true`. It can recover missing/corrupt finalized chunks or invalid MIME metadata through a new immutable copy instead of asking the DM to reupload an otherwise valid original. The DM-only report distinguishes a healthy picture from a repaired or rebuilt picture and clears after successful publication.
 
 Regression coverage includes legacy pins with no revision marker, immediate denial after their image path stops matching, finalized-copy reconstruction, unreadable originals, decoder failures, account changes during upload, and a real browser player read after explicit publication. `campaign-map-recovery-browser.cjs` also checks visible DM actions, single-pin copying, cloning, saved/unsaved deletion, mobile layout and accessibility.
+
+
+## A saved draft cannot publish after a newer publication — 26 November 2026
+
+`map-publication/conflict` means the saved private draft was based on a different publication revision. The publication read succeeded; this is a version conflict rather than an image permission error. Refresh reloads the same saved draft and therefore cannot repair a persisted mismatch by itself.
+
+DMs now see **Review publication changes** on an out-of-date draft. The review compares the published and draft titles, map-picture choice, revealed-place counts and added/removed/changed places, with expandable text and position comparisons. **Download my draft backup** preserves the local draft, including hidden places and unsaved map edits, as a private JSON file.
+
+Choose **Keep my draft for review** to save the current draft against the reviewed publication. This keeps draft text, pictures, geometry and hidden places. Nothing is published at this step. Review the resulting draft, then explicitly choose **Publish changes** to replace the current publication with its selected content. Later published changes omitted by the draft are identified in the comparison before this choice.
+
+Both the publication revision and saved draft revision are rechecked atomically. A newer saved private draft blocks replacement and leaves local edits available for backup; close the review and Refresh to load it. If a publication changes during review, close and review again. Account/campaign/role changes invalidate the controls. No rules deployment, schema migration or automatic data backfill is needed for this recovery flow.
+
+Coverage: `campaign-content-management.cjs`, `campaign-map-publication-browser.cjs`, and the actual Firestore/Storage `campaign-map-rules.cjs` suite cover retained hidden content, cancel/Refresh behavior, backup, separate publication, newer saved drafts/publications, account boundaries, mobile layout and accessibility.
