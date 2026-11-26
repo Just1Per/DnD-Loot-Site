@@ -1,0 +1,202 @@
+{
+  "format": 1,
+  "measuredAt": "2026-11-26T08:11:59.831Z",
+  "commit": "a9103cfceb136b40098ce0aa87391b3712df2ed2",
+  "scope": "Tracked JS modules and rules JSON; loader membership is static, not proof of reachability or obsolescence.",
+  "startup": {
+    "scripts": 176,
+    "bytes": 3803155,
+    "gzipBytes": 1011502
+  },
+  "optional": {
+    "scripts": 71,
+    "bytes": 1111480
+  },
+  "catalogue": {
+    "spells": 969,
+    "feats": 302,
+    "editions": [
+      "2014",
+      "2024"
+    ],
+    "sha256": "b6f95f7e19ac02be2b7d4037a35d989d9bfec5295cd75ca1bd1b5d69cce69bc5"
+  },
+  "byteIdenticalGroups": [],
+  "largest": [
+    {
+      "file": "data/rules/monsters.json",
+      "bytes": 1352087,
+      "gzipBytes": 166992,
+      "sha256": "b90bd38d1966cb38fcb94fa41e71c91a6ea64881458d952efda016f8dfaa7b50",
+      "loader": "data-or-transitive-reference"
+    },
+    {
+      "file": "data/rules/catalog.json",
+      "bytes": 1207949,
+      "gzipBytes": 202664,
+      "sha256": "b6f95f7e19ac02be2b7d4037a35d989d9bfec5295cd75ca1bd1b5d69cce69bc5",
+      "loader": "data-or-transitive-reference"
+    },
+    {
+      "file": "js/modules/character-pinned-item-data.js",
+      "bytes": 357279,
+      "gzipBytes": 45958,
+      "sha256": "cb34dd46b5fe12d45b846a64ea297b6fb55dea79e62f8173ef9c3245ecb4d744",
+      "loader": "startup-script"
+    },
+    {
+      "file": "data/rules/srd-magic-item-text-hashes.json",
+      "bytes": 321543,
+      "gzipBytes": 47136,
+      "sha256": "d58e03bdeb6995777e79c5cf6f2db5eac380b69a28f74cc9c50acdbe906464c0",
+      "loader": "data-or-transitive-reference"
+    },
+    {
+      "file": "data/rules/wild-shapes-v1.json",
+      "bytes": 248854,
+      "gzipBytes": 23120,
+      "sha256": "065e1585e460c3c8cef2391bebcedc2abb8bc79c4aa19767b842fab86d60160e",
+      "loader": "data-or-transitive-reference"
+    },
+    {
+      "file": "data/rules/adobe-starting-equipment.json",
+      "bytes": 240618,
+      "gzipBytes": 17414,
+      "sha256": "a2bd51c4cd85399faa038562455c778e51f6667198fd5251447662faf35864f7",
+      "loader": "data-or-transitive-reference"
+    },
+    {
+      "file": "js/modules/character-srd-class-data.js",
+      "bytes": 176239,
+      "gzipBytes": 29837,
+      "sha256": "a8956a61544773df2fba08ae9b1195e9e31af04038042a342922dec2d0f0c77b",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-class-feature-choices.js",
+      "bytes": 128527,
+      "gzipBytes": 31440,
+      "sha256": "6eef8a3e80721432ae4cd69de9c1471f9daa9e96e161bd04dc2f4f0ca247a312",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/site-help.js",
+      "bytes": 123908,
+      "gzipBytes": 39779,
+      "sha256": "59a435da9618c69e1f0e8e24a88e3c3c6f443c6c850542bf68fb6c43ebd41d58",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-adobe-view.js",
+      "bytes": 118742,
+      "gzipBytes": 31345,
+      "sha256": "098e96e0982a47f8850bc629d6de41bbccc7ec5780f9d7a2848041c72e0673db",
+      "loader": "optional-script"
+    },
+    {
+      "file": "js/modules/character-catalog-ui.js",
+      "bytes": 113631,
+      "gzipBytes": 26983,
+      "sha256": "01fd3cfaf1f755b0bd5e838a5af5fa88119605aa13bf02616d4e4a1ae212f159",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-spell-effect-data.js",
+      "bytes": 113086,
+      "gzipBytes": 28659,
+      "sha256": "c0d8d3287226189df096621df3bce5ad4c0c1d38798d4fc159c6868eed493829",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-feat-reference.js",
+      "bytes": 81631,
+      "gzipBytes": 10858,
+      "sha256": "6f29c861ced777283e09b36d5a6becad06a39bb46668c019db96c690244a65ae",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/campaign-map-ui.js",
+      "bytes": 72101,
+      "gzipBytes": 19449,
+      "sha256": "ec78aacb20e56fafec9f5f9050b691a4d48dd05f8ba9776f2ec697b8ae5ad7fc",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-feat-mechanics-data.js",
+      "bytes": 67553,
+      "gzipBytes": 9699,
+      "sha256": "f55a23893c78ebfd891ae5d8491925126b92ecc7173d4acae127130c181cb4ea",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-origin-facts.js",
+      "bytes": 67460,
+      "gzipBytes": 11289,
+      "sha256": "1e449a3bd13e3d7c8e3683923903338e16e3fce8289413d5599e4392eff10a4b",
+      "loader": "startup-script"
+    },
+    {
+      "file": "data/rules/adobe-reference.json",
+      "bytes": 67350,
+      "gzipBytes": 6696,
+      "sha256": "85cede13fcffbe7b2d3f10f740edfc2df26db44aaf832228124ef1e547f6f3cc",
+      "loader": "data-or-transitive-reference"
+    },
+    {
+      "file": "js/modules/character-sheet.js",
+      "bytes": 64189,
+      "gzipBytes": 17066,
+      "sha256": "0b54fa3a7ffd2cfeac95a6fc367d4462aa4f9b8a511bed31746e11b8160e8756",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-feat-data.js",
+      "bytes": 61211,
+      "gzipBytes": 7763,
+      "sha256": "2c29aa2633252b2a9bf51cc6ae94ce2974377ecb1f37eac3f4bae7839b161d50",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-subclass-feature-data.js",
+      "bytes": 60854,
+      "gzipBytes": 11378,
+      "sha256": "8f8027ff4d97b681ef729a9cbf6382313acce1fc4801c07d98563226e7c95ce3",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/site-help-data.js",
+      "bytes": 56602,
+      "gzipBytes": 19196,
+      "sha256": "f1bb2c6821659e4494ec10512f924c650a66c4b97ab01371592fb5930dd0de3a",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-subclass-spell-data.js",
+      "bytes": 54789,
+      "gzipBytes": 6085,
+      "sha256": "9a2137213ace7293089d8f385b69022d914e099ba2a523aa164160030237bb61",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-overview-ui.js",
+      "bytes": 51869,
+      "gzipBytes": 15257,
+      "sha256": "80f325c9dc01434c066739cbdd76172c1ed2a431fab717ef35efa5b77699c2f8",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-species-feature-data.js",
+      "bytes": 51768,
+      "gzipBytes": 14947,
+      "sha256": "f3326221d17b6825a567293e2a09a12443d90455c010a45ad7a5803c6a4e14c3",
+      "loader": "startup-script"
+    },
+    {
+      "file": "js/modules/character-spell-summaries.js",
+      "bytes": 49989,
+      "gzipBytes": 18316,
+      "sha256": "3c2cec90ae36b6c13e64cfb7d1ab1030425d9df4feb816a0a385bcd93552b9f1",
+      "loader": "startup-script"
+    }
+  ]
+}

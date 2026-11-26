@@ -1,5 +1,7 @@
 # Oprydning og konfiguration — første gennemgang
 
+**Aktuel opfølgning 26. november:** [HTTP/cache-målinger, katalogvurdering og CI-fordeling](performance-loading-2026-11-26.md). De første målinger nedenfor er historiske. Brug [dokumentationsindekset](README.md) til aktuelle indgange.
+
 Opdatering 10. november: dependency-opdelingen er gennemført; se [profiler, installation og kørsel](test-dependency-profiles-da.md).
 
 Måling: 9. november 2026, udgangspunkt `cb6d431` på main. Dette er en gennemgang af repoet og dets lokale pakke-/testopsætning. Firebase-dokumenter, brugerdata og publicerede operatorpakker ændres ikke.
@@ -46,11 +48,11 @@ Den eksisterende offline startup-smoketest blev også kørt: seks starter nåede
 
 ## Næste oprydningspunkter
 
-1. Sammenlign CI-varigheder og eventuel skævhed mellem shards; brug de nye fil-timings før en anden fordeling vælges.
+1. Målte CI-tider fra #290 ligger nu i `tests/browser-suite-timings.json`. Den nye fordeling bruger dem; begge runners eksporterer nye målinger. Følg de faktiske tider, før vægtene opdateres igen.
 2. Dependency-opdelingen er gennemført 10. november med fire profiler og egne lockfiles. Følg de faktiske installationstider og brug rollekontrollerne ved nye imports.
-3. Mål reel landing → login → kampagne → character sheet/Library på preview med netværk og cache adskilt. Den eksisterende offline startup-benchmark kan ikke stå alene som produktmåling.
+3. HTTP/cache-benchmark og en anonym live-landing er nu målt; se den aktuelle rapport. Rigtige login-/Firestore-/billedtider på ejerens enhed er fortsat en særskilt produktionsmåling.
 4. Gennemgå katalogdata for semantisk overlap og mulighed for versionerede, behovsstyrede dele. Bevar begge editions, referencer, source-id'er og eksisterende gemte karakterer.
-5. Saml de aktive dokumentationsindgange og marker historiske checkpoints. Bevar beslutninger, audits, attribution, reproducerbare generatorer og recovery-materiale.
+5. De aktive dokumentationsindgange er samlet i `docs/README.md`, og de centrale gamle checkpoints er mærket. Fortsæt afstemning af øvrige historiske statusnoter. Bevar beslutninger, audits, attribution, reproducerbare generatorer og recovery-materiale.
 6. Brug popup-kortlægningen ved senere afkobling af den gamle visning. Ingen af dens renderere, styles eller popup-komponenter slettes i denne oprydning.
 
 7. Vurder en dedikeret Hosting-buildmappe eller en eksplicit staging-manifest, så public-filer ikke længere vælges fra hele repo-roden. Bevar asset-URLer, versionering og fallback-filer under en sådan ændring.

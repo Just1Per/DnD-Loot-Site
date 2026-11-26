@@ -1,5 +1,8 @@
 # Deferred Character Overview work
 
+> Historical checkpoint. For current priorities, measurements and delivery status, start with [the documentation index](README.md) and [26 November loading/CI follow-up](performance-loading-2026-11-26.md). Decisions and recovery references below are retained.
+
+
 The user requested completing non-Overview P1/P2/P3 work first. Overview rendering, styling and design were not redesigned in this PR.
 
 The subsequently reported premature subclass warning is a separate correctness fix: Overview must use the subclass picker's edition-aware minimum, including level 3 for 2024 legacy options and the original class-specific unlock levels for 2014 characters. This does not redesign Overview or complete the deferred styling items below.
