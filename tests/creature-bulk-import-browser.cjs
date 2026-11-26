@@ -74,7 +74,11 @@ const {chromium}=require(process.env.PLAYWRIGHT_PATH || 'playwright');
  // Revoke context before the pending transaction starts; no new campaign gets
  // any writes and the remainder of the batch is stopped.
  await page.locator('[data-workspace-catalog]').click();await page.waitForSelector('[data-select-monster]');
- await page.locator('[data-catalog-search]').fill('Rat');await page.locator('[data-select-monster="srd-2014-rat"]').check();
+ await page.locator('[data-catalog-search]').fill('Rat');const rat=page.locator('[data-select-monster="srd-2014-rat"]'),ratNode=await rat.elementHandle();await rat.check();
+ assert.equal(await ratNode.evaluate(input=>input.isConnected&&input.checked),true,'Selecting a creature must retain the native checkbox through its change event');
+ await rat.press('Space');assert.equal(await rat.isChecked(),false);assert.equal(await page.locator('[data-catalog-import-selected]').isDisabled(),true);
+ await rat.press('Space');assert.equal(await rat.isChecked(),true);assert.equal(await ratNode.evaluate(input=>input.isConnected&&document.activeElement===input),true,'Keyboard selection keeps its focused checkbox');
+ assert.equal(await page.locator('[data-catalog-import-selected]').textContent(),'Import selected (1)');
  const before=await page.evaluate(()=>Object.keys(testSheetDocs).filter(key=>/^campaigns\/a\/creatures\/[^/]+$/.test(key)).length);
  await page.evaluate(()=>{CampaignWorkspace.store.save=async args=>{await new Promise(resolve=>window.resumeBulkSave=resolve);return normalWorkspaceSave(args);};});
  await page.locator('[data-catalog-import-selected]').click();await page.waitForFunction(()=>!!window.resumeBulkSave);
