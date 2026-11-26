@@ -136,7 +136,7 @@
     "test:ui-palette": "node site-palette-browser.cjs",
     "test:campaign-appearance": "node campaign-appearance-browser.cjs",
     "test:campaign-appearance-rules": "cd .. && firebase emulators:exec --only firestore --project demo-vault-test --config firebase.workspace-test.json \"node tests/campaign-appearance-rules.cjs\"",
-    "test:map-management": "node campaign-map-management-browser.cjs",
+    "test:map-management": "node campaign-map-management-browser.cjs && node campaign-map-recovery-browser.cjs",
     "test:workspace-deletion": "node campaign-workspace-deletion-browser.cjs"
   },
   "name": "campaignatlas-tests",

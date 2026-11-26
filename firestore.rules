@@ -699,7 +699,9 @@ match /campaigns/{campaignId} {
       return exists(mapPath) && !('deletedAt' in map) && (d.kind == 'map'
         ? (d.path == map.imagePath || ('previewPath' in map && d.path == map.previewPath))
         : (exists(pinPath) && get(pinPath).data.picturePath == d.path
-          && get(pinPath).data.publishedRevision == map.revision));
+          && ('schemaVersion' in map
+            ? get(pinPath).data.publishedRevision == map.revision
+            : get(pinPath).data.imagePath == map.imagePath)));
     }
     function canRead(d) {
       return scoped(d) && (isCampaignDM(campaignId)

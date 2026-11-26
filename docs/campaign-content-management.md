@@ -4,7 +4,7 @@
 
 | Content | DM control | Result |
 | --- | --- | --- |
-| Maps | Maps → Organise maps → Delete map | Remove its publication and private draft, clear its ordering/main-map selection and revoke player image/pin access. |
+| Maps | Maps → DM map actions → Delete map | Remove its publication and private draft, clear its ordering/main-map selection and revoke player image/pin access. |
 | Map places, regions, roads and party routes | Remove from draft, then Publish changes | Remove the selected shape from the next publication. |
 | World posts, NPCs, creatures and chapters | More options → Delete entry | Delete the source, DM notes, player publication and protected journal illustration copies together. |
 | Campaign encounters and One Shots | Delete entry in the editor | Remove that entry; preserve other campaign records and player character data. |
@@ -14,11 +14,13 @@
 | Campaign custom feats | Campaign settings → feat editor → Delete custom feat | Delete the campaign definition. Existing character selections remain unavailable references; its automatic bonuses stop. Hide availability instead to preserve current benefits. |
 | Library items | Existing Delete item control | Existing inventory-aware item removal remains unchanged. |
 
+An unsaved new map can also be discarded with **Delete map**, without creating or deleting server records. Map copy/clone/delete controls are absent from player view and player preview. **Organise maps** retains ordering and main-map controls.
+
 Delete actions require confirmation, recheck context and refuse stale saved revisions. Archive/Restore remains available when preservation is wanted. Deleting a linked entry does not cascade through related entries; its old connections show Unavailable entry and can be removed or replaced. Deleting a World post returns the mobile editor to its browse list.
 
 ## Copy places or clone a map
 
-Open **Organise maps** on a DM map. **Copy places…** selects another saved map and the places/regions/routes to add. Existing destination pins remain. **Clone map…** creates a separately named private map, including its background and optional overview. Both offer an Include place pictures checkbox. A clone can use a replacement background, so an unreadable original need not block recovery; copying places into an existing map never needs the old background to load.
+Use the always-visible **DM map actions** below the map heading. **Copy pins…** selects another saved map and the places/regions/routes to add. Select a pin and use **Copy pin to another map…** in its details to preselect just that pin. Existing destination pins remain. **Clone map…** creates a separately named private map, including its background and optional overview. Both offer an Include place pictures checkbox. A clone can use a replacement background, so an unreadable original need not block recovery; copying places into an existing map never needs the old background to load.
 
 Copies retain text, relative percentage positions, marker styles, region appearance, boundaries/routes and same-campaign World links. Each pin receives a new ID. Copied pins start hidden; inspect their positions, reveal the desired places and explicitly Publish changes. Copying never publishes, modifies or deletes the source, and never silently replaces destination pins. The 100-place and 50-map UI limits remain. Source/destination revision checks stop a late copy from overwriting newer work.
 
@@ -40,7 +42,7 @@ Deploy the accompanying **Firestore rules** before releasing the frontend:
 firebase deploy --only firestore:rules --project dnd-loot-site
 ```
 
-Storage rules, indexes, dependencies and Cloud Functions are unchanged. No production deployment or data backfill is performed by this PR. The image MIME repair itself does not broaden permissions; see [map image access](campaign-map-image-access.md). After release, run **Repair image access** on affected maps and refresh the player view.
+Storage rules, indexes, dependencies and Cloud Functions are unchanged. No production deployment or data backfill is performed by this PR. The image MIME repair itself does not broaden permissions; see [map image access](campaign-map-image-access.md). After release, run **Repair image access** on affected maps. Follow its per-image report: refresh after an in-place repair; review and **Publish changes** after a rebuilt copy. The latest rules also restore legacy published pin pictures; an earlier rules deployment does not contain this fix.
 
 ## Verification
 
@@ -48,6 +50,7 @@ Storage rules, indexes, dependencies and Cloud Functions are unchanged. No produ
 - `campaign-map-media.cjs`: legacy MIME normalization for PNG/JPEG/WebP without byte changes, unsupported-image diagnostics and authentication boundaries.
 - `campaign-content-management-rules.cjs`: actual Firestore delete/copy/retirement rights, revocation of old manifests/chunks/pins, forbidden identifier reuse, source/publication/note deletion, own-author recaps, scoped adventure encounters and custom feats.
 - `campaign-map-management-browser.cjs`: 4-of-13 repair failures, remaining-image recovery, missing MIME, DM preview/player pictures, private copies, explicit publication, mobile/axe, cancel/delete and a fresh map after deleting all old maps.
+- `campaign-map-recovery-browser.cjs`: corrupted finalized copies, explicit publication, healthy-copy diagnostics, visible DM controls, selected-pin copy, cloning and saved/unsaved deletion, mobile layout and accessibility.
 - `campaign-workspace-deletion-browser.cjs`: mobile confirmation, browse restoration, retained linked records, stale revisions, recap/custom-feat deletion and unchanged player originals/selections.
 
 The existing named-map, map-media, Storage, World/NPC/chapter, One Shot, journal, notification and Adobe regression suites remain enabled.

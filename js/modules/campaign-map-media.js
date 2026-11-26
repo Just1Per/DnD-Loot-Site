@@ -101,6 +101,25 @@ function createCampaignMapMedia(sdk) {
   if(digest!==copy.sha256)throw error('invalid','The map image copy differs from its checksum. Ask the DM to repair image access.');
   return blob;
  }
- return {scope,reference,normalizeImageBlob,ensure,load,partSize,maxSize};
+ // Repair verifies bytes, rather than trusting ready metadata. Missing/incomplete
+ // copies can resume in place; finalized damaged copies need a fresh immutable key.
+ async function repair({campaignId,mapId='main',path,isCurrent=()=>true,onProgress=()=>{},validateImage}){
+  const check=guard(isCurrent),bound=await reference(campaignId,mapId,path);check();let problem;
+  const decoded=async blob=>{if(validateImage)try{await validateImage(blob);}catch{throw error('decode','The image bytes could not be decoded. Replace this picture or upload a valid PNG, JPEG or WebP original again.');}check();};
+  try{const blob=await load({campaignId,mapId,path,isCurrent});await decoded(blob);check();return {path,status:'verified',size:blob.size,publishRequired:false};}
+  catch(error){check();if(error.code==='permission-denied'||error.code==='unauthenticated'||error.code==='map-media/context'||error.code==='map-media/scope')throw error;problem=error;}
+  let blob;try{blob=await sdk.getBlob(sdk.ref(sdk.storage,path),bound.kind==='place'?5*1024*1024:maxSize);check();}
+  catch(error){check();throw Object.assign(error,{message:'The player copy could not be verified ('+(problem.code||'read failed')+'), and the original file could not be read ('+(error.code||'read failed')+'). Replace this picture or upload its original again.'});}
+  blob=await normalizeImageBlob(blob,{place:bound.kind==='place'});await decoded(blob);check();
+  if(problem.code==='map-media/missing'||problem.code==='map-media/incomplete'){
+   try{await ensure({campaignId,mapId,path,blob,isCurrent,onProgress});await load({campaignId,mapId,path,isCurrent});check();return {path,status:'repaired',size:blob.size,publishRequired:false};}
+   catch(error){check();if(!['map-media/invalid','map-media/conflict'].includes(error.code))throw error;}
+  }
+  const replacement=path.slice(0,path.lastIndexOf('/')+1)+crypto.randomUUID();
+  await sdk.uploadBytes(sdk.ref(sdk.storage,replacement),blob,{contentType:blob.type});check();
+  await ensure({campaignId,mapId,path:replacement,blob,isCurrent,onProgress});await load({campaignId,mapId,path:replacement,isCurrent});check();
+  return {path:replacement,previousPath:path,status:'rebuilt',size:blob.size,publishRequired:true};
+ }
+ return {scope,reference,normalizeImageBlob,ensure,load,repair,partSize,maxSize};
 }
 if(typeof module!=='undefined')module.exports={createCampaignMapMedia};

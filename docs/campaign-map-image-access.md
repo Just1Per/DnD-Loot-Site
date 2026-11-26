@@ -15,10 +15,17 @@ New uploads prepare their private copy before attaching the image to the draft. 
 1. Publish **this change's Firestore rules** to the intended project before releasing the frontend:
    `firebase deploy --only firestore:rules --project dnd-loot-site`.
 2. Merge/release the frontend through the normal GitHub Hosting workflow.
-3. As the campaign owner or an active campaign DM, open **DM Workspace → Maps** (or **Journal → Maps → Manage map**). Select the affected map, then **Repair image access** beside Save private draft. Wait for **Image access repaired**.
-4. Repeat for each affected named map. Players then choose **Refresh** or reopen Maps. No reupload or republish is necessary.
+3. As the campaign owner or an active campaign DM, open **DM Workspace → Maps** (or **Journal → Maps → Manage map**). Select the affected map, then **Repair image access** beside Save private draft. Review the **Image access check** report for each named picture.
+4. Missing or interrupted copies repair in place; players then choose **Refresh** or reopen Maps. When the report says **New copy prepared · publish required**, review the private draft and choose **Publish changes** to share the replacement. Repeat for each affected named map.
 
-Repair copies the current published and private-draft image references for the selected map. It changes no original Storage objects, map/pin data, draft text, revisions, visibility or publication. Hidden draft pictures stay private. Completed immutable copies are reused; interrupted preparation can resume. Errors identify missing copies or denied permissions and point to Repair image access. A published copy with corrupt finalized bytes requires a fresh image upload; the reader verifies the checksum and never silently displays corrupt data.
+Repair checks the bytes, checksum, metadata and image decoding of the current published and private-draft pictures for the selected map:
+
+- **Already readable · verified**: the protected copy is healthy; no image is uploaded or changed. If a player is still denied access, check the deployed rules and whether that specific map/pin is published.
+- **Player copy repaired**: a missing or interrupted copy was prepared at its existing path. Publication and private text are unchanged.
+- **New copy prepared · publish required**: a finalized copy was damaged or invalid. Finalized copies are immutable, so Repair reads the authenticated original, creates a fresh scoped copy with identical bytes and updates matching references in the current private draft. Review and publish explicitly. Existing draft edits are preserved; the old publication stays unchanged until publication.
+- **Could not repair**: the report names the image and error. Replace that picture if its original cannot be read or decoded. Other pictures are still checked; permission/session failures stop the operation.
+
+Original files, image quality and pin geometry are preserved. Hidden draft pictures stay private. Repair cannot publish Firestore rules, grant campaign membership or reveal a private pin.
 
 No production rules deployment, live data backfill or campaign repair is performed by preparing this PR. The operator performs the steps above. If the DM also cannot fetch an old original, inspect campaign DM membership, the deployed Storage rules and Storage's Firestore service-agent permission before repair; access must not be made public to work around an error.
 
@@ -46,3 +53,12 @@ Repair continues past individual invalid, missing or oversized images and report
 A failed pin image now gets a separate retry box and a DM-only Repair this picture action/details. The place name and description stay readable and are never replaced in saved data by an image error. A player receives a short retry/help message rather than Firestore configuration instructions.
 
 No broader image permissions are needed for MIME normalization. The new DM content deletion controls have separate accompanying Firestore rules, described in [campaign content management](campaign-content-management.md).
+
+
+## Legacy pin access and verified repair — 26 November 2026
+
+Older maps without a `schemaVersion` bind published pins to the map's `imagePath`, while schema-versioned maps bind them to `publishedRevision`. The protected picture rules now use the same distinction as the pin reader and existing pin rules. Previously, a legacy pin could be readable while its picture was denied to players and DM player preview. Deploy the updated **Firestore rules**, even if an earlier image-access rule update was already deployed. Campaign membership, map scope, current publication and deletion checks remain enforced.
+
+The repair operation now verifies finalized copies rather than trusting `ready: true`. It can recover missing/corrupt finalized chunks or invalid MIME metadata through a new immutable copy instead of asking the DM to reupload an otherwise valid original. The DM-only report distinguishes a healthy picture from a repaired or rebuilt picture and clears after successful publication.
+
+Regression coverage includes legacy pins with no revision marker, immediate denial after their image path stops matching, finalized-copy reconstruction, unreadable originals, decoder failures, account changes during upload, and a real browser player read after explicit publication. `campaign-map-recovery-browser.cjs` also checks visible DM actions, single-pin copying, cloning, saved/unsaved deletion, mobile layout and accessibility.
