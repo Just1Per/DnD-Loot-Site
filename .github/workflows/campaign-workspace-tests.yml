@@ -140,7 +140,7 @@ jobs:
       run: |
         mkdir -p /tmp/campaignatlas-ui-checks
         set -o pipefail
-        npm --prefix tests run test:adobe-connected -- --shard ${{ matrix.shard }}/3 2>&1 | tee /tmp/campaignatlas-ui-checks/adobe-shard.log
+        npm --prefix tests run test:adobe-connected -- --shard ${{ matrix.shard }}/3 --report /tmp/campaignatlas-ui-checks/adobe-suite-timings.json 2>&1 | tee /tmp/campaignatlas-ui-checks/adobe-shard.log
     - name: Upload Adobe screenshots, PDFs and suite timings
       if: always()
       uses: actions/upload-artifact@v4
@@ -187,10 +187,14 @@ jobs:
         path: /tmp/campaignatlas-ui-checks
         if-no-files-found: ignore
   browser:
-    name: Browser and navigation
+    name: Site browser shard ${{ matrix.shard }}/3
     # Playwright 1.51.1 supports Ubuntu 24.04; ubuntu-latest has advanced to 26.04.
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -211,149 +215,30 @@ jobs:
     - name: Install PDF text verification
       timeout-minutes: 3
       run: sudo apt-get install -y poppler-utils
-    - name: Resource hover help, rest recovery and turn actions
+    - name: Site browser regressions
       run: |
-        npm --prefix tests run test:sorcerer-metamagic
-        npm --prefix tests run test:ranger-resources
-    - name: Adobe first-page manual Control prototype
-      run: npm --prefix tests run test:control-prototype
-    - name: NPC reading, exact-record reopening and return navigation
-      run: |-
-        npm --prefix tests run test:campaign-npcs
-        npm --prefix tests run test:npc-navigation
-    - name: Player publishing, image access and focused navigation
-      run: |
-        npm --prefix tests run test:publishing-feedback
-        npm --prefix tests run test:world-post-layouts
-        npm --prefix tests run test:one-shot-hub
-        npm --prefix tests run test:read-page-recovery
-        npm --prefix tests run test:character-note-recaps
-    - name: Centered native dialogs, spell details and unsaved-draft prompts
-      run: npm --prefix tests run test:dialogs
-    - name: Account notifications, read state and private source links
-      run: npm --prefix tests run test:account-notifications
-    - name: Root catalogue multi-select and viewport checks
-      run: npm --prefix tests run test:root-picker
-    - name: Admin catalogue loading, retry and account isolation
-      run: |-
-        npm --prefix tests run test:admin-accounts
-        npm --prefix tests run test:admin-catalogue
-        npm --prefix tests run test:library-dm-panel
-        npm --prefix tests run test:library-browsing
-        npm --prefix tests run test:navigation-feedback
-    - name: Campaign UI consistency, mobile targets and responsive party actions
-      run: npm --prefix tests run test:ui-consistency
-    - name: Non-Overview accessibility, keyboard, layout and print
-      run: npm --prefix tests run test:ui
-    - name: Refresh restoration and save before leaving character sheets
-      run: npm --prefix tests run test:navigation
-    - name: Grouped campaign navigation, settings, roles and refresh
-      run: npm --prefix tests run test:app-navigation
-    - name: Campaign deletion UI and permission boundaries
-      run: npm --prefix tests run test:campaign-deletion
-    - name: Shared character sheet, gear and bookmark context
-      run: |-
-        npm --prefix tests run test:sheet-tools-loading
-        npm --prefix tests run test:sheet-print-loading
-        npm --prefix tests run test:sheet-calculation-reuse
-        npm --prefix tests run test:extra-attack
-        npm --prefix tests run test:class-expertise
-        npm --prefix tests run test:weapon-mastery
-        npm --prefix tests run test:paladin-auras
-        npm --prefix tests run test:druid-wild-shape
-        npm --prefix tests run test:druid-elemental-fury
-        npm --prefix tests run test:druid-wild-companion
-        npm --prefix tests run test:druid-wild-resurgence
-        npm --prefix tests run test:druid-created-slots
-        npm --prefix tests run test:cleric-blessed-strikes
-        npm --prefix tests run test:cleric-intervention
-        npm --prefix tests run test:beast-spells
-        npm --prefix tests run test:languages
-        npm --prefix tests run test:feats-selected-overview
-        npm --prefix tests run test:sheet-warning-targets
-        npm --prefix tests run test:divine-channels
-        npm --prefix tests run test:wizard-recovery
-        npm --prefix tests run test:paladin-healing
-        npm --prefix tests run test:ranger-terrain
-        npm --prefix tests run test:bard-inspiration
-        npm --prefix tests run test:barbarian-rage
-        npm --prefix tests run test:fighter-resources
-        npm --prefix tests run test:class-capstones
-        npm --prefix tests run test:class-movement
-        npm --prefix tests run test:monk-points
-        npm --prefix tests run test:monk-martial-arts
-        npm --prefix tests run test:class-orders
-        npm --prefix tests run test:class-saves
-        npm --prefix tests run test:warlock-cantrips
-        npm --prefix tests run test:warlock-invocations
-        npm --prefix tests run test:artificer-versions
-        npm --prefix tests run test:artificer-reference
-        npm --prefix tests run test:artificer-flash
-        npm --prefix tests run test:artificer-tools
-        npm --prefix tests run test:artificer-attunement
-        npm --prefix tests run test:point-buy-presets
-        npm --prefix tests run test:fighting-styles
-        npm --prefix tests run test:bard-half-proficiency
-        npm --prefix tests run test:multiclass-asi
-        npm --prefix tests run test:character-workspace
-    - name: Page editors, dirty drafts and retryable campaign setup
-      run: npm --prefix tests run test:page-editors
-    - name: World, chapters, encounters and scoped player adventure flows
-      run: npm --prefix tests run test:workspace-browser
-    - name: Shared DM workspace and draft-preserving references
-      run: |-
-        npm --prefix tests run test:dm-workspace
-        npm --prefix tests run test:dm-navigation
-        npm --prefix tests run test:world-editor-navigation
-    - name: Creature and NPC preparation, optional combat and template preservation
-      run: npm --prefix tests run test:creature-editor
-    - name: Deferred creature catalogue, retry and context changes
-      run: npm --prefix tests run test:creature-import-loading
-    - name: Bulk SRD selection, private imports and safe retries
-      run: npm --prefix tests run test:creature-bulk-import
-    - name: Saved player illustrations and exact image permissions
-      run: npm --prefix tests run test:player-images
-    - name: Campaign home save/reopen, access, accessibility and layout
-      run: npm --prefix tests run test:campaign-home
-    - name: Book layouts, live draft previews and standard compatibility
-      run: npm --prefix tests run test:campaign-layouts
-    - name: Campaign item removal, race protection and catalogue isolation
-      run: npm --prefix tests run test:item-removal
-    - name: Library item refresh requests and delayed-write scope
-      run: npm --prefix tests run test:library-item-refresh
-    - name: Contextual archive warnings, cancellation and restoration
-      run: npm --prefix tests run test:archive-dialog
-    - name: Simple world entry creation and preserved optional preparation
-      run: npm --prefix tests run test:simple-world
-    - name: Visual NPC/world cards and DM-managed campaign map
-      run: |-
-        npm --prefix tests run test:journal-images
-        npm --prefix tests run test:journal-thumbnails
-        npm --prefix tests run test:journal-cards
-        npm --prefix tests run test:world-navigation
-        npm --prefix tests run test:multiple-maps
-        npm --prefix tests run test:map-preview-loading
-        npm --prefix tests run test:campaign-map
-        npm --prefix tests run test:map-media
-        npm --prefix tests run test:map-management
-        npm --prefix tests run test:workspace-deletion
-        npm --prefix tests run test:map-styles-regions
-        npm --prefix tests run test:map-roads-routes
-    - name: Shared party journal, notebook reader and private recap permissions
-      run: |-
-        npm --prefix tests run test:campaign-journal
-        npm --prefix tests run test:recap-navigation
-    - name: Player campaign information sharing and accessibility
-      run: npm --prefix tests run test:campaign-information
-    - name: Completed chapters and private player notes
-      run: npm --prefix tests run test:campaign-chapters
+        mkdir -p /tmp/campaignatlas-ui-checks
+        set -o pipefail
+        npm --prefix tests run test:site-browser -- --shard ${{ matrix.shard }}/3 --report /tmp/campaignatlas-ui-checks/site-suite-timings.json 2>&1 | tee /tmp/campaignatlas-ui-checks/site-shard.log
     - name: Upload UI screenshots and print checks
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: campaignatlas-ui-checks-browser
+        name: campaignatlas-ui-checks-browser-${{ matrix.shard }}
         path: /tmp/campaignatlas-ui-checks
         if-no-files-found: ignore
+        retention-days: 14
+  browser-status:
+    # Preserve the existing check name for repository rules and familiar PR links.
+    name: Browser and navigation
+    needs: browser
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Require every site browser shard
+      env:
+        BROWSER_RESULT: ${{ needs.browser.result }}
+      run: test "$BROWSER_RESULT" = success
   permissions:
     name: Firestore and Storage permissions
     runs-on: ubuntu-latest

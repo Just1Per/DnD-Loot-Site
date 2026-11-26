@@ -1,5 +1,8 @@
 # Repository cleanup inventory
 
+> Historical checkpoint. For current priorities, measurements and delivery status, start with [the documentation index](README.md) and [26 November loading/CI follow-up](performance-loading-2026-11-26.md). Decisions and recovery references below are retained.
+
+
 Audit: 20 October 2026. Runtime references were checked across `index.html`, all browser modules and their dynamic HTML, plus tests, workflows, package scripts and operator packaging. All browser feature modules are loaded by `FEATURE_FILES`; the shared scope means an isolated-file unused-code rule is insufficient.
 
 ## Verified code cleanup

@@ -1,5 +1,8 @@
 # Offline ordered-loader baseline — October 21, 2026
 
+> Historical checkpoint. For current priorities, measurements and delivery status, start with [the documentation index](README.md) and [26 November loading/CI follow-up](performance-loading-2026-11-26.md). Decisions and recovery references below are retained.
+
+
 `PLAYWRIGHT_PATH=<compatible Playwright module> node scripts/benchmark-startup.cjs` measures the existing `js/app.js` bootstrap with its real ordered feature loader and all current feature files. Only its Firebase imports are replaced with the deterministic browser-test SDK. All external requests are blocked; authentication callbacks are registered but no login occurs. The script asserts readiness, working navigation/World/Guide modules, no fixture writes and exactly one request per feature file.
 
 Three fresh-page runs per case use 4× Chromium CPU throttling. Timing starts immediately before the module entry is appended and ends at `campaignatlas:ready`. The optional 40 ms request delay applies independently to each feature-file request; it is not a real network bandwidth/connection model.

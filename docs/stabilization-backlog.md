@@ -1,5 +1,8 @@
 # Current stabilization backlog
 
+> Historical checkpoint. For current priorities, measurements and delivery status, start with [the documentation index](README.md) and [26 November loading/CI follow-up](performance-loading-2026-11-26.md). Decisions and recovery references below are retained.
+
+
 Order agreed with the owner: stabilize merged behavior and complete UX/code/performance/CI cleanup. One Shots are parked at the owner’s request until their setup and user flows have been planned. New test failures take priority over larger features. Each PR describes tests and rules requirements; merges and production changes remain owner actions.
 
 - [x] Confirm #168 reached main (3f4f8aa) with its six passing checks.

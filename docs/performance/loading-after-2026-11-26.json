@@ -1,0 +1,471 @@
+{
+  "format": 1,
+  "measuredAt": "2026-11-26T08:14:29.645Z",
+  "commit": "a9103cfceb136b40098ce0aa87391b3712df2ed2",
+  "appRef": "working-tree",
+  "mode": "controlled-http-with-fixture-sdk",
+  "target": "loopback HTTP",
+  "settings": {
+    "latencyMs": 80,
+    "cpu": 4,
+    "throughputBytesPerSecond": 1310720,
+    "compression": "gzip"
+  },
+  "limits": [
+    "Frontend assets use real HTTP and browser cache; login, campaign and Library backend responses use in-memory fixtures.",
+    "No production authentication, App Check, Firestore, image latency or production speed guarantee. Library uses a tiny/empty synthetic catalogue.",
+    "Warm results are reloads in the same context after a full identical journey; fixture navigation preferences are reset while HTTP cache is retained."
+  ],
+  "runs": [
+    {
+      "run": 1,
+      "cache": "cold",
+      "stages": [
+        {
+          "name": "landing",
+          "elapsedMs": 3617,
+          "requests": 207,
+          "transferBytes": 1212613,
+          "decodedBytes": 4334857,
+          "cacheHits": 0,
+          "featureScripts": 176,
+          "catalogueRequests": [],
+          "fixtureReads": 0
+        },
+        {
+          "name": "login-fixture",
+          "elapsedMs": 179,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 10
+        },
+        {
+          "name": "campaign-fixture",
+          "elapsedMs": 63,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 15
+        },
+        {
+          "name": "sheet-first-open",
+          "elapsedMs": 6263,
+          "requests": 78,
+          "transferBytes": 709695,
+          "decodedBytes": 2634128,
+          "cacheHits": 0,
+          "featureScripts": 70,
+          "catalogueRequests": [
+            "/data/rules/catalog.json"
+          ],
+          "fixtureReads": 17
+        },
+        {
+          "name": "sheet-reopen",
+          "elapsedMs": 2932,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 18
+        },
+        {
+          "name": "library-explicit-load-fixture",
+          "elapsedMs": 201,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 21
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 1,
+      "cache": "warm-reload",
+      "stages": [
+        {
+          "name": "landing",
+          "elapsedMs": 1043,
+          "requests": 207,
+          "transferBytes": 0,
+          "decodedBytes": 4334857,
+          "cacheHits": 207,
+          "featureScripts": 176,
+          "catalogueRequests": [],
+          "fixtureReads": 0
+        },
+        {
+          "name": "login-fixture",
+          "elapsedMs": 98,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 15
+        },
+        {
+          "name": "campaign-fixture",
+          "elapsedMs": 44,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 20
+        },
+        {
+          "name": "sheet-first-open",
+          "elapsedMs": 4684,
+          "requests": 80,
+          "transferBytes": 0,
+          "decodedBytes": 2668106,
+          "cacheHits": 79,
+          "featureScripts": 70,
+          "catalogueRequests": [
+            "/data/rules/catalog.json"
+          ],
+          "fixtureReads": 22
+        },
+        {
+          "name": "sheet-reopen",
+          "elapsedMs": 2303,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 23
+        },
+        {
+          "name": "library-explicit-load-fixture",
+          "elapsedMs": 173,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 26
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 2,
+      "cache": "cold",
+      "stages": [
+        {
+          "name": "landing",
+          "elapsedMs": 3676,
+          "requests": 207,
+          "transferBytes": 1212613,
+          "decodedBytes": 4334857,
+          "cacheHits": 0,
+          "featureScripts": 176,
+          "catalogueRequests": [],
+          "fixtureReads": 0
+        },
+        {
+          "name": "login-fixture",
+          "elapsedMs": 178,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 10
+        },
+        {
+          "name": "campaign-fixture",
+          "elapsedMs": 68,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 15
+        },
+        {
+          "name": "sheet-first-open",
+          "elapsedMs": 5852,
+          "requests": 78,
+          "transferBytes": 709695,
+          "decodedBytes": 2634128,
+          "cacheHits": 0,
+          "featureScripts": 70,
+          "catalogueRequests": [
+            "/data/rules/catalog.json"
+          ],
+          "fixtureReads": 17
+        },
+        {
+          "name": "sheet-reopen",
+          "elapsedMs": 2880,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 18
+        },
+        {
+          "name": "library-explicit-load-fixture",
+          "elapsedMs": 201,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 21
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 2,
+      "cache": "warm-reload",
+      "stages": [
+        {
+          "name": "landing",
+          "elapsedMs": 927,
+          "requests": 207,
+          "transferBytes": 0,
+          "decodedBytes": 4334857,
+          "cacheHits": 207,
+          "featureScripts": 176,
+          "catalogueRequests": [],
+          "fixtureReads": 0
+        },
+        {
+          "name": "login-fixture",
+          "elapsedMs": 93,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 15
+        },
+        {
+          "name": "campaign-fixture",
+          "elapsedMs": 25,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 20
+        },
+        {
+          "name": "sheet-first-open",
+          "elapsedMs": 4415,
+          "requests": 80,
+          "transferBytes": 0,
+          "decodedBytes": 2668106,
+          "cacheHits": 79,
+          "featureScripts": 70,
+          "catalogueRequests": [
+            "/data/rules/catalog.json"
+          ],
+          "fixtureReads": 22
+        },
+        {
+          "name": "sheet-reopen",
+          "elapsedMs": 3104,
+          "requests": 1,
+          "transferBytes": 0,
+          "decodedBytes": 1016,
+          "cacheHits": 1,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 23
+        },
+        {
+          "name": "library-explicit-load-fixture",
+          "elapsedMs": 225,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 26
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 3,
+      "cache": "cold",
+      "stages": [
+        {
+          "name": "landing",
+          "elapsedMs": 3677,
+          "requests": 207,
+          "transferBytes": 1212613,
+          "decodedBytes": 4334857,
+          "cacheHits": 0,
+          "featureScripts": 176,
+          "catalogueRequests": [],
+          "fixtureReads": 0
+        },
+        {
+          "name": "login-fixture",
+          "elapsedMs": 187,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 10
+        },
+        {
+          "name": "campaign-fixture",
+          "elapsedMs": 79,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 15
+        },
+        {
+          "name": "sheet-first-open",
+          "elapsedMs": 6297,
+          "requests": 78,
+          "transferBytes": 709695,
+          "decodedBytes": 2634128,
+          "cacheHits": 0,
+          "featureScripts": 70,
+          "catalogueRequests": [
+            "/data/rules/catalog.json"
+          ],
+          "fixtureReads": 17
+        },
+        {
+          "name": "sheet-reopen",
+          "elapsedMs": 3191,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 18
+        },
+        {
+          "name": "library-explicit-load-fixture",
+          "elapsedMs": 222,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 21
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 3,
+      "cache": "warm-reload",
+      "stages": [
+        {
+          "name": "landing",
+          "elapsedMs": 1148,
+          "requests": 207,
+          "transferBytes": 0,
+          "decodedBytes": 4334857,
+          "cacheHits": 207,
+          "featureScripts": 176,
+          "catalogueRequests": [],
+          "fixtureReads": 0
+        },
+        {
+          "name": "login-fixture",
+          "elapsedMs": 103,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 15
+        },
+        {
+          "name": "campaign-fixture",
+          "elapsedMs": 23,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 20
+        },
+        {
+          "name": "sheet-first-open",
+          "elapsedMs": 6315,
+          "requests": 80,
+          "transferBytes": 0,
+          "decodedBytes": 2668106,
+          "cacheHits": 79,
+          "featureScripts": 70,
+          "catalogueRequests": [
+            "/data/rules/catalog.json"
+          ],
+          "fixtureReads": 22
+        },
+        {
+          "name": "sheet-reopen",
+          "elapsedMs": 2872,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 23
+        },
+        {
+          "name": "library-explicit-load-fixture",
+          "elapsedMs": 183,
+          "requests": 0,
+          "transferBytes": 0,
+          "decodedBytes": 0,
+          "cacheHits": 0,
+          "featureScripts": 0,
+          "catalogueRequests": [],
+          "fixtureReads": 26
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

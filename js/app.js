@@ -53,7 +53,7 @@ window.__DND_VAULT_DEPS__ = Object.freeze({
   notificationsAvailable:()=>window.AccountNotifications?.enabled===true,
 });
 
-const ASSET_VERSION = "20261125-origin-ability-choices-v147";
+const ASSET_VERSION = "20261126-optional-loading-v148";
 
 // Keep the optional character-engine styles cache-versioned with the scripts.
 if (!document.querySelector('link[data-character-adobe-integration]')) {
@@ -261,11 +261,18 @@ function loadFeatureScript(relativePath) {
 
 // Code assets are public and contain no account data. Reuse one in-flight load.
 function createOptionalFeatureLoader(features) {
-  const requests=new Map();
+  const requests=new Map(),preloads=new Map();
+  function preload(file) {
+    if(requests.has(file)||preloads.has(file))return;
+    const link=document.createElement('link'),url=new URL(file,import.meta.url);
+    url.searchParams.set('v',ASSET_VERSION);link.rel='preload';link.as='script';link.href=url.href;
+    link.onerror=()=>{if(preloads.get(file)===link)preloads.delete(file);link.remove();};
+    preloads.set(file,link);document.head.appendChild(link);
+  }
   function loadOnce(file) {
     if(!requests.has(file)) {
       const request=loadFeatureScript(file).catch(error=>{
-        requests.delete(file);console.warn('[CampaignAtlas] Optional tool failed to load:',error);
+        requests.delete(file);preloads.get(file)?.remove();preloads.delete(file);console.warn('[CampaignAtlas] Optional tool failed to load:',error);
         throw new Error('Character tools could not load. Try opening the sheet again.');
       });
       requests.set(file,request);
@@ -276,6 +283,9 @@ function createOptionalFeatureLoader(features) {
     if(!Object.hasOwn(features,key))throw new Error('Unknown character tool.');
     // Preserve wrapper order and retain completed scripts when a later file fails.
     const files=Array.isArray(features[key])?features[key]:[features[key]];
+    // Fetch only after an explicit tool request. The first script starts below;
+    // the rest download together, while successful execution stays strictly ordered.
+    for(const file of files.slice(1))preload(file);
     for(const file of files)await loadOnce(file);
   }});
 }

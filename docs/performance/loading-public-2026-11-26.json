@@ -1,0 +1,56 @@
+{
+  "format": 1,
+  "measuredAt": "2026-11-26T08:07:44.630Z",
+  "commit": "a9103cfceb136b40098ce0aa87391b3712df2ed2",
+  "appRef": "working-tree",
+  "mode": "public-anonymous-live",
+  "target": "https://dnd-loot-site.web.app",
+  "settings": {
+    "latencyMs": 80,
+    "cpu": 4,
+    "throughputBytesPerSecond": 1310720,
+    "compression": "server-controlled"
+  },
+  "limits": [
+    "Anonymous landing only; no login, account creation or campaign writes. The isolated browser accepts the execution environment HTTPS proxy certificate.",
+    "Cross-origin Performance API byte counts may be unavailable without Timing-Allow-Origin."
+  ],
+  "runs": [
+    {
+      "run": 1,
+      "cache": "cold",
+      "stages": [
+        {
+          "name": "landing",
+          "elapsedMs": 3532,
+          "requests": 213,
+          "transferBytes": 1041701,
+          "decodedBytes": 4328064,
+          "cacheHits": 0,
+          "featureScripts": 176,
+          "catalogueRequests": [],
+          "fixtureReads": 0
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 1,
+      "cache": "warm-reload",
+      "stages": [
+        {
+          "name": "landing",
+          "elapsedMs": 1133,
+          "requests": 214,
+          "transferBytes": 0,
+          "decodedBytes": 4353968,
+          "cacheHits": 208,
+          "featureScripts": 176,
+          "catalogueRequests": [],
+          "fixtureReads": 0
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

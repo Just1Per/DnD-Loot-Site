@@ -2,7 +2,7 @@
 // One suite list for local execution and isolated CI shards. Never invokes a shell.
 const fs = require('node:fs');
 const path = require('node:path');
-const {spawnSync} = require('node:child_process');
+const P = require('./browser-suite-plan.cjs');
 const tests = path.resolve(__dirname, '../tests');
 
 function suites() {
@@ -18,23 +18,15 @@ function suites() {
   return rows;
 }
 
-function select(rows, shard) {
-  if (!shard) return rows;
-  const match = /^([1-9]\d*)\/([1-9]\d*)$/.exec(shard);
-  if (!match) throw Error('Use --shard INDEX/TOTAL (for example 1/3).');
-  const index = Number(match[1]), total = Number(match[2]);
-  if (!Number.isSafeInteger(index) || !Number.isSafeInteger(total) || index > total || total > rows.length) {
-    throw Error('Shard must select a nonempty part of the suite manifest.');
-  }
-  return rows.filter((_, i) => i % total === index - 1);
-}
+function select(rows, shard, seconds = P.weights('adobe')) { return P.select(rows, shard, seconds); }
 
 function options(args) {
   const out = {};
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--list' && !out.list) out.list = true;
+    else if (args[i] === '--report' && !out.report && args[i + 1]) out.report = args[++i];
     else if (args[i] === '--shard' && !out.shard && args[i + 1]) out.shard = args[++i];
-    else throw Error('Supported options: --list, --shard INDEX/TOTAL.');
+    else throw Error('Supported options: --list, --shard INDEX/TOTAL, --report FILE.');
   }
   return out;
 }
@@ -45,23 +37,7 @@ function run(args) {
     console.log(JSON.stringify(rows, null, 2));
     return 0;
   }
-  const start = Date.now();
-  console.log('Adobe browser suites: ' + rows.length + (opts.shard ? ' · shard ' + opts.shard : ''));
-  for (const file of rows) {
-    const before = Date.now();
-    console.log('\nRUN ' + file);
-    const result = spawnSync(process.execPath, [path.join(tests, file)], {
-      cwd: tests, env: process.env, stdio: 'inherit'
-    });
-    if (result.error) throw result.error;
-    if (result.status !== 0) {
-      console.error('FAIL ' + file + ' · ' + (result.signal || 'exit ' + result.status));
-      return result.status || 1;
-    }
-    console.log('DONE ' + file + ' · ' + ((Date.now() - before) / 1000).toFixed(1) + 's');
-  }
-  console.log('PASS ' + rows.length + ' suites · ' + ((Date.now() - start) / 1000).toFixed(1) + 's');
-  return 0;
+  return P.run(rows, opts, {group:'Adobe', cwd:tests, command:file=>[process.execPath,path.join(tests,file)]});
 }
 
 if (require.main === module) {
