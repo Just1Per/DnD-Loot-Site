@@ -20,7 +20,7 @@ async function boot(browser){
  await page.evaluate(()=>{CharacterCatalog.set(__testCatalog);document.getElementById('siteBootPanel')?.remove()});await page.addScriptTag({path:root+'/tests/dom-state.js'});
  await page.evaluate(data=>{window.__testMonsters=data;window.fetch=async u=>({ok:true,json:async()=>String(u).includes('monsters.json')?__testMonsters:__testCatalog});window.auditSeed=role=>{closeCharacterSheet(true);CampaignWorkspace.clear(true);SiteHelp.onLogout();seed(role);document.getElementById('loginControls').style.display='none';document.getElementById('logoutButton').style.display='inline-block';document.getElementById('adminTab').style.display=role==='admin'?'inline-block':'none';document.getElementById('userDisplay').textContent='Sample '+role;document.getElementById('activeCampaignName').textContent=activeCampaign.name;renderDMTools();SiteHelp.onLogin();};},JSON.parse(fs.readFileSync(root+'/data/rules/monsters.json','utf8')));
  await page.addScriptTag({content:'(()=>{const ASSET_VERSION="print-test";'+loader+'})()'});
- await page.evaluate(()=>{auditSeed('player');testSheetDocs['campaigns/a/characters/c1']=structuredClone(characters.find(c=>c.id==='c1'));window.print=()=>{};delete window.__DND_VAULT_DEPS__});
+ await page.evaluate(()=>{auditSeed('player');testSheetDocs['campaigns/a/characters/c1']=structuredClone(characters.find(c=>c.id==='c1'));window.print=()=>{};window.initialRead=readSheetForm;delete window.__DND_VAULT_DEPS__});
  assert.equal(await page.evaluate(()=>typeof CharacterSheetPrint),'undefined');return page;
 }
 // Exercise the actual deferred wrapper chain, including a failure after one script installed.
@@ -35,11 +35,11 @@ for(const name of deferred)assert.ok(!mandatory.includes('./modules/'+name+'.js'
  await page.evaluate(()=>openCharacterSheet('c1'));assert.match(await page.locator('#sheetStatus').textContent(),/Character tools could not load/);assert.equal(await page.evaluate(()=>sheetSession),null);
  assert.equal(await page.evaluate(()=>CharacterCreatureData.rows.length),127);
  for(const name of catalogue)assert.equal(counts[name+'.js'],1);
- assert.equal(counts['character-adobe-builder-ui.js'],1);assert.equal(counts['character-adobe-pages.js'],1);assert.equal(counts['character-creature-ui.js'],undefined);
+ assert.equal(counts['character-adobe-builder-ui.js'],1);assert.ok(counts['character-adobe-pages.js']>=1);assert.equal(counts['character-creature-ui.js'],1,'Later public code may be prefetched');assert.equal(await page.evaluate(()=>typeof renderCompanionCreaturePickers),'undefined','Prefetched code must not execute ahead of failed dependencies');const pageFailures=counts['character-adobe-pages.js'];
  await page.evaluate(()=>{window.installedRead=readSheetForm});assert.equal(await page.evaluate(()=>readSheetForm===initialRead),false);
  fail=false;await page.evaluate(()=>openCharacterSheet('c1'));await page.waitForSelector('#characterSheetForm');
  assert.equal(await page.evaluate(()=>readSheetForm===installedRead),true,'Retry must not install the successful builder wrapper twice');
- for(const name of deferred)assert.equal(counts[name+'.js'],name==='character-adobe-pages'?2:1);
+ for(const name of deferred)assert.equal(counts[name+'.js'],name==='character-adobe-pages'?pageFailures+1:1);
  assert.equal(await page.evaluate(()=>new Set(CharacterCreatureData.rows.map(row=>row.id)).size),127,'Retry preserves all creature identities without resetting or duplicating the catalogue');
  for(const selector of ['#sheetAdobeProgression','#sheetPageManager','#sheetSpellGeneration','#sheetSpellGenerator'])assert.equal(await page.locator(selector).count(),1);
  // Exercise builder progression, optional companion page and real spell generation after SDK cleanup.
@@ -58,14 +58,14 @@ for(const name of deferred)assert.ok(!mandatory.includes('./modules/'+name+'.js'
  const partial=await boot(browser),partialCounts={};let failBatch=true;
  await partial.route('**/js/modules/*.js*',route=>{const name=new URL(route.request().url()).pathname.split('/').at(-1);partialCounts[name]=(partialCounts[name]||0)+1;return failBatch&&name==='character-creature-data-2.js'?route.abort('failed'):route.fulfill({path:root+'/js/modules/'+name,contentType:'text/javascript'})});
  await partial.evaluate(()=>openCharacterSheet('c1'));assert.equal(await partial.evaluate(()=>sheetSession),null);
- const partialRows=await partial.evaluate(()=>CharacterCreatureData.rows.length);assert.ok(partialRows>0&&partialRows<127);assert.equal(partialCounts['character-adobe-builder-ui.js'],undefined);
+ const partialRows=await partial.evaluate(()=>CharacterCreatureData.rows.length);assert.ok(partialRows>0&&partialRows<127);assert.equal(partialCounts['character-adobe-builder-ui.js'],1);assert.equal(await partial.evaluate(()=>readSheetForm===initialRead),true,'Prefetched wrappers must wait for complete data');const batchFailures=partialCounts['character-creature-data-2.js'];
  failBatch=false;await partial.evaluate(()=>openCharacterSheet('c1'));await partial.waitForSelector('#characterSheetForm');
- for(const name of deferred)assert.equal(partialCounts[name+'.js'],name==='character-creature-data-2'?2:1);
+ for(const name of deferred)assert.equal(partialCounts[name+'.js'],name==='character-creature-data-2'?batchFailures+1:1);
  assert.equal(await partial.evaluate(()=>CharacterCreatureData.rows.length),127);assert.equal(await partial.evaluate(()=>new Set(CharacterCreatureData.rows.map(row=>row.id)).size),127);await partial.close();
  // Concurrent opens share each script; the wrapper chain keeps its original order.
  const concurrent=await boot(browser),order=[];let release,started;const ready=new Promise(resolve=>started=resolve);
  await concurrent.route('**/js/modules/*.js*',async route=>{const name=new URL(route.request().url()).pathname.split('/').at(-1);if(deferred.some(n=>name===n+'.js')){order.push(name);if(name===deferred[0]+'.js')await new Promise(resolve=>{release=resolve;started()});}await route.fulfill({path:root+'/js/modules/'+name,contentType:'text/javascript'})});
- await concurrent.evaluate(()=>{window.firstOpen=openCharacterSheet('c1');window.secondOpen=openCharacterSheet('c1')});await ready;release();await concurrent.evaluate(()=>Promise.all([firstOpen,secondOpen]));assert.deepEqual(order,deferred.map(n=>n+'.js'));assert.equal(await concurrent.locator('#sheetAdobeProgression').count(),1);await concurrent.close();
+ await concurrent.evaluate(()=>{window.firstOpen=openCharacterSheet('c1');window.secondOpen=openCharacterSheet('c1')});await ready;release();await concurrent.evaluate(()=>Promise.all([firstOpen,secondOpen]));assert.deepEqual([...order].sort(),deferred.map(n=>n+'.js').sort());assert.deepEqual(await concurrent.evaluate(names=>[...document.querySelectorAll('script[data-dnd-vault-module]')].map(n=>n.dataset.dndVaultModule.split('/').at(-1)).filter(n=>names.includes(n)),deferred.map(n=>n+'.js')),deferred.map(n=>n+'.js'),'Execution preserves dependency and wrapper order despite parallel downloads');assert.equal(await concurrent.locator('#sheetAdobeProgression').count(),1);await concurrent.close();
  for(const change of ['account','campaign','close']){
   const delayed=await boot(browser);let resume,started;const ready=new Promise(resolve=>started=resolve);
   await delayed.route('**/character-creature-data-2.js*',async route=>{await new Promise(resolve=>{resume=resolve;started()});await route.fulfill({path:root+'/js/modules/character-creature-data-2.js',contentType:'text/javascript'})});

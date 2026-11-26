@@ -9,10 +9,10 @@ A campaign website for character sheets, a shared item catalogue, private campai
 - `firestore.rules`, `storage.rules`: access rules, verified with demo emulators.
 - `tests/`: engine tests, fixture-based app/browser tests and emulator permission tests.
 - `scripts/`: data generators, read-only audits, preview maintenance and owner-run migration/recovery tools. They are not app startup code.
-- `functions/`: the historical dependency location used by local operator tools for `firebase-admin`. There is no Cloud Functions deployment target; campaign operations use the browser Firestore store and rules.
+- `functions/`: the historical `firebase-admin` dependency location for local operators. `functions/email/` is a separate, disabled-by-default invitation email backend; see [activation](docs/invitation-email-setup.md). Campaign operations still use the browser Firestore store and rules.
 - `docs/`: feature behavior, operational instructions and the remaining product backlog.
 
-Start with [the code map](docs/code-map.md), [the campaign experience backlog](docs/campaign-experience-backlog.md) and [the cleanup inventory](docs/repository-cleanup.md).
+Start with [the current documentation index](docs/README.md), [the code map](docs/code-map.md), [the campaign experience backlog](docs/campaign-experience-backlog.md) and [the cleanup inventory](docs/repository-cleanup.md).
 
 ## Development and tests
 
@@ -42,7 +42,7 @@ Browser fixtures use synthetic data, not production accounts. The campaign works
 npm --prefix tests run with -- emulator npm --prefix tests run test:workspace-rules
 ```
 
-Adobe browser suites use one manifest (`tests/adobe-connected-suites.json`). Run all with `npm --prefix tests run with -- browser npm --prefix tests run test:adobe-connected`, or select a CI shard with `-- --shard 1/3`; add `--list` to inspect its files. CI runs all three shards on separate runners and requires every shard to pass. See the [current configuration review](docs/repository-configuration-review-da.md) for measured sizes, Hosting boundaries and follow-up work.
+Adobe browser suites use one manifest (`tests/adobe-connected-suites.json`). Run all with `npm --prefix tests run with -- browser npm --prefix tests run test:adobe-connected`, or select a CI shard with `-- --shard 1/3`; add `--list` to inspect its files. CI balances all three shards using recorded suite durations and requires every shard to pass. The 97 existing site/browser npm checks also have one manifest (`tests/site-browser-suites.json`) and three isolated groups; the additional real-HTTP loader regression is included there. Run them with `npm --prefix tests run with -- browser npm --prefix tests run test:site-browser -- --shard 1/3`. Both runners accept `--report FILE` for structured timing/failure results. See the [current configuration review](docs/repository-configuration-review-da.md) for measured sizes, Hosting boundaries and follow-up work.
 
 The additional package scripts under `tests/package.json` select individual features. Use the existing emulator configuration and project flags rather than production credentials.
 
