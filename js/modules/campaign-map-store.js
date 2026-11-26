@@ -13,6 +13,7 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
  const picturePrefix=(cid,pid)=>'campaign-map-place-images/'+id(cid)+'/'+(mapId==='main'?'':mapId+'/')+id(pid)+'/';
  function image(cid,path){const prefix=imagePrefix(cid);if(typeof path!=='string'||!path.startsWith(prefix)||!/^[A-Za-z0-9_-]{1,100}$/.test(path.slice(prefix.length)))throw Error('Choose an image belonging to this campaign map.');return path;}
 
+ const publicationConflict=()=>Object.assign(Error('The published map changed. Review publication changes before publishing.'),{code:'map-publication/conflict'});
  const check=(uid,isCurrent)=>{if(auth.currentUser?.uid!==uid||!isCurrent())throw Error('Campaign access changed. Reopen the map.');};
  async function load(cid,{includeDeleted=false}={}){actor();const snapshot=await getDoc(mapRef(cid));return snapshot.exists()&&(includeDeleted||!snapshot.data().deletedAt)?snapshot.data():null;}
  async function listPins(cid,imagePath){actor();return rows(await getDocs(pinsQuery(cid,typeof imagePath==='object'?imagePath:image(cid,imagePath))));}
@@ -121,7 +122,7 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
    if(map.data()?.deletedAt)throw Error('This map was deleted. Choose another map.');
    if(sourceGuard){if(!/^[A-Za-z0-9_-]{1,100}$/.test(sourceGuard.mapId||'')||sourceGuard.mapId===mapId||![sourceGuard.mapRevision,sourceGuard.draftRevision].every(n=>Number.isInteger(n)&&n>=0))throw Error('Invalid source map.');const sourceMap=await tx.get(doc(db,'campaigns',id(campaignId),'campaignMaps',sourceGuard.mapId)),sourceDraft=await tx.get(doc(db,'campaigns',id(campaignId),'campaignMapDrafts',sourceGuard.mapId));check(uid,isCurrent);if(sourceMap.data()?.deletedAt||(sourceMap.data()?.revision||0)!==sourceGuard.mapRevision||(sourceDraft.data()?.revision||0)!==sourceGuard.draftRevision)throw Error('The source map changed or was deleted. Refresh before copying again.');}
    if((previous.data()?.revision||0)!==revision)throw Error('The DM draft changed in another window. Copy your changes and refresh.');
-   if((map.data()?.revision||0)!==sourceRevision)throw Error('Another DM published a map. Copy your changes and refresh before saving.');
+   if((map.data()?.revision||0)!==sourceRevision)throw publicationConflict();
    const next={...normalized,sourceRevision,revision:revision+1,updatedBy:uid,updatedAt:Date.now()};tx.set(ref,next);return next;
   });
  }
@@ -131,7 +132,7 @@ function createCampaignMapStore(sdk,{mapId="main"}={}){
    stage='reading-published-map';const previous=await tx.get(destination);if(previous.data()?.deletedAt)throw Error('This map was deleted. Choose another map.');
    if(!draft.exists()||draft.data().revision!==draftRevision)throw Error('The saved DM draft changed. Refresh before publishing.');
    const source=draft.data(),normalized=normalizeDraft(campaignId,source),oldRevision=previous.data()?.revision||0;
-   if(source.sourceRevision!==oldRevision)throw Error('The published map changed. Refresh before publishing.');
+   stage='checking-publication-revision';if(source.sourceRevision!==oldRevision)throw publicationConflict();
    const pins=normalized.pins.filter(pin=>pin.revealed),shared=new Set();
    for(const entryId of new Set(pins.map(pin=>pin.worldEntryId).filter(Boolean))){stage='checking-world-links';const entry=await tx.get(doc(db,'campaigns',id(campaignId),'playerInformation',id(entryId)));if(entry.exists())shared.add(entryId);}
    check(uid,isCurrent);

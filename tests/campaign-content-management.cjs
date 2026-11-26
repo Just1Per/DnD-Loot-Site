@@ -44,3 +44,21 @@ test('Deleting campaign entries atomically removes their shared versions, DM not
 test('DM-authored recap deletion is bounded to its author and atomically removes its saved/shared copies with stale safeguards',async()=>{
  const f=fixture(),store=createCampaignJournalStore(f.sdk),input={title:'DM recap',body:'The story',authorName:'DM',characterName:'',sessionDate:'2026-11-25',sessionNumber:1,remember:'',nextTime:''};await store.save({campaignId:'a',id:'recap',revision:0,input});await store.publish({campaignId:'a',id:'recap',revision:1});f.docs.set('campaigns/a/journalDrafts/player/entries/recap',{body:'Private player notes'});const before=JSON.stringify([...f.docs]);await assert.rejects(store.removeDraft({campaignId:'a',id:'recap',revision:1,publishedRevision:0}),/changed/);assert.equal(JSON.stringify([...f.docs]),before);await store.removeDraft({campaignId:'a',id:'recap',revision:1,publishedRevision:1});assert.equal(f.docs.has('campaigns/a/journalDrafts/dm/entries/recap'),false);assert.equal(f.docs.has('campaigns/a/journalRecaps/recap'),false);assert.equal(f.docs.get('campaigns/a/journalDrafts/player/entries/recap').body,'Private player notes');
 });
+
+
+test('A stale saved map draft remains intact across reloads and can be retained against a reviewed publication without publishing it',async()=>{
+ for(const mapId of ['main','aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee']){
+  const f=fixture(),source=await seed(f,mapId,[pin('town'),pin('secret',{revealed:false,description:'Keep private notes'})]),store=f.map(mapId),mapPath='campaigns/a/campaignMaps/'+mapId,draftPath='campaigns/a/campaignMapDrafts/'+mapId;
+  f.docs.get(mapPath).revision++;f.docs.get(mapPath).title='Newer publication';const old=structuredClone(f.docs.get(draftPath)),before=JSON.stringify([...f.docs]);
+  await assert.rejects(store.publish({campaignId:'a',draftRevision:old.revision}),error=>error.code==='map-publication/conflict'&&error.mapPublishStage==='checking-publication-revision');assert.equal(JSON.stringify([...f.docs]),before);
+  assert.deepEqual(await store.loadDraft('a'),old,'Refresh alone reloads the same stale draft');
+  const reviewed=await store.saveDraft({campaignId:'a',input:{...old,title:'Keep my draft'},revision:old.revision,sourceRevision:2});assert.equal(reviewed.sourceRevision,2);assert.deepEqual(reviewed.pins,old.pins);assert.equal(f.docs.get(mapPath).title,'Newer publication');assert.equal(f.docs.get(mapPath).revision,2);
+  const result=await store.publish({campaignId:'a',draftRevision:reviewed.revision});assert.equal(result.map.revision,3);assert.equal(result.map.title,'Keep my draft');assert.equal(result.pins.some(p=>p.id==='secret'),false);assert.equal(result.draft.pins.find(p=>p.id==='secret').description,'Keep private notes');
+ }
+});
+test('Retaining a reviewed draft rejects a newer saved draft, newer publication, retired map or changed account without writes',async()=>{
+ for(const change of ['draft','publication','retired','account']){const f=fixture(),source=await seed(f),store=f.map('main'),input=structuredClone(source.draft),map=f.docs.get('campaigns/a/campaignMaps/main'),draft=f.docs.get('campaigns/a/campaignMapDrafts/main');
+  if(change==='draft'){draft.revision++;draft.title='Newer DM draft';}if(change==='publication')map.revision++;if(change==='retired')map.deletedAt=1;if(change==='account')f.sdk.auth.currentUser={uid:'other'};
+  const before=JSON.stringify([...f.docs]);await assert.rejects(store.saveDraft({campaignId:'a',input,revision:source.draft.revision,sourceRevision:1,isCurrent:()=>change!=='account'}),/changed|deleted/);assert.equal(JSON.stringify([...f.docs]),before);
+ }
+});

@@ -141,3 +141,9 @@
 .map-repair-report h3{margin-top:0;font-size:1.1rem}
 .map-repair-report li{margin:10px 0}
 .map-repair-report li p{margin:5px 0;font-size:.95rem}
+
+.map-publication-conflict{margin:12px 0;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--paper-soft)}
+.map-conflict-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;overflow-wrap:anywhere}
+.map-publication-dialog details{margin:10px 0;border:1px solid var(--border);border-radius:6px;padding:10px}
+.map-publication-dialog{overflow-wrap:anywhere}
+@media(max-width:600px){.map-conflict-columns{grid-template-columns:1fr}}
