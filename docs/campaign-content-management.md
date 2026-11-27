@@ -18,6 +18,10 @@ An unsaved new map can also be discarded with **Delete map**, without creating o
 
 Delete actions require confirmation, recheck context and refuse stale saved revisions. Archive/Restore remains available when preservation is wanted. Deleting a linked entry does not cascade through related entries; its old connections show Unavailable entry and can be removed or replaced. Deleting a World post returns the mobile editor to its browse list.
 
+## Reveal all pins
+
+In **DM map actions**, choose **Reveal all pins (N)** to mark every hidden place, region, road and party route on the selected map. Confirm the map and count. This changes only the current private working draft; choose **Save private draft** to keep it private, or review and **Publish changes** to share it. Other maps and World entry sharing are unchanged. Finish or cancel any open place editor/drawing before using the button. When all pins are already revealed, the button reads **All pins revealed** and is disabled. Player view and player preview have no bulk-reveal control.
+
 ## Copy places or clone a map
 
 Use the always-visible **DM map actions** below the map heading. **Copy pins…** selects another saved map and the places/regions/routes to add. Select a pin and use **Copy pin to another map…** in its details to preselect just that pin. Existing destination pins remain. **Clone map…** creates a separately named private map, including its background and optional overview. Both offer an Include place pictures checkbox. A clone can use a replacement background, so an unreadable original need not block recovery; copying places into an existing map never needs the old background to load.
